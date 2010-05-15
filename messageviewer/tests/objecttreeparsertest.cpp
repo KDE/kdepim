@@ -158,6 +158,22 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   QVERIFY( nodeHelper.partMetaData( msg->contents().at( 1 ) ).isEncapsulatedRfc822Message );
 }
 
+void ObjectTreeParserTester::test_missingContentTypeHeader()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "no-content-type.mbox" );
+  QCOMPARE( msg->subject()->as7BitString( false ).constData(), "Simple Mail Without Content-Type Header" );
+  QCOMPARE( msg->contents().size(), 0 );
+
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  NodeHelper nodeHelper;
+  TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( msg.get() );
+
+  QCOMPARE( otp.textualContent().toAscii().data(), "asdfasdf" );
+}
+
 KMime::Message::Ptr ObjectTreeParserTester::readAndParseMail( const QString &mailFile ) const
 {
   QFile file( MAIL_DATA_DIR"/" + mailFile );

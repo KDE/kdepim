@@ -259,10 +259,17 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
     if ( htmlWriter() /*&& contentIndex.isValid()*/ )
       htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"></a>").arg( contentIndex.toString() ) );
 
+    QByteArray mediaType( "text" );
+    QByteArray subType( "plain" );
+    if ( node->contentType( false ) && !node->contentType()->mediaType().isEmpty() &&
+         !node->contentType()->subType().isEmpty() ) {
+      mediaType = node->contentType()->mediaType();
+      subType = node->contentType()->subType();
+    }
+
     // First, try if an external plugin can handle this MIME part
     if ( const Interface::BodyPartFormatter * formatter
-          = BodyPartFormatterFactory::instance()->createFor( node->contentType()->mediaType(),
-                                                             node->contentType()->subType() ) ) {
+          = BodyPartFormatterFactory::instance()->createFor( mediaType, subType ) ) {
       PartNodeBodyPart part( mTopLevelContent, node, mNodeHelper, codecFor( node ) );
       // Set the default display strategy for this body part relying on the
       // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
@@ -291,11 +298,9 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
     // No external plugin can handle the MIME part, handle it internally
     } else {
       const BodyPartFormatter * bpf
-        = BodyPartFormatter::createFor( node->contentType()->mediaType(), node->contentType()->subType() );
+        = BodyPartFormatter::createFor( mediaType, subType );
       if ( !bpf ) {
-        kFatal() << "THIS SHOULD NO LONGER HAPPEN ("
-                 << node->contentType()->mediaType() << '/'
-                 << node->contentType()->subType() << ')';
+        kFatal() << "THIS SHOULD NO LONGER HAPPEN:" << mediaType << '/' << subType;
       }
       writeAttachmentMarkHeader( node );
       if ( bpf && !bpf->process( this, node, processResult ) ) {
