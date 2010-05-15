@@ -155,6 +155,9 @@ class StandardContactActionManager::Private
       if ( !mItemSelectionModel )
         return;
 
+      if ( mItemSelectionModel->selectedIndexes().isEmpty() )
+        return;
+
       const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
       if ( !index.isValid() )
         return;
@@ -201,6 +204,9 @@ class StandardContactActionManager::Private
       if ( !mCollectionSelectionModel )
         return;
 
+      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
+        return;
+
       const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
       if ( !index.isValid() )
         return;
@@ -225,6 +231,9 @@ class StandardContactActionManager::Private
     void configureAddressBookTriggered()
     {
       if ( !mCollectionSelectionModel )
+        return;
+
+      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
         return;
 
       const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
