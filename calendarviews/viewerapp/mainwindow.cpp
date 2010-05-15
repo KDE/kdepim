@@ -112,7 +112,7 @@ void MainWindow::delayedInit()
   CalendarModel* calendarModel = new CalendarModel( mChangeRecorder, this );
 
   // no collections, just items
-  calendarModel->setCollectionFetchStrategy( EntityTreeModel::InvisibleFetch );
+  calendarModel->setCollectionFetchStrategy( EntityTreeModel::InvisibleCollectionFetch );
 
   EntityMimeTypeFilterModel *filterModel = new EntityMimeTypeFilterModel( this );
   filterModel->setHeaderGroup( EntityTreeModel::ItemListHeaders );
