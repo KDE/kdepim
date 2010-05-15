@@ -161,8 +161,10 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
   const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
   Q_ASSERT( incidence );
 
-  if ( alreadyExisted ) {
-    //TODO(AKONADI_PORT): for changed items, we should remove existing date entries (they might have changed)
+  if ( alreadyExisted && m_itemDateForItemId.contains( item.id() )) {
+    // for changed items, we must remove existing date entries (they might have changed)
+    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()] );
+    m_itemDateForItemId.remove( item.id() );
   }
 
   QString date;
@@ -183,6 +185,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
 
   if ( !m_itemIdsForDate.contains( date, item.id() ) ) {
     m_itemIdsForDate.insert( date, item.id() );
+    m_itemDateForItemId.insert( item.id(), date );
   }
 
   m_itemMap.insert( id, item );

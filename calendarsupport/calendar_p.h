@@ -146,7 +146,8 @@ public:
   QHash<Akonadi::Item::Id, UnseenItem> m_childToUnseenParent; // child to parent map, unknown/not cached parent items
   QMap<UnseenItem, QList<Akonadi::Item::Id> > m_unseenParentToChildren;
 
-  QMultiHash<QString, Akonadi::Item::Id> m_itemIdsForDate;// on start dates/due dates of non-recurring, single-day Incidences
+  QMultiHash<QString, Akonadi::Item::Id> m_itemIdsForDate; // on start dates/due dates of non-recurring, single-day Incidences
+  QHash<Akonadi::Item::Id, QString> m_itemDateForItemId;
 
   void clear();
   void readFromModel();
