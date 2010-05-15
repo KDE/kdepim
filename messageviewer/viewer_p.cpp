@@ -1645,10 +1645,10 @@ void ViewerPrivate::createWidgets() {
   mBox = new KHBox( mSplitter );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
+  mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
   KVBox *readerBox = new KVBox( mBox );
   mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
-  mViewer->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
 
 #ifdef KDEPIM_MOBILE_UI
   mViewer->page()->mainFrame()->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
@@ -1656,7 +1656,6 @@ void ViewerPrivate::createWidgets() {
 #endif
 
   mFindBar = new FindBar( mViewer, readerBox );
-  mColorBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Ignored );
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 }
