@@ -829,7 +829,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
       "     <tr> "
       "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
-      StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly, linkColor ) +
+      StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "
       "     </tr>\n";
   }
@@ -840,7 +840,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
       "     <tr> "
       "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
       "      <td style=\"" + borderSettings + "\">" +
-      StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly, linkColor ) +
+      StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress, linkColor ) +
       "      </td> "
       "     </tr>\n";
   }
