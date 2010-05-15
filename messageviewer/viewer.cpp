@@ -238,6 +238,12 @@ void Viewer::setHtmlLoadExtOverride( bool override )
   d->setHtmlLoadExtOverride( override );
 }
 
+void Viewer::setAppName( QString appName )
+{
+  Q_D(Viewer);
+  d->mAppName = appName;
+}
+
 bool Viewer::htmlLoadExtOverride() const
 {
   Q_D(const Viewer);

@@ -198,6 +198,12 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   bool htmlLoadExternal() const;
 
   /**
+   * Set the application name that is shown when the splash screen is active.
+   * @param appName - A QString that is set to the calling application name.
+   */
+  void setAppName( QString appName );
+
+  /**
    * Display a generic HTML splash page instead of a message.
    * @param info - the text to be displayed in HTML format
    */

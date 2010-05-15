@@ -1039,11 +1039,10 @@ void ViewerPrivate::displaySplashPage( const QString &info )
     content = content.arg( "" );
 
   QString fontSize = QString::number( pointsToPixel( mCSSHelper->bodyFont().pointSize() ) );
-  QString appTitle = i18n("Mailreader");
   QString catchPhrase = ""; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
   QString quickDescription = i18n("The KDE email client.");
 
-  mViewer->setHtml( content.arg(fontSize).arg(appTitle).arg(catchPhrase).arg(quickDescription).arg(info), KUrl::fromPath( location ) );
+  mViewer->setHtml( content.arg(fontSize).arg(mAppName).arg(catchPhrase).arg(quickDescription).arg(info), KUrl::fromPath( location ) );
   mViewer->show();
 }
 
@@ -1369,7 +1368,6 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
   // standard event processing
   return false;
 }
-
 
 void ViewerPrivate::readConfig()
 {
