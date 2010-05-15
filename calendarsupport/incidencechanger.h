@@ -73,8 +73,8 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     };
 
     enum DestinationPolicy {
-      ASK_DESTINATION,          // user is asked in which collection
-      USE_DEFAULT_DESTINATION   // the default collection is used, unless it's invalid
+      USE_DEFAULT_DESTINATION,   // the default collection is used, unless it's invalid
+      ASK_DESTINATION          // user is asked in which collection
     };
 
     void setGroupware( Groupware *groupware );
