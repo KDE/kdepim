@@ -138,6 +138,7 @@ public:
   QAbstractItemModel *m_model;
   Akonadi::CalFilterProxyModel* m_filterProxy;
   QHash<Akonadi::Item::Id, Akonadi::Item> m_itemMap; // akonadi id to items
+  QHash<Akonadi::Entity::Id, Akonadi::Collection> m_collectionMap; // akonadi id to collections
 
   QHash<Akonadi::Item::Id, Akonadi::Item::Id> m_childToParent; // child to parent map, for already cached parents
   QHash<Akonadi::Item::Id, QList<Akonadi::Item::Id> > m_parentToChildren; //parent to children map, for alread cached children
@@ -155,6 +156,9 @@ public:
 public Q_SLOTS:
   void itemsAdded( const Akonadi::Item::List &items );
   void itemsRemoved( const Akonadi::Item::List &items );
+
+  void collectionsAdded( const Akonadi::Collection::List &collections );
+  void collectionsRemoved( const Akonadi::Collection::List &collections );
 
   void rowsInserted( const QModelIndex& index, int start, int end );
   void rowsAboutToBeRemoved( const QModelIndex& index, int start, int end );

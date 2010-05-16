@@ -82,11 +82,13 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
 void Calendar::Private::rowsInserted( const QModelIndex &parent, int start, int end )
 {
   itemsAdded( itemsFromModel( m_model, parent, start, end ) );
+  collectionsAdded( collectionsFromModel( m_model, parent, start, end ) );
 }
 
 void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end )
 {
   itemsRemoved( itemsFromModel( m_model, parent, start, end ) );
+  collectionsRemoved( collectionsFromModel( m_model, parent, start, end ) );
 }
 
 void Calendar::Private::layoutChanged()
@@ -329,6 +331,23 @@ void Calendar::Private::itemsAdded( const Item::List &items )
   }
   emit q->calendarChanged();
   assertInvariants();
+}
+
+void Calendar::Private::collectionsAdded( const Collection::List &collections )
+{
+  kDebug() << "adding collections: " << collections.count();
+ 
+  foreach( const Collection &collection, collections ) {
+    m_collectionMap[collection.id()] = collection;
+  }
+}
+
+void Calendar::Private::collectionsRemoved( const Collection::List &collections )
+{
+  kDebug() << "removing collections: " << collections.count();
+  foreach( const Collection &collection, collections ) {
+    m_collectionMap.remove( collection.id() );
+  }
 }
 
 void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
@@ -1767,5 +1786,15 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
       kDebug() << incidence->summary() << "':" << dt.toString();
       alarms.append( a );
     }
+  }
+
+}
+
+Collection Calendar::collection( const Akonadi::Collection::Id &id )
+{
+  if ( d->m_collectionMap.contains( id ) ) {
+    return d->m_collectionMap[id];
+  } else {
+    return Collection();
   }
 }

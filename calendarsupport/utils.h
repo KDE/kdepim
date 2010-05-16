@@ -175,6 +175,11 @@ namespace Akonadi
                                                                int start = 0,
                                                                int end = -1 );
 
+  AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection::List collectionsFromModel( const QAbstractItemModel *model,
+                                                                           const QModelIndex &parentIndex = QModelIndex(),
+                                                                           int start = 0,
+                                                                           int end = -1 );
+
   AKONADI_KCAL_NEXT_EXPORT Collection collectionFromIndex( const QModelIndex &index );
 
   AKONADI_KCAL_NEXT_EXPORT Collection::Id collectionIdFromIndex( const QModelIndex &index );
