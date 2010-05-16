@@ -31,7 +31,21 @@ namespace Akonadi {
 
 namespace MessageCore {
   namespace Util {
+    /**
+     * Retrieve the KMime::Message from the item, if there is one.
+     * @returns A valid message pointer, or 0, is the item does not contain
+     * a valid message.
+     */
     MESSAGECORE_EXPORT KMime::Message::Ptr message( const Akonadi::Item & item );
+
+    /**
+     * Returns whether the item represents a valid KMime::Message that is not
+     * in the Akonadi store (yet). This happens when operating on messages
+     * attached to other mails, for example. Such items are not "valid", in
+     * the akonadi sense, since jobs can not sensibly use them, but they do
+     * contain a valid message pointer.
+     */
+    MESSAGECORE_EXPORT bool isStandaloneMessage( const Akonadi::Item& item );
   }
 }
 
