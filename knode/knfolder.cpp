@@ -292,8 +292,9 @@ bool KNFolder::loadHdrs()
 
 bool KNFolder::unloadHdrs(bool force)
 {
-  if(l_ockedArticles>0)
+  if ( lockedArticles() > 0 ) {
     return false;
+  }
 
   if (!force && isNotUnloadable())
     return false;
@@ -450,22 +451,18 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
   if( !isLoaded() || l.isEmpty() )
     return;
 
-  int idx = 0, delCnt = 0, *positions;
-  positions = new int[l.count()];
-  KNLocalArticle::Ptr a;
-
-  for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it, ++idx ) {
-    if ( (*it)->isLocked() )
-      positions[idx] = -1;
-    else
-      positions[idx] = a_rticles.indexForId( (*it)->id() );
-  }
-
-  for ( idx = 0; idx < (int)(l.count()); ++idx ) {
-    if(positions[idx]==-1)
+  int delCnt = 0;
+  for ( int idx = 0; idx < l.count(); ++idx ) {
+    KNLocalArticle::Ptr a = l[ idx ];
+    if ( a->isLocked() ) {
       continue;
+    }
 
-    a=at(positions[idx]);
+    // check if this article belongs to this folder
+    a = byId( a->id() );
+    if ( !a ) {
+      continue;
+    }
 
     //update
     KNGlobals::self()->articleFactory()->deleteComposerForArticle(a);
@@ -474,7 +471,7 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
     delete a->listItem();
 
     //delete article
-    a_rticles.remove( positions[idx] );
+    remove( a );
     delCnt++;
     if(!del)
       a->setId(-1);
@@ -486,14 +483,14 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
     updateListItem();
     i_ndexDirty=true;
   }
-  delete[] positions;
 }
 
 
 void KNFolder::deleteAll()
 {
-  if(l_ockedArticles>0)
+  if ( lockedArticles() > 0 ) {
     return;
+  }
 
   if (!unloadHdrs(true))
     return;

@@ -28,7 +28,6 @@ KNArticleVector::KNArticleVector(KNArticleVector *master, SortingType sorting)
 
 KNArticleVector::~KNArticleVector()
 {
-  clear();
 }
 
 void KNArticleVector::append( KNArticle::Ptr a )
@@ -180,11 +179,8 @@ KNArticleCollection::KNArticleCollection( KNCollection::Ptr p )
   m_idIndex.setMaster(&a_rticles);
 }
 
-
-
 KNArticleCollection::~KNArticleCollection()
 {
-  clear();
 }
 
 void KNArticleCollection::append( KNArticle::Ptr a )
@@ -194,6 +190,12 @@ void KNArticleCollection::append( KNArticle::Ptr a )
     a->setId( ++l_astID );
   }
 }
+
+void KNArticleCollection::remove( const KNArticle::Ptr &art )
+{
+  a_rticles.remove( a_rticles.indexForId( art->id() ) );
+}
+
 
 void KNArticleCollection::clear()
 {

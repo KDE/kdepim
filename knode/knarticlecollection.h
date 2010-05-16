@@ -108,6 +108,10 @@ class KNArticleCollection : public KNCollection {
       Appends an article to this collection.
     */
     void append( KNArticle::Ptr a );
+    /**
+     * Remove the article @p art from this collection.
+     */
+    void remove( const KNArticle::Ptr &art );
     void clear();
     void compact();
     void setLastID();
@@ -129,7 +133,7 @@ class KNArticleCollection : public KNCollection {
     // search index
     void syncSearchIndex();
 
-  protected:
+  private:
     int l_astID;
     unsigned int l_ockedArticles;
     bool n_otUnloadable;
