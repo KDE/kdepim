@@ -55,8 +55,8 @@ using namespace Akonadi;
 
 class IncidenceChanger::Private {
 public:
-  Private( const Collection &defaultCollection ) :
-    mDefaultCollection( defaultCollection ),
+  Private( const Entity::Id &defaultCollectionId ) :
+    mDefaultCollectionId( defaultCollectionId ),
     mGroupware( 0 ),
     mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ) {
   }
@@ -70,7 +70,7 @@ public:
   QHash<Akonadi::Item::Id, int> m_latestVersionByItemId;
   QHash<const KJob*, Item> m_oldItemByJob;
   QHash<QString, IncidenceChanger::WhatChanged> m_actionByOldUid;
-  Collection mDefaultCollection;
+  Entity::Id mDefaultCollectionId;
 
   Groupware *mGroupware;
   DestinationPolicy mDestinationPolicy;
@@ -78,8 +78,8 @@ public:
 
 IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
                                     QObject *parent,
-                                    const Collection &defaultCollection )
-  : QObject( parent ), mCalendar( cal ), d( new Private( defaultCollection ) )
+                                    const Entity::Id &defaultCollectionId )
+  : QObject( parent ), mCalendar( cal ), d( new Private( defaultCollectionId ) )
 {
 }
 
@@ -370,9 +370,9 @@ bool IncidenceChanger::cutIncidence( const Item &item, QWidget *parent )
   return cutIncidences( items, parent );
 }
 
-void IncidenceChanger::setDefaultCollection( const Collection &defaultCollection )
+void IncidenceChanger::setDefaultCollectionId( const Entity::Id &defaultCollectionId )
 {
-  d->mDefaultCollection = defaultCollection;
+  d->mDefaultCollectionId = defaultCollectionId;
 }
 
 namespace {
@@ -514,14 +514,17 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
                                      QWidget *parent, Akonadi::Collection &selectedCollection,
                                      int &dialogCode )
 {
+
+  const Collection defaultCollection = mCalendar->collection( d->mDefaultCollectionId );
+  
   if ( d->mDestinationPolicy == ASK_DESTINATION ||
-       !d->mDefaultCollection.isValid() ) {
+       !defaultCollection.isValid() ) {
     selectedCollection = Akonadi::selectCollection( parent,
                                                     dialogCode,
-                                                    d->mDefaultCollection );
+                                                    defaultCollection );
   } else {
     dialogCode = QDialog::Accepted;
-    selectedCollection = d->mDefaultCollection;
+    selectedCollection = defaultCollection;
   }
 
   if ( selectedCollection.isValid() ) {

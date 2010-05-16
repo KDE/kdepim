@@ -70,6 +70,11 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   connect( m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
   connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
   connect( m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+
+  // use the unfiltered model to catch collections
+  connect( m_treeModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInTreeModel(QModelIndex,int,int)) );
+  connect( m_treeModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemovedInTreeModel(QModelIndex,int,int)) );
+  
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -78,17 +83,25 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   */
 }
 
+void Calendar::Private::rowsInsertedInTreeModel( const QModelIndex &parent, int start, int end )
+{
+  collectionsAdded( collectionsFromModel( m_treeModel, parent, start, end ) );
+}
+
+void Calendar::Private::rowsAboutToBeRemovedInTreeModel( const QModelIndex &parent, int start, int end )
+{
+  collectionsRemoved( collectionsFromModel( m_treeModel, parent, start, end ) );
+}
+
 
 void Calendar::Private::rowsInserted( const QModelIndex &parent, int start, int end )
 {
   itemsAdded( itemsFromModel( m_model, parent, start, end ) );
-  collectionsAdded( collectionsFromModel( m_model, parent, start, end ) );
 }
 
 void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end )
 {
   itemsRemoved( itemsFromModel( m_model, parent, start, end ) );
-  collectionsRemoved( collectionsFromModel( m_model, parent, start, end ) );
 }
 
 void Calendar::Private::layoutChanged()

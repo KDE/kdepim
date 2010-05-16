@@ -121,7 +121,7 @@ void MainWindow::delayedInit()
 
   mCalendar = new Akonadi::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
 
-  mIncidenceChanger = new IncidenceChanger( mCalendar, this, Collection() );
+  mIncidenceChanger = new IncidenceChanger( mCalendar, this, Collection().id() );
 
   Q_FOREACH( const QString &viewName, mViewNames ) {
     addView( viewName );

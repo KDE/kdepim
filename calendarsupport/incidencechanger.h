@@ -46,7 +46,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
   public:
     IncidenceChanger( Akonadi::Calendar *cal,
                       QObject *parent,
-                      const Collection &defaultCollection );
+                      const Akonadi::Entity::Id &defaultCollectionId );
     ~IncidenceChanger();
 
     enum HowChanged {
@@ -112,7 +112,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     bool cutIncidences( const Akonadi::Item::List &incidences, QWidget *parent );
     bool cutIncidence( const Akonadi::Item &incidence, QWidget *parent );
 
-    void setDefaultCollection( const Akonadi::Collection & );
+    void setDefaultCollectionId( const Akonadi::Entity::Id & );
 
     static bool incidencesEqual( KCal::Incidence *inc1, KCal::Incidence *inc2 );
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );

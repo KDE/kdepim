@@ -98,7 +98,7 @@ IncidenceEditor::IncidenceEditor( const QString &caption, const QStringList& mim
   callayout->setSpacing( KDialog::spacingHint() );
   mCalSelector = new Akonadi::CollectionComboBox( mainWidget() );
   mCalSelector->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
-  mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
+  //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
   //mCalSelector->addExcludeResourcesType(QStringList()<<"akonadi_search_resource");
   mCalSelector->setMimeTypeFilter( QStringList() << mimetypes );
   connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),

@@ -27,6 +27,7 @@
 #include "kcalprefs_base.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/entity.h>
 
 #include <kdatetime.h>
 
@@ -81,16 +82,13 @@ class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
     QString mPublishPassword;
     QString mRetrievePassword;
 
-    QString defaultCalendar() const;
-
-    void setDefaultCollection( const Akonadi::Collection& );
-    Akonadi::Collection defaultCollection() const;
+    Akonadi::Entity::Id defaultCalendarId() const;
+    void setDefaultCalendarId( const Akonadi::Entity::Id );
 
   private:
     KDateTime::Spec mTimeSpec;
 
-    QString mDefaultCalendar;
-    Akonadi::Collection mDefaultCollection;
+    Akonadi::Entity::Id mDefaultCalendarId;
 };
 
 #endif

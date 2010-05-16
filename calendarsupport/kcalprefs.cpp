@@ -105,21 +105,15 @@ void KCalPrefs::setTimeSpec( const KDateTime::Spec &spec )
   mTimeSpec = spec;
 }
 
-QString KCalPrefs::defaultCalendar() const
+Akonadi::Entity::Id KCalPrefs::defaultCalendarId() const
 {
-  return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
+  return mDefaultCalendarId;
 }
 
-Akonadi::Collection KCalPrefs::defaultCollection() const
-{
-  return mDefaultCollection;
-}
 
-void KCalPrefs::setDefaultCollection( const Akonadi::Collection& col )
+void KCalPrefs::setDefaultCalendarId( const Akonadi::Entity::Id id )
 {
-  mDefaultCollection = col;
-  if ( !col.isValid() )
-    mDefaultCalendar ="";
+  mDefaultCalendarId = id;
 }
 
 void KCalPrefs::setTimeZoneDefault()
@@ -160,7 +154,7 @@ void KCalPrefs::usrReadConfig()
   }
 
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  mDefaultCalendar = defaultCalendarConfig.readEntry( "Default Calendar", QString() );
+  mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
 
 #if 0
   config()->setGroup( "FreeBusy" );
@@ -201,7 +195,7 @@ void KCalPrefs::usrWriteConfig()
 #endif
 
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendar() );
+  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendarId() );
 
   KConfigSkeleton::usrWriteConfig();
 }
