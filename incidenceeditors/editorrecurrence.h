@@ -324,6 +324,9 @@ class EditorRecurrence : public QWidget
 
     bool recurs();
 
+    void saveValues();
+    void restoreValues();
+
   public slots:
     void setRecurrenceEnabled( bool );
     void setDateTimes( const QDateTime &start, const QDateTime &end );
@@ -339,6 +342,7 @@ class EditorRecurrence : public QWidget
 
   private:
     QWidget *mParent;
+    KCal::Recurrence mSaveRec;
     QCheckBox *mEnabledCheck;
 
     QGroupBox *mTimeGroupBox;
