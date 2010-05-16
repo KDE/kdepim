@@ -348,11 +348,13 @@ public:
 
   void resetStateForNewMessage();
 
-    /** Set the Akonadi item that will be displayed.
-  * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
-  *               an empty page is shown.
-  * @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
-  */
+  void setMessageInternal( const KMime::Message::Ptr message, Viewer::UpdateMode updateMode );
+
+  /** Set the Akonadi item that will be displayed.
+   *  @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
+   *                an empty page is shown.
+   *  @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
+   */
   void setMessageItem(const Akonadi::Item& item, Viewer::UpdateMode updateMode = Viewer::Delayed );
 
 

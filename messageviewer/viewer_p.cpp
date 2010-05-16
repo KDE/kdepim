@@ -797,7 +797,6 @@ void ViewerPrivate::displayMessage()
   /*FIXME(Andras) port to Akonadi
   mMimePartTree->clearAndResetSortOrder();
   */
-  mMimePartModel->setRoot( mMessage.get() );
   showHideMimeTree();
 
   mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
@@ -1231,6 +1230,7 @@ void ViewerPrivate::printMessage( KMime::Message::Ptr message )
 void ViewerPrivate::resetStateForNewMessage()
 {
   enableMessageDisplay(); // just to make sure it's on
+  mMessage.reset();
   mNodeHelper->clear();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
@@ -1240,7 +1240,18 @@ void ViewerPrivate::resetStateForNewMessage()
     mLevelQuote = -1;
 }
 
-void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
+void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
+                                        Viewer::UpdateMode updateMode )
+{
+  mMessage = message;
+  if ( message ) {
+    mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
+  }
+  mMimePartModel->setRoot( mMessage.get() );
+  update( updateMode );
+}
+
+void ViewerPrivate::setMessageItem( const Akonadi::Item &item, Viewer::UpdateMode updateMode )
 {
   resetStateForNewMessage();
   foreach( const Akonadi::Entity::Id monitoredId, mMonitor.itemsMonitored() ) {
@@ -1248,7 +1259,6 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
   }
   Q_ASSERT( mMonitor.itemsMonitored().isEmpty() );
 
-  mMessage = KMime::Message::Ptr(); //forget the old message if it was set
   mMessageItem = item;
   if ( mMessageItem.isValid() )
     mMonitor.setItemMonitored( mMessageItem, true );
@@ -1259,25 +1269,18 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
     return;
   }
 
-  mMessage = mMessageItem.payload<KMime::Message::Ptr>();
-
-  update( updateMode );
+  setMessageInternal( mMessageItem.payload<KMime::Message::Ptr>(), updateMode );
 }
 
 void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode updateMode )
 {
   resetStateForNewMessage();
 
-  mMessage = aMsg;
   Akonadi::Item item;
-  item.setPayload( mMessage );
+  item.setPayload( aMsg );
   mMessageItem = item;
 
-  if ( mMessage ) {
-    mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
-  }
-
-  update( updateMode );
+  setMessageInternal( mMessage, updateMode );
 }
 
 void ViewerPrivate::setMessagePart( KMime::Content * node )
