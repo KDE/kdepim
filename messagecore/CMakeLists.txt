@@ -23,6 +23,7 @@ set(messagecore_LIB_SRCS
    mailinglist-magic.cpp
    kmfawidgets.cpp
    globalsettings.cpp
+   messagehelpers.cpp
 )
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
