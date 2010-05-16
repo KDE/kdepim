@@ -198,7 +198,6 @@ class KNHeaderView : public K3ListView  {
   private slots:
     void slotCenterDelayed();
     void slotSizeChanged( int, int, int );
-    void resetCurrentTime();
 
 };
 

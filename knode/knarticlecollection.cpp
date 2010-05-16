@@ -33,13 +33,15 @@ KNArticleVector::~KNArticleVector()
 
 void KNArticleVector::append( KNArticle::Ptr a )
 {
-  mList.append( a );
+  if ( a ) {
+    mList.append( a );
+  }
 }
 
-void KNArticleVector::remove( int pos, bool autoDel )
+void KNArticleVector::remove( int pos )
 {
-  if ( autoDel && pos >= 0 && pos < mList.size() ) {
-    mList.takeAt( pos ).reset();
+  if ( pos >= 0 && pos < mList.size() ) {
+    mList.removeAt( pos );
   }
 }
 
@@ -48,13 +50,6 @@ void KNArticleVector::clear()
 {
   mList.clear();
 }
-
-
-void KNArticleVector::compact()
-{
-  mList.removeAll( KNArticle::Ptr() );
-}
-
 
 void KNArticleVector::syncWithMaster()
 {
@@ -82,7 +77,6 @@ void KNArticleVector::sort()
   }
 
   if(cmp) {
-    //compact(); // remove null-pointers
     qSort( mList.begin(), mList.end(), cmp );
   }
 }
@@ -137,7 +131,6 @@ int KNArticleVector::indexForId(int id)
   if(found)
     return mid;
   else {
-    kDebug() << "id" << id << "not found";
     return -1;
   }
 }
@@ -168,24 +161,15 @@ int KNArticleVector::indexForMsgId( const QByteArray &id )
   }
 
   if(found) {
-    /*#ifndef NDEBUG
-    qDebug("KNArticleVector::indexForMsgID() : msgID=%s found after %d compares", id.data(), cnt);
-    #endif*/
     return mid;
-  }
-  else {
-    /*#ifndef NDEBUG
-    qDebug("knode: KNArticleVector::indexForMsgID() : msgID=%s not found", id.data());
-    #endif*/
+  } else {
     return -1;
   }
 }
 
 
 
-
 // -------------------------------------------------------------------------------------------
-
 
 
 KNArticleCollection::KNArticleCollection( KNCollection::Ptr p )
@@ -219,10 +203,8 @@ void KNArticleCollection::clear()
 }
 
 
-
 void KNArticleCollection::compact()
 {
-  a_rticles.compact();
   m_idIndex.clear();
 }
 
@@ -256,14 +238,4 @@ void KNArticleCollection::setLastID()
 void KNArticleCollection::syncSearchIndex()
 {
   m_idIndex.syncWithMaster();
-
-  /*for(int i=0; i<m_idIndex.length(); i++) {
-    kDebug(5003) << m_idIndex.at(i)->id() <<" ," << m_idIndex.at(i)->messageID()->as7BitString(false);
-  } */
-}
-
-
-void KNArticleCollection::clearSearchIndex()
-{
-  m_idIndex.clear();
 }

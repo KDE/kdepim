@@ -516,8 +516,6 @@ void KNArticleManager::copyIntoFolder( KNArticle::List &l, KNFolder::Ptr f )
     f->setNotUnloadable(true);
 
     if ( !f->isLoaded() && !knGlobals.folderManager()->loadHeaders( f ) ) {
-      for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it )
-        (*it).reset();
       l2.clear();
       f->setNotUnloadable(false);
       return;
@@ -595,10 +593,8 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
     f->removeArticles( l, true );
     knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticleCollection>( f ) );
     return false; // composers for those articles were already removed in removeArticles
-  }
-  else {
-    for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
-      (*it).reset();
+  } else {
+    l.clear();
   }
 
   return true;
