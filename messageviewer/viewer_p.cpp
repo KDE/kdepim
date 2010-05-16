@@ -1823,23 +1823,20 @@ const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
   return KGlobal::charsets()->codecForName(codec);
 }
 
-
 void ViewerPrivate::update( Viewer::UpdateMode updateMode )
 {
   // Avoid flicker, somewhat of a cludge
   if ( updateMode == Viewer::Force ) {
     // stop the timer to avoid calling updateReaderWin twice
-      mUpdateReaderWinTimer.stop();
-      saveRelativePosition();
-      updateReaderWin();
-  }
-  else if (mUpdateReaderWinTimer.isActive()) {
-      mUpdateReaderWinTimer.setInterval( delay );
+    mUpdateReaderWinTimer.stop();
+    saveRelativePosition();
+    updateReaderWin();
+  } else if ( mUpdateReaderWinTimer.isActive() ) {
+    mUpdateReaderWinTimer.setInterval( delay );
   } else {
-      mUpdateReaderWinTimer.start( 0 );
+    mUpdateReaderWinTimer.start( 0 );
   }
 }
-
 
 void ViewerPrivate::slotUrlOpen( const QUrl& url )
 {
@@ -2009,10 +2006,11 @@ void ViewerPrivate::updateReaderWin()
 void ViewerPrivate::slotMimePartSelected( const QModelIndex &index )
 {
   KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-  if ( !mMimePartModel->parent(index).isValid() && index.row() == 0 ) {
-   update(Viewer::Force);
-  } else
+  if ( !mMimePartModel->parent( index ).isValid() && index.row() == 0 ) {
+    update( Viewer::Force );
+  } else {
     setMessagePart( content );
+  }
 }
 
 
