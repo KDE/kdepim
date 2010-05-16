@@ -250,9 +250,6 @@ public:
 
   QString createAtmFileLink( const QString& atmFileName ) const;
   KService::Ptr getServiceOffer( KMime::Content *content);
-  bool saveContent( KMime::Content* content, const KUrl& url, bool encoded );
-  void saveAttachments( const KMime::Content::List & contents );
-  KMime::Content::List allContents( const KMime::Content * content );
   KMime::Content::List selectedContents();
   void attachmentOpenWith( KMime::Content *node );
   void attachmentOpen( KMime::Content *node );

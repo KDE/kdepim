@@ -41,8 +41,9 @@
 #include "viewer_p.h"
 #include "mailwebview.h"
 #include "nodehelper.h"
-
+#include "util.h"
 #include "stl_util.h"
+
 #include <kurl.h>
 
 #include <messagecore/stringutil.h>
@@ -703,7 +704,7 @@ namespace {
       return false;
     if ( !window )
       return false;
-    window->saveAttachments( QList<KMime::Content*>() << node );
+    Util::saveContents( window->viewer(), QList<KMime::Content*>() << node );
     return true;
   }
 

@@ -231,8 +231,6 @@ ViewerPrivate::~ViewerPrivate()
   delete mNodeHelper;
 }
 
-
-
 //-----------------------------------------------------------------------------
 KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
 {
@@ -321,7 +319,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
   const int choice = dialog.exec();
 
   if ( choice == AttachmentDialog::Save ) {
-    saveAttachments( KMime::Content::List() << node );
+    Util::saveContents( mMainWindow, KMime::Content::List() << node );
   }
   else if ( choice == AttachmentDialog::Open ) { // Open
     attachmentOpen( node );
@@ -683,265 +681,6 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
   }
   return KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 }
-
-bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool encoded )
-{
-  KMime::Content *topContent  = content->topLevel();
-  bool bSaveEncrypted = false;
-
-  bool bEncryptedParts = mNodeHelper->encryptionState( content ) != KMMsgNotEncrypted;
-  if( bEncryptedParts )
-    if( KMessageBox::questionYesNo( mMainWindow,
-          i18n( "The part %1 of the message is encrypted. Do you want to keep the encryption when saving?",
-           url.fileName() ),
-          i18n( "KMail Question" ), KGuiItem(i18n("Keep Encryption")), KGuiItem(i18n("Do Not Keep")) ) ==
-        KMessageBox::Yes )
-      bSaveEncrypted = true;
-
-  bool bSaveWithSig = true;
-  if( mNodeHelper->signatureState( content ) != KMMsgNotSigned )
-    if( KMessageBox::questionYesNo( mMainWindow,
-          i18n( "The part %1 of the message is signed. Do you want to keep the signature when saving?",
-           url.fileName() ),
-          i18n( "KMail Question" ), KGuiItem(i18n("Keep Signature")), KGuiItem(i18n("Do Not Keep")) ) !=
-        KMessageBox::Yes )
-      bSaveWithSig = false;
-
-  QByteArray data;
-  if ( encoded )
-  {
-    // This does not decode the Message Content-Transfer-Encoding
-    // but saves the _original_ content of the message part
-    data = content->encodedContent();
-  }
-  else
-  {
-    if( bSaveEncrypted || !bEncryptedParts) {
-      KMime::Content *dataNode = content;
-      QByteArray rawReplyString;
-      bool gotRawReplyString = false;
-      if ( !bSaveWithSig ) {
-        if ( topContent->contentType()->mimeType() == "multipart/signed" )  {
-          // carefully look for the part that is *not* the signature part:
-          if ( ObjectTreeParser::findType( topContent, "application/pgp-signature", true, false ) ) {
-            dataNode = ObjectTreeParser::findTypeNot( topContent, "application", "pgp-signature", true, false );
-          } else if ( ObjectTreeParser::findType( topContent, "application/pkcs7-mime" , true, false ) ) {
-            dataNode = ObjectTreeParser::findTypeNot( topContent, "application", "pkcs7-mime", true, false );
-          } else {
-            dataNode = ObjectTreeParser::findTypeNot( topContent, "multipart", "", true, false );
-          }
-        } else {
-          EmptySource emptySource;
-          ObjectTreeParser otp( &emptySource, 0, 0,false, false, false );
-
-          // process this node and all it's siblings and descendants
-          mNodeHelper->setNodeUnprocessed( dataNode, true );
-          otp.parseObjectTree( dataNode );
-
-          rawReplyString = otp.rawReplyString();
-          gotRawReplyString = true;
-        }
-      }
-      QByteArray cstr = gotRawReplyString
-                         ? rawReplyString
-                         : dataNode->decodedContent();
-       if ( dataNode->contentType()->isText() && cstr.size() > 0 )  {
-        data = KMime::CRLFtoLF( cstr );
-       } else
-        data = cstr; 
-    }
-  }
-  QDataStream ds;
-  QFile file;
-  KTemporaryFile tf;
-  if ( url.isLocalFile() )
-  {
-    // save directly
-    file.setFileName( url.toLocalFile() );
-    if ( !file.open( QIODevice::WriteOnly ) )
-    {
-      KMessageBox::error( mMainWindow,
-                          i18nc( "1 = file name, 2 = error string",
-                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                 file.fileName(),
-                                 QString::fromLocal8Bit( strerror( errno ) ) ),
-                          i18n( "Error saving attachment" ) );
-      return false;
-    }
-
-    const int permissions = Util::getWritePermissions();
-    if ( permissions )
-      fchmod( file.handle(), permissions );
-    ds.setDevice( &file );
-  } else
-  {
-    // tmp file for upload
-    tf.open();
-    ds.setDevice( &tf );
-  }
-
-  if ( ds.writeRawData( data.data(), data.size() ) == -1)
-  {
-    QFile *f = static_cast<QFile *>( ds.device() );
-    KMessageBox::error( mMainWindow,
-                        i18nc( "1 = file name, 2 = error string",
-                               "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                               f->fileName(),
-                               f->errorString() ),
-                        i18n( "Error saving attachment" ) );
-    return false;
-  }
-
-  if ( !url.isLocalFile() )
-  {
-    // QTemporaryFile::fileName() is only defined while the file is open
-    QString tfName = tf.fileName();
-    tf.close();
-    if ( !KIO::NetAccess::upload( tfName, url, mMainWindow ) )
-    {
-      KMessageBox::error( mMainWindow,
-                          i18nc( "1 = file name, 2 = error string",
-                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                 url.prettyUrl(),
-                                 KIO::NetAccess::lastErrorString() ),
-                          i18n( "Error saving attachment" ) );
-      return false;
-    }
-  } else
-    file.close();
-  return true;
-}
-
-// FIXME: This is blatant code duplication with KMSaveAttachmentsCommand::slotSaveAll!!
-void ViewerPrivate::saveAttachments( const KMime::Content::List & contents )
-{
-  KUrl url, dirUrl;
-  if ( contents.size() > 1 ) {
-    dirUrl = KFileDialog::getExistingDirectoryUrl( KUrl( "kfiledialog:///saveAttachment" ),
-                                                   mMainWindow,
-                                                   i18n( "Save Attachments To" ) );
-    if ( !dirUrl.isValid() ) {
-      return;
-    }
-    // we may not get a slash-terminated url out of KFileDialog
-    dirUrl.adjustPath( KUrl::AddTrailingSlash );
-  } else {
-    // only one item, get the desired filename
-    KMime::Content *content = contents[0];
-
-    QString fileName = NodeHelper::fileName( content );
-    fileName = MessageCore::StringUtil::cleanFileName( fileName );
-    if ( fileName.isEmpty() ) {
-      fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
-    }
-    url = KFileDialog::getSaveUrl( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
-                                   QString(),
-                                   mMainWindow,
-                                   i18n( "Save Attachment" ) );
-    if ( url.isEmpty() ) {
-      return;
-    }
-  }
-
-  QMap< QString, int > renameNumbering;
-
-  int unnamedAtmCount = 0;
-  bool overwriteAll = false;
-  for ( KMime::Content::List::const_iterator it = contents.constBegin();
-        it != contents.constEnd();
-        ++it ) {
-    KMime::Content *content = *it;
-    KUrl curUrl;
-    if ( !dirUrl.isEmpty() ) {
-      curUrl = dirUrl;
-      QString s = content->contentDisposition()->filename();
-      if ( s.isEmpty() )
-        s = content->contentType()->name().trimmed().replace( ':', '_' );
-      if ( s.isEmpty() ) {
-        ++unnamedAtmCount;
-        s = i18nc("filename for the %1-th unnamed attachment",
-                 "attachment.%1",
-              unnamedAtmCount );
-      }
-      curUrl.setFileName( s );
-    } else {
-      curUrl = url;
-    }
-
-    if ( !curUrl.isEmpty() ) {
-
-     // Rename the file if we have already saved one with the same name:
-     // try appending a number before extension (e.g. "pic.jpg" => "pic_2.jpg")
-     QString origFile = curUrl.fileName();
-     QString file = origFile;
-
-     while ( renameNumbering.contains(file) ) {
-       file = origFile;
-       int num = renameNumbering[file] + 1;
-       int dotIdx = file.lastIndexOf('.');
-       file = file.insert( (dotIdx>=0) ? dotIdx : file.length(), QString("_") + QString::number(num) );
-     }
-     curUrl.setFileName(file);
-
-     // Increment the counter for both the old and the new filename
-     if ( !renameNumbering.contains(origFile))
-         renameNumbering[origFile] = 1;
-     else
-         renameNumbering[origFile]++;
-
-     if ( file != origFile ) {
-        if ( !renameNumbering.contains(file))
-            renameNumbering[file] = 1;
-        else
-            renameNumbering[file]++;
-     }
-
-
-      if ( !overwriteAll && KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, mMainWindow ) ) {
-        if ( contents.count() == 1 ) {
-          if ( KMessageBox::warningContinueCancel( mMainWindow,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
-            continue;
-          }
-        }
-        else {
-          int button = KMessageBox::warningYesNoCancel(
-                mMainWindow,
-                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
-                  curUrl.fileName() ),
-                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")),
-                KGuiItem(i18n("Overwrite &All")) );
-          if ( button == KMessageBox::Cancel )
-            continue;
-          else if ( button == KMessageBox::No )
-            overwriteAll = true;
-        }
-      }
-      // save
-      saveContent( content, curUrl, false );
-    }
-  }
-}
-
-KMime::Content::List ViewerPrivate::allContents( const KMime::Content * content )
-{
-  KMime::Content::List result;
-  KMime::Content *child = MessageCore::NodeHelper::firstChild( content );
-  if ( child ) {
-    result += child;
-    result += allContents( child );
-  }
-  KMime::Content *next = MessageCore::NodeHelper::nextSibling( content );
-  if ( next ) {
-    result += next;
-    result += allContents( next );
-  }
-
-  return result;
-}
-
 
 KMime::Content::List ViewerPrivate::selectedContents()
 {
@@ -2529,7 +2268,6 @@ void ViewerPrivate::slotAttachmentOpen()
   }
 }
 
-
 void ViewerPrivate::slotAttachmentSaveAs()
 {
   KMime::Content::List contents = selectedContents();
@@ -2539,40 +2277,20 @@ void ViewerPrivate::slotAttachmentSaveAs()
     return;
   }
 
-  saveAttachments( contents );
+  Util::saveContents( mMainWindow, contents );
 }
-
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
-  KMime::Content::List contents = allContents( mMessage.get() );
-
-  for ( KMime::Content::List::iterator it = contents.begin();
-        it != contents.end(); ) {
-    // only body parts which have a filename or a name parameter (except for
-    // the root node for which name is set to the message's subject) are
-    // considered attachments
-    KMime::Content* content = *it;
-    if ( content->contentDisposition()->filename().trimmed().isEmpty() &&
-          ( content->contentType()->name().trimmed().isEmpty() ||
-            content == mMessage.get() ) ) {
-      KMime::Content::List::iterator delIt = it;
-      ++it;
-      contents.erase( delIt );
-    } else {
-      ++it;
-    }
-  }
+  KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
 
   if ( contents.isEmpty() ) {
-    KMessageBox::information( mMainWindow, i18n("Found no attachments to save.") );
+    KMessageBox::information( mMainWindow, i18n( "Found no attachments to save." ) );
     return;
   }
 
-  saveAttachments( contents );
-
+  Util::saveContents( mMainWindow, contents );
 }
-
 
 void ViewerPrivate::slotAttachmentView()
 {
@@ -2704,7 +2422,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
   } else if ( choice == Viewer::Properties ) {
     attachmentProperties( mCurrentContent );
   } else if ( choice == Viewer::Save ) {
-    saveAttachments( KMime::Content::List()<<mCurrentContent );
+    Util::saveContents( mMainWindow, KMime::Content::List() << mCurrentContent );
   } else if ( choice == Viewer::OpenWith ) {
     attachmentOpenWith( mCurrentContent );
   } else if ( choice == Viewer::Open ) {
@@ -2782,81 +2500,19 @@ void ViewerPrivate::slotUrlCopy()
   }
 }
 
-
 void ViewerPrivate::slotSaveMessage()
 {
-   if(!mMessage) return;
-
-   KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( mMessage->subject()->asUnicodeString().trimmed()
-                                  .replace( QDir::separator(), '_' ) ),
-                                  "*.mbox", mMainWindow );
-
-   if ( url.isEmpty() )
-     return;
-
-  QByteArray data( mMessage->encodedContent() );
-  QDataStream ds;
-  QFile file;
-  KTemporaryFile tf;
-  if ( url.isLocalFile() )
-  {
-    // save directly
-    file.setFileName( url.toLocalFile() );
-    if ( !file.open( QIODevice::WriteOnly ) )
-    {
-      KMessageBox::error( mMainWindow,
-                          i18nc( "1 = file name, 2 = error string",
-                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                 file.fileName(),
-                                 QString::fromLocal8Bit( strerror( errno ) ) ),
-                          i18n( "Error saving attachment" ) );
-      return;
-    }
-
-    //TODO handle huge attachment (and on demand attachment loading), especially saving them to
-    //remote destination
-
-    const int permissions = Util::getWritePermissions();
-    if ( permissions >= 0 )
-      fchmod( file.handle(), permissions );
-    ds.setDevice( &file );
-  } else
-  {
-    // tmp file for upload
-    tf.open();
-    ds.setDevice( &tf );
-  }
-
-  if ( ds.writeRawData( data.data(), data.size() ) == -1)
-  {
-    QFile *f = static_cast<QFile *>( ds.device() );
-    KMessageBox::error( mMainWindow,
-                        i18nc( "1 = file name, 2 = error string",
-                               "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                               f->fileName(),
-                               f->errorString() ),
-                        i18n( "Error saving attachment" ) );
+  if( !mMessage )
     return;
-  }
 
-  if ( !url.isLocalFile() )
-  {
-    // QTemporaryFile::fileName() is only defined while the file is open
-    QString tfName = tf.fileName();
-    tf.close();
-    if ( !KIO::NetAccess::upload( tfName, url, mMainWindow ) )
-    {
-      KMessageBox::error( mMainWindow,
-                          i18nc( "1 = file name, 2 = error string",
-                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                 url.prettyUrl(),
-                                 KIO::NetAccess::lastErrorString() ),
-                          i18n( "Error saving attachment" ) );
-      return;
-    }
-  } else
-    file.close();
-  return;
+  const QString initialFileName = MessageCore::StringUtil::cleanFileName(
+                                           mMessage->subject()->asUnicodeString().trimmed() );
+  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( initialFileName ), "*.mbox", mMainWindow );
+
+  if ( url.isEmpty() )
+    return;
+
+  Util::saveContent( mMainWindow, mMessage.get(), url );
 }
 
 void ViewerPrivate::saveRelativePosition()
@@ -2950,7 +2606,7 @@ void ViewerPrivate::scrollToAttachment( const KMime::Content *node )
 
   // Remove any old color markings which might be there
   const KMime::Content *root = node->topLevel();
-  int totalChildCount = allContents( root ).size();
+  int totalChildCount = Util::allContents( root ).size();
   for ( int i = 0; i <= totalChildCount + 1; i++ ) {
     QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( i + 1 ) );
     if ( !attachmentDiv.isNull() )
