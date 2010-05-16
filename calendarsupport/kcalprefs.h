@@ -33,6 +33,7 @@
 
 class QStringList;
 
+// TODO: comeup with a better name, this is not libkcal, and add a namespace to it
 class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
 {
   public:
