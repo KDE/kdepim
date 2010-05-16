@@ -373,8 +373,13 @@ class EditorRecurrenceDialog : public KDialog
     EditorRecurrenceDialog( QWidget *parent );
     EditorRecurrence *editor() const { return mRecurrence; }
 
+  protected slots:
+    void slotOk();
+    void slotCancel();
+
   private:
     EditorRecurrence *mRecurrence;
+    bool mRecurEnabled;
 };
 
 #endif

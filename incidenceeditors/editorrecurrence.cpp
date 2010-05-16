@@ -1071,6 +1071,7 @@ EditorRecurrence::~EditorRecurrence()
 
 void EditorRecurrence::setRecurrenceEnabled( bool enabled )
 {
+  mEnabledCheck->setChecked( enabled );
   mTimeGroupBox->setEnabled( enabled );
   mRuleBox->setEnabled( enabled );
   if ( mRecurrenceRangeWidget ) {
@@ -1141,9 +1142,7 @@ void EditorRecurrence::setDefaults( const QDateTime &from, const QDateTime &to, 
 {
   setDateTimes( from, to );
 
-  bool enabled = false;
-  mEnabledCheck->setChecked( enabled );
-  setRecurrenceEnabled( enabled );
+  setRecurrenceEnabled( false );
 
   mRecurrenceRange->setDefaults( from );
 
@@ -1199,7 +1198,6 @@ void EditorRecurrence::readIncidence( Incidence *incidence )
     f = r->frequency();
   }
 
-  mEnabledCheck->setChecked( recurs );
   setRecurrenceEnabled( recurs );
 
   int recurrenceType = RecurrenceChooser::Weekly;
@@ -1469,6 +1467,19 @@ EditorRecurrenceDialog::EditorRecurrenceDialog( QWidget *parent )
 
   mRecurrence = new EditorRecurrence( this );
   setMainWidget( mRecurrence );
+}
+
+void EditorRecurrenceDialog::slotOk()
+{
+  mRecurEnabled = mRecurrence->recurs();
+  emit okClicked();
+  accept();
+}
+
+void EditorRecurrenceDialog::slotCancel()
+{
+  mRecurrence->setRecurrenceEnabled( mRecurEnabled );
+  reject();
 }
 
 #include "editorrecurrence.moc"
