@@ -85,6 +85,7 @@
 #include <QScrollArea>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QHeaderView>
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
@@ -1642,6 +1643,7 @@ void ViewerPrivate::createWidgets() {
   connect(mMimePartTree, SIGNAL( activated( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
+  mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
   mBox = new KHBox( mSplitter );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
