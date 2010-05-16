@@ -125,6 +125,8 @@ AntiSpamWizard::AntiSpamWizard( WizardMode mode,
     addPage( mVirusRulesPage, i18n( "Options to fine-tune the handling of virus messages" ));
     connect( mVirusRulesPage, SIGNAL( selectionChanged( void ) ),
              this, SLOT( checkVirusRulesSelections( void ) ) );
+    connect( mVirusRulesPage, SIGNAL( allowToSelectFolder( bool ) ),
+             this, SLOT( allowToSelectFolder( bool ) ) );
   }
 
   connect( this, SIGNAL( helpClicked( void) ),
@@ -138,6 +140,10 @@ AntiSpamWizard::AntiSpamWizard( WizardMode mode,
   QTimer::singleShot( 0, this, SLOT( checkToolAvailability( void ) ) );
 }
 
+void AntiSpamWizard::allowToSelectFolder( bool allowOk )
+{
+  setValid( currentPage(), allowOk );
+}
 
 void AntiSpamWizard::accept()
 {
@@ -1144,7 +1150,13 @@ ASWizVirusRulesPage::ASWizVirusRulesPage( QWidget * parent, const char * name,
             this, SLOT(processSelectionChange(void)) );
   connect( mMoveRules, SIGNAL( toggled( bool ) ),
            mMarkRules, SLOT( setEnabled( bool ) ) );
+  connect( mFolderTree, SIGNAL( actionsAllowed( bool, bool) ),
+           this, SLOT( verifyAllowToSelectFolder( bool, bool ) ) );
+}
 
+void ASWizVirusRulesPage::verifyAllowToSelectFolder( bool allowOk, bool /*allowCreate*/ )
+{
+  emit allowToSelectFolder( allowOk );
 }
 
 bool ASWizVirusRulesPage::pipeRulesSelected() const

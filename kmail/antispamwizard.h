@@ -255,6 +255,8 @@ namespace KMail {
       /** Create the summary text based on the current settings */
       void slotBuildSummary();
 
+      void allowToSelectFolder( bool );
+
     private:
       /* Check for the availability of an executible along the PATH */
       int checkForProgram( const QString &executable );
@@ -374,8 +376,10 @@ namespace KMail {
 
     private slots:
       void processSelectionChange();
+      void verifyAllowToSelectFolder( bool allowOk, bool /*allowCreate*/ );
     signals:
       void selectionChanged();
+      void allowToSelectFolder( bool );
 
     private:
       QCheckBox * mPipeRules;
