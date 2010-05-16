@@ -326,7 +326,7 @@ void NepomukFeederAgentBase::selfTest()
     setOnline( true );
     mNepomukStartupAttempted = false; // everything worked, we can try again if the server goes down later
     mNepomukStartupTimeout.stop();
-    if ( !mInitialUpdateDone ) {
+    if ( !mInitialUpdateDone && needsReIndexing() ) {
       mInitialUpdateDone = true;
       QTimer::singleShot( 0, this, SLOT(updateAll()) );
     } else {
@@ -418,6 +418,11 @@ void NepomukFeederAgentBase::indexData(const KUrl& url, const QByteArray& data, 
 ItemFetchScope NepomukFeederAgentBase::fetchScopeForcollection(const Akonadi::Collection& collection)
 {
   return changeRecorder()->itemFetchScope();
+}
+
+bool NepomukFeederAgentBase::needsReIndexing() const
+{
+  return true;
 }
 
 #include "nepomukfeederagentbase.moc"

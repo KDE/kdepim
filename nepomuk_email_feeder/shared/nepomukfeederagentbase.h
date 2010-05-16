@@ -164,6 +164,13 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
   private:
     void processNextCollection();
 
+    /**
+      Overrides in subclasses to cause re-indexing on startup to only happen
+      when the format changes, for example. Base implementation returns true,
+      to be safe.
+      */
+    virtual bool needsReIndexing() const;
+
   private slots:
     void collectionsReceived( const Akonadi::Collection::List &collections );
     void itemHeadersReceived( const Akonadi::Item::List &items );
