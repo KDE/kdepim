@@ -184,8 +184,12 @@ void NepomukFeederAgentBase::collectionsReceived(const Akonadi::Collection::List
 
 void NepomukFeederAgentBase::processNextCollection()
 {
-  if ( mCurrentCollection.isValid() || mCollectionQueue.isEmpty() )
+  if ( mCurrentCollection.isValid() )
     return;
+  if ( mCollectionQueue.isEmpty() ) {
+    emit fullyIndexed();
+    return;
+  }
   mCurrentCollection = mCollectionQueue.takeFirst();
   emit status( AgentBase::Running, i18n( "Indexing collection '%1'...", mCurrentCollection.name() ) );
   kDebug() << "Indexing collection" << mCurrentCollection.name();

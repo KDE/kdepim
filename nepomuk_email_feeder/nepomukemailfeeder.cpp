@@ -32,6 +32,8 @@
 
 #include <gpgme++/context.h>
 
+static const int INDEX_COMPAT_LEVEL = 1; // increment when the index format for emails changes
+
 using namespace Akonadi;
 
 Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
@@ -43,6 +45,9 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   setNeedsStrigi( true );
 
   changeRecorder()->itemFetchScope().fetchFullPayload();
+
+  connect( this, SIGNAL( fullyIndexed() ),
+           this, SLOT( slotFullyIndexed() ) );
 
   // failsafe in case we don't have / lost G13 support
   if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
@@ -103,6 +108,17 @@ ItemFetchScope NepomukEMailFeeder::fetchScopeForcollection(const Akonadi::Collec
       scope.setCacheOnly( true );
   }
   return scope;
+}
+
+bool NepomukEMailFeeder::needsReIndexing() const
+{
+  return INDEX_COMPAT_LEVEL > Settings::self()->indexCompatLevel();
+}
+
+void NepomukEMailFeeder::slotFullyIndexed()
+{
+  Settings::self()->setIndexCompatLevel( INDEX_COMPAT_LEVEL );
+  Settings::self()->writeConfig();
 }
 
 AKONADI_AGENT_MAIN( NepomukEMailFeeder )

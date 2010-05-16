@@ -151,6 +151,9 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     /** Trigger a complete update of all items. */
     void updateAll();
 
+  signals:
+    void fullyIndexed();
+
   protected:
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
