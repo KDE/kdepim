@@ -580,6 +580,8 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
       kError() << "sendIcalMessage failed.";
     }
   }
+
+  emit incidenceAdded( job->item() );
 }
 
 /* static */
