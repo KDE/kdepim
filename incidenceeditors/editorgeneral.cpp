@@ -336,11 +336,13 @@ void EditorGeneral::addAttachments( const QStringList &attachments,
   QStringList::ConstIterator it;
   int i = 0;
   for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it, ++i ) {
-    QString mimeType;
-    if ( mimeTypes.count() > i ) {
-      mimeType = mimeTypes[ i ];
+    if ( !(*it).isEmpty() ) {
+      QString mimeType;
+      if ( mimeTypes.count() > i ) {
+        mimeType = mimeTypes[ i ];
+      }
+      mAttachments->addUriAttachment( *it, mimeType, QString(), inlineAttachments );
     }
-    mAttachments->addUriAttachment( *it, mimeType, QString(), inlineAttachments );
   }
 }
 
