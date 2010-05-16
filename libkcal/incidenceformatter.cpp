@@ -1393,6 +1393,10 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     html += invitationRow( i18n( "Start Date:" ),
                            IncidenceFormatter::dateToString( todo->dtStart(), false ) );
+    if ( !todo->doesFloat() ) {
+      html += invitationRow( i18n( "Start Time:" ),
+                             KGlobal::locale()->formatTime( todo->dtStart().time() ) );
+    }
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     html += invitationRow( i18n( "Due Date:" ),
@@ -1901,7 +1905,11 @@ static QString invitationAttendees( Incidence *incidence )
     return tmpStr;
   }
 
-  tmpStr += htmlAddTag( "u", i18n( "Attendee List" ) );
+  if ( incidence->type() == "Todo" ) {
+    tmpStr += htmlAddTag( "u", i18n( "Assignees" ) );
+  } else {
+    tmpStr += htmlAddTag( "u", i18n( "Attendees" ) );
+  }
   tmpStr += "<br/>";
 
   int count=0;
