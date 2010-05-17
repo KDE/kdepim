@@ -2126,6 +2126,7 @@ void KMComposeWin::addAttach( KMMessagePart *msgPart )
            this, SLOT( uncompressAttach( KMAtmListViewItem* ) ) );
 
   slotUpdateAttachActions();
+  setModified( true );
 }
 
 //-----------------------------------------------------------------------------
