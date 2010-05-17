@@ -53,7 +53,7 @@ class RecipientComboBox : public KComboBox
 {
     Q_OBJECT
   public:
-    RecipientComboBox( QWidget *parent );
+    explicit RecipientComboBox( QWidget *parent );
 
   signals:
     void rightPressed();
@@ -66,7 +66,7 @@ class RecipientLineEdit : public MessageComposer::ComposerLineEdit
 {
     Q_OBJECT
   public:
-    RecipientLineEdit( QWidget * parent );
+    explicit RecipientLineEdit( QWidget * parent );
 
   signals:
     void deleteMe();
@@ -81,7 +81,7 @@ class RecipientLine : public QWidget
 {
     Q_OBJECT
   public:
-    RecipientLine( QWidget *parent );
+    explicit RecipientLine( QWidget *parent );
 
     void setRecipient( const Recipient & );
     Recipient recipient() const;
@@ -158,7 +158,7 @@ class RecipientsView : public QScrollArea
 {
     Q_OBJECT
   public:
-    RecipientsView( QWidget *parent );
+    explicit RecipientsView( QWidget *parent );
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
@@ -283,7 +283,7 @@ class MESSAGECOMPOSER_EXPORT RecipientsEditor : public QWidget
 {
     Q_OBJECT
   public:
-    RecipientsEditor( QWidget *parent );
+    explicit RecipientsEditor( QWidget *parent = 0 );
     ~RecipientsEditor();
 
     void clear();

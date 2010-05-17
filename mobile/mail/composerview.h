@@ -36,6 +36,10 @@ namespace Message
   class KMeditor;
 }
 
+namespace MessageComposer {
+  class RecipientsEditor;
+}
+
 /** The new KMMainWidget ;-) */
 class ComposerView : public KDeclarativeFullScreenView
 {
@@ -47,6 +51,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_identityCombo = combo; }
     void setEditor( Message::KMeditor* editor ) { m_editor = editor; }
+    void setRecipientsEditor( MessageComposer::RecipientsEditor *editor ) { m_recipientsEditor = editor; }
 
     QString subject() const;
     void setSubject( const QString &subject );
@@ -66,6 +71,7 @@ class ComposerView : public KDeclarativeFullScreenView
   private:
     KPIMIdentities::IdentityCombo *m_identityCombo;
     Message::KMeditor *m_editor;
+    MessageComposer::RecipientsEditor *m_recipientsEditor;
     QString m_subject;
     KActionCollection *mActionCollection;
 };

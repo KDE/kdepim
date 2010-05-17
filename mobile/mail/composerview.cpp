@@ -21,6 +21,7 @@
 
 #include "declarativeeditor.h"
 #include "declarativeidentitycombobox.h"
+#include "declarativerecipientseditor.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>
@@ -53,6 +54,7 @@ ComposerView::ComposerView(QWidget* parent) :
 
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
+  qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
 
   // TODO: Really make this application-global;
   mActionCollection = new KActionCollection( this );

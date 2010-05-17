@@ -20,6 +20,7 @@
 import Qt 4.7
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.messagecomposer 4.5 as MessageComposer
 
 KPIM.MainView {
 
@@ -36,6 +37,12 @@ KPIM.MainView {
       id: folderPanel
       titleText: KDE.i18n( "Recipients" )
       handleHeight: 150
+      content: [
+        MessageComposer.RecipientsEditor {
+          id: recipientsEditor
+          anchors.fill: parent
+        }
+      ]
     }
 
     SlideoutPanel {
