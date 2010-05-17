@@ -209,6 +209,7 @@ void IncidenceAttachmentEditor::removeSelectedAttachments()
   }
 
   mAttachmentView->update();
+  checkDirtyStatus();
 }
 
 void IncidenceAttachmentEditor::saveAttachment( QListWidgetItem *item )
@@ -318,10 +319,11 @@ void IncidenceAttachmentEditor::editSelectedAttachments()
   for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
     if ( item->isSelected() ) {
+      Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
+
       AttachmentIconItem *attitem = static_cast<AttachmentIconItem*>( item );
-      if ( !attitem || !attitem->attachment() ) {
+      if ( !attitem->attachment() )
         return;
-      }
 
       AttachmentEditDialog *dialog = new AttachmentEditDialog( attitem, mAttachmentView, false );
       dialog->setModal( false );
@@ -336,6 +338,7 @@ void IncidenceAttachmentEditor::slotItemRenamed ( QListWidgetItem *item )
   Q_ASSERT( item );
   Q_ASSERT( dynamic_cast<AttachmentIconItem *>( item ) );
   static_cast<AttachmentIconItem *>( item )->setLabel( item->text() );
+  checkDirtyStatus();
 }
 
 void IncidenceAttachmentEditor::slotSelectionChanged()
@@ -531,6 +534,8 @@ void IncidenceAttachmentEditor::addDataAttachment( const QByteArray &data,
   } else {
     item->setMimeType( mimeType );
   }
+
+  checkDirtyStatus();
 }
 
 void IncidenceAttachmentEditor::addUriAttachment( const QString &uri,
