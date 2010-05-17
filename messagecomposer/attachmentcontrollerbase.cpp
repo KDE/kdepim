@@ -667,6 +667,7 @@ void AttachmentControllerBase::addAttachments( const KUrl::List &urls )
 
 void AttachmentControllerBase::showAttachPublicKeyDialog()
 {
+#ifdef QT_QT3SUPPORT_FOUND
   using Kleo::KeySelectionDialog;
   QPointer<KeySelectionDialog> dialog = new KeySelectionDialog(
       i18n( "Attach Public OpenPGP Key" ),
@@ -681,6 +682,7 @@ void AttachmentControllerBase::showAttachPublicKeyDialog()
     exportPublicKey( dialog->fingerprint() );
   }
   delete dialog;
+#endif
 }
 
 void AttachmentControllerBase::enableAttachPublicKey( bool enable )
