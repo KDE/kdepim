@@ -117,8 +117,6 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     static bool incidencesEqual( KCal::Incidence *inc1, KCal::Incidence *inc2 );
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
 
-    static void errorSaveIncidence( QWidget *parent, const KCal::Incidence::Ptr &incidence );
-
     void setDestinationPolicy( DestinationPolicy destinationPolicy );
     DestinationPolicy destinationPolicy() const;
 

@@ -587,16 +587,6 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
   emit incidenceAdded( job->item() );
 }
 
-/* static */
-void IncidenceChanger::errorSaveIncidence( QWidget *parent,
-                                           const Incidence::Ptr &incidence )
-{
-  KMessageBox::sorry(
-    parent,
-    i18n( "Unable to save %1 \"%2\".",
-          i18n( incidence->type() ), incidence->summary() ) );
-}
-
 void IncidenceChanger::setDestinationPolicy( DestinationPolicy destinationPolicy )
 {
   d->mDestinationPolicy = destinationPolicy;

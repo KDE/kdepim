@@ -47,6 +47,7 @@
 #include <KIconLoader>
 #include <KComponentData>
 #include <KConfigGroup>
+#include <KMessageBox>
 #include <KWordWrap>
 
 #include <QApplication>
@@ -1583,7 +1584,9 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
       todo->setAllDay( allDay );
       todo->setHasDueDate( true );
       if ( !changer()->addIncidence( todo, this ) ) {
-        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+        KMessageBox::sorry( this,
+                            i18n( "Unable to save %1 \"%2\".",
+                            i18n( todo->type() ), todo->summary() ) );
       }
     }
   }
@@ -1612,7 +1615,9 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
     int dialogCode;
     if ( !changer()->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
       if ( dialogCode != QDialog::Rejected ) {
-        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+        KMessageBox::sorry( this,
+                            i18n( "Unable to save %1 \"%2\".",
+                            i18n( todo->type() ), todo->summary() ) );
       }
     }
   }
