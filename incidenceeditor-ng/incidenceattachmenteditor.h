@@ -22,6 +22,11 @@
 
 #include "incidenceeditor-ng.h"
 
+class KAction;
+class KMenu;
+class QListWidgetItem;
+class QMimeData;
+
 namespace Ui {
 class IncidenceAttachmentEditor;
 }
@@ -39,17 +44,47 @@ class IncidenceAttachmentEditor : public IncidenceEditor
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
-
+    
   private slots:
-    void slotAddAttachment();
-    void slotRemoveAttachment();
+    void addAttachment();
+    void copyToClipboard(); /// Copies selected items to clip board
+    void cutToClipboard();  /// Copies selected items to clipboard and removes them from the list
+    void editSelectedAttachments();
+    void openURL( const KUrl &url );
+    void pasteFromClipboard();
+    void removeSelectedAttachments();
+    void saveAttachment( QListWidgetItem *item );
+    void saveSelectedAttachments();
+    void showAttachment( QListWidgetItem *item );
+    void showContextMenu( const QPoint &pos );
+    void showSelectedAttachments();
+    void slotItemRenamed ( QListWidgetItem * item );
+    void slotSelectionChanged();
 
   private:
+    //     void addAttachment( KCal::Attachment *attachment );
+    void addDataAttachment( const QByteArray &data,
+                            const QString &mimeType = QString(),
+                            const QString &label = QString() );
+    void addUriAttachment( const QString &uri,
+                           const QString &mimeType = QString(),
+                           const QString &label = QString(),
+                           bool inLine = false );
+    void handlePasteOrDrop( const QMimeData *mimeData );
+    void setupActions();
     void setupAttachmentIconView();
     
   private:
     AttachmentIconView *mAttachmentView;
     Ui::IncidenceAttachmentEditor *mUi;
+
+    KMenu *mPopupMenu;
+    KAction *mOpenAction;
+    KAction *mSaveAsAction;
+    KAction *mCopyAction;
+    KAction *mCutAction;
+    KAction *mDeleteAction;
+    KAction *mEditAction;
 };
 
 }

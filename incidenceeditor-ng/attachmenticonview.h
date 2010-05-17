@@ -49,11 +49,11 @@ class AttachmentIconView : public QListWidget
   public:
     AttachmentIconView( QWidget *parent );
 
+    QMimeData* mimeData() const;
     KUrl tempFileForAttachment( KCal::Attachment *attachment ) const;
-
+    
   protected:
     QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
-    QMimeData* mimeData() const;
     void startDrag( Qt::DropActions supportedActions );
     void keyPressEvent( QKeyEvent* event );
 
