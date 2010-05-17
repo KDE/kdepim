@@ -42,10 +42,10 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   layout->addWidget( ieGeneral );
 
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
-  layout->addWidget( ieDescription );
+  layout->addWidget( ieDescription, 4 );
 
   IncidenceAttachmentEditor *ieAttachment = new IncidenceAttachmentEditor( this );
-  layout->addWidget( ieAttachment );
+  layout->addWidget( ieAttachment, 1 );
   
 //   QSpacerItem *verticalSpacer =
 //     new QSpacerItem( 20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding );
