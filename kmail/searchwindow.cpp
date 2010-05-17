@@ -586,7 +586,7 @@ void SearchWindow::slotAddMsg( int idx )
   QTreeWidgetItem *newItem = new QTreeWidgetItem( mLbxMatches );
   newItem->setText( 0, msg->subject() );
   newItem->setText( 1, from );
-  newItem->setText( 2, msg->dateIsoStr() );
+  newItem->setText( 2, msg->dateStr() );
   newItem->setText( 3, fName );
   newItem->setText( 4,QString::number( mFolder->serNum( idx ) ) );
   mLbxMatches->addTopLevelItem( newItem );
