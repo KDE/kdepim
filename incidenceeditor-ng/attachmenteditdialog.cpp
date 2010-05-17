@@ -46,14 +46,34 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
    , mAttachment( new KCal::Attachment( QString() ) )
 #endif
   , mItem( item )
+  , mMimeType( KMimeType::mimeType( item->mimeType() ) )
   , mUi( new Ui::AttachmentEditDialog )
 { 
   QWidget *page = new QWidget(this);
   mUi->setupUi( page );
+  mUi->mLabelEdit->setText( item->label().isEmpty() ? item->uri() : item->label() );
   mUi->mIcon->setPixmap( item->icon() );
+  mUi->mInlineCheck->setChecked( item->isBinary() );
+
+  QString typecomment = item->mimeType().isEmpty() ?
+                        i18nc( "@label unknown mimetype", "Unknown" ) :
+                        mMimeType->comment();
+  mUi->mTypeLabel->setText( typecomment );
   
   setMainWidget( page );
   setModal( modal );
+
+  if ( item->attachment()->isUri() || !item->attachment()->data() ) {
+    mUi->mStackedWidget->setCurrentIndex( 0 );
+    mUi->mURLRequester->setUrl( item->uri() );
+    urlChanged( item->uri() );
+  } else {
+    mUi->mStackedWidget->setCurrentIndex( 1 );
+    mUi->mSizeLabel->setText( QString::fromLatin1( "%1 (%2)" ).
+                                 arg( KIO::convertSize( item->attachment()->size() ) ).
+                                 arg( KGlobal::locale()->formatNumber(
+                                        item->attachment()->size(), 0 ) ) );
+  }
   
   connect( mUi->mURLRequester, SIGNAL(urlSelected(const KUrl &)),
            SLOT(urlChanged(const KUrl &)) );
@@ -82,7 +102,7 @@ void AttachmentEditDialog::slotApply()
     mItem->setLabel( i18nc( "@label", "New attachment" ) );
   }
   mItem->setMimeType( mMimeType->name() );
-  if ( mUi->mURLRequester ) {
+  if ( mUi->mStackedWidget->currentIndex() == 0 ) {
     if ( mUi->mInlineCheck->isChecked() ) {
       QString tmpFile;
       if ( KIO::NetAccess::download( mUi->mURLRequester->url(), tmpFile, this ) ) {
