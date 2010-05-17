@@ -92,11 +92,11 @@ void AttachmentEditDialog::slotApply()
         }
         QByteArray data = f.readAll();
         f.close();
-//         mItem->setData( data );
+        mItem->setData( data );
       }
       KIO::NetAccess::removeTempFile( tmpFile );
     } else {
-//       mItem->setUri( mURLRequester->url().url() );
+      mItem->setUri( mUi->mURLRequester->url().url() );
     }
   }
 }
