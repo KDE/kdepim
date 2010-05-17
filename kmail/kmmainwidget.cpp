@@ -4412,7 +4412,7 @@ void KMMainWidget::updateFolderMenu()
   mRemoveFolderAction->setEnabled( mFolder && !mFolder->isSystemFolder() && mFolder->canDeleteMessages() && !multiFolder && !mFolder->noContent());
   mRemoveFolderAction->setText( mFolder && mFolder->folderType() == KMFolderTypeSearch ? i18n("&Delete Search") : i18n("&Delete Folder") );
   if ( mArchiveFolderAction )
-    mArchiveFolderAction->setEnabled( mFolder && !multiFolder );
+    mArchiveFolderAction->setEnabled( mFolder && !multiFolder && !mFolder->noContent() );
   mExpireFolderAction->setEnabled( mFolder && mFolder->isAutoExpire() && !multiFolder && mFolder->canDeleteMessages() );
   updateMarkAsReadAction();
   // the visual ones only make sense if we are showing a message list
