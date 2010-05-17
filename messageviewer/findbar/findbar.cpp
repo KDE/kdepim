@@ -86,7 +86,7 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   connect( m_findPrevBtn, SIGNAL( clicked() ), this, SLOT( findPrev() ) );
   connect( m_caseSensitiveAct, SIGNAL( toggled( bool ) ), this, SLOT( caseSensitivityChanged() ) );
   connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
-  connect( m_search, SIGNAL( userTextChanged( QString ) ), this, SLOT( autoSearch( QString ) ) );
+  connect( m_search, SIGNAL( textEdited( QString ) ), this, SLOT( autoSearch( QString ) ) );
   connect( m_search, SIGNAL( clearButtonClicked() ), this, SLOT( slotClearSearch() ) );
   hide();
 }
