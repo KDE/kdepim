@@ -20,11 +20,14 @@
 
 #include "incidenceeditorgeneralpage.h"
 
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QVBoxLayout>
 
 #include "incidencegeneraleditor.h"
+#include "incidencedatetimeeditor.h"
 #include "incidencedescriptioneditor.h"
 #include "incidenceattachmenteditor.h"
 
@@ -40,6 +43,16 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
 
   IncidenceGeneralEditor *ieGeneral = new IncidenceGeneralEditor( this );
   layout->addWidget( ieGeneral );
+
+  QGroupBox *timeGroupBox = new QGroupBox( i18nc( "@title:group", "Date && Time" ), this );
+  timeGroupBox->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Sets options related to the date and time of the event or to-do." ) );
+  QGridLayout *timeLayout = new QGridLayout( timeGroupBox );
+           
+  IncidenceDateTimeEditor *ieDateTime = new IncidenceDateTimeEditor( timeGroupBox );
+  timeLayout->addWidget( ieDateTime );
+  layout->addWidget( timeGroupBox );
 
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
   layout->addWidget( ieDescription, 4 );
@@ -59,6 +72,7 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   
   // Combine the various editors with this page.
   combine( ieGeneral );
+  combine( ieDateTime );
   combine( ieDescription );
   combine( ieAttachment );
 }

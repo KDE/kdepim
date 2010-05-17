@@ -20,6 +20,7 @@ set( incidenceeditors_LIB_SRCS
     incidenceeditor-ng/incidenceeditor.cpp
     incidenceeditor-ng/combinedincidenceeditor.cpp
     incidenceeditor-ng/incidencegeneraleditor.cpp
+    incidenceeditor-ng/incidencedatetimeeditor.cpp
     incidenceeditor-ng/incidencedescriptioneditor.cpp
     incidenceeditor-ng/incidenceattachmenteditor.cpp
     incidenceeditor-ng/attachmenticonview.cpp
@@ -68,6 +69,7 @@ kde4_add_ui_files( incidenceeditors_LIB_SRCS
    # IncidenceEditorsNG ui files
    incidenceeditor-ng/attachmenteditdialog.ui
    incidenceeditor-ng/incidencegeneraleditor.ui
+   incidenceeditor-ng/incidencedatetime.ui
    incidenceeditor-ng/incidencedescription.ui
    incidenceeditor-ng/incidenceattachmenteditor.ui
 )
