@@ -33,6 +33,8 @@
 
 #include <QtGui/QListWidget>
 
+#include <KDE/KMimeType>
+
 class KUrl;
 
 namespace KCal {
@@ -52,11 +54,42 @@ class AttachmentIconView : public QListWidget
   protected:
     QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
     QMimeData* mimeData() const;
-    void startDrag(Qt::DropActions supportedActions);
-    void keyPressEvent(QKeyEvent* event);
+    void startDrag( Qt::DropActions supportedActions );
+    void keyPressEvent( QKeyEvent* event );
 
   private:
     mutable QHash<KCal::Attachment *, KUrl> mTempFiles;
+};
+
+class AttachmentIconItem : public QListWidgetItem
+{
+  public:
+    AttachmentIconItem( KCal::Attachment *att, QListWidget *parent );
+    ~AttachmentIconItem();
+
+    KCal::Attachment *attachment() const;
+    const QString uri() const;
+    void setUri( const QString &uri );
+
+    using QListWidgetItem::setData;
+
+    void setData( const QByteArray &data );
+
+    const QString mimeType() const;
+    void setMimeType( const QString &mime );
+
+    const QString label() const;
+    void setLabel( const QString &description );
+
+    bool isBinary() const;
+
+    static QPixmap icon( KMimeType::Ptr mimeType, const QString &uri, bool binary = false );
+    QPixmap icon() const;
+
+    void readAttachment();
+
+  private:
+    KCal::Attachment *mAttachment;
 };
 
 }

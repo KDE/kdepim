@@ -22,6 +22,7 @@
 #include <QtCore/QPointer>
 
 #include "attachmenticonview.h"
+#include "attachmenteditdialog.h"
 #include "ui_incidenceattachmenteditor.h"
 
 using namespace IncidenceEditorsNG;
@@ -35,7 +36,7 @@ IncidenceAttachmentEditor::IncidenceAttachmentEditor( QWidget *parent )
   mUi->mRemoveButton->setIcon( KIcon( "list-remove" ) );
 
   setupAttachmentIconView();
-
+  
   connect( mUi->mAddButton, SIGNAL(clicked()), SLOT(slotAddAttachment()) );
   connect( mUi->mRemoveButton, SIGNAL(clicked()), SLOT(slotRemoveAttachment()) );
 }
@@ -57,14 +58,14 @@ bool IncidenceAttachmentEditor::isDirty() const
 
 void IncidenceAttachmentEditor::slotAddAttachment()
 {
-//   //AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachments );
-// 
-//   QPointer<AttachmentEditDialog> dlg = new AttachmentEditDialog( mAttachmentView );
-//   dlg->setCaption( i18nc( "@title", "Add Attachment" ) );
-//   if ( dlg->exec() == KDialog::Rejected ) {
-//     delete item;
-//   }
-//   delete dlg;
+  AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachmentView );
+
+  QPointer<AttachmentEditDialog> dlg = new AttachmentEditDialog( item, mAttachmentView );
+  dlg->setCaption( i18nc( "@title", "Add Attachment" ) );
+  if ( dlg->exec() == KDialog::Rejected )
+    delete item;
+
+  delete dlg;
 }
 
 void IncidenceAttachmentEditor::slotRemoveAttachment()

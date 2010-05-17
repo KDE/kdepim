@@ -36,7 +36,6 @@
 
 #include <KDE/KIconLoader>
 #include <KDE/KLocale>
-#include <KDE/KMimeType>
 #include <KDE/KTemporaryFile>
 #include <KDE/KUrl>
 
@@ -44,120 +43,128 @@
 
 using namespace IncidenceEditorsNG;
 
-class AttachmentIconItem : public QListWidgetItem
+AttachmentIconItem::AttachmentIconItem( KCal::Attachment *att, QListWidget *parent )
+  : QListWidgetItem( parent )
 {
-  public:
-    AttachmentIconItem( KCal::Attachment *att, QListWidget *parent )
-      : QListWidgetItem( parent )
-    {
-      if ( att ) {
-        mAttachment = new KCal::Attachment( *att );
-      } else {
-        // for the enteprise, inline attachments are the default
+  if ( att ) {
+    mAttachment = new KCal::Attachment( *att );
+  } else {
+    // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
-        mAttachment = new KCal::Attachment( '\0' ); //use the non-uri constructor
-                                                    // as we want inline by default
+    mAttachment = new KCal::Attachment( '\0' ); //use the non-uri constructor
+                                                // as we want inline by default
 #else
-        mAttachment = new KCal::Attachment( QString() );
+    mAttachment = new KCal::Attachment( QString() );
 #endif
-      }
-      readAttachment();
-      setFlags( flags() | Qt::ItemIsDragEnabled );
-    }
-    ~AttachmentIconItem() { delete mAttachment; }
-    KCal::Attachment *attachment() const
-    {
-      return mAttachment;
-    }
-    const QString uri() const
-    {
-      return mAttachment->uri();
-    }
-    void setUri( const QString &uri )
-    {
-      mAttachment->setUri( uri );
-      readAttachment();
-    }
-    using QListWidgetItem::setData;
-    void setData( const QByteArray &data )
-    {
-      mAttachment->setDecodedData( data );
-      readAttachment();
-    }
-    const QString mimeType() const
-    {
-      return mAttachment->mimeType();
-    }
-    void setMimeType( const QString &mime )
-    {
-      mAttachment->setMimeType( mime );
-      readAttachment();
-    }
-    const QString label() const
-    {
-      return mAttachment->label();
-    }
-    void setLabel( const QString &description )
-    {
-      if ( mAttachment->label() == description )
-        return;
-      mAttachment->setLabel( description );
-      readAttachment();
-    }
-    bool isBinary() const
-    {
-      return mAttachment->isBinary();
-    }
-    QPixmap icon() const
-    {
-      return icon( KMimeType::mimeType( mAttachment->mimeType() ),
-                   mAttachment->uri(), mAttachment->isBinary() );
-    }
-    static QPixmap icon( KMimeType::Ptr mimeType, const QString &uri,
-                         bool binary = false )
-    {
-      QString iconStr = mimeType->iconName( uri );
-      QStringList overlays;
-      if ( !uri.isEmpty() && !binary ) {
-        overlays << "emblem-link";
-      }
+  }
+  readAttachment();
+  setFlags( flags() | Qt::ItemIsDragEnabled );
+}
 
-      return KIconLoader::global()->loadIcon( iconStr, KIconLoader::Desktop, 0,
-                                              KIconLoader::DefaultState,
-                                              overlays );
+AttachmentIconItem::~AttachmentIconItem()
+{
+  delete mAttachment;
+}
+
+KCal::Attachment *AttachmentIconItem::attachment() const
+{
+  return mAttachment;
+}
+
+const QString AttachmentIconItem::uri() const
+{
+  return mAttachment->uri();
+}
+
+void AttachmentIconItem::setUri( const QString &uri )
+{
+  mAttachment->setUri( uri );
+  readAttachment();
+}
+
+void AttachmentIconItem::setData( const QByteArray &data )
+{
+  mAttachment->setDecodedData( data );
+  readAttachment();
+}
+
+const QString AttachmentIconItem::mimeType() const
+{
+  return mAttachment->mimeType();
+}
+
+void AttachmentIconItem::setMimeType( const QString &mime )
+{
+  mAttachment->setMimeType( mime );
+  readAttachment();
+}
+
+const QString AttachmentIconItem::label() const
+{
+  return mAttachment->label();
+}
+
+void AttachmentIconItem::setLabel( const QString &description )
+{
+  if ( mAttachment->label() == description )
+    return;
+  mAttachment->setLabel( description );
+  readAttachment();
+}
+
+bool AttachmentIconItem::isBinary() const
+{
+  return mAttachment->isBinary();
+}
+
+QPixmap AttachmentIconItem::icon() const
+{
+  return icon( KMimeType::mimeType( mAttachment->mimeType() ),
+                mAttachment->uri(), mAttachment->isBinary() );
+}
+
+QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
+                                  const QString &uri,
+                                  bool binary )
+{
+  QString iconStr = mimeType->iconName( uri );
+  QStringList overlays;
+  if ( !uri.isEmpty() && !binary ) {
+    overlays << "emblem-link";
+  }
+
+  return KIconLoader::global()->loadIcon( iconStr, KIconLoader::Desktop, 0,
+                                          KIconLoader::DefaultState,
+                                          overlays );
+}
+
+void AttachmentIconItem::readAttachment()
+{
+  if ( mAttachment->label().isEmpty() ) {
+    if ( mAttachment->isUri() ) {
+      setText( mAttachment->uri() );
+    } else {
+      setText( i18nc( "@label attachment contains binary data", "[Binary data]" ) );
     }
+  } else {
+    setText( mAttachment->label() );
+  }
 
-    void readAttachment()
-    {
-      if ( mAttachment->label().isEmpty() ) {
-        if ( mAttachment->isUri() ) {
-          setText( mAttachment->uri() );
-        } else {
-          setText( i18nc( "@label attachment contains binary data", "[Binary data]" ) );
-        }
-      } else {
-        setText( mAttachment->label() );
-      }
+  setFlags( flags() | Qt::ItemIsEditable );
 
-      setFlags( flags() | Qt::ItemIsEditable );
-
-      if ( mAttachment->mimeType().isEmpty() ||
-           !( KMimeType::mimeType( mAttachment->mimeType() ) ) ) {
-        KMimeType::Ptr mimeType;
-        if ( mAttachment->isUri() ) {
-          mimeType = KMimeType::findByUrl( mAttachment->uri() );
-        } else {
-          mimeType = KMimeType::findByContent( mAttachment->decodedData() );
-        }
-        mAttachment->setMimeType( mimeType->name() );
-      }
-
-      setIcon( icon() );
+  if ( mAttachment->mimeType().isEmpty() ||
+        !( KMimeType::mimeType( mAttachment->mimeType() ) ) ) {
+    KMimeType::Ptr mimeType;
+    if ( mAttachment->isUri() ) {
+      mimeType = KMimeType::findByUrl( mAttachment->uri() );
+    } else {
+      mimeType = KMimeType::findByContent( mAttachment->decodedData() );
     }
+    mAttachment->setMimeType( mimeType->name() );
+  }
 
-  private:
-    KCal::Attachment *mAttachment;
-};
+  setIcon( icon() );
+}
 
 AttachmentIconView::AttachmentIconView( QWidget *parent )
   : QListWidget( parent )

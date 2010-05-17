@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AttachmentEditDialog</class>
+ <widget class="QWidget" name="AttachmentEditDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>299</width>
+    <height>209</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="mIcon">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="KLineEdit" name="mLabelEdit">
+     <property name="clickMessage">
+      <string extracomment="@label">Attachment name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="KSeparator" name="kseparator"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Type:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QLabel" name="mTypeLabel">
+     <property name="text">
+      <string>Unknown</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QCheckBox" name="mInlineCheck">
+     <property name="toolTip">
+      <string extracomment="@info:tooltip">Store the attachment file inside the calendar</string>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Checking this option will cause the attachment to be stored inside your calendar, which can take a lot of space depending on the size of the attachment. If this option is not checked, then only a link pointing to the attachment will be stored.  Do not use a link for attachments that change often or may be moved (or removed) from their current location.</string>
+     </property>
+     <property name="text">
+      <string extracomment="@option:check">Store attachment inline</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Location:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="KUrlRequester" name="mURLRequester">
+     <property name="toolTip">
+      <string extracomment="@info:tooltip">Provide a location for the attachment file</string>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Enter the path to the attachment file or use the file browser by pressing the adjacent button</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>288</width>
+       <height>87</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
