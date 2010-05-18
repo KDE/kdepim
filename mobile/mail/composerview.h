@@ -63,8 +63,12 @@ class ComposerView : public KDeclarativeFullScreenView
     void send();
     QObject* getAction( const QString &name ) const;
 
+  private:
+    void expandAddresses();
+
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
+    void addressExpansionResult( KJob *job );
     void composerResult( KJob* job );
     void sendResult( KJob* job );
 

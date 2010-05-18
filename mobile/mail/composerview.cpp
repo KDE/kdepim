@@ -34,11 +34,14 @@
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/textpart.h>
+#include <messagecomposer/emailaddressresolvejob.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>
 #include <KIcon>
 #include <KAction>
+#include <KMessageBox>
+
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
 
@@ -87,13 +90,39 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 void ComposerView::send()
 {
   kDebug();
+  expandAddresses();
+}
+
+void ComposerView::expandAddresses()
+{
+  // TODO share this with kmcomposewin.cpp
+  MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
+  job->setFrom( "volker@kdab.com" ); // TODO: retrieve from identity
+  job->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
+  job->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
+  job->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(addressExpansionResult(KJob*)) );
+  job->start();
+}
+
+void ComposerView::addressExpansionResult(KJob* job)
+{
+  if ( job->error() ) {
+    kDebug() << job->error() << job->errorText();
+    return;
+  }
+
+  const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
+
   // ### temporary, more code can be shared with kmail here
   Message::Composer* composer = new Message::Composer( this );
   composer->globalPart()->setCharsets( QList<QByteArray>() << "utf-8" );
   composer->globalPart()->setParentWidgetForGui( this );
   composer->infoPart()->setSubject( subject() );
-  composer->infoPart()->setTo( QStringList() << "volker@kdab.com" );
-  composer->infoPart()->setFrom( "volker@kdab.com" );
+  composer->infoPart()->setTo( resolveJob->expandedTo() );
+  composer->infoPart()->setCc( resolveJob->expandedCc() );
+  composer->infoPart()->setBcc( resolveJob->expandedBcc() );
+  composer->infoPart()->setFrom( resolveJob->expandedFrom() );
   composer->infoPart()->setUserAgent( "KMail Mobile" );
   m_editor->fillComposerTextPart( composer->textPart() );
   connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
