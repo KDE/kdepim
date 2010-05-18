@@ -351,7 +351,7 @@ void Backend::fetchPost( BilboPost &post )
 void Backend::slotPostFetched( KBlog::BlogPost *post )
 {
     emit sigPostFetched( new BilboPost(*post) );
-    delete post;
+//     delete post;
 }
 
 void Backend::error( KBlog::Blog::ErrorType type, const QString & errorMessage )
