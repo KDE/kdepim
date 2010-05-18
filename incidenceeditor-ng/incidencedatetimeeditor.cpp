@@ -278,7 +278,10 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
 
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableAlarm(bool)) );
-//   connect( mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
+  //   connect( mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
+  connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );
