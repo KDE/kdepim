@@ -279,7 +279,12 @@ RecipientsView::RecipientsView( QWidget *parent )
   setWidgetResizable( true );
   setFrameStyle( QFrame::NoFrame );
 
+  // ### currently KGlobalSettings returns a useless font on Maemo5, remove this hack once this is fixed in kdelibs
+#ifndef KDEPIM_MOBILE_UI
   mEditFont = KGlobalSettings::generalFont();
+#else
+  mEditFont = QApplication::font();
+#endif
   mPage = new QWidget;
 
   mPage->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
