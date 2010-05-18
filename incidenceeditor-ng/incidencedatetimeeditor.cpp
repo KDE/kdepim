@@ -233,6 +233,12 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   mUi->mStartCheck->setVisible( true );
   mUi->mEndCheck->setVisible( true );
 
+  // These fields where not enabled in the old code either:
+  mUi->mDurationExplLabel->setVisible( false );
+  mUi->mDurationLabel->setVisible( false );
+  mUi->mFreeBusyLabel->setVisible( false );
+  mUi->mFreeBusyCombo->setVisible( false );
+
   mUi->mHasTimeCheck->setChecked( !todo->allDay() );
 
   // Connect to the right logic

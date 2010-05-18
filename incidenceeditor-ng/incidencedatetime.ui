@@ -187,7 +187,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_7">
+      <widget class="QLabel" name="mDurationExplLabel">
        <property name="text">
         <string>Duration:</string>
        </property>
@@ -217,14 +217,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_9">
+      <widget class="QLabel" name="mFreeBusyLabel">
        <property name="text">
         <string>Show time as:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="mFreeBusyCombo">
        <property name="toolTip">
         <string extracomment="@info:tooltip">Set this event as Busy or Free time</string>
        </property>
