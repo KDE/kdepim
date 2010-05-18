@@ -234,40 +234,35 @@ ViewerPrivate::~ViewerPrivate()
 //-----------------------------------------------------------------------------
 KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
 {
+  KMime::Content *node = 0;
   if ( url.isEmpty() )
     return 0;
-  if ( !url.isLocalFile() )
-    return 0;
+  if ( !url.isLocalFile() ) {
+    QString path = url.path(KUrl::RemoveTrailingSlash);
+    if ( path.contains(':') ) {
+      //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
+      //and use the remaining part as a ContentIndex to find the node insde the extra node
+      int i = path.left( path.indexOf(':') ).toInt();
+      path = path.mid( path.indexOf(':') + 1 );
+      KMime::ContentIndex idx(path);
+      QList<KMime::Content*> extras = mNodeHelper->extraContents( mMessage.get() );
+      if ( i >= 0 && i < extras.size() ) {
+        KMime::Content* c = extras[i];
+        node = c->content( idx );
+      }
+    } else {
+      node= mMessage->content( KMime::ContentIndex( path ) );
+    }
+  } else {
+    QString path = url.toLocalFile();
+    uint right = path.lastIndexOf( '/' );
+    uint left = path.lastIndexOf( '.', right );
 
-  QString path = url.toLocalFile();
-  uint right = path.lastIndexOf( '/' );
-  uint left = path.lastIndexOf( '.', right );
-
-  KMime::ContentIndex index(path.mid( left + 1, right - left - 1 ));
-  KMime::Content *node = mMessage->content( index );
-
+    KMime::ContentIndex index(path.mid( left + 1, right - left - 1 ));
+    node = mMessage->content( index );
+  }
   return node;
 }
-
-KMime::Content* ViewerPrivate::nodeForContentIndex( const KMime::ContentIndex& index )
-{
-  KMime::Content* result = mMessage->content( index );
-  if ( !result ) {
-    //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
-    //and use the remaining part as a ContentIndex to find the node insde the extra node
-    QString url = index.toString();
-    int i = url.left( url.indexOf('.') ).toInt();
-    url = url.mid( url.indexOf('.') + 1 );
-    KMime::ContentIndex idx(url);
-    QList<KMime::Content*> extras = mNodeHelper->extraContents( mMessage.get() );
-    if ( i >= 0 && i < extras.size() ) {
-      KMime::Content* c = extras[i];
-      result = c->content( idx );
-    }
-  }
-  return result;
-}
-
 
 void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
 {

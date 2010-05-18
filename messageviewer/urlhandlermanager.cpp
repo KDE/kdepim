@@ -248,7 +248,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
     return 0;
   KMime::ContentIndex index( urlParts[1] );
   *path = KUrl::fromPercentEncoding( urlParts[2].toLatin1() );
-  return w->nodeForContentIndex( index );
+  return w->nodeFromUrl( urlParts[1] );
 }
 
 bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
@@ -665,8 +665,7 @@ namespace {
    if ( url.protocol() != "attachment" )
      return 0;
 
-   KMime::ContentIndex index( url.path() );
-   KMime::Content * node = w->nodeForContentIndex( index );
+   KMime::Content * node = w->nodeFromUrl( url );
    return node;
  }
 

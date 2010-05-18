@@ -643,7 +643,7 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
       QList<KMime::Content*> extraNodes = it.value();
       for ( uint i = 0; i < extraNodes.size(); ++i )  {
         if ( node->topLevel() == extraNodes[i] ) {
-          indexStr.prepend( QString("%1.").arg(i) );
+          indexStr.prepend( QString("%1:").arg(i) );
           it = mExtraContents.end();
           --it;
           break;

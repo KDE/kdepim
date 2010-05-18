@@ -2105,7 +2105,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
     comment.clear();
 
   QString fileName = mNodeHelper->writeNodeToTempFile( msgPart );
-  QString href = QString( "attachment:%1?place=body" ).arg( msgPart->index().toString() );
+  QString href = mNodeHelper->asHREF( msgPart, "body" );
 
   QString iconName;
 

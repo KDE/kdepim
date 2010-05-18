@@ -187,11 +187,9 @@ public:
 
   virtual ~ViewerPrivate();
 
-    /** Returns message part from given URL or null if invalid. */
+  /** Returns message part from given URL or null if invalid. The URL's path is a KMime::ContentIndex path, or an index for the extra nodes,
+   followed by : and the ContentIndex path. */
   KMime::Content* nodeFromUrl(const KUrl &url);
-
-    /** Returns the message part for a given content index. */
-  KMime::Content* nodeForContentIndex( const KMime::ContentIndex& index );
 
   /** Open the attachment pointed to the node.
    * @param fileName - if not empty, use this file to load the attachment content
