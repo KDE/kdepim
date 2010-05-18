@@ -20,8 +20,9 @@
 
 #include "incidencedatetimeeditor.h"
 
-#include <KCal/ICalTimeZones>
+#include <QtCore/QDebug>
 
+#include <KCal/ICalTimeZones>
 #include <KCal/IncidenceFormatter>
 
 #include "ui_incidencedatetime.h"
@@ -33,10 +34,9 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   : IncidenceEditor( parent )
   , mTimeZones( new ICalTimeZones )
   , mUi( new Ui::IncidenceDateTimeEditor )
+  , mStartDateModified( false )
 {
   mUi->setupUi( this );
-
-  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
 }
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
@@ -56,6 +56,8 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
     KCal::Event::ConstPtr event = IncidenceDateTimeEditor::incidence<Event>();
     Q_ASSERT( event );
   }
+
+  mWasDirty = false;
 }
 
 void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
@@ -169,6 +171,49 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
   return false;
 }
 
+void IncidenceDateTimeEditor::slotTodoDateChanged()
+{
+  KLocale *l = KGlobal::locale();
+  QString dateTimeStr = "";
+
+  if ( mUi->mStartCheck->isChecked() ) {
+    dateTimeStr += i18nc( "to-do start datetime",
+                          "Start: %1", l->formatDate( mUi->mStartDateEdit->date() ) );
+    if ( mUi->mHasTimeCheck->isChecked() ) {
+      dateTimeStr += QString( " %1" ).arg( l->formatTime( mUi->mStartTimeEdit->time() ) );
+      dateTimeStr += ' ';
+      dateTimeStr += mUi->mTimeZoneComboStart->selectedTimeSpec().timeZone().name();
+    }
+  }
+
+  if ( mUi->mEndCheck->isChecked() ) {
+    dateTimeStr += i18nc( "to-do due datetime", "   Due: %1",
+                          l->formatDate( mUi->mEndDateEdit->date() ) );
+    if ( mUi->mHasTimeCheck->isChecked() ) {
+      dateTimeStr += QString( " %1" ).arg( l->formatTime( mUi->mEndTimeEdit->time() ) );
+      dateTimeStr += ' ';
+      dateTimeStr += mUi->mTimeZoneComboEnd->selectedTimeSpec().timeZone().name();
+    }
+  }
+
+  mEndSpec = mUi->mTimeZoneComboEnd->selectedTimeSpec();
+
+  // TODO: Investigate whether we really need all those signals.
+//   emit dateTimeStrChanged( dateTimeStr );
+//   QDateTime endDt( mDueDateEdit->date(), mDueTimeEdit->time() );
+//   emit signalDateTimeChanged( endDt, endDt );
+}
+
+void IncidenceDateTimeEditor::slotTodoStartDateModified()
+{
+  mStartDateModified = true;
+  mStartSpec = mUi->mTimeZoneComboStart->selectedTimeSpec();
+
+  slotTodoDateChanged();
+  checkDirtyStatus();
+}
+
+
 /// Private methods
 
 void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
@@ -189,6 +234,12 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   mUi->mEndCheck->setVisible( true );
 
   mUi->mHasTimeCheck->setChecked( !todo->allDay() );
+
+  // Connect to the right logic
+  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
+  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)), SLOT(slotTodoStartDateModified()) );
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(slotTodoStartDateModified()) );
+  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(slotTodoStartDateModified()) );
 
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );
@@ -244,6 +295,5 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
     mUi->mTimeZoneComboEnd->setEnabled( false );
   }
 
-  // TODO
   updateRecurrenceSummary( todo );
 }
