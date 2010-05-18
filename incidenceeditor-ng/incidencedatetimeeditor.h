@@ -47,6 +47,7 @@ class IncidenceDateTimeEditor : public IncidenceEditor
     virtual bool isDirty() const;
 
   private slots: /// General
+    void editRecurrence();
     void enableAlarm( bool enable );
     void updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence );
     

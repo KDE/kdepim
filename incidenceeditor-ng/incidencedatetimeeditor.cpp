@@ -23,6 +23,7 @@
 #include <KCal/ICalTimeZones>
 #include <KCal/IncidenceFormatter>
 
+#include "incidencerecurrencedialog.h"
 #include "ui_incidencedatetime.h"
 
 using namespace IncidenceEditorsNG;
@@ -39,6 +40,8 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
+
+  connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
 }
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
@@ -77,6 +80,13 @@ bool IncidenceDateTimeEditor::isDirty() const
 }
 
 /// private slots for General
+
+void IncidenceDateTimeEditor::editRecurrence()
+{
+  QPointer<IncidenceRecurrenceDialog> dialog( new IncidenceRecurrenceDialog( this ) );
+  dialog->exec();
+  delete dialog;
+}
 
 void IncidenceDateTimeEditor::enableAlarm( bool enable )
 {

@@ -23,6 +23,8 @@ set( incidenceeditors_LIB_SRCS
     incidenceeditor-ng/incidencedatetimeeditor.cpp
     incidenceeditor-ng/incidencedescriptioneditor.cpp
     incidenceeditor-ng/incidenceattachmenteditor.cpp
+    incidenceeditor-ng/incidencerecurrenceeditor.cpp
+    incidenceeditor-ng/incidencerecurrencedialog.cpp
     incidenceeditor-ng/attachmenticonview.cpp
     incidenceeditor-ng/attachmenteditdialog.cpp
     incidenceeditor-ng/incidenceeditorgeneralpage.cpp
@@ -66,12 +68,14 @@ kde4_add_ui_files( incidenceeditors_LIB_SRCS
    editoralarms_base.ui
    #incidencegeneral.ui
    template_management_dialog_base.ui
+
    # IncidenceEditorsNG ui files
    incidenceeditor-ng/attachmenteditdialog.ui
    incidenceeditor-ng/incidencegeneraleditor.ui
    incidenceeditor-ng/incidencedatetime.ui
    incidenceeditor-ng/incidencedescription.ui
    incidenceeditor-ng/incidenceattachmenteditor.ui
+   incidenceeditor-ng/incidencerecurrenceeditor.ui
 )
 
 kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
