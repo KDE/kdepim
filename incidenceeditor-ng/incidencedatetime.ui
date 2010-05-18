@@ -297,6 +297,9 @@
      </item>
      <item>
       <widget class="QStackedWidget" name="mAlarmStack">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="currentIndex">
         <number>0</number>
        </property>

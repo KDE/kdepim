@@ -20,8 +20,6 @@
 
 #include "incidencedatetimeeditor.h"
 
-#include <QtCore/QDebug>
-
 #include <KCal/ICalTimeZones>
 #include <KCal/IncidenceFormatter>
 
@@ -119,6 +117,28 @@ void IncidenceDateTimeEditor::enableStartEdit( bool enable )
   checkDirtyStatus();
 }
 
+void IncidenceDateTimeEditor::enableEndEdit( bool enable )
+{
+  mUi->mEndDateEdit->setEnabled( enable );
+
+  if( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
+    mUi->mHasTimeCheck->setEnabled( true );
+  } else {
+    mUi->mHasTimeCheck->setEnabled( false );
+  }
+
+  if ( enable ) {
+    mUi->mEndTimeEdit->setEnabled( mUi->mHasTimeCheck->isChecked() );
+    mUi->mTimeZoneComboEnd->setEnabled( mUi->mHasTimeCheck->isChecked() );
+  } else {
+    mUi->mEndTimeEdit->setEnabled( false );
+    mUi->mTimeZoneComboEnd->setEnabled( false );
+  }
+
+  mUi->mTimeZoneComboEnd->setFloating( !mUi->mTimeZoneComboEnd->isEnabled() );
+  checkDirtyStatus();
+}
+
 bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
 {
   Q_ASSERT( todo );
@@ -143,13 +163,16 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
     if ( mUi->mStartTimeEdit->time() != startDT.time() )
       return true;
 
-    if ( mUi->mTimeZoneComboStart->selectedTimeSpec() != startDT.timeSpec() )
+    // Use mStartSpec. This is the KDateTime::Spec selected on load comming from
+    // the combobox. We use this one as it can slightly differ (e.g. missing
+    // country code in the incidence time spec) from the incidence.
+    if ( mUi->mTimeZoneComboStart->selectedTimeSpec() != mStartSpec )
       return true;
   }
 
   if ( todo->hasDueDate() != mUi->mEndCheck->isChecked() )
     return true;
-  
+
   if ( mUi->mEndCheck->isChecked() ) {
     KDateTime dueDT = todo->dtDue();
         // TODO: Integrate date, whereever it comes from.
@@ -167,7 +190,10 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
     if ( mUi->mEndTimeEdit->time() != dueDT.time() )
       return true;
 
-    if ( mUi->mTimeZoneComboEnd->selectedTimeSpec() != dueDT.timeSpec() )
+    // Use mEndSpec. This is the KDateTime::Spec selected on load comming from
+    // the combobox. We use this one as it can slightly differ (e.g. missing
+    // country code in the incidence time spec) from the incidence.
+    if ( mUi->mTimeZoneComboEnd->selectedTimeSpec() != mEndSpec )
       return true;
   }
 
@@ -211,8 +237,6 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
 void IncidenceDateTimeEditor::slotTodoStartDateModified()
 {
   mStartDateModified = true;
-  mStartSpec = mUi->mTimeZoneComboStart->selectedTimeSpec();
-
 //   slotTodoDateChanged();
   checkDirtyStatus();
 }
@@ -251,6 +275,10 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(slotTodoStartDateModified()) );
   connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(slotTodoStartDateModified()) );
 
+  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
+  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableAlarm(bool)) );
+//   connect( mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
+
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );
 
@@ -267,8 +295,8 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
     mUi->mStartDateEdit->setDate( startDT.date() );
     mUi->mStartTimeEdit->setTime( startDT.time() );
     mUi->mStartCheck->setChecked( true );
-    mStartSpec = todo->dtStart().timeSpec();
-    mUi->mTimeZoneComboStart->selectTimeSpec( mStartSpec );
+    mUi->mTimeZoneComboStart->selectTimeSpec( todo->dtStart().timeSpec() );
+    mStartSpec = mUi->mTimeZoneComboStart->selectedTimeSpec();
   } else {
     mUi->mStartDateEdit->setEnabled( false );
     mUi->mStartTimeEdit->setEnabled( false );
@@ -293,8 +321,8 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
     mUi->mEndDateEdit->setDate( dueDT.date() );
     mUi->mEndTimeEdit->setTime( dueDT.time() );
     mUi->mEndCheck->setChecked( true );
-    mEndSpec = todo->dtDue().timeSpec();
-    mUi->mTimeZoneComboEnd->selectTimeSpec( mEndSpec );
+    mUi->mTimeZoneComboEnd->selectTimeSpec( todo->dtDue().timeSpec() );
+    mEndSpec = mUi->mTimeZoneComboEnd->selectedTimeSpec();
   } else {
     enableAlarm( false );
     mUi->mEndDateEdit->setEnabled( false );
