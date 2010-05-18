@@ -827,6 +827,10 @@ RecipientsEditor::RecipientsEditor( QWidget *parent )
     SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ) );
 
   mSideWidget = new SideWidget( mRecipientsView, this );
+#ifdef KDEPIM_MOBILE_UI
+  // needs to much space on mobile and brings up too big sub-dialogs
+  mSideWidget->hide();
+#endif
   topLayout->addWidget( mSideWidget );
   connect( mSideWidget, SIGNAL( pickedRecipient( const Recipient & ) ),
     SLOT( slotPickedRecipient( const Recipient & ) ) );
