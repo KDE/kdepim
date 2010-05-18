@@ -112,7 +112,7 @@ static bool itemIsHeader( const QListBoxItem* item )
 AddresseeLineEdit::AddresseeLineEdit( QWidget* parent, bool useCompletion,
                                       const char *name )
   : ClickLineEdit( parent, QString::null, name ), DCOPObject( newLineEditDCOPObjectName() ),
-    m_allowDistLists( true )
+    m_useSemiColonAsSeparator( false ), m_allowDistLists( true )
 {
   m_useCompletion = useCompletion;
   m_completionInitialized = false;
@@ -950,15 +950,23 @@ void AddresseeLineEdit::updateSearchString()
 
   int n = -1;
   bool inQuote = false;
-  for ( uint i = 0; i < m_searchString.length(); ++i ) {
-    if ( m_searchString[ i ] == '"' )
+  uint searchStringLength = m_searchString.length();
+  for ( uint i = 0; i < searchStringLength; ++i ) {
+    if ( m_searchString[ i ] == '"' ) {
       inQuote = !inQuote;
-    if ( m_searchString[ i ] == '\\' && (i + 1) < m_searchString.length() && m_searchString[ i + 1 ] == '"' )
+    }
+    if ( m_searchString[ i ] == '\\' &&
+         (i + 1) < searchStringLength && m_searchString[ i + 1 ] == '"' ) {
       ++i;
-    if ( inQuote )
+    }
+    if ( inQuote ) {
       continue;
-    if ( m_searchString[ i ] == ',' || ( m_useSemiColonAsSeparator && m_searchString[ i ] == ';' ) )
+    }
+    if ( i < searchStringLength &&
+         ( m_searchString[ i ] == ',' ||
+           ( m_useSemiColonAsSeparator && m_searchString[ i ] == ';' ) ) ) {
       n = i;
+    }
   }
 
   if ( n >= 0 ) {
@@ -972,9 +980,7 @@ void AddresseeLineEdit::updateSearchString()
 
     m_previousAddresses = m_searchString.left( n );
     m_searchString = m_searchString.mid( n ).stripWhiteSpace();
-  }
-  else
-  {
+  } else {
     m_previousAddresses = QString::null;
   }
 }
