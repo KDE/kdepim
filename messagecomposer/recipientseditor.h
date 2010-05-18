@@ -292,7 +292,8 @@ class MESSAGECOMPOSER_EXPORT RecipientsEditor : public QWidget
     MessageComposer::RecipientsPicker* picker() const;
 
     void setRecipientString( const QList<KMime::Types::Mailbox> &mailboxes, Recipient::Type );
-    QString recipientString( Recipient::Type );
+    QString recipientString( Recipient::Type ) const;
+    QStringList recipientStringList( Recipient::Type ) const;
 
     /** Adds a recipient (or multiple recipients) to one line of the editor.
         @param recipient The recipient(s) you want to add.

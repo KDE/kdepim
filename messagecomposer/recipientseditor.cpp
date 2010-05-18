@@ -905,22 +905,22 @@ void RecipientsEditor::setRecipientString( const QList<KMime::Types::Mailbox> &m
   }
 }
 
-QString RecipientsEditor::recipientString( Recipient::Type type )
+QString RecipientsEditor::recipientString( Recipient::Type type ) const
 {
-  QString str;
+  return recipientStringList( type ).join( QLatin1String(", ") );
+}
 
-  Recipient::List recipients = mRecipientsView->recipients();
-  if ( !recipients.isEmpty() ) {
-    Recipient::List::ConstIterator it;
-    for( it = recipients.constBegin(); it != recipients.constEnd(); ++it ) {
-      if ( (*it).type() == type ) {
-        if ( !str.isEmpty() ) str += QLatin1String(", ");
-        str.append( (*it).email() );
-      }
+QStringList RecipientsEditor::recipientStringList( Recipient::Type type ) const
+{
+  QStringList selectedRecipients;
+  foreach( const Recipient &r, recipients() ) {
+    if ( r.type() == type ) {
+      selectedRecipients << r.email();
     }
   }
-  return str;
+  return selectedRecipients;
 }
+
 
 void RecipientsEditor::addRecipient( const QString & recipient,
                                      Recipient::Type type )
