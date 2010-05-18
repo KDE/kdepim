@@ -35,6 +35,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   , mStartDateModified( false )
 {
   mUi->setupUi( this );
+  mUi->mAlarmBell->setPixmap( SmallIcon( "task-reminder" ) );
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
