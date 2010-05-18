@@ -1,7 +1,5 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Stephen Kelly <stephen@kdab.com>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,25 +17,17 @@
     02110-1301, USA.
 */
 
-#include <kdeclarativeapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#ifndef KDECLARATIVEAPPLICATION_H
+#define KDECLARATIVEAPPLICATION_H
 
-#include "mainview.h"
+#include "mobileui_export.h"
+#include <kapplication.h>
 
-
-int main( int argc, char **argv )
+class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
 {
-  const QByteArray& ba = QByteArray( "notes-mobile" );
-  const KLocalizedString name = ki18n( "Notes Mobile" );
+  Q_OBJECT
+  public:
+    KDeclarativeApplication();
+};
 
-  KAboutData aboutData( ba, ba, name, ba, name );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication app;
-
-  MainView view;
-  view.show();
-
-  return app.exec();
-}
-
+#endif

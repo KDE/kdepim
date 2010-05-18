@@ -6,6 +6,7 @@ set(mobileui_SRCS
     kbreadcrumbnavigationcomponentfactory.cpp
     akonadibreadcrumbnavigationfactory.cpp
     declarativeakonadiitem.cpp
+    kdeclarativeapplication.cpp
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
     kdeclarativefullscreenview.cpp

@@ -19,7 +19,7 @@
 * 02110-1301  USA
 */
 
-#include <kapplication.h>
+#include <kdeclarativeapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
@@ -32,7 +32,7 @@ int main( int argc, char **argv )
   const KLocalizedString name = ki18n( "KMail Mobile" );
   KAboutData aboutData( ba, ba, name, ba, name );
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+  KDeclarativeApplication app;
 
   MainView view;
   view.show();

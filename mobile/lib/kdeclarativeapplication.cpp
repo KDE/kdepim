@@ -1,7 +1,5 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Stephen Kelly <stephen@kdab.com>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,25 +17,19 @@
     02110-1301, USA.
 */
 
-#include <kdeclarativeapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include "kdeclarativeapplication.h"
 
-#include "mainview.h"
+#include <kglobalsettings.h>
 
-
-int main( int argc, char **argv )
+KDeclarativeApplication::KDeclarativeApplication()
 {
-  const QByteArray& ba = QByteArray( "notes-mobile" );
-  const KLocalizedString name = ki18n( "Notes Mobile" );
+  // start with the oxygen palette (which is not necessarily the default on all platforms)
+  QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
 
-  KAboutData aboutData( ba, ba, name, ba, name );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication app;
+  // background comes from QML
+  pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
 
-  MainView view;
-  view.show();
-
-  return app.exec();
+  setPalette( pal );
 }
 
+#include "kdeclarativeapplication.moc"
