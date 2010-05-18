@@ -174,45 +174,46 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
   return false;
 }
 
-void IncidenceDateTimeEditor::slotTodoDateChanged()
-{
-  KLocale *l = KGlobal::locale();
-  QString dateTimeStr = "";
-
-  if ( mUi->mStartCheck->isChecked() ) {
-    dateTimeStr += i18nc( "to-do start datetime",
-                          "Start: %1", l->formatDate( mUi->mStartDateEdit->date() ) );
-    if ( mUi->mHasTimeCheck->isChecked() ) {
-      dateTimeStr += QString( " %1" ).arg( l->formatTime( mUi->mStartTimeEdit->time() ) );
-      dateTimeStr += ' ';
-      dateTimeStr += mUi->mTimeZoneComboStart->selectedTimeSpec().timeZone().name();
-    }
-  }
-
-  if ( mUi->mEndCheck->isChecked() ) {
-    dateTimeStr += i18nc( "to-do due datetime", "   Due: %1",
-                          l->formatDate( mUi->mEndDateEdit->date() ) );
-    if ( mUi->mHasTimeCheck->isChecked() ) {
-      dateTimeStr += QString( " %1" ).arg( l->formatTime( mUi->mEndTimeEdit->time() ) );
-      dateTimeStr += ' ';
-      dateTimeStr += mUi->mTimeZoneComboEnd->selectedTimeSpec().timeZone().name();
-    }
-  }
-
-  mEndSpec = mUi->mTimeZoneComboEnd->selectedTimeSpec();
-
-  // TODO: Investigate whether we really need all those signals.
-//   emit dateTimeStrChanged( dateTimeStr );
-//   QDateTime endDt( mDueDateEdit->date(), mDueTimeEdit->time() );
-//   emit signalDateTimeChanged( endDt, endDt );
-}
+// TODO: Investigate if we need this at all.
+// void IncidenceDateTimeEditor::slotTodoDateChanged()
+// {
+//   KLocale *l = KGlobal::locale();
+//   QString dateTimeStr = "";
+// 
+//   if ( mUi->mStartCheck->isChecked() ) {
+//     dateTimeStr += i18nc( "to-do start datetime",
+//                           "Start: %1", l->formatDate( mUi->mStartDateEdit->date() ) );
+//     if ( mUi->mHasTimeCheck->isChecked() ) {
+//       dateTimeStr += QString( " %1" ).arg( l->formatTime( mUi->mStartTimeEdit->time() ) );
+//       dateTimeStr += ' ';
+//       dateTimeStr += mUi->mTimeZoneComboStart->selectedTimeSpec().timeZone().name();
+//     }
+//   }
+// 
+//   if ( mUi->mEndCheck->isChecked() ) {
+//     dateTimeStr += i18nc( "to-do due datetime", "   Due: %1",
+//                           l->formatDate( mUi->mEndDateEdit->date() ) );
+//     if ( mUi->mHasTimeCheck->isChecked() ) {
+//       dateTimeStr += QString( " %1" ).arg( l->formatTime( mUi->mEndTimeEdit->time() ) );
+//       dateTimeStr += ' ';
+//       dateTimeStr += mUi->mTimeZoneComboEnd->selectedTimeSpec().timeZone().name();
+//     }
+//   }
+// 
+//   mEndSpec = mUi->mTimeZoneComboEnd->selectedTimeSpec();
+// 
+//   // TODO: Investigate whether we really need all those signals.
+// //   emit dateTimeStrChanged( dateTimeStr );
+// //   QDateTime endDt( mDueDateEdit->date(), mDueTimeEdit->time() );
+// //   emit signalDateTimeChanged( endDt, endDt );
+// }
 
 void IncidenceDateTimeEditor::slotTodoStartDateModified()
 {
   mStartDateModified = true;
   mStartSpec = mUi->mTimeZoneComboStart->selectedTimeSpec();
 
-  slotTodoDateChanged();
+//   slotTodoDateChanged();
   checkDirtyStatus();
 }
 
