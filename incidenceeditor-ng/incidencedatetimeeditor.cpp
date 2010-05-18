@@ -37,6 +37,9 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   , mStartDateModified( false )
 {
   mUi->setupUi( this );
+  mUi->mRecurrenceEditButton->setIcon(
+    KIconLoader::global()->loadIcon(
+      "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
 }
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
