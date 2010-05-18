@@ -53,6 +53,7 @@ class IncidenceDateTimeEditor : public IncidenceEditor
   private slots: /// Todo specific
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
+    void enableTimeEdits( bool enable );
     bool isDirty( KCal::Todo::ConstPtr todo ) const;
 //     void slotTodoDateChanged();
     void slotTodoStartDateModified();

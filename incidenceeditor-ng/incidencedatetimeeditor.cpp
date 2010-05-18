@@ -140,6 +140,20 @@ void IncidenceDateTimeEditor::enableEndEdit( bool enable )
   checkDirtyStatus();
 }
 
+void IncidenceDateTimeEditor::enableTimeEdits( bool enable )
+{
+  if( mUi->mStartCheck->isChecked() ) {
+    mUi->mStartTimeEdit->setEnabled( enable );
+    mUi->mTimeZoneComboStart->setEnabled( enable );
+    mUi->mTimeZoneComboStart->setFloating( !enable, mStartSpec );
+  }
+  if( mUi->mEndCheck->isChecked() ) {
+    mUi->mEndTimeEdit->setEnabled( enable );
+    mUi->mTimeZoneComboEnd->setEnabled( enable );
+    mUi->mTimeZoneComboEnd->setFloating( !enable, mEndSpec );
+  }
+}
+
 bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
 {
   Q_ASSERT( todo );
@@ -282,6 +296,8 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
+
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits(bool)));
 
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );
