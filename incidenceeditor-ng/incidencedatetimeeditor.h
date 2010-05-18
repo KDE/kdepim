@@ -37,6 +37,7 @@ namespace IncidenceEditorsNG {
 
 class IncidenceDateTimeEditor : public IncidenceEditor
 {
+  Q_OBJECT
   public:
     IncidenceDateTimeEditor( QWidget *parent = 0 );
     ~IncidenceDateTimeEditor();
@@ -51,6 +52,7 @@ class IncidenceDateTimeEditor : public IncidenceEditor
     
   private slots: /// Todo specific
     void enableStartEdit( bool enable );
+    bool isDirty( KCal::Todo::ConstPtr todo ) const;
 
   private slots: /// Event specific
     

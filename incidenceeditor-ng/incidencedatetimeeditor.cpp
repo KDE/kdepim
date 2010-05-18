@@ -63,7 +63,13 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceDateTimeEditor::isDirty() const
 {
-  return false;
+  if ( KCal::Todo::ConstPtr todo = IncidenceDateTimeEditor::incidence<Todo>() ) {
+    return isDirty( todo );
+  } else {
+//     KCal::Event::ConstPtr event = IncidenceDateTimeEditor::incidence<Event>();
+//     eventIsDirty( event );
+    return false;
+  }
 }
 
 /// private slots for General
@@ -105,6 +111,62 @@ void IncidenceDateTimeEditor::enableStartEdit( bool enable )
   }
 
   mUi->mTimeZoneComboStart->setFloating( !mUi->mTimeZoneComboStart->isEnabled() );
+  checkDirtyStatus();
+}
+
+bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
+{
+  Q_ASSERT( todo );
+
+  // First check the start time/date of the todo
+  if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() )
+    return true;
+
+  if ( mUi->mStartCheck->isChecked() ) {
+    KDateTime startDT = todo->dtStart();
+    // TODO: Integrate date, whereever it comes from.
+//     if ( todo->recurs() && date.isValid() && todo->hasDueDate() ) {
+//       int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
+//       startDT.setDate( dueDT.date().addDays( -days ) );
+//     }
+    if ( startDT.isUtc() )
+      startDT = startDT.toLocalZone();
+
+    if ( mUi->mStartDateEdit->date() != startDT.date() )
+      return true;
+
+    if ( mUi->mStartTimeEdit->time() != startDT.time() )
+      return true;
+
+    if ( mUi->mTimeZoneComboStart->selectedTimeSpec() != startDT.timeSpec() )
+      return true;
+  }
+
+  if ( todo->hasDueDate() != mUi->mEndCheck->isChecked() )
+    return true;
+  
+  if ( mUi->mEndCheck->isChecked() ) {
+    KDateTime dueDT = todo->dtDue();
+        // TODO: Integrate date, whereever it comes from.
+//     if ( todo->recurs() && date.isValid() ) {
+//       KDateTime dt( date, QTime( 0, 0, 0 ) );
+//       dt = dt.addSecs( -1 );
+//       dueDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
+//     }
+    if ( dueDT.isUtc() )
+        dueDT = dueDT.toLocalZone();
+
+    if ( mUi->mEndDateEdit->date() != dueDT.date() )
+      return true;
+
+    if ( mUi->mEndTimeEdit->time() != dueDT.time() )
+      return true;
+
+    if ( mUi->mTimeZoneComboEnd->selectedTimeSpec() != dueDT.timeSpec() )
+      return true;
+  }
+
+  return false;
 }
 
 /// Private methods
@@ -126,10 +188,34 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   mUi->mStartCheck->setVisible( true );
   mUi->mEndCheck->setVisible( true );
 
-  //TODO: do something with tmpl
+  mUi->mHasTimeCheck->setChecked( !todo->allDay() );
+
+  //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );
 
-  KDateTime dueDT = todo->dtDue();
+  if ( todo->hasStartDate() ) {
+    KDateTime startDT = todo->dtStart();
+    // TODO: Integrate date, whereever it comes from.
+//     if ( todo->recurs() && date.isValid() && todo->hasDueDate() ) {
+//       int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
+//       startDT.setDate( dueDT.date().addDays( -days ) );
+//     }
+    if ( startDT.isUtc() )
+      startDT = startDT.toLocalZone();
+
+    mUi->mStartDateEdit->setDate( startDT.date() );
+    mUi->mStartTimeEdit->setTime( startDT.time() );
+    mUi->mStartCheck->setChecked( true );
+    mStartSpec = todo->dtStart().timeSpec();
+    mUi->mTimeZoneComboStart->selectTimeSpec( mStartSpec );
+  } else {
+    mUi->mStartDateEdit->setEnabled( false );
+    mUi->mStartTimeEdit->setEnabled( false );
+    mUi->mStartDateEdit->setDate( QDate::currentDate() );
+    mUi->mStartTimeEdit->setTime( QTime::currentTime() );
+    mUi->mStartCheck->setChecked( false );
+    mUi->mTimeZoneComboStart->setEnabled( false );
+  }
 
   if ( todo->hasDueDate() ) {
     enableAlarm( true );
@@ -139,9 +225,10 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
 //       dt = dt.addSecs( -1 );
 //       dueDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
 //     }
-    if ( dueDT.isUtc() ) {
+    KDateTime dueDT = todo->dtDue();
+    if ( dueDT.isUtc() )
       dueDT = dueDT.toLocalZone();
-    }
+
     mUi->mEndDateEdit->setDate( dueDT.date() );
     mUi->mEndTimeEdit->setTime( dueDT.time() );
     mUi->mEndCheck->setChecked( true );
@@ -157,32 +244,6 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
     mUi->mTimeZoneComboEnd->setEnabled( false );
   }
 
-  if ( todo->hasStartDate() ) {
-    KDateTime startDT = todo->dtStart();
-    // TODO: Integrate date, whereever it comes from.
-//     if ( todo->recurs() && date.isValid() && todo->hasDueDate() ) {
-//       int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
-//       startDT.setDate( dueDT.date().addDays( -days ) );
-//     }
-    if ( startDT.isUtc() ) {
-      startDT = startDT.toLocalZone();
-    }
-    mUi->mStartDateEdit->setDate( startDT.date() );
-    mUi->mStartTimeEdit->setTime( startDT.time() );
-    mUi->mStartCheck->setChecked( true );
-    mStartSpec = todo->dtStart().timeSpec();
-    mUi->mTimeZoneComboStart->selectTimeSpec( mStartSpec );
-  } else {
-    mUi->mStartDateEdit->setEnabled( false );
-    mUi->mStartTimeEdit->setEnabled( false );
-    mUi->mStartDateEdit->setDate( QDate::currentDate() );
-    mUi->mStartTimeEdit->setTime( QTime::currentTime() );
-    mUi->mStartCheck->setChecked( false );
-    mUi->mTimeZoneComboStart->setEnabled( false );
-  }
-
-  mUi->mHasTimeCheck->setChecked( !todo->allDay() );
-
   // TODO
-//   updateRecurrenceSummary( todo );
+  updateRecurrenceSummary( todo );
 }
