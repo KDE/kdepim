@@ -24,12 +24,14 @@
 #include "emailaddressresolvejob.h"
 
 #include "aliasesexpandjob.h"
-#include "globalsettings.h"
+#include "messagecomposersettings.h"
 
 #include "messagecomposer/composer.h"
 #include "messagecomposer/infopart.h"
 
 #include <KPIMUtils/Email>
+
+using namespace MessageComposer;
 
 EmailAddressResolveJob::EmailAddressResolveJob( QObject *parent )
   : KJob( parent ), mJobCount( 0 )
@@ -47,8 +49,8 @@ void EmailAddressResolveJob::start()
   mJobCount = 4;
 
   {
-    AliasesExpandJob *job = new AliasesExpandJob( mFrom, GlobalSettings::defaultDomain(), this );
-    job->setProperty( "id", "infoPartFrom" );
+    AliasesExpandJob *job = new AliasesExpandJob( mFrom, MessageComposerSettings::defaultDomain(), this );
+    job->setProperty( "id", QLatin1String("infoPartFrom") );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( slotAliasExpansionDone( KJob* ) ) );
     job->start();
   }
@@ -67,20 +69,20 @@ void EmailAddressResolveJob::start()
     }
   } */
   {
-    AliasesExpandJob *job = new AliasesExpandJob( mTo.join( QLatin1String( ", " ) ), GlobalSettings::defaultDomain(), this );
-    job->setProperty( "id", "infoPartTo" );
+    AliasesExpandJob *job = new AliasesExpandJob( mTo.join( QLatin1String( ", " ) ), MessageComposerSettings::defaultDomain(), this );
+    job->setProperty( "id", QLatin1String("infoPartTo") );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( slotAliasExpansionDone( KJob* ) ) );
     job->start();
   }
   {
-    AliasesExpandJob *job = new AliasesExpandJob( mCc.join( QLatin1String( ", " ) ), GlobalSettings::defaultDomain(), this );
-    job->setProperty( "id", "infoPartCc" );
+    AliasesExpandJob *job = new AliasesExpandJob( mCc.join( QLatin1String( ", " ) ), MessageComposerSettings::defaultDomain(), this );
+    job->setProperty( "id", QLatin1String("infoPartCc") );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( slotAliasExpansionDone( KJob* ) ) );
     job->start();
   }
   {
-    AliasesExpandJob *job = new AliasesExpandJob( mBcc.join( QLatin1String( ", " ) ), GlobalSettings::defaultDomain(), this );
-    job->setProperty( "id", "infoPartBcc" );
+    AliasesExpandJob *job = new AliasesExpandJob( mBcc.join( QLatin1String( ", " ) ), MessageComposerSettings::defaultDomain(), this );
+    job->setProperty( "id", QLatin1String("infoPartBcc") );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( slotAliasExpansionDone( KJob* ) ) );
     job->start();
   }
@@ -127,23 +129,23 @@ void EmailAddressResolveJob::setBcc(const QStringList& bcc)
 
 QString EmailAddressResolveJob::expandedFrom() const
 {
-  return mResultMap.value( "infoPartFrom" ).toString();
+  return mResultMap.value( QLatin1String("infoPartFrom") ).toString();
 }
 
 QStringList EmailAddressResolveJob::expandedTo() const
 {
-  return KPIMUtils::splitAddressList( mResultMap.value( "infoPartTo" ).toString() );
+  return KPIMUtils::splitAddressList( mResultMap.value( QLatin1String("infoPartTo") ).toString() );
 }
 
 QStringList EmailAddressResolveJob::expandedCc() const
 {
-  return KPIMUtils::splitAddressList( mResultMap.value( "infoPartCc" ).toString() );
+  return KPIMUtils::splitAddressList( mResultMap.value( QLatin1String("infoPartCc") ).toString() );
 
 }
 
 QStringList EmailAddressResolveJob::expandedBcc() const
 {
-  return KPIMUtils::splitAddressList( mResultMap.value( "infoPartBcc" ).toString() );
+  return KPIMUtils::splitAddressList( mResultMap.value( QLatin1String("infoPartBcc") ).toString() );
 
 }
 

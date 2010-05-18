@@ -31,6 +31,8 @@
 
 #include <messagecore/stringutil.h>
 
+using namespace MessageComposer;
+
 DistributionListExpandJob::DistributionListExpandJob( const QString &name, QObject *parent )
   : KJob( parent ), mListName( name ), mIsEmpty( false )
 {
@@ -233,9 +235,9 @@ void AliasesExpandJob::finishExpansion()
     }
 
     // check whether the address is missing the domain part
-    QByteArray displayName, addrSpec, comment;
-    KPIMUtils::splitAddress( receiver.toLatin1(), displayName, addrSpec, comment );
-    if ( !addrSpec.contains( '@' ) ) {
+    QString displayName, addrSpec, comment;
+    KPIMUtils::splitAddress( receiver, displayName, addrSpec, comment );
+    if ( !addrSpec.contains( QLatin1Char('@') ) ) {
       if ( !mDefaultDomain.isEmpty() )
         mEmailAddresses += KPIMUtils::normalizedAddress( displayName, addrSpec + QLatin1Char( '@' ) +
                                                             mDefaultDomain, comment );

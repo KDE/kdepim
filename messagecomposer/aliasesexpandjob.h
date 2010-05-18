@@ -23,10 +23,14 @@
 #ifndef ALIASESEXPANDJOB_H
 #define ALIASESEXPANDJOB_H
 
+#include "messagecomposer_export.h"
+
 #include <kjob.h>
 
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
+
+namespace MessageComposer {
 
 /**
  * @short A job to expand aliases to email addresses.
@@ -34,7 +38,7 @@
  * Expands aliases (distribution lists and nick names) and appends a
  * domain part to all email addresses which are missing the domain part.
  */
-class AliasesExpandJob : public KJob
+class MESSAGECOMPOSER_EXPORT AliasesExpandJob : public KJob
 {
   Q_OBJECT
 
@@ -92,5 +96,7 @@ class AliasesExpandJob : public KJob
     QMap<QString, DistributionListExpansionResult> mDistListExpansionResults;
     QMap<QString, QString> mNicknameExpansionResults;
 };
+
+}
 
 #endif

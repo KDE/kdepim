@@ -25,21 +25,23 @@ class Composer;/*
 #ifndef EMAILADDRESSRESOLVEJOB_H
 #define EMAILADDRESSRESOLVEJOB_H
 
+#include "messagecomposer_export.h"
+
 #include <kjob.h>
 
-#include <kmime/kmime_message.h>
-#include <mailtransport/messagequeuejob.h>
-
+#include <QtCore/QStringList>
 #include <QtCore/QVariant>
 
 namespace Message {
   class Composer;
 }
 
+namespace MessageComposer {
+
 /**
  * @short A job to resolve nicknames, distribution lists and email addresses for queued emails.
  */
-class EmailAddressResolveJob : public KJob
+class MESSAGECOMPOSER_EXPORT EmailAddressResolveJob : public KJob
 {
   Q_OBJECT
 
@@ -110,5 +112,7 @@ class EmailAddressResolveJob : public KJob
     QString mFrom;
     QStringList mTo, mCc, mBcc;
 };
+
+}
 
 #endif

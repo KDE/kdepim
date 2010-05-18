@@ -50,6 +50,9 @@ set( messagecomposer_src
      recipientspicker.cpp
      recipientseditor.cpp
      kwindowpositioner.cpp
+
+     aliasesexpandjob.cpp
+     emailaddressresolvejob.cpp
 )
 
 if(KDEPIM_ENTERPRISE_BUILD)
