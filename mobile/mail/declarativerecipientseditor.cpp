@@ -23,6 +23,7 @@ DeclarativeRecipientsEditor::DeclarativeRecipientsEditor(QDeclarativeItem* paren
   DeclarativeComposerWidgetBase< MessageComposer::RecipientsEditor, &ComposerView::setRecipientsEditor>( parent )
 {
   m_widget = new MessageComposer::RecipientsEditor;
+  m_widget->setCompletionMode( KGlobalSettings::CompletionAuto );
   m_proxy->setWidget( m_widget );
 }
 
