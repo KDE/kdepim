@@ -42,7 +42,7 @@ MailTransportServiceIface_DIR = $(srcdir)/interfaces
 
 AddressBookServiceIface_DIR = $(srcdir)/interfaces
 
-libkdepim_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0
+libkdepim_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 $(LIB_QT) -lkdecore
 libkdepim_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la \
                        $(top_builddir)/libemailfunctions/libemailfunctions.la \
                        $(LIB_KIO) $(LIB_KABC) $(LIB_KPARTS) $(LIB_KIMPROXY) $(LIB_POLL) -lqui
@@ -52,7 +52,7 @@ include_HEADERS = kdepimmacros.h kpimprefs.h
 
 AM_CXXFLAGS = -DQT_PLUGIN
 kde_widget_LTLIBRARIES = kdepimwidgets.la
-kdepimwidgets_la_LDFLAGS = $(KDE_PLUGIN) -module $(all_libraries)
+kdepimwidgets_la_LDFLAGS = $(KDE_PLUGIN) -module $(all_libraries) $(LIB_QT) -lkdecore
 kdepimwidgets_la_LIBADD = $(LIB_KIO) libkdepim.la
 kdepimwidgets_la_SOURCES = kdepimwidgets.cpp 
 

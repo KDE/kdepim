@@ -6,7 +6,7 @@ INCLUDES = -I$(srcdir)/versit -I$(top_srcdir)/ \
   $(all_includes)
 
 lib_LTLIBRARIES   = libkcal.la
-libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0
+libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0 $(LIB_QT) -lkdecore
 libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
                      -lical -licalss \
                      $(top_builddir)/ktnef/lib/libktnef.la \
@@ -50,11 +50,11 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
 kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la 
 
 kcal_local_la_SOURCES = resourcelocal_plugin.cpp
-kcal_local_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+kcal_local_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) $(LIB_QT) -lkdecore
 kcal_local_la_LIBADD  = libkcal.la
 
 kcal_localdir_la_SOURCES = resourcelocaldir_plugin.cpp
-kcal_localdir_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+kcal_localdir_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) $(LIB_QT) -lkdecore
 kcal_localdir_la_LIBADD  = libkcal.la
 
 EXTRA_PROGRAMS = convertqtopia
