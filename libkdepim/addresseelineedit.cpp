@@ -1164,6 +1164,9 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
       completionBox()->isVisible() ) {
     const QKeyEvent *keyEvent = static_cast<QKeyEvent*>( event );
     int currentIndex = completionBox()->currentRow();
+    if ( currentIndex < 0 ) {
+      return true;
+    }
     if ( keyEvent->key() == Qt::Key_Up ) {
       //kDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
       // figure out if the item we would be moving to is one we want
@@ -1225,10 +1228,13 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
                 ( keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab ) ) {
       /// first, find the header of the current section
       QListWidgetItem *myHeader = 0;
-      int index = qMax( currentIndex - 1, 0 );
+      int myHeaderIndex = -1;
+      const int iterationStep = keyEvent->key() == Qt::Key_Tab ?  1 : -1;
+      int index = qMin( qMax( currentIndex - iterationStep, 0 ), completionBox()->count() - 1 );
       while ( index >= 0 ) {
         if ( itemIsHeader( completionBox()->item( index ) ) ) {
           myHeader = completionBox()->item( index );
+          myHeaderIndex = index;
           break;
         }
 
@@ -1236,17 +1242,24 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
       }
       Q_ASSERT( myHeader ); // we should always be able to find a header
 
-      // find the next header (searching backwards, for Qt::Key_Backtab
+      // find the next header (searching backwards, for Qt::Key_Backtab)
       QListWidgetItem *nextHeader = 0;
-      const int iterationStep = keyEvent->key() == Qt::Key_Tab ?  1 : -1;
 
       // when iterating forward, start at the currentindex, when backwards,
       // one up from our header, or at the end
-      uint j = keyEvent->key() == Qt::Key_Tab ?
-               currentIndex : index == 0 ?
-               completionBox()->count() - 1 : ( index - 1 ) % completionBox()->count();
+      uint j;
+      if ( keyEvent->key() == Qt::Key_Tab ) {
+        j = currentIndex;
+      } else {
+        index = myHeaderIndex;
+        if ( index == 0 ) {
+          j = completionBox()->count() - 1;
+        } else {
+          j = ( index - 1 ) % completionBox()->count();
+        }
+      }
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
-          if ( itemIsHeader(nextHeader) ) {
+          if ( itemIsHeader( nextHeader ) ) {
             break;
           }
           j = ( j + iterationStep ) % completionBox()->count();
