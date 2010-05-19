@@ -32,9 +32,10 @@
 
 #include "ldap/ldapclient.h"
 
-#include <kabc/addressee.h>
 #include <Akonadi/Job>
 #include <Akonadi/Collection>
+
+#include <KABC/Addressee>
 
 #include <KLineEdit>
 
@@ -118,7 +119,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * - Recognizes email addresses which are protected against address
      *   harvesters, i.e. "name at kde dot org" and "name(at)kde.org"
      */
-    virtual void insert( const QString& );
+    virtual void insert( const QString & );
 
     /**
      * Reimplemented for smart insertion of pasted email addresses.
@@ -128,17 +129,17 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     /**
      * Reimplemented for smart insertion with middle mouse button.
      */
-    virtual void mouseReleaseEvent( QMouseEvent* );
+    virtual void mouseReleaseEvent( QMouseEvent * );
 
     /**
      * Reimplemented for smart insertion of dragged email addresses.
      */
-    virtual void dropEvent( QDropEvent* );
+    virtual void dropEvent( QDropEvent * );
 
     /**
      * Reimplemented for internal reasons.
      */
-    virtual void keyPressEvent( QKeyEvent* );
+    virtual void keyPressEvent( QKeyEvent * );
 
     /**
      * Reimplemented for subclass access to menu
@@ -150,24 +151,24 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      *
      * See QLineEdit::contextMenuEvent().
      */
-    virtual void contextMenuEvent( QContextMenuEvent* );
+    virtual void contextMenuEvent( QContextMenuEvent * );
 
   private:
-    virtual bool eventFilter( QObject*, QEvent* );
+    virtual bool eventFilter( QObject *, QEvent * );
 
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void slotCompletion() )
-    Q_PRIVATE_SLOT( d, void slotPopupCompletion( const QString& ) )
-    Q_PRIVATE_SLOT( d, void slotReturnPressed( const QString& ) )
+    Q_PRIVATE_SLOT( d, void slotPopupCompletion( const QString & ) )
+    Q_PRIVATE_SLOT( d, void slotReturnPressed( const QString & ) )
     Q_PRIVATE_SLOT( d, void slotStartLDAPLookup() )
-    Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List& ) )
+    Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List & ) )
     Q_PRIVATE_SLOT( d, void slotEditCompletionOrder() )
-    Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString& ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List& ) )
+    Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString & ) )
+    Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob * ) )
+    Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & ) )
     //@endcond
 };
 
