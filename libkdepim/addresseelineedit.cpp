@@ -148,7 +148,8 @@ class AddresseeLineEdit::Private
         m_completionInitialized( false ),
         m_smartPaste( false ),
         m_addressBookConnected( false ),
-        m_searchExtended( false )
+        m_searchExtended( false ),
+        m_useSemicolonAsSeparator( false )
     {
     }
 
@@ -425,7 +426,8 @@ void AddresseeLineEdit::Private::updateSearchString()
 
   int n = -1;
   bool inQuote = false;
-  for ( uint i = 0, searchStringLength = m_searchString.length(); i < searchStringLength; ++i ) {
+  uint searchStringLength = m_searchString.length();
+  for ( uint i = 0; i < searchStringLength; ++i ) {
     if ( m_searchString[ i ] == QLatin1Char( '"' ) ) {
       inQuote = !inQuote;
     }
@@ -439,8 +441,9 @@ void AddresseeLineEdit::Private::updateSearchString()
       continue;
     }
 
-    if ( m_searchString[ i ] == ',' ||
-         ( m_useSemicolonAsSeparator && m_searchString[ i ] == ';' ) ) {
+    if ( i < searchStringLength &&
+         ( m_searchString[ i ] == ',' ||
+           ( m_useSemicolonAsSeparator && m_searchString[ i ] == ';' ) ) ) {
       n = i;
     }
   }
