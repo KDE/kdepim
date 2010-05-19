@@ -472,5 +472,38 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>mAlarmButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>mAlarmTimeEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>115</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>240</x>
+     <y>142</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mAlarmButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>mAlarmIncrCombo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>159</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>316</x>
+     <y>136</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
