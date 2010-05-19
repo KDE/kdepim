@@ -45,7 +45,7 @@ namespace MessageComposer {
 class ComposerView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
-  Q_PROPERTY( QString subject READ subject WRITE setSubject )
+  Q_PROPERTY( QString subject READ subject WRITE setSubject NOTIFY changed )
 
   public:
     explicit ComposerView(QWidget* parent = 0);
@@ -65,6 +65,9 @@ class ComposerView : public KDeclarativeFullScreenView
     /// Send clicked in the user interface
     void send();
     QObject* getAction( const QString &name ) const;
+
+  signals:
+    void changed();
 
   private:
     void setMessageInternal( const KMime::Message::Ptr &msg );

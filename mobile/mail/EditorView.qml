@@ -49,6 +49,7 @@ Item {
     TextInput {
       id: subjectInput
       anchors.fill: parent
+      text: window.subject
     }
   }
 

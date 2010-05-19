@@ -104,6 +104,8 @@ void ComposerView::setMessageInternal(const KMime::Message::Ptr& msg)
 {
   // ### duplication with KMComposeWin
 
+  m_subject = msg->subject()->asUnicodeString();
+
   m_recipientsEditor->setRecipientString( msg->to()->mailboxes(), Recipient::To );
   m_recipientsEditor->setRecipientString( msg->cc()->mailboxes(), Recipient::Cc );
   m_recipientsEditor->setRecipientString( msg->bcc()->mailboxes(), Recipient::Bcc );
@@ -120,6 +122,8 @@ void ComposerView::setMessageInternal(const KMime::Message::Ptr& msg)
 
   // Set the editor text and charset
   m_editor->setText( otp.textualContent() );
+
+  emit changed();
 }
 
 
