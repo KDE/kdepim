@@ -23,6 +23,8 @@
 
 #include "kdeclarativemainview.h"
 
+#include <messagecomposer/messagefactory.h>
+
 /** The new KMMainWidget ;-) */
 class MainView : public KDeclarativeMainView
 {
@@ -33,6 +35,11 @@ class MainView : public KDeclarativeMainView
   public slots:
     void startComposer();
     void reply( quint64 id );
+    void replyToAll( quint64 id );
+    void forwardInline( quint64 id );
+
+  private:
+    void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
 };
 
 #endif

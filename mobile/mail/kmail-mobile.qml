@@ -211,7 +211,7 @@ KPIM.MainView {
       contentWidth: 240
       content: [
           KPIM.Button {
-            id: moveButton
+            id: replyButton
             anchors.top: parent.top;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
@@ -222,9 +222,33 @@ KPIM.MainView {
               application.reply( messageView.itemId );
             }
           },
+          KPIM.Button {
+            id: replyAllButton
+            anchors.top: replyButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText: KDE.i18n( "Reply To All" )
+            onClicked: {
+              actionPanel.collapse();
+              application.replyToAll( messageView.itemId );
+            }
+          },
+          KPIM.Button {
+            id: forwardButton
+            anchors.top: replyAllButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText: KDE.i18n( "Forward" )
+            onClicked: {
+              actionPanel.collapse();
+              application.forwardInline( messageView.itemId );
+            }
+          },
           KPIM.Action{
             id : deleteButton
-            anchors.top: moveButton.bottom;
+            anchors.top: forwardButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             hardcoded_height: parent.height / 6

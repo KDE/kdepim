@@ -23,8 +23,6 @@
 #include "messagelistproxy.h"
 #include "global.h"
 
-#include <messagecomposer/messagefactory.h>
-
 #include <KDE/KDebug>
 #include <kselectionproxymodel.h>
 #include <klocalizedstring.h>
@@ -52,7 +50,30 @@ void MainView::startComposer()
 
 void MainView::reply( quint64 id )
 {
-  kDebug() << id;
+  reply( id, MessageComposer::ReplySmart );
+}
+
+void MainView::replyToAll(quint64 id)
+{
+  reply( id, MessageComposer::ReplyAll );
+}
+
+void MainView::reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy)
+{
+  const Akonadi::Item item = itemFromId( id );
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), id );
+  factory.setIdentityManager( Global::identityManager() );
+  factory.setReplyStrategy( replyStrategy );
+
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( factory.createReply().msg );
+  composer->show();
+}
+
+void MainView::forwardInline(quint64 id)
+{
   const Akonadi::Item item = itemFromId( id );
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
@@ -60,7 +81,7 @@ void MainView::reply( quint64 id )
   factory.setIdentityManager( Global::identityManager() );
 
   ComposerView *composer = new ComposerView;
-  composer->setMessage( factory.createReply().msg );
+  composer->setMessage( factory.createForward() );
   composer->show();
 }
 
