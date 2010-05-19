@@ -334,6 +334,14 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   if ( !parent )
     return true;
 
+  QList<KMime::Content*> extraNodes = mNodeHelper->extraContents( mMessage.get() );
+  if ( extraNodes.contains( node->topLevel() ) ) {
+      KMessageBox::error( mMainWindow,
+        i18n("Deleting an attachment from an encrypted or old-style mailman message is not supported."),
+        i18n("Delete Attachment") );
+      return true; //cancelled
+  }
+
   if ( showWarning && KMessageBox::warningContinueCancel( mMainWindow,
        i18n("Deleting an attachment might invalidate any digital signature on this message."),
        i18n("Delete Attachment"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
@@ -342,16 +350,30 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
     return false; //cancelled
   }
 
+  delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 ); //don't confuse the model
+
   parent->removeContent( node, true );
-  mMimePartModel->setRoot( mMessage.get() );
 
-  mMessageItem.setPayloadFromData( mMessage->encodedContent() );
+  KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
+  mMimePartModel->setRoot( modifiedMessage );
+
+  mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
-//TODO(Andras) error checking?   connect( job, SIGNAL(result(KJob*)), SLOT(imapItemUpdateResult(KJob*)) );
-
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
   return true;
 }
+
+
+void ViewerPrivate::itemModifiedResult(KJob* job)
+{
+  if ( job->error() ) {
+    kDebug() << "Item update failed!";
+  } else {
+    setMessageItem( mMessageItem, MessageViewer::Viewer::Force);
+  }
+}
+
 
 bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
 {
@@ -816,7 +838,10 @@ void ViewerPrivate::displayMessage()
     htmlWriter()->queue( QString::fromLatin1("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg( background.name(), foreground.name(), foreground.name(), Qt::escape( attr->message() ) ) );
     htmlWriter()->queue( QLatin1String("<p></p>") );
   }
+
   parseContent( mMessage.get() );
+  delete mMimePartModel->root();
+  mMimePartModel->setRoot( mNodeHelper->messageWithExtraContent( mMessage.get() ) );
   mColorBar->update();
 
   htmlWriter()->queue("</body></html>");
@@ -1227,6 +1252,7 @@ void ViewerPrivate::resetStateForNewMessage()
   enableMessageDisplay(); // just to make sure it's on
   mMessage.reset();
   mNodeHelper->clear();
+  delete mMimePartModel->root();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
   setShowSignatureDetails( false );
@@ -1242,7 +1268,9 @@ void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
   if ( message ) {
     mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
   }
-  mMimePartModel->setRoot( mMessage.get() );
+
+  delete mMimePartModel->root();
+  mMimePartModel->setRoot( mNodeHelper->messageWithExtraContent( message.get() ) );
   update( updateMode );
 }
 
@@ -1275,7 +1303,7 @@ void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode upd
   item.setPayload( aMsg );
   mMessageItem = item;
 
-  setMessageInternal( mMessage, updateMode );
+  setMessageInternal( aMsg, updateMode );
 }
 
 void ViewerPrivate::setMessagePart( KMime::Content * node )
@@ -1378,6 +1406,7 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mMimePartTree->setSelectionBehavior( QAbstractItemView::SelectRows );
   connect(mMimePartTree, SIGNAL( activated( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
+  connect(mMimePartTree, SIGNAL( destroyed(QObject*) ), this, SLOT( slotMimePartDestoryed() ) );
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
@@ -1399,6 +1428,11 @@ void ViewerPrivate::createWidgets() {
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 }
 
+void ViewerPrivate::slotMimePartDestroyed()
+{
+  //root is either null or a modified tree that we need to clean up
+  delete mMimePartModel->root();
+}
 
 void ViewerPrivate::createActions()
 {
@@ -1924,6 +1958,7 @@ void ViewerPrivate::slotToggleMimePartTree()
 
 void ViewerPrivate::slotShowMessageSource()
 {
+  mNodeHelper->messageWithExtraContent( mMessage.get() );
   const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
   const QString htmlSource = mViewer->page()->mainFrame()->documentElement().toOuterXml();
 
@@ -2138,7 +2173,6 @@ void ViewerPrivate::attachmentView( KMime::Content *atmNode )
     const bool isEncapsulatedMessage = atmNode->parent() && atmNode->parent()->bodyIsMessage();
     if ( isEncapsulatedMessage ) {
        atmViewMsg( atmNode->parent()->bodyAsMessage() );
-//        emit showReader( atmNode, htmlMail(), fileName, pname, overrideEncoding() );
     } else if ((kasciistricmp(atmNode->contentType()->mediaType(), "text")==0) &&
                ( (kasciistricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
                  (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {

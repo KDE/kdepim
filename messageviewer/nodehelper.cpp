@@ -103,6 +103,11 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
   //avoid double addition of extra nodes, eg. encrypted attachments
   for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
     if ( node == dynamic_cast<KMime::Content*>( it.key() ) ) {
+      Q_FOREACH( KMime::Content* c, it.value() ) {
+        KMime::Content * p = c->parent();
+        if ( p )
+          p->removeContent( c );
+      }
       qDeleteAll( it.value() );
       kDebug() << "mExtraContents deleted for" << it.key();
       mExtraContents.remove( it.key() );
@@ -141,6 +146,11 @@ void NodeHelper::clear()
   mBodyPartMementoMap.clear();
 
   for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+    Q_FOREACH( KMime::Content* c, it.value() ) {
+      KMime::Content * p = c->parent();
+      if ( p )
+        p->removeContent( c );
+    }
     qDeleteAll( it.value() );
     kDebug() << "mExtraContents deleted for" << it.key();
   }
@@ -767,7 +777,7 @@ void NodeHelper::attachExtraContent( KMime::Content *topLevelNode, KMime::Conten
   mExtraContents[topLevelNode].append( content );
 }
 
-void NodeHelper::removeExtraContent( KMime::Content *topLevelNode )
+void NodeHelper::removeAllExtraContent( KMime::Content *topLevelNode )
 {
   if ( mExtraContents.contains( topLevelNode ) ) {
     qDeleteAll( mExtraContents[topLevelNode] );
@@ -779,8 +789,77 @@ QList< KMime::Content* > NodeHelper::extraContents( KMime::Content *topLevelnode
 {
  if ( mExtraContents.contains( topLevelnode ) ) {
     return mExtraContents[topLevelnode];
- } else
+ } else {
+   Q_FOREACH( KMime::Content* c, topLevelnode->contents() ) {
+     QList< KMime::Content* > result = extraContents( c );
+     if ( !result.isEmpty() )
+       return result;
+   }
    return QList< KMime::Content* >();
+ }
+}
+
+void NodeHelper::mergeExtraNodes( KMime::Content *node )
+{
+  if ( !node )
+    return;
+  
+  QList<KMime::Content* > extraNodes = extraContents( node );
+  Q_FOREACH( KMime::Content* extra, extraNodes ) {
+      KMime::Content *c = new KMime::Content( node );
+      c->setContent( extra->encodedContent() );
+      c->parse();
+      node->addContent( c );
+  }
+
+  Q_FOREACH( KMime::Content* child, node->contents() ) {
+    mergeExtraNodes( child );
+  }
+}
+
+void NodeHelper::cleanFromExtraNodes( KMime::Content* node )
+{
+  if ( !node )
+    return;
+  QList<KMime::Content* > extraNodes = extraContents( node );
+  Q_FOREACH( KMime::Content* extra, extraNodes ) {
+     QByteArray s = extra->encodedContent();
+     QList<KMime::Content* > children = node->contents();
+     Q_FOREACH( KMime::Content *c, children ) {
+       if ( c->encodedContent() == s ) {
+         node->removeContent( c );
+       }
+     }
+  }
+  Q_FOREACH( KMime::Content* child, node->contents() ) {
+    cleanFromExtraNodes( child );
+  }
+}
+
+
+KMime::Message* NodeHelper::messageWithExtraContent( KMime::Content* topLevelNode )
+{
+  /*The merge is done in several steps:
+    1) merge the extra nodes into topLevelNode
+    2) copy the modified (merged) node tree into a new node tree
+    3) restore the original node tree in topLevelNode by removing the extra nodes from it
+
+    The reason is that extra nodes are assigned by pointer value to the nodes in the original tree.
+  */
+  if (!topLevelNode)
+    return 0;
+
+  mergeExtraNodes( topLevelNode );
+
+  KMime::Message *m = new KMime::Message;
+  m->setContent( topLevelNode->encodedContent() );
+  m->parse();
+
+  cleanFromExtraNodes( topLevelNode );
+//   qDebug() << "MESSAGE WITH EXTRA: " << m->encodedContent();
+//   qDebug() << "MESSAGE WITHOUT EXTRA: " << topLevelNode->encodedContent();
+
+  return m;
 }
 
 

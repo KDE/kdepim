@@ -108,9 +108,17 @@ public:
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message::Ptr message, KMime::Message::Ptr unencrypted );
 
+    /** Attach an extra node to an existing node */
     void attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content );
-    void removeExtraContent( KMime::Content *topLevelNode );
+    void removeAllExtraContent( KMime::Content *topLevelNode );
+
+    /** Get the extra nodes attached to the @param topLevelNode and all sub-nodes of @param topLevelNode */
     QList<KMime::Content*> extraContents( KMime::Content *topLevelNode );
+
+    /** Return a modified message (node tree) starting from @param topLevelNode that has the original nodes and the extra nodes.
+        The caller has the responsibility to delete the new message.
+     */
+    KMime::Message *messageWithExtraContent( KMime::Content* topLevelNode );
 
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
@@ -235,6 +243,9 @@ private:
                                  bool replace, const QString& newPrefix );
 
     void clearBodyPartMemento( QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap );
+
+    void mergeExtraNodes( KMime::Content *node );
+    void cleanFromExtraNodes( KMime::Content *node );
 
     QList<KMime::Content*> mProcessedNodes;
     QList<KMime::Content*> mNodesUnderProcess;

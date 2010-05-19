@@ -48,6 +48,8 @@ class MimeTreeModel : public QAbstractItemModel
 
     void setRoot( KMime::Content *root );
 
+    KMime::Content* root();
+
     QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
     QModelIndex parent( const QModelIndex &index ) const;
     int rowCount( const QModelIndex &parent = QModelIndex() ) const;

@@ -354,7 +354,7 @@ private:
           found in 'cntDesc'.
       2. Parse the 'node' to display the content.
    */
-  void createAndParseTempNode( const char * content, const char * cntDesc );
+  void createAndParseTempNode( KMime::Content* parentNode, const char * content, const char * cntDesc );
 
   /** if data is 0:
       Feeds the HTML widget with the contents of the opaque signed

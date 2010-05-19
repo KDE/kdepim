@@ -473,6 +473,10 @@ private slots:
 
   void slotItemChanged( const Akonadi::Item& item, const QSet<QByteArray>& partIdentifiers );
 
+  void itemModifiedResult( KJob* job );
+
+  void slotMimePartDestroyed();
+
 public slots:
   /** An URL has been activate with a click. */
   void slotUrlOpen( const QUrl &url = QUrl());

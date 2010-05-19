@@ -128,6 +128,12 @@ void MimeTreeModel::setRoot(KMime::Content * root)
   reset();
 }
 
+KMime::Content* MimeTreeModel::root()
+{
+  return d->root;
+}
+
+
 QModelIndex MimeTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
   if ( !parent.isValid() ) {

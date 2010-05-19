@@ -189,13 +189,13 @@ ObjectTreeParser::~ObjectTreeParser()
   }
 }
 
-void ObjectTreeParser::createAndParseTempNode( const char* content, const char* cntDesc )
+void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, const char* content, const char* cntDesc )
 {
   kDebug() << "CONTENT: " << QByteArray( content ).left( 100 ) << " CNTDESC: " << cntDesc;
 
   KMime::Content *newNode = new KMime::Content();
   newNode->setContent( content );
-  newNode->parse();  
+  newNode->parse();
 /*  kDebug()  << "MEDIATYPE: " << newNode->contentType()->mediaType() << newNode->contentType()->mimeType()
     ;
   kDebug() << "DECODEDCONTENT: " << newNode->decodedContent().left(40);
@@ -204,7 +204,7 @@ void ObjectTreeParser::createAndParseTempNode( const char* content, const char* 
   if ( !newNode->head().isEmpty() ) {
     newNode->contentDescription()->from7BitString( cntDesc );
   }
-  mNodeHelper->attachExtraContent( mTopLevelContent, newNode );
+  mNodeHelper->attachExtraContent( parentNode, newNode );
 
   ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
   otp.parseObjectTreeInternal( newNode );
@@ -673,7 +673,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
       bIsOpaqueSigned = true;
 
       CryptoProtocolSaver cpws( this, cryptProto );
-      createAndParseTempNode( doCheck ? cleartext.data() : cleartextData->data(),
+      createAndParseTempNode( data, doCheck ? cleartext.data() : cleartextData->data(),
                               "opaque signed data" );
 
       if ( htmlWriter() )
@@ -1118,7 +1118,7 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
   // at least one message found: build a mime tree
   digestHeaderStr = "Content-Type: text/plain\nContent-Description: digest header\n\n";
   digestHeaderStr += str.mid( 0, thisDelim );
-  createAndParseTempNode( digestHeaderStr.toLatin1(), "Digest Header" );
+  createAndParseTempNode( mTopLevelContent, digestHeaderStr.toLatin1(), "Digest Header" );
   //mReader->queueHtml("<br><hr><br>");
   // temporarily change curent node's Content-Type
   // to get our embedded RfC822 messages properly inserted
@@ -1153,7 +1153,7 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
         subject.truncate( thisEoL );
     }
     kDebug() << "        embedded message found: \"" << subject;
-    createAndParseTempNode( partStr.toLatin1(), subject.toLatin1() );
+    createAndParseTempNode( mTopLevelContent, partStr.toLatin1(), subject.toLatin1() );
     //mReader->queueHtml("<br><hr><br>");
     thisDelim = nextDelim+1;
     nextDelim = str.indexOf(delim1, thisDelim, Qt::CaseInsensitive );
@@ -1177,7 +1177,7 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
     thisDelim = thisDelim+1;
   partStr = "Content-Type: text/plain\nContent-Description: digest footer\n\n";
   partStr += str.mid( thisDelim );
-  createAndParseTempNode( partStr.toLatin1(), "Digest Footer" );
+  createAndParseTempNode( mTopLevelContent, partStr.toLatin1(), "Digest Footer" );
   return true;
 }
 
@@ -1519,7 +1519,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
     } else {
       decryptedData = KMime::CRLFtoLF( decryptedData ); //KMime works with LF only inside insertAndParseNewChildNode
       
-      createAndParseTempNode( decryptedData.constData(),"encrypted data" );
+      createAndParseTempNode( node, decryptedData.constData(),"encrypted data" );
     }
   } else {
     mRawReplyString += decryptedData;
@@ -1654,7 +1654,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
 
       if ( bOkDecrypt ) {
         // fixing the missing attachments bug #1090-b
-        createAndParseTempNode( decryptedData.constData(), "encrypted data" );
+        createAndParseTempNode( node, decryptedData.constData(), "encrypted data" );
       } else {
         mRawReplyString += decryptedData;
         if ( htmlWriter() ) {
@@ -1822,7 +1822,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
           htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                     cryptoProtocol(),
                                                     NodeHelper::fromAsString( node ) ) );
-        createAndParseTempNode( decryptedData.constData(), "encrypted data" );
+        createAndParseTempNode( node, decryptedData.constData(), "encrypted data" );
         if ( htmlWriter() )
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
       } else {
