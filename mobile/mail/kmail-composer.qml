@@ -85,7 +85,7 @@ KPIM.MainView {
         KPIM.Action {
           id : newAttachmentButton
 //           color : "lightsteelblue"
-          anchors.top : attachmentView.top
+          anchors.top : attachmentView.bottom
           anchors.left : parent.left
           anchors.right : parent.right
           height : parent.height / 6
