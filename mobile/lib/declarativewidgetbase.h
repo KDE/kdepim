@@ -37,6 +37,8 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
       m_proxy( new QGraphicsProxyWidget( this ) )
     {
       m_proxy->setWidget( m_widget );
+      setWidth( m_widget->width() );
+      setHeight( m_widget->height() );
     }
 
     virtual ~DeclarativeWidgetBase() { delete m_proxy; }
