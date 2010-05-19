@@ -22,7 +22,6 @@
 
 #include "declarativecomposerwidgetbase.h"
 
-#include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identitycombo.h>
 
 class QGraphicsProxyWidget;
@@ -32,9 +31,6 @@ class DeclarativeIdentityComboBox : public DeclarativeComposerWidgetBase<KPIMIde
   Q_OBJECT
   public:
     explicit DeclarativeIdentityComboBox( QDeclarativeItem *parent = 0 );
-
-  private:
-    QScopedPointer<KPIMIdentities::IdentityManager> m_manager;
 };
 
 #endif

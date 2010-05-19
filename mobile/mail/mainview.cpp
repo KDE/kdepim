@@ -21,6 +21,7 @@
 #include "mainview.h"
 #include "composerview.h"
 #include "messagelistproxy.h"
+#include "global.h"
 
 #include <messagecomposer/messagefactory.h>
 
@@ -56,7 +57,7 @@ void MainView::reply( quint64 id )
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
   MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), id );
-  factory.setIdentityManager( new KPIMIdentities::IdentityManager() ); // FIXME share one in the entire app
+  factory.setIdentityManager( Global::identityManager() );
 
   ComposerView *composer = new ComposerView;
   composer->setMessage( factory.createReply().msg );

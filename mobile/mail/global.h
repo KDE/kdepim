@@ -16,16 +16,19 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "declarativeidentitycombobox.h"
-#include "global.h"
 
-#include <kpimidentities/identitymanager.h>
+#ifndef KMAIL_MOBILE_GLOBAL_H
+#define KMAIL_MOBILE_GLOBAL_H
 
-DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
-  DeclarativeComposerWidgetBase< KPIMIdentities::IdentityCombo, &ComposerView::setIdentityCombo> ( parent )
-{
-  m_widget = new KPIMIdentities::IdentityCombo( Global::identityManager(), 0 );
-  m_proxy->setWidget( m_widget );
+namespace KPIMIdentities {
+class IdentityManager;
 }
 
-#include "declarativeidentitycombobox.moc"
+namespace Global {
+
+  /// application-wide shared identity manager
+  KPIMIdentities::IdentityManager *identityManager();
+
+}
+
+#endif

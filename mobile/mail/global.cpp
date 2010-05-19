@@ -16,16 +16,28 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "declarativeidentitycombobox.h"
+
 #include "global.h"
 
 #include <kpimidentities/identitymanager.h>
+#include <kglobal.h>
 
-DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
-  DeclarativeComposerWidgetBase< KPIMIdentities::IdentityCombo, &ComposerView::setIdentityCombo> ( parent )
+#include <QScopedPointer>
+
+class GlobalPrivate
 {
-  m_widget = new KPIMIdentities::IdentityCombo( Global::identityManager(), 0 );
-  m_proxy->setWidget( m_widget );
-}
+  public:
+    GlobalPrivate() :
+      m_identityManager( new KPIMIdentities::IdentityManager )
+    {
+    }
 
-#include "declarativeidentitycombobox.moc"
+    QScopedPointer<KPIMIdentities::IdentityManager> m_identityManager;
+};
+
+K_GLOBAL_STATIC( GlobalPrivate, s_global )
+
+KPIMIdentities::IdentityManager* Global::identityManager()
+{
+  return s_global->m_identityManager.data();
+}
