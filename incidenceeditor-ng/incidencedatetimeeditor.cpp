@@ -277,7 +277,12 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
   mUi->mStartLabel->setVisible( true );
   mUi->mEndLabel->setVisible( true );
   mUi->mStartCheck->setVisible( false );
+  mUi->mStartCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
   mUi->mEndCheck->setVisible( false );
+  mUi->mEndCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
+
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits(bool)) );
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(enableAlarm(bool)) );
 }
 
 void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
