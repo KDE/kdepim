@@ -40,6 +40,7 @@
 #include <kcharsets.h>
 #include <QTextCodec>
 
+using namespace MessageComposer;
 
 MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id )
   : m_identityManager( 0 )
