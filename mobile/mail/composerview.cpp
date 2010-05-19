@@ -43,6 +43,7 @@
 #include <KIcon>
 #include <KAction>
 #include <KMessageBox>
+#include <KCMultiDialog>
 
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
@@ -217,6 +218,13 @@ QObject* ComposerView::getAction( const QString &name ) const
 {
   kDebug() << mActionCollection << mActionCollection->action( name );
   return mActionCollection->action( name );
+}
+
+void ComposerView::configureTransport()
+{
+  KCMultiDialog dlg;
+  dlg.addModule( "kcm_mailtransport" );
+  dlg.exec();
 }
 
 #include "composerview.moc"

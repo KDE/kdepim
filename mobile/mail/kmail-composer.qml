@@ -51,6 +51,20 @@ KPIM.MainView {
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       contentWidth: 240
+      content: [
+        KPIM.Button {
+          id: configureTransportButton
+          anchors.top: parent.top;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          buttonText: KDE.i18n( "Configure Transport" )
+          onClicked: {
+            actionPanel.collapse();
+            window.configureTransport();
+          }
+        }
+      ]
     }
 
     SlideoutPanel {

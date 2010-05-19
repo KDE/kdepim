@@ -65,6 +65,7 @@ class ComposerView : public KDeclarativeFullScreenView
     /// Send clicked in the user interface
     void send();
     QObject* getAction( const QString &name ) const;
+    void configureTransport();
 
   signals:
     void changed();
