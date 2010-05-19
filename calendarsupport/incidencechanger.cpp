@@ -117,8 +117,8 @@ bool IncidenceChanger::Private::performChange( Change *change )
     return true;
   } else {
 
-    if ( m_latestRevisionByItemId.contains( newItem.id() ) &&
-         m_latestRevisionByItemId[newItem.id()] > newItem.revision() ) {
+    if ( mLatestRevisionByItemId.contains( newItem.id() ) &&
+         mLatestRevisionByItemId[newItem.id()] > newItem.revision() ) {
       /* When a ItemModifyJob ends, the application can still modify the old items if the user
        * is quick because the ETM wasn't updated yet, and we'll get a STORE error, because
        * we are not modifying the latest revision.
@@ -126,7 +126,7 @@ bool IncidenceChanger::Private::performChange( Change *change )
        * When a job ends, we keep the new revision in m_latestVersionByItemId
        * so we can update the item's revision
        */
-      newItem.setRevision( m_latestRevisionByItemId[newItem.id()] );
+      newItem.setRevision( mLatestRevisionByItemId[newItem.id()] );
     }
 
     kDebug() << "Changing incidence";
@@ -209,7 +209,7 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
     emit incidenceChanged( oldItem, newItem, change->action );
   }
 
-  m_latestRevisionByItemId[newItem.id()] = newItem.revision();
+  mLatestRevisionByItemId[newItem.id()] = newItem.revision();
 
   // execute any other modification if it exists
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
@@ -351,7 +351,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
       d->mGroupware->setDoNotNotify( false );
     }
   }
-  d->m_latestRevisionByItemId.remove( items.first().id() );
+  d->mLatestRevisionByItemId.remove( items.first().id() );
   emit incidenceDeleted( items.first() );
 }
 
