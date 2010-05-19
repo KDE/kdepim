@@ -859,7 +859,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
     if ( incidence->dtStart().toTimeSpec( preferences()->timeSpec() ) == startDt &&
          ev->dtEnd().toTimeSpec( preferences()->timeSpec() ) == endDt ) {
       // No change
-      changer()->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
       return;
     }
@@ -881,7 +880,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
     if ( td->dtDue().toTimeSpec( preferences()->timeSpec() )  == endDt ) {
       // No change
-      changer()->endChange( aitem );
       QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
       return;
     }
@@ -1075,7 +1073,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
   const bool result = changer()->changeIncidence( oldIncidence, aitem,
                                                  IncidenceChanger::DATE_MODIFIED, this );
-  changer()->endChange( aitem );
 
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
@@ -1568,12 +1565,11 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
     if ( Todo::Ptr existingTodo = Akonadi::todo( existingTodoItem ) ) {
       kDebug() << "Drop existing Todo";
       Todo::Ptr oldTodo( existingTodo->clone() );
-      if ( changer() && changer()->beginChange( existingTodoItem ) ) {
+      if ( changer() ) {
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
         changer()->changeIncidence( oldTodo, existingTodoItem, IncidenceChanger::DATE_MODIFIED, this );
-        changer()->endChange( existingTodoItem );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
                                         "because it cannot be locked." ) );

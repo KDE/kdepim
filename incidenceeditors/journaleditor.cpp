@@ -131,18 +131,13 @@ bool JournalEditor::processInput()
       // Don't do anything
     } else {
       journal = Akonadi::journal( mIncidence );
-      if ( mChanger->beginChange( mIncidence ) ) {
-        journal->startUpdates(); //merge multiple mIncidence->updated() calls into one
-        fillJournal( journal.get() );
-        rc = mChanger->changeIncidence( oldJournal,
-                                        mIncidence,
-                                        Akonadi::IncidenceChanger::NOTHING_MODIFIED,
-                                        this );
-        journal->endUpdates();
-        mChanger->endChange( mIncidence );
-      } else {
-        return false;
-      }
+      journal->startUpdates(); //merge multiple mIncidence->updated() calls into one
+      fillJournal( journal.get() );
+      rc = mChanger->changeIncidence( oldJournal,
+                                      mIncidence,
+                                      Akonadi::IncidenceChanger::NOTHING_MODIFIED,
+                                      this );
+      journal->endUpdates();
     }
     return rc;
   } else {

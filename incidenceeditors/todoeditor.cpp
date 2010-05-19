@@ -204,29 +204,24 @@ bool TodoEditor::processInput()
     if( *oldTodo == *todo ) {
       // Don't do anything cause no changes where done
     } else {
-      if ( mChanger->beginChange( mIncidence ) ) {
-        //merge multiple mIncidence->updated() calls into one
-        Akonadi::todo( mIncidence )->startUpdates();
-        fillTodo( mIncidence );
+      //merge multiple mIncidence->updated() calls into one
+      Akonadi::todo( mIncidence )->startUpdates();
+      fillTodo( mIncidence );
 
-        Akonadi::IncidenceChanger::WhatChanged whatChanged;
+      Akonadi::IncidenceChanger::WhatChanged whatChanged;
 
-        if ( !oldTodo->isCompleted() && todo->isCompleted() ) {
-          whatChanged = Akonadi::IncidenceChanger::COMPLETION_MODIFIED;
-        } else {
-          whatChanged = Akonadi::IncidenceChanger::UNKNOWN_MODIFIED;
-        }
-
-        rc = mChanger->changeIncidence( oldTodo,
-                                        mIncidence,
-                                        whatChanged,
-                                        this );
-
-        Akonadi::todo( mIncidence )->endUpdates();
-        mChanger->endChange( mIncidence );
+      if ( !oldTodo->isCompleted() && todo->isCompleted() ) {
+        whatChanged = Akonadi::IncidenceChanger::COMPLETION_MODIFIED;
       } else {
-        return false;
+        whatChanged = Akonadi::IncidenceChanger::UNKNOWN_MODIFIED;
       }
+
+      rc = mChanger->changeIncidence( oldTodo,
+                                      mIncidence,
+                                      whatChanged,
+                                      this );
+
+      Akonadi::todo( mIncidence )->endUpdates();
     }
     return rc;
   } else {

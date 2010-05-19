@@ -46,7 +46,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
   public:
     IncidenceChanger( Akonadi::Calendar *cal,
                       QObject *parent,
-                      const Akonadi::Entity::Id &defaultCollectionId );
+                      Akonadi::Entity::Id defaultCollectionId );
     ~IncidenceChanger();
 
     enum HowChanged {
@@ -79,17 +79,6 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 
     void setGroupware( Groupware *groupware );
 
-    /** Locks the incidence */
-    bool beginChange( const Akonadi::Item & incidence );
-
-    /** Commits the change by starting an akonadi modify job
-     *  The lock is removed in changeIncidenceFinished()
-     */
-    bool endChange( const Akonadi::Item &incidence );
-
-    /** Removes the lock in case you don't want to call endchange() anymore */
-    void cancelChange( const Akonadi::Item &incidence );
-
     bool sendGroupwareMessage( const Akonadi::Item &incidence,
                                KCal::iTIPMethod method,
                                HowChanged action,
@@ -112,7 +101,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     bool cutIncidences( const Akonadi::Item::List &incidences, QWidget *parent );
     bool cutIncidence( const Akonadi::Item &incidence, QWidget *parent );
 
-    void setDefaultCollectionId( const Akonadi::Entity::Id & );
+    void setDefaultCollectionId( Akonadi::Entity::Id );
 
     static bool incidencesEqual( KCal::Incidence *inc1, KCal::Incidence *inc2 );
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
@@ -120,16 +109,13 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     void setDestinationPolicy( DestinationPolicy destinationPolicy );
     DestinationPolicy destinationPolicy() const;
 
-  public slots:
+  public Q_SLOTS:
     void cancelAttendees( const Akonadi::Item &incidence );
 
   protected:
-    bool myAttendeeStatusChanged( const KCal::Incidence *newInc,
-                                  const KCal::Incidence *oldInc );
-
     Akonadi::Calendar *mCalendar;
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void incidenceAdded( const Akonadi::Item & );
 
     void incidenceChanged( const Akonadi::Item &oldinc,
@@ -144,7 +130,6 @@ Q_SIGNALS:
   private Q_SLOTS:
     void addIncidenceFinished( KJob* job );
     void deleteIncidenceFinished( KJob* job );
-    void changeIncidenceFinished( KJob* job );
 
   private:
     class Private;

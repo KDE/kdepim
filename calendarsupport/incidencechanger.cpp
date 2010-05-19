@@ -23,6 +23,7 @@
 */
 
 #include "incidencechanger.h"
+#include "incidencechanger_p.h"
 #include "groupware.h"
 
 #include <akonadi/kcal/calendar.h>
@@ -53,34 +54,177 @@
 using namespace KCal;
 using namespace Akonadi;
 
-class IncidenceChanger::Private {
-public:
-  Private( const Entity::Id &defaultCollectionId ) :
-    mDefaultCollectionId( defaultCollectionId ),
-    mGroupware( 0 ),
-    mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ) {
+bool IncidenceChanger::Private::myAttendeeStatusChanged( const Incidence* newInc,
+                                                         const Incidence* oldInc )
+{
+  Attendee *oldMe = oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
+  Attendee *newMe = newInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
+  if ( oldMe && newMe && ( oldMe->status() != newMe->status() ) ) {
+    return true;
   }
 
-  ~Private() {}
+  return false;
+}
 
-  QList<Akonadi::Item::Id> m_changes; //list of item ids that are modified atm
-  KCal::Incidence::Ptr m_incidenceBeingChanged; // clone of the incidence currently being modified, for rollback and to check if something actually changed
-  Item m_itemBeingChanged;
+void IncidenceChanger::Private::queueChange( Change *change )
+{
+  // If there's already a change queued we just discard it
+  // and send the newer change, which already includes
+  // previous modifications
+  const Item::Id id = change->newItem.id();
+  if ( mQueuedChanges.contains( id ) ) {
+    delete mQueuedChanges.take( id );
+  }
 
-  QHash<Akonadi::Item::Id, int> m_latestVersionByItemId;
-  QHash<const KJob*, Item> m_oldItemByJob;
-  QHash<QString, IncidenceChanger::WhatChanged> m_actionByOldUid;
-  Entity::Id mDefaultCollectionId;
+  mQueuedChanges[id] = change;
+}
 
-  Groupware *mGroupware;
-  DestinationPolicy mDestinationPolicy;
-};
+void IncidenceChanger::Private::cancelChanges( Item::Id id )
+{
+  delete mQueuedChanges.take( id );
+  delete mCurrentChanges.take( id );
+}
+
+void IncidenceChanger::Private::performNextChange( Item::Id id )
+{
+  delete mCurrentChanges.take( id );
+
+  if ( mQueuedChanges.contains( id ) ) {
+    performChange( mQueuedChanges.take( id ) );
+  }
+}
+
+bool IncidenceChanger::Private::performChange( Change *change )
+{
+  Item newItem = change->newItem;
+  const Incidence::Ptr oldinc =  change->oldInc;
+  const Incidence::Ptr newinc = Akonadi::incidence( newItem );
+
+  kDebug() << "id="                  << newItem.id()         <<
+              "uid="                 << newinc->uid()        <<
+              "version="             << newItem.revision()   <<
+              "summary="             << newinc->summary()    <<
+              "old summary"          << oldinc->summary()    <<
+              "type="                << newinc->type()       <<
+              "storageCollectionId=" << newItem.storageCollectionId();
+
+  // There not any job modifying this item, so mCurrentChanges[item.id] can't exist
+  Q_ASSERT( !mCurrentChanges.contains( newItem.id() ) );
+
+  if ( incidencesEqual( newinc.get(), oldinc.get() ) ) {
+    // Don't do anything
+    kDebug() << "Incidence not changed";
+    return true;
+  } else {
+
+    if ( m_latestRevisionByItemId.contains( newItem.id() ) &&
+         m_latestRevisionByItemId[newItem.id()] > newItem.revision() ) {
+      /* When a ItemModifyJob ends, the application can still modify the old items if the user
+       * is quick because the ETM wasn't updated yet, and we'll get a STORE error, because
+       * we are not modifying the latest revision.
+       *
+       * When a job ends, we keep the new revision in m_latestVersionByItemId
+       * so we can update the item's revision
+       */
+      newItem.setRevision( m_latestRevisionByItemId[newItem.id()] );
+    }
+
+    kDebug() << "Changing incidence";
+    const bool attendeeStatusChanged = myAttendeeStatusChanged( oldinc.get(), newinc.get() );
+    const int revision = newinc->revision();
+    newinc->setRevision( revision + 1 );
+    // FIXME: Use a generic method for this! Ideally, have an interface class
+    //        for group cheduling. Each implementation could then just do what
+    //        it wants with the event. If no groupware is used,use the null
+    //        pattern...
+    bool success = true;
+    if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
+      if ( !mGroupware ) {
+          kError() << "Groupware communication enabled but no groupware instance set";
+      } else {
+        success = mGroupware->sendICalMessage( change->parent,
+                                               KCal::iTIPRequest,
+                                               newinc.get(),
+                                               INCIDENCEEDITED,
+                                               attendeeStatusChanged );
+      }
+    }
+
+    if ( !success ) {
+      kDebug() << "Changing incidence failed. Reverting changes.";
+      assignIncidence( newinc.get(), oldinc.get() );
+      return false;
+    }
+  }
+
+  // FIXME: if that's a groupware incidence, and I'm not the organizer,
+  // send out a mail to the organizer with a counterproposal instead
+  // of actually changing the incidence. Then no locking is needed.
+  // FIXME: if that's a groupware incidence, and the incidence was
+  // never locked, we can't unlock it with endChange().
+
+  mCurrentChanges[newItem.id()] = change;
+  ItemModifyJob *job = new ItemModifyJob( newItem );
+  connect( job, SIGNAL(result( KJob*)), this, SLOT(changeIncidenceFinished(KJob*)) );
+  return true;
+}
+
+void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
+{
+  //AKONADI_PORT this is from the respective method in the old Akonadi::Calendar, so I leave it here: --Frank
+  kDebug();
+
+  // we should probably update the revision number here,or internally in the Event
+  // itself when certain things change. need to verify with ical documentation.
+  const ItemModifyJob* job = qobject_cast<const ItemModifyJob*>( j );
+  Q_ASSERT( job );
+
+  const Item newItem = job->item();
+
+  if ( !mCurrentChanges.contains( newItem.id() ) ) {
+    kDebug() << "Item was deleted? Great.";
+    cancelChanges( newItem.id() );
+    return;
+  }
+
+  const Private::Change *change = mCurrentChanges[newItem.id()];
+  const Incidence::Ptr oldInc = change->oldInc;
+
+  if ( job->error() ) {
+    kWarning( 5250 ) << "Item modify failed:" << job->errorString();
+
+    const Incidence::Ptr newInc = Akonadi::incidence( newItem );
+    KMessageBox::sorry( change->parent,
+                        i18n( "Unable to save changes for incidence %1 \"%2\": %3",
+                              i18n( newInc->type() ),
+                              newInc->summary(),
+                              job->errorString( )) );
+  } else {
+    Item oldItem;
+    // TODO revisions ?
+    oldItem.setPayload<Incidence::Ptr>( oldInc );
+    oldItem.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" )
+                         .arg( QLatin1String( oldInc->type().toLower() ) ) );
+    oldItem.setId( newItem.id() );
+    emit incidenceChanged( oldItem, newItem, change->action );
+  }
+
+  m_latestRevisionByItemId[newItem.id()] = newItem.revision();
+
+  // execute any other modification if it exists
+  qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
+  QMetaObject::invokeMethod( this, "performNextChange",
+                             Qt::QueuedConnection,
+                             Q_ARG( Akonadi::Item::Id, newItem.id() ) );
+}
 
 IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
                                     QObject *parent,
-                                    const Entity::Id &defaultCollectionId )
+                                    Entity::Id defaultCollectionId )
   : QObject( parent ), mCalendar( cal ), d( new Private( defaultCollectionId ) )
 {
+  connect( d, SIGNAL(incidenceChanged(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged)),
+           SIGNAL(incidenceChanged(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged)) );
 }
 
 IncidenceChanger::~IncidenceChanger()
@@ -91,38 +235,6 @@ IncidenceChanger::~IncidenceChanger()
 void IncidenceChanger::setGroupware( Groupware *groupware )
 {
   d->mGroupware = groupware;
-}
-
-bool IncidenceChanger::beginChange( const Item &item )
-{
-  if ( !Akonadi::hasIncidence( item ) ) {
-    kDebug() << "Skipping invalid item id=" << item.id();
-    return false;
-  }
-
-  // Don't start two modify jobs over the same revision
-  if ( d->m_latestVersionByItemId.contains( item.id() ) &&
-       d->m_latestVersionByItemId[item.id()] > item.revision() ) {
-    kDebug() << "Skipping item " << item.id() << " with revision " << item.revision();
-    return false;
-  }
-
-  const Incidence::Ptr incidence = Akonadi::incidence( item );
-  Q_ASSERT( incidence );
-  kDebug() << "id=" << item.id() << "uid=" << incidence->uid() <<
-    "version=" << item.revision() << "summary=" << incidence->summary() <<
-    "type=" << incidence->type() << "storageCollectionId=" <<
-    item.storageCollectionId();
-
-  if ( !d->m_changes.contains( item.id() ) ) { // no nested changes allowed
-    d->m_changes.push_back( item.id() );
-    d->m_incidenceBeingChanged = Incidence::Ptr( incidence->clone() );
-    d->m_itemBeingChanged = item;
-    return true;
-  } else {
-    kDebug() << "No nested changes allowed id = " << item.id();
-    return false;
-  }
 }
 
 bool IncidenceChanger::sendGroupwareMessage( const Item &aitem,
@@ -173,65 +285,6 @@ void IncidenceChanger::cancelAttendees( const Item &aitem )
   }
 }
 
-bool IncidenceChanger::endChange( const Item &item )
-{
-  if ( !Akonadi::hasIncidence( item ) ) {
-    return false;
-  }
-
-  // FIXME: if that's a groupware incidence, and I'm not the organizer,
-  // send out a mail to the organizer with a counterproposal instead
-  // of actually changing the incidence. Then no locking is needed.
-  // FIXME: if that's a groupware incidence, and the incidence was
-  // never locked, we can't unlock it with endChange().
-
-  const Incidence::Ptr incidence = Akonadi::incidence( item );
-  Q_ASSERT( incidence );
-
-  const bool isModification = d->m_changes.contains( item.id() );
-
-  if ( !isModification || !d->m_incidenceBeingChanged ) {
-    // only if beginChange() with the incidence was called then this is a modification else it
-    // is e.g. a new event/todo/journal that was not added yet or an existing one got deleted.
-    kDebug() << "Skipping modify uid=" << incidence->uid() << "summary=" << incidence->summary()
-             << "type=" << incidence->type();
-    cancelChange( item );
-
-    return false;
-  }
-
-  // check if there was an actual change to the incidence since beginChange
-  // if not, don't kick off a modify job. The reason this is useful is that
-  // begin/endChange is used for locking as well, so it is called quite often
-  // without any actual changes happening. Nested modify jobs confuse the
-  // conflict detection in Akonadi, so let's avoid them.
-  KCal::ComparisonVisitor v;
-  Incidence::Ptr incidencePtr( d->m_incidenceBeingChanged );
-  d->m_incidenceBeingChanged.reset();
-  const Item oldItem = d->m_itemBeingChanged;
-  d->m_itemBeingChanged = Item();
-  if ( v.compare( incidence.get(), incidencePtr.get() ) ) {
-    kDebug()<<"Incidence is unmodified";
-    cancelChange( item );
-
-    return true;
-  }
-
-  kDebug() << "modify id=" << item.id() << "uid=" << incidence->uid() << "version=" << item.revision() << "summary=" << incidence->summary() << "type=" << incidence->type() << "storageCollectionId=" << item.storageCollectionId();
-  ItemModifyJob *job = new ItemModifyJob( item );
-  d->m_oldItemByJob.insert( job, oldItem );
-  connect( job, SIGNAL(result( KJob*)), this, SLOT(changeIncidenceFinished(KJob*)) );
-  return true;
-}
-
-void IncidenceChanger::cancelChange( const Akonadi::Item &item )
-{
-  if ( Akonadi::hasIncidence( item ) ) {
-    kDebug() << "Canceling change";
-    d->m_changes.removeAll( item.id() );
-  }
-}
-
 bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
 {
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
@@ -246,49 +299,15 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
     return false;
   }
   emit incidenceToBeDeleted( aitem );
-  d->m_changes.removeAll( aitem.id() ); //abort changes to this incidence cause we will just delete it
+  d->cancelChanges( aitem.id() ); //abort changes to this incidence cause we will just delete it
   ItemDeleteJob* job = new ItemDeleteJob( aitem );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(deleteIncidenceFinished(KJob*)) );
   return true;
 }
 
-void IncidenceChanger::changeIncidenceFinished( KJob* j )
-{
-  //AKONADI_PORT this is from the respective method in the old Akonadi::Calendar, so I leave it here: --Frank
-  kDebug();
-
-  // we should probably update the revision number here,or internally in the Event
-  // itself when certain things change. need to verify with ical documentation.
-  const ItemModifyJob* job = qobject_cast<const ItemModifyJob*>( j );
-  Q_ASSERT( job );
-
-  const Item oldItem = d->m_oldItemByJob.value( job );
-  d->m_oldItemByJob.remove( job );
-  const Item newItem = job->item();
-  Incidence::Ptr tmp = Akonadi::incidence( newItem );
-  Q_ASSERT( tmp );
-
-  if ( job->error() ) {
-    kWarning( 5250 ) << "Item modify failed:" << job->errorString();
-    KMessageBox::sorry( 0, //PENDING(AKONADI_PORT) set parent
-                        i18n( "Unable to save changes for incidence %1 \"%2\": %3",
-                              i18n( tmp->type() ),
-                              tmp->summary(),
-                              job->errorString( )) );
-  } else {
-    QString uid = Akonadi::incidence( oldItem )->uid();
-    WhatChanged whatChanged = d->m_actionByOldUid.contains( uid ) ?
-                              d->m_actionByOldUid[uid] : UNKNOWN_MODIFIED;
-    emit incidenceChanged( oldItem, newItem, whatChanged );
-    d->m_actionByOldUid.remove( uid );
-  }
-
-  d->m_latestVersionByItemId[newItem.id()] = newItem.revision();
-  d->m_changes.removeAll( oldItem.id() );
-}
-
 void IncidenceChanger::deleteIncidenceFinished( KJob* j )
 {
+  // todo, cancel changes?
   kDebug();
   const ItemDeleteJob* job = qobject_cast<const ItemDeleteJob*>( j );
   Q_ASSERT( job );
@@ -332,6 +351,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
       d->mGroupware->setDoNotNotify( false );
     }
   }
+  d->m_latestRevisionByItemId.remove( items.first().id() );
   emit incidenceDeleted( items.first() );
 }
 
@@ -370,7 +390,7 @@ bool IncidenceChanger::cutIncidence( const Item &item, QWidget *parent )
   return cutIncidences( items, parent );
 }
 
-void IncidenceChanger::setDefaultCollectionId( const Entity::Id &defaultCollectionId )
+void IncidenceChanger::setDefaultCollectionId( Entity::Id defaultCollectionId )
 {
   d->mDefaultCollectionId = defaultCollectionId;
 }
@@ -453,59 +473,30 @@ bool IncidenceChanger::assignIncidence( Incidence *inc1, Incidence *inc2 )
   return v.assign( inc1, inc2 );
 }
 
-bool IncidenceChanger::myAttendeeStatusChanged( const Incidence* newInc,
-                                                const Incidence* oldInc )
-{
-  Attendee *oldMe = oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
-  Attendee *newMe = newInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
-  if ( oldMe && newMe && ( oldMe->status() != newMe->status() ) ) {
-    return true;
-  }
-
-  return false;
-}
-
 bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
                                         const Item &newItem,
                                         WhatChanged action,
                                         QWidget *parent )
 {
-  const Incidence::Ptr newinc = Akonadi::incidence( newItem );
 
-  kDebug() << "for incidence \"" << newinc->summary() << "\""
-           << "( old one was \"" << oldinc->summary() << "\")";
-
-  if ( incidencesEqual( newinc.get(), oldinc.get() ) ) {
-    // Don't do anything
-    kDebug() << "Incidence not changed";
-  } else {
-    kDebug() << "Changing incidence";
-    bool attendeeStatusChanged = myAttendeeStatusChanged( oldinc.get(), newinc.get() );
-    int revision = newinc->revision();
-    newinc->setRevision( revision + 1 );
-    // FIXME: Use a generic method for this! Ideally, have an interface class
-    //        for group cheduling. Each implementation could then just do what
-    //        it wants with the event. If no groupware is used,use the null
-    //        pattern...
-    bool success = true;
-    if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
-      if ( !d->mGroupware ) {
-          kError() << "Groupware communication enabled but no groupware instance set";
-      } else {
-        success = d->mGroupware->sendICalMessage( parent, KCal::iTIPRequest,
-                                                  newinc.get(),
-                                                  INCIDENCEEDITED,
-                                                  attendeeStatusChanged );
-      }
-    }
-
-    if ( !success ) {
-      kDebug() << "Changing incidence failed. Reverting changes.";
-      assignIncidence( newinc.get(), oldinc.get() );
-      return false;
-    }
+  if ( !Akonadi::hasIncidence( newItem ) ||
+       !newItem.isValid() ) {
+    kDebug() << "Skipping invalid item id=" << newItem.id();
+    return false;
   }
-  d->m_actionByOldUid[oldinc->uid()] = action;
+
+  Private::Change *change = new Private::Change();
+  change->action = action;
+  change->newItem = newItem;
+  change->oldInc = oldinc;
+  change->parent = parent;
+
+  if ( d->mCurrentChanges.contains( newItem.id() ) ) {
+    d->queueChange( change );
+  } else {
+    d->performChange( change );
+  }
+
   return true;
 }
 
@@ -596,5 +587,3 @@ IncidenceChanger::DestinationPolicy IncidenceChanger::destinationPolicy() const
 {
   return d->mDestinationPolicy;
 }
-
-#include "incidencechanger.moc"

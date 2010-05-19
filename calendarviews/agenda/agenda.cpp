@@ -954,7 +954,7 @@ void Agenda::performItemAction( const QPoint &pos )
       emit startDragSignal( d->mActionItem->incidence() );
       setCursor( Qt::ArrowCursor );
       if ( d->mChanger ) {
-        d->mChanger->cancelChange( d->mActionItem->incidence() );
+//        d->mChanger->cancelChange( d->mActionItem->incidence() );
       }
       d->mActionItem = 0;
       d->mActionType = NOP;
@@ -979,7 +979,7 @@ void Agenda::performItemAction( const QPoint &pos )
   // Move or resize item if necessary
   if ( d->mEndCell != gpos ) {
     if ( !d->mItemMoved ) {
-      if ( !d->mChanger || !d->mChanger->beginChange( d->mActionItem->incidence() ) ) {
+      if ( !d->mChanger ) {
         KMessageBox::information( this,
                                   i18n( "Unable to lock item for modification. "
                                         "You cannot make any changes." ),
@@ -1276,18 +1276,7 @@ void Agenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      if ( d->mChanger ) {
-        d->mChanger->endChange( inc );
-      } else {
-        kError() << "No IncidenceChanger set";
-      }
       emit itemModified( d->mActionItem );
-    }
-  } else {
-    if ( d->mChanger ) {
-      d->mChanger->endChange( inc );
-    } else {
-      kError() << "No IncidenceChanger set";
     }
   }
 
