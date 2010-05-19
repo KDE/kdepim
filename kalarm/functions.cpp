@@ -1,7 +1,7 @@
 /*
  *  functions.cpp  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1163,6 +1163,41 @@ void viewAlarm(const KAEvent* event, QWidget* parent)
 }
 
 /******************************************************************************
+* Called when OK is clicked in the alarm edit dialog invoked by the Edit button
+* in an alarm message window.
+* Updates the alarm calendar and closes the dialog.
+*/
+void updateEditedAlarm(EditAlarmDlg* editDlg, KAEvent& event, AlarmResource* resource)
+{
+	kDebug();
+	KAEvent newEvent;
+	AlarmResource* res;
+	editDlg->getEvent(newEvent, res);
+
+	// Update the displayed lists and the calendar file
+	UpdateStatus status;
+	if (AlarmCalendar::resources()->event(event.id()))
+	{
+		// The old alarm hasn't expired yet, so replace it
+		Undo::Event undo(event, resource);
+		status = modifyEvent(event, newEvent, editDlg);
+		Undo::saveEdit(undo, newEvent);
+	}
+	else
+	{
+		// The old event has expired, so simply create a new one
+		status = addEvent(newEvent, resource, editDlg);
+		Undo::saveAdd(newEvent, resource);
+	}
+
+	if (status != UPDATE_OK  &&  status <= UPDATE_KORG_ERR)
+		displayKOrgUpdateError(editDlg, ERR_MODIFY, status, 1);
+	outputAlarmWarnings(editDlg, &newEvent);
+
+	editDlg->close();
+}
+
+/******************************************************************************
 * Returns a list of all alarm templates.
 * If shell commands are disabled, command alarm templates are omitted.
 */
@@ -1836,7 +1871,8 @@ void setSimulatedSystemTime(const KDateTime& dt)
 } // namespace KAlarm
 
 
-namespace {
+namespace
+{
 
 /******************************************************************************
 * Tell KOrganizer to put an alarm in its calendar.

@@ -1,7 +1,7 @@
 /*
  *  functions.h  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2004-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2004-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -98,6 +98,7 @@ void                editNewAlarm(KAEventData::Action, QWidget* parent = 0, const
 void                editNewAlarm(const KAEvent* preset, QWidget* parent = 0);
 bool                editAlarm(const QString& eventID, QWidget* parent = 0);
 void                editAlarm(KAEvent*, QWidget* parent = 0);
+void                updateEditedAlarm(EditAlarmDlg*, KAEvent&, AlarmResource*);
 void                viewAlarm(const KAEvent*, QWidget* parent = 0);
 void                editNewTemplate(EditAlarmDlg::Type, QWidget* parent = 0);
 void                editNewTemplate(const KAEvent* preset, QWidget* parent = 0);
