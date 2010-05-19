@@ -29,7 +29,8 @@ KDeclarativeApplication::KDeclarativeApplication()
   // background comes from QML
   pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
 
-  setPalette( pal );
+  // FIXME: actually makes things worse with the Maemo5 style which completely ignores our palette apparently
+//  setPalette( pal );
 }
 
 #include "kdeclarativeapplication.moc"
