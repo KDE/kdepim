@@ -30,6 +30,8 @@
 #include <qdeclarativeengine.h>
 #include <qdeclarativecontext.h>
 
+#include "incidenceview.h"
+
 
 using namespace Akonadi;
 
@@ -59,5 +61,12 @@ void MainView::setCurrentEventItemId(qint64 id)
 
   setListSelectedRow(list.first().row());
 }
+
+void MainView::startIncidenceEditor()
+{
+  IncidenceView *editor = new IncidenceView;
+  editor->show();
+}
+
 
 #include "mainview.moc"

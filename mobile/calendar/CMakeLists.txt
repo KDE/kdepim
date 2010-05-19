@@ -1,3 +1,5 @@
+project(korganizer-mobile)
+
 include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
   ${KDEPIMLIBS_INCLUDE_DIR}
@@ -7,6 +9,7 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(korganizer_mobile_SRCS
+  incidenceview.cpp
   mainview.cpp
   main.cpp
 )
@@ -24,6 +27,8 @@ target_link_libraries(korganizer-mobile
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES korganizer-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  MobileIncidenceEditor.qml
+  incidence-editor.qml
   korganizer-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )

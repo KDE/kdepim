@@ -40,6 +40,8 @@ public slots:
 
     void setCurrentEventItemId( qint64 id );
 
+    void startIncidenceEditor();
+
 private:
   Akonadi::Calendar *m_calendar;
 };

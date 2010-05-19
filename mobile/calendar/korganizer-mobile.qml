@@ -73,6 +73,7 @@ KPIM.MainView {
     }
   }
 
+
   Rectangle {
     id: agendaView
     anchors.fill: parent
@@ -124,7 +125,7 @@ KPIM.MainView {
                 width : parent.width
                 buttonText : KDE.i18n( "New Appointment" )
                 font.bold:  true
-                onClicked : { console.log("Create new appointment") }
+                onClicked : { application.startIncidenceEditor(); }
               }
               KPIM.Button {
                 height : 480 / 6
@@ -279,8 +280,17 @@ KPIM.MainView {
       contentWidth: 240
       content: [
           KPIM.Button {
-            id: moveButton
+            id: newButton
             anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText: KDE.i18n( "New Event" )
+            onClicked: { application.startIncidenceEditor() }
+          },
+          KPIM.Button {
+            id: moveButton
+            anchors.top: newButton.bottom
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
