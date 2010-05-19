@@ -28,6 +28,7 @@ class KActionCollection;
 
 namespace Akonadi {
 class EntityTreeModel;
+class Item;
 }
 
 class ListProxy;
@@ -96,6 +97,8 @@ protected:
   QItemSelectionModel* favoriteSelectionModel() const;
   QAbstractItemModel *regularSelectedItems() const;
   QAbstractItemModel *favoriteSelectedItems() const;
+
+  Akonadi::Item itemFromId( quint64 id ) const;
 
 private:
   KDeclarativeMainViewPrivate * const d;

@@ -337,3 +337,11 @@ QObject* KDeclarativeMainView::getAction( const QString &name ) const
 {
   return d->mActionCollection->action( name );
 }
+
+Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
+{
+  const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );
+  if ( list.isEmpty() )
+    return Akonadi::Item();
+  return list.first().data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+}

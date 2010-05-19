@@ -23,6 +23,7 @@
 #include "kdeclarativefullscreenview.h"
 
 #include <KActionCollection>
+#include <KMime/Message>
 
 class KJob;
 
@@ -58,12 +59,15 @@ class ComposerView : public KDeclarativeFullScreenView
 
     KActionCollection* actionCollection() const;
 
+    void setMessage( const KMime::Message::Ptr &msg );
+
   public slots:
     /// Send clicked in the user interface
     void send();
     QObject* getAction( const QString &name ) const;
 
   private:
+    void setMessageInternal( const KMime::Message::Ptr &msg );
     void expandAddresses();
 
   private slots:
@@ -78,6 +82,7 @@ class ComposerView : public KDeclarativeFullScreenView
     MessageComposer::RecipientsEditor *m_recipientsEditor;
     QString m_subject;
     KActionCollection *mActionCollection;
+    KMime::Message::Ptr m_message;
 };
 
 #endif

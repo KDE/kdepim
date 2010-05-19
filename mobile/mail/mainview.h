@@ -32,6 +32,7 @@ class MainView : public KDeclarativeMainView
 
   public slots:
     void startComposer();
+    void reply( quint64 id );
 };
 
 #endif

@@ -78,7 +78,10 @@ KPIM.MainView {
                 height: 480 / 6
                 buttonText : KDE.i18n( "Write new Email" )
                 font.bold: true
-                onClicked : { application.startComposer(); }
+                onClicked : {
+                  startPanel.collapse();
+                  application.startComposer();
+                }
               }
               KPIM.Button {
                 width: parent.width
@@ -169,7 +172,10 @@ KPIM.MainView {
               anchors.right : parent.right
               height : 30
               buttonText : KDE.i18n( "Write new E-Mail" )
-              onClicked : { application.startComposer(); }
+              onClicked : {
+                folderPanel.collapse();
+                application.startComposer();
+              }
             }
             KPIM.Button {
               id : searchEmailButton
@@ -210,8 +216,11 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: KDE.i18n( "Move" )
-            onClicked: actionPanel.collapse();
+            buttonText: KDE.i18n( "Reply" )
+            onClicked: {
+              actionPanel.collapse();
+              application.reply( messageView.itemId );
+            }
           },
           KPIM.Action{
             id : deleteButton

@@ -28,6 +28,8 @@
 #include <kpimidentities/identitymanager.h>
 #include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportmanager.h>
+#include <messageviewer/objecttreeemptysource.h>
+#include <messageviewer/objecttreeparser.h>
 #include <messagecomposer/kmeditor.h>
 #include <messagecomposer/signaturecontroller.h>
 #include <messagecomposer/composer.h>
@@ -77,6 +79,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 
   Q_ASSERT( m_identityCombo );
   Q_ASSERT( m_editor );
+  Q_ASSERT( m_recipientsEditor );
 
   kDebug() << m_identityCombo;
   kDebug() << m_editor;
@@ -85,7 +88,35 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   signatureController->setEditor( m_editor );
   signatureController->setIdentityCombo( m_identityCombo );
   signatureController->applyCurrentSignature();
+
+  if ( m_message )
+    setMessageInternal( m_message );
 }
+
+void ComposerView::setMessage(const KMime::Message::Ptr& msg)
+{
+  m_message = msg;
+  if ( status() == QDeclarativeView::Ready )
+    setMessageInternal( msg );
+}
+
+void ComposerView::setMessageInternal(const KMime::Message::Ptr& msg)
+{
+  // ### duplication with KMComposeWin
+  // First, we copy the message and then parse it to the object tree parser.
+  // The otp gets the message text out of it, in textualContent(), and also decrypts
+  // the message if necessary.
+  KMime::Content *msgContent = new KMime::Content;
+  msgContent->setContent( msg->encodedContent() );
+  msgContent->parse();
+  MessageViewer::EmptySource emptySource;
+  MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
+  otp.parseObjectTree( msgContent );
+
+  // Set the editor text and charset
+  m_editor->setText( otp.textualContent() );
+}
+
 
 void ComposerView::send()
 {

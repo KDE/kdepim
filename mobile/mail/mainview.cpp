@@ -20,6 +20,9 @@
 
 #include "mainview.h"
 #include "composerview.h"
+#include "messagelistproxy.h"
+
+#include <messagecomposer/messagefactory.h>
 
 #include <KDE/KDebug>
 #include <kselectionproxymodel.h>
@@ -27,8 +30,8 @@
 
 #include <KMime/Message>
 #include <akonadi/kmime/messageparts.h>
+#include <kpimidentities/identitymanager.h>
 
-#include "messagelistproxy.h"
 #include <KActionCollection>
 #include <KAction>
 
@@ -46,7 +49,19 @@ void MainView::startComposer()
   composer->show();
 }
 
+void MainView::reply( quint64 id )
+{
+  kDebug() << id;
+  const Akonadi::Item item = itemFromId( id );
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), id );
+  factory.setIdentityManager( new KPIMIdentities::IdentityManager() ); // FIXME share one in the entire app
 
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( factory.createReply().msg );
+  composer->show();
+}
 
 #include "mainview.moc"
 
