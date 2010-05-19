@@ -35,6 +35,8 @@ namespace KPIMIdentities
 namespace Message
 {
   class KMeditor;
+  class AttachmentModel;
+  class AttachmentControllerBase;
 }
 
 namespace MessageComposer {
@@ -79,11 +81,14 @@ class ComposerView : public KDeclarativeFullScreenView
     void addressExpansionResult( KJob *job );
     void composerResult( KJob* job );
     void sendResult( KJob* job );
+    void addAttachment();
 
   private:
     KPIMIdentities::IdentityCombo *m_identityCombo;
     Message::KMeditor *m_editor;
     MessageComposer::RecipientsEditor *m_recipientsEditor;
+    Message::AttachmentModel *m_model;
+    Message::AttachmentControllerBase *m_attachmentController;
     QString m_subject;
     KActionCollection *mActionCollection;
     KMime::Message::Ptr m_message;

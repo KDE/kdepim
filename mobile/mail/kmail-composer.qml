@@ -90,9 +90,6 @@ KPIM.MainView {
           anchors.right : parent.right
           height : parent.height / 6
           action : application.getAction("add_attachment")
-          onTriggered : {
-            console.log("New Attachment");
-          }
         }
       ]
     }

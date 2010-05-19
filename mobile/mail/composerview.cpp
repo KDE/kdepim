@@ -37,6 +37,7 @@
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/textpart.h>
 #include <messagecomposer/emailaddressresolvejob.h>
+#include <messagecomposer/attachmentcontrollerbase.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>
@@ -47,6 +48,8 @@
 
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
+#include <KFileDialog>
+#include <messagecomposer/attachmentmodel.h>
 
 QML_DECLARE_TYPE( DeclarativeEditor )
 QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
@@ -54,7 +57,8 @@ QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
 ComposerView::ComposerView(QWidget* parent) :
   KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent ),
   m_identityCombo( 0 ),
-  m_editor( 0 )
+  m_editor( 0 ),
+  m_attachmentController( 0 )
 {
   setSubject( QString() );
 
@@ -67,10 +71,15 @@ ComposerView::ComposerView(QWidget* parent) :
   KAction *action = mActionCollection->addAction( "add_attachment" );
   action->setText( i18n( "Add Attachment" ) );
   action->setIcon( KIcon( "list-add" ) );
+  connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(addAttachment()));
 
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
-
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
+
+  m_model = new Message::AttachmentModel(this);
+  engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( m_model ) ) );
+  m_attachmentController = new Message::AttachmentControllerBase(m_model, this, mActionCollection);
+
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -97,6 +106,29 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 {
   m_message = msg;
+  foreach(KPIM::AttachmentPart::Ptr attachment, m_model->attachments())
+    m_model->removeAttachment(attachment);
+
+  foreach(KMime::Content *attachment, msg->attachments())
+  {
+    KPIM::AttachmentPart::Ptr part( new KPIM::AttachmentPart );
+    if( attachment->contentType()->mimeType() == "multipart/digest" ||
+        attachment->contentType()->mimeType() == "message/rfc822" ) {
+      // if it is a digest or a full message, use the encodedContent() of the attachment,
+      // which already has the proper headers
+      part->setData( attachment->encodedContent() );
+      part->setMimeType( attachment->contentType()->mimeType() );
+      part->setName( attachment->contentDisposition()->parameter( QLatin1String("name") ) );
+    } else {
+      part->setName( attachment->contentDescription()->asUnicodeString() );
+      part->setFileName( attachment->contentDisposition()->filename() );
+      part->setMimeType( attachment->contentType()->mimeType() );
+      part->setData( attachment->decodedContent() );
+    }
+    m_attachmentController->addAttachment( part );
+    m_model->addAttachment(part);
+  }
+
   if ( status() == QDeclarativeView::Ready )
     setMessageInternal( msg );
 }
@@ -225,6 +257,13 @@ void ComposerView::configureTransport()
   KCMultiDialog dlg;
   dlg.addModule( "kcm_mailtransport" );
   dlg.exec();
+}
+
+void ComposerView::addAttachment()
+{
+  KUrl url = KFileDialog::getOpenUrl();
+  if (!url.isEmpty())
+    m_attachmentController->addAttachment(url);
 }
 
 #include "composerview.moc"
