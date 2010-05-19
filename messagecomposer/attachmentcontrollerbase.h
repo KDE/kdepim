@@ -41,7 +41,7 @@ namespace Message {
 class AttachmentModel;
 }
 
-namespace KMail {
+namespace Message {
 
 class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 {

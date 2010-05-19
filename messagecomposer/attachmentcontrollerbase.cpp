@@ -61,10 +61,10 @@
 
 #include <KMime/Content>
 
-using namespace KMail;
+using namespace Message;
 using namespace KPIM;
 
-class KMail::AttachmentControllerBase::Private
+class Message::AttachmentControllerBase::Private
 {
   public:
     Private( AttachmentControllerBase *qq );
