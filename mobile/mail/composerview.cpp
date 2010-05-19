@@ -103,6 +103,11 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 void ComposerView::setMessageInternal(const KMime::Message::Ptr& msg)
 {
   // ### duplication with KMComposeWin
+
+  m_recipientsEditor->setRecipientString( msg->to()->mailboxes(), Recipient::To );
+  m_recipientsEditor->setRecipientString( msg->cc()->mailboxes(), Recipient::Cc );
+  m_recipientsEditor->setRecipientString( msg->bcc()->mailboxes(), Recipient::Bcc );
+
   // First, we copy the message and then parse it to the object tree parser.
   // The otp gets the message text out of it, in textualContent(), and also decrypts
   // the message if necessary.
