@@ -34,7 +34,7 @@ namespace IncidenceEditors
   class AutoCheckTreeWidget;
   class CategoryConfig;
 
-class CategorySelectWidget : public QWidget
+class INCIDENCEEDITORS_EXPORT CategorySelectWidget : public QWidget
 {
   Q_OBJECT
   public:

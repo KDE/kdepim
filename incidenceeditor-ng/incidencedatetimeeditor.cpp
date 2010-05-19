@@ -22,6 +22,7 @@
 
 #include <KCal/ICalTimeZones>
 #include <KCal/IncidenceFormatter>
+#include <KDebug>
 
 #include "incidencerecurrencedialog.h"
 #include "ui_incidencedatetime.h"
@@ -57,9 +58,10 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
   // We can only handle events or todos.
   if ( KCal::Todo::ConstPtr todo = IncidenceDateTimeEditor::incidence<Todo>() ) {
     load( todo );
+  } else if ( KCal::Event::ConstPtr event = IncidenceDateTimeEditor::incidence<Event>() ) {
+    load( event );
   } else {
-    KCal::Event::ConstPtr event = IncidenceDateTimeEditor::incidence<Event>();
-    Q_ASSERT( event );
+    kDebug() << "Not an event or an todo.";
   }
 
   mWasDirty = false;

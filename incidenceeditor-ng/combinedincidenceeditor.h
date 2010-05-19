@@ -21,6 +21,7 @@
 #define COMBINEDINCIDENCEEDITOR_H
 
 #include "incidenceeditor-ng.h"
+#include "../incidenceeditors_export.h"
 
 namespace IncidenceEditorsNG {
 
@@ -29,10 +30,14 @@ namespace IncidenceEditorsNG {
  * IncidenceEditors. The CombinedIncidenceEditor keeps track of the dirty state
  * of the IncidenceEditors that where combined.
  */
-class CombinedIncidenceEditor : public IncidenceEditor
+class INCIDENCEEDITORS_EXPORT CombinedIncidenceEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:
+    CombinedIncidenceEditor( QWidget *parent = 0 );
+
+    void combine( IncidenceEditor *other );
+    
     /**
      * Returns wether or not the current values in the editor differ from the
      * initial values or if one of the combined editors is dirty.
@@ -46,11 +51,7 @@ class CombinedIncidenceEditor : public IncidenceEditor
      */
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
-    
-  protected:
-    CombinedIncidenceEditor( QWidget *parent = 0);
-    
-    void combine( IncidenceEditor *other );
+
 
   private slots:
     void handleDirtyStatusChange( bool isDirty );

@@ -23,13 +23,6 @@ using namespace IncidenceEditorsNG;
 
 /// public methods
 
-bool CombinedIncidenceEditor::isDirty() const
-{
-  return mDirtyEditorCount > 0;
-}
-
-/// protected methods
-
 CombinedIncidenceEditor::CombinedIncidenceEditor( QWidget *parent )
   : IncidenceEditor( parent )
   , mDirtyEditorCount( 0 )
@@ -41,6 +34,11 @@ void CombinedIncidenceEditor::combine( IncidenceEditor *other )
   mCombinedEditors.append( other );
   connect( other, SIGNAL(dirtyStatusChanged(bool)),
            SLOT(handleDirtyStatusChange(bool)) );
+}
+
+bool CombinedIncidenceEditor::isDirty() const
+{
+  return mDirtyEditorCount > 0;
 }
 
 void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
