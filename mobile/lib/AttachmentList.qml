@@ -82,8 +82,8 @@ Item {
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: actionView.left
-    height: Math.min( model.attachmentCount * rowHeight, parent.height )
-    interactive: model.attachmentCount * rowHeight > parent.height
+    height: { Math.min( count * rowHeight, parent.height ) }
+    interactive: count * rowHeight > parent.height
     delegate: attachmentDelegate
     clip: true
 
