@@ -26,6 +26,8 @@
 
 #include "kdeclarativefullscreenview.h"
 
+class KJob;
+
 namespace Akonadi {
 class CollectionComboBox;
 }
@@ -50,6 +52,9 @@ class IncidenceView : public KDeclarativeFullScreenView
   public slots:
     void save();   /// Ok clicked in the user interface
     void cancel(); /// Cancel clicked in the user interface
+
+  private slots:
+    void itemCreateResult( KJob * );
 
     
   private:

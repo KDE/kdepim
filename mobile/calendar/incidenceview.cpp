@@ -19,6 +19,10 @@
 
 #include "incidenceview.h"
 
+#include <KDialog>
+
+#include <Akonadi/Item>
+#include <Akonadi/ItemCreateJob>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include "declarativeeditors.h"
@@ -65,11 +69,28 @@ void IncidenceView::save()
   if ( !mEditor->isValid() )
     return;
 
+  KCal::Event::Ptr event( new KCal::Event );
+  mEditor->save( event );
+
+  Akonadi::Item item;
+  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  item.setPayload<KCal::Event::Ptr>( event );
   
-  deleteLater();
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollectionCombo->currentCollection() );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemCreateResult(KJob*)) );
 }
 
 void IncidenceView::cancel()
 {
+  deleteLater();
+}
+
+/// Private slots
+
+void IncidenceView::itemCreateResult( KJob *job )
+{
+  if ( job->error() )
+    kDebug() << "Event creation failed!";
+
   deleteLater();
 }
