@@ -116,15 +116,18 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     Akonadi::Calendar *mCalendar;
 
   Q_SIGNALS:
-    void incidenceAdded( const Akonadi::Item & );
+    // Signals emited by the Item*Job, the bool parameter is the success of the operation
+    void incidenceAddFinished( const Akonadi::Item &, bool );
 
-    void incidenceChanged( const Akonadi::Item &oldinc,
-                           const Akonadi::Item &newInc,
-                           Akonadi::IncidenceChanger::WhatChanged );
+    void incidenceChangeFinished( const Akonadi::Item &oldinc,
+                                  const Akonadi::Item &newInc,
+                                  Akonadi::IncidenceChanger::WhatChanged,
+                                  bool );
+
+    void incidenceDeleteFinished( const Akonadi::Item &, bool );
+
 
     void incidenceToBeDeleted( const Akonadi::Item & );
-    void incidenceDeleted( const Akonadi::Item & );
-
     void schedule( KCal::iTIPMethod method, const Akonadi::Item &incidence );
 
   private Q_SLOTS:

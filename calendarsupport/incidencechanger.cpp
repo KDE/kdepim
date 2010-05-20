@@ -181,14 +181,21 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
 
   const Item newItem = job->item();
 
+  const Private::Change *change = mCurrentChanges[newItem.id()];
+  const Incidence::Ptr oldInc = change->oldInc;
+  
+  Item oldItem;
+  oldItem.setPayload<Incidence::Ptr>( oldInc );
+  oldItem.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" )
+                       .arg( QLatin1String( oldInc->type().toLower() ) ) );
+  oldItem.setId( newItem.id() );
+
   if ( !mCurrentChanges.contains( newItem.id() ) ) {
     kDebug() << "Item was deleted? Great.";
     cancelChanges( newItem.id() );
+    emit incidenceChangeFinished( oldItem, newItem, change->action, true );
     return;
   }
-
-  const Private::Change *change = mCurrentChanges[newItem.id()];
-  const Incidence::Ptr oldInc = change->oldInc;
 
   if ( job->error() ) {
     kWarning( 5250 ) << "Item modify failed:" << job->errorString();
@@ -199,14 +206,9 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
                               i18n( newInc->type() ),
                               newInc->summary(),
                               job->errorString( )) );
+    emit incidenceChangeFinished( oldItem, newItem, change->action, false );
   } else {
-    Item oldItem;
-    // TODO revisions ?
-    oldItem.setPayload<Incidence::Ptr>( oldInc );
-    oldItem.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" )
-                         .arg( QLatin1String( oldInc->type().toLower() ) ) );
-    oldItem.setId( newItem.id() );
-    emit incidenceChanged( oldItem, newItem, change->action );
+    emit incidenceChangeFinished( oldItem, newItem, change->action, true );
   }
 
   mLatestRevisionByItemId[newItem.id()] = newItem.revision();
@@ -223,8 +225,8 @@ IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
                                     Entity::Id defaultCollectionId )
   : QObject( parent ), mCalendar( cal ), d( new Private( defaultCollectionId ) )
 {
-  connect( d, SIGNAL(incidenceChanged(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged)),
-           SIGNAL(incidenceChanged(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged)) );
+  connect( d, SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)),
+           SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)) );
 }
 
 IncidenceChanger::~IncidenceChanger()
@@ -321,6 +323,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
                               i18n( tmp->type() ),
                               tmp->summary(),
                               job->errorString( )) );
+    emit incidenceDeleteFinished( items.first(), false );
     return;
   }
   if ( !KCalPrefs::instance()->thatIsMe( tmp->organizer().email() ) ) {
@@ -352,7 +355,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
     }
   }
   d->mLatestRevisionByItemId.remove( items.first().id() );
-  emit incidenceDeleted( items.first() );
+  emit incidenceDeleteFinished( items.first(), true );
 }
 
 bool IncidenceChanger::cutIncidences( const Item::List &list, QWidget *parent )
@@ -375,7 +378,7 @@ bool IncidenceChanger::cutIncidences( const Item::List &list, QWidget *parent )
 
   if ( factory.cutIncidences( itemsToCut ) ) {
     for ( it = itemsToCut.constBegin(); it != itemsToCut.constEnd(); ++it ) {
-      emit incidenceDeleted( *it );
+      emit incidenceDeleteFinished( *it, true );
     }
     return !itemsToCut.isEmpty();
   } else {
@@ -534,12 +537,12 @@ bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
   kDebug() << "\"" << incidence->summary() << "\"";
 
   Item item;
-  item.setPayload( incidence );
+  item.setPayload<KCal::Incidence::Ptr>( incidence );
   //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
   //PENDING(AKONADI_PORT) shouldn't be hardcoded?
-  item.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" )
-                    .arg( QLatin1String( incidence->type().toLower() ) ) );
+  item.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" ).arg( QLatin1String( incidence->type().toLower() ) ) );
   ItemCreateJob *job = new ItemCreateJob( item, collection );
+
   // The connection needs to be queued to be sure addIncidenceFinished is called after the kjob finished
   // it's eventloop. That's needed cause Akonadi::Groupware uses synchron job->exec() calls.
   connect( job, SIGNAL(result(KJob*)),
@@ -560,6 +563,7 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
             i18n( incidence->type() ),
             incidence->summary(),
             job->errorString() ) );
+    emit incidenceAddFinished( job->item(), false );
     return;
   }
 
@@ -575,7 +579,7 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
     }
   }
 
-  emit incidenceAdded( job->item() );
+  emit incidenceAddFinished( job->item(), true );
 }
 
 void IncidenceChanger::setDestinationPolicy( DestinationPolicy destinationPolicy )

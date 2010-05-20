@@ -85,9 +85,10 @@ private slots:
   void changeIncidenceFinished( KJob* job );
 
 signals:
-  void incidenceChanged( const Akonadi::Item &oldinc,
-                         const Akonadi::Item &newInc,
-                         Akonadi::IncidenceChanger::WhatChanged );
+  void incidenceChangeFinished( const Akonadi::Item &oldinc,
+                                const Akonadi::Item &newInc,
+                                Akonadi::IncidenceChanger::WhatChanged,
+                                bool );
 
 };
 
