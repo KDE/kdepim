@@ -84,10 +84,12 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
                                HowChanged action,
                                QWidget *parent );
 
+    // returns true if the add job was created
     bool addIncidence( const KCal::Incidence::Ptr &incidence,
                        QWidget *parent, Akonadi::Collection &selectedCollection,
                        int &dialogCode );
 
+    // returns true if the add job was created
     bool addIncidence( const KCal::Incidence::Ptr &incidence,
                        const Akonadi::Collection &collection, QWidget *parent );
 
@@ -96,6 +98,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
                           WhatChanged,
                           QWidget *parent );
 
+    // returns true if the delete job was created
     bool deleteIncidence( const Akonadi::Item &incidence, QWidget *parent );
 
     bool cutIncidences( const Akonadi::Item::List &incidences, QWidget *parent );

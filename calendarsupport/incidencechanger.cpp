@@ -291,7 +291,7 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
 {
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
   if ( !incidence ) {
-    return true;
+    return false;
   }
 
   kDebug() << "\"" << incidence->summary() << "\"";
