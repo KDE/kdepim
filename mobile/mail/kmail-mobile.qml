@@ -58,7 +58,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
-      titleIcon: KDE.iconPath( "kmail", 48 )
+      titleIcon: KDE.iconPath( "kmail-mobile", 48 )
       handlePosition: 30
       handleHeight: 78
       content: [

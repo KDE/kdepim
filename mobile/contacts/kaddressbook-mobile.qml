@@ -71,7 +71,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
-      titleIcon: KDE.iconPath( "kaddressbook", 48 )
+      titleIcon: KDE.iconPath( "view-pim-contacts", 48 )
       handlePosition: 30
       handleHeight: 78
       content: [

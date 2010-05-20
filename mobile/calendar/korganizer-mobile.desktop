@@ -13,5 +13,5 @@ Name[uk]=Мобільний KOrganizer
 Name[x-test]=xxKOrganizer Mobilexx
 Exec=korganizer-mobile
 
-Icon=korganizer
+Icon=office-calendar
 Type=Application

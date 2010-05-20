@@ -13,5 +13,5 @@ Name[uk]=Мобільна KAddressBook
 Name[x-test]=xxKAddressbook Mobilexx
 Exec=kaddressbook-mobile
 
-Icon=kaddressbook-mobile
+Icon=view-pim-contacts
 Type=Application
