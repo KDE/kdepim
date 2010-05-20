@@ -24,6 +24,7 @@ kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 
 target_link_libraries(kmail-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
+    ${KDE4_KCMUTILS_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
     ${KDEPIMLIBS_KMIME_LIBRARY}
     ${KDEPIMLIBS_AKONADI_LIBRARY}
@@ -33,6 +34,7 @@ target_link_libraries(kmail-mobile
     kdepimmobileui
     messagecomposer
     messagecore
+    messageviewer
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
