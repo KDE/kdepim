@@ -49,6 +49,7 @@ set( incidenceeditors_LIB_SRCS
     groupwareintegration.cpp
     incidenceeditor.cpp
     journaleditor.cpp
+    korganizereditorconfig.cpp
     templatemanagementdialog.cpp
     todoeditor.cpp
 )

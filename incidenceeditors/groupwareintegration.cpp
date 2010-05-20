@@ -36,100 +36,10 @@
 
 #include <KSystemTimeZones>
 
+#include "korganizereditorconfig.h"
+
 using namespace KCal;
 using namespace IncidenceEditors;
-
-class KOrganizerEditorConfig : public EditorConfig
-{
-  public:
-    explicit KOrganizerEditorConfig() : EditorConfig() {}
-    virtual ~KOrganizerEditorConfig() {}
-
-    virtual KConfigSkeleton *config() const
-    {
-      return KCalPrefs::instance();
-    }
-
-    virtual QString fullName() const
-    {
-      return KCalPrefs::instance()->fullName();
-    }
-
-    virtual QString email() const
-    {
-      return KCalPrefs::instance()->email();
-    }
-
-    virtual bool thatIsMe( const QString &email ) const
-    {
-      return KCalPrefs::instance()->thatIsMe(email);
-    }
-
-    virtual QStringList allEmails() const
-    {
-      return KCalPrefs::instance()->allEmails();
-    }
-
-    virtual QStringList fullEmails() const
-    {
-      return KCalPrefs::instance()->fullEmails();
-    }
-
-    virtual bool showTimeZoneSelectorInIncidenceEditor() const
-    {
-      return KCalPrefs::instance()->showTimeZoneSelectorInIncidenceEditor();
-    }
-
-    virtual QDateTime defaultDuration() const
-    {
-      return KCalPrefs::instance()->defaultDuration();
-    }
-
-    virtual QDateTime startTime() const
-    {
-      return KCalPrefs::instance()->startTime();
-    }
-
-    virtual int reminderTime() const
-    {
-      return KCalPrefs::instance()->reminderTime();
-    }
-
-    virtual int reminderTimeUnits() const
-    {
-      return KCalPrefs::instance()->reminderTimeUnits();
-    }
-
-    virtual bool defaultTodoReminders() const
-    {
-      return KCalPrefs::instance()->defaultTodoReminders();
-    }
-
-    virtual bool defaultEventReminders() const
-    {
-      return KCalPrefs::instance()->defaultEventReminders();
-    }
-
-    virtual QStringList activeDesignerFields() const
-    {
-      return KCalPrefs::instance()->activeDesignerFields();
-    }
-
-    virtual QStringList &templates( const QString &type )
-    {
-      if ( type == "Event" ) {
-        //TODO remove mEventTemplates+etc from Prefs::instance()
-        return KCalPrefs::instance()->mEventTemplates;
-      }
-      if ( type == "Todo" ) {
-        return KCalPrefs::instance()->mTodoTemplates;
-      }
-      if ( type == "Journal" ) {
-        return KCalPrefs::instance()->mJournalTemplates;
-      }
-      return EditorConfig::templates(type);
-    }
-};
 
 class EditorDialogVisitor : public IncidenceBase::Visitor
 {
