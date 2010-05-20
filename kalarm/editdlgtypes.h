@@ -1,7 +1,7 @@
 /*
  *  editdlgtypes.h  -  dialogues to create or edit alarm or alarm template types
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,6 +44,7 @@ class CommandEdit;
 class LineEdit;
 class TextEdit;
 class SoundWidget;
+class PickLogFileRadio;
 
 
 class EditDisplayAlarmDlg : public EditAlarmDlg
@@ -181,7 +182,7 @@ class EditCommandAlarmDlg : public EditAlarmDlg
 		QGroupBox*          mCmdOutputBox;
 		ButtonGroup*        mCmdOutputGroup;     // what to do with command output
 		RadioButton*        mCmdExecInTerm;
-		RadioButton*        mCmdLogToFile;
+		PickLogFileRadio*   mCmdLogToFile;
 		RadioButton*        mCmdDiscardOutput;
 		LineEdit*           mCmdLogFileEdit;     // log file URL edit box
 		KHBox*              mCmdPadding;
