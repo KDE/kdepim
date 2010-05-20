@@ -80,6 +80,16 @@ bool IncidenceGeneralEditor::isDirty() const
   }
 }
 
+bool IncidenceGeneralEditor::isValid()
+{
+  if ( mUi->mSummaryEdit->text().isEmpty() ) {
+    mUi->mSummaryEdit->setFocus();
+    return false;
+  }
+    
+  return true;
+}
+
 void IncidenceGeneralEditor::selectCategories()
 {
   CategoryConfig cc( EditorConfig::instance()->config() );

@@ -44,6 +44,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceGeneralEditor : public IncidenceEditor
     virtual void load(KCal::Incidence::ConstPtr incidence);
     virtual void save(KCal::Incidence::Ptr incidence);
     virtual bool isDirty() const;
+    virtual bool isValid();
 
   private slots:
     /**

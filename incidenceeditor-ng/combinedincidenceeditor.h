@@ -43,6 +43,7 @@ class INCIDENCEEDITORS_EXPORT CombinedIncidenceEditor : public IncidenceEditor
      * initial values or if one of the combined editors is dirty.
      */
     virtual bool isDirty() const;
+    virtual bool isValid();
 
     /**
      * Loads all data from @param inicidence into the combined editors. Note, if

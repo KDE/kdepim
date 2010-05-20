@@ -38,4 +38,9 @@ void IncidenceEditor::checkDirtyStatus()
   }
 }
 
+bool IncidenceEditor::isValid()
+{
+  return true;
+}
+
 #include "moc_incidenceeditor-ng.cpp"

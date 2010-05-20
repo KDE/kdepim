@@ -57,6 +57,13 @@ class IncidenceEditor : public QWidget
      */
     virtual bool isDirty() const = 0;
 
+    /**
+     * Returns whether or not the content of this editor is valid. The default
+     * implementation returns always true. The method is not const so that
+     * re-implementing editors can change the focus of their widgets.
+     */
+    virtual bool isValid();
+
   signals:
     /**
      * Signals wether the dirty status of this editor has changed. The new dirty

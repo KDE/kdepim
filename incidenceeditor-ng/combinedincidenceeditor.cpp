@@ -41,6 +41,15 @@ bool CombinedIncidenceEditor::isDirty() const
   return mDirtyEditorCount > 0;
 }
 
+bool CombinedIncidenceEditor::isValid()
+{
+  foreach ( IncidenceEditor *editor, mCombinedEditors  )
+    if ( !editor->isValid() )
+      return false;
+
+  return true;
+}
+
 void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
 {
   const int prevDirtyCount = mDirtyEditorCount;
