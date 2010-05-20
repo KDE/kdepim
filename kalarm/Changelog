@@ -1,8 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.4.6 --- 19 May 2010 ===
+=== Version 2.4.6 --- 20 May 2010 ===
 - Fix alarm edit dialog not saving changes when invoked from alarm message
   window's Edit button.
+- Fix main window close action not working when system tray icon is not shown.
 
 === Version 2.4.5 (KDE 4.4.3) --- 7 April 2010 ===
 - Fix audio files playing silently when no volume level has been specified.
