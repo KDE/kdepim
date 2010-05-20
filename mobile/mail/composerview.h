@@ -67,6 +67,7 @@ class ComposerView : public KDeclarativeFullScreenView
     /// Send clicked in the user interface
     void send();
     QObject* getAction( const QString &name ) const;
+    void configureIdentity();
     void configureTransport();
 
   signals:
@@ -87,7 +88,7 @@ class ComposerView : public KDeclarativeFullScreenView
     KPIMIdentities::IdentityCombo *m_identityCombo;
     Message::KMeditor *m_editor;
     MessageComposer::RecipientsEditor *m_recipientsEditor;
-    Message::AttachmentModel *m_model;
+    Message::AttachmentModel *m_attachmentModel;
     Message::AttachmentControllerBase *m_attachmentController;
     QString m_subject;
     KActionCollection *mActionCollection;

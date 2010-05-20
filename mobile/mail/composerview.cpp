@@ -76,9 +76,9 @@ ComposerView::ComposerView(QWidget* parent) :
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
 
-  m_model = new Message::AttachmentModel(this);
-  engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( m_model ) ) );
-  m_attachmentController = new Message::AttachmentControllerBase(m_model, this, mActionCollection);
+  m_attachmentModel = new Message::AttachmentModel(this);
+  engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( m_attachmentModel ) ) );
+  m_attachmentController = new Message::AttachmentControllerBase(m_attachmentModel, this, mActionCollection);
 
 }
 
@@ -106,8 +106,8 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 {
   m_message = msg;
-  foreach(KPIM::AttachmentPart::Ptr attachment, m_model->attachments())
-    m_model->removeAttachment(attachment);
+  foreach(KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments())
+    m_attachmentModel->removeAttachment(attachment);
 
   foreach(KMime::Content *attachment, msg->attachments())
   {
@@ -126,7 +126,7 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg)
       part->setData( attachment->decodedContent() );
     }
     m_attachmentController->addAttachment( part );
-    m_model->addAttachment(part);
+    m_attachmentModel->addAttachment(part);
   }
 
   if ( status() == QDeclarativeView::Ready )
@@ -198,6 +198,7 @@ void ComposerView::addressExpansionResult(KJob* job)
   composer->infoPart()->setFrom( resolveJob->expandedFrom() );
   composer->infoPart()->setUserAgent( "KMail Mobile" );
   m_editor->fillComposerTextPart( composer->textPart() );
+  composer->addAttachmentParts( m_attachmentModel->attachments() );
   connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
   composer->start();
 }
@@ -250,6 +251,14 @@ QObject* ComposerView::getAction( const QString &name ) const
 {
   kDebug() << mActionCollection << mActionCollection->action( name );
   return mActionCollection->action( name );
+}
+
+void ComposerView::configureIdentity()
+{
+  KCMultiDialog dlg;
+  dlg.addModule( "kcm_kpimidentities" );
+  dlg.exec();
+
 }
 
 void ComposerView::configureTransport()

@@ -53,8 +53,20 @@ KPIM.MainView {
       contentWidth: 240
       content: [
         KPIM.Button {
-          id: configureTransportButton
+          id: configureIdentityButton
           anchors.top: parent.top;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          buttonText: KDE.i18n( "Configure Identity" )
+          onClicked: {
+            actionPanel.collapse();
+            window.configureIdentity();
+          }
+        },
+        KPIM.Button {
+          id: configureTransportButton
+          anchors.top: configureIdentityButton.bottom;
           anchors.horizontalCenter: parent.horizontalCenter;
           width: parent.width - 10
           height: parent.height / 6
