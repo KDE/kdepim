@@ -1780,14 +1780,15 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
           completeQueue.removeRef(cmd);
           if (!ok)
           {
-            error(ERR_CANNOT_RENAME, i18n("Unable to close mailbox."));
+            kdWarning(7116) << "Unable to close mailbox!" << endl;
+            error(ERR_CANNOT_RENAME, src.path());
             return;
           }
           setState(ISTATE_LOGIN);
         }
         imapCommand *cmd = doCommand (imapCommand::clientRename (sBox, dBox));
         if (cmd->result () != "OK") {
-          error (ERR_CANNOT_RENAME, cmd->result ());
+          error (ERR_CANNOT_RENAME, src.path());
           completeQueue.removeRef (cmd);
           return;
         }
@@ -1798,13 +1799,13 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
     case ITYPE_MSG:
     case ITYPE_ATTACH:
     case ITYPE_UNKNOWN:
-      error (ERR_CANNOT_RENAME, src.prettyURL());
+      error (ERR_CANNOT_RENAME, src.path());
       break;
     }
   }
   else
   {
-    error (ERR_CANNOT_RENAME, src.prettyURL());
+    error (ERR_CANNOT_RENAME, src.path());
     return;
   }
   finished ();
