@@ -23,14 +23,22 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
+#include <incidenceeditors/korganizereditorconfig.h>
+
 #include "mainview.h"
 
+using namespace IncidenceEditors;
 
 int main( int argc, char **argv )
 {
   const QByteArray& ba = QByteArray( "korganizer-mobile" );
   const KLocalizedString name = ki18n( "KOrganizer Mobile" );
 
+  // NOTE: This is necessary to avoid a crash, but will result in an empty config.
+  //       To make this really configurable do something like KOrganizerEditorConfig
+  //       in incidinceeditors/groupwareintegration.cpp
+  EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
+  
   KAboutData aboutData( ba, ba, name, ba, name );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication app;

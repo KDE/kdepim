@@ -20,13 +20,42 @@
 #ifndef INCIDENCEVIEW_H
 #define INCIDENCEVIEW_H
 
+#include <KCal/Incidence>
+
+#include <incidenceeditors/incidenceeditor-ng/combinedincidenceeditor.h>
+
 #include "kdeclarativefullscreenview.h"
+
+namespace Akonadi {
+class CollectionComboBox;
+}
+
+namespace IncidenceEditorsNG {
+class IncidenceGeneralEditor;
+class IncidenceDateTimeEditor;
+}
 
 
 class IncidenceView : public KDeclarativeFullScreenView
 {
+  Q_OBJECT;
   public:
     explicit IncidenceView( QWidget* parent = 0 );
+    ~IncidenceView();
+
+    void setCollectionCombo( Akonadi::CollectionComboBox * );
+    void setDateTimeEditor( IncidenceEditorsNG::IncidenceDateTimeEditor * );
+    void setGeneralEditor( IncidenceEditorsNG::IncidenceGeneralEditor * );
+
+  public slots:
+    void save();   /// Ok clicked in the user interface
+    void cancel(); /// Cancel clicked in the user interface
+
+    
+  private:
+    Akonadi::CollectionComboBox *mCollectionCombo;
+    KCal::Incidence::Ptr mEvent;
+    IncidenceEditorsNG::CombinedIncidenceEditor *mEditor;
 };
 
 #endif // INCIDENCEVIEW_H

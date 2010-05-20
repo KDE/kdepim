@@ -9,6 +9,7 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(korganizer_mobile_SRCS
+  declarativeeditors.cpp
   incidenceview.cpp
   mainview.cpp
   main.cpp
@@ -21,6 +22,7 @@ target_link_libraries(korganizer-mobile
   ${KDE4_KDEUI_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   akonadi-kcal_next
+  incidenceeditors
   kdepimmobileui
 )
 

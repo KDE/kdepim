@@ -18,11 +18,85 @@
 */
 
 import Qt 4.7
+import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.incidenceeditors 4.5 as IncidenceEditors
 
 KPIM.MainView {
-  MobileIncidenceEditor {
-    id: editorView
+
+  SlideoutPanelContainer {
     anchors.fill: parent
+    z: 50
+
+    SlideoutPanel {
+      anchors.fill: parent
+//       id: startPanel
+      titleText: KDE.i18n( "Attendees" )
+      handlePosition: 30
+      handleHeight: 80
+    }
+    SlideoutPanel {
+      anchors.fill: parent
+//       id: startPanel
+      titleText: KDE.i18n( "Recurrence" )
+      handlePosition: 30 + 80
+      handleHeight: 80
+    }
+    SlideoutPanel {
+      anchors.fill: parent
+//       id: startPanel
+      titleText: KDE.i18n( "Attachments" )
+      handlePosition: 30 + 80 + 80
+      handleHeight: 100
+    }
+    SlideoutPanel {
+      anchors.fill: parent
+//       id: startPanel
+      titleText: KDE.i18n( "More" )
+      handlePosition: 30 + 80 + 80 + 100
+      handleHeight: 60
+    }
+    
+  }
+
+  
+  Column {
+    spacing: 4;
+    anchors.leftMargin: 40;
+    anchors.rightMargin: 4;
+    anchors.topMargin: 40
+    anchors.fill: parent
+
+    IncidenceEditors.CollectionCombo {
+      width: parent.width;
+      z: 2
+    }
+
+    IncidenceEditors.GeneralEditor {
+      width: parent.width;
+    }
+    
+    IncidenceEditors.DateTimeEditor {
+      width: parent.width;
+    }
+  }
+
+  KPIM.Button {
+    id: okButton;
+    anchors.bottom: parent.bottom;
+    anchors.right: parent.right;
+    width: 100;
+    height: parent.height / 6;
+    buttonText: KDE.i18n( "Ok" );
+    onClicked: window.save();
+  }
+
+  KPIM.Button {
+    anchors.bottom: parent.bottom;
+    anchors.right: okButton.left;
+    width: 100;
+    height: parent.height / 6;
+    buttonText: KDE.i18n( "Cancel" );
+    onClicked: window.cancel();
   }
 }
