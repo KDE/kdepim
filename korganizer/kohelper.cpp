@@ -67,8 +67,8 @@ QColor KOHelper::resourceColor( KCal::Calendar *calendar,
   return resourceColor;
 }
 
-qint64 KOHelper::yearDiff( const QDate &start, const QDate &end )
+int KOHelper::yearDiff( const QDate &start, const QDate &end )
 {
-  return static_cast<qint64>( start.daysTo( end ) / 365.25 );
+  return end.year() - start.year();
 }
 

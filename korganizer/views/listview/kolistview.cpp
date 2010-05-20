@@ -380,7 +380,7 @@ void KOListView::addIncidence( Incidence *incidence, const QDate &date )
   Incidence *tinc = incidence;
   if ( tinc->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        tinc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    qint64 years = KOHelper::yearDiff( tinc->dtStart().date(), mEndDate );
+    int years = KOHelper::yearDiff( tinc->dtStart().date(), mEndDate );
     if ( years > 0 ) {
       tinc = incidence->clone();
       tinc->setReadOnly( false );

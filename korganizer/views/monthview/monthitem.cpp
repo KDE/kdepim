@@ -286,7 +286,7 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
 
   if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    qint64 years = KOHelper::yearDiff( mIncidence->dtStart().date(), recurStartDate );
+    int years = KOHelper::yearDiff( mIncidence->dtStart().date(), recurStartDate );
     if ( years > 0 ) {
       mIncidence = incidence->clone();
       mIncidence->setReadOnly( false );

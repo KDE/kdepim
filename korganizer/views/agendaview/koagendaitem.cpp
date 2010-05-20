@@ -76,7 +76,7 @@ KOAgendaItem::KOAgendaItem( Calendar *calendar, Incidence *incidence,
 
   if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    qint64 years = KOHelper::yearDiff( mIncidence->dtStart().date(), qd );
+    int years = KOHelper::yearDiff( mIncidence->dtStart().date(), qd );
     if ( years > 0 ) {
       mIncidence = incidence->clone();
       mIncidence->setReadOnly( false );
