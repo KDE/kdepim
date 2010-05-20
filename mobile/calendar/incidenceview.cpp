@@ -62,6 +62,10 @@ void IncidenceView::setGeneralEditor( IncidenceGeneralEditor *editor )
 
 void IncidenceView::save()
 {
+  if ( !mEditor->isValid() )
+    return;
+
+  
   deleteLater();
 }
 
