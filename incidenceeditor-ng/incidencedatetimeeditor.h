@@ -47,9 +47,17 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
+    /**
+     * Sets the active date for the editing session. This defaults to the current
+     * date. It should be set <em>before</em> loading a non-empty (i.e. existing
+     * incidence).
+     */
+    void setActiveDate( const QDate &activeDate );
+
   private slots: /// General
     void editRecurrence();
     void enableAlarm( bool enable );
+    void startTimeChanged( const QTime &newtime );
     void updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence );
     
   private slots: /// Todo specific
@@ -57,22 +65,33 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
     void enableEndEdit( bool enable );
     void enableTimeEdits( bool enable );
     bool isDirty( KCal::Todo::ConstPtr todo ) const;
-//     void slotTodoDateChanged();
-    void slotTodoStartDateModified();
 
   private slots: /// Event specific
+    bool isDirty( KCal::Event::ConstPtr event ) const;
     
   private:
+    /// Created from the values in the widgets
+    KDateTime currentStartDateTime() const; 
+    KDateTime currentEndDateTime() const;
+    
     void load( KCal::Event::ConstPtr event );
     void load( KCal::Todo::ConstPtr todo );
+    void setDateTimes( const KDateTime &start, const KDateTime &end );
+    void setTimes( const KDateTime &start, const KDateTime &end );
+    void setDuration();
     
   private:
     KCal::ICalTimeZones *mTimeZones;
     Ui::IncidenceDateTimeEditor *mUi;
 
-    bool mStartDateModified;
-    KDateTime::Spec mStartSpec;
-    KDateTime::Spec mEndSpec;
+    QDate mActiveDate;
+    /**
+     * These might differ from mLoadedIncidence->(dtStart|dtDue) as these take
+     * in account recurrence if needed. The values are calculated once on load().
+     * and don't change afterwards.
+     */
+    KDateTime mActiveStartDT;
+    KDateTime mActiveEndDT;
 };
 
 } // IncidenceEditorsNG

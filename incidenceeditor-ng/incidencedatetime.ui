@@ -187,19 +187,12 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="mDurationExplLabel">
+      <widget class="QLabel" name="mDurationLabel">
        <property name="text">
         <string>Duration:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="mDurationLabel">
-       <property name="text">
-        <string>0 hours</string>
        </property>
       </widget>
      </item>
