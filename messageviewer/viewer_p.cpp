@@ -1406,7 +1406,7 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mMimePartTree->setSelectionBehavior( QAbstractItemView::SelectRows );
   connect(mMimePartTree, SIGNAL( activated( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
-  connect(mMimePartTree, SIGNAL( destroyed(QObject*) ), this, SLOT( slotMimePartDestoryed() ) );
+  connect(mMimePartTree, SIGNAL( destroyed(QObject*) ), this, SLOT( slotMimePartDestroyed() ) );
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
