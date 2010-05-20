@@ -37,6 +37,7 @@
 #ifndef __KLEO_KEYRESOLVER_H__
 #define __KLEO_KEYRESOLVER_H__
 
+#include "messagecomposer_export.h"
 #include "libkleo/ui/keyapprovaldialog.h"
 #include "kleo/enum.h"
 
@@ -127,7 +128,7 @@ namespace Kleo {
      a copy of it's own to hide the other secondary recipients.
     */
 
-  class KeyResolver {
+  class MESSAGECOMPOSER_EXPORT KeyResolver {
   public:
     KeyResolver( bool encToSelf, bool showApproval, bool oppEncryption,
 		 unsigned int format,

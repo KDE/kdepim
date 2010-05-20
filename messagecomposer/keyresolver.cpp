@@ -312,20 +312,20 @@ static std::vector<GpgME::Key> TrustedOrConfirmed( const std::vector<GpgME::Key>
   if ( !fishies.empty() ) {
     // certificates can't have marginal trust
     msg += i18n( "\nThe following keys are only marginally trusted: \n");
-    msg += keysAsStrings( fishies ).join(",");
+    msg += keysAsStrings( fishies ).join( QLatin1String(",") );
   }
   if ( !ickies.empty() ) {
     msg += i18n( "\nThe following keys or certificates have unknown trust level: \n");
-    msg += keysAsStrings( ickies ).join(",");
+    msg += keysAsStrings( ickies ).join( QLatin1String(",") );
   }
   if ( !rewookies.empty() ) {
     msg += i18n( "\nThe following keys or certificates are <b>revoked</b>: \n");
-    msg += keysAsStrings( rewookies ).join(",");
+    msg += keysAsStrings( rewookies ).join( QLatin1String(",") );
   }
 
   if( KMessageBox::warningContinueCancel( 0, msg, i18n("Not Fully Trusted Encryption Keys"),
                                           KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                          "not fully trusted encryption key warning" )
+                                          QLatin1String("not fully trusted encryption key warning") )
           == KMessageBox::Continue )
     return keys;
   else
@@ -539,10 +539,10 @@ namespace {
 
 static QString canonicalAddress( const QString & _address ) {
   const QString address = KPIMUtils::extractEmailAddress( _address );
-  if ( !address.contains('@') ) {
+  if ( !address.contains( QLatin1Char('@') ) ) {
     // local address
     //return address + '@' + KNetwork::KResolver::localHostName();
-    return address + "@localdomain";
+    return address + QLatin1String("@localdomain");
   }
   else
     return address;
@@ -634,7 +634,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
                        "<p>expired %1 days ago.</p>") )
 		  .subs( daysSinceExpiry )
 		  .subs( QString::fromUtf8( key.userID(0).id() ) )
-		  .subs( key.shortKeyID() )
+		  .subs( QString::fromLatin1( key.shortKeyID() ) )
 		  .toString()
           : ( ca
               ? ( key.isRoot()
@@ -678,7 +678,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
                                "<p>expired %1 days ago.</p>") ) )
 			   .subs( daysSinceExpiry )
 			   .subs( Kleo::DN( orig.userID(0).id() ).prettyDN() )
-			   .subs( orig.issuerSerial() )
+			   .subs( QString::fromLatin1( orig.issuerSerial() ) )
 			   .subs( Kleo::DN( key.userID(0).id() ).prettyDN() )
 			   .toString()
               : ( mine ? sign
@@ -696,14 +696,14 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
                            "<p>expired %1 days ago.</p>" ) )
 		       .subs( daysSinceExpiry )
 		       .subs( Kleo::DN( key.userID(0).id() ).prettyDN() )
-		       .subs( key.issuerSerial() )
+		       .subs( QString::fromLatin1( key.issuerSerial() ) )
 		       .toString() );
       d->alreadyWarnedFingerprints.insert( subkey.fingerprint() );
       if ( KMessageBox::warningContinueCancel( 0, msg,
                                                key.protocol() == GpgME::OpenPGP
                                                ? i18n("OpenPGP Key Expired" )
                                                : i18n("S/MIME Certificate Expired" ),
-                                               KStandardGuiItem::cont(), KStandardGuiItem::cancel(), dontAskAgainName ) == KMessageBox::Cancel )
+                                               KStandardGuiItem::cont(), KStandardGuiItem::cancel(), QLatin1String(dontAskAgainName) ) == KMessageBox::Cancel )
           return Kpgp::Canceled;
   } else {
   const int daysTillExpiry = 1 + int( secsTillExpiry / secsPerDay );
@@ -739,7 +739,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
 		   "<p>expires in less than %1 days.</p>") )
 		  .subs( daysTillExpiry )
 		  .subs( QString::fromUtf8( key.userID(0).id() ) )
-		  .subs( key.shortKeyID() )
+		  .subs( QString::fromLatin1( key.shortKeyID() ) )
 		  .toString()
       : ( ca
 	  ? ( key.isRoot()
@@ -783,7 +783,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
 			   "<p>expires in less than %1 days.</p>") ) )
 			   .subs( daysTillExpiry )
 			   .subs( Kleo::DN( orig.userID(0).id() ).prettyDN() )
-			   .subs( orig.issuerSerial() )
+			   .subs( QString::fromLatin1( orig.issuerSerial() ) )
 			   .subs( Kleo::DN( key.userID(0).id() ).prettyDN() )
 			   .toString()
 	  : ( mine ? sign
@@ -801,7 +801,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
 		       "<p>expires in less than %1 days.</p>" ) )
 		       .subs( daysTillExpiry )
 		       .subs( Kleo::DN( key.userID(0).id() ).prettyDN() )
-		       .subs( key.issuerSerial() )
+		       .subs( QString::fromLatin1( key.issuerSerial() ) )
 		       .toString() );
     d->alreadyWarnedFingerprints.insert( subkey.fingerprint() );
     if ( KMessageBox::warningContinueCancel( 0, msg,
@@ -809,7 +809,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
 					     ? i18n("OpenPGP Key Expires Soon" )
 					     : i18n("S/MIME Certificate Expires Soon" ),
 					     KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-					     dontAskAgainName )
+					     QLatin1String( dontAskAgainName ) )
 	 == KMessageBox::Cancel )
       return Kpgp::Canceled;
   }
@@ -817,7 +817,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
   if ( key.isRoot() )
     return Kpgp::Ok;
   else if ( const char * chain_id = key.chainID() ) {
-    const std::vector<GpgME::Key> issuer = lookup( QStringList( chain_id ), false );
+    const std::vector<GpgME::Key> issuer = lookup( QStringList( QLatin1String( chain_id ) ), false );
     if ( issuer.empty() )
       return Kpgp::Ok;
     else
@@ -852,7 +852,7 @@ Kpgp::Result Kleo::KeyResolver::setEncryptToSelfKeys( const QStringList & finger
 			     "to use.");
     return KMessageBox::warningContinueCancel( 0, msg, i18n("Unusable Encryption Keys"),
 					       KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-					       "unusable own encryption key warning" )
+					       QLatin1String("unusable own encryption key warning") )
       == KMessageBox::Continue ? Kpgp::Ok : Kpgp::Canceled ;
   }
 
@@ -896,7 +896,7 @@ Kpgp::Result Kleo::KeyResolver::setSigningKeys( const QStringList & fingerprints
 			     "to use.");
     return KMessageBox::warningContinueCancel( 0, msg, i18n("Unusable Signing Keys"),
 					       KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-					       "unusable signing key warning" )
+					       QLatin1String("unusable signing key warning") )
       == KMessageBox::Continue ? Kpgp::Ok : Kpgp::Canceled ;
   }
 
@@ -1186,7 +1186,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
       if ( KMessageBox::warningContinueCancel( 0, msg,
 					       i18n("Unusable Encryption Keys"),
 					       KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-					       "encrypt-to-self will fail warning" )
+					       QLatin1String("encrypt-to-self will fail warning") )
 	   == KMessageBox::Cancel )
 	return Kpgp::Canceled;
       // FIXME: Allow selection
@@ -1213,7 +1213,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
       if ( KMessageBox::warningContinueCancel( 0, msg,
 					       i18n("Unusable Encryption Keys"),
 					       KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-					       "encrypt-to-self will fail warning" )
+					       QLatin1String("encrypt-to-self will fail warning") )
 	   == KMessageBox::Cancel )
 	return Kpgp::Canceled;
       // FIXME: Allow selection
@@ -1241,7 +1241,7 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption() {
 					     i18n("Unusable Signing Keys"),
 					     KGuiItem(i18n("Do Not OpenPGP-Sign")),
 					     KStandardGuiItem::cancel(),
-					     "signing will fail warning" )
+					     QLatin1String("signing will fail warning") )
 	 == KMessageBox::Cancel )
       return Kpgp::Canceled;
     // FIXME: Allow selection
@@ -1258,7 +1258,7 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption() {
 					     i18n("Unusable Signing Keys"),
 					     KGuiItem(i18n("Do Not S/MIME-Sign")),
 					     KStandardGuiItem::cancel(),
-					     "signing will fail warning" )
+					     QLatin1String("signing will fail warning") )
 	 == KMessageBox::Cancel )
       return Kpgp::Canceled;
     // FIXME: Allow selection
@@ -1407,7 +1407,7 @@ void Kleo::KeyResolver::dump() const {
 	std::cerr << kit->shortKeyID() << " ";
       std::cerr << std::endl
 		<< "  SplitInfo #" << i << " recipients: "
-		<< qPrintable(sit->recipients.join(", ")) << std::endl;
+		<< qPrintable(sit->recipients.join( QLatin1String(", ") )) << std::endl;
     }
   }
 #endif
@@ -1459,10 +1459,10 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
       for ( std::vector<GpgME::Key>::const_iterator it = keys.begin(), end = keys.end() ; it != end ; ++it ) {
         if ( it->protocol() == GpgME::OpenPGP ) {
           if ( const char * fpr = it->primaryFingerprint() )
-            pref.pgpKeyFingerprints.push_back( fpr );
+            pref.pgpKeyFingerprints.push_back( QLatin1String( fpr ) );
         } else if ( it->protocol() == GpgME::CMS ) {
           if ( const char * fpr = it->primaryFingerprint() )
-            pref.smimeCertFingerprints.push_back( fpr );
+            pref.smimeCertFingerprints.push_back( QLatin1String( fpr ) );
         }
       }
       saveContactPreference( items[i].address, pref );
@@ -1567,6 +1567,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   const bool opgp = containsOpenPGP( mCryptoMessageFormats );
   const bool x509 = containsSMIME( mCryptoMessageFormats );
 
+#ifdef QT_QT3SUPPORT_FOUND
   Kleo::KeySelectionDialog dlg( i18n("Encryption Key Selection"),
 				msg, selectedKeys,
                                 Kleo::KeySelectionDialog::ValidEncryptionKeys
@@ -1575,6 +1576,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
 				true, true ); // multi-selection and "remember choice" box
 
   if ( dlg.exec() != QDialog::Accepted )
+#endif
     return std::vector<GpgME::Key>();
   std::vector<GpgME::Key> keys = dlg.selectedKeys();
   keys.erase( std::remove_if( keys.begin(), keys.end(),
@@ -1595,7 +1597,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
 
   if ( !fingerprints.empty() ) {
     kDebug() << "Using encryption keys 0x"
-	             << fingerprints.join( ", 0x" )
+	             << fingerprints.join( QLatin1String(", 0x") )
 	             << "for" << person;
     std::vector<GpgME::Key> keys = lookup( fingerprints );
     if ( !keys.empty() ) {
@@ -1672,7 +1674,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
 std::vector<GpgME::Key> Kleo::KeyResolver::lookup( const QStringList & patterns, bool secret ) const {
   if ( patterns.empty() )
     return std::vector<GpgME::Key>();
-  kDebug() << "( \"" << patterns.join("\", \"" ) << "\"," << secret << ")";
+  kDebug() << "( \"" << patterns.join( QLatin1String("\", \"") ) << "\"," << secret << ")";
   std::vector<GpgME::Key> result;
   if ( mCryptoMessageFormats & (InlineOpenPGPFormat|OpenPGPMIMEFormat) )
     if ( const Kleo::CryptoBackend::Protocol * p = Kleo::CryptoBackendFactory::instance()->openpgp() ) {
@@ -1750,14 +1752,14 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
   ContactPreferences pref;
   if ( !res.isEmpty() ) {
     KABC::Addressee addr = res.first();
-    QString encryptPref = addr.custom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF" );
+    QString encryptPref = addr.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF") );
     pref.encryptionPreference = Kleo::stringToEncryptionPreference( encryptPref );
-    QString signPref = addr.custom( "KADDRESSBOOK", "CRYPTOSIGNPREF" );
+    QString signPref = addr.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF") );
     pref.signingPreference = Kleo::stringToSigningPreference( signPref );
-    QString cryptoFormats = addr.custom( "KADDRESSBOOK", "CRYPTOPROTOPREF" );
+    QString cryptoFormats = addr.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF") );
     pref.cryptoMessageFormat = Kleo::stringToCryptoMessageFormat( cryptoFormats );
-    pref.pgpKeyFingerprints = addr.custom( "KADDRESSBOOK", "OPENPGPFP" ).split( ',', QString::SkipEmptyParts );
-    pref.smimeCertFingerprints = addr.custom( "KADDRESSBOOK", "SMIMEFP" ).split(',', QString::SkipEmptyParts );
+    pref.pgpKeyFingerprints = addr.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP") ).split( QLatin1Char(','), QString::SkipEmptyParts );
+    pref.smimeCertFingerprints = addr.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP") ).split( QLatin1Char(','), QString::SkipEmptyParts );
   }
   // insert into map and grab resulting iterator
   d->mContactPreferencesMap.insert( std::make_pair( address, pref ) );
@@ -1766,11 +1768,11 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
 
 void Kleo::KeyResolver::writeCustomContactProperties( KABC::Addressee &contact, const ContactPreferences& pref ) const
 {
-  contact.insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF", Kleo::encryptionPreferenceToString( pref.encryptionPreference ) );
-  contact.insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF", Kleo::signingPreferenceToString( pref.signingPreference ) );
-  contact.insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", cryptoMessageFormatToString( pref.cryptoMessageFormat ) );
-  contact.insertCustom( "KADDRESSBOOK", "OPENPGPFP", pref.pgpKeyFingerprints.join( "," ) );
-  contact.insertCustom( "KADDRESSBOOK", "SMIMEFP", pref.smimeCertFingerprints.join( "," ) );
+  contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String( Kleo::encryptionPreferenceToString( pref.encryptionPreference ) ) );
+  contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String( Kleo::signingPreferenceToString( pref.signingPreference ) ) );
+  contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF"), QLatin1String( cryptoMessageFormatToString( pref.cryptoMessageFormat ) ) );
+  contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP"), pref.pgpKeyFingerprints.join( QLatin1String(",") ) );
+  contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP"), pref.smimeCertFingerprints.join( QLatin1String(",") ) );
 }
 
 void Kleo::KeyResolver::saveContactPreference( const QString& email, const ContactPreferences& pref ) const

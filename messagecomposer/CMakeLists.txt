@@ -53,6 +53,8 @@ set( messagecomposer_src
 
      aliasesexpandjob.cpp
      emailaddressresolvejob.cpp
+
+     keyresolver.cpp
 )
 
 if(KDEPIM_ENTERPRISE_BUILD)
