@@ -246,6 +246,9 @@ public:
                                  bool weAreReplacingTheRootNode = false,
                                  int recCount = 0 );
 
+  KMime::Message* createDecryptedMessage();
+  void removeEncryptedPart( KMime::Content* node );
+
   QString createAtmFileLink( const QString& atmFileName ) const;
   KService::Ptr getServiceOffer( KMime::Content *content);
   KMime::Content::List selectedContents();

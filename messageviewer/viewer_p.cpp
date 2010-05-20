@@ -858,6 +858,48 @@ static bool message_was_saved_decrypted_before( KMime::Message::Ptr msg )
   return msg->messageID()->asUnicodeString().trimmed().startsWith( "<DecryptedMsg." );
 }
 
+void ViewerPrivate::removeEncryptedPart(KMime::Content* node)
+{
+  bool changed = false;
+  KMime::Content* data = ObjectTreeParser::findType( node, "application/pgp-encrypted", true, true );
+  if ( data ) {
+    changed = true;
+//     qDebug() << "REMOVING: " << data->encodedContent();
+    KMime::Content *encryptedData = MessageCore::NodeHelper::next( data, false ); //this is the encrypted data
+    if ( encryptedData && encryptedData->contentType()->mimeType() == "application/octet-stream" ) {
+//       qDebug() << "REMOVING: " << encryptedData->encodedContent();
+      data = MessageCore::NodeHelper::next( encryptedData, false ); //this will be the decrypted content
+      if ( data ) {
+        QByteArray decryptedData = data->encodedContent();
+        node->setBody( decryptedData );
+        node->contentType()->from7BitString( data->contentType()->as7BitString( false ) );
+        node->contentTransferEncoding()->from7BitString( data->contentTransferEncoding()->as7BitString( false ) );
+        node->assemble();
+        return;
+      }
+    }
+    data = 0;
+  }
+  else {
+    data = ObjectTreeParser::findType( node, "application/pkcs7-mime", true, true );
+    if ( data ) {
+        //node->removeContent( data, true );
+        kDebug() << "Unfinished Akonadi port in " << Q_FUNC_INFO;
+        data = 0;
+    }
+  }
+
+}
+
+
+KMime::Message* ViewerPrivate::createDecryptedMessage()
+{
+  KMime::Message* message = mNodeHelper->messageWithExtraContent( mMessage.get() );
+  removeEncryptedPart( message );
+//   qDebug() << "Decrypted message: " << message->encodedContent();
+  return message;
+}
+
 void ViewerPrivate::parseContent( KMime::Content *content )
 {
   assert( content != 0 );
@@ -898,7 +940,7 @@ void ViewerPrivate::parseContent( KMime::Content *content )
   otp.setShowRawToltecMail( mShowRawToltecMail );
   otp.parseObjectTree( content );
 
-#if 0 // Disabled: Setting the signature state to nodehelper is not enough, it should actually
+// TODO: Setting the signature state to nodehelper is not enough, it should actually
       // be added to the store, so that the message list correctly displays the signature state
       // of messages that were parsed at least once
   // store encrypted/signed status information in the KMMessage
@@ -912,11 +954,7 @@ void ViewerPrivate::parseContent( KMime::Content *content )
        mNodeHelper->signatureState( content ) == KMMsgSignatureStateUnknown ) {
     mNodeHelper->setSignatureState( content, signatureState );
   }
-#else
-  kWarning() << "Port code: Remember signature state in the store";
-#endif
 
-#if 0 // BROKEN
   bool emitReplaceMsgByUnencryptedVersion = false;
   if ( GlobalSettings::self()->storeDisplayedMessagesUnencrypted() ) {
 
@@ -942,13 +980,13 @@ void ViewerPrivate::parseContent( KMime::Content *content )
     kDebug() << "|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
-    if(    (/*aMsg == message()*/ true) //TODO(Andras) review if still needed
-          // don't remove encryption in the outbox folder :)
+    if(
+          // only proceed if the message has actually been decrypted
+        decryptMessage()
+      // don't remove encryption in the outbox folder :)
 //FIXME(Andras)      && ( aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() )
           // only proceed if this message was not saved encryptedly before
 //FIXME(Andras)      && !message_was_saved_decrypted_before( aMsg )
-          // only proceed if the message has actually been decrypted
-        && decryptMessage()
           // only proceed if no pending async jobs are running:
         && !otp.hasPendingAsyncJobs()
           // only proceed if this message is (at least partially) encrypted
@@ -957,39 +995,42 @@ void ViewerPrivate::parseContent( KMime::Content *content )
 
       kDebug() << "Calling objectTreeToDecryptedMsg()";
 
+      KMime::Message* decryptedMessage = createDecryptedMessage();
+      mMessage.reset( decryptedMessage );
+
+      mMessageItem.setPayloadFromData( decryptedMessage->encodedContent() );
+      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+      connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
+
+      
+/*
       KMime::Message::Ptr unencryptedMessage( new KMime::Message );
       QByteArray decryptedData;
       // note: The following call may change the message's headers.
-      objectTreeToDecryptedMsg( mMessage.get(), decryptedData, unencryptedMessage );
+      objectTreeToDecryptedMsg( decryptedMessage, decryptedData, unencryptedMessage );
       kDebug() << "Resulting data:" << decryptedData;
 
       if( !decryptedData.isEmpty() ) {
         kDebug() << "Composing unencrypted message";
         unencryptedMessage->setBody( decryptedData );
-      //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
-        kDebug() << "Attach unencrypted message to aMsg";
+        unencryptedMessage->parse();
+        kDebug() << "Resulting data2:" << unencryptedMessage->encodedContent();
+    //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
+//         kDebug() << "Attach unencrypted message to aMsg";
 
-        mNodeHelper->attachUnencryptedMessage( mMessage, unencryptedMessage );
+//         mNodeHelper->attachUnencryptedMessage( mMessage, unencryptedMessage );
 
         emitReplaceMsgByUnencryptedVersion = true;
-      }
+      }*/
     }
   }
 
-  // store message id to avoid endless recursions
-/*FIXME(Andras) port it
-  setIdOfLastViewedMessage( aMsg->index().toString() );
-*/
   if( emitReplaceMsgByUnencryptedVersion ) {
     kDebug() << "Invoke saving in decrypted form:";
     emit replaceMsgByUnencryptedVersion(); //FIXME(Andras) actually connect and do the replacement on the server (see KMMainWidget::slotReplaceByUnencryptedVersion)
   } else {
     showHideMimeTree();
   }
-
-#else
-  kWarning() << "Port to Akonadi: store unencrypted version of message";
-#endif
 }
 
 
