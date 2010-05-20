@@ -11,7 +11,7 @@ Name[pt_BR]=Notas do KDE Móveis
 Name[sv]=KDE:s anteckningar för mobil
 Name[uk]=Мобільні нотатки KDE
 Name[x-test]=xxKDE Notes Mobilexx
-Exec=tasks-mobile
+Exec=notes-mobile
 
 Icon=notes-mobile
 Type=Application
