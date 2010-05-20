@@ -84,7 +84,7 @@ void IncidenceGeneralEditor::selectCategories()
 {
   CategoryConfig cc( EditorConfig::instance()->config() );
   QPointer<CategorySelectDialog> categoryDialog =
-    new CategorySelectDialog( &cc, mUi->mSelectCategoriesButton );
+    new CategorySelectDialog( &cc );
   categoryDialog->setHelp( "categories-view", "korganizer" );
   categoryDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Help );
   categoryDialog->setSelected( mSelectedCategories );
