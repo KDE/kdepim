@@ -45,9 +45,8 @@ class KNArticleVector {
     /**
       Remove the element at position @p pos in this store.
     */
-    void remove( int pos, bool autoDel=false );
+    void remove( int pos );
     void clear();
-    void compact();
     void syncWithMaster();
 
     // sorting
@@ -63,7 +62,7 @@ class KNArticleVector {
     int indexForId(int id);
     int indexForMsgId( const QByteArray &id );
 
-  protected:
+  private:
     void sort();
 
     KNArticleVector *m_aster;
@@ -109,6 +108,10 @@ class KNArticleCollection : public KNCollection {
       Appends an article to this collection.
     */
     void append( KNArticle::Ptr a );
+    /**
+     * Remove the article @p art from this collection.
+     */
+    void remove( const KNArticle::Ptr &art );
     void clear();
     void compact();
     void setLastID();
@@ -129,9 +132,8 @@ class KNArticleCollection : public KNCollection {
 
     // search index
     void syncSearchIndex();
-    void clearSearchIndex();
 
-  protected:
+  private:
     int l_astID;
     unsigned int l_ockedArticles;
     bool n_otUnloadable;

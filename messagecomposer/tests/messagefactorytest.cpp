@@ -44,6 +44,7 @@
 #include <qtest_kde.h>
 #include <QDateTime>
 using namespace Message;
+using namespace MessageComposer;
 
 QTEST_KDEMAIN( MessageFactoryTest, NoGUI )
 

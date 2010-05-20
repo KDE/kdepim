@@ -3,9 +3,13 @@ include_directories(${CMAKE_SOURCE_DIR}/akonadi/)
 set(mobileui_SRCS
     listproxy.cpp
     breadcrumbnavigation.cpp
+    kbreadcrumbnavigationcomponentfactory.cpp
+    akonadibreadcrumbnavigationfactory.cpp
     declarativeakonadiitem.cpp
+    kdeclarativeapplication.cpp
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
+    kdeclarativefullscreenview.cpp
 )
 
 
@@ -21,6 +25,8 @@ target_link_libraries(kdepimmobileui
 install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
+  Action.qml
+  AttachmentList.qml
   Button.qml
   ItemListView.qml
   ItemListViewDelegate.qml

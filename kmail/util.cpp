@@ -60,15 +60,6 @@
 #endif
 #include "foldercollection.h"
 
-KMime::Message::Ptr KMail::Util::message( const Akonadi::Item & item )
-{
-  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
-    kWarning() << "Payload is not a MessagePtr!";
-    return KMime::Message::Ptr();
-  }
-  return item.payload<boost::shared_ptr<KMime::Message> >();
-}
-
 uint KMail::Util::folderIdentity(const Akonadi::Item& item)
 {
   uint id = 0;
@@ -96,7 +87,7 @@ QStringList KMail::Util::mailingListsFromMessage( const Akonadi::Item& item )
 
 Akonadi::Item::Id KMail::Util::putRepliesInSameFolder( const Akonadi::Item& item )
 {
- Akonadi::Collection parentCollection = item.parentCollection();
+  Akonadi::Collection parentCollection = item.parentCollection();
   QSharedPointer<FolderCollection> fd;
   if ( parentCollection.isValid() ) {
     fd = FolderCollection::forCollection( parentCollection );

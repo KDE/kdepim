@@ -33,6 +33,7 @@ namespace KPIMIdentities {
 
 namespace Message {
 
+class TextPart;
 class KMeditorPrivate;
 
 /**
@@ -146,6 +147,12 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     bool replaceSignature( const KPIMIdentities::Signature &oldSig,
                            const KPIMIdentities::Signature &newSig );
+
+    /**
+     * Fill the given composer Message::TextPart with what's in the editor currently.
+     * @param textPart The Message::TextPart to fill.
+     */
+    void fillComposerTextPart( Message::TextPart* textPart ) const;
 
   public Q_SLOTS:
 

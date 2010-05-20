@@ -92,9 +92,6 @@
       <entry name="WarnBeforeExpire" type="bool" key="warn-before-expire">
         <default>true</default>
       </entry>
-      <entry  name="DefaultDomain" type="String" key="Default domain">
-        <default></default>
-      </entry>
       <entry name="SystemTrayEnabled" type="Bool">
         <label>Enable system tray icon</label>
         <default>false</default>
@@ -135,55 +132,6 @@
     </group>
 <!-- General -->
 
-    <group name="Groupware">
-      <entry name="LegacyMangleFromToHeaders" type="Bool">
-        <label>Mangle From:/To: headers in replies to replies</label>
-        <whatsthis>Microsoft Outlook has a number of shortcomings in its implementation of the iCalendar standard; this option works around one of them. If you have problems with Outlook users not being able to get your replies, try setting this option.</whatsthis>
-        <default>false</default>
-      </entry>
-
-      <entry name="LegacyBodyInvites" type="Bool">
-        <label>Send groupware invitations in the mail body</label>
-        <whatsthis>Microsoft Outlook has a number of shortcomings in its implementation of the iCalendar standard; this option works around one of them. If you have problems with Outlook users not being able to get your invitations, try setting this option.</whatsthis>
-        <default>false</default>
-      </entry>
-
-     <entry name="ExchangeCompatibleInvitations" type="Bool">
-        <label>Exchange-compatible invitation naming</label>
-        <whatsthis>Microsoft Outlook, when used in combination with a Microsoft Exchange server, has a problem understanding standards-compliant groupware email. Turn this option on to send groupware invitations in a way that Microsoft Exchange understands.</whatsthis>
-        <default>false</default>
-      </entry>
-
-      <entry name="OutlookCompatibleInvitationReplyComments" type="Bool">
-        <label>Outlook compatible invitation reply comments</label>
-        <whatsthis>When replying to invitations, send the reply comment in way that Microsoft Outlook understands.</whatsthis>
-        <default>false</default>
-      </entry>
-
-      <entry name="AutomaticSending" type="Bool">
-        <label>Automatic invitation sending</label>
-        <whatsthis>When this is checked, you will not see the mail composer window. Instead, all invitation mails are sent automatically. If you want to see the mail before sending it, you can uncheck this option. However, be aware that the text in the composer window is in iCalendar syntax, and you should not try modifying it by hand.</whatsthis>
-        <default>true</default>
-      </entry>
-
-      <entry name="DeleteInvitationEmailsAfterSendingReply" type="Bool">
-        <label>Delete invitation emails after the reply to them has been sent</label>
-        <whatsthis>When this is checked, received invitation emails that have been replied to will be moved to the Trash folder, once the reply has been successfully sent.</whatsthis>
-        <default>${DELETE_INVITATIONS_AFTER_REPLY_DEFAULT}</default>
-      </entry>
-
-      <entry name="AskForCommentWhenReactingToInvitation"  type="Enum">
-        <label></label>
-        <whatsthis></whatsthis>
-        <choices>
-          <choice name="NeverAsk"/>
-          <choice name="AskForAllButAcceptance"/>
-          <choice name="AlwaysAsk"/>
-        </choices>
-        <default>AskForAllButAcceptance</default>
-      </entry>
-
-    </group>
 
     <group name="Internal">
       <entry name="MsgDictSizeHint" type="Int" hidden="true">
@@ -219,14 +167,6 @@
       <entry name="ForwardingInlineByDefault" type="Bool">
         <default>false</default>
         <label>Forward Inline As Default.</label>
-      </entry>
-      <entry name="AllowSemicolonAsAddressSeparator" type="Bool">
-        <default>${ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT}</default>
-        <label>Allow the semicolon character (';') to be used as separator in the message composer.</label>
-      </entry>
-      <entry name="AutoTextSignature" type="String" key="signature">
-        <label>A&amp;utomatically insert signature</label>
-        <default>auto</default>
       </entry>
       <entry name="StickyIdentity" type="Bool" key="sticky-identity">
         <whatsthis>Remember this identity, so that it will be used in future composer windows as well.
@@ -304,11 +244,6 @@
         <whatsthis>&lt;qt&gt;&lt;p&gt;Enable this option if you want KMail to request Message Disposition Notifications (MDNs) for each of your outgoing messages.&lt;/p&gt;&lt;p&gt;This option only affects the default; you can still enable or disable MDN requesting on a per-message basis in the composer, menu item &lt;em&gt;Options&lt;/em&gt;-&gt;&lt;em&gt;Request Disposition Notification&lt;/em&gt;.&lt;/p&gt;&lt;/qt&gt;</whatsthis>
         <default>false</default>
       </entry>
-      <entry name="ShowRecentAddressesInComposer" type="Bool" key="showRecentAddressesInComposer">
-        <label>Use recent addresses for autocompletion</label>
-        <whatsthis>Disable this option if you do not want recently used addresses to appear in the autocompletion list in the composer's address fields.</whatsthis>
-        <default>true</default>
-      </entry>
       <entry name="Headers" type="Int" key="headers">
         <default>KMail::Composer::HDR_SUBJECT</default>
       </entry>
@@ -329,38 +264,16 @@
                 "attachment,attached" ).split( ',' )
         </default>
       </entry>
-      <entry name="ShowMessagePartDialogOnAttach" type="Bool" key="showMessagePartDialogOnAttach">
-        <default>false</default>
-      </entry>
       <entry name="AutosaveInterval" type="Int" key="autosave">
         <label>Autosave interval:</label>
         <whatsthis>A backup copy of the text in the composer window can be created regularly. The interval used to create the backups is set here. You can disable autosaving by setting it to the value 0.</whatsthis>
         <default>2</default>
-      </entry>
-      <entry name="PrependSignature" type="Bool" key="prepend-signature">
-        <label>Insert signature above quoted text</label>
-        <default>false</default>
-      </entry>
-      <entry name="DashDashSignature" type="Bool" key="dash-dash-signature">
-        <label>Prepend separator to signature</label>
-        <default>true</default>
       </entry>
       <entry name="QuoteSelectionOnly" type="Bool">
         <label>Only quote selected text when replying</label>
         <default>true</default>
       </entry>
 
-      <entry name="SecondRecipientTypeDefault" type="Enum">
-        <choices>
-          <choice name="To"/>
-          <choice name="Cc"/>
-        </choices>
-        <default>To</default>
-      </entry>
-      <entry name="MaximumRecipients" type="Int">
-        <label>Maximum number of recipient editor lines.</label>
-        <default>200</default>
-      </entry>
       <entry name="CustomTemplates" type="StringList" key="CustomTemplates" />
 
       <entry name="MimetypesToStripWhenInlineForwarding" type="StringList">
@@ -372,11 +285,6 @@
           <default>false</default>
       </entry>
       <entry name="SnippetSplitterPosition" type="IntList"/>
-
-      <entry name="MaximumAttachmentSize" type="Int">
-          <label>The maximum size in MB that email attachments are allowed to have (-1 for no limit).</label>
-          <default>-1</default>
-      </entry>
 
       <entry name="ShowGnuPGAuditLogAfterSuccessfulSignEncrypt" type="Bool">
           <label>Show the GnuPG Audit Log even after crypto operations that completed successfully.</label>
@@ -526,4 +434,9 @@
     <entry name="FavoriteFolderViewSeenInboxes" type="IntList"/>
   </group>
 
+ <group name="Search">
+   <entry name="LastSearchCollectionId" type="LongLong">
+     <default>-1</default>
+   </entry>
+ </group>
 </kcfg>

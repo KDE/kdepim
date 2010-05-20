@@ -55,6 +55,14 @@ include(CheckIncludeFiles)
 include(MacroBoolTo01)
 find_package(KdepimLibs 4.4.61 REQUIRED)
 
+### remove the following when requiring kdelibs 4.5 ###
+if ( NOT KDE4_KCMUTILS_LIBS )
+  set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
+endif()
+if ( NOT KDE4_KEMOTICONS_LIBS )
+  set( KDE4_KEMOTICONS_LIBS ${KDE4_KUTILS_LIBS} )
+endif()
+### end of 4.4 compat code ###
 
 ############### Load the CTest options ###############
 # Set a timeout value of 5 minutes per test
@@ -222,13 +230,11 @@ set(libkdgantt1_SRCS
   add_subdirectory(libkdepim)
   add_subdirectory(calendarviews)
   add_subdirectory( incidenceeditors )
-  if (QT_QT3SUPPORT_FOUND) # not directly, but depends on kmail/korganizer
-    add_subdirectory(libkdepimdbusinterfaces)
-  endif (QT_QT3SUPPORT_FOUND)
+  add_subdirectory(libkdepimdbusinterfaces)
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
   add_subdirectory(libksieve)
-  add_subdirectory(libstickynotes)
+  #add_subdirectory(libstickynotes)
   add_subdirectory(kdgantt1)
   add_subdirectory(icons)
   add_subdirectory(messagecore)
@@ -243,11 +249,10 @@ set(libkdgantt1_SRCS
       macro_optional_add_subdirectory(wizards)
     endif (QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
     # The following components depend on QGpgME.
+    set(MESSAGEVIEWER_SUPPORTED TRUE)
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(messagecomposer)
-    if (QT_QT3SUPPORT_FOUND)
-      macro_optional_add_subdirectory(kmail)
-    endif (QT_QT3SUPPORT_FOUND)
+    macro_optional_add_subdirectory(kmail)
     if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
       macro_optional_add_subdirectory(mobile)
     endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
@@ -264,9 +269,7 @@ set(libkdgantt1_SRCS
 
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
-    if (QT_QT3SUPPORT_FOUND)
-      macro_optional_add_subdirectory(korganizer)
-    endif (QT_QT3SUPPORT_FOUND)
+    macro_optional_add_subdirectory(korganizer)
 
     if (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
       add_subdirectory( nepomuk_email_feeder )

@@ -192,45 +192,12 @@ private:
   KUrl mUrl;
 };
 
-class KMAIL_EXPORT KMMailtoAddAddrBookCommand : public KMCommand
-{
-  Q_OBJECT
-
-public:
-  KMMailtoAddAddrBookCommand( const KUrl &url, QWidget *parent );
-
-private Q_SLOTS:
-  void slotAddEmailAddressDone( KJob* );
-
-private:
-  virtual Result execute();
-
-  KUrl mUrl;
-};
-
 class KMAIL_EXPORT KMAddBookmarksCommand : public KMCommand
 {
   Q_OBJECT
 
 public:
   KMAddBookmarksCommand( const KUrl &url, QWidget *parent );
-
-private:
-  virtual Result execute();
-
-  KUrl mUrl;
-};
-
-
-class KMAIL_EXPORT KMMailtoOpenAddrBookCommand : public KMCommand
-{
-  Q_OBJECT
-
-public:
-  KMMailtoOpenAddrBookCommand( const KUrl &url, QWidget *parent );
-
-private Q_SLOTS:
-  void slotOpenEmailAddressDone( KJob* );
 
 private:
   virtual Result execute();
@@ -344,15 +311,8 @@ public:
    */
   KMSaveAttachmentsCommand( QWidget *parent, const QList<Akonadi::Item>& msgs );
 
-private slots:
-  void slotSaveAll();
-
 private:
   virtual Result execute();
-  Result saveItem( KMime::Content *node, const KUrl& url );
-
-private:
-  PartNodeMessageMap mAttachmentMap;
 };
 
 class KMAIL_EXPORT KMReplyToCommand : public KMCommand
@@ -753,29 +713,6 @@ private:
   KMReaderWin *mReaderWin;
   bool mHtmlPref;
   KMMainWidget *mMainWidget;
-};
-
-class KMAIL_EXPORT KMLoadPartsCommand : public KMCommand
-{
-  Q_OBJECT
-
-public:
-  KMLoadPartsCommand( PartNodeMessageMap& partMap );
-
-public slots:
-  void slotPartRetrieved( KMime::Message* msg, const QString &partSpecifier );
-
-signals:
-  void partsRetrieved();
-
-private:
-  // Retrieve parts then calls execute
-  virtual void slotStart();
-
-  virtual Result execute();
-
-  int mNeedsRetrieval;
-  PartNodeMessageMap mPartMap;
 };
 
 class KMAIL_EXPORT KMResendMessageCommand : public KMCommand

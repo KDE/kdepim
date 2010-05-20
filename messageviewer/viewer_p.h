@@ -187,11 +187,9 @@ public:
 
   virtual ~ViewerPrivate();
 
-    /** Returns message part from given URL or null if invalid. */
+  /** Returns message part from given URL or null if invalid. The URL's path is a KMime::ContentIndex path, or an index for the extra nodes,
+   followed by : and the ContentIndex path. */
   KMime::Content* nodeFromUrl(const KUrl &url);
-
-    /** Returns the message part for a given content index. */
-  KMime::Content* nodeForContentIndex( const KMime::ContentIndex& index );
 
   /** Open the attachment pointed to the node.
    * @param fileName - if not empty, use this file to load the attachment content
@@ -248,11 +246,11 @@ public:
                                  bool weAreReplacingTheRootNode = false,
                                  int recCount = 0 );
 
+  KMime::Message* createDecryptedMessage();
+  void removeEncryptedPart( KMime::Content* node );
+
   QString createAtmFileLink( const QString& atmFileName ) const;
   KService::Ptr getServiceOffer( KMime::Content *content);
-  bool saveContent( KMime::Content* content, const KUrl& url, bool encoded );
-  void saveAttachments( const KMime::Content::List & contents );
-  KMime::Content::List allContents( const KMime::Content * content );
   KMime::Content::List selectedContents();
   void attachmentOpenWith( KMime::Content *node );
   void attachmentOpen( KMime::Content *node );
@@ -267,7 +265,9 @@ public:
 
   Viewer *viewer() const { return q; }
 
-  Akonadi::Item messageItem() { return mMessageItem; }
+  Akonadi::Item messageItem() const { return mMessageItem; }
+
+  KMime::Message::Ptr message() const { return mMessage; }
 
   /** Returns whether the message should be decryted. */
   bool decryptMessage() const;
@@ -287,12 +287,12 @@ public:
     HTML begin/end parts are written around the message. */
   void displayMessage();
 
-  /** Parse the root message and add it's contents to the reader window. */
-  void parseMsg();
+  /** Parse the given content and generate HTML out of it for display */
+  void parseContent( KMime::Content *content );
 
   /** Creates a nice mail header depending on the current selected
     header style. */
-  QString writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content* vCardNode = 0,
+  QString writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCardNode = 0,
                           bool topLevel = false );
 
   /** show window containing information about a vCard. */
@@ -349,11 +349,13 @@ public:
 
   void resetStateForNewMessage();
 
-    /** Set the Akonadi item that will be displayed.
-  * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
-  *               an empty page is shown.
-  * @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
-  */
+  void setMessageInternal( const KMime::Message::Ptr message, Viewer::UpdateMode updateMode );
+
+  /** Set the Akonadi item that will be displayed.
+   *  @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
+   *                an empty page is shown.
+   *  @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
+   */
   void setMessageItem(const Akonadi::Item& item, Viewer::UpdateMode updateMode = Viewer::Delayed );
 
 
@@ -365,9 +367,6 @@ public:
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
-  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                       const QString& aFileName, const QString& pname );
-
   void setMessagePart( KMime::Content * node );
 
   /** Show or hide the Mime Tree Viewer if configuration
@@ -477,6 +476,10 @@ private slots:
 
   void slotItemChanged( const Akonadi::Item& item, const QSet<QByteArray>& partIdentifiers );
 
+  void itemModifiedResult( KJob* job );
+
+  void slotMimePartDestroyed();
+
 public slots:
   /** An URL has been activate with a click. */
   void slotUrlOpen( const QUrl &url = QUrl());
@@ -574,7 +577,8 @@ signals:
   void urlClicked(const KUrl &url, int button);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
   void requestConfigSync();
-  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
+  void showMessage( KMime::Message::Ptr message, const QString& encoding );
 
 public:
   NodeHelper* mNodeHelper;
@@ -637,12 +641,14 @@ public:
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;
+  QString mMessagePath;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
   Kleo::SpecialJob *mJob;
   Viewer *const q;
   bool mShowFullToAddressList;
   bool mShowFullCcAddressList;
   Akonadi::Monitor mMonitor;
+  QString mAppName;
 
 };
 

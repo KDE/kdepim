@@ -46,6 +46,8 @@
 #include <KWindowSystem>
 #include <KMessageBox>
 
+#include <akonadi/standardactionmanager.h>
+
 #include "folderrequester.h"
 #include "kmcommands.h"
 #include "kmmainwidget.h"
@@ -63,6 +65,7 @@ using namespace KPIM;
 #include <Akonadi/SearchCreateJob>
 #include <Akonadi/KMime/MessageModel>
 #include <akonadi/persistentsearchattribute.h>
+#include <Akonadi/CollectionStatisticsJob>
 
 #include <kmime/kmime_message.h>
 
@@ -72,13 +75,6 @@ using namespace KPIM;
 namespace KMail {
 
 const int SearchWindow::MSGID_COLUMN = 4;
-
-#if 0 //TODO port to akonadi
-void MatchListView::contextMenuEvent( QContextMenuEvent* event )
-{
-  emit contextMenuRequested( itemAt( event->pos() ) );
-}
-#endif
 
 //-----------------------------------------------------------------------------
 SearchWindow::SearchWindow(KMMainWidget* w, const Akonadi::Collection& curFolder):
@@ -163,7 +159,7 @@ SearchWindow::SearchWindow(KMMainWidget* w, const Akonadi::Collection& curFolder
 #endif
 
   bool currentFolderIsSearchFolder = false;
-    
+
   if ( !curFolder.hasAttribute<Akonadi::PersistentSearchAttribute>() ) {
     // it's not a search folder, make a new search
     mSearchPattern.append( KMSearchRule::createInstance( "Subject" ) );
@@ -186,7 +182,7 @@ SearchWindow::SearchWindow(KMMainWidget* w, const Akonadi::Collection& curFolder
       // FIXME show results, but disable edit GUI
       kWarning() << "This search was not created with KMail. It can not be edited within it.";
       mSearchPattern.clear();
-    } 
+    }
   }
   mPatternEdit->setSearchPattern( &mSearchPattern );
 
@@ -219,20 +215,16 @@ SearchWindow::SearchWindow(KMMainWidget* w, const Akonadi::Collection& curFolder
   mLbxMatches->setSortingEnabled( true );
 #if 0 // port me!
   mLbxMatches->sortItems( 2, Qt::DescendingOrder );
-  mLbxMatches->header()->setSortIndicator( 2, Qt::DescendingOrder );
+#else
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
+
   mLbxMatches->setAllColumnsShowFocus( true );
   mLbxMatches->setSelectionMode( QAbstractItemView::ExtendedSelection );
+  mLbxMatches->setContextMenuPolicy( Qt::CustomContextMenu );
 
-#if 0 // port me!
-  mLbxMatches->header()->setStretchLastSection( false );
-  mLbxMatches->header()->setResizeMode( 3, QHeaderView::Stretch );
-
-  connect( mLbxMatches, SIGNAL( contextMenuRequested( QTreeWidgetItem*) ),
-           this, SLOT( slotContextMenuRequested( QTreeWidgetItem* ) ) );
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  connect( mLbxMatches, SIGNAL(customContextMenuRequested(QPoint)),
+           this, SLOT(slotContextMenuRequested(QPoint)) );
   connect( mLbxMatches, SIGNAL(clicked(Akonadi::Item)), SLOT(slotShowMsg(Akonadi::Item)) );
   connect( mLbxMatches, SIGNAL(doubleClicked(Akonadi::Item)), SLOT(slotViewMsg(Akonadi::Item)) );
   connect( mLbxMatches, SIGNAL(currentChanged(Akonadi::Item)), SLOT(slotCurrentChanged(Akonadi::Item)) );
@@ -251,12 +243,18 @@ SearchWindow::SearchWindow(KMMainWidget* w, const Akonadi::Collection& curFolder
     mResultModel = new Akonadi::MessageModel( this );
     mResultModel->setCollection( mFolder );
     mLbxMatches->setModel( mResultModel );
+    mAkonadiStandardAction = new Akonadi::StandardActionManager( actionCollection(), this );
+    mAkonadiStandardAction->setItemSelectionModel( mLbxMatches->selectionModel() );
   } else {
     mSearchFolderEdt->setText( i18n("Last Search") );
-    // TODO find last search and set mFolder to it?
-    // Might not be what the user expects and is not what
-    // kmail1 did.
+    // find last search and reuse it if possible
+    mFolder = KMKernel::self()->collectionFromId( GlobalSettings::lastSearchCollectionId() );
+    // when the last folder got renamed, create a new one
+    if ( mFolder.isValid() && mFolder.name() != mSearchFolderEdt->text() ) {
+      mFolder = Akonadi::Collection();
+    }
   }
+
   mSearchFolderLbl->setBuddy(mSearchFolderEdt);
   mSearchFolderOpenBtn = new KPushButton(i18n("Op&en Search Folder"), searchWidget);
   mSearchFolderOpenBtn->setEnabled(false);
@@ -359,8 +357,6 @@ SearchWindow::SearchWindow(KMMainWidget* w, const Akonadi::Collection& curFolder
   actionCollection()->addAction("search_clear_selection", mClearAction );
   connect(mClearAction, SIGNAL(triggered(bool)), SLOT(slotClearSelection()));
 
-  mCopyAction = ac->addAction( KStandardAction::Copy, "search_copy_messages", this, SLOT(slotCopyMsgs()) );
-  mCutAction = ac->addAction( KStandardAction::Cut, "search_cut_messages", this, SLOT(slotCutMsgs()) );
 
   connect(mTimer, SIGNAL(timeout()), this, SLOT(updateStatusLine()));
   connect(mCbxFolders, SIGNAL(folderChanged(const Akonadi::Collection&)),
@@ -399,12 +395,26 @@ void SearchWindow::setEnabledSearchButton( bool )
 //-----------------------------------------------------------------------------
 void SearchWindow::updateStatusLine()
 {
+  if ( mFolder.isValid() ) {
+    Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( mFolder );
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( updateCollectionStatisticsFinished( KJob* ) ) );
+  }
+}
+
+void SearchWindow::updateCollectionStatisticsFinished( KJob * job)
+{
+    if ( job->error() )
+      kWarning() << job->errorText(); // TODO
+    else {
+      
     QString genMsg, detailMsg;
     int numMatches = 0;
-    if ( mFolder.isValid() ) {
-        numMatches = mFolder.statistics().count();
-    }
 
+    Akonadi::CollectionStatisticsJob *statisticsJob = qobject_cast<Akonadi::CollectionStatisticsJob*>( job );
+    const Akonadi::CollectionStatistics statistics = statisticsJob->statistics();
+    
+    numMatches = statistics.count();
+    
     if ( mFolder.isValid() && mSearchJob ) {
         if(!mStopped) {
             genMsg = i18nc( "Search finished.", "Done" );
@@ -421,8 +431,9 @@ void SearchWindow::updateStatusLine()
 
     mStatusBar->changeItem(genMsg, 0);
     mStatusBar->changeItem(detailMsg, 1);
-}
 
+    }
+}
 
 //-----------------------------------------------------------------------------
 void SearchWindow::keyPressEvent(QKeyEvent *evt)
@@ -499,6 +510,8 @@ void SearchWindow::slotSearch()
   kDebug() << searchPattern.asSparqlQuery();
 
   if ( !mFolder.isValid() ) {
+    // FIXME if another app created a virtual 'Last Search' folder without
+    // out custom attributes it will result in problems
     mSearchJob = new Akonadi::SearchCreateJob( mSearchFolderEdt->text(), searchPattern.asSparqlQuery(), this );
   } else {
     Akonadi::PersistentSearchAttribute *psa = mFolder.attribute<Akonadi::PersistentSearchAttribute>();
@@ -520,7 +533,13 @@ void SearchWindow::searchDone( KJob* job )
     } else if ( Akonadi::CollectionModifyJob *mj = qobject_cast<Akonadi::CollectionModifyJob*>( mSearchJob ) ) {
       mFolder = mj->collection();
     }
+    /// TODO: cope better with cases where this fails
+    Q_ASSERT( mFolder.isValid() );
     Q_ASSERT( mFolder.hasAttribute<Akonadi::PersistentSearchAttribute>() );
+
+    GlobalSettings::setLastSearchCollectionId( mFolder.id() );
+    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->requestSync();
 
     // store the kmail specific serialization of the search in an attribute on
     // the server, for easy retrieval when editing it again
@@ -548,6 +567,12 @@ void SearchWindow::searchDone( KJob* job )
       mLbxMatches->setColumnWidth( 2, group.readEntry( "DateWidth", 120 ) );
       mLbxMatches->setColumnWidth( 3, group.readEntry( "FolderWidth", 100 ) );
       mLbxMatches->setColumnWidth( 4, 0 );
+      mLbxMatches->header()->setSortIndicator( 2, Qt::DescendingOrder );
+      mLbxMatches->header()->setStretchLastSection( false );
+      mLbxMatches->header()->setResizeMode( 3, QHeaderView::Stretch );
+      mAkonadiStandardAction = new Akonadi::StandardActionManager( actionCollection(), this );
+      mAkonadiStandardAction->setItemSelectionModel( mLbxMatches->selectionModel() );
+
     } else {
       mResultModel->setCollection( mFolder );
       mLbxMatches->setModel( mResultModel );
@@ -699,20 +724,12 @@ void SearchWindow::enableGUI()
 QList<Akonadi::Item> SearchWindow::selectedMessages()
 {
   QList<Akonadi::Item> msgList;
-#if 0 // TODO port me!
-    KMFolder* folder = 0;
-    int msgIndex = -1;
-    for (QTreeWidgetItemIterator it(mLbxMatches); (*it); ++it)
-        if ((*it)->isSelected()) {
-            KMMsgDict::instance()->getLocation((*it)->text(MSGID_COLUMN).toUInt(),
-                                           &folder, &msgIndex);
-            if (folder && msgIndex >= 0)
-                msgList.append(folder->getMsgBase(msgIndex));
-        }
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
-    return msgList;
+  foreach ( const QModelIndex &index, mLbxMatches->selectionModel()->selectedRows() ) {
+    const Akonadi::Item item = index.data( Akonadi::MessageModel::ItemRole ).value<Akonadi::Item>();
+    if ( item.isValid() )
+      msgList.append( item );
+  }
+  return msgList;
 }
 
 //-----------------------------------------------------------------------------
@@ -720,36 +737,6 @@ Akonadi::Item SearchWindow::message()
 {
   return mLbxMatches->currentIndex().data( Akonadi::ItemModel::ItemRole ).value<Akonadi::Item>();
 }
-#if 0
-//-----------------------------------------------------------------------------
-void SearchWindow::slotMoveSelectedMessagesToFolder( QAction* act )
-{
-  KMFolder *dest = static_cast<KMFolder *>( act->data().value<void *>() );
-  if ( !dest )
-    return;
-#if 0
-  // Fixme: isn't this already handled by KMHeaders ?
-  QList<Akonadi::Item> msgList = selectedMessages();
-  KMCommand *command = new KMMoveCommand( dest, msgList );
-  command->start();
-#endif
-}
-
-//-----------------------------------------------------------------------------
-void SearchWindow::slotCopySelectedMessagesToFolder( QAction* act )
-{
-#ifdef OLD_COMMAND
-  KMFolder *dest = static_cast<KMFolder *>( act->data().value<void *>() );
-  if ( !dest )
-    return;
-
-  // Fixme: isn't this already handled by KMHeaders ?
-  QList<Akonadi::Item> msgList = selectedMessages();
-  KMCommand *command = new KMCopyCommand( dest, msgList );
-  command->start();
-#endif
-}
-#endif
 
 //-----------------------------------------------------------------------------
 void SearchWindow::updateContextMenuActions()
@@ -760,53 +747,31 @@ void SearchWindow::updateContextMenuActions()
     mReplyAllAction->setEnabled( single_actions );
     mReplyListAction->setEnabled( single_actions );
     mPrintAction->setEnabled( single_actions );
-    mCopyAction->setEnabled( count > 0 );
-    mCutAction->setEnabled( count > 0 );
 }
 
-#if 0
 //-----------------------------------------------------------------------------
-void SearchWindow::slotContextMenuRequested( QTreeWidgetItem *lvi )
+void SearchWindow::slotContextMenuRequested( const QPoint &pos )
 {
-    if (!lvi)
-        return;
-    if ( !lvi->isSelected() ) {
-      lvi->setSelected( lvi );
-#if 0 // TODO port me!
-      mLbxMatches->setCurrentItem( lvi );
-#endif
-    }
-
-    // FIXME is this ever unGetMsg()'d?
     if (!message().isValid())
-        return;
+      return;
     QMenu *menu = new QMenu(this);
     updateContextMenuActions();
-#ifdef OLD_FOLDERVIEW
-    QMenu *msgMoveMenu = new QMenu(menu);
-    mKMMainWidget->mainFolderView()->folderToPopupMenu( MainFolderView::MoveMessage,
-        this, msgMoveMenu );
-    QMenu *msgCopyMenu = new QMenu(menu);
-    mKMMainWidget->mainFolderView()->folderToPopupMenu( MainFolderView::CopyMessage,
-        this, msgCopyMenu );
-#endif
+
     // show most used actions
     menu->addAction( mReplyAction );
     menu->addAction( mReplyAllAction );
     menu->addAction( mReplyListAction );
     menu->addAction( mForwardActionMenu );
     menu->addSeparator();
-    menu->addAction( mCopyAction );
-    menu->addAction( mCutAction );
-#ifdef OLD_FOLDERVIEW
-    msgCopyMenu->setTitle( i18n( "&Copy To" ) );
-    msgCopyMenu->setIcon( KIcon( "edit-copy" ) );
-    menu->addMenu( msgCopyMenu );
+    KAction *act = mAkonadiStandardAction->createAction( Akonadi::StandardActionManager::CopyItems );
+    mAkonadiStandardAction->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Message", "Copy %1 Messages" ) );
+    menu->addAction( act );
+    act = mAkonadiStandardAction->createAction( Akonadi::StandardActionManager::CutItems );
+    mAkonadiStandardAction->setActionText( Akonadi::StandardActionManager::CutItems, ki18np( "Cut Message", "Cut %1 Messages" ) );
+    menu->addAction( act );
 
-    msgMoveMenu->setTitle( i18n( "&Move To" ) );
-    msgMoveMenu->setIcon( KIcon( "go-jump" ) );
-    menu->addMenu( msgMoveMenu );
-#endif
+    menu->addAction( mAkonadiStandardAction->createAction( Akonadi::StandardActionManager::CopyItemToMenu ) );
+    menu->addAction( mAkonadiStandardAction->createAction( Akonadi::StandardActionManager::MoveItemToMenu ) );
     menu->addSeparator();
     menu->addAction( mSaveAsAction );
     menu->addAction( mSaveAtchAction );
@@ -816,7 +781,6 @@ void SearchWindow::slotContextMenuRequested( QTreeWidgetItem *lvi )
     menu->exec( QCursor::pos(), 0 );
     delete menu;
 }
-#endif
 //-----------------------------------------------------------------------------
 void SearchWindow::slotClearSelection()
 {
@@ -882,22 +846,6 @@ void SearchWindow::slotPrintMsg()
 {
     KMCommand *command = new KMPrintCommand(this, message());
     command->start();
-}
-
-void SearchWindow::slotCopyMsgs()
-{
-#if 0 //Port to akonadi
-  QList<quint32> list = MessageCopyHelper::serNumListFromMsgList( selectedMessages() );
-  mKMMainWidget->setMessageClipboardContents( list, false );
-#endif
-}
-
-void SearchWindow::slotCutMsgs()
-{
-#if 0  //Port to akonadi
-  QList<quint32> list = MessageCopyHelper::serNumListFromMsgList( selectedMessages() );
-  mKMMainWidget->setMessageClipboardContents( list, true );
-#endif
 }
 
 void SearchWindow::addRulesToSearchPattern( const KMSearchPattern &pattern )

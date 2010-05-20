@@ -30,6 +30,8 @@
 #include <qdeclarativeengine.h>
 #include <qdeclarativecontext.h>
 
+#include "incidenceview.h"
+
 
 using namespace Akonadi;
 
@@ -50,5 +52,21 @@ void MainView::showRegularCalendar()
 {
   m_calendar->setUnfilteredModel(regularSelectedItems());
 }
+
+void MainView::setCurrentEventItemId(qint64 id)
+{
+  QModelIndexList list = itemModel()->match(itemModel()->index(0, 0), EntityTreeModel::ItemIdRole, id, 1 );
+  if (list.isEmpty())
+    return;
+
+  setListSelectedRow(list.first().row());
+}
+
+void MainView::startIncidenceEditor()
+{
+  IncidenceView *editor = new IncidenceView;
+  editor->show();
+}
+
 
 #include "mainview.moc"

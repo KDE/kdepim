@@ -47,6 +47,8 @@
 #include <KIconLoader>
 #include <KComponentData>
 #include <KConfigGroup>
+#include <KMessageBox>
+#include <KWordWrap>
 
 #include <QApplication>
 #include <QScrollBar>
@@ -56,7 +58,7 @@
 #include <QPainter>
 #include <QSplitter>
 #include <QTimer>
-#include <KWordWrap>
+#include <QDialog>
 
 using namespace Akonadi;
 using namespace EventViews;
@@ -172,6 +174,7 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
     TimeLabelsZone *mTimeLabelsZone;
 
     DateList mSelectedDates;  // List of dates to be displayed
+    DateList mSaveSelectedDates; // Save the list of dates between updateViews
     int mViewType;
     EventIndicator *mEventIndicatorTop;
     EventIndicator *mEventIndicatorBottom;
@@ -321,7 +324,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   dummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->timeLabelsWidth() -
                                   d->mTimeBarHeaderFrame->width() );
 
-  createDayLabels();
+  createDayLabels( true );
 
   /* Connect the agendas */
 
@@ -559,11 +562,15 @@ void AgendaView::placeDecorationsFrame( KHBox *frame, bool decorationsFound, boo
   }
 }
 
-void AgendaView::createDayLabels()
+void AgendaView::createDayLabels( bool force )
 {
-  // ### Before deleting and recreating we could check if mSelectedDates changed...
-  // It would remove some flickering and gain speed (since this is called by
-  // each updateView() call)
+  // Check if mSelectedDates has changed, if not just return
+  // Removes some flickering and gains speed (since this is called by each updateView())
+  if ( !force && d->mSaveSelectedDates == d->mSelectedDates ) {
+    return;
+  }
+  d->mSaveSelectedDates = d->mSelectedDates;
+
   delete d->mTopDayLabels;
   delete d->mBottomDayLabels;
 
@@ -740,7 +747,7 @@ void AgendaView::updateConfig()
 
   setHolidayMasks();
 
-  createDayLabels();
+  createDayLabels( true );
 
   updateView();
 }
@@ -817,7 +824,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
   if ( !incidence ) {
     return;
   }
-  if ( !changer() || !changer()->beginChange( aitem ) ) {
+  if ( !changer() ) {
     return;
   }
   Incidence::Ptr oldIncidence( incidence->clone() );
@@ -852,7 +859,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
     if ( incidence->dtStart().toTimeSpec( preferences()->timeSpec() ) == startDt &&
          ev->dtEnd().toTimeSpec( preferences()->timeSpec() ) == endDt ) {
       // No change
-      changer()->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
       return;
     }
@@ -874,7 +880,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
     if ( td->dtDue().toTimeSpec( preferences()->timeSpec() )  == endDt ) {
       // No change
-      changer()->endChange( aitem );
       QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
       return;
     }
@@ -1068,7 +1073,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
   const bool result = changer()->changeIncidence( oldIncidence, aitem,
                                                  IncidenceChanger::DATE_MODIFIED, this );
-  changer()->endChange( aitem );
 
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
@@ -1353,13 +1357,21 @@ void AgendaView::changeIncidenceDisplay( const Item &aitem, int mode )
     }
     case IncidenceChanger::INCIDENCEDELETED:
     {
-      d->mAgenda->removeIncidence( aitem );
-      d->mAllDayAgenda->removeIncidence( aitem );
+      removeIncidence( aitem );
       updateEventIndicators();
       break;
     }
     default:
-      updateView();
+      return;
+  }
+
+  // HACK: Update the view if the all-day agenda has been modified.
+  // Do this because there are some layout problems in the
+  // all-day agenda that are not easily solved, but clearing
+  // and redrawing works ok.
+  Incidence::Ptr incidence = Akonadi::incidence( aitem );
+  if ( incidence && incidence->allDay() ) {
+    updateView();
   }
 }
 
@@ -1385,7 +1397,7 @@ void AgendaView::fillAgenda()
   d->mEventIndicatorTop->changeColumns( d->mSelectedDates.count() );
   d->mEventIndicatorBottom->changeColumns( d->mSelectedDates.count() );
 
-  createDayLabels();
+  createDayLabels( false );
   setHolidayMasks();
 
   d->mMinY.resize( d->mSelectedDates.count() );
@@ -1561,12 +1573,11 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
     if ( Todo::Ptr existingTodo = Akonadi::todo( existingTodoItem ) ) {
       kDebug() << "Drop existing Todo";
       Todo::Ptr oldTodo( existingTodo->clone() );
-      if ( changer() && changer()->beginChange( existingTodoItem ) ) {
+      if ( changer() ) {
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
         changer()->changeIncidence( oldTodo, existingTodoItem, IncidenceChanger::DATE_MODIFIED, this );
-        changer()->endChange( existingTodoItem );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
                                         "because it cannot be locked." ) );
@@ -1577,7 +1588,9 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
       todo->setAllDay( allDay );
       todo->setHasDueDate( true );
       if ( !changer()->addIncidence( todo, this ) ) {
-        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+        KMessageBox::sorry( this,
+                            i18n( "Unable to save %1 \"%2\".",
+                            i18n( todo->type() ), todo->summary() ) );
       }
     }
   }
@@ -1602,10 +1615,13 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
     todo->setAllDay( allDay );
     todo->setHasDueDate( true );
 
-    bool userCanceled;
-    if ( !changer()->addIncidence( todo, this, userCanceled ) ) {
-      if ( !userCanceled ) {
-        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+    Akonadi::Collection selectedCollection;
+    int dialogCode;
+    if ( !changer()->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
+      if ( dialogCode != QDialog::Rejected ) {
+        KMessageBox::sorry( this,
+                            i18n( "Unable to save %1 \"%2\".",
+                            i18n( todo->type() ), todo->summary() ) );
       }
     }
   }

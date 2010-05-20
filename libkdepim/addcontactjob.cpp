@@ -39,6 +39,11 @@ class AddContactJob::Private
     {
     }
 
+    Private( AddContactJob *qq, const KABC::Addressee &contact, const Akonadi::Collection &collection )
+      : q( qq ), mContact( contact ), mParentWidget( 0 ), mCollection( collection )
+    {
+    }
+
     void slotSearchDone( KJob *job )
     {
       if ( job->error() ) {
@@ -62,36 +67,40 @@ class AddContactJob::Private
         return;
       }
 
+      if ( !mCollection.isValid() ) {
+        // ask user in which address book the new contact shall be stored
+        const QStringList mimeTypes( KABC::Addressee::mimeType() );
+        QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mParentWidget );
+        dlg->setMimeTypeFilter( mimeTypes );
+        dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+        dlg->setCaption( i18n( "Select Address Book" ) );
+        dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
 
-      // ask user in which address book the new contact shall be stored
-      const QStringList mimeTypes( KABC::Addressee::mimeType() );
-      QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mParentWidget );
-      dlg->setMimeTypeFilter( mimeTypes );
-      dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-      dlg->setCaption( i18n( "Select Address Book" ) );
-      dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
-
-      if ( dlg->exec() == QDialog::Accepted ) {
-        const Akonadi::Collection addressBook = dlg->selectedCollection();
-        if ( addressBook.isValid() ) {
-          // create the new item
-          Akonadi::Item item;
-          item.setMimeType( KABC::Addressee::mimeType() );
-          item.setPayload<KABC::Addressee>( mContact );
-
-          // save the new item in akonadi storage
-          Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, addressBook );
-          q->connect( job, SIGNAL( result( KJob* ) ), SLOT( slotAddContactDone( KJob* ) ) );
+        if ( dlg->exec() == QDialog::Accepted ) {
+          mCollection = dlg->selectedCollection();
         } else {
           q->setError( UserDefinedError );
           q->emitResult();
+          delete dlg;
+          return;
         }
+
+        delete dlg;
+      }
+
+      if ( mCollection.isValid() ) {
+        // create the new item
+        Akonadi::Item item;
+        item.setMimeType( KABC::Addressee::mimeType() );
+        item.setPayload<KABC::Addressee>( mContact );
+
+        // save the new item in akonadi storage
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
+        q->connect( job, SIGNAL( result( KJob* ) ), SLOT( slotAddContactDone( KJob* ) ) );
       } else {
         q->setError( UserDefinedError );
         q->emitResult();
       }
-
-      delete dlg;
     }
 
     void slotAddContactDone( KJob *job )
@@ -114,10 +123,16 @@ class AddContactJob::Private
     AddContactJob *q;
     KABC::Addressee mContact;
     QWidget *mParentWidget;
+    Akonadi::Collection mCollection;
 };
 
 AddContactJob::AddContactJob( const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent )
   : KJob( parent ), d( new Private( this, contact, parentWidget ) )
+{
+}
+
+AddContactJob::AddContactJob( const KABC::Addressee &contact, const Akonadi::Collection &collection, QObject *parent )
+  : KJob( parent ), d( new Private( this, contact, collection ) )
 {
 }
 

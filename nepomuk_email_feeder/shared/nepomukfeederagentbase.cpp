@@ -184,8 +184,12 @@ void NepomukFeederAgentBase::collectionsReceived(const Akonadi::Collection::List
 
 void NepomukFeederAgentBase::processNextCollection()
 {
-  if ( mCurrentCollection.isValid() || mCollectionQueue.isEmpty() )
+  if ( mCurrentCollection.isValid() )
     return;
+  if ( mCollectionQueue.isEmpty() ) {
+    emit fullyIndexed();
+    return;
+  }
   mCurrentCollection = mCollectionQueue.takeFirst();
   emit status( AgentBase::Running, i18n( "Indexing collection '%1'...", mCurrentCollection.name() ) );
   kDebug() << "Indexing collection" << mCurrentCollection.name();
@@ -326,7 +330,7 @@ void NepomukFeederAgentBase::selfTest()
     setOnline( true );
     mNepomukStartupAttempted = false; // everything worked, we can try again if the server goes down later
     mNepomukStartupTimeout.stop();
-    if ( !mInitialUpdateDone ) {
+    if ( !mInitialUpdateDone && needsReIndexing() ) {
       mInitialUpdateDone = true;
       QTimer::singleShot( 0, this, SLOT(updateAll()) );
     } else {
@@ -413,6 +417,16 @@ void NepomukFeederAgentBase::indexData(const KUrl& url, const QByteArray& data, 
   Strigi::StringInputStream sr( data.constData(), data.size(), false );
   Strigi::AnalysisResult idx( url.url().toLatin1().constData(), mtime.toTime_t(), *writer, streamindexer );
   idx.index( &sr );
+}
+
+ItemFetchScope NepomukFeederAgentBase::fetchScopeForcollection(const Akonadi::Collection& collection)
+{
+  return changeRecorder()->itemFetchScope();
+}
+
+bool NepomukFeederAgentBase::needsReIndexing() const
+{
+  return true;
 }
 
 #include "nepomukfeederagentbase.moc"

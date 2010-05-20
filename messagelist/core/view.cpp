@@ -120,7 +120,8 @@ View::View( Widget *pParent )
   //connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex &, const QModelIndex & ) ),
   //         this, SLOT( slotCurrentIndexChanged( const QModelIndex &, const QModelIndex & ) ) );
   connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-           this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ) );
+           this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ),
+           Qt::UniqueConnection );
 
   // as in KDE3, when a root-item of a message thread is expanded, expand all children
   connect( this, SIGNAL( expanded ( const QModelIndex & ) ), this, SLOT( expandFullThread( const QModelIndex & ) ) );
@@ -163,7 +164,8 @@ void View::ignoreCurrentChanges( bool ignore )
     viewport()->setUpdatesEnabled( false );
   } else {
     connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-             this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ) );
+             this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ),
+             Qt::UniqueConnection );
     viewport()->setUpdatesEnabled( true );
   }
 }

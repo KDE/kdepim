@@ -251,7 +251,9 @@ QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spe
   return todos;
 }
 
-Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::Collection &defaultCollection )
+Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
+                                               int dialogCode,
+                                               const Akonadi::Collection &defaultCollection )
 {
   QPointer<CollectionDialog> dlg( new CollectionDialog( parent ) );
   QStringList mimetypes;
@@ -261,17 +263,42 @@ Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::C
 
   dlg->setMimeTypeFilter( mimetypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  if ( defaultCollection.isValid() )
+  if ( defaultCollection.isValid() ) {
     dlg->setDefaultCollection( defaultCollection );
+  }
   Akonadi::Collection collection;
-  if ( dlg->exec() == QDialog::Accepted )
+  dialogCode = dlg->exec();
+  if ( dialogCode == QDialog::Accepted ) {
     collection = dlg->selectedCollection();
+  }
   delete dlg;
   return collection;
 }
 
 Item Akonadi::itemFromIndex( const QModelIndex& idx ) {
-  return idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  item.setParentCollection( idx.data( EntityTreeModel::ParentCollectionRole ).value<Collection>() );
+  return item;
+}
+
+
+Collection::List Akonadi::collectionsFromModel( const QAbstractItemModel* model,
+                                                const QModelIndex &parentIndex,
+                                                int start,
+                                                int end ) {
+  const int endRow = end >= 0 ? end : model->rowCount() - 1;
+  Collection::List collections;
+  int row = start;
+  QModelIndex i = model->index( row, 0, parentIndex );
+  while ( row <= endRow ) {
+    const Collection collection = collectionFromIndex( i );
+    if ( collection.isValid() ) {
+      collections << collection;
+    }
+    ++row;
+    i = i.sibling( row, 0 );
+  }
+  return collections;
 }
 
 Item::List Akonadi::itemsFromModel( const QAbstractItemModel* model,
@@ -292,22 +319,26 @@ Item::List Akonadi::itemsFromModel( const QAbstractItemModel* model,
   return items;
 }
 
-Collection Akonadi::collectionFromIndex( const QModelIndex &index ) {
+Collection Akonadi::collectionFromIndex( const QModelIndex &index )
+{
   return index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 }
 
-Collection::Id Akonadi::collectionIdFromIndex( const QModelIndex &index ) {
+Collection::Id Akonadi::collectionIdFromIndex( const QModelIndex &index )
+{
   return index.data( Akonadi::EntityTreeModel::CollectionIdRole ).value<Akonadi::Collection::Id>();
 }
 
-Collection::List Akonadi::collectionsFromIndexes( const QModelIndexList &indexes ) {
+Collection::List Akonadi::collectionsFromIndexes( const QModelIndexList &indexes )
+{
   Collection::List l;
   Q_FOREACH( const QModelIndex &idx, indexes )
       l.push_back( collectionFromIndex( idx ) );
   return l;
 }
 
-QString Akonadi::displayName( const Collection &c ) {
+QString Akonadi::displayName( const Collection &c )
+{
   const EntityDisplayAttribute* attr = c.attribute<EntityDisplayAttribute>();
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
 }

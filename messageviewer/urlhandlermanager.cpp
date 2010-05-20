@@ -41,8 +41,9 @@
 #include "viewer_p.h"
 #include "mailwebview.h"
 #include "nodehelper.h"
-
+#include "util.h"
 #include "stl_util.h"
+
 #include <kurl.h>
 
 #include <messagecore/stringutil.h>
@@ -247,7 +248,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
     return 0;
   KMime::ContentIndex index( urlParts[1] );
   *path = KUrl::fromPercentEncoding( urlParts[2].toLatin1() );
-  return w->nodeForContentIndex( index );
+  return w->nodeFromUrl( urlParts[1] );
 }
 
 bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
@@ -256,9 +257,9 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url
   if ( !node )
     return false;
 
-  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
-    if ( (*it)->handleClick( &part, path ) )
+    if ( (*it)->handleClick( w->viewer(), &part, path ) )
       return true;
   }
 
@@ -271,7 +272,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest( con
   if ( !node )
     return false;
 
-  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
     if ( (*it)->handleContextMenuRequest( &part, path, p ) )
       return true;
@@ -284,7 +285,7 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage( const KU
   if ( !node )
     return QString();
 
-  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
     const QString msg = (*it)->statusBarMessage( &part, path );
     if ( !msg.isEmpty() )
@@ -664,8 +665,7 @@ namespace {
    if ( url.protocol() != "attachment" )
      return 0;
 
-   KMime::ContentIndex index( url.path() );
-   KMime::Content * node = w->nodeForContentIndex( index );
+   KMime::Content * node = w->nodeFromUrl( url );
    return node;
  }
 
@@ -703,7 +703,7 @@ namespace {
       return false;
     if ( !window )
       return false;
-    window->saveAttachments( QList<KMime::Content*>() << node );
+    Util::saveContents( window->viewer(), QList<KMime::Content*>() << node );
     return true;
   }
 

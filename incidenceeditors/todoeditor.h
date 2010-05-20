@@ -40,6 +40,10 @@ namespace Akonadi {
   class Item;
 }
 
+namespace IncidenceEditorsNG {
+class IncidenceEditorGeneralPage;
+}
+
 namespace IncidenceEditors
 {
 
@@ -121,12 +125,13 @@ class INCIDENCEEDITORS_EXPORT TodoEditor : public IncidenceEditor
     // Todo which represents the initial dialog setup when creating a new todo.
     // If cancel is pressed and the dialog has different information than
     // this todo then the user will be asked if he really wants to cancel
-    Todo::Ptr mInitialTodo;
+    KCal::Todo::Ptr mInitialTodo;
     Akonadi::Item mInitialTodoItem;
 
-    Todo::Ptr mRelatedTodo;
+    KCal::Todo::Ptr mRelatedTodo;
 
     EditorGeneralTodo *mGeneral;
+    IncidenceEditorsNG::IncidenceEditorGeneralPage *mNewGeneral;
     EditorRecurrenceDialog *mRecurrenceDialog;
     EditorRecurrence *mRecurrence;
 };

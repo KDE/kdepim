@@ -184,7 +184,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     // Used by the timelabelszone
     void updateTimeBarWidth();
     /** Create labels for the selected dates. */
-    void createDayLabels();
+    void createDayLabels( bool force );
 
     void createTimeBarHeaders();
 

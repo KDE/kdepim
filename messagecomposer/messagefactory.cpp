@@ -40,6 +40,7 @@
 #include <kcharsets.h>
 #include <QTextCodec>
 
+using namespace MessageComposer;
 
 MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id )
   : m_identityManager( 0 )
@@ -378,7 +379,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
     KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
     msgPart->contentType()->setMimeType( "message/rfc822" );
 
-    msgPart->contentDisposition()->setFilename( QLatin1String( "forwarded message" ) );
+    msgPart->contentDisposition()->setParameter( QLatin1String( "name" ), i18n( "forwarded message" ) );
     msgPart->contentDisposition()->setDisposition( KMime::Headers::CDinline );
     msgPart->contentDescription()->fromUnicodeString( fwdMsg->from()->asUnicodeString() + QLatin1String( ": " ) + fwdMsg->subject()->asUnicodeString(), "utf-8" );
     msgPart->setBody( fwdMsg->encodedContent() );
@@ -407,6 +408,7 @@ KMime::Message::Ptr MessageFactory::createResend()
   KMime::Message::Ptr msg( new KMime::Message );
   MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
   msg->setContent( m_origMsg->encodedContent() );
+  msg->parse();
   msg->removeHeader( "Message-Id" );
   uint originalIdentity = identityUoid( m_origMsg );
 
@@ -670,7 +672,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
     part->contentType()->setCharset( fMsg->contentType()->charset() );
     part->contentID()->setIdentifier( fMsg->contentID()->identifier() );
     part->contentDescription()->fromUnicodeString( fMsg->contentDescription()->asUnicodeString(), "utf8" );
-    part->contentDisposition()->setFilename( QLatin1String( "forwarded message" ) );
+    part->contentDisposition()->setParameter( QLatin1String( "name" ), i18n( "forwarded message" ) );
     part->fromUnicodeString( QString::fromLatin1( fMsg->encodedContent() ) );
     part->assemble();
 

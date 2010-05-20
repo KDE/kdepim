@@ -59,6 +59,8 @@
 #include <messageviewer/viewer.h>
 #include <akonadi/item.h>
 
+#include "messagecore/messagehelpers.h"
+
 KMReaderMainWin::KMReaderMainWin( bool htmlOverride, bool htmlLoadExtOverride,
                                   char *name )
   : KMail::SecondaryWindow( name ? name : "readerwindow#" )
@@ -82,14 +84,13 @@ KMReaderMainWin::KMReaderMainWin( char *name )
 
 
 //-----------------------------------------------------------------------------
-KMReaderMainWin::KMReaderMainWin(KMime::Content* aMsgPart,
-    bool aHTML, const QString& aFileName, const QString& pname,
-    const QString & encoding, char *name )
+KMReaderMainWin::KMReaderMainWin(KMime::Content* aMsgPart, bool aHTML, const QString & encoding, char *name )
   : KMail::SecondaryWindow( name ? name : "readerwindow#" )
 {
   mReaderWin = new KMReaderWin( this, this, actionCollection() );
   mReaderWin->setOverrideEncoding( encoding );
-  mReaderWin->setMsgPart( aMsgPart, aHTML, aFileName, pname );
+  mReaderWin->setHtmlOverride( aHTML );
+  mReaderWin->setMsgPart( aMsgPart );
   initKMReaderMainWin();
 }
 
@@ -128,7 +129,7 @@ void KMReaderMainWin::showMessage( const QString & encoding, const Akonadi::Item
 {
   mReaderWin->setOverrideEncoding( encoding );
   mReaderWin->setMessage( msg, MessageViewer::Viewer::Force );
-  KMime::Message::Ptr message = KMail::Util::message( msg );
+  KMime::Message::Ptr message = MessageCore::Util::message( msg );
   if ( message )
     setCaption( message->subject()->asUnicodeString() );
   mReaderWin->slotTouchMessage();
@@ -142,6 +143,21 @@ void KMReaderMainWin::showMessage( const QString & encoding, const Akonadi::Item
   menuBar()->show();
   toolBar( "mainToolBar" )->show();
 }
+
+void KMReaderMainWin::showMessage( const QString& encoding, KMime::Message::Ptr message )
+{
+  mReaderWin->setOverrideEncoding( encoding );
+  mReaderWin->setMessage( message );
+  if ( message )
+    setCaption( message->subject()->asUnicodeString() );
+  mReaderWin->slotTouchMessage();
+
+  mTrashAction->setEnabled( false );
+
+  menuBar()->show();
+  toolBar( "mainToolBar" )->show();
+}
+
 
 void KMReaderMainWin::slotReplyOrForwardFinished()
 {

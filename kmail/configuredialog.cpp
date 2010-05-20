@@ -26,6 +26,7 @@
 #include "configuredialog.h"
 #include "configuredialog_p.h"
 #include "ui_accountspagereceivingtab.h"
+#include "identitypage.h"
 
 #include "globalsettings.h"
 #include "templatesconfiguration_kfg.h"
@@ -36,9 +37,6 @@
 #include "simplestringlisteditor.h"
 #include "colorlistbox.h"
 #include <kpimidentities/identitymanager.h>
-#include "identitylistview.h"
-using KMail::IdentityListView;
-using KMail::IdentityListViewItem;
 #include "folderrequester.h"
 using KMail::FolderRequester;
 #include "kmmainwidget.h"
@@ -60,6 +58,7 @@ using KPIM::RecentAddresses;
 #include "messageviewer/nodehelper.h"
 #include "messageviewer/configurewidget.h"
 #include "messageviewer/globalsettings.h"
+#include "messageviewer/invitationsettings.h"
 #include "messagelist/core/settings.h"
 #include "messagecore/globalsettings.h"
 
@@ -70,11 +69,6 @@ using KPIM::RecentAddresses;
 
 
 #include "messagecomposer/messagecomposersettings.h"
-
-using KMail::IdentityListView;
-using KMail::IdentityListViewItem;
-#include "identitydialog.h"
-using KMail::IdentityDialog;
 
 // other kdenetwork headers:
 #include <kpimidentities/identity.h>
@@ -88,7 +82,7 @@ using KMime::DateFormatter;
 #include <mailtransport/transportmanagementwidget.h>
 using MailTransport::TransportManagementWidget;
 // other KDE headers:
-#include <kldap/ldapclient.h>
+#include <libkdepim/ldap/ldapclient.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kcharsets.h>
@@ -220,7 +214,6 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
   addModule( "kmail_config_appearance" );
   addModule( "kmail_config_composer" );
   addModule( "kmail_config_security" );
-  addModule( "kleopatra_config_gnupgsystem" );
   addModule( "kmail_config_misc" );
 
   connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
@@ -263,286 +256,6 @@ void ConfigureDialog::slotOk()
   slotOkClicked();
   KMKernel::self()->slotRequestConfigSync();
   emit configChanged();
-}
-
-// *************************************************************
-// *                                                           *
-// *                      IdentityPage                         *
-// *                                                           *
-// *************************************************************
-QString IdentityPage::helpAnchor() const
-{
-  return QString::fromLatin1( "configure-identity" );
-}
-
-IdentityPage::IdentityPage( const KComponentData &instance, QWidget *parent )
-  : ConfigModule( instance, parent ),
-    mIdentityDialog( 0 )
-{
-  mIPage.setupUi( this );
-
-  connect( mIPage.mIdentityList, SIGNAL( itemSelectionChanged() ),
-           SLOT( slotIdentitySelectionChanged() ) );
-  connect( this, SIGNAL( changed(bool) ),
-           SLOT( slotIdentitySelectionChanged() ) );
-  connect( mIPage.mIdentityList, SIGNAL( rename( KMail::IdentityListViewItem *, const QString & ) ),
-           SLOT( slotRenameIdentity(KMail::IdentityListViewItem *, const QString & ) ) );
-  connect( mIPage.mIdentityList, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ),
-           SLOT( slotModifyIdentity() ) );
-  connect( mIPage.mIdentityList, SIGNAL( contextMenu( KMail::IdentityListViewItem *, const QPoint & ) ),
-           SLOT( slotContextMenu( KMail::IdentityListViewItem *, const QPoint & ) ) );
-  // ### connect dragged(...), ...
-
-  connect( mIPage.mButtonAdd, SIGNAL( clicked() ),
-           this, SLOT( slotNewIdentity() ) );
-  connect( mIPage.mModifyButton, SIGNAL( clicked() ),
-           this, SLOT( slotModifyIdentity() ) );
-  connect( mIPage.mRenameButton, SIGNAL( clicked() ),
-           this, SLOT( slotRenameIdentity() ) );
-  connect( mIPage.mRemoveButton, SIGNAL( clicked() ),
-           this, SLOT( slotRemoveIdentity() ) );
-  connect( mIPage.mSetAsDefaultButton, SIGNAL( clicked() ),
-           this, SLOT( slotSetAsDefault() ) );
-}
-
-void IdentityPage::load()
-{
-  KPIMIdentities::IdentityManager *im = kmkernel->identityManager();
-  mOldNumberOfIdentities = im->shadowIdentities().count();
-  // Fill the list:
-  mIPage.mIdentityList->clear();
-  QTreeWidgetItem *item = 0;
-  for ( KPIMIdentities::IdentityManager::Iterator it = im->modifyBegin(); it != im->modifyEnd(); ++it ) {
-    item = new IdentityListViewItem( mIPage.mIdentityList, item, *it );
-  }
-  if ( mIPage.mIdentityList->currentItem() ) {
-    mIPage.mIdentityList->currentItem()->setSelected( true );
-  }
-}
-
-void IdentityPage::save()
-{
-  Q_ASSERT( !mIdentityDialog );
-
-  kmkernel->identityManager()->sort();
-  kmkernel->identityManager()->commit();
-
-  if( mOldNumberOfIdentities < 2 && mIPage.mIdentityList->topLevelItemCount() > 1 ) {
-    // have more than one identity, so better show the combo in the
-    // composer now:
-    int showHeaders = GlobalSettings::self()->headers();
-    showHeaders |= KMail::Composer::HDR_IDENTITY;
-    GlobalSettings::self()->setHeaders( showHeaders );
-  }
-  // and now the reverse
-  if( mOldNumberOfIdentities > 1 && mIPage.mIdentityList->topLevelItemCount() < 2 ) {
-    // have only one identity, so remove the combo in the composer:
-    int showHeaders = GlobalSettings::self()->headers();
-    showHeaders &= ~KMail::Composer::HDR_IDENTITY;
-    GlobalSettings::self()->setHeaders( showHeaders );
-  }
-}
-
-void IdentityPage::slotNewIdentity()
-{
-  Q_ASSERT( !mIdentityDialog );
-
-  KPIMIdentities::IdentityManager *im = kmkernel->identityManager();
-  MessageViewer::AutoQPointer<NewIdentityDialog> dialog( new NewIdentityDialog(
-      im->shadowIdentities(), this ) );
-  dialog->setObjectName( "new" );
-
-  if ( dialog->exec() == QDialog::Accepted && dialog ) {
-    QString identityName = dialog->identityName().trimmed();
-    Q_ASSERT( !identityName.isEmpty() );
-
-    //
-    // Construct a new Identity:
-    //
-    switch ( dialog->duplicateMode() ) {
-    case NewIdentityDialog::ExistingEntry:
-      {
-        KPIMIdentities::Identity &dupThis = im->modifyIdentityForName( dialog->duplicateIdentity() );
-        im->newFromExisting( dupThis, identityName );
-        break;
-      }
-    case NewIdentityDialog::ControlCenter:
-      im->newFromControlCenter( identityName );
-      break;
-    case NewIdentityDialog::Empty:
-      im->newFromScratch( identityName );
-    default: ;
-    }
-
-    //
-    // Insert into listview:
-    //
-    KPIMIdentities::Identity &newIdent = im->modifyIdentityForName( identityName );
-    QTreeWidgetItem *item = 0;
-    if ( mIPage.mIdentityList->selectedItems().size() > 0 ) {
-      item = mIPage.mIdentityList->selectedItems()[0];
-    }
-
-    QTreeWidgetItem * newItem = 0;
-    if ( item ) {
-      newItem = new IdentityListViewItem( mIPage.mIdentityList, mIPage.mIdentityList->itemAbove( item ), newIdent );
-    } else {
-      newItem = new IdentityListViewItem( mIPage.mIdentityList, newIdent );
-    }
-
-    mIPage.mIdentityList->selectionModel()->clearSelection();
-    if ( newItem ) {
-      newItem->setSelected( true );
-    }
-
-    slotModifyIdentity();
-  }
-}
-
-void IdentityPage::slotModifyIdentity()
-{
-  Q_ASSERT( !mIdentityDialog );
-
-  IdentityListViewItem *item = 0;
-  if ( mIPage.mIdentityList->selectedItems().size() > 0 ) {
-    item = dynamic_cast<IdentityListViewItem*>( mIPage.mIdentityList->selectedItems()[0] );
-  }
-  if ( !item ) {
-    return;
-  }
-
-  mIdentityDialog = new IdentityDialog( this );
-  mIdentityDialog->setIdentity( item->identity() );
-
-  // Hmm, an unmodal dialog would be nicer, but a modal one is easier ;-)
-  if ( mIdentityDialog->exec() == QDialog::Accepted ) {
-    mIdentityDialog->updateIdentity( item->identity() );
-    item->redisplay();
-    emit changed( true );
-  }
-
-  delete mIdentityDialog;
-  mIdentityDialog = 0;
-}
-
-void IdentityPage::slotRemoveIdentity()
-{
-  Q_ASSERT( !mIdentityDialog );
-
-  KPIMIdentities::IdentityManager *im = kmkernel->identityManager();
-  if ( im->shadowIdentities().count() < 2 ) {
-    kFatal() << "Attempted to remove the last identity!";
-  }
-
-  IdentityListViewItem *item = 0;
-  if ( mIPage.mIdentityList->selectedItems().size() > 0 ) {
-    item = dynamic_cast<IdentityListViewItem*>( mIPage.mIdentityList->selectedItems()[0] );
-  }
-  if ( !item ) {
-    return;
-  }
-
-  QString msg = i18n( "<qt>Do you really want to remove the identity named "
-                      "<b>%1</b>?</qt>", item->identity().identityName() );
-  if( KMessageBox::warningContinueCancel( this, msg, i18n("Remove Identity"),
-                                          KGuiItem(i18n("&Remove"),
-                                          "edit-delete") )
-      == KMessageBox::Continue ) {
-    if ( im->removeIdentity( item->identity().identityName() ) ) {
-      delete item;
-      if ( mIPage.mIdentityList->currentItem() ) {
-        mIPage.mIdentityList->currentItem()->setSelected( true );
-      }
-      refreshList();
-    }
-  }
-}
-
-void IdentityPage::slotRenameIdentity()
-{
-  Q_ASSERT( !mIdentityDialog );
-
-  QTreeWidgetItem *item = 0;
-
-  if ( mIPage.mIdentityList->selectedItems().size() > 0 ) {
-    item = mIPage.mIdentityList->selectedItems()[0];
-  }
-  if ( !item ) return;
-
-  mIPage.mIdentityList->editItem( item );
-}
-
-void IdentityPage::slotRenameIdentity( KMail::IdentityListViewItem *item , const QString &text )
-{
-  if ( !item ) return;
-
-  QString newName = text.trimmed();
-  if ( !newName.isEmpty() &&
-       !kmkernel->identityManager()->shadowIdentities().contains( newName ) ) {
-    KPIMIdentities::Identity &ident = item->identity();
-    ident.setIdentityName( newName );
-    emit changed( true );
-  }
-  item->redisplay();
-}
-
-void IdentityPage::slotContextMenu( IdentityListViewItem *item, const QPoint &pos )
-{
-  QMenu *menu = new QMenu( this );
-  menu->addAction( i18n( "Add..." ), this, SLOT( slotNewIdentity() ) );
-  if ( item ) {
-    menu->addAction( i18n( "Modify..." ), this, SLOT( slotModifyIdentity() ) );
-    if ( mIPage.mIdentityList->topLevelItemCount() > 1 ) {
-      menu->addAction( i18n( "Remove" ), this, SLOT( slotRemoveIdentity() ) );
-    }
-    if ( !item->identity().isDefault() ) {
-      menu->addAction( i18n( "Set as Default" ), this, SLOT( slotSetAsDefault() ) );
-    }
-  }
-  menu->exec( pos );
-  delete menu;
-}
-
-
-void IdentityPage::slotSetAsDefault()
-{
-  Q_ASSERT( !mIdentityDialog );
-
-  IdentityListViewItem *item = 0;
-  if ( mIPage.mIdentityList->selectedItems().size() > 0 ) {
-    item = dynamic_cast<IdentityListViewItem*>( mIPage.mIdentityList->selectedItems()[0] );
-  }
-  if ( !item ) {
-    return;
-  }
-
-  KPIMIdentities::IdentityManager *im = kmkernel->identityManager();
-  im->setAsDefault( item->identity().uoid() );
-  refreshList();
-}
-
-void IdentityPage::refreshList()
-{
-  for ( int i = 0; i < mIPage.mIdentityList->topLevelItemCount(); ++i ) {
-    IdentityListViewItem *item = dynamic_cast<IdentityListViewItem*>( mIPage.mIdentityList->topLevelItem( i ) );
-    if ( item ) {
-      item->redisplay();
-    }
-  }
-  emit changed( true );
-}
-
-void IdentityPage::slotIdentitySelectionChanged()
-{
-  IdentityListViewItem *item = 0;
-  if ( mIPage.mIdentityList->selectedItems().size() >  0 ) {
-    item = dynamic_cast<IdentityListViewItem*>( mIPage.mIdentityList->selectedItems()[0] );
-  }
-
-  mIPage.mRemoveButton->setEnabled( item && mIPage.mIdentityList->topLevelItemCount() > 1 );
-  mIPage.mModifyButton->setEnabled( item );
-  mIPage.mRenameButton->setEnabled( item );
-  mIPage.mSetAsDefaultButton->setEnabled( item && !item->identity().isDefault() );
 }
 
 // *************************************************************
@@ -676,7 +389,7 @@ void AccountsPage::SendingTab::doLoadOther()
 {
   mSendMethodCombo->setCurrentIndex( MessageComposer::MessageComposerSettings::self()->sendImmediate() ? 0 : 1 );
   mConfirmSendCheck->setChecked( GlobalSettings::self()->confirmBeforeSend() );
-  QString defaultDomain = GlobalSettings::defaultDomain();
+  QString defaultDomain = MessageComposer::MessageComposerSettings::defaultDomain();
   if( defaultDomain.isEmpty() ) {
     defaultDomain = QHostInfo::localHostName();
   }
@@ -686,7 +399,7 @@ void AccountsPage::SendingTab::doLoadOther()
 void AccountsPage::SendingTab::save()
 {
   GlobalSettings::self()->setSendOnCheck( mSendOnCheckCombo->currentIndex() );
-  GlobalSettings::self()->setDefaultDomain( mDefaultDomainEdit->text() );
+  MessageComposer::MessageComposerSettings::self()->setDefaultDomain( mDefaultDomainEdit->text() );
   GlobalSettings::self()->setConfirmBeforeSend( mConfirmSendCheck->isChecked() );
   MessageComposer::MessageComposerSettings::self()->setSendImmediate( mSendMethodCombo->currentIndex() == 0 );
 }
@@ -1692,6 +1405,7 @@ void AppearancePage::SystemTrayTab::save()
 {
   GlobalSettings::self()->setSystemTrayEnabled( mSystemTrayCheck->isChecked() );
   GlobalSettings::self()->setSystemTrayPolicy( mSystemTrayGroup->selected() );
+  GlobalSettings::self()->writeConfig();
 }
 
 QString AppearancePage::MessageTagTab::helpAnchor() const
@@ -2277,14 +1991,14 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
 
   // some check buttons...
   mAutoAppSignFileCheck = new QCheckBox(
-           GlobalSettings::self()->autoTextSignatureItem()->label(),
+           MessageComposer::MessageComposerSettings::self()->autoTextSignatureItem()->label(),
            this );
   vlay->addWidget( mAutoAppSignFileCheck );
   connect( mAutoAppSignFileCheck, SIGNAL( stateChanged(int) ),
            this, SLOT( slotEmitChanged( void ) ) );
 
   mTopQuoteCheck = new QCheckBox(
-                GlobalSettings::self()->prependSignatureItem()->label(), this );
+                MessageComposer::MessageComposerSettings::self()->prependSignatureItem()->label(), this );
   mTopQuoteCheck->setEnabled( false );
   vlay->addWidget( mTopQuoteCheck);
   connect( mTopQuoteCheck, SIGNAL( stateChanged(int) ),
@@ -2292,7 +2006,7 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   connect( mAutoAppSignFileCheck, SIGNAL( toggled(bool) ),
            mTopQuoteCheck, SLOT( setEnabled(bool) ) );
   mDashDashCheck = new QCheckBox(
-               GlobalSettings::self()->dashDashSignatureItem()->label(), this );
+               MessageComposer::MessageComposerSettings::self()->dashDashSignatureItem()->label(), this );
   mDashDashCheck->setEnabled( false );
   vlay->addWidget( mDashDashCheck);
   connect( mDashDashCheck, SIGNAL( stateChanged(int) ),
@@ -2333,9 +2047,8 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
            this, SLOT( slotEmitChanged( void ) ) );
 
   mShowRecentAddressesInComposer = new QCheckBox(
-           GlobalSettings::self()->showRecentAddressesInComposerItem()->label(),
+           MessageComposer::MessageComposerSettings::self()->showRecentAddressesInComposerItem()->label(),
            this);
-  mShowRecentAddressesInComposer->setObjectName( "kcfg_ShowRecentAddressesInComposer" );
   vlay->addWidget( mShowRecentAddressesInComposer );
   connect( mShowRecentAddressesInComposer, SIGNAL( stateChanged(int) ),
            this, SLOT( slotEmitChanged( void ) ) );
@@ -2501,9 +2214,9 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings()
   // various check boxes:
 
   mAutoAppSignFileCheck->setChecked(
-           GlobalSettings::self()->autoTextSignature()=="auto" );
-  mTopQuoteCheck->setChecked( GlobalSettings::self()->prependSignature() );
-  mDashDashCheck->setChecked( GlobalSettings::self()->dashDashSignature() );
+           MessageComposer::MessageComposerSettings::self()->autoTextSignature()=="auto" );
+  mTopQuoteCheck->setChecked( MessageComposer::MessageComposerSettings::self()->prependSignature() );
+  mDashDashCheck->setChecked( MessageComposer::MessageComposerSettings::self()->dashDashSignature() );
   mSmartQuoteCheck->setChecked( TemplateParser::GlobalSettings::self()->smartQuote() );
   mQuoteSelectionOnlyCheck->setChecked( MessageComposer::MessageComposerSettings::self()->quoteSelectionOnly() );
   mStripSignatureCheck->setChecked( TemplateParser::GlobalSettings::self()->stripSignature() );
@@ -2511,6 +2224,7 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings()
   mWordWrapCheck->setChecked( GlobalSettings::self()->wordWrap() );
   mWrapColumnSpin->setValue( GlobalSettings::self()->lineWrapWidth() );
   mAutoSave->setValue( GlobalSettings::self()->autosaveInterval() );
+  mShowRecentAddressesInComposer->setChecked( MessageComposer::MessageComposerSettings::self()->showRecentAddressesInComposer() );
 
 #ifdef KDEPIM_ENTERPRISE_BUILD
   mRecipientCheck->setChecked( GlobalSettings::self()->tooManyRecipients() );
@@ -2527,10 +2241,10 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings()
 }
 
 void ComposerPage::GeneralTab::save() {
-  GlobalSettings::self()->setAutoTextSignature(
+  MessageComposer::MessageComposerSettings::self()->setAutoTextSignature(
          mAutoAppSignFileCheck->isChecked() ? "auto" : "manual" );
-  GlobalSettings::self()->setPrependSignature( mTopQuoteCheck->isChecked() );
-  GlobalSettings::self()->setDashDashSignature( mDashDashCheck->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setPrependSignature( mTopQuoteCheck->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setDashDashSignature( mDashDashCheck->isChecked() );
   TemplateParser::GlobalSettings::self()->setSmartQuote( mSmartQuoteCheck->isChecked() );
   MessageComposer::MessageComposerSettings::self()->setQuoteSelectionOnly( mQuoteSelectionOnlyCheck->isChecked() );
   TemplateParser::GlobalSettings::self()->setStripSignature( mStripSignatureCheck->isChecked() );
@@ -2538,6 +2252,7 @@ void ComposerPage::GeneralTab::save() {
   GlobalSettings::self()->setWordWrap( mWordWrapCheck->isChecked() );
   GlobalSettings::self()->setLineWrapWidth( mWrapColumnSpin->value() );
   GlobalSettings::self()->setAutosaveInterval( mAutoSave->value() );
+  MessageComposer::MessageComposerSettings::self()->setShowRecentAddressesInComposer( mShowRecentAddressesInComposer->isChecked() );
 
 #ifdef KDEPIM_ENTERPRISE_BUILD
   GlobalSettings::self()->setTooManyRecipients( mRecipientCheck->isChecked() );
@@ -2548,6 +2263,8 @@ void ComposerPage::GeneralTab::save() {
   // editor group:
   GlobalSettings::self()->setUseExternalEditor( mExternalEditorCheck->isChecked() );
   GlobalSettings::self()->setExternalEditor( mEditorRequester->text() );
+
+  MessageComposer::MessageComposerSettings::self()->requestSync();
 }
 
 void ComposerPage::GeneralTab::slotConfigureRecentAddresses()
@@ -3186,7 +2903,7 @@ SecurityPage::SecurityPage( const KComponentData &instance, QWidget *parent )
   // "Warnings" tab:
   //
   mWarningTab = new WarningTab();
-  addTab( mWarningTab, i18n("Warnings") );
+  addTab( mWarningTab, i18n("Miscellaneous") );
 
   //
   // "S/MIME Validation" tab:
@@ -3385,6 +3102,7 @@ SecurityPageWarningTab::SecurityPageWarningTab( QWidget * parent )
   connect( mWidget->warnUnencryptedCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
   connect( mWidget->warnReceiverNotInCertificateCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
 
+  connect( mWidget->gnupgButton, SIGNAL(clicked()), SLOT(slotConfigureGnupg()) );
   connect( mWidget->enableAllWarningsPB, SIGNAL(clicked()), SLOT(slotReenableAllWarningsClicked()) );
 }
 
@@ -3455,6 +3173,13 @@ void SecurityPage::WarningTab::slotReenableAllWarningsClicked()
 {
   KMessageBox::enableAllMessages();
   mWidget->enableAllWarningsPB->setEnabled( false );
+}
+
+void SecurityPage::WarningTab::slotConfigureGnupg()
+{
+  KCMultiDialog dlg;
+  dlg.addModule( "kleopatra_config_gnupgsystem" );
+  dlg.exec();
 }
 
 ////
@@ -3855,98 +3580,25 @@ void MiscPage::FolderTab::save()
         mMMTab.mExcludeImportantFromExpiry->isChecked() );
 }
 
-QString MiscPage::InviteTab::helpAnchor() const
-{
-  return QString::fromLatin1("configure-misc-invites");
-}
 
 MiscPageInviteTab::MiscPageInviteTab( QWidget* parent )
   : ConfigModuleTab( parent )
 {
-  mMITab.setupUi( this );
-
-  mMITab.mDeleteInvitations->setText(
-             i18n( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem()->label().toUtf8() ) );
-  mMITab.mDeleteInvitations->setWhatsThis( i18n( GlobalSettings::self()
-             ->deleteInvitationEmailsAfterSendingReplyItem()->whatsThis().toUtf8() ) );
-  connect( mMITab.mDeleteInvitations, SIGNAL( toggled(bool) ),
-           SLOT( slotEmitChanged() ) );
-
-  mMITab.mLegacyMangleFromTo->setWhatsThis( i18n( GlobalSettings::self()->
-           legacyMangleFromToHeadersItem()->whatsThis().toUtf8() ) );
-  connect( mMITab.mLegacyMangleFromTo, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  mMITab.mLegacyMangleFromTo->setWhatsThis( i18n( GlobalSettings::self()->
-           legacyBodyInvitesItem()->whatsThis().toUtf8() ) );
-  connect( mMITab.mLegacyBodyInvites, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotLegacyBodyInvitesToggled( bool ) ) );
-  connect( mMITab.mLegacyBodyInvites, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-
-  mMITab.mExchangeCompatibleInvitations->setWhatsThis( i18n( GlobalSettings::self()->
-           exchangeCompatibleInvitationsItem()->whatsThis().toUtf8() ) );
-  connect( mMITab.mExchangeCompatibleInvitations, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-
-  mMITab.mOutlookCompatibleInvitationComments->setWhatsThis( i18n( GlobalSettings::self()->
-           outlookCompatibleInvitationReplyCommentsItem()->whatsThis().toUtf8() ) );
-  connect( mMITab.mOutlookCompatibleInvitationComments, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-
-  mMITab.mAutomaticSending->setWhatsThis( i18n( GlobalSettings::self()->
-           automaticSendingItem()->whatsThis().toUtf8() ) );
-  connect( mMITab.mAutomaticSending, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-}
-
-void MiscPageInviteTab::slotLegacyBodyInvitesToggled( bool on )
-{
-  if ( on ) {
-    QString txt = i18n( "<qt>Invitations are normally sent as attachments to "
-                        "a mail. This switch changes the invitation mails to "
-                        "be sent in the text of the mail instead; this is "
-                        "necessary to send invitations and replies to "
-                        "Microsoft Outlook.<br />But, when you do this, you no "
-                        "longer get descriptive text that mail programs "
-                        "can read; so, to people who have email programs "
-                        "that do not understand the invitations, the "
-                        "resulting messages look very odd.<br />People that have email "
-                        "programs that do understand invitations will still "
-                        "be able to work with this.</qt>" );
-    KMessageBox::information( this, txt, QString(), "LegacyBodyInvitesWarning" );
-  }
-  // Invitations in the body are autosent in any case (no point in editing raw ICAL)
-  // So the autosend option is only available if invitations are sent as attachment.
-  mMITab.mAutomaticSending->setEnabled( !mMITab.mLegacyBodyInvites->isChecked() );
+  mInvitationUi = new MessageViewer::InvitationSettings( this );
+  QHBoxLayout *l = new QHBoxLayout( this );
+  l->setContentsMargins( 0 , 0, 0, 0 );
+  l->addWidget( mInvitationUi );
+  connect( mInvitationUi, SIGNAL( changed() ), this, SLOT( slotEmitChanged() ) );
 }
 
 void MiscPage::InviteTab::doLoadFromGlobalSettings()
 {
-  mMITab.mLegacyMangleFromTo->setChecked( GlobalSettings::self()->legacyMangleFromToHeaders() );
-  mMITab.mExchangeCompatibleInvitations->setChecked( GlobalSettings::self()->exchangeCompatibleInvitations() );
-
-  mMITab.mLegacyBodyInvites->blockSignals( true );
-  mMITab.mLegacyBodyInvites->setChecked( GlobalSettings::self()->legacyBodyInvites() );
-  mMITab.mLegacyBodyInvites->blockSignals( false );
-
-  mMITab.mOutlookCompatibleInvitationComments->setChecked( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() );
-
-  mMITab.mAutomaticSending->setChecked( GlobalSettings::self()->automaticSending() );
-  mMITab.mAutomaticSending->setEnabled( !mMITab.mLegacyBodyInvites->isChecked() );
-  mMITab.mDeleteInvitations->setChecked(  GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
+  mInvitationUi->doLoadFromGlobalSettings();
 }
 
 void MiscPage::InviteTab::save()
 {
-  KConfigGroup groupware( KMKernel::config(), "Groupware" );
-
-  // Write the groupware config
-  GlobalSettings::self()->setLegacyMangleFromToHeaders( mMITab.mLegacyMangleFromTo->isChecked() );
-  GlobalSettings::self()->setLegacyBodyInvites( mMITab.mLegacyBodyInvites->isChecked() );
-  GlobalSettings::self()->setExchangeCompatibleInvitations( mMITab.mExchangeCompatibleInvitations->isChecked() );
-  GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments( mMITab.mOutlookCompatibleInvitationComments->isChecked() );
-  GlobalSettings::self()->setAutomaticSending( mMITab.mAutomaticSending->isChecked() );
-  GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( mMITab.mDeleteInvitations->isChecked() );
+  mInvitationUi->save();
 }
 
 

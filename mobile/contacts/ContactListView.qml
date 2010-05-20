@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as Qt
+import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
@@ -25,7 +25,7 @@ KPIM.ItemListView {
   delegate: [
     KPIM.ItemListViewDelegate {
       summaryContent: [
-        Qt.Image {
+        QML.Image {
           anchors.left: parent.left
           anchors.top: parent.top
           anchors.margins: 4
@@ -33,7 +33,7 @@ KPIM.ItemListView {
           scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
           transformOrigin: "TopLeft"
         },
-        Qt.Text {
+        QML.Text {
           anchors.top: parent.top
           anchors.margins: 4
           x: parent.height + anchors.margins
@@ -41,7 +41,7 @@ KPIM.ItemListView {
         }
       ]
       detailsContent: [
-        Qt.Image {
+        QML.Image {
           anchors.left: parent.left
           anchors.top: parent.top
           anchors.margins: 4
@@ -49,7 +49,7 @@ KPIM.ItemListView {
           scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
           transformOrigin: "TopLeft"
         },
-        Qt.Text {
+        QML.Text {
           anchors.top: parent.top
           anchors.margins: 4
           x: parent.height + anchors.margins

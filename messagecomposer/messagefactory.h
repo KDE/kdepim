@@ -50,7 +50,6 @@ namespace MessageComposer {
     MDNSendDenied,
     MDNSend
   };
-}
 
 /**
  * Contains various factory methods for creating new messages such as replies, MDNs, forwards, etc.
@@ -271,5 +270,7 @@ private:
   Akonadi::Item::Id m_id;
   
 };
+
+}
 
 #endif

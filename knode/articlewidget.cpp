@@ -139,7 +139,6 @@ ArticleWidget::~ArticleWidget()
     // if the article manager is still loading the current article,
     // cancel the job.
     knGlobals.articleManager()->cancelJobs( mArticle );
-    mArticle.reset();
   }
   removeTempFiles();
 }
@@ -1067,19 +1066,17 @@ void ArticleWidget::removeTempFiles( )
 void ArticleWidget::processJob( KNJobData * job )
 {
   if ( job->type() == KNJobData::JTfetchSource || job->type() == KNJobData::JTfetchArticle ) {
-    KNRemoteArticle::Ptr a = boost::static_pointer_cast<KNRemoteArticle>( job->data() );
     if ( !job->canceled() ) {
       if ( !job->success() )
         KMessageBox::error( this, i18n("An error occurred while downloading the article source:\n%1",
             job->errorString() ) );
-      else
+      else {
+        KNRemoteArticle::Ptr a = boost::static_pointer_cast<KNRemoteArticle>( job->data() );
         new KNSourceViewWindow( a->head() + '\n' + a->body() );
+      }
     }
-    delete job;
-    a.reset();
   }
-  else
-    delete job;
+  delete job;
 }
 
 

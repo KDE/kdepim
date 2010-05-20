@@ -26,7 +26,10 @@
 #include "kmversion.h"
 #include "kmmainwidget.h"
 #include "kmreadermainwin.h"
+#include <kpimutils/email.h>
 #include <kpimutils/kfileio.h>
+#include <libkdepim/addemailaddressjob.h>
+#include <libkdepim/openemailaddressjob.h>
 #include "kmcommands.h"
 #include "mdnadvicedialog.h"
 #include <QByteArray>
@@ -59,6 +62,9 @@ using namespace MessageViewer;
 #include "messageviewer/attachmentstrategy.h"
 #include "messagecomposer/messagesender.h"
 #include "messagecomposer/messagefactory.h"
+using MessageComposer::MessageFactory;
+
+#include "messagecore/messagehelpers.h"
 
 
 // KABC includes
@@ -105,7 +111,6 @@ using namespace MessageViewer;
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <errno.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -132,13 +137,18 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   QVBoxLayout * vlay = new QVBoxLayout( this );
   vlay->setMargin( 0 );
   mViewer = new Viewer( this, mainWindow, mActionCollection );
+  mViewer->setAppName( "KMail" );
   connect( mViewer, SIGNAL(urlClicked( const Akonadi::Item &, const KUrl & ) ),
            this, SLOT( slotUrlClicked( const Akonadi::Item &, const KUrl& ) ) );
   connect( mViewer, SIGNAL( requestConfigSync() ), kmkernel, SLOT( slotRequestConfigSync() ) );
-  connect( mViewer, SIGNAL( showReader( KMime::Content* , bool, const QString&, const QString&, const QString &) ),
-           this, SLOT( slotShowReader( KMime::Content* , bool, const QString&, const QString&, const QString &) ) );
+  connect( mViewer, SIGNAL( showReader( KMime::Content* , bool, const QString& ) ),
+           this, SLOT( slotShowReader( KMime::Content* , bool, const QString& ) ) );
+  connect( mViewer, SIGNAL( showMessage(KMime::Message::Ptr, const QString&) ),
+           this, SLOT( slotShowMessage(KMime::Message::Ptr, const QString& ) ) );
   connect( mViewer, SIGNAL( showStatusBarMessage( const QString & ) ),
            this, SIGNAL( showStatusBarMessage( const QString & ) ) );
+  connect( mViewer, SIGNAL( deleteMessage( Akonadi::Item ) ),
+           this, SLOT( slotDeleteMessage( Akonadi::Item ) ) );
   vlay->addWidget( mViewer );
   readConfig();
 
@@ -299,7 +309,6 @@ void KMReaderWin::displayBusyPage()
 {
   QString info =
     i18n( "<h2 style='margin-top: 0px;'>Retrieving Folder Contents</h2><p>Please wait . . .</p>&nbsp;" );
-#include "mdnadvicedialog.h"
 
   displaySplashPage( info );
 }
@@ -414,7 +423,7 @@ void KMReaderWin::slotTouchMessage()
          KMKernel::self()->folderIsTemplates( col ) ) )
     return;
 
-  KMime::Message::Ptr msg = KMail::Util::message( message() );
+  KMime::Message::Ptr msg = MessageCore::Util::message( message() );
   if ( !msg )
     return;
 
@@ -448,10 +457,9 @@ void KMReaderWin::slotCopySelectedText()
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::setMsgPart( KMime::Content* aMsgPart, bool aHTML,
-                              const QString& aFileName, const QString& pname )
+void KMReaderWin::setMsgPart( KMime::Content* aMsgPart )
 {
-  mViewer->setMessagePart( aMsgPart, aHTML, aFileName, pname );
+  mViewer->setMessagePart( aMsgPart );
 }
 
 //-----------------------------------------------------------------------------
@@ -514,17 +522,19 @@ void KMReaderWin::slotMailtoForward()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoAddAddrBook()
 {
-  KMCommand *command = new KMMailtoAddAddrBookCommand( urlClicked(),
-                                                       mMainWindow );
-  command->start();
+  const QString emailString = KPIMUtils::decodeMailtoUrl( urlClicked() );
+
+  KPIM::AddEmailAddressJob *job = new KPIM::AddEmailAddressJob( emailString, mMainWindow, this );
+  job->start();
 }
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotMailtoOpenAddrBook()
 {
-  KMCommand *command = new KMMailtoOpenAddrBookCommand( urlClicked(),
-                                                        mMainWindow );
-  command->start();
+  const QString emailString = KPIMUtils::decodeMailtoUrl( urlClicked() );
+
+  KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob( emailString, mMainWindow, this );
+  job->start();
 }
 
 //-----------------------------------------------------------------------------
@@ -639,6 +649,12 @@ void KMReaderWin::setMessage( const Akonadi::Item &item, Viewer::UpdateMode upda
   }
 }
 
+void KMReaderWin::setMessage(Message::Ptr message)
+{
+  mViewer->setMessage( message );
+}
+
+
 KUrl KMReaderWin::urlClicked() const
 {
   return mViewer->urlClicked();
@@ -663,11 +679,27 @@ void KMReaderWin::slotUrlClicked( const Akonadi::Item & item, const KUrl & url )
   command->start();
 }
 
-void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const QString&filename, const QString&pname, const QString &encoding)
+void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const QString &encoding )
 {
-  KMReaderMainWin *win = new KMReaderMainWin(msgPart, htmlMail,filename, pname, encoding );
+  KMReaderMainWin *win = new KMReaderMainWin( msgPart, htmlMail, encoding );
   win->show();
 }
+
+void KMReaderWin::slotShowMessage( KMime::Message::Ptr message, const QString& encoding )
+{
+  KMReaderMainWin *win = new KMReaderMainWin();
+  win->showMessage( encoding, message );
+  win->show();
+}
+
+void KMReaderWin::slotDeleteMessage(const Akonadi::Item& item)
+{
+  if ( !item.isValid() )
+    return;
+  KMTrashMsgCommand *command = new KMTrashMsgCommand( item.parentCollection(), item, -1 );
+  command->start();
+}
+
 
 #include "kmreaderwin.moc"
 

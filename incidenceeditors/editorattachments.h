@@ -104,10 +104,12 @@ class EditorAttachments : public QWidget
 
   protected slots:
     void showAttachment( QListWidgetItem *item );
+    void saveAttachment( QListWidgetItem *item );
     void slotAdd();
     void slotEdit();
     void slotRemove();
     void slotShow();
+    void slotSaveAs();
     void dragEnterEvent( QDragEnterEvent *event );
     void dropEvent( QDropEvent *event );
     void slotItemRenamed ( QListWidgetItem * item );
@@ -129,6 +131,7 @@ class EditorAttachments : public QWidget
     QString mUid; // used only to generate attachments' filenames
     QPushButton *mRemoveBtn;
     KAction *mOpenAction;
+    KAction *mSaveAsAction;
     KAction *mCopyAction;
     KAction *mCutAction;
     KAction *mDeleteAction;

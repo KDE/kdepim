@@ -82,7 +82,7 @@ target_link_libraries( akonadiconsole_bin
   ${KDEPIMLIBS_KCAL_LIBS}
   kdepim
   messageviewer
-  ${KDE4_KUTILS_LIBS}
+  ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KIO_LIBS}
   ${NEPOMUK_LIBRARIES}
   ${QT_QTSQL_LIBRARY}

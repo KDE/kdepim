@@ -26,7 +26,6 @@
 
 #include "korganizer_export.h"
 #include "koprefs_base.h"
-#include <akonadi/collection.h>
 #include <kdatetime.h>
 
 #include <QHash>
@@ -57,8 +56,7 @@ class KORGANIZER_CORE_EXPORT KOPrefs : public KOPrefsBase
     /** Constructor disabled for public. Use instance() to create a KOPrefs
     object. */
     KOPrefs();
-
-    static KOPrefs *mInstance;
+    friend class KOPrefsPrivate;
 
   public:
     void setCategoryColor( const QString &cat, const QColor &color );
@@ -74,12 +72,8 @@ class KORGANIZER_CORE_EXPORT KOPrefs : public KOPrefsBase
     QString mPublishPassword;
     QString mRetrievePassword;
 
-    QStringList timeScaleTimezones();
+    QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
-
-    QString defaultCalendar() const;
-    void setDefaultCollection( const Akonadi::Collection& );
-    Akonadi::Collection defaultCollection() const;
 
   private:
     QHash<QString,QColor> mCategoryColors;
@@ -92,9 +86,6 @@ class KORGANIZER_CORE_EXPORT KOPrefs : public KOPrefsBase
     QFont mDefaultAgendaTimeLabelsFont;
 
     QStringList mTimeScaleTimeZones;
-
-    QString mDefaultCalendar;
-    Akonadi::Collection mDefaultCollection;
 
   public: // Do not use - except in KOPrefsDialogMain
     QString mName;

@@ -37,6 +37,12 @@
 #include "kmmainwin.h"
 #include "folderrequester.h"
 #include "foldertreewidget.h"
+#include "foldertreeview.h"
+#include "readablecollectionproxymodel.h"
+#include "util.h"
+#include "imapsettings.h"
+
+#include <Akonadi/AgentInstance>
 
 #include <kaction.h>
 #include <kdebug.h>
@@ -141,9 +147,9 @@ void AntiSpamWizard::accept()
 {
   if ( mSpamRulesPage ) {
     kDebug() << "Folder name for messages classified as spam is"
-                    << mSpamRulesPage->selectedSpamFolderName();
+                    << mSpamRulesPage->selectedSpamCollectionId();
     kDebug() << "Folder name for messages classified as unsure is"
-                    << mSpamRulesPage->selectedUnsureFolderName();
+                    << mSpamRulesPage->selectedUnsureCollectionId();
   }
   if ( mVirusRulesPage ) {
     kDebug() << "Folder name for viruses is"
@@ -269,7 +275,7 @@ void AntiSpamWizard::accept()
     if ( mSpamRulesPage->moveSpamSelected() )
     {
       KMFilterAction* spamFilterAction1 = dict.value( "transfer" )->create();
-      spamFilterAction1->argsFromString( mSpamRulesPage->selectedSpamFolderName() );
+      spamFilterAction1->argsFromString( mSpamRulesPage->selectedSpamCollectionId() );
       spamFilterActions->append( spamFilterAction1 );
     }
     KMFilterAction* spamFilterAction2 = dict.value( "set status" )->create();
@@ -319,7 +325,7 @@ void AntiSpamWizard::accept()
       KMFilter* unsureFilter = new KMFilter();
       QList<KMFilterAction*> *unsureFilterActions = unsureFilter->actions();
       KMFilterAction* unsureFilterAction1 = dict.value( "transfer" )->create();
-      unsureFilterAction1->argsFromString( mSpamRulesPage->selectedUnsureFolderName() );
+      unsureFilterAction1->argsFromString( mSpamRulesPage->selectedUnsureCollectionId() );
       unsureFilterActions->append( unsureFilterAction1 );
       KMSearchPattern* unsureFilterPattern = unsureFilter->pattern();
       if ( replaceExistingFilters )
@@ -379,7 +385,7 @@ void AntiSpamWizard::accept()
     if ( mSpamRulesPage->moveSpamSelected() )
     {
       KMFilterAction* classSpamFilterActionLast = dict.value( "transfer" )->create();
-      classSpamFilterActionLast->argsFromString( mSpamRulesPage->selectedSpamFolderName() );
+      classSpamFilterActionLast->argsFromString( mSpamRulesPage->selectedSpamCollectionId() );
       classSpamFilterActions->append( classSpamFilterActionLast );
     }
 
@@ -509,25 +515,24 @@ void AntiSpamWizard::checkToolAvailability()
       // check the configured account for pattern in <server>
       QString pattern = (*it).getServerPattern();
       kDebug() << "Testing for server pattern:" << pattern;
-#if 0
-      AccountManager* mgr = kmkernel->acctMgr();
-      QList<KMAccount*>::iterator accountIt = mgr->begin();
-      while ( accountIt != mgr->end() ) {
-        KMAccount *account = *accountIt;
-        ++accountIt;
-        if ( account->type() == KAccount::Pop ||
-             account->type() == KAccount::Imap ||
-             account->type() == KAccount::DImap ) {
-          const NetworkAccount * n = dynamic_cast<const NetworkAccount*>( account );
-          if ( n && n->host().toLower().contains( pattern.toLower() ) ) {
+      Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+      foreach( Akonadi::AgentInstance type, lst ) {
+        if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+          OrgKdeAkonadiImapSettingsInterface *iface = KMail::Util::createImapSettingsInterface( type.identifier() );
+          if ( iface->isValid() ) {
+            QString host = iface->imapServer();
             mInfoPage->addAvailableTool( (*it).getVisibleName() );
             found = true;
           }
+          delete iface;
         }
-      }
-#else
-      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#if 0
+        else if ( type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
+          //TODO look at pop3 resources.
+        }
 #endif
+
+      }
     }
     else {
       // check the availability of the application
@@ -574,7 +579,7 @@ void AntiSpamWizard::slotBuildSummary()
       if ( mSpamRulesPage->moveSpamSelected() )
         text = i18n( "<p>Messages classified as spam are marked as read."
                      "<br />Spam messages are moved into the folder named <i>%1</i>.</p>"
-                     , mSpamRulesPage->selectedSpamFolderName() );
+                     , mSpamRulesPage->selectedSpamCollectionName() );
       else
         text = i18n( "<p>Messages classified as spam are marked as read."
                      "<br />Spam messages are not moved into a certain folder.</p>" );
@@ -583,7 +588,7 @@ void AntiSpamWizard::slotBuildSummary()
       if ( mSpamRulesPage->moveSpamSelected() )
         text = i18n( "<p>Messages classified as spam are not marked as read."
                      "<br />Spam messages are moved into the folder named <i>%1</i>.</p>"
-                     , mSpamRulesPage->selectedSpamFolderName() );
+                     , mSpamRulesPage->selectedSpamCollectionName() );
       else
         text = i18n( "<p>Messages classified as spam are not marked as read."
                      "<br />Spam messages are not moved into a certain folder.</p>" );
@@ -612,7 +617,7 @@ void AntiSpamWizard::slotBuildSummary()
         sortFilterOnExistance( i18n( "Semi spam (unsure) handling" ),
                                newFilters, replaceFilters );
         text += i18n( "<p>The folder for messages classified as unsure (probably spam) is <i>%1</i>.</p>"
-          , mSpamRulesPage->selectedUnsureFolderName() );
+          , mSpamRulesPage->selectedUnsureCollectionName() );
       }
     }
 
@@ -944,8 +949,7 @@ void ASWizInfoPage::setScanProgressText( const QString &toolName )
 
 void ASWizInfoPage::addAvailableTool( const QString &visibleName )
 {
-  QString listName = visibleName;
-  mToolsList->addItem( listName );
+  mToolsList->addItem( visibleName );
   if ( !mToolsList->isVisible() )
   {
     mToolsList->show();
@@ -1055,23 +1059,41 @@ bool ASWizSpamRulesPage::moveUnsureSelected() const
   return mMoveUnsureRules->isChecked();
 }
 
+QString ASWizSpamRulesPage::selectedSpamCollectionId() const
+{
+  return QString::number( selectedSpamCollection().id() );
+}
 
-QString ASWizSpamRulesPage::selectedSpamFolderName() const
+QString ASWizSpamRulesPage::selectedSpamCollectionName() const
+{
+  return selectedSpamCollection().name();
+}
+
+Akonadi::Collection ASWizSpamRulesPage::selectedSpamCollection() const
 {
   if ( mFolderReqForSpamFolder->folderCollection().isValid() )
-    return QString::number( mFolderReqForSpamFolder->folderCollection().id() );
+    return mFolderReqForSpamFolder->folderCollection();
   else
-    return QString::number( KMKernel::self()->trashCollectionFolder().id() );
+    return KMKernel::self()->trashCollectionFolder();
 }
 
 
-QString ASWizSpamRulesPage::selectedUnsureFolderName() const
+Akonadi::Collection ASWizSpamRulesPage::selectedUnsureCollection() const
 {
-  QString name = "inbox";
   if ( mFolderReqForUnsureFolder->folderCollection().isValid() )
-    return QString::number( mFolderReqForUnsureFolder->folderCollection().id() );
+    return mFolderReqForUnsureFolder->folderCollection();
   else
-    return QString::number( KMKernel::self()->inboxCollectionFolder().id() );
+    return KMKernel::self()->inboxCollectionFolder();
+}
+
+QString ASWizSpamRulesPage::selectedUnsureCollectionName() const
+{
+  return selectedUnsureCollection().name();
+}
+
+QString ASWizSpamRulesPage::selectedUnsureCollectionId() const
+{
+  return QString::number( selectedUnsureCollection().id() );
 }
 
 
@@ -1129,11 +1151,12 @@ ASWizVirusRulesPage::ASWizVirusRulesPage( QWidget * parent, const char * name )
             "virus-infected as read, as well as moving them "
             "to the selected folder.") );
   grid->addWidget( mMarkRules, 2, 0 );
-  mFolderTree = new FolderTreeWidget( this );
+  mFolderTree = new FolderTreeWidget( this, 0, FolderTreeWidget::None );
+  mFolderTree->readableCollectionProxyModel()->setAccessRights( Akonadi::Collection::CanCreateCollection );
+  mFolderTree->selectCollectionFolder( KMKernel::self()->trashCollectionFolder() );
+  mFolderTree->folderTreeView()->setDragDropMode( QAbstractItemView::NoDragDrop );
+
   mFolderTree->disableContextMenuAndExtraColumn();
-#if 0 //Port to akonadi
-  mFolderTree->reload( true, true, true, QString( "trash" ) );
-#endif
   grid->addWidget( mFolderTree, 3, 0 );
 
   connect( mPipeRules, SIGNAL(clicked()),

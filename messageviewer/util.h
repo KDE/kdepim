@@ -46,6 +46,11 @@ class KUrl;
 class QWidget;
 class QStringList;
 
+namespace KMime {
+  class Content;
+  class Message;
+}
+
 namespace MessageViewer {
 
 /**
@@ -80,6 +85,13 @@ namespace Util {
      * @return specific file permissions or -1 for default permissions
      */
     int MESSAGEVIEWER_EXPORT getWritePermissions();
+
+    QList<KMime::Content*> MESSAGEVIEWER_EXPORT allContents( const KMime::Content *message );
+    QList<KMime::Content*> MESSAGEVIEWER_EXPORT extractAttachments( const KMime::Message *message );
+    bool MESSAGEVIEWER_EXPORT saveContents( QWidget *parent,
+                                            const QList<KMime::Content*> &contents );
+    bool MESSAGEVIEWER_EXPORT saveContent( QWidget *parent, KMime::Content* content,
+                                           const KUrl& url );
 
     /**
      * Finds the filename of an icon based on the given mimetype or filenames.

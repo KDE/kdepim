@@ -30,11 +30,9 @@
 
 #include "korganizer_export.h"
 #include "korganizer/part.h"
-#include <KMenuBar>
 
 #include <KUrl>
 
-#include <QDateTime>
 #include <QObject>
 
 #include <akonadi/item.h>
@@ -66,6 +64,7 @@ class KRecentFilesAction;
 class KSelectAction;
 class KTemporaryFile;
 class KToggleAction;
+class KMenuBar;
 
 /**
   The ActionManager creates all the actions in KOrganizer. This class
@@ -272,7 +271,10 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     void importCalendar( const KUrl &url );
 
   protected slots:
-     void setItems( const QStringList & );
+    void setItems( const QStringList & );
+
+    /** called by the autoExportTimer to automatically export the calendar */
+    void checkAutoExport();
 
     /** open new window */
     void file_new();
@@ -292,17 +294,8 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     /** open a calendar and add the contents to the current calendar. */
     void file_merge();
 
-    /** revert to saved */
-    void file_revert();
-
     /** delete or archive old entries in your calendar for speed/space. */
     void file_archive();
-
-    /** save a file with the current fileName. */
-    void file_save();
-
-    /** save a file under a (possibly) different filename. */
-    void file_saveas();
 
     /** close a file, prompt for save if changes made. */
     void file_close();
@@ -355,8 +348,14 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     void dumpText( const QString & );  // only for debugging purposes
 
     void slotResourcesChanged(bool);
+    void slotDefaultResourceChanged( const Akonadi::Collection & );
     void slotChangeComboActionItem(int);
     void slotResourcesAddedRemoved();
+
+    void slotNewEvent();
+    void slotNewTodo();
+    void slotNewSubTodo();
+    void slotNewJournal();
   private:
     class ActionStringsVisitor;
 
@@ -365,19 +364,19 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     void initActions();
     void enableIncidenceActions( bool enable );
 
+    Akonadi::Collection selectedCollection() const;
+
     KOrg::Part::List mParts; // List of parts loaded
     KUrl mURL;               // URL of calendar file
     QString mFile;           // Local name of calendar file
     QString mLastUrl;        // URL of last loaded calendar.
 
     KTemporaryFile *mTempFile;
+    QTimer *mAutoExportTimer;    // used if calendar is to be autoexported
     QTimer *mAutoArchiveTimer; // used for the auto-archiving feature
 
     // list of all existing KOrganizer instances
     static KOWindowList *mWindowList;
-
-    // Actions
-    KRecentFilesAction *mRecent;
 
     KToggleAction *mDateNavigatorShowAction;
     KToggleAction *mTodoViewShowAction;

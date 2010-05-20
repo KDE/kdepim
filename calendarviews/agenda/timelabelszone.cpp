@@ -60,7 +60,7 @@ void TimeLabelsZone::reset()
   updateAll();
   if ( mParent ) {
     mParent->updateTimeBarWidth();
-    mParent->createDayLabels();
+    mParent->createDayLabels( true );
   }
 }
 

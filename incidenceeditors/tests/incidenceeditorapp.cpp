@@ -48,6 +48,7 @@
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/control.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/kcal/incidencechanger.h>
 
 #include <KCal/Incidence>
 
@@ -200,7 +201,7 @@ class MainWidget : public QWidget
       connect( m_itemview, SIGNAL(activated(QModelIndex)),
                this, SLOT(itemActivated()) );
 
-      m_changer = new IncidenceChanger( 0, this, Collection() );
+      m_changer = new IncidenceChanger( 0, this, Collection().id() );
     }
     virtual ~MainWidget() {}
 

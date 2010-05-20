@@ -575,24 +575,6 @@ void KNArticleFactory::edit( KNLocalArticle::Ptr a )
     return;
   }
 
-  //find identity
-  KPIMIdentities::Identity id = KNGlobals::self()->settings()->identity();
-
-  if(a->doPost()) {
-    KNNntpAccount::Ptr acc = knGlobals.accountManager()->account( a->serverId() );
-    if(acc) {
-      KMime::Headers::Newsgroups *grps=a->newsgroups();
-      if ( !grps->isEmpty() ) {
-        KNGroup::Ptr grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
-        if ( grp && !grp->identity().isNull() ) {
-          id = grp->identity();
-        } else if ( !acc->identity().isNull() ) {
-          id = acc->identity();
-        }
-      }
-    }
-  }
-
   //load article body
   if(!a->hasContent())
     knGlobals.articleManager()->loadArticle(a);

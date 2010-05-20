@@ -54,6 +54,7 @@
 #include <QToolTip>
 #include <QVBoxLayout>
 
+using namespace KCal;
 using namespace IncidenceEditors;
 
 // The FreeBusyItem is the whole line for a given attendee.
@@ -64,9 +65,10 @@ using namespace IncidenceEditors;
 class FreeBusyItem : public KDGanttViewTaskItem
 {
   public:
-    FreeBusyItem( Attendee *attendee, KDGanttView *parent ) :
+    FreeBusyItem( Attendee *attendee, KDGanttView *parent,
+                  QWidget *parentWidget ) :
       KDGanttViewTaskItem( parent, parent->lastItem() ), mAttendee( attendee ), mTimerID( 0 ),
-      mIsDownloading( false )
+      mIsDownloading( false ), mParentWidget( parentWidget )
     {
       Q_ASSERT( attendee );
       updateItem();
@@ -111,7 +113,8 @@ class FreeBusyItem : public KDGanttViewTaskItem
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
       Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-      if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload ) ) {
+      if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
+                                 mParentWidget ) ) {
         mIsDownloading = false;
       }
     }
@@ -129,6 +132,8 @@ class FreeBusyItem : public KDGanttViewTaskItem
 
     // Only run one download job at a time
     bool mIsDownloading;
+
+    QWidget *mParentWidget;
 };
 
 void FreeBusyItem::updateItem()
@@ -173,20 +178,34 @@ void FreeBusyItem::setFreeBusyPeriods( FreeBusy *fb )
     QList<KCal::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
     for ( QList<KCal::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
           it != busyPeriods.end(); ++it ) {
+      FreeBusyPeriod per = *it;
+
       KDGanttViewTaskItem *newSubItem = new KDGanttViewTaskItem( this );
-      newSubItem->setStartTime( (*it).start().toTimeSpec( timeSpec ).dateTime() );
-      newSubItem->setEndTime( (*it).end().toTimeSpec( timeSpec ).dateTime() );
+      newSubItem->setStartTime( per.start().toTimeSpec( timeSpec ).dateTime() );
+      newSubItem->setEndTime( per.end().toTimeSpec( timeSpec ).dateTime() );
       newSubItem->setColors( Qt::red, Qt::red, Qt::red );
-      QString toolTip;
-      if ( !(*it).summary().isEmpty() ) {
-        toolTip += "<b>" + (*it).summary() + "</b><br/>";
+
+      QString toolTip = "<qt>";
+      toolTip += "<b>" + i18nc( "@info:tooltip", "Freebusy Period" ) + "</b>";
+      toolTip += "<hr>";
+      if ( !per.summary().isEmpty() ) {
+        toolTip += "<i>" + i18nc( "@info:tooltip", "Summary:" ) + "</i>" + "&nbsp;";
+        toolTip += per.summary();
+        toolTip += "<br>";
       }
-      if ( !(*it).location().isEmpty() ) {
-        toolTip += i18nc( "@info:tooltip", "Location: %1", (*it).location() );
+      if ( !per.location().isEmpty() ) {
+        toolTip += "<i>" + i18nc( "@info:tooltip", "Location:" ) + "</i>" + "&nbsp;";
+        toolTip += per.location();
+        toolTip += "<br>";
       }
-      if ( !toolTip.isEmpty() ) {
-        newSubItem->setTooltipText( toolTip );
-      }
+      toolTip += "<i>" + i18nc( "@info:tooltip period start time", "Start:" ) + "</i>" + "&nbsp;";
+      toolTip += KGlobal::locale()->formatDateTime( per.start().toTimeSpec( timeSpec ).dateTime() );
+      toolTip += "<br>";
+      toolTip += "<i>" + i18nc( "@info:tooltip period end time", "End:" ) + "</i>" + "&nbsp;";
+      toolTip += KGlobal::locale()->formatDateTime( per.end().toTimeSpec( timeSpec ).dateTime() );
+      toolTip += "<br>";
+      toolTip += "</qt>";
+      newSubItem->setTooltipText( toolTip );
     }
     setFreeBusy( fb );
     setShowNoInformation( false );
@@ -398,7 +417,7 @@ void EditorFreeBusy::removeAttendee( Attendee *attendee )
 
 void EditorFreeBusy::insertAttendee( Attendee *attendee, bool readFBList )
 {
-  FreeBusyItem *item = new FreeBusyItem( attendee, mGanttView );
+  FreeBusyItem *item = new FreeBusyItem( attendee, mGanttView, this );
   if ( readFBList ) {
     updateFreeBusyData( item );
   } else {
@@ -1020,6 +1039,7 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
     if ( !newOrganizerAttendee ) {
       Attendee *a = new Attendee( name, email, true );
       insertAttendee( a, false );
+      mNewAttendees.append( a );
       updateAttendee();
     }
   }

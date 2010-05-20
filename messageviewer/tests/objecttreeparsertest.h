@@ -30,6 +30,7 @@ class ObjectTreeParserTester : public QObject
   private slots:
     void test_parseEncapsulatedMessage();
     void test_parsePlainMessage();
+    void test_missingContentTypeHeader();
 
   private:
     KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;

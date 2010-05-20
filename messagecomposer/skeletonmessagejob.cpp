@@ -18,6 +18,7 @@
 */
 
 #include "skeletonmessagejob.h"
+#include "kdepim-version.h"
 
 #include "infopart.h"
 #include "globalpart.h"
@@ -29,6 +30,7 @@
 #include <KCharsets>
 #include <KDebug>
 #include <KGlobal>
+#include <KProtocolManager>
 
 #include <kmime/kmime_message.h>
 
@@ -82,6 +84,15 @@ void SkeletonMessageJobPrivate::doStart()
     message->setHeader( to );
   }
 
+  // Reply To:
+  {
+    KMime::Headers::ReplyTo *replyTo = new KMime::Headers::ReplyTo( message );
+    KMime::Types::Mailbox address;
+    address.fromUnicodeString( infoPart->replyTo() );
+    replyTo->addAddress( address );
+    message->setHeader( replyTo );
+  }
+
   // Cc:
   {
     KMime::Headers::Cc *cc = new KMime::Headers::Cc( message );
@@ -132,6 +143,15 @@ void SkeletonMessageJobPrivate::doStart()
       KMime::Headers::Generic* mdn = new KMime::Headers::Generic( "Disposition-Notification-To", message, addr, "utf-8" );
       message->setHeader( mdn );
     }
+  }
+
+  // User-Agent
+  if ( !infoPart->userAgent().isEmpty() ) {
+    QStringList extraInfo;
+    extraInfo << QLatin1String( KDEPIM_SVN_REVISION_STRING ) << QLatin1String( KDEPIM_SVN_LAST_CHANGE );
+    KMime::Headers::UserAgent *ua = new KMime::Headers::UserAgent( message );
+    ua->fromUnicodeString( KProtocolManager::userAgentForApplication( infoPart->userAgent(), QLatin1String( KDEPIM_VERSION ), extraInfo ), "utf-8" );
+    message->setHeader( ua );
   }
 
   q->emitResult(); // Success.

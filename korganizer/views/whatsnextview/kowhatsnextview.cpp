@@ -34,6 +34,7 @@
 
 #include <QBoxLayout>
 
+using namespace KCal;
 using namespace Akonadi;
 
 void WhatsNextTextBrowser::setSource( const QUrl &name )
@@ -342,6 +343,16 @@ void KOWhatsNextView::showIncidence( const QString &uid )
 
   if ( incidence.isValid() ) {
     emit showIncidenceSignal( incidence );
+  }
+}
+
+KOrg::CalPrinterBase::PrintType KOWhatsNextView::printType()
+{
+  // If up to three days are selected, use day style, otherwise week
+  if ( currentDateCount() <= 3 ) {
+    return KOrg::CalPrinterBase::Day;
+  } else {
+    return KOrg::CalPrinterBase::Week;
   }
 }
 

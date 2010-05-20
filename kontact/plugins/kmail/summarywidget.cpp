@@ -78,7 +78,7 @@ SummaryWidget::SummaryWidget( KontactInterface::Plugin *plugin, QWidget *parent 
   mModelProxy->setSourceModel( mModel );
   mModelState = new Akonadi::EntityModelStateSaver( mModelProxy, this );
   mModelState->addRole( Qt::CheckStateRole, "CheckState" );
-  
+
   connect( mChangeRecorder, SIGNAL( collectionChanged( const Akonadi::Collection & ) ), SLOT( slotCollectionChanged( const Akonadi::Collection& ) ) );
   connect( mModel, SIGNAL( rowsInserted ( const QModelIndex&, int , int )), SLOT( slotRowInserted( const QModelIndex& , int, int)));
   updateFolderList();
@@ -111,7 +111,7 @@ void SummaryWidget::selectFolder( const QString &folder )
   } else {
     mPlugin->core()->selectPlugin( mPlugin );
   }
- 
+
   org::kde::kmail::kmail kmail( "org.kde.kmail", "/KMail", QDBusConnection::sessionBus() );
   kmail.selectFolder( folder );
 }
@@ -121,23 +121,23 @@ void SummaryWidget::displayModel( const QModelIndex& parent,
                                   const bool showFolderPaths,
                                   QStringList parentTreeNames )
 {
-  QLabel *label = 0;
-  for( int i = 0; i < mModelProxy->rowCount( parent ); i ++ )
+  const int nbCol = mModelProxy->rowCount( parent );
+  for( int i = 0; i < nbCol; ++i )
   {
     const QModelIndex child = mModelProxy->index( i, 0, parent );
     Akonadi::Collection col =
       mModelProxy->data( child, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
     int showCollection =
       mModelProxy->data( child, Qt::CheckStateRole ).value<int>();
-      
+
     if( col.isValid() )
-    {    
+    {
       const Akonadi::CollectionStatistics stats = col.statistics();
       if( ( ( stats.unreadCount() ) != Q_INT64_C(0) ) && showCollection )
       {
         // Collection Name.
         KUrlLabel *urlLabel;
-        
+
         if( showFolderPaths )
         {
           // Construct the full path string.
@@ -148,7 +148,7 @@ void SummaryWidget::displayModel( const QModelIndex& parent,
         }
         else
            urlLabel = new KUrlLabel( QString::number( col.id() ), col.name(), this );
-        
+
         urlLabel->installEventFilter( this );
         urlLabel->setAlignment( Qt::AlignLeft );
         urlLabel->setWordWrap( true );
@@ -167,7 +167,7 @@ void SummaryWidget::displayModel( const QModelIndex& parent,
                 SLOT(selectFolder(const QString&)) );
 
         // Read and unread count.
-        label = new QLabel( i18nc( "%1: number of unread messages "
+        QLabel *label = new QLabel( i18nc( "%1: number of unread messages "
                                   "%2: total number of messages",
                                   "%1 / %2", stats.unreadCount(), stats.count() ), this );
 
@@ -199,7 +199,6 @@ void SummaryWidget::updateFolderList()
 {
   qDeleteAll( mLabels );
   mLabels.clear();
-  QLabel *label = 0;
   KConfig _config( "kcmkmailsummaryrc" );
   KConfigGroup config( &_config, "General" );
   mModelState->restoreConfig( config );
@@ -209,7 +208,7 @@ void SummaryWidget::updateFolderList()
   displayModel( QModelIndex(), counter, showFolderPaths, QStringList() );
 
   if ( counter == 0 ) {
-    label = new QLabel( i18n( "No unread messages in your monitored folders" ), this );
+    QLabel *label = new QLabel( i18n( "No unread messages in your monitored folders" ), this );
     label->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
     mLayout->addWidget( label, 0, 0 );
     mLabels.append( label );

@@ -91,4 +91,4 @@ Comment[zh_CN]=text/x-patch 的正文格式化插件
 Comment[zh_TW]=text/x-patch 格式化外掛程式
 [Plugin]
 Type=text/x-patch
-X-KDE-Library=message_viewer_bodypartformatter_text_xdiff
+X-KDE-Library=messageviewer_bodypartformatter_text_xdiff

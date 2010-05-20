@@ -138,6 +138,7 @@ public:
   QAbstractItemModel *m_model;
   Akonadi::CalFilterProxyModel* m_filterProxy;
   QHash<Akonadi::Item::Id, Akonadi::Item> m_itemMap; // akonadi id to items
+  QHash<Akonadi::Entity::Id, Akonadi::Collection> m_collectionMap; // akonadi id to collections
 
   QHash<Akonadi::Item::Id, Akonadi::Item::Id> m_childToParent; // child to parent map, for already cached parents
   QHash<Akonadi::Item::Id, QList<Akonadi::Item::Id> > m_parentToChildren; //parent to children map, for alread cached children
@@ -146,17 +147,23 @@ public:
   QHash<Akonadi::Item::Id, UnseenItem> m_childToUnseenParent; // child to parent map, unknown/not cached parent items
   QMap<UnseenItem, QList<Akonadi::Item::Id> > m_unseenParentToChildren;
 
-  QMultiHash<QString, Akonadi::Item> m_itemsForDate;// on start dates of non-recurring, single-day Incidences
+  QMultiHash<QString, Akonadi::Item::Id> m_itemIdsForDate; // on start dates/due dates of non-recurring, single-day Incidences
+  QHash<Akonadi::Item::Id, QString> m_itemDateForItemId;
 
   void clear();
   void readFromModel();
 
-public Q_SLOTS:  
+public Q_SLOTS:
   void itemsAdded( const Akonadi::Item::List &items );
   void itemsRemoved( const Akonadi::Item::List &items );
 
+  void collectionsAdded( const Akonadi::Collection::List &collections );
+  void collectionsRemoved( const Akonadi::Collection::List &collections );
+
   void rowsInserted( const QModelIndex& index, int start, int end );
   void rowsAboutToBeRemoved( const QModelIndex& index, int start, int end );
+  void rowsInsertedInTreeModel( const QModelIndex& index, int start, int end );
+  void rowsAboutToBeRemovedInTreeModel( const QModelIndex& index, int start, int end );
   void layoutChanged();
   void modelReset();
   void dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight );

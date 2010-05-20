@@ -24,23 +24,50 @@
 */
 
 #include "history.h"
-#include <akonadi/kcal/calendar.h>
 
-#include <kcal/incidence.h>
+#include <akonadi/kcal/groupware.h>
+#include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/utils.h>
+#include <akonadi/kcal/incidencechanger.h>
+
+#include <KCal/Incidence>
+#include <Akonadi/Item>
 
 #include <klocale.h>
 
+#include <QWidget>
+
 using namespace KCal;
 using namespace KOrg;
+using namespace Akonadi;
 
-History::History( Akonadi::Calendar *calendar )
-  : mCalendar( calendar ), mCurrentMultiEntry( 0 )
+History::History( Akonadi::Calendar *calendar, QWidget *parent )
+  : mCalendar( calendar ), mCurrentMultiEntry( 0 ), mParent( parent ),
+  mChanger( new Akonadi::IncidenceChanger( calendar, parent, -1 ) ),
+  mCurrentRunningEntry( 0 )
 {
+  // We create a new incidencechanger because we don't want CalendarView receiving it's signals
+  // because of stuff we do here. It would cause CalendarView to create a undo entry for an
+  // undo
+
+  qRegisterMetaType<Akonadi::Item>( "Akonadi::Item" );
+  qRegisterMetaType<Akonadi::IncidenceChanger::WhatChanged>("Akonadi::IncidenceChanger::WhatChanged");  
+  connect( mChanger, SIGNAL(incidenceAddFinished(Akonadi::Item,bool)),
+           this, SLOT(incidenceAddFinished(Akonadi::Item,bool)) );
+
+  connect( mChanger, SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)),
+           this, SLOT(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)), Qt::QueuedConnection );
+
+  connect( mChanger, SIGNAL(incidenceDeleteFinished(Akonadi::Item,bool)),
+           this, SLOT(incidenceDeleteFinished(Akonadi::Item,bool)) );
+
+  mChanger->setGroupware( Groupware::instance() );
 }
 
 void History::undo()
 {
-  if ( mUndoEntries.isEmpty() ) {
+  // If mCurrentRunningEntry != 0 there's already a modify job running
+  if ( mUndoEntries.isEmpty() || mCurrentRunningEntry ) {
     return;
   }
 
@@ -49,26 +76,40 @@ void History::undo()
     return;
   }
 
-  entry->undo();
-  mRedoEntries.push( entry );
+  mCurrentRunningEntry = entry;
+  mCurrentRunningOperation = UNDO;
+  if ( entry->undo() ) {
+    // We only enable it back when the jobs end, in finishUndo
+    disableHistory();
+  } else {
+   finishUndo( false ); 
+  }
+}
+
+void History::finishUndo( bool success ) {
+  mRedoEntries.push( mCurrentRunningEntry );
   emit undone();
 
-  emit redoAvailable( entry->text() );
+  emit redoAvailable( mCurrentRunningEntry->text() );
 
   if ( !mUndoEntries.isEmpty() ) {
     // We need the text of the next undo item on the stack, which means we need
     // to pop it from the stack to be able to investigate it, and then re-add it.
-    entry = mUndoEntries.pop();
+    Entry *entry = mUndoEntries.pop();
     mUndoEntries.push( entry );
+
     emit undoAvailable( entry ? entry->text() : QString() );
   } else {
     emit undoAvailable( QString() );
   }
+
+  mCurrentRunningEntry = 0;
 }
 
 void History::redo()
 {
-  if ( mRedoEntries.isEmpty() ) {
+  // If mCurrentRunningEntry != 0 there's already a modify job running
+  if ( mRedoEntries.isEmpty() || mCurrentRunningEntry ) {
     return;
   }
   if ( mCurrentMultiEntry ) {
@@ -78,22 +119,40 @@ void History::redo()
   if ( !entry ) {
     return;
   }
+  mCurrentRunningOperation = REDO;
+  mCurrentRunningEntry = entry;
+  if ( entry->redo() ) {
+    // We only enable it back when the jobs end, in finishUndo
+    disableHistory();
+  } else {
+    finishRedo( false );
+  }
+}
 
-  emit undoAvailable( entry->text() );
+void History::finishRedo( bool success )
+{
+  emit undoAvailable( mCurrentRunningEntry->text() );
 
-  entry->redo();
-  mUndoEntries.push( entry );
+  mUndoEntries.push( mCurrentRunningEntry );
   emit redone();
 
   if ( !mRedoEntries.isEmpty() ) {
     // We need the text of the next redo item on the stack, which means we need
     // to pop it from the stack to be able to investigate it, and then re-add it.
-    entry = mRedoEntries.pop();
+    Entry *entry = mRedoEntries.pop();
     mRedoEntries.push( entry );
     emit redoAvailable( entry ? entry->text() : QString() );
   } else {
     emit redoAvailable( QString() );
   }
+
+  mCurrentRunningEntry = 0;
+}
+
+void History::disableHistory()
+{
+  emit undoAvailable( QString() );
+  emit redoAvailable( QString() );
 }
 
 void History::truncate()
@@ -114,19 +173,19 @@ void History::addEntry( Entry *entry )
   }
 }
 
-void History::recordDelete( Incidence *incidence )
+void History::recordDelete( const Akonadi::Item &incidence )
 {
-  addEntry( new EntryDelete( mCalendar, incidence ) );
+  addEntry( new EntryDelete( mCalendar, mChanger, incidence ) );
 }
 
-void History::recordAdd( Incidence *incidence )
+void History::recordAdd( const Akonadi::Item &incidence )
 {
-  addEntry( new EntryAdd( mCalendar, incidence ) );
+  addEntry( new EntryAdd( mCalendar, mChanger, incidence ) );
 }
 
-void History::recordEdit( Incidence *oldIncidence, Incidence *newIncidence )
+void History::recordEdit( const Akonadi::Item &oldItem, const Akonadi::Item &newItem )
 {
-  addEntry( new EntryEdit( mCalendar, oldIncidence, newIncidence ) );
+  addEntry( new EntryEdit( mCalendar, mChanger, oldItem, newItem ) );
 }
 
 void History::startMultiModify( const QString &description )
@@ -143,8 +202,56 @@ void History::endMultiModify()
   mCurrentMultiEntry = 0;
 }
 
-History::Entry::Entry( Akonadi::Calendar *calendar )
-  : mCalendar( calendar )
+
+void History::incidenceChangeFinished( const Akonadi::Item &,
+                                       const Akonadi::Item &,
+                                       const Akonadi::IncidenceChanger::WhatChanged,
+                                       bool success )
+{
+  if ( mCurrentRunningOperation == UNDO ){
+    finishUndo( success );
+  } else {
+    finishRedo( success );
+  }
+}
+
+void History::incidenceAddFinished( const Akonadi::Item &item, bool success )
+{
+
+  /* When we undo a delete or redo an add, a new item is created but will have
+   * a different Id, so we must iterate the stack and update the id so they don't use the old one
+   */
+  const Akonadi::Item::Id oldId = mCurrentRunningEntry->itemId();
+  foreach ( Entry *entry, mUndoEntries ) {
+    if ( entry->itemId() == oldId ) {
+      entry->setItemId( item.id() );
+    }
+  }
+  foreach ( Entry *entry, mRedoEntries ) {
+    if ( entry->itemId() == oldId ) {
+      entry->setItemId( item.id() );
+    }
+  }
+
+  mCurrentRunningEntry->setItemId( item.id() );
+
+  if ( mCurrentRunningOperation == UNDO ) {
+    finishUndo( success );
+  } else {
+    finishRedo( success );
+  }
+}
+
+void History::incidenceDeleteFinished( const Akonadi::Item &, bool success )
+{
+  if ( mCurrentRunningOperation == UNDO ) {
+    finishUndo( success );
+  } else {
+    finishRedo( success );
+  }
+}
+History::Entry::Entry( Akonadi::Calendar *calendar, Akonadi::IncidenceChanger *changer )
+  : mCalendar( calendar ), mChanger( changer )
 {
 }
 
@@ -152,34 +259,39 @@ History::Entry::~Entry()
 {
 }
 
-History::EntryDelete::EntryDelete( Akonadi::Calendar *calendar, Incidence *incidence )
-  : Entry( calendar ), mIncidence( incidence->clone() )
+void History::Entry::setItemId( Akonadi::Item::Id id )
 {
+  mItemId = id;
+}
+
+Akonadi::Item::Id History::Entry::itemId()
+{
+  return mItemId;
+}
+
+History::EntryDelete::EntryDelete( Akonadi::Calendar *calendar,
+                                   Akonadi::IncidenceChanger *changer,
+                                   const Akonadi::Item &item )
+  : Entry( calendar, changer ), mIncidence( Akonadi::incidence( item )->clone() ),
+  mCollection( item.parentCollection() )
+{
+  mItemId =item.id();
 }
 
 History::EntryDelete::~EntryDelete()
 {
-  delete mIncidence;
 }
 
-void History::EntryDelete::undo()
+bool History::EntryDelete::undo()
 {
-#ifdef AKONADI_PORT_DISABLED //here we need the akonadi item after creation
-  // TODO: Use the proper resource instead of asking!
-  mCalendar->addIncidence( mIncidence->clone() );
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  Incidence::Ptr incidence( mIncidence->clone() );
+  return mChanger->addIncidence( incidence, mCollection, 0 );
 }
 
-void History::EntryDelete::redo()
+bool History::EntryDelete::redo()
 {
-#ifdef AKONADI_PORT_DISABLED
-  Incidence *incidence = mCalendar->incidence( mIncidence->uid() );
-  mCalendar->deleteIncidence( incidence );
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  const Akonadi::Item item = mCalendar->incidence( mItemId );
+  return mChanger->deleteIncidence( item, 0 );
 }
 
 QString History::EntryDelete::text()
@@ -187,36 +299,29 @@ QString History::EntryDelete::text()
   return i18n( "Delete %1", QString::fromLatin1( mIncidence->type() ) );
 }
 
-History::EntryAdd::EntryAdd( Akonadi::Calendar *calendar, Incidence *incidence )
-  : Entry( calendar ), mIncidence( incidence->clone() )
+History::EntryAdd::EntryAdd( Akonadi::Calendar *calendar,
+                             Akonadi::IncidenceChanger *changer,
+                             const Akonadi::Item &item )
+  : Entry( calendar, changer ), mIncidence( Akonadi::incidence( item )->clone() ),
+  mCollection( item.parentCollection() )
 {
+  mItemId = item.id();
 }
 
 History::EntryAdd::~EntryAdd()
 {
-  delete mIncidence;
 }
 
-void History::EntryAdd::undo()
+bool History::EntryAdd::undo()
 {
-#ifdef AKONADI_PORT_DISABLED //here we need the akonadi item after creation
-  Incidence *incidence = mCalendar->incidence( mIncidence->uid() );
-  if ( incidence ) {
-    mCalendar->deleteIncidence( incidence );
-  }
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  const Akonadi::Item item = mCalendar->incidence( mItemId );
+  return mChanger->deleteIncidence( item, 0 );
 }
 
-void History::EntryAdd::redo()
+bool History::EntryAdd::redo()
 {
-#ifdef AKONADI_PORT_DISABLED
-  // TODO: User the proper resource instead of asking again
-  mCalendar->addIncidence( mIncidence->clone() );
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;  
-#endif
+  Incidence::Ptr incidence( mIncidence->clone() );
+  return mChanger->addIncidence( incidence, mCollection, 0 );
 }
 
 QString History::EntryAdd::text()
@@ -224,45 +329,33 @@ QString History::EntryAdd::text()
   return i18n( "Add %1", QString::fromLatin1( mIncidence->type() ) );
 }
 
-History::EntryEdit::EntryEdit( Akonadi::Calendar *calendar, Incidence *oldIncidence,
-                               Incidence *newIncidence )
-  : Entry( calendar ), mOldIncidence( oldIncidence->clone() ),
-    mNewIncidence( newIncidence->clone() )
+History::EntryEdit::EntryEdit( Akonadi::Calendar *calendar,
+                               Akonadi::IncidenceChanger *changer,
+                               const Akonadi::Item &oldItem,
+                               const Akonadi::Item &newItem )
+  : Entry( calendar, changer ),
+  mOldIncidence( Akonadi::incidence( oldItem )->clone() ),
+  mNewIncidence( Akonadi::incidence( newItem )->clone() )
 {
+  mItemId = oldItem.id();
 }
 
 History::EntryEdit::~EntryEdit()
 {
-  delete mOldIncidence;
-  delete mNewIncidence;
 }
 
-void History::EntryEdit::undo()
+bool History::EntryEdit::undo()
 {
-#ifdef AKONADI_PORT_DISABLED //here we need the akonadi item after creation
-  Incidence *incidence = mCalendar->incidence( mNewIncidence->uid() );
-  if ( incidence ) {
-    mCalendar->deleteIncidence( incidence );
-  }
-  // TODO: Use the proper resource instead of asking again
-  mCalendar->addIncidence( mOldIncidence->clone() );
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  Akonadi::Item item = mCalendar->incidence( mItemId );
+  item.setPayload<KCal::Incidence::Ptr>( mOldIncidence );
+  return mChanger->changeIncidence( mNewIncidence, item, Akonadi::IncidenceChanger::UNKNOWN_MODIFIED, 0 );
 }
 
-void History::EntryEdit::redo()
+bool History::EntryEdit::redo()
 {
-#ifdef AKONADI_PORT_DISABLED //here we need the akonadi item after creation
-  Incidence *incidence = mCalendar->incidence( mOldIncidence->uid() );
-  if ( incidence ) {
-    mCalendar->deleteIncidence( incidence );
-  }
-  // TODO: Use the proper resource instead of asking again
-  mCalendar->addIncidence( mNewIncidence->clone() );
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;  
-#endif
+  Akonadi::Item item = mCalendar->incidence( mItemId );
+  item.setPayload<KCal::Incidence::Ptr>( mNewIncidence );
+  return mChanger->changeIncidence( mOldIncidence, item, Akonadi::IncidenceChanger::UNKNOWN_MODIFIED, 0 );
 }
 
 QString History::EntryEdit::text()
@@ -271,7 +364,7 @@ QString History::EntryEdit::text()
 }
 
 History::MultiEntry::MultiEntry( Akonadi::Calendar *calendar, const QString &text )
-  : Entry( calendar ), mText( text )
+  : Entry( calendar, 0 ), mText( text )
 {
 }
 
@@ -285,7 +378,7 @@ void History::MultiEntry::appendEntry( Entry *entry )
   mEntries.append( entry );
 }
 
-void History::MultiEntry::undo()
+bool History::MultiEntry::undo()
 {
   for ( int i = mEntries.size()-1; i>=0; --i ) {
     Entry *entry = mEntries.at( i );
@@ -293,13 +386,19 @@ void History::MultiEntry::undo()
       entry->undo();
     }
   }
+
+  // What should we do if one fails? Rollback everything?
+  return true;
 }
 
-void History::MultiEntry::redo()
+bool History::MultiEntry::redo()
 {
   foreach ( Entry *entry, mEntries ) {
     entry->redo();
   }
+
+  // What should we do if one fails? Rollback everything?
+  return true;
 }
 
 QString History::MultiEntry::text()

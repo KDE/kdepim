@@ -19,7 +19,7 @@
 
 #include "kcalitembrowseritem.h"
 
-#include <akonadi/kcal/kcalitembrowser.h>
+#include <akonadi/kcal/incidenceviewer.h>
 #include <akonadi/item.h>
 
 using namespace Akonadi;
@@ -27,8 +27,7 @@ using namespace Akonadi::KCal;
 
 KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : DeclarativeAkonadiItem(parent)
 {
-  m_viewer = new KCalItemBrowser( 0 );
-  m_viewer->setFrameStyle( QFrame::NoFrame );
+  m_viewer = new IncidenceViewer( 0 );
   setWidget( m_viewer );
 }
 
@@ -40,6 +39,12 @@ qint64 KCalItemBrowserItem::itemId() const
 void KCalItemBrowserItem::setItemId(qint64 id)
 {
   m_viewer->setItem( Akonadi::Item( id ) );
+  emit attachmentModelChanged();
+}
+
+QObject* KCalItemBrowserItem::attachmentModel() const
+{
+  return m_viewer->attachmentModel();
 }
 
 #include "kcalitembrowseritem.moc"

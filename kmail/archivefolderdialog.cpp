@@ -67,6 +67,7 @@ ArchiveFolderDialog::ArchiveFolderDialog( QWidget *parent )
   mainLayout->addWidget( folderLabel, row, 0 );
   mFolderRequester = new FolderRequester( mainWidget );
   mFolderRequester->setMustBeReadWrite( false );
+  mFolderRequester->setNotAllowToCreateNewFolder( true );
   connect( mFolderRequester, SIGNAL( folderChanged( const Akonadi::Collection& ) ), SLOT( slotFolderChanged( const Akonadi::Collection& ) ) );
   folderLabel->setBuddy( mFolderRequester );
   mainLayout->addWidget( mFolderRequester, row, 1 );
@@ -118,7 +119,7 @@ ArchiveFolderDialog::ArchiveFolderDialog( QWidget *parent )
 bool canRemoveFolder( const Akonadi::Collection& col )
 {
   const QSharedPointer<FolderCollection> folder = FolderCollection::forCollection( col );
-  return col.isValid() && col.rights() & Akonadi::Collection::CanDeleteItem && !folder->isStructural() && !folder->isSystemFolder();
+  return col.isValid() && col.rights() & Akonadi::Collection::CanDeleteCollection && !folder->isStructural() && !folder->isSystemFolder();
 }
 
 void ArchiveFolderDialog::slotFolderChanged( const Akonadi::Collection &folder )

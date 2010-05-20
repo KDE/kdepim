@@ -62,7 +62,7 @@ void ComposerTest::testAttachments()
 
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   kDebug() << message->encodedContent();
   delete composer;
   composer = 0;
@@ -99,11 +99,11 @@ void ComposerTest::testSignOpenPGPMime()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
-  QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+  QVERIFY( ComposerTestUtil::verifySignature( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::OpenPGPMIMEFormat ) );
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
@@ -123,12 +123,12 @@ void ComposerTest::testEncryptOpenPGPMime()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
 
-  QVERIFY( ComposerTestUtil::verifyEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+  QVERIFY( ComposerTestUtil::verifyEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::OpenPGPMIMEFormat ) );
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
@@ -147,11 +147,11 @@ void ComposerTest::testSignEncryptOpenPGPMime()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
@@ -178,12 +178,12 @@ void ComposerTest::testSignEncryptSameAttachmentsOpenPGPMime()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message,
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message.get(),
                                                            QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                                            Kleo::OpenPGPMIMEFormat, true ) );
 
@@ -212,12 +212,12 @@ void ComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
   // as we have an additional attachment, just ignore it when checking for sign/encrypt
-  KMime::Content * b = MessageCore::NodeHelper::firstChild( message );
+  KMime::Content * b = MessageCore::NodeHelper::firstChild( message.get() );
   QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( b,
                                                            QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                                            Kleo::OpenPGPMIMEFormat, true ) );
@@ -227,7 +227,7 @@ void ComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
 
   // now check the attachment separately
   kDebug() << "message:" << message->encodedContent();
-  QVERIFY( MessageCore::NodeHelper::nextSibling( MessageCore::NodeHelper::firstChild( message ) )->body() == "abc" );
+  QVERIFY( MessageCore::NodeHelper::nextSibling( MessageCore::NodeHelper::firstChild( message.get() ) )->body() == "abc" );
 //   kDebug() << "attachment:" << attNode->encodedContent();
 
 }
@@ -264,18 +264,18 @@ void ComposerTest::testBCCEncrypt()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 2 );
 
-  KMime::Message* primMessage = composer->resultMessages().first();
-  KMime::Message* secMessage = composer->resultMessages()[1];
+  KMime::Message::Ptr primMessage = composer->resultMessages().first();
+  KMime::Message::Ptr secMessage = composer->resultMessages()[1];
   delete composer;
   composer = 0;
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( primMessage, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( primMessage.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
 
   QVERIFY( primMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( primMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
   
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( secMessage, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( secMessage.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
 
   QVERIFY( secMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( secMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
@@ -296,13 +296,13 @@ void ComposerTest::testSignInlinePGP()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
   kDebug() << message->encodedContent();
 
-  QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+  QVERIFY( ComposerTestUtil::verifySignature( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::InlineOpenPGPFormat ) );
                                           
 /*
@@ -326,13 +326,13 @@ void ComposerTest::testEncryptInlinePGP()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
   kDebug() << message->encodedContent();
 
-  QVERIFY( ComposerTestUtil::verifyEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+  QVERIFY( ComposerTestUtil::verifyEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::InlineOpenPGPFormat ) );
 
                                           /*
@@ -357,13 +357,13 @@ void ComposerTest::testSignEncryptInlinePGP()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
 
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
   kDebug() << message->encodedContent();
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::InlineOpenPGPFormat ) );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::InlineOpenPGPFormat ) );
 /*
   QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::OpenPGPMIMEFormat ) );
@@ -450,18 +450,18 @@ bool ComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
   
   Q_ASSERT( composer->exec() );
   Q_ASSERT( composer->resultMessages().size() == 1 );
-  KMime::Message* message = composer->resultMessages().first();
+  KMime::Message::Ptr message = composer->resultMessages().first();
   delete composer;
   composer = 0;
 
   kDebug() << "message:" << message->encodedContent();
 
   if( sign && !enc ) {
-    Q_ASSERT( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
+    Q_ASSERT( ComposerTestUtil::verifySignature( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
   } else if( !sign && enc ) {
-    Q_ASSERT( ComposerTestUtil::verifyEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
+    Q_ASSERT( ComposerTestUtil::verifyEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
   } else if( sign && enc ) {
-    Q_ASSERT( ComposerTestUtil::verifySignatureAndEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), f ) );
+    Q_ASSERT( ComposerTestUtil::verifySignatureAndEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), f ) );
   }
     
 

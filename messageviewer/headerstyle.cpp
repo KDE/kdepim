@@ -81,7 +81,7 @@ static QString strToHtml( const QString & str,
 }
 
 // Prepare the date string (when printing always use the localized date)
-static QString dateString( KMime::Message::Ptr message, bool printing, bool shortDate ) {
+static QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
   if( printing ) {
     KDateTime dateTime = message->date()->dateTime();
     KLocale * locale = KGlobal::locale();
@@ -110,10 +110,10 @@ public:
   HeaderStyle * next() const { return plain(); }
   HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 };
 
-QString BriefHeaderStyle::format( KMime::Message::Ptr message ) const {
+QString BriefHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
 
   const HeaderStrategy *strategy = headerStrategy();
@@ -194,13 +194,13 @@ public:
   HeaderStyle * next() const { return fancy(); }
   HeaderStyle * prev() const { return brief(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 
 private:
-  QString formatAllMessageHeaders( KMime::Message::Ptr message ) const;
+  QString formatAllMessageHeaders( KMime::Message *message ) const;
 };
 
-QString PlainHeaderStyle::format( KMime::Message::Ptr message ) const {
+QString PlainHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
   const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
@@ -284,7 +284,7 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message ) const {
   return headerStr;
 }
 
-QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message::Ptr message ) const {
+QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message *message ) const {
   QByteArray head = message->head();
   KMime::Headers::Generic *header = message->nextHeader(head);
   QString result;
@@ -314,7 +314,7 @@ public:
   HeaderStyle * next() const { return enterprise(); }
   HeaderStyle * prev() const { return plain(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
   static QString imgToDataUrl( const QImage & image );
 
 private:
@@ -420,7 +420,7 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
 }
 
 
-QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
+QString FancyHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
   const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
@@ -472,11 +472,11 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
     Q_ASSERT( sourceObject() );
 
     ContactPhotoMemento *photoMemento =
-        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message.get(), "contactphoto" ) );
+        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
     if ( !photoMemento ) {
       const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
       photoMemento = new ContactPhotoMemento( email );
-      nodeHelper()->setBodyPartMemento( message.get(), "contactphoto", photoMemento );
+      nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
       QObject::connect( photoMemento, SIGNAL( update( Viewer::UpdateMode ) ),
                         sourceObject(), SLOT( update( Viewer::UpdateMode ) ) );
     }
@@ -714,10 +714,10 @@ public:
   }
   HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 };
 
-QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message ) const
+QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
 {
   if ( !message ) return QString();
   const HeaderStrategy *strategy = headerStrategy();
@@ -756,23 +756,6 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message ) const
     fontColor = QColor(Qt::black);
     linkColor = "class =\"black\"";
   }
-
-//TODO(Andras) this looks like  duplicate code, try to factor out!
-  QStringList headerParts;
-  if ( strategy->showHeader( "to" ) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor );
-  }
-
-  if ( strategy->showHeader( "cc" ) && message->cc(false) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly, linkColor );
-  }
-
-  if ( strategy->showHeader( "bcc" ) && message->bcc(false) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly, linkColor );
-  }
-
-  // remove all empty (modulo whitespace) entries and joins them via ", \n"
-  QString headerPart = ' ' + headerParts.filter( QRegExp( "\\S" ) ).join( ", " );
 
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
   imgpath.prepend( "file://" );
@@ -829,14 +812,38 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message ) const
       "     </tr> ";
   }
 
-  // to, cc, bcc
-  headerStr +=
-    "     <tr> "
-    "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\">"+i18nc("To field of the mail header.", "To: ")+"</td> "
-    "      <td style=\""+borderSettings+"\">"
-    +headerPart+
-    "      </td> "
-    "     </tr> ";
+  // to line
+  if ( strategy->showHeader( "to" ) ) {
+    headerStr +=
+      "     <tr> "
+      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("To: ") + "</td> "
+      "      <td style=\"" + borderSettings + "\">" +
+      StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor ) +
+      "      </td> "
+      "     </tr>\n";
+  }
+
+  // cc line, if any
+  if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
+    headerStr +=
+      "     <tr> "
+      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
+      "      <td style=\"" + borderSettings + "\">" +
+      StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor ) +
+      "      </td> "
+      "     </tr>\n";
+  }
+
+  // bcc line, if any
+  if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
+    headerStr +=
+      "     <tr> "
+      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
+      "      <td style=\"" + borderSettings + "\">" +
+      StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress, linkColor ) +
+      "      </td> "
+      "     </tr>\n";
+  }
 
   // header-bottom
   headerStr +=
@@ -897,10 +904,10 @@ public:
   HeaderStyle * next() const { return brief(); }
   HeaderStyle * prev() const { return enterprise(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 };
 
-QString MobileHeaderStyle::format( KMime::Message::Ptr message ) const
+QString MobileHeaderStyle::format( KMime::Message *message ) const
 {
   if ( !message ) return QString();
 
@@ -947,10 +954,13 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message ) const
   headerStr += "</tr>\n";
 
   headerStr += "<tr style=\"margin-top: 2px; height: 27px; font-size: 15px; color: #24353F;\">\n";
-  // TODO: Put these back in when we can somehow determine the path
-  //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
-  //headerStr += "  <td style=\"margin-left: 7px;\">" + messagePath + "</td>\n";
 
+  if ( !messagePath().isEmpty() )
+  {
+    // TODO: Put these back in when we can somehow determine the path
+    //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
+    headerStr += "  <td colspan=\"2\" style=\"padding-left: 50px;\">" + messagePath() + "</td>\n";
+  }
   headerStr += "  <td>&nbsp;</td>\n";
   headerStr += "  <td colspan=\"2\" style=\"text-align: right; margin-right: 15px;\">sent: ";
   headerStr += dateString( message, isPrinting(), /* shortDate = */ false ) + "</td>\n";

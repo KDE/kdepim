@@ -139,14 +139,23 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    *               an empty page is shown.
    * @param updateMode - update the display immediately or not. See UpdateMode.
    */
-  void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
+  void setMessageItem( const Akonadi::Item& item, UpdateMode updateMode = Delayed );
+
+  /**
+   * The path to the message in terms of Akonadi collection hierarchy.
+   */
+  QString messagePath() const;
+
+  /**
+   * Set the path to the message in terms of Akonadi collection hierarchy.
+   */
+  void setMessagePath( const QString &path );
 
   /**
    * Instead of settings a message to be shown sets a message part
    * to be shown
    */
-  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                   const QString& aFileName, const QString& pname );
+  void setMessagePart( KMime::Content* aMsgPart );
 
   /**
    * Convenience method to clear the reader and discard the current message. Sets the internal message pointer
@@ -189,6 +198,12 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   bool htmlLoadExternal() const;
 
   /**
+   * Set the application name that is shown when the splash screen is active.
+   * @param appName - A QString that is set to the calling application name.
+   */
+  void setAppName( const QString &appName );
+
+  /**
    * Display a generic HTML splash page instead of a message.
    * @param info - the text to be displayed in HTML format
    */
@@ -213,6 +228,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    * The caller should also call the widget's slotSettingsChanged() if the configuration has changed.
    */
   QWidget* configWidget();
+
+  /**
+   * Initiates a delete, by sending a signal to delete the message item */
+  void deleteMessage();
 
   const AttachmentStrategy * attachmentStrategy() const;
   void setAttachmentStrategy( const AttachmentStrategy * strategy );
@@ -283,8 +302,14 @@ signals:
   void urlClicked(const KUrl &url, int button);
 
   void requestConfigSync();
-  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName,
-                   const QString& pname, const QString & encoding );
+
+  /// Emitted when the content should be shown in a seperate window
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
+
+  /// Emitted when the message should be shown in a seperate window
+  void showMessage( KMime::Message::Ptr message, const QString& encoding );
+
+  void deleteMessage( const Akonadi::Item & );
 
 public slots:
 

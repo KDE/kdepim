@@ -60,7 +60,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
-      titleIcon: KDE.iconPath( "korganizer", 48 )
+      titleIcon: KDE.iconPath( "view-pim-tasks", 48 )
       handlePosition: 30
       handleHeight: 78
       content: [
@@ -68,14 +68,14 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: "Tasks start page"
+          startText: KDE.i18n( "Tasks start page" )
 
           contextActions : [
             KPIM.Button {
               id : start_newEmailButton
               width: parent.width
               height: 480 / 6
-              buttonText : "Start new task"
+              buttonText : KDE.i18n( "Start new task" )
               onClicked : {
                 console.log( "Write new task clicked" );
               }
@@ -100,7 +100,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: folderPanel
-      titleText: "Folders"
+      titleText: KDE.i18n( "Folders" )
       handlePosition : 108
       handleHeight: 150
       anchors.fill : parent
@@ -118,9 +118,6 @@ KPIM.MainView {
              breadcrumbItemsModel : breadcrumbCollectionsModel
              selectedItemModel : selectedCollectionModel
              childItemsModel : childCollectionsModel
-             onCollectionSelected: {
-               //folderPanel.collapse()
-             }
            }
 
            KPIM.ItemListView {
@@ -131,13 +128,13 @@ KPIM.MainView {
                    Text {
                      anchors.top: parent.top
                      anchors.left: parent.left
-                     text: "Task: " + model.summary
+                     text: KDE.i18na( "Task: %1", [model.summary] )
                      font.bold: true
                    },
                    Text {
                      anchors.top: parent.top
                      anchors.right: parent.right
-                     text: model.percentComplete + "%"
+                     text: KDE.i18na( "%1%", [model.percentComplete] )
                    }
                  ]
                  detailsContent: [
@@ -150,19 +147,19 @@ KPIM.MainView {
                           id: summaryLabel
                           anchors.top: parent.top
                           anchors.left: parent.left
-                          text: "Task: " + model.summary
+                          text: KDE.i18na( "Task: %1",  [model.summary] )
                           font.bold: true
                           color: palette.highlightedText
                         }
                         Text {
                           anchors.top: parent.top
                           anchors.right: parent.right
-                          text: model.percentComplete + "%"
+                          text: KDE.i18na( "%1%", [model.percentComplete] )
                           color: palette.highlightedText
                         }
                       }
                       Text {
-                        text: "Details: " + model.description
+                        text: KDE.i18na( "Details: %1", [model.description] )
                         color: palette.highlightedText
                       }
                     }
@@ -186,9 +183,8 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: actionPanel
-      titleText: "Actions"
+      titleText: KDE.i18n( "Actions" )
       handleHeight: 150
-      handlePosition : 258
       anchors.fill : parent
       contentWidth: 240
       content: [
@@ -198,7 +194,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Move"
+            buttonText: KDE.i18n( "Move" )
             onClicked: actionPanel.collapse();
           },
           KPIM.Button {
@@ -207,7 +203,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Delete"
+             buttonText: KDE.i18n( "Delete" )
              onClicked: actionPanel.collapse();
            },
            KPIM.Button {
@@ -216,7 +212,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Previous"
+             buttonText: KDE.i18n( "Previous" )
              onClicked: {
                itemList.previousItem()
                actionPanel.collapse()
@@ -227,7 +223,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Next"
+             buttonText: KDE.i18n( "Next" )
              onClicked: {
                itemList.nextItem();
                actionPanel.collapse();
@@ -237,45 +233,18 @@ KPIM.MainView {
     }
 
     SlideoutPanel {
+      anchors.fill: parent
       id: attachmentPanel
-
-      anchors.fill : parent
-      visible: false //messageView.messageTreeModel.attachmentCount >= 2
+      visible: taskView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
-      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
-      contentWidth: 400
-//      content: [
-//         Component {
-//           id: attachmentDelegate
-//           Item {
-//             id: wrapper
-//             width: attachmentList.width
-//             height: 48
-//             clip: true
-//             Rectangle {
-//               anchors.fill: parent
-//               opacity: 0.25
-//               border.color: palette.mid
-//             }
-//             Text { anchors.fill: parent; text: model.display; horizontalAlignment: "AlignHCenter"; verticalAlignment: "AlignVCenter"; color: "black" }
-//           }
-//         },
-//         ListView {
-//           id: attachmentList
-//           anchors.fill: parent
-//
-//           model: messageView.messageTreeModel
-//           delegate: attachmentDelegate
-//
-//           MouseArea {
-//             anchors.fill: parent
-//             onClicked: {
-//               console.log( "current mime tree count: " + messageView.messageTreeModel.attachmentCount );
-//             }
-//           }
-//         }
-//      ]
+      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      content: [
+        KPIM.AttachmentList {
+          id: attachmentView
+          model: taskView.attachmentModel
+          anchors.fill: parent
+        }
+      ]
     }
   }
 

@@ -24,6 +24,10 @@
 
 #include <kjob.h>
 
+namespace Akonadi {
+class Collection;
+}
+
 namespace KABC {
 class Addressee;
 }
@@ -44,11 +48,23 @@ class KDEPIM_EXPORT AddContactJob : public KJob
     /**
      * Creates a new add contact job.
      *
+     * If the contact is not found, the user will be presented a dialog to
+     * choose the address book where the new contact shall be stored.
+     *
      * @param contact The contact to add.
      * @param parentWidget The widget that will be used as parent for dialog.
      * @param parent The parent object.
      */
     AddContactJob( const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent = 0 );
+
+    /**
+     * Creates a new add contact job.
+     *
+     * @param contact The contact to add.
+     * @param collection The address book collection where the contact shall be stored in.
+     * @param parent The parent object.
+     */
+    AddContactJob( const KABC::Addressee &contact, const Akonadi::Collection &collection, QObject *parent = 0 );
 
     /**
      * Destroys the add email address job.

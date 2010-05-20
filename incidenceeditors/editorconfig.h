@@ -26,10 +26,10 @@
 
 #include "incidenceeditors_export.h"
 
-#include <KConfigSkeleton>
-
 #include <QtCore/QDateTime>
 #include <QtCore/QStringList>
+
+class KConfigSkeleton;
 
 namespace IncidenceEditors
 {

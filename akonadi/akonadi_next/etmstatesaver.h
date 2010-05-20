@@ -24,6 +24,9 @@
 
 #include "kviewstatesaver.h"
 
+#include "akonadi/collection.h"
+#include "akonadi/item.h"
+
 #include "akonadi_next_export.h"
 
 class AKONADI_NEXT_EXPORT ETMStateSaver : public Future::KViewStateSaver
@@ -31,6 +34,11 @@ class AKONADI_NEXT_EXPORT ETMStateSaver : public Future::KViewStateSaver
   Q_OBJECT
 public:
   ETMStateSaver(QObject *parent = 0);
+
+  void selectCollections( const Akonadi::Collection::List &list );
+  void selectCollections( const QList<Akonadi::Collection::Id> &list );
+  void selectItems( const Akonadi::Item::List &list );
+  void selectItems( const QList<Akonadi::Item::Id> &list );
 
 protected:
   /* reimp */ QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const;

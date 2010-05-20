@@ -6,6 +6,7 @@
 #include "secondarywindow.h"
 
 #include <kurl.h>
+#include <KMime/Message>
 
 #include <boost/scoped_ptr.hpp>
 #include <akonadi/item.h>
@@ -36,9 +37,7 @@ class KMReaderMainWin : public KMail::SecondaryWindow
 public:
   KMReaderMainWin( bool htmlOverride, bool htmlLoadExtOverride, char *name = 0 );
   KMReaderMainWin( char *name = 0 );
-  KMReaderMainWin(KMime::Content* aMsgPart,
-    bool aHTML, const QString& aFileName, const QString& pname,
-    const QString & encoding, char *name = 0 );
+  KMReaderMainWin( KMime::Content* aMsgPart, bool aHTML, const QString &encoding, char *name = 0 );
   virtual ~KMReaderMainWin();
 
   void setUseFixedFont( bool useFixedFont );
@@ -52,6 +51,7 @@ public:
    * onto setOriginalMsg() of KMReaderWin.
    */
   void showMessage( const QString & encoding, const Akonadi::Item &msg );
+  void showMessage( const QString & encoding, KMime::Message::Ptr message);
 private slots:
   void slotMessagePopup(const Akonadi::Item& ,const KUrl&,const QPoint& );
   void slotDelayedMessagePopup( KJob* );

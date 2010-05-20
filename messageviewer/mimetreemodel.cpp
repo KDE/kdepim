@@ -63,6 +63,12 @@ class MimeTreeModel::Private
         if ( !name.isEmpty() )
           return name;
       }
+      if ( content->contentDisposition( false ) )
+      {
+        const QString name = content->contentDisposition()->filename();
+        if ( !name.isEmpty() )
+          return name;
+      }
       return i18n( "body part" );
     }
 
@@ -121,6 +127,12 @@ void MimeTreeModel::setRoot(KMime::Content * root)
   d->root = root;
   reset();
 }
+
+KMime::Content* MimeTreeModel::root()
+{
+  return d->root;
+}
+
 
 QModelIndex MimeTreeModel::index(int row, int column, const QModelIndex &parent) const
 {

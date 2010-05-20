@@ -42,6 +42,7 @@ class TimeLabelsZone;
 class KOAgenda;
 class KOAgendaItem;
 class KOAgendaView;
+class KOAlternateLabel;
 
 class KConfig;
 class KHBox;
@@ -227,6 +228,8 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     */
     void updateEventIndicators();
 
+    virtual void resizeEvent( QResizeEvent *resizeEvent );
+
   protected slots:
     /** Update event belonging to agenda item */
     void updateEventDates( KOAgendaItem *item );
@@ -242,6 +245,8 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     void newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end );
 
     void handleNewEventRequest();
+
+    void updateDayLabelSizes();
 
   private:
 
@@ -262,6 +267,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     QGridLayout *mGridLayout;
     QFrame *mTopDayLabels;
     KHBox *mTopDayLabelsFrame;
+    QList<KOAlternateLabel*> mDateDayLabels;
     QBoxLayout *mLayoutTopDayLabels;
     QFrame *mBottomDayLabels;
     KHBox *mBottomDayLabelsFrame;

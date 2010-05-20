@@ -25,6 +25,7 @@
 #include <QSortFilterProxyModel>
 
 #include "akonadi_next_export.h"
+#include <QItemSelection>
 
 class QItemSelectionModel;
 
@@ -45,6 +46,9 @@ public:
   /* reimp */ bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
   /* reimp */ void setSourceModel(QAbstractItemModel* sourceModel);
+
+protected:
+  virtual bool select( const QItemSelection &selection, QItemSelectionModel::SelectionFlags command );
 
 private:
   Q_DECLARE_PRIVATE(CheckableItemProxyModel)

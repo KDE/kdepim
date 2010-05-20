@@ -24,6 +24,7 @@
   without including the source code for Qt in the source distribution.
 */
 
+#include <config-enterprise.h>
 #include "editorattachments.h"
 
 #include <KABC/VCardDrag>
@@ -34,6 +35,7 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KDebug>
+#include <KFileDialog>
 #include <KLineEdit>
 #include <KLocale>
 #include <KMenu>
@@ -69,7 +71,13 @@ class AttachmentIconItem : public QListWidgetItem
       if ( att ) {
         mAttachment = new KCal::Attachment( *att );
       } else {
+        // for the enteprise, inline attachments are the default
+#ifdef KDEPIM_ENTERPRISE_BUILD
+        mAttachment = new KCal::Attachment( '\0' ); //use the non-uri constructor
+                                                    // as we want inline by default
+#else
         mAttachment = new KCal::Attachment( QString() );
+#endif
       }
       readAttachment();
       setFlags( flags() | Qt::ItemIsDragEnabled );
@@ -232,8 +240,8 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
            "attachments that change often or may be moved (or removed) from "
            "their current location." ) );
 
-  if ( item->attachment()->isUri() ) {
-    label = new QLabel( i18nc( "@label", "Location:" ), page );
+  if ( item->attachment()->isUri() || !item->attachment()->data() ) {
+      label = new QLabel( i18nc( "@label", "Location:" ), page );
     grid->addWidget( label, 4, 0 );
     mURLRequester = new KUrlRequester( item->uri(), page );
     mURLRequester->setToolTip(
@@ -477,6 +485,12 @@ EditorAttachments::EditorAttachments( int spacing, QWidget *parent )
   connect( mOpenAction, SIGNAL(triggered(bool)), this, SLOT(slotShow()) );
   ac->addAction( "view", mOpenAction );
   mPopupMenu->addAction( mOpenAction );
+
+  mSaveAsAction = new KAction( i18nc( "@action:inmenu save the attachment to a file",
+                                      "Save As..." ), this );
+  connect( mSaveAsAction, SIGNAL(triggered(bool)), this, SLOT(slotSaveAs()) );
+  mPopupMenu->addAction( mSaveAsAction );
+
   mPopupMenu->addSeparator();
 
   mCopyAction = KStandardAction::copy( this, SLOT(slotCopy()), ac );
@@ -491,6 +505,7 @@ EditorAttachments::EditorAttachments( int spacing, QWidget *parent )
                                       "&Remove" ), this );
   connect( mDeleteAction, SIGNAL(triggered(bool)), this, SLOT(slotRemove()) );
   ac->addAction( "remove", mDeleteAction );
+  mDeleteAction->setShortcut( Qt::Key_Delete );
   mPopupMenu->addAction( mDeleteAction );
   mPopupMenu->addSeparator();
 
@@ -640,6 +655,43 @@ void EditorAttachments::showAttachment( QListWidgetItem *item )
   }
 }
 
+void EditorAttachments::saveAttachment( QListWidgetItem *item )
+{
+  AttachmentIconItem *attitem = static_cast<AttachmentIconItem*>( item );
+  if ( !attitem || !attitem->attachment() ) {
+    return;
+  }
+
+  KCal::Attachment *att = attitem->attachment();
+
+  // get the saveas file name
+  QString saveAsFile =  KFileDialog::getSaveFileName(
+    att->label(),
+    QString(), 0,
+    i18nc( "@title", "Save  Attachment" ) );
+
+  if ( saveAsFile.isEmpty() ||
+       ( QFile( saveAsFile ).exists() &&
+         ( KMessageBox::warningYesNo(
+           0,
+           i18nc( "@info", "%1 already exists. Do you want to overwrite it?",
+                  saveAsFile ) ) == KMessageBox::No ) ) ) {
+    return;
+  }
+
+  KUrl sourceUrl;
+  if ( att->isUri() ) {
+    sourceUrl = att->uri();
+  } else {
+    sourceUrl = mAttachments->tempFileForAttachment( att );
+  }
+  // save the attachment url
+  if ( !KIO::NetAccess::file_copy( sourceUrl, KUrl( saveAsFile ) ) &&
+       KIO::NetAccess::lastError() ) {
+    KMessageBox::error( this, KIO::NetAccess::lastErrorString() );
+  }
+}
+
 void EditorAttachments::slotAdd()
 {
   AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachments );
@@ -672,27 +724,51 @@ void EditorAttachments::slotEdit()
 
 void EditorAttachments::slotRemove()
 {
-  QList<QListWidgetItem *> toDelete;
+  QList<QListWidgetItem *> selected;
+  QStringList labels;
+
   for ( int itemIndex = 0; itemIndex < mAttachments->count(); ++itemIndex ) {
     QListWidgetItem *it = mAttachments->item( itemIndex );
     if ( it->isSelected() ) {
-      AttachmentIconItem *item = static_cast<AttachmentIconItem *>( it );
-
-      if ( !item ) {
-        continue;
-      }
-
-      if ( KMessageBox::questionYesNo(
-             this,
-             i18nc( "@info",
-                    "Do you really want to remove the attachment labeled \"%1\"?", item->label() ),
-             i18nc( "@title:window", "Remove Attachment?" ) ) == KMessageBox::Yes ) {
-        toDelete.append( it );
+      AttachmentIconItem *attitem = static_cast<AttachmentIconItem *>( it );
+      if ( attitem ) {
+        KCal::Attachment *att = attitem->attachment();
+        labels << att->label();
+        selected << it;
       }
     }
   }
 
-  qDeleteAll( toDelete );
+  if ( selected.isEmpty() ) {
+    return;
+  }
+
+  QString labelsStr = labels.join( "<br>" );
+
+  if ( KMessageBox::questionYesNo(
+         this,
+         i18nc( "@info",
+                "Do you really want to remove these attachments?<nl>%1</nl>", labelsStr ),
+         i18nc( "@title:window", "Remove Attachments?" ),
+         KStandardGuiItem::yes(), KStandardGuiItem::no(),
+         "calendarRemoveAttachments" ) != KMessageBox::Yes ) {
+    return;
+  }
+
+  for ( QList<QListWidgetItem *>::iterator it( selected.begin() ), end( selected.end() );
+        it != end ; ++it ) {
+    int row = mAttachments->row( *it );
+    QListWidgetItem *next = mAttachments->item( ++row );
+    QListWidgetItem *prev = mAttachments->item( --row );
+    if ( next ) {
+      next->setSelected( true );
+    } else if ( prev ) {
+      prev->setSelected( true );
+    }
+    delete *it;
+  }
+
+  mAttachments->update();
 }
 
 void EditorAttachments::slotShow()
@@ -701,6 +777,16 @@ void EditorAttachments::slotShow()
     QListWidgetItem *item = mAttachments->item( itemIndex );
     if ( item->isSelected() ) {
       showAttachment( item );
+    }
+  }
+}
+
+void EditorAttachments::slotSaveAs()
+{
+  for ( int itemIndex = 0; itemIndex < mAttachments->count(); ++itemIndex ) {
+    QListWidgetItem *item = mAttachments->item( itemIndex );
+    if ( item->isSelected() ) {
+      saveAttachment( item );
     }
   }
 }
@@ -844,9 +930,20 @@ void EditorAttachments::contextMenu( const QPoint &pos )
 {
   QListWidgetItem *item = mAttachments->itemAt( pos );
   const bool enable = item != 0;
+
+  int numSelected = 0;
+  for ( int itemIndex = 0; itemIndex < mAttachments->count(); ++itemIndex ) {
+    QListWidgetItem *item = mAttachments->item( itemIndex );
+    if ( item->isSelected() ) {
+      numSelected++;
+    }
+  }
+
   mOpenAction->setEnabled( enable );
-  mCopyAction->setEnabled( enable );
-  mCutAction->setEnabled( enable );
+  //TODO: support saving multiple attachments into a directory
+  mSaveAsAction->setEnabled( enable && numSelected == 1 );
+  mCopyAction->setEnabled( enable && numSelected == 1 );
+  mCutAction->setEnabled( enable && numSelected == 1 );
   mDeleteAction->setEnabled( enable );
   mEditAction->setEnabled( enable );
   mPopupMenu->exec( mAttachments->mapToGlobal( pos ) );

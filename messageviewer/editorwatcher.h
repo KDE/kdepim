@@ -56,7 +56,7 @@ class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
     bool fileChanged() const { return mFileModified; }
     KUrl url() { return mUrl;}
   signals:
-    void editDone( EditorWatcher* watcher );
+    void editDone( MessageViewer::EditorWatcher* watcher );
 
   private slots:
     void editorExited();

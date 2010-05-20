@@ -32,6 +32,8 @@
 
 #include <gpgme++/context.h>
 
+static const int INDEX_COMPAT_LEVEL = 1; // increment when the index format for emails changes
+
 using namespace Akonadi;
 
 Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
@@ -43,6 +45,9 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   setNeedsStrigi( true );
 
   changeRecorder()->itemFetchScope().fetchFullPayload();
+
+  connect( this, SIGNAL( fullyIndexed() ),
+           this, SLOT( slotFullyIndexed() ) );
 
   // failsafe in case we don't have / lost G13 support
   if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
@@ -81,6 +86,39 @@ void NepomukEMailFeeder::removeSearch(const Akonadi::Collection& resultCollectio
 {
   // ignored since we don't do persistent searches yet
   Q_UNUSED( resultCollection );
+}
+
+ItemFetchScope NepomukEMailFeeder::fetchScopeForcollection(const Akonadi::Collection& collection)
+{
+  ItemFetchScope scope = NepomukFeederAgentBase::fetchScopeForcollection(collection);
+  switch ( Settings::self()->indexAggressiveness() ) {
+    case Settings::LocalAndCached:
+    {
+      const QStringList localResources = QStringList()
+        << QLatin1String( "akonadi_maildir_resource" )
+        << QLatin1String( "akonadi_mbox_resource" );
+      scope.setCacheOnly( !localResources.contains( collection.resource() ) );
+      break;
+    }
+    case Settings::Everything:
+      scope.setCacheOnly( false );
+      break;
+    case Settings::CachedOnly:
+    default:
+      scope.setCacheOnly( true );
+  }
+  return scope;
+}
+
+bool NepomukEMailFeeder::needsReIndexing() const
+{
+  return INDEX_COMPAT_LEVEL > Settings::self()->indexCompatLevel();
+}
+
+void NepomukEMailFeeder::slotFullyIndexed()
+{
+  Settings::self()->setIndexCompatLevel( INDEX_COMPAT_LEVEL );
+  Settings::self()->writeConfig();
 }
 
 AKONADI_AGENT_MAIN( NepomukEMailFeeder )

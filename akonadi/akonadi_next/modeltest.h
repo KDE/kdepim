@@ -48,6 +48,8 @@ protected Q_SLOTS:
   void runAllTests();
   void layoutAboutToBeChanged();
   void layoutChanged();
+  void modelAboutToBeReset();
+  void modelReset();
   void rowsAboutToBeInserted( const QModelIndex &parent, int start, int end );
   void rowsInserted( const QModelIndex & parent, int start, int end );
   void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );

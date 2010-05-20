@@ -63,6 +63,7 @@ void SkeletonMessageJobTest::testSubject()
 void SkeletonMessageJobTest::testAddresses_data()
 {
   QTest::addColumn<QString>( "from" );
+  QTest::addColumn<QString>( "replyto" );
   QTest::addColumn<QStringList>( "to" );
   QTest::addColumn<QStringList>( "cc" );
   QTest::addColumn<QStringList>( "bcc" );
@@ -75,8 +76,9 @@ void SkeletonMessageJobTest::testAddresses_data()
     cc << QString::fromLatin1( "three@example.com" );
     QStringList bcc;
     bcc << QString::fromLatin1( "four@example.com" );
+    QString replyto = QString::fromLatin1( "five@example.com" );
 
-    QTest::newRow( "simple single address" ) << from << to << cc << bcc;
+    QTest::newRow( "simple single address" ) << from << replyto << to << cc << bcc;
   }
 
   {
@@ -90,8 +92,9 @@ void SkeletonMessageJobTest::testAddresses_data()
     QStringList bcc;
     bcc << QString::fromLatin1( "four@example.com" );
     bcc << QString::fromLatin1( "four.four@example.com" );
+    QString replyto = QString::fromLatin1( "five@example.com" );
 
-    QTest::newRow( "simple multi address" ) << from << to << cc << bcc;
+    QTest::newRow( "simple multi address" ) << from << replyto << to << cc << bcc;
   }
 
   {
@@ -105,8 +108,9 @@ void SkeletonMessageJobTest::testAddresses_data()
     QStringList bcc;
     bcc << QString::fromLatin1( "And you too <four@example.com>" );
     bcc << QString::fromLatin1( "four.four@example.com" );
+    QString replyto = QString::fromLatin1( "You over there <five@example.com>" );
 
-    QTest::newRow( "named multi address" ) << from << to << cc << bcc;
+    QTest::newRow( "named multi address" ) << from << replyto << to << cc << bcc;
   }
 
   {
@@ -120,8 +124,9 @@ void SkeletonMessageJobTest::testAddresses_data()
     QStringList bcc;
     bcc << QString::fromUtf8( "Zburătorul <four@example.com>" );
     bcc << QString::fromLatin1( "four.four@example.com" );
+    QString replyto = QString::fromLatin1( "Şîşzbură <five@example.com>" );
 
-    QTest::newRow( "non-ascii named multi address" ) << from << to << cc << bcc;
+    QTest::newRow( "non-ascii named multi address" ) << from << replyto << to << cc << bcc;
   }
 }
 
@@ -134,10 +139,12 @@ void SkeletonMessageJobTest::testAddresses()
   Q_ASSERT( infoPart );
 
   QFETCH( QString, from );
+  QFETCH( QString, replyto );
   QFETCH( QStringList, to );
   QFETCH( QStringList, cc );
   QFETCH( QStringList, bcc );
   infoPart->setFrom( from );
+  infoPart->setReplyTo( replyto );
   infoPart->setTo( to );
   infoPart->setCc( cc );
   infoPart->setBcc( bcc );
@@ -149,6 +156,12 @@ void SkeletonMessageJobTest::testAddresses()
     QVERIFY( message->from( false ) );
     kDebug() << "From:" << message->from()->asUnicodeString();
     QCOMPARE( from, message->from()->asUnicodeString() );
+  }
+
+  {
+    QVERIFY( message->replyTo( false ) );
+    kDebug() << "Reply-To:" << message->replyTo()->asUnicodeString();
+    QCOMPARE( replyto, message->replyTo()->asUnicodeString() );
   }
 
   {

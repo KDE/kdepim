@@ -101,10 +101,6 @@ private slots:
   void slotEditACL();
   void slotRemoveACL();
 
-#if 0
-  void slotChanged( bool b );
-
-#endif
 private:
   void addACLs( const QStringList& userIds, KIMAP::Acl::Rights permissions );
 
@@ -119,22 +115,12 @@ private:
   KPushButton* mEditACL;
   KPushButton* mRemoveACL;
   QStringList mRemovedACLs;
-#if 0
-  QString mImapPath;
-#endif
   QString mImapUserName;
   KIMAP::Acl::Rights mUserRights;
-#if 0
-  ACLList mInitialACLList;
-  ACLList mACLList; // to be set
-  IMAPUserIdFormat mUserIdFormat;
-#endif
   QLabel* mLabel;
   QStackedWidget* mStack;
 
   bool mChanged;
-  bool mAccepting; // i.e. close when done
-  bool mSaving;
 };
 
 #endif /* COLLECTIONACLPAGE_H */

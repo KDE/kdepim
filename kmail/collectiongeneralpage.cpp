@@ -49,6 +49,8 @@ using namespace Akonadi;
 CollectionGeneralPage::CollectionGeneralPage(QWidget * parent) :
     CollectionPropertiesPage( parent ), mFolderCollection( 0 )
 {
+  Akonadi::AttributeFactory::registerAttribute<Akonadi::CollectionAnnotationsAttribute>();
+
   setPageTitle(  i18nc("@title:tab General settings for a folder.", "General"));
 
 }
@@ -140,24 +142,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
     hl->addWidget( label );
 
     mNameEdit = new KLineEdit( this );
-#if 0
-    if( !mDlg->folder() )
-      mNameEdit->setFocus();
-    mNameEdit->setText( mDlg->folder() ? mDlg->folder()->label() : i18n("unnamed") );
-    if (!aName.isEmpty())
-            mNameEdit->setText(aName);
-    mNameEdit->setMinimumSize(mNameEdit->sizeHint());
-    // prevent renaming of IMAP inbox
-    if ( mDlg->folder() && mDlg->folder()->isSystemFolder() ) {
-      QString imapPath;
-      if ( mDlg->folder()->folderType() == KMFolderTypeImap )
-        imapPath = static_cast<KMFolderImap*>( mDlg->folder()->storage() )->imapPath();
-      if ( mDlg->folder()->folderType() == KMFolderTypeCachedImap )
-        imapPath = static_cast<KMFolderCachedImap*>( mDlg->folder()->storage() )->imapPath();
-      if ( imapPath == "/INBOX/" )
-        mNameEdit->setEnabled( false );
-    }
-#endif
+    mNameEdit->setEnabled( col.rights() & Collection::CanChangeCollection );
     label->setBuddy( mNameEdit );
     hl->addWidget( mNameEdit );
     connect( mNameEdit, SIGNAL( textChanged( const QString & ) ),
@@ -188,6 +173,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
 
     QHBoxLayout *nml = new QHBoxLayout();
     topLayout->addItem( nml );
+    nml->setMargin( KDialog::marginHint() );
     nml->setSpacing( KDialog::spacingHint() );
     mNewMailCheckBox = new QCheckBox( i18n("Include this folder in mail checks"), this );
     mNewMailCheckBox->setWhatsThis(
@@ -213,7 +199,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
                          "after sending, instead of in the configured sent-mail folder." ) );
   hbl->addWidget( mKeepRepliesInSameFolderCheckBox );
   hbl->addStretch( 1 );
-
+#if 0
   // should this folder be shown in the folder selection dialog?
   hbl = new QHBoxLayout();
   topLayout->addItem( hbl );
@@ -227,7 +213,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
                           "Jump to Folder</interface> dialog." ) );
   hbl->addWidget( mHideInSelectionDialogCheckBox );
   hbl->addStretch( 1 );
-
+#endif
   addLine( this, topLayout );
   // use grid layout for the following combobox settings
   QGridLayout *gl = new QGridLayout();
@@ -444,7 +430,9 @@ void CollectionGeneralPage::load(const Akonadi::Collection & col)
   const bool keepInFolder = !mFolderCollection->isReadOnly() && mFolderCollection->putRepliesInSameFolder();
   mKeepRepliesInSameFolderCheckBox->setChecked( keepInFolder );
   mKeepRepliesInSameFolderCheckBox->setDisabled( mFolderCollection->isReadOnly() );
+#if 0
   mHideInSelectionDialogCheckBox->setChecked( mFolderCollection->hideInSelectionDialog() );
+#endif
 }
 
 void CollectionGeneralPage::save(Collection & col)
@@ -478,7 +466,9 @@ void CollectionGeneralPage::save(Collection & col)
 
     mFolderCollection->setIgnoreNewMail( !mNotifyOnNewMailCheckBox->isChecked() );
     mFolderCollection->setPutRepliesInSameFolder( mKeepRepliesInSameFolderCheckBox->isChecked() );
+#if 0
     mFolderCollection->setHideInSelectionDialog( mHideInSelectionDialogCheckBox->isChecked() );
+#endif
 
   }
 }

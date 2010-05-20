@@ -84,7 +84,7 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.append( node );
-  kDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
+  kDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString() << " decodedContent" << node->decodedContent();
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -99,7 +99,22 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.removeAll( node );
-kDebug() << "Node UNprocessed: " << node;
+
+  //avoid double addition of extra nodes, eg. encrypted attachments
+  for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+    if ( node == dynamic_cast<KMime::Content*>( it.key() ) ) {
+      Q_FOREACH( KMime::Content* c, it.value() ) {
+        KMime::Content * p = c->parent();
+        if ( p )
+          p->removeContent( c );
+      }
+      qDeleteAll( it.value() );
+      kDebug() << "mExtraContents deleted for" << it.key();
+      mExtraContents.remove( it.key() );
+    }
+  }
+
+  kDebug() << "Node UNprocessed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -130,9 +145,14 @@ void NodeHelper::clear()
   }
   mBodyPartMementoMap.clear();
 
-  for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+  for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+    Q_FOREACH( KMime::Content* c, it.value() ) {
+      KMime::Content * p = c->parent();
+      if ( p )
+        p->removeContent( c );
+    }
     qDeleteAll( it.value() );
-//     kDebug() << "mExtraContents deleted for" << it.key().get() ;
+    kDebug() << "mExtraContents deleted for" << it.key();
   }
   mExtraContents.clear();
   mDisplayEmbeddedNodes.clear();
@@ -484,13 +504,13 @@ QString NodeHelper::replacePrefixes( const QString& str,
     return str;
 }
 
-QString NodeHelper::cleanSubject( KMime::Message::Ptr message )
+QString NodeHelper::cleanSubject( KMime::Message *message )
 {
   return cleanSubject( message, replySubjPrefixes + forwardSubjPrefixes,
                        true, QString() ).trimmed();
 }
 
-QString NodeHelper::cleanSubject( KMime::Message::Ptr message, const QStringList & prefixRegExps,
+QString NodeHelper::cleanSubject( KMime::Message *message, const QStringList & prefixRegExps,
                                   bool replace,
                                   const QString & newPrefix )
 {
@@ -609,11 +629,13 @@ void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &whi
 
 bool NodeHelper::isNodeDisplayedEmbedded( KMime::Content* node ) const
 {
+  kDebug() << "IS NODE: " << mDisplayEmbeddedNodes.contains( node );
   return mDisplayEmbeddedNodes.contains( node );
 }
 
 void NodeHelper::setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded )
 {
+  kDebug() << "SET NODE: " << node << displayedEmbedded;
   if ( displayedEmbedded )
     mDisplayEmbeddedNodes.insert( node );
   else
@@ -624,8 +646,22 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
 {
   if ( !node )
     return QString();
-  else
-    return QString( "attachment:%1?place=%2" ).arg( node->index().toString() ).arg( place );
+  else {
+    QString indexStr = node->index().toString();
+    //if the node is an extra node, prepent the index of the extra node to the url
+    for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+      QList<KMime::Content*> extraNodes = it.value();
+      for ( uint i = 0; i < extraNodes.size(); ++i )  {
+        if ( node->topLevel() == extraNodes[i] ) {
+          indexStr.prepend( QString("%1:").arg(i) );
+          it = mExtraContents.end();
+          --it;
+          break;
+        }
+      }
+    }
+    return QString( "attachment:%1?place=%2" ).arg( indexStr ).arg( place );
+  }
 }
 
 QString NodeHelper::fixEncoding( const QString &encoding )
@@ -735,26 +771,95 @@ QString NodeHelper::fromAsString( KMime::Content* node )
   return QString();
 }
 
-void NodeHelper::attachExtraContent( KMime::Message::Ptr node, KMime::Content* content )
+void NodeHelper::attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content )
 {
-//   kDebug() << "mExtraContents added for" << node.get() ;
-  mExtraContents[node].append( content );
+   kDebug() << "mExtraContents added for" << topLevelNode << " extra content: " << content;
+  mExtraContents[topLevelNode].append( content );
 }
 
-void NodeHelper::removeExtraContent(KMime::Message::Ptr node )
+void NodeHelper::removeAllExtraContent( KMime::Content *topLevelNode )
 {
-  if ( mExtraContents.contains( node ) ) {
-    qDeleteAll( mExtraContents[node] );
-    mExtraContents.remove( node );
+  if ( mExtraContents.contains( topLevelNode ) ) {
+    qDeleteAll( mExtraContents[topLevelNode] );
+    mExtraContents.remove( topLevelNode );
   }    
 }
 
-QList< KMime::Content* > NodeHelper::extraContents( KMime::Message::Ptr node )
+QList< KMime::Content* > NodeHelper::extraContents( KMime::Content *topLevelnode )
 {
- if ( mExtraContents.contains( node ) ) {
-    return mExtraContents[node];
- } else
+ if ( mExtraContents.contains( topLevelnode ) ) {
+    return mExtraContents[topLevelnode];
+ } else {
+   Q_FOREACH( KMime::Content* c, topLevelnode->contents() ) {
+     QList< KMime::Content* > result = extraContents( c );
+     if ( !result.isEmpty() )
+       return result;
+   }
    return QList< KMime::Content* >();
+ }
+}
+
+void NodeHelper::mergeExtraNodes( KMime::Content *node )
+{
+  if ( !node )
+    return;
+  
+  QList<KMime::Content* > extraNodes = extraContents( node );
+  Q_FOREACH( KMime::Content* extra, extraNodes ) {
+      KMime::Content *c = new KMime::Content( node );
+      c->setContent( extra->encodedContent() );
+      c->parse();
+      node->addContent( c );
+  }
+
+  Q_FOREACH( KMime::Content* child, node->contents() ) {
+    mergeExtraNodes( child );
+  }
+}
+
+void NodeHelper::cleanFromExtraNodes( KMime::Content* node )
+{
+  if ( !node )
+    return;
+  QList<KMime::Content* > extraNodes = extraContents( node );
+  Q_FOREACH( KMime::Content* extra, extraNodes ) {
+     QByteArray s = extra->encodedContent();
+     QList<KMime::Content* > children = node->contents();
+     Q_FOREACH( KMime::Content *c, children ) {
+       if ( c->encodedContent() == s ) {
+         node->removeContent( c );
+       }
+     }
+  }
+  Q_FOREACH( KMime::Content* child, node->contents() ) {
+    cleanFromExtraNodes( child );
+  }
+}
+
+
+KMime::Message* NodeHelper::messageWithExtraContent( KMime::Content* topLevelNode )
+{
+  /*The merge is done in several steps:
+    1) merge the extra nodes into topLevelNode
+    2) copy the modified (merged) node tree into a new node tree
+    3) restore the original node tree in topLevelNode by removing the extra nodes from it
+
+    The reason is that extra nodes are assigned by pointer value to the nodes in the original tree.
+  */
+  if (!topLevelNode)
+    return 0;
+
+  mergeExtraNodes( topLevelNode );
+
+  KMime::Message *m = new KMime::Message;
+  m->setContent( topLevelNode->encodedContent() );
+  m->parse();
+
+  cleanFromExtraNodes( topLevelNode );
+//   qDebug() << "MESSAGE WITH EXTRA: " << m->encodedContent();
+//   qDebug() << "MESSAGE WITHOUT EXTRA: " << topLevelNode->encodedContent();
+
+  return m;
 }
 
 

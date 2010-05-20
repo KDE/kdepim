@@ -32,21 +32,25 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${NEPOMUK_INCLUDES}
-  ${SOPRANO_INCLUDE_DIR} 
+  ${SOPRANO_INCLUDE_DIR}
  )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 
+if (QT_QT3SUPPORT_FOUND)
 add_subdirectory(about)
 add_subdirectory(pics)
 add_subdirectory(icons)
 add_subdirectory(avscripts)
 add_subdirectory(tests)
 add_subdirectory(kconf_update)
+endif (QT_QT3SUPPORT_FOUND)
+add_subdirectory(kcm_kpimidentities)
 
 ########### kmailprivate ###############
 
+if (QT_QT3SUPPORT_FOUND)
 set(kmailprivate_LIB_SRCS
    foldercollectionmonitor.cpp
    readablecollectionproxymodel.cpp
@@ -76,7 +80,6 @@ set(kmailprivate_LIB_SRCS
    snippetwidget.cpp
    snippetitem.cpp
    kmreaderwin.cpp
-   actionscheduler.cpp
    messageproperty.cpp
    kmsystemtray.cpp
    kmfiltermgr.cpp
@@ -102,7 +105,6 @@ set(kmailprivate_LIB_SRCS
    aboutdata.cpp
    mailserviceimpl.cpp
    kmcomposereditor.cpp
-   kmlineeditspell.cpp
    composer.cpp
    antispamwizard.cpp
    secondarywindow.cpp
@@ -110,19 +112,13 @@ set(kmailprivate_LIB_SRCS
    filterlogdlg.cpp
    codecaction.cpp
    codecmanager.cpp
-   keyresolver.cpp
    regexplineedit.cpp
    rulewidgethandlermanager.cpp
    expirejob.cpp
-   compactionjob.cpp
    jobscheduler.cpp
    redirectdialog.cpp
    foldershortcutdialog.cpp
    folderrequester.cpp
-   recipientseditor.cpp
-   recipientspicker.cpp
-   kwindowpositioner.cpp
-   distributionlistdialog.cpp
    expirypropertiesdialog.cpp
    mailinglistpropertiesdialog.cpp
    managesievescriptsdialog.cpp
@@ -132,9 +128,7 @@ set(kmailprivate_LIB_SRCS
    statusbarlabel.cpp
    kmcomposewin.cpp
    attachmentcontroller.cpp
-   attachmentmodel.cpp
    attachmentview.cpp
-   attachmentfrompublickeyjob.cpp
    backupjob.cpp
    archivefolderdialog.cpp
    searchdescriptionattribute.cpp
@@ -144,8 +138,8 @@ set(kmailprivate_LIB_SRCS
    mdnadvicedialog.cpp
    kmsoundtestwidget.cpp
    addressvalidationjob.cpp
-   aliasesexpandjob.cpp
-   emailaddressresolvejob.cpp
+   identitypage.cpp
+   newidentitydialog.cpp
 )
 
 soprano_add_ontology(kmailprivate_LIB_SRCS
@@ -191,7 +185,6 @@ kde4_add_ui_files(kmailprivate_LIB_SRCS
   ui/smimeconfiguration.ui
   ui/snippetdlgbase.ui
   ui/miscpagemaintab.ui
-  ui/miscpageinvitetab.ui
   ui/securitypagegeneraltab.ui
   ui/identitypage.ui
   ui/accountspagereceivingtab.ui
@@ -220,7 +213,6 @@ kde4_add_kcfg_files(kmailprivate_LIB_SRCS
 
 kde4_add_library(kmailprivate SHARED ${kmailprivate_LIB_SRCS})
 target_link_libraries(kmailprivate
-  ${KDE4_THREADWEAVER_LIBRARY}
   ${KDEPIMLIBS_KMIME_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
@@ -237,7 +229,7 @@ target_link_libraries(kmailprivate
   ${KDEPIMLIBS_KIMAP_LIBRARY}
   ${KDE4_KPARTS_LIBRARY}
   ${KDE4_KRESOURCES_LIBRARY}
-  ${KDE4_KUTILS_LIBS}
+  ${KDE4_KCMUTILS_LIBS}
   kleo
   ${QGPGME_LIBRARIES}
   ksieve
@@ -280,7 +272,7 @@ target_link_libraries(kmailpart
   ${KDEPIMLIBS_AKONADI_LIBS}
   kmailprivate
   ${KDE4_KPARTS_LIBS}
-  ${KDE4_KUTILS_LIBS}
+  ${KDE4_KCMUTILS_LIBS}
 )
 
 ########### KMail executable ###############
@@ -303,7 +295,7 @@ install(TARGETS kmailprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SK
 install(TARGETS kmail ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES KMail.desktop kmail_view.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg  
+  ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg
   custommimeheader.kcfg
   DESTINATION ${KCFG_INSTALL_DIR}
 )
@@ -337,3 +329,6 @@ install(FILES
   ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml
   DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
 )
+
+endif (QT_QT3SUPPORT_FOUND)
+

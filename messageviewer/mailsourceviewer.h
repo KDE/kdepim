@@ -103,22 +103,16 @@ public:
   ~MailSourceViewer();
 
   void setRawSource( const QString &source );
-  void setProcessedSource( const QString &source );
   void setDisplayedSource( const QString &source );
-
-protected:
-  void showEvent( QShowEvent *event );
 
 private:
   bool mShowHTMLBrowser;
   KTextBrowser *mRawBrowser;
-  KTextBrowser *mProcessedBrowser;
 #ifndef NDEBUG
   KTextBrowser *mHtmlBrowser;
   HTMLSourceHighlighter *mHtmlSourceHighLighter;
 #endif
   MailSourceHighlighter *mRawSourceHighLighter;
-  MailSourceHighlighter *mProcessedSourceHighLighter;
 };
 
 }

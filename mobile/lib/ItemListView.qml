@@ -35,6 +35,7 @@ Item {
       currentIndex = currentIndex + 1;
       currentItemId = model.itemId( currentIndex );
       itemSelected();
+      application.setListSelectedRow(currentIndex);
     }
   }
 
@@ -43,6 +44,7 @@ Item {
       currentIndex = currentIndex - 1;
       currentItemId = model.itemId( currentIndex );
       itemSelected();
+      application.setListSelectedRow(currentIndex);
     }
   }
 

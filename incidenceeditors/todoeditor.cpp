@@ -26,9 +26,13 @@
 #include "todoeditor.h"
 #include "editorattachments.h"
 #include "editorconfig.h"
+#ifdef HAVE_QT3SUPPORT
 #include "editordetails.h"
+#endif
 #include "editorgeneraltodo.h"
 #include "editorrecurrence.h"
+
+#include "incidenceeditor-ng/incidenceeditorgeneralpage.h"
 
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/incidencechanger.h>
@@ -45,6 +49,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+using namespace KCal;
 using namespace Akonadi;
 using namespace IncidenceEditors;
 
@@ -52,7 +57,7 @@ TodoEditor::TodoEditor( QWidget *parent )
   : IncidenceEditor( QString(),
                        QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType(),
                        parent ),
-    mRelatedTodo(), mGeneral( 0 ), mRecurrence( 0 )
+    mRelatedTodo(), mGeneral( 0 ), mNewGeneral(0), mRecurrence( 0 )
 {
   mInitialTodo = Todo::Ptr( new Todo );
   mInitialTodoItem.setPayload( mInitialTodo );
@@ -101,8 +106,10 @@ void TodoEditor::init()
   connect( this, SIGNAL(updateCategoryConfig()),
            mGeneral, SIGNAL(updateCategoryConfig()) );
 
+#ifdef HAVE_QT3SUPPORT
   connect( mDetails, SIGNAL(updateAttendeeSummary(int)),
            mGeneral, SLOT(updateAttendeeSummary(int)) );
+#endif
 
   connect( mGeneral, SIGNAL(editRecurrence()),
            mRecurrenceDialog, SLOT(show()) );
@@ -113,9 +120,11 @@ void TodoEditor::init()
 void TodoEditor::setupGeneral()
 {
   mGeneral = new EditorGeneralTodo( this );
+  mNewGeneral = new IncidenceEditorsNG::IncidenceEditorGeneralPage( this );
 
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, i18nc( "@title:tab general to-do settings", "&General" ) );
+  mTabWidget->addTab( mNewGeneral, "&New General" );
 
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
@@ -195,29 +204,24 @@ bool TodoEditor::processInput()
     if( *oldTodo == *todo ) {
       // Don't do anything cause no changes where done
     } else {
-      if ( mChanger->beginChange( mIncidence ) ) {
-        //merge multiple mIncidence->updated() calls into one
-        Akonadi::todo( mIncidence )->startUpdates();
-        fillTodo( mIncidence );
+      //merge multiple mIncidence->updated() calls into one
+      Akonadi::todo( mIncidence )->startUpdates();
+      fillTodo( mIncidence );
 
-        Akonadi::IncidenceChanger::WhatChanged whatChanged;
+      Akonadi::IncidenceChanger::WhatChanged whatChanged;
 
-        if ( !oldTodo->isCompleted() && todo->isCompleted() ) {
-          whatChanged = Akonadi::IncidenceChanger::COMPLETION_MODIFIED;
-        } else {
-          whatChanged = Akonadi::IncidenceChanger::UNKNOWN_MODIFIED;
-        }
-
-        rc = mChanger->changeIncidence( oldTodo,
-                                        mIncidence,
-                                        whatChanged,
-                                        this );
-
-        Akonadi::todo( mIncidence )->endUpdates();
-        mChanger->endChange( mIncidence );
+      if ( !oldTodo->isCompleted() && todo->isCompleted() ) {
+        whatChanged = Akonadi::IncidenceChanger::COMPLETION_MODIFIED;
       } else {
-        return false;
+        whatChanged = Akonadi::IncidenceChanger::UNKNOWN_MODIFIED;
       }
+
+      rc = mChanger->changeIncidence( oldTodo,
+                                      mIncidence,
+                                      whatChanged,
+                                      this );
+
+      Akonadi::todo( mIncidence )->endUpdates();
     }
     return rc;
   } else {
@@ -265,7 +269,9 @@ void TodoEditor::setDates( const QDateTime &due, bool allDay, const Akonadi::Ite
     mGeneral->setDefaults( due, allDay );
   }
 
+#ifdef HAVE_QT3SUPPORT
   mDetails->setDefaults();
+#endif
   if ( Todo::Ptr todo = Akonadi::todo( mIncidence ) ) {
     mRecurrence->setDefaults(
       todo->dtStart().toTimeSpec( timeSpec ).dateTime(), due, false );
@@ -283,7 +289,10 @@ bool TodoEditor::read( const Item &todoItem, const QDate &date, bool tmpl )
   }
 
   mGeneral->readTodo( todo.get(), date, tmpl );
+  mNewGeneral->load( todo ); //, date, tmpl );
+#ifdef HAVE_QT3SUPPORT
   mDetails->readIncidence( todo.get() );
+#endif
   mRecurrence->readIncidence( todo.get() );
 
   createEmbeddedURLPages( todo.get() );
@@ -297,7 +306,9 @@ void TodoEditor::fillTodo( const Akonadi::Item &item )
   Incidence::Ptr oldIncidence( todo->clone() );
 
   mGeneral->fillTodo( todo.get() );
+#ifdef HAVE_QT3SUPPORT
   mDetails->fillIncidence( todo.get() );
+#endif
   mRecurrence->fillIncidence( todo.get() );
 
   if ( *( oldIncidence->recurrence() ) != *( todo->recurrence() ) ) {
@@ -324,9 +335,11 @@ bool TodoEditor::validateInput()
   if ( !mRecurrence->validateInput() ) {
     return false;
   }
+#ifdef HAVE_QT3SUPPORT
   if ( !mDetails->validateInput() ) {
     return false;
   }
+#endif
   return true;
 }
 

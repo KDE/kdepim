@@ -26,7 +26,9 @@
 
 #include "journaleditor.h"
 #include "editorconfig.h"
+#ifdef HAVE_QT3SUPPORT
 #include "editordetails.h"
+#endif
 #include "editorgeneraljournal.h"
 
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
@@ -40,6 +42,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+using namespace KCal;
 using namespace Akonadi;
 using namespace IncidenceEditors;
 
@@ -128,18 +131,13 @@ bool JournalEditor::processInput()
       // Don't do anything
     } else {
       journal = Akonadi::journal( mIncidence );
-      if ( mChanger->beginChange( mIncidence ) ) {
-        journal->startUpdates(); //merge multiple mIncidence->updated() calls into one
-        fillJournal( journal.get() );
-        rc = mChanger->changeIncidence( oldJournal,
-                                        mIncidence,
-                                        Akonadi::IncidenceChanger::NOTHING_MODIFIED,
-                                        this );
-        journal->endUpdates();
-        mChanger->endChange( mIncidence );
-      } else {
-        return false;
-      }
+      journal->startUpdates(); //merge multiple mIncidence->updated() calls into one
+      fillJournal( journal.get() );
+      rc = mChanger->changeIncidence( oldJournal,
+                                      mIncidence,
+                                      Akonadi::IncidenceChanger::NOTHING_MODIFIED,
+                                      this );
+      journal->endUpdates();
     }
     return rc;
   } else {
@@ -204,7 +202,9 @@ bool JournalEditor::read( const Item &item, const QDate &date, bool tmpl )
   }
 
   mGeneral->readJournal( journal.get(), date, tmpl );
+#ifdef HAVE_QT3SUPPORT
   mDetails->readIncidence( journal.get() );
+#endif
 
   return true;
 }
@@ -212,7 +212,9 @@ bool JournalEditor::read( const Item &item, const QDate &date, bool tmpl )
 void JournalEditor::fillJournal( Journal *journal )
 {
   mGeneral->fillJournal( journal );
+#ifdef HAVE_QT3SUPPORT
   mDetails->fillIncidence( journal );
+#endif
 }
 
 bool JournalEditor::validateInput()
@@ -220,9 +222,11 @@ bool JournalEditor::validateInput()
   if ( !mGeneral->validateInput() ) {
     return false;
   }
+#ifdef HAVE_QT3SUPPORT
   if ( !mDetails->validateInput() ) {
     return false;
   }
+#endif
   return true;
 }
 

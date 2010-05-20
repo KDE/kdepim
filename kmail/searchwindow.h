@@ -56,6 +56,7 @@ namespace Akonadi {
   class EntityTreeView;
   class ItemModel;
   class Item;
+  class StandardActionManager;
 }
 
 namespace KMail {
@@ -114,6 +115,8 @@ protected slots:
   /** Update status line widget. */
   virtual void updateStatusLine(void);
 
+  void updateCollectionStatisticsFinished( KJob * job);
+
   virtual void slotClose();
   virtual void slotSearch();
   virtual void slotStop();
@@ -125,10 +128,6 @@ protected slots:
   virtual bool slotViewMsg( const Akonadi::Item &item );
   void slotCurrentChanged(const Akonadi::Item&);
   virtual void updateContextMenuActions();
-#if 0
-  void slotCopySelectedMessagesToFolder( QAction* );
-  void slotMoveSelectedMessagesToFolder( QAction* );
-#endif
   virtual void slotFolderActivated();
   void slotClearSelection();
   void slotReplyToMsg();
@@ -139,8 +138,6 @@ protected slots:
   void slotSaveMsg();
   void slotSaveAttachments();
   void slotPrintMsg();
-  void slotCopyMsgs();
-  void slotCutMsgs();
 
   /** GUI cleanup after search */
   void searchDone(KJob* job);
@@ -148,6 +145,8 @@ protected slots:
 
   void setEnabledSearchButton(bool);
   void slotSearchFolderRenameDone( KJob* job );
+
+  void slotContextMenuRequested( const QPoint &pos );
 
 protected:
 
@@ -181,7 +180,7 @@ protected:
   QWidget* mLastFocus; // to remember the position of the focus
   QAction *mReplyAction, *mReplyAllAction, *mReplyListAction, *mSaveAsAction,
     *mForwardInlineAction, *mForwardAttachedAction, *mPrintAction, *mClearAction,
-    *mSaveAtchAction, *mCopyAction, *mCutAction;
+    *mSaveAtchAction;
   KActionMenu *mForwardActionMenu;
   QTimer mRenameTimer;
   QByteArray mHeaderState;
@@ -189,6 +188,8 @@ protected:
   KMMainWidget* mKMMainWidget;
   KMSearchPatternEdit *mPatternEdit;
   KMSearchPattern mSearchPattern;
+
+  Akonadi::StandardActionManager *mAkonadiStandardAction;
 
   static const int MSGID_COLUMN;
 };

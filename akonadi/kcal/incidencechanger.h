@@ -27,7 +27,6 @@
 #include "akonadi-kcal_next_export.h"
 
 #include "utils.h"
-#include "groupware.h"
 
 #include <KCal/Incidence>
 #include <KCal/Scheduler>
@@ -38,13 +37,16 @@ class KJob;
 
 namespace Akonadi {
 
+class Groupware;
+class Calendar;
+
 class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 {
   Q_OBJECT
   public:
     IncidenceChanger( Akonadi::Calendar *cal,
                       QObject *parent,
-                      const Collection &defaultCollection );
+                      Akonadi::Entity::Id defaultCollectionId );
     ~IncidenceChanger();
 
     enum HowChanged {
@@ -70,28 +72,24 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
       NOTHING_MODIFIED
     };
 
+    enum DestinationPolicy {
+      USE_DEFAULT_DESTINATION,   // the default collection is used, unless it's invalid
+      ASK_DESTINATION          // user is asked in which collection
+    };
+
     void setGroupware( Groupware *groupware );
-
-    /** Locks the incidence */
-    bool beginChange( const Akonadi::Item & incidence );
-
-    /** Commits the change by starting an akonadi modify job
-     *  The lock is removed in changeIncidenceFinished()
-     */
-    bool endChange( const Akonadi::Item &incidence );
-
-    /** Removes the lock in case you don't want to call endchange() anymore */
-    void cancelChange( const Akonadi::Item &incidence );
 
     bool sendGroupwareMessage( const Akonadi::Item &incidence,
                                KCal::iTIPMethod method,
-                               Akonadi::Groupware::HowChanged action,
+                               HowChanged action,
                                QWidget *parent );
 
+    // returns true if the add job was created
     bool addIncidence( const KCal::Incidence::Ptr &incidence,
-                       QWidget *parent,
-                       bool &userCanceled );
+                       QWidget *parent, Akonadi::Collection &selectedCollection,
+                       int &dialogCode );
 
+    // returns true if the add job was created
     bool addIncidence( const KCal::Incidence::Ptr &incidence,
                        const Akonadi::Collection &collection, QWidget *parent );
 
@@ -100,39 +98,44 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
                           WhatChanged,
                           QWidget *parent );
 
+    // returns true if the delete job was created
     bool deleteIncidence( const Akonadi::Item &incidence, QWidget *parent );
 
+    bool cutIncidences( const Akonadi::Item::List &incidences, QWidget *parent );
     bool cutIncidence( const Akonadi::Item &incidence, QWidget *parent );
+
+    void setDefaultCollectionId( Akonadi::Entity::Id );
+
     static bool incidencesEqual( KCal::Incidence *inc1, KCal::Incidence *inc2 );
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
 
-    static void errorSaveIncidence( QWidget *parent, const Incidence::Ptr &incidence );
+    void setDestinationPolicy( DestinationPolicy destinationPolicy );
+    DestinationPolicy destinationPolicy() const;
 
-  public slots:
+  public Q_SLOTS:
     void cancelAttendees( const Akonadi::Item &incidence );
 
   protected:
-    bool myAttendeeStatusChanged( const KCal::Incidence *newInc,
-                                  const KCal::Incidence *oldInc );
-
     Akonadi::Calendar *mCalendar;
 
-Q_SIGNALS:
-    void incidenceAdded( const Akonadi::Item & );
+  Q_SIGNALS:
+    // Signals emited by the Item*Job, the bool parameter is the success of the operation
+    void incidenceAddFinished( const Akonadi::Item &, bool );
 
-    void incidenceChanged( const Akonadi::Item &oldinc,
-                           const Akonadi::Item &newInc,
-                           Akonadi::IncidenceChanger::WhatChanged );
+    void incidenceChangeFinished( const Akonadi::Item &oldinc,
+                                  const Akonadi::Item &newInc,
+                                  Akonadi::IncidenceChanger::WhatChanged,
+                                  bool );
+
+    void incidenceDeleteFinished( const Akonadi::Item &, bool );
+
 
     void incidenceToBeDeleted( const Akonadi::Item & );
-    void incidenceDeleted( const Akonadi::Item & );
-
-    void schedule( iTIPMethod method, const Akonadi::Item &incidence );
+    void schedule( KCal::iTIPMethod method, const Akonadi::Item &incidence );
 
   private Q_SLOTS:
     void addIncidenceFinished( KJob* job );
     void deleteIncidenceFinished( KJob* job );
-    void changeIncidenceFinished( KJob* job );
 
   private:
     class Private;

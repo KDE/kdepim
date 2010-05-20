@@ -42,6 +42,7 @@
 #include <kcal/journal.h>
 
 #include <Akonadi/Item>
+#include <Akonadi/Collection>
 
 class QAbstractItemModel;
 
@@ -294,6 +295,8 @@ public:
     A null pointer is returned if no such KCal::Incidence exists.
   */
   Akonadi::Item incidence( const Akonadi::Item::Id &id );
+
+  Akonadi::Collection collection( const Akonadi::Entity::Id &id );
 
   /**
     Returns the KCal::Incidence associated with the given scheduling identifier.

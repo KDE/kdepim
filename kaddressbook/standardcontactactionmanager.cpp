@@ -80,7 +80,7 @@ class StandardContactActionManager::Private
       if ( mItemSelectionModel ) {
         itemCount = mItemSelectionModel->selectedRows().count();
         if ( itemCount == 1 ) {
-          const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
+          const QModelIndex index = mItemSelectionModel->selectedRows().first();
           if ( index.isValid() ) {
             const QString mimeType = index.data( EntityTreeModel::MimeTypeRole ).toString();
             if ( mimeType == KABC::Addressee::mimeType() ) {
@@ -108,7 +108,7 @@ class StandardContactActionManager::Private
 
       if ( mCollectionSelectionModel ) {
         if ( mCollectionSelectionModel->selectedRows().count() == 1 ) {
-          const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
+          const QModelIndex index = mCollectionSelectionModel->selectedRows().first();
           if ( index.isValid() ) {
             const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( collection.isValid() ) {
@@ -153,6 +153,9 @@ class StandardContactActionManager::Private
     void editTriggered()
     {
       if ( !mItemSelectionModel )
+        return;
+
+      if ( mItemSelectionModel->selectedIndexes().isEmpty() )
         return;
 
       const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
@@ -201,6 +204,9 @@ class StandardContactActionManager::Private
       if ( !mCollectionSelectionModel )
         return;
 
+      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
+        return;
+
       const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
       if ( !index.isValid() )
         return;
@@ -225,6 +231,9 @@ class StandardContactActionManager::Private
     void configureAddressBookTriggered()
     {
       if ( !mCollectionSelectionModel )
+        return;
+
+      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
         return;
 
       const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();

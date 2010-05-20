@@ -167,10 +167,15 @@ bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
     d->mDy += mev->pos().y() - mev->lastPos().y(); // Moving up gives positive values
 
     const DeclarativeAkonadiItemPrivate::Direction dir = d->direction();
-    if ( dir == DeclarativeAkonadiItemPrivate::Up )
+    if ( dir == DeclarativeAkonadiItemPrivate::Unknown )
+      return true;
+    if ( dir == DeclarativeAkonadiItemPrivate::Up ) {
       scrollUp( d->mDy );
-    else if ( dir == DeclarativeAkonadiItemPrivate::Down )
+    } else if ( dir == DeclarativeAkonadiItemPrivate::Down )
       scrollDown( d->mDy );
+
+    d->mDx = 0;
+    d->mDy = 0;
 
     return true;
   }

@@ -35,10 +35,12 @@
 #include "xfaceconfigurator.h"
 #include "folderrequester.h"
 using KMail::FolderRequester;
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
+#include "kmkernel.h"
+#endif
 
 #include "addressvalidationjob.h"
 #include "kleo_util.h"
-#include "kmmainwidget.h"
 #include "stringutil.h"
 #include "templatesconfiguration.h"
 #include "templatesconfiguration_kfg.h"
@@ -181,6 +183,7 @@ namespace KMail {
     glay->setColumnStretch( 1, 1 );
 
     // "OpenPGP Signature Key" requester and label:
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     ++row;
     mPGPSigningKeyRequester = new Kleo::SigningKeyRequester( false, Kleo::SigningKeyRequester::OpenPGP, tab );
     mPGPSigningKeyRequester->dialogButton()->setText( i18n("Chang&e...") );
@@ -284,6 +287,7 @@ namespace KMail {
 
     label->setEnabled( smimeProtocol );
     mSMIMEEncryptionKeyRequester->setEnabled( smimeProtocol );
+#endif
 
     // "Preferred Crypto Message Format" combobox and label:
     ++row;
@@ -367,6 +371,7 @@ namespace KMail {
     label->setBuddy( mDictionaryCombo );
     glay->addWidget( label, row, 0 );
 
+#ifndef KCM_KPIMIDENTITIES_STANDALONE // ### folder requester is too integrated into KMail atm
     // "Sent-mail Folder" combo box and label:
     ++row;
     mFccCombo = new FolderRequester( tab );
@@ -393,6 +398,7 @@ namespace KMail {
     label = new QLabel( i18n("&Templates folder:"), tab );
     label->setBuddy( mTemplatesCombo );
     glay->addWidget( label, row, 0 );
+#endif
 
     // "Special transport" combobox and label:
     ++row;
@@ -410,7 +416,6 @@ namespace KMail {
     // Tab Widget: Templates
     //
     tab = new QWidget( tabWidget );
-    tabWidget->addTab( tab, i18n("Templates") );
     vlay = new QVBoxLayout( tab );
     vlay->setMargin( marginHint() );
     vlay->setSpacing( spacingHint() );
@@ -443,6 +448,11 @@ namespace KMail {
              mCopyGlobal, SLOT(setEnabled( bool )) );
     connect( mCopyGlobal, SIGNAL(clicked()),
              this, SLOT(slotCopyGlobal()) );
+#ifdef KDEPIM_MOBILE_UI
+    tab->hide(); // not yet mobile ready
+#else
+    tabWidget->addTab( tab, i18n("Templates") );
+#endif
 
     //
     // Tab Widget: Signature
@@ -451,13 +461,22 @@ namespace KMail {
     mSignatureConfigurator->layout()->setMargin( KDialog::marginHint() );
     tabWidget->addTab( mSignatureConfigurator, i18n("Signature") );
 
+    //
+    // Tab Widget: Picture
+    //
     mXFaceConfigurator = new XFaceConfigurator( tabWidget );
     mXFaceConfigurator->layout()->setMargin( KDialog::marginHint() );
+#ifdef KDEPIM_MOBILE_UI
+    mXFaceConfigurator->hide(); // not yet mobile ready
+#else
     tabWidget->addTab( mXFaceConfigurator, i18n("Picture") );
+#endif
 
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     KConfigGroup geometry( KMKernel::config(), "Geometry" );
     if ( geometry.hasKey( "Identity Dialog size" ) )
       resize( geometry.readEntry( "Identity Dialog size", QSize() ));
+#endif
     mNameEdit->setFocus();
 
     connect( tabWidget, SIGNAL(currentChanged(QWidget*)),
@@ -466,8 +485,10 @@ namespace KMail {
   }
 
   IdentityDialog::~IdentityDialog() {
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     KConfigGroup geometry( KMKernel::config(), "Geometry" );
     geometry.writeEntry( "Identity Dialog size", size() );
+#endif
   }
 
   void IdentityDialog::slotAboutToShow( QWidget * w ) {
@@ -475,10 +496,12 @@ namespace KMail {
       // set the configured email address as initial query of the key
       // requesters:
       const QString email = mEmailEdit->text().trimmed();
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
       mPGPEncryptionKeyRequester->setInitialQuery( email );
       mPGPSigningKeyRequester->setInitialQuery( email );
       mSMIMEEncryptionKeyRequester->setInitialQuery( email );
       mSMIMESigningKeyRequester->setInitialQuery( email );
+#endif
     }
   }
 
@@ -555,6 +578,7 @@ namespace KMail {
 
     const QString email = validationJob->property( "email" ).toString();
 
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     const std::vector<GpgME::Key> &pgpSigningKeys =
       mPGPSigningKeyRequester->keys();
     const std::vector<GpgME::Key> &pgpEncryptionKeys =
@@ -606,6 +630,7 @@ namespace KMail {
         return;
       }
     }
+#endif
 
 
     if ( mSignatureConfigurator->isSignatureEnabled() &&
@@ -622,12 +647,15 @@ namespace KMail {
   }
 
   bool IdentityDialog::checkFolderExists( const QString & folderID,
-                                          const QString & msg ) {
+                                          const QString & msg )
+  {
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     Akonadi::Collection folder = kmkernel->collectionFromId( folderID );
     if ( !folder.isValid() ) {
       KMessageBox::sorry( this, msg );
       return false;
     }
+#endif
     return true;
   }
 
@@ -641,10 +669,12 @@ namespace KMail {
     mEmailEdit->setText( ident.emailAddr() );
 
     // "Cryptography" tab:
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     mPGPSigningKeyRequester->setFingerprint( ident.pgpSigningKey() );
     mPGPEncryptionKeyRequester->setFingerprint( ident.pgpEncryptionKey() );
     mSMIMESigningKeyRequester->setFingerprint( ident.smimeSigningKey() );
     mSMIMEEncryptionKeyRequester->setFingerprint( ident.smimeEncryptionKey() );
+#endif
 
     mPreferredCryptoMessageFormat->setCurrentIndex( format2cb(
        Kleo::stringToCryptoMessageFormat( ident.preferredCryptoMessageFormat() ) ) );
@@ -661,6 +691,7 @@ namespace KMail {
       mTransportCombo->setCurrentTransport( transport->id() );
     mDictionaryCombo->setCurrentByDictionaryName( ident.dictionary() );
 
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     if ( ident.fcc().isEmpty() ||
          !checkFolderExists( ident.fcc(),
                              i18n("The custom sent-mail folder for identity "
@@ -696,6 +727,7 @@ namespace KMail {
     }
     else
       mTemplatesCombo->setFolder( ident.templates() );
+#endif
 
     // "Templates" tab:
     uint identity = ident.uoid();
@@ -717,6 +749,7 @@ namespace KMail {
     ident.setOrganization( mOrganizationEdit->text() );
     QString email = mEmailEdit->text();
     ident.setEmailAddr( email );
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     // "Cryptography" tab:
     ident.setPGPSigningKey( mPGPSigningKeyRequester->fingerprint().toLatin1() );
     ident.setPGPEncryptionKey( mPGPEncryptionKeyRequester->fingerprint().toLatin1() );
@@ -724,18 +757,21 @@ namespace KMail {
     ident.setSMIMEEncryptionKey( mSMIMEEncryptionKeyRequester->fingerprint().toLatin1() );
     ident.setPreferredCryptoMessageFormat(
        Kleo::cryptoMessageFormatToString(cb2format( mPreferredCryptoMessageFormat->currentIndex() ) ) );
+#endif
     // "Advanced" tab:
     ident.setReplyToAddr( mReplyToEdit->text() );
     ident.setBcc( mBccEdit->text() );
     ident.setTransport( ( mTransportCheck->isChecked() ) ?
                           mTransportCombo->currentText() : QString() );
     ident.setDictionary( mDictionaryCombo->currentDictionaryName() );
+#ifndef KCM_KPIMIDENTITIES_STANDALONE
     ident.setFcc( mFccCombo->folderCollection().isValid() ?
                   QString::number( mFccCombo->folderCollection().id() ) : QString() );
     ident.setDrafts( mDraftsCombo->folderCollection().isValid() ?
                      QString::number( mDraftsCombo->folderCollection().id() ) : QString() );
     ident.setTemplates( mTemplatesCombo->folderCollection().isValid() ?
                         QString::number( mTemplatesCombo->folderCollection().id() ) : QString() );
+#endif
 
     // "Templates" tab:
     uint identity = ident.uoid();

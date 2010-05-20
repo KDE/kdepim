@@ -6,9 +6,15 @@ add_subdirectory(tests)
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
+  ${CMAKE_SOURCE_DIR}/libkleo/
 )
 
 set(kmail_mobile_srcs
+  global.cpp
+  composerview.cpp
+  declarativeeditor.cpp
+  declarativeidentitycombobox.cpp
+  declarativerecipientseditor.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
@@ -21,16 +27,20 @@ target_link_libraries(kmail-mobile
     ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
     ${KDEPIMLIBS_KMIME_LIBRARY}
     ${KDEPIMLIBS_AKONADI_LIBRARY}
+    ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
     akonadi_next
     kdepim
     kdepimmobileui
+    messagecomposer
+    messagecore
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
-  AttachmentList.qml
   HeaderView.qml
+  EditorView.qml
+  kmail-composer.qml
   kmail-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )

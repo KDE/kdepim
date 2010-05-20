@@ -24,12 +24,16 @@
 #ifndef CUSTOMLISTVIEWITEM_H
 #define CUSTOMLISTVIEWITEM_H
 
+#include "incidenceeditors_export.h"
+
 #include <QMap>
 #include <QString>
 #include <K3ListView>
 
+namespace IncidenceEditors {
+
 template<class T>
-class CustomListViewItem : public K3ListViewItem
+class INCIDENCEEDITORS_EXPORT CustomListViewItem : public K3ListViewItem
 {
   public:
     CustomListViewItem( T data, K3ListView *parent ) :
@@ -62,5 +66,7 @@ class CustomListViewItem : public K3ListViewItem
 
     QMap<int,QString> mKeyMap;
 };
+
+} // namespace IncidenceEditors
 
 #endif

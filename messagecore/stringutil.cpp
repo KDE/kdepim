@@ -792,9 +792,9 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
         if ( !mailbox.name().isEmpty() ) // Fallback to the email address when the name is not set.
           result += quoteHtmlChars( mailbox.name(), true );
         else
-          result += quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
+          result += quoteHtmlChars( mailbox.prettyAddress(), true );
       } else {
-        result += quoteHtmlChars( mailbox.prettyAddress(), true );
+        result += quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
       }
       if( link == ShowLink ) {
         result += "</a>, ";
@@ -1052,8 +1052,17 @@ QString cleanFileName( const QString &name )
   fileName.replace( '\\', '_' );
 
   // replace all '.' with '_', not just at the start of the filename
-  fileName.replace( '.', '_' );
-
+  // but don't replace the last '.' before the file extension.
+  int i = fileName.lastIndexOf( '.' );
+  if( i != -1 )
+    i = fileName.lastIndexOf( '.' , i - 1 );
+  
+  while( i != -1 )
+  {
+    fileName.replace( i, 1, '_' );
+    i = fileName.lastIndexOf( '.', i - 1 );
+  }
+  
   // replace all '~' with '_', not just leading '~' either.
   fileName.replace( '~', '_' );
 

@@ -25,6 +25,7 @@
 
 namespace Akonadi {
   class Item;
+class ChangeRecorder;
 }
 namespace KMime {
   class Message;
@@ -78,11 +79,6 @@ public:
    * for example;
    * */
   bool atLeastOneIncomingFilterAppliesTo( const QString & accountID ) const;
-
-  /** Returns whether at least one filter targets a folder on an
-   * online IMAP account.
-   * */
-  bool atLeastOneOnlineImapFolderTarget();
 
   /** Check for existing filters with the &p name and extend the
       "name" to "name (i)" until no match is found for i=1..n */
@@ -157,6 +153,9 @@ public slots:
 signals:
   void filterListUpdated();
 
+private slots:
+  void itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection);
+
 private:
   int processPop( const Akonadi::Item &item ) const;
   /** Find out if a message matches the filter criteria */
@@ -164,10 +163,9 @@ private:
 
   QPointer<KMFilterDlg> mEditDialog;
   QList<KMFilter *> mFilters;
+  Akonadi::ChangeRecorder *mChangeRecorder;
   bool bPopFilter;
   bool mShowLater;
-  bool mDirtyBufferedFolderTarget;
-  bool mBufferedFolderTarget;
 };
 
 #endif /*kmfiltermgr_h*/

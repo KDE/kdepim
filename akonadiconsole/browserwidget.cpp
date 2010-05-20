@@ -295,6 +295,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   contentUi.flags->setItems( flags );
 
   Attribute::List list = item.attributes();
+  delete mAttrModel;
   mAttrModel = new QStandardItemModel( list.count(), 2 );
   QStringList labels;
   labels << i18n( "Attribute" ) << i18n( "Value" );
@@ -414,7 +415,7 @@ void BrowserWidget::saveResult(KJob * job)
 
 void BrowserWidget::addAttribute()
 {
-  if ( contentUi.attrName->text().isEmpty() )
+  if ( !mAttrModel || contentUi.attrName->text().isEmpty() )
     return;
   const int row = mAttrModel->rowCount();
   mAttrModel->insertRow( row );
@@ -426,6 +427,8 @@ void BrowserWidget::addAttribute()
 
 void BrowserWidget::delAttribute()
 {
+  if ( !mAttrModel )
+    return;
   QModelIndexList selection = contentUi.attrView->selectionModel()->selectedRows();
   if ( selection.count() != 1 )
     return;

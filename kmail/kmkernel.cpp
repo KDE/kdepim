@@ -29,6 +29,7 @@ using KPIM::RecentAddresses;
 #include <kpimidentities/identitymanager.h>
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
+#include <mailtransport/dispatcherinterface.h>
 
 #include <kde_file.h>
 #include <kwindowsystem.h>
@@ -52,6 +53,7 @@ using KMail::MailServiceImpl;
 
 #include <kmessagebox.h>
 #include <knotification.h>
+#include <progressmanager.h>
 #include <kstandarddirs.h>
 #include <kconfig.h>
 #include <kpassivepopup.h>
@@ -77,7 +79,6 @@ using KMail::MailServiceImpl;
 #include <Akonadi/Session>
 #include <Akonadi/EntityTreeModel>
 #include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/persistentsearchattribute.h>
 
 #include <QByteArray>
 #include <QDir>
@@ -102,7 +103,6 @@ using KMail::MailServiceImpl;
 #include "foldercollectionmonitor.h"
 #include "imapsettings.h"
 #include "util.h"
-#include "actionscheduler.h"
 
 #include "searchdescriptionattribute.h"
 
@@ -117,7 +117,6 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   mIdentityManager(0), mConfigureDialog(0), mMailService(0)
 {
   Akonadi::AttributeFactory::registerAttribute<Akonadi::SearchDescriptionAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<Akonadi::PersistentSearchAttribute>();
 
   // Akonadi migration
   KConfig config( "kmail-migratorrc" );
@@ -242,18 +241,12 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   connect( MailTransport::TransportManager::self(),
            SIGNAL(transportRenamed(int,QString,QString)),
            SLOT(transportRenamed(int,QString,QString)) );
+
+  QDBusConnection::sessionBus().connect(QString(), QLatin1String( "/MailDispatcherAgent" ), "org.freedesktop.Akonadi.MailDispatcherAgent", "itemDispatchStarted",this, SLOT(itemDispatchStarted()) );
 }
 
 KMKernel::~KMKernel ()
 {
-  QMap<KIO::Job*, putData>::Iterator it = mPutJobs.begin();
-  while ( it != mPutJobs.end() )
-  {
-    KIO::Job *job = it.key();
-    mPutJobs.erase( it );
-    job->kill();
-    it = mPutJobs.begin();
-  }
   delete mMailService;
   mMailService = 0;
 
@@ -628,7 +621,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
     if ( isICalInvitation && bcc.isEmpty() )
       msg->bcc()->clear();
     if ( isICalInvitation &&
-        GlobalSettings::self()->legacyBodyInvites() ) {
+        MessageViewer::GlobalSettings::self()->legacyBodyInvites() ) {
       // KOrganizer invitation caught and to be sent as body instead
       msg->setBody( attachData );
       context = KMail::Composer::NoTemplate;
@@ -647,7 +640,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
       msgPart->setBody( attachData ); //TODO: check if was setBodyEncoded
       msgPart->contentType()->setMimeType( attachType + "/" +  attachSubType );
       msgPart->contentDisposition()->setParameter( attachParamAttr, attachParamValue ); //TODO: Check if the content disposition parameter needs to be set!
-       if( ! GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+       if( ! MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msgPart->contentDisposition()->fromUnicodeString(attachContDisp, "utf-8" );
       }
       if( !attachCharset.isEmpty() ) {
@@ -655,14 +648,14 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
         msgPart->contentType()->setCharset( attachCharset );
       }
       // Don't show the composer window if the automatic sending is checked
-      iCalAutoSend = GlobalSettings::self()->automaticSending();
+      iCalAutoSend = MessageViewer::GlobalSettings::self()->automaticSending();
     }
   }
 
   KMail::Composer * cWin = KMail::makeComposer( KMime::Message::Ptr(), context );
   cWin->setMsg( msg, !isICalInvitation /* mayAutoSign */ );
   cWin->setSigningAndEncryptionDisabled( isICalInvitation
-      && GlobalSettings::self()->legacyBodyInvites() );
+      && MessageViewer::GlobalSettings::self()->legacyBodyInvites() );
   if ( noWordWrap )
     cWin->disableWordWrap();
   if ( msgPart )
@@ -823,12 +816,6 @@ bool KMKernel::showMail( quint32 serialNumber, const QString& /* messageId */ )
     }
   }
   return false;
-}
-
-QString KMKernel::debugScheduler()
-{
-  QString res = KMail::ActionScheduler::debug();
-  return res;
 }
 
 void KMKernel::pauseBackgroundJobs()
@@ -1058,16 +1045,9 @@ void KMKernel::init()
   initFolders();
   the_filterMgr->readConfig();
   the_popFilterMgr->readConfig();
-#if 0 //TODO port to akonadi
-  cleanupImapFolders();
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   the_msgSender = new AkonadiSender;
   readConfig();
   // filterMgr->dump();
-
-  the_weaver =  new ThreadWeaver::Weaver( this );
 
   mBackgroundTasksTimer = new QTimer( this );
   mBackgroundTasksTimer->setSingleShot( true );
@@ -1157,9 +1137,6 @@ void KMKernel::cleanup(void)
   delete the_popFilterMgr;
   the_popFilterMgr = 0;
 
-  delete the_weaver;
-  the_weaver = 0;
-
   KSharedConfig::Ptr config =  KMKernel::config();
   KConfigGroup group(config, "General");
   if ( the_trashCollectionFolder.isValid() ) {
@@ -1220,66 +1197,6 @@ void KMKernel::action( bool mailto, bool check, const QString &to,
   //Anything else?
 }
 
-void KMKernel::byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL,
-  bool overwrite)
-{
-  // ## when KDE 3.3 is out: use KIO::storedPut to remove slotDataReq altogether
-  KIO::Job *job = KIO::put(aURL, -1, overwrite ? KIO::Overwrite : KIO::DefaultFlags);
-  putData pd; pd.url = aURL; pd.data = aData; pd.offset = 0;
-  mPutJobs.insert(job, pd);
-  connect(job, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
-    SLOT(slotDataReq(KIO::Job*,QByteArray&)));
-  connect(job, SIGNAL(result(KJob*)),
-    SLOT(slotResult(KJob*)));
-}
-
-void KMKernel::slotDataReq(KIO::Job *job, QByteArray &data)
-{
-  // send the data in 64 KB chunks
-  const int MAX_CHUNK_SIZE = 64*1024;
-  QMap<KIO::Job*, putData>::Iterator it = mPutJobs.find(job);
-  assert(it != mPutJobs.end());
-  int remainingBytes = (*it).data.size() - (*it).offset;
-  if( remainingBytes > MAX_CHUNK_SIZE )
-  {
-    // send MAX_CHUNK_SIZE bytes to the receiver (deep copy)
-    data = QByteArray( (*it).data.data() + (*it).offset, MAX_CHUNK_SIZE );
-    (*it).offset += MAX_CHUNK_SIZE;
-    //kDebug() << "Sending" << MAX_CHUNK_SIZE << "bytes ("
-    //                << remainingBytes - MAX_CHUNK_SIZE << " bytes remain)\n";
-  }
-  else
-  {
-    // send the remaining bytes to the receiver (deep copy)
-    data = QByteArray( (*it).data.data() + (*it).offset, remainingBytes );
-    (*it).data = QByteArray();
-    (*it).offset = 0;
-    //kDebug() << "Sending" << remainingBytes << "bytes";
-  }
-}
-
-void KMKernel::slotResult(KJob *job)
-{
-  QMap<KIO::Job*, putData>::Iterator it = mPutJobs.find(static_cast<KIO::Job*>(job));
-  assert(it != mPutJobs.end());
-  if (job->error())
-  {
-    if (job->error() == KIO::ERR_FILE_ALREADY_EXIST)
-    {
-      if (KMessageBox::warningContinueCancel(0,
-        i18n("File %1 exists.\nDo you want to replace it?",
-         (*it).url.prettyUrl()), i18n("Save to File"), KGuiItem(i18n("&Replace")))
-        == KMessageBox::Continue)
-        byteArrayToRemoteFile((*it).data, (*it).url, true);
-    }
-    else {
-      KIO::JobUiDelegate *ui = static_cast<KIO::Job*>( job )->ui();
-      ui->showErrorMessage();
-    }
-  }
-  mPutJobs.erase(it);
-}
-
 void KMKernel::slotRequestConfigSync()
 {
   // ### FIXME: delay as promised in the kdoc of this function ;-)
@@ -1293,6 +1210,7 @@ void KMKernel::slotSyncConfig()
   MessageComposer::MessageComposerSettings::self()->writeConfig();
   TemplateParser::GlobalSettings::self()->writeConfig();
   MessageList::Core::Settings::self()->writeConfig();
+  GlobalSettings::self()->writeConfig();
   KMKernel::config()->sync();
 }
 
@@ -1313,6 +1231,10 @@ void KMKernel::slotShowConfigurationDialog()
     win->show();
 
   }
+
+  // Save all current settings.
+  if( getKMMainWidget() )
+    getKMMainWidget()->writeConfig();
 
   if( mConfigureDialog->isHidden() ) {
     mConfigureDialog->show();
@@ -1597,10 +1519,6 @@ void KMKernel::slotRunBackgroundTasks() // called regularly by timer
       mFolderCollectionMonitor->expireAllFolders( false /*scheduled, not immediate*/ );
   }
 
-  if ( generalGroup.readEntry( "auto-compaction", true ) ) {
-      mFolderCollectionMonitor->compactAllFolders( false /*scheduled, not immediate*/ );
-  }
-
 #ifdef DEBUG_SCHEDULER // for debugging, see jobscheduler.h
   mBackgroundTasksTimer->start( 60 * 1000 ); // check again in 1 minute
 #else
@@ -1635,11 +1553,6 @@ void KMKernel::expireAllFoldersNow() // called by the GUI
   mFolderCollectionMonitor->expireAllFolders( true /*immediate*/ );
 }
 
-void KMKernel::compactAllFolders() // called by the GUI
-{
-  mFolderCollectionMonitor->compactAllFolders( true /*immediate*/ );
-}
-
 Akonadi::Collection KMKernel::findFolderCollectionById( const QString& idString )
 {
   int id = idString.toInt();
@@ -1656,15 +1569,18 @@ Akonadi::Collection KMKernel::findFolderCollectionById( const QString& idString 
 Akonadi::Collection KMKernel::collectionFromId( const QString &idString ) const
 {
   bool ok;
-  Akonadi::Entity::Id id = idString.toLongLong( &ok );
+  Akonadi::Collection::Id id = idString.toLongLong( &ok );
   if ( !ok )
     return Akonadi::Collection();
-  const QModelIndexList list =
-      collectionModel()->match( QModelIndex(), Akonadi::EntityTreeModel::CollectionIdRole, id );
-  if ( list.isEmpty() )
-    return Akonadi::Collection();
-  Q_ASSERT( list.size() == 1 );
-  return list.at( 0 ).data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  return collectionFromId( id );
+}
+
+Akonadi::Collection KMKernel::collectionFromId(const Akonadi::Collection::Id& id) const
+{
+  const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(
+    collectionModel(), Akonadi::Collection(id)
+  );
+  return idx.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 }
 
 bool KMKernel::canQueryClose()
@@ -1756,6 +1672,19 @@ void KMKernel::transportRenamed(int id, const QString & oldName, const QString &
     im->commit();
   }
 }
+
+void KMKernel::itemDispatchStarted()
+{
+  // Watch progress of the MDA.
+  KPIM::ProgressManager::createProgressItem( 0,
+      MailTransport::DispatcherInterface().dispatcherInstance(),
+      QString::fromAscii( "Sender" ),
+      i18n( "Sending messages" ),
+      i18n( "Initiating sending process..." ),
+      true );
+  kDebug() << "Created ProgressItem";
+}
+
 
 void KMKernel::updatedTemplates()
 {

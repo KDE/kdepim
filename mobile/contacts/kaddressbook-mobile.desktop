@@ -4,6 +4,8 @@ Encoding=UTF-8
 Name=KAddressbook Mobile
 Name[ca]=KAddressBook mòbil
 Name[en_GB]=KAddressbook Mobile
+Name[es]=KAddressBook móvil
+Name[km]=KAddressbook Mobile
 Name[pt]=KAddressBook Móvel
 Name[pt_BR]=KAddressBook Móvel
 Name[sv]=Adressbok för mobil
@@ -11,5 +13,5 @@ Name[uk]=Мобільна KAddressBook
 Name[x-test]=xxKAddressbook Mobilexx
 Exec=kaddressbook-mobile
 
-Icon=kaddressbook-mobile
+Icon=view-pim-contacts
 Type=Application

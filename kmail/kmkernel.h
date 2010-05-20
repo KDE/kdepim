@@ -9,7 +9,6 @@
 #include <QString>
 #include <QPointer>
 #include <QDBusObjectPath>
-#include <threadweaver/ThreadWeaver.h>
 
 #include <kconfig.h>
 #include <kurl.h>
@@ -85,7 +84,7 @@ class FolderCollectionMonitor;
  *
  * The kernel also manages some stuff that should be factored out:
  * - default collection handling, like inboxCollectionFolder()
- * - job handling, like jobScheduler() and mPutJobs
+ * - job handling, like jobScheduler()
  * - handling of some config settings, like wrapCol()
  * - various other stuff
  */
@@ -106,11 +105,6 @@ public Q_SLOTS:
 
   Q_SCRIPTABLE void checkMail();
   Q_SCRIPTABLE void openReader() { openReader( false ); }
-
-  /**
-   * Compact all folders, used for the GUI action (and from D-Bus)
-   */
-  Q_SCRIPTABLE void compactAllFolders();
 
   /**
    * Pauses all background jobs and does not
@@ -150,8 +144,6 @@ public Q_SLOTS:
   Q_SCRIPTABLE bool canQueryClose();
 
   Q_SCRIPTABLE bool handleCommandLine( bool noArgsOpensReader );
-
-  Q_SCRIPTABLE QString debugScheduler();
 
   /**
    * returns id of composer if more are opened
@@ -247,7 +239,6 @@ public:
    */
   Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
 
-//TODO port to akonadi   void cleanupImapFolders();
   void recoverDeadLetters();
   void initFolders();
   void closeAllKMailWindows();
@@ -260,8 +251,6 @@ public:
                const QString &bcc, const QString &subj, const QString &body,
                const KUrl &messageFile, const KUrl::List &attach,
                const QStringList &customHeaders );
-  void byteArrayToRemoteFile( const QByteArray&, const KUrl&,
-                              bool overwrite = false );
   bool folderIsDraftOrOutbox(const Akonadi::Collection &);
   bool folderIsDrafts(const Akonadi::Collection&);
 
@@ -299,7 +288,6 @@ public:
   KMFilterActionDict *filterActionDict() { return the_filterActionDict; }
   MessageSender *msgSender();
 
-  ThreadWeaver::Weaver *weaver() { return the_weaver; }
   /** return the pointer to the identity manager */
   KPIMIdentities::IdentityManager *identityManager();
 
@@ -351,10 +339,16 @@ public:
   Akonadi::Collection::List allFolders() const;
 
   /**
-   * Returns the collection associated with the given id, or an invalid collection if not found.
+   * Returns the collection associated with the given @p id, or an invalid collection if not found.
    * The EntityTreeModel of the kernel is searched for the collection. Since the ETM is loaded
    * async, this method will not find the collection right after startup, when the ETM is not yet
    * fully loaded.
+   */
+  Akonadi::Collection collectionFromId( const Akonadi::Collection::Id& id ) const;
+
+  /**
+   * Converts @p idString into a number and returns the collection for it.
+   * @see collectionFromId( qint64 )
    */
   Akonadi::Collection collectionFromId( const QString &idString ) const;
 
@@ -397,10 +391,6 @@ public slots:
 
   void slotConfigChanged();
 
-protected slots:
-  void slotDataReq(KIO::Job*,QByteArray&);
-  void slotResult(KJob*);
-
 signals:
   void configChanged();
   void onlineStatusChanged( GlobalSettings::EnumNetworkState::type );
@@ -411,6 +401,7 @@ private slots:
   void transportRemoved( int id, const QString &name );
   /** Updates identities when a transport has been renamed. */
   void transportRenamed( int id, const QString &oldName, const QString &newName );
+  void itemDispatchStarted();
   void createDefaultCollectionDone( KJob * job);
 
 private:
@@ -432,13 +423,6 @@ private:
   KMFilterActionDict *the_filterActionDict;
   mutable KPIMIdentities::IdentityManager *mIdentityManager;
   AkonadiSender *the_msgSender;
-  struct putData
-  {
-    KUrl url;
-    QByteArray data;
-    int offset;
-  };
-  QMap<KIO::Job *, putData> mPutJobs;
   /** previous KMail version. If different from current,
       the user has just updated. read from config */
   QString the_previousVersion;
@@ -464,9 +448,6 @@ private:
   MailServiceImpl *mMailService;
 
   QList<const KStatusNotifierItem*> systemTrayApplets;
-
-  /* Weaver */
-  ThreadWeaver::Weaver *the_weaver;
 
   FolderCollectionMonitor *mFolderCollectionMonitor;
   Akonadi::EntityTreeModel *mEntityTreeModel;

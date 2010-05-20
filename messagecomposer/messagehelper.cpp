@@ -114,11 +114,12 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
   else
     message->bcc()->addAddress(ident.bcc().toUtf8());
 
-  if (ident.organization().isEmpty())
+  if ( ident.organization().isEmpty() )
     message->removeHeader("Organization");
   else {
-    KMime::Headers::Generic *header = new KMime::Headers::Generic( "Organization", message.get(), ident.organization(), "utf-8" );
-    message->setHeader( header );
+    KMime::Headers::Organization * const organization
+           = new KMime::Headers::Organization( message.get(), ident.organization(), "utf-8" );
+    message->setHeader( organization );
   }
 
   if (ident.isDefault())

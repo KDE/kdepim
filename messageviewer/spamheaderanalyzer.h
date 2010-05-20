@@ -104,7 +104,7 @@ public:
       @param message A KMime::Message to examine
       @return A list of detected scores. See SpamScore
   */
-  static SpamScores getSpamScores( KMime::Message::Ptr message );
+  static SpamScores getSpamScores( KMime::Message *message );
 };
 
 }

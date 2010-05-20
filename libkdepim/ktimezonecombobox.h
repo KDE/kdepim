@@ -45,6 +45,7 @@ namespace KPIM {
  */
 class KDEPIM_EXPORT KTimeZoneComboBox : public KComboBox
 {
+  Q_OBJECT
   public:
     /**
      * Creates a new time zone combobox.

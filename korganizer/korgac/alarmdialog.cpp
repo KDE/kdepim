@@ -26,7 +26,6 @@
 
 #include "alarmdialog.h"
 #include "kocore.h"
-#include "koeventviewer.h"
 #include "korganizer_interface.h"
 
 #include <kcalprefs.h>
@@ -39,6 +38,7 @@
 #include <KPIMIdentities/IdentityManager>
 
 #include <Akonadi/Item>
+#include <akonadi/kcal/incidenceviewer.h>
 #include <akonadi/kcal/mailclient.h>
 #include <akonadi/kcal/utils.h>
 
@@ -61,6 +61,7 @@
 #include <QVBoxLayout>
 #include <phonon/mediaobject.h>
 
+using namespace KPIMIdentities;
 using namespace KCal;
 
 static int defSuspendVal = 5;
@@ -194,13 +195,12 @@ AlarmDialog::AlarmDialog( Akonadi::Calendar *calendar, QWidget *parent )
   connect( mIncidenceTree, SIGNAL(itemSelectionChanged()),
            SLOT(update()) );
 
-  mDetailView = new KOEventViewer( topBox );
+  mDetailView = new Akonadi::IncidenceViewer( topBox );
   QString s;
   s = i18nc( "@info default incidence details string",
              "<emphasis>Select an event or to-do from the list above "
              "to view its details here.</emphasis>" );
-  mDetailView->setDefaultText( s );
-  mDetailView->clearEventsNow();
+  mDetailView->setDefaultMessage( s );
   mTopLayout->addWidget( mDetailView );
   mDetailView->hide();
   mLastItem = 0;
@@ -517,6 +517,7 @@ void AlarmDialog::suspend()
       break;
   }
 
+  ReminderListItem *selitem = 0;
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
     if ( (*it)->isSelected() && !(*it)->isDisabled() ) { //suspend selected, non-suspended reminders
@@ -527,8 +528,17 @@ void AlarmDialog::suspend()
       item->mHappening = KDateTime( item->mRemindAt, KDateTime::Spec::LocalZone() );
       item->mNotified = false;
       (*it)->setText( 1, KGlobal::locale()->formatDateTime( item->mHappening ) );
+      selitem = item;
     }
     ++it;
+  }
+
+  if ( selitem ) {
+    if ( mIncidenceTree->itemBelow( selitem ) ) {
+      mIncidenceTree->setCurrentItem( mIncidenceTree->itemBelow( selitem ) );
+    } else if ( mIncidenceTree->itemAbove( selitem ) ) {
+      mIncidenceTree->setCurrentItem( mIncidenceTree->itemAbove( selitem ) );
+    }
   }
 
   // save suspended alarms too so they can be restored on restart
@@ -804,17 +814,15 @@ void AlarmDialog::toggleDetails( QTreeWidgetItem *item, int column )
 
 void AlarmDialog::showDetails()
 {
-  mDetailView->clearEvents( true );
-  mDetailView->clear();
   ReminderListItem *item = dynamic_cast<ReminderListItem *>( mIncidenceTree->currentItem() );
   if ( !item ) {
-    mDetailView->clearEventsNow();
+    mDetailView->setIncidence( Akonadi::Item() );
   } else {
     if ( !item->mDisplayText.isEmpty() ) {
       QString txt = "<qt><p><b>" + item->mDisplayText + "</b></p></qt>";
-      mDetailView->addText( txt );
+      mDetailView->setHeaderText( txt );
     }
-    mDetailView->appendIncidence( item->mIncidence, item->mRemindAt.date() );
+    mDetailView->setIncidence( item->mIncidence, item->mRemindAt.date() );
   }
 }
 

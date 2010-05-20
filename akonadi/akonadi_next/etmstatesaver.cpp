@@ -45,20 +45,20 @@ QModelIndex ETMStateSaver::indexFromConfigString(const QAbstractItemModel *model
 
   if ( key.startsWith( QLatin1Char( 'c' ) ) )
   {
-    QModelIndexList list = model->match( QModelIndex(), EntityTreeModel::CollectionIdRole, id, 1, Qt::MatchRecursive );
-    if ( list.isEmpty() )
+    QModelIndex idx = EntityTreeModel::modelIndexForCollection( model, Collection( id ) );
+    if ( !idx.isValid() )
     {
-      kWarning() << "Cannot find collection with id " << id;
+      kDebug() << "Collection with id" << id << "is not in model yet";
       return QModelIndex();
     }
-    return list.first();
+    return idx;
   }
   else if ( key.startsWith( QLatin1Char( 'i' ) ) )
   {
-    QModelIndexList list = model->match( QModelIndex(), EntityTreeModel::ItemIdRole, id, 1, Qt::MatchRecursive );
+    QModelIndexList list = EntityTreeModel::modelIndexesForItem( model, Item( id ) );
     if ( list.isEmpty() )
     {
-      kWarning() << "Cannot find item with id " << id;
+      kDebug() << "Item with id" << id << "is not in model yet";
       return QModelIndex();
     }
     return list.first();
@@ -77,4 +77,36 @@ QString ETMStateSaver::indexToConfigString(const QModelIndex& index) const
   if ( id >= 0 )
     return QString::fromLatin1( "i%1" ).arg( id );
   return QString();
+}
+
+void ETMStateSaver::selectCollections(const Akonadi::Collection::List& list)
+{
+  QStringList colStrings;
+  foreach(const Collection &col, list)
+    colStrings << QString("c%1").arg( col.id() );
+  restoreSelection(colStrings);
+}
+
+void ETMStateSaver::selectCollections(const QList< Collection::Id >& list)
+{
+  QStringList colStrings;
+  foreach(const Collection::Id &colId, list)
+    colStrings << QString("c%1").arg( colId );
+  restoreSelection(colStrings);
+}
+
+void ETMStateSaver::selectItems(const Akonadi::Item::List& list)
+{
+  QStringList itemStrings;
+  foreach(const Item &item, list)
+    itemStrings << QString("i%1").arg( item.id() );
+  restoreSelection(itemStrings);
+}
+
+void ETMStateSaver::selectItems(const QList< Item::Id >& list)
+{
+  QStringList itemStrings;
+  foreach(const Item::Id &itemId, list)
+    itemStrings << QString("i%1").arg( itemId );
+  restoreSelection(itemStrings);
 }

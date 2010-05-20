@@ -42,9 +42,10 @@
 #include <QItemSelectionModel>
 
 #include <akonadi/kcal/calendarmodel.h>
-#include <akonadi/kcal/collectionselectionproxymodel.h>
+#include <akonadi/akonadi_next/collectionselectionproxymodel.h>
 #include <akonadi/akonadi_next/entitymodelstatesaver.h>
 #include <akonadi/kcal/collectionselection.h>
+#include <akonadi/kcal/kcalprefs.h>
 #include <akonadi/kcal/utils.h>
 
 #include <akonadi/collection.h>
@@ -100,12 +101,12 @@ namespace {
           }
         } else if ( role == Qt::FontRole ) {
           const Akonadi::Collection collection = Akonadi::collectionFromIndex( index );
-          if ( !collection.contentMimeTypes().isEmpty() && KOHelper::isStandardCalendar( collection )) {
+          if ( !collection.contentMimeTypes().isEmpty() && KOHelper::isStandardCalendar( collection.id() ) ) {
             QFont font = qvariant_cast<QFont>( QSortFilterProxyModel::data( index, Qt::FontRole ) );
             font.setBold( true );
             if ( !mInitDefaultCalendar ) {
               mInitDefaultCalendar = true;
-              KOPrefs::instance()->setDefaultCollection( collection );
+              KCalPrefs::instance()->setDefaultCalendarId( collection.id() );
             }
             return font;
           }
@@ -182,7 +183,7 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView* view, QWidget *paren
 
   connect( searchCol, SIGNAL( textChanged(QString) ), filterTreeViewModel, SLOT( setFilterFixedString(QString) ) );
 
-  connect( mCollectionview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+  connect( mCollectionview->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            this, SLOT(selectionChanged()) );
 
   connect( mBaseModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
@@ -254,9 +255,12 @@ void AkonadiCollectionView::setDefaultCalendar()
   QModelIndex index = mCollectionview->selectionModel()->currentIndex(); //selectedRows()
   Q_ASSERT( index.isValid() );
   const Akonadi::Collection collection = collectionFromIndex( index );
-  KOPrefs::instance()->setDefaultCollection( collection );
+  KCalPrefs::instance()->setDefaultCalendarId( collection.id() );
+  KCalPrefs::instance()->usrWriteConfig();
   updateMenu();
   updateView();
+
+  emit defaultResourceChanged( collection );
 }
 
 void AkonadiCollectionView::editCalendar()
@@ -312,6 +316,11 @@ void AkonadiCollectionView::setCollectionSelectionProxyModel( CollectionSelectio
   connect( mSelectionProxyModel->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged()) );
 }
 
+CollectionSelectionProxyModel *AkonadiCollectionView::collectionSelectionProxyModel() const
+{
+  return mSelectionProxyModel;
+}
+
 Akonadi::EntityTreeView* AkonadiCollectionView::view() const
 {
   return mCollectionview;
@@ -341,7 +350,7 @@ void AkonadiCollectionView::updateMenu()
       const QString resource = collection.resource();
       Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( resource );
       mEditAction->setEnabled( !instance.type().capabilities().contains( QLatin1String( "NoConfig" ) ) );
-      mDefaultCalendar->setEnabled( !KOHelper::isStandardCalendar( collection ) );
+      mDefaultCalendar->setEnabled( !KOHelper::isStandardCalendar( collection.id() ) );
     } else {
       mDisableColor->setEnabled( false );
       mEditAction->setEnabled( false );
@@ -398,30 +407,36 @@ void AkonadiCollectionView::deleteCalendar()
   Q_ASSERT( index.isValid() );
   const Akonadi::Collection collection = collectionFromIndex( index );
   Q_ASSERT( collection.isValid() );
-  //Q_ASSERT( mCollectionview->selectionModel()->isSelected(index) );
+
 
   const QString displayname = index.model()->data( index, Qt::DisplayRole ).toString();
-  Q_ASSERT( ! displayname.isEmpty() );
+  Q_ASSERT( !displayname.isEmpty() );
 
-  if( KMessageBox::questionYesNo( this,
-                                  i18n( "Do you really want to delete calendar %1?", displayname ),
-                                  i18n( "Delete Calendar" ),
-                                  KStandardGuiItem::del(),
-                                  KStandardGuiItem::cancel(),
-                                  QString(),
-                                  KMessageBox::Dangerous )
-    == KMessageBox::Yes )
-  {
+  if ( KMessageBox::questionYesNo( this,
+                                   i18n( "Do you really want to delete calendar %1?", displayname ),
+                                   i18n( "Delete Calendar" ),
+                                   KStandardGuiItem::del(),
+                                   KStandardGuiItem::cancel(),
+                                   QString(),
+                                   KMessageBox::Dangerous )
+       == KMessageBox::Yes ) {
+
+    bool isTopLevel = collection.parentCollection() == Collection::root();
+
     mNotSendAddRemoveSignal = true;
-    mWasDefaultCalendar = KOHelper::isStandardCalendar( collection );
-    Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( collection, this );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deleteCalendarDone( KJob* ) ) );
-#if 0 //TODO bug 235127
-    //Delete calendar.
-    const AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
-    if ( instance.isValid() )
-      Akonadi::AgentManager::self()->removeInstance( instance );
-#endif
+    mWasDefaultCalendar = KOHelper::isStandardCalendar( collection.id() );
+
+    if ( !isTopLevel ) {
+      // deletes contents
+      Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( collection, this );
+      connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deleteCalendarDone( KJob* ) ) );
+    } else {
+      // deletes the agent, not the contents
+      const AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
+      if ( instance.isValid() ) {
+        Akonadi::AgentManager::self()->removeInstance( instance );
+      }
+    }
   }
 }
 
@@ -434,8 +449,9 @@ void AkonadiCollectionView::deleteCalendarDone( KJob *job )
     mNotSendAddRemoveSignal = false;
     return;
   }
-  if ( mWasDefaultCalendar )
-    KOPrefs::instance()->setDefaultCollection( Akonadi::Collection() );
+  if ( mWasDefaultCalendar ) {
+    KCalPrefs::instance()->setDefaultCalendarId( Akonadi::Collection().id() );
+  }
   mNotSendAddRemoveSignal = false;
   //TODO
 }

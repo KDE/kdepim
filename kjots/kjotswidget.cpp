@@ -333,6 +333,11 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
       KBookmarkManager::managerForFile( KStandardDirs::locateLocal( "data","kjots/bookmarks.xml" ), "kjots" ),
       bookmarks, bookmarkMenu->menu(), actionCollection );
 
+  // "Add bookmark" and "make text bold" actions have conflicting shortcuts (ctrl + b)
+  // Make add_bookmark use ctrl+shift+b to resolve that.
+  QAction *bm_action = actionCollection->action("add_bookmark");
+  bm_action->setShortcuts( QList<QKeySequence>() << ( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_B ) ) );
+
   KStandardAction::find( this, SLOT( onShowSearch() ), actionCollection );
   action = KStandardAction::findNext( this, SLOT( onRepeatSearch() ), actionCollection );
   action->setEnabled(false);
@@ -381,7 +386,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 void KJotsWidget::delayedInitialization()
 {
   migrateNoteData( "kjotsmigrator" );
-  migrateNoteData( "kres-migrator", "notes" );
+  // Disable nigration of data from KNotes as that app still exists in 4.5.
+//   migrateNoteData( "kres-migrator", "notes" );
 
   //TODO: Save previous searches in settings file?
   searchDialog = new KFindDialog ( this, 0, QStringList(), false );

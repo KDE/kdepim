@@ -19,22 +19,71 @@
 */
 
 #include "mainview.h"
+#include "composerview.h"
+#include "messagelistproxy.h"
+#include "global.h"
 
 #include <KDE/KDebug>
 #include <kselectionproxymodel.h>
+#include <klocalizedstring.h>
 
 #include <KMime/Message>
 #include <akonadi/kmime/messageparts.h>
+#include <kpimidentities/identitymanager.h>
 
-#include "messagelistproxy.h"
+#include <KActionCollection>
+#include <KAction>
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
   addMimeType( KMime::Message::mimeType() );
   setListPayloadPart( Akonadi::MessagePart::Header );
+  setWindowTitle( i18n( "KMail Mobile" ) );
 }
 
+void MainView::startComposer()
+{
+  ComposerView *composer = new ComposerView;
+  composer->show();
+}
+
+void MainView::reply( quint64 id )
+{
+  reply( id, MessageComposer::ReplySmart );
+}
+
+void MainView::replyToAll(quint64 id)
+{
+  reply( id, MessageComposer::ReplyAll );
+}
+
+void MainView::reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy)
+{
+  const Akonadi::Item item = itemFromId( id );
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), id );
+  factory.setIdentityManager( Global::identityManager() );
+  factory.setReplyStrategy( replyStrategy );
+
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( factory.createReply().msg );
+  composer->show();
+}
+
+void MainView::forwardInline(quint64 id)
+{
+  const Akonadi::Item item = itemFromId( id );
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), id );
+  factory.setIdentityManager( Global::identityManager() );
+
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( factory.createForward() );
+  composer->show();
+}
 
 #include "mainview.moc"
 

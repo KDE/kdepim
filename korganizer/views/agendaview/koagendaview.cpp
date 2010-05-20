@@ -35,6 +35,7 @@
 #include "koeventpopupmenu.h"
 #include "koglobals.h"
 #include "koprefs.h"
+#include "kohelper.h"
 #include "timelabelszone.h"
 #include "akonadicollectionview.h"
 
@@ -499,6 +500,7 @@ void KOAgendaView::createDayLabels()
   // each updateView() call)
   delete mTopDayLabels;
   delete mBottomDayLabels;
+  mDateDayLabels.clear();
 
   QFontMetrics fm = fontMetrics();
 
@@ -552,6 +554,7 @@ void KOAgendaView::createDayLabels()
 
     KOAlternateLabel *dayLabel =
       new KOAlternateLabel( shortstr, longstr, veryLongStr, topDayLabelBox );
+    dayLabel->useShortText(); // will be recalculated in updateDayLabelSizes() anyway
     dayLabel->setMinimumWidth( 1 );
     dayLabel->setAlignment( Qt::AlignHCenter );
     if ( date == QDate::currentDate() ) {
@@ -559,6 +562,7 @@ void KOAgendaView::createDayLabels()
       font.setBold( true );
       dayLabel->setFont( font );
     }
+    mDateDayLabels.append( dayLabel );
 
     // if a holiday region is selected, show the holiday name
     QStringList texts = KOGlobals::self()->holiday( date );
@@ -592,6 +596,11 @@ void KOAgendaView::createDayLabels()
   }
   mTopDayLabels->show();
   mBottomDayLabels->show();
+
+  // Update the labels now and after a single event loop run. Now to avoid flicker, and
+  // delayed so that the delayed layouting size is taken into account.
+  updateDayLabelSizes();
+  QTimer::singleShot( 0, this, SLOT( updateDayLabelSizes() ) );
 }
 
 void KOAgendaView::enableAgendaUpdate( bool enable )
@@ -654,7 +663,7 @@ bool KOAgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool
     if ( start.secsTo( end ) == 15 * 60 ) {
       // One cell in the agenda view selected, e.g.
       // because of a double-click, => Use the default duration
-      QTime defaultDuration( KOPrefs::instance()->mDefaultDuration.time() );
+      QTime defaultDuration( KCalPrefs::instance()->mDefaultDuration.time() );
       int addSecs = ( defaultDuration.hour() * 3600 ) + ( defaultDuration.minute() * 60 );
       end = start.addSecs( addSecs );
     }
@@ -783,7 +792,8 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
   if ( !incidence ) {
     return;
   }
-  if ( !mChanger || !mChanger->beginChange( aitem ) ) {
+
+  if ( !mChanger ) {
     return;
   }
   Incidence::Ptr oldIncidence( incidence->clone() );
@@ -817,8 +827,6 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
     }
     if ( incidence->dtStart().toTimeSpec( KCalPrefs::instance()->timeSpec() ) == startDt &&
          ev->dtEnd().toTimeSpec( KCalPrefs::instance()->timeSpec() ) == endDt ) {
-      // No change
-      mChanger->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
       return;
     }
@@ -839,8 +847,6 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
     }
 
     if ( td->dtDue().toTimeSpec( KCalPrefs::instance()->timeSpec() )  == endDt ) {
-      // No change
-      mChanger->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
       return;
     }
@@ -1034,7 +1040,6 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
 
   const bool result = mChanger->changeIncidence( oldIncidence, aitem,
                                                  Akonadi::IncidenceChanger::DATE_MODIFIED, this );
-  mChanger->endChange( aitem );
 
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
@@ -1291,13 +1296,21 @@ void KOAgendaView::changeIncidenceDisplay( const Item &aitem, int mode )
     }
     case Akonadi::IncidenceChanger::INCIDENCEDELETED:
     {
-      mAgenda->removeIncidence( aitem );
-      mAllDayAgenda->removeIncidence( aitem );
+      removeIncidence( aitem );
       updateEventIndicators();
       break;
     }
     default:
-      updateView();
+      return;
+  }
+
+  // HACK: Update the view if the all-day agenda has been modified.
+  // Do this because there are some layout problems in the
+  // all-day agenda that are not easily solved, but clearing
+  // and redrawing works ok.
+  Incidence::Ptr incidence = Akonadi::incidence( aitem );
+  if ( incidence && incidence->allDay() ) {
+    updateView();
   }
 }
 
@@ -1466,7 +1479,8 @@ void KOAgendaView::clearView()
 
 CalPrinter::PrintType KOAgendaView::printType()
 {
-  if ( currentDateCount() == 1 ) {
+  // If up to three days are selected, use day style, otherwise week
+  if ( currentDateCount() <= 3 ) {
     return CalPrinter::Day;
   } else {
     return CalPrinter::Week;
@@ -1506,13 +1520,13 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
       dynamic_cast<Akonadi::Calendar*>( calendar() )->itemForIncidence( calendar()->todo( todo->uid() ) );
     if ( Todo::Ptr existingTodo = Akonadi::todo( existingTodoItem ) ) {
       kDebug() << "Drop existing Todo";
-      Todo::Ptr oldTodo( existingTodo->clone() );
-      if ( mChanger && mChanger->beginChange( existingTodoItem ) ) {
+
+      if ( mChanger ) {
+        Todo::Ptr oldTodo( existingTodo->clone() );
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
         mChanger->changeIncidence( oldTodo, existingTodoItem, Akonadi::IncidenceChanger::DATE_MODIFIED, this );
-        mChanger->endChange( existingTodoItem );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
                                         "because it cannot be locked." ) );
@@ -1523,7 +1537,7 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
       todo->setAllDay( allDay );
       todo->setHasDueDate( true );
       if ( !mChanger->addIncidence( todo, this ) ) {
-        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+        KOHelper::showSaveIncidenceErrorMsg( this, todo );
       }
     }
   }
@@ -1547,10 +1561,11 @@ void KOAgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint
     todo->setDtDue( newTime );
     todo->setAllDay( allDay );
     todo->setHasDueDate( true );
-    bool userCanceled;
-    if ( !mChanger->addIncidence( todo, this, userCanceled ) ) {
-      if ( !userCanceled ) {
-        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+    Akonadi::Collection selectedCollection;
+    int dialogCode = 0;
+    if ( !mChanger->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
+      if ( dialogCode != QDialog::Rejected ) {
+        KOHelper::showSaveIncidenceErrorMsg( this, todo );
       }
     }
   }
@@ -1677,6 +1692,29 @@ void KOAgendaView::updateEventIndicators()
   mAgenda->checkScrollBoundaries();
   updateEventIndicatorTop( mAgenda->visibleContentsYMin() );
   updateEventIndicatorBottom( mAgenda->visibleContentsYMax() );
+}
+
+void KOAgendaView::updateDayLabelSizes()
+{
+  // First, calculate the maximum text type that fits for all labels
+  KOAlternateLabel::TextType overallType = KOAlternateLabel::Extensive;
+  foreach ( KOAlternateLabel *label, mDateDayLabels ) {
+    KOAlternateLabel::TextType type = label->largestFittingTextType();
+    if ( type < overallType ) {
+      overallType = type;
+    }
+  }
+
+  // Then, set that maximum text type to all the labels
+  foreach ( KOAlternateLabel *label, mDateDayLabels ) {
+    label->setFixedType( overallType );
+  }
+}
+
+void KOAgendaView::resizeEvent( QResizeEvent *resizeEvent )
+{
+  updateDayLabelSizes();
+  KOrg::AgendaView::resizeEvent( resizeEvent );
 }
 
 void KOAgendaView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )

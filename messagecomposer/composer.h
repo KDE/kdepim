@@ -56,7 +56,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     explicit Composer( QObject *parent = 0 );
     virtual ~Composer();
 
-    KMime::Message::List resultMessages() const;
+    QList<KMime::Message::Ptr> resultMessages() const;
 
     GlobalPart *globalPart();
     InfoPart *infoPart();
@@ -65,7 +65,9 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     void addAttachmentPart( KPIM::AttachmentPart::Ptr part );
     void addAttachmentParts( const KPIM::AttachmentPart::List &parts );
     void removeAttachmentPart( KPIM::AttachmentPart::Ptr part );
-    
+
+    // if the message and attachments should not be encrypted regardless of settings
+    void setNoCrypto( bool noCrypto );
     void setSignAndEncrypt( const bool doSign, const bool doEncrypt );
     void setMessageCryptoFormat( Kleo::CryptoMessageFormat format );
     void setSigningKeys( std::vector<GpgME::Key>& signers );

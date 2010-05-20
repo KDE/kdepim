@@ -75,8 +75,6 @@ namespace KMail {
   class Vacation;
   class SieveDebugDialog;
   class SearchWindow;
-  class ImapAccountBase;
-  class FavoriteFolderView;
   class StatusBarLabel;
   class TagActionManager;
   class FolderShortcutActionManager;
@@ -174,7 +172,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     QList<QAction*> actionList();
 
     QLabel* vacationScriptIndicator() const;
-    void updateVactionScriptStatus() { updateVactionScriptStatus( mVacationIndicatorActive ); }
+    void updateVacationScriptStatus() { updateVacationScriptStatus( mVacationIndicatorActive ); }
     void selectCollectionFolder( const Akonadi::Collection & col );
 
     FolderTreeView *folderTreeView() const {
@@ -219,7 +217,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
       Select the given folder
       If the folder is 0 the intro is shown
     */
-    void folderSelected( const Akonadi::Collection & col, bool forceJumpToUnread = false, bool preferNewTabForOpening = false );
+    void folderSelected( const Akonadi::Collection & col );
 
     /**
       Open a separate viewer window containing the specified message.
@@ -250,18 +248,10 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     /** Update message actions */
     void updateMessageActions();
 
-    /** Launch subscription-dialog (server side) */
-    void slotSubscriptionDialog();
-
-    /** Launch dialog for local (client side) subscription configuration */
-    void slotLocalSubscriptionDialog();
-
     /** Clear and create actions for marked filters */
     void clearFilterActions();
     void initializeFilterActions();
 
-    /** Create IMAP-account-related actions if applicable */
-    void initializeIMAPActions() { initializeIMAPActions( true ); }
 
     /** Trigger the dialog for editing out-of-office scripts.  */
     void slotEditVacation();
@@ -325,17 +315,13 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotShowFolderShortcutDialog();
     void slotExpireFolder();
     void slotExpireAll();
-    void slotInvalidateIMAPFolders();
     void slotMarkAllAsRead();
     void slotArchiveFolder();
     void slotRemoveFolder();
     void slotDelayedRemoveFolder( KJob* );
     void slotEmptyFolder();
-    void slotCompactFolder();
-#if 0
-  void slotRefreshFolder();
-#endif
-    void slotCompactAll();
+    void slotAddFavoriteFolder();
+    void slotShowSelectedForderInPane();
     void slotOverrideHtml();
     void slotOverrideHtmlLoadExt();
     void slotMessageQueuedOrDrafted();
@@ -452,7 +438,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     */
     void showOfflinePage();
 
-    void updateVactionScriptStatus( bool active );
+    void updateVacationScriptStatus( bool active );
 
 
     void slotShowExpiryProperties();
@@ -461,20 +447,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
   private:
     /** Get override character encoding. */
     QString overrideEncoding() const;
-
-    void initializeIMAPActions( bool setState );
-
-    /**
-      Helper which finds the associated account if there is a current
-      folder and it is an imap or disconnected imap one.
-    */
-    KMail::ImapAccountBase* findCurrentImapAccountBase();
-
-    /**
-      Helper which finds the associated IMAP path if there is a current
-      folder and it is an imap or disconnected imap one.
-    */
-    QString findCurrentImapPath();
 
     /** Update the custom template menus. */
     void updateCustomTemplateMenus();
@@ -537,7 +509,7 @@ private:
       *mDeleteThreadAction, *mSaveAsAction, *mUseAction,
       *mSendAgainAction, *mApplyAllFiltersAction, *mFindInMessageAction,
       *mSaveAttachmentsAction, *mOpenAction, *mViewSourceAction,
-      *mRefreshImapCacheAction, *mMoveMsgToFolderAction, *mCollectionProperties;
+      *mMoveMsgToFolderAction, *mCollectionProperties;
     // Filter actions
     KActionMenu *mFilterMenu;
     KAction *mSubjectFilterAction, *mFromFilterAction, *mToFilterAction,
@@ -545,6 +517,7 @@ private:
 
     KAction *mNextMessageAction, *mPreviousMessageAction;
     KAction *mExpireConfigAction;
+    KAction *mAddFavoriteFolder;
     // Custom template actions menu
     KActionMenu *mTemplateMenu;
     CustomTemplatesMenu *mCustomTemplateMenus;
@@ -563,6 +536,7 @@ private:
     KToggleAction *mWatchThreadAction, *mIgnoreThreadAction;
 
     Akonadi::EntityListView *mFavoriteCollectionsView;
+    Akonadi::FavoriteCollectionsModel *mFavoritesModel;
     QWidget      *mSearchAndTree;
     KMReaderWin  *mMsgView;
     QSplitter    *mSplitter1, *mSplitter2, *mFolderViewSplitter;
@@ -591,7 +565,7 @@ private:
     KMail::SearchWindow *mSearchWin;
 
     KAction *mRemoveFolderAction,
-      *mExpireFolderAction, *mCompactFolderAction,
+      *mExpireFolderAction,
       *mEmptyFolderAction, *mMarkAllAsReadAction, *mFolderMailingListPropertiesAction,
       *mShowFolderShortcutDialogAction,
       *mRemoveDuplicatesAction, *mArchiveFolderAction,
@@ -631,6 +605,8 @@ private:
     KMail::StatusBarLabel *mVacationScriptIndicator;
     bool mVacationIndicatorActive;
     bool mGoToFirstUnreadMessageInSelectedFolder;
+    MessageList::Core::PreSelectionMode mPreSelectionMode;
+
     KPIM::ProgressItem *mFilterProgressItem;
 };
 

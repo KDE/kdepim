@@ -1,4 +1,4 @@
-/**
+/*
  * kmeditor.cpp
  *
  * Copyright 2007 Laurent Montel <montel@kde.org>
@@ -21,6 +21,7 @@
  */
 
 #include "kmeditor.h"
+#include "textpart.h"
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -628,6 +629,16 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
   cursor.endEditBlock();
   return found;
+}
+
+void KMeditor::fillComposerTextPart ( TextPart* textPart ) const
+{
+  textPart->setCleanPlainText( toCleanPlainText() );
+  textPart->setWrappedPlainText( toWrappedPlainText() );
+  if( isFormattingUsed() ) {
+    textPart->setCleanHtml( toCleanHtml() );
+    textPart->setEmbeddedImages( embeddedImages() );
+  }
 }
 
 #include "kmeditor.moc"

@@ -12,7 +12,6 @@ if(KDEPIM_MOBILE_UI)
 endif(KDEPIM_MOBILE_UI)
 
 set(libmessageviewer_SRCS
-
 viewer_p.cpp
 viewer.cpp
 webkitparthtmlwriter.cpp
@@ -52,6 +51,7 @@ pluginloaderbase.cpp
 kxface.cpp
 csshelperbase.cpp
 contactphotomemento.cpp
+invitationsettings.cpp
 )
 
 
@@ -61,6 +61,7 @@ kde4_add_kcfg_files(libmessageviewer_SRCS
 
 kde4_add_ui_files(libmessageviewer_SRCS
   settings.ui
+  invitationsettings.ui
 )
 
 kde4_add_library(messageviewer SHARED ${libmessageviewer_SRCS})

@@ -129,7 +129,7 @@ public:
   /**
    * Restores the configuration for this mailing list from the config arguement
    */
-  void readConfig( KConfigGroup & config );
+  void readConfig( const KConfigGroup & config );
 private:
   int        mFeatures;
   Handler    mHandler;

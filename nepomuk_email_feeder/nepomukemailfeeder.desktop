@@ -76,5 +76,5 @@ Exec=akonadi_nepomuk_email_feeder
 Icon=nepomuk
 
 X-Akonadi-MimeTypes=message/rfc822,message/news
-X-Akonadi-Capabilities=Unique,Search
+X-Akonadi-Capabilities=Unique,Search,Autostart
 X-Akonadi-Identifier=akonadi_nepomuk_email_feeder

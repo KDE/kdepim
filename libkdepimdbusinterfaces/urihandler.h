@@ -25,6 +25,7 @@
 #define URIHANDLER_H
 
 #include "kdepimdbusinterfaces_export.h"
+#include <akonadi/item.h>
 class QString;
 
 class KDEPIMDBUSINTERFACES_EXPORT UriHandler
@@ -35,7 +36,7 @@ class KDEPIMDBUSINTERFACES_EXPORT UriHandler
         @return true if handler handled the URI, otherwise false.
         @param uri The URI of the link that should be handled.
     */
-    static bool process( const QString &uri );
+    static bool process( const QString &uri, const Akonadi::Item & item = Akonadi::Item() );
 };
 
 #endif

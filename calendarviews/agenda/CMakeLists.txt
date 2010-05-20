@@ -40,7 +40,7 @@ target_link_libraries(eventviews
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KMIME_LIBRARY}
                       ${KDEPIMLIBS_KCAL_LIBS}
-                      ${KDE4_KUTILS_LIBS}
+                      ${KDE4_KCMUTILS_LIBS}
                       ${ZLIB_LIBRARY}
                       ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
                       ${KDE4_KIO_LIBS}

@@ -32,7 +32,9 @@ endif(KORG_NODECOS)
 # enable exception handling
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+if (QT_QT3SUPPORT_FOUND)
 add_subdirectory( tests )
+endif (QT_QT3SUPPORT_FOUND)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5850)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
@@ -45,6 +47,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
                     ${CMAKE_BINARY_DIR}/libkdepim
                     ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
                     ${CMAKE_BINARY_DIR}/libkdepimdbusinterfaces
+                    ${CMAKE_SOURCE_DIR}/incidenceeditors
                     ${CMAKE_CURRENT_BINARY_DIR}
                     ${AKONADI_INCLUDE_DIR}
                     ${Boost_INCLUDE_DIRS}
@@ -52,13 +55,14 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
+add_subdirectory( interfaces )
 add_subdirectory( korgac )
 add_subdirectory( pixmaps )
 add_subdirectory( sounds )
+if (QT_QT3SUPPORT_FOUND)
 add_subdirectory( plugins )
-add_subdirectory( interfaces )
 add_subdirectory( kcmconfigs )
-add_subdirectory( incidenceeditor )
+endif (QT_QT3SUPPORT_FOUND)
 
 set( PERL ${PERL_EXECUTABLE} )
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ical2vcal.cmake ${CMAKE_CURRENT_BINARY_DIR}/ical2vcal @ONLY)
@@ -66,6 +70,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ical2vcal.cmake ${CMAKE_CURRENT_BINAR
 
 ########### next target ###############
 
+if (QT_QT3SUPPORT_FOUND)
 set(korganizer_SRCS
   main.cpp
   korganizer.cpp
@@ -76,22 +81,23 @@ kde4_add_app_icon(korganizer_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmaps/hi*-apps-
 
 kde4_add_executable(korganizer ${korganizer_SRCS})
 
-target_link_libraries(korganizer 
-	${KDE4_KDEUI_LIBS}
-	${KDE4_KDE3SUPPORT_LIBRARY}
-	${KDE4_KPARTS_LIBRARY} 
-	${KDEPIMLIBS_KCAL_LIBS}
- 	${KDEPIMLIBS_AKONADI_KCAL_LIBS}
-	${KDEPIMLIBS_KHOLIDAYS_LIBS} 
-	${KDEPIMLIBS_KONTACTINTERFACE_LIBS} 
-	${KDEPIMLIBS_AKONADI_LIBS} 
-	kdepim 
-	kdepimdbusinterfaces 
-	korganizerprivate 
-	korganizer_interfaces
-	korganizer_core
-	akonadi_next
-	akonadi-kcal_next
+target_link_libraries(korganizer
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KDE3SUPPORT_LIBRARY}
+    ${KDE4_KPARTS_LIBRARY}
+    ${KDEPIMLIBS_KCAL_LIBS}
+    ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
+    ${KDEPIMLIBS_KHOLIDAYS_LIBS}
+    ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
+    kdepim
+    kdepimdbusinterfaces
+    korganizerprivate
+    korganizer_interfaces
+    korganizer_core
+    akonadi_next
+    akonadi-kcal_next
+    incidenceeditors
 )
 
 install(TARGETS korganizer ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -100,7 +106,6 @@ install(TARGETS korganizer ${INSTALL_TARGETS_DEFAULT_ARGS})
 ########### next target ###############
 
 set(kcm_korganizer_PART_SRCS
-    designerfields.cpp
     kcmdesignerfields.cpp
     koprefsdialog.cpp
    )
@@ -111,7 +116,7 @@ target_link_libraries(kcm_korganizer
   ${QT_QTUITOOLS_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KHOLIDAYS_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
-  mailtransport korganizerprivate korganizer_core kdepim akonadi-kcal_next)
+  mailtransport korganizerprivate korganizer_core kdepim incidenceeditors akonadi-kcal_next)
 
 install(TARGETS kcm_korganizer  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -125,23 +130,7 @@ kde4_add_plugin(korganizerpart ${korganizerpart_PART_SRCS})
 target_link_libraries(korganizerpart ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} korganizer_interfaces akonadi-kcal_next korganizer_core korganizerprivate)
 
 install(TARGETS korganizerpart  DESTINATION ${PLUGIN_INSTALL_DIR})
-
-
-########### next target ###############
-
-set(korganizer_eventviewer_LIB_SRCS koeventviewer.cpp koeventviewerdialog.cpp)
-
-qt4_add_dbus_interfaces( korganizer_eventviewer_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml)
-qt4_add_dbus_interfaces( korganizer_eventviewer_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
-
-kde4_add_library(korganizer_eventviewer SHARED ${korganizer_eventviewer_LIB_SRCS})
-
-target_link_libraries(korganizer_eventviewer ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} kdepim kdepimdbusinterfaces akonadi-kcal_next ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS})
-
-
-set_target_properties(korganizer_eventviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS korganizer_eventviewer ${INSTALL_TARGETS_DEFAULT_ARGS})
-
+endif (QT_QT3SUPPORT_FOUND)
 
 ########### next target ###############
 
@@ -149,23 +138,18 @@ set(korganizer_core_LIB_SRCS
     koprefs.cpp
     kocore.cpp
     koidentitymanager.cpp
-    autochecktreewidget.cpp
-    categoryconfig.cpp
     categoryeditdialog.cpp
-    categoryhierarchyreader.cpp
-    categoryselectdialog.cpp
 )
 
 kde4_add_ui_files(korganizer_core_LIB_SRCS
   categoryeditdialog_base.ui
-  categoryselectdialog_base.ui
 )
 
 kde4_add_kcfg_files(korganizer_core_LIB_SRCS koprefs_base.kcfgc )
 
 kde4_add_library(korganizer_core SHARED ${korganizer_core_LIB_SRCS})
 
-target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} kdepim akonadi-kcal_next korganizer_eventviewer korganizer_interfaces)
+target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} kdepim incidenceeditors akonadi-kcal_next korganizer_interfaces)
 
 set_target_properties(korganizer_core PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
@@ -174,11 +158,13 @@ install(TARGETS korganizer_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 
+if (QT_QT3SUPPORT_FOUND)
 set(korganizerprivate_LIB_SRCS
   ${libkdgantt1_SRCS}
   collectiongeneralpage.cpp
   koalternatelabel.cpp
   kodecorationlabel.cpp
+  koeventviewerdialog.cpp
   timelabelszone.cpp
   timelabels.cpp
   timescaleconfigdialog.cpp
@@ -255,30 +241,31 @@ qt4_add_resources(korganizerprivate_LIB_SRCS agendaitem_pixmaps/agendaitemtheme.
 qt4_add_dbus_adaptor(korganizerprivate_LIB_SRCS org.kde.korganizer.Korganizer.xml korganizerifaceimpl.h KOrganizerIfaceImpl )
 qt4_add_dbus_adaptor(korganizerprivate_LIB_SRCS org.kde.Korganizer.Calendar.xml actionmanager.h ActionManager calendaradaptor KOrgCalendarAdaptor )
 qt4_add_dbus_interfaces(korganizerprivate_LIB_SRCS org.kde.korganizer.Korganizer.xml )
+qt4_add_dbus_interfaces(korganizerprivate_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml)
+qt4_add_dbus_interfaces(korganizerprivate_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
 
 kde4_add_library(korganizerprivate SHARED ${korganizerprivate_LIB_SRCS})
 
 target_link_libraries(korganizerprivate
-  ${KDE4_KNEWSTUFF2_LIBS} ${KDE4_KNEWSTUFF3_LIBS} ${KDE4_KUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} ${ZLIB_LIBRARY}
+  ${KDE4_KNEWSTUFF2_LIBS} ${KDE4_KNEWSTUFF3_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KPRINTUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} ${ZLIB_LIBRARY}
   ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY}
   ${KDEPIMLIBS_KHOLIDAYS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBRARY}
-  korganizer_eventviewer
   kdepim
   korganizer_interfaces
   kdepimdbusinterfaces
   korganizer_core
   akonadi-kcal_next
   akonadi_next
-  korg_incidenceeditor
+  incidenceeditors
 )
 
 set_target_properties(korganizerprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install(TARGETS korganizerprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
-
+endif (QT_QT3SUPPORT_FOUND)
 
 ########### install files ###############
 

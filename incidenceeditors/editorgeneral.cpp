@@ -336,11 +336,13 @@ void EditorGeneral::addAttachments( const QStringList &attachments,
   QStringList::ConstIterator it;
   int i = 0;
   for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it, ++i ) {
-    QString mimeType;
-    if ( mimeTypes.count() > i ) {
-      mimeType = mimeTypes[ i ];
+    if ( !(*it).isEmpty() ) {
+      QString mimeType;
+      if ( mimeTypes.count() > i ) {
+        mimeType = mimeTypes[ i ];
+      }
+      mAttachments->addUriAttachment( *it, mimeType, QString(), inlineAttachments );
     }
-    mAttachments->addUriAttachment( *it, mimeType, QString(), inlineAttachments );
   }
 }
 
@@ -452,7 +454,9 @@ void EditorGeneral::updateAlarmWidgets()
 
       offset = offset / -60; // make minutes
       int useoffset = offset;
-      if ( offset % ( 24 * 60 ) == 0 ) { // divides evenly into days?
+      if ( offset == 0 ) {
+        mAlarmIncrCombo->setCurrentItem( 0 ); // use minute units for 0 offset
+      } else if ( offset % ( 24 * 60 ) == 0 ) { // divides evenly into days?
         useoffset = offset / ( 24 * 60 );
         mAlarmIncrCombo->setCurrentIndex( 2 );
       } else if ( offset % 60 == 0 ) { // divides evenly into hours?

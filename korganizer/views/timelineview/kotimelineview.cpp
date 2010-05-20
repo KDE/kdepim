@@ -326,7 +326,6 @@ void KOTimelineView::itemMoved( KDGanttViewItem *item )
 
   const Item i = tlit->incidence();
   const Incidence::Ptr inc = Akonadi::incidence( i );
-  mChanger->beginChange( i );
 
   KDateTime newStart( tlit->startTime() );
   if ( inc->allDay() ) {
@@ -350,7 +349,6 @@ void KOTimelineView::itemMoved( KDGanttViewItem *item )
   inc->setDuration( duration );
   TimelineItem *parent = static_cast<TimelineItem *>( tlit->parent() );
   parent->moveItems( i, tlit->originalStart().secsTo( newStart ), duration + allDayOffset );
-  mChanger->endChange( i );
 }
 
 void KOTimelineView::overscale( KDGanttView::Scale scale )
@@ -366,5 +364,16 @@ void KOTimelineView::overscale( KDGanttView::Scale scale )
   mGantt->setMinorScaleCount( 12 );
   */
 }
+
+KOrg::CalPrinterBase::PrintType KOTimelineView::printType()
+{
+  // If up to three days are selected, use day style, otherwise week
+  if ( currentDateCount() <= 3 ) {
+    return KOrg::CalPrinterBase::Day;
+  } else {
+    return KOrg::CalPrinterBase::Week;
+  }
+}
+
 
 #include "kotimelineview.moc"

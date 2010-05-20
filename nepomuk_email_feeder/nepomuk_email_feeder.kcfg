@@ -15,4 +15,19 @@
       <default>NoIndexing</default>
     </entry>
   </group>
+  <group name="InitialIndexing">
+    <entry name="IndexAggressiveness" type="Enum">
+      <label>Aggressiveness for initial indexing.</label>
+      <choices>
+        <choice name="CachedOnly"/>
+        <choice name="LocalAndCached"/>
+        <choice name="Everything"/>
+      </choices>
+      <default>LocalAndCached</default>
+    </entry>
+    <entry name="IndexCompatLevel" type="Int">
+        <label>The compatibility level of the last successful full indexing.</label>
+        <default>0</default>
+    </entry>
+  </group>
 </kcfg>

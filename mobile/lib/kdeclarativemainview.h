@@ -19,14 +19,16 @@
 #ifndef KDECLARATIVEMAINVIEW_H
 #define KDECLARATIVEMAINVIEW_H
 
-#include <QtDeclarative/QDeclarativeView>
-
-#include "mobileui_export.h"
+#include "kdeclarativefullscreenview.h"
 #include <QItemSelectionModel>
 
 class QAbstractItemModel;
+
+class KActionCollection;
+
 namespace Akonadi {
 class EntityTreeModel;
+class Item;
 }
 
 class ListProxy;
@@ -36,7 +38,7 @@ class KDeclarativeMainViewPrivate;
  * Main view for mobile applications. This class is just to share code and therefore
  * should not be instantiated by itself.
  */
-class MOBILEUI_EXPORT KDeclarativeMainView : public QDeclarativeView
+class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 {
   Q_OBJECT;
 
@@ -69,27 +71,34 @@ public:
 
   QStringList mimeTypes() const;
 
+  KActionCollection* actionCollection() const;
+
 public slots:
   void setSelectedAccount( int row );
   void setSelectedChildCollectionRow( int row );
   void setSelectedBreadcrumbCollectionRow( int row );
 
+  void setListSelectedRow( int row );
+
   /** Returns wheter or not the child collection at row @param row has children. */
   bool childCollectionHasChildren( int row );
 
-  /** Triggers de-fullscreen/task switcher */
-  void triggerTaskSwitcher();
+  QString pathToItem( qint64 id );
 
   void launchAccountWizard();
 
   void saveFavorite( const QString &name );
   void loadFavorite( const QString &name );
 
+  QObject* getAction( const QString &name ) const;
+
 protected:
   QItemSelectionModel* regularSelectionModel() const;
   QItemSelectionModel* favoriteSelectionModel() const;
   QAbstractItemModel *regularSelectedItems() const;
   QAbstractItemModel *favoriteSelectedItems() const;
+
+  Akonadi::Item itemFromId( quint64 id ) const;
 
 private:
   KDeclarativeMainViewPrivate * const d;

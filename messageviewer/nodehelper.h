@@ -103,14 +103,22 @@ public:
      *  Return this mails subject, with all "forward" and "reply"
      *  prefixes removed
      */
-    static QString cleanSubject( KMime::Message::Ptr message );
+    static QString cleanSubject( KMime::Message *message );
 
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message::Ptr message, KMime::Message::Ptr unencrypted );
 
-    void attachExtraContent( KMime::Message::Ptr node, KMime::Content* content );
-    void removeExtraContent( KMime::Message::Ptr node );
-    QList<KMime::Content*> extraContents( KMime::Message::Ptr node );
+    /** Attach an extra node to an existing node */
+    void attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content );
+    void removeAllExtraContent( KMime::Content *topLevelNode );
+
+    /** Get the extra nodes attached to the @param topLevelNode and all sub-nodes of @param topLevelNode */
+    QList<KMime::Content*> extraContents( KMime::Content *topLevelNode );
+
+    /** Return a modified message (node tree) starting from @param topLevelNode that has the original nodes and the extra nodes.
+        The caller has the responsibility to delete the new message.
+     */
+    KMime::Message *messageWithExtraContent( KMime::Content* topLevelNode );
 
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
@@ -159,6 +167,10 @@ public:
      */
     void addTempFile( const QString& file );
 
+    // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
+    // UrlHandlerManager.
+    QString asHREF( const KMime::Content* node, const QString &place );
+
     static bool isToltecMessage( KMime::Content* node );
 
     /**
@@ -194,10 +206,6 @@ public:
      */
     static QString fileName( const KMime::Content *node );
 
-    // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
-    // UrlHandlerManager.
-    static QString asHREF( const KMime::Content* node, const QString &place );
-
     /**
      * Fixes an encoding received by a KDE function and returns the proper,
      * MIME-compilant encoding name instead.
@@ -231,10 +239,13 @@ private:
         sequence of whitespace-delimited prefixes at the beginning of
         #subject() is replaced by @p newPrefix
     **/
-    static QString cleanSubject( KMime::Message::Ptr message, const QStringList& prefixRegExps,
+    static QString cleanSubject( KMime::Message *message, const QStringList& prefixRegExps,
                                  bool replace, const QString& newPrefix );
 
     void clearBodyPartMemento( QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap );
+
+    void mergeExtraNodes( KMime::Content *node );
+    void cleanFromExtraNodes( KMime::Content *node );
 
     QList<KMime::Content*> mProcessedNodes;
     QList<KMime::Content*> mNodesUnderProcess;
@@ -248,7 +259,7 @@ private:
     QStringList mTempFiles;
     QStringList mTempDirs;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
-    QMap<KMime::Message::Ptr, QList<KMime::Content*> > mExtraContents;
+    QMap<KMime::Message::Content*, QList<KMime::Content*> > mExtraContents;
 };
 
 }

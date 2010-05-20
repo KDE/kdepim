@@ -51,6 +51,7 @@ class Message::ComposerPrivate : public JobBasePrivate
       , finished( false )
       , sign( false )
       , encrypt( false )
+      , noCrypto( false )
       , globalPart( 0 )
       , infoPart( 0 )
       , textPart( 0 )
@@ -77,12 +78,13 @@ class Message::ComposerPrivate : public JobBasePrivate
     bool finished;
     bool sign;
     bool encrypt;
+    bool noCrypto;
 
     Kleo::CryptoMessageFormat format;
     std::vector<GpgME::Key> signers;
     QList<QPair<QStringList, std::vector<GpgME::Key> > > encData;
-    
-    KMime::Message::List resultMessages;
+
+    QList<KMime::Message::Ptr> resultMessages;
 
     // Stuff that the application plays with.
     GlobalPart *globalPart;
@@ -162,7 +164,7 @@ void ComposerPrivate::composeStep2()
     while( iter.hasNext() ) {
       AttachmentPart::Ptr part = iter.next();
       kDebug() << "Checking attachment crypto policy..." << part->isSigned() << part->isEncrypted();
-      if( sign != part->isSigned() || encrypt != part->isEncrypted() ) { // different policy
+      if( !noCrypto && ( sign != part->isSigned() || encrypt != part->isEncrypted() ) ) { // different policy
         kDebug() << "got attachment with different crypto policy!";
         lateAttachmentParts.append( part );
         iter.remove();
@@ -457,7 +459,7 @@ void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content*
   content->assemble();
 
   QByteArray allData = headers->head() + content->encodedContent();
-  KMime::Message* resultMessage =  new KMime::Message;
+  KMime::Message::Ptr resultMessage( new KMime::Message );
   resultMessage->setContent( allData );
   resultMessage->parse(); // Not strictly necessary.
   resultMessages.append( resultMessage );
@@ -480,12 +482,12 @@ Composer::~Composer()
 {
 }
 
-KMime::Message::List Composer::resultMessages() const
+QList<KMime::Message::Ptr> Composer::resultMessages() const
 {
   Q_D( const Composer );
   Q_ASSERT( d->finished );
   Q_ASSERT( !error() );
-  KMime::Message::List results = d->resultMessages;
+  QList<KMime::Message::Ptr> results = d->resultMessages;
   return results;
 }
 
@@ -568,6 +570,13 @@ void Composer::setEncryptionKeys( QList<QPair<QStringList, std::vector<GpgME::Ke
   Q_D( Composer );
 
   d->encData = encData;
+}
+
+void Composer::setNoCrypto(bool noCrypto)
+{
+  Q_D( Composer );
+
+  d->noCrypto = noCrypto;
 }
 
     

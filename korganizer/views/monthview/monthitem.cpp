@@ -24,8 +24,6 @@
 
 #include "monthitem.h"
 #include <kcalprefs.h>
-#include "kodialogmanager.h"
-#include "koglobals.h"
 #include "kohelper.h"
 #include "koprefs.h"
 #include "monthgraphicsitems.h"
@@ -439,8 +437,8 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
   Incidence::Ptr incidence = Akonadi::incidence( mIncidence );
 
   Akonadi::IncidenceChanger *changer = monthScene()->incidenceChanger();
-  if ( !changer || !changer->beginChange( mIncidence ) ) {
-    Akonadi::IncidenceChanger::errorSaveIncidence( parentWidget(), incidence );
+  if ( !changer ) {
+    KOHelper::showSaveIncidenceErrorMsg( parentWidget(), incidence );
     return;
   }
 
@@ -461,7 +459,7 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
            //TODO check return values
           changer->changeIncidence( oldIncSaved, mIncidence,
                                     Akonadi::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, 0 );
-          changer->endChange( mIncidence );
+
           changer->addIncidence( newInc, mIncidence.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
@@ -483,7 +481,7 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
            //TODO check return values
           changer->changeIncidence( oldIncSaved, mIncidence,
                                     Akonadi::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, 0 );
-          changer->endChange( mIncidence );
+
           changer->addIncidence( newInc, mIncidence.parentCollection(), parentWidget() );
         } else {
           KMessageBox::sorry(
@@ -518,7 +516,6 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
     changer->changeIncidence( oldInc, mIncidence, Akonadi::IncidenceChanger::DATE_MODIFIED, 0 );
   }
 
-  changer->endChange( mIncidence );
 }
 
 void IncidenceMonthItem::updateSelection( const Akonadi::Item &incidence, const QDate &date )

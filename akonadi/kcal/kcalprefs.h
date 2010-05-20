@@ -26,10 +26,14 @@
 
 #include "kcalprefs_base.h"
 
+#include <akonadi/collection.h>
+#include <akonadi/entity.h>
+
 #include <kdatetime.h>
 
 class QStringList;
 
+// TODO: comeup with a better name, this is not libkcal, and add a namespace to it
 class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
 {
   public:
@@ -73,18 +77,19 @@ class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
     void setTimeSpec( const KDateTime::Spec &spec );
     KDateTime::Spec timeSpec();
 
-    QStringList timeScaleTimezones() const;
-    void setTimeScaleTimezones( const QStringList &list );
-
     QString mMailTransport;
 
     // Groupware passwords
     QString mPublishPassword;
     QString mRetrievePassword;
 
+    Akonadi::Entity::Id defaultCalendarId() const;
+    void setDefaultCalendarId( const Akonadi::Entity::Id );
+
   private:
     KDateTime::Spec mTimeSpec;
-    QStringList mTimeScaleTimeZones;
+
+    Akonadi::Entity::Id mDefaultCalendarId;
 };
 
 #endif

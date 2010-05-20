@@ -550,13 +550,6 @@ bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
 }
 
 
-void KNHeaderView::resetCurrentTime()
-{
-  mDateFormatter.reset();
-  QTimer::singleShot( 1000, this, SLOT(resetCurrentTime()) );
-}
-
-
 //BEGIN: KNHeaderViewToolTip ==================================================
 
 #ifdef __GNUC__

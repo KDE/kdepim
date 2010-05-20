@@ -30,7 +30,6 @@
 #include <kio/jobuidelegate.h>
 #include "kmcommands.h"
 #include "expirejob.h"
-#include "compactionjob.h"
 #include "foldershortcutactionmanager.h"
 
 #include <QMutex>
@@ -149,7 +148,7 @@ QString FolderCollection::configGroupName() const
 
 void FolderCollection::readConfig()
 {
-  KConfigGroup configGroup( KMKernel::config(), configGroupName() );
+  const KConfigGroup configGroup( KMKernel::config(), configGroupName() );
   mExpireMessages = configGroup.readEntry( "ExpireMessages", false );
   mReadExpireAge = configGroup.readEntry( "ReadExpireAge", 3 );
   mReadExpireUnits = (ExpireUnits)configGroup.readEntry( "ReadExpireUnits", (int)ExpireMonths );
@@ -184,7 +183,6 @@ void FolderCollection::readConfig()
     KShortcut sc( shortcut );
     setShortcut( sc, 0 );
   }
-  configGroup.sync();
 }
 
 bool FolderCollection::isValid() const
@@ -224,7 +222,7 @@ void FolderCollection::writeConfig() const
       }
     }
     delete imapSettingsInterface;
-    if ( identityId != -1 && mIdentity != identityId )
+    if ( identityId > -1 && mIdentity != static_cast<uint>( identityId ) )
       configGroup.writeEntry("Identity", mIdentity);
     else
       configGroup.deleteEntry( "Identity" );
@@ -321,7 +319,7 @@ uint FolderCollection::identity() const
     OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = KMail::Util::createImapSettingsInterface( mCollection.resource() );
     if ( imapSettingsInterface->isValid() ) {
       QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
-      if ( reply.isValid() ) {
+      if ( reply.isValid() && reply.value() > 0 ) {
         identityId = reply;
       }
     }
@@ -515,29 +513,8 @@ void FolderCollection::slotDeletionCollectionResult( KJob * job )
 
 void FolderCollection::expireOldMessages( bool immediate )
 {
-  kDebug() << "AKONADI PORT: port it  " << Q_FUNC_INFO;
   KMail::ScheduledExpireTask* task = new KMail::ScheduledExpireTask(mCollection, immediate);
-#if 0
   kmkernel->jobScheduler()->registerTask( task );
-  if ( immediate ) {
-    // #82259: compact after expiring.
-    compact( CompactLater );
-  }
-#endif
 }
 
-void FolderCollection::compact( FolderCollection::CompactOptions options )
-{
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-  if ( options == CompactLater ) {
-    KMail::ScheduledCompactionTask* task = new KMail::ScheduledCompactionTask(mCollection, false);
-#if 0
-    kmkernel->jobScheduler()->registerTask( task );
-#endif
-  } else {
-#if 0
-    mStorage->compact( options == CompactSilentlyNow );
-#endif
-  }
-}
 

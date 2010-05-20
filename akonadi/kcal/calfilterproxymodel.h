@@ -20,15 +20,16 @@
 #ifndef AKONADI_KCAL_CALFILTERPROXYMODEL_H
 #define AKONADI_KCAL_CALFILTERPROXYMODEL_H
 
+#include "akonadi-kcal_next_export.h"
+
 #include <QtGui/QSortFilterProxyModel>
 
 namespace KCal {
   class CalFilter;
 }
 
-class KDateTime;
 namespace Akonadi {
-  class CalFilterProxyModel : public QSortFilterProxyModel {
+  class AKONADI_KCAL_NEXT_EXPORT CalFilterProxyModel : public QSortFilterProxyModel {
     Q_OBJECT
   public:
     explicit CalFilterProxyModel( QObject* parent=0 );

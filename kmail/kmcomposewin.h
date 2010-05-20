@@ -25,6 +25,7 @@
 
 // KMail includes
 #include "composer.h"
+#include "recipientseditor.h"
 
 // Qt includes
 #include <QFont>
@@ -69,8 +70,6 @@ class KTempDir;
 class KToggleAction;
 class KUrl;
 class KRecentFilesAction;
-class RecipientsEditor;
-class KMLineEdit;
 class SnippetWidget;
 
 namespace boost {
@@ -96,7 +95,6 @@ namespace MailTransport {
 
 namespace KMail {
   class AttachmentController;
-  class AttachmentModel;
   class AttachmentView;
 }
 
@@ -106,17 +104,20 @@ namespace KIO {
 
 namespace Message {
   class Composer;
+  class AttachmentModel;
   class GlobalPart;
   class InfoPart;
-  class TextPart;
+  class SignatureController;
+}
+
+namespace MessageComposer
+{
+  class ComposerLineEdit;
+  class RecipientsEditor;
 }
 
 namespace MailTransport{
   class MessageQueueJob;
-}
-
-namespace Message {
-  class InfoPart;
 }
 
 //-----------------------------------------------------------------------------
@@ -262,12 +263,6 @@ class KMComposeWin : public KMail::Composer
      bool inlineSigningEncryptionSelected();
 
      /**
-      * Enables HTML mode, by showing the HTML toolbar and checking the
-      * "Formatting" action
-      */
-     void enableHtml();
-
-     /**
       * Disables the HTML mode, by hiding the HTML toolbar and unchecking the
       * "Formatting" action. Also, removes all rich-text formatting.
       */
@@ -289,6 +284,11 @@ class KMComposeWin : public KMail::Composer
     }
 
   private slots:
+    /**
+     * Enables HTML mode, by showing the HTML toolbar and checking the
+     * "Formatting" action
+     */
+    void enableHtml();
 
     /**
      * Actions:
@@ -401,22 +401,6 @@ class KMComposeWin : public KMail::Composer
     void slotWordWrapToggled( bool );
 
   private slots:
-    /**
-     * Append signature to the end of the text in the editor.
-     */
-    void slotAppendSignature();
-
-    /**
-    * Prepend signature at the beginning of the text in the editor.
-    */
-    void slotPrependSignature();
-
-    /**
-    * Insert signature at the cursor position of the text in the editor.
-    */
-    void slotInsertSignatureAtCursor();
-
-    void slotCleanSpace();
     void slotToggleMarkup();
     void slotTextModeChanged( KRichTextEdit::Mode );
     void htmlToolBarVisibilityChanged( bool visible );
@@ -483,10 +467,10 @@ class KMComposeWin : public KMail::Composer
      */
     void readyForSending();
 
+    enum RecipientExpansion { UseExpandedRecipients, UseUnExpandedRecipients };
     QList< Message::Composer* > generateCryptoMessages( bool sign, bool encrypt );
     void fillGlobalPart( Message::GlobalPart *globalPart );
-    void fillTextPart( Message::TextPart *part );
-    void fillInfoPart( Message::InfoPart *part );
+    void fillInfoPart( Message::InfoPart *part, RecipientExpansion expansion );
     void queueMessage( boost::shared_ptr<KMime::Message> message, Message::Composer* composer );
 
     /**
@@ -644,14 +628,6 @@ class KMComposeWin : public KMail::Composer
      */
     void cleanupAutoSave();
 
-    /**
-     * Helper to insert the signature of the current identity arbitrarily
-     * in the editor, connecting slot functions to KMeditor::insertSignature().
-     * @param placement the position of the signature
-     */
-    void insertSignatureHelper( KPIMIdentities::Signature::Placement = KPIMIdentities::Signature::End );
-
-
   private slots:
     void recipientEditorSizeHintChanged();
     void setMaximumHeaderSize();
@@ -663,8 +639,8 @@ class KMComposeWin : public KMail::Composer
     Sonnet::DictionaryComboBox *mDictionaryCombo;
     KPIMIdentities::IdentityCombo *mIdentity;
     Akonadi::CollectionComboBox *mFcc;
-    KMLineEdit *mEdtFrom, *mEdtReplyTo;
-    KMLineEdit *mEdtSubject;
+    MessageComposer::ComposerLineEdit *mEdtFrom, *mEdtReplyTo;
+    MessageComposer::ComposerLineEdit *mEdtSubject;
     QLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
     QLabel    *mLblFrom, *mLblReplyTo;
     QLabel    *mLblSubject;
@@ -674,6 +650,7 @@ class KMComposeWin : public KMail::Composer
 
     KMime::Message::Ptr mMsg;
     KMComposerEditor *mEditor;
+    Message::SignatureController *mSignatureController;
     QGridLayout *mGrid;
     QString mTextSelection;
     QString mCustomTemplate;
@@ -730,6 +707,15 @@ class KMComposeWin : public KMail::Composer
     */
     void writeAutoSaveToDisk( KMime::Message::Ptr message );
 
+    /**
+     * Creates a simple composer that creates a KMime::Message out of the composer content.
+     * Crypto handling is not done, therefore the name "simple".
+     * This is used when autosaving or printing a message.
+     *
+     * The caller takes ownership of the composer.
+     */
+    Message::Composer* createSimpleComposer();
+
     bool canSignEncryptAttachments() const {
       return cryptoMessageFormat() != Kleo::InlineOpenPGPFormat;
     }
@@ -766,10 +752,10 @@ class KMComposeWin : public KMail::Composer
     void slotConfigChanged();
 
     void slotAutoSaveComposeResult( KJob *job );
+    void slotPrintComposeResult( KJob *job );
     void slotSendComposeResult( KJob *job );
     void slotQueueResult( KJob *job );
     void slotCreateItemResult( KJob *job );
-    void slotContinuePrint( bool );
 
     void slotEncryptChiasmusToggled( bool );
 
@@ -790,7 +776,7 @@ class KMComposeWin : public KMail::Composer
     QSplitter *mSplitter;
     QSplitter *mSnippetSplitter;
     KMail::AttachmentController *mAttachmentController;
-    KMail::AttachmentModel *mAttachmentModel;
+    Message::AttachmentModel *mAttachmentModel;
     KMail::AttachmentView *mAttachmentView;
     QByteArray mOriginalPreferredCharset;
 
@@ -801,16 +787,16 @@ class KMComposeWin : public KMail::Composer
     KToggleAction *mEncryptChiasmusAction;
     bool mEncryptWithChiasmus;
 
+    // List of active composer jobs. For example, saving as draft, autosaving and printing
+    // all create a composer, which is added to this list as long as it is active.
+    // Used mainly to prevent closing the window if a composer is active
     QList< Message::Composer* > mComposers;
+
     Message::Composer *mDummyComposer;
     int mPendingQueueJobs;
     int mPendingCreateItemJobs;
 
-    // Temp var for slotPrint:
-    bool mMessageWasModified;
-
-
-    RecipientsEditor *mRecipientsEditor;
+    MessageComposer::RecipientsEditor *mRecipientsEditor;
     int mLabelWidth;
 
     QTimer *mAutoSaveTimer;

@@ -70,6 +70,11 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   connect( m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
   connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
   connect( m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+
+  // use the unfiltered model to catch collections
+  connect( m_treeModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInTreeModel(QModelIndex,int,int)) );
+  connect( m_treeModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemovedInTreeModel(QModelIndex,int,int)) );
+  
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -78,40 +83,57 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   */
 }
 
+void Calendar::Private::rowsInsertedInTreeModel( const QModelIndex &parent, int start, int end )
+{
+  collectionsAdded( collectionsFromModel( m_treeModel, parent, start, end ) );
+}
 
-void Calendar::Private::rowsInserted( const QModelIndex &parent, int start, int end ) {
+void Calendar::Private::rowsAboutToBeRemovedInTreeModel( const QModelIndex &parent, int start, int end )
+{
+  collectionsRemoved( collectionsFromModel( m_treeModel, parent, start, end ) );
+}
+
+
+void Calendar::Private::rowsInserted( const QModelIndex &parent, int start, int end )
+{
   itemsAdded( itemsFromModel( m_model, parent, start, end ) );
 }
 
-void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end ) {
+void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end )
+{
   itemsRemoved( itemsFromModel( m_model, parent, start, end ) );
 }
 
-void Calendar::Private::layoutChanged() {
+void Calendar::Private::layoutChanged()
+{
   kDebug();
 }
 
-void Calendar::Private::modelReset() {
+void Calendar::Private::modelReset()
+{
   kDebug();
   clear();
   readFromModel();
 }
 
-void Calendar::Private::clear() {
+void Calendar::Private::clear()
+{
   itemsRemoved( m_itemMap.values() );
   Q_ASSERT( m_itemMap.isEmpty() );
   m_childToParent.clear();
   m_parentToChildren.clear();
   m_childToUnseenParent.clear();
   m_unseenParentToChildren.clear();
-  m_itemsForDate.clear();
+  m_itemIdsForDate.clear();
 }
 
-void Calendar::Private::readFromModel() {
+void Calendar::Private::readFromModel()
+{
   itemsAdded( itemsFromModel( m_model ) );
 }
 
-void Calendar::Private::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight ) {
+void Calendar::Private::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+{
   kDebug();
   Q_ASSERT( topLeft.row() <= bottomRight.row() );
   const int endRow = bottomRight.row();
@@ -143,7 +165,8 @@ void Calendar::Private::assertInvariants() const
 {
 }
 
-void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
+void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
+{
   assertInvariants();
   const bool alreadyExisted = m_itemMap.contains( item.id() );
   const Item::Id id = item.id();
@@ -161,23 +184,31 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
   const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
   Q_ASSERT( incidence );
 
-  if ( alreadyExisted ) {
-    //TODO(AKONADI_PORT): for changed items, we should remove existing date entries (they might have changed)
+  if ( alreadyExisted && m_itemDateForItemId.contains( item.id() )) {
+    // for changed items, we must remove existing date entries (they might have changed)
+    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()] );
+    m_itemDateForItemId.remove( item.id() );
   }
 
-  if( const KCal::Todo::Ptr t = Akonadi::todo( item ) ) {
+  QString date;
+  if ( const KCal::Todo::Ptr t = Akonadi::todo( item ) ) {
     if ( t->hasDueDate() ) {
-      m_itemsForDate.insert( t->dtDue().date().toString(), item );
+      date = t->dtDue().date().toString();
     }
-  } else if( const KCal::Event::Ptr e = Akonadi::event( item ) ) {
+  } else if ( const KCal::Event::Ptr e = Akonadi::event( item ) ) {
     if ( !e->recurs() && !e->isMultiDay() ) {
-      m_itemsForDate.insert( e->dtStart().date().toString(), item );
+      date = e->dtStart().date().toString();
     }
-  } else if( const KCal::Journal::Ptr j = Akonadi::journal( item ) ) {
-      m_itemsForDate.insert( j->dtStart().date().toString(), item );
+  } else if ( const KCal::Journal::Ptr j = Akonadi::journal( item ) ) {
+    date = j->dtStart().date().toString();
   }  else {
     Q_ASSERT( false );
     return;
+  }
+
+  if ( !m_itemIdsForDate.contains( date, item.id() ) ) {
+    m_itemIdsForDate.insert( date, item.id() );
+    m_itemDateForItemId.insert( item.id(), date );
   }
 
   m_itemMap.insert( id, item );
@@ -301,18 +332,35 @@ void Calendar::Private::itemChanged( const Item& item )
 
 void Calendar::Private::itemsAdded( const Item::List &items )
 {
-    kDebug() << "adding items: " << items.count();
-    assertInvariants();
-    foreach( const Item &item, items ) {
-        Q_ASSERT( item.isValid() );
-        if ( !Akonadi::hasIncidence( item ) )
-          continue;
-        updateItem( item, AssertNew );
-        const KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
-        kDebug() << "Add akonadi id=" << item.id() << "parentCollection.id() :"<<item.parentCollection().id()<< "parentCollection.name() :"<<item.parentCollection().name()<<"uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
+  kDebug() << "adding items: " << items.count();
+  assertInvariants();
+  foreach( const Item &item, items ) {
+    Q_ASSERT( item.isValid() );
+    if ( !Akonadi::hasIncidence( item ) ) {
+      continue;
     }
-    emit q->calendarChanged();
-    assertInvariants();
+    updateItem( item, AssertNew );
+    const KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
+  }
+  emit q->calendarChanged();
+  assertInvariants();
+}
+
+void Calendar::Private::collectionsAdded( const Collection::List &collections )
+{
+  kDebug() << "adding collections: " << collections.count();
+ 
+  foreach( const Collection &collection, collections ) {
+    m_collectionMap[collection.id()] = collection;
+  }
+}
+
+void Calendar::Private::collectionsRemoved( const Collection::List &collections )
+{
+  kDebug() << "removing collections: " << collections.count();
+  foreach( const Collection &collection, collections ) {
+    m_collectionMap.remove( collection.id() );
+  }
 }
 
 void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
@@ -346,38 +394,38 @@ void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
 
 void Calendar::Private::itemsRemoved( const Item::List &items )
 {
-    assertInvariants();
-    foreach( const Item& item, items ) {
-        Q_ASSERT( item.isValid() );
-        Item ci( m_itemMap.take( item.id() ) );
+  assertInvariants();
+  foreach( const Item& item, items ) {
+    Q_ASSERT( item.isValid() );
+    Item ci( m_itemMap.take( item.id() ) );
 
-        removeItemFromMaps( ci );
+    removeItemFromMaps( ci );
 
-        kDebug()<<item.id();
-        Q_ASSERT( ci.hasPayload<KCal::Incidence::Ptr>() );
-        const KCal::Incidence::Ptr incidence = ci.payload<KCal::Incidence::Ptr>();
-        kDebug() << "Remove uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
+    kDebug()<<item.id();
+    Q_ASSERT( ci.hasPayload<KCal::Incidence::Ptr>() );
+    const KCal::Incidence::Ptr incidence = ci.payload<KCal::Incidence::Ptr>();
+    kDebug() << "Remove uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
 
-        if( const KCal::Event::Ptr e = dynamic_pointer_cast<KCal::Event>( incidence ) ) {
-          if ( !e->recurs() ) {
-            m_itemsForDate.remove( e->dtStart().date().toString(), item );
-          }
-        } else if( const KCal::Todo::Ptr t = dynamic_pointer_cast<KCal::Todo>( incidence ) ) {
-          if ( t->hasDueDate() ) {
-            m_itemsForDate.remove( t->dtDue().date().toString(), item );
-          }
-        } else if( const KCal::Journal::Ptr j = dynamic_pointer_cast<KCal::Journal>( incidence ) ) {
-          m_itemsForDate.remove( j->dtStart().date().toString(), item );
-        } else {
-          Q_ASSERT( false );
-          continue;
-        }
-
-        incidence->unRegisterObserver( q );
-        q->notifyIncidenceDeleted( item );
+    if ( const KCal::Event::Ptr e = dynamic_pointer_cast<KCal::Event>( incidence ) ) {
+      if ( !e->recurs() ) {
+        m_itemIdsForDate.remove( e->dtStart().date().toString(), item.id() );
+      }
+    } else if ( const KCal::Todo::Ptr t = dynamic_pointer_cast<KCal::Todo>( incidence ) ) {
+      if ( t->hasDueDate() ) {
+        m_itemIdsForDate.remove( t->dtDue().date().toString(), item.id() );
+      }
+    } else if ( const KCal::Journal::Ptr j = dynamic_pointer_cast<KCal::Journal>( incidence ) ) {
+      m_itemIdsForDate.remove( j->dtStart().date().toString(), item.id() );
+    } else {
+      Q_ASSERT( false );
+      continue;
     }
-    emit q->calendarChanged();
-    assertInvariants();
+
+    incidence->unRegisterObserver( q );
+    q->notifyIncidenceDeleted( item );
+  }
+  emit q->calendarChanged();
+  assertInvariants();
 }
 
 Calendar::Calendar( QAbstractItemModel* treeModel, QAbstractItemModel *model, const KDateTime::Spec &timeSpec, QObject *parent )
@@ -394,25 +442,29 @@ Calendar::~Calendar()
   delete d;
 }
 
-QAbstractItemModel* Calendar::treeModel() const {
+QAbstractItemModel* Calendar::treeModel() const
+{
   return d->m_treeModel;
 }
 
-QAbstractItemModel* Calendar::model() const {
+QAbstractItemModel* Calendar::model() const
+{
   return d->m_filterProxy;
 }
 
-QAbstractItemModel* Calendar::unfilteredModel() const {
+QAbstractItemModel* Calendar::unfilteredModel() const
+{
   return d->m_model;
 }
 
-void Calendar::setUnfilteredModel( QAbstractItemModel *model ) {
+void Calendar::setUnfilteredModel( QAbstractItemModel *model )
+{
 
-  if ( d->m_model == model )
+  if ( d->m_model == model ) {
     return;
+  }
 
-  if ( d->m_model )
-  {
+  if ( d->m_model ) {
     disconnect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), d, SLOT(dataChanged(QModelIndex,QModelIndex)) );
     disconnect( d->m_model, SIGNAL(layoutChanged()), d, SLOT(layoutChanged()) );
     disconnect( d->m_model, SIGNAL(modelReset()), d, SLOT(modelReset()) );
@@ -421,8 +473,7 @@ void Calendar::setUnfilteredModel( QAbstractItemModel *model ) {
   }
   d->m_model = model;
   d->m_filterProxy->setSourceModel( model );
-  if ( model )
-  {
+  if ( model ) {
     connect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), d, SLOT(dataChanged(QModelIndex,QModelIndex)) );
     connect( d->m_model, SIGNAL(layoutChanged()), d, SLOT(layoutChanged()) );
     connect( d->m_model, SIGNAL(modelReset()), d, SLOT(modelReset()) );
@@ -473,8 +524,9 @@ Item::List Calendar::rawTodos( TodoSortField sortField, SortDirection sortDirect
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Akonadi::todo( i.value() ) )
+    if ( Akonadi::todo( i.value() ) ) {
       todoList.append( i.value() );
+    }
   }
   return sortTodos( todoList, sortField, sortDirection );
 }
@@ -486,10 +538,11 @@ Item::List Calendar::rawTodosForDate( const QDate &date )
   kDebug()<<date.toString();
   Item::List todoList;
   QString dateStr = date.toString();
-  QMultiHash<QString, Item>::const_iterator it = d->m_itemsForDate.constFind( dateStr );
-  while ( it != d->m_itemsForDate.constEnd() && it.key() == dateStr ) {
-    if( Akonadi::todo( it.value() ) )
-      todoList.append( it.value() );
+  QMultiHash<QString, Item::Id>::const_iterator it = d->m_itemIdsForDate.constFind( dateStr );
+  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == dateStr ) {
+    if ( Akonadi::todo( d->m_itemMap[it.value()] ) ) {
+      todoList.append( d->m_itemMap[it.value()] );
+    }
     ++it;
   }
   return todoList;
@@ -509,34 +562,43 @@ KCal::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to )
   while ( i.hasNext() ) {
     const Item item = i.next().value();
     KCal::Incidence::Ptr e = Akonadi::event( item );
-    if( ! e )
+    if ( !e ) {
       continue;
-    kDebug() << e->summary();
-    if ( e->recurs() )
-        appendRecurringAlarms( alarmList, item, from, to );
-    else
-        appendAlarms( alarmList, item, from, to );
+    }
+
+    if ( e->recurs() ) {
+      appendRecurringAlarms( alarmList, item, from, to );
+    } else {
+      appendAlarms( alarmList, item, from, to );
+    }
   }
   return alarmList;
 }
 
-Item::List Calendar::rawEventsForDate( const QDate &date, const KDateTime::Spec &timespec, EventSortField sortField, SortDirection sortDirection )
+Item::List Calendar::rawEventsForDate( const QDate &date,
+                                       const KDateTime::Spec &timespec,
+                                       EventSortField sortField,
+                                       SortDirection sortDirection )
 {
   kDebug()<<date.toString();
   Item::List eventList;
   // Find the hash for the specified date
   QString dateStr = date.toString();
   // Iterate over all non-recurring, single-day events that start on this date
-  QMultiHash<QString, Item>::const_iterator it = d->m_itemsForDate.constFind( dateStr );
+  QMultiHash<QString, Item::Id>::const_iterator it = d->m_itemIdsForDate.constFind( dateStr );
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
   KDateTime kdt( date, ts );
-  while ( it != d->m_itemsForDate.constEnd() && it.key() == dateStr ) {
-    if( KCal::Event::Ptr ev = Akonadi::event( it.value() ) ) {
+  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == dateStr ) {
+    if ( KCal::Event::Ptr ev = Akonadi::event( d->m_itemMap[it.value()] ) ) {
       KDateTime end( ev->dtEnd().toTimeSpec( ev->dtStart() ) );
-      if ( ev->allDay() )
-        end.setDateOnly( true ); else end = end.addSecs( -1 );
-      if ( end >= kdt )
-        eventList.append( it.value() );
+      if ( ev->allDay() ) {
+        end.setDateOnly( true );
+      } else {
+        end = end.addSecs( -1 );
+      }
+      if ( end >= kdt ) {
+        eventList.append( d->m_itemMap[it.value()] );
+      }
     }
     ++it;
   }
@@ -544,7 +606,7 @@ Item::List Calendar::rawEventsForDate( const QDate &date, const KDateTime::Spec 
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( KCal::Event::Ptr ev = Akonadi::event( i.value() ) ) {
+    if ( KCal::Event::Ptr ev = Akonadi::event( i.value() ) ) {
       if ( ev->recurs() ) {
         if ( ev->isMultiDay() ) {
           int extraDays = ev->dtStart().date().daysTo( ev->dtEnd().date() );
@@ -555,8 +617,9 @@ Item::List Calendar::rawEventsForDate( const QDate &date, const KDateTime::Spec 
             }
           }
         } else {
-          if ( ev->recursOn( date, ts ) )
+          if ( ev->recursOn( date, ts ) ) {
             eventList.append( i.value() );
+          }
         }
       } else {
         if ( ev->isMultiDay() ) {
@@ -581,7 +644,7 @@ Item::List Calendar::rawEvents( const QDate &start, const QDate &end, const KDat
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( KCal::Event::Ptr event = Akonadi::event( i.value() ) ) {
+    if ( KCal::Event::Ptr event = Akonadi::event( i.value() ) ) {
       KDateTime rStart = event->dtStart();
       if ( nd < rStart ) continue;
       if ( inclusive && rStart < st ) continue;
@@ -602,7 +665,7 @@ Item::List Calendar::rawEvents( const QDate &start, const QDate &end, const KDat
           if ( inclusive && nd < rEnd ) continue;
           break;
         } // switch(duration)
-      } //if(recurs)
+      } //if (recurs)
       eventList.append( i.value() );
     }
   }
@@ -622,7 +685,7 @@ Item::List Calendar::rawEvents( EventSortField sortField, SortDirection sortDire
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Akonadi::event( i.value() ) )
+    if ( Akonadi::event( i.value() ) )
       eventList.append( i.value() );
   }
   return sortEvents( eventList, sortField, sortDirection );
@@ -632,34 +695,35 @@ Item::List Calendar::rawEvents( EventSortField sortField, SortDirection sortDire
 Item Calendar::journal( const Item::Id &id )
 {
   const Item item = d->m_itemMap.value( id );
-  if ( Akonadi::journal( item ) )
+  if ( Akonadi::journal( item ) ) {
     return item;
-  else
+  } else {
     return Item();
+  }
 }
 
 Item::List Calendar::rawJournals( JournalSortField sortField, SortDirection sortDirection )
 {
-  kDebug()<<sortField<<sortDirection;
   Item::List journalList;
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Akonadi::journal( i.value() ) )
+    if ( Akonadi::journal( i.value() ) ) {
       journalList.append( i.value() );
+    }
   }
   return sortJournals( journalList, sortField, sortDirection );
 }
 
 Item::List Calendar::rawJournalsForDate( const QDate &date )
 {
-  kDebug()<<date.toString();
   Item::List journalList;
   QString dateStr = date.toString();
-  QMultiHash<QString, Item>::const_iterator it = d->m_itemsForDate.constFind( dateStr );
-  while ( it != d->m_itemsForDate.constEnd() && it.key() == dateStr ) {
-    if( Akonadi::journal( it.value() ) )
-      journalList.append( it.value() );
+  QMultiHash<QString, Item::Id>::const_iterator it = d->m_itemIdsForDate.constFind( dateStr );
+  while ( it != d->m_itemIdsForDate.constEnd() && it.key() == dateStr ) {
+    if ( Akonadi::journal( d->m_itemMap[it.value()] ) ) {
+      journalList.append( d->m_itemMap[it.value()] );
+    }
     ++it;
   }
   return journalList;
@@ -670,18 +734,22 @@ Item Calendar::findParent( const Item &child ) const
   return d->m_itemMap.value( d->m_childToParent.value( child.id() ) );
 }
 
-Item::List Calendar::findChildren( const Item &parent ) const {
+Item::List Calendar::findChildren( const Item &parent ) const
+{
   Item::List l;
-  Q_FOREACH( const Item::Id &id, d->m_parentToChildren.value( parent.id() ) )
-      l.push_back( d->m_itemMap.value( id ) );
+  Q_FOREACH( const Item::Id &id, d->m_parentToChildren.value( parent.id() ) ) {
+    l.push_back( d->m_itemMap.value( id ) );
+  }
   return l;
 }
 
-bool Calendar::isChild( const Item &parent, const Item &child ) const {
+bool Calendar::isChild( const Item &parent, const Item &child ) const
+{
   return d->m_childToParent.value( child.id() ) == parent.id();
 }
 
-Item::Id Calendar::itemIdForIncidenceUid(const QString &uid) const {
+Item::Id Calendar::itemIdForIncidenceUid(const QString &uid) const
+{
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
@@ -1344,7 +1412,7 @@ Item::List Calendar::sortJournals( const Item::List &journalList_,
 }
 
 Item::List Calendar::journals( JournalSortField sortField,
-                                  SortDirection sortDirection )
+                               SortDirection sortDirection )
 {
   const Item::List jl = rawJournals( sortField, sortDirection );
   return Akonadi::applyCalFilter( jl, filter() );
@@ -1572,8 +1640,8 @@ QString Calendar::productId() const
 }
 
 Item::List Calendar::mergeIncidenceList( const Item::List &events,
-                                              const Item::List &todos,
-                                              const Item::List &journals )
+                                         const Item::List &todos,
+                                         const Item::List &journals )
 {
   Item::List incidences;
 
@@ -1731,5 +1799,15 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
       kDebug() << incidence->summary() << "':" << dt.toString();
       alarms.append( a );
     }
+  }
+
+}
+
+Collection Calendar::collection( const Akonadi::Collection::Id &id )
+{
+  if ( d->m_collectionMap.contains( id ) ) {
+    return d->m_collectionMap[id];
+  } else {
+    return Collection();
   }
 }

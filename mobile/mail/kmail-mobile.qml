@@ -58,7 +58,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
-      titleIcon: KDE.iconPath( "kmail", 48 )
+      titleIcon: KDE.iconPath( "kmail-mobile", 48 )
       handlePosition: 30
       handleHeight: 78
       content: [
@@ -66,7 +66,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: "Mail start page"
+          startText: KDE.i18n( "Mail start page" )
           favoritesModel : favoritesList
 
           contextActions: [
@@ -76,21 +76,24 @@ KPIM.MainView {
               KPIM.Button {
                 width: parent.width
                 height: 480 / 6
-                buttonText : "Write new Email"
+                buttonText : KDE.i18n( "Write new Email" )
                 font.bold: true
-                onClicked : { console.log( "Write new clicked" ); }
+                onClicked : {
+                  startPanel.collapse();
+                  application.startComposer();
+                }
               }
               KPIM.Button {
                 width: parent.width
                 height: 480 / 6
-                buttonText : "Add Account"
+                buttonText : KDE.i18n( "Add Account" )
                 font.bold: true
                 onClicked : { application.launchAccountWizard(); }
               }
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
-                buttonText : "Add Favorite"
+                buttonText : KDE.i18n( "Add Favorite" )
                 font.bold:  true
                 onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
               }
@@ -117,9 +120,8 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: folderPanel
-      titleText: "Folders"
+      titleText: KDE.i18n( "Folders" )
       handleHeight: 150
-      handlePosition: startPanel.handlePosition + startPanel.handleHeight
       content: [
         Item {
           anchors.fill: parent
@@ -134,9 +136,6 @@ KPIM.MainView {
             breadcrumbItemsModel : breadcrumbCollectionsModel
             selectedItemModel : selectedCollectionModel
             childItemsModel : childCollectionsModel
-            onCollectionSelected: {
-              //folderPanel.collapse()
-            }
           }
 
           HeaderView {
@@ -151,7 +150,10 @@ KPIM.MainView {
               // Prevent reloading of the message, perhaps this should be done
               // in messageview itself.
               if ( messageView.itemId != headerList.currentItemId )
+              {
+                messageView.messagePath = application.pathToItem(headerList.currentItemId);
                 messageView.itemId = headerList.currentItemId;
+              }
               folderPanel.collapse()
             }
           }
@@ -169,9 +171,10 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Write new E-Mail"
+              buttonText : KDE.i18n( "Write new E-Mail" )
               onClicked : {
-                console.log("Write new");
+                folderPanel.collapse();
+                application.startComposer();
               }
             }
             KPIM.Button {
@@ -180,7 +183,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Search for E-Mail"
+              buttonText : KDE.i18n( "Search for E-Mail" )
               onClicked : {
                 console.log("Search email");
               }
@@ -190,7 +193,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Configure Account"
+              buttonText : KDE.i18n( "Configure Account" )
               onClicked : {
                 console.log("Configure");
               }
@@ -203,31 +206,54 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: actionPanel
-      titleText: "Actions"
-      // ### QML has a bug where the children property is broken.
-      // As a workaround, we need to set handlePosition here and
-      // set anchors.fill parent on the panels. Remove when Qt is fixed.
-      handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
+      titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       contentWidth: 240
       content: [
           KPIM.Button {
-            id: moveButton
+            id: replyButton
             anchors.top: parent.top;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Move"
-            onClicked: actionPanel.collapse();
+            buttonText: KDE.i18n( "Reply" )
+            onClicked: {
+              actionPanel.collapse();
+              application.reply( messageView.itemId );
+            }
           },
           KPIM.Button {
-            id: deleteButton
-            anchors.top: moveButton.bottom;
+            id: replyAllButton
+            anchors.top: replyButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Delete"
-            onClicked: actionPanel.collapse();
+            buttonText: KDE.i18n( "Reply To All" )
+            onClicked: {
+              actionPanel.collapse();
+              application.replyToAll( messageView.itemId );
+            }
+          },
+          KPIM.Button {
+            id: forwardButton
+            anchors.top: replyAllButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText: KDE.i18n( "Forward" )
+            onClicked: {
+              actionPanel.collapse();
+              application.forwardInline( messageView.itemId );
+            }
+          },
+          KPIM.Action{
+            id : deleteButton
+            anchors.top: forwardButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            hardcoded_height: parent.height / 6
+            action : application.getAction("akonadi_item_delete")
+            onTriggered : actionPanel.collapse();
           },
           KPIM.Button {
             id: previousButton
@@ -235,7 +261,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Previous"
+            buttonText: KDE.i18n( "Previous" )
             onClicked: {
               if ( messageView.itemId >= 0 )
                 headerList.previousItem();
@@ -248,7 +274,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Next"
+            buttonText: KDE.i18n( "Next" )
             onClicked: {
               if ( messageView.itemId >= 0 )
                 headerList.nextItem();
@@ -261,14 +287,13 @@ KPIM.MainView {
 
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition: actionPanel.handlePosition + actionPanel.handleHeight
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: attachmentView.requestedWidth
       content: [
-        AttachmentList {
+        KPIM.AttachmentList {
           id: attachmentView
           model: messageView.attachmentModel
           anchors.fill: parent

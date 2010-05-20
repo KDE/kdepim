@@ -25,13 +25,17 @@
 
 #include "eventeditor.h"
 #include "editorconfig.h"
+#ifdef HAVE_QT3SUPPORT
 #include "editordetails.h"
 #include "editorfreebusy.h"
+#endif
 #include "editorgeneralevent.h"
 #include "editorrecurrence.h"
+#include "incidencegeneraleditor.h"
 
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/incidencechanger.h>
+#include <akonadi/kcal/groupware.h>
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
@@ -43,6 +47,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+using namespace KCal;
 using namespace Akonadi;
 using namespace IncidenceEditors;
 
@@ -93,14 +98,18 @@ void EventEditor::init()
            mRecurrence, SLOT(setDateTimes(const QDateTime&,const QDateTime&)) );
   connect( mGeneral, SIGNAL(dateTimeStrChanged(const QString&)),
            mRecurrence, SLOT(setDateTimeStr(const QString&)) );
+#ifdef HAVE_QT3SUPPORT
   connect( mFreeBusy, SIGNAL(dateTimesChanged(const QDateTime&,const QDateTime&)),
            mRecurrence, SLOT(setDateTimes(const QDateTime&,const QDateTime&)) );
+#endif
 
   // Propagate date time settings to gantt tab and back
+#ifdef HAVE_QT3SUPPORT
   connect( mGeneral, SIGNAL(dateTimesChanged(const QDateTime&,const QDateTime&)),
            mFreeBusy, SLOT(slotUpdateGanttView(const QDateTime&,const QDateTime&)) );
   connect( mFreeBusy, SIGNAL(dateTimesChanged(const QDateTime&,const QDateTime&)),
            mGeneral, SLOT(setDateTimes(const QDateTime&,const QDateTime&)) );
+#endif
 
   connect( mGeneral, SIGNAL(focusReceivedSignal()),
            SIGNAL(focusReceivedSignal()) );
@@ -110,18 +119,22 @@ void EventEditor::init()
   connect( this, SIGNAL(updateCategoryConfig()),
            mGeneral, SIGNAL(updateCategoryConfig()) );
 
+#ifdef HAVE_QT3SUPPORT
   connect( mFreeBusy, SIGNAL(updateAttendeeSummary(int)),
            mGeneral, SLOT(updateAttendeeSummary(int)) );
+#endif
 
   connect( mGeneral, SIGNAL(editRecurrence()),
            mRecurrenceDialog, SLOT(show()) );
   connect( mRecurrenceDialog, SIGNAL(okClicked()),
            SLOT(updateRecurrenceSummary()) );
 
+#ifdef HAVE_QT3SUPPORT
   connect( mGeneral, SIGNAL(acceptInvitation()),
            mFreeBusy, SLOT(acceptForMe()) );
   connect( mGeneral, SIGNAL(declineInvitation()),
            mFreeBusy, SLOT(declineForMe()) );
+#endif
 
   updateRecurrenceSummary();
 }
@@ -132,6 +145,7 @@ void EventEditor::setupGeneral()
 
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, i18nc( "@title:tab general event settings", "&General" ) );
+//   mTabWidget->addTab( new EventGeneralEditor( this ), "&New General" );
   topFrame->setWhatsThis( i18nc( "@info:whatsthis",
                                  "The General tab allows you to set the most "
                                  "common options for the event." ) );
@@ -176,8 +190,10 @@ void EventEditor::setupFreeBusy()
   QVBoxLayout *topLayout = new QVBoxLayout( freeBusyPage );
   topLayout->setMargin(0);
 
+#ifdef HAVE_QT3SUPPORT
   mAttendeeEditor = mFreeBusy = new EditorFreeBusy( spacingHint(), freeBusyPage );
   topLayout->addWidget( mFreeBusy );
+#endif
 }
 
 void EventEditor::newEvent()
@@ -194,11 +210,13 @@ void EventEditor::setDates( const QDateTime &from, const QDateTime &to, bool all
   mRecurrence->setDefaults( from, to, allDay );
 
   if ( mFreeBusy ) {
+#ifdef HAVE_QT3SUPPORT
     if ( allDay ) {
       mFreeBusy->setDateTimes( from, to.addDays( 1 ) );
     } else {
       mFreeBusy->setDateTimes( from, to );
     }
+#endif
   }
 }
 
@@ -232,7 +250,9 @@ bool EventEditor::processInput()
     return false;
   }
 
+#ifdef HAVE_QT3SUPPORT
   QPointer<EditorFreeBusy> freeBusy( mFreeBusy );
+#endif
 
   if ( Akonadi::hasEvent( mIncidence ) ) {
     Event::Ptr ev = Akonadi::event( mIncidence );
@@ -269,18 +289,13 @@ bool EventEditor::processInput()
         Akonadi::Collection col = mCalSelector->currentCollection();
         rc = mChanger->addIncidence( event2, col, this );
       } else {
-        if ( mChanger->beginChange( mIncidence ) ) {
-          ev->startUpdates(); //merge multiple mIncidence->updated() calls into one
-          fillEvent(mIncidence);
-          rc = mChanger->changeIncidence( oldEvent,
-                                          mIncidence,
-                                          Akonadi::IncidenceChanger::NOTHING_MODIFIED,
-                                          this );
-          ev->endUpdates();
-          mChanger->endChange( mIncidence );
-        } else {
-          return false;
-        }
+        ev->startUpdates(); //merge multiple mIncidence->updated() calls into one
+        fillEvent(mIncidence);
+        rc = mChanger->changeIncidence( oldEvent,
+                                        mIncidence,
+                                        Akonadi::IncidenceChanger::NOTHING_MODIFIED,
+                                        this );
+        ev->endUpdates();
       }
     }
     return rc;
@@ -299,9 +314,11 @@ bool EventEditor::processInput()
   }
 
   // if "this" was deleted, freeBusy is 0 (being a guardedptr)
+#ifdef HAVE_QT3SUPPORT
   if ( freeBusy ) {
     freeBusy->cancelReload();
   }
+#endif
 
   return true;
 }
@@ -309,7 +326,9 @@ bool EventEditor::processInput()
 void EventEditor::processCancel()
 {
   if ( mFreeBusy ) {
+#ifdef HAVE_QT3SUPPORT
     mFreeBusy->cancelReload();
+#endif
   }
 }
 
@@ -334,8 +353,10 @@ bool EventEditor::read( const Item &eventItem, const QDate &date, bool tmpl )
   mRecurrence->readIncidence( event.get() );
 
   if ( mFreeBusy ) {
+#ifdef HAVE_QT3SUPPORT
     mFreeBusy->readIncidence( event.get() );
     mFreeBusy->triggerReload();
+#endif
   }
 
   createEmbeddedURLPages( event.get() );
@@ -352,7 +373,9 @@ void EventEditor::fillEvent( const Akonadi::Item &item )
   KCal::Event::Ptr event = Akonadi::event(item);
   mGeneral->fillEvent( event.get() );
   if ( mFreeBusy ) {
+#ifdef HAVE_QT3SUPPORT
     mFreeBusy->fillIncidence( event.get() );
+#endif
   }
   cancelRemovedAttendees( item );
   mRecurrence->fillIncidence( event.get() );
@@ -364,9 +387,11 @@ bool EventEditor::validateInput()
   if ( !mGeneral->validateInput() ) {
     return false;
   }
+#ifdef HAVE_QT3SUPPORT
   if ( !mDetails->validateInput() ) {
     return false;
   }
+#endif
   if ( !mRecurrence->validateInput() ) {
     return false;
   }

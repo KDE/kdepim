@@ -227,6 +227,7 @@ void ConfigureThemesDialog::Private::fillThemeList()
     (void)new ThemeListWidgetItem( mThemeList, *( *it ) );
 }
 
+
 void ConfigureThemesDialog::Private::themeListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
 {
   commitEditor();
@@ -327,6 +328,8 @@ void ConfigureThemesDialog::Private::newThemeButtonClicked()
   ThemeListWidgetItem * item = new ThemeListWidgetItem( mThemeList, emptyTheme );
 
   mThemeList->setCurrentItem( item );
+  mDeleteThemeButton->setEnabled( mThemeList->count() > 1 );
+
 }
 
 void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
@@ -342,6 +345,7 @@ void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
   item = new ThemeListWidgetItem( mThemeList, copyTheme );
 
   mThemeList->setCurrentItem( item );
+  mDeleteThemeButton->setEnabled( mThemeList->count() > 1 );
 
 }
 
@@ -356,6 +360,8 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
   mEditor->editTheme( 0 ); // forget it
 
   delete item; // this will trigger themeListCurrentItemChanged()
+
+  mDeleteThemeButton->setEnabled( mThemeList->count() > 1 );
 }
 
 #include "configurethemesdialog.moc"

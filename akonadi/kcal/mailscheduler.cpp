@@ -34,7 +34,6 @@
 
 #include <KCal/Calendar>
 #include <KCal/ICalFormat>
-//#include <KCal/Scheduler>
 #include <KCal/IncidenceBase>
 #include <KCal/AssignmentVisitor>
 
@@ -44,6 +43,7 @@
 
 #include <QDir>
 
+using namespace KCal;
 using namespace Akonadi;
 
 MailScheduler::MailScheduler( Akonadi::Calendar *calendar )
@@ -252,7 +252,8 @@ bool MailScheduler::acceptCounterProposal( KCal::Incidence *incidence )
     new Akonadi::ItemModifyJob( exInc );
     //FIXME: Add error handling
   } else {
-    Akonadi::Collection collection = Akonadi::selectCollection( 0 );
+    int dialogCode = 0;
+    Akonadi::Collection collection = Akonadi::selectCollection( 0, dialogCode );
 
     Akonadi::Item item;
     item.setPayload( Incidence::Ptr( incidence->clone() ) );

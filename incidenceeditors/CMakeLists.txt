@@ -6,15 +6,30 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
     ${CMAKE_SOURCE_DIR}/akonadi/kcal
     ${CMAKE_BINARY_DIR}/akonadi/kcal
+    ${Boost_INCLUDE_DIR}
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+if (QT_QT3SUPPORT_FOUND)
+  add_definitions( -DHAVE_QT3SUPPORT )
+endif ()
 
 ########### next target ###############
 
 set( incidenceeditors_LIB_SRCS
-    ${libkdgantt1_SRCS}
-    attendeeeditor.cpp
+    incidenceeditor-ng/incidenceeditor.cpp
+    incidenceeditor-ng/combinedincidenceeditor.cpp
+    incidenceeditor-ng/incidencegeneraleditor.cpp
+    incidenceeditor-ng/incidencedatetimeeditor.cpp
+    incidenceeditor-ng/incidencedescriptioneditor.cpp
+    incidenceeditor-ng/incidenceattachmenteditor.cpp
+    incidenceeditor-ng/incidencerecurrenceeditor.cpp
+    incidenceeditor-ng/incidencerecurrencedialog.cpp
+    incidenceeditor-ng/attachmenticonview.cpp
+    incidenceeditor-ng/attachmenteditdialog.cpp
+    incidenceeditor-ng/incidenceeditorgeneralpage.cpp
+
+    #incidencegeneraleditor.cpp
     autochecktreewidget.cpp
     categoryconfig.cpp
     categoryhierarchyreader.cpp
@@ -23,8 +38,6 @@ set( incidenceeditors_LIB_SRCS
     editoralarms.cpp
     editorattachments.cpp
     editorconfig.cpp
-    editordetails.cpp
-    editorfreebusy.cpp
     editorgeneral.cpp
     editorgeneralevent.cpp
     editorgeneraljournal.cpp
@@ -36,18 +49,35 @@ set( incidenceeditors_LIB_SRCS
     groupwareintegration.cpp
     incidenceeditor.cpp
     journaleditor.cpp
-    prefs.cpp
+    korganizereditorconfig.cpp
     templatemanagementdialog.cpp
     todoeditor.cpp
 )
 
+if (QT_QT3SUPPORT_FOUND)
+  set( incidenceeditors_LIB_SRCS
+    ${incidenceeditors_LIB_SRCS}
+    ${libkdgantt1_SRCS}
+    attendeeeditor.cpp
+    editordetails.cpp
+    editorfreebusy.cpp
+  )
+endif ()
+
 kde4_add_ui_files( incidenceeditors_LIB_SRCS
    categoryselectdialog_base.ui
    editoralarms_base.ui
+   #incidencegeneral.ui
    template_management_dialog_base.ui
-)
 
-kde4_add_kcfg_files(incidenceeditors_LIB_SRCS prefs_base.kcfgc )
+   # IncidenceEditorsNG ui files
+   incidenceeditor-ng/attachmenteditdialog.ui
+   incidenceeditor-ng/incidencegeneraleditor.ui
+   incidenceeditor-ng/incidencedatetime.ui
+   incidenceeditor-ng/incidencedescription.ui
+   incidenceeditor-ng/incidenceattachmenteditor.ui
+   incidenceeditor-ng/incidencerecurrenceeditor.ui
+)
 
 kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
 
@@ -62,15 +92,17 @@ target_link_libraries(incidenceeditors
    ${KDE4_KDEUI_LIBS}
    ${KDE4_KPARTS_LIBS}
    ${KDE4_KMIME_LIBRARY}
-   ${KDE4_KDE3SUPPORT_LIBRARY}
    ${KDEPIMLIBS_KCAL_LIBS}
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
    kdepim
    kdepimdbusinterfaces
-   korganizer_core
    akonadi-kcal_next
 )
+
+if (QT_QT3SUPPORT_FOUND)
+  target_link_libraries(incidenceeditors ${KDE4_KDE3SUPPORT_LIBRARY})
+endif ()
 
 set_target_properties(incidenceeditors PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})

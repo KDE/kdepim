@@ -8,6 +8,7 @@
 #include <config-enterprise.h>
 
 #include "kmail_export.h"
+#include "configmodule.h"
 
 #include <QPointer>
 #include <QString>
@@ -34,9 +35,7 @@
 #include "ui_smimeconfiguration.h"
 #include "ui_customtemplates_base.h"
 #include "ui_miscpagemaintab.h"
-#include "ui_miscpageinvitetab.h"
 #include "ui_securitypagegeneraltab.h"
-#include "ui_identitypage.h"
 #include "ui_accountspagereceivingtab.h"
 
 class QPushButton;
@@ -78,12 +77,10 @@ namespace MessageList {
 
 namespace MessageViewer {
   class ConfigureWidget;
+class InvitationSettings;
 }
 
 namespace KMail {
-  class IdentityDialog;
-  class IdentityListView;
-  class IdentityListViewItem;
   class Tag;
   typedef QSharedPointer<Tag> TagPtr;
 }
@@ -115,47 +112,6 @@ public:
   ComposerCryptoConfiguration( QWidget *parent ) : QWidget( parent ) {
     setupUi( this );
   }
-};
-
-
-class NewIdentityDialog : public KDialog
-{
-  Q_OBJECT
-
-public:
-  enum DuplicateMode { Empty, ControlCenter, ExistingEntry };
-
-  explicit NewIdentityDialog( const QStringList & identities,
-                     QWidget *parent=0 );
-
-  QString identityName() const { return mLineEdit->text(); }
-  QString duplicateIdentity() const { return mComboBox->currentText(); }
-  DuplicateMode duplicateMode() const;
-
-protected slots:
-  virtual void slotEnableOK( const QString & );
-
-private:
-  KLineEdit  *mLineEdit;
-  KComboBox  *mComboBox;
-  QButtonGroup *mButtonGroup;
-};
-
-#include <kvbox.h>
-class ConfigModule : public KCModule {
-  Q_OBJECT
-public:
-  explicit ConfigModule( const KComponentData &instance, QWidget *parent=0 )
-     : KCModule ( instance, parent )
-     {}
-  ~ConfigModule() {}
-
-  virtual void load() = 0;
-  virtual void save() = 0;
-  virtual void defaults() {}
-
-  /** Should return the help anchor for this page or tab */
-  virtual QString helpAnchor() const = 0;
 };
 
 
@@ -209,48 +165,6 @@ protected:
 private:
   KTabWidget *mTabWidget;
 
-};
-
-
-//
-//
-// IdentityPage
-//
-//
-
-class KMAIL_EXPORT IdentityPage : public ConfigModule {
-  Q_OBJECT
-public:
-  explicit IdentityPage( const KComponentData &instance, QWidget *parent = 0 );
-  ~IdentityPage() {}
-
-  QString helpAnchor() const;
-
-  void load();
-  void save();
-
-private slots:
-  void slotNewIdentity();
-  void slotModifyIdentity();
-  void slotRemoveIdentity();
-  /** Connected to @p mRenameButton's clicked() signal. Just does a
-      QTreeWidget::editItem on the selected item */
-  void slotRenameIdentity();
-  /** connected to @p mIdentityList's renamed() signal. Validates the
-      new name and sets it in the KPIMIdentities::IdentityManager */
-  void slotRenameIdentity( KMail::IdentityListViewItem *, const QString & );
-  void slotContextMenu( KMail::IdentityListViewItem *, const QPoint & );
-  void slotSetAsDefault();
-  void slotIdentitySelectionChanged();
-
-private: // methods
-  void refreshList();
-
-private: // data members
-  KMail::IdentityDialog   *mIdentityDialog;
-  int                      mOldNumberOfIdentities;
-
-  Ui_IdentityPage mIPage;
 };
 
 
@@ -834,6 +748,7 @@ public:
 
 private slots:
   void slotReenableAllWarningsClicked();
+  void slotConfigureGnupg();
 
 private:
   //virtual void doLoadFromGlobalSettings();
@@ -915,16 +830,12 @@ class MiscPageInviteTab : public ConfigModuleTab  {
 public:
   MiscPageInviteTab( QWidget * parent=0 );
   void save();
-  QString helpAnchor() const;
-
-private slots:
-  void slotLegacyBodyInvitesToggled( bool on );
 
 private:
   virtual void doLoadFromGlobalSettings();
 
 private:
-  Ui_MiscInviteTab mMITab;
+  MessageViewer::InvitationSettings *mInvitationUi;
 };
 
 class KMAIL_EXPORT MiscPage : public ConfigModuleWithTabs {

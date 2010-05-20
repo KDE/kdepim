@@ -46,7 +46,7 @@
 using namespace MessageViewer;
 
 // static
-SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
+SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message *message ) {
   SpamScores scores;
   SpamAgents agents = AntiSpamConfig::instance()->uniqueAgents();
 

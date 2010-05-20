@@ -97,7 +97,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   // Parse the message
   EmptySource emptySource;
   ObjectTreeParser otp( &emptySource );
-  otp.parseObjectTree( Akonadi::Item(), msg.get() );
+  otp.parseObjectTree( msg.get() );
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.textualContent(), QString( "This is the message text." ) );
@@ -119,7 +119,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   msg->setContent( content );
   msg->parse();
   ObjectTreeParser otp2( &emptySource );
-  otp2.parseObjectTree( Akonadi::Item(), msg.get() );
+  otp2.parseObjectTree( msg.get() );
   QCOMPARE( otp2.textualContentCharset().constData(), msg->defaultCharset().constData() );
 }
 
@@ -135,7 +135,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   NodeHelper nodeHelper;
   TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
-  otp.parseObjectTree( Akonadi::Item(), msg.get() );
+  otp.parseObjectTree( msg.get() );
 
   // Check that the OTP didn't modify the message in weird ways
   QCOMPARE( msg->contents().size(), 2 );
@@ -156,6 +156,22 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 0 ) ) );
   QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 1 ) ) );
   QVERIFY( nodeHelper.partMetaData( msg->contents().at( 1 ) ).isEncapsulatedRfc822Message );
+}
+
+void ObjectTreeParserTester::test_missingContentTypeHeader()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "no-content-type.mbox" );
+  QCOMPARE( msg->subject()->as7BitString( false ).constData(), "Simple Mail Without Content-Type Header" );
+  QCOMPARE( msg->contents().size(), 0 );
+
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  NodeHelper nodeHelper;
+  TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( msg.get() );
+
+  QCOMPARE( otp.textualContent().toAscii().data(), "asdfasdf" );
 }
 
 KMime::Message::Ptr ObjectTreeParserTester::readAndParseMail( const QString &mailFile ) const

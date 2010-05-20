@@ -54,7 +54,7 @@ namespace MessageViewer {
 */
 class PartNodeBodyPart : public Interface::BodyPart {
 public:
-  explicit PartNodeBodyPart( const Akonadi::Item &item, KMime::Content* content,
+  explicit PartNodeBodyPart( KMime::Content *topLevelContent, KMime::Content* content,
                              NodeHelper *nodeHelper, const QTextCodec * codec=0 );
 
   QString makeLink( const QString & path ) const;
@@ -71,10 +71,10 @@ public:
   BodyPart::Display defaultDisplay() const;
   void setDefaultDisplay( BodyPart::Display );
   KMime::Content* content() const { return mContent; }
-  Akonadi::Item item() const { return mItem; }
+  KMime::Content* topLevelContent() const { return mTopLevelContent; }
 
 private:
-  Akonadi::Item mItem;
+  KMime::Content *mTopLevelContent;
   KMime::Content *mContent;
   const QTextCodec * mCodec;
   BodyPart::Display mDefaultDisplay;

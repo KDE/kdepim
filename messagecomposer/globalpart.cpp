@@ -40,6 +40,7 @@ GlobalPart::GlobalPart( QObject *parent )
   d->parentWidgetForGui = 0;
   d->fallbackCharsetEnabled = false;
   d->allow8Bit = false;
+  d->MDNRequested = false;
 }
 
 GlobalPart::~GlobalPart()

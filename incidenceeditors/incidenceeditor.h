@@ -27,11 +27,7 @@
 
 #include "incidenceeditors_export.h"
 
-#include <akonadi/kcal/incidencechanger.h>
-
 #include <Akonadi/Item>
-
-#include <KCal/Incidence>
 
 #include <KDialog>
 
@@ -40,10 +36,14 @@
 class AttendeeEditor;
 class EditorDetails;
 
-class DesignerFields;
 class EmbeddedURLPage;
 
+namespace KCal {
+  class Incidence;
+}
+
 namespace Akonadi {
+  class IncidenceChanger;
   class CollectionComboBox;
   class Monitor;
 }
@@ -54,6 +54,7 @@ class QTabWidget;
 
 namespace IncidenceEditors
 {
+  class DesignerFields;
 
 /**
   This is the base class for the calendar component editors.
@@ -142,7 +143,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
     void setupDesignerTabs( const QString &type );
 
     void readDesignerFields( const Akonadi::Item &item );
-    void writeDesignerFields( Incidence * );
+    void writeDesignerFields( KCal::Incidence * );
 
     /**
       Returns true if the user made any alteration
@@ -154,7 +155,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
 
     void setupEmbeddedURLPage( const QString &label, const QString &url,
                                const QString &mimetype );
-    void createEmbeddedURLPages( const Incidence *inc );
+    void createEmbeddedURLPages( const KCal::Incidence *inc );
 
     /**
       Process user input and create or update event.

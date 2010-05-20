@@ -25,8 +25,11 @@
 #include "kohelper.h"
 #include "koprefs.h"
 
-#include <Akonadi/Collection>
-#include <akonadi/item.h>
+#include <kcalprefs.h>
+
+#include <Akonadi/Item>
+
+#include <KMessageBox>
 
 #include <QDate>
 
@@ -59,9 +62,18 @@ qint64 KOHelper::yearDiff( const QDate &start, const QDate &end )
   return static_cast<qint64>( start.daysTo( end ) / 365.25 );
 }
 
-bool KOHelper::isStandardCalendar( const Akonadi::Collection &coll ) {
-  if ( !coll.isValid() )
-    return false;
-  const QString id = QString::number( coll.id() );
-  return ( id == KOPrefs::instance()->defaultCalendar() );
+bool KOHelper::isStandardCalendar( const Akonadi::Entity::Id &id )
+{
+  return id == KCalPrefs::instance()->defaultCalendarId();
 }
+
+
+void KOHelper::showSaveIncidenceErrorMsg( QWidget *parent,
+                                          const KCal::Incidence::Ptr &incidence )
+{
+  KMessageBox::sorry(
+    parent,
+    i18n( "Unable to save %1 \"%2\".",
+          i18n( incidence->type() ), incidence->summary() ) );
+}
+

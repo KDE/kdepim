@@ -118,6 +118,7 @@ class AttendeeEditor : public QWidget
     QPushButton *mAddressBookButton;
 
     QList<KCal::Attendee*> mDelAttendees;
+    QList<KCal::Attendee*>mNewAttendees;
 
   private:
     bool mDisableItemUpdate;

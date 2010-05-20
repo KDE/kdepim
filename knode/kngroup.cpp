@@ -366,8 +366,9 @@ bool KNGroup::loadHdrs()
 
 bool KNGroup::unloadHdrs(bool force)
 {
-  if(l_ockedArticles>0)
+  if ( lockedArticles() > 0 ) {
     return false;
+  }
 
   if (!force && isNotUnloadable())
     return false;

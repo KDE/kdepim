@@ -348,35 +348,16 @@ bool KMSearchRuleString::matches( const Akonadi::Item &item ) const
       return matchesInternal( msg->to()->asUnicodeString() )
           || matchesInternal( msg->cc()->asUnicodeString() )
           || matchesInternal( msg->bcc()->asUnicodeString() ) ;
-          // sometimes messages have multiple Cc headers //TODO: check if this can happen for KMime!
-      //    || matchesInternal( msg->cc() )
-          
 
     msgContents = msg->to()->asUnicodeString();
-#if 0  //TODO port to akonadi - check if this is needed for KMime. 
-    if ( !msg->headerField("Cc").compare( msg->cc() ) )
-      msgContents += ", " + msg->headerField("Cc");
-    else
-      msgContents += ", " + msg->cc();
-#else
-      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
-  msgContents += ", " + msg->bcc()->asUnicodeString();
+    msgContents += ", " + msg->cc()->asUnicodeString();
+    msgContents += ", " + msg->bcc()->asUnicodeString();
   } else if ( field() == "<tag>" ) {
-#if 0  //TODO port to akonadi
-    if ( msg->tagList() ) {
-      foreach ( const QString &label, * msg->tagList() ) {
-        const KMime::MessageTagDescription * tagDesc = kmkernel->msgTagMgr()->find( label );
-        if ( tagDesc )
-          msgContents += tagDesc->name();
-      }
-      logContents = false;
-    }
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
-  } else
- {
+    const Nepomuk::Resource res( item.url() );
+    foreach ( const Nepomuk::Tag &tag, res.tags() )
+      msgContents += tag.label();
+    logContents = false;
+  } else {
     // make sure to treat messages with multiple header lines for
     // the same header correctly
     msgContents = msg->headerByType( field() ) ? msg->headerByType( field() )->asUnicodeString() : "";
@@ -685,6 +666,7 @@ void KMSearchRuleNumerical::addQueryTerms(Nepomuk::Query::GroupTerm& groupTerm) 
                                                    nepomukComparator() );
     addAndNegateTerm( sizeTerm, groupTerm );
   } else if ( field() == "<age in days>" ) {
+    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
     // TODO
   }
 }

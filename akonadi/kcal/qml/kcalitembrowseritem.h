@@ -21,23 +21,30 @@
 #define MESSAGEVIEWER_MESSAGEVIEWITEM_H
 
 #include <mobile/lib/declarativeakonadiitem.h>
+#include <QAbstractItemModel>
 
 namespace Akonadi {
-class KCalItemBrowser;
+class IncidenceViewer;
 
 namespace KCal {
 
 class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
+  Q_PROPERTY( QObject* attachmentModel READ attachmentModel NOTIFY attachmentModelChanged )
   public:
     explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
 
     qint64 itemId() const;
     void setItemId(qint64 id);
 
+    QObject *attachmentModel() const;
+
+  signals:
+    void attachmentModelChanged();
+
   private:
-    KCalItemBrowser *m_viewer;
+    IncidenceViewer *m_viewer;
 };
 
 }

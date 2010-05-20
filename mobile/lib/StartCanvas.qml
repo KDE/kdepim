@@ -105,7 +105,7 @@ Item {
         id: favoritesText
         width: parent.width
         height: 14
-        text: "Favorites:"
+        text: KDE.i18n( "Favorites:" )
         font.bold: true
       }
 

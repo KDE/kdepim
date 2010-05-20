@@ -2,6 +2,9 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
+if ( QT_QT3SUPPORT_FOUND )
+  add_definitions( -DQT_QT3SUPPORT_FOUND )
+endif ()
 
 add_subdirectory( tests )
 
@@ -9,6 +12,10 @@ set( messagecomposer_src
 
      composer.cpp
      util.cpp
+
+     attachmentcontrollerbase.cpp
+     attachmentmodel.cpp
+     attachmentfrompublickeyjob.cpp
 
      akonadisender.cpp
      messagehelper.cpp
@@ -35,7 +42,30 @@ set( messagecomposer_src
      skeletonmessagejob.cpp
 
      kmeditor.cpp
+     inserttextfilejob.cpp
+     signaturecontroller.cpp
+     composerlineedit.cpp
+     recipient.cpp
+     distributionlistdialog.cpp
+     recipientspicker.cpp
+     recipientseditor.cpp
+     kwindowpositioner.cpp
+
+     aliasesexpandjob.cpp
+     emailaddressresolvejob.cpp
+
+     keyresolver.cpp
 )
+
+if(KDEPIM_ENTERPRISE_BUILD)
+  set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
+  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT true)
+else(KDEPIM_ENTERPRISE_BUILD)
+  set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
+  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT false)
+endif(KDEPIM_ENTERPRISE_BUILD)
+
+configure_file(messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
 
 kde4_add_kcfg_files(messagecomposer_src
   messagecomposersettings_base.kcfgc 

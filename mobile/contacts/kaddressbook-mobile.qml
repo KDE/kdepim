@@ -71,7 +71,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
-      titleIcon: KDE.iconPath( "kaddressbook", 48 )
+      titleIcon: KDE.iconPath( "view-pim-contacts", 48 )
       handlePosition: 30
       handleHeight: 78
       content: [
@@ -79,7 +79,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: "Addressbook start page"
+          startText: KDE.i18n( "Addressbook start page" )
           favoritesModel : favoritesList
 
           contextActions : [
@@ -94,14 +94,14 @@ KPIM.MainView {
                 KPIM.Button {
                   height : 480 / 6
                   width : parent.width - 75
-                  buttonText : "New Contact"
+                  buttonText : KDE.i18n( "New Contact" )
                   font.bold: true
                   onClicked : { console.log( "New Contact clicked" ); }
                 }
                 KPIM.Button {
                   height : 480 / 6
                   width : parent.width - 75
-                  buttonText : "New Distribution Group"
+                  buttonText : KDE.i18n( "New Contact Group" )
                   font.bold: true
                   onClicked : { console.log( "New Group clicked" ); }
 
@@ -109,14 +109,14 @@ KPIM.MainView {
                 KPIM.Button {
                   height: 480 / 6
                   width : parent.width - 75
-                  buttonText : "Add Account"
+                  buttonText : KDE.i18n( "Add Account" )
                   font.bold: true
                   onClicked : { application.launchAccountWizard(); }
                 }
                 KPIM.Button {
                   height: 480 / 6
                   width : parent.width - 75
-                  buttonText : "Favorites"
+                  buttonText : KDE.i18n( "Favorites" )
                   font.bold: true
                   onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
                 }
@@ -144,9 +144,8 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: folderPanel
-      titleText: "Addressbooks"
+      titleText: KDE.i18n( "Addressbooks" )
       handleHeight: 150
-      handlePosition: startPanel.handlePosition + startPanel.handleHeight
       content: [
         Item {
           anchors.fill: parent
@@ -198,7 +197,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Add Contact"
+              buttonText : KDE.i18n( "Add Contact" )
               onClicked : {
                 console.log("Write new");
               }
@@ -209,7 +208,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Search for Contact"
+              buttonText : KDE.i18n( "Search for Contact" )
               onClicked : {
                 console.log("Search email");
               }
@@ -219,7 +218,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Configure Account"
+              buttonText : KDE.i18n( "Configure Account" )
               onClicked : {
                 console.log("Configure");
               }
@@ -232,11 +231,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: actionPanel
-      titleText: "Actions"
-      // ### QML has a bug where the children property is broken.
-      // As a workaround, we need to set handlePosition here and
-      // set anchors.fill parent on the panels. Remove when Qt is fixed.
-      handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
+      titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -246,17 +241,17 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Move"
+            buttonText: KDE.i18n( "Move" )
             onClicked: actionPanel.collapse();
           },
-          KPIM.Button {
+          KPIM.Action {
             id: deleteButton
             anchors.top: moveButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Delete"
-            onClicked: actionPanel.collapse();
+            action : application.getAction("akonadi_item_delete")
+            onTriggered: actionPanel.collapse();
           },
           KPIM.Button {
             id: previousButton
@@ -264,7 +259,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Previous"
+            buttonText: KDE.i18n( "Previous" )
             onClicked: {
               if ( contactView.itemId >= 0 )
                 contactList.previousItem();
@@ -277,7 +272,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Next"
+            buttonText: KDE.i18n( "Next" )
             onClicked: {
               if ( contactView.itemId >= 0 )
                 contactList.nextItem();

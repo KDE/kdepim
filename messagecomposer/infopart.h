@@ -56,6 +56,9 @@ class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
     QString fcc() const;
     void setFcc( const QString &fcc );
 
+    QString userAgent() const;
+    void setUserAgent( const QString &userAgent );
+
     void setExtraHeaders( KMime::Headers::Base::List headers );
     KMime::Headers::Base::List extraHeaders() const;
     

@@ -24,13 +24,15 @@
 
 #include "incidenceeditor.h"
 #include "editorconfig.h"
+#ifdef HAVE_QT3SUPPORT
 #include "editordetails.h"
+#endif
 #include "designerfields.h"
 #include "embeddedurlpage.h"
 #include "templatemanagementdialog.h"
-#include "prefs.h"
 
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <akonadi/kcal/kcalprefs.h> //krazy:exclude=camelcase since kdepim/akonadi
 
 #include <libkdepimdbusinterfaces/urihandler.h>
 
@@ -56,6 +58,7 @@
 #include <QVBoxLayout>
 
 using namespace Akonadi;
+using namespace KCal;
 using namespace IncidenceEditors;
 
 IncidenceEditor::IncidenceEditor( const QString &caption, const QStringList& mimetypes, QWidget *parent )
@@ -95,7 +98,7 @@ IncidenceEditor::IncidenceEditor( const QString &caption, const QStringList& mim
   callayout->setSpacing( KDialog::spacingHint() );
   mCalSelector = new Akonadi::CollectionComboBox( mainWidget() );
   mCalSelector->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
-  mCalSelector->setDefaultCollection( Prefs::instance()->defaultCollection() );
+  //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
   //mCalSelector->addExcludeResourcesType(QStringList()<<"akonadi_search_resource");
   mCalSelector->setMimeTypeFilter( QStringList() << mimetypes );
   connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),
@@ -237,8 +240,10 @@ void IncidenceEditor::setupAttendeesTab()
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
   topLayout->setMargin(0);
 
+#ifdef HAVE_QT3SUPPORT
   mAttendeeEditor = mDetails = new EditorDetails( spacingHint(), topFrame );
   topLayout->addWidget( mDetails );
+#endif
 }
 
 void IncidenceEditor::accept()
@@ -268,7 +273,9 @@ void IncidenceEditor::cancelRemovedAttendees( const Akonadi::Item &item )
   if ( thatIsMe ) {
     Incidence::Ptr inc( incidence->clone() );
     inc->registerObserver( 0 );
+#ifdef HAVE_QT3SUPPORT
     mAttendeeEditor->cancelAttendeeIncidence( inc.get() );
+#endif
     if ( inc->attendeeCount() > 0 ) {
       emit deleteAttendee( item );
     }
@@ -550,7 +557,9 @@ void IncidenceEditor::addAttendees( const QStringList &attendees )
   for ( it = attendees.begin(); it != attendees.end(); ++it ) {
     QString name, email;
     KABC::Addressee::parseEmailAddress( *it, name, email );
-    mAttendeeEditor->insertAttendee( new Attendee( name, email ) );
+#ifdef HAVE_QT3SUPPORT
+    mAttendeeEditor->insertAttendee( new Attendee( name, email, true, Attendee::NeedsAction ) );
+#endif
   }
 }
 

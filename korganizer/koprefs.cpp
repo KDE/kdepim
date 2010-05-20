@@ -37,7 +37,6 @@
 #include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <k3staticdeleter.h>
 #include <kstringhandler.h>
 #include <ksystemtimezone.h>
 
@@ -51,10 +50,17 @@
 #include <time.h>
 #include <unistd.h>
 
+using namespace IncidenceEditors;
 using namespace KPIMIdentities;
 
-KOPrefs *KOPrefs::mInstance = 0;
-static K3StaticDeleter<KOPrefs> insd;
+class KOPrefsPrivate {
+  public:
+    KOPrefsPrivate() : prefs( new KOPrefs ) {}
+    ~KOPrefsPrivate() { delete prefs; }
+    KOPrefs* prefs;
+};
+
+K_GLOBAL_STATIC( KOPrefsPrivate, sInstance )
 
 KOPrefs::KOPrefs() : KOPrefsBase()
 {
@@ -87,13 +93,11 @@ KOPrefs::~KOPrefs()
 
 KOPrefs *KOPrefs::instance()
 {
-  if ( !mInstance ) {
-    insd.setObject( mInstance, new KOPrefs() );
-
-    mInstance->readConfig();
+  if ( !sInstance.exists() ) {
+    sInstance->prefs->readConfig();
   }
 
-  return mInstance;
+  return sInstance->prefs;
 }
 
 void KOPrefs::usrSetDefaults()
@@ -133,9 +137,6 @@ void KOPrefs::usrReadConfig()
     setResourceColor( *it3, color );
   }
 
-  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  mDefaultCalendar = defaultCalendarConfig.readEntry( "Default Calendar", QString() );
-
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
 
@@ -169,12 +170,8 @@ void KOPrefs::usrWriteConfig()
   }
 #endif
 
-  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendar() );
-
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
-
 
   KConfigSkeleton::usrWriteConfig();
 }
@@ -202,23 +199,6 @@ QColor KOPrefs::categoryColor( const QString &cat ) const
 bool KOPrefs::hasCategoryColor( const QString &cat ) const
 {
     return mCategoryColors[ cat ].isValid();
-}
-
-QString KOPrefs::defaultCalendar() const
-{
-  return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
-}
-
-Akonadi::Collection KOPrefs::defaultCollection() const
-{
-  return mDefaultCollection;
-}
-
-void KOPrefs::setDefaultCollection( const Akonadi::Collection& col )
-{
-  mDefaultCollection = col;
-  if ( !col.isValid() )
-    mDefaultCalendar ="";
 }
 
 void KOPrefs::setResourceColor ( const QString &cal, const QColor &color )
@@ -265,7 +245,7 @@ QColor KOPrefs::resourceColor( const QString &cal )
   }
 }
 
-QStringList KOPrefs::timeScaleTimezones()
+QStringList KOPrefs::timeScaleTimezones() const
 {
   return mTimeScaleTimeZones;
 }
@@ -274,3 +254,4 @@ void KOPrefs::setTimeScaleTimezones( const QStringList &list )
 {
   mTimeScaleTimeZones = list;
 }
+

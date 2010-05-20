@@ -31,6 +31,7 @@ class InfoPart::Private
     QString subject;
     QString fcc;
     QString replyTo;
+    QString userAgent;
     int transportId;
     KMime::Headers::Base::List extraHeaders;
 };
@@ -138,5 +139,14 @@ KMime::Headers::Base::List InfoPart::extraHeaders() const
   return d->extraHeaders;
 }
     
+QString InfoPart::userAgent() const
+{
+  return d->userAgent;
+}
+
+void InfoPart::setUserAgent ( const QString& userAgent )
+{
+  d->userAgent = userAgent;
+}
 
 #include "infopart.moc"

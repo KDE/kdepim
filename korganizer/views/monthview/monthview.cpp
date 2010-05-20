@@ -135,6 +135,8 @@ void MonthView::updateConfig() {
 
   types |= CalendarSearch::Events;
   calendarSearch()->setIncidenceTypes( types );
+
+  mScene->update();
 }
 
 MonthView::~MonthView()
@@ -486,4 +488,9 @@ int MonthView::currentMonth() const
 bool MonthView::usesFullWindow()
 {
   return KOPrefs::instance()->mFullViewMonth;
+}
+
+CalPrinterBase::PrintType MonthView::printType()
+{
+  return CalPrinterBase::Month;
 }

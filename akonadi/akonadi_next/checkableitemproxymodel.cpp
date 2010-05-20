@@ -85,7 +85,7 @@ bool CheckableItemProxyModel::setData(const QModelIndex& index, const QVariant& 
 
     Qt::CheckState state = static_cast<Qt::CheckState>(value.toInt());
     const QModelIndex srcIndex = mapToSource(index);
-    d->m_itemSelectionModel->select(QItemSelection(srcIndex, srcIndex), state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
+    return select(QItemSelection(srcIndex, srcIndex), state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
     return true;
   }
   return QSortFilterProxyModel::setData(index, value, role);
@@ -105,6 +105,14 @@ void CheckableItemProxyModelPrivate::selectionChanged(const QItemSelection &sele
   foreach (const QItemSelectionRange &range, deselected)
     q->dataChanged(range.topLeft(), range.bottomRight());
 }
+
+bool CheckableItemProxyModel::select(const QItemSelection& selection, QItemSelectionModel::SelectionFlags command)
+{
+  Q_D(CheckableItemProxyModel);
+  d->m_itemSelectionModel->select(selection, command);
+  return true;
+}
+
 
 #include "checkableitemproxymodel.moc"
 
