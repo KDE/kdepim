@@ -241,7 +241,7 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
 {
   KMime::Content *node = 0;
   if ( url.isEmpty() )
-    return 0;
+    return mMessage.get();
   if ( !url.isLocalFile() ) {
     QString path = url.path(KUrl::RemoveTrailingSlash);
     if ( path.contains(':') ) {
