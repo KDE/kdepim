@@ -78,6 +78,8 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
     
     void load( KCal::Event::ConstPtr event );
     void load( KCal::Todo::ConstPtr todo );
+    void save( KCal::Event::Ptr event );
+    void save( KCal::Todo::Ptr todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
     void setDuration();

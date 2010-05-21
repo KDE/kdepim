@@ -84,7 +84,14 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 }
 
 void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
-{ }
+{
+//   if ( KCal::Todo::Ptr todo = IncidenceDateTimeEditor::incidence<Todo>() )
+//     save( todo );
+//   else if ( KCal::Event::Ptr event = IncidenceDateTimeEditor::incidence<Event>() )
+//     save( event );
+//   else
+//     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
+}
 
 bool IncidenceDateTimeEditor::isDirty() const
 {
@@ -470,6 +477,40 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   setDateTimes( mActiveStartDT, mActiveEndDT );
   enableAlarm( todo->hasDueDate() );
   updateRecurrenceSummary( todo );
+}
+
+void IncidenceDateTimeEditor::save( KCal::Event::Ptr event )
+{
+  if ( mUi->mHasTimeCheck->isChecked() ) { // Timed event
+    event->setAllDay( false );
+
+    // set date/time end
+    event->setDtStart( currentStartDateTime() );
+    event->setDtEnd( currentEndDateTime() );
+  } else { // All day event
+    event->setAllDay( true );
+
+    // need to change this.
+    KDateTime eventDT = currentStartDateTime();
+    eventDT.setDateOnly( true );
+    event->setDtStart( eventDT );
+    event->setDtEnd( eventDT );
+  }
+
+  // Free == Event::Transparant
+  // Busy == Event::Opaque
+#ifdef KDEPIM_MOBILE_UI
+  event->setTransparency( mUi->mFreeRadio->isChecked() ?
+                          KCal::Event::Transparent : KCal::Event::Opaque );
+#else
+  event->setTransparency( mUi->mFreeTimeCombo->currentIndex() > 0 ?
+                          KCal::Event::Transparent : KCal::Event::Opaque );
+#endif
+}
+
+void IncidenceDateTimeEditor::save( KCal::Todo::Ptr todo )
+{
+  Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "not implemented" );
 }
 
 void IncidenceDateTimeEditor::setDateTimes( const KDateTime &start, const KDateTime &end )

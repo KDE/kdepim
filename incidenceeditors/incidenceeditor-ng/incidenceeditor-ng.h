@@ -84,7 +84,7 @@ class IncidenceEditor : public QWidget
 
     /** Convenience method to get a pointer for a specific const Incidence Type. */
     template <typename IncidenceT>
-    boost::shared_ptr<const IncidenceT> incidence() const
+    boost::shared_ptr<const IncidenceT> constIncidence() const
     {
       return  boost::dynamic_pointer_cast<const IncidenceT>( mLoadedIncidence );
     }
