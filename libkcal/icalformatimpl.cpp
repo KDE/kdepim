@@ -914,7 +914,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         if (icaltime.is_date) {
           todo->setDtDue(QDateTime(readICalDate(icaltime),QTime(0,0,0)),true);
         } else {
-          todo->setDtDue(readICalDateTime(icaltime),true);
+          todo->setDtDue(readICalDateTime(p, icaltime),true);
           todo->setFloats(false);
         }
         todo->setHasDueDate(true);
@@ -922,7 +922,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_COMPLETED_PROPERTY:  // completion date
         icaltime = icalproperty_get_completed(p);
-        todo->setCompleted(readICalDateTime(icaltime));
+        todo->setCompleted(readICalDateTime(p, icaltime));
         break;
 
       case ICAL_PERCENTCOMPLETE_PROPERTY:  // Percent completed
@@ -945,7 +945,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_RECURRENCEID_PROPERTY:
         icaltime = icalproperty_get_recurrenceid(p);
-        todo->setDtRecurrence( readICalDateTime(icaltime) );
+        todo->setDtRecurrence( readICalDateTime(p, icaltime) );
         break;
 
       default:
@@ -1000,7 +1000,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
           }
           event->setDtEnd( QDateTime( endDate, QTime( 0, 0, 0 ) ) );
         } else {
-          event->setDtEnd(readICalDateTime(icaltime, tz));
+          event->setDtEnd(readICalDateTime(p, icaltime, tz));
           event->setFloats( false );
         }
         dtEndProcessed = true;
@@ -1063,20 +1063,20 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
         icaltime = icalproperty_get_dtstart(p);
-        freebusy->setDtStart(readICalDateTime(icaltime));
+        freebusy->setDtStart(readICalDateTime(p, icaltime));
         break;
 
       case ICAL_DTEND_PROPERTY:  // end Date and Time
         icaltime = icalproperty_get_dtend(p);
-        freebusy->setDtEnd(readICalDateTime(icaltime));
+        freebusy->setDtEnd(readICalDateTime(p, icaltime));
         break;
 
       case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times
         icalperiodtype icalperiod = icalproperty_get_freebusy(p);
-        QDateTime period_start = readICalDateTime(icalperiod.start);
+        QDateTime period_start = readICalDateTime(p, icalperiod.start);
         Period period;
         if ( !icaltime_is_null_time(icalperiod.end) ) {
-          QDateTime period_end = readICalDateTime(icalperiod.end);
+          QDateTime period_end = readICalDateTime(p, icalperiod.end);
           period = Period(period_start, period_end);
         } else {
           Duration duration = readICalDuration( icalperiod.duration );
@@ -1280,7 +1280,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
 
       case ICAL_CREATED_PROPERTY:
         icaltime = icalproperty_get_created(p);
-        incidence->setCreated(readICalDateTime(icaltime, tz));
+        incidence->setCreated(readICalDateTime(p, icaltime, tz));
         break;
 
       case ICAL_SEQUENCE_PROPERTY:  // sequence
@@ -1290,7 +1290,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
 
       case ICAL_LASTMODIFIED_PROPERTY:  // last modification date
         icaltime = icalproperty_get_lastmodified(p);
-        incidence->setLastModified(readICalDateTime(icaltime, tz));
+        incidence->setLastModified(readICalDateTime(p, icaltime, tz));
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
@@ -1299,7 +1299,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
           incidence->setDtStart(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
           incidence->setFloats( true );
         } else {
-          incidence->setDtStart(readICalDateTime(icaltime, tz));
+          incidence->setDtStart(readICalDateTime(p, icaltime, tz));
           incidence->setFloats( false );
         }
         break;
@@ -1369,7 +1369,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
           if ( icaltime_is_date( rd.time ) ) {
             incidence->recurrence()->addRDate( readICalDate( rd.time ) );
           } else {
-            incidence->recurrence()->addRDateTime( readICalDateTime( rd.time, tz ) );
+            incidence->recurrence()->addRDateTime( readICalDateTime(p, rd.time, tz ) );
           }
         } else {
           // TODO: RDates as period are not yet implemented!
@@ -1385,7 +1385,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
         if ( icaltime_is_date(icaltime) ) {
           incidence->recurrence()->addExDate( readICalDate(icaltime) );
         } else {
-          incidence->recurrence()->addExDateTime( readICalDateTime(icaltime, tz) );
+          incidence->recurrence()->addExDateTime( readICalDateTime(p, icaltime, tz) );
         }
         break;
 
@@ -1586,7 +1586,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
     icaltimetype t;
     t = r.until;
     // Convert to the correct time zone! it's in UTC by specification.
-    QDateTime endDate( readICalDateTime(t) );
+    QDateTime endDate( readICalDateTime(0, t) );
     recur->setEndDt( endDate );
   } else {
     if (r.count == 0)
@@ -1694,7 +1694,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
               ialarm->setStartOffset(duration);
           }
         } else {
-          ialarm->setTime(readICalDateTime(trigger.time));
+          ialarm->setTime(readICalDateTime(p, trigger.time));
         }
         break;
       }
@@ -1856,17 +1856,30 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   return t;
 }
 
-QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
+QDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, icaltimetype& t, icaltimezone* tz )
 {
 //   kdDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
-  icaltimezone *zone = tz;
   if ( tz && t.is_utc == 0 ) { // Only use the TZ if time is not UTC.
     // FIXME: We'll need to make sure to apply the appropriate TZ, not just
     //        the first one found.
-    t.zone = tz;
     t.is_utc = (tz == icaltimezone_get_utc_timezone())?1:0;
+    if (t.is_utc == 0) {
+        icalparameter *param = p ? icalproperty_get_first_parameter(p, ICAL_TZID_PARAMETER) : 0;
+        const char *tzid = param ? icalparameter_get_tzid(param) : 0;
+        if ( !tzid )
+            t.zone = tz;
+        else {
+            icaltimezone* icaltz;
+            // Try to match the ID with the libical time zone's location property
+            icaltz = icaltimezone_get_builtin_timezone( tzid );
+            if ( icaltz ) {
+//              kdDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from libical database" << endl;
+            }
+            t.zone = icaltz;
+        }
+    }
   } else {
-    zone = icaltimezone_get_utc_timezone();
+    t.zone = icaltimezone_get_utc_timezone();
   }
   //_dumpIcaltime( t );
 
@@ -1874,7 +1887,7 @@ QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
   if ( !mParent->timeZoneId().isEmpty() && t.zone ) {
 //    kdDebug(5800) << "--- Converting time from: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) ) << " (" << ICalDate2QDate(t) << ")." << endl;
     icaltimezone* viewTimeZone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
-    icaltimezone_convert_time(  &t, zone, viewTimeZone );
+    icaltimezone_convert_time(  &t, const_cast<icaltimezone*>(t.zone), viewTimeZone );
 //    kdDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
   }
 

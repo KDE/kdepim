@@ -84,7 +84,7 @@ class ICalFormatImpl
     static icaltimetype writeICalDate(const QDate &);
     static QDate readICalDate(icaltimetype);
     icaltimetype writeICalDateTime(const QDateTime &);
-    QDateTime readICalDateTime( icaltimetype&, icaltimezone* tz = 0 );
+    QDateTime readICalDateTime( icalproperty*, icaltimetype&, icaltimezone* tz = 0 );
     static icaldurationtype writeICalDuration(int seconds);
     static int readICalDuration(icaldurationtype);
     static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
