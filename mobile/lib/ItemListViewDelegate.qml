@@ -37,14 +37,6 @@ Item {
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
-  Rectangle {
-    id: background
-    x: 1; y: 2; width: parent.width - 2; height: parent.height - 4
-    border.color: palette.mid
-    opacity: 0.25
-    radius: 5
-  }
-
   MouseArea {
     anchors.fill: parent
     onClicked: {
@@ -70,5 +62,11 @@ Item {
       anchors.fill: parent
       opacity: 0
     }
+  }
+  Rectangle {
+    id: bottomLine
+    x: 1; y: parent.height -2; width: parent.width - 2; height: 1
+    border.color: palette.mid
+    opacity: 0.25
   }
 }
