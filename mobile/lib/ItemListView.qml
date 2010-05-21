@@ -52,8 +52,6 @@ QML.Item {
     anchors.fill: parent
     highlightFollowsCurrentItem: true
     highlightRangeMode: "StrictlyEnforceRange"
-    preferredHighlightBegin: height/2 - currentItem.height/2
-    preferredHighlightEnd: height/2 + currentItem.height/2
     focus: true
     clip: true
   }
