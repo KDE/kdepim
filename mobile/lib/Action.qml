@@ -27,7 +27,8 @@ Rectangle {
   id : _topContext
   property variant action
   property int hardcoded_height : 70
-  property bool hidden : !action.enabled
+  property bool hidable : true
+  property bool hidden : hidable && !action.enabled
   property alias showText : buttonText.visible
 
   signal triggered()
@@ -44,11 +45,13 @@ Rectangle {
     value : { action.text.replace("&", ""); }
   }
 
-  height : action.enabled ? hardcoded_height : 0
-  visible : action.enabled
+  height : (!hidable || action.enabled) ? hardcoded_height : 0
+  visible : (!hidable || action.enabled)
   Connections {
     target : action
     onChanged : {
+      if (!hidable)
+        return;
       parent.height = action.enabled ? hardcoded_height : 0;
       _topContext.visible = action.enabled
     }
