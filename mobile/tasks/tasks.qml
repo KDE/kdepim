@@ -124,43 +124,52 @@ KPIM.MainView {
              id: itemList
              delegate: [
                KPIM.ItemListViewDelegate {
+                 id : listDelegate
+                 height : itemListView.height / 7
                  summaryContent: [
-                   Text {
-                     anchors.top: parent.top
-                     anchors.left: parent.left
-                     text: KDE.i18na( "Task: %1", [model.summary] )
-                     font.bold: true
-                   },
-                   Text {
-                     anchors.top: parent.top
-                     anchors.right: parent.right
-                     text: KDE.i18na( "%1%", [model.percentComplete] )
-                   }
-                 ]
-                 detailsContent: [
-                    Column {
-                      anchors.fill: parent
-                      Item {
-                        width: parent.width
-                        height: summaryLabel.height
-                        Text {
-                          id: summaryLabel
-                          anchors.top: parent.top
-                          anchors.left: parent.left
-                          text: KDE.i18na( "Task: %1",  [model.summary] )
-                          font.bold: true
-                          color: palette.highlightedText
-                        }
-                        Text {
-                          anchors.top: parent.top
-                          anchors.right: parent.right
-                          text: KDE.i18na( "%1%", [model.percentComplete] )
-                          color: palette.highlightedText
-                        }
-                      }
-                      Text {
-                        text: KDE.i18na( "Details: %1", [model.description] )
-                        color: palette.highlightedText
+                    Text {
+                        id : summaryLabel
+                        anchors.top : parent.top
+                        anchors.topMargin : 4
+                        anchors.left : parent.left
+                        anchors.leftMargin : 20
+                        text: KDE.i18na( "Task: %1", [model.summary] )
+                        color : "#0C55BB"
+                    },
+                    Text {
+                      anchors.top : summaryLabel.bottom
+                      anchors.topMargin : 4
+                      anchors.left : parent.left
+                      anchors.leftMargin : 20
+                      height : 30;
+                      text: KDE.i18na( "Details: %1", [model.description] )
+                      color: "#3B3B3B"
+                    },
+                    Text {
+                      anchors.top: parent.top
+                      anchors.right: parent.right
+                      text: KDE.i18na( "%1%", [model.percentComplete] )
+                    },
+                    Image {
+                      id : importantFlagImage
+                      anchors.verticalCenter : parent.verticalCenter;
+                      anchors.left : parent.left
+                      anchors.leftMargin : 15
+                      source : KDE.iconPath("emblem-important.png", parent.height + 16)
+                      opacity : model.is_important ? 0.25 : 0
+                    },
+                    KPIM.Action{
+                      id : deleteAction
+                      anchors.verticalCenter: parent.verticalCenter;
+                      anchors.right : parent.right;
+                      width: parent.height - 10
+                      height : parent.height - 10
+                      action : application.getAction("akonadi_item_delete")
+                      hidable : false
+                      showText : false
+                      opacity : 0.6
+                      onTriggered : {
+                        application.setListSelectedRow(model.index);
                       }
                     }
                  ]
