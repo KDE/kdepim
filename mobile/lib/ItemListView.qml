@@ -18,10 +18,9 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
-import org.kde 4.5
+import Qt 4.7 as QML
 
-Item {
+QML.Item {
   property alias model: itemListView.model
   property alias currentIndex: itemListView.currentIndex
   property int currentItemId: -1
@@ -48,7 +47,7 @@ Item {
     }
   }
 
-  ListView {
+  QML.ListView {
     id: itemListView
     anchors.fill: parent
     highlightFollowsCurrentItem: true
