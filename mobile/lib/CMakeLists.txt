@@ -28,9 +28,12 @@ install(FILES
   Action.qml
   AttachmentList.qml
   Button.qml
+  CompletionSlider.qml
   ItemListView.qml
   ItemListViewDelegate.qml
   MainView.qml
   StartCanvas.qml
   WindowBar.qml
+  sliderbackground.png
+  sliderhandle.png
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
