@@ -58,26 +58,39 @@ KPIM.MainView {
     }
     
   }
-
   
   Column {
-    spacing: 4;
     anchors.leftMargin: 40;
     anchors.rightMargin: 4;
     anchors.topMargin: 40
     anchors.fill: parent
 
     IncidenceEditors.CollectionCombo {
+      id: collectionCombo
       width: parent.width;
       z: 2
     }
 
-    IncidenceEditors.GeneralEditor {
+
+    Flickable {
       width: parent.width;
-    }
-    
-    IncidenceEditors.DateTimeEditor {
-      width: parent.width;
+      height: parent.height - parent.height / 6 - collectionCombo.height;
+      contentHeight: generalEditor.height + dateTimeEditor.height;
+      clip: true;
+      flickDirection: "VerticalFlick"
+
+      Column {
+        anchors.fill: parent
+        IncidenceEditors.GeneralEditor {
+          id: generalEditor;
+          width: parent.width;
+        }
+
+        IncidenceEditors.DateTimeEditor {
+          id: dateTimeEditor;
+          width: parent.width;
+        }
+      }
     }
   }
 
