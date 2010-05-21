@@ -94,6 +94,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/kmime/specialmailcollections.h>
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
@@ -131,6 +132,10 @@
 #include <gpgme++/error.h>
 #include <messagecore/nodehelper.h>
 #include "messagecore/globalsettings.h"
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
+#include <Akonadi/CollectionFetchJob>
+#include <akonadi/collectionfetchscope.h>
 
 using namespace MailTransport;
 using namespace MessageViewer;
@@ -850,14 +855,6 @@ void ViewerPrivate::displayMessage()
   htmlWriter()->flush();
 }
 
-static bool message_was_saved_decrypted_before( KMime::Message::Ptr msg )
-{
-  if ( !msg )
-    return false;
-  kDebug() << "msgId =" << msg->messageID()->asUnicodeString();
-  return msg->messageID()->asUnicodeString().trimmed().startsWith( "<DecryptedMsg." );
-}
-
 void ViewerPrivate::removeEncryptedPart(KMime::Content* node)
 {
   bool changed = false;
@@ -892,12 +889,56 @@ void ViewerPrivate::removeEncryptedPart(KMime::Content* node)
 }
 
 
-KMime::Message* ViewerPrivate::createDecryptedMessage()
+void ViewerPrivate::createDecryptedMessage()
 {
-  KMime::Message* message = mNodeHelper->messageWithExtraContent( mMessage.get() );
-  removeEncryptedPart( message );
-//   qDebug() << "Decrypted message: " << message->encodedContent();
-  return message;
+  //check if the message is in the outbox folder
+//   kDebug() << "Item is in the collection : " << mMessageItem.parentCollection().id() << mMessageItem.isValid();
+  //FIXME: using root() is too much, but using mMessageItem.parentCollection() returns no collections in job->collections()
+  Akonadi::CollectionFetchJob* job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive );
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( collectionFetchResult( KJob* ) ) );
+}
+
+void ViewerPrivate::collectionFetchResult( KJob* job )
+{
+  if ( job->error() )
+    return;
+  
+  Akonadi::Collection col;
+  Q_FOREACH(Akonadi::Collection c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
+    if ( c == mMessageItem.parentCollection() ) {
+      col = c;
+      break;
+    }
+  }
+  if ( !col.isValid() )
+    return;
+  Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
+  QString itemResource = col.resource();
+//   kDebug() << "Item resource : " << itemResource << col.id() << col.name();
+  Akonadi::AgentInstance resourceInstance;
+  foreach ( const Akonadi::AgentInstance &instance, instances ) {
+//     kDebug() << "Instance " << instance.name() << " identifier : " << instance.identifier();
+    if ( instance.identifier() == itemResource ) {
+      resourceInstance = instance;
+      break;
+    }
+  }
+  bool isInOutbox = true;
+  Akonadi::Collection outboxCollection = Akonadi::SpecialMailCollections::self()->collection( Akonadi::SpecialMailCollections::Outbox, resourceInstance );
+  if ( resourceInstance.isValid() && outboxCollection != col )
+    isInOutbox = false;
+
+  if ( !isInOutbox ) {
+      KMime::Message* message = mNodeHelper->messageWithExtraContent( mMessage.get() );
+      removeEncryptedPart( message );
+
+      mMessage.reset( message );
+
+      mMessageItem.setPayloadFromData( message->encodedContent() );
+      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+      connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
+  //   kDebug() << "Decrypted message: " << message->encodedContent();
+  }
 }
 
 void ViewerPrivate::parseContent( KMime::Content *content )
@@ -956,7 +997,8 @@ void ViewerPrivate::parseContent( KMime::Content *content )
   }
 
   bool emitReplaceMsgByUnencryptedVersion = false;
-  if ( GlobalSettings::self()->storeDisplayedMessagesUnencrypted() ) {
+  if ( GlobalSettings::self()->storeDisplayedMessagesUnencrypted() )
+  {
 
     // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
     // of german government:
@@ -978,59 +1020,18 @@ void ViewerPrivate::parseContent( KMime::Content *content )
     kDebug() << "otp.hasPendingAsyncJobs() = " << otp.hasPendingAsyncJobs();
     kDebug() << "   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
     kDebug() << "|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
+
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
-    if(
-          // only proceed if the message has actually been decrypted
-        decryptMessage()
-      // don't remove encryption in the outbox folder :)
-//FIXME(Andras)      && ( aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() )
-          // only proceed if this message was not saved encryptedly before
-//FIXME(Andras)      && !message_was_saved_decrypted_before( aMsg )
-          // only proceed if no pending async jobs are running:
-        && !otp.hasPendingAsyncJobs()
-          // only proceed if this message is (at least partially) encrypted
-        && (    (KMMsgFullyEncrypted == encryptionState)
+    if( decryptMessage() // only proceed if the message has actually been decrypted          
+        && !otp.hasPendingAsyncJobs() // only proceed if no pending async jobs are running:         
+        && (    (KMMsgFullyEncrypted == encryptionState)     // only proceed if this message is (at least partially) encrypted
             || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
-
-      kDebug() << "Calling objectTreeToDecryptedMsg()";
-
-      KMime::Message* decryptedMessage = createDecryptedMessage();
-      mMessage.reset( decryptedMessage );
-
-      mMessageItem.setPayloadFromData( decryptedMessage->encodedContent() );
-      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
-      connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
-
-      
-/*
-      KMime::Message::Ptr unencryptedMessage( new KMime::Message );
-      QByteArray decryptedData;
-      // note: The following call may change the message's headers.
-      objectTreeToDecryptedMsg( decryptedMessage, decryptedData, unencryptedMessage );
-      kDebug() << "Resulting data:" << decryptedData;
-
-      if( !decryptedData.isEmpty() ) {
-        kDebug() << "Composing unencrypted message";
-        unencryptedMessage->setBody( decryptedData );
-        unencryptedMessage->parse();
-        kDebug() << "Resulting data2:" << unencryptedMessage->encodedContent();
-    //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
-//         kDebug() << "Attach unencrypted message to aMsg";
-
-//         mNodeHelper->attachUnencryptedMessage( mMessage, unencryptedMessage );
-
-        emitReplaceMsgByUnencryptedVersion = true;
-      }*/
+      createDecryptedMessage();
     }
   }
 
-  if( emitReplaceMsgByUnencryptedVersion ) {
-    kDebug() << "Invoke saving in decrypted form:";
-    emit replaceMsgByUnencryptedVersion(); //FIXME(Andras) actually connect and do the replacement on the server (see KMMainWidget::slotReplaceByUnencryptedVersion)
-  } else {
-    showHideMimeTree();
-  }
+  showHideMimeTree();
 }
 
 

@@ -246,7 +246,7 @@ public:
                                  bool weAreReplacingTheRootNode = false,
                                  int recCount = 0 );
 
-  KMime::Message* createDecryptedMessage();
+  void createDecryptedMessage();
   void removeEncryptedPart( KMime::Content* node );
 
   QString createAtmFileLink( const QString& atmFileName ) const;
@@ -477,6 +477,8 @@ private slots:
   void slotItemChanged( const Akonadi::Item& item, const QSet<QByteArray>& partIdentifiers );
 
   void itemModifiedResult( KJob* job );
+
+  void collectionFetchResult( KJob* job );
 
   void slotMimePartDestroyed();
 
