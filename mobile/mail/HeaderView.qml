@@ -60,6 +60,66 @@ KPIM.ItemListView {
           anchors.left : importantFlagImage.right
           source : KDE.iconPath("mail-mark-task.png", parent.height + 16)
           opacity : model.is_action_item ? 0.25 : 0
+        },
+        KPIM.Action{
+          id : deleteAction
+          anchors.verticalCenter: parent.verticalCenter;
+          anchors.right : parent.right;
+          width: parent.height - 10
+          height : parent.height - 10
+          action : application.getAction("akonadi_item_delete")
+          hidable : false
+          showText : false
+          opacity : 0.6
+          onTriggered : {
+            application.setListSelectedRow(model.index);
+          }
+        }
+      ]
+
+      states : [
+        QML.State {
+          name : "deleteFaded"
+          when : itemListView.flicking
+          QML.PropertyChanges {
+            target : deleteAction;
+            opacity : 0
+          }
+          QML.PropertyChanges {
+            target : deleteAction.anchors;
+            rightMargin : -deleteAction.width
+          }
+        }
+      ]
+      transitions : [
+        QML.Transition {
+          from : ""
+          to   : "deleteFaded"
+          QML.PropertyAnimation {
+            target : deleteAction
+            properties : "opacity"
+            duration: 500
+            easing.type: "OutQuad"
+          }
+        },
+        QML.Transition {
+          from : "deleteFaded"
+          to   : ""
+          QML.SequentialAnimation {
+            QML.PauseAnimation {
+              // delay a bit
+              duration: {
+                // TODO: figure out how to do this.
+                0
+              }
+            }
+            QML.PropertyAnimation {
+              target : deleteAction.anchors
+              properties : "rightMargin"
+              duration: 500
+              easing.type: "InQuad"
+            }
+          }
         }
       ]
     }
