@@ -147,13 +147,9 @@ void IncidenceDateTimeEditor::startDateChanged( const QDate &newDate )
 
 void IncidenceDateTimeEditor::startSpecChanged()
 {
-  if ( mUi->mEndCheck->isChecked() ) {
-    qDebug() << "end: " << currentEndDateTime().timeSpec().timeZone().name()
-      << "cur. start:" << mCurrentStartDateTime.timeSpec().timeZone().name();
-      
-    if ( currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() )
-      mUi->mTimeZoneComboEnd->selectTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
-  }
+  if ( mUi->mEndCheck->isChecked()
+    && currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() )
+    mUi->mTimeZoneComboEnd->selectTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
 
   mCurrentStartDateTime.setTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
 //   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
