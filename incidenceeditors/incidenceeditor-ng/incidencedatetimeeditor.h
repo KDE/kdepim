@@ -57,7 +57,9 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
   private slots: /// General
     void editRecurrence();
     void enableAlarm( bool enable );
-    void startTimeChanged( const QTime &newtime );
+    void startTimeChanged( const QTime &newTime );
+    void startDateChanged( const QDate &newDate );
+    void startSpecChanged();
     void updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence );
     
   private slots: /// Todo specific
@@ -92,6 +94,12 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
      */
     KDateTime mActiveStartDT;
     KDateTime mActiveEndDT;
+
+    /**
+     * We need to store the current start date/time to be able to update the end
+     * time appropriate when the start time changes.
+     */
+    KDateTime mCurrentStartDateTime;
 };
 
 } // IncidenceEditorsNG

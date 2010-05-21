@@ -106,21 +106,57 @@ void IncidenceDateTimeEditor::enableAlarm( bool enable )
   mUi->mAlarmEditButton->setEnabled( enable );
 }
 
-void IncidenceDateTimeEditor::startTimeChanged( const QTime &/* newtime */ )
+void IncidenceDateTimeEditor::startTimeChanged( const QTime &newTime )
 {
-  if ( mUi->mStartCheck->isChecked() && mUi->mEndCheck->isChecked() ) {
-    const KDateTime currStartDateTime = currentEndDateTime();
-    KDateTime currEndDateTime = currentEndDateTime();
-    const int secsep = currStartDateTime.secsTo( currEndDateTime );
+  if ( !newTime.isValid() )
+    return;
 
-    // adjust end time so that the event has the same duration as before.
-    currEndDateTime = currStartDateTime.addSecs( secsep );
-    mUi->mEndTimeEdit->setTime( currEndDateTime.time() );
-    mUi->mEndDateEdit->setDate( currEndDateTime.date() );
+  KDateTime endDateTime = currentEndDateTime();
+  const int secsep = mCurrentStartDateTime.secsTo( endDateTime );
+  mCurrentStartDateTime.setTime( newTime );
+  if ( mUi->mEndCheck->isChecked() ) {
+    // Only update the end time when it is actually enabled, adjust end time so
+    // that the event/todo has the same duration as before.
+    endDateTime = mCurrentStartDateTime.addSecs( secsep );
+    mUi->mEndTimeEdit->setTime( endDateTime.time() );
+    mUi->mEndDateEdit->setDate( endDateTime.date() );
   }
 
 //   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
   checkDirtyStatus();
+}
+
+void IncidenceDateTimeEditor::startDateChanged( const QDate &newDate )
+{
+  if ( !newDate.isValid() )
+    return;
+
+  KDateTime endDateTime = currentEndDateTime();
+  int daysep = mCurrentStartDateTime.daysTo( endDateTime );
+  mCurrentStartDateTime.setDate( newDate );
+  if ( mUi->mEndCheck->isChecked() ) {
+    // Only update the end time when it is actually enabled, adjust end time so
+    // that the event/todo has the same duration as before.
+    endDateTime.setDate( mCurrentStartDateTime.date().addDays( daysep ) );
+    mUi->mEndDateEdit->setDate( endDateTime.date() );
+//     emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
+  }
+
+  checkDirtyStatus();
+}
+
+void IncidenceDateTimeEditor::startSpecChanged()
+{
+  if ( mUi->mEndCheck->isChecked() ) {
+    qDebug() << "end: " << currentEndDateTime().timeSpec().timeZone().name()
+      << "cur. start:" << mCurrentStartDateTime.timeSpec().timeZone().name();
+      
+    if ( currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() )
+      mUi->mTimeZoneComboEnd->selectTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
+  }
+
+  mCurrentStartDateTime.setTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
+//   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
 }
 
 void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )
@@ -259,7 +295,7 @@ KDateTime IncidenceDateTimeEditor::currentEndDateTime() const
   return KDateTime(
     mUi->mEndDateEdit->date(),
     mUi->mEndTimeEdit->time(),
-    mUi->mTimeZoneComboEnd->selectedTimeSpec() ).toTimeSpec( currentStartDateTime().timeSpec() );
+    mUi->mTimeZoneComboEnd->selectedTimeSpec() );
 }
 
 void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
@@ -272,8 +308,25 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
   mUi->mEndCheck->setVisible( false );
   mUi->mEndCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
 
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits(bool)) );
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(enableAlarm(bool)) );
+  // All day
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
+           SLOT(enableTimeEdits(bool)) );
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
+           SLOT(enableAlarm(bool)) );
+  // Start time
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
+           SLOT(startTimeChanged(QTime)) );
+  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
+           SLOT(startDateChanged(QDate)) );
+  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)),
+           SLOT(startSpecChanged()) );
+  // End time
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
+           SLOT(checkDirtyStatus()) );
 
   mUi->mHasTimeCheck->setChecked( !event->allDay() );
   enableTimeEdits( !event->allDay() );
@@ -420,6 +473,7 @@ void IncidenceDateTimeEditor::setDateTimes( const KDateTime &start, const KDateT
     mUi->mTimeZoneComboEnd->selectTimeSpec( dt.timeSpec() );
   }
 
+  mCurrentStartDateTime = currentStartDateTime();
   setDuration();
 }
 
