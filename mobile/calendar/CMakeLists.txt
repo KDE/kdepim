@@ -24,7 +24,7 @@ target_link_libraries(korganizer-mobile
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   akonadi-kcal_next
-  incidenceeditors
+  incidenceeditorsmobile
   kdepimmobileui
 )
 

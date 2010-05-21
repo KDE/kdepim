@@ -107,4 +107,43 @@ endif ()
 set_target_properties(incidenceeditors PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+if (KDEPIM_MOBILE_UI)
+  set(incidenceeditors_mobile_LIB_SRCS
+    incidenceeditor-ng/incidenceeditor.cpp
+    incidenceeditor-ng/combinedincidenceeditor.cpp
+    incidenceeditor-ng/incidencegeneraleditor.cpp
+    incidenceeditor-ng/incidencedatetimeeditor.cpp
+    incidenceeditor-ng/incidencerecurrenceeditor.cpp
+    incidenceeditor-ng/incidencerecurrencedialog.cpp
+
+    autochecktreewidget.cpp
+    categoryconfig.cpp
+    categoryhierarchyreader.cpp
+    categoryselectdialog.cpp
+    editorconfig.cpp
+    korganizereditorconfig.cpp
+  )
+
+  kde4_add_ui_files( incidenceeditors_mobile_LIB_SRCS
+    incidenceeditor-ng/incidencegeneraleditor.ui
+    incidenceeditor-ng/incidencedatetime.ui
+  )
+
+  kde4_add_library(incidenceeditorsmobile SHARED ${incidenceeditors_mobile_LIB_SRCS})
+  target_link_libraries(incidenceeditorsmobile
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+    ${KDE4_KDEUI_LIBS}
+    ${KDEPIMLIBS_KCAL_LIBS}
+    kdepim            # For KPIM::K{Date|Time}Edit
+    akonadi-kcal_next # For KCalPrefs
+  )
+
+  set_target_properties(incidenceeditorsmobile
+    PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+  )
+  install(TARGETS incidenceeditorsmobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+endif (KDEPIM_MOBILE_UI)
+
 add_subdirectory( tests )
