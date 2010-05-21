@@ -25,7 +25,12 @@
 #include <KSystemTimeZones>
 
 #include "incidencerecurrencedialog.h"
+
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_iedatetimemobile.h"
+#else
 #include "ui_incidencedatetime.h"
+#endif
 
 using namespace IncidenceEditorsNG;
 using namespace KCal;
@@ -36,12 +41,19 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   , mUi( new Ui::IncidenceDateTimeEditor )
 {
   mUi->setupUi( this );
+
+#ifndef KDEPIM_MOBILE_UI
   mUi->mAlarmBell->setPixmap( SmallIcon( "task-reminder" ) );
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
 
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
+#else
+  QButtonGroup *freeBusyGroup = new QButtonGroup( this );
+  freeBusyGroup->addButton( mUi->mFreeRadio );
+  freeBusyGroup->addButton( mUi->mBusyRadio );
+#endif
 }
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
@@ -157,11 +169,13 @@ void IncidenceDateTimeEditor::startSpecChanged()
 
 void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )
 {
+#ifndef KDEPIM_MOBILE_UI
   if ( incidence->recurs() ) {
     mUi->mRecurrenceLabel->setText( IncidenceFormatter::recurrenceString( const_cast<Incidence *>( incidence.get() ) ) );
   } else {
     mUi->mRecurrenceLabel->setText( QString() );
   }
+#endif
 }
 
 /// private slots for Todo
@@ -364,10 +378,18 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
 
   switch( event->transparency() ) {
   case Event::Transparent:
+#ifdef KDEPIM_MOBILE_UI
+    mUi->mFreeRadio->setChecked( true );
+#else
     mUi->mFreeBusyCombo->setCurrentIndex( 1 );
+#endif
     break;
   case Event::Opaque:
+#ifdef KDEPIM_MOBILE_UI
+    mUi->mBusyRadio->setChecked( true );
+#else
     mUi->mFreeBusyCombo->setCurrentIndex( 0 );
+#endif
     break;
   }
 
@@ -393,9 +415,14 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   mUi->mTimeZoneComboEnd->setEnabled( todo->hasDueDate() );
 
   // These fields where not enabled in the old code either:
+#ifdef KDEPIM_MOBILE_UI
+  mUi->mFreeRadio->setVisible( false );
+  mUi->mBusyRadio->setVisible( false );
+#else
   mUi->mDurationLabel->setVisible( false );
-  mUi->mFreeBusyLabel->setVisible( false );
   mUi->mFreeBusyCombo->setVisible( false );
+#endif
+  mUi->mFreeBusyLabel->setVisible( false );
 
   mUi->mHasTimeCheck->setChecked( !todo->allDay() );
 
@@ -492,6 +519,7 @@ void IncidenceDateTimeEditor::setTimes( const KDateTime &start, const KDateTime 
 
 void IncidenceDateTimeEditor::setDuration()
 {
+#ifndef KDEPIM_MOBILE_UI
   // Those checks are always checked for events, but not for todos. If one of them
   // isn't checked we don't show the duration.
   if ( !mUi->mStartCheck->isChecked() || !mUi->mEndCheck->isChecked() ) {
@@ -546,4 +574,5 @@ void IncidenceDateTimeEditor::setDuration()
     i18nc( "@info:whatsthis",
            "Shows the duration of the event or to-do with the "
            "current start and end dates and times." ) );
+#endif
 }

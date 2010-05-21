@@ -126,7 +126,7 @@ if (KDEPIM_MOBILE_UI)
 
   kde4_add_ui_files( incidenceeditors_mobile_LIB_SRCS
     incidenceeditor-ng/iegeneralmobile.ui
-    incidenceeditor-ng/incidencedatetime.ui
+    incidenceeditor-ng/iedatetimemobile.ui
   )
 
   kde4_add_library(incidenceeditorsmobile SHARED ${incidenceeditors_mobile_LIB_SRCS})
