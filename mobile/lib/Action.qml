@@ -28,6 +28,7 @@ Rectangle {
   property variant action
   property int hardcoded_height : 70
   property bool hidden : !action.enabled
+  property alias showText : buttonText.visible
 
   signal triggered()
 
