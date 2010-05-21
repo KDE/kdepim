@@ -22,17 +22,9 @@ import Qt 4.7
 /** Delegate base class for use in ItemListView */
 Item {
   id: itemViewTopLevel
-  /// content in summary mode
   property alias summaryContent: itemSummary.data
-  /// height of an item in summary mode
-  property int summaryContentHeight: 32
-  /// content in details mode
-  property alias detailsContent: itemDetails.data
-  /// height of an item in detail mode
-  property int detailsContentHeight: 100
 
   width: itemListView.width
-  height: summaryContentHeight
   clip: true
 
   SystemPalette { id: palette; colorGroup: "Active" }
@@ -49,19 +41,9 @@ Item {
   }
 
   Item {
-    anchors.fill: background
+    anchors.fill: parent
     anchors.margins: 4
-
-    Item {
-      id: itemSummary
-      anchors.fill: parent
-    }
-
-    Item {
-      id: itemDetails
-      anchors.fill: parent
-      opacity: 0
-    }
+    id: itemSummary
   }
   Rectangle {
     id: bottomLine
