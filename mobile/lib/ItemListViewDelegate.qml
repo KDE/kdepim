@@ -48,15 +48,11 @@ Item {
   MouseArea {
     anchors.fill: parent
     onClicked: {
-      var currentClicked = false;
-      if ( itemViewTopLevel.ListView.view.currentIndex == model.index ) { currentClicked = true }
       itemViewTopLevel.ListView.view.currentIndex = model.index;
       itemViewTopLevel.ListView.view.parent.currentItemId = model.itemId;
-      // only clicks on the current (expanded) item triggers displaying
-      if ( currentClicked ) {
-        itemViewTopLevel.ListView.view.parent.itemSelected();
-        application.setListSelectedRow(model.index);
-      }
+
+      itemViewTopLevel.ListView.view.parent.itemSelected();
+      application.setListSelectedRow(model.index);
     }
   }
 
@@ -75,23 +71,4 @@ Item {
       opacity: 0
     }
   }
-
-  states: [
-    State {
-      name: "currentState"
-      when: itemViewTopLevel.ListView.isCurrentItem
-      PropertyChanges { target: itemViewTopLevel; height: detailsContentHeight }
-      PropertyChanges { target: itemDetails; opacity: 1 }
-      PropertyChanges { target: itemSummary; opacity: 0 }
-      PropertyChanges { target: background; color: palette.highlight; opacity: 1.0 }
-    }
-  ]
-//  transitions: [
-//    Transition {
-//      NumberAnimation { property: "height"; duration: 200 }
-//      NumberAnimation { target: itemDetails; property: "opacity"; duration: 200 }
-//      NumberAnimation { target: itemSummary; property: "opacity"; duration: 200 }
-//      ColorAnimation { target: background; property: "color"; duration: 200 }
-//    }
-//  ]
 }
