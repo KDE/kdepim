@@ -22,7 +22,12 @@
 #include "categoryconfig.h"
 #include "categoryselectdialog.h"
 #include "editorconfig.h"
+
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_iegeneralmobile.h"
+#else
 #include "ui_incidencegeneraleditor.h"
+#endif
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
