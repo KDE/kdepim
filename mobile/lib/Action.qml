@@ -75,6 +75,6 @@ Rectangle {
       border.width = 2
     }
     onReleased : border.width = 0
-    onClicked : { action.trigger(); triggered(); }
+    onClicked : { triggered(); action.trigger(); }
   }
 }
