@@ -33,7 +33,11 @@ class MessageListProxy : public ListProxy
     enum Role {
       SubjectRole = Akonadi::EntityTreeModel::UserRole,
       FromRole,
-      DateRole
+      DateRole,
+      IsNewRole,
+      IsUnreadRole,
+      IsImportantRole,
+      IsActionItemRole
     };
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

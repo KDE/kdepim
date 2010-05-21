@@ -22,6 +22,8 @@
 #include <akonadi/item.h>
 #include <KMime/Message>
 
+#include <messagecore/messagestatus.h>
+
 MessageListProxy::MessageListProxy(QObject* parent) : ListProxy(parent)
 {
 }
@@ -31,6 +33,8 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   if ( item.isValid() && item.hasPayload<KMime::Message::Ptr>() ) {
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+    KPIM::MessageStatus messageStatus;
+    messageStatus.setStatusFromFlags(item.flags());
     switch ( role ) {
       case SubjectRole:
         return msg->subject()->asUnicodeString();
@@ -38,6 +42,14 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         return msg->from()->asUnicodeString();
       case DateRole:
         return msg->date()->asUnicodeString();
+      case IsNewRole:
+        return messageStatus.isNew();
+      case IsUnreadRole:
+        return messageStatus.isUnread();
+      case IsImportantRole:
+        return messageStatus.isImportant();
+      case IsActionItemRole:
+        return messageStatus.isToAct();
     }
   }
   return QSortFilterProxyModel::data(index, role);
@@ -51,6 +63,10 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( SubjectRole, "subject" );
   names.insert( FromRole, "from" );
   names.insert( DateRole, "date" );
+  names.insert( IsNewRole, "is_new" );
+  names.insert( IsUnreadRole, "is_unread" );
+  names.insert( IsImportantRole, "is_important" );
+  names.insert( IsActionItemRole, "is_action_item" );
   setRoleNames( names );
   kDebug() << names << sourceModel->roleNames();
 }

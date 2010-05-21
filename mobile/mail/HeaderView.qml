@@ -27,8 +27,27 @@ KPIM.ItemListView {
     KPIM.ItemListViewDelegate {
       summaryContent: [
         QML.Text {
-          anchors.fill: parent
+          id : summaryText
+          anchors { left : parent.left; bottom : parent.bottom; top : parent.top; }
           text: model.subject
+        },
+        QML.Image {
+          id : newFlagImage
+          anchors { top : parent.top; bottom : parent.bottom; right : importantFlagImage.left }
+          width : { (model.is_new || model.isUnread) ? parent.height - 2 : 0 }
+          source : KDE.iconPath(model.is_new ? "mail-unread-new.png" : "mail-unread.png", parent.height - 2)
+        },
+        QML.Image {
+          id : importantFlagImage
+          anchors { top : parent.top; bottom : parent.bottom; right : actionFlagImage.left }
+          width : { model.is_important ? parent.height - 2 : 0 }
+          source : KDE.iconPath("emblem-important.png", parent.height - 2)
+        },
+        QML.Image {
+          id : actionFlagImage
+          anchors { top : parent.top; bottom : parent.bottom; right : parent.right }
+          width : { model.is_action_item ? parent.height - 2 : 0 }
+          source : KDE.iconPath("mail-mark-task.png", parent.height - 2)
         }
       ]
       detailsContent: [
