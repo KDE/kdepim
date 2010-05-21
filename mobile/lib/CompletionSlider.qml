@@ -35,7 +35,7 @@ Rectangle {
   }
   Image {
     anchors.verticalCenter : parent.verticalCenter
-    x : 3 + (percentComplete * (width / 2))
+    x : 3 + ((percentComplete/100) * (width / 2))
     source : "sliderhandle.png";
   }
 

@@ -145,10 +145,10 @@ KPIM.MainView {
                       text: KDE.i18na( "Details: %1", [model.description] )
                       color: "#3B3B3B"
                     },
-                    Text {
+                    KPIM.CompletionSlider {
                       anchors.top: parent.top
                       anchors.right: parent.right
-                      text: KDE.i18na( "%1%", [model.percentComplete] )
+                      percentComplete : model.percentComplete
                     },
                     Image {
                       id : importantFlagImage
@@ -157,20 +157,6 @@ KPIM.MainView {
                       anchors.leftMargin : 15
                       source : KDE.iconPath("emblem-important.png", parent.height + 16)
                       opacity : model.is_important ? 0.25 : 0
-                    },
-                    KPIM.Action{
-                      id : deleteAction
-                      anchors.verticalCenter: parent.verticalCenter;
-                      anchors.right : parent.right;
-                      width: parent.height - 10
-                      height : parent.height - 10
-                      action : application.getAction("akonadi_item_delete")
-                      hidable : false
-                      showText : false
-                      opacity : 0.6
-                      onTriggered : {
-                        application.setListSelectedRow(model.index);
-                      }
                     }
                  ]
                }
