@@ -39,9 +39,6 @@
 class KConfig;
 class KHBox;
 
-class QBoxLayout;
-class QGridLayout;
-class QMenu;
 class QPaintEvent;
 class QSplitter;
 

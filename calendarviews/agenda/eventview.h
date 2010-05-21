@@ -61,7 +61,6 @@ namespace KHolidays {
 class KConfigGroup;
 class QDate;
 class QDateTime;
-class QMenu;
 class QModelIndex;
 
 namespace EventViews
