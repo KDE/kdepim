@@ -164,6 +164,11 @@ bool IncidenceChanger::Private::performChange( Change *change )
   // never locked, we can't unlock it with endChange().
 
   mCurrentChanges[newItem.id()] = change;
+
+  // Don't write back remote revision since we can't make sure it is the current one
+  // fixes problems with DAV resource
+  newItem.setRemoteRevision( QString() );
+
   ItemModifyJob *job = new ItemModifyJob( newItem );
   connect( job, SIGNAL(result( KJob*)), this, SLOT(changeIncidenceFinished(KJob*)) );
   return true;
