@@ -282,6 +282,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
 
     Q_FOREACH ( const Item::Id &cid, orphanedChildren ) {
       m_childToParent.insert( cid, id );
+      Akonadi::incidence( m_itemMap[cid] )->setRelatedTo( incidence.get() );
     }
 
     m_unseenParentToChildren.remove( ui );
