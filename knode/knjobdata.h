@@ -15,12 +15,11 @@
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
+#include <QPointer>
 #include <kurl.h>
 #include <kio/global.h>
-
 #include <QObject>
 #include <QList>
-
 #include <libkdepim/progressmanager.h>
 
 class KJob;
@@ -203,7 +202,7 @@ class KNJobData : public QObject
     bool mCanceled;
     KNJobConsumer *c_onsumer;
     /** An associated KJob. */
-    KJob *mJob;
+    QPointer<KJob> mJob;
     /** The progress item representing this job to the user. */
     KPIM::ProgressItem *mProgressItem;
 
