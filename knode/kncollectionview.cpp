@@ -86,6 +86,10 @@ void KNCollectionView::loadLayout()
   addTotalColumn( i18n("Total") );
 
   restoreLayout( knGlobals.config(), "GroupView" );
+
+  if ( sortColumn() == -1 ) {
+    sortByColumn( labelColumnIndex(), Qt::AscendingOrder );
+  }
 }
 
 void KNCollectionView::readConfig()
