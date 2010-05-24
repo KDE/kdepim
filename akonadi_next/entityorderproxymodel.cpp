@@ -115,7 +115,19 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
 
   const KUrl::List urls = KUrl::List::fromMimeData( data );
 
-  const Collection parentCol = index( row, column, parent ).data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+  Collection parentCol;
+
+  if (parent.isValid())
+    parentCol = parent.data( EntityTreeModel::CollectionRole ).value<Collection>();
+  else
+  {
+    if (!hasChildren(parent))
+      return QSortFilterProxyModel::dropMimeData( data, action, row, column, parent );
+
+    const QModelIndex targetIndex = index( 0, column, parent );
+
+    parentCol = targetIndex.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+  }
 
   QStringList droppedList;
   foreach ( const KUrl &url, urls ) {
