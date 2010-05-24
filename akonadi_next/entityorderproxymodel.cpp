@@ -58,7 +58,7 @@ using namespace Akonadi;
 EntityOrderProxyModel::EntityOrderProxyModel( QObject* parent )
   : QSortFilterProxyModel(parent), d_ptr( new EntityOrderProxyModelPrivate( this ) )
 {
-
+  setDynamicSortFilter(true);
 }
 
 void EntityOrderProxyModel::setOrderConfig( KConfigGroup& configGroup )
