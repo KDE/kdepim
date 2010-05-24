@@ -160,7 +160,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   selProxy = new KSelectionProxyModel( treeview->selectionModel(), this );
-  selProxy->setSourceModel( m_kjotsModel );
+  selProxy->setSourceModel( treeview->model() );
 
   // TODO: Write a QAbstractItemView subclass to render kjots selection.
   connect( selProxy, SIGNAL( dataChanged(QModelIndex,QModelIndex)), SLOT(renderSelection()) );
@@ -765,7 +765,9 @@ QString KJotsWidget::renderSelectionToHtml()
     QModelIndex idx = selProxy->index( row, column, QModelIndex() );
 
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
-    objectList << QVariant::fromValue(obj);
+    KJotsEntity *kjotsEntity = qobject_cast<KJotsEntity*>(obj);
+    kjotsEntity->setIndex(idx);
+    objectList << QVariant::fromValue(static_cast<QObject *>(kjotsEntity));
   }
 
   hash.insert( QLatin1String( "entities" ), objectList);
@@ -794,7 +796,9 @@ QString KJotsWidget::renderSelectionToPlainText()
     QModelIndex idx = selProxy->index( row, column, QModelIndex() );
 
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
-    objectList << QVariant::fromValue(obj);
+    KJotsEntity *kjotsEntity = qobject_cast<KJotsEntity*>(obj);
+    kjotsEntity->setIndex(idx);
+    objectList << QVariant::fromValue(static_cast<QObject *>(kjotsEntity));
   }
 
   hash.insert( QLatin1String( "entities" ), objectList);
@@ -824,7 +828,9 @@ QString KJotsWidget::renderSelectionToXml()
     QModelIndex idx = selProxy->index( row, column, QModelIndex() );
 
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
-    objectList << QVariant::fromValue(obj);
+    KJotsEntity *kjotsEntity = qobject_cast<KJotsEntity*>(obj);
+    kjotsEntity->setIndex(idx);
+    objectList << QVariant::fromValue(static_cast<QObject *>(kjotsEntity));
   }
 
   hash.insert( QLatin1String( "entities" ), objectList);
