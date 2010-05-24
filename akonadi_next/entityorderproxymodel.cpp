@@ -163,8 +163,10 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
 
   for ( int i = 0; i < droppedList.size(); ++i )
   {
-    existingList.removeAll( droppedList.at( i ) );
-    existingList.insert( row + i, droppedList.at( i ) );
+    const QString droppedItem = droppedList.at( i );
+    const int existingIndex = existingList.indexOf( droppedItem );
+    existingList.removeAt( existingIndex );
+    existingList.insert( row + i - (existingIndex > row ? 0 : 1), droppedList.at( i ) );
   }
 
   d->m_orderConfig.writeEntry( QString::number( parentCol.id() ), existingList );
