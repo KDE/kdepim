@@ -16,6 +16,7 @@
 
 #include "job.h"
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <qmutex.h>
 
