@@ -16,6 +16,7 @@
 
 #include "writer.h"
 #include <kdebug.h>
+#include <string>
 
 /*=========================================================================
 | DEFINES

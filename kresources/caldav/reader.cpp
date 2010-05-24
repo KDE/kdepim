@@ -16,6 +16,7 @@
 
 #include "reader.h"
 #include <kdebug.h>
+#include <string>
 
 /*=========================================================================
 | NAMESPACE
