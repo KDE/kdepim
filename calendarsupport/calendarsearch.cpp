@@ -173,7 +173,7 @@ void CalendarSearch::Private::searchCreated( const QVariantMap& result ) {
     const int id = result.value( QLatin1String("Collection") ).toInt( &ok );
     if ( !ok || id < 0 ) {
         error = CalendarSearch::SomeError;
-        errorString = i18n("Could not parsed the collection ID");
+        errorString = i18n("Could not parse the collection ID");
         emit q->errorOccurredceived();
         return;
     }
