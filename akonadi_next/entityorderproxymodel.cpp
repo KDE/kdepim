@@ -127,7 +127,7 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
       if ( !item.isValid() )
         continue;
 
-      QModelIndexList list = match( index( 0, 0 ), EntityTreeModel::ItemIdRole, item.id(), 1, Qt::MatchRecursive );
+      const QModelIndexList list = EntityTreeModel::modelIndexesForItem( this, item );
       if ( list.isEmpty() )
         continue;
 
@@ -136,14 +136,14 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
 
       droppedList << configString( list.first() );
     } else {
-      QModelIndexList list = match( index( 0, 0 ), EntityTreeModel::CollectionIdRole, col.id(), 1, Qt::MatchRecursive );
-      if ( list.isEmpty() )
+      const QModelIndex idx = EntityTreeModel::modelIndexForCollection( this, col );
+      if ( !idx.isValid() )
         continue;
 
-      if ( !containsMove && list.first().data( EntityTreeModel::ParentCollectionRole ).value<Collection>().id() != parentCol.id() )
+      if ( !containsMove && idx.data( EntityTreeModel::ParentCollectionRole ).value<Collection>().id() != parentCol.id() )
         containsMove = true;
 
-      droppedList << configString( list.first() );
+      droppedList << configString( idx );
     }
   }
 
