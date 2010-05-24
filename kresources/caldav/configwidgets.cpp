@@ -47,6 +47,7 @@
 #include <qspinbox.h>
 #include <qbuttongroup.h>
 #include <qgroupbox.h>
+#include <qhbox.h>
 
 using namespace KCal;
 
