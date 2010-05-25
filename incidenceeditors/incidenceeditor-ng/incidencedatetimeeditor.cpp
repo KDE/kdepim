@@ -285,6 +285,7 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
 
 bool IncidenceDateTimeEditor::isDirty( KCal::Event::ConstPtr event ) const
 {
+  return false;
   if ( event->allDay() != mUi->mHasTimeCheck->isChecked() )
     return true;
 
