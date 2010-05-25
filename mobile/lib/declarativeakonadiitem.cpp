@@ -96,6 +96,11 @@ DeclarativeAkonadiItem::~DeclarativeAkonadiItem()
   delete d_ptr;
 }
 
+Akonadi::Item DeclarativeAkonadiItem::item() const
+{
+  return Akonadi::Item( itemId() );
+}
+
 void DeclarativeAkonadiItem::setWidget( QWidget *widget )
 {
   Q_D( DeclarativeAkonadiItem );
