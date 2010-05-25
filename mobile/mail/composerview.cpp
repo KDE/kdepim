@@ -19,6 +19,7 @@
 
 #include "composerview.h"
 
+#include "global.h"
 #include "declarativeeditor.h"
 #include "declarativeidentitycombobox.h"
 #include "declarativerecipientseditor.h"
@@ -38,6 +39,9 @@
 #include <messagecomposer/textpart.h>
 #include <messagecomposer/emailaddressresolvejob.h>
 #include <messagecomposer/attachmentcontrollerbase.h>
+#include <messagecomposer/attachmentmodel.h>
+#include <messagecomposer/keyresolver.h>
+#include <messagecomposer/kleo_util.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>
@@ -45,11 +49,10 @@
 #include <KAction>
 #include <KMessageBox>
 #include <KCMultiDialog>
+#include <KFileDialog>
 
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
-#include <KFileDialog>
-#include <messagecomposer/attachmentmodel.h>
 
 QML_DECLARE_TYPE( DeclarativeEditor )
 QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
@@ -58,7 +61,8 @@ ComposerView::ComposerView(QWidget* parent) :
   KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent ),
   m_identityCombo( 0 ),
   m_editor( 0 ),
-  m_attachmentController( 0 )
+  m_attachmentController( 0 ),
+  m_jobCount( 0 )
 {
   setSubject( QString() );
 
@@ -170,7 +174,7 @@ void ComposerView::expandAddresses()
 {
   // TODO share this with kmcomposewin.cpp
   MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
-  const KPIMIdentities::Identity identity = m_identityCombo->identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+  const KPIMIdentities::Identity identity = m_identityCombo->identityManager()->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
   job->setFrom( identity.fullEmailAddr() );
   job->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
   job->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
@@ -188,21 +192,158 @@ void ComposerView::addressExpansionResult(KJob* job)
 
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
 
+  bool sign = true;
+  bool encrypt = true;
+
+  // FIXME copied from kmcomposewin.cpp
+  //BEGIN generateCryptoMessages() copy
+  QList< Message::Composer* > composers;
+  do {
+  Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  true /*encryptToSelf()*/,
+                                                           false /*showKeyApprovalDialog()*/,
+                                                           false /*GlobalSettings::self()->pgpAutoEncrypt()*/,
+                                                           Kleo::AutoFormat /*cryptoMessageFormat()*/,
+                                                           -1 /*encryptKeyNearExpiryWarningThresholdInDays()*/,
+                                                           -1 /*signingKeyNearExpiryWarningThresholdInDays()*/,
+                                                           -1 /*encryptRootCertNearExpiryWarningThresholdInDays()*/,
+                                                           -1 /*signingRootCertNearExpiryWarningThresholdInDays()*/,
+                                                           -1 /*encryptChainCertNearExpiryWarningThresholdInDays()*/,
+                                                           -1 /*signingChainCertNearExpiryWarningThresholdInDays()*/ );
+  const KPIMIdentities::Identity &id = Global::identityManager()->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
+  QStringList encryptToSelfKeys;
+  QStringList signKeys;
+
+  bool signSomething = sign;
+  foreach( KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+    if( attachment->isSigned() )
+      signSomething = true;
+  }
+  bool encryptSomething = encrypt;
+  foreach( KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+    if( attachment->isEncrypted() )
+      encryptSomething = true;
+  }
+
+   if( !signSomething && !encryptSomething ) {
+    composers.append( new Message::Composer() );
+    break;
+  }
+
+  if( encryptSomething ) {
+    if ( !id.pgpEncryptionKey().isEmpty() )
+      encryptToSelfKeys.push_back( id.pgpEncryptionKey() );
+    if ( !id.smimeEncryptionKey().isEmpty() )
+      encryptToSelfKeys.push_back( id.smimeEncryptionKey() );
+    if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
+      kDebug() << "Failed to set encryptoToSelf keys!";
+      break;
+    }
+  }
+
+  if( signSomething ) {
+    if ( !id.pgpSigningKey().isEmpty() )
+      signKeys.push_back( id.pgpSigningKey() );
+    if ( !id.smimeSigningKey().isEmpty() )
+      signKeys.push_back( id.smimeSigningKey() );
+    if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
+      kDebug() << "Failed to set signing keys!";
+      break;
+    }
+  }
+
+  QStringList recipients( resolveJob->expandedTo() ), bcc( resolveJob->expandedBcc() );
+  recipients.append( resolveJob->expandedCc() );
+
+  keyResolver->setPrimaryRecipients( recipients );
+  keyResolver->setSecondaryRecipients( bcc );
+
+  if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
+    /// TODO handle failure
+    kDebug() << "failed to resolve keys! oh noes";
+    break;
+  }
+  kDebug() << "done resolving keys:";
+
+  Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
+  if( encryptSomething ) {
+    for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
+      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
+        continue;
+
+      if ( !(concreteCryptoMessageFormats[i] & Kleo::AutoFormat/*cryptoMessageFormat()*/) )
+        continue;
+
+      concreteEncryptFormat = concreteCryptoMessageFormats[i];
+
+      std::vector<Kleo::KeyResolver::SplitInfo> encData = keyResolver->encryptionItems( concreteEncryptFormat );
+      std::vector<Kleo::KeyResolver::SplitInfo>::iterator it;
+      QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
+      for( it = encData.begin(); it != encData.end(); ++it ) {
+        QPair<QStringList, std::vector<GpgME::Key> > p( it->recipients, it->keys );
+        data.append( p );
+        kDebug() << "got resolved keys for:" << it->recipients;
+      }
+      Message::Composer* composer =  new Message::Composer;
+
+      composer->setEncryptionKeys( data );
+      composer->setMessageCryptoFormat( concreteEncryptFormat );
+
+      if( signSomething ) {
+        // find signing keys for this format
+        std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteEncryptFormat );
+        composer->setSigningKeys( signingKeys );
+      }
+
+      composer->setSignAndEncrypt( sign, encrypt );
+
+      composers.append( composer );
+    }
+  } else if( signSomething ) { // just signing, so check sign prefs
+    Kleo::CryptoMessageFormat concreteSignFormat = Kleo::AutoFormat;
+
+    for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
+      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
+        continue;
+
+      if ( !(concreteCryptoMessageFormats[i] & Kleo::AutoFormat/*cryptoMessageFormat()*/) )
+        continue;
+
+      concreteSignFormat = concreteCryptoMessageFormats[i];
+      std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteEncryptFormat );
+
+      Message::Composer* composer =  new Message::Composer;
+
+      composer->setSigningKeys( signingKeys );
+      composer->setMessageCryptoFormat( concreteSignFormat );
+      composer->setSignAndEncrypt( sign, encrypt );
+
+      composers.append( composer );
+    }
+  }
+
+  if( composers.isEmpty() && ( signSomething || encryptSomething ) )
+    Q_ASSERT_X( false, "KMComposeWin::fillCryptoInfo" , "No concrete sign or encrypt method selected");
+  } while (false);
+  //END generateCryptoMessages() copy
+
   // ### temporary, more code can be shared with kmail here
-  Message::Composer* composer = new Message::Composer( this );
-  composer->globalPart()->setCharsets( QList<QByteArray>() << "utf-8" );
-  composer->globalPart()->setParentWidgetForGui( this );
-  composer->infoPart()->setSubject( subject() );
-  composer->infoPart()->setTo( resolveJob->expandedTo() );
-  composer->infoPart()->setCc( resolveJob->expandedCc() );
-  composer->infoPart()->setBcc( resolveJob->expandedBcc() );
-  composer->infoPart()->setFrom( resolveJob->expandedFrom() );
-  composer->infoPart()->setUserAgent( "KMail Mobile" );
-  m_editor->fillComposerTextPart( composer->textPart() );
-  composer->addAttachmentParts( m_attachmentModel->attachments() );
-  connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
-  composer->start();
+  m_jobCount = composers.size();
+  foreach ( Message::Composer* composer, composers ) {
+    composer->globalPart()->setCharsets( QList<QByteArray>() << "utf-8" );
+    composer->globalPart()->setParentWidgetForGui( this );
+    composer->infoPart()->setSubject( subject() );
+    composer->infoPart()->setTo( resolveJob->expandedTo() );
+    composer->infoPart()->setCc( resolveJob->expandedCc() );
+    composer->infoPart()->setBcc( resolveJob->expandedBcc() );
+    composer->infoPart()->setFrom( resolveJob->expandedFrom() );
+    composer->infoPart()->setUserAgent( "KMail Mobile" );
+    m_editor->fillComposerTextPart( composer->textPart() );
+    composer->addAttachmentParts( m_attachmentModel->attachments() );
+    connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
+    composer->start();
+  }
 }
+
 
 void ComposerView::composerResult ( KJob* job )
 {
@@ -225,7 +366,8 @@ void ComposerView::composerResult ( KJob* job )
 void ComposerView::sendResult ( KJob* job )
 {
   kDebug() << job->error() << job->errorText();
-  if ( !job->error() )
+  --m_jobCount;
+  if ( !job->error() && !m_jobCount )
     deleteLater();
 }
 

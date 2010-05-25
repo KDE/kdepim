@@ -93,6 +93,7 @@ class ComposerView : public KDeclarativeFullScreenView
     QString m_subject;
     KActionCollection *mActionCollection;
     KMime::Message::Ptr m_message;
+    int m_jobCount;
 };
 
 #endif
