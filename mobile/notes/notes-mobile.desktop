@@ -13,5 +13,5 @@ Name[uk]=Мобільні нотатки KDE
 Name[x-test]=xxKDE Notes Mobilexx
 Exec=notes-mobile
 
-Icon=view-pim-notes
+Icon=notes-mobile
 Type=Application

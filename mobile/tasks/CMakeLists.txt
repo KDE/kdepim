@@ -39,3 +39,4 @@ install(FILES
   tasks.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )
+kde4_install_icons( ${ICON_INSTALL_DIR} )

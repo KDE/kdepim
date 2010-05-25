@@ -13,5 +13,5 @@ Name[uk]=Мобільні завдання KDE
 Name[x-test]=xxKDE Tasks Mobilexx
 Exec=tasks-mobile
 
-Icon=view-pim-tasks
+Icon=tasks-mobile
 Type=Application
