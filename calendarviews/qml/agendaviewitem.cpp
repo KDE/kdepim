@@ -105,6 +105,11 @@ qint64 AgendaViewItem::selectedItemId() const
   return m_view->selectedIncidences().first().id();
 }
 
+void AgendaViewItem::clearSelection()
+{
+  m_view->clearSelection();
+}
+
 void AgendaViewItem::gotoNext()
 {
   const QDate start = endDate().addDays( 1 );

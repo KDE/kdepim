@@ -68,6 +68,9 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     qint64 selectedItemId() const;
 
   public slots:
+    /** Unselects currently selected incidences */
+    void clearSelection();
+    
     /** Show the following date range of equal length right after the current one. */
     void gotoNext();
     /** Show the preceeding date range. */

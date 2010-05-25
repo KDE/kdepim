@@ -107,6 +107,7 @@ KPIM.MainView {
           application.setCurrentEventItemId(selectedItemId);
           eventView.visible = true;
           agendaView.visible = false;
+          clearSelection();
         }
       }
     }
