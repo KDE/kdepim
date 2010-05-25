@@ -47,6 +47,23 @@ QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
   return QSortFilterProxyModel::data(index, role);
 }
 
+bool TaskListProxy::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  if ( role == PercentComplete )
+  {
+    Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+    if ( item.isValid() && item.hasPayload<KCal::Todo::Ptr>() ) {
+      KCal::Todo::Ptr incidence = item.payload<KCal::Todo::Ptr>();
+      incidence->setPercentComplete(value.toInt());
+      item.setPayload(incidence);
+      return QSortFilterProxyModel::setData(index, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+    }
+  }
+  return QSortFilterProxyModel::setData(index, value, role);
+}
+
+
 void TaskListProxy::setSourceModel( QAbstractItemModel* sourceModel )
 {
   ListProxy::setSourceModel(sourceModel);

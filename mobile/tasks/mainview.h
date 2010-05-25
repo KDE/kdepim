@@ -18,6 +18,7 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 * 02110-1301  USA
 */
+
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
@@ -25,8 +26,12 @@
 
 class MainView : public KDeclarativeMainView
 {
+  Q_OBJECT
 public:
     explicit MainView( QWidget *parent = 0 );
+
+public slots:
+    void setPercentComplete(int row, int percentComplete);
 };
 
 #endif // MAINVIEW_H

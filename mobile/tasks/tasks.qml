@@ -151,6 +151,9 @@ KPIM.MainView {
                       anchors.top: parent.top
                       anchors.right: parent.right
                       percentComplete : model.percentComplete
+                      onPercentCompleteChanged : {
+                        application.setPercentComplete(model.index, percentComplete);
+                      }
                     },
                     Image {
                       id : importantFlagImage

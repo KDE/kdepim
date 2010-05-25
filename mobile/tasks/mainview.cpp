@@ -40,3 +40,9 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskL
   addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
 
 }
+
+void MainView::setPercentComplete(int row, int percentComplete)
+{
+  const QModelIndex idx = itemModel()->index(row, 0);
+  itemModel()->setData(idx, percentComplete, TaskListProxy::PercentComplete);
+}

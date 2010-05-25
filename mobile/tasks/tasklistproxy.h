@@ -37,6 +37,7 @@ public:
   explicit TaskListProxy( QObject* parent = 0 );
 
   virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+  virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 
   virtual void setSourceModel( QAbstractItemModel* sourceModel );
 
