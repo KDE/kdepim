@@ -171,11 +171,13 @@ bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
       return true;
     if ( dir == DeclarativeAkonadiItemPrivate::Up ) {
       scrollUp( d->mDy );
-    } else if ( dir == DeclarativeAkonadiItemPrivate::Down )
+      d->mDx = 0;
+      d->mDy = 0;
+    } else if ( dir == DeclarativeAkonadiItemPrivate::Down ) {
       scrollDown( d->mDy );
-
-    d->mDx = 0;
-    d->mDy = 0;
+      d->mDx = 0;
+      d->mDy = 0;
+    }
 
     return true;
   }
