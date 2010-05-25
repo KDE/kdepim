@@ -52,7 +52,7 @@ QColor EventViews::resourceColor( const Item &item, const PrefsPtr &preferences 
   return preferences->resourceColor( id );
 }
 
-qint64 EventViews::yearDiff( const QDate &start, const QDate &end )
+int EventViews::yearDiff( const QDate &start, const QDate &end )
 {
-  return static_cast<qint64>( start.daysTo( end ) / 365.25 );
+  return end.year() - start.year();
 }

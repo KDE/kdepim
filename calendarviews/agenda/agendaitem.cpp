@@ -83,7 +83,7 @@ AgendaItem::AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const
   Q_ASSERT( incidence );
   if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    qint64 years = EventViews::yearDiff( incidence->dtStart().date(), qd );
+    int years = EventViews::yearDiff( incidence->dtStart().date(), qd );
     if ( years > 0 ) {
       incidence = Incidence::Ptr( incidence->clone() );
       incidence->setReadOnly( false );

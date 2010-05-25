@@ -38,7 +38,6 @@
 class QDropEvent;
 class QEvent;
 class QKeyEvent;
-class QLabel;
 class QMouseEvent;
 class QResizeEvent;
 class QScrollBar;
@@ -61,7 +60,6 @@ namespace EventViews
 
 class Agenda;
 class AgendaItem;
-class AgendaView;
 class EventView;
 
 class MarcusBains : public QFrame

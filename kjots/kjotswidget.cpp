@@ -55,6 +55,7 @@
 #include <akonadi/session.h>
 
 #include "akonadi_next/entityorderproxymodel.h"
+#include "akonadi_next/etmstatesaver.h"
 
 // Grantlee
 #include <grantlee/template.h>
@@ -160,7 +161,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   selProxy = new KSelectionProxyModel( treeview->selectionModel(), this );
-  selProxy->setSourceModel( m_kjotsModel );
+  selProxy->setSourceModel( treeview->model() );
 
   // TODO: Write a QAbstractItemView subclass to render kjots selection.
   connect( selProxy, SIGNAL( dataChanged(QModelIndex,QModelIndex)), SLOT(renderSelection()) );
@@ -381,6 +382,33 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateMenu()) );
   connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCaption()) );
+
+  connect( m_kjotsModel, SIGNAL(modelAboutToBeReset()), SLOT(saveState()));
+  connect( m_kjotsModel, SIGNAL(modelReset()), SLOT(restoreState()));
+
+  restoreState();
+}
+
+KJotsWidget::~KJotsWidget()
+{
+  saveState();
+}
+
+void KJotsWidget::restoreState()
+{
+  ETMStateSaver *saver = new ETMStateSaver;
+  saver->setTreeView( treeview );
+  KConfigGroup cfg( KGlobal::config(), "TreeState" );
+  saver->restoreState( cfg );
+}
+
+void KJotsWidget::saveState()
+{
+  ETMStateSaver saver;
+  saver.setTreeView( treeview );
+  KConfigGroup cfg( KGlobal::config(), "TreeState" );
+  saver.saveState( cfg );
+  cfg.sync();
 }
 
 void KJotsWidget::delayedInitialization()
@@ -609,11 +637,6 @@ void KJotsWidget::copySelectionToTitle()
   }
 }
 
-KJotsWidget::~KJotsWidget()
-{
-
-}
-
 void KJotsWidget::deleteMultiple()
 {
   QModelIndexList selectedRows = treeview->selectionModel()->selectedRows();
@@ -765,7 +788,9 @@ QString KJotsWidget::renderSelectionToHtml()
     QModelIndex idx = selProxy->index( row, column, QModelIndex() );
 
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
-    objectList << QVariant::fromValue(obj);
+    KJotsEntity *kjotsEntity = qobject_cast<KJotsEntity*>(obj);
+    kjotsEntity->setIndex(idx);
+    objectList << QVariant::fromValue(static_cast<QObject *>(kjotsEntity));
   }
 
   hash.insert( QLatin1String( "entities" ), objectList);
@@ -794,7 +819,9 @@ QString KJotsWidget::renderSelectionToPlainText()
     QModelIndex idx = selProxy->index( row, column, QModelIndex() );
 
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
-    objectList << QVariant::fromValue(obj);
+    KJotsEntity *kjotsEntity = qobject_cast<KJotsEntity*>(obj);
+    kjotsEntity->setIndex(idx);
+    objectList << QVariant::fromValue(static_cast<QObject *>(kjotsEntity));
   }
 
   hash.insert( QLatin1String( "entities" ), objectList);
@@ -824,7 +851,9 @@ QString KJotsWidget::renderSelectionToXml()
     QModelIndex idx = selProxy->index( row, column, QModelIndex() );
 
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
-    objectList << QVariant::fromValue(obj);
+    KJotsEntity *kjotsEntity = qobject_cast<KJotsEntity*>(obj);
+    kjotsEntity->setIndex(idx);
+    objectList << QVariant::fromValue(static_cast<QObject *>(kjotsEntity));
   }
 
   hash.insert( QLatin1String( "entities" ), objectList);

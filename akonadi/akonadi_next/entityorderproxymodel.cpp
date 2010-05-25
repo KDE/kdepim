@@ -58,7 +58,7 @@ using namespace Akonadi;
 EntityOrderProxyModel::EntityOrderProxyModel( QObject* parent )
   : QSortFilterProxyModel(parent), d_ptr( new EntityOrderProxyModelPrivate( this ) )
 {
-
+  setDynamicSortFilter(true);
 }
 
 void EntityOrderProxyModel::setOrderConfig( KConfigGroup& configGroup )
@@ -115,7 +115,19 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
 
   const KUrl::List urls = KUrl::List::fromMimeData( data );
 
-  const Collection parentCol = index( row, column, parent ).data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+  Collection parentCol;
+
+  if (parent.isValid())
+    parentCol = parent.data( EntityTreeModel::CollectionRole ).value<Collection>();
+  else
+  {
+    if (!hasChildren(parent))
+      return QSortFilterProxyModel::dropMimeData( data, action, row, column, parent );
+
+    const QModelIndex targetIndex = index( 0, column, parent );
+
+    parentCol = targetIndex.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+  }
 
   QStringList droppedList;
   foreach ( const KUrl &url, urls ) {
@@ -127,7 +139,7 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
       if ( !item.isValid() )
         continue;
 
-      QModelIndexList list = match( index( 0, 0 ), EntityTreeModel::ItemIdRole, item.id(), 1, Qt::MatchRecursive );
+      const QModelIndexList list = EntityTreeModel::modelIndexesForItem( this, item );
       if ( list.isEmpty() )
         continue;
 
@@ -136,14 +148,14 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
 
       droppedList << configString( list.first() );
     } else {
-      QModelIndexList list = match( index( 0, 0 ), EntityTreeModel::CollectionIdRole, col.id(), 1, Qt::MatchRecursive );
-      if ( list.isEmpty() )
+      const QModelIndex idx = EntityTreeModel::modelIndexForCollection( this, col );
+      if ( !idx.isValid() )
         continue;
 
-      if ( !containsMove && list.first().data( EntityTreeModel::ParentCollectionRole ).value<Collection>().id() != parentCol.id() )
+      if ( !containsMove && idx.data( EntityTreeModel::ParentCollectionRole ).value<Collection>().id() != parentCol.id() )
         containsMove = true;
 
-      droppedList << configString( list.first() );
+      droppedList << configString( idx );
     }
   }
 
@@ -151,8 +163,10 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
 
   for ( int i = 0; i < droppedList.size(); ++i )
   {
-    existingList.removeAll( droppedList.at( i ) );
-    existingList.insert( row + i, droppedList.at( i ) );
+    const QString droppedItem = droppedList.at( i );
+    const int existingIndex = existingList.indexOf( droppedItem );
+    existingList.removeAt( existingIndex );
+    existingList.insert( row + i - (existingIndex > row ? 0 : 1), droppedList.at( i ) );
   }
 
   d->m_orderConfig.writeEntry( QString::number( parentCol.id() ), existingList );

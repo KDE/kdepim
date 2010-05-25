@@ -51,6 +51,7 @@ class KJotsEntity : public QObject
 
 public:
   explicit KJotsEntity( const QModelIndex &index, QObject *parent = 0 );
+  void setIndex( const QModelIndex &index );
 
   bool isBook() const;
   bool isPage() const;

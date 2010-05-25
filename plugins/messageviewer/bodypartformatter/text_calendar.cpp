@@ -465,15 +465,23 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
+      
       if ( !MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
         msg->setBody( iCal.toUtf8() );
+      } else {
+        KMime::Content *text = new KMime::Content;
+        text->contentType()->from7BitString( "text/plain; charset=\"us-ascii\"" );
+        text->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+        text->setBody("");
+        msg->addContent( text );
+        KMime::Content *body = new KMime::Content;
+        body->contentType()->from7BitString( "text/calendar; name=\"cal.ics\";method=\"reply\"" );
+        text->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+        body->setBody( iCal.toUtf8() );
+        msg->addContent( body );
       }
-      KMime::Content *body = new KMime::Content;
-      body->contentType()->setMimeType( "text/calendar" );
-      body->setBody( iCal.toUtf8() );
-      msg->addContent( body );
-
+      
       // Try and match the receiver with an identity.
       // Setting the identity here is important, as that is used to select the correct
       // transport later

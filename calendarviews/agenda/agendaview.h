@@ -39,9 +39,6 @@
 class KConfig;
 class KHBox;
 
-class QBoxLayout;
-class QGridLayout;
-class QMenu;
 class QPaintEvent;
 class QSplitter;
 
@@ -58,6 +55,7 @@ class TimeLabelsZone;
 class Agenda;
 class AgendaItem;
 class AgendaView;
+class AlternateLabel;
 
 class EVENTVIEWS_EXPORT EventIndicator : public QFrame
 {
@@ -216,6 +214,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     */
     void updateEventIndicators();
 
+    virtual void resizeEvent( QResizeEvent *resizeEvent );
+
   protected Q_SLOTS:
     /** Update event belonging to agenda item */
     void updateEventDates( AgendaItem *item );
@@ -231,6 +231,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end );
 
     void handleNewEventRequest();
+
+    void updateDayLabelSizes();
 
   private:
 

@@ -159,6 +159,7 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
     QFrame *mTopDayLabels;
     QBoxLayout *mLayoutTopDayLabels;
     KHBox *mTopDayLabelsFrame;
+    QList<AlternateLabel*> mDateDayLabels;
     QBoxLayout *mLayoutBottomDayLabels;
     QFrame *mBottomDayLabels;
     KHBox *mBottomDayLabelsFrame;
@@ -573,6 +574,8 @@ void AgendaView::createDayLabels( bool force )
 
   delete d->mTopDayLabels;
   delete d->mBottomDayLabels;
+  d->mDateDayLabels.clear();
+
 
   QFontMetrics fm = fontMetrics();
 
@@ -614,6 +617,7 @@ void AgendaView::createDayLabels( bool force )
 
     AlternateLabel *dayLabel =
       new AlternateLabel( shortstr, longstr, veryLongStr, topDayLabelBox );
+    dayLabel->useShortText(); // will be recalculated in updateDayLabelSizes() anyway
     dayLabel->setMinimumWidth( 1 );
     dayLabel->setAlignment( Qt::AlignHCenter );
     if ( date == QDate::currentDate() ) {
@@ -621,7 +625,7 @@ void AgendaView::createDayLabels( bool force )
       font.setBold( true );
       dayLabel->setFont( font );
     }
-
+    d->mDateDayLabels.append( dayLabel );
     // if a holiday region is selected, show the holiday name
     const QStringList texts = holidayNames( date );
     Q_FOREACH( const QString &text, texts ) {
@@ -641,7 +645,36 @@ void AgendaView::createDayLabels( bool force )
   }
   d->mTopDayLabels->show();
   d->mBottomDayLabels->show();
+
+ // Update the labels now and after a single event loop run. Now to avoid flicker, and
+  // delayed so that the delayed layouting size is taken into account.
+  updateDayLabelSizes();
+
 }
+
+void AgendaView::updateDayLabelSizes()
+{
+  // First, calculate the maximum text type that fits for all labels
+  AlternateLabel::TextType overallType = AlternateLabel::Extensive;
+  foreach ( AlternateLabel *label, d->mDateDayLabels ) {
+    AlternateLabel::TextType type = label->largestFittingTextType();
+    if ( type < overallType ) {
+      overallType = type;
+    }
+  }
+
+  // Then, set that maximum text type to all the labels
+  foreach ( AlternateLabel *label, d->mDateDayLabels ) {
+    label->setFixedType( overallType );
+  }
+}
+
+void AgendaView::resizeEvent( QResizeEvent *resizeEvent )
+{
+  updateDayLabelSizes();
+  EventView::resizeEvent( resizeEvent );
+}
+
 
 void AgendaView::enableAgendaUpdate( bool enable )
 {

@@ -206,7 +206,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
     return;
   }
 
-  if ( !m_itemIdsForDate.contains( date, item.id() ) ) {
+  if ( !m_itemIdsForDate.contains( date, item.id() ) && !date.isEmpty() ) {
     m_itemIdsForDate.insert( date, item.id() );
     m_itemDateForItemId.insert( item.id(), date );
   }
@@ -282,6 +282,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
 
     Q_FOREACH ( const Item::Id &cid, orphanedChildren ) {
       m_childToParent.insert( cid, id );
+      Akonadi::incidence( m_itemMap[cid] )->setRelatedTo( incidence.get() );
     }
 
     m_unseenParentToChildren.remove( ui );
