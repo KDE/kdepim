@@ -170,7 +170,8 @@ void ComposerView::expandAddresses()
 {
   // TODO share this with kmcomposewin.cpp
   MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
-  job->setFrom( "volker@kdab.com" ); // TODO: retrieve from identity
+  const KPIMIdentities::Identity identity = m_identityCombo->identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+  job->setFrom( identity.fullEmailAddr() );
   job->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
   job->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
   job->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
