@@ -24,9 +24,8 @@
 
 using namespace Akonadi;
 
-TaskListProxy::TaskListProxy( int customRoleBaseline, QObject* parent )
-  : ListProxy( parent ),
-    mCustomRoleBaseline( customRoleBaseline )
+TaskListProxy::TaskListProxy( QObject* parent )
+  : ListProxy( parent )
 { }
 
 QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
@@ -35,7 +34,7 @@ QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
 
   if ( item.isValid() && item.hasPayload<KCal::Todo::Ptr>() ) {
     const KCal::Todo::Ptr incidence = item.payload<KCal::Todo::Ptr>();
-    switch ( relativeCustomRole( role ) ) {
+    switch ( role ) {
     case Summary:
       return incidence->summary();
     case Description:
@@ -54,9 +53,9 @@ void TaskListProxy::setSourceModel( QAbstractItemModel* sourceModel )
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
-  names.insert( absoluteCustomRole( Summary ), "summary" );
-  names.insert( absoluteCustomRole( Description ), "description" );
-  names.insert( absoluteCustomRole( PercentComplete ), "percentComplete" );
+  names.insert( Summary, "summary" );
+  names.insert( Description, "description" );
+  names.insert( PercentComplete, "percentComplete" );
   setRoleNames( names );
 }
 
