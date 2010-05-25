@@ -309,7 +309,7 @@ KDateTime IncidenceDateTimeEditor::currentStartDateTime() const
 {
   return KDateTime(
     mUi->mStartDateEdit->date(),
-    mUi->mEndTimeEdit->time(),
+    mUi->mStartTimeEdit->time(),
     mUi->mTimeZoneComboStart->selectedTimeSpec() );
 }
 
