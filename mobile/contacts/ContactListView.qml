@@ -24,23 +24,8 @@ import org.kde.pim.mobileui 4.5 as KPIM
 KPIM.ItemListView {
   delegate: [
     KPIM.ItemListViewDelegate {
+      height : itemListView.height / 7
       summaryContent: [
-        QML.Image {
-          anchors.left: parent.left
-          anchors.top: parent.top
-          anchors.margins: 4
-          pixmap: model.picture
-          scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
-          transformOrigin: "TopLeft"
-        },
-        QML.Text {
-          anchors.top: parent.top
-          anchors.margins: 4
-          x: parent.height + anchors.margins
-          text: model.name
-        }
-      ]
-      detailsContent: [
         QML.Image {
           anchors.left: parent.left
           anchors.top: parent.top
