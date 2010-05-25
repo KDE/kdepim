@@ -35,8 +35,19 @@ Rectangle {
   }
   Image {
     anchors.verticalCenter : parent.verticalCenter
-    x : 3 + ((percentComplete/100) * (width / 2))
+    x : 3 + ((percentComplete/100) * width)
     source : "sliderhandle.png";
+
+    MouseArea {
+      anchors.fill : parent
+      drag.target: parent
+      drag.axis: "XAxis"
+      drag.minimumX: 3
+      drag.maximumX: width - 6
+      onReleased : {
+        percentComplete = ((parent.x - 3)/width) * 100
+      }
+    }
   }
 
 }
