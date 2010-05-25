@@ -34,7 +34,9 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent) :
            SIGNAL(itemSelected(Akonadi::Item, QDate)) );
   connect( this, SIGNAL(nextItemRequest()), SLOT(gotoNext()) );
   connect( this, SIGNAL(previousItemRequest()), SLOT(gotoPrevious()) );
+
   setWidget( m_view );
+  showRange( QDate::currentDate(), Week );
 }
 
 AgendaViewItem::~AgendaViewItem()
