@@ -345,3 +345,8 @@ Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
     return Akonadi::Item();
   return list.first().data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 }
+
+QItemSelectionModel* KDeclarativeMainView::itemSelectionModel() const
+{
+  return d->mItemSelectionModel;
+}
