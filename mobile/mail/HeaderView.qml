@@ -30,19 +30,21 @@ KPIM.ItemListView {
         QML.Text {
           id : subjectLabel
           anchors.top : parent.top
-          anchors.topMargin : 4
+          anchors.topMargin : 1
           anchors.left : parent.left
-          anchors.leftMargin : 20
+          anchors.leftMargin : 10
           text : model.from
           color : "#0C55BB"
+          font.pixelSize: 16
         },
         QML.Text {
           anchors.top : subjectLabel.bottom
-          anchors.topMargin : 4
+          anchors.topMargin : 1
           anchors.left : parent.left
-          anchors.leftMargin : 20
+          anchors.leftMargin : 10
           height : 30;
           text : model.subject
+          font.pointSize: 14
           // No indication of new yet. Possibly does not make sense on mobile anyway.
           color : (model.isUnread) ? "#E10909" : "#3B3B3B"
         },
