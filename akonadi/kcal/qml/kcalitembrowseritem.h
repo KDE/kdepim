@@ -25,7 +25,9 @@
 #include <mobile/lib/declarativeakonadiitem.h>
 
 namespace Akonadi {
+
 class IncidenceViewer;
+class Item;
 
 namespace KCal {
 
@@ -33,10 +35,11 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
   Q_PROPERTY( QObject* attachmentModel READ attachmentModel NOTIFY attachmentModelChanged )
-  Q_PROPERTY( QDate activeDate WRITE setActiveDate )
+  Q_PROPERTY( QDate activeDate WRITE setActiveDate READ activeDate )
   public:
     explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
 
+    virtual Akonadi::Item item() const;
     virtual qint64 itemId() const;
     virtual void setItemId(qint64 id);
 
@@ -44,6 +47,7 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
      * Sets the active date for the incidence. The active date is used for
      * incideces that have recurrence.
      */
+    QDate activeDate() const;
     void setActiveDate( const QDate &date );
 
     QObject *attachmentModel() const;

@@ -31,6 +31,11 @@ KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : Declarative
   setWidget( m_viewer );
 }
 
+Akonadi::Item KCalItemBrowserItem::item() const
+{
+  return m_viewer->item();
+}
+
 qint64 KCalItemBrowserItem::itemId() const
 {
   return m_viewer->item().id();
@@ -40,6 +45,11 @@ void KCalItemBrowserItem::setItemId(qint64 id)
 {
   m_viewer->setItem( Akonadi::Item( id ) );
   emit attachmentModelChanged();
+}
+
+QDate KCalItemBrowserItem::activeDate() const
+{
+  return m_viewer->activeDate();
 }
 
 void KCalItemBrowserItem::setActiveDate( const QDate &date )
