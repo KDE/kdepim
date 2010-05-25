@@ -112,6 +112,15 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     void setDestinationPolicy( DestinationPolicy destinationPolicy );
     DestinationPolicy destinationPolicy() const;
 
+    /*
+     * Returns false if the item is being deleted by a job
+     * or was deleted already.
+     *
+     * This is more accurate than querying the ETM because when a delete
+     * job ends the ETM still has the item for a short period of time.
+     */
+    bool wasntDeleted( Akonadi::Item::Id ) const;
+
   public Q_SLOTS:
     void cancelAttendees( const Akonadi::Item &incidence );
 

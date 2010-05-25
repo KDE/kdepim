@@ -35,6 +35,8 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 
+#include <mailtransport/errorattribute.h>
+
 //KDE includes
 #include <QWebView>
 #include <QWebPage>
@@ -471,6 +473,7 @@ Akonadi::ItemFetchJob* Viewer::createFetchJob( const Akonadi::Item &item )
   job->fetchScope().fetchAllAttributes();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   job->fetchScope().fetchFullPayload( true );
+  job->fetchScope().fetchAttribute<MailTransport::ErrorAttribute>();
   return job;
 }
 

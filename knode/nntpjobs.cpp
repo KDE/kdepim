@@ -41,7 +41,7 @@ void KNode::GroupListJob::execute()
         .arg( target->fetchSince.month(), 2, 10, QChar( '0' ) )
         .arg( target->fetchSince.day(), 2, 10, QChar( '0' ) );
   destination.setQuery( query.join( "&" ) );
-  KIO::Job* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
+  KIO::ListJob* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
@@ -153,7 +153,7 @@ void KNode::ArticleListJob::execute()
   if ( target->lastNr() <= 0 ) // first fetch
     query << "max=" + QString::number( target->maxFetch() );
   destination.setQuery( query.join( "&" ) );
-  KIO::Job* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
+  KIO::ListJob* job = KIO::listDir( destination, KIO::HideProgressInfo, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
