@@ -20,8 +20,9 @@
 #ifndef MESSAGEVIEWER_MESSAGEVIEWITEM_H
 #define MESSAGEVIEWER_MESSAGEVIEWITEM_H
 
+#include <QtCore/QAbstractItemModel>
+
 #include <mobile/lib/declarativeakonadiitem.h>
-#include <QAbstractItemModel>
 
 namespace Akonadi {
 class IncidenceViewer;
@@ -32,14 +33,21 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
   Q_PROPERTY( QObject* attachmentModel READ attachmentModel NOTIFY attachmentModelChanged )
+  Q_PROPERTY( QDate activeDate WRITE setActiveDate )
   public:
     explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
 
-    qint64 itemId() const;
-    void setItemId(qint64 id);
+    virtual qint64 itemId() const;
+    virtual void setItemId(qint64 id);
+
+    /**
+     * Sets the active date for the incidence. The active date is used for
+     * incideces that have recurrence.
+     */
+    void setActiveDate( const QDate &date );
 
     QObject *attachmentModel() const;
-
+    
   signals:
     void attachmentModelChanged();
 

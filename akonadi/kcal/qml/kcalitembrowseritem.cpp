@@ -42,6 +42,11 @@ void KCalItemBrowserItem::setItemId(qint64 id)
   emit attachmentModelChanged();
 }
 
+void KCalItemBrowserItem::setActiveDate( const QDate &date )
+{
+  m_viewer->setIncidence( m_viewer->item(), date );
+}
+
 QObject* KCalItemBrowserItem::attachmentModel() const
 {
   return m_viewer->attachmentModel();
