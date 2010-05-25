@@ -63,13 +63,13 @@ void MainView::setCurrentEventItemId(qint64 id)
   setListSelectedRow(list.first().row());
 }
 
-void MainView::startIncidenceEditor()
+void MainView::newIncidence()
 {
   IncidenceView *editor = new IncidenceView;
   editor->show();
 }
 
-void MainView::startIncidenceEditor( const Akonadi::Item &item, const QDate &date )
+void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
 {
   IncidenceView *editor = new IncidenceView;
   editor->load( item, date );

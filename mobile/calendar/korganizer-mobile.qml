@@ -67,7 +67,7 @@ KPIM.MainView {
       height: 48
       icon: KDE.iconPath( "document-edit", width );
       onClicked: {
-        application.startIncidenceEditor( parent.item, parent.activeDate );
+        application.editIncidence( parent.item, parent.activeDate );
         eventView.visible = false;
         agendaView.visible = true;
       }
@@ -137,7 +137,7 @@ KPIM.MainView {
                 width : parent.width
                 buttonText : KDE.i18n( "New Appointment" )
                 font.bold:  true
-                onClicked : { application.startIncidenceEditor(); }
+                onClicked : { application.newIncidence(); }
               }
               KPIM.Button {
                 height : 480 / 6
@@ -262,6 +262,9 @@ KPIM.MainView {
               width: parent.width
               anchors.horizontalCenter: parent.horizontalCenter
               buttonText: KDE.i18n( "New Appointment" )
+              // TODO: Make sure that the correct default calender is selected in
+              //       the incidence editor.
+              onClicked : { application.newIncidence(); }
 
             }
             KPIM.Button {
@@ -298,7 +301,7 @@ KPIM.MainView {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: KDE.i18n( "New Event" )
-            onClicked: { application.startIncidenceEditor() }
+            onClicked: { application.newIncidence() }
           },
           KPIM.Button {
             id: moveButton
