@@ -130,20 +130,22 @@ KPIM.MainView {
                     Text {
                         id : summaryLabel
                         anchors.top : parent.top
-                        anchors.topMargin : 4
+                        anchors.topMargin : 1
                         anchors.left : parent.left
-                        anchors.leftMargin : 20
+                        anchors.leftMargin : 10
                         text: KDE.i18na( "Task: %1", [model.summary] )
                         color : "#0C55BB"
+                        font.pixelSize: 16
                     },
                     Text {
                       anchors.top : summaryLabel.bottom
-                      anchors.topMargin : 4
+                      anchors.topMargin : 1
                       anchors.left : parent.left
-                      anchors.leftMargin : 20
+                      anchors.leftMargin : 10
                       height : 30;
                       text: KDE.i18na( "Details: %1", [model.description] )
                       color: "#3B3B3B"
+                      font.pointSize: 14
                     },
                     KPIM.CompletionSlider {
                       anchors.top: parent.top
