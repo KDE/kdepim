@@ -1395,7 +1395,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
                            IncidenceFormatter::dateToString( todo->dtStart(), false ) );
     if ( !todo->doesFloat() ) {
       html += invitationRow( i18n( "Start Time:" ),
-                             KGlobal::locale()->formatTime( todo->dtStart().time() ) );
+                             IncidenceFormatter::timeToString( todo->dtStart(), false ) );
     }
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
@@ -1403,12 +1403,11 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
                            IncidenceFormatter::dateToString( todo->dtDue(), false ) );
     if ( !todo->doesFloat() ) {
       html += invitationRow( i18n( "Due Time:" ),
-                             KGlobal::locale()->formatTime( todo->dtDue().time() ) );
+                             IncidenceFormatter::timeToString( todo->dtDue(), false ) );
     }
 
   } else {
-    html += invitationRow( i18n( "Due Date:" ),
-                           i18n( "Due Date: None", "None" ) );
+    html += invitationRow( i18n( "Due Date:" ), i18n( "Due Date: None", "None" ) );
   }
 
   html += "</table></div>\n";
@@ -2134,10 +2133,11 @@ class IncidenceFormatter::IncidenceCompareVisitor
       if ( oldTodo->isCompleted() && !newTodo->isCompleted() ) {
         mChanges += i18n( "The task is no longer completed" );
       }
-      if ( !oldTodo->isCompleted() && !newTodo->isCompleted() &&
-           oldTodo->percentComplete() != newTodo->percentComplete() ) {
+      if ( oldTodo->percentComplete() != newTodo->percentComplete() ) {
+        const QString oldPer = i18n( "%1%" ).arg( oldTodo->percentComplete() );
+        const QString newPer = i18n( "%1%" ).arg( newTodo->percentComplete() );
         mChanges += i18n( "The task completed percentage has changed from %1 to %2" ).
-                    arg( oldTodo->percentComplete(), newTodo->percentComplete() );
+                    arg( oldPer, newPer );
       }
 
       if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
