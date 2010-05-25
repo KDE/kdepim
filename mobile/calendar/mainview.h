@@ -23,6 +23,8 @@
 
 #include "kdeclarativemainview.h"
 
+class QDate;
+
 namespace Akonadi
 {
 class Calendar;
@@ -41,6 +43,7 @@ public slots:
     void setCurrentEventItemId( qint64 id );
 
     void startIncidenceEditor();
+    void startIncidenceEditor( const Akonadi::Item &item, const QDate &date );
 
 private:
   Akonadi::Calendar *m_calendar;

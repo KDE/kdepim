@@ -27,18 +27,20 @@
 
 #include "declarativeeditors.h"
 
-using namespace IncidenceEditorsNG;
 using namespace Akonadi;
+using namespace IncidenceEditorsNG;
+using namespace KCal;
 
 IncidenceView::IncidenceView( QWidget* parent )
   : KDeclarativeFullScreenView( QLatin1String( "incidence-editor" ), parent )
   , mCollectionCombo( 0 )
-  , mEvent( new KCal::Event )
   , mEditor( new CombinedIncidenceEditor( parent ) )
 {
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEDateTime>( "org.kde.incidenceeditors", 4, 5, "DateTimeEditor" );
+
+  mItem.setPayload<KCal::Incidence::Ptr>( KCal::Incidence::Ptr( new KCal::Event ) );
 }
 
 IncidenceView::~IncidenceView()
@@ -46,22 +48,36 @@ IncidenceView::~IncidenceView()
   delete mEditor;
 }
 
+void IncidenceView::load( const Akonadi::Item &item, const QDate &date )
+{
+  Q_ASSERT( item.hasPayload() ); // TODO: Fetch payload if there is no payload set.
+  
+  mItem = item;
+  mEditor->load( mItem.payload<Incidence::Ptr>() );
+  mActiveDate = date;
+
+  if ( mCollectionCombo )
+    mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
+}
+
 void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 {
   mCollectionCombo = combo;
   mCollectionCombo->setMimeTypeFilter( QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
 
 void IncidenceView::setDateTimeEditor( IncidenceDateTimeEditor *editor )
 {
   mEditor->combine( editor );
-  editor->load( mEvent );
+  editor->setActiveDate( mActiveDate );
+  editor->load( mItem.payload<Incidence::Ptr>() );
 }
 
 void IncidenceView::setGeneralEditor( IncidenceGeneralEditor *editor )
 {
   mEditor->combine( editor );
-  editor->load( mEvent );
+  editor->load( mItem.payload<Incidence::Ptr>() );
 }
 
 void IncidenceView::save()

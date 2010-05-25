@@ -61,6 +61,20 @@ KPIM.MainView {
 
     KPIM.Button {
       anchors.bottom: parent.bottom
+      anchors.right: backButton.left
+      anchors.margins: 12
+      width: 48
+      height: 48
+      icon: KDE.iconPath( "document-edit", width );
+      onClicked: {
+        application.startIncidenceEditor( parent.item, parent.activeDate );
+        eventView.visible = false;
+        agendaView.visible = true;
+      }
+    }
+    KPIM.Button {
+      id: backButton
+      anchors.bottom: parent.bottom
       anchors.right: parent.right
       anchors.margins: 12
       width: 48

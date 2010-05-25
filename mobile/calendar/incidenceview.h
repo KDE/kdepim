@@ -20,6 +20,7 @@
 #ifndef INCIDENCEVIEW_H
 #define INCIDENCEVIEW_H
 
+#include <Akonadi/Item>
 #include <KCal/Incidence>
 
 #include <incidenceeditors/incidenceeditor-ng/combinedincidenceeditor.h>
@@ -45,6 +46,8 @@ class IncidenceView : public KDeclarativeFullScreenView
     explicit IncidenceView( QWidget* parent = 0 );
     ~IncidenceView();
 
+    void load( const Akonadi::Item &item, const QDate &date );
+
     void setCollectionCombo( Akonadi::CollectionComboBox * );
     void setDateTimeEditor( IncidenceEditorsNG::IncidenceDateTimeEditor * );
     void setGeneralEditor( IncidenceEditorsNG::IncidenceGeneralEditor * );
@@ -55,11 +58,11 @@ class IncidenceView : public KDeclarativeFullScreenView
 
   private slots:
     void itemCreateResult( KJob * );
-
     
   private:
+    QDate mActiveDate;
+    Akonadi::Item mItem;
     Akonadi::CollectionComboBox *mCollectionCombo;
-    KCal::Incidence::Ptr mEvent;
     IncidenceEditorsNG::CombinedIncidenceEditor *mEditor;
 };
 

@@ -34,6 +34,7 @@
 
 
 using namespace Akonadi;
+using namespace KCal;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
@@ -65,6 +66,13 @@ void MainView::setCurrentEventItemId(qint64 id)
 void MainView::startIncidenceEditor()
 {
   IncidenceView *editor = new IncidenceView;
+  editor->show();
+}
+
+void MainView::startIncidenceEditor( const Akonadi::Item &item, const QDate &date )
+{
+  IncidenceView *editor = new IncidenceView;
+  editor->load( item, date );
   editor->show();
 }
 
