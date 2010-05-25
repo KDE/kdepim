@@ -31,8 +31,12 @@
 #include <akonadi/kmime/messageparts.h>
 #include <kpimidentities/identitymanager.h>
 
+#include <messagecore/messagestatus.h>
+
 #include <KActionCollection>
 #include <KAction>
+#include <Akonadi/ItemModifyJob>
+#include "mailactionmanager.h"
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
@@ -40,6 +44,14 @@ MainView::MainView(QWidget* parent) :
   addMimeType( KMime::Message::mimeType() );
   setListPayloadPart( Akonadi::MessagePart::Header );
   setWindowTitle( i18n( "KMail Mobile" ) );
+
+  MailActionManager *mailActionManager = new MailActionManager(actionCollection(), this);
+  mailActionManager->setItemSelectionModel(itemSelectionModel());
+
+  connect(actionCollection()->action("mark_message_important"), SIGNAL(triggered(bool)), SLOT(markImportant(bool)));
+  connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
+
+  connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 }
 
 void MainView::startComposer()
@@ -85,5 +97,78 @@ void MainView::forwardInline(quint64 id)
   composer->show();
 }
 
-#include "mainview.moc"
+void MainView::markImportant(bool checked)
+{
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+  if (list.size() != 1)
+    return;
+  const QModelIndex idx = list.first();
+  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  if (!item.hasPayload<KMime::Message::Ptr>())
+    return;
 
+  KPIM::MessageStatus status;
+  status.setStatusFromFlags(item.flags());
+  if (checked && status.isImportant())
+    return;
+  if (checked)
+      status.setImportant();
+  else
+      status.setImportant(false);
+  item.setFlags(status.getStatusFlags());
+
+  Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
+  connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
+}
+
+void MainView::markMailTask(bool checked)
+{
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+  if (list.size() != 1)
+    return;
+  const QModelIndex idx = list.first();
+  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  if (!item.hasPayload<KMime::Message::Ptr>())
+    return;
+
+  KPIM::MessageStatus status;
+  status.setStatusFromFlags(item.flags());
+  if (checked && status.isToAct())
+    return;
+  if (checked)
+      status.setToAct();
+  else
+      status.setToAct(false);
+  item.setFlags(status.getStatusFlags());
+
+  Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
+  connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
+}
+
+void MainView::modifyDone(KJob *job)
+{
+  if (job->error())
+  {
+    kWarning() << "Modify error: " << job->errorString();
+    return;
+  }
+}
+
+void MainView::dataChanged()
+{
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+  if (list.size() != 1)
+    return;
+  const QModelIndex idx = list.first();
+  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  if (!item.hasPayload<KMime::Message::Ptr>())
+    return;
+
+  KPIM::MessageStatus status;
+  status.setStatusFromFlags(item.flags());
+
+  actionCollection()->action("mark_message_important")->setChecked(status.isImportant());
+  actionCollection()->action("mark_message_action_item")->setChecked(status.isToAct());
+}
+
+#include "mainview.moc"

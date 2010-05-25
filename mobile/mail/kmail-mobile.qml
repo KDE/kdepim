@@ -255,32 +255,25 @@ KPIM.MainView {
             action : application.getAction("akonadi_item_delete")
             onTriggered : actionPanel.collapse();
           },
-          KPIM.Button {
-            id: previousButton
+          KPIM.Action{
+            id : importantButton
             anchors.top: deleteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Previous" )
-            onClicked: {
-              if ( messageView.itemId >= 0 )
-                headerList.previousItem();
-
-              actionPanel.collapse();
-            }
+            hardcoded_height: parent.height / 6
+            action : application.getAction("mark_message_important")
+            checkable : true
+            onTriggered : actionPanel.collapse();
           },
-          KPIM.Button {
-            anchors.top: previousButton.bottom;
+          KPIM.Action{
+            id : markAsActionButton
+            anchors.top: importantButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Next" )
-            onClicked: {
-              if ( messageView.itemId >= 0 )
-                headerList.nextItem();
-
-              actionPanel.collapse();
-            }
+            hardcoded_height: parent.height / 6
+            action : application.getAction("mark_message_action_item")
+            checkable : true
+            onTriggered : actionPanel.collapse();
           }
       ]
     }

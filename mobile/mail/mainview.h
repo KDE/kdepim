@@ -25,6 +25,8 @@
 
 #include <messagecomposer/messagefactory.h>
 
+class KJob;
+
 /** The new KMMainWidget ;-) */
 class MainView : public KDeclarativeMainView
 {
@@ -37,6 +39,11 @@ class MainView : public KDeclarativeMainView
     void reply( quint64 id );
     void replyToAll( quint64 id );
     void forwardInline( quint64 id );
+
+    void markImportant(bool checked);
+    void markMailTask(bool checked);
+    void modifyDone(KJob *job);
+    void dataChanged();
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
