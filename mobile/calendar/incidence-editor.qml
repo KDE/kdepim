@@ -58,40 +58,55 @@ KPIM.MainView {
     }
     
   }
-  
-  Column {
+
+  Flickable {
+    anchors.top: parent.top
+    anchors.bottom: cancelButton.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    
+    anchors.topMargin: 40
     anchors.leftMargin: 40;
     anchors.rightMargin: 4;
-    anchors.topMargin: 40
-    anchors.fill: parent
+    
+    width: parent.width;
+    height: parent.height - parent.height / 6 - collectionCombo.height;
+    contentHeight: generalEditor.height + dateTimeEditor.height;
+    clip: true;
+    flickDirection: "VerticalFlick"
 
-    IncidenceEditors.CollectionCombo {
-      id: collectionCombo
-      width: parent.width;
-      z: 2
-    }
+    Column {
+      anchors.fill: parent
+      IncidenceEditors.GeneralEditor {
+        id: generalEditor;
+        width: parent.width;
+      }
 
-
-    Flickable {
-      width: parent.width;
-      height: parent.height - parent.height / 6 - collectionCombo.height;
-      contentHeight: generalEditor.height + dateTimeEditor.height;
-      clip: true;
-      flickDirection: "VerticalFlick"
-
-      Column {
-        anchors.fill: parent
-        IncidenceEditors.GeneralEditor {
-          id: generalEditor;
-          width: parent.width;
-        }
-
-        IncidenceEditors.DateTimeEditor {
-          id: dateTimeEditor;
-          width: parent.width;
-        }
+      IncidenceEditors.DateTimeEditor {
+        id: dateTimeEditor;
+        width: parent.width;
       }
     }
+  }
+
+  IncidenceEditors.CollectionCombo {
+    id: collectionCombo
+    anchors.bottom: parent.bottom;
+    anchors.right: cancelButton.left;
+    anchors.left: parent.left;
+    
+    width: parent.width;
+    height: parent.height / 6;
+  }
+
+  KPIM.Button {
+    id: cancelButton
+    anchors.bottom: parent.bottom;
+    anchors.right: okButton.left;
+    width: 100;
+    height: parent.height / 6;
+    buttonText: KDE.i18n( "Cancel" );
+    onClicked: window.cancel();
   }
 
   KPIM.Button {
@@ -102,14 +117,5 @@ KPIM.MainView {
     height: parent.height / 6;
     buttonText: KDE.i18n( "Ok" );
     onClicked: window.save();
-  }
-
-  KPIM.Button {
-    anchors.bottom: parent.bottom;
-    anchors.right: okButton.left;
-    width: 100;
-    height: parent.height / 6;
-    buttonText: KDE.i18n( "Cancel" );
-    onClicked: window.cancel();
   }
 }
