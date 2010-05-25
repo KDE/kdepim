@@ -79,7 +79,7 @@ KPIM.ItemListView {
         }
       ]
 
-      states : [
+      /* states : [
         QML.State {
           name : "deleteFaded"
           when : itemListView.flicking
@@ -123,7 +123,7 @@ KPIM.ItemListView {
             }
           }
         }
-      ]
+      ] */
     }
   ]
 }
