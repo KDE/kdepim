@@ -24,6 +24,9 @@ DeclarativeRecipientsEditor::DeclarativeRecipientsEditor(QDeclarativeItem* paren
 {
   m_widget = new MessageComposer::RecipientsEditor;
   m_widget->setCompletionMode( KGlobalSettings::CompletionAuto );
+  QPalette pal = m_widget->palette();
+  pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+  m_widget->setPalette( pal );
   m_proxy->setWidget( m_widget );
 }
 
