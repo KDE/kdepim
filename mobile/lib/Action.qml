@@ -29,6 +29,7 @@ Rectangle {
   property int hardcoded_height : 70
   property bool hidable : true
   property bool hidden : hidable && !action.enabled
+  property bool checkable : false
   property alias showText : buttonText.visible
 
   signal triggered()
@@ -50,6 +51,7 @@ Rectangle {
   Connections {
     target : action
     onChanged : {
+      border.width = action.checked ? 2 : 0
       if (!hidable)
         return;
       parent.height = action.enabled ? hardcoded_height : 0;
@@ -75,10 +77,16 @@ Rectangle {
   MouseArea {
     anchors.fill : parent
     onPressed : {
-      border.color = "lightblue";
       border.width = 2
     }
-    onReleased : border.width = 0
-    onClicked : { triggered(); action.trigger(); }
+    onReleased : {
+      border.width = 0
+    }
+    onClicked : {
+      triggered(); action.trigger();
+    }
   }
+
+  border.color : "lightblue"
+  border.width : action.checked ? 2 : 0
 }
