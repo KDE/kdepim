@@ -19,6 +19,9 @@
 
 #include "agendaviewitem.h"
 
+#include <KGlobal>
+#include <KGlobalSettings>
+
 #include <akonadi/kcal/calendar.h>
 #include <calendarviews/agenda/agendaview.h>
 
@@ -28,8 +31,8 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
   , m_view( new AgendaView( 0 ) )
 {
-  QPalette pal = m_view->palette();
-  pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+  // start with the oxygen palette (which is not necessarily the default on all platforms)
+  QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
   m_view->setPalette( pal );
   
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
