@@ -85,12 +85,12 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 
 void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 {
-//   if ( KCal::Todo::Ptr todo = IncidenceDateTimeEditor::incidence<Todo>() )
-//     save( todo );
-//   else if ( KCal::Event::Ptr event = IncidenceDateTimeEditor::incidence<Event>() )
-//     save( event );
-//   else
-//     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
+  if ( KCal::Todo::Ptr todo = IncidenceDateTimeEditor::incidence<Todo>( incidence ) )
+    save( todo );
+  else if ( KCal::Event::Ptr event = IncidenceDateTimeEditor::incidence<Event>( incidence ) )
+    save( event );
+  else
+    Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
 }
 
 bool IncidenceDateTimeEditor::isDirty() const
