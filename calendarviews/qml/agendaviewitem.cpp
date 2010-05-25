@@ -28,7 +28,10 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent) :
   DeclarativeAkonadiItem( parent )
 {
   m_view = new AgendaView( 0 );
-  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item,QDate)), SIGNAL(itemSelected()) );
+  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
+           SIGNAL(itemSelected()) );
+  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
+           SIGNAL(itemSelected(Akonadi::Item, QDate)) );
   connect( this, SIGNAL(nextItemRequest()), SLOT(gotoNext()) );
   connect( this, SIGNAL(previousItemRequest()), SLOT(gotoPrevious()) );
   setWidget( m_view );

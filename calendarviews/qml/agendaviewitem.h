@@ -20,11 +20,16 @@
 #ifndef CALENDARVIEWS_AGENDAVIEWITEM_H
 #define CALENDARVIEWS_AGENDAVIEWITEM_H
 
-#include "declarativeakonadiitem.h"
 #include <QtCore/QDate>
 
+#include "declarativeakonadiitem.h"
+
+namespace Akonadi {
+class Item;
+}
+
 namespace EventViews {
-  
+
 class AgendaView;
 
 class AgendaViewItem : public DeclarativeAkonadiItem
@@ -46,7 +51,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
   public:
     explicit AgendaViewItem( QDeclarativeItem *parent = 0 );
     ~AgendaViewItem();
-
+    
     virtual qint64 itemId() const { return -1; }
     virtual void setItemId( qint64 /*id*/ ) {}
 
@@ -69,7 +74,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     void gotoPrevious();
 
   signals:
-    void itemSelected();
+    void itemSelected( Akonadi::Item item, const QDate &activeDate );
 
   private:
     AgendaView *m_view;
