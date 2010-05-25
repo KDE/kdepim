@@ -36,3 +36,4 @@ install(FILES
   korganizer-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )
+kde4_install_icons( ${ICON_INSTALL_DIR} )
