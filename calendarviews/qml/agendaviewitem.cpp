@@ -120,17 +120,20 @@ void AgendaViewItem::gotoNext()
 {
   const QDate start = endDate().addDays( 1 );
   const QDate end = start.addDays( startDate().daysTo( endDate() ) );
-  kDebug() << start << end;
+  m_view->blockSignals( true );
   m_view->showDates( start, end );
+  m_view->clearSelection();
+  m_view->blockSignals( false );
 }
 
 void AgendaViewItem::gotoPrevious()
 {
   const QDate end = startDate().addDays( - 1 );
   const QDate start = end.addDays( - startDate().daysTo( endDate() ) );
-  kDebug() << start << end;
+  m_view->blockSignals( true );
   m_view->showDates( start, end );
-
+  m_view->clearSelection();
+  m_view->blockSignals( false );
 }
 
 #include "agendaviewitem.moc"
