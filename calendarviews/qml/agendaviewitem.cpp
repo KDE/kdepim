@@ -24,10 +24,14 @@
 
 using namespace EventViews;
 
-AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent) :
-  DeclarativeAkonadiItem( parent )
+AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
+  : DeclarativeAkonadiItem( parent )
+  , m_view( new AgendaView( 0 ) )
 {
-  m_view = new AgendaView( 0 );
+  QPalette pal = m_view->palette();
+  pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+  m_view->setPalette( pal );
+  
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
            SIGNAL(itemSelected()) );
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
