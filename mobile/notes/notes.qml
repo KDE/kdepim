@@ -114,23 +114,15 @@ KPIM.MainView {
              id: headerList
              delegate: [
                KPIM.ItemListViewDelegate {
+                 height : itemListView.height / 7
                  summaryContent: [
-                   Text {
-                     anchors.fill: parent
-                     text: KDE.i18na( "Title: %1", [model.title] )
-                     font.bold: true
-                   }
-                 ]
-                 detailsContent: [
                   Column {
                     anchors.fill: parent
                     Text {
                       text: KDE.i18na( "Title: %1", [model.title] )
-                      color: palette.highlightedText
                     }
                     Text {
                       text: KDE.i18na( "Content: %1", [model.plainContent] )
-                      color: palette.highlightedText
                     }
                   }
                  ]
