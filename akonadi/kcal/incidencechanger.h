@@ -119,7 +119,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
      * This is more accurate than querying the ETM because when a delete
      * job ends the ETM still has the item for a short period of time.
      */
-    bool wasntDeleted( Akonadi::Item::Id ) const;
+    bool isNotDeleted( Akonadi::Item::Id ) const;
 
   public Q_SLOTS:
     void cancelAttendees( const Akonadi::Item &incidence );

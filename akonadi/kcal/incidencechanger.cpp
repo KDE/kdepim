@@ -601,7 +601,7 @@ IncidenceChanger::DestinationPolicy IncidenceChanger::destinationPolicy() const
   return d->mDestinationPolicy;
 }
 
-bool IncidenceChanger::wasntDeleted( Akonadi::Item::Id id ) const
+bool IncidenceChanger::isNotDeleted( Akonadi::Item::Id id ) const
 {
   if ( mCalendar->incidence( id ).isValid() ) {
     // it's inside the calendar, but maybe it's being deleted by a job or was
