@@ -20,6 +20,7 @@ target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   akonadi_next
+  messagecore
 )
 
 install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})

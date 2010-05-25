@@ -42,6 +42,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/selectionproxymodel.h>
+#include <akonadi/itemmodifyjob.h>
 
 #include <akonadi_next/kbreadcrumbselectionmodel.h>
 #include <akonadi_next/kproxyitemselectionmodel.h>
@@ -53,6 +54,7 @@
 #include <KActionCollection>
 #include <akonadi/standardactionmanager.h>
 #include <KAction>
+#include <messagecore/messagestatus.h>
 
 using namespace Akonadi;
 
@@ -245,8 +247,17 @@ void KDeclarativeMainView::setSelectedBreadcrumbCollectionRow( int row )
 void KDeclarativeMainView::setListSelectedRow( int row )
 {
   static const int column = 0;
-  QModelIndex idx =d->mItemSelectionModel->model()->index( row, column );
+  const QModelIndex idx = d->mItemSelectionModel->model()->index( row, column );
   d->mItemSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+  Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+  KPIM::MessageStatus status;
+  status.setStatusFromFlags(item.flags());
+  if (status.isUnread() || status.isNew())
+  {
+    status.setRead();
+    item.setFlags(status.getStatusFlags());
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
+  }
 }
 
 void KDeclarativeMainView::setSelectedAccount( int row )
