@@ -15,6 +15,7 @@ set(kmail_mobile_srcs
   declarativeeditor.cpp
   declarativeidentitycombobox.cpp
   declarativerecipientseditor.cpp
+  mailactionmanager.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
