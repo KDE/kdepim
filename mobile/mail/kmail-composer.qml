@@ -54,8 +54,34 @@ KPIM.MainView {
       contentWidth: 240
       content: [
         KPIM.Button {
-          id: configureIdentityButton
+          id: signButton
           anchors.top: parent.top;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          buttonText: KDE.i18n( "Sign" )
+          onClicked: {
+            window.sign = !window.sign;
+            actionPanel.collapse();
+            console.log( "sign: " + window.sign );
+          }
+        },
+        KPIM.Button {
+          id: encryptButton
+          anchors.top: signButton.bottom;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          buttonText: KDE.i18n( "Encrypt" )
+          onClicked: {
+            window.encrypt = !window.encrypt;
+            actionPanel.collapse();
+            console.log( "encrypt: " + window.encrypt );
+          }
+        },
+        KPIM.Button {
+          id: configureIdentityButton
+          anchors.top: encryptButton.bottom
           anchors.horizontalCenter: parent.horizontalCenter;
           width: parent.width - 10
           height: parent.height / 6

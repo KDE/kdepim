@@ -48,6 +48,8 @@ class ComposerView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
   Q_PROPERTY( QString subject READ subject WRITE setSubject NOTIFY changed )
+  Q_PROPERTY( bool sign READ sign WRITE setSign )
+  Q_PROPERTY( bool encrypt READ encrypt WRITE setEncrypt )
 
   public:
     explicit ComposerView(QWidget* parent = 0);
@@ -58,6 +60,11 @@ class ComposerView : public KDeclarativeFullScreenView
 
     QString subject() const;
     void setSubject( const QString &subject );
+
+    bool sign() const { return m_sign; }
+    void setSign( bool sign ) { m_sign = sign; }
+    bool encrypt() const { return m_encrypt; }
+    void setEncrypt( bool encrypt ) { m_encrypt = encrypt; }
 
     KActionCollection* actionCollection() const;
 
@@ -94,6 +101,8 @@ class ComposerView : public KDeclarativeFullScreenView
     KActionCollection *mActionCollection;
     KMime::Message::Ptr m_message;
     int m_jobCount;
+    bool m_sign;
+    bool m_encrypt;
 };
 
 #endif

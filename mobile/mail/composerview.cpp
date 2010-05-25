@@ -62,7 +62,9 @@ ComposerView::ComposerView(QWidget* parent) :
   m_identityCombo( 0 ),
   m_editor( 0 ),
   m_attachmentController( 0 ),
-  m_jobCount( 0 )
+  m_jobCount( 0 ),
+  m_sign( false ),
+  m_encrypt( false )
 {
   setSubject( QString() );
 
@@ -192,9 +194,6 @@ void ComposerView::addressExpansionResult(KJob* job)
 
   const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
 
-  bool sign = true;
-  bool encrypt = true;
-
   // FIXME copied from kmcomposewin.cpp
   //BEGIN generateCryptoMessages() copy
   QList< Message::Composer* > composers;
@@ -213,12 +212,12 @@ void ComposerView::addressExpansionResult(KJob* job)
   QStringList encryptToSelfKeys;
   QStringList signKeys;
 
-  bool signSomething = sign;
+  bool signSomething = m_sign;
   foreach( KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isSigned() )
       signSomething = true;
   }
-  bool encryptSomething = encrypt;
+  bool encryptSomething = m_encrypt;
   foreach( KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isEncrypted() )
       encryptSomething = true;
@@ -294,7 +293,7 @@ void ComposerView::addressExpansionResult(KJob* job)
         composer->setSigningKeys( signingKeys );
       }
 
-      composer->setSignAndEncrypt( sign, encrypt );
+      composer->setSignAndEncrypt( m_sign, m_encrypt );
 
       composers.append( composer );
     }
@@ -315,7 +314,7 @@ void ComposerView::addressExpansionResult(KJob* job)
 
       composer->setSigningKeys( signingKeys );
       composer->setMessageCryptoFormat( concreteSignFormat );
-      composer->setSignAndEncrypt( sign, encrypt );
+      composer->setSignAndEncrypt( m_sign, m_encrypt );
 
       composers.append( composer );
     }
