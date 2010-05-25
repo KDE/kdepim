@@ -42,17 +42,20 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 {
   mUi->setupUi( this );
 
-#ifndef KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
+  QButtonGroup *freeBusyGroup = new QButtonGroup( this );
+  freeBusyGroup->addButton( mUi->mFreeRadio );
+  freeBusyGroup->addButton( mUi->mBusyRadio );
+
+  mUi->mTimeZoneComboStart->setVisible( false );
+  mUi->mTimeZoneComboEnd->setVisible( false );
+#else
   mUi->mAlarmBell->setPixmap( SmallIcon( "task-reminder" ) );
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
 
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
-#else
-  QButtonGroup *freeBusyGroup = new QButtonGroup( this );
-  freeBusyGroup->addButton( mUi->mFreeRadio );
-  freeBusyGroup->addButton( mUi->mBusyRadio );
 #endif
 }
 
@@ -176,7 +179,9 @@ void IncidenceDateTimeEditor::startSpecChanged()
 
 void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )
 {
-#ifndef KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
+  Q_UNUSED( incidence );
+#else
   if ( incidence->recurs() ) {
     mUi->mRecurrenceLabel->setText( IncidenceFormatter::recurrenceString( const_cast<Incidence *>( incidence.get() ) ) );
   } else {
