@@ -91,7 +91,7 @@ KPIM.MainView {
   Rectangle {
     id: agendaView
     anchors.fill: parent
-    color: palette.window
+    color: "#D2D1D0" // TODO: make palette work correctly. palette.window
 
     CalendarViews.AgendaView {
       id: agenda
