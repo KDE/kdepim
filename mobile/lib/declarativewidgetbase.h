@@ -36,6 +36,9 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
       m_widget( new WidgetT ),
       m_proxy( new QGraphicsProxyWidget( this ) )
     {
+      QPalette pal = m_widget->palette();
+      pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+      m_widget->setPalette( pal );
       m_proxy->setWidget( m_widget );
       setWidth( m_widget->width() );
       setHeight( m_widget->height() );
