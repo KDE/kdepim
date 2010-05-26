@@ -509,7 +509,7 @@ void IncidenceDateTimeEditor::save( KCal::Event::Ptr event )
   event->setTransparency( mUi->mFreeRadio->isChecked() ?
                           KCal::Event::Transparent : KCal::Event::Opaque );
 #else
-  event->setTransparency( mUi->mFreeTimeCombo->currentIndex() > 0 ?
+  event->setTransparency( mUi->mFreeBusyCombo->currentIndex() > 0 ?
                           KCal::Event::Transparent : KCal::Event::Opaque );
 #endif
 }
