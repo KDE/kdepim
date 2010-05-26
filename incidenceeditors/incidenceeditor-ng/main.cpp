@@ -32,8 +32,10 @@
 #include <KCal/Event>
 #include <KCal/Todo>
 
+#include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
 
+using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
 
 int main( int argc, char **argv )
@@ -88,7 +90,9 @@ int main( int argc, char **argv )
     std::cerr << "Invalid usage." << std::endl << std::endl;
     return 1;
   }
-  
+
+  EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
+
   EventOrTodoDialog *dialog = new EventOrTodoDialog;
   dialog->resize( QSize( 800, 600 ).expandedTo( dialog->minimumSizeHint() ) );
   dialog->load( item );
