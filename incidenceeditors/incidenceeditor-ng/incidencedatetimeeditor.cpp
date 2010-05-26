@@ -78,10 +78,10 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
     kDebug() << "Not an event or an todo.";
   }
 
-  mActiveStartDT.setTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
-  mActiveEndDT.setTimeSpec( mUi->mTimeZoneComboEnd->selectedTimeSpec() );
-
   enableTimeEdits( mUi->mHasTimeCheck->isChecked() );
+
+  mActiveStartDT = currentStartDateTime();
+  mActiveEndDT = currentEndDateTime();
 
   mWasDirty = false;
 }
@@ -258,7 +258,7 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
   // First check the start time/date of the todo
   if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() )
     return true;
-
+  
   if ( mUi->mStartCheck->isChecked() ) {
     // Use mActiveStartTime. This is the KDateTime::Spec selected on load comming from
     // the combobox. We use this one as it can slightly differ (e.g. missing
@@ -356,32 +356,32 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
 
   bool isTemplate = false; // TODO
   if ( !isTemplate ) {
-    mActiveStartDT = event->dtStart();
-    mActiveEndDT = event->dtEnd();
+    KDateTime startDT = event->dtStart();
+    KDateTime endDT = event->dtEnd();
     if ( event->recurs() && mActiveDate.isValid() ) {
       // Consider the active date when editing recurring Events.
       KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
-      const int eventLength = mActiveStartDT.daysTo( mActiveEndDT );
+      const int eventLength = startDT.daysTo( endDT );
       kdt = kdt.addSecs( -1 );
-      mActiveStartDT.setDate( event->recurrence()->getNextDateTime( kdt ).date() );
+      startDT.setDate( event->recurrence()->getNextDateTime( kdt ).date() );
       if ( event->hasEndDate() ) {
-        mActiveEndDT.setDate( mActiveStartDT.addDays( eventLength ).date() );
+        endDT.setDate( startDT.addDays( eventLength ).date() );
       } else {
         if ( event->hasDuration() ) {
-          mActiveEndDT = mActiveStartDT.addSecs( event->duration().asSeconds() );
+          endDT = startDT.addSecs( event->duration().asSeconds() );
         } else {
-          mActiveEndDT = mActiveStartDT;
+          endDT = startDT;
         }
       }
     }
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
-    if ( mActiveStartDT.isUtc() ) {
-      mActiveStartDT = mActiveStartDT.toLocalZone();
+    if ( startDT.isUtc() ) {
+      startDT = startDT.toLocalZone();
     }
-    if ( mActiveEndDT.isUtc() ) {
-      mActiveEndDT = mActiveEndDT.toLocalZone();
+    if ( endDT.isUtc() ) {
+      endDT = endDT.toLocalZone();
     }
-    setDateTimes( mActiveStartDT, mActiveEndDT );
+    setDateTimes( startDT, endDT );
   } else {
     // set the start/end time from the template, only as a last resort #190545
     if ( !event->dtStart().isValid() || !event->dtEnd().isValid() ) {
@@ -457,30 +457,30 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );
 
-  mActiveEndDT = KDateTime( QDate::currentDate(), QTime::currentTime() );
+  KDateTime endDT = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
   if ( todo->hasDueDate() ) {
-    mActiveEndDT = todo->dtDue();
+    endDT = todo->dtDue();
     if ( todo->recurs() && mActiveDate.isValid() ) {
       KDateTime dt( mActiveDate, QTime( 0, 0, 0 ) );
       dt = dt.addSecs( -1 );
-      mActiveEndDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
+      endDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
     }
-    if ( mActiveEndDT.isUtc() )
-      mActiveEndDT = mActiveEndDT.toLocalZone();
+    if ( endDT.isUtc() )
+      endDT = endDT.toLocalZone();
   }
 
-  mActiveStartDT = KDateTime( QDate::currentDate(), QTime::currentTime() );
+  KDateTime startDT = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
   if ( todo->hasStartDate() ) {
-    mActiveStartDT = todo->dtStart();
+    startDT = todo->dtStart();
     if ( todo->recurs() && mActiveDate.isValid() && todo->hasDueDate() ) {
       int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
-      mActiveStartDT.setDate( mActiveStartDT.date().addDays( -days ) );
+      startDT.setDate( startDT.date().addDays( -days ) );
     }
-    if ( mActiveStartDT.isUtc() )
-      mActiveStartDT = mActiveStartDT.toLocalZone();
+    if ( startDT.isUtc() )
+      startDT = startDT.toLocalZone();
   }
 
-  setDateTimes( mActiveStartDT, mActiveEndDT );
+  setDateTimes( startDT, endDT );
   enableAlarm( todo->hasDueDate() );
   updateRecurrenceSummary( todo );
 }
