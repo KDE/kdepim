@@ -1523,7 +1523,8 @@ static bool replyMeansCounter( Incidence */*incidence*/ )
 */
 }
 
-static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const QString &sender )
+static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence,
+                                      ScheduleMessage *msg, const QString &sender )
 {
   if ( !msg || !event )
     return QString::null;
@@ -1532,7 +1533,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
   case Scheduler::Publish:
     return i18n( "This invitation has been published" );
   case Scheduler::Request:
-    if ( event->revision() > 0 ) {
+    if ( existingIncidence && event->revision() > 0 ) {
       return i18n( "This invitation has been updated by the organizer %1" ).
         arg( event->organizer().fullName() );
     }
@@ -1659,7 +1660,8 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
   return QString::null;
 }
 
-static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QString &sender )
+static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
+                                     ScheduleMessage *msg, const QString &sender )
 {
   if ( !msg || !todo ) {
     return QString::null;
@@ -1669,7 +1671,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
   case Scheduler::Publish:
     return i18n("This task has been published");
   case Scheduler::Request:
-    if ( todo->revision() > 0 ) {
+    if ( existingIncidence && todo->revision() > 0 ) {
       return i18n( "This task has been updated by the organizer %1" ).
         arg( todo->organizer().fullName() );
     } else {
@@ -1980,9 +1982,11 @@ class IncidenceFormatter::ScheduleMessageVisitor
   : public IncidenceBase::Visitor
 {
   public:
-    ScheduleMessageVisitor() : mMessage( 0 ) { mResult = ""; }
-    bool act( IncidenceBase *incidence, ScheduleMessage *msg, const QString &sender )
+    ScheduleMessageVisitor() : mExistingIncidence( 0 ), mMessage( 0 ) { mResult = ""; }
+    bool act( IncidenceBase *incidence, Incidence *existingIncidence, ScheduleMessage *msg,
+              const QString &sender )
     {
+      mExistingIncidence = existingIncidence;
       mMessage = msg;
       mSender = sender;
       return incidence->accept( *this );
@@ -1991,6 +1995,7 @@ class IncidenceFormatter::ScheduleMessageVisitor
 
   protected:
     QString mResult;
+    Incidence *mExistingIncidence;
     ScheduleMessage *mMessage;
     QString mSender;
 };
@@ -2001,12 +2006,12 @@ class IncidenceFormatter::InvitationHeaderVisitor
   protected:
     bool visit( Event *event )
     {
-      mResult = invitationHeaderEvent( event, mMessage, mSender );
+      mResult = invitationHeaderEvent( event, mExistingIncidence, mMessage, mSender );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      mResult = invitationHeaderTodo( todo, mMessage, mSender );
+      mResult = invitationHeaderTodo( todo, mExistingIncidence, mMessage, mSender );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
@@ -2236,73 +2241,67 @@ static QString spacer = "<td> &nbsp; </td>";
 static QString tdOpen = "<td>";
 static QString tdClose = "</td>" + spacer;
 
-static QString recordButtons( Incidence *inc, InvitationFormatterHelper *helper )
+static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
+                                InvitationFormatterHelper *helper )
 {
   QString html;
   if ( !helper ) {
     return html;
   }
 
-  html += tdOpen;
-  if ( inc && inc->revision() > 0 ) {
-    html += helper->makeLink( "record", i18n( "[Record Update]" ) );
-  } else {
-    html += helper->makeLink( "record", i18n( "[Record]" ) );
-  }
-  html += tdClose;
-
-  // Move to trash
-  html += tdOpen;
-  html += helper->makeLink( "delete", i18n( "[Move to Trash]" ) );
-  html += tdClose;
-
-  return html;
-}
-static QString responseButtons( Incidence *inc, InvitationFormatterHelper *helper )
-{
-  QString html;
-  if ( !helper ) {
-    return html;
-  }
-
-  // Accept
-  html += tdOpen;
-  html += helper->makeLink( "accept", i18n( "[Accept]" ) );
-  html += tdClose;
-
-  // Tentative
-  html += tdOpen;
-  html += helper->makeLink( "accept_conditionally",
-                            i18n( "Accept conditionally", "[Accept cond.]" ) );
-  html += tdClose;
-
-  // Counter proposal
-  html += tdOpen;
-  html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
-  html += tdClose;
-
-  // Decline
-  html += tdOpen;
-  html += helper->makeLink( "decline", i18n( "[Decline]" ) );
-  html += tdClose;
-
-  // Delegate
-  html += tdOpen;
-  html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
-  html += tdClose;
-
-  // Forward
-  html += tdOpen;
-  html += helper->makeLink( "forward", i18n( "[Forward]" ) );
-  html += tdClose;
-
-  // Check calendar
-  if ( inc && inc->type() == "Event" ) {
+  if ( !rsvpReq && ( inc && inc->revision() == 0 ) ) {
+    // Record only
     html += tdOpen;
-    html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+    html += helper->makeLink( "record", i18n( "[Record]" ) );
+    html += tdClose;
+
+    // Move to trash
+    html += tdOpen;
+    html += helper->makeLink( "delete", i18n( "[Move to Trash]" ) );
+    html += tdClose;
+
+  } else {
+
+    // Accept
+    html += tdOpen;
+    html += helper->makeLink( "accept", i18n( "[Accept]" ) );
+    html += tdClose;
+
+    // Tentative
+    html += tdOpen;
+    html += helper->makeLink( "accept_conditionally",
+                              i18n( "Accept conditionally", "[Accept cond.]" ) );
+    html += tdClose;
+
+    // Counter proposal
+    html += tdOpen;
+    html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
+    html += tdClose;
+
+    // Decline
+    html += tdOpen;
+    html += helper->makeLink( "decline", i18n( "[Decline]" ) );
     html += tdClose;
   }
 
+  if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
+    // Delegate
+    html += tdOpen;
+    html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
+    html += tdClose;
+
+    // Forward
+    html += tdOpen;
+    html += helper->makeLink( "forward", i18n( "[Forward]" ) );
+    html += tdClose;
+
+    // Check calendar
+    if ( inc && inc->type() == "Event" ) {
+      html += tdOpen;
+      html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+      html += tdClose;
+    }
+  }
   return html;
 }
 
@@ -2388,12 +2387,12 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   html += tableHead;
   InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
-  if ( !headerVisitor.act( incBase, msg, sender ) )
+  if ( !headerVisitor.act( incBase, existingIncidence, msg, sender ) )
     return QString::null;
   html += "<b>" + headerVisitor.result() + "</b>";
 
   InvitationBodyVisitor bodyVisitor( noHtmlMode );
-  if ( !bodyVisitor.act( incBase, msg, sender ) )
+  if ( !bodyVisitor.act( incBase, existingIncidence, msg, sender ) )
     return QString::null;
   html += bodyVisitor.result();
 
@@ -2444,15 +2443,6 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     }
   }
 
-  // determine if this revision needs to be recorded
-  bool recordReq = true;
-  if ( !myInc ) {
-    if ( inc && existingIncidence &&
-         inc->revision() >= existingIncidence->revision() ) {
-      recordReq = false;
-    }
-  }
-
   // determine invitation role
   QString role;
   bool isDelegated = false;
@@ -2467,36 +2457,18 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     role = Attendee::roleName( a->role() );
   }
 
-  // determine if RSVP needed, not-needed, or response already recorded
+  // Print if RSVP needed, not-needed, or response already recorded
   bool rsvpReq = rsvpRequested( inc );
-
-  // determine if the organizer gave you a preset status
-  if ( !myInc ) {
-    if ( inc ) {
-      QString statStr = myStatusStr( inc );
-      if ( !statStr.isEmpty() ) {
-        html += "<br/>";
-        html += "<i>";
-        html += statStr;
-        html += "</i>";
-        rsvpReq = false;
-        rsvpRec = true;
-      }
-    }
-  }
-
-  // print status
   if ( !myInc && a ) {
     html += "<br/>";
     html += "<i><u>";
     if ( rsvpRec && inc ) {
-      if ( !recordReq ) {
+      if ( inc->revision() == 0 ) {
         html += i18n( "Your <b>%1</b> response has already been recorded" ).
                 arg( ea->statusStr() );
       } else {
         html += i18n( "Your status for this invitation is <b>%1</b>" ).
-                arg( ea ? ea->statusStr() :
-                     a ? a->statusStr() : i18n( "unknown attendee status", "unknown" ) );
+                arg( ea->statusStr() );
       }
       rsvpReq = false;
     } else if ( msg->method() == Scheduler::Cancel ) {
@@ -2513,6 +2485,19 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     html += "</u></i>";
   }
 
+  // Print if the organizer gave you a preset status
+  if ( !myInc ) {
+    if ( inc && inc->revision() == 0 ) {
+      QString statStr = myStatusStr( inc );
+      if ( !statStr.isEmpty() ) {
+        html += "<br/>";
+        html += "<i>";
+        html += statStr;
+        html += "</i>";
+      }
+    }
+  }
+
   // Add groupware links
 
   html += "<br><table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr>";
@@ -2523,8 +2508,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     case Scheduler::Refresh:
     case Scheduler::Add:
     {
-      if ( recordReq &&
-           inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
+      if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
         html += "<tr>";
         if ( inc->type() == "Todo" ) {
           html += "<td colspan=\"9\">";
@@ -2536,30 +2520,23 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
         html += "</td></tr>";
       }
 
-      html += "<tr>";
-      if ( recordReq && !rsvpReq ) {
-        html += recordButtons( inc, helper );
+      if ( !myInc && a ) {
+        html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
       }
-      if ( rsvpReq ) {
-        html += responseButtons( inc, helper );
-      }
-      html += "</tr>";
       break;
     }
 
     case Scheduler::Cancel:
       // Remove invitation
-      if ( inc ) {
-        html += "<tr>";
-        if ( inc->type() == "Todo" ) {
-          html += "<td colspan=\"9\">";
-          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
-        } else {
-          html += "<td colspan=\"13\">";
-          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
-        }
-        html += "</td></tr>";
+      html += "<tr>";
+      if ( inc->type() == "Todo" ) {
+        html += "<td colspan=\"9\">";
+        html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
+      } else {
+        html += "<td colspan=\"13\">";
+        html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
       }
+      html += "</td></tr>";
       break;
 
     case Scheduler::Reply:
@@ -2583,7 +2560,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
         if ( a ) {
           if ( a->status() != Attendee::Accepted ||
                a->status() != Attendee::Tentative ) {
-            html += "<tr>" + responseButtons( inc, helper ) + "</tr>";
+            html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
             break;
           }
         }
