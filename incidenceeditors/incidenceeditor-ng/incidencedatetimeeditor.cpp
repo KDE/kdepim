@@ -57,6 +57,9 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
 #endif
+
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(setDuration()) );
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
 }
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()

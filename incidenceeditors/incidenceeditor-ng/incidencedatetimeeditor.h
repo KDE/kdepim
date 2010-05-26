@@ -57,6 +57,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
   private slots: /// General
     void editRecurrence();
     void enableAlarm( bool enable );
+    void setDuration();
     void startTimeChanged( const QTime &newTime );
     void startDateChanged( const QDate &newDate );
     void startSpecChanged();
@@ -82,7 +83,6 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
     void save( KCal::Todo::Ptr todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
-    void setDuration();
     
   private:
     KCal::ICalTimeZones *mTimeZones;
