@@ -40,27 +40,87 @@
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
 
+/// Class EventOrTodoDialogPrivate
+
+namespace IncidenceEditorsNG {
+
+class EventOrTodoDialogPrivate
+{
+public:
+  EventOrTodoDialog *q;
+
+  Akonadi::CollectionComboBox *mCalSelector;
+  IncidenceEditorGeneralPage *mGeneralPage;
+
+public:
+  EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
+  void itemFetchResult( KJob *job );
+};
+
+}
+
+EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
+  : q( qq )
+  , mCalSelector( new Akonadi::CollectionComboBox( q->mainWidget() ) )
+  , mGeneralPage( new IncidenceEditorGeneralPage )
+{ }
+
+void EventOrTodoDialogPrivate::itemFetchResult( KJob *job )
+{
+  Q_ASSERT( job );
+
+  if ( job->error() ) {
+    kDebug() << "ItemFetch failed" << job->errorString();
+    q->reject();
+    return;
+  }
+
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  if ( fetchJob->items().isEmpty() ) {
+    kDebug() << "No items returned by fetch job";
+    q->reject();
+    return;
+  }
+
+  Item item = fetchJob->items().first();
+  if ( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() ) {
+    q->load( item );
+
+    //TODO read-only ATM till we support moving of existing incidences from
+    // one collection to another.
+    mCalSelector->setEnabled( false );
+    mCalSelector->setDefaultCollection( item.parentCollection() );
+    q->show();
+  } else {
+    kDebug() << "Item as invalid payload type";
+    q->reject();
+  }
+}
+
+/// Class EventOrTodoDialog
+
 EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
   : KDialog( parent )
-  , mCalSelector( new Akonadi::CollectionComboBox( mainWidget() ) )
-  , mGeneralPage( new IncidenceEditorGeneralPage )
+  , d_ptr( new EventOrTodoDialogPrivate( this ) )
 {
+  Q_D( EventOrTodoDialog );
+  
   // Calendar selector
-  mCalSelector->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+  d->mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
   
   QLabel *callabel = new QLabel( i18n( "Calendar:" ), mainWidget() );
-  callabel->setBuddy( mCalSelector );
+  callabel->setBuddy( d->mCalSelector );
   
   QHBoxLayout *callayout = new QHBoxLayout;
   callayout->setSpacing( KDialog::spacingHint() );
   callayout->addWidget( callabel );
-  callayout->addWidget( mCalSelector, 1 );
+  callayout->addWidget( d->mCalSelector, 1 );
 
   // Tab widget and pages
   QTabWidget *tabWidget = new QTabWidget( mainWidget() );
   
-  tabWidget->addTab( mGeneralPage, i18nc( "@title:tab general event settings", "&General" ) );
+  tabWidget->addTab( d->mGeneralPage, i18nc( "@title:tab general event settings", "&General" ) );
 
   // Overall layout of the complete dialog
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
@@ -78,8 +138,15 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
   showButtonSeparator( false );
 }
 
+EventOrTodoDialog::~EventOrTodoDialog()
+{
+  delete d_ptr;
+}
+
 void EventOrTodoDialog::load( const Akonadi::Item &item )
 {
+  Q_D( EventOrTodoDialog );
+  
   if ( item.id() < 0 ) {
     // We're creating a new item
     Q_ASSERT( item.hasPayload() );
@@ -89,22 +156,22 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
     KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
     setCaption( i18nc( "@title:window",
                      "New %1", QString( incidence->type() ) ) );
-    mGeneralPage->load( incidence );
+    d->mGeneralPage->load( incidence );
     show();
   } else if ( item.hasPayload() ) {
     
     if ( item.hasPayload<KCal::Event::Ptr>() ) {
-      mCalSelector->setMimeTypeFilter(
+      d->mCalSelector->setMimeTypeFilter(
         QStringList() << IncidenceMimeTypeVisitor::eventMimeType() );
     } else {
-      mCalSelector->setMimeTypeFilter(
+      d->mCalSelector->setMimeTypeFilter(
         QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
     }
     
     KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
     setCaption( i18nc( "@title:window",
                      "Edit %1: %2", QString( incidence->type() ), incidence->summary() ) );
-    mGeneralPage->load( incidence );
+    d->mGeneralPage->load( incidence );
   } else {
     ItemFetchJob *job = new ItemFetchJob( item, this );
     job->fetchScope().fetchFullPayload();
@@ -115,44 +182,11 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
   }
 
   if ( item.hasPayload<KCal::Event::Ptr>() )
-    mCalSelector->setMimeTypeFilter(
+    d->mCalSelector->setMimeTypeFilter(
       QStringList() << IncidenceMimeTypeVisitor::eventMimeType() );
   else
-    mCalSelector->setMimeTypeFilter(
+    d->mCalSelector->setMimeTypeFilter(
       QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
 }
 
-
-/// private slots
-
-void EventOrTodoDialog::itemFetchResult( KJob *job )
-{
-  Q_ASSERT( job );
-
-  if ( job->error() ) {
-    kDebug() << "ItemFetch failed" << job->errorString();
-    reject();
-    return;
-  }
-
-  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-  if ( fetchJob->items().isEmpty() ) {
-    kDebug() << "No items returned by fetch job";
-    reject();
-    return;
-  }
-
-  Item item = fetchJob->items().first();
-  if ( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() ) {
-    load( item );
-
-    //TODO read-only ATM till we support moving of existing incidences from
-    // one collection to another.
-    mCalSelector->setEnabled( false );
-    mCalSelector->setDefaultCollection( item.parentCollection() );
-    show();
-  } else {
-    kDebug() << "Item as invalid payload type";
-    reject();
-  }
-}
+#include "moc_eventortododialog.cpp"

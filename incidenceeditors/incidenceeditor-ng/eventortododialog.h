@@ -35,12 +35,15 @@ class CollectionComboBox;
 namespace IncidenceEditorsNG {
 
 class IncidenceEditorGeneralPage;
-  
+
+class EventOrTodoDialogPrivate;
+
 class INCIDENCEEDITORS_EXPORT EventOrTodoDialog : public KDialog
 {
   Q_OBJECT;
   public:
     EventOrTodoDialog( QWidget *parent = 0 );
+    ~EventOrTodoDialog();
 
     /**
      * Loads the @param item into the dialog.
@@ -53,12 +56,12 @@ class INCIDENCEEDITORS_EXPORT EventOrTodoDialog : public KDialog
      */
     void load( const Akonadi::Item &item );
 
-  private slots:
-    void itemFetchResult( KJob *job );
-    
   private:
-    Akonadi::CollectionComboBox *mCalSelector;
-    IncidenceEditorGeneralPage *mGeneralPage;
+    EventOrTodoDialogPrivate *d_ptr;
+    Q_DECLARE_PRIVATE( EventOrTodoDialog );
+    Q_DISABLE_COPY( EventOrTodoDialog );
+
+    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob *job ) )
 };
 
 }
