@@ -107,7 +107,8 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
     mGeneralPage->load( incidence );
   } else {
     ItemFetchJob *job = new ItemFetchJob( item, this );
-    job->fetchScope().fetchFullPayload();;
+    job->fetchScope().fetchFullPayload();
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
     connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
     return;
@@ -119,8 +120,6 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
   else
     mCalSelector->setMimeTypeFilter(
       QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
-
-  mCalSelector->setEnabled( mCalSelector->count() > 1 );
 }
 
 
@@ -146,6 +145,11 @@ void EventOrTodoDialog::itemFetchResult( KJob *job )
   Item item = fetchJob->items().first();
   if ( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() ) {
     load( item );
+
+    //TODO read-only ATM till we support moving of existing incidences from
+    // one collection to another.
+    mCalSelector->setEnabled( false );
+    mCalSelector->setDefaultCollection( item.parentCollection() );
     show();
   } else {
     kDebug() << "Item as invalid payload type";
