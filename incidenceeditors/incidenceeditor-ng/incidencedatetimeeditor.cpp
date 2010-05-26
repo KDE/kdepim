@@ -288,8 +288,10 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
 
 bool IncidenceDateTimeEditor::isDirty( KCal::Event::ConstPtr event ) const
 {
-  return false;
-  if ( event->allDay() != mUi->mHasTimeCheck->isChecked() )
+  // When the check box is checked, it has time associated and thus is not an all
+  // day event. So the editor is dirty when the event is allDay and the checkbox
+  // is checked.
+  if ( event->allDay() == mUi->mHasTimeCheck->isChecked() )
     return true;
 
   if ( !event->allDay() ) {
