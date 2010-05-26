@@ -26,23 +26,28 @@
 
 #include <KLocale>
 
+#include <KCal/Event>
+#include <KCal/Todo>
+
 #include <Akonadi/CollectionComboBox>
+#include <Akonadi/Item>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include "incidenceeditorgeneralpage.h"
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
 
+using namespace Akonadi;
 using namespace IncidenceEditorsNG;
 
 EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
   : KDialog( parent )
+  , mCalSelector( new Akonadi::CollectionComboBox( mainWidget() ) )
+  , mGeneralPage( new IncidenceEditorGeneralPage )
 {
   // Calendar selector
-  Akonadi::CollectionComboBox *mCalSelector = new Akonadi::CollectionComboBox( mainWidget() );
   mCalSelector->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
   //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
-  //mCalSelector->addExcludeResourcesType(QStringList()<<"akonadi_search_resource");
-  mCalSelector->setMimeTypeFilter(
-    QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
   
   QLabel *callabel = new QLabel( i18n( "Calendar:" ), mainWidget() );
   callabel->setBuddy( mCalSelector );
@@ -54,8 +59,8 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
 
   // Tab widget and pages
   QTabWidget *tabWidget = new QTabWidget( mainWidget() );
-  IncidenceEditorGeneralPage *generalPage = new IncidenceEditorGeneralPage( tabWidget );
-  tabWidget->addTab( generalPage, i18nc( "@title:tab general event settings", "&General" ) );
+  
+  tabWidget->addTab( mGeneralPage, i18nc( "@title:tab general event settings", "&General" ) );
 
   // Overall layout of the complete dialog
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
@@ -73,3 +78,77 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
   showButtonSeparator( false );
 }
 
+void EventOrTodoDialog::load( const Akonadi::Item &item )
+{
+  if ( item.id() < 0 ) {
+    // We're creating a new item
+    Q_ASSERT( item.hasPayload() );
+    Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
+    Q_ASSERT( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() );
+
+    KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
+    setCaption( i18nc( "@title:window",
+                     "New %1", QString( incidence->type() ) ) );
+    mGeneralPage->load( incidence );
+    show();
+  } else if ( item.hasPayload() ) {
+    
+    if ( item.hasPayload<KCal::Event::Ptr>() ) {
+      mCalSelector->setMimeTypeFilter(
+        QStringList() << IncidenceMimeTypeVisitor::eventMimeType() );
+    } else {
+      mCalSelector->setMimeTypeFilter(
+        QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
+    }
+    
+    KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
+    setCaption( i18nc( "@title:window",
+                     "Edit %1: %2", QString( incidence->type() ), incidence->summary() ) );
+    mGeneralPage->load( incidence );
+  } else {
+    ItemFetchJob *job = new ItemFetchJob( item, this );
+    job->fetchScope().fetchFullPayload();;
+
+    connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
+    return;
+  }
+
+  if ( item.hasPayload<KCal::Event::Ptr>() )
+    mCalSelector->setMimeTypeFilter(
+      QStringList() << IncidenceMimeTypeVisitor::eventMimeType() );
+  else
+    mCalSelector->setMimeTypeFilter(
+      QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
+
+  mCalSelector->setEnabled( mCalSelector->count() > 1 );
+}
+
+
+/// private slots
+
+void EventOrTodoDialog::itemFetchResult( KJob *job )
+{
+  Q_ASSERT( job );
+
+  if ( job->error() ) {
+    kDebug() << "ItemFetch failed" << job->errorString();
+    reject();
+    return;
+  }
+
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  if ( fetchJob->items().isEmpty() ) {
+    kDebug() << "No items returned by fetch job";
+    reject();
+    return;
+  }
+
+  Item item = fetchJob->items().first();
+  if ( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() ) {
+    load( item );
+    show();
+  } else {
+    kDebug() << "Item as invalid payload type";
+    reject();
+  }
+}

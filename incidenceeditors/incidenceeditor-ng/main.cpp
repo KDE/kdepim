@@ -22,17 +22,25 @@
   without including the source code for Qt in the source distribution.
 */
 
+#include <iostream>
+
 #include <KAboutData>
 #include <KApplication>
 #include <KCmdLineArgs>
 
+#include <Akonadi/Item>
+#include <KCal/Event>
+#include <KCal/Todo>
+
 #include "eventortododialog.h"
+
+using namespace IncidenceEditorsNG;
 
 int main( int argc, char **argv )
 {
   KAboutData about( "IncidenceEditorNGApp",
                     "korganizer",
-                    ki18n( "IncidenceEditorApp" ),
+                    ki18n( "KOrganizer" ),
                     "0.1",
                     ki18n( "KDE application to run the KOrganizer incidenceeditor." ),
                     KAboutData::License_LGPL,
@@ -41,12 +49,49 @@ int main( int argc, char **argv )
                     "http://kdepim.kde.org",
                     "kdepim@kde.org" );
   about.addAuthor( ki18n( "Bertjan Broeksema" ), ki18n( "Author" ), "b.broeksema@home.nl" );
+
+  KCmdLineOptions options;
+  options.add("new-event", ki18n("Creates a new event"));
+  options.add("new-todo", ki18n("Creates a new todo"));
+  options.add("+item", ki18n("Loads an existing item, or returns without doing anything when the item is not an event or todo."));
+
+  KCmdLineArgs::addCmdLineOptions( options );
   KCmdLineArgs::init( argc, argv, &about );
   KApplication app;
 
-  IncidenceEditorsNG::EventOrTodoDialog *dialog = new IncidenceEditorsNG::EventOrTodoDialog;
+  KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+  Akonadi::Item item( -1 );
+  if ( args->isSet( "new-event" ) ) {
+    std::cout << "Creating new event..." << std::endl;
+    item.setPayload<KCal::Event::Ptr>( KCal::Event::Ptr( new KCal::Event ) );
+  } else if ( args->isSet( "new-todo" ) ) {
+    std::cout << "Creating new todo..." << std::endl;
+    item.setPayload<KCal::Todo::Ptr>( KCal::Todo::Ptr( new KCal::Todo ) );
+  } else if ( args->count() == 1 ) {
+    qint64 id = -1;
+    if ( argc == 2 ) {
+      bool ok = false;
+      id = QString( argv[1] ).toLongLong( &ok );
+      if ( !ok ) {
+        std::cerr << "Invalid akonadi item id given." << std::endl;
+        return 1;
+      }
+
+      item.setId( id );
+      std::cout << "Trying to load Akonadi Item " << QString::number( id ).toLatin1().data();
+      std::cout << "..." << std::endl;
+    } else {
+      std::cerr << "Invalid argument count." << std::endl << std::endl;
+      return 1;
+    }
+  } else {
+    std::cerr << "Invalid usage." << std::endl << std::endl;
+    return 1;
+  }
+  
+  EventOrTodoDialog *dialog = new EventOrTodoDialog;
   dialog->resize( QSize( 800, 600 ).expandedTo( dialog->minimumSizeHint() ) );
-  dialog->show();
+  dialog->load( item );
 
   return app.exec();
 }
