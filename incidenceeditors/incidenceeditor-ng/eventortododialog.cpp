@@ -54,7 +54,9 @@ public:
 
 public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
+
   void itemFetchResult( KJob *job );
+  void updateButtonStatus( bool isDirty );
 };
 
 }
@@ -97,6 +99,12 @@ void EventOrTodoDialogPrivate::itemFetchResult( KJob *job )
   }
 }
 
+void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
+{
+  q->enableButton( KDialog::Apply, isDirty );
+  q->enableButton( KDialog::Ok, isDirty );
+}
+
 /// Class EventOrTodoDialog
 
 EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
@@ -136,6 +144,8 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
   enableButton( Apply, false );
   setModal( false );
   showButtonSeparator( false );
+
+  connect( d->mGeneralPage, SIGNAL(dirtyStatusChanged(bool)), SLOT(updateButtonStatus(bool)) );
 }
 
 EventOrTodoDialog::~EventOrTodoDialog()

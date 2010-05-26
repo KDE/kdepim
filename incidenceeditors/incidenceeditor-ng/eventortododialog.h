@@ -61,7 +61,8 @@ class INCIDENCEEDITORS_EXPORT EventOrTodoDialog : public KDialog
     Q_DECLARE_PRIVATE( EventOrTodoDialog );
     Q_DISABLE_COPY( EventOrTodoDialog );
 
-    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob *job ) )
+    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult(KJob *job) )
+    Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool isDirty) )
 };
 
 }
