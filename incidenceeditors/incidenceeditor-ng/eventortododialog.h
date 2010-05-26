@@ -21,11 +21,18 @@
 #ifndef EVENTORTODODIALOG_H
 #define EVENTORTODODIALOG_H
 
-#include <kdialog.h>
+#include <KDialog>
 
+#include "../incidenceeditors_export.h"
 
-class EventOrTodoDialog : public KDialog
+namespace IncidenceEditorsNG {
+
+class INCIDENCEEDITORS_EXPORT EventOrTodoDialog : public KDialog
 {
+  public:
+    EventOrTodoDialog( QWidget *parent = 0 );
 };
+
+}
 
 #endif // EVENTORTODODIALOG_H

@@ -44,7 +44,7 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &about );
   KApplication app;
 
-  EventOrTodoDialog *dialog = new EventOrTodoDialog;
+  IncidenceEditorsNG::EventOrTodoDialog *dialog = new IncidenceEditorsNG::EventOrTodoDialog;
   dialog->resize( QSize( 800, 600 ).expandedTo( dialog->minimumSizeHint() ) );
   dialog->show();
 

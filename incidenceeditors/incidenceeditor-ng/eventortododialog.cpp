@@ -20,3 +20,56 @@
 
 #include "eventortododialog.h"
 
+#include <QtGui/QLabel>
+#include <QtGui/QGridLayout>
+#include <QtGui/QTabWidget>
+
+#include <KLocale>
+
+#include <Akonadi/CollectionComboBox>
+#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
+
+#include "incidenceeditorgeneralpage.h"
+
+using namespace IncidenceEditorsNG;
+
+EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
+  : KDialog( parent )
+{
+  // Calendar selector
+  Akonadi::CollectionComboBox *mCalSelector = new Akonadi::CollectionComboBox( mainWidget() );
+  mCalSelector->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+  //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
+  //mCalSelector->addExcludeResourcesType(QStringList()<<"akonadi_search_resource");
+  mCalSelector->setMimeTypeFilter(
+    QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  
+  QLabel *callabel = new QLabel( i18n( "Calendar:" ), mainWidget() );
+  callabel->setBuddy( mCalSelector );
+  
+  QHBoxLayout *callayout = new QHBoxLayout;
+  callayout->setSpacing( KDialog::spacingHint() );
+  callayout->addWidget( callabel );
+  callayout->addWidget( mCalSelector, 1 );
+
+  // Tab widget and pages
+  QTabWidget *tabWidget = new QTabWidget( mainWidget() );
+  IncidenceEditorGeneralPage *generalPage = new IncidenceEditorGeneralPage( tabWidget );
+  tabWidget->addTab( generalPage, i18nc( "@title:tab general event settings", "&General" ) );
+
+  // Overall layout of the complete dialog
+  QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+  layout->setMargin( 0 );
+  layout->setSpacing( 0 );
+  layout->addLayout( callayout );
+  layout->addWidget( tabWidget );
+
+  mainWidget()->setLayout( layout );
+  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
+  setDefaultButton( Ok );
+  enableButton( Ok, false );
+  enableButton( Apply, false );
+  setModal( false );
+  showButtonSeparator( false );
+}
+

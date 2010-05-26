@@ -1,3 +1,5 @@
+remove_definitions(-DKDEPIM_MOBILE_UI)
+
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -10,8 +12,6 @@ include_directories(
 #     incidenceeditor-ng/incidenceattachmenteditor.cpp
 #     incidenceeditor-ng/incidencerecurrenceeditor.cpp
 #     incidenceeditor-ng/incidencerecurrencedialog.cpp
-#     incidenceeditor-ng/attachmenticonview.cpp
-#     incidenceeditor-ng/attachmenteditdialog.cpp
 #     incidenceeditor-ng/incidenceeditorgeneralpage.cpp
 
 
@@ -31,8 +31,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencerecurrenceeditor.cpp
   incidencerecurrencedialog.cpp
 
-  eventortododialog.cpp
-
   ../autochecktreewidget.cpp
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
@@ -45,6 +43,14 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
+
+  attachmenticonview.cpp
+  attachmenteditdialog.cpp
+  incidenceattachmenteditor.cpp
+  incidencedescriptioneditor.cpp
+
+  incidenceeditorgeneralpage.cpp
+  eventortododialog.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
@@ -63,8 +69,10 @@ target_link_libraries(incidenceeditorsng
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS}
-  kdepim            # For KPIM::K{Date|Time}Edit
-  akonadi-kcal_next # For KCalPrefs
+  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
+  kdepim               # For KPIM::K{Date|Time}Edit
+  kdepimdbusinterfaces # For UriHandler
+  akonadi-kcal_next    # For KCalPrefs
 )
 
 set_target_properties(incidenceeditorsng
@@ -99,8 +107,9 @@ if (KDEPIM_MOBILE_UI)
     akonadi-kcal_next # For KCalPrefs
   )
 
-  set_target_properties(incidenceeditorsngmobile
-    PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+  set_target_properties(incidenceeditorsngmobile PROPERTIES
+    DEFINE_SYMBOL KDEPIM_MOBILE_UI
+    VERSION ${GENERIC_LIB_VERSION}
     SOVERSION ${GENERIC_LIB_SOVERSION}
   )
 
@@ -110,13 +119,10 @@ endif (KDEPIM_MOBILE_UI)
 
 ### Build the test app TODO: Make optional
 
-set(incidenceeditorapp_SRCS main.cpp)
+set(testincidenceeditor_SRCS main.cpp)
 
-# qt_wrap_cpp(incidenceeditorng ${incidenceeditorapp_SRCS} main.cpp)
-
-kde4_add_executable(incidenceeditorng ${incidenceeditorapp_SRCS})
-
-target_link_libraries(incidenceeditorng
+kde4_add_executable(testincidenceeditorsng ${testincidenceeditor_SRCS})
+target_link_libraries(testincidenceeditorsng
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS}
