@@ -186,7 +186,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
 
   if ( alreadyExisted && m_itemDateForItemId.contains( item.id() )) {
     // for changed items, we must remove existing date entries (they might have changed)
-    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()] );
+    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()], item.id() );
     m_itemDateForItemId.remove( item.id() );
   }
 
