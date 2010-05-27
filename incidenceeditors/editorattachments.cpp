@@ -748,7 +748,7 @@ void EditorAttachments::slotRemove()
   if ( KMessageBox::questionYesNo(
          this,
          i18nc( "@info",
-                "Do you really want to remove these attachments?<nl>%1</nl>", labelsStr ),
+                "Do you really want to remove these attachments?<nl/>%1", labelsStr ),
          i18nc( "@title:window", "Remove Attachments?" ),
          KStandardGuiItem::yes(), KStandardGuiItem::no(),
          "calendarRemoveAttachments" ) != KMessageBox::Yes ) {
