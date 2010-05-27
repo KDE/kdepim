@@ -39,6 +39,12 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
 {
   mUi->setupUi( this );
 
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
+  connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(checkDirtyStatus()));
+#endif
+
   connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
            SLOT(selectCategories()));
   connect( mUi->mSummaryEdit, SIGNAL(textChanged(QString)),
@@ -74,6 +80,16 @@ void IncidenceGeneralEditor::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceGeneralEditor::isDirty() const
 {
+#ifndef KDEPIM_MOBILE_UI
+  if ( mLoadedIncidence ) {
+    if ( mLoadedIncidence->secrecy() != mUi->mSecrecyCombo->currentIndex() )
+      return true;
+  } else {
+    if ( mUi->mSecrecyCombo->currentIndex() != 0 )
+      return true;
+  }
+#endif
+
   if ( mLoadedIncidence ) {
     return ( mUi->mSummaryEdit->text() != mLoadedIncidence->summary() )
       || ( mUi->mLocationEdit->text() != mLoadedIncidence->location() )
