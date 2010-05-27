@@ -277,10 +277,15 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
 
   const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
   if ( isEncapsulatedMessage ) {
-    atmViewMsg( node->parent()->bodyAsMessage() );
+
+    // the viewer/urlhandlermanager expects that the message (mMessage) it is passed is the root when doing index calculation
+    // in urls. Simply passing the result of bodyAsMessage() does not cut it as the resulting pointer is a child in its tree.
+    KMime::Message::Ptr m = KMime::Message::Ptr( new KMime::Message );
+    m->setContent( node->parent()->bodyAsMessage()->encodedContent() );
+    m->parse();
+    atmViewMsg( m );
     return;
   }
-
   // determine the MIME type of the attachment
   KMimeType::Ptr mimetype;
   // prefer the value of the Content-Type header
