@@ -57,10 +57,16 @@ void IncidenceGeneralEditor::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
+#ifndef KDEPIM_MOBILE_UI
+    mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
+#endif
     mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
     mUi->mLocationEdit->setText( mLoadedIncidence->location() );
     setCategories( mLoadedIncidence->categories() );
   } else {
+#ifndef KDEPIM_MOBILE_UI
+    mUi->mSecrecyCombo->setCurrentIndex( 0 );
+#endif
     mUi->mSummaryEdit->clear();
     mUi->mLocationEdit->clear();
     mUi->mCategoriesLabel->clear();
@@ -76,6 +82,19 @@ void IncidenceGeneralEditor::save( KCal::Incidence::Ptr incidence )
   incidence->setSummary( mUi->mSummaryEdit->text() );
   incidence->setLocation( mUi->mLocationEdit->text() );
   incidence->setCategories( mSelectedCategories );
+
+#ifndef KDEPIM_MOBILE_UI
+  switch( mUi->mSecrecyCombo->currentIndex() ) {
+  case 1:
+    incidence->setSecrecy( KCal::Incidence::SecrecyPrivate );
+    break;
+  case 2:
+    incidence->setSecrecy( KCal::Incidence::SecrecyConfidential );
+    break;
+  default:
+    incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
+  }
+#endif
 }
 
 bool IncidenceGeneralEditor::isDirty() const
