@@ -1964,14 +1964,7 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
 
-  if ( mMessage ) {
-    kWarning() << "Unhandled URL right-click!";
-    emit popupMenu( *mMessage, url, aPos );
-  }
-  if ( mMessageItem.isValid() ) {
-    kWarning() << "Unhandled URL right-click!";
-    emit popupMenu( mMessageItem, url, aPos );
-  }
+  emitPopupMenu( aUrl, aPos );
 }
 
 void ViewerPrivate::slotToggleHtmlMode()
