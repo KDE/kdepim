@@ -2528,15 +2528,17 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
     case Scheduler::Cancel:
       // Remove invitation
-      html += "<tr>";
-      if ( inc->type() == "Todo" ) {
-        html += "<td colspan=\"9\">";
-        html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
-      } else {
-        html += "<td colspan=\"13\">";
-        html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
+      if ( inc ) {
+        html += "<tr>";
+        if ( inc->type() == "Todo" ) {
+          html += "<td colspan=\"9\">";
+          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
+        } else {
+          html += "<td colspan=\"13\">";
+          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
+        }
+        html += "</td></tr>";
       }
-      html += "</td></tr>";
       break;
 
     case Scheduler::Reply:
