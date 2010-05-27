@@ -47,15 +47,10 @@ class INCIDENCEEDITORS_EXPORT IncidenceGeneralEditor : public IncidenceEditor
     virtual bool isValid();
 
   private slots:
-    /**
-     * Opens a category selection dialog which let the user select the
-     * categories for this Incidence.
-     */
-    void selectCategories();
+    void setCategories( const QStringList &categories );
 
   private:
     bool categoriesChanged() const ;
-    void setCategories( const QStringList &categories );
     
   private:
     QStringList mSelectedCategories;

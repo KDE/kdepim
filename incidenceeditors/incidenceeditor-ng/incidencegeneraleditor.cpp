@@ -20,6 +20,7 @@
 #include "incidencegeneraleditor.h"
 
 #include "categoryconfig.h"
+#include "categoryhierarchyreader.h"
 #include "categoryselectdialog.h"
 #include "editorconfig.h"
 
@@ -38,15 +39,17 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   , mUi( new Ui::IncidenceGeneralEditor )
 {
   mUi->setupUi( this );
-
-#ifndef KDEPIM_MOBILE_UI
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
+
+  CategoryConfig cc( EditorConfig::instance()->config() );
+  mUi->mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
+  mUi->mCategoryCombo->setSqueezeText( true );
+  CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( cc.customCategories() );
+
+  connect( mUi->mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
+           SLOT(setCategories(QStringList)) );
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
-#endif
-
-  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
-           SLOT(selectCategories()));
   connect( mUi->mSummaryEdit, SIGNAL(textChanged(QString)),
            SLOT(checkDirtyStatus()));
   connect( mUi->mLocationEdit, SIGNAL(textChanged(QString)),
@@ -57,19 +60,14 @@ void IncidenceGeneralEditor::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
-#ifndef KDEPIM_MOBILE_UI
     mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
-#endif
     mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
     mUi->mLocationEdit->setText( mLoadedIncidence->location() );
     setCategories( mLoadedIncidence->categories() );
   } else {
-#ifndef KDEPIM_MOBILE_UI
     mUi->mSecrecyCombo->setCurrentIndex( 0 );
-#endif
     mUi->mSummaryEdit->clear();
     mUi->mLocationEdit->clear();
-    mUi->mCategoriesLabel->clear();
     mSelectedCategories.clear();
   }
 
@@ -83,7 +81,6 @@ void IncidenceGeneralEditor::save( KCal::Incidence::Ptr incidence )
   incidence->setLocation( mUi->mLocationEdit->text() );
   incidence->setCategories( mSelectedCategories );
 
-#ifndef KDEPIM_MOBILE_UI
   switch( mUi->mSecrecyCombo->currentIndex() ) {
   case 1:
     incidence->setSecrecy( KCal::Incidence::SecrecyPrivate );
@@ -94,7 +91,6 @@ void IncidenceGeneralEditor::save( KCal::Incidence::Ptr incidence )
   default:
     incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
   }
-#endif
 }
 
 bool IncidenceGeneralEditor::isDirty() const
@@ -130,26 +126,6 @@ bool IncidenceGeneralEditor::isValid()
   return true;
 }
 
-void IncidenceGeneralEditor::selectCategories()
-{
-  CategoryConfig cc( EditorConfig::instance()->config() );
-  QPointer<CategorySelectDialog> categoryDialog =
-    new CategorySelectDialog( &cc );
-  categoryDialog->setHelp( "categories-view", "korganizer" );
-  categoryDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Help );
-  categoryDialog->setSelected( mSelectedCategories );
-
-  connect( categoryDialog, SIGNAL(editCategories()),
-           SIGNAL(openCategoryDialog()) );
-  connect( this, SIGNAL(updateCategoryConfig()),
-           categoryDialog, SLOT(updateCategoryConfig()) );
-
-  if ( categoryDialog->exec() )
-    setCategories( categoryDialog->selectedCategories() );
-
-  delete categoryDialog;
-}
-
 bool IncidenceGeneralEditor::categoriesChanged() const
 {
   // If no Incidence was loaded, mSelectedCategories should be empty.
@@ -169,7 +145,6 @@ bool IncidenceGeneralEditor::categoriesChanged() const
 void IncidenceGeneralEditor::setCategories( const QStringList &categories )
 {
   mSelectedCategories = categories;
-  mUi->mCategoriesLabel->setText( categories.join( "," ) );
   checkDirtyStatus();
 }
 
