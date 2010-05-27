@@ -33,7 +33,7 @@
 namespace IncidenceEditors {
 
 template<class T>
-class INCIDENCEEDITORS_EXPORT CustomListViewItem : public K3ListViewItem
+class CustomListViewItem : public K3ListViewItem
 {
   public:
     CustomListViewItem( T data, K3ListView *parent ) :

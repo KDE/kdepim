@@ -85,5 +85,5 @@ endif ()
 set_target_properties(incidenceeditors PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory( incidenceeditor-ng )
+#add_subdirectory( incidenceeditor-ng )
 add_subdirectory( tests )
