@@ -121,8 +121,8 @@ endif (KDEPIM_MOBILE_UI)
 
 set(testincidenceeditor_SRCS main.cpp)
 
-kde4_add_executable(testincidenceeditorsng ${testincidenceeditor_SRCS})
-target_link_libraries(testincidenceeditorsng
+kde4_add_executable(keventeditor ${testincidenceeditor_SRCS})
+target_link_libraries(keventeditor
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS}
@@ -131,3 +131,5 @@ target_link_libraries(testincidenceeditorsng
   akonadi-kcal_next
   kdepimdbusinterfaces
 )
+
+install(TARGETS keventeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
