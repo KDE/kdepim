@@ -41,6 +41,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   , mUi( new Ui::IncidenceDateTimeEditor )
 {
   mUi->setupUi( this );
+  showOrHideTimeZones( "hide" );
 
 #ifdef KDEPIM_MOBILE_UI
   QButtonGroup *freeBusyGroup = new QButtonGroup( this );
@@ -54,7 +55,8 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
-
+  connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
+           SLOT(showOrHideTimeZones(QString)) );
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
 #endif
 
@@ -129,6 +131,23 @@ void IncidenceDateTimeEditor::enableAlarm( bool enable )
 {
   mUi->mAlarmStack->setEnabled( enable );
   mUi->mAlarmEditButton->setEnabled( enable );
+}
+
+void IncidenceDateTimeEditor::showOrHideTimeZones( const QString &showOrHide )
+{
+  if ( showOrHide == QLatin1String( "hide" ) ) {
+#ifndef KDEPIM_MOBILE_UI
+    mUi->mTimeZoneLabel->setText( "<a href=\"show\"><font color='blue'>Time zones &gt;&gt;</font></a>" );
+#endif
+    mUi->mTimeZoneComboStart->setVisible( false );
+    mUi->mTimeZoneComboEnd->setVisible( false );
+  } else {
+#ifndef KDEPIM_MOBILE_UI
+    mUi->mTimeZoneLabel->setText( "<a href=\"hide\"><font color='blue'>&lt;&lt;Time zones</font></a>" );
+#endif
+    mUi->mTimeZoneComboStart->setVisible( true );
+    mUi->mTimeZoneComboEnd->setVisible( true );
+  }
 }
 
 void IncidenceDateTimeEditor::startTimeChanged( const QTime &newTime )

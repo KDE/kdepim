@@ -39,30 +39,29 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   : CombinedIncidenceEditor( parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
-  layout->setSpacing( 0 );
+  layout->setSpacing( 1 );
 
   IncidenceGeneralEditor *ieGeneral = new IncidenceGeneralEditor( this );
   layout->addWidget( ieGeneral );
 
-  QGroupBox *timeGroupBox = new QGroupBox( i18nc( "@title:group", "Date && Time" ), this );
-  timeGroupBox->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Sets options related to the date and time of the event or to-do." ) );
-  QGridLayout *timeLayout = new QGridLayout( timeGroupBox );
-           
-  IncidenceDateTimeEditor *ieDateTime = new IncidenceDateTimeEditor( timeGroupBox );
-  timeLayout->addWidget( ieDateTime );
-  layout->addWidget( timeGroupBox );
+  QFrame *seperatorLine = new QFrame( this );
+  seperatorLine->setFrameShape( QFrame::HLine );
+  seperatorLine->setFrameShadow( QFrame::Sunken );
+
+  layout->addWidget( seperatorLine );
+  IncidenceDateTimeEditor *ieDateTime = new IncidenceDateTimeEditor( this );
+  layout->addWidget( ieDateTime );
+
+  seperatorLine = new QFrame( this );
+  seperatorLine->setFrameShape( QFrame::HLine );
+  seperatorLine->setFrameShadow( QFrame::Sunken );
+  layout->addWidget( seperatorLine );
 
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
   layout->addWidget( ieDescription, 4 );
 
   IncidenceAttachmentEditor *ieAttachment = new IncidenceAttachmentEditor( this );
   layout->addWidget( ieAttachment, 1 );
-  
-//   QSpacerItem *verticalSpacer =
-//     new QSpacerItem( 20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding );
-//   layout->addItem( verticalSpacer );
 
   mDirtyLabel = new QLabel( i18n( "Clean!" ), this );
   layout->addWidget( mDirtyLabel );

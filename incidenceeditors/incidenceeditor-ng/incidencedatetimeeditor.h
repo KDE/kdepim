@@ -58,11 +58,12 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
     void editRecurrence();
     void enableAlarm( bool enable );
     void setDuration();
+    void showOrHideTimeZones( const QString &showOrHide );
     void startTimeChanged( const QTime &newTime );
     void startDateChanged( const QDate &newDate );
     void startSpecChanged();
     void updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence );
-    
+
   private slots: /// Todo specific
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
@@ -71,19 +72,19 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
 
   private slots: /// Event specific
     bool isDirty( KCal::Event::ConstPtr event ) const;
-    
+
   private:
     /// Created from the values in the widgets
     KDateTime currentStartDateTime() const; 
     KDateTime currentEndDateTime() const;
-    
+
     void load( KCal::Event::ConstPtr event );
     void load( KCal::Todo::ConstPtr todo );
     void save( KCal::Event::Ptr event );
     void save( KCal::Todo::Ptr todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
-    
+
   private:
     KCal::ICalTimeZones *mTimeZones;
     Ui::IncidenceDateTimeEditor *mUi;
