@@ -2,6 +2,7 @@
   This file is part of libkdepim.
 
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
+  Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,11 +29,77 @@
 #include <QKeyEvent>
 #include <QLineEdit>
 
-KCheckComboBox::KCheckComboBox( QWidget *parent ) : KComboBox( parent )
-{
-  mSeparator = QLatin1String( "," );
-  mIgnoreHide = false;
+using namespace KPIM;
 
+/// Class KCheckComboBox::Private
+
+namespace KPIM {
+
+class KCheckComboBox::Private
+{
+  KCheckComboBox *q;
+
+  public:
+    Private( KCheckComboBox *qq )
+      : q( qq )
+      , mSeparator( QLatin1String( "," ) )
+      , mIgnoreHide( false )
+    { }
+
+    void updateCheckedItems( const QModelIndex &topLeft = QModelIndex(),
+                             const QModelIndex &bottomRight = QModelIndex() );
+    void toggleCheckState( int pos );
+    void toggleCheckState( const QModelIndex &index );
+
+  public:
+    QString mSeparator;
+    QString mDefaultText;
+    bool mIgnoreHide;
+};
+
+}
+
+void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
+                                                  const QModelIndex &bottomRight )
+{
+  Q_UNUSED( topLeft );
+  Q_UNUSED( bottomRight );
+
+  QStringList items = q->checkedItems();
+  QString text;
+  if ( items.isEmpty() ) {
+    text = mDefaultText;
+  } else {
+    text = items.join( mSeparator );
+  }
+
+  q->setEditText( text );
+
+  emit q->checkedItemsChanged( items );
+}
+
+void KCheckComboBox::Private::toggleCheckState( const QModelIndex &index )
+{
+  QVariant value = index.data( Qt::CheckStateRole );
+  if ( value.isValid() ) {
+    Qt::CheckState state = static_cast<Qt::CheckState>( value.toInt() );
+    q->model()->setData( index, state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked,
+                         Qt::CheckStateRole );
+  }
+}
+
+void KCheckComboBox::Private::toggleCheckState( int pos )
+{
+  Q_UNUSED( pos );
+  toggleCheckState( q->view()->currentIndex() );
+}
+
+/// Class KCheckComboBox
+
+KCheckComboBox::KCheckComboBox( QWidget *parent )
+  : KComboBox( parent )
+  , d( new KCheckComboBox::Private( this ) )
+{
   connect( this, SIGNAL(activated(int)), this, SLOT(toggleCheckState(int)) );
   connect( model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
            this, SLOT(updateCheckedItems(const QModelIndex &, const QModelIndex &)) );
@@ -47,19 +114,20 @@ KCheckComboBox::KCheckComboBox( QWidget *parent ) : KComboBox( parent )
 
   lineEdit()->installEventFilter( this );
 
-  updateCheckedItems();
+  d->updateCheckedItems();
 }
 
 KCheckComboBox::~KCheckComboBox()
 {
+  delete d;
 }
 
 void KCheckComboBox::hidePopup()
 {
-  if ( !mIgnoreHide ) {
+  if ( !d->mIgnoreHide ) {
     KComboBox::hidePopup();
   }
-  mIgnoreHide = false;
+  d->mIgnoreHide = false;
 }
 
 Qt::CheckState KCheckComboBox::itemCheckState( int index ) const
@@ -94,32 +162,32 @@ void KCheckComboBox::setCheckedItems( const QStringList &items )
     bool found = items.contains( text );
     model()->setData( indx, found ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole );
   }
-  updateCheckedItems();
+  d->updateCheckedItems();
 }
 
 QString KCheckComboBox::defaultText() const
 {
-  return mDefaultText;
+  return d->mDefaultText;
 }
 
 void KCheckComboBox::setDefaultText( const QString &text )
 {
-  if ( mDefaultText != text ) {
-    mDefaultText = text;
-    updateCheckedItems();
+  if ( d->mDefaultText != text ) {
+    d->mDefaultText = text;
+    d->updateCheckedItems();
   }
 }
 
 QString KCheckComboBox::separator() const
 {
-  return mSeparator;
+  return d->mSeparator;
 }
 
 void KCheckComboBox::setSeparator( const QString &separator )
 {
-  if ( mSeparator != separator ) {
-    mSeparator = separator;
-    updateCheckedItems();
+  if ( d->mSeparator != separator ) {
+    d->mSeparator = separator;
+    d->updateCheckedItems();
   }
 }
 
@@ -159,7 +227,7 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
       switch ( static_cast<QKeyEvent *>( event )->key() ) {
         case Qt::Key_Space:
           if ( event->type() == QEvent::KeyPress ) {
-            toggleCheckState( view()->currentIndex() );
+            d->toggleCheckState( view()->currentIndex() );
             return true;
           }
           break;
@@ -177,7 +245,7 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
     case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
-      mIgnoreHide = true;
+      d->mIgnoreHide = true;
 
       if ( receiver == lineEdit() ) {
         showPopup();
@@ -189,41 +257,6 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
       break;
   }
   return KComboBox::eventFilter( receiver, event );
-}
-
-void KCheckComboBox::updateCheckedItems( const QModelIndex &topLeft,
-                                         const QModelIndex &bottomRight )
-{
-  Q_UNUSED( topLeft );
-  Q_UNUSED( bottomRight );
-
-  QStringList items = checkedItems();
-  QString text;
-  if ( items.isEmpty() ) {
-    text = mDefaultText;
-  } else {
-    text = items.join( mSeparator );
-  }
-
-  setEditText( text );
-
-  emit checkedItemsChanged( items );
-}
-
-void KCheckComboBox::toggleCheckState( const QModelIndex &index )
-{
-  QVariant value = index.data( Qt::CheckStateRole );
-  if ( value.isValid() ) {
-    Qt::CheckState state = static_cast<Qt::CheckState>( value.toInt() );
-    model()->setData( index, state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked,
-                      Qt::CheckStateRole );
-  }
-}
-
-void KCheckComboBox::toggleCheckState( int pos )
-{
-  Q_UNUSED( pos );
-  toggleCheckState( view()->currentIndex() );
 }
 
 #include "kcheckcombobox.moc"

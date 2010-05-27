@@ -22,6 +22,13 @@ IncludeFile=libkdepim/ktimeedit.h
 ConstructorArgs=(parent, QTime::currentTime())
 Group=Input (KDE-PIM)
 
+[KPIM::KCheckComboBox]
+ToolTip=Combobox with checkable items (KDE-PIM)
+WhatsThis=A combobox that allows the user to check the items in the drop down menu
+IncludeFile=libkdepim/kcheckcombobox.h
+ConstructorArgs=(parent)
+Group=Input (KDE-PIM)
+
 [KPIM::KTimeZoneComboBox]
 ToolTip=Time Zone Combobox (KDE-PIM)
 WhatsThis=A widget to select a time zone.
