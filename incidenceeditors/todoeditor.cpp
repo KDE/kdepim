@@ -32,8 +32,6 @@
 #include "editorgeneraltodo.h"
 #include "editorrecurrence.h"
 
-#include "incidenceeditor-ng/incidenceeditorgeneralpage.h"
-
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/incidencechanger.h>
 
@@ -57,7 +55,7 @@ TodoEditor::TodoEditor( QWidget *parent )
   : IncidenceEditor( QString(),
                        QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType(),
                        parent ),
-    mRelatedTodo(), mGeneral( 0 ), mNewGeneral(0), mRecurrence( 0 )
+    mRelatedTodo(), mGeneral( 0 ), mRecurrence( 0 )
 {
   mInitialTodo = Todo::Ptr( new Todo );
   mInitialTodoItem.setPayload( mInitialTodo );
