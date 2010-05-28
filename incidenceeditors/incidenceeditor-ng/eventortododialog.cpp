@@ -133,7 +133,7 @@ void EventOrTodoDialogPrivate::modifyFinished( KJob *job )
   } else {
     ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
     Q_ASSERT(createJob);
-    mItem = modifyJob->item();
+    mItem = createJob->item();
     mGeneralPage->load( mItem.payload<KCal::Incidence::Ptr>() );
   }
 }
@@ -147,6 +147,11 @@ void EventOrTodoDialogPrivate::save()
     ItemModifyJob *modifyJob = new ItemModifyJob( mItem );
     q->connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
   } else { // An invalid item needs to be created.
+    if ( mItem.hasPayload<KCal::Event::Ptr>() )
+      mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
+    else
+      mItem.setMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
+
     ItemCreateJob *createJob =
       new ItemCreateJob( mItem, mCalSelector->currentCollection() );
     q->connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
