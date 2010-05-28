@@ -25,6 +25,7 @@
 #include <QtGui/QTabWidget>
 
 #include <KLocale>
+#include <KPushButton>
 
 #include <KCal/Event>
 #include <KCal/Todo>
@@ -37,6 +38,8 @@
 
 #include "incidenceeditorgeneralpage.h"
 #include "incidenceattachmenteditor.h"
+#include <Akonadi/ItemModifyJob>
+#include <Akonadi/ItemCreateJob>
 
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
@@ -50,6 +53,10 @@ class EventOrTodoDialogPrivate
 public:
   EventOrTodoDialog *q;
 
+  Akonadi::Item mItem;
+
+  bool mAcceptOnSuccessFullSave;
+  
   Akonadi::CollectionComboBox *mCalSelector;
   IncidenceAttachmentEditor *mAttachtmentPage;
   IncidenceEditorGeneralPage *mGeneralPage;
@@ -58,6 +65,9 @@ public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
 
   void itemFetchResult( KJob *job );
+  void modifyFinished( KJob *job );
+  void save();
+  void slotButtonClicked( KDialog::ButtonCode button );
   void updateButtonStatus( bool isDirty );
 };
 
@@ -65,6 +75,7 @@ public:
 
 EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   : q( qq )
+  , mAcceptOnSuccessFullSave( false )
   , mCalSelector( new Akonadi::CollectionComboBox( q->mainWidget() ) )
   , mAttachtmentPage( new IncidenceAttachmentEditor )
   , mGeneralPage( new IncidenceEditorGeneralPage )
@@ -91,6 +102,7 @@ void EventOrTodoDialogPrivate::itemFetchResult( KJob *job )
 
   Item item = fetchJob->items().first();
   if ( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() ) {
+    mItem = item;
     q->load( item );
 
     //TODO read-only ATM till we support moving of existing incidences from
@@ -101,6 +113,47 @@ void EventOrTodoDialogPrivate::itemFetchResult( KJob *job )
   } else {
     kDebug() << "Item as invalid payload type";
     q->reject();
+  }
+}
+
+void EventOrTodoDialogPrivate::modifyFinished( KJob *job )
+{
+  Q_ASSERT( job );
+
+  if ( job->error() ) {
+    kDebug() << "Item modify or create failed:" << job->errorString();
+    return;
+  }
+
+  if ( mAcceptOnSuccessFullSave )
+    q->accept();
+  else if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) ) {
+    mItem = modifyJob->item();
+    mGeneralPage->load( mItem.payload<KCal::Incidence::Ptr>() );
+  } else {
+    ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
+    Q_ASSERT(createJob);
+    mItem = modifyJob->item();
+    mGeneralPage->load( mItem.payload<KCal::Incidence::Ptr>() );
+  }
+}
+
+
+void EventOrTodoDialogPrivate::save()
+{
+  mGeneralPage->save( mItem.payload<KCal::Incidence::Ptr>() );
+
+  if ( mItem.isValid() ) { // A valid item needs to be modified.
+    ItemModifyJob *modifyJob = new ItemModifyJob( mItem );
+    q->connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
+  } else { // An invalid item needs to be created.
+    ItemCreateJob *createJob =
+      new ItemCreateJob( mItem, mCalSelector->currentCollection() );
+    q->connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
+
+    //TODO read-only ATM till we support moving of existing incidences from
+    // one collection to another.
+    mCalSelector->setEnabled( false );
   }
 }
 
@@ -148,13 +201,21 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
 
   mainWidget()->setLayout( layout );
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
+  setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
+  setButtonToolTip( KDialog::Apply,
+                    i18nc( "@info:tooltip", "Save current changes" ) );
+  setButtonToolTip( KDialog::Ok,
+                    i18nc( "@action:button", "Save changes and close dialog" ) );
+  setButtonToolTip( KDialog::Cancel,
+                    i18nc( "@action:button", "Discard changes and close dialog" ) );
   setDefaultButton( Ok );
   enableButton( Ok, false );
   enableButton( Apply, false );
   setModal( false );
   showButtonSeparator( false );
 
-  connect( d->mGeneralPage, SIGNAL(dirtyStatusChanged(bool)), SLOT(updateButtonStatus(bool)) );
+  connect( d->mGeneralPage, SIGNAL(dirtyStatusChanged(bool)),
+           SLOT(updateButtonStatus(bool)) );
 }
 
 EventOrTodoDialog::~EventOrTodoDialog()
@@ -165,8 +226,10 @@ EventOrTodoDialog::~EventOrTodoDialog()
 void EventOrTodoDialog::load( const Akonadi::Item &item )
 {
   Q_D( EventOrTodoDialog );
-  
-  if ( item.id() < 0 ) {
+
+  d->mItem = item;
+
+  if ( !item.isValid() ) {
     // We're creating a new item
     Q_ASSERT( item.hasPayload() );
     Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
@@ -178,7 +241,7 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
     d->mGeneralPage->load( incidence );
     show();
   } else if ( item.hasPayload() ) {
-    
+
     if ( item.hasPayload<KCal::Event::Ptr>() ) {
       d->mCalSelector->setMimeTypeFilter(
         QStringList() << IncidenceMimeTypeVisitor::eventMimeType() );
@@ -186,7 +249,7 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
       d->mCalSelector->setMimeTypeFilter(
         QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
     }
-    
+
     KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
     setCaption( i18nc( "@title:window",
                      "Edit %1: %2", QString( incidence->type() ), incidence->summary() ) );
@@ -207,5 +270,23 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
     d->mCalSelector->setMimeTypeFilter(
       QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
 }
+
+void EventOrTodoDialog::slotButtonClicked( int button )
+{
+  Q_D( EventOrTodoDialog );
+
+  switch ( button ) {
+  case KDialog::Apply:
+    d->save();
+    break;
+  case KDialog::Ok:
+    d->mAcceptOnSuccessFullSave = true;
+    d->save();
+    break;
+  default:
+    KDialog::slotButtonClicked( button );
+  }
+}
+
 
 #include "moc_eventortododialog.cpp"

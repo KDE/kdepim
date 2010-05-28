@@ -48,21 +48,27 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
     /**
      * Loads the @param item into the dialog.
      *
-     * To create a new Incidence pass an item with an negative id and either an
+     * To create a new Incidence pass an invalid item with either an
      * KCal::Event:Ptr or a KCal::Todo:Ptr set as payload.
      *
-     * When the item has an id >= 0 it will fetch the payload when this is not
+     * When the item has is valid it will fetch the payload when this is not
      * set.
      */
     void load( const Akonadi::Item &item );
+
+  protected Q_SLOTS:
+    /** Override default behiavor of KDialog. */
+    void slotButtonClicked( int buttonCode );
 
   private:
     EventOrTodoDialogPrivate *d_ptr;
     Q_DECLARE_PRIVATE( EventOrTodoDialog );
     Q_DISABLE_COPY( EventOrTodoDialog );
 
-    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult(KJob *job) )
-    Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool isDirty) )
+    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult(KJob*))
+    Q_PRIVATE_SLOT(d_ptr, void modifyFinished(KJob*))
+    Q_PRIVATE_SLOT(d_ptr, void save())
+    Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
 };
 
 }

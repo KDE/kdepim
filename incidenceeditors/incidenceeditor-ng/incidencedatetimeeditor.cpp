@@ -111,7 +111,6 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
             || ! mUi->mTimeZoneComboEnd->selectedTimeSpec().isLocalZone() ) )
     setTimeZonesVisibility( true );
 
-
   mWasDirty = false;
 }
 
