@@ -58,6 +58,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
     void editRecurrence();
     void enableAlarm( bool enable );
     void setDuration();
+    void setTimeZonesVisibility( bool visible );
     void toggleTimeZoneVisibility();
     void startTimeChanged( const QTime &newTime );
     void startDateChanged( const QDate &newDate );

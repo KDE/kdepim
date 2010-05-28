@@ -41,7 +41,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   , mUi( new Ui::IncidenceDateTimeEditor )
 {
   mUi->setupUi( this );
-  toggleTimeZoneVisibility();
+  setTimeZonesVisibility( false );
 
 #ifdef KDEPIM_MOBILE_UI
   QButtonGroup *freeBusyGroup = new QButtonGroup( this );
@@ -75,7 +75,6 @@ IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
   delete mTimeZones;
 }
 
-
 void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
@@ -89,16 +88,29 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
     kDebug() << "Not an event or an todo.";
   }
 
-  enableTimeEdits( mUi->mHasTimeCheck->isChecked() );
-
+  // Set the initial times before calling enableTimeEdits, as enableTimeEdits
+  // assumes that the initial times are initialized.
   mInitialStartDT = currentStartDateTime();
   mInitialEndDT = currentEndDateTime();
+
+  enableTimeEdits( mUi->mHasTimeCheck->isChecked() );
 
   if ( mUi->mTimeZoneComboStart->currentIndex() == 0 ) // Floating
     mInitialStartDT.setTimeSpec( mInitialStartDT.toLocalZone().timeSpec() );
 
   if ( mUi->mTimeZoneComboEnd->currentIndex() == 0 ) // Floating
     mInitialEndDT.setTimeSpec( mInitialEndDT.toLocalZone().timeSpec() );
+
+  setTimeZonesVisibility( false );
+  if ( mUi->mTimeZoneComboStart->isEnabled()
+       && ( mUi->mTimeZoneComboStart->currentIndex() == 0
+            || ! mUi->mTimeZoneComboStart->selectedTimeSpec().isLocalZone() ) )
+    setTimeZonesVisibility( true );
+  if ( mUi->mTimeZoneComboEnd->isEnabled()
+       && ( mUi->mTimeZoneComboEnd->currentIndex() == 0
+            || ! mUi->mTimeZoneComboEnd->selectedTimeSpec().isLocalZone() ) )
+    setTimeZonesVisibility( true );
+
 
   mWasDirty = false;
 }
@@ -145,26 +157,28 @@ void IncidenceDateTimeEditor::enableAlarm( bool enable )
   mUi->mAlarmEditButton->setEnabled( enable );
 }
 
-void IncidenceDateTimeEditor::toggleTimeZoneVisibility()
+void IncidenceDateTimeEditor::setTimeZonesVisibility( bool visible )
 {
   static const QString tz( i18nc( "@info:label", "Time zones" ) );
-  if ( mUi->mTimeZoneComboStart->isVisible() ) {
+
 #ifndef KDEPIM_MOBILE_UI
-    QString placeholder( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
+  QString placeholder( "<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>" );
+  if ( visible ) {
     placeholder = placeholder.arg( tz );
-    mUi->mTimeZoneLabel->setText( placeholder );
-#endif
-    mUi->mTimeZoneComboStart->setVisible( false );
-    mUi->mTimeZoneComboEnd->setVisible( false );
   } else {
-#ifndef KDEPIM_MOBILE_UI
-    QString placeholder( "<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>" );
+    placeholder = QString( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
     placeholder = placeholder.arg( tz );
-    mUi->mTimeZoneLabel->setText( placeholder );
-#endif
-    mUi->mTimeZoneComboStart->setVisible( true );
-    mUi->mTimeZoneComboEnd->setVisible( true );
   }
+  mUi->mTimeZoneLabel->setText( placeholder );
+#endif
+
+  mUi->mTimeZoneComboStart->setVisible( visible );
+  mUi->mTimeZoneComboEnd->setVisible( visible );
+}
+
+void IncidenceDateTimeEditor::toggleTimeZoneVisibility()
+{
+  setTimeZonesVisibility( !mUi->mTimeZoneComboStart->isVisible() );
 }
 
 void IncidenceDateTimeEditor::startTimeChanged( const QTime &newTime )
@@ -278,6 +292,7 @@ void IncidenceDateTimeEditor::enableEndEdit( bool enable )
 
 void IncidenceDateTimeEditor::enableTimeEdits( bool enable )
 {
+  // NOTE: assumes that the initial times are initialized.
   if( mUi->mStartCheck->isChecked() ) {
     mUi->mStartTimeEdit->setEnabled( enable );
     mUi->mTimeZoneComboStart->setEnabled( enable );
@@ -416,12 +431,12 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
       }
     }
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
-    if ( startDT.isUtc() ) {
+    if ( startDT.isUtc() )
       startDT = startDT.toLocalZone();
-    }
-    if ( endDT.isUtc() ) {
+
+    if ( endDT.isUtc() )
       endDT = endDT.toLocalZone();
-    }
+
     setDateTimes( startDT, endDT );
   } else {
     // set the start/end time from the template, only as a last resort #190545
