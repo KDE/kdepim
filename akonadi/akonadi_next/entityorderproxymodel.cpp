@@ -61,6 +61,11 @@ EntityOrderProxyModel::EntityOrderProxyModel( QObject* parent )
   setDynamicSortFilter(true);
 }
 
+EntityOrderProxyModel::~EntityOrderProxyModel()
+{
+  delete d_ptr;
+}
+
 void EntityOrderProxyModel::setOrderConfig( KConfigGroup& configGroup )
 {
   Q_D( EntityOrderProxyModel );

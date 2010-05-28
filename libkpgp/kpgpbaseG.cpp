@@ -807,7 +807,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       // Example: fpr:::::::::17AFBAAF21064E513F037E6E63CB691DFAEBD5FC:
 
       if (key == 0) // invalid key data
-	break;
+        break;
 
       // search the fingerprint (it's in the 10th field)
       int pos = index + 4;
@@ -852,6 +852,7 @@ BaseG::parseKeyList( const QByteArray& output, bool secretKeys )
 
   do {
     key = parseKeyData( output, offset );
+
     if( key != 0 )
       keys.append( key );
   }

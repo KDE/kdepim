@@ -170,7 +170,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    * Sets a message as the current one and print it immediately.
    * @param message the message to display and print
    */
-  void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
   /** Print the currently displayed message */
@@ -288,8 +287,6 @@ signals:
   void replaceMsgByUnencryptedVersion();
 
   /** The user presses the right mouse button. 'url' may be 0. */
-  void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
-  /** The user presses the right mouse button. 'url' may be 0. */
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
 
   /**
@@ -297,9 +294,6 @@ signals:
    * and ftp(s). When it can't handle the url it will emit this signal.
    */
   void urlClicked( const Akonadi::Item &, const KUrl& );
-
-  /** The user has clicked onto an URL that is no attachment. */
-  void urlClicked(const KUrl &url, int button);
 
   void requestConfigSync();
 
@@ -325,7 +319,6 @@ public slots:
   void slotScrollNext();
   void slotJumpDown();
   void slotFind();
-  void slotUrlClicked();
   void slotSaveMessage();
   void slotAttachmentSaveAs();
   void slotShowMessageSource();

@@ -186,7 +186,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
 
   if ( alreadyExisted && m_itemDateForItemId.contains( item.id() )) {
     // for changed items, we must remove existing date entries (they might have changed)
-    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()] );
+    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()], item.id() );
     m_itemDateForItemId.remove( item.id() );
   }
 
@@ -500,7 +500,7 @@ void Calendar::incidenceUpdated( KCal::IncidenceBase *incidence )
 #endif
 }
 
-Item Calendar::event( const Item::Id &id )
+Item Calendar::event( const Item::Id &id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::event( item ) )
@@ -509,7 +509,7 @@ Item Calendar::event( const Item::Id &id )
     return Item();
 }
 
-Item Calendar::todo( const Item::Id &id )
+Item Calendar::todo( const Item::Id &id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::todo( item ) )
@@ -693,7 +693,7 @@ Item::List Calendar::rawEvents( EventSortField sortField, SortDirection sortDire
 }
 
 
-Item Calendar::journal( const Item::Id &id )
+Item Calendar::journal( const Item::Id &id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::journal( item ) ) {
@@ -749,7 +749,7 @@ bool Calendar::isChild( const Item &parent, const Item &child ) const
   return d->m_childToParent.value( child.id() ) == parent.id();
 }
 
-Item::Id Calendar::itemIdForIncidenceUid(const QString &uid) const
+Item::Id Calendar::itemIdForIncidenceUid( const QString &uid ) const
 {
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
@@ -765,6 +765,10 @@ Item::Id Calendar::itemIdForIncidenceUid(const QString &uid) const
   return -1;
 }
 
+Item Calendar::itemForIncidenceUid( const QString &uid ) const
+{
+  return incidence( itemIdForIncidenceUid( uid ) );
+}
 
 // calendarbase.cpp
 
@@ -1149,7 +1153,7 @@ KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &item,
   return KCal::Incidence::Ptr( newInc );
 }
 
-Item Calendar::incidence( const Item::Id &uid )
+Item Calendar::incidence( const Item::Id &uid ) const
 {
   Item i = event( uid );
   if ( i.isValid() ) {

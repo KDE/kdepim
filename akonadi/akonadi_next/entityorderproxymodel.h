@@ -37,6 +37,8 @@ class AKONADI_NEXT_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
   Q_OBJECT
 public:
   EntityOrderProxyModel(QObject* parent = 0);
+  
+  virtual ~EntityOrderProxyModel();
 
   void setOrderConfig( KConfigGroup &configGroup );
 

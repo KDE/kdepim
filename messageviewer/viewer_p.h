@@ -210,17 +210,6 @@ public:
   cancelled the editing, true in all other cases! */
   bool editAttachment( KMime::Content* node, bool showWarning = true );
 
-  void emitUrlClicked( const KUrl & url, int button ) {
-    emit urlClicked( url, button );
-  }
-
-  void emitPopupMenu( const KUrl & url, const QPoint & p ) {
-    if ( mMessage )
-      emit popupMenu( *mMessage, url, p );
-    if ( mMessageItem.isValid() )
-      emit popupMenu( mMessageItem, url, p );
-  }
-
   /** Access to the MailWebView used for the viewer. Use with
       care! */
   MailWebView *htmlPart() const { return mViewer; }
@@ -344,7 +333,6 @@ public:
 
 
   /** Print message. */
-  void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
   void resetStateForNewMessage();
@@ -563,7 +551,6 @@ public slots:
   /** Select message body. */
   void selectAll();
 
-  void slotUrlClicked();
   /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
       beginning of URL before copying. */
   void slotUrlCopy();
@@ -574,9 +561,7 @@ public slots:
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
-  void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
-  void urlClicked(const KUrl &url, int button);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );

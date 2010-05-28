@@ -37,6 +37,7 @@
 #include <akonadi/kcal/incidencechanger.h>
 
 #include <KCal/CalFilter>
+#include <KCal/CalFormat>
 
 #include <QStyle>
 #include <KCalendarSystem>
@@ -1644,17 +1645,31 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
   newTime.setDateOnly( allDay );
 
   Q_FOREACH( const Todo::Ptr &todo, items ) {
-    todo->setDtDue( newTime );
-    todo->setAllDay( allDay );
-    todo->setHasDueDate( true );
+    Akonadi::Item item = calendar()->itemForIncidenceUid( todo->uid() );
+    if ( item.isValid() && Akonadi::hasTodo( item ) ) {
+      Todo::Ptr oldTodo( Akonadi::todo( item )->clone() );
+      Todo::Ptr newTodo = Akonadi::todo( item );
 
-    Akonadi::Collection selectedCollection;
-    int dialogCode;
-    if ( !changer()->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
-      if ( dialogCode != QDialog::Rejected ) {
-        KMessageBox::sorry( this,
-                            i18n( "Unable to save %1 \"%2\".",
-                            i18n( todo->type() ), todo->summary() ) );
+      newTodo->setDtDue( newTime );
+      newTodo->setAllDay( allDay );
+      newTodo->setHasDueDate( true );
+
+      // We know this incidence, just change it's date/time
+      changer()->changeIncidence( oldTodo, item, IncidenceChanger::DATE_MODIFIED, this );
+    } else {
+      // The drop came from another application create a new todo
+      todo->setDtDue( newTime );
+      todo->setAllDay( allDay );
+      todo->setHasDueDate( true );
+      todo->setUid( KCal::CalFormat::createUniqueId() );
+      Akonadi::Collection selectedCollection;
+      int dialogCode = 0;
+      if ( !changer()->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
+        if ( dialogCode != QDialog::Rejected ) {
+          KMessageBox::sorry( this,
+                              i18n( "Unable to save %1 \"%2\".",
+                              i18n( todo->type() ), todo->summary() ) );
+        }
       }
     }
   }

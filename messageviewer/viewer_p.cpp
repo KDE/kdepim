@@ -211,9 +211,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
            this, SLOT(updateReaderWin()) );
 
-  connect( this, SIGNAL(urlClicked(const KUrl&,int)),
-           this, SLOT(slotUrlClicked()) );
-
   connect( mColorBar, SIGNAL( clicked() ),
            this, SLOT( slotToggleHtmlMode() ) );
 
@@ -277,10 +274,15 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
 
   const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
   if ( isEncapsulatedMessage ) {
-    atmViewMsg( node->parent()->bodyAsMessage() );
+
+    // the viewer/urlhandlermanager expects that the message (mMessage) it is passed is the root when doing index calculation
+    // in urls. Simply passing the result of bodyAsMessage() does not cut it as the resulting pointer is a child in its tree.
+    KMime::Message::Ptr m = KMime::Message::Ptr( new KMime::Message );
+    m->setContent( node->parent()->bodyAsMessage()->encodedContent() );
+    m->parse();
+    atmViewMsg( m );
     return;
   }
-
   // determine the MIME type of the attachment
   KMimeType::Ptr mimetype;
   // prefer the value of the Content-Type header
@@ -359,6 +361,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   mMimePartModel->setRoot( 0 ); //don't confuse the model
 
   parent->removeContent( node, true );
+  parent->assemble();
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
   mMimePartModel->setRoot( modifiedMessage );
@@ -1282,13 +1285,6 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
   setMessageItem( message, Viewer::Force );
 }
 
-void ViewerPrivate::printMessage( KMime::Message::Ptr message )
-{
-  disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  setMessage( message, Viewer::Force );
-}
-
 void ViewerPrivate::resetStateForNewMessage()
 {
   enableMessageDisplay(); // just to make sure it's on
@@ -1917,11 +1913,14 @@ void ViewerPrivate::slotUrlOpen( const QUrl& url )
   KUrl aUrl(url);
   mClickedUrl = aUrl;
 
+  // First, let's see if the URL handler manager can handle the URL. If not, try KRun for some
+  // known URLs, otherwise fallback to emitting a signal.
+  // That signal is caught by KMail, and in case of mailto URLs, a composer is shown.
+
   if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
     return;
 
-  kWarning() << "Unhandled URL click! " << aUrl;
-  emit urlClicked( aUrl, Qt::LeftButton );
+  emit urlClicked( mMessageItem, mClickedUrl );
 }
 
 
@@ -1943,10 +1942,15 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
     return;
   }
 
-  const QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
+  QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
+  if ( msg.isEmpty() ) {
+    if ( !title.isEmpty() ) {
+      msg = title;
+    } else {
+      msg = link;
+    }
+  }
 
-  if ( msg.isEmpty() )
-    kWarning() << "Unhandled URL hover!";
   KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );
   emit showStatusBarMessage( msg );
 }
@@ -1959,14 +1963,7 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
 
-  if ( mMessage ) {
-    kWarning() << "Unhandled URL right-click!";
-    emit popupMenu( *mMessage, url, aPos );
-  }
-  if ( mMessageItem.isValid() ) {
-    kWarning() << "Unhandled URL right-click!";
-    emit popupMenu( mMessageItem, url, aPos );
-  }
+  emit popupMenu( mMessageItem, aUrl, aPos );
 }
 
 void ViewerPrivate::slotToggleHtmlMode()
@@ -2523,36 +2520,6 @@ void ViewerPrivate::slotCopySelectedText()
 void ViewerPrivate::selectAll()
 {
   mViewer->page()->triggerAction(QWebPage::SelectAll);
-}
-
-void ViewerPrivate::slotUrlClicked()
-{
-  if ((mClickedUrl.protocol() == "http") || (mClickedUrl.protocol() == "https") ||
-      (mClickedUrl.protocol() == "ftp")  || (mClickedUrl.protocol() == "file")  ||
-      (mClickedUrl.protocol() == "ftps") || (mClickedUrl.protocol() == "sftp" ) ||
-      (mClickedUrl.protocol() == "help") || (mClickedUrl.protocol() == "vnc")   ||
-      (mClickedUrl.protocol() == "smb")  || (mClickedUrl.protocol() == "fish")  ||
-      (mClickedUrl.protocol() == "news"))
-  {
-    KPIM::BroadcastStatus::instance()->setTransientStatusMsg( i18n("Opening URL..."));
-    QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT( reset() ) );
-
-    KMimeType::Ptr mime = KMimeType::findByUrl( mClickedUrl );
-    if (mime->name() == "application/x-desktop" ||
-        mime->name() == "application/x-executable" ||
-        mime->name() == "application/x-ms-dos-executable" ||
-        mime->name() == "application/x-shellscript" )
-    {
-      if (KMessageBox::warningYesNo( 0, i18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
-          mClickedUrl.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
-        return;
-    }
-    if ( !MessageViewer::Util::handleUrlOnMac( mClickedUrl.pathOrUrl() ) ) {
-      KRun *runner = new KRun( mClickedUrl, q ); // will delete itself
-      runner->setRunExecutables( false );
-    }
-  } else
-    emit urlClicked( mMessageItem, mClickedUrl );
 }
 
 void ViewerPrivate::slotUrlCopy()
