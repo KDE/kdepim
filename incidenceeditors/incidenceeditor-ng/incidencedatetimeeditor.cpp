@@ -85,8 +85,14 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 
   enableTimeEdits( mUi->mHasTimeCheck->isChecked() );
 
-  mActiveStartDT = currentStartDateTime();
-  mActiveEndDT = currentEndDateTime();
+  mInitialStartDT = currentStartDateTime();
+  mInitialEndDT = currentEndDateTime();
+
+  if ( mUi->mTimeZoneComboStart->currentIndex() == 0 ) // Floating
+    mInitialStartDT.setTimeSpec( mInitialStartDT.toLocalZone().timeSpec() );
+
+  if ( mUi->mTimeZoneComboEnd->currentIndex() == 0 ) // Floating
+    mInitialEndDT.setTimeSpec( mInitialEndDT.toLocalZone().timeSpec() );
 
   mWasDirty = false;
 }
@@ -264,12 +270,12 @@ void IncidenceDateTimeEditor::enableTimeEdits( bool enable )
   if( mUi->mStartCheck->isChecked() ) {
     mUi->mStartTimeEdit->setEnabled( enable );
     mUi->mTimeZoneComboStart->setEnabled( enable );
-    mUi->mTimeZoneComboStart->setFloating( !enable, mActiveStartDT.timeSpec() );
+    mUi->mTimeZoneComboStart->setFloating( !enable, mInitialStartDT.timeSpec() );
   }
   if( mUi->mEndCheck->isChecked() ) {
     mUi->mEndTimeEdit->setEnabled( enable );
     mUi->mTimeZoneComboEnd->setEnabled( enable );
-    mUi->mTimeZoneComboEnd->setFloating( !enable, mActiveEndDT.timeSpec() );
+    mUi->mTimeZoneComboEnd->setFloating( !enable, mInitialEndDT.timeSpec() );
   }
 }
 
@@ -285,7 +291,7 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
     // Use mActiveStartTime. This is the KDateTime::Spec selected on load comming from
     // the combobox. We use this one as it can slightly differ (e.g. missing
     // country code in the incidence time spec) from the incidence.
-    if ( currentStartDateTime() != mActiveStartDT )
+    if ( currentStartDateTime() != mInitialStartDT )
       return true;
   }
 
@@ -293,7 +299,7 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
     return true;
 
   if ( mUi->mEndCheck->isChecked() ) {
-    if ( currentEndDateTime() != mActiveEndDT )
+    if ( currentEndDateTime() != mInitialEndDT )
       return true;
   }
 
@@ -314,10 +320,10 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Event::ConstPtr event ) const
     return true;
 
   if ( !event->allDay() ) {
-    if ( currentStartDateTime() != mActiveStartDT )
+    if ( currentStartDateTime() != mInitialStartDT )
       return true;
 
-    if ( currentEndDateTime() != mActiveEndDT )
+    if ( currentEndDateTime() != mInitialEndDT )
       return true;
   }
 

@@ -95,8 +95,8 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
      * in account recurrence if needed. The values are calculated once on load().
      * and don't change afterwards.
      */
-    KDateTime mActiveStartDT;
-    KDateTime mActiveEndDT;
+    KDateTime mInitialStartDT;
+    KDateTime mInitialEndDT;
 
     /**
      * We need to store the current start date/time to be able to update the end
