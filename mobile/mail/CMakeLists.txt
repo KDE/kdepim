@@ -39,6 +39,7 @@ target_link_libraries(kmail-mobile
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   HeaderView.qml

@@ -11,7 +11,7 @@ Name[pt_BR]=KMail Móvel
 Name[sv]=Kmail för mobil
 Name[uk]=Мобільний KMail
 Name[x-test]=xxKMail Mobilexx
-Exec=kmail-mobile
+Exec=kmail-mobile.sh
 
 Icon=kmail-mobile
 Type=Application

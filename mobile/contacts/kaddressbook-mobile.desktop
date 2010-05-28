@@ -11,7 +11,7 @@ Name[pt_BR]=KAddressBook Móvel
 Name[sv]=Adressbok för mobil
 Name[uk]=Мобільна KAddressBook
 Name[x-test]=xxKAddressbook Mobilexx
-Exec=kaddressbook-mobile
+Exec=kaddressbook-mobile.sh
 
 Icon=kaddressbook-mobile
 Type=Application

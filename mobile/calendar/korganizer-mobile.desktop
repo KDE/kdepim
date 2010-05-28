@@ -11,7 +11,7 @@ Name[pt_BR]=KOrganizer Móvel
 Name[sv]=Korganizer för mobil
 Name[uk]=Мобільний KOrganizer
 Name[x-test]=xxKOrganizer Mobilexx
-Exec=korganizer-mobile
+Exec=korganizer-mobile.sh
 
 Icon=korganizer-mobile
 Type=Application

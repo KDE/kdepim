@@ -29,6 +29,7 @@ target_link_libraries(korganizer-mobile
 )
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES korganizer-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES korganizer-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   MobileIncidenceEditor.qml
