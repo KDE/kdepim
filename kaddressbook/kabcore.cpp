@@ -1609,7 +1609,6 @@ void KABCore::editDistributionList( const KPIM::DistributionList &dist )
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
     const KPIM::DistributionList newDist = dlg->distributionList();
     if ( newDist != dist ) {
-      addressBook()->insertAddressee( newDist );
       setModified();
     }
   }

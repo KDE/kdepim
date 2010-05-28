@@ -28,6 +28,7 @@
 #include <libemailfunctions/email.h>
 
 #include <kabc/addressbook.h>
+#include <kabc/resource.h>
 
 #include <kapplication.h>
 #include <kdialogbase.h>
@@ -264,6 +265,12 @@ void KPIM::DistributionListEditor::EditorWidget::slotOk()
         return;
     }
 
+    KABC::Ticket *ticket = d->resource->requestSaveTicket();
+    if ( !ticket ) {
+        kdWarning(5720) << "Unable to get save ticket!" << endl;
+        return;
+    }
+
     KPIM::DistributionList list;
     list.setUid( d->distListUid.isNull() ? KApplication::randomString( 10 ) :d->distListUid );
     list.setName( name );
@@ -277,7 +284,16 @@ void KPIM::DistributionListEditor::EditorWidget::slotOk()
         list.insertEntry( entry.addressee, entry.email );
     }
     d->distributionList = list;
-    accept();
+
+    d->addressBook->insertAddressee( d->distributionList );
+    if ( !d->resource->save( ticket ) ) {
+        kdWarning(5720) << "Unable to save dist list!" << endl;
+    }
+    d->resource->releaseSaveTicket( ticket );
+
+    if ( !KPIM::DistributionList::findByName( d->addressBook, name ).isEmpty() ) {
+        accept();
+    }
 }
 
 KPIM::DistributionList KPIM::DistributionListEditor::EditorWidget::distributionList() const
