@@ -295,9 +295,6 @@ signals:
    */
   void urlClicked( const Akonadi::Item &, const KUrl& );
 
-  /** The user has clicked onto an URL that is no attachment. */
-  void urlClicked(const KUrl &url, int button);
-
   void requestConfigSync();
 
   /// Emitted when the content should be shown in a seperate window
@@ -322,7 +319,6 @@ public slots:
   void slotScrollNext();
   void slotJumpDown();
   void slotFind();
-  void slotUrlClicked();
   void slotSaveMessage();
   void slotAttachmentSaveAs();
   void slotShowMessageSource();

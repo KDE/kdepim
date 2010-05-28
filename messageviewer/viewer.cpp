@@ -418,12 +418,6 @@ void Viewer::writeConfig( bool force )
   d->writeConfig( force );
 }
 
-void Viewer::slotUrlClicked()
-{
-  Q_D( Viewer );
-  d->slotUrlClicked();
-}
-
 KUrl Viewer::urlClicked() const
 {
   Q_D( const Viewer );

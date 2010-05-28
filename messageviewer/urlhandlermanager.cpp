@@ -175,18 +175,6 @@ namespace {
         { return QString(); }
   };
 
-  class FallBackURLHandler : public URLHandler {
-  public:
-    FallBackURLHandler() : URLHandler() {}
-    ~FallBackURLHandler() {}
-
-    bool handleClick( const KUrl &, ViewerPrivate * ) const;
-    bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const;
-    QString statusBarMessage( const KUrl & url, ViewerPrivate * ) const {
-      return url.prettyUrl();
-    }
-  };
-
 } // anon namespace
 
 
@@ -310,7 +298,6 @@ URLHandlerManager::URLHandlerManager() {
   registerHandler( mBodyPartURLHandlerManager = new BodyPartURLHandlerManager() );
   registerHandler( new ShowAuditLogURLHandler() );
   registerHandler( new InternalImageURLHandler );
-  registerHandler( new FallBackURLHandler() );
 }
 
 URLHandlerManager::~URLHandlerManager() {
@@ -809,19 +796,5 @@ namespace {
 
     const QString imagePath = KStandardDirs::locate( "data", "libmessageviewer/pics/" );
     return url.path().contains( imagePath );
-  }
-}
-
-namespace {
-  bool FallBackURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-    if ( w )
-      w->emitUrlClicked( url, Qt::LeftButton );
-    return true;
-  }
-
-  bool FallBackURLHandler::handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w ) const {
-    if ( w )
-      w->emitPopupMenu( url, p );
-    return true;
   }
 }
