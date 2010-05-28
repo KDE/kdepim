@@ -41,7 +41,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   , mUi( new Ui::IncidenceDateTimeEditor )
 {
   mUi->setupUi( this );
-  showOrHideTimeZones( "hide" );
+  toggleTimeZoneVisibility();
 
 #ifdef KDEPIM_MOBILE_UI
   QButtonGroup *freeBusyGroup = new QButtonGroup( this );
@@ -56,7 +56,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
-           SLOT(showOrHideTimeZones(QString)) );
+           SLOT(toggleTimeZoneVisibility()) );
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
 #endif
 
@@ -145,17 +145,22 @@ void IncidenceDateTimeEditor::enableAlarm( bool enable )
   mUi->mAlarmEditButton->setEnabled( enable );
 }
 
-void IncidenceDateTimeEditor::showOrHideTimeZones( const QString &showOrHide )
+void IncidenceDateTimeEditor::toggleTimeZoneVisibility()
 {
-  if ( showOrHide == QLatin1String( "hide" ) ) {
+  static const QString tz( i18nc( "@info:label", "Time zones" ) );
+  if ( mUi->mTimeZoneComboStart->isVisible() ) {
 #ifndef KDEPIM_MOBILE_UI
-    mUi->mTimeZoneLabel->setText( "<a href=\"show\"><font color='blue'>Time zones &gt;&gt;</font></a>" );
+    QString placeholder( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
+    placeholder = placeholder.arg( tz );
+    mUi->mTimeZoneLabel->setText( placeholder );
 #endif
     mUi->mTimeZoneComboStart->setVisible( false );
     mUi->mTimeZoneComboEnd->setVisible( false );
   } else {
 #ifndef KDEPIM_MOBILE_UI
-    mUi->mTimeZoneLabel->setText( "<a href=\"hide\"><font color='blue'>&lt;&lt;Time zones</font></a>" );
+    QString placeholder( "<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>" );
+    placeholder = placeholder.arg( tz );
+    mUi->mTimeZoneLabel->setText( placeholder );
 #endif
     mUi->mTimeZoneComboStart->setVisible( true );
     mUi->mTimeZoneComboEnd->setVisible( true );

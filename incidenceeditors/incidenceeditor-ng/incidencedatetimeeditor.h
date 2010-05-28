@@ -58,7 +58,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
     void editRecurrence();
     void enableAlarm( bool enable );
     void setDuration();
-    void showOrHideTimeZones( const QString &showOrHide );
+    void toggleTimeZoneVisibility();
     void startTimeChanged( const QTime &newTime );
     void startDateChanged( const QDate &newDate );
     void startSpecChanged();
