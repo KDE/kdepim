@@ -79,7 +79,7 @@ static const char* s_inlineMimeType = "text/x-vcard";
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
-    mCachedSubresource( QString::null ), mLocked( false )
+    mCachedSubresource( QString::null ), mCachedSubresourceNotFound( false ), mLocked( false )
 {
   setType( "imap" );
   if ( !config ) {
@@ -145,6 +145,7 @@ void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
 {
   mLocked = false;
   mCachedSubresource = QString::null;
+  mCachedSubresourceNotFound = false;
   delete ticket;
 }
 
@@ -338,14 +339,20 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     }
     sernum = mUidMap[ uid ].serialNumber();
   } else {
-    if ( !mCachedSubresource.isNull() ) {
+    if ( !mCachedSubresource.isNull() || mCachedSubresourceNotFound ) {
       subResource = mCachedSubresource;
     } else {
       subResource = findWritableResource( Kolab::Contacts, mSubResources );
       // We were locked, remember the subresource we are working with until
       // we are unlocked
-      if ( mLocked )
+      if ( mLocked ) {
         mCachedSubresource = subResource;
+
+        // If the subresource is empty here, it means findWritableResource() failed, for example
+        // because the user cancelled the resource selection dialog. Remember that, so we avoid
+        // asking multiple times when locked.
+        mCachedSubresourceNotFound = subResource.isEmpty();
+      }
     }
     if ( subResource.isEmpty() )
       return false;
