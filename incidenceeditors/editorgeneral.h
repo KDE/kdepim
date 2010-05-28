@@ -126,7 +126,7 @@ class EditorGeneral : public QObject
     virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const = 0;
 
     QWidget                 *mParent;
-    KLineEdit               *mSummaryEdit;
+    FocusLineEdit           *mSummaryEdit;
     KLineEdit               *mLocationEdit;
     QLabel                  *mAttendeeSummaryLabel;
     QLabel                  *mAlarmBell;
