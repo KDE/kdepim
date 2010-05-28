@@ -31,11 +31,12 @@
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include "incidenceeditorgeneralpage.h"
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include "incidenceattachmenteditor.h"
 
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
@@ -50,6 +51,7 @@ public:
   EventOrTodoDialog *q;
 
   Akonadi::CollectionComboBox *mCalSelector;
+  IncidenceAttachmentEditor *mAttachtmentPage;
   IncidenceEditorGeneralPage *mGeneralPage;
 
 public:
@@ -64,8 +66,11 @@ public:
 EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   : q( qq )
   , mCalSelector( new Akonadi::CollectionComboBox( q->mainWidget() ) )
+  , mAttachtmentPage( new IncidenceAttachmentEditor )
   , mGeneralPage( new IncidenceEditorGeneralPage )
-{ }
+{
+  mGeneralPage->combine( mAttachtmentPage );
+}
 
 void EventOrTodoDialogPrivate::itemFetchResult( KJob *job )
 {
@@ -116,10 +121,10 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
   // Calendar selector
   d->mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
-  
+
   QLabel *callabel = new QLabel( i18n( "Calendar:" ), mainWidget() );
   callabel->setBuddy( d->mCalSelector );
-  
+
   QHBoxLayout *callayout = new QHBoxLayout;
   callayout->setSpacing( KDialog::spacingHint() );
   callayout->addWidget( callabel );
@@ -127,8 +132,12 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
 
   // Tab widget and pages
   QTabWidget *tabWidget = new QTabWidget( mainWidget() );
-  
-  tabWidget->addTab( d->mGeneralPage, i18nc( "@title:tab general event settings", "&General" ) );
+  tabWidget->addTab( d->mGeneralPage,
+                     i18nc( "@title:tab general event or todo settings", "&General" ) );
+  tabWidget->addTab( new QWidget(),
+                     i18nc( "@title:tab event or todo attendees", "&Attendees" ) );
+  tabWidget->addTab( d->mAttachtmentPage,
+                     i18nc( "@title:tab event or todo attachments", "A&ttachments" ) );
 
   // Overall layout of the complete dialog
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );

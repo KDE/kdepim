@@ -10,27 +10,14 @@
     <height>111</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QGridLayout" name="gridLayout">
    <property name="margin">
     <number>0</number>
    </property>
-   <item>
-    <widget class="QLabel" name="label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string extracomment="@label">Attachments:</string>
-     </property>
-    </widget>
-   </item>
-   <item>
+   <item row="0" column="0" rowspan="2" colspan="3">
     <widget class="QWidget" name="mAttachmentViewPlaceHolder" native="true"/>
    </item>
-   <item>
+   <item row="2" column="1">
     <widget class="QPushButton" name="mAddButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -49,7 +36,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item row="2" column="2">
     <widget class="QPushButton" name="mRemoveButton">
      <property name="enabled">
       <bool>false</bool>
@@ -70,6 +57,19 @@
       <string/>
      </property>
     </widget>
+   </item>
+   <item row="2" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

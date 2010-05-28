@@ -60,9 +60,6 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
   layout->addWidget( ieDescription, 4 );
 
-  IncidenceAttachmentEditor *ieAttachment = new IncidenceAttachmentEditor( this );
-  layout->addWidget( ieAttachment, 1 );
-
   mDirtyLabel = new QLabel( i18n( "Clean!" ), this );
   layout->addWidget( mDirtyLabel );
 
@@ -73,7 +70,6 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   combine( ieGeneral );
   combine( ieDateTime );
   combine( ieDescription );
-  combine( ieAttachment );
 }
 
 void IncidenceEditorGeneralPage::updateDirtyLabel( bool isDirty )

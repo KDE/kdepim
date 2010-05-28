@@ -51,6 +51,7 @@ int main( int argc, char **argv )
                     "http://kdepim.kde.org",
                     "kdepim@kde.org" );
   about.addAuthor( ki18n( "Bertjan Broeksema" ), ki18n( "Author" ), "b.broeksema@home.nl" );
+  about.setProgramIconName( "korganizer" );
 
   KCmdLineOptions options;
   options.add("new-event", ki18n("Creates a new event"));
