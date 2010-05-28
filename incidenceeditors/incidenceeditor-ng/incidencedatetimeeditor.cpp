@@ -468,7 +468,6 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   mUi->mFreeRadio->setVisible( false );
   mUi->mBusyRadio->setVisible( false );
 #else
-  mUi->mDurationLabel->setVisible( false );
   mUi->mFreeBusyCombo->setVisible( false );
 #endif
   mUi->mFreeBusyLabel->setVisible( false );
@@ -477,12 +476,14 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
 
   // Connect to the right logic
   connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
+  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(setDuration()) );
   connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(startTimeChanged(QTime)) );
   connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableAlarm(bool)) );
+  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(setDuration()) );
   //   connect( mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
@@ -606,52 +607,48 @@ void IncidenceDateTimeEditor::setDuration()
   // Those checks are always checked for events, but not for todos. If one of them
   // isn't checked we don't show the duration.
   if ( !mUi->mStartCheck->isChecked() || !mUi->mEndCheck->isChecked() ) {
-    mUi->mDurationLabel->setVisible( false );
+    mUi->mDurationLabel->setText( " - " );
     return;
   }
 
-  mUi->mDurationLabel->setVisible( true );
-  
-  QString tmpStr, catStr;
+  QString tmpStr( " - ");
+  QString catStr;
   int hourdiff, minutediff;
   // end date is an accepted temporary state while typing, but don't show
   // any duration if this happens
   KDateTime startDateTime = currentStartDateTime();
   KDateTime endDateTime = currentEndDateTime();
 
-
-  if ( startDateTime <= endDateTime ) {
-
-    if ( !mUi->mHasTimeCheck->isChecked() ) {
-      int daydiff = startDateTime.date().daysTo( endDateTime.date() ) + 1;
-      tmpStr.append( i18ncp( "@label", "1 Day", "%1 Days", daydiff ) );
+  if ( !mUi->mHasTimeCheck->isChecked() && startDateTime.date() <= endDateTime.date() ) {
+    int daydiff = startDateTime.date().daysTo( endDateTime.date() ) + 1;
+    tmpStr = i18ncp( "@label", "1 Day", "%1 Days", daydiff );
+  } else if ( startDateTime < endDateTime ) {
+    hourdiff = startDateTime.date().daysTo( endDateTime.date() ) * 24;
+    hourdiff += endDateTime.time().hour() - startDateTime.time().hour();
+    minutediff = endDateTime.time().minute() - startDateTime.time().minute();
+    // If minutediff is negative, "borrow" 60 minutes from hourdiff
+    if ( minutediff < 0 && hourdiff > 0 ) {
+      hourdiff -= 1;
+      minutediff += 60;
+    }
+    if ( hourdiff || minutediff ) {
+      tmpStr.clear(); // Remove " - "
+      if ( hourdiff ){
+        catStr = i18ncp( "@label", "1 hour", "%1 hours", hourdiff );
+        tmpStr.append( catStr );
+      }
+      if ( hourdiff && minutediff ) {
+        tmpStr += i18nc( "@label", ", " );
+      }
+      if ( minutediff ){
+        catStr = i18ncp( "@label", "1 minute", "%1 minutes", minutediff );
+        tmpStr += catStr;
+      }
     } else {
-      hourdiff = startDateTime.date().daysTo( endDateTime.date() ) * 24;
-      hourdiff += endDateTime.time().hour() - startDateTime.time().hour();
-      minutediff = endDateTime.time().minute() - startDateTime.time().minute();
-      // If minutediff is negative, "borrow" 60 minutes from hourdiff
-      if ( minutediff < 0 && hourdiff > 0 ) {
-        hourdiff -= 1;
-        minutediff += 60;
-      }
-      if ( hourdiff || minutediff ) {
-        tmpStr = i18nc( "@label", "Duration: " );
-        if ( hourdiff ){
-          catStr = i18ncp( "@label", "1 hour", "%1 hours", hourdiff );
-          tmpStr.append( catStr );
-        }
-        if ( hourdiff && minutediff ) {
-          tmpStr += i18nc( "@label", ", " );
-        }
-        if ( minutediff ){
-          catStr = i18ncp( "@label", "1 minute", "%1 minutes", minutediff );
-          tmpStr += catStr;
-        }
-      } else {
-        tmpStr = "";
-      }
+      tmpStr = "";
     }
   }
+
   mUi->mDurationLabel->setText( tmpStr );
   mUi->mDurationLabel->setWhatsThis(
     i18nc( "@info:whatsthis",
