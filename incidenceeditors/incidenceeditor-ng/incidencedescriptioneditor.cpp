@@ -43,9 +43,9 @@ IncidenceDescriptionEditor::IncidenceDescriptionEditor( QWidget *parent )
                                              KRichTextWidget::SupportFormatPainting );
 
   setupToolBar();
-  
-  connect( mUi->mRichTextCheck, SIGNAL(toggled(bool)),
-           this, SLOT(enableRichTextDescription(bool)) );
+
+  connect( mUi->mRichTextLabel, SIGNAL(linkActivated(QString)),
+           this, SLOT(toggleRichTextDescription()) );
   connect( mUi->mDescriptionEdit, SIGNAL(textChanged()),
            this, SLOT(checkDirtyStatus()) );
 }
@@ -55,14 +55,12 @@ void IncidenceDescriptionEditor::load( KCal::Incidence::ConstPtr incidence )
   mLoadedIncidence = incidence;
   if ( incidence ) {
     enableRichTextDescription( incidence->descriptionIsRich() );
-    mUi->mRichTextCheck->setChecked( incidence->descriptionIsRich() );
     if ( incidence->descriptionIsRich() )
       mUi->mDescriptionEdit->setHtml( incidence->richDescription() );
     else
       mUi->mDescriptionEdit->setText( incidence->description() );
   } else {
     enableRichTextDescription( false );
-    mUi->mRichTextCheck->setChecked( false );
     mUi->mDescriptionEdit->clear();
   }
 
@@ -71,7 +69,7 @@ void IncidenceDescriptionEditor::load( KCal::Incidence::ConstPtr incidence )
 
 void IncidenceDescriptionEditor::save( KCal::Incidence::Ptr incidence )
 {
-  if ( mUi->mRichTextCheck->isChecked() ) {
+  if ( mUi->mEditToolBarPlaceHolder->isVisible() ) {
     incidence->setDescription( mUi->mDescriptionEdit->toHtml(), true );
   } else {
     incidence->setDescription( mUi->mDescriptionEdit->toPlainText(), false );
@@ -79,8 +77,8 @@ void IncidenceDescriptionEditor::save( KCal::Incidence::Ptr incidence )
 }
 
 bool IncidenceDescriptionEditor::isDirty() const
-{  
-  if ( mUi->mRichTextCheck->isChecked() ) {
+{
+  if ( mUi->mEditToolBarPlaceHolder->isVisible() ) {
     return !mLoadedIncidence->descriptionIsRich() ||
       mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml();
   } else {
@@ -91,14 +89,27 @@ bool IncidenceDescriptionEditor::isDirty() const
 
 void IncidenceDescriptionEditor::enableRichTextDescription( bool enable )
 {
-  mUi->mDescriptionEdit->setActionsEnabled( enable );
-  if ( !enable ) {
-    mUi->mDescriptionEdit->switchToPlainText();
-  } else {
+  QString rt( i18nc( "@info:label", "Enable rich text" ) );
+  QString placeholder( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
+  
+  if ( enable ) {
+    rt = i18nc( "@info:label", "Disable rich text" );
+    placeholder = QString( "<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>" );
     mUi->mDescriptionEdit->enableRichTextMode();
+  } else {
+    mUi->mDescriptionEdit->switchToPlainText();
   }
 
+  placeholder = placeholder.arg( rt );
+  mUi->mRichTextLabel->setText( placeholder );
+  mUi->mEditToolBarPlaceHolder->setVisible( enable );
+  mUi->mDescriptionEdit->setActionsEnabled( enable );
   checkDirtyStatus();
+}
+
+void IncidenceDescriptionEditor::toggleRichTextDescription()
+{
+  enableRichTextDescription( !mUi->mEditToolBarPlaceHolder->isVisible() );
 }
 
 void IncidenceDescriptionEditor::setupToolBar()
@@ -124,10 +135,13 @@ void IncidenceDescriptionEditor::setupToolBar()
   mEditToolBar->addSeparator();
 
   mEditToolBar->addAction( collection->action( "format_painter" ) );
-  mUi->mDescriptionEdit->setActionsEnabled( mUi->mRichTextCheck->isChecked() );
+  mUi->mDescriptionEdit->setActionsEnabled( false );
 
   QGridLayout *layout = new QGridLayout( mUi->mEditToolBarPlaceHolder );
   layout->addWidget( mEditToolBar );
+
+  // By default we don't show the rich text toolbar.
+  mUi->mEditToolBarPlaceHolder->setVisible( false );
 }
 
 #include "moc_incidencedescriptioneditor.cpp"

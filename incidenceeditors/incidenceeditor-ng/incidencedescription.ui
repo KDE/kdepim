@@ -6,32 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>519</width>
-    <height>164</height>
+    <width>617</width>
+    <height>174</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
    <item row="0" column="0">
-    <widget class="QCheckBox" name="mRichTextCheck">
+    <widget class="QWidget" name="mEditToolBarPlaceHolder" native="true"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="mRichTextLabel">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select this option if you would like to enter rich text into the description field of this event or to-do.</string>
-     </property>
      <property name="text">
-      <string extracomment="@option:check">Ric&amp;h text</string>
+      <string>&lt;a href=\&quot;hide\&quot;&gt;&lt;font color='blue'&gt;Rich text &amp;gt;&amp;gt;&lt;/font&gt;&lt;/a&gt;</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
      </property>
     </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QWidget" name="mEditToolBarPlaceHolder" native="true"/>
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="KRichTextWidget" name="mDescriptionEdit">

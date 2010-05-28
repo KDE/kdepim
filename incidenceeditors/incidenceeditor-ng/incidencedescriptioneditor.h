@@ -43,11 +43,12 @@ class IncidenceDescriptionEditor : public IncidenceEditor
     virtual bool isDirty() const;
 
   private slots:
+    void toggleRichTextDescription();
     void enableRichTextDescription( bool enable );
-    
+
   private:
     void setupToolBar();
-    
+
   private:
     Ui::IncidenceDescriptionEditor *mUi;
 };
