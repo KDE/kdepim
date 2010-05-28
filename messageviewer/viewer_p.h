@@ -215,8 +215,6 @@ public:
   }
 
   void emitPopupMenu( const KUrl & url, const QPoint & p ) {
-    if ( mMessage )
-      emit popupMenu( *mMessage, url, p );
     if ( mMessageItem.isValid() )
       emit popupMenu( mMessageItem, url, p );
   }
@@ -573,7 +571,6 @@ public slots:
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
-  void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
   void urlClicked(const KUrl &url, int button);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );

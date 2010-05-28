@@ -287,8 +287,6 @@ signals:
   void replaceMsgByUnencryptedVersion();
 
   /** The user presses the right mouse button. 'url' may be 0. */
-  void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
-  /** The user presses the right mouse button. 'url' may be 0. */
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
 
   /**
