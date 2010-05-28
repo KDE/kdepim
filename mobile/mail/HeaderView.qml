@@ -62,7 +62,7 @@ KPIM.ItemListView {
           anchors.left : importantFlagImage.right
           source : KDE.iconPath("mail-mark-task.png", parent.height + 16)
           opacity : model.is_action_item ? 0.25 : 0
-        },
+        }/*,
         KPIM.Action{
           id : deleteAction
           anchors.verticalCenter: parent.verticalCenter;
@@ -76,7 +76,7 @@ KPIM.ItemListView {
           onTriggered : {
             application.setListSelectedRow(model.index);
           }
-        }
+        }*/
       ]
 
       /* states : [
