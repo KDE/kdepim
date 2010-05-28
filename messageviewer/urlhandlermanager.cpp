@@ -758,8 +758,12 @@ namespace {
     if ( !name.isEmpty() )
       return i18n( "Attachment: %1", name );
     else if ( dynamic_cast<KMime::Message*>( node ) ) {
-      return i18n( "Encapsulated Message (Subject: %1)",
-                   node->header<KMime::Headers::Subject>()->asUnicodeString() );
+      if ( node->header<KMime::Headers::Subject>() ) {
+        return i18n( "Encapsulated Message (Subject: %1)",
+                     node->header<KMime::Headers::Subject>()->asUnicodeString() );
+      } else {
+        return i18n( "Encapsulated Message" );
+      }
     }
     return i18n( "Unnamed attachment" );
   }
