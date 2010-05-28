@@ -42,7 +42,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="4">
+   <item row="0" column="1" colspan="3">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -74,7 +74,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" colspan="4">
+   <item row="1" column="1" colspan="3">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -103,7 +103,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="4">
+   <item row="2" column="3">
     <widget class="QComboBox" name="mSecrecyCombo">
      <property name="toolTip">
       <string extracomment="@info:tooltip">Set the secrecy level</string>
@@ -113,7 +113,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="2" column="2">
     <widget class="QLabel" name="label_3">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -144,22 +144,6 @@
       </sizepolicy>
      </property>
     </widget>
-   </item>
-   <item row="2" column="2">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Minimum</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
