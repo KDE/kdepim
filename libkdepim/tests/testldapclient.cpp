@@ -80,7 +80,7 @@ void TestLDAPClient::cleanup()
 void TestLDAPClient::testIntevation()
 {
   kDebug() ;
-  mClient = new LdapClient( 0, this );
+  mClient = new KLDAP::LdapClient( 0, this );
 
 #ifdef __GNUC__
 #warning TODO!
@@ -114,8 +114,8 @@ void TestLDAPClient::testIntevation()
   QString filter = "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
                    "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))";
 
-  connect( mClient, SIGNAL( result( const LdapClient&, const KLDAP::LdapObject& ) ),
-           this, SLOT( slotLDAPResult( const LdapClient&, const KLDAP::LdapObject& ) ) );
+  connect( mClient, SIGNAL( result( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ),
+           this, SLOT( slotLDAPResult( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) ) );
   connect( mClient, SIGNAL( done() ),
            this, SLOT( slotLDAPDone() ) );
   connect( mClient, SIGNAL( error( const QString& ) ),
@@ -164,7 +164,7 @@ static QString join( const KLDAP::LdapAttrValue &lst, const QString &sep )
   return res;
 }
 
-void TestLDAPClient::slotLDAPResult( const LdapClient&, const KLDAP::LdapObject &obj )
+void TestLDAPClient::slotLDAPResult( const KLDAP::LdapClient&, const KLDAP::LdapObject &obj )
 {
   QString cn = join( obj.attributes()[ "cn" ], ", " );
   kDebug() <<" cn:" << cn;
