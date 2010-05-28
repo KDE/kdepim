@@ -62,6 +62,12 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
   connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(setDuration()) );
   connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
+  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)), SLOT(setDuration()) );
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(setDuration()) );
+  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(setDuration()) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(setDuration()) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(setDuration()) );
+  connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(setDuration()) );
 }
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
@@ -612,12 +618,12 @@ void IncidenceDateTimeEditor::setDuration()
   // any duration if this happens
   KDateTime startDateTime = currentStartDateTime();
   KDateTime endDateTime = currentEndDateTime();
-    
-  if ( startDateTime < endDateTime ) {
+
+
+  if ( startDateTime <= endDateTime ) {
 
     if ( !mUi->mHasTimeCheck->isChecked() ) {
       int daydiff = startDateTime.date().daysTo( endDateTime.date() ) + 1;
-      tmpStr = i18nc( "@label", "Duration: " );
       tmpStr.append( i18ncp( "@label", "1 Day", "%1 Days", daydiff ) );
     } else {
       hourdiff = startDateTime.date().daysTo( endDateTime.date() ) * 24;
