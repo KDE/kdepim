@@ -364,6 +364,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   mMimePartModel->setRoot( 0 ); //don't confuse the model
 
   parent->removeContent( node, true );
+  parent->assemble();
 
   KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
   mMimePartModel->setRoot( modifiedMessage );
