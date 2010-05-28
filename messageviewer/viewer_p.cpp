@@ -1288,13 +1288,6 @@ void ViewerPrivate::printMessage( const Akonadi::Item &message )
   setMessageItem( message, Viewer::Force );
 }
 
-void ViewerPrivate::printMessage( KMime::Message::Ptr message )
-{
-  disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  setMessage( message, Viewer::Force );
-}
-
 void ViewerPrivate::resetStateForNewMessage()
 {
   enableMessageDisplay(); // just to make sure it's on

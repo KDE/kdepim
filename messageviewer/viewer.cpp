@@ -121,12 +121,6 @@ void Viewer::printMessage( const Akonadi::Item &msg )
   d->printMessage( msg );
 }
 
-void Viewer::printMessage( KMime::Message::Ptr message )
-{
-   Q_D(Viewer);
-   d->printMessage( message );
-}
-
 void Viewer::print()
 {
   Q_D(Viewer);

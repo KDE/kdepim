@@ -170,7 +170,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    * Sets a message as the current one and print it immediately.
    * @param message the message to display and print
    */
-  void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
   /** Print the currently displayed message */

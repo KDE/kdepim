@@ -344,7 +344,6 @@ public:
 
 
   /** Print message. */
-  void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
   void resetStateForNewMessage();
