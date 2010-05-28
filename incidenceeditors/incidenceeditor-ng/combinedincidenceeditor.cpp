@@ -74,8 +74,9 @@ void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
   foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
     // load() may fire dirtyStatusChanged(), reset mDirtyEditorCount to make sure
     // we don't end up with an invalid dirty count.
-    mDirtyEditorCount = 0;
+    editor->blockSignals( true );
     editor->load( incidence );
+    editor->blockSignals( false );
     Q_ASSERT( !editor->isDirty() );
   }
 
@@ -86,13 +87,8 @@ void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
 
 void CombinedIncidenceEditor::save( KCal::Incidence::Ptr incidence )
 {
-  foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
+  foreach ( IncidenceEditor *editor, mCombinedEditors  )
     editor->save( incidence );
-    editor->load( incidence );
-    Q_ASSERT( !editor->isDirty() );
-  }
-
-  checkDirtyStatus();
 }
 
 #include "moc_combinedincidenceeditor.cpp"
