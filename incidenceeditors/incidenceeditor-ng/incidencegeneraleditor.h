@@ -20,7 +20,7 @@
 #ifndef INCIDENCEGENERALEDITOR_H
 #define INCIDENCEGENERALEDITOR_H
 
-#include "../incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 #include "incidenceeditor-ng.h"
 
 namespace Ui {
@@ -35,7 +35,7 @@ namespace IncidenceEditorsNG {
  * - Location
  * - Categories
  */
-class INCIDENCEEDITORS_EXPORT IncidenceGeneralEditor : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneralEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:

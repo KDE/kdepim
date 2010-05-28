@@ -21,7 +21,7 @@
 #define COMBINEDINCIDENCEEDITOR_H
 
 #include "incidenceeditor-ng.h"
-#include "../incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 namespace IncidenceEditorsNG {
 
@@ -30,7 +30,7 @@ namespace IncidenceEditorsNG {
  * IncidenceEditors. The CombinedIncidenceEditor keeps track of the dirty state
  * of the IncidenceEditors that where combined.
  */
-class INCIDENCEEDITORS_EXPORT CombinedIncidenceEditor : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:

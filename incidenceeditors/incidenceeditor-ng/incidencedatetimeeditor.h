@@ -21,7 +21,7 @@
 #define INCIDENCEDATETIMEEDITOR_H
 
 #include "incidenceeditor-ng.h"
-#include "../incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include <KCal/Event>
 #include <KCal/Todo>
@@ -36,7 +36,7 @@ class IncidenceDateTimeEditor;
 
 namespace IncidenceEditorsNG {
 
-class INCIDENCEEDITORS_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:

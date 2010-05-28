@@ -23,7 +23,7 @@
 
 #include <KDialog>
 
-#include "../incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 class KJob;
 
@@ -38,7 +38,7 @@ class IncidenceEditorGeneralPage;
 
 class EventOrTodoDialogPrivate;
 
-class INCIDENCEEDITORS_EXPORT EventOrTodoDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
 {
   Q_OBJECT;
   public:
