@@ -1920,35 +1920,6 @@ void ViewerPrivate::slotUrlOpen( const QUrl& url )
   if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
     return;
 
-  // TODO: Factor out all this stuff into a KRun URL handler
-  if ( ( mClickedUrl.protocol() == "http" ) || ( mClickedUrl.protocol() == "https" ) ||
-       ( mClickedUrl.protocol() == "ftp" )  || ( mClickedUrl.protocol() == "file" )  ||
-       ( mClickedUrl.protocol() == "ftps" ) || ( mClickedUrl.protocol() == "sftp" ) ||
-       ( mClickedUrl.protocol() == "help" ) || ( mClickedUrl.protocol() == "vnc" )   ||
-       ( mClickedUrl.protocol() == "smb" )  || ( mClickedUrl.protocol() == "fish" )  ||
-       ( mClickedUrl.protocol() == "news" ) )
-  {
-    KPIM::BroadcastStatus::instance()->setTransientStatusMsg( i18n("Opening URL..."));
-    QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT( reset() ) );
-
-    KMimeType::Ptr mime = KMimeType::findByUrl( mClickedUrl );
-    if (mime->name() == "application/x-desktop" ||
-        mime->name() == "application/x-executable" ||
-        mime->name() == "application/x-ms-dos-executable" ||
-        mime->name() == "application/x-shellscript" )
-    {
-      if ( KMessageBox::warningYesNo( 0, i18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
-          mClickedUrl.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
-        return;
-    }
-    if ( !MessageViewer::Util::handleUrlOnMac( mClickedUrl.pathOrUrl() ) ) {
-      KRun *runner = new KRun( mClickedUrl, q ); // will delete itself
-      runner->setRunExecutables( false );
-    }
-
-    return;
-  }
-
   emit urlClicked( mMessageItem, mClickedUrl );
 }
 
