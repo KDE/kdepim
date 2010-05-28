@@ -18,29 +18,38 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef DIMAPCACHECOLLECTIONMIGRATOR_H
-#define DIMAPCACHECOLLECTIONMIGRATOR_H
+#ifndef IMAPCACHECOLLECTIONMIGRATOR_H
+#define IMAPCACHECOLLECTIONMIGRATOR_H
 
 #include "abstractcollectionmigrator.h"
 
-class KConfig;
-
-class DImapCacheCollectionMigrator : public AbstractCollectionMigrator
+class ImapCacheCollectionMigrator : public AbstractCollectionMigrator
 {
   Q_OBJECT
 
   public:
-    explicit DImapCacheCollectionMigrator( const Akonadi::AgentInstance &resource, QObject *parent = 0 );
+    enum MigrationOption
+    {
+      ConfigOnly = 0x0,
+      ImportNewMessages = 0x01,
+      ImportCachedMessages = 0x02,
+      RemoveDeletedMessages = 0x04
+    };
 
-    void setCacheFolder( const QString &cacheFolder );
-    void setKMailConfig( KConfig *config );
+    Q_DECLARE_FLAGS( MigrationOptions, MigrationOption )
 
-    ~DImapCacheCollectionMigrator();
+    explicit ImapCacheCollectionMigrator( const Akonadi::AgentInstance &resource, QObject *parent = 0 );
 
-    bool migrationOptionsEnabled() const;
+    ~ImapCacheCollectionMigrator();
+
+    void setMigrationOptions( const MigrationOptions &options );
+
+    MigrationOptions migrationOptions() const;
+
+    void setCacheBasePath( const QString &basePath );
 
   protected:
-    void migrateCollection( const Akonadi::Collection &collection );
+    void migrateCollection( const Akonadi::Collection &collection, const QString &folderId );
 
   private:
     class Private;
@@ -54,6 +63,8 @@ class DImapCacheCollectionMigrator : public AbstractCollectionMigrator
     Q_PRIVATE_SLOT( d, void itemDeletePhase1Result( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemDeletePhase2Result( KJob* ) )
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( ImapCacheCollectionMigrator::MigrationOptions )
 
 #endif
 

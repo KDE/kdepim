@@ -18,7 +18,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "dimapcachecollectionmigrator.h"
+#include "imapcachecollectionmigrator.h"
 
 #include "kmigratorbase.h"
 
@@ -39,6 +39,8 @@
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 
+#include <Nepomuk/Tag>
+
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KLocale>
@@ -52,15 +54,14 @@ using KPIM::Maildir;
 
 typedef QHash<QString, QString> UidHash;
 
-class DImapCacheCollectionMigrator::Private
+class ImapCacheCollectionMigrator::Private
 {
-  DImapCacheCollectionMigrator *const q;
+  ImapCacheCollectionMigrator *const q;
 
   public:
-    explicit Private( DImapCacheCollectionMigrator *parent )
+    explicit Private( ImapCacheCollectionMigrator *parent )
       : q( parent ), mStore( 0 ), mHiddenSession( 0 ),
-        mImportNewMessages( false ), mImportCachedMessages( false ), mRemoveDeletedMessages( false ),
-        mKMailConfig( 0 )
+        mImportNewMessages( false ), mImportCachedMessages( false ), mRemoveDeletedMessages( false )
     {
     }
 
@@ -70,11 +71,9 @@ class DImapCacheCollectionMigrator::Private
       delete mHiddenSession;
     }
 
-    Collection cacheCollection( const Collection &collection, QString &cachePath ) const;
+    Collection cacheCollection( const Collection &collection ) const;
 
   public:
-    QString mCacheFolder;
-
     MixedMaildirStore *mStore;
 
     Session *mHiddenSession;
@@ -88,8 +87,9 @@ class DImapCacheCollectionMigrator::Private
     bool mImportCachedMessages;
     bool mRemoveDeletedMessages;
 
-    KConfig *mKMailConfig;
     KConfigGroup mCurrentFolderGroup;
+
+    QHash<QString, QVariant> mTagListHash;
 
   public: // slots
     void fetchItemsResult( KJob *job );
@@ -101,31 +101,24 @@ class DImapCacheCollectionMigrator::Private
     void itemDeletePhase2Result( KJob *job );
 };
 
-Collection DImapCacheCollectionMigrator::Private::cacheCollection( const Collection &collection, QString &cachePath ) const
+Collection ImapCacheCollectionMigrator::Private::cacheCollection( const Collection &collection ) const
 {
   if ( collection.parentCollection() == Collection::root() ) {
     Collection cache;
-    cache.setRemoteId( mCacheFolder );
+    cache.setRemoteId( q->topLevelFolder() );
     cache.setParentCollection( mStore->topLevelCollection() );
-    cachePath = Maildir::subDirNameForFolderName( mCacheFolder ) + QLatin1Char( '/' ) + cachePath;
     return cache;
   }
 
   const QString remoteId = collection.remoteId().mid( 1 );
 
-  if ( cachePath.isEmpty() ) {
-    cachePath = remoteId;
-  } else {
-    cachePath = Maildir::subDirNameForFolderName( remoteId ) + QLatin1Char( '/' ) + cachePath;
-  }
-
   Collection cache;
   cache.setRemoteId( remoteId );
-  cache.setParentCollection( cacheCollection( collection.parentCollection(), cachePath ) );
+  cache.setParentCollection( cacheCollection( collection.parentCollection() ) );
   return cache;
 }
 
-void DImapCacheCollectionMigrator::Private::fetchItemsResult( KJob *job )
+void ImapCacheCollectionMigrator::Private::fetchItemsResult( KJob *job )
 {
   if ( job->error() != 0 ) {
     kWarning() << "Store Fetch for item list in collection" << mCurrentCollection.remoteId()
@@ -166,10 +159,18 @@ void DImapCacheCollectionMigrator::Private::fetchItemsResult( KJob *job )
   mItems = fetchJob->items();
   kDebug() << mItems.count() << "items for target collection" << mCurrentCollection.remoteId();
 
+  const QVariant tagListHashVar = fetchJob->property( "remoteIdToTagList" );
+  if ( !tagListHashVar.isValid() ) {
+    kDebug() << "No tags from index for collection" << mCurrentCollection.name();
+  } else {
+    mTagListHash = tagListHashVar.value< QHash<QString, QVariant> >();
+    kDebug() << mTagListHash.count() << "items have tags";
+  }
+
   processNextItem();
 }
 
-void DImapCacheCollectionMigrator::Private::processNextItem()
+void ImapCacheCollectionMigrator::Private::processNextItem()
 {
   kDebug() << "mCurrentCollection=" << mCurrentCollection.name()
            << mItems.count() << "items to go";
@@ -193,7 +194,7 @@ void DImapCacheCollectionMigrator::Private::processNextItem()
   connect( job, SIGNAL( result( KJob* ) ), q, SLOT( fetchItemResult( KJob* ) ) );
 }
 
-void DImapCacheCollectionMigrator::Private::processNextDeletedUid()
+void ImapCacheCollectionMigrator::Private::processNextDeletedUid()
 {
   kDebug() << "mCurrentCollection=" << mCurrentCollection.name()
            << mDeletedUids.count() << "items to go";
@@ -203,7 +204,6 @@ void DImapCacheCollectionMigrator::Private::processNextDeletedUid()
       const QString key = QLatin1String( "UIDSDeletedSinceLastSync" );
       if ( !mCurrentFolderGroup.readEntry( key, QStringList() ).isEmpty() ) {
         mCurrentFolderGroup.deleteEntry( QLatin1String( "UIDSDeletedSinceLastSync" ) );
-        mCurrentFolderGroup.sync();
       }
     }
     mCurrentFolderGroup = KConfigGroup();
@@ -225,7 +225,7 @@ void DImapCacheCollectionMigrator::Private::processNextDeletedUid()
   connect( createJob, SIGNAL( result( KJob* ) ), q, SLOT( itemDeletePhase1Result( KJob* ) ) );
 }
 
-void DImapCacheCollectionMigrator::Private::fetchItemResult( KJob *job )
+void ImapCacheCollectionMigrator::Private::fetchItemResult( KJob *job )
 {
   FileStore::ItemFetchJob *fetchJob = qobject_cast<FileStore::ItemFetchJob*>( job );
   Q_ASSERT( fetchJob != 0 );
@@ -252,6 +252,7 @@ void DImapCacheCollectionMigrator::Private::fetchItemResult( KJob *job )
 
   ItemCreateJob *createJob = 0;
 
+  const QString storeRemoteId = item.remoteId();
   const QString uid = mUidHash[ item.remoteId() ];
   if ( uid.isEmpty() && mImportNewMessages ) {
     item.setRemoteId( QString() );
@@ -270,6 +271,7 @@ void DImapCacheCollectionMigrator::Private::fetchItemResult( KJob *job )
   }
 
   if ( createJob != 0 ) {
+    createJob->setProperty( "storeRemoteId", storeRemoteId );
     connect( createJob, SIGNAL( result( KJob* ) ), q, SLOT( itemCreateResult( KJob* ) ) );
   } else {
     kDebug() << "Skipping cacheItem: remoteId=" << item.remoteId()
@@ -279,22 +281,40 @@ void DImapCacheCollectionMigrator::Private::fetchItemResult( KJob *job )
   }
 }
 
-void DImapCacheCollectionMigrator::Private::itemCreateResult( KJob *job )
+void ImapCacheCollectionMigrator::Private::itemCreateResult( KJob *job )
 {
   ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
   Q_ASSERT( createJob != 0 );
 
   const Item item = createJob->item();
+  const QString storeRemoteId = job->property( "storeRemoteId" ).value<QString>();
 
   if ( job->error() != 0 ) {
     kWarning() << "Akonadi Create for single item" << item.remoteId() << "returned error: code="
                << job->error() << "text=" << job->errorString();
+  } else if ( !storeRemoteId.isEmpty() ) {
+    const QStringList tagList = mTagListHash[ storeRemoteId ].value<QStringList>();
+    if ( !tagList.isEmpty() ) {
+      kDebug() << "Tagging item" << item.url() << "with" << tagList;
+
+      QList<Nepomuk::Tag> nepomukTags;
+      Q_FOREACH( const QString &tag, tagList ) {
+        if ( tag.isEmpty() ) {
+          kWarning() << "TagList for item" << item.url() << "contains an empty tag";
+        } else {
+          nepomukTags << Nepomuk::Tag( tag );
+        }
+      }
+
+      Nepomuk::Resource nepomukResource( item.url() );
+      nepomukResource.setTags( nepomukTags );
+    }
   }
 
   processNextItem();
 }
 
-void DImapCacheCollectionMigrator::Private::itemDeletePhase1Result( KJob *job )
+void ImapCacheCollectionMigrator::Private::itemDeletePhase1Result( KJob *job )
 {
   ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
   Q_ASSERT( createJob != 0 );
@@ -311,7 +331,7 @@ void DImapCacheCollectionMigrator::Private::itemDeletePhase1Result( KJob *job )
   }
 }
 
-void DImapCacheCollectionMigrator::Private::itemDeletePhase2Result( KJob *job )
+void ImapCacheCollectionMigrator::Private::itemDeletePhase2Result( KJob *job )
 {
   ItemDeleteJob *deleteJob = qobject_cast<ItemDeleteJob*>( job );
   Q_ASSERT( deleteJob != 0 );
@@ -327,52 +347,64 @@ void DImapCacheCollectionMigrator::Private::itemDeletePhase2Result( KJob *job )
   processNextDeletedUid();
 }
 
-DImapCacheCollectionMigrator::DImapCacheCollectionMigrator( const Akonadi::AgentInstance &resource, QObject *parent )
+ImapCacheCollectionMigrator::ImapCacheCollectionMigrator( const AgentInstance &resource, QObject *parent )
   : AbstractCollectionMigrator( resource, parent ), d( new Private( this ) )
 {
-  const KConfigGroup config( KGlobal::config(), QLatin1String( "Disconnected IMAP" ) );
-  if ( config.isValid() ) {
-    d->mImportNewMessages = config.readEntry( QLatin1String( "ImportNewMessages" ), false );
-    d->mImportCachedMessages = config.readEntry( QLatin1String( "ImportCachedMessages" ), false );
-    d->mRemoveDeletedMessages = config.readEntry( QLatin1String( "RemoveDeletedMessages" ), false );
-  }
-
-  kDebug() << "Migration options: new messages=" << d->mImportNewMessages
-           << ", cachedMessages=" << d->mImportCachedMessages
-           << ", removeDeleted=" << d->mRemoveDeletedMessages;
+  d->mHiddenSession = new Session( resource.identifier().toAscii() );
 }
 
-DImapCacheCollectionMigrator::~DImapCacheCollectionMigrator()
+ImapCacheCollectionMigrator::~ImapCacheCollectionMigrator()
 {
   delete d;
 }
 
-void DImapCacheCollectionMigrator::setCacheFolder( const QString &cacheFolder )
+void ImapCacheCollectionMigrator::setMigrationOptions( const MigrationOptions &options )
 {
-  d->mCacheFolder = cacheFolder;
+  d->mImportNewMessages = options.testFlag( ImportNewMessages );
+  d->mImportCachedMessages = options.testFlag( ImportCachedMessages );
+  d->mRemoveDeletedMessages = options.testFlag( RemoveDeletedMessages );
+}
 
-  d->mHiddenSession = new Session( resource().identifier().toAscii() );
-
-  const QFileInfo dimapBaseDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail/dimap" ) ) );
-  if ( dimapBaseDir.exists() && dimapBaseDir.isDir() ) {
-    d->mStore = new MixedMaildirStore;
-    d->mStore->setPath( dimapBaseDir.absoluteFilePath() );
+ImapCacheCollectionMigrator::MigrationOptions ImapCacheCollectionMigrator::migrationOptions() const
+{
+  MigrationOptions options;
+  if ( d->mImportNewMessages ) {
+    options |= ImportNewMessages;
   }
+  if ( d->mImportCachedMessages ) {
+    options |= ImportCachedMessages;
+  }
+  if ( d->mRemoveDeletedMessages ) {
+    options |= RemoveDeletedMessages;
+  }
+  return options;
 }
 
-void DImapCacheCollectionMigrator::setKMailConfig( KConfig *config )
+void ImapCacheCollectionMigrator::setCacheBasePath( const QString &basePath )
 {
-  d->mKMailConfig = config;
+  const QFileInfo baseDir( basePath );
+  if ( baseDir.exists() && baseDir.isDir() ) {
+    if ( d->mStore != 0 ) {
+      if ( d->mStore->path() == baseDir.absoluteFilePath() ) {
+        return;
+      }
+
+      delete d->mStore;
+    }
+
+    d->mStore = new MixedMaildirStore;
+    d->mStore->setPath( baseDir.absoluteFilePath() );
+    return;
+  }
+
+  delete d->mStore;
+  d->mStore = 0;
 }
 
-bool DImapCacheCollectionMigrator::migrationOptionsEnabled() const
+void ImapCacheCollectionMigrator::migrateCollection( const Collection &collection, const QString &folderId )
 {
-  return d->mImportNewMessages || d->mImportCachedMessages || d->mRemoveDeletedMessages;
-}
-
-void DImapCacheCollectionMigrator::migrateCollection( const Akonadi::Collection &collection )
-{
-  if ( !migrationOptionsEnabled() ) {
+  if ( migrationOptions() == ConfigOnly ) {
+    collectionProcessed();
     return;
   }
 
@@ -394,23 +426,23 @@ void DImapCacheCollectionMigrator::migrateCollection( const Akonadi::Collection 
 
   kDebug() << "Akonadi collection remoteId=" << collection.remoteId() << ", parent=" << collection.parentCollection().remoteId();
 
-  QString cachePath;
-  Collection cache = d->cacheCollection( collection, cachePath );
+  Collection cache = d->cacheCollection( collection );
   kDebug() << "Cache collection remoteId=" << cache.remoteId() << ", parent=" << cache.parentCollection().remoteId();
 
   d->mDeletedUids.clear();
   if ( d->mRemoveDeletedMessages ) {
-    Q_ASSERT( d->mKMailConfig );
+    Q_ASSERT( kmailConfig() );
 
-    const QString groupName = QLatin1String( "Folder-" ) + cachePath;
-    if ( d->mKMailConfig->hasGroup( groupName ) ) {
-      d->mCurrentFolderGroup = KConfigGroup( d->mKMailConfig, groupName );
+    const QString groupName = QLatin1String( "Folder-" ) + folderId;
+    if ( kmailConfig()->hasGroup( groupName ) ) {
+      d->mCurrentFolderGroup = KConfigGroup( kmailConfig(), groupName );
       d->mDeletedUids = d->mCurrentFolderGroup.readEntry( QLatin1String( "UIDSDeletedSinceLastSync" ), QStringList() );
     }
     kDebug() << "DeleteUids=" << d->mDeletedUids;
   }
 
   d->mCurrentCollection = collection;
+  d->mTagListHash.clear();
 
   emit message( KMigratorBase::Info, i18nc( "@info:status", "Starting cache migration for folder %1 of account %2", collection.name(), resource().name() ) );
 
@@ -424,6 +456,6 @@ void DImapCacheCollectionMigrator::migrateCollection( const Akonadi::Collection 
   }
 }
 
-#include "dimapcachecollectionmigrator.moc"
+#include "imapcachecollectionmigrator.moc"
 
 // kate: space-indent on; indent-width 2; replace-tabs on;
