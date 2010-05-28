@@ -86,7 +86,6 @@ void IncidenceAttachmentEditor::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceAttachmentEditor::isDirty() const
 {
-  qDebug() << "COUNT:" << mAttachmentView->count();
   if ( mLoadedIncidence ) {
     if ( mAttachmentView->count() != mLoadedIncidence->attachments().count() )
       return true;
@@ -146,6 +145,8 @@ void IncidenceAttachmentEditor::addAttachment()
     delete item;
 
   delete dlg;
+
+  checkDirtyStatus();
 }
 
 void IncidenceAttachmentEditor::copyToClipboard()
