@@ -3,6 +3,11 @@ kde4_add_plugin( akonadicontactqmlplugin WITH_PREFIX
   contactviewitem.cpp
   contactgroupviewitem.cpp
 )
+
+include_directories(
+  ${Boost_INCLUDE_DIR}
+)
+
 target_link_libraries( akonadicontactqmlplugin
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBRARY}
   ${QT_QTDECLARATIVE_LIBRARY}

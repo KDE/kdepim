@@ -1,5 +1,6 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/mobile/lib
+  ${Boost_INCLUDE_DIR}
 )
 
 kde4_add_plugin( calendarviewerqmlplugin WITH_PREFIX
