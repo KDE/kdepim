@@ -79,7 +79,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: KDE.i18n( "Addressbook start page" )
+          startText: KDE.i18n( "Address book start page" )
           favoritesModel : favoritesList
 
           contextActions : [
@@ -144,7 +144,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: folderPanel
-      titleText: KDE.i18n( "Addressbooks" )
+      titleText: KDE.i18n( "Address books" )
       handleHeight: 150
       content: [
         Item {
