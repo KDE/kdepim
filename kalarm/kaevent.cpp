@@ -846,7 +846,7 @@ void KAEvent::Private::setCommandError(CmdErrType error) const
 
 bool KAEvent::Private::setDisplaying(const KAEvent::Private& e, KAAlarm::Type t, const QString& resourceID, const KDateTime& dt, bool showEdit, bool showDefer)
 {
-    bool result = mEventData->setDisplaying(*mEventData, t, resourceID, dt, showEdit, showDefer);
+    bool result = mEventData->setDisplaying(*e.mEventData, t, resourceID, dt, showEdit, showDefer);
     if (result)
         copy(e, false);
     return result;
