@@ -896,9 +896,11 @@ void RecipientsEditor::setRecipientString( const QList<KMime::Types::Mailbox> &m
   foreach( const KMime::Types::Mailbox &mailbox, mailboxes ) {
     if ( count++ > MessageComposer::MessageComposerSettings::self()->maximumRecipients() ) {
       KMessageBox::sorry( this,
-        i18nc("@info:status", "Truncating recipients list to %1 of %2 entries.",
-              MessageComposer::MessageComposerSettings::self()->maximumRecipients(),
-              mailboxes.count() ) );
+        i18ncp("@info:status",
+              "Truncating recipients list to %2 of %1 entry.",
+              "Truncating recipients list to %2 of %1 entries.",
+              mailboxes.count(),
+              MessageComposer::MessageComposerSettings::self()->maximumRecipients() ) );
       break;
     }
     addRecipient( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), type );
