@@ -1,6 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.4.6 --- 20 May 2010 ===
+=== Version 2.4.7 --- 30 May 2010 ===
+- Fix inability to defer non-recurring alarms.
+
+=== Version 2.4.6 (KDE 4.4.4) --- 20 May 2010 ===
 - Fix alarm edit dialog not saving changes when invoked from alarm message
   window's Edit button.
 - Fix main window close action not working when system tray icon is not shown.
