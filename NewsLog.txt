@@ -4,10 +4,6 @@ Problems addressed
 ------------------
 
 * kolab/issue4365: Wish: Edit Todo: Complete button. (rt#6156)
-* kolab/issue3533: Display xfb information in free/busy when creating invitations
-* kolab/issue4360: Todo with attendee is changed by the attendee, but the text of the update mail is wrong (rt#6149)
-* kolab/issue4203: A reminder can contain non-existing events (rt#6051)
-* kolab/issue4333(partly): Renaming of a shared calendar folder failed (rt#6121)
 * kolab/issue4372: Rename context menu entry "Copy Link Address" to "Copy Email Address(es)
 * kolab/issue4281: Composer: create distlist, for every entry a resource chooser appears (rt#6098)
 * KDE bug 238945: Crash while displaying an invitation mail
