@@ -31,8 +31,8 @@ mailreaderView::mailreaderView(QWidget *parent)
     setLayout(layout);
     setAutoFillBackground(true);
     displayAboutPage();
-    connect( m_readerWin, SIGNAL(urlClicked(const KUrl&, Qt::MouseButton)), this,
-        SLOT(urlClicked(const KUrl&, Qt::MouseButton)));
+    connect( m_readerWin, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl& ) ), this,
+        SLOT(urlClicked( const Akonadi::Item &, const KUrl& )));
 }
 
 mailreaderView::~mailreaderView()
@@ -80,9 +80,9 @@ void mailreaderView::displayAboutPage()
    m_readerWin->displaySplashPage( info.toString() );
 }
 
-void mailreaderView::urlClicked( const KUrl& url, Qt::MouseButton button)
+void mailreaderView::urlClicked( const Akonadi::Item & item , const KUrl& url )
 {
-  Q_UNUSED( button);
+  Q_UNUSED( item );
   //TODO "Handle click"
   kDebug() << url << " clicked in the mail viewer";
 }
