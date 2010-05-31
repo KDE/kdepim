@@ -65,6 +65,7 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
     Q_DECLARE_PRIVATE( EventOrTodoDialog );
     Q_DISABLE_COPY( EventOrTodoDialog );
 
+    Q_PRIVATE_SLOT(d_ptr, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ))
     Q_PRIVATE_SLOT(d_ptr, void itemFetchResult(KJob*))
     Q_PRIVATE_SLOT(d_ptr, void modifyFinished(KJob*))
     Q_PRIVATE_SLOT(d_ptr, void save())

@@ -20,8 +20,9 @@
 
 #include "eventortododialog.h"
 
-#include <QtGui/QLabel>
 #include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QMessageBox>
 #include <QtGui/QTabWidget>
 
 #include <KLocale>
@@ -32,14 +33,16 @@
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
+#include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
+#include <Akonadi/ItemModifyJob>
+#include <Akonadi/Monitor>
+#include <Akonadi/Session>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include "incidenceeditorgeneralpage.h"
 #include "incidenceattachmenteditor.h"
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemCreateJob>
 
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
@@ -50,13 +53,14 @@ namespace IncidenceEditorsNG {
 
 class EventOrTodoDialogPrivate
 {
-public:
   EventOrTodoDialog *q;
+public:
 
   Akonadi::Item mItem;
+  Akonadi::Monitor *mMonitor;
 
   bool mAcceptOnSuccessFullSave;
-  
+
   Akonadi::CollectionComboBox *mCalSelector;
   IncidenceAttachmentEditor *mAttachtmentPage;
   IncidenceEditorGeneralPage *mGeneralPage;
@@ -65,8 +69,10 @@ public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
 
   void itemFetchResult( KJob *job );
+  void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
   void modifyFinished( KJob *job );
   void save();
+  void setupMonitor();
   void slotButtonClicked( KDialog::ButtonCode button );
   void updateButtonStatus( bool isDirty );
 };
@@ -75,12 +81,61 @@ public:
 
 EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   : q( qq )
+  , mMonitor( 0 )
   , mAcceptOnSuccessFullSave( false )
   , mCalSelector( new Akonadi::CollectionComboBox( q->mainWidget() ) )
   , mAttachtmentPage( new IncidenceAttachmentEditor )
   , mGeneralPage( new IncidenceEditorGeneralPage )
 {
   mGeneralPage->combine( mAttachtmentPage );
+}
+
+void EventOrTodoDialogPrivate::setupMonitor()
+{
+  delete mMonitor;
+  mMonitor = new Akonadi::Monitor;
+  mMonitor->ignoreSession( Akonadi::Session::defaultSession() );
+  mMonitor->itemFetchScope().fetchFullPayload();
+  if ( mItem.isValid() )
+    mMonitor->setItemMonitored( mItem );
+
+  q->connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+              SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+}
+
+
+void EventOrTodoDialogPrivate::itemChanged( const Akonadi::Item &item,
+                                            const QSet<QByteArray> &partIdentifiers )
+{
+  if ( partIdentifiers.contains( QByteArray( "PLD:RFC822" ) ) ) {
+    QPointer<QMessageBox> dlg = new QMessageBox( q ); //krazy:exclude=qclasses
+    dlg->setIcon( QMessageBox::Question );
+    dlg->setInformativeText( i18n( "The incidence has been changed by someone else.\nWhat should be done?" ) );
+    dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
+    dlg->addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
+
+    if ( dlg->exec() == QMessageBox::AcceptRole ) {
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
+      job->fetchScope().fetchFullPayload();
+      job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+
+      Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
+      mItem = item;
+
+      q->enableButton( KDialog::Ok, false );
+      q->enableButton( KDialog::Apply, false );
+      q->load( mItem );
+    } else {
+      mItem.setRevision( item.revision() );
+      save();
+    }
+
+    delete dlg;
+  }
+
+  // Overwrite or not we need to update the revision and the remote id to be able
+  // to store item later on.
+  mItem.setRevision( item.revision() );
 }
 
 void EventOrTodoDialogPrivate::itemFetchResult( KJob *job )
@@ -136,6 +191,8 @@ void EventOrTodoDialogPrivate::modifyFinished( KJob *job )
     mItem = createJob->item();
     mGeneralPage->load( mItem.payload<KCal::Incidence::Ptr>() );
   }
+
+  setupMonitor();
 }
 
 
@@ -233,6 +290,7 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
   Q_D( EventOrTodoDialog );
 
   d->mItem = item;
+  d->setupMonitor();
 
   if ( !item.isValid() ) {
     // We're creating a new item
