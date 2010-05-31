@@ -70,12 +70,15 @@ const int ResourceCardDav::DEFAULT_SAVE_INTERVAL     = 10;
 ResourceCardDav::ResourceCardDav( const KConfig *config ) :
     ResourceCached(config)
     , mLock(true)
+    , readLockout(false)
+    , mAllWritesComplete(false)
     , mPrefs(NULL)
     , mLoader(NULL)
     , mWriter(NULL)
     , mProgress(NULL)
     , mLoadingQueueReady(true)
     , mWritingQueueReady(true)
+    , mWriteRetryTimer(NULL)
 {
     log("ResourceCardDav(config)");
     init();
@@ -88,11 +91,14 @@ ResourceCardDav::ResourceCardDav( const KConfig *config ) :
 ResourceCardDav::~ResourceCardDav() {
     log("jobs termination");
 
-    // This must save the users data before termination below to prevent data loss...
-    doSave();
+    if (mWriteRetryTimer != NULL) {
+        mWriteRetryTimer->stop();	// Unfortunately we cannot do anything at this point; if this timer is still running something is seriously wrong
+    }
+
     while ((mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady) {
-         sleep(1);
-         qApp->processEvents(QEventLoop::ExcludeUserInput);
+        readLockout = true;
+        sleep(1);
+        qApp->processEvents(QEventLoop::ExcludeUserInput);
     }
 
     if (mLoader) {
@@ -121,6 +127,10 @@ ResourceCardDav::~ResourceCardDav() {
     delete mPrefs;
 }
 
+bool ResourceCardDav::isSaving() {
+    return (((mWriteRetryTimer != NULL) ? mWriteRetryTimer->isActive() : 0) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady);
+}
+
 /*=========================================================================
 | GENERAL METHODS
  ========================================================================*/
@@ -128,7 +138,7 @@ ResourceCardDav::~ResourceCardDav() {
 bool ResourceCardDav::load() {
     bool syncCache = true;
 
-    if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true)) {
+    if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true) || (readLockout == true)) {
         return true;	// Silently fail; the user has obviously not responded to a dialog and we don't need to pop up more of them!
     }
 
@@ -361,7 +371,7 @@ void ResourceCardDav::loadFinished() {
             data.replace('\r', '\n');
 
             log("trying to parse...");
-            //printf("PARSING:\n\r%s\n\r", data.ascii());
+            printf("PARSING:\n\r%s\n\r", data.ascii());
             if (parseData(data)) {
                 // FIXME: The agenda view can crash when a change is 
                 // made on a remote server and a reload is requested!
@@ -566,7 +576,11 @@ bool ResourceCardDav::startWriting(const QString& url) {
     // modifies the calendar with clearChanges() or similar
     // Before these calls are made any existing read (and maybe write) threads should be finished
     if ((mLoader->running() == true) || (mLoadingQueue.isEmpty() == false) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false)) {
-        QTimer::singleShot( 100, this, SLOT(doSave()) );
+        if (mWriteRetryTimer == NULL) {
+            mWriteRetryTimer = new QTimer(this);
+            connect( mWriteRetryTimer, SIGNAL(timeout()), SLOT(doSave()) );
+        }
+        mWriteRetryTimer->start(1000, TRUE);
         return false;
     }
 

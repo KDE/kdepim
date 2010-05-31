@@ -71,6 +71,8 @@ public:
 
     virtual void setReadOnly(bool v);
 
+    bool isSaving();
+
 protected slots:
 
     void loadFinished();
@@ -190,6 +192,9 @@ private:
     static const int DEFAULT_RELOAD_POLICY;
     static const int DEFAULT_SAVE_POLICY;
 
+    bool readLockout;
+    bool mAllWritesComplete;
+
     // members: ===============================================================
 
     KABC::LockNull mLock;
@@ -203,6 +208,8 @@ private:
 
     bool mWritingQueueReady;
     QPtrQueue<WritingTask> mWritingQueue;
+
+    QTimer *mWriteRetryTimer;
 
 };
 
