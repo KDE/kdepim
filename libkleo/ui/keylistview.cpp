@@ -492,33 +492,10 @@ int Kleo::KeyListView::ColumnStrategy::width( int col, const QFontMetrics & fm )
   return fm.width( title( col ) ) * 2;
 }
 
-int Kleo::KeyListView::ColumnStrategy::subkeyCompare( const GpgME::Subkey & sub1, const GpgME::Subkey & sub2, const int col ) const {
-  return QString::localeAwareCompare( subkeyText( sub1, col ), subkeyText( sub2, col ) );
-}
-
-int Kleo::KeyListView::ColumnStrategy::userIDCompare( const GpgME::UserID & uid1, const GpgME::UserID & uid2, const int col ) const {
-  return QString::localeAwareCompare( userIDText( uid1, col ), userIDText( uid2, col ) );
-}
-
-int Kleo::KeyListView::ColumnStrategy::signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int col ) const {
-  return QString::localeAwareCompare( signatureText( sig1, col ), signatureText( sig2, col ) );
-}
-
 QString Kleo::KeyListView::ColumnStrategy::toolTip( const GpgME::Key & key, int col ) const {
   return text( key, col );
 }
 
-QString Kleo::KeyListView::ColumnStrategy::subkeyToolTip( const GpgME::Subkey & sub, int col ) const {
-  return subkeyText( sub, col );
-}
-
-QString Kleo::KeyListView::ColumnStrategy::userIDToolTip( const GpgME::UserID & uid, int col ) const {
-  return userIDText( uid, col );
-}
-
-QString Kleo::KeyListView::ColumnStrategy::signatureToolTip( const GpgME::UserID::Signature & sig, int col ) const {
-  return signatureText( sig, col );
-}
 
 //
 //
@@ -534,49 +511,13 @@ QFont Kleo::KeyListView::DisplayStrategy::keyFont( const GpgME::Key &, const QFo
   return font;
 }
 
-QFont Kleo::KeyListView::DisplayStrategy::subkeyFont( const GpgME::Subkey &, const QFont & font ) const {
-  return font;
-}
-
-QFont Kleo::KeyListView::DisplayStrategy::useridFont( const GpgME::UserID &, const QFont & font ) const {
-  return font;
-}
-
-QFont Kleo::KeyListView::DisplayStrategy::signatureFont( const GpgME::UserID::Signature &, const QFont & font ) const {
-  return font;
-}
-
 //foreground
 QColor Kleo::KeyListView::DisplayStrategy::keyForeground( const GpgME::Key &, const QColor & fg )const {
   return fg;
 }
 
-QColor Kleo::KeyListView::DisplayStrategy::subkeyForeground( const GpgME::Subkey &, const QColor & fg ) const {
-  return fg;
-}
-
-QColor Kleo::KeyListView::DisplayStrategy::useridForeground( const GpgME::UserID &, const QColor & fg ) const {
-  return fg;
-}
-
-QColor Kleo::KeyListView::DisplayStrategy::signatureForeground( const GpgME::UserID::Signature &, const QColor & fg ) const {
-  return fg;
-}
-
 //background
 QColor Kleo::KeyListView::DisplayStrategy::keyBackground( const GpgME::Key &, const QColor & bg )const {
-  return bg;
-}
-
-QColor Kleo::KeyListView::DisplayStrategy::subkeyBackground( const GpgME::Subkey &, const QColor & bg ) const {
-  return bg;
-}
-
-QColor Kleo::KeyListView::DisplayStrategy::useridBackground( const GpgME::UserID &, const QColor & bg ) const {
-  return bg;
-}
-
-QColor Kleo::KeyListView::DisplayStrategy::signatureBackground( const GpgME::UserID::Signature &, const QColor & bg ) const {
   return bg;
 }
 
