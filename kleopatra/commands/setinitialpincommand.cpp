@@ -75,10 +75,10 @@ private:
         dlg->setNksPinPresent(  pinStates.size() >= 1 && pinStates[0] != ReaderStatus::NullPin );
         dlg->setSigGPinPresent( pinStates.size() >= 3 && pinStates[2] != ReaderStatus::NullPin );
 
-        connect( dlg, SIGNAL(nksPinRequested()), q, SLOT(slotNksPinRequested()) );
-        connect( dlg, SIGNAL(sigGPinRequested()), q, SLOT(slotSigGPinRequested()) );
-        connect( dlg, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
-        connect( dlg, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
+        connect( dlg, SIGNAL(nksPinRequested()), q_func(), SLOT(slotNksPinRequested()) );
+        connect( dlg, SIGNAL(sigGPinRequested()), q_func(), SLOT(slotSigGPinRequested()) );
+        connect( dlg, SIGNAL(rejected()), q_func(), SLOT(slotDialogRejected()) );
+        connect( dlg, SIGNAL(accepted()), q_func(), SLOT(slotDialogAccepted()) );
 
         dialog = dlg;
     }

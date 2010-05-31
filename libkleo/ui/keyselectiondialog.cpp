@@ -573,10 +573,12 @@ void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::P
 
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
 	   SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
-  connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-	   mKeyListView, validate ?
-	   SLOT(slotRefreshKey(const GpgME::Key&)) :
-	   SLOT(slotAddKey(const GpgME::Key&)) );
+  if ( validate )
+    connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+             mKeyListView, SLOT(slotRefreshKey(const GpgME::Key&)) );
+  else
+    connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+             mKeyListView, SLOT(slotAddKey(const GpgME::Key&)) );
 
   QStringList fprs;
   std::transform( keys.begin(), keys.end(), std::back_inserter( fprs ), ExtractFingerprint() );

@@ -46,6 +46,7 @@ class KListWidget;
 class KSelectAction;
 // class KStatusBar;
 
+class MediaListWidget;
 class MultiLineTextEdit;
 class AddEditLink;
 class BilboMedia;
@@ -306,7 +307,7 @@ private:
 
     KToolBar *barVisual;
 
-    KListWidget *lstMediaFiles;
+    MediaListWidget *lstMediaFiles;
 //     KPushButton *btnGetStyle;
 
     KAction *actBold;

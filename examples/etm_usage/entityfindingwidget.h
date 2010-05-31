@@ -58,7 +58,7 @@ private slots:
   void findItem();
 
 private:
-  EntityTreeWidget *m_etw;
+  FindingETW *m_etw;
   QListView *m_selectionView;
   QLineEdit *m_collectionIdInput;
   QLineEdit *m_itemIdInput;
