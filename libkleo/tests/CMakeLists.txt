@@ -10,7 +10,6 @@ kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
 target_link_libraries(test_keylister
     kleo
     ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDE3SUPPORT_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QGPGME_LIBRARIES}
     ${QT_QTGUI_LIBRARY} )
