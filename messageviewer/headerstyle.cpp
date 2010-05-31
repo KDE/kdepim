@@ -65,6 +65,9 @@ using KPIMUtils::LinkLocator;
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 
+#include <grantlee/context.h>
+#include <grantlee/engine.h>
+
 using namespace MessageCore;
 
 //
@@ -430,8 +433,11 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   // The direction of the header is determined according to the direction
   // of the application layout.
 
+  Grantlee::Template t = engine->loadByName( QLatin1String( "fancy.html" ) );
+  QVariantHash data;
+
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  QString headerStr = QString("<div class=\"fancy header\" dir=\"%1\">\n").arg(dir);
+  data.insert( QLatin1String( "subjectDir" ) , dir );
 
   // However, the direction of the message subject within the header is
   // determined according to the contents of the subject itself. Since
@@ -574,17 +580,10 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 ( GlobalSettings::self()->showEmoticons() ?
                   LinkLocator::ReplaceSmileys : 0 );
 
-    headerStr += QString("<div dir=\"%1\">%2</div>\n")
-                      .arg(subjectDir)
-                      .arg(!message->subject(false)?
-                            i18n("No Subject") :
-                            strToHtml( message->subject()->asUnicodeString(), flags ));
+    data.insert( QLatin1String( "subject" ) , message->subject()->asUnicodeString() );
+    data.insert( QLatin1String( "subjectDir" ) , subjectDir );
   }
-  headerStr += "<table class=\"outer\"><tr><td width=\"100%\"><table>\n";
-  //headerStr += "<table>\n";
-  // from line
-  // the mailto: URLs can contain %3 etc., therefore usage of multiple
-  // QString::arg is not possible
+
   if ( strategy->showHeader( "from" ) ) {
 
     // Get the resent-from header into a Mailbox
@@ -602,87 +601,54 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
       }
     }
 
-    headerStr += QString("<tr><th>%1</th>\n"
-                          "<td>")
-                          .arg(i18n("From: "))
-                + StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress )
-                + ( message->headerByType( "Resent-From" ) ? "&nbsp;"
-                              + i18n( "(resent from %1)",
-                                    StringUtil::emailAddrAsAnchor(
-                                      resentFrom, StringUtil::DisplayFullAddress ) )
-                            : QString("") )
-                + ( !vCardName().isEmpty() ? "&nbsp;&nbsp;<a href=\"" + vCardName() + "\">"
-                              + i18n("[vCard]") + "</a>"
-                            : QString("") )
-                + ( !message->headerByType("Organization")
-                            ? QString("")
-                            : "&nbsp;&nbsp;("
-                              + strToHtml(message->headerByType("Organization")->asUnicodeString())
-                              + ')')
-                + "</td></tr>\n";
+    data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress ));
   }
   // to line
-  if ( strategy->showHeader( "to" ) )
-    headerStr.append(QString("<tr><th>%1</th>\n"
-                  "<td>%2</td></tr>\n")
-                          .arg( i18nc( "To-field of the mail header.","To: " ) )
-                          .arg( StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
-                                                             QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                                             "FullToAddressList",
-                                                             GlobalSettings::self()->numberOfAddressesToShow() ) ) );
+
+  if ( strategy->showHeader( "to" ) ) {
+    data.insert( QLatin1String( "to" ), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ));
+  }
 
   // cc line, if an
-  if ( strategy->showHeader( "cc" ) && message->cc(false))
-    headerStr.append(QString("<tr><th>%1</th>\n"
-                  "<td>%2</td></tr>\n")
-                            .arg( i18n( "CC: " ) )
-                            .arg( StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress,
-                                                               QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                                               "FullCcAddressList",
-                                                               GlobalSettings::self()->numberOfAddressesToShow() ) ) );
+  if ( strategy->showHeader( "cc" ) && message->cc(false)) {
+    data.insert( QLatin1String( "cc" ), StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ));
+  }
+
 
   // Bcc line, if any
-  if ( strategy->showHeader( "bcc" ) && message->bcc(false))
-    headerStr.append(QString("<tr><th>%1</th>\n"
-                  "<td>%2</td></tr>\n")
-                            .arg( i18n( "BCC: " ) )
-                            .arg( StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) ) );
+  if ( strategy->showHeader( "bcc" ) && message->bcc(false)) {
+    data.insert( QLatin1String( "bcc" ), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ));
+  }
 
-  if ( strategy->showHeader( "date" ) )
-    headerStr.append(QString("<tr><th>%1</th>\n"
-                  "<td dir=\"%2\">%3</td></tr>\n")
-                          .arg(i18n("Date: "))
-                  .arg( directionOf( dateStr( message->date()->dateTime() ) ) )
-                          .arg(strToHtml( dateString( message, isPrinting(), /* short = */ false ) ) ) );
+  if ( strategy->showHeader( "date" ) ) {
+    data.insert( QLatin1String( "dateDir" ), directionOf( dateStr( message->date()->dateTime() )) );
+    data.insert( QLatin1String( "date" ), dateString( message, isPrinting(), false ));
+   }
+
   if ( GlobalSettings::self()->showUserAgent() ) {
     if ( strategy->showHeader( "user-agent" ) ) {
       if ( message->headerByType("User-Agent") ) {
-        headerStr.append(QString("<tr><th>%1</th>\n"
-                                  "<td>%2</td></tr>\n")
-                          .arg(i18n("User-Agent: "))
-                          .arg( strToHtml( message->headerByType("User-Agent")->as7BitString() ) ) );
+        data.insert( QLatin1String( "user-agent" ), message->headerByType("User-Agent")->as7BitString() );
       }
     }
 
     if ( strategy->showHeader( "x-mailer" ) ) {
       if ( message->headerByType("X-Mailer") ) {
-        headerStr.append(QString("<tr><th>%1</th>\n"
-                                  "<td>%2</td></tr>\n")
-                          .arg(i18n("X-Mailer: "))
-                          .arg( strToHtml( message->headerByType("X-Mailer")->as7BitString() ) ) );
+        data.insert( QLatin1String( "x-mailer" ), message->headerByType("X-Mailer")->as7BitString() );
       }
     }
   }
-  headerStr.append( QString( "<tr><td colspan=\"2\"><div id=\"attachmentInjectionPoint\"></div></td></tr>" ) );
-  headerStr.append(
-        QString( "</table></td><td align=\"center\">%1</td></tr></table>\n" ).arg(userHTML) );
 
-  if ( !spamHTML.isEmpty() )
-    headerStr.append( QString( "<div class=\"spamheader\" dir=\"%1\"><b>%2</b>&nbsp;<span style=\"padding-left: 20px;\">%3</span></div>\n")
-                      .arg( subjectDir, i18n("Spam Status:"), spamHTML ) );
+  data.insert( QLatin1String( "userHTML" ), userHTML );
 
-  headerStr += "</div>\n\n";
-  return headerStr;
+  if ( !spamHTML.isEmpty() ) {
+    data.insert( QLatin1String( "spamHTML" ), spamHTML );
+  }
+
+  Grantlee::Context c( data );
+  QString headerStrGrantlee = t->render( &c );
+
+  return headerStrGrantlee;
 }
 
 QString FancyHeaderStyle::imgToDataUrl( const QImage &image )
@@ -985,6 +951,13 @@ HeaderStyle::HeaderStyle()
   : mStrategy( 0 ), mPrinting( false ), mTopLevel( true ), mNodeHelper( 0 ), mAllowAsync( false ),
     mSourceObject( 0 )
 {
+    engine = new Grantlee::Engine();
+
+    Grantlee::FileSystemTemplateLoader::Ptr loader(new Grantlee::FileSystemTemplateLoader());
+
+    engine->addTemplateLoader( loader );
+    loader->setTemplateDirs( QStringList() << KStandardDirs::locate("data","themes/images/") );
+    engine->setPluginPaths( QStringList() << KStandardDirs::locate("data","themes/") );
 }
 
 HeaderStyle::~HeaderStyle() {

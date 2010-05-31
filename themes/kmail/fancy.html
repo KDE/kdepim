@@ -1,0 +1,120 @@
+{# Fancy Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+body {
+    color: #000000 ! important;
+    background-color: #ffffff ! important;
+}
+
+div.fancy.header, div a {
+    color: %3 ! important;
+}
+
+div.fancy.header,, table.outer {
+    background-color: %2 ! important;
+}
+
+div.fancy.header {
+    padding: 4px ! important;
+    border: solid %3 1px ! important;
+}
+
+div.fancy.header, table.outer {
+    border-bottom: solid %3 1px ! important;\n"
+    border-left: solid %3 1px ! important;\n"
+    border-right: solid %3 1px ! important;\n"
+}
+
+div.spamheader {
+    display:none ! important;
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="fancy header" dir="{{ dir }}">
+
+{% if subject %}
+    <div dir="{{ subjectDir }}"> {{ subject }} </div>
+{% else %}
+    No Subject 
+{% endif %}
+
+<table class="outer">
+    <tr>
+    <td width="100%">
+
+    <table>
+
+    <tr>
+    <th>From: </th>
+    <td>{{ from }}</td>
+    </tr>
+
+    <tr>
+    <th>To: </th>
+    <td>{{ to }}</td>
+    </tr>
+
+{% if cc %}
+    <tr>
+    <th>CC: </th>
+    <td>{{ CC }}</td>
+    </tr>
+{% endif %}
+
+{% if bcc %}
+    <tr>
+    <th>BCC: </th>
+    <td>{{ BCC }}</td>
+    </tr>
+{% endif %}
+
+    <tr>
+    <th>Date: </th>
+    <td dir="{{ dateDir }}">{{ date|safe }}</td>
+    </tr>
+
+{% if user-agent %}
+    <tr>
+    <th>User-Agent: </th>
+    <td>{{ user-agent|safe }}</td>
+    </tr>
+{% endif %}
+
+{% if x-mailer %}
+    <tr>
+    <th>X-Mailer: </th>
+    <td>{{ x-mailer|safe }}</td>
+    </tr>
+{% endif %}
+
+    <tr>
+    <td colspan="2"><div id="attachmentInjectionPoint"></div></td>
+    </tr>
+
+    </table>
+    </td>
+
+{% if userHTML %}
+    <td align="center">{{ userHTML }}</td>
+{% endif %}
+
+    </tr>
+
+</table>
+
+{% if spamHTML %}
+  <div class="spamheader" dir="{{ subjectDir }}">
+      <b>Spam Status</b>&nbsp;
+      <span style="padding-left: 20px;">{{ spamHTML }}</span>
+  </div>
+{% endif %}
+
+</div>
+
+{% endblock %}

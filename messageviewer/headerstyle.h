@@ -40,6 +40,11 @@ class QByteArray;
 class QString;
 class KDateTime;
 
+namespace Grantlee
+{
+    class Engine;
+}
+
 namespace MessageViewer {
 
 class HeaderStrategy;
@@ -123,6 +128,8 @@ public:
   static QString dateStr(const KDateTime &dateTime);
   static QByteArray dateShortStr(const KDateTime &dateTime);
 
+  Grantlee::Engine *engine;
+
 private:
 
   QString mMessagePath;
@@ -133,6 +140,8 @@ private:
   NodeHelper *mNodeHelper;
   bool mAllowAsync;
   QObject *mSourceObject;
+
+  
 };
 }
 
