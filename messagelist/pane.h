@@ -320,6 +320,11 @@ public:
   void reloadGlobalConfiguration();
 
   /**
+   * Returns the QItemSelectionModel for the currently displayed tab.
+   */
+  QItemSelectionModel* currentItemSelectionModel();
+  
+  /**
    * Sets the current folder to be displayed by this Pane.
    * If the specified folder is already open in one of the tabs
    * then that tab is made current (and no reloading happens).
@@ -392,6 +397,13 @@ signals:
    * could be useful
    */
   void statusMessage( const QString &message );
+
+  /**
+   * Emitted when the current tab has changed. Clients using the
+   *  selection model from currentItemSelectionModel() should
+   *  ask for it again, as it may be different now.
+   */
+  void currentTabChanged();
 
 
 private:

@@ -112,6 +112,12 @@ public:
    * Called by Model just before this StorageModel is attacched to it.
    */
   virtual void prepareForScan() = 0;
+
+  /**
+   * The implementation-specific mime data for this list of items.
+   *    Called when the user initiates a drag from the messagelist.
+   */
+  virtual QMimeData* mimeData( QList< MessageItem* > ) const = 0;
 };
 
 } // namespace Core

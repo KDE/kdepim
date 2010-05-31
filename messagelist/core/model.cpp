@@ -456,10 +456,26 @@ int Model::columnCount( const QModelIndex & parent ) const
   return d->mTheme->columns().count();
 }
 
-QVariant Model::data( const QModelIndex &, int ) const
+QVariant Model::data( const QModelIndex & index, int role ) const
 {
-  // This is very inefficient: we don't use it actually
-  return QVariant();
+  /// this is called only when Akonadi is using the selectionmodel
+  ///  for item actions. since akonadi uses the ETM ItemRoles, and the
+  ///  messagelist uses its own internal roles, here we respond
+  ///  to the ETM ones.
+
+  const Item* item = static_cast< Item* >( index.internalPointer() );
+
+  switch( role ) {
+   /// taken from entitytreemodel.h
+    case Qt::UserRole + 3:
+      if( item->type() == MessageList::Core::Item::Message )
+        return QLatin1String( "message/rfc822" );
+      else
+        return QVariant();
+      break;
+    default:
+      return QVariant();
+  }
 }
 
 QVariant Model::headerData(int section, Qt::Orientation, int role) const
@@ -4500,6 +4516,21 @@ Qt::ItemFlags Model::flags( const QModelIndex &index ) const
 
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
+
+QMimeData* MessageList::Core::Model::mimeData( const QModelIndexList& indexes ) const
+{
+  QList< MessageItem* > msgs;
+  foreach( const QModelIndex idx, indexes ) {
+      if( idx.isValid() ) {
+        Item* item = static_cast< Item* >( idx.internalPointer() );
+        if( item->type() == MessageList::Core::Item::Message ) {
+          msgs << static_cast< MessageItem* >( idx.internalPointer() );
+        }
+      }
+  }
+  return storageModel()->mimeData( msgs );
+}
+
 
 Item *Model::rootItem() const
 {
