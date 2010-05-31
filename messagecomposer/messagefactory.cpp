@@ -740,6 +740,16 @@ void MessageFactory::putRepliesInSameFolder( Akonadi::Entity::Id parentColId )
   m_parentFolderId = parentColId;
 }
 
+bool MessageFactory::MDNRequested(KMime::Message::Ptr msg)
+{
+  // extract where to send to:
+  QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+  if ( receiptTo.trimmed().isEmpty() ) return false;
+  receiptTo.remove( QChar::fromLatin1('\n') );
+  return !receiptTo.isEmpty();
+}
+
+
 bool MessageFactory::MDNConfirmMultipleRecipients( KMime::Message::Ptr msg )
 {
   // extract where to send to:
