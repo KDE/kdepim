@@ -80,7 +80,7 @@ public:
 private:
     void init() {
         q->setWarnWhenRunningAtShutdown( false );
-        connect( this, SIGNAL(finished()), q, SLOT(slotOperationFinished()) );
+        connect( this, SIGNAL(finished()), q_func(), SLOT(slotOperationFinished()) );
     }
 
     /* reimp */ void run();

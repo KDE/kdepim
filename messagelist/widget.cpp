@@ -23,6 +23,8 @@
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemmovejob.h>
 
+#include <messagecore/taglistmonitor.h>
+
 #include "storagemodel.h"
 #include "core/messageitem.h"
 #include "core/view.h"
@@ -62,6 +64,8 @@ public:
 
   int mLastSelectedMessage;
   KXMLGUIClient *mXmlGuiClient;
+
+  MessageCore::TagListMonitor *mTagListMonitor;
 };
 
 } // namespace MessageList
@@ -73,6 +77,8 @@ Widget::Widget( QWidget *parent )
   : Core::Widget( parent ), d( new Private( this ) )
 {
   populateStatusFilterCombo();
+  d->mTagListMonitor = new MessageCore::TagListMonitor( this );
+  connect( d->mTagListMonitor, SIGNAL( tagsChanged() ), this, SLOT( populateStatusFilterCombo() ) );
 }
 
 Widget::~Widget()

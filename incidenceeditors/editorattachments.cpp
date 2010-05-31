@@ -668,7 +668,7 @@ void EditorAttachments::saveAttachment( QListWidgetItem *item )
   QString saveAsFile =  KFileDialog::getSaveFileName(
     att->label(),
     QString(), 0,
-    i18nc( "@title", "Save  Attachment" ) );
+    i18nc( "@title", "Save Attachment" ) );
 
   if ( saveAsFile.isEmpty() ||
        ( QFile( saveAsFile ).exists() &&

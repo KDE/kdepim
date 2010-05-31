@@ -97,8 +97,8 @@ public:
         applyWindowID( dialog );
         dialog->setAttribute( Qt::WA_DeleteOnClose );
         dialog->setWindowTitle( i18nc("@title:window", "Delete Certificates") );
-        connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
-        connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
+        connect( dialog, SIGNAL(accepted()), q_func(), SLOT(slotDialogAccepted()) );
+        connect( dialog, SIGNAL(rejected()), q_func(), SLOT(slotDialogRejected()) );
     }
     void ensureDialogShown() {
         if ( dialog )
@@ -315,8 +315,12 @@ void DeleteCertificatesCommand::Private::startDeleteJob( GpgME::Protocol protoco
 
     std::auto_ptr<MultiDeleteJob> job( new MultiDeleteJob( backend ) );
 
-    connect( job.get(), SIGNAL(result(GpgME::Error,GpgME::Key)),
-             q, protocol == CMS ? SLOT(cmsDeleteResult(GpgME::Error)) : SLOT(pgpDeleteResult(GpgME::Error)) );
+    if ( protocol == CMS )
+        connect( job.get(), SIGNAL(result(GpgME::Error,GpgME::Key)),
+                 q_func(), SLOT(cmsDeleteResult(GpgME::Error)) );
+    else
+        connect( job.get(), SIGNAL(result(GpgME::Error,GpgME::Key)),
+                 q_func(), SLOT(pgpDeleteResult(GpgME::Error)) );
 
     connect( job.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );

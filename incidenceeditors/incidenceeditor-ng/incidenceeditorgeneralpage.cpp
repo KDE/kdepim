@@ -60,7 +60,7 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
   layout->addWidget( ieDescription, 4 );
 
-  mDirtyLabel = new QLabel( i18n( "Clean!" ), this );
+  mDirtyLabel = new QLabel( i18n( "Clean" ), this );
   layout->addWidget( mDirtyLabel );
 
   connect( this, SIGNAL(dirtyStatusChanged(bool)),
@@ -75,9 +75,9 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
 void IncidenceEditorGeneralPage::updateDirtyLabel( bool isDirty )
 {
   if ( isDirty )
-    mDirtyLabel->setText( i18n( "Dirty!" ) );
+    mDirtyLabel->setText( i18n( "Dirty" ) );
   else
-    mDirtyLabel->setText( i18n( "Clean!" ) );
+    mDirtyLabel->setText( i18n( "Clean" ) );
 }
 
 #include "moc_incidenceeditorgeneralpage.cpp"

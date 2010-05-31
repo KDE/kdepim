@@ -5,6 +5,7 @@ add_subdirectory( qmlplugin )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
+  ${Boost_INCLUDE_DIR}
 )
 
 set(kab_mobile_srcs
