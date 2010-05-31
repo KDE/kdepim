@@ -2,7 +2,7 @@
     keylistview.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klar�vdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -105,102 +105,6 @@ namespace Kleo {
 
   private:
     GpgME::Key mKey;
-  };
-
-  class KLEO_EXPORT SubkeyKeyListViewItem : public KeyListViewItem {
-  public:
-    SubkeyKeyListViewItem( KeyListView * parent, const GpgME::Subkey & subkey );
-    SubkeyKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Subkey & subkey );
-    SubkeyKeyListViewItem( KeyListViewItem * parent, const GpgME::Subkey & subkey );
-    SubkeyKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Subkey & subkey );
-
-    void setSubkey( const GpgME::Subkey & subkey );
-    const GpgME::Subkey & subkey() const { return mSubkey; }
-
-    enum { RTTI = KeyListViewItem::RTTI + 1 };
-
-    //
-    // only boring stuff below:
-    //
-    /*! \reimp */
-    QString toolTip( int col ) const;
-    /*! \reimp */
-    QString text( int col ) const;
-    /*! \reimp */
-    const QPixmap * pixmap( int col ) const;
-    /*! \reimp */
-    int compare( Q3ListViewItem * other, int col, bool ascending ) const;
-    /*! \reimp */
-    int rtti() const { return RTTI; }
-    /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
-
-  private:
-    GpgME::Subkey mSubkey;
-  };
-
-  class KLEO_EXPORT UserIDKeyListViewItem : public KeyListViewItem {
-  public:
-    UserIDKeyListViewItem( KeyListView * parent, const GpgME::UserID & userid );
-    UserIDKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID & userid );
-    UserIDKeyListViewItem( KeyListViewItem * parent, const GpgME::UserID & userid );
-    UserIDKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::UserID & userid );
-
-    void setUserID( const GpgME::UserID & userid );
-    const GpgME::UserID userID() const { return mUserID; }
-
-    enum { RTTI = KeyListViewItem::RTTI + 2 };
-
-    //
-    // only boring stuff below:
-    //
-    /*! \reimp */
-    QString toolTip( int col ) const;
-    /*! \reimp */
-    QString text( int col ) const;
-    /*! \reimp */
-    const QPixmap * pixmap( int col ) const;
-    /*! \reimp */
-    int compare( Q3ListViewItem * other, int col, bool ascending ) const;
-    /*! \reimp */
-    int rtti() const { return RTTI; }
-    /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
-
-  private:
-    GpgME::UserID mUserID;
-  };
-
-  class KLEO_EXPORT SignatureKeyListViewItem : public KeyListViewItem {
-  public:
-    SignatureKeyListViewItem( KeyListView * parent, const GpgME::UserID::Signature & sig );
-    SignatureKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
-    SignatureKeyListViewItem( KeyListViewItem * parent, const GpgME::UserID::Signature & sig );
-    SignatureKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
-
-    void setSignature( const GpgME::UserID::Signature & sig );
-    const GpgME::UserID::Signature & signature() const { return mSignature; }
-
-    enum { RTTI = KeyListViewItem::RTTI + 3 };
-
-    //
-    // only boring stuff below:
-    //
-    /*! \reimp */
-    QString toolTip( int col ) const;
-    /*! \reimp */
-    QString text( int col ) const;
-    /*! \reimp */
-    const QPixmap * pixmap( int col ) const;
-    /*! \reimp */
-    int compare( Q3ListViewItem * other, int col, bool ascending ) const;
-    /*! \reimp */
-    int rtti() const { return RTTI; }
-    /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
-
-  private:
-    GpgME::UserID::Signature mSignature;
   };
 
 
