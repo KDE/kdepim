@@ -191,11 +191,13 @@ void SignEncryptJob::process()
 
   if ( res.first.error() ) {
     kDebug() << "signing failed:" << res.first.error().asString();
-    //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
+    setError( res.first.error().code() );
+    setErrorText( QString::fromLocal8Bit( res.first.error().asString() ) );
   }
   if ( res.second.error() ) {
     kDebug() << "encrypyting failed:" << res.second.error().asString();
-    //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
+    setError( res.second.error().code() );
+    setErrorText( QString::fromLocal8Bit( res.second.error().asString() ) );
   }
 
   // exec'ed jobs don't delete themselves
