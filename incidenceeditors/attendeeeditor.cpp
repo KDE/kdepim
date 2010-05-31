@@ -353,6 +353,13 @@ void AttendeeEditor::readIncidence( Incidence *incidence )
 
   // Set the initial editing values to the first attendee in the list.
   if ( first ) {
+
+    // Don't update the item here, the user didn't edit it, so it's not needed.
+    // Also, AttendeeEditor's subclasses didn't set the current Item at this point
+    // so if updateAttendee is called now what will happen is that a random item
+    // will get the text of "first".
+    mDisableItemUpdate = true;
+
     mNameEdit->setText( first->fullName() );
     mUid = first->uid();
     mRoleCombo->setCurrentIndex( first->role() );
@@ -363,6 +370,7 @@ void AttendeeEditor::readIncidence( Incidence *incidence )
     }
     mRsvpButton->setChecked( first->RSVP() );
     mRsvpButton->setEnabled( true );
+    mDisableItemUpdate = false;
   }
 }
 
