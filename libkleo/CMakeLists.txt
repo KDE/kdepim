@@ -97,12 +97,8 @@ kde4_add_ui_files(libkleo_ui_common_SRCS
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
 set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 if ( NOT KDEPIM_ONLY_KLEO )
-   set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} )
+   set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS} )
    set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} )
-   if ( QT_QT3SUPPORT_FOUND )
-     set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_ui_SRCS} )
-     set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
-   endif( QT_QT3SUPPORT_FOUND )
 endif ( NOT KDEPIM_ONLY_KLEO)
 
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
