@@ -548,7 +548,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
 
   // extract where to send to:
   QString receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
-  if ( receiptTo.trimmed().isEmpty() ) receiptTo = m_origMsg->from()->asUnicodeString();
+  if( receiptTo.trimmed().isEmpty() ) return KMime::Message::Ptr( new KMime::Message );
   receiptTo.remove( QChar::fromLatin1('\n') );
 
 
