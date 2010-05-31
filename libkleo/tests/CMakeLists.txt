@@ -32,11 +32,11 @@ target_link_libraries(test_keygen  kleo ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} 
 
 ########### next target ###############
 
-#set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
+set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
 
-#kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
+kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
 
-#target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 

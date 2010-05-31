@@ -37,38 +37,36 @@
 
 #include <gpgme++/key.h>
 
-#include <k3listview.h>
-
-#include <QtGui/QPixmap>
 #include <QtCore/QByteArray>
-#include <Qt3Support/Q3PtrList>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QHeaderView>
+#include <KIcon>
 
 class QPainter;
 class QColorGroup;
 class QFont;
 class QColor;
-class QEvent;
 
 namespace Kleo {
 
   // work around moc parser bug...
 #define TEMPLATE_TYPENAME(T) template <typename T>
   TEMPLATE_TYPENAME(T)
-  inline T * lvi_cast( Q3ListViewItem * item ) {
-    return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
+  inline T * lvi_cast( QTreeWidgetItem * item ) {
+    return item && (item->type() == T::RTTI)
       ? static_cast<T*>( item ) : 0 ;
   }
 
   TEMPLATE_TYPENAME(T)
-  inline const T * lvi_cast( const Q3ListViewItem * item ) {
-    return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
+  inline const T * lvi_cast( const QTreeWidgetItem * item ) {
+    return item && (item->type() == T::RTTI)
       ? static_cast<const T*>( item ) : 0 ;
   }
 #undef TEMPLATE_TYPENAME
 
   class KeyListView;
 
-  class KLEO_EXPORT KeyListViewItem : public Q3ListViewItem {
+  class KLEO_EXPORT KeyListViewItem : public QTreeWidgetItem {
   public:
     KeyListViewItem( KeyListView * parent, const GpgME::Key & key );
     KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key );
@@ -79,7 +77,7 @@ namespace Kleo {
     void setKey( const GpgME::Key & key );
     const GpgME::Key & key() const { return mKey; }
 
-    enum { RTTI_MASK = 0xFFFFFFF0, RTTI = 0x2C1362E0 };
+    enum { RTTI = QTreeWidgetItem::UserType + 1 };
 
     //
     // only boring stuff below:
@@ -91,24 +89,16 @@ namespace Kleo {
     /*! \reimp for covariant return */
     KeyListViewItem * nextSibling() const;
     /*! \reimp */
-    int compare( Q3ListViewItem * other, int col, bool ascending ) const;
-    /*! \reimp to allow for key() overload above */
-    QString key( int col, bool ascending ) const { return Q3ListViewItem::key( col, ascending ); }
+    bool operator<( const QTreeWidgetItem &other ) const;
     /*! \reimp */
-    int rtti() const { return RTTI; }
-    /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
-    /*! \reimp */
-    void insertItem( Q3ListViewItem * item );
-    /*! \reimp */
-    void takeItem( Q3ListViewItem * item );
+    void takeItem( QTreeWidgetItem* item );
 
   private:
     GpgME::Key mKey;
   };
 
 
-  class KLEO_EXPORT KeyListView : public K3ListView {
+  class KLEO_EXPORT KeyListView : public QTreeWidget {
     Q_OBJECT
     friend class KeyListViewItem;
   public:
@@ -118,11 +108,11 @@ namespace Kleo {
       virtual ~ColumnStrategy();
       virtual QString title( int column ) const = 0;
       virtual int width( int column, const QFontMetrics & fm ) const;
-      virtual Q3ListView::WidthMode widthMode( int ) const { return Q3ListView::Manual; }
+      virtual QHeaderView::ResizeMode resizeMode( int ) const { return QHeaderView::Interactive; }
 
       virtual QString text( const GpgME::Key & key, int column ) const = 0;
       virtual QString toolTip( const GpgME::Key & key, int column ) const;
-      virtual const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
+      virtual KIcon icon( const GpgME::Key &, int ) const { return KIcon(); }
       virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
     };
 
@@ -151,15 +141,19 @@ namespace Kleo {
 
     void flushKeys() { slotUpdateTimeout(); }
 
-    bool hasSelection() const;
+    bool isMultiSelection() const;
 
     KeyListViewItem * itemByFingerprint( const QByteArray & ) const;
 
+    using QTreeWidget::selectionChanged; // for below, but moc doesn't like it to be in the signals: section
   Q_SIGNALS:
-    void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
+    void doubleClicked( Kleo::KeyListViewItem*, int );
     void returnPressed( Kleo::KeyListViewItem* );
     void selectionChanged( Kleo::KeyListViewItem* );
     void contextMenu( Kleo::KeyListViewItem*, const QPoint& );
+
+  protected:
+    void keyPressEvent(QKeyEvent* event);
 
   public Q_SLOTS:
     virtual void slotAddKey( const GpgME::Key & key );
@@ -169,33 +163,28 @@ namespace Kleo {
     // Only boring stuff below:
     //
   private Q_SLOTS:
-    void slotEmitDoubleClicked( Q3ListViewItem*, const QPoint&, int );
-    void slotEmitReturnPressed( Q3ListViewItem* );
-    void slotEmitSelectionChanged( Q3ListViewItem* );
-    void slotEmitContextMenu( K3ListView*, Q3ListViewItem*, const QPoint& );
+    void slotEmitDoubleClicked( QTreeWidgetItem*, int );
+    void slotEmitReturnPressed( QTreeWidgetItem* );
+    void slotEmitSelectionChanged();
+    void slotEmitContextMenu( const QPoint& pos );
     void slotUpdateTimeout();
 
   public:
     /*! \reimp for covariant return */
     KeyListViewItem * selectedItem() const;
     /*! \reimp */
-    Q3PtrList<KeyListViewItem> selectedItems() const;
+    QList<KeyListViewItem*> selectedItems() const;
     /*! \reimp for covariant return */
     KeyListViewItem * firstChild() const;
     /*! \reimp */
     void clear();
     /*! \reimp */
-    void insertItem( Q3ListViewItem * );
-    /*! \reimp */
-    void takeItem( Q3ListViewItem * );
+    void takeItem( QTreeWidgetItem * );
 
-  protected:
-    virtual bool event(QEvent *e );
   private:
-    bool showToolTip( const QPoint& p );
     void doHierarchicalInsert( const GpgME::Key & );
     void gatherScattered();
-    void scatterGathered( Q3ListViewItem * );
+    void scatterGathered( KeyListViewItem* );
     void registerItem( KeyListViewItem * );
     void deregisterItem( const KeyListViewItem * );
 
