@@ -1,13 +1,12 @@
 /*=========================================================================
-| KCalDAV
+| KABCDAV
 |--------------------------------------------------------------------------
 | (c) 2010  Timothy Pearson
-| (c) 2009  Kumaran Santhanam (initial KDE4 version)
 |
 | This project is released under the GNU General Public License.
 | Please see the file COPYING for more details.
 |--------------------------------------------------------------------------
-| CalDAV resource preferences class.
+| CardDAV resource preferences class.
  ========================================================================*/
 
 /*=========================================================================
@@ -25,34 +24,34 @@
 | NAMESPACES
  ========================================================================*/
 
-using namespace KCal;
+using namespace KABC;
 using namespace KWallet;
 
 /*=========================================================================
 | CONSTANTS
  ========================================================================*/
 
-const QString CalDavPrefs::NO_PASSWORD = "";
-const QString CalDavPrefs::WALLET_FOLDER = "CalDAV resource";
-const QString CalDavPrefs::WALLET_PWD_SUFFIX = ":caldav_password";
+const QString CardDavPrefs::NO_PASSWORD = "";
+const QString CardDavPrefs::WALLET_FOLDER = "CardDAV resource";
+const QString CardDavPrefs::WALLET_PWD_SUFFIX = ":carddav_password";
 
 /*=========================================================================
 | METHODS
  ========================================================================*/
 
-bool CalDavPrefs::setWalletFolder(const QString& folder) {
+bool CardDavPrefs::setWalletFolder(const QString& folder) {
     bool ret = true;
 
     if (!mNoWallet && NULL != mWallet) {
         if (!mWallet->hasFolder(folder)) {
             if (!mWallet->createFolder(folder)) {
                 ret = false;
-                kdWarning() << "can't create the wallet folder for CalDAV passwords";
+                kdWarning() << "can't create the wallet folder for CardDAV passwords";
             }
         }
         if (!mWallet->setFolder(folder)) {
             ret = false;
-            kdWarning() << "can't set the wallet folder for CalDAV passwords";
+            kdWarning() << "can't set the wallet folder for CardDAV passwords";
         }
     } else {
         // the wallet is inaccessible or not configured
@@ -62,7 +61,7 @@ bool CalDavPrefs::setWalletFolder(const QString& folder) {
     return ret;
 }
 
-Wallet* CalDavPrefs::getWallet() {
+Wallet* CardDavPrefs::getWallet() {
     Wallet* ret = NULL;
 
     if (!mNoWallet) {
@@ -74,13 +73,13 @@ Wallet* CalDavPrefs::getWallet() {
             mWallet = Wallet::openWallet(Wallet::NetworkWallet(), 0);
             if (NULL == mWallet) {
                 mNoWallet = true; // can't open the wallet, mark it inaccessible
-                kdWarning() << "can't create a wallet for CalDAV passwords";
+                kdWarning() << "can't create a wallet for CardDAV passwords";
             } else {
                 if (setWalletFolder(WALLET_FOLDER)) {
                     // reserved
                 } else {
                     // can't set the wallet folder, remove the wallet and mark it inaccessible
-                    kdWarning() << "can't set the walet folder for CalDAV passwords";
+                    kdWarning() << "can't set the walet folder for CardDAV passwords";
                     removeWallet(true);
                 }
             }
@@ -92,13 +91,13 @@ Wallet* CalDavPrefs::getWallet() {
     return ret;
 }
 
-void CalDavPrefs::removeWallet(bool noWallet) {
+void CardDavPrefs::removeWallet(bool noWallet) {
     delete mWallet;
     mWallet = NULL;
     mNoWallet = noWallet;
 }
 
-void CalDavPrefs::addPrefix(const QString& prefix) {
+void CardDavPrefs::addPrefix(const QString& prefix) {
     KConfigSkeletonItem::List itemList = items();
     KConfigSkeletonItem::List::Iterator it;
 
@@ -107,7 +106,7 @@ void CalDavPrefs::addPrefix(const QString& prefix) {
     }
 }
 
-bool CalDavPrefs::writePasswordToWallet(const QString& password) {
+bool CardDavPrefs::writePasswordToWallet(const QString& password) {
 
     Wallet* w = getWallet();
 
@@ -115,7 +114,7 @@ bool CalDavPrefs::writePasswordToWallet(const QString& password) {
     if (NULL != w) {
         int rc = w->writePassword(mPrefix + WALLET_PWD_SUFFIX, password);
         if (0 != rc) {
-            kdWarning() << "CalDAV: can't write password to the wallet";
+            kdWarning() << "CardDAV: can't write password to the wallet";
         } else {
             ret = true;
         }
@@ -124,7 +123,7 @@ bool CalDavPrefs::writePasswordToWallet(const QString& password) {
     return ret;
 }
 
-bool CalDavPrefs::readPasswordFromWallet(QString& password) {
+bool CardDavPrefs::readPasswordFromWallet(QString& password) {
     Wallet* w = getWallet();
 
     bool ret = false;
@@ -132,11 +131,11 @@ bool CalDavPrefs::readPasswordFromWallet(QString& password) {
         QString p;
         int rc = w->readPassword(mPrefix + WALLET_PWD_SUFFIX, p);
         if (0 == rc) {
-            //CalDavPrefsSkel::setPassword(p);
+            //CardDavPrefsSkel::setPassword(p);
             password = p;
             ret = true;
         } else {
-            kdWarning() << "CalDAV: can't read password from the wallet";
+            kdWarning() << "CardDAV: can't read password from the wallet";
             password = NO_PASSWORD;
         }
     }
@@ -144,7 +143,7 @@ bool CalDavPrefs::readPasswordFromWallet(QString& password) {
     return ret;
 }
 
-bool CalDavPrefs::removePasswordFromWallet() {
+bool CardDavPrefs::removePasswordFromWallet() {
 
     Wallet* w = getWallet();
 
@@ -154,14 +153,14 @@ bool CalDavPrefs::removePasswordFromWallet() {
         if (0 == rc) {
             ret = true;
         } else {
-            kdWarning() << "CalDAV: can't remove password from the wallet";
+            kdWarning() << "CardDAV: can't remove password from the wallet";
         }
     }
 
     return ret;
 }
 
-void CalDavPrefs::setPassword(const QString& p) {
+void CardDavPrefs::setPassword(const QString& p) {
 
     mPassword = p;
 
@@ -170,21 +169,21 @@ void CalDavPrefs::setPassword(const QString& p) {
     }
 }
 
-QString CalDavPrefs::password() {
+QString CardDavPrefs::password() {
     if (NO_PASSWORD == mPassword) {
         readPasswordFromWallet(mPassword);
     }
     return mPassword;
 }
 
-QString CalDavPrefs::getusername() {
+QString CardDavPrefs::getusername() {
     return username();
 }
 
-void CalDavPrefs::setRememberPassword(bool v) {
+void CardDavPrefs::setRememberPassword(bool v) {
     kdDebug() << "remember: " << v;
 
-    CalDavPrefsSkel::setRememberPassword(v);
+    CardDavPrefsSkel::setRememberPassword(v);
 
     if (!v) {
         // we should not remember password. If there is one already stored, it must be removed.
@@ -193,13 +192,13 @@ void CalDavPrefs::setRememberPassword(bool v) {
     }
 }
 
-void CalDavPrefs::writeConfig() {
-    CalDavPrefsSkel::writeConfig();
+void CardDavPrefs::writeConfig() {
+    CardDavPrefsSkel::writeConfig();
 }
 
-void CalDavPrefs::readConfig() {
+void CardDavPrefs::readConfig() {
 
-    CalDavPrefsSkel::readConfig();
+    CardDavPrefsSkel::readConfig();
 
     // the password is not in config file, try to restore it from the wallet.
     /*if (rememberPassword()) {
@@ -207,7 +206,7 @@ void CalDavPrefs::readConfig() {
     }*/
 }
 
-QString CalDavPrefs::getFullUrl() {
+QString CardDavPrefs::getFullUrl() {
 
     QUrl t(url());
     QString safeURL;
@@ -226,7 +225,7 @@ QString CalDavPrefs::getFullUrl() {
     // Unencode the username, as Zimbra stupidly rejects the %40
     safeURL.replace("%40", "@");
 
-    // Encode any spaces, as libcaldav stupidly fails otherwise
+    // Encode any spaces, as libcarddav stupidly fails otherwise
     safeURL.replace(" ", "%20");
 
     return safeURL;

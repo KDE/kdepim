@@ -1,21 +1,20 @@
 /*=========================================================================
-| KCalDAV
+| KCardDAV
 |--------------------------------------------------------------------------
 | (c) 2010  Timothy Pearson
-| (c) 2009  Kumaran Santhanam (initial KDE4 version)
 |
 | This project is released under the GNU General Public License.
 | Please see the file COPYING for more details.
 |--------------------------------------------------------------------------
-| Job class for accessing remote calendars.
+| Job class for accessing remote address books.
  ========================================================================*/
 
 /*=========================================================================
 | INCLUDES
  ========================================================================*/
 
-#ifndef KCALDAV_JOB_H
-#define KCALDAV_JOB_H
+#ifndef KABCDAV_JOB_H
+#define KABCDAV_JOB_H
 
 #include <qthread.h>
 #include <qstring.h>
@@ -23,10 +22,10 @@
 #include <qapplication.h>
 
 extern "C" {
-    #include <libcaldav/caldav.h>
+    #include <libcarddav/carddav.h>
 }
 
-namespace KCal {
+namespace KABC {
 
 /*=========================================================================
 | CLASS
@@ -35,16 +34,16 @@ namespace KCal {
 /**
  * Calendar job.
  */
-class CalDavJob : public QThread {
+class CardDavJob : public QThread {
 
 public:
 
     /**
      * @param url URL to load.
      */
-    CalDavJob(const QString& url = QString());
+    CardDavJob(const QString& url = QString());
 
-    virtual ~CalDavJob();
+    virtual ~CardDavJob();
 
     /**
      * Sets a new URL to load.
@@ -116,11 +115,11 @@ protected:
     /**
      * Main run method for jobs. Jobs should not override run() method.
      * Instead of this they should override this one.
-     * @param caldavRuntime specific libcaldav runtime information. This pointer should not be saved for the usage
+     * @param carddavRuntime specific libcarddav runtime information. This pointer should not be saved for the usage
      * outside of runJob.
-     * @return libcaldav response code (see CALDAV_RESPONSE)
+     * @return libcarddav response code (see CARDDAV_RESPONSE)
      */
-    virtual int runJob(runtime_info* caldavRuntime) = 0;
+    virtual int runJob(runtime_info* carddavRuntime) = 0;
 
     /**
      * Some cleaning. Jobs may (and usually should) override this method.
@@ -142,7 +141,7 @@ protected:
      * should be done. Call setErrorString() to set the error after processing is done.
      * @param err error structure.
      */
-    virtual void processError(const caldav_error* err);
+    virtual void processError(const carddav_error* err);
 
 private:
 
@@ -153,10 +152,10 @@ private:
     QObject *mParent;
     int mType;
 
-    void enableCaldavDebug(runtime_info*);
+    void enableCarddavDebug(runtime_info*);
 };
 
-} // namespace KCal
+} // namespace KABC
 
-#endif // KCALDAV_JOB_H
+#endif // KABCDAV_JOB_H
 

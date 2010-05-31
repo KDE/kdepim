@@ -1,8 +1,7 @@
 /*=========================================================================
-| KCalDAV
+| KCardDAV
 |--------------------------------------------------------------------------
 | (c) 2010  Timothy Pearson
-| (c) 2009  Kumaran Santhanam (initial KDE4 version)
 |
 | This project is released under the GNU General Public License.
 | Please see the file COPYING for more details.
@@ -14,14 +13,14 @@
 | INCLUDES
  ========================================================================*/
 
-#ifndef KCAL_RESOURCECALDAV_H
-#define KCAL_RESOURCECALDAV_H
+#ifndef KABC_RESOURCECARDDAV_H
+#define KABC_RESOURCECARDDAV_H
 
 #include "preferences.h"
 #include <qthread.h>
 #include <qptrqueue.h>
 
-#include <libkcal/resourcecached.h>
+#include <kabcresourcecached.h>
 #include <libkdepim/progressmanager.h>
 
 #include <kabc/locknull.h>
@@ -29,41 +28,44 @@
 #include <kdepimmacros.h>
 #include <kconfig.h>
 
-namespace KCal {
+namespace KABC {
 
-class CalDavReader;
-class CalDavWriter;
+class CardDavReader;
+class CardDavWriter;
 
 /*=========================================================================
 | CLASS
  ========================================================================*/
 
 /**
- * This class provides a resource for accessing calendars via CalDAV protocol.
+ * This class provides a resource for accessing calendars via CardDAV protocol.
  */
-class KDE_EXPORT ResourceCalDav : public ResourceCached
+class KDE_EXPORT ResourceCardDav : public ResourceCached
 {
     Q_OBJECT
 
 public:
 
-    explicit ResourceCalDav( const KConfig *config );
-    virtual ~ResourceCalDav();
+    explicit ResourceCardDav( const KConfig *config );
+    virtual ~ResourceCardDav();
 
     void readConfig( const KConfig *config );
     void writeConfig( KConfig *config );
 
+    virtual Ticket *requestSaveTicket();
+    virtual void releaseSaveTicket( Ticket* );
+
     /**
      * @return This resource preferences.
      */
-    CalDavPrefs* prefs() {
+    CardDavPrefs* prefs() {
         return mPrefs;
     }
 
     /**
      * @return This resource preferences.
      */
-    const CalDavPrefs* prefs() const {
+    const CardDavPrefs* prefs() const {
         return mPrefs;
     }
 
@@ -76,8 +78,6 @@ protected slots:
     virtual bool doSave();
 
     void writingFinished();
-
-    void releaseReadLockout();
 
 protected:
 
@@ -96,10 +96,9 @@ protected:
 //     virtual bool doLoad( bool syncCache );
 //     virtual bool doSave( bool syncCache );
 
-    virtual bool doLoad();
-//    virtual bool doSave();
+    virtual bool load();
 
-    virtual bool doSave( bool syncCache, Incidence *incidence );
+    virtual bool save( Ticket* ticket );
 
     virtual KABC::Lock* lock();
 
@@ -107,7 +106,7 @@ protected:
      * Creates prefs and configures them.
      * @return a newly created preferences object. It should be removed by the caller.
      */
-    CalDavPrefs* createPrefs() const;
+    CardDavPrefs* createPrefs() const;
 
     /**
      * Initializes internal state.
@@ -115,11 +114,6 @@ protected:
      * creates writing and reading jobs and preferences objects.
      */
     void init();
-
-    /**
-     * Updates the progress bar
-     */
-    void updateProgressBar(int direction);
 
     /**
      * Initiates calendar loading process.
@@ -147,20 +141,6 @@ protected:
      * @return true if write was queued successfully, false if not
      */
     bool startWriting(const QString& url);
-
-    /**
-     * Returns a list of incidences as a valid iCalendar string.
-     * @param inc list of incidences.
-     * @return a string in iCalendar format which describes the given incidences.
-     */
-    QString getICalString(const Incidence::List& inc);
-
-    /**
-     * Changes read-only status of incidences from a given list.
-     * @param inc list of incidences.
-     * @param readOnly read-only status that all the incidences should have after the method finishes.
-     */
-    static void setIncidencesReadOnly(Incidence::List& inc, bool readOnly);
 
     /**
      * Ensures incidences' read-only states are the same as the calendar's read-only state.
@@ -210,14 +190,12 @@ private:
     static const int DEFAULT_RELOAD_POLICY;
     static const int DEFAULT_SAVE_POLICY;
 
-    bool readLockout;
-
     // members: ===============================================================
 
     KABC::LockNull mLock;
-    CalDavPrefs* mPrefs;
-    CalDavReader* mLoader;
-    CalDavWriter* mWriter;
+    CardDavPrefs* mPrefs;
+    CardDavReader* mLoader;
+    CardDavWriter* mWriter;
     KPIM::ProgressItem *mProgress;
 
     bool mLoadingQueueReady;
@@ -230,7 +208,7 @@ private:
 
 
 
-} // namespace KCal
+} // namespace KABC
 
-#endif // KCAL_RESOURCECALDAV_H
+#endif // KABC_RESOURCECARDDAV_H
 

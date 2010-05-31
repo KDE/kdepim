@@ -1,8 +1,7 @@
 /*=========================================================================
-| KCalDAV
+| KCardDAV
 |--------------------------------------------------------------------------
 | (c) 2010  Timothy Pearson
-| (c) 2009  Kumaran Santhanam (initial KDE4 version)
 |
 | This project is released under the GNU General Public License.
 | Please see the file COPYING for more details.
@@ -21,8 +20,8 @@
 #include <qapplication.h>
 #include <qeventloop.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
+#include <kabc/addressee.h>
+#include <kabc/vcardconverter.h>
 
 #include <klocale.h>
 #include <kpassdlg.h>
@@ -30,8 +29,9 @@
 #include <qdatetime.h>
 #include <qmutex.h>
 #include <qthread.h>
+#include <qtimer.h>
 
-#ifdef KCALDAV_DEBUG
+#ifdef KCARDDAV_DEBUG
     #include <qfile.h>
 #endif
 
@@ -43,19 +43,19 @@
 | NAMESPACE
  ========================================================================*/
 
-using namespace KCal;
+using namespace KABC;
 
 /*=========================================================================
 | CONSTANTS
  ========================================================================*/
 
-const unsigned long ResourceCalDav::TERMINATION_WAITING_TIME = 3 * 1000; // 3 seconds
-const int ResourceCalDav::CACHE_DAYS = 90;
+const unsigned long ResourceCardDav::TERMINATION_WAITING_TIME = 3 * 1000; // 3 seconds
+const int ResourceCardDav::CACHE_DAYS = 90;
 
-const int ResourceCalDav::DEFAULT_RELOAD_INTERVAL   = 10;
-const int ResourceCalDav::DEFAULT_SAVE_INTERVAL     = 10;
-const int ResourceCalDav::DEFAULT_RELOAD_POLICY     = ResourceCached::ReloadInterval;
-const int ResourceCalDav::DEFAULT_SAVE_POLICY       = ResourceCached::SaveDelayed;
+const int ResourceCardDav::DEFAULT_RELOAD_INTERVAL   = 10;
+const int ResourceCardDav::DEFAULT_SAVE_INTERVAL     = 10;
+//const int ResourceCardDav::DEFAULT_RELOAD_POLICY     = ResourceCached::ReloadInterval;
+//const int ResourceCardDav::DEFAULT_SAVE_POLICY       = ResourceCached::SaveDelayed;
 
 /*=========================================================================
 | UTILITY
@@ -67,9 +67,8 @@ const int ResourceCalDav::DEFAULT_SAVE_POLICY       = ResourceCached::SaveDelaye
 | CONSTRUCTOR / DESTRUCTOR
  ========================================================================*/
 
-ResourceCalDav::ResourceCalDav( const KConfig *config ) :
+ResourceCardDav::ResourceCardDav( const KConfig *config ) :
     ResourceCached(config)
-    , readLockout(false)
     , mLock(true)
     , mPrefs(NULL)
     , mLoader(NULL)
@@ -78,7 +77,7 @@ ResourceCalDav::ResourceCalDav( const KConfig *config ) :
     , mLoadingQueueReady(true)
     , mWritingQueueReady(true)
 {
-    log("ResourceCalDav(config)");
+    log("ResourceCardDav(config)");
     init();
 
     if ( config ) {
@@ -86,7 +85,7 @@ ResourceCalDav::ResourceCalDav( const KConfig *config ) :
     }
 }
 
-ResourceCalDav::~ResourceCalDav() {
+ResourceCardDav::~ResourceCardDav() {
     log("jobs termination");
 
     // This must save the users data before termination below to prevent data loss...
@@ -126,7 +125,7 @@ ResourceCalDav::~ResourceCalDav() {
 | GENERAL METHODS
  ========================================================================*/
 
-bool ResourceCalDav::doLoad() {
+bool ResourceCardDav::load() {
     bool syncCache = true;
 
     if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true)) {
@@ -135,15 +134,15 @@ bool ResourceCalDav::doLoad() {
 
     log(QString("doLoad(%1)").arg(syncCache));
 
-    clearCache();
+    //clearCache();
 
     log("loading from cache");
-    disableChangeNotification();
+    //disableChangeNotification();
     loadCache();
-    enableChangeNotification();
-    clearChanges();	// TODO: Determine if this really needs to be here, as it might clear out the calendar prematurely causing user confusion while the download process is running
-    emit resourceChanged(this);
-    emit resourceLoaded(this);
+    //enableChangeNotification();
+    clearChanges();
+    addressBook()->emitAddressBookChanged();
+    emit loadingFinished( this );
 
     log("starting download job");
     startLoading(mPrefs->getFullUrl());
@@ -151,7 +150,7 @@ bool ResourceCalDav::doLoad() {
     return true;
 }
 
-bool ResourceCalDav::doSave() {
+bool ResourceCardDav::doSave() {
     bool syncCache = true;
 
     log(QString("doSave(%1)").arg(syncCache));
@@ -186,48 +185,50 @@ bool ResourceCalDav::doSave() {
 }
 
 
-bool ResourceCalDav::doSave( bool syncCache, Incidence *incidence ) {
-    // To suppress warning about doSave(bool) method hides ResourceCached::doSave(bool, Incidence)
-    return ResourceCached::doSave();
+bool ResourceCardDav::save( Ticket* ticket ) {
+    // To suppress warning about doSave() method hides ResourceCached::doSave(Ticket)
+    //return ResourceCached::doSave();
+    return doSave();
 }
 
-KABC::Lock* ResourceCalDav::lock() {
+KABC::Lock* ResourceCardDav::lock() {
     log("lock()");
     return &mLock;
 }
 
-void ResourceCalDav::readConfig( const KConfig *config ) {
+void ResourceCardDav::readConfig( const KConfig *config ) {
     log("readConfig");
     mPrefs->readConfig();
-    ResourceCached::readConfig(config);
+    // FIXME KABC
+    //ResourceCached::readConfig(config);
 }
 
-void ResourceCalDav::writeConfig( KConfig *config ) {
+void ResourceCardDav::writeConfig( KConfig *config ) {
     log("writeConfig()");
-    ResourceCalendar::writeConfig(config);
+    Resource::writeConfig(config);
     mPrefs->writeConfig();
     ResourceCached::writeConfig(config);
 }
 
-CalDavPrefs* ResourceCalDav::createPrefs() const {
+CardDavPrefs* ResourceCardDav::createPrefs() const {
     log("createPrefs()");
-    CalDavPrefs* p = new CalDavPrefs(identifier());
+    CardDavPrefs* p = new CardDavPrefs(identifier());
     return p;
 }
 
-void ResourceCalDav::init() {
+void ResourceCardDav::init() {
     // default settings
-    setReloadInterval(DEFAULT_RELOAD_INTERVAL);
-    setReloadPolicy(DEFAULT_RELOAD_POLICY);
-    setSaveInterval(DEFAULT_SAVE_INTERVAL);
-    setSavePolicy(DEFAULT_SAVE_POLICY);
+//     setReloadInterval(DEFAULT_RELOAD_INTERVAL);
+//     setReloadPolicy(DEFAULT_RELOAD_POLICY);
+//     setSaveInterval(DEFAULT_SAVE_INTERVAL);
+//     setSavePolicy(DEFAULT_SAVE_POLICY);
 
     // creating preferences
     mPrefs = createPrefs();
 
     // creating reader/writer instances
-    mLoader = new CalDavReader;
-    mWriter = new CalDavWriter;
+    mLoader = new CardDavReader;
+    mWriter = new CardDavWriter;
 
     // creating jobs
     // Qt4 handles this quite differently, as shown below,
@@ -235,73 +236,44 @@ void ResourceCalDav::init() {
 //     connect(mLoader, SIGNAL(finished()), this, SLOT(loadFinished()));
 //     connect(mWriter, SIGNAL(finished()), this, SLOT(writingFinished()));
 
-    setType("ResourceCalDav");
+    setType("ResourceCardDav");
 }
 
-void ResourceCalDav::setIncidencesReadOnly(Incidence::List& inc, bool readOnly) {
-    Incidence::List::Iterator it;
-    for ( it = inc.begin(); it != inc.end(); ++it ) {
-        (*it)->setReadOnly( readOnly );
-    }
-}
-
-void ResourceCalDav::ensureReadOnlyFlagHonored() {
+void ResourceCardDav::ensureReadOnlyFlagHonored() {
     //disableChangeNotification();
 
-    Incidence::List inc( rawIncidences() );
-    setIncidencesReadOnly(inc, readOnly());
+    // FIXME KABC
+    //Incidence::List inc( rawIncidences() );
+    //setIncidencesReadOnly(inc, readOnly());
 
     //enableChangeNotification();
 
-    emit resourceChanged(this);
+    addressBook()->emitAddressBookChanged();
 }
 
-void ResourceCalDav::setReadOnly(bool v) {
+void ResourceCardDav::setReadOnly(bool v) {
     KRES::Resource::setReadOnly(v);
     log("ensuring read only flag honored");
     ensureReadOnlyFlagHonored();
-}
-
-void ResourceCalDav::updateProgressBar(int direction) {
-    int current_queued_events;
-    static int original_queued_events;
-
-    // See if anything is in the queues
-    current_queued_events = mWritingQueue.count() + mLoadingQueue.count();
-    if (current_queued_events > original_queued_events) {
-        original_queued_events = current_queued_events;
-    }
-
-    if (current_queued_events == 0) {
-        if ( mProgress != NULL) {
-            mProgress->setComplete();
-            mProgress = NULL;
-            original_queued_events = 0;
-        }
-    }
-    else {
-        if (mProgress == NULL) {
-            if (direction == 0) mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
-            if (direction == 1) mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Uploading Calendar") );
-        }
-        mProgress->setProgress( ((((float)original_queued_events-(float)current_queued_events)*100)/(float)original_queued_events) );
-    }
 }
 
 /*=========================================================================
 | READING METHODS
  ========================================================================*/
 
-void ResourceCalDav::loadingQueuePush(const LoadingTask *task) {
+void ResourceCardDav::loadingQueuePush(const LoadingTask *task) {
    if ((mLoadingQueue.isEmpty() == true) && (mLoader->running() == false)) {
         mLoadingQueue.enqueue(task);
         loadingQueuePop();
-        updateProgressBar(0);
+        if (mProgress == NULL) {
+            mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
+            mProgress->setProgress( 0 );
+        }
     }
 }
 
-void ResourceCalDav::loadingQueuePop() {
-    if (!mLoadingQueueReady || mLoadingQueue.isEmpty() || (mWritingQueue.isEmpty() == false) || (mWriter->running() == true) || !mWritingQueueReady || (readLockout == true)) {
+void ResourceCardDav::loadingQueuePop() {
+    if (!mLoadingQueueReady || mLoadingQueue.isEmpty() || (mWritingQueue.isEmpty() == false) || (mWriter->running() == true) || !mWritingQueueReady) {
         return;
     }
 
@@ -318,15 +290,14 @@ void ResourceCalDav::loadingQueuePop() {
     mLoader->setParent(this);
     mLoader->setType(0);
 
-    QDateTime dt(QDate::currentDate());
-    mLoader->setRange(dt.addDays(-CACHE_DAYS), dt.addDays(CACHE_DAYS));
+    //QDateTime dt(QDate::currentDate());
+    //mLoader->setRange(dt.addDays(-CACHE_DAYS), dt.addDays(CACHE_DAYS));
     //mLoader->setGetAll();
 
     mLoadingQueueReady = false;
 
     log("starting actual download job");
     mLoader->start(QThread::LowestPriority);
-    updateProgressBar(0);
 
     // if all ok, removing the task from the queue
     mLoadingQueue.dequeue();
@@ -334,18 +305,21 @@ void ResourceCalDav::loadingQueuePop() {
     delete t;
 }
 
-void ResourceCalDav::startLoading(const QString& url) {
+void ResourceCardDav::startLoading(const QString& url) {
     LoadingTask *t = new LoadingTask;
     t->url = url;
     loadingQueuePush(t);
 }
 
-void ResourceCalDav::loadFinished() {
-    CalDavReader* loader = mLoader;
+void ResourceCardDav::loadFinished() {
+    CardDavReader* loader = mLoader;
 
     log("load finished");
 
-    updateProgressBar(0);
+    if ( mProgress != NULL) {
+        mProgress->setComplete();
+        mProgress = NULL;
+    }
 
     if (!loader) {
         log("loader is NULL");
@@ -358,7 +332,7 @@ void ResourceCalDav::loadFinished() {
                 QCString newpass;
                 if (KPasswordDialog::getPassword (newpass, QString("<b>") + i18n("Remote authorization required") + QString("</b><p>") + i18n("Please input the password for") + QString(" ") + mPrefs->getusername(), NULL) != 1) {
                     log("load error: " + loader->errorString() );
-                    loadError(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+                    addressBook()->error(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
                 }
                 else {
                     // Set new password and try again
@@ -368,34 +342,35 @@ void ResourceCalDav::loadFinished() {
             }
             else {
                 log("load error: " + loader->errorString() );
-                loadError(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+                addressBook()->error(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
             }
         }
         else {
             log("load error: " + loader->errorString() );
-            loadError(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+            addressBook()->error(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
         }
     } else {
         log("successful load");
         QString data = loader->data();
 
         if (!data.isNull() && !data.isEmpty()) {
-            // TODO: I don't know why, but some schedules on http://caldav-test.ioda.net/ (I used it for testing)
+            // TODO: I don't know why, but some schedules on http://carddav-test.ioda.net/ (I used it for testing)
             // have some lines separated by single \r rather than \n or \r\n.
             // ICalFormat fails to parse that.
             data.replace("\r\n", "\n"); // to avoid \r\n becomes \n\n after the next line
             data.replace('\r', '\n');
 
             log("trying to parse...");
+            //printf("PARSING:\n\r%s\n\r", data.ascii());
             if (parseData(data)) {
-                // FIXME: The agenda view can crash when a change is
+                // FIXME: The agenda view can crash when a change is 
                 // made on a remote server and a reload is requested!
                 log("... parsing is ok");
                 log("clearing changes");
-                enableChangeNotification();
+                //enableChangeNotification();
                 clearChanges();
-                emit resourceChanged(this);
-                emit resourceLoaded(this);
+                addressBook()->emitAddressBookChanged();
+                emit loadingFinished( this );
             }
         }
     }
@@ -406,20 +381,21 @@ void ResourceCalDav::loadFinished() {
     loadingQueuePop();
 }
 
-bool ResourceCalDav::checkData(const QString& data) {
+bool ResourceCardDav::checkData(const QString& data) {
     log("checking the data");
 
-    ICalFormat ical;
+    KABC::VCardConverter converter;
     bool ret = true;
-    if (!ical.fromString(&mCalendar, data)) {
-        log("invalid ical string");
+    KABC::VCardConverter conv;
+    Addressee::List addressees = conv.parseVCards( data );
+    if (addressees.isEmpty() == true) {
         ret = false;
     }
 
     return ret;
 }
 
-bool ResourceCalDav::parseData(const QString& data) {
+bool ResourceCardDav::parseData(const QString& data) {
     log("parseData()");
 
     bool ret = true;
@@ -427,26 +403,34 @@ bool ResourceCalDav::parseData(const QString& data) {
     // check if the data is OK
     // May be it's not efficient (parsing is done twice), but it should be safe
     if (!checkData(data)) {
-        loadError(i18n("Parsing calendar data failed."));
+        addressBook()->error(i18n("Parsing calendar data failed."));
         return false;
     }
 
-    log("clearing cache");
-    clearCache();
+    // FIXME KABC
+    //log("clearing cache");
+    //clearCache();
 
-    disableChangeNotification();
+    //disableChangeNotification();
 
     log("actually parsing the data");
 
-    ICalFormat ical;
-    if ( !ical.fromString( &mCalendar, data ) ) {
-        // this should never happen, but...
-        ret = false;
+    KABC::VCardConverter conv;
+    Addressee::List addressees = conv.parseVCards( data );
+    Addressee::List::ConstIterator it;
+    for( it = addressees.begin(); it != addressees.end(); ++it ) {
+      KABC::Addressee addr = *it;
+      if ( !addr.isEmpty() ) {
+        addr.setResource( this );
+
+        insertAddressee( addr );
+        clearChange( addr );
+      }
     }
 
     // debug code here -------------------------------------------------------
-#ifdef KCALDAV_DEBUG
-    const QString fout_path = "/tmp/kcaldav_download_" + identifier() + ".tmp";
+#ifdef KCARDDAV_DEBUG
+    const QString fout_path = "/tmp/kcarddav_download_" + identifier() + ".tmp";
 
     QFile fout(fout_path);
     if (fout.open(IO_WriteOnly | IO_Append)) {
@@ -455,12 +439,12 @@ bool ResourceCalDav::parseData(const QString& data) {
         sout << data << "\n";
         fout.close();
     } else {
-        loadError(i18n("can't open file"));
+        addressBook()->error(i18n("can't open file"));
     }
-#endif // KCALDAV_DEBUG
+#endif // KCARDDAV_DEBUG
     // end of debug code ----------------------------------------------------
 
-    enableChangeNotification();
+    //enableChangeNotification();
 
     if (ret) {
         log("parsing is ok");
@@ -480,37 +464,34 @@ bool ResourceCalDav::parseData(const QString& data) {
 | WRITING METHODS
  ========================================================================*/
 
-QString ResourceCalDav::getICalString(const Incidence::List& inc) {
-    if (inc.isEmpty()) {
-        return "";
-    }
+Ticket *ResourceCardDav::requestSaveTicket()
+{
+  if ( !addressBook() ) {
+    kdDebug(5700) << "no addressbook" << endl;
+    return 0;
+  }
 
-    CalendarLocal loc(timeZoneId());
-    QString data = "";
-    ICalFormat ical;
-
-    // NOTE: This is very susceptible to invalid entries in added/changed/deletedIncidences
-    // Be very careful with clearChange/clearChanges, and be sure to clear after load and save...
-    for(Incidence::List::ConstIterator it = inc.constBegin(); it != inc.constEnd(); ++it) {
-        Incidence *i = (*it)->clone();
-        loc.addIncidence(i);
-    }
-
-    data = ical.toString(&loc);
-
-    return data;
+  return createTicket( this );
 }
 
-void ResourceCalDav::writingQueuePush(const WritingTask *task) {
+void ResourceCardDav::releaseSaveTicket( Ticket *ticket )
+{
+  delete ticket;
+}
+
+void ResourceCardDav::writingQueuePush(const WritingTask *task) {
 //     printf("task->added: %s\n\r", task->added.ascii());
 //     printf("task->deleted: %s\n\r", task->deleted.ascii());
 //     printf("task->changed: %s\n\r", task->changed.ascii());
     mWritingQueue.enqueue(task);
     writingQueuePop();
-    updateProgressBar(1);
+    if (mProgress == NULL) {
+        mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Saving Calendar") );
+        mProgress->setProgress( 0 );
+    }
 }
 
-void ResourceCalDav::writingQueuePop() {
+void ResourceCardDav::writingQueuePop() {
     if (!mWritingQueueReady || mWritingQueue.isEmpty()) {
         return;
     }
@@ -530,8 +511,8 @@ void ResourceCalDav::writingQueuePop() {
     mWriter->setParent(this);
     mWriter->setType(1);
 
-#ifdef KCALDAV_DEBUG
-    const QString fout_path = "/tmp/kcaldav_upload_" + identifier() + ".tmp";
+#ifdef KCARDDAV_DEBUG
+    const QString fout_path = "/tmp/kcarddav_upload_" + identifier() + ".tmp";
 
     QFile fout(fout_path);
     if (fout.open(IO_WriteOnly | IO_Append)) {
@@ -542,7 +523,7 @@ void ResourceCalDav::writingQueuePop() {
         sout << "================== Deleted:\n" << t->deleted << "\n";
         fout.close();
     } else {
-        loadError(i18n("can't open file"));
+        addressBook()->error(i18n("can't open file"));
     }
 #endif // debug
 
@@ -554,7 +535,6 @@ void ResourceCalDav::writingQueuePop() {
 
     log("starting actual write job");
     mWriter->start(QThread::LowestPriority);
-    updateProgressBar(1);
 
     // if all ok, remove the task from the queue
     mWritingQueue.dequeue();
@@ -562,7 +542,7 @@ void ResourceCalDav::writingQueuePop() {
     delete t;
 }
 
-bool ResourceCalDav::event ( QEvent * e ) {
+bool ResourceCardDav::event ( QEvent * e ) {
     if (e->type() == 1000) {
         // Read done
         loadFinished();
@@ -576,12 +556,11 @@ bool ResourceCalDav::event ( QEvent * e ) {
     else return FALSE;
 }
 
-void ResourceCalDav::releaseReadLockout() {
-    readLockout = false;
-}
-
-bool ResourceCalDav::startWriting(const QString& url) {
+bool ResourceCardDav::startWriting(const QString& url) {
     log("startWriting: url = " + url);
+
+    WritingTask *t = new WritingTask;
+    KABC::VCardConverter converter;
 
     // WARNING: This will segfault if a separate read or write thread
     // modifies the calendar with clearChanges() or similar
@@ -591,70 +570,28 @@ bool ResourceCalDav::startWriting(const QString& url) {
         return false;
     }
 
-    // If we don't lock the read out for a few seconds, it would be possible for the old calendar to be
-    // downloaded before our changes are committed, presenting a very bad image to the user as his/her appointments
-    // revert to the state they were in before the write (albiet temporarily)
-    readLockout = true;
+    KABC::Addressee::List added = addedAddressees();
+    KABC::Addressee::List changed = changedAddressees();
+    KABC::Addressee::List deleted = deletedAddressees();
 
-    // This needs to send each event separately; i.e. if two events were added they need
-    // to be extracted and pushed on the stack independently (using two calls to writingQueuePush())
+    t->url = url;
+    // FIXME KABC
+    t->added = converter.createVCards(added);		// This crashes when an event is added from the remote server and save() is subsequently called
+    t->changed = converter.createVCards(changed);
+    t->deleted = converter.createVCards(deleted);
 
-    Incidence::List added = addedIncidences();
-    Incidence::List changed = changedIncidences();
-    Incidence::List deleted = deletedIncidences();
-
-    Incidence::List::ConstIterator it;
-    Incidence::List currentIncidence;
-
-    for( it = added.begin(); it != added.end(); ++it ) {
-        WritingTask *t = new WritingTask;
-
-        currentIncidence.clear();
-        currentIncidence.append(*it);
-
-        t->url = url;
-        t->added = getICalString(currentIncidence);
-        t->changed = "";
-        t->deleted = "";
-
-        writingQueuePush(t);
-    }
-
-    for( it = changed.begin(); it != changed.end(); ++it ) {
-        WritingTask *t = new WritingTask;
-
-        currentIncidence.clear();
-        currentIncidence.append(*it);
-
-        t->url = url;
-        t->added = "";
-        t->changed = getICalString(currentIncidence);
-        t->deleted = "";
-
-        writingQueuePush(t);
-    }
-
-    for( it = deleted.begin(); it != deleted.end(); ++it ) {
-        WritingTask *t = new WritingTask;
-
-        currentIncidence.clear();
-        currentIncidence.append(*it);
-
-        t->url = url;
-        t->added = "";
-        t->changed = "";
-        t->deleted = getICalString(currentIncidence);
-
-        writingQueuePush(t);
-    }
+    writingQueuePush(t);
 
     return true;
 }
 
-void ResourceCalDav::writingFinished() {
+void ResourceCardDav::writingFinished() {
     log("writing finished");
 
-    updateProgressBar(1);
+    if ( mProgress != NULL) {
+        mProgress->setComplete();
+        mProgress = NULL;
+    }
 
     if (!mWriter) {
         log("mWriter is NULL");
@@ -667,7 +604,7 @@ void ResourceCalDav::writingFinished() {
                 QCString newpass;
                 if (KPasswordDialog::getPassword (newpass, QString("<b>") + i18n("Remote authorization required") + QString("</b><p>") + i18n("Please input the password for") + QString(" ") + mPrefs->getusername(), NULL) != 1) {
                     log("write error: " + mWriter->errorString());
-                    saveError(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+                    addressBook()->error(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
                 }
                 else {
                     // Set new password and try again
@@ -677,20 +614,17 @@ void ResourceCalDav::writingFinished() {
             }
             else {
                 log("write error: " + mWriter->errorString());
-                saveError(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+                addressBook()->error(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
             }
         }
         else {
             log("write error: " + mWriter->errorString());
-            saveError(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+            addressBook()->error(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
         }
     } else {
         log("success");
         // is there something to do here?
     }
-
-    // Give the remote system a few seconds to process the data before we allow any read operations
-    QTimer::singleShot( 3000, this, SLOT(releaseReadLockout()) );
 
     // Writing queue and mWritingQueueReady flag are not shared resources, i.e. only one thread has an access to them.
     // That's why no mutexes are required.

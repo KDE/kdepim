@@ -1,13 +1,12 @@
 /*=========================================================================
-| KCalDAV
+| KCardDAV
 |--------------------------------------------------------------------------
 | (c) 2010  Timothy Pearson
-| (c) 2009  Kumaran Santhanam (initial KDE4 version)
 |
 | This project is released under the GNU General Public License.
 | Please see the file COPYING for more details.
 |--------------------------------------------------------------------------
-| Job class for accessing remote calendars.
+| Job class for accessing remote address books.
  ========================================================================*/
 
 /*=========================================================================
@@ -26,7 +25,7 @@
 | NAMESPACE
  ========================================================================*/
 
-using namespace KCal;
+using namespace KABC;
 
 /*=========================================================================
 | STATIC
@@ -36,12 +35,12 @@ using namespace KCal;
 | CONSTRUCTOR AND DESTRUCTOR
  ========================================================================*/
 
-CalDavJob::CalDavJob(const QString& url) {
+CardDavJob::CardDavJob(const QString& url) {
     cleanJob();
     setUrl(url);
 }
 
-CalDavJob::~CalDavJob() {
+CardDavJob::~CardDavJob() {
 }
 
 
@@ -49,20 +48,20 @@ CalDavJob::~CalDavJob() {
 | METHODS
  ========================================================================*/
 
-void CalDavJob::enableCaldavDebug(runtime_info* rt) {
+void CardDavJob::enableCarddavDebug(runtime_info* rt) {
     if (rt && rt->options) {
         rt->options->debug = 0; // if debug = 1, it causes major CPU overhead
         rt->options->verify_ssl_certificate = FALSE;
     }
 }
 
-void CalDavJob::setErrorString(const QString& err, const long number) {
+void CardDavJob::setErrorString(const QString& err, const long number) {
     mError = true;
     mErrorString = err;
     mErrorNumber = number;
 }
 
-void CalDavJob::processError(const caldav_error* err) {
+void CardDavJob::processError(const carddav_error* err) {
     QString error_string;
 
     long code = err->code;
@@ -70,7 +69,7 @@ void CalDavJob::processError(const caldav_error* err) {
     if (-401 == code) { // unauthorized
         error_string = i18n("Unauthorized. Username or password incorrect.");
     } else if (-599 <= code && code <= -300) {
-        error_string = i18n("HTTP error %1. Maybe, URL is not a CalDAV resource.").arg(-code);
+        error_string = i18n("HTTP error %1. Maybe, URL is not a CardDAV resource.").arg(-code);
     } else {
         error_string = err->str;
     }
@@ -79,28 +78,28 @@ void CalDavJob::processError(const caldav_error* err) {
 }
 
 
-void CalDavJob::run() {
+void CardDavJob::run() {
     log("cleaning job");
     cleanJob();
 
     int res = OK;
 
-    runtime_info* caldav_runtime = caldav_get_runtime_info();
+    runtime_info* carddav_runtime = carddav_get_runtime_info();
 
-#ifdef KCALDAV_DEBUG
-    log("setting debug caldav options");
-    enableCaldavDebug(caldav_runtime);
-#endif // KCALDAV_DEBUG
+#ifdef KABCDAV_DEBUG
+    log("setting debug carddav options");
+    enableCarddavDebug(carddav_runtime);
+#endif // KABCDAV_DEBUG
 
     log("running job");
-    res = runJob(caldav_runtime);
+    res = runJob(carddav_runtime);
 
     if (OK != res) {
         log("job failed");
-        processError(caldav_runtime->error);
+        processError(carddav_runtime->error);
     }
 
-    caldav_free_runtime_info(&caldav_runtime);
+    carddav_free_runtime_info(&carddav_runtime);
 
     // Signal done
     // 1000 is read, 1001 is write
