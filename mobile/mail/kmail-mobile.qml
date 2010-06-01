@@ -18,18 +18,18 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 import org.kde 4.5
-import org.kde.akonadi 4.5
-import org.kde.messageviewer 4.5
+import org.kde.akonadi 4.5 as Akonadi
+import org.kde.messageviewer 4.5 as MessageViewer
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.MainView {
   id: kmailMobile
 
-  SystemPalette { id: palette; colorGroup: "Active" }
+  QML.SystemPalette { id: palette; colorGroup: "Active" }
 
-  MessageView {
+  MessageViewer.MessageView {
     id: messageView
     z: 0
     anchors.left: parent.left
@@ -70,7 +70,7 @@ KPIM.MainView {
           favoritesModel : favoritesList
 
           contextActions: [
-            Column {
+            QML.Column {
               anchors.fill: parent
               height: 480 / 6 * 3
               KPIM.Button {
@@ -100,7 +100,7 @@ KPIM.MainView {
             }
           ]
         },
-        FavoriteSelector {
+        Akonadi.FavoriteSelector {
           id : favoriteSelector
           anchors.fill : parent
           visible : false
@@ -123,10 +123,10 @@ KPIM.MainView {
       titleText: KDE.i18n( "Folders" )
       handleHeight: 150
       content: [
-        Item {
+        QML.Item {
           anchors.fill: parent
 
-          AkonadiBreadcrumbNavigationView {
+          Akonadi.AkonadiBreadcrumbNavigationView {
             id : collectionView
             width: 1/3 * folderPanel.contentWidth
             anchors.top: parent.top
@@ -157,7 +157,7 @@ KPIM.MainView {
               folderPanel.collapse()
             }
           }
-          Rectangle {
+          QML.Rectangle {
             id : headerActionOverlay
             color: "#00000000" // Set a transparant color.
             opacity : { headerList.count > 0 ? 0 : 1; }
@@ -295,7 +295,7 @@ KPIM.MainView {
     }
   }
 
-  Connections {
+  QML.Connections {
     target: startPage
     onAccountSelected : {
       application.setSelectedAccount(row);
@@ -305,12 +305,12 @@ KPIM.MainView {
 
   }
 
-  Connections {
+  QML.Connections {
     target: collectionView
     onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
   }
 
-  Connections {
+  QML.Connections {
     target: collectionView
     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
