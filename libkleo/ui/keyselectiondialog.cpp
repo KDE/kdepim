@@ -393,7 +393,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mKeyListView->setRootIsDecorated( true );
   mKeyListView->setSortingEnabled( true );
   mKeyListView->header()->setSortIndicatorShown( true );
-  mKeyListView->header()->setSortIndicator( 1, Qt::Ascending ); // sort by User ID
+  mKeyListView->header()->setSortIndicator( 1, Qt::AscendingOrder ); // sort by User ID
   if ( extendedSelection )
     mKeyListView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mTopLayout->addWidget( mKeyListView, 10 );

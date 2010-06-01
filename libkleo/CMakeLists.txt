@@ -5,7 +5,7 @@ if (KDEPIM_ONLY_KLEO)
 endif (KDEPIM_ONLY_KLEO)
 
 remove_definitions( -DQT_NO_STL )
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -DQT_STL )
+add_definitions ( -DQT_STL )
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 #parts of Boost don't build with the gcc pedantic option, so remove that option
 string(REPLACE "-pedantic" "" FOO ${CMAKE_CXX_FLAGS})
