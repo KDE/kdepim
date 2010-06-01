@@ -562,12 +562,12 @@ KCal::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to )
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     const Item item = i.next().value();
-    KCal::Incidence::Ptr e = Akonadi::event( item );
-    if ( !e ) {
+    KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
+    if ( !incidence ) {
       continue;
     }
 
-    if ( e->recurs() ) {
+    if ( incidence->recurs() ) {
       appendRecurringAlarms( alarmList, item, from, to );
     } else {
       appendAlarms( alarmList, item, from, to );
