@@ -113,6 +113,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
       IncidenceEditor *editor = v.editor();
       editor->editIncidence( item, QDate::currentDate() );
       editor->selectInvitationCounterProposal( true );
+      editor->setIncidenceChanger( new Akonadi::IncidenceChanger( mCalendar, this, -1 ) );
       editor->show();
     }
 

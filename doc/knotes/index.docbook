@@ -183,7 +183,7 @@ exit the dialog without renaming the note, press the
 <listitem>
 <para>To hide a note, click the <guiicon>X</guiicon> in the upper
 right corner of the titlebar of the note or select <menuchoice><shortcut>
-<keycap>Esc</keycap></shortcut><guimenuitem>Hide</guimenuitem>
+&Esc;</shortcut><guimenuitem>Hide</guimenuitem>
 </menuchoice> in the context menu.  The note will no longer be
 displayed on the screen.  The note itself will not be deleted.</para>
 </listitem>
@@ -389,7 +389,7 @@ a default resource installed that saves all notes in a file
 under <filename>$<envar>HOME</envar>/.kde/share/apps/knotes/notes.ics</filename>; 
 you can add more resources by using the <guilabel>Resource Configuration</guilabel> 
 dialog, which is available in
-the &systemsettings; under <guilabel>Advanced</guilabel>->
+the &systemsettings; under <guilabel>Personal Information</guilabel>->
 <guilabel>&kde; Resources</guilabel>:</para>
 
 <para>Load the configuration module you want to add your resource(s) to

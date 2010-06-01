@@ -46,6 +46,7 @@
 #include <QtCore/QAtomicInt>
 #include <QtCore/QScopedPointer>
 #include <QtGui/QItemSelectionModel>
+#include <QtCore/QMimeData>
 
 namespace MessageList
 {
@@ -374,6 +375,21 @@ int StorageModel::rowCount( const QModelIndex &parent ) const
     return d->mModel->rowCount();
   return 0; // this model is flat.
 }
+
+QMimeData* StorageModel::mimeData( QList< MessageList::Core::MessageItem* > items ) const
+{
+  QMimeData *data = new QMimeData();
+  KUrl::List urls;
+  foreach ( MessageList::Core::MessageItem* mi, items ) {
+    Akonadi::Item item = itemForRow( mi->currentModelIndexRow() );
+    urls << item.url( Item::UrlWithMimeType );
+  }
+
+  urls.populateMimeData( data );
+
+  return data;
+}
+
 
 void StorageModel::prepareForScan()
 {

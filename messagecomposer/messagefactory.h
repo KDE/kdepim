@@ -205,7 +205,8 @@ public:
    * When creating MDNs, the user needs to be asked for confirmation in specific
    *  cases according to RFC 2298.
    */
-
+  static bool MDNRequested( KMime::Message::Ptr msg );
+  
   /**
    * If sending an MDN requires confirmation due to multiple addresses.
    *

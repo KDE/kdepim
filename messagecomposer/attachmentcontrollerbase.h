@@ -74,6 +74,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void addAttachment( const KUrl &url );
     void addAttachments( const KUrl::List &urls );
     void showAttachPublicKeyDialog();
+    virtual void attachMyPublicKey() {};
 
   signals:
     void actionsCreated();
