@@ -141,6 +141,7 @@ CalendarSearch::Private::Private( CalendarSearch* qq )
 
     kcalFilterProxyModel = new CalFilterProxyModel( q );
     kcalFilterProxyModel->setSourceModel( incidenceFilterProxyModel );
+    kcalFilterProxyModel->setDynamicSortFilter( true );
 
     dateRangeProxyModel = new DateRangeFilterProxyModel;
     dateRangeProxyModel->setDynamicSortFilter( true );
