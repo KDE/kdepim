@@ -28,6 +28,7 @@ Item {
   property alias startText: startText.text
   property alias contextActions: contextContainer.children
   property alias favoritesModel : favsView.model
+  property alias showAccountsList : accountsList.visible
 
   signal accountSelected( int row )
   signal favoriteSelected( string favName )
@@ -61,7 +62,7 @@ Item {
     spacing: 10
 
     Column {
-      width: parent.width / 3
+      width: accountsList.visible ? (parent.width / 3) : 0
       height: parent.height
       spacing: 5
 
