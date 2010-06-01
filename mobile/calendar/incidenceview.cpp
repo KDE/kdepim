@@ -41,6 +41,7 @@ IncidenceView::IncidenceView( QWidget* parent )
   qmlRegisterType<DIEDateTime>( "org.kde.incidenceeditors", 4, 5, "DateTimeEditor" );
 
   mItem.setPayload<KCal::Incidence::Ptr>( KCal::Incidence::Ptr( new KCal::Event ) );
+  mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
 }
 
 IncidenceView::~IncidenceView()
@@ -51,7 +52,7 @@ IncidenceView::~IncidenceView()
 void IncidenceView::load( const Akonadi::Item &item, const QDate &date )
 {
   Q_ASSERT( item.hasPayload() ); // TODO: Fetch payload if there is no payload set.
-  
+
   mItem = item;
   mEditor->load( mItem.payload<Incidence::Ptr>() );
   mActiveDate = date;
@@ -69,15 +70,15 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 
 void IncidenceView::setDateTimeEditor( IncidenceDateTimeEditor *editor )
 {
-  mEditor->combine( editor );
   editor->setActiveDate( mActiveDate );
   editor->load( mItem.payload<Incidence::ConstPtr>() );
+  mEditor->combine( editor );
 }
 
 void IncidenceView::setGeneralEditor( IncidenceGeneralEditor *editor )
 {
-  mEditor->combine( editor );
   editor->load( mItem.payload<Incidence::Ptr>() );
+  mEditor->combine( editor );
 }
 
 void IncidenceView::save()
