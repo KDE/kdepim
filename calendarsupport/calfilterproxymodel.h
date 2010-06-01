@@ -37,10 +37,10 @@ namespace Akonadi {
 
     KCal::CalFilter* filter() const;
     void setFilter( KCal::CalFilter* filter );
-    
+
   protected:
     /* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex& source_parent ) const;
-    
+
   private:
     class Private;
     Private* const d;
