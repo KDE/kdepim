@@ -371,7 +371,7 @@ void ResourceCardDav::loadFinished() {
             data.replace('\r', '\n');
 
             log("trying to parse...");
-            printf("PARSING:\n\r%s\n\r", data.ascii());
+            //printf("PARSING:\n\r%s\n\r", data.ascii());
             if (parseData(data)) {
                 // FIXME: The agenda view can crash when a change is 
                 // made on a remote server and a reload is requested!
