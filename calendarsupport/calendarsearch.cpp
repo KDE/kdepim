@@ -22,6 +22,7 @@
 #include "calendarsearchinterface.h"
 #include "daterangefilterproxymodel.h"
 #include "incidencefilterproxymodel.h"
+#include "calfilterproxymodel.h"
 #include "utils.h"
 
 #include <Akonadi/Collection>
@@ -82,6 +83,7 @@ public:
     KSelectionProxyModel* selectionProxyModel;
     DateRangeFilterProxyModel* dateRangeProxyModel;
     IncidenceFilterProxyModel* incidenceFilterProxyModel;
+    CalFilterProxyModel *kcalFilterProxyModel; // support for libkcal filters
     QItemSelectionModel* selectionModel;
     ChangeRecorder *monitor;
     CalendarSearch::IncidenceTypes incidenceTypes;
@@ -137,9 +139,12 @@ CalendarSearch::Private::Private( CalendarSearch* qq )
     incidenceFilterProxyModel->setSourceModel( filterProxy );
     incidenceFilterProxyModel->showAll();
 
+    kcalFilterProxyModel = new CalFilterProxyModel( q );
+    kcalFilterProxyModel->setSourceModel( incidenceFilterProxyModel );
+
     dateRangeProxyModel = new DateRangeFilterProxyModel;
     dateRangeProxyModel->setDynamicSortFilter( true );
-    dateRangeProxyModel->setSourceModel( incidenceFilterProxyModel );
+    dateRangeProxyModel->setSourceModel( kcalFilterProxyModel );
 }
 
 void CalendarSearch::Private::updateSearch() {
@@ -336,6 +341,11 @@ void CalendarSearch::setSelectionModel( QItemSelectionModel* selectionModel ) {
         else
             d->preselectedCollections.append( cid );
     }
+}
+
+void CalendarSearch::setFilter( KCal::CalFilter *filter )
+{
+  d->kcalFilterProxyModel->setFilter( filter );
 }
 
 #include "calendarsearch.moc"
