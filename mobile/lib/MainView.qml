@@ -24,6 +24,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 QML.Rectangle {
   height: 480
   width: 800
+  color : "#FAFAFA"
 
   KPIM.WindowBar {
     z: 100
