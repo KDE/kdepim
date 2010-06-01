@@ -32,6 +32,7 @@ install(FILES
   Action.qml
   AttachmentList.qml
   Button.qml
+  Button2.qml
   CompletionSlider.qml
   ItemListView.qml
   ItemListViewDelegate.qml
@@ -40,4 +41,7 @@ install(FILES
   WindowBar.qml
   sliderbackground.png
   sliderhandle.png
+  button-left.png
+  button-right.png
+  button-center.png
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)

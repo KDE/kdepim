@@ -1,4 +1,5 @@
 Button 4.5 Button.qml
+Button2 4.5 Button2.qml
 Action 4.5 Action.qml
 AttachmentList 4.5 AttachmentList.qml
 CompletionSlider 4.5 CompletionSlider.qml
