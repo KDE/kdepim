@@ -96,24 +96,10 @@ Item {
         width: parent.width
       }
 
-      Rectangle {
-        color: "gray"
-        width: parent.width
-        height: 2
-      }
-
-      Text {
-        id: favoritesText
-        width: parent.width
-        height: 14
-        text: KDE.i18n( "Favorites:" )
-        font.bold: true
-      }
-
       ListView {
         id : favsView
         width: parent.width
-        height: parent.height - contextContainer.height - favoritesText.height - 2 - 4 * 5
+        height: parent.height - contextContainer.height - 2 - 4 * 5
         delegate : favDelegate
         clip: true
       }
