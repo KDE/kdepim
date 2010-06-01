@@ -63,6 +63,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
     void startTimeChanged( const QTime &newTime );
     void startDateChanged( const QDate &newDate );
     void startSpecChanged();
+    void updateRecurrence();
     void updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence );
 
   private slots: /// Todo specific

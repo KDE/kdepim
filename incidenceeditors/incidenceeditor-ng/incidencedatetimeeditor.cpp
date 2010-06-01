@@ -55,8 +55,11 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
+  mUi->mRecurrenceEditButton->setEnabled( false );
+
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
+  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)), SLOT(updateRecurrence()) );
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
 #endif
 
@@ -228,6 +231,16 @@ void IncidenceDateTimeEditor::startSpecChanged()
   mCurrentStartDateTime.setTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
 //   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
 }
+
+void IncidenceDateTimeEditor::updateRecurrence()
+{
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mRecurrenceEditButton->setEnabled( mUi->mRecurrenceCombo->currentIndex() > 0 );
+  if ( mUi->mRecurrenceCombo->currentIndex() > 0 ) {
+  }
+#endif
+}
+
 
 void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )
 {
