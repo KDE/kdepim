@@ -51,7 +51,7 @@ Item {
       width : ListView.view.width
       onIndexSelected : {
         console.log("favorite clicked: " + model.display );
-        favoriteSelected(model.display); 
+        favoriteSelected(model.display);
       }
     }
   }
