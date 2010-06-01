@@ -615,7 +615,7 @@ void IncidenceDateTimeEditor::setDateTimes( const KDateTime &start, const KDateT
     mUi->mEndTimeEdit->setTime( end.time() );
     mUi->mTimeZoneComboEnd->selectTimeSpec( end.timeSpec() );
   } else {
-    KDateTime dt( QDate::currentDate(), QTime::currentTime() );
+    KDateTime dt( QDate::currentDate(), QTime::currentTime().addSecs( 60 * 60 ) );
     mUi->mEndDateEdit->setDate( dt.date() );
     mUi->mEndTimeEdit->setTime( dt.time() );
     mUi->mTimeZoneComboEnd->selectTimeSpec( dt.timeSpec() );

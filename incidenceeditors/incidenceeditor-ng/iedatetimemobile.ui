@@ -6,17 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>544</width>
-    <height>155</height>
+    <width>545</width>
+    <height>213</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="mHasTimeCheck">
+     <property name="whatsThis">
+      <string>Set if this to-do's start and due dates have times associated with them.</string>
+     </property>
+     <property name="text">
+      <string>Ti&amp;me associated</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
       <widget class="QLabel" name="mStartLabel">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -41,34 +51,25 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="1">
+   <item row="1" column="2">
     <widget class="QDateEdit" name="mStartDateEdit"/>
    </item>
-   <item row="0" column="2">
-    <widget class="QTimeEdit" name="mStartTimeEdit"/>
-   </item>
-   <item row="0" column="3">
-    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+   <item row="1" column="3">
+    <widget class="QTimeEdit" name="mStartTimeEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-     </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="3" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_8">
      <item>
       <widget class="QLabel" name="mEndLabel">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -93,53 +94,41 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="1">
-    <widget class="QDateEdit" name="mEndDateEdit"/>
-   </item>
-   <item row="1" column="2">
-    <widget class="QTimeEdit" name="mEndTimeEdit"/>
-   </item>
-   <item row="1" column="3">
-    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+   <item row="3" column="2">
+    <widget class="QDateEdit" name="mEndDateEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QTimeEdit" name="mEndTimeEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QCheckBox" name="mHasTimeCheck">
-     <property name="whatsThis">
-      <string>Set if this to-do's start and due dates have times associated with them.</string>
+   <item row="5" column="0">
+    <widget class="QLabel" name="mFreeBusyLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
-      <string>Ti&amp;me associated</string>
+      <string>Show time as:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="4">
+   <item row="5" column="2" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="mFreeBusyLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Show time as:</string>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QRadioButton" name="mFreeRadio">
        <property name="text">
@@ -156,7 +145,7 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="0" colspan="4">
+   <item row="6" column="0" colspan="5">
     <layout class="QHBoxLayout" name="horizontalLayout_12">
      <item>
       <widget class="QStackedWidget" name="mAlarmStack">
@@ -315,6 +304,38 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item row="2" column="2" colspan="3">
+    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2" colspan="2">
+    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
