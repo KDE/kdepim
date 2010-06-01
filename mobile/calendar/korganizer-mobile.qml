@@ -63,8 +63,8 @@ KPIM.MainView {
       anchors.bottom: parent.bottom
       anchors.right: backButton.left
       anchors.margins: 12
-      width: 48
-      height: 48
+      width: parent.height / 6
+      height: parent.height / 6
       icon: KDE.iconPath( "document-edit", width );
       onClicked: {
         application.editIncidence( parent.item, parent.activeDate );
@@ -77,8 +77,8 @@ KPIM.MainView {
       anchors.bottom: parent.bottom
       anchors.right: parent.right
       anchors.margins: 12
-      width: 48
-      height: 48
+      width: parent.height / 6
+      height: parent.height / 6
       icon: KDE.iconPath( "edit-undo", width );
       onClicked: {
         eventView.visible = false;
@@ -137,14 +137,14 @@ KPIM.MainView {
                 width : parent.width
                 buttonText : KDE.i18n( "New Appointment" )
                 font.bold:  true
-                onClicked : { application.newIncidence(); }
+                onClicked : { startPanel.collapse(); application.newIncidence(); }
               }
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
                 buttonText : KDE.i18n( "Add Calendar" )
                 font.bold:  true
-                onClicked : { application.launchAccountWizard() }
+                onClicked : { startPanel.collapse(); application.launchAccountWizard() }
               }
               KPIM.Button {
                 height : 480 / 6
@@ -199,22 +199,14 @@ KPIM.MainView {
              anchors.right: parent.right
              spacing: 2
              Row {
-               Text {
-                 id: dateText
-                 height: 30
-                 verticalAlignment: "AlignVCenter"
-                 text: KDE.i18n( "Show the date:" )
-               }
+               height: 480 / 6
+               width: parent.width
                QmlDateEdit {
                  id: dateEdit
-                 anchors.left: parent.right// WTF is the QmlDateEdit overlapping the dateText when this is not set?
-                 height: 30
+                 width: parent.width
+                 height: 480 / 6
+                 displayFormat: "MMM d yy"
                }
-             }
-             Text {
-               height: 30
-               verticalAlignment: "AlignVCenter"
-               text: KDE.i18n( "Using the following calendar view:" )
              }
              Row {
                spacing: 2
@@ -222,7 +214,7 @@ KPIM.MainView {
 
                KPIM.Button {
                  id: dayButton
-                 buttonText: KDE.i18n( "Day" )
+                 buttonText: KDE.i18n( "Day view" )
                  height: 480 / 6
                  width: parent.width / 3
                  onClicked: {
@@ -232,7 +224,7 @@ KPIM.MainView {
                }
                KPIM.Button {
                  id: weekButton
-                 buttonText: KDE.i18n( "Week" )
+                 buttonText: KDE.i18n( "Week view" )
                  height: 480 / 6
                  width: parent.width / 3
                  onClicked: {
@@ -242,7 +234,7 @@ KPIM.MainView {
                }
                KPIM.Button {
                  id: monthButton
-                 buttonText: KDE.i18n( "Month" )
+                 buttonText: KDE.i18n( "Month view" )
                  height: 480 / 6
                  width: parent.width / 3
                  onClicked: {
@@ -268,13 +260,6 @@ KPIM.MainView {
 
             }
             KPIM.Button {
-              id: searchAppointmentButton
-              height: 480 / 6
-              width: parent.width
-              anchors.horizontalCenter: parent.horizontalCenter
-              buttonText: KDE.i18n( "Search Appointment" )
-            }
-            KPIM.Button {
               id: configureAccountButton
               anchors.horizontalCenter: parent.horizontalCenter
               height: 480 / 6
@@ -282,7 +267,6 @@ KPIM.MainView {
               buttonText: KDE.i18n( "Configure Account" )
             }
           }
-
         }
       ]
     }
@@ -300,18 +284,18 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: KDE.i18n( "New Event" )
-            onClicked: { application.newIncidence() }
+            buttonText: KDE.i18n( "New Appointment" )
+            onClicked: { application.newIncidence(); actionPanel.collapse() }
           },
-          KPIM.Button {
-            id: moveButton
-            anchors.top: newButton.bottom
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Move" )
-            onClicked: actionPanel.collapse();
-          },
+//           KPIM.Button {
+//             id: moveButton
+//             anchors.top: newButton.bottom
+//             anchors.horizontalCenter: parent.horizontalCenter;
+//             width: parent.width - 10
+//             height: parent.height / 6
+//             buttonText: KDE.i18n( "Move" )
+//             onClicked: actionPanel.collapse();
+//           },
           KPIM.Action {
              id: deleteButton
              anchors.top: moveButton.bottom;
@@ -329,7 +313,7 @@ KPIM.MainView {
              height: parent.height / 6
              buttonText: KDE.i18n( "Previous" )
              onClicked: {
-               itemList.previousItem()
+               agenda.gotoNext();
                actionPanel.collapse()
              }
            },
@@ -340,7 +324,7 @@ KPIM.MainView {
              height: parent.height / 6
              buttonText: KDE.i18n( "Next" )
              onClicked: {
-               itemList.nextItem();
+               agenda.gotoPrevious();
                actionPanel.collapse();
              }
            }
