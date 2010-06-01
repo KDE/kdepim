@@ -33,7 +33,6 @@ macro( add_messagecomposer_cryptotest _source )
       ${QT_QTGUI_LIBRARY}
       ${QT_QTCORE_LIBRARY}
       ${KDE4_KDEUI_LIBS}
-      ${QT_QT3SUPPORT_LIBRARY}
       ${QGPGME_LIBRARIES}
       )
 endmacro( add_messagecomposer_cryptotest )
