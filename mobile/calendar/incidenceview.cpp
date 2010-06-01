@@ -71,7 +71,9 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 void IncidenceView::setDateTimeEditor( IncidenceDateTimeEditor *editor )
 {
   editor->setActiveDate( mActiveDate );
-  editor->load( mItem.payload<Incidence::ConstPtr>() );
+  // TODO: ugly dynamic pointer cast should get removed when payload method supports
+  //       retrieving const pointers.
+  editor->load( boost::dynamic_pointer_cast<const Incidence>( mItem.payload<Incidence::Ptr>() ) );
   mEditor->combine( editor );
 }
 
