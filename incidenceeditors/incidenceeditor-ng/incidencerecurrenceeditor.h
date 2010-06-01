@@ -23,6 +23,8 @@
 
 #include "incidenceeditor-ng.h"
 
+class QCheckBox;
+
 namespace Ui {
 class IncidenceRecurrenceEditor;
 }
@@ -33,6 +35,14 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:
+    enum RecurrenceType {
+      Daily,
+      Weekly,
+      Monthly,
+      Yearly
+    };
+  
+  public:
     IncidenceRecurrenceEditor( QWidget *parent = 0 );
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
@@ -41,9 +51,30 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
 
   private slots:
     void updateRecerrenceLabel( int recurrenceRadioIndex );
-    
+
   private:
+    QBitArray days() const;
+    int monthlyDay() const;
+    int monthlyPos() const;
+    int yearlyPosCount() const;
+    void setByDay( RecurrenceType type, int day );
+    void setByMonth( int day, int month );
+    void setByPos( int count, int weekday );
+    void setByPos( int count, int weekday, int month );
+    void setDateTimes( const QDateTime &from, const QDateTime &to = QDateTime() );
+    void setDays( const QBitArray &days );
+    void setDefaults( const QDateTime &from, const QDateTime &to );
+    void setDuration( int duration );
+    void setExceptionDates( const KCal::DateList &dates );
+    void setFrequency( int f );
+    void setRecurrenceEnabled( bool enabled );
+    void setType( RecurrenceType type );
+
+  private:
+    KCal::DateList mExceptionDates;
+
     Ui::IncidenceRecurrenceEditor *mUi;
+    QCheckBox *mDayBoxes[7];
 };
 
 } // IncidenceEditorsNG
