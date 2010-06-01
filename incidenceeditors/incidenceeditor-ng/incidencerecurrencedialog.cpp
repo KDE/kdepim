@@ -24,8 +24,15 @@
 using namespace IncidenceEditorsNG;
 
 IncidenceRecurrenceDialog::IncidenceRecurrenceDialog( QWidget *parent  )
+  : KDialog( parent )
+  , mEditor( new IncidenceRecurrenceEditor( this ) )
 {
-  setMainWidget( new IncidenceRecurrenceEditor( this ) );
+  setMainWidget( mEditor );
   setButtons( KDialog::Ok | KDialog::Cancel );
+}
+
+IncidenceEditor *IncidenceRecurrenceDialog::editor() const
+{
+  return mEditor;
 }
 

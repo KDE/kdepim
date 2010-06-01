@@ -20,8 +20,7 @@
 #ifndef INCIDENCEDATETIMEEDITOR_H
 #define INCIDENCEDATETIMEEDITOR_H
 
-#include "incidenceeditor-ng.h"
-#include "incidenceeditors-ng_export.h"
+#include "combinedincidenceeditor.h"
 
 #include <KCal/Event>
 #include <KCal/Todo>
@@ -36,7 +35,9 @@ class IncidenceDateTimeEditor;
 
 namespace IncidenceEditorsNG {
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
+class IncidenceRecurrenceDialog;
+
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public CombinedIncidenceEditor
 {
   Q_OBJECT
   public:
@@ -90,6 +91,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
   private:
     KCal::ICalTimeZones *mTimeZones;
     Ui::IncidenceDateTimeEditor *mUi;
+
+#ifndef KDEPIM_MOBILE_UI
+    IncidenceRecurrenceDialog *mRecurrenceDialog;
+#endif
 
     QDate mActiveDate;
     /**

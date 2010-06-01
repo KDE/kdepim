@@ -36,7 +36,7 @@ using namespace IncidenceEditorsNG;
 using namespace KCal;
 
 IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
-  : IncidenceEditor( parent )
+  : CombinedIncidenceEditor( parent )
   , mTimeZones( new ICalTimeZones )
   , mUi( new Ui::IncidenceDateTimeEditor )
 {
@@ -57,6 +57,10 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
   mUi->mRecurrenceEditButton->setEnabled( false );
 
+  mRecurrenceDialog = new IncidenceRecurrenceDialog( this );
+  mRecurrenceDialog->hide();
+  combine( mRecurrenceDialog->editor() );
+
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
   connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)), SLOT(updateRecurrence()) );
@@ -75,11 +79,15 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
 {
+#ifndef KDEPIM_MOBILE_UI
+  delete mRecurrenceDialog;
+#endif
   delete mTimeZones;
 }
 
 void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 {
+  CombinedIncidenceEditor::load( incidence );
   mLoadedIncidence = incidence;
 
   // We can only handle events or todos.
@@ -119,6 +127,7 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 
 void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 {
+  CombinedIncidenceEditor::save( incidence );
   if ( KCal::Todo::Ptr todo = IncidenceDateTimeEditor::incidence<Todo>( incidence ) )
     save( todo );
   else if ( KCal::Event::Ptr event = IncidenceDateTimeEditor::incidence<Event>( incidence ) )
@@ -148,9 +157,9 @@ void IncidenceDateTimeEditor::setActiveDate( const QDate &activeDate )
 
 void IncidenceDateTimeEditor::editRecurrence()
 {
-  QPointer<IncidenceRecurrenceDialog> dialog( new IncidenceRecurrenceDialog( this ) );
-  dialog->exec();
-  delete dialog;
+#ifndef KDEPIM_MOBILE_UI
+  mRecurrenceDialog->show();
+#endif
 }
 
 void IncidenceDateTimeEditor::enableAlarm( bool enable )

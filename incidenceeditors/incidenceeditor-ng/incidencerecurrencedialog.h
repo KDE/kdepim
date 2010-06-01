@@ -21,14 +21,22 @@
 #ifndef INCIDENCERECURRENCEDIALOG_H
 #define INCIDENCERECURRENCEDIALOG_H
 
-#include <kdialog.h>
+#include <KDialog>
 
 namespace IncidenceEditorsNG {
 
+class IncidenceEditor;  
+class IncidenceRecurrenceEditor;
+  
 class IncidenceRecurrenceDialog : public KDialog
 {
   public:
     IncidenceRecurrenceDialog( QWidget *parent = 0 );
+
+    IncidenceEditor *editor() const;
+
+  private:
+    IncidenceRecurrenceEditor *mEditor;
 };
 
 } // IncidenceEditorsNG
