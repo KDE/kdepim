@@ -272,9 +272,19 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
   Akonadi::Item groupItem( KABC::ContactGroup::mimeType() );
   groupItem.setPayload<KABC::ContactGroup>( group );
 
-  new Akonadi::ItemCreateJob( groupItem, targetCollection );
-
-  accept();
+  Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, targetCollection );
+  connect( createJob, SIGNAL( result( KJob* ) ), this, SLOT( slotContactGroupCreateJobResult( KJob* ) ) );
 }
+
+void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
+{
+  if ( job->error() ) {
+    // TODO: After string freeze, show nice error dialog here.
+    kWarning() << "Unable to create distribution list:" << job->errorText();
+  } else {
+    accept();
+  }
+}
+
 
 #include "distributionlistdialog.moc"
