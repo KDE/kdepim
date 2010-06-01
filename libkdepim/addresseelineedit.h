@@ -32,9 +32,6 @@
 
 #include "ldap/ldapclient.h"
 
-#include <Akonadi/Job>
-#include <Akonadi/Collection>
-
 #include <KLineEdit>
 
 class QDropEvent;
@@ -43,6 +40,10 @@ class QKeyEvent;
 class QMenu;
 class QMouseEvent;
 class QObject;
+
+namespace Akonadi {
+  class Item;
+}
 
 namespace KABC {
   class Addressee;
@@ -110,6 +111,8 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * Same as the above, but this time with contact groups.
      */
     void addContactGroup( const KABC::ContactGroup &group, int weight, int source = -1 );
+
+    void addItem( const Akonadi::Item &item, int weight, int source = -1 );
 
     /**
      * Adds the @p name of a completion source and its @p weight

@@ -498,13 +498,7 @@ void AddresseeLineEdit::Private::akonadiHandlePending()
       s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
     if ( sourceIndex >= 0 ) {
       kDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
-      // FIXME: code duplication with search result handling
-      if ( item.hasPayload<KABC::Addressee>() ) {
-        q->addContact( item.payload<KABC::Addressee>(), 1, sourceIndex ); // TODO calculate proper
-                                                                          // weight somehow..
-      } else if ( item.hasPayload<KABC::ContactGroup>() ) {
-        q->addContactGroup( item.payload<KABC::ContactGroup>(), 1, sourceIndex );
-      }
+      q->addItem( item, 1, sourceIndex );
 
       // remove from the pending
       it = s_static->akonadiPendingItems.erase( it );
@@ -763,11 +757,8 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
       /* fetch job already started, don't need to start another one,
          so just append the item as pending */
       s_static->akonadiPendingItems.append( item );
-    } else if ( item.hasPayload<KABC::Addressee>() ) {
-      q->addContact( item.payload<KABC::Addressee>(), 1, sourceIndex ); // TODO calculate proper
-                                                                        // weight somehow..
-    } else if ( item.hasPayload<KABC::ContactGroup>() ) {
-      q->addContactGroup( item.payload<KABC::ContactGroup>(), 1, sourceIndex ); // Same TODO as above
+    } else {
+      q->addItem( item, 1, sourceIndex );
     }
   }
 
@@ -1055,6 +1046,15 @@ void AddresseeLineEdit::enableCompletion( bool enable )
   d->m_useCompletion = enable;
 }
 
+void AddresseeLineEdit::addItem( const Akonadi::Item &item, int weight, int source )
+{
+  if ( item.hasPayload<KABC::Addressee>() ) {
+    addContact( item.payload<KABC::Addressee>(), weight, source );
+  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+    addContactGroup( item.payload<KABC::ContactGroup>(), weight, source );
+  }
+}
+
 void AddresseeLineEdit::addContactGroup( const KABC::ContactGroup &group, int weight, int source )
 {
   d->addCompletionItem( group.name(), weight, source );
@@ -1078,7 +1078,6 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
     const QString domain    = email.mid( email.indexOf( '@' ) + 1 );
     QString fullEmail       = addr.fullEmail( email );
     //TODO: let user decide what fields to use in lookup, e.g. company, city, ...
-
     //for CompletionAuto
     if ( givenName.isEmpty() && familyName.isEmpty() ) {
       d->addCompletionItem( fullEmail, weight + isPrefEmail, source ); // use whatever is there
