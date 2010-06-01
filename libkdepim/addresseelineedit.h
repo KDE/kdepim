@@ -35,8 +35,6 @@
 #include <Akonadi/Job>
 #include <Akonadi/Collection>
 
-#include <KABC/Addressee>
-
 #include <KLineEdit>
 
 class QDropEvent;
@@ -45,6 +43,11 @@ class QKeyEvent;
 class QMenu;
 class QMouseEvent;
 class QObject;
+
+namespace KABC {
+  class Addressee;
+  class ContactGroup;
+}
 
 namespace KPIM {
   typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
@@ -93,6 +96,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
 
     /**
      * Reimplemented for stripping whitespace after completion
+     * Danger: This is _not_ virtual in the base class!
      */
     virtual void setText( const QString &text );
 
@@ -101,6 +105,11 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * Adds a new @p contact to the completion with a given @p weight and @p source index.
      */
     void addContact( const KABC::Addressee &contact, int weight, int source = -1 );
+
+    /**
+     * Same as the above, but this time with contact groups.
+     */
+    void addContactGroup( const KABC::ContactGroup &group, int weight, int source = -1 );
 
     /**
      * Adds the @p name of a completion source and its @p weight

@@ -28,6 +28,7 @@
 #include "completionordereditor.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
+#include <Akonadi/Contact/ContactGroupSearchJob>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
@@ -468,11 +469,20 @@ void AddresseeLineEdit::Private::updateSearchString()
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
   kDebug() << "searching akonadi with:" << m_searchString;
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  job->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
-                 Akonadi::ContactSearchJob::ContainsMatch );
-  q->connect( job, SIGNAL(result(KJob *)),
+  Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob();
+  Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob();
+  contactJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  contactJob->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
+                        Akonadi::ContactSearchJob::ContainsMatch );
+  groupJob->setQuery( Akonadi::ContactGroupSearchJob::Name, m_searchString,
+                      Akonadi::ContactGroupSearchJob::StartsWithMatch );
+  // FIXME: ContainsMatch is broken, even though it creates the correct SPARQL query, so use
+  //        StartsWith for now
+                      //Akonadi::ContactGroupSearchJob::ContainsMatch );
+  q->connect( contactJob, SIGNAL(result(KJob *)),
+              q, SLOT(slotAkonadiSearchResult(KJob *)) );
+  q->connect( groupJob, SIGNAL(result(KJob *)),
               q, SLOT(slotAkonadiSearchResult(KJob *)) );
   akonadiHandlePending();
 }
@@ -488,9 +498,12 @@ void AddresseeLineEdit::Private::akonadiHandlePending()
       s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
     if ( sourceIndex >= 0 ) {
       kDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
+      // FIXME: code duplication with search result handling
       if ( item.hasPayload<KABC::Addressee>() ) {
         q->addContact( item.payload<KABC::Addressee>(), 1, sourceIndex ); // TODO calculate proper
                                                                           // weight somehow..
+      } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+        q->addContactGroup( item.payload<KABC::ContactGroup>(), 1, sourceIndex );
       }
 
       // remove from the pending
@@ -716,12 +729,19 @@ void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
 
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
-  const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
-  kDebug() << "akonadi found " << searchJob->contacts().size() << "contacts";
+  const Akonadi::ContactSearchJob *contactJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
+  const Akonadi::ContactGroupSearchJob *groupJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+  if ( contactJob ) {
+    kDebug() << "Found" << contactJob->contacts().size() << "contacts";
+  } else if ( groupJob ) {
+    kDebug() << "Found" << groupJob->contactGroups().size() << "groups";
+  }
 
   /* We have to fetch the collections of the items, so that
      the source name can be correctly labeled.*/
-  const Akonadi::Item::List items = searchJob->items();
+  Akonadi::Item::List items;
+  if ( contactJob ) items += contactJob->items();
+  if ( groupJob ) items += groupJob->items();
   foreach ( const Akonadi::Item &item, items ) {
 
     // check the local cache of collections
@@ -746,10 +766,13 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
     } else if ( item.hasPayload<KABC::Addressee>() ) {
       q->addContact( item.payload<KABC::Addressee>(), 1, sourceIndex ); // TODO calculate proper
                                                                         // weight somehow..
+    } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+      q->addContactGroup( item.payload<KABC::ContactGroup>(), 1, sourceIndex ); // Same TODO as above
     }
   }
 
-  if ( searchJob->contacts().size() > 0 ) {
+  if ( ( contactJob && contactJob->contacts().size() > 0 ) ||
+       ( groupJob && groupJob->contactGroups().size() > 0 ) ) {
     const QListWidgetItem *current = q->completionBox()->currentItem();
     if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
       doCompletion( m_lastSearchMode );
@@ -1030,6 +1053,14 @@ void AddresseeLineEdit::cursorAtEnd()
 void AddresseeLineEdit::enableCompletion( bool enable )
 {
   d->m_useCompletion = enable;
+}
+
+void AddresseeLineEdit::addContactGroup( const KABC::ContactGroup &group, int weight, int source )
+{
+  d->addCompletionItem( group.name(), weight, source );
+  QStringList keyWords;
+  keyWords.append( group.name() );
+  d->addCompletionItem( group.name(), weight, source, &keyWords );
 }
 
 void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
