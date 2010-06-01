@@ -71,7 +71,7 @@ void IncidenceView::setDateTimeEditor( IncidenceDateTimeEditor *editor )
 {
   mEditor->combine( editor );
   editor->setActiveDate( mActiveDate );
-  editor->load( mItem.payload<Incidence::Ptr>() );
+  editor->load( mItem.payload<Incidence::ConstPtr>() );
 }
 
 void IncidenceView::setGeneralEditor( IncidenceGeneralEditor *editor )
