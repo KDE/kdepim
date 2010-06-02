@@ -45,6 +45,7 @@ install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   HeaderView.qml
   important-email.png
+  action-item-email.png
   delete-button.png
   EditorView.qml
   kmail-composer.qml
