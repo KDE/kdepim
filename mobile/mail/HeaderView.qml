@@ -67,8 +67,8 @@ KPIM.ItemListView {
           id : deleteAction
           anchors.verticalCenter: parent.verticalCenter;
           anchors.right : parent.right;
-          width: parent.height - 10
-          height : parent.height - 10
+          width: imageWidth
+          height : imageHeight
           action : application.getAction("akonadi_item_delete")
           hidable : false
           showText : false
@@ -76,6 +76,7 @@ KPIM.ItemListView {
           onTriggered : {
             application.setListSelectedRow(model.index);
           }
+          image : "delete-button.png"
         }
       ]
 
