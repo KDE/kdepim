@@ -20,6 +20,7 @@
 #include "kdeclarativefullscreenview.h"
 
 #include <KDebug>
+#include <KGlobalSettings>
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <klocalizedstring.h>
@@ -42,6 +43,8 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #ifdef Q_WS_MAEMO_5
   setWindowState( Qt::WindowFullScreen );
+  // use the oxygen black on whilte palette instead of the native white on black maemo5 one
+  setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
 #endif
 
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(slotStatusChanged(QDeclarativeView::Status)) );
