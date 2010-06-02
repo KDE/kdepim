@@ -20,9 +20,17 @@
 #include "kdeclarativeapplication.h"
 
 #include <kglobalsettings.h>
+#include <QFont>
 
 KDeclarativeApplication::KDeclarativeApplication()
 {
+#ifndef Q_WS_MAEMO_5
+  // make it look more like on the actual device when testing on the desktop
+  QFont f = font();
+  f.setPointSize( 16 );
+  setFont( f );
+#endif
+
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
 
