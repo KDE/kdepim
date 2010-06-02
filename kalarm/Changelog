@@ -1,9 +1,11 @@
 KAlarm Change Log
 
-=== Version 2.4.7 --- 31 May 2010 ===
+=== Version 2.4.7 --- 2 June 2010 ===
 - Fix inability to defer non-recurring alarms.
 - Fix crash when selecting calendar type in calendar selector, if text widths
   and selector width are "exactly wrong".
+- Fix loss of time zone specification for date only alarms when converting a
+  pre-2.3.2 calendar, if start-of-day time in calendar is not midnight.
 
 === Version 2.4.6 (KDE 4.4.4) --- 20 May 2010 ===
 - Fix alarm edit dialog not saving changes when invoked from alarm message

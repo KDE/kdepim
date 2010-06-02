@@ -1,7 +1,7 @@
 /*
  *  kaeventdata.h  -  represents calendar alarm and event data
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -435,7 +435,7 @@ public:
 		static int         currentCalendarVersion();
 		static QByteArray  currentCalendarVersionString();
 		static void        setStartOfDay(const QTime& startOfDay);
-		static bool        convertKCalEvents(KCal::CalendarLocal&, int calendarVersion, bool adjustSummerTime, const QTime& startOfDay, const KTimeZone&);
+		static bool        convertKCalEvents(KCal::CalendarLocal&, int calendarVersion, bool adjustSummerTime, const QTime& startOfDay);
 //		static bool        convertRepetitions(KCal::CalendarLocal&);
 		KARecurrence::Type checkRecur() const;
 
@@ -453,7 +453,7 @@ public:
 		OccurType          nextRecurrence(const KDateTime& preDateTime, DateTime& result, const QTime& startOfDay) const;
 		void               setAudioAlarm(KCal::Alarm*) const;
 		void               notifyChanges() const;
-		static bool        convertStartOfDay(KCal::Event*, const KTimeZone&);
+		static bool        convertStartOfDay(KCal::Event*);
 		static bool        convertRepetition(KCal::Event*);
 		KCal::Alarm*       initKCalAlarm(KCal::Event*, const DateTime&, const QStringList& types, KAAlarm::Type = KAAlarm::INVALID_ALARM) const;
 		KCal::Alarm*       initKCalAlarm(KCal::Event*, int startOffsetSecs, const QStringList& types, KAAlarm::Type = KAAlarm::INVALID_ALARM) const;
