@@ -352,7 +352,6 @@ void KOAttendeeEditor::readIncidence( KCal::Incidence *incidence )
     // so if updateAttendee is called now what will happen is that a random item
     // will get the text of "first".
     mDisableItemUpdate = true;
-    mDisableItemUpdate = true;
     mNameEdit->setText( first->fullName() );
     mUid = first->uid();
     mRoleCombo->setCurrentIndex( first->role() );
