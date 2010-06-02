@@ -548,6 +548,8 @@ public slots:
   /** Copy the selected text to the clipboard */
   void slotCopySelectedText();
 
+  void viewerSelectionChanged();
+  
   /** Select message body. */
   void selectAll();
 

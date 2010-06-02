@@ -1587,6 +1587,10 @@ void ViewerPrivate::createActions()
   mCopyAction = ac->addAction( KStandardAction::Copy, "kmail_copy", this,
                                SLOT(slotCopySelectedText()) );
 
+  connect( mViewer->page(), SIGNAL( selectionChanged() ), this,
+                      SLOT( viewerSelectionChanged() ) );
+  viewerSelectionChanged();
+
   // copy all text to clipboard
   mSelectAllAction  = new KAction(i18n("Select All Text"), this);
   ac->addAction("mark_all_text", mSelectAllAction );
@@ -2516,6 +2520,17 @@ void ViewerPrivate::slotCopySelectedText()
   selection.replace( QChar::Nbsp, ' ' );
   QApplication::clipboard()->setText( selection );
 }
+
+void ViewerPrivate::viewerSelectionChanged()
+{
+  if( mViewer->selectedText().isEmpty() )
+  {
+    mActionCollection->action( "kmail_copy" )->setEnabled( false );
+  } else {
+    mActionCollection->action( "kmail_copy" )->setEnabled( true );
+  }
+}
+
 
 void ViewerPrivate::selectAll()
 {
