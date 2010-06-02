@@ -141,7 +141,7 @@ private:
   bool mAllowAsync;
   QObject *mSourceObject;
 
-  
+
 };
 }
 

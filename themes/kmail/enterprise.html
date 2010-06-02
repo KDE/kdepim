@@ -1,0 +1,268 @@
+{# Enterprise Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+body {
+    color: #000000 ! important;
+    background-color: #ffffff ! important;
+}
+
+div.date {
+    margin-left: 10px;
+    top: 0px;
+}
+
+.span_date {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+div.left, div.right {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #606060; 
+    width: 10px;
+    min-height: 100%;
+}
+
+div.left {
+    background-image:url('{% media_finder "s_left.png" %}');
+}
+
+div.right {
+    background-image:url('{% media_finder "s_right.png" %}');
+}
+
+table.main {
+    background: "{{ activeColorDark }}";
+    border-collapse:collapse;
+    top: 14px;
+    min-width: 200px;
+    cellpadding:0px;
+}
+
+td.top_left {
+    min-width: 6px;
+    background-image:url('{% media_finder "top_left.png" %}');
+}
+
+td.top_right {
+    min-width: 6px;
+    background:url('{% media_finder "top_right.png" %}');
+}
+
+td.top {
+    height: 6px;
+    width: 100%;
+    background:url('{% media_finder "top.png" %}');
+}
+
+td.left {
+    min-width: 6px;
+    max-width: 6px; 
+    background:url('{% media_finder "left.png" %}');
+}
+
+table.sec {
+    color: "{{ fontColor }}" ! important;
+    margin: 1px;
+    border-spacing: 0px;
+    cellpadding: 0px;
+}
+
+td.subject_header,td.subject,td.from,td.from_header,td.to_header,td.to {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-width: 0px
+}
+
+td.subject_header {
+    font-size: 6px;
+    text-align: right;
+    padding-left: 5px;
+    padding-right: 24px;
+}
+
+td.subject {
+    font-weight: bolder;
+    font-size: 120%;
+    padding-right: 91px;
+}
+
+td.from_header {
+    font-size: 10px;
+    padding-left: 5px;
+    padding-right: 24px;
+    text-align: right;
+}
+
+td.to_header { 
+    font-size: 6px;
+    text-align: right;
+    padding-left: 5px;
+    padding-right: 24px;
+}
+
+td.s_left {
+    min-width: 6px;
+    background-image:url('{% media_finder "s_left.png" %}');
+}
+
+td.s_right {
+    min-width: 6px;
+    background-image:url('{% media_finder "s_right.png" %}');
+}
+
+img.sw {
+    margin: 0px;
+    height: 30px;
+    overflow:hidden;
+}
+
+img.sp_right {
+    float: right;
+}
+
+td.bottom_right {
+    min-width: 6px;
+    max-height: 15px;
+    background:url('{% media_finder "right.png" %}');
+}
+
+td.bottom_middle {
+    height: 35px;
+    width: 80%;
+    background:url('{% media_finder "sbar.png" %}');
+}
+
+div.noprint , div.noprint_atachment {
+    display:none ! important;
+    position: absolute;
+}
+
+div.noprint {
+    top: -14px;
+    right: 30px;
+    width: 91px;
+    height: 91px;
+}
+
+div.noprint_atachment {
+    top: 60px;
+    right: 20px;
+}
+
+a {
+    text-decoration: none ! important;
+}
+
+a.white {
+    color: white ! important;
+}
+
+a.black {
+    color: black ! important;
+}
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="left">&nbsp;</div>     
+  <div class="right">&nbsp;</div>
+
+  <div class="date">
+    <span class="span_date">"
+      {{ date }}
+    </span>
+  </div>
+
+  <table class="main">
+    <tr>
+      <td class="top_left"></td>
+      <td class="top"></td>
+      <td class="top_right"></td>
+   </tr>
+
+   <tr> 
+     <td class="left"></td>
+     <td> 
+
+     <table class="sec">
+
+     {% if subject %}
+     <tr> 
+     <td class="subject_header"></td>
+
+     <td class="subject">{{ subject }}</td>
+     </tr>
+     {% endif %}
+
+     <tr>
+     <td class="from_header">From:</td>
+     <td class="from">
+     {{ from }}
+
+     {% if vCardName %}
+       &nbsp;&nbsp;<a href="{{ vCardName }}" class ="{{ linkColor }}">[vCard]</a>
+     {% endif %}
+ 
+     </td>
+     </tr>
+
+     <tr>
+     <td class="to_header"> To: </td>
+     <td class="to">{{ to }}</td>
+     </tr>
+
+     {% if cc %}
+     <tr>
+     <td class="to_header"> CC: </td>
+     <td class="to">{{ cc }}</td>
+     </tr>
+     {% endif %}
+
+     {% if bcc %}
+     <tr>
+     <td class="to_header"> BCC: </td>
+     <td class="to">{{ bcc }}</td>
+     </tr>
+     {% endif %}
+
+     </table>
+     </td>
+
+    <td></td>
+    </tr>
+
+    <tr> 
+    <td class="s_left"></td>
+    <td class="bottom_middle">
+      <img src="{% media_finder "sw.png" %}" class="sw">
+      <img src="{% media_finder "sp_right.png" %}" class="sp_right">
+    </td>
+
+    <td class="s_right"></td>
+    </tr>
+  </table>
+
+{% if isTopLevel %}
+  <div class="noprint">
+    <img src="{% media_finder "icon.png" %}" class="sp_right">
+  </div>
+
+  <div class="noprint_attachment">
+    <div id="attachmentInjectionPoint"></div>
+  </div>
+{% endif %}
+
+{% if isPrinting %}
+   <div style=\"padding: 6px; padding-left: 10px;\">
+{% else %}
+  <div style=\"padding: 6px;\">
+{% endif %}
+
+{% endblock %}

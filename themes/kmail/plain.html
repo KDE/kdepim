@@ -1,0 +1,71 @@
+{# Plain Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+body {
+    color: #000000 ! important;
+    background-color: #ffffff ! important;
+}
+
+div.header {
+    font-family: "{{ font-family }}" ! important;
+    font-size: {{ font-size }} ! important;
+}
+
+{% endblock %}
+
+{% block content %}
+
+{% if message %}
+  <div class="header" dir="ltr">
+    {{ message }}
+  </div>
+{% endif %}
+
+<div class="header" dir="{{ dir }}">
+
+{% if subject %}
+  <div dir="{{ subjectDir }}">
+    <b style="font-size:130%">{{ subject }}</b>
+  </div>
+  <br />
+{% endif %}
+
+  Date:  {{ date }}
+  <br />
+
+  From:  {{ from }}
+
+{% if vCardName %}
+  &nbsp;&nbsp;<a href="{{ vCardName }}">[vCard]</a>
+{% endif %}
+
+{% if organization %}
+  &nbsp;&nbsp;("{{ organization }}")
+{% endif %}
+
+  <br/>
+
+  To:  {{ to }}
+  <br />
+
+{% if cc %}
+  CC:  {{ cc }}
+  <br />
+{% endif %}
+
+{% if bcc %}
+  BCC:  {{ bcc }}
+  <br />
+{% endif %}
+
+{% if replyTo %}
+  Reply to: {{ replyTo }}
+  <br />
+{% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{# Brief Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+body {
+    color: #000000 ! important;
+    background-color: #ffffff ! important;
+}
+
+div.header {
+    font-family: "{{ font-family }}" ! important;
+    font-size: {{ font-size }} ! important;
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="header" dir="{{ dir }}">
+
+{% if subject %}
+  <div dir="{{ subjectDir }}">
+    <b style="font-size:130%">{{ subject }}</b>
+  </div>
+  <br />
+{% endif %}
+
+  From:  {{ from }}
+
+{% if vCardName %}
+  &nbsp;&nbsp;<a href="{{ vCardName }}">[vCard]</a>
+{% endif %}
+
+<br/>
+
+(
+
+{% if cc %}
+  CC:  {{ cc }}&nbsp;
+{% endif %}
+
+{% if bcc %}
+  BCC:  {{ bcc }}&nbsp;
+{% endif %}
+
+{% if date %}
+  {{ date }}&nbsp;
+{% endif %}
+
+)
+
+</div>
+
+{% endblock %}
