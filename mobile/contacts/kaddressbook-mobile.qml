@@ -95,14 +95,12 @@ KPIM.MainView {
                   height : 480 / 6
                   width : parent.width - 75
                   buttonText : KDE.i18n( "New Contact" )
-                  font.bold: true
                   onClicked : { console.log( "New Contact clicked" ); }
                 }
                 KPIM.Button {
                   height : 480 / 6
                   width : parent.width - 75
                   buttonText : KDE.i18n( "New Contact Group" )
-                  font.bold: true
                   onClicked : { console.log( "New Group clicked" ); }
 
                 }
@@ -110,14 +108,12 @@ KPIM.MainView {
                   height: 480 / 6
                   width : parent.width - 75
                   buttonText : KDE.i18n( "Add Account" )
-                  font.bold: true
                   onClicked : { application.launchAccountWizard(); }
                 }
                 KPIM.Button {
                   height: 480 / 6
                   width : parent.width - 75
                   buttonText : KDE.i18n( "Favorites" )
-                  font.bold: true
                   onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
                 }
               }

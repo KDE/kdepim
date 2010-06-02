@@ -136,21 +136,18 @@ KPIM.MainView {
                 height : 480 / 6
                 width : parent.width
                 buttonText : KDE.i18n( "New Appointment" )
-                font.bold:  true
                 onClicked : { startPanel.collapse(); application.newIncidence(); }
               }
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
                 buttonText : KDE.i18n( "Add Calendar" )
-                font.bold:  true
                 onClicked : { startPanel.collapse(); application.launchAccountWizard() }
               }
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
                 buttonText : KDE.i18n( "Add Favorite" )
-                font.bold:  true
                 onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
               }
             }

@@ -70,7 +70,6 @@ Item {
         width: parent.width
         id: startText
         font {
-          bold: true
           pointSize: 14
         }
       }
