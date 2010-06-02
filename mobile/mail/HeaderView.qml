@@ -53,7 +53,7 @@ KPIM.ItemListView {
           anchors.verticalCenter : parent.verticalCenter;
           anchors.left : parent.left
           anchors.leftMargin : 15
-          source : KDE.iconPath("emblem-important.png", parent.height + 16)
+          source : "important-email.png"
           opacity : model.is_important ? 0.25 : 0
         },
         QML.Image {
