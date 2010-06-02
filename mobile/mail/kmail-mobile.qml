@@ -75,10 +75,9 @@ KPIM.MainView {
 
   QML.Item {
     anchors.top: parent.top
-    anchors.topMargin : 30
+    anchors.topMargin : 12
     anchors.bottom: parent.bottom
     anchors.left: parent.left
-    anchors.leftMargin : 40
     anchors.right : parent.right
 
     Akonadi.AkonadiBreadcrumbNavigationView {
