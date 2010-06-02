@@ -357,35 +357,56 @@ void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *e )
 void AddresseeLineEdit::dropEvent( QDropEvent *e )
 {
   KURL::List uriList;
-  if ( !isReadOnly()
-       && KURLDrag::canDecode(e) && KURLDrag::decode( e, uriList ) ) {
-    QString contents = text();
-    // remove trailing white space and comma
-    int eot = contents.length();
-    while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() )
-      eot--;
-    if ( eot == 0 )
-      contents = QString::null;
-    else if ( contents[ eot - 1 ] == ',' ) {
-      eot--;
-      contents.truncate( eot );
-    }
-    bool mailtoURL = false;
-    // append the mailto URLs
-    for ( KURL::List::Iterator it = uriList.begin();
-          it != uriList.end(); ++it ) {
-      if ( !contents.isEmpty() )
-        contents.append( ", " );
-      KURL u( *it );
-      if ( u.protocol() == "mailto" ) {
-        mailtoURL = true;
-        contents.append( (*it).path() );
+  if ( !isReadOnly() ) {
+    if ( KURLDrag::canDecode(e) && KURLDrag::decode( e, uriList ) ) {
+      QString contents = text();
+      // remove trailing white space and comma
+      int eot = contents.length();
+      while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() )
+        eot--;
+      if ( eot == 0 )
+        contents = QString::null;
+      else if ( contents[ eot - 1 ] == ',' ) {
+        eot--;
+        contents.truncate( eot );
       }
-    }
-    if ( mailtoURL ) {
-      setText( contents );
-      setEdited( true );
-      return;
+      bool mailtoURL = false;
+      // append the mailto URLs
+      for ( KURL::List::Iterator it = uriList.begin();
+            it != uriList.end(); ++it ) {
+        if ( !contents.isEmpty() )
+          contents.append( ", " );
+        KURL u( *it );
+        if ( u.protocol() == "mailto" ) {
+          mailtoURL = true;
+          contents.append( (*it).path() );
+        }
+      }
+      if ( mailtoURL ) {
+        setText( contents );
+        setEdited( true );
+        return;
+      }
+    } else {
+      // Let's see if this drop contains a comma separated list of emails
+      QStringList addrs = splitEmailAddrList( QString::fromUtf8( e->encodedData( "text/plain" ) ) );
+      if ( addrs.count() > 0 ) {
+        QStringList::ConstIterator it;
+        QStringList emails;
+        for ( it = addrs.begin(); it != addrs.end(); ++it ) {
+          QString name, mail;
+          if ( getNameAndMail( (*it), name, mail ) ) {
+            emails.append( mail );
+          } else {
+            continue;
+          }
+        }
+        if ( emails.count() > 0 ) {
+          setText( emails.join( "," ) );
+          setEdited( true );
+          return;
+        }
+      }
     }
   }
 
