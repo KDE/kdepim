@@ -31,32 +31,24 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
 //       id: startPanel
-      titleText: KDE.i18n( "Attendees" )
+      titleIcon: KDE.iconPath( "view-pim-contacts", 48 )
       handlePosition: 30
       handleHeight: 80
     }
     SlideoutPanel {
       anchors.fill: parent
 //       id: startPanel
-      titleText: KDE.i18n( "Recurrence" )
+      titleIcon: KDE.iconPath( "appointment-recurring", 48 )
       handlePosition: 30 + 80
       handleHeight: 80
     }
     SlideoutPanel {
       anchors.fill: parent
 //       id: startPanel
-      titleText: KDE.i18n( "Attachments" )
+      titleIcon: KDE.iconPath( "mail-attachment", 48 )
       handlePosition: 30 + 80 + 80
       handleHeight: 100
     }
-    SlideoutPanel {
-      anchors.fill: parent
-//       id: startPanel
-      titleText: KDE.i18n( "More" )
-      handlePosition: 30 + 80 + 80 + 100
-      handleHeight: 60
-    }
-    
   }
 
   Flickable {
