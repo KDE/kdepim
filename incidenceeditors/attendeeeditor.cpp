@@ -25,7 +25,7 @@
 #include <libkdepim/addresseelineedit.h>
 
 #include <KCal/Incidence>
-
+#include <kabc/addressee.h>
 #include <KPIMUtils/Email>
 
 #include <KComboBox>
