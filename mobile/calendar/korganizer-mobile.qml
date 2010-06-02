@@ -298,7 +298,7 @@ KPIM.MainView {
 //           },
           KPIM.Action {
              id: deleteButton
-             anchors.top: moveButton.bottom;
+             anchors.top: newButton.bottom;
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
