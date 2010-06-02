@@ -44,6 +44,7 @@ install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   HeaderView.qml
+  important-email.png
   EditorView.qml
   kmail-composer.qml
   kmail-mobile.qml
