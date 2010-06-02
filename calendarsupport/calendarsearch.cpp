@@ -300,9 +300,12 @@ void CalendarSearch::Private::collectionSelectionChanged( const QItemSelection &
   }
 
   Q_FOREACH( const QModelIndex& i, newIndexes ) {
-    const QModelIndex idx = findIndex( calendarModel, QModelIndex(), Akonadi::collectionIdFromIndex( i ) );
+    const Collection::Id id = Akonadi::collectionIdFromIndex( i );
+    const QModelIndex idx = findIndex( calendarModel, QModelIndex(), id );
     if ( idx.isValid() ) {
       selectionModel->select( idx, QItemSelectionModel::Select );
+    } else {
+      preselectedCollections.append( id );
     }
   }
 }
