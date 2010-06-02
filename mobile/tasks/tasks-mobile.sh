@@ -1,6 +1,6 @@
 #!/bin/sh
 
-QT_DIR=/opt/qt4-maemo5
+QT_DIR=/opt/qt4-maemo5/lib
 
 echo $LD_LIBRARY_PATH | grep "$QT_DIR" > /dev/null 2>&1
 
