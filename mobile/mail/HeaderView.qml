@@ -60,7 +60,7 @@ KPIM.ItemListView {
           id : actionFlagImage
           anchors.verticalCenter : parent.verticalCenter;
           anchors.left : importantFlagImage.right
-          source : KDE.iconPath("mail-mark-task.png", parent.height + 16)
+          source : "action-item-email.png"
           opacity : model.is_action_item ? 0.25 : 0
         },
         KPIM.Action{
