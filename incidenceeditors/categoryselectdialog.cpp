@@ -41,8 +41,13 @@ class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog
     {
       setupUi( this );
 
+#ifdef KDEPIM_MOBILE_UI
+      mButtonClear->setVisible( false );
+      mButtonEdit->setVisible( false );
+#else
       mButtonClear->setIcon( KIcon( "edit-clear-locationbar-rtl" ) );
       mButtonEdit->setIcon( KIcon( "document-properties" ) );
+#endif
     }
 };
 
@@ -169,8 +174,20 @@ CategorySelectDialog::CategorySelectDialog( CategoryConfig* cc, QWidget *parent 
   : KDialog( parent )
 {
   setCaption( i18n( "Select Categories" ) );
+#ifdef KDEPIM_MOBILE_UI
+  // HACK: This is for maemo, which hides the button if there is only a cancel
+  //       button.
+  setButtons( KDialog::Cancel );
+  setButtonIcon( KDialog::Cancel, KIcon( "dialog-ok" ) );
+  setButtonText( KDialog::Cancel, i18n( "&Ok" ) );
+  showButtonSeparator( false );
+
+  connect( this, SIGNAL(cancelClicked()), this, SLOT(slotOk()) );
+#else
   setButtons( Ok | Apply | Cancel | Help );
   showButtonSeparator( true );
+#endif
+  
   QWidget *page = new QWidget;
   setMainWidget( page );
   QVBoxLayout *lay = new QVBoxLayout( page );

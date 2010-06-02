@@ -19,6 +19,12 @@
 
 #include "incidencegeneraleditor.h"
 
+#ifdef KDEPIM_MOBILE_UI
+#include <QtGui/QTreeWidgetItem>
+#include <KDialog>
+#endif
+
+#include "autochecktreewidget.h"
 #include "categoryconfig.h"
 #include "categoryhierarchyreader.h"
 #include "categoryselectdialog.h"
@@ -41,6 +47,10 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   mUi->setupUi( this );
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
 
+#ifdef KDEPIM_MOBILE_UI
+  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
+           SLOT(selectCategories()) );
+#else
   CategoryConfig cc( EditorConfig::instance()->config() );
   mUi->mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
   mUi->mCategoryCombo->setSqueezeText( true );
@@ -48,6 +58,7 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
 
   connect( mUi->mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
            SLOT(setCategories(QStringList)) );
+#endif
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
   connect( mUi->mSummaryEdit, SIGNAL(textChanged(QString)),
@@ -142,9 +153,25 @@ bool IncidenceGeneralEditor::categoriesChanged() const
   return !categoriesEqual;
 }
 
+void IncidenceGeneralEditor::selectCategories()
+{
+#ifdef KDEPIM_MOBILE_UI
+  CategoryConfig cc( EditorConfig::instance()->config() );
+  QPointer<CategorySelectDialog> dialog( new CategorySelectDialog( &cc ) );
+  dialog->setSelected( mSelectedCategories );
+  dialog->exec();
+
+  setCategories( dialog->selectedCategories() );
+  delete dialog;
+#endif
+}
+
 void IncidenceGeneralEditor::setCategories( const QStringList &categories )
 {
   mSelectedCategories = categories;
+#ifdef KDEPIM_MOBILE_UI
+  mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
+#endif
   checkDirtyStatus();
 }
 

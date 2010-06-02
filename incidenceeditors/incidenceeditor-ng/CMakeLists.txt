@@ -1,5 +1,3 @@
-remove_definitions(-DKDEPIM_MOBILE_UI)
-
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )

@@ -40,18 +40,19 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneralEditor : public IncidenceEditor
   Q_OBJECT
   public:
     IncidenceGeneralEditor( QWidget *parent = 0 );
-    
+
     virtual void load(KCal::Incidence::ConstPtr incidence);
     virtual void save(KCal::Incidence::Ptr incidence);
     virtual bool isDirty() const;
     virtual bool isValid();
 
   private slots:
+    void selectCategories();
     void setCategories( const QStringList &categories );
 
   private:
     bool categoriesChanged() const ;
-    
+
   private:
     QStringList mSelectedCategories;
     Ui::IncidenceGeneralEditor *mUi;

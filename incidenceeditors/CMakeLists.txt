@@ -1,3 +1,7 @@
+if (KDEPIM_MOBILE_UI)
+  remove_definitions(-DKDEPIM_MOBILE_UI)
+endif()
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/incidenceeditors
     ${CMAKE_BINARY_DIR}/incidenceeditors

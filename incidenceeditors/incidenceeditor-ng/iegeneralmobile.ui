@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>533</width>
-    <height>120</height>
+    <width>499</width>
+    <height>119</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -93,7 +93,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="label_5">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -101,13 +101,48 @@
      <property name="text">
       <string extracomment="@label">Categories:</string>
      </property>
+     <property name="buddy">
+      <cstring>mSelectCategoriesButton</cstring>
+     </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="2">
-    <widget class="KPIM::KCheckComboBox" name="mCategoryCombo"/>
+   <item row="2" column="1">
+    <widget class="KSqueezedTextLabel" name="mCategoriesLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string extracomment="@info:tooltip">Set the categories</string>
+     </property>
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Allows you to select the categories that this event or to-do belongs to.</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="buddy">
+      <cstring>mSelectCategoriesButton</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="mSelectCategoriesButton">
+     <property name="text">
+      <string>&amp;Select...</string>
+     </property>
+    </widget>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="toolTip">
       <string extracomment="@info:tooltip">Set the secrecy level</string>
      </property>
@@ -117,16 +152,13 @@
      <property name="text">
       <string>Access:</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="3" column="1" colspan="2">
     <widget class="QComboBox" name="mSecrecyCombo">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="toolTip">
       <string extracomment="@info:tooltip">Set the secrecy level</string>
      </property>
@@ -139,19 +171,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KCheckComboBox</class>
-   <extends>KComboBox</extends>
-   <header>libkdepim/kcheckcombobox.h</header>
+   <class>KSqueezedTextLabel</class>
+   <extends>QLabel</extends>
+   <header>ksqueezedtextlabel.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
