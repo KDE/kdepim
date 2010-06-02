@@ -31,6 +31,9 @@ Rectangle {
   property bool hidden : hidable && !action.enabled
   property bool checkable : false
   property alias showText : buttonText.visible
+  property alias image : image.source
+  property alias imageWidth : image.width
+  property alias imageHeight : image.height
 
   signal triggered()
 
