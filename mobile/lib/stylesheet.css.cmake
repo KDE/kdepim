@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-QCheckBox, QLabel, QPushButton {
+QCheckBox, QLabel, QPushButton, QRadioButton:off {
   color: black
 }
 
@@ -32,6 +32,7 @@ QCheckBox, QComboBox, QRadioButton, QPushButton {
 
 QPushButton:pressed, QRadioButton:on {
   border-image: url(@STYLE_IMAGE_PATH@/button-border-active.png) 10 10 10 10;
+  color: white;
 }
 
 QLineEdit, QTextEdit {
