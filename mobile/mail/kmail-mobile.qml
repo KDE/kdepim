@@ -238,6 +238,7 @@ KPIM.MainView {
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
+      collectionView.state = "favOverlay";
     }
   }
 
