@@ -19,7 +19,11 @@
 
 #include "incidenceview.h"
 
+#include <QtGui/QMessageBox>
+
+#include <KDebug>
 #include <KDialog>
+#include <KLocalizedString>
 
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
@@ -33,6 +37,7 @@ using namespace KCal;
 
 IncidenceView::IncidenceView( QWidget* parent )
   : KDeclarativeFullScreenView( QLatin1String( "incidence-editor" ), parent )
+  , mItemManager( new EditorItemManager( this ) )
   , mCollectionCombo( 0 )
   , mEditor( new CombinedIncidenceEditor( parent ) )
 {
@@ -42,6 +47,11 @@ IncidenceView::IncidenceView( QWidget* parent )
 
   mItem.setPayload<KCal::Incidence::Ptr>( KCal::Incidence::Ptr( new KCal::Event ) );
   mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
+
+  connect( mItemManager, SIGNAL(itemSaveFinished()),
+           SLOT(slotSaveFinished() ) );
+  connect( mItemManager, SIGNAL(itemSaveFailed(QString)),
+           SLOT(slotSaveFailed(QString) ) );
 }
 
 IncidenceView::~IncidenceView()
@@ -54,7 +64,7 @@ void IncidenceView::load( const Akonadi::Item &item, const QDate &date )
   Q_ASSERT( item.hasPayload() ); // TODO: Fetch payload if there is no payload set.
 
   mItem = item;
-  mEditor->load( mItem.payload<Incidence::Ptr>() );
+  mItemManager->load( mItem );
   mActiveDate = date;
 
   if ( mCollectionCombo )
@@ -83,20 +93,82 @@ void IncidenceView::setGeneralEditor( IncidenceGeneralEditor *editor )
   mEditor->combine( editor );
 }
 
+/// ItemEditorUi methods
+
+bool IncidenceView::containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const
+{
+  return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
+}
+
+bool IncidenceView::hasSupportedPayload( const Akonadi::Item &item ) const
+{
+  return item.hasPayload() && item.hasPayload<KCal::Incidence::Ptr>()
+    && ( item.hasPayload<KCal::Event::Ptr>() || item.hasPayload<KCal::Todo::Ptr>() );
+}
+
+bool IncidenceView::isDirty() const
+{
+  return mEditor->isDirty();
+}
+
+bool IncidenceView::isValid()
+{
+  return mEditor->isValid();
+}
+
+void IncidenceView::load( const Akonadi::Item &item )
+{
+  Q_ASSERT( hasSupportedPayload( item ) );
+  mItem = item;
+  mEditor->load( mItem.payload<Incidence::Ptr>() );
+}
+
+Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
+{
+  // TODO: Add support for todos
+  KCal::Event::Ptr event( new KCal::Event );
+  mEditor->save( event );
+
+  Akonadi::Item result = item;
+  result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  result.setPayload<KCal::Event::Ptr>( event );
+  return result;
+}
+
+Akonadi::Collection IncidenceView::selectedCollection() const
+{
+  return mCollectionCombo->currentCollection();
+}
+
+void IncidenceView::reject( RejectReason /*reason*/, const QString &errorMessage )
+{
+  kDebug() << "Rejecting:" << errorMessage;
+  deleteLater();
+}
+
+/// IncidenceView slots
+
 void IncidenceView::save()
 {
   if ( !mEditor->isValid() )
     return;
 
-  KCal::Event::Ptr event( new KCal::Event );
-  mEditor->save( event );
+  mItemManager->save();
+}
 
-  Akonadi::Item item;
-  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  item.setPayload<KCal::Event::Ptr>( event );
-  
-  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollectionCombo->currentCollection() );
-  connect( job, SIGNAL(result(KJob*)), SLOT(itemCreateResult(KJob*)) );
+void IncidenceView::slotSaveFinished()
+{
+  deleteLater();
+}
+
+void IncidenceView::slotSaveFailed( const QString &message )
+{
+  QPointer<QMessageBox> dlg = new QMessageBox; //krazy:exclude=qclasses
+  dlg->setIcon( QMessageBox::Warning );
+  dlg->setWindowTitle( i18n( "Saving the event failed." ) );
+  dlg->setInformativeText( i18n( "Reason:\n\n" ) + message );
+  dlg->addButton( i18n( "Ok" ), QMessageBox::AcceptRole );
+  dlg->exec();
 }
 
 void IncidenceView::cancel()
@@ -104,12 +176,4 @@ void IncidenceView::cancel()
   deleteLater();
 }
 
-/// Private slots
-
-void IncidenceView::itemCreateResult( KJob *job )
-{
-  if ( job->error() )
-    kDebug() << "Event creation failed!";
-
-  deleteLater();
-}
+#include "incidenceview.moc"

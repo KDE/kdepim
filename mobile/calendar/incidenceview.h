@@ -24,6 +24,7 @@
 #include <KCal/Incidence>
 
 #include <incidenceeditors/incidenceeditor-ng/combinedincidenceeditor.h>
+#include <incidenceeditors/incidenceeditor-ng/itemeditor.h>
 
 #include "kdeclarativefullscreenview.h"
 
@@ -39,7 +40,7 @@ class IncidenceDateTimeEditor;
 }
 
 
-class IncidenceView : public KDeclarativeFullScreenView
+class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEditorUi
 {
   Q_OBJECT;
   public:
@@ -52,16 +53,28 @@ class IncidenceView : public KDeclarativeFullScreenView
     void setDateTimeEditor( IncidenceEditorsNG::IncidenceDateTimeEditor * );
     void setGeneralEditor( IncidenceEditorsNG::IncidenceGeneralEditor * );
 
+  public: /// ItemEditorUi function implementations
+    virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
+    virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
+    virtual bool isDirty() const;
+    virtual bool isValid();
+    virtual void load( const Akonadi::Item &item );
+    virtual Akonadi::Item save( const Akonadi::Item &item );
+    virtual Akonadi::Collection selectedCollection() const;
+    virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
+
   public slots:
     void save();   /// Ok clicked in the user interface
     void cancel(); /// Cancel clicked in the user interface
 
   private slots:
-    void itemCreateResult( KJob * );
-    
+    void slotSaveFinished();
+    void slotSaveFailed( const QString &message );
+
   private:
     QDate mActiveDate;
     Akonadi::Item mItem;
+    Akonadi::EditorItemManager *mItemManager;
     Akonadi::CollectionComboBox *mCollectionCombo;
     IncidenceEditorsNG::CombinedIncidenceEditor *mEditor;
 };
