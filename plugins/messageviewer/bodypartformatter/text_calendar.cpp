@@ -94,6 +94,46 @@ using namespace KCal;
 namespace {
 
 #ifndef KDEPIM_NO_KRESOURCES
+
+static bool hasMyWritableEventsFolders( const QString &family )
+{
+  QString myfamily = family;
+  if ( family.isEmpty() ) {
+    myfamily = "calendar";
+  }
+
+  CalendarResourceManager manager( myfamily );
+  manager.readConfig();
+
+  CalendarResourceManager::ActiveIterator it;
+  for ( it=manager.activeBegin(); it != manager.activeEnd(); ++it ) {
+    if ( (*it)->readOnly() ) {
+      continue;
+    }
+
+    const QStringList subResources = (*it)->subresources();
+    if ( subResources.isEmpty() ) {
+      return true;
+    }
+
+    QStringList::ConstIterator subIt;
+    for ( subIt=subResources.begin(); subIt != subResources.end(); ++subIt ) {
+      if ( !(*it)->subresourceActive( (*subIt) ) ) {
+        continue;
+      }
+      if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
+        if ( (*it)->subresourceType( ( *subIt ) ) == "todo" ||
+             (*it)->subresourceType( ( *subIt ) ) == "journal" ||
+             !(*subIt).contains( "/.INBOX.directory/" ) ) {
+          continue;
+        }
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
 class CalendarManager
 {
   public:
@@ -919,7 +959,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                       const QString &path ) const
     {
 #ifndef KDEPIM_NO_KRESOURCES
-      if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
+      if ( !hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "
