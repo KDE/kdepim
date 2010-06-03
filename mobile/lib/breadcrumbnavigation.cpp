@@ -172,7 +172,14 @@ void KForwardingItemSelectionModel::select(const QItemSelection& selection, QIte
 
 void KForwardingItemSelectionModel::navigationSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
-  select(selected, ClearAndSelect);
+  // ### The KNavigatingProxyModel selects all top level items if there is 'no selection'.
+  // This slot is called when we newly get a selection, so we can unselect all.
+  if (selectedRows().size() == model()->rowCount())
+    select(selected, ClearAndSelect);
+  else
+    select(selected, Select);
+
+  select(deselected, Deselect);
   if (selected == selection())
     resetNavigation();
 }
