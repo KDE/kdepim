@@ -80,6 +80,7 @@
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
 #include <kmime/kmime_message.h>
+#include <kmime/kmime_util.h>
 
 // KDE includes
 #include <kdebug.h>
@@ -194,13 +195,15 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
   kDebug() << "CONTENT: " << QByteArray( content ).left( 100 ) << " CNTDESC: " << cntDesc;
 
   KMime::Content *newNode = new KMime::Content();
-  newNode->setContent( content );
+  newNode->setContent( KMime::CRLFtoLF( content ) );
   newNode->parse();
-/*  kDebug()  << "MEDIATYPE: " << newNode->contentType()->mediaType() << newNode->contentType()->mimeType()
-    ;
-  kDebug() << "DECODEDCONTENT: " << newNode->decodedContent().left(40);
-  kDebug() << "ENCODEDCONTENT: " << newNode->encodedContent().left(40);
-  kDebug() << "BODY: " << newNode->body().left(40);*/
+/*  
+  kDebug()  << "MEDIATYPE: " << newNode->contentType()->mediaType() << newNode->contentType()->mimeType()    ;
+  kDebug() << "DECODEDCONTENT: " << newNode->decodedContent().left(400);
+  kDebug() << "ENCODEDCONTENT: " << newNode->encodedContent().left(400);
+  kDebug() << "BODY: " << newNode->body().left(400);
+  */
+
   if ( !newNode->head().isEmpty() ) {
     newNode->contentDescription()->from7BitString( cntDesc );
   }
