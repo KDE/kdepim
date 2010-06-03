@@ -150,9 +150,6 @@ void IncidenceView::reject( RejectReason /*reason*/, const QString &errorMessage
 
 void IncidenceView::save()
 {
-  if ( !mEditor->isValid() )
-    return;
-
   mItemManager->save();
 }
 
