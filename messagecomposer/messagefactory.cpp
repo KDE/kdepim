@@ -455,9 +455,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
     .arg( ident.emailAddr() );
 
   // format the current date to be used in Resent-Date:
-  QString origDate = msg->date()->asUnicodeString();
-  msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
-  QString newDate = msg->date()->asUnicodeString();
+  QString newDate = KDateTime::currentLocalDateTime().toString( KDateTime::RFCDateDay );
 
   // prepend Resent-*: headers (c.f. RFC2822 3.6.6)
   QString msgIdSuffix;
@@ -473,12 +471,25 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   header = new KMime::Headers::Generic( "Resent-Date", msg.get(), newDate, "utf-8" );
   msg->setHeader( header );
 
+  header = new KMime::Headers::Generic( "Resent-From", msg.get(), strFrom, "utf-8" );
+  msg->setHeader( header );
+  
   KMime::Headers::To* headerT = new KMime::Headers::To( msg.get(), toStr, "utf-8" );
   msg->setHeader( headerT );
   
-  header = new KMime::Headers::Generic( "Resent-To", msg.get(), strFrom, "utf-8" );
+  header = new KMime::Headers::Generic( "Resent-To", msg.get(), toStr, "utf-8" );
   msg->setHeader( header );
 
+  if( msg->cc( false ) ) {
+    header = new KMime::Headers::Generic( "Resent-Cc", msg.get(), m_origMsg->cc()->asUnicodeString(), "utf-8" );
+    msg->setHeader( header );
+  }
+
+  if( msg->bcc( false ) ) {
+    header = new KMime::Headers::Generic( "Resent-Bcc", msg.get(), m_origMsg->bcc()->asUnicodeString(), "utf-8" );
+    msg->setHeader( header );
+  }
+  
   header = new KMime::Headers::Generic( "X-KMail-Redirect-From", msg.get(), strByWayOf, "utf-8" );
   msg->setHeader( header );
   header = new KMime::Headers::Generic( "X-KMail-Recipients", msg.get(), toStr, "utf-8" );
