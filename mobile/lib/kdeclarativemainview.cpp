@@ -43,6 +43,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/agentmanager.h>
 
 #include <akonadi_next/kbreadcrumbselectionmodel.h>
 #include <akonadi_next/kproxyitemselectionmodel.h>
@@ -364,4 +365,22 @@ Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
 QItemSelectionModel* KDeclarativeMainView::itemSelectionModel() const
 {
   return d->mItemSelectionModel;
+}
+
+void KDeclarativeMainView::configureCurrentAccount()
+{
+  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
+  if (list.size() != 1)
+    return;
+
+  const Collection col = list.first().data(EntityTreeModel::CollectionRole).value<Collection>();
+  if (!col.isValid())
+    return;
+
+  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+  AgentInstance agent = manager->instance(col.resource());
+  if (!agent.isValid())
+    return;
+
+  agent.configure();
 }

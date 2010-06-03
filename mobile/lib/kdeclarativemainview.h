@@ -92,6 +92,8 @@ public slots:
 
   QObject* getAction( const QString &name ) const;
 
+  void configureCurrentAccount();
+
 protected:
   QItemSelectionModel* regularSelectionModel() const;
   QItemSelectionModel* favoriteSelectionModel() const;
