@@ -133,8 +133,8 @@ void ItemEditorPrivate::setupMonitor()
   if ( mItem.isValid() )
     mItemMonitor->setItemMonitored( mItem );
 
-  q->connect( mItemMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-              SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+//   q->connect( mItemMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+//               SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
 }
 
 void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
@@ -221,7 +221,6 @@ void EditorItemManager::save()
   }
 
   Akonadi::Item updateItem = d->mItemUi->save( d->mItem );
-  Q_ASSERT( updateItem.isValid() );
   Q_ASSERT( updateItem.id() == d->mItem.id() );
   d->mItem = updateItem;
 
