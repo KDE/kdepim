@@ -50,6 +50,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
+  mUi->mAlarmEditButton->setVisible( false ); // TODO: IMPLEMENT
 #else
   mUi->mAlarmBell->setPixmap( SmallIcon( "task-reminder" ) );
   mUi->mRecurrenceEditButton->setIcon(
