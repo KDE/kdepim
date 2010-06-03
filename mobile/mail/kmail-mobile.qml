@@ -74,6 +74,7 @@ KPIM.MainView {
   }
 
   QML.Item {
+    id : mainWorkView
     anchors.top: parent.top
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
@@ -82,13 +83,34 @@ KPIM.MainView {
 
     Akonadi.AkonadiBreadcrumbNavigationView {
       id : collectionView
-      width: 1/3 * parent.width
       anchors.top: parent.top
-      anchors.bottom: parent.bottom
+      width: 1/3 * parent.width
+      anchors.bottom : selectButton.top
+      //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
       breadcrumbItemsModel : breadcrumbCollectionsModel
       selectedItemModel : selectedCollectionModel
       childItemsModel : childCollectionsModel
+    }
+    KPIM.Button2 {
+      id : selectButton
+      anchors.left: collectionView.left
+      anchors.right: collectionView.right
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : collectionView.hasSelection ? -selectButton.height : 0
+      buttonText : KDE.i18n("Select")
+      opacity : collectionView.hasSelection ? 0 : 1
+      onClicked : {
+        favoriteSelector.visible = true;
+        mainWorkView.visible = false;
+
+        // show select multiple dialog
+        // Show selection content.
+        // Change contents of this panel.
+
+        // When Home is clicked do the reverse.
+      }
+
     }
     KPIM.StartCanvas {
       id : startPage
@@ -116,20 +138,6 @@ KPIM.MainView {
         }
       ]
     }
-          Akonadi.FavoriteSelector {
-            id : favoriteSelector
-            anchors.fill : parent
-            visible : false
-            onCanceled: {
-              favoriteSelector.visible = false;
-              startPage.visible = true;
-            }
-            onFinished : {
-              favoriteSelector.visible = false;
-              startPage.visible = true;
-              application.saveFavorite( favoriteSelector.favoriteName );
-            }
-          }
 
     QML.Rectangle {
       id : homePage
@@ -221,6 +229,19 @@ KPIM.MainView {
           }
         }
       }
+    }
+  }
+  Akonadi.FavoriteSelector {
+    id : favoriteSelector
+    anchors.fill : parent
+    visible : false
+    onCanceled: {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+    }
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
     }
   }
 
