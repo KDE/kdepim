@@ -13,6 +13,7 @@ set(mobileui_SRCS
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
     kdeclarativefullscreenview.cpp
+    stylesheetloader.cpp
 )
 
 
@@ -25,6 +26,9 @@ target_link_libraries(kdepimmobileui
   akonadi_next
   messagecore
 )
+
+set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui )
+configure_file( stylesheet.css.cmake ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css ) 
 
 install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
@@ -44,4 +48,8 @@ install(FILES
   button-left.png
   button-right.png
   button-center.png
+  button-border.png
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
+  DESTINATION ${DATA_INSTALL_DIR}/mobileui)

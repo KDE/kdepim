@@ -18,6 +18,7 @@
 */
 
 #include "kdeclarativefullscreenview.h"
+#include "stylesheetloader.h"
 
 #include <KDebug>
 #include <KGlobalSettings>
@@ -46,6 +47,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   // use the oxygen black on whilte palette instead of the native white on black maemo5 one
   setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
 #endif
+  StyleSheetLoader::applyStyle( this );
 
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(slotStatusChanged(QDeclarativeView::Status)) );
 

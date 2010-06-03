@@ -20,6 +20,8 @@
 #ifndef DECLARATIVEWIDGETBASE_H
 #define DECLARATIVEWIDGETBASE_H
 
+#include "stylesheetloader.h"
+
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsScene>
@@ -39,6 +41,7 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
       QPalette pal = m_widget->palette();
       pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
       m_widget->setPalette( pal );
+      StyleSheetLoader::applyStyle( m_widget );
       m_proxy->setWidget( m_widget );
       setWidth( m_widget->width() );
       setHeight( m_widget->height() );
