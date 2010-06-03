@@ -140,7 +140,43 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      opacity : (!collectionView.hasSelection || headerList.count) > 0 ? 0 : 1
+      opacity : (collectionView.hasSelection && !collectionView.hasBreadcrumbs) && (headerList.count == 0) ? 1 : 0
+
+
+      KPIM.Button2 {
+        id : newEmailButton
+        anchors.top : parent.top
+        anchors.topMargin : 30
+        anchors.left : parent.left
+        anchors.right : parent.right
+        anchors.leftMargin : 10
+        anchors.rightMargin : 10
+        buttonText : KDE.i18n( "Write new E-Mail" )
+        onClicked : {
+          application.startComposer();
+        }
+      }
+      KPIM.Button2 {
+        anchors.bottom : parent.bottom
+        anchors.bottomMargin : 10
+        anchors.right : parent.right
+        anchors.rightMargin : 35
+        width : 230
+        buttonText : KDE.i18n( "Configure Account" )
+        onClicked : {
+          console.log("Configure");
+        }
+      }
+    }
+
+    QML.Rectangle {
+      id : emptyFolderPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : (collectionView.hasBreadcrumbs && headerList.count == 0 ) ? 1 : 0
       // TODO: content
       QML.Text {
         text : "This space intentionally left blank";
@@ -148,49 +184,6 @@ KPIM.MainView {
         anchors.verticalCenter : parent.verticalCenter;
         anchors.horizontalCenter : parent.horizontalCenter
       }
-      /*
-      QML.Rectangle {
-        id : headerActionOverlay
-        color: "#00000000" // Set a transparant color.
-        opacity : { headerList.count > 0 ? 0 : 1; }
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.left: collectionView.right
-        KPIM.Button {
-          id : newEmailButton
-          anchors.top : parent.top
-          anchors.left : parent.left
-          anchors.right : parent.right
-          height : 30
-          buttonText : KDE.i18n( "Write new E-Mail" )
-          onClicked : {
-            folderPanel.collapse();
-            application.startComposer();
-          }
-        }
-        KPIM.Button {
-          id : searchEmailButton
-          anchors.top : newEmailButton.bottom
-          anchors.left : parent.left
-          anchors.right : parent.right
-          height : 30
-          buttonText : KDE.i18n( "Search for E-Mail" )
-          onClicked : {
-            console.log("Search email");
-          }
-        }
-        KPIM.Button {
-          anchors.top : searchEmailButton.bottom
-          anchors.left : parent.left
-          anchors.right : parent.right
-          height : 30
-          buttonText : KDE.i18n( "Configure Account" )
-          onClicked : {
-            console.log("Configure");
-          }
-        }
-      }*/
     }
 
     QML.Rectangle {
