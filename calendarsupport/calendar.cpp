@@ -238,7 +238,8 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
 
   if ( alreadyExisted ) {
     if ( m_uidToItemId.value( ui ) != item.id() ) {
-      kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui );
+      kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
+              << "item uid = "  << ui.uid;
     }
 
     Q_ASSERT( m_uidToItemId.value( ui ) == item.id() );
