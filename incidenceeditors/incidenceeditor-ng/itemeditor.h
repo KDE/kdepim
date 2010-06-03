@@ -23,12 +23,13 @@
 
 #include <QtCore/QObject>
 
-class ItemEditorPrivate;
+class KJob;
 
 namespace Akonadi {
 
 class Collection;
 class Item;
+class ItemEditorPrivate;
 class ItemEditorUi;
 
 /**
@@ -65,10 +66,24 @@ class ItemEditor : public QObject
      */
     void save();
 
+  public:
+    enum SaveResult {
+      Succes,
+      Failure
+    };
+
+  signals:
+    void itemSaveResult( SaveResult result, const QString message = QString() );
+
   private:
-    ItemEditorPrivate *d_ptr;
+    ItemEditorPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( ItemEditor );
     Q_DISABLE_COPY( ItemEditor );
+
+    Q_PRIVATE_SLOT(d_ptr, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
+    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob* ) )
+    Q_PRIVATE_SLOT(d_ptr, void itemMoveResult( KJob* ) )
+    Q_PRIVATE_SLOT(d_ptr, void modifyResult( KJob* ) )
 };
 
 class ItemEditorUi
@@ -114,12 +129,11 @@ class ItemEditorUi
      */
     virtual Akonadi::Item save( const Akonadi::Item &item ) = 0;
 
-
     /**
      * Returns the currently sellected collection in which the item will be stored.
      */
     virtual Akonadi::Collection selectedCollection() const = 0;
-    
+
     /**
      * This function is called if for some reason the creation or editting of the
      * item cannot be continued. The implementing class must abort editting at

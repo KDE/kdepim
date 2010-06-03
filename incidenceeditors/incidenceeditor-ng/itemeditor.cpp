@@ -38,9 +38,12 @@ using namespace Akonadi;
 
 /// ItemEditorPrivate
 
+namespace Akonadi {
+
 class ItemEditorPrivate
 {
-  ItemEditor *q;
+  ItemEditor *q_ptr;
+  Q_DECLARE_PUBLIC( ItemEditor )
 
   public:
     Item mItem;
@@ -49,18 +52,23 @@ class ItemEditorPrivate
 
   public:
     ItemEditorPrivate( ItemEditor *qq );
+    void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
     void itemFetchResult( KJob *job );
     void itemMoveResult( KJob *job );
+    void modifyResult( KJob *job );
     void setupMonitor();
 };
 
+}
+
 ItemEditorPrivate::ItemEditorPrivate( ItemEditor *qq )
-  : q( qq ), mItemMonitor( 0 )
+  : q_ptr( qq ), mItemMonitor( 0 )
 { }
 
 void ItemEditorPrivate::itemFetchResult( KJob *job )
 {
   Q_ASSERT( job );
+  Q_Q( ItemEditor );
 
   if ( job->error() ) {
     mItemUi->reject( ItemEditorUi::ItemFetchFailed, job->errorString() );
@@ -92,8 +100,32 @@ void ItemEditorPrivate::itemMoveResult( KJob *job )
   }
 }
 
+void ItemEditorPrivate::modifyResult( KJob *job )
+{
+  Q_ASSERT( job );
+  Q_Q( ItemEditor );
+
+  if ( job->error() ) {
+    emit q->itemSaveResult( ItemEditor::Failure, job->errorString() );
+    return;
+  }
+
+  if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) ) {
+    mItem = modifyJob->item();
+    emit q->itemSaveResult( ItemEditor::Succes );
+  } else {
+    ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
+    Q_ASSERT(createJob);
+    mItem = createJob->item();
+    emit q->itemSaveResult( ItemEditor::Succes );
+  }
+
+  setupMonitor();
+}
+
 void ItemEditorPrivate::setupMonitor()
 {
+  Q_Q( ItemEditor );
   delete mItemMonitor;
   mItemMonitor = new Akonadi::Monitor;
   mItemMonitor->ignoreSession( Akonadi::Session::defaultSession() );
@@ -108,8 +140,9 @@ void ItemEditorPrivate::setupMonitor()
 void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
                                      const QSet<QByteArray> &partIdentifiers )
 {
+  Q_Q( ItemEditor );
   if ( mItemUi->containsPayloadIdentifiers( partIdentifiers ) ) {
-    QPointer<QMessageBox> dlg = new QMessageBox( q ); //krazy:exclude=qclasses
+    QPointer<QMessageBox> dlg = new QMessageBox; //krazy:exclude=qclasses
     dlg->setIcon( QMessageBox::Question );
     dlg->setInformativeText( i18n( "The item has been changed by another application.\nWhat should be done?" ) );
     dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
@@ -182,7 +215,7 @@ void ItemEditor::save()
 
     if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
       ItemModifyJob *modifyJob = new ItemModifyJob( d->mItem );
-      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
+      connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
 
@@ -201,6 +234,8 @@ void ItemEditor::save()
 
     ItemCreateJob *createJob =
       new ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
-    connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
+    connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
   }
 }
+
+#include "itemeditor.moc"
