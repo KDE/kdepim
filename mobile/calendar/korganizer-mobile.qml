@@ -306,7 +306,7 @@ KPIM.MainView {
              height: parent.height / 6
              buttonText: KDE.i18n( "Previous" )
              onClicked: {
-               agenda.gotoNext();
+               agenda.gotoPrevious();
                actionPanel.collapse()
              }
            },
@@ -317,7 +317,7 @@ KPIM.MainView {
              height: parent.height / 6
              buttonText: KDE.i18n( "Next" )
              onClicked: {
-               agenda.gotoPrevious();
+               agenda.gotoNext();
                actionPanel.collapse();
              }
            }
