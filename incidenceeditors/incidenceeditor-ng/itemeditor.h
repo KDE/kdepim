@@ -23,6 +23,8 @@
 
 #include <QtCore/QObject>
 
+#include "incidenceeditors-ng_export.h"
+
 class KJob;
 
 namespace Akonadi {
@@ -40,7 +42,7 @@ class ItemEditorUi;
  * editing.
  */
 // template <typename PayloadT>
-class ItemEditor : public QObject
+class INCIDENCEEDITORS_NG_EXPORT ItemEditor : public QObject
 {
   Q_OBJECT
   public:
@@ -86,7 +88,7 @@ class ItemEditor : public QObject
     Q_PRIVATE_SLOT(d_ptr, void modifyResult( KJob* ) )
 };
 
-class ItemEditorUi
+class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
 {
   public:
     enum RejectReason {
@@ -94,7 +96,7 @@ class ItemEditorUi
       ItemHasInvalidPayload ///> The fetched item has an invalid payload
     };
 
-    virtual ~ItemEditorUi() {}
+    virtual ~ItemEditorUi();
 
     /**
      * Returns wether or not the identifier set contains payload identifiers that
@@ -139,7 +141,7 @@ class ItemEditorUi
      * item cannot be continued. The implementing class must abort editting at
      * this point.
      */
-    virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
+    virtual void reject( RejectReason reason, const QString &errorMessage = QString() ) = 0;
 };
 
 }

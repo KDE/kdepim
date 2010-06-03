@@ -238,4 +238,7 @@ void ItemEditor::save()
   }
 }
 
+ItemEditorUi::~ItemEditorUi()
+{ }
+
 #include "itemeditor.moc"
