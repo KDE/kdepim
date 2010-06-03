@@ -17,14 +17,36 @@
     02110-1301, USA.
 */
 
-QLabel {
+QCheckBox, QLabel, QPushButton {
   color: black
 }
 
-QPushButton, QComboBox {
+QCheckBox, QComboBox, QPushButton {
   border-image: url(@STYLE_IMAGE_PATH@/button-border.png) 10 10 10 10;
   border-top: 10px;
   border-bottom: 10px;
   border-left: 10px;
   border-right: 10px;
+  min-height: 48px;
 }
+
+QLineEdit, QTextEdit {
+  border: 2px;
+  border-color: grey;
+  border-radius: 8px;
+  border-style: inset;
+  padding: 4px;
+}
+
+QCheckBox:disabled {
+  color: grey;
+}
+
+QCheckBox::indicator:disabled {
+  background-color: rgba(0,0,0,0);
+}
+
+QComboBox::drop-down, QComboBox::down-arrow {
+  background-color: rgba(0,0,0,0);
+}
+
