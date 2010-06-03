@@ -49,6 +49,7 @@ install(FILES
   button-right.png
   button-center.png
   button-border.png
+  button-border-active.png
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css

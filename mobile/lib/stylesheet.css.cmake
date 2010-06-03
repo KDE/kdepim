@@ -21,13 +21,17 @@ QCheckBox, QLabel, QPushButton {
   color: black
 }
 
-QCheckBox, QComboBox, QPushButton {
+QCheckBox, QComboBox, QRadioButton, QPushButton {
   border-image: url(@STYLE_IMAGE_PATH@/button-border.png) 10 10 10 10;
   border-top: 10px;
   border-bottom: 10px;
   border-left: 10px;
   border-right: 10px;
   min-height: 48px;
+}
+
+QPushButton:pressed, QRadioButton:on {
+  border-image: url(@STYLE_IMAGE_PATH@/button-border-active.png) 10 10 10 10;
 }
 
 QLineEdit, QTextEdit {
@@ -50,3 +54,6 @@ QComboBox::drop-down, QComboBox::down-arrow {
   background-color: rgba(0,0,0,0);
 }
 
+QRadioButton::indicator {
+  background-color: rgba(0,0,0,0);
+}
