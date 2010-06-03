@@ -237,6 +237,10 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   }
 
   if ( alreadyExisted ) {
+    if ( m_uidToItemId.value( ui ) != item.id() ) {
+      kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui );
+    }
+
     Q_ASSERT( m_uidToItemId.value( ui ) == item.id() );
     QHash<Item::Id,Item::Id>::Iterator oldParentIt = m_childToParent.find( id );
     if ( oldParentIt != m_childToParent.end() ) {
