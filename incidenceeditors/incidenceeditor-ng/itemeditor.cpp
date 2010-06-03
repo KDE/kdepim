@@ -42,8 +42,8 @@ namespace Akonadi {
 
 class ItemEditorPrivate
 {
-  ItemEditor *q_ptr;
-  Q_DECLARE_PUBLIC( ItemEditor )
+  EditorItemManager *q_ptr;
+  Q_DECLARE_PUBLIC( EditorItemManager )
 
   public:
     Item mItem;
@@ -51,7 +51,7 @@ class ItemEditorPrivate
     ItemEditorUi *mItemUi;
 
   public:
-    ItemEditorPrivate( ItemEditor *qq );
+    ItemEditorPrivate( EditorItemManager *qq );
     void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
     void itemFetchResult( KJob *job );
     void itemMoveResult( KJob *job );
@@ -61,14 +61,14 @@ class ItemEditorPrivate
 
 }
 
-ItemEditorPrivate::ItemEditorPrivate( ItemEditor *qq )
+ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
   : q_ptr( qq ), mItemMonitor( 0 )
 { }
 
 void ItemEditorPrivate::itemFetchResult( KJob *job )
 {
   Q_ASSERT( job );
-  Q_Q( ItemEditor );
+  Q_Q( EditorItemManager );
 
   if ( job->error() ) {
     mItemUi->reject( ItemEditorUi::ItemFetchFailed, job->errorString() );
@@ -103,21 +103,21 @@ void ItemEditorPrivate::itemMoveResult( KJob *job )
 void ItemEditorPrivate::modifyResult( KJob *job )
 {
   Q_ASSERT( job );
-  Q_Q( ItemEditor );
+  Q_Q( EditorItemManager );
 
   if ( job->error() ) {
-    emit q->itemSaveResult( ItemEditor::Failure, job->errorString() );
+    emit q->itemSaveFailed( job->errorString() );
     return;
   }
 
   if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) ) {
     mItem = modifyJob->item();
-    emit q->itemSaveResult( ItemEditor::Succes );
+    emit q->itemSaveFinished();
   } else {
     ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
     Q_ASSERT(createJob);
     mItem = createJob->item();
-    emit q->itemSaveResult( ItemEditor::Succes );
+    emit q->itemSaveFinished();
   }
 
   setupMonitor();
@@ -125,7 +125,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
 
 void ItemEditorPrivate::setupMonitor()
 {
-  Q_Q( ItemEditor );
+  Q_Q( EditorItemManager );
   delete mItemMonitor;
   mItemMonitor = new Akonadi::Monitor;
   mItemMonitor->ignoreSession( Akonadi::Session::defaultSession() );
@@ -140,7 +140,7 @@ void ItemEditorPrivate::setupMonitor()
 void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
                                      const QSet<QByteArray> &partIdentifiers )
 {
-  Q_Q( ItemEditor );
+  Q_Q( EditorItemManager );
   if ( mItemUi->containsPayloadIdentifiers( partIdentifiers ) ) {
     QPointer<QMessageBox> dlg = new QMessageBox; //krazy:exclude=qclasses
     dlg->setIcon( QMessageBox::Question );
@@ -171,7 +171,7 @@ void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
 
 /// ItemEditor
 
-ItemEditor::ItemEditor( ItemEditorUi *ui )
+EditorItemManager::EditorItemManager( ItemEditorUi *ui )
   : d_ptr( new ItemEditorPrivate( this ) )
 {
   Q_D( ItemEditor );
@@ -179,13 +179,13 @@ ItemEditor::ItemEditor( ItemEditorUi *ui )
 }
 
 
-ItemEditor::~ItemEditor()
+EditorItemManager::~EditorItemManager()
 {
   delete d_ptr;
 }
 
 
-void ItemEditor::load( const Akonadi::Item &item )
+void EditorItemManager::load( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
   Q_D( ItemEditor );
@@ -204,11 +204,26 @@ void ItemEditor::load( const Akonadi::Item &item )
   }
 }
 
-void ItemEditor::save()
+void EditorItemManager::save()
 {
   Q_D( ItemEditor );
 
-  d->mItem = d->mItemUi->save( d->mItem );
+  if ( !d->mItemUi->isValid() ) {
+    emit itemSaveFailed( i18n( "Editor content is not valid." ) );
+    return;
+  }
+
+  if ( !d->mItemUi->isDirty()
+    && d->mItemUi->selectedCollection() == d->mItem.parentCollection() ) {
+    // Item did not change and was not moved
+    emit itemSaveFinished();
+    return;
+  }
+
+  Akonadi::Item updateItem = d->mItemUi->save( d->mItem );
+  Q_ASSERT( updateItem.isValid() );
+  Q_ASSERT( updateItem.id() == d->mItem.id() );
+  d->mItem = updateItem;
 
   if ( d->mItem.isValid() ) { // A valid item needs to be modified.
     Q_ASSERT( d->mItem.parentCollection().isValid() );
@@ -240,5 +255,10 @@ void ItemEditor::save()
 
 ItemEditorUi::~ItemEditorUi()
 { }
+
+bool ItemEditorUi::isValid()
+{
+  return true;
+}
 
 #include "itemeditor.moc"

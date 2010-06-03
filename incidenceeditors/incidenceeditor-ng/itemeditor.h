@@ -35,26 +35,25 @@ class ItemEditorPrivate;
 class ItemEditorUi;
 
 /**
- * Helper class for creating dialogs that let the user create and edit Akonadi
- * items with a specific payload (e.g. events, contacts, etc). This class supports
- * editting of one item at a time and hanldes all Akonadi specific logic like
- * Item creation, Item modifying and monitoring of changes to the item during
- * editing.
+ * Helper class for creating dialogs that let the user create and edit the payload
+ * of Akonadi items (e.g. events, contacts, etc). This class supports editting of
+ * one item at a time and hanldes all Akonadi specific logic like Item creation,
+ * Item modifying and monitoring of changes to the item during editing.
  */
 // template <typename PayloadT>
-class INCIDENCEEDITORS_NG_EXPORT ItemEditor : public QObject
+class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
 {
   Q_OBJECT
   public:
     /**
      * Creates an ItemEditor for a new Item.
      */
-    ItemEditor( ItemEditorUi *ui );
+    EditorItemManager( ItemEditorUi *ui );
 
     /**
      * Destructs the ItemEditor. Unsaved changes will get lost at this point.
      */
-    ~ItemEditor();
+    ~EditorItemManager();
 
     /**
      * Loads the @param item into the editor. The item passed <em>must</em> be
@@ -63,24 +62,19 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditor : public QObject
     void load( const Akonadi::Item &item );
 
     /**
-     * Saves the new or modified item. This mCollectionethod does nothing when isDirty
-     * returns false.
+     * Saves the new or modified item. This mCollectionethod does nothing when the
+     * ui is not dirty.
      */
     void save();
 
-  public:
-    enum SaveResult {
-      Succes,
-      Failure
-    };
-
-  signals:
-    void itemSaveResult( SaveResult result, const QString message = QString() );
+  Q_SIGNALS:
+    void itemSaveFinished();
+    void itemSaveFailed( const QString &message );
 
   private:
     ItemEditorPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( ItemEditor );
-    Q_DISABLE_COPY( ItemEditor );
+    Q_DISABLE_COPY( EditorItemManager );
 
     Q_PRIVATE_SLOT(d_ptr, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
     Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob* ) )
@@ -117,6 +111,14 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
      * stored has changed, this method should return false.
      */
     virtual bool isDirty() const = 0;
+
+    /**
+     * Returns wether or not the values in the ui are valid. This method can also
+     * be used to update the ui if necessary. The default implementation returns
+     * true, so if the ui doesn't need validation there is no need to reimplement
+     * this method.
+     */
+    virtual bool isValid();
 
     /**
      * Fills the ui with the values of the payload of @param item. The item is
