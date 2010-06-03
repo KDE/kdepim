@@ -97,21 +97,15 @@ KPIM.MainView {
       anchors.left: collectionView.left
       anchors.right: collectionView.right
       anchors.bottom : parent.bottom
-      anchors.bottomMargin : collectionView.hasSelection ? -selectButton.height : 0
+      anchors.bottomMargin : { (collectionView.numSelected == 1) ? -selectButton.height : 0 }
       buttonText : KDE.i18n("Select")
-      opacity : collectionView.hasSelection ? 0 : 1
+      opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
         favoriteSelector.visible = true;
         mainWorkView.visible = false;
-
-        // show select multiple dialog
-        // Show selection content.
-        // Change contents of this panel.
-
-        // When Home is clicked do the reverse.
       }
-
     }
+
     KPIM.StartCanvas {
       id : startPage
       anchors.left : collectionView.right
@@ -139,9 +133,6 @@ KPIM.MainView {
       ]
     }
 
-    QML.Rectangle {
-      id : homePage
-    }
     QML.Rectangle {
       id : accountPage
       anchors.left : collectionView.right
