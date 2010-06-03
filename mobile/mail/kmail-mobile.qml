@@ -164,7 +164,7 @@ KPIM.MainView {
         width : 230
         buttonText : KDE.i18n( "Configure Account" )
         onClicked : {
-          console.log("Configure");
+          application.configureCurrentAccount();
         }
       }
     }
