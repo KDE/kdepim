@@ -34,8 +34,6 @@ class CollectionComboBox;
 
 namespace IncidenceEditorsNG {
 
-class IncidenceEditorGeneralPage;
-
 class EventOrTodoDialogPrivate;
 
 class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
