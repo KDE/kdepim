@@ -157,10 +157,6 @@ KPIM.MainView {
           id : favoriteSelector
           anchors.fill : parent
           visible : false
-          onCanceled: {
-            favoriteSelector.visible = false;
-            startPage.visible = true;
-          }
           onFinished : {
             favoriteSelector.visible = false;
             startPage.visible = true;
