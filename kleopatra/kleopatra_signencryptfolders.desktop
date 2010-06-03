@@ -82,7 +82,7 @@ Name[x-test]=xxArchive, Sign & Encrypt Folderxx
 Name[zh_CN]=归档、签名并加密文件夹
 Name[zh_TW]=歸檔，簽署與加密資料夾
 Icon=kleopatra
-Exec=kleopatra --sign-encrypt %F
+Exec=kleopatra --encrypt-sign %F
 
 [Desktop Action kleoencryptfolder]
 Name=Archive & Encrypt Folder
