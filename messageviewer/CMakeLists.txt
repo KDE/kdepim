@@ -78,11 +78,14 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${QGPGME_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARY}
   ${KDE4_KDEWEBKIT_LIBRARY}
+  ${Grantlee_CORE_LIBRARIES}
+  ${Grantlee_GUI_LIBRARIES}
 )
 include_directories(
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIRS}
     ${GPGME_INCLUDES}
+    ${Grantlee_INCLUDE_DIRS}
 )
 
 set_target_properties( messageviewer PROPERTIES VERSION 0.1.0 SOVERSION 0)
