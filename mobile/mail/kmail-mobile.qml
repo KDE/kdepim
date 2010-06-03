@@ -308,6 +308,19 @@ KPIM.MainView {
             action : application.getAction("mark_message_action_item")
             checkable : true
             onTriggered : actionPanel.collapse();
+          },
+          KPIM.Button {
+            id : saveFavoriteButton
+            anchors.top: markAsActionButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            buttonText: KDE.i18n( "Save Favorite" )
+            width: parent.width - 10
+            height: collectionView.hasSelection ? parent.height / 6 : 0
+            visible : collectionView.hasSelection
+            onClicked : {
+              application.saveFavorite();
+              actionPanel.collapse();
+            }
           }
       ]
     }
@@ -336,6 +349,13 @@ KPIM.MainView {
       application.setSelectedAccount(row);
       startPanel.collapse();
       folderPanel.expand();
+    }
+  }
+  QML.Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
+      collectionView.state = "favOverlay";
     }
   }
 

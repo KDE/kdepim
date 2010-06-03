@@ -55,6 +55,7 @@
 #include <akonadi/standardactionmanager.h>
 #include <KAction>
 #include <messagecore/messagestatus.h>
+#include <QInputDialog>
 
 using namespace Akonadi;
 
@@ -291,10 +292,17 @@ void KDeclarativeMainView::launchAccountWizard()
   }
 }
 
-void KDeclarativeMainView::saveFavorite(const QString& name)
+void KDeclarativeMainView::saveFavorite()
 {
+  bool ok;
+  QString name = QInputDialog::getText(this, i18n("Select name for favorite"),
+                                      i18n("Favorite name"), QLineEdit::Normal, QString(), &ok);
+
+  if (!ok || name.isEmpty())
+    return;
+
   ETMStateSaver saver;
-  saver.setSelectionModel( d->mFavSelection );
+  saver.setSelectionModel( d->mBnf->selectionModel() );
 
   KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
   saver.saveState( cfg );
@@ -305,7 +313,7 @@ void KDeclarativeMainView::saveFavorite(const QString& name)
 void KDeclarativeMainView::loadFavorite(const QString& name)
 {
   ETMStateSaver *saver = new ETMStateSaver;
-  saver->setSelectionModel( d->mFavSelection );
+  saver->setSelectionModel( d->mBnf->selectionModel() );
   KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
   if ( !cfg.isValid() )
   {

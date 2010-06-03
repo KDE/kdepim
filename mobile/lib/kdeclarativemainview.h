@@ -87,7 +87,7 @@ public slots:
 
   void launchAccountWizard();
 
-  void saveFavorite( const QString &name );
+  void saveFavorite();
   void loadFavorite( const QString &name );
 
   QObject* getAction( const QString &name ) const;
