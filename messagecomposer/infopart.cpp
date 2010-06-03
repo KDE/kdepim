@@ -42,6 +42,7 @@ InfoPart::InfoPart( QObject *parent )
   , d( new Private )
 {
   d->transportId = 0;
+  d->urgent = false;
 }
 
 InfoPart::~InfoPart()
