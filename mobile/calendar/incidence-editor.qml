@@ -33,20 +33,20 @@ KPIM.MainView {
 //       id: startPanel
       titleIcon: KDE.iconPath( "view-pim-contacts", 48 )
       handlePosition: 30
-      handleHeight: 80
+      handleHeight: 120
     }
     SlideoutPanel {
       anchors.fill: parent
 //       id: startPanel
       titleIcon: KDE.iconPath( "appointment-recurring", 48 )
-      handlePosition: 30 + 80
-      handleHeight: 80
+      handlePosition: 30 + 120
+      handleHeight: 120
     }
     SlideoutPanel {
       anchors.fill: parent
 //       id: startPanel
       titleIcon: KDE.iconPath( "mail-attachment", 48 )
-      handlePosition: 30 + 80 + 80
+      handlePosition: 30 + 120 + 120
       handleHeight: 100
     }
   }
