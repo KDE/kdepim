@@ -50,6 +50,12 @@ install(FILES
   button-center.png
   button-border.png
   button-border-active.png
+  button-plus.png
+  button-plus-active.png
+  button-plus-disabled.png
+  button-minus.png
+  button-minus-active.png
+  button-minus-disabled.png
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
