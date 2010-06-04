@@ -195,3 +195,14 @@ MessageComposer--RecipientsView > * > QWidget
 {
   background-color: rgba(0,0,0,0);
 }
+
+/* category label in incidence editor has an ugly frame by default */
+KSqueezedTextLabel#mCategoriesLabel
+{
+  background-color: white;
+  border: 2px;
+  border-color: grey;
+  border-radius: 8px;
+  border-style: inset;
+  padding: 4px;
+}
