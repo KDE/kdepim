@@ -133,6 +133,7 @@ KPIM.MainView {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
     }
+    styleSheet: window.styleSheet
   }
 
   Item {
@@ -221,6 +222,7 @@ KPIM.MainView {
           width: parent.width
           height: 480 / 6
           displayFormat: "MM dd yyyy"
+          styleSheet: window.styleSheet
         }
       }
       Row {
