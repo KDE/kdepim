@@ -37,9 +37,15 @@
 #include <klocale.h>
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
+#include <kfiledialog.h>
 #include <kiconloader.h>
+#include <kmessagebox.h>
+#include <ktempfile.h>
+#include <kio/netaccess.h>
 
-#include <kaddrbook.h>
+
+#include <libkdepim/addresseeview.h>
+#include <libkdepim/kaddrbook.h>
 
 #include "interfaces/bodypartformatter.h"
 #include "interfaces/bodypart.h"
@@ -47,6 +53,7 @@ using KMail::Interface::BodyPart;
 #include "interfaces/bodyparturlhandler.h"
 #include "khtmlparthtmlwriter.h"
 #include <kimproxy.h>
+#include <kpopupmenu.h>
 
 #include <kabc/vcardconverter.h>
 #include <kabc/addressee.h>
@@ -74,7 +81,11 @@ namespace {
        VCardConverter vcc;
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return AsIcon;
-       Addressee::List al = vcc.parseVCards(  vCard );
+#if defined(KABC_VCARD_ENCODING_FIX)
+       Addressee::List al = vcc.parseVCardsRaw( vCard.utf8() );
+#else
+       Addressee::List al = vcc.parseVCards( vCard );
+#endif
        if ( al.empty() ) return AsIcon;
 
        writer->queue (
@@ -111,28 +122,126 @@ namespace {
 
   class UrlHandler : public KMail::Interface::BodyPartURLHandler {
   public:
-     bool handleClick( BodyPart * bodyPart, const QString & path,
-                       KMail::Callback& ) const {
+    bool handleClick( BodyPart * bodyPart, const QString & path,
+                      KMail::Callback& ) const {
 
-       const QString vCard = bodyPart->asText();
-       if ( vCard.isEmpty() ) return true;
-       VCardConverter vcc;
-       Addressee::List al = vcc.parseVCards(  vCard );
-       int index = path.right( path.length() - path.findRev( ":" ) - 1 ).toInt();
-       if ( index == -1 ) return true;
-       KABC::Addressee a = al[index];
-       if ( a.isEmpty() ) return true;
-       KAddrBookExternal::addVCard( a, 0 );
-       return true;
-     }
+      const QString vCard = bodyPart->asText();
+      if ( vCard.isEmpty() ) return true;
+      VCardConverter vcc;
+#if defined(KABC_VCARD_ENCODING_FIX)
+      Addressee::List al = vcc.parseVCardsRaw( vCard.utf8() );
+#else
+      Addressee::List al = vcc.parseVCards( vCard );
+#endif
+      int index = path.right( path.length() - path.findRev( ":" ) - 1 ).toInt();
+      if ( index == -1 ) return true;
+      KABC::Addressee a = al[index];
+      if ( a.isEmpty() ) return true;
+      KAddrBookExternal::addVCard( a, 0 );
+      return true;
+    }
 
-     bool handleContextMenuRequest(  BodyPart *, const QString &, const QPoint & ) const {
-       return false;
-     }
+    static KABC::Addressee findAddressee( BodyPart *part, const QString &path )
+    {
+      const QString vCard = part->asText();
+      if ( !vCard.isEmpty() ) {
+        VCardConverter vcc;
+#if defined(KABC_VCARD_ENCODING_FIX)
+        Addressee::List al = vcc.parseVCardsRaw( vCard.utf8() );
+#else
+        Addressee::List al = vcc.parseVCards( vCard );
+#endif
+        int index = path.right( path.length() - path.findRev( ":" ) - 1 ).toInt();
+        if ( index >= 0 ) {
+          return al[index];
+        }
+      }
+      return KABC::Addressee();
+    }
 
-     QString statusBarMessage(  BodyPart *, const QString & ) const {
-       return i18n("Add this contact to the address book.");
-     }
+    bool handleContextMenuRequest( KMail::Interface::BodyPart *part,
+                                   const QString &path,
+                                   const QPoint &point ) const
+    {
+      const QString vCard = part->asText();
+      if ( vCard.isEmpty() ) {
+        return true;
+      }
+      KABC::Addressee a = findAddressee( part, path );
+      if ( a.isEmpty() ) {
+        return true;
+      }
+
+      KPopupMenu *menu = new KPopupMenu();
+      menu->insertItem( i18n( "View Business Card" ), 0 );
+      menu->insertItem( i18n( "Save Business Card As..." ), 1 );
+
+      switch( menu->exec( point, 0 ) ) {
+      case 0: // open
+        openVCard( a, vCard );
+        break;
+      case 1: // save as
+        saveAsVCard( a, vCard );
+        break;
+      default:
+        break;
+      }
+      return true;
+    }
+
+    QString statusBarMessage( BodyPart *part, const QString &path ) const
+    {
+      KABC::Addressee a = findAddressee( part, path );
+      if ( a.realName().isEmpty() ) {
+        return i18n( "Add this contact to the address book." );
+      } else {
+        return i18n( "Add \"%1\" to the address book." ).arg( a.realName() );
+      }
+    }
+
+    bool openVCard( const KABC::Addressee &a, const QString &vCard ) const
+    {
+      Q_UNUSED( vCard );
+      AddresseeView *view = new AddresseeView( 0 );
+      view->setVScrollBarMode( QScrollView::Auto );
+      if ( a.isEmpty() ) {
+        view->setText( i18n( "Failed to parse the business card." ) );
+      } else {
+        view->setAddressee( a );
+      }
+      view->setMinimumSize( 300, 400 );
+      view->show();
+      return true;
+    }
+
+    bool saveAsVCard( const KABC::Addressee &a, const QString &vCard ) const
+    {
+      QString fileName = a.givenName() + '_' + a.familyName() + ".vcf";
+
+      // get the saveas file name
+      KURL saveAsUrl =
+        KFileDialog::getSaveURL( fileName,
+                                 QString::null, 0,
+                                 i18n( "Save Business Card" ) );
+      if ( saveAsUrl.isEmpty() ||
+           ( QFileInfo( saveAsUrl.path() ).exists() &&
+             ( KMessageBox::warningYesNo(
+               0,
+               i18n( "%1 already exists. Do you want to overwrite it?").
+               arg( saveAsUrl.path() ) ) == KMessageBox::No ) ) ) {
+        return false;
+      }
+
+      // put the attachment in a temporary file and save it
+      KTempFile tmpFile;
+      tmpFile.setAutoDelete( true );
+
+      QByteArray data = vCard.utf8();
+      tmpFile.file()->writeBlock( data.data(), data.size() );
+      tmpFile.close();
+
+      return KIO::NetAccess::upload( tmpFile.name(), saveAsUrl, 0 );
+    }
   };
 
   class Plugin : public KMail::Interface::BodyPartFormatterPlugin {
