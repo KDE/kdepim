@@ -20,9 +20,8 @@
 #include "composerview.h"
 
 #include "global.h"
-#include "declarativeeditor.h"
+#include "declarativewidgetbase.h"
 #include "declarativeidentitycombobox.h"
-#include "declarativerecipientseditor.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>
@@ -42,6 +41,7 @@
 #include <messagecomposer/attachmentmodel.h>
 #include <messagecomposer/keyresolver.h>
 #include <messagecomposer/kleo_util.h>
+#include <messagecomposer/recipientseditor.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>
@@ -54,8 +54,12 @@
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
 
+typedef DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor> DeclarativeEditor;
+typedef DeclarativeWidgetBase<MessageComposer::RecipientsEditor, ComposerView, &ComposerView::setRecipientsEditor> DeclarativeRecipientsEditor;
+
 QML_DECLARE_TYPE( DeclarativeEditor )
 QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
+QML_DECLARE_TYPE( DeclarativeRecipientsEditor )
 
 ComposerView::ComposerView(QWidget* parent) :
   KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent ),
@@ -104,6 +108,8 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   signatureController->setEditor( m_editor );
   signatureController->setIdentityCombo( m_identityCombo );
   signatureController->applyCurrentSignature();
+
+  m_recipientsEditor->setCompletionMode( KGlobalSettings::CompletionAuto );
 
   if ( m_message )
     setMessageInternal( m_message );

@@ -13,9 +13,7 @@ include_directories(
 set(kmail_mobile_srcs
   global.cpp
   composerview.cpp
-  declarativeeditor.cpp
   declarativeidentitycombobox.cpp
-  declarativerecipientseditor.cpp
   mailactionmanager.cpp
   mainview.cpp
   main.cpp
