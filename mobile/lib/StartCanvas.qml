@@ -62,7 +62,7 @@ Item {
     spacing: 10
 
     Column {
-      width: accountsList.visible ? (parent.width / 3) : 0
+      width: accountsList.visible ? (parent.width) : 0
       height: parent.height
       spacing: 5
 
@@ -85,7 +85,7 @@ Item {
     }
 
     Column {
-      width: parent.width / 3 * 2
+      width: parent.width
       height: parent.height
       spacing: 5
 

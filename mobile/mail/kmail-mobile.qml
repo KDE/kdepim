@@ -112,7 +112,8 @@ KPIM.MainView {
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
-      anchors.leftMargin : 50
+      anchors.leftMargin : 10
+      anchors.rightMargin : 10
 
       opacity : collectionView.hasSelection ? 0 : 1
       showAccountsList : false
@@ -151,7 +152,7 @@ KPIM.MainView {
         anchors.right : parent.right
         anchors.leftMargin : 10
         anchors.rightMargin : 10
-        buttonText : KDE.i18n( "Write new E-Mail" )
+        buttonText : KDE.i18n( "Write new Email" )
         onClicked : {
           application.startComposer();
         }
@@ -179,8 +180,10 @@ KPIM.MainView {
       opacity : (collectionView.hasBreadcrumbs && headerList.count == 0 ) ? 1 : 0
       // TODO: content
       QML.Text {
-        text : "This space intentionally left blank";
+        text : KDE.i18n("No messages in this folder");
         height : 20;
+        font.italic : true
+        horizontalAlignment : Text.AlignHCenter
         anchors.verticalCenter : parent.verticalCenter;
         anchors.horizontalCenter : parent.horizontalCenter
       }
