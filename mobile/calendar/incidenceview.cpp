@@ -29,6 +29,8 @@
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
+#include <akonadi/kcal/utils.h>
+
 #include "declarativeeditors.h"
 
 using namespace Akonadi;
@@ -127,6 +129,7 @@ Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
 {
   // TODO: Add support for todos
   KCal::Event::Ptr event( new KCal::Event );
+  event->setUid( Akonadi::incidence( mItem )->uid() );
   mEditor->save( event );
 
   Akonadi::Item result = item;
