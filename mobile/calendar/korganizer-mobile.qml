@@ -141,14 +141,14 @@ KPIM.MainView {
     anchors.topMargin : 12
     anchors.bottom: parent.bottom
     anchors.left: parent.left
-    anchors.right : parent.right
+    width: 1/3 * parent.width
 
     AkonadiBreadcrumbNavigationView {
       id : collectionView
       anchors.top: parent.top
-      width: 1/3 * parent.width
       anchors.bottom : selectButton.top
       anchors.left: parent.left
+      anchors.right: parent.right
       breadcrumbItemsModel : breadcrumbCollectionsModel
       selectedItemModel : selectedCollectionModel
       childItemsModel : childCollectionsModel
@@ -158,7 +158,6 @@ KPIM.MainView {
       id : selectButton
       anchors.left: collectionView.left
       anchors.right: collectionView.right
-      anchors.leftMargin: 40
       anchors.bottom : parent.bottom
       anchors.bottomMargin : collectionView.hasSelection ? -selectButton.height : 0
       buttonText : KDE.i18n("Select")
@@ -168,10 +167,49 @@ KPIM.MainView {
         mainWorkView.visible = false;
       }
     }
+  }
+
+  KPIM.StartCanvas {
+    id: homePage
+    anchors.left: mainWorkView.right
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.topMargin: 12
+    visible: mainWorkView.visible && !collectionView.hasSelection
+
+    showAccountsList : false
+    favoritesModel : favoritesList
+
+    contextActions : [
+      Column {
+        anchors.fill: parent
+        height : 70
+        KPIM.Button2 {
+          id: newAppointmentButton2
+          width: 2/3 * parent.width
+          anchors.horizontalCenter: parent.horizontalCenter
+          buttonText: KDE.i18n( "New Appointment" )
+          // TODO: Make sure that the correct default calender is selected in
+          //       the incidence editor.
+          onClicked : { application.newIncidence(); }
+
+        }
+      }
+    ]
+  }
+
+  Item {
+    id : calendarPage
+    anchors.left: mainWorkView.right
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    visible: mainWorkView.visible && collectionView.hasSelection
 
     Column {
       anchors.top: parent.top
-      anchors.left: collectionView.right
+      anchors.left: parent.left
       anchors.right: parent.right
       height: parent.height
       spacing: 10
@@ -246,6 +284,16 @@ KPIM.MainView {
         width: 2/3 * parent.width
         buttonText: KDE.i18n( "Add calendar" )
         onClicked : { application.launchAccountWizard() }
+      }
+      KPIM.Button2 {
+        id : saveFavoriteButton
+        anchors.horizontalCenter: parent.horizontalCenter
+        buttonText: KDE.i18n( "Save calendar selection" )
+        width: 2/3 * parent.width
+        visible : collectionView.hasSelection
+        onClicked : {
+          application.saveFavorite();
+        }
       }
     }
   }
@@ -322,20 +370,18 @@ KPIM.MainView {
   }
 
   Connections {
-    target: startPage
+    target: homePage
     onAccountSelected : {
       application.setSelectedAccount(row);
       application.showRegularCalendar();
-      startPanel.collapse();
     }
   }
 
   Connections {
-    target: startPage
+    target: homePage
     onFavoriteSelected : {
       application.loadFavorite(favName);
       application.showFavoriteCalendar();
-      startPanel.collapse();
     }
   }
   
