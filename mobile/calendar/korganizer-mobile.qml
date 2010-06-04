@@ -87,11 +87,23 @@ KPIM.MainView {
     }
   }
 
-
   Rectangle {
     id: agendaView
+    visible: false
     anchors.fill: parent
     color: "#D2D1D0" // TODO: make palette work correctly. palette.window
+
+    KPIM.Button {
+      id : backToMessageListButton
+      y : 250
+      width : 48
+      height : 48
+      icon: KDE.iconPath("korganizer", 48)
+      onClicked: {
+        agendaView.visible = false;
+        mainWorkView.visible = true;
+      }
+    }
 
     CalendarViews.AgendaView {
       id: agenda
@@ -111,163 +123,142 @@ KPIM.MainView {
     }
   }
 
+  FavoriteSelector {
+    id : favoriteSelector
+    anchors.fill : parent
+    anchors.topMargin : 12
+    anchors.leftMargin: 40
+    visible : false
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+    }
+  }
+
+  Item {
+    id : mainWorkView
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+
+    AkonadiBreadcrumbNavigationView {
+      id : collectionView
+      anchors.top: parent.top
+      width: 1/3 * parent.width
+      anchors.bottom : selectButton.top
+      anchors.left: parent.left
+      breadcrumbItemsModel : breadcrumbCollectionsModel
+      selectedItemModel : selectedCollectionModel
+      childItemsModel : childCollectionsModel
+    }
+
+    KPIM.Button2 {
+      id : selectButton
+      anchors.left: collectionView.left
+      anchors.right: collectionView.right
+      anchors.leftMargin: 40
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : collectionView.hasSelection ? -selectButton.height : 0
+      buttonText : KDE.i18n("Select")
+      opacity : collectionView.hasSelection ? 0 : 1
+      onClicked : {
+        favoriteSelector.visible = true;
+        mainWorkView.visible = false;
+      }
+    }
+
+    Column {
+      anchors.top: parent.top
+      anchors.left: collectionView.right
+      anchors.right: parent.right
+      height: parent.height
+      spacing: 10
+      Row {
+        height: 480 / 6
+        width: parent.width
+        QmlDateEdit {
+          id: dateEdit
+          width: parent.width
+          height: 480 / 6
+          displayFormat: "MM dd yyyy"
+        }
+      }
+      Row {
+        spacing: 2
+        width: parent.width - 5
+
+        KPIM.Button2 {
+          id: dayButton
+          buttonText: KDE.i18n( "Day view" )
+          width: parent.width / 3
+          onClicked: {
+            agenda.showRange( dateEdit.date, 0 /* "Day" */ );
+            mainWorkView.visible = false
+            agendaView.visible = true
+          }
+        }
+        KPIM.Button2 {
+          id: weekButton
+          buttonText: KDE.i18n( "Week view" )
+          width: parent.width / 3
+          onClicked: {
+            agenda.showRange( dateEdit.date, 1 /* "Week" */ );
+            mainWorkView.visible = false
+            agendaView.visible = true
+          }
+        }
+        KPIM.Button2 {
+          id: monthButton
+          buttonText: KDE.i18n( "Month view" )
+          width: parent.width / 3
+          onClicked: {
+            agenda.showRange( dateEdit.date, 2 /* "Month" */ );
+            mainWorkView.visible = false
+            agendaView.visible = true
+          }
+        }
+      }
+
+      KPIM.Button2 {
+        id: newAppointmentButton
+        width: 2/3 * parent.width
+        anchors.horizontalCenter: parent.horizontalCenter
+        buttonText: KDE.i18n( "New Appointment" )
+        // TODO: Make sure that the correct default calender is selected in
+        //       the incidence editor.
+        onClicked : { application.newIncidence(); }
+
+      }
+      KPIM.Button2 {
+        id: configureAccountButton
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 2/3 * parent.width
+        visible: (collectionView.hasSelection && !collectionView.hasBreadcrumbs) ? true : false
+        buttonText: KDE.i18n( "Configure Account" )
+        onClicked : { application.configureCurrentAccount(); }
+      }
+
+      KPIM.Button2 {
+        id: addCalendarAccountButton
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 2/3 * parent.width
+        buttonText: KDE.i18n( "Add calendar" )
+        onClicked : { application.launchAccountWizard() }
+      }
+    }
+  }
+
   SlideoutPanelContainer {
     anchors.fill: parent
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: startPanel
-      titleIcon: KDE.iconPath( "office-calendar", 48 )
-      handlePosition: 30
-      handleHeight: 78
-      content: [
-        KPIM.StartCanvas {
-          id : startPage
-          anchors.fill : parent
-          anchors.leftMargin : 50
-          startText: KDE.i18n( "Calendar start page" )
-          favoritesModel : favoritesList
-
-          contextActions : [
-            Column {
-              anchors.fill: parent
-              height: 480 / 6 * 3
-              KPIM.Button {
-                height : 480 / 6
-                width : parent.width
-                buttonText : KDE.i18n( "New Appointment" )
-                onClicked : { startPanel.collapse(); application.newIncidence(); }
-              }
-              KPIM.Button {
-                height : 480 / 6
-                width : parent.width
-                buttonText : KDE.i18n( "Add Calendar" )
-                onClicked : { startPanel.collapse(); application.launchAccountWizard() }
-              }
-              KPIM.Button {
-                height : 480 / 6
-                width : parent.width
-                buttonText : KDE.i18n( "Add Favorite" )
-                onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
-              }
-            }
-          ]
-        },
-        FavoriteSelector {
-          id : favoriteSelector
-          anchors.fill : parent
-          visible : false
-          onFinished : {
-            favoriteSelector.visible = false;
-            startPage.visible = true;
-            application.saveFavorite( favoriteSelector.favoriteName );
-          }
-        }
-      ]
-    }
-
-    SlideoutPanel {
-      id: folderPanel
-      titleText: KDE.i18n( "Calendars" )
-      handleHeight: 150
-      anchors.fill : parent
-      content: [
-        Item {
-          anchors.fill: parent //effect
-
-           AkonadiBreadcrumbNavigationView {
-             id : collectionView
-             width: 1/3 * folderPanel.contentWidth
-             anchors.top: parent.top
-             anchors.bottom: parent.bottom
-             anchors.left: parent.left
-             anchors.rightMargin: 4
-             breadcrumbItemsModel : breadcrumbCollectionsModel
-             selectedItemModel : selectedCollectionModel
-             childItemsModel : childCollectionsModel
-           }
-
-           Column {
-             anchors.left: collectionView.right
-             anchors.right: parent.right
-             spacing: 2
-             Row {
-               height: 480 / 6
-               width: parent.width
-               QmlDateEdit {
-                 id: dateEdit
-                 width: parent.width
-                 height: 480 / 6
-                 displayFormat: "MMM d yy"
-               }
-             }
-             Row {
-               spacing: 2
-               width: parent.width
-
-               KPIM.Button {
-                 id: dayButton
-                 buttonText: KDE.i18n( "Day view" )
-                 height: 480 / 6
-                 width: parent.width / 3
-                 onClicked: {
-                   agenda.showRange( dateEdit.date, 0 /* "Day" */ );
-                   folderPanel.collapse();
-                 }
-               }
-               KPIM.Button {
-                 id: weekButton
-                 buttonText: KDE.i18n( "Week view" )
-                 height: 480 / 6
-                 width: parent.width / 3
-                 onClicked: {
-                   agenda.showRange( dateEdit.date, 1 /* "Week" */ );
-                   folderPanel.collapse();
-                 }
-               }
-               KPIM.Button {
-                 id: monthButton
-                 buttonText: KDE.i18n( "Month view" )
-                 height: 480 / 6
-                 width: parent.width / 3
-                 onClicked: {
-                   agenda.showRange( dateEdit.date, 2 /* "Month" */ );
-                   folderPanel.collapse();
-                 }
-               }
-            }
-            Rectangle {
-              width:parent.width
-              height: 2
-              color: "#000000"
-            }
-            KPIM.Button {
-              id: newAppointmentButton
-              height: 480 / 6
-              width: parent.width
-              anchors.horizontalCenter: parent.horizontalCenter
-              buttonText: KDE.i18n( "New Appointment" )
-              // TODO: Make sure that the correct default calender is selected in
-              //       the incidence editor.
-              onClicked : { application.newIncidence(); }
-
-            }
-            KPIM.Button {
-              id: configureAccountButton
-              anchors.horizontalCenter: parent.horizontalCenter
-              height: 480 / 6
-              width: parent.width
-              buttonText: KDE.i18n( "Configure Account" )
-            }
-          }
-        }
-      ]
-    }
+    visible: agendaView.visible || eventView.visible
 
     SlideoutPanel {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
+      handlePosition : 40
       anchors.fill : parent
       contentWidth: 240
       content: [
@@ -280,15 +271,6 @@ KPIM.MainView {
             buttonText: KDE.i18n( "New Appointment" )
             onClicked: { application.newIncidence(); actionPanel.collapse() }
           },
-//           KPIM.Button {
-//             id: moveButton
-//             anchors.top: newButton.bottom
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: KDE.i18n( "Move" )
-//             onClicked: actionPanel.collapse();
-//           },
           KPIM.Action {
              id: deleteButton
              anchors.top: newButton.bottom;
@@ -337,7 +319,6 @@ KPIM.MainView {
         }
       ]
     }
-
   }
 
   Connections {
@@ -348,6 +329,7 @@ KPIM.MainView {
       startPanel.collapse();
     }
   }
+
   Connections {
     target: startPage
     onFavoriteSelected : {
@@ -356,6 +338,7 @@ KPIM.MainView {
       startPanel.collapse();
     }
   }
+  
   Connections {
     target: collectionView
     onChildCollectionSelected : {
