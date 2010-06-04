@@ -203,7 +203,7 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
     /* reimplemented from KCal::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const Akonadi::Item &incidence );
     void calendarIncidenceChanged( const Akonadi::Item &incidence );
-    void calendarIncidenceRemoved( const Akonadi::Item &incidence );
+    void calendarIncidenceDeleted( const Akonadi::Item &incidence );
 };
 
 void AgendaView::Private::calendarIncidenceAdded( const Item &incidence )
@@ -224,7 +224,7 @@ void AgendaView::Private::calendarIncidenceChanged( const Item &incidence )
   }
 }
 
-void AgendaView::Private::calendarIncidenceRemoved( const Item &incidence )
+void AgendaView::Private::calendarIncidenceDeleted( const Item &incidence )
 {
   Q_UNUSED( incidence );
   if ( !mPendingChanges ) {
