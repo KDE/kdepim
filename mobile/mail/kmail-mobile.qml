@@ -88,6 +88,10 @@ KPIM.MainView {
       anchors.bottom : selectButton.top
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
+
+      multipleSelectionText : KDE.i18na("You have selected \n%1 folders\nfrom %2 accounts\n%3 emails", [collectionView.numSelected,
+                                                                                                        application.numSelectedAccounts,
+                                                                                                        headerList.count])
       breadcrumbItemsModel : breadcrumbCollectionsModel
       selectedItemModel : selectedCollectionModel
       childItemsModel : childCollectionsModel
