@@ -231,6 +231,7 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+    visible : !favoriteSelector.visible
     SlideoutPanel {
 
       anchors.fill: parent
