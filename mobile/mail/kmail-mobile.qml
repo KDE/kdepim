@@ -324,6 +324,17 @@ KPIM.MainView {
               application.saveFavorite();
               actionPanel.collapse();
             }
+          },
+          KPIM.Button {
+            anchors.top: saveFavoriteButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText : KDE.i18n( "Write new Email" )
+            onClicked : {
+              application.startComposer();
+              actionPanel.collapse();
+            }
           }
       ]
     }
