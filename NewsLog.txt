@@ -1,3 +1,19 @@
+Friday, June 4th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue3974: Clicking on an ics/vcs-attachment doesn't import or display the events of the attachment (rt#5812)
+* kolab/issue4400: Composer: create distribution list adds the dist list just into the default resource
+* kolab/issue4094: Scrollbar position changes, if a new mail is synced into the folder (rt#5997)
+* kolab/issue3911: mail enterprise header: cannot mail to the second to address
+* kolab/issue4350: Sometimes the date headers in the agenda view are grainy and doubled (rt#6140)
+* kolab/issue3411: kmail drag and drop (DnD) of email addresses with umlauts from reader to composer exposes
+                   encoded-word encoding
+* Added a kdelibs patch that fixes a bunch of encoding problems for contacts.
+  This should fix the following issues: 3548, 3320, 4204, 4054
+
+
 Friday, May 28th 2010
 
 Problems addressed
