@@ -90,6 +90,17 @@ QCheckBox::indicator:disabled {
 }
 
 
+/* QColumnView, QListView and hacks for column view internals */
+QColumnView,
+QColumnView .QWidget,
+QColumnView .QAbstractItemView,
+QListView
+{
+  background-color: rgba(0,0,0,0);
+  color: black;
+}
+
+
 /* QComboBox */
 QComboBox::drop-down, QComboBox::down-arrow {
   background-color: rgba(0,0,0,0);
