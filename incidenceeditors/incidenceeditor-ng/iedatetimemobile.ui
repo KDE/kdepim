@@ -11,16 +11,6 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2">
-    <widget class="QCheckBox" name="mHasTimeCheck">
-     <property name="whatsThis">
-      <string>Set if this to-do's start and due dates have times associated with them.</string>
-     </property>
-     <property name="text">
-      <string>Ti&amp;me associated</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
@@ -52,7 +42,11 @@
     </layout>
    </item>
    <item row="1" column="2">
-    <widget class="QDateEdit" name="mStartDateEdit"/>
+    <widget class="QDateEdit" name="mStartDateEdit">
+     <property name="displayFormat">
+      <string>MM.dd.yyyy</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="3">
     <widget class="QTimeEdit" name="mStartTimeEdit">
@@ -102,6 +96,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="displayFormat">
+      <string>MM.dd.yyyy</string>
+     </property>
     </widget>
    </item>
    <item row="3" column="3">
@@ -114,7 +111,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="mFreeBusyLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -127,7 +124,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="2" colspan="3">
+   <item row="7" column="2" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QRadioButton" name="mFreeRadio">
@@ -145,7 +142,7 @@
      </item>
     </layout>
    </item>
-   <item row="6" column="0" colspan="5">
+   <item row="8" column="0" colspan="5">
     <layout class="QHBoxLayout" name="horizontalLayout_12">
      <item>
       <widget class="QStackedWidget" name="mAlarmStack">
@@ -318,6 +315,16 @@
      </property>
      <property name="whatsThis">
       <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QCheckBox" name="mHasTimeCheck">
+     <property name="whatsThis">
+      <string>Set if this to-do's start and due dates have times associated with them.</string>
+     </property>
+     <property name="text">
+      <string>Ti&amp;me associated</string>
      </property>
     </widget>
    </item>
