@@ -98,7 +98,7 @@ KPIM.MainView {
       anchors.right: collectionView.right
       anchors.bottom : parent.bottom
       anchors.bottomMargin : { (collectionView.numSelected == 1) ? -selectButton.height : 0 }
-      buttonText : KDE.i18n("Select")
+      buttonText : (collectionView.numSelected <= 1) ? KDE.i18n("Select") : KDE.i18n("Change Selection")
       opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
         application.persistCurrentSelection("preFavSelection");
