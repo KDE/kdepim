@@ -214,7 +214,7 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
 
   Grantlee::Template t = engine->loadByName( QLatin1String( "plain.html" ) );
   QVariantHash data;
-
+  
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   data.insert( QLatin1String( "dir" ) , dir );
 
@@ -241,14 +241,14 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
   if ( strategy->showHeader( "subject" ) ) {
     data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString()) );
     data.insert( QLatin1String( "subjectDir" ) , subjectDir );
-  }
+  }   
 
   if ( strategy->showHeader( "date" ) )
     data.insert( QLatin1String( "date" ) , strToHtml(dateString(message,isPrinting(),false)) );
 
   if ( strategy->showHeader( "from" ) ) {
     data.insert( QLatin1String( "from" ) , StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
-
+    
     if ( !vCardName().isEmpty() )
       data.insert( QLatin1String( "vCardName" ) , vCardName() );
 
@@ -453,8 +453,6 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                    drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
   }
 
-  QString userHTML;
-
   QString photoURL;
   int photoWidth = 60;
   int photoHeight = 60;
@@ -599,7 +597,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
 
     if ( strategy->showHeader( "organization" ) && message->headerByType("Organization"))
       data.insert( QLatin1String( "organization" ) , strToHtml( message->headerByType("Organization")->asUnicodeString() ) );
-
+   
   }
   // to line
 
@@ -697,7 +695,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   // of the application layout.
 
   Grantlee::Template t = engine->loadByName( QLatin1String( "enterprise.html" ) );
-  QVariantHash data;
+  QVariantHash data;  
 
   QString dir = ( QApplication::layoutDirection() == Qt::RightToLeft ) ? "rtl" : "ltr" ;
   data.insert( QLatin1String( "dir" ) , dir );
@@ -727,10 +725,6 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     fontColor = QColor(Qt::black);
     linkColor = "black";
   }
-
-  QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
-  imgpath.prepend( "file://" );
-  imgpath.append("enterprise_");
 
   // 3D borders
   if(isTopLevel())
@@ -820,57 +814,29 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   // Use always the brief strategy for the mobile headers.
   const HeaderStrategy *strategy = HeaderStrategy::brief();
 
-  // From
-  QString linkColor ="style=\"color: #0E49A1; text-decoration: none\"";
-  QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor );
+  Grantlee::Template t = engine->loadByName( QLatin1String( "mobile.html" ) );
+  QVariantHash data;  
+
+  data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly) );
+  data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString()) );
 
   if ( !vCardName().isEmpty() )
-    fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName() + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
-
-  // Background image
-  QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
-  imgpath.prepend( "file://" );
-  imgpath.append("mobile_");
-
-  QString headerStr;
-  headerStr += "<div style=\"position: absolute;\n";
-  headerStr += "            top: 5px;\n";
-  headerStr += "            left: 0px;\n";
-  headerStr += "            width: 100%;\n";
-  headerStr += "            height: 94px;\n";
-  headerStr += "            background-image: url('" + imgpath + "bg.png');\n";
-  headerStr += "            background-repeat: repeat-x;\">\n";
-  headerStr += "<table style=\"margin-left: 0px; margin-top:2px; width: 100%\">\n";
-
-  // From line
-  headerStr += "<tr style=\"height: 30px; vertical-align: middle; font-size: 20px; color: #0E49A1;\">\n";
-  headerStr += "  <td style=\"width: 120px; text-align: right; margin-right: 7px;\">" + i18n( "From:" ) + "</td>\n";
-  headerStr += "  <td colspan=\"2\">" + fromPart + "</td>\n";
-  headerStr += "</tr>\n";
-
-  // Subject line
-  headerStr += "<tr style=\"height: 30px; font-size: 20px; color: #24353F;\">\n";
-  headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "Subject:" ) + "</td>\n";
-  headerStr += "  <td colspan=\"2\" style=\"white-space: nowrap\">" + message->subject()->asUnicodeString() + "</td>\n";
-  headerStr += "</tr>\n";
-
-  headerStr += "<tr style=\"margin-top: 2px; height: 27px; font-size: 15px; color: #24353F;\">\n";
+    data.insert( QLatin1String( "vCardName" ) , vCardName() );
 
   if ( !messagePath().isEmpty() )
   {
     // TODO: Put these back in when we can somehow determine the path
     //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
-    headerStr += "  <td colspan=\"2\" style=\"padding-left: 50px;\">" + messagePath() + "</td>\n";
+    data.insert( QLatin1String( "messagePath" ) , messagePath() );
   }
-  headerStr += "  <td>&nbsp;</td>\n";
-  headerStr += "  <td colspan=\"2\" style=\"text-align: right; margin-right: 15px;\">sent: ";
-  headerStr += dateString( message, isPrinting(), /* shortDate = */ false ) + "</td>\n";
-  headerStr += "</tr>\n";
-  headerStr += "</table>\n";
-  headerStr += "</div>\n";
-  headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
+
+  data.insert( QLatin1String( "date" ) , dateString( message, isPrinting(), false ) );
 
   //kDebug() << headerStr;
+  Grantlee::Context c( data );
+  c.setRelativeMediaPath("images/");
+  QString headerStr= t->render( &c );
+
   return headerStr;
 }
 
