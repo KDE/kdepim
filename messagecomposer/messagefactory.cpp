@@ -406,17 +406,11 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 KMime::Message::Ptr MessageFactory::createResend()
 {
   KMime::Message::Ptr msg( new KMime::Message );
-  MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
   msg->setContent( m_origMsg->encodedContent() );
   msg->parse();
   msg->removeHeader( "Message-Id" );
   uint originalIdentity = identityUoid( m_origMsg );
 
-  // Remove all unnecessary headers
-  msg->removeHeader("Bcc");
-  msg->removeHeader( "Cc" );
-  msg->removeHeader( "To" );
-  msg->removeHeader( "Subject" );
   // Set the identity from above
   KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( originalIdentity ), "utf-8" );
   msg->setHeader( header );

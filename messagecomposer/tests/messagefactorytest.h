@@ -35,6 +35,7 @@ class MessageFactoryTest : public QObject
     void testCreateReplyUTF16Base64();
     void testCreateForward();
     void testCreateRedirect();
+    void testCreateResend();
     void testCreateMDN();
 
   private:
