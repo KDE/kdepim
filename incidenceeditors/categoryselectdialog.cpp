@@ -177,12 +177,10 @@ CategorySelectDialog::CategorySelectDialog( CategoryConfig* cc, QWidget *parent 
 #ifdef KDEPIM_MOBILE_UI
   // HACK: This is for maemo, which hides the button if there is only a cancel
   //       button.
-  setButtons( KDialog::Cancel );
-  setButtonIcon( KDialog::Cancel, KIcon( "dialog-ok" ) );
-  setButtonText( KDialog::Cancel, i18n( "&Ok" ) );
+  setButtons( KDialog::Ok );
   showButtonSeparator( false );
 
-  connect( this, SIGNAL(cancelClicked()), this, SLOT(slotOk()) );
+  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
 #else
   setButtons( Ok | Apply | Cancel | Help );
   showButtonSeparator( true );
