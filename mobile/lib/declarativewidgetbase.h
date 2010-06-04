@@ -38,13 +38,16 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
       m_widget( new WidgetT ),
       m_proxy( new QGraphicsProxyWidget( this ) )
     {
-      QPalette pal = m_widget->palette();
-      pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-      m_widget->setPalette( pal );
-      StyleSheetLoader::applyStyle( m_widget );
-      m_proxy->setWidget( m_widget );
-      setWidth( m_widget->width() );
-      setHeight( m_widget->height() );
+      init();
+    }
+
+    /** use this constructor if you inherit from this template to customize widget construction. */
+    DeclarativeWidgetBase( WidgetT *widget, QDeclarativeItem *parent ) :
+      QDeclarativeItem( parent ),
+      m_widget( widget ),
+      m_proxy( new QGraphicsProxyWidget( this ) )
+    {
+      init();
     }
 
     virtual ~DeclarativeWidgetBase() { delete m_proxy; }
@@ -71,6 +74,21 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
   protected:
     WidgetT* m_widget;
     QGraphicsProxyWidget *m_proxy;
+
+  private:
+    void init()
+    {
+      Q_ASSERT( m_widget );
+      Q_ASSERT( m_proxy );
+
+      QPalette pal = m_widget->palette();
+      pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+      m_widget->setPalette( pal );
+      StyleSheetLoader::applyStyle( m_widget );
+      m_proxy->setWidget( m_widget );
+      setWidth( m_widget->width() );
+      setHeight( m_widget->height() );
+    }
 };
 
 #endif

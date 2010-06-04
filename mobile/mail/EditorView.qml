@@ -32,7 +32,7 @@ Item {
     id: subjectLabel
     text: KDE.i18n( "Subject:" );
     anchors.leftMargin: 48
-    anchors.top: parent.top
+    anchors.verticalCenter: subject.verticalCenter
     anchors.left: parent.left
   }
 
@@ -43,12 +43,14 @@ Item {
       top: parent.top
       right: parent.right
     }
-    height: subjectInput.height
-    border { color: "black"; width: 1 }
+    height: subjectInput.height + 8 // padding
+    border { color: "grey"; width: 2; }
+    radius: 8
 
     TextInput {
       id: subjectInput
       anchors.fill: parent
+      anchors.margins: 4
       text: window.subject
     }
   }

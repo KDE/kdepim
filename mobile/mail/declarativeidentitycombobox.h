@@ -20,13 +20,14 @@
 #ifndef DECLRARATIVEIDENTITYCOMBOBOX_H
 #define DECLRARATIVEIDENTITYCOMBOBOX_H
 
-#include "declarativecomposerwidgetbase.h"
+#include "declarativewidgetbase.h"
+#include "composerview.h"
 
 #include <kpimidentities/identitycombo.h>
 
 class QGraphicsProxyWidget;
 
-class DeclarativeIdentityComboBox : public DeclarativeComposerWidgetBase<KPIMIdentities::IdentityCombo, &ComposerView::setIdentityCombo>
+class DeclarativeIdentityComboBox : public DeclarativeWidgetBase<KPIMIdentities::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
 {
   Q_OBJECT
   public:
