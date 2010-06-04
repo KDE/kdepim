@@ -17,12 +17,14 @@
     02110-1301, USA.
 */
 
+
 /*
  * Generic settings
  */
 
 /* font colors */
-QCheckBox, QLabel, QPushButton, QRadioButton:off {
+QCheckBox, QLabel, QPushButton, QRadioButton:off
+{
   color: black
 }
 
@@ -45,6 +47,8 @@ QSpinBox::up-button
 }
 
 /* active button background */
+QCheckBox:pressed,
+QComboBox:pressed,
 QDateTimeEdit::down-button:pressed,
 QDateTimeEdit::up-button:pressed,
 QPushButton:pressed,
@@ -62,12 +66,14 @@ QLineEdit,
 QTextEdit,
 QSpinBox
 {
+  background-color: white;
   border: 2px;
   border-color: grey;
   border-radius: 8px;
   border-style: inset;
   padding: 4px;
 }
+
 
 
 /*
@@ -92,6 +98,13 @@ QComboBox::drop-down, QComboBox::down-arrow {
 
 /* QRadioButton */
 QRadioButton::indicator {
+  background-color: rgba(0,0,0,0);
+  width: 0;
+}
+
+
+/* QScrollArea */
+QScrollArea {
   background-color: rgba(0,0,0,0);
 }
 
@@ -168,4 +181,17 @@ QSpinBox::up-arrow:disabled,
 QSpinBox::up-arrow:off
 {
   image: url(@STYLE_IMAGE_PATH@/button-plus-disabled.png);
+}
+
+
+
+/*
+ * Hacks that should not be necessary at all
+ */
+
+/* Recipients editor does not have a transparent background by default on Maemo and tries very hard to avoid getting one :-/ */
+MessageComposer--RecipientLine,
+MessageComposer--RecipientsView > * > QWidget
+{
+  background-color: rgba(0,0,0,0);
 }
