@@ -49,7 +49,6 @@ public: /// members
   QAbstractItemModel                 *mFavSelectedChildItems;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
   QItemSelectionModel                *mItemSelectionModel;
-  KActionCollection                  *mActionCollection;
   QHash<QString, QStringList>        mPersistedSelections;
 
 public: /// Methods

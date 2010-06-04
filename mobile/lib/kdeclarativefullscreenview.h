@@ -24,6 +24,8 @@
 
 #include "mobileui_export.h"
 
+class KActionCollection;
+
 /**
  * Full screen view for mobile applications. This class is just to share code and therefore
  * should not be instantiated by itself.
@@ -43,9 +45,15 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     /** Triggers de-fullscreen/task switcher */
     void triggerTaskSwitcher();
 
+    QObject* getAction( const QString &name ) const;
+    KActionCollection* actionCollection() const;
+
   private slots:
     void setQmlFile( const QString &source ) { setSource( source ); }
     void slotStatusChanged ( QDeclarativeView::Status );
+
+  private:
+    KActionCollection *mActionCollection;
 };
 
 #endif

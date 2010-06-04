@@ -25,6 +25,8 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <klocalizedstring.h>
+#include <KAction>
+#include <KActionCollection>
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/QTimer>
@@ -58,6 +60,9 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   const QString qmlPath = KStandardDirs::locate( "appdata", qmlFileName + ".qml" );
   // call setSource() only once our derived classes have set up everything
   QMetaObject::invokeMethod( this, "setQmlFile", Qt::QueuedConnection, Q_ARG( QString, qmlPath ) );
+
+  // TODO: Get this from a KXMLGUIClient?
+  mActionCollection = new KActionCollection( this );
 }
 
 void KDeclarativeFullScreenView::triggerTaskSwitcher()
@@ -78,5 +83,16 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
     QCoreApplication::instance()->exit( 1 );
   }
 }
+
+KActionCollection* KDeclarativeFullScreenView::actionCollection() const
+{
+  return mActionCollection;
+}
+
+QObject* KDeclarativeFullScreenView::getAction( const QString &name ) const
+{
+  return mActionCollection->action( name );
+}
+
 
 #include "kdeclarativefullscreenview.moc"

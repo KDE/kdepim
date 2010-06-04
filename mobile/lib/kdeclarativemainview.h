@@ -24,7 +24,6 @@
 
 class QAbstractItemModel;
 
-class KActionCollection;
 
 namespace Akonadi {
 class EntityTreeModel;
@@ -71,8 +70,6 @@ public:
 
   QStringList mimeTypes() const;
 
-  KActionCollection* actionCollection() const;
-
 public slots:
   void setSelectedAccount( int row );
   void setSelectedChildCollectionRow( int row );
@@ -89,8 +86,6 @@ public slots:
 
   void saveFavorite();
   void loadFavorite( const QString &name );
-
-  QObject* getAction( const QString &name ) const;
 
   void configureCurrentAccount();
 

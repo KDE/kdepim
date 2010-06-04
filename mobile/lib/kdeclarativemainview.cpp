@@ -125,10 +125,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   d->mItemSelectionModel = new QItemSelectionModel( listProxy ? static_cast<QAbstractItemModel *>( listProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
-  // TODO: Get this from a KXMLGUIClient?
-  d->mActionCollection = new KActionCollection( this );
-
-  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( d->mActionCollection, this );
+  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
 
@@ -342,16 +339,6 @@ QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
 QAbstractItemModel* KDeclarativeMainView::favoriteSelectedItems() const
 {
   return d->mFavSelectedChildItems;
-}
-
-KActionCollection* KDeclarativeMainView::actionCollection() const
-{
-  return d->mActionCollection;
-}
-
-QObject* KDeclarativeMainView::getAction( const QString &name ) const
-{
-  return d->mActionCollection->action( name );
 }
 
 Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
