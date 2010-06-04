@@ -94,6 +94,10 @@ public slots:
 
   void configureCurrentAccount();
 
+  void persistCurrentSelection(const QString &key);
+  void clearPersistedSelection(const QString &key);
+  void restorePersistedSelection(const QString &key);
+
 protected:
   QItemSelectionModel* regularSelectionModel() const;
   QItemSelectionModel* favoriteSelectionModel() const;

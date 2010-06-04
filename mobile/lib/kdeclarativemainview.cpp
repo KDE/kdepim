@@ -384,3 +384,35 @@ void KDeclarativeMainView::configureCurrentAccount()
 
   agent.configure();
 }
+
+void KDeclarativeMainView::persistCurrentSelection(const QString& key)
+{
+  ETMStateSaver saver;
+  saver.setSelectionModel(d->mBnf->selectionModel());
+  QStringList selection = saver.selectionKeys();
+  if (selection.isEmpty())
+    return;
+
+  d->mPersistedSelections.insert(key, selection);
+}
+
+void KDeclarativeMainView::clearPersistedSelection(const QString& key)
+{
+  d->mPersistedSelections.remove(key);
+}
+
+void KDeclarativeMainView::restorePersistedSelection(const QString& key)
+{
+  if (!d->mPersistedSelections.contains(key))
+    return;
+
+  QStringList selection = d->mPersistedSelections.take(key);
+  ETMStateSaver *restorer = new ETMStateSaver;
+
+  QItemSelectionModel *selectionModel = d->mBnf->selectionModel();
+  selectionModel->clearSelection();
+
+  restorer->setSelectionModel(selectionModel);
+  restorer->restoreSelection(selection);
+}
+

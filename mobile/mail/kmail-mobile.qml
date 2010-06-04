@@ -101,6 +101,7 @@ KPIM.MainView {
       buttonText : KDE.i18n("Select")
       opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
       onClicked : {
+        application.persistCurrentSelection("preFavSelection");
         favoriteSelector.visible = true;
         mainWorkView.visible = false;
       }
@@ -226,6 +227,13 @@ KPIM.MainView {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
       collectionView.state = "favOverlay";
+      application.clearPersistedSelection("preFavSelection");
+    }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.restorePersistedSelection("preFavSelection");
+      collectionView.state = "";
     }
   }
 
