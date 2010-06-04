@@ -184,6 +184,8 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
 
   d->restoreState();
+
+  connect( d->mBnf->selectionModel(), SIGNAL(selectionModel(QItemSelection, QItemSelection)), SLOT(numSelectedAccounts()));
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()

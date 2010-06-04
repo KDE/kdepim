@@ -39,7 +39,8 @@ class KDeclarativeMainViewPrivate;
  */
 class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 {
-  Q_OBJECT;
+  Q_OBJECT
+  Q_PROPERTY(int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged)
 
 protected:
   /**
@@ -70,6 +71,8 @@ public:
 
   QStringList mimeTypes() const;
 
+  int numSelectedAccounts();
+
 public slots:
   void setSelectedAccount( int row );
   void setSelectedChildCollectionRow( int row );
@@ -93,7 +96,8 @@ public slots:
   void clearPersistedSelection(const QString &key);
   void restorePersistedSelection(const QString &key);
 
-  int numSelectedAccounts();
+signals:
+  void numSelectedAccountsChanged();
 
 protected:
   QItemSelectionModel* regularSelectionModel() const;
