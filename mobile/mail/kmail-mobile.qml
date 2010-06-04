@@ -184,7 +184,7 @@ KPIM.MainView {
         text : KDE.i18n("No messages in this folder");
         height : 20;
         font.italic : true
-        horizontalAlignment : Text.AlignHCenter
+        horizontalAlignment : QML.Text.AlignHCenter
         anchors.verticalCenter : parent.verticalCenter;
         anchors.horizontalCenter : parent.horizontalCenter
       }
