@@ -54,21 +54,21 @@ KPIM.MainView {
 
   QML.Rectangle {
     id : backToMessageListButton
-    y : 200
-    width : 32
-    height : 32
-    color : "blue"
+    anchors.right : kmailMobile.right
+    anchors.rightMargin : 70
+    anchors.bottom : kmailMobile.bottom
+    anchors.bottomMargin : 100
     visible : false
     QML.Image {
-      source : KDE.iconPath("draw-arrow-back", 32)
-    }
-    QML.MouseArea {
-      anchors.fill : parent;
-      onClicked : {
-        messageView.visible = false;
-        backToMessageListButton.visible = false;
-        collectionView.visible = true;
-        emailListPage.visible = true;
+      source : "back-to-message-list.png"
+      QML.MouseArea {
+        anchors.fill : parent;
+        onClicked : {
+          messageView.visible = false;
+          backToMessageListButton.visible = false;
+          collectionView.visible = true;
+          emailListPage.visible = true;
+        }
       }
     }
   }
