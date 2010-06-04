@@ -939,33 +939,16 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   headerStr += "            height: 94px;\n";
   headerStr += "            background-image: url('" + imgpath + "bg.png');\n";
   headerStr += "            background-repeat: repeat-x;\">\n";
-  headerStr += "<table style=\"margin-left: 0px; margin-top:2px; width: 100%\">\n";
-
-  // From line
-  headerStr += "<tr style=\"height: 30px; vertical-align: middle; font-size: 20px; color: #0E49A1;\">\n";
-  headerStr += "  <td style=\"width: 120px; text-align: right; margin-right: 7px;\">" + i18n( "From:" ) + "</td>\n";
-  headerStr += "  <td colspan=\"2\">" + fromPart + "</td>\n";
-  headerStr += "</tr>\n";
-
-  // Subject line
-  headerStr += "<tr style=\"height: 30px; font-size: 20px; color: #24353F;\">\n";
-  headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "Subject:" ) + "</td>\n";
-  headerStr += "  <td colspan=\"2\" style=\"white-space: nowrap\">" + message->subject()->asUnicodeString() + "</td>\n";
-  headerStr += "</tr>\n";
-
-  headerStr += "<tr style=\"margin-top: 2px; height: 27px; font-size: 15px; color: #24353F;\">\n";
-
+  headerStr += "  <div style=\"margin-top: 10px; height: 25px; margin-left: 90px; vertical-align: bottom; font-size: 20px; color: #0E49A1;\">" + fromPart + "</div>\n";
+  headerStr += "  <div style=\"height: 35px; margin-left: 90px; font-size: 20px; color: #24353F;\">" + message->subject()->asUnicodeString() + "</div>\n";
   if ( !messagePath().isEmpty() )
   {
     // TODO: Put these back in when we can somehow determine the path
     //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
-    headerStr += "  <td colspan=\"2\" style=\"padding-left: 50px;\">" + messagePath() + "</td>\n";
+    headerStr += "  <div style=\"position:absolute; top: 70px; left: 15px; font-size: 15px; color: #24353F;\">" + messagePath() + "</div>\n";
   }
-  headerStr += "  <td>&nbsp;</td>\n";
-  headerStr += "  <td colspan=\"2\" style=\"text-align: right; margin-right: 15px;\">sent: ";
-  headerStr += dateString( message, isPrinting(), /* shortDate = */ false ) + "</td>\n";
-  headerStr += "</tr>\n";
-  headerStr += "</table>\n";
+  headerStr += "  <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px;\">sent: ";
+  headerStr += dateString( message, isPrinting(), /* shortDate = */ false ) + "</div>\n";
   headerStr += "</div>\n";
   headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
 
