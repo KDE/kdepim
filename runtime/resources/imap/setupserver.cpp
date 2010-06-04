@@ -115,7 +115,7 @@ static void addAuthenticationItem( QComboBox* authCombo, KIMAP::LoginJob::Authen
 
 SetupServer::SetupServer( ImapResource *parentResource, WId parent )
   : KDialog(), m_parentResource( parentResource ), m_ui(new Ui::SetupServerView), m_serverTest(0),
-    m_subscriptionsChanged(false), m_shouldClearCache(false)
+    m_subscriptionsChanged(false), m_shouldClearCache(false), mValidator( this )
 {
 #ifdef KDEPIM_MOBILE_UI
   setButtonsOrientation( Qt::Vertical );
@@ -137,6 +137,10 @@ SetupServer::SetupServer( ImapResource *parentResource, WId parent )
   m_ui->testProgress->hide();
   m_ui->accountName->setFocus();
   m_ui->checkInterval->setSuffix( ki18np( " minute", " minutes" ) );
+
+  // regex for evaluating a valid server name/ip
+  mValidator.setRegExp( QRegExp( "[A-Za-z0-9-_:.]*" ) );
+  m_ui->imapServer->setValidator( &mValidator );
 
   // FIXME: This option has no effect yet, therefore hide it for now.
   m_ui->includeInCheck->hide();
@@ -236,7 +240,21 @@ void SetupServer::applySettings()
   Settings::self()->setImapServer( m_ui->imapServer->text() );
   Settings::self()->setImapPort( m_ui->portSpin->value() );
   Settings::self()->setUserName( m_ui->userName->text() );
-  Settings::self()->setSafety( m_ui->safeImapGroup->checkedId() );
+  QString encryption = "";
+  switch ( m_ui->safeImapGroup->checkedId() ) {
+  case KIMAP::LoginJob::Unencrypted :
+    encryption = "None";
+    break;
+  case KIMAP::LoginJob::AnySslVersion:
+    encryption = "SSL";
+    break;
+  case KIMAP::LoginJob::TlsV1:
+    encryption = "STARTTLS";
+    break;
+  default:
+    kFatal() << "Shouldn't happen";
+  }
+  Settings::self()->setSafety( encryption );
   KIMAP::LoginJob::AuthenticationMode authtype = getCurrentAuthMode( m_ui->authenticationCombo );
   kDebug() << "saving IMAP auth mode: " << authenticationModeString( authtype );
   Settings::self()->setAuthentication( authtype );
@@ -293,7 +311,15 @@ void SetupServer::readSettings()
     !Settings::self()->userName().isEmpty() ? Settings::self()->userName() :
     currentUser->loginName() );
 
-  int i = Settings::self()->safety();
+  QString safety = Settings::self()->safety();
+  int i = 0;
+  if( safety == "SSL" )
+    i = KIMAP::LoginJob::AnySslVersion;
+  else if ( safety == "STARTTLS" )
+    i = KIMAP::LoginJob::TlsV1;
+  else
+    i = KIMAP::LoginJob::Unencrypted;
+
   QAbstractButton* safetyButton = m_ui->safeImapGroup->button( i );
   if ( safetyButton )
       safetyButton->setChecked( true );
@@ -303,7 +329,9 @@ void SetupServer::readSettings()
   kDebug() << "read IMAP auth mode: " << authenticationModeString( (KIMAP::LoginJob::AuthenticationMode) i );
   setCurrentAuthMode( m_ui->authenticationCombo, (KIMAP::LoginJob::AuthenticationMode) i );
 
-  if ( !Settings::self()->passwordPossible() ) {
+  bool rejected = false;
+  QString password = Settings::self()->password( &rejected );
+  if ( rejected ) {
     m_ui->password->setEnabled( false );
     KMessageBox::information( 0, i18n( "Could not access KWallet. "
                                        "If you want to store the password permanently then you have to "
@@ -312,7 +340,7 @@ void SetupServer::readSettings()
                                        "prompted for your password when needed." ),
                               i18n( "Do not use KWallet" ), "warning_kwallet_disabled" );
   } else {
-    m_ui->password->insert( Settings::self()->password() );
+    m_ui->password->insert( password );
   }
 
   m_ui->subscriptionEnabled->setChecked( Settings::self()->subscriptionEnabled() );
@@ -523,6 +551,7 @@ void SetupServer::slotSafetyChanged()
   }
 
   m_ui->authenticationCombo->clear();
+  addAuthenticationItem( m_ui->authenticationCombo, KIMAP::LoginJob::ClearText );
   foreach( int prot, protocols ) {
     KIMAP::LoginJob::AuthenticationMode t = mapTransportAuthToKimap( ( MailTransport::Transport::EnumAuthenticationType::type ) prot );
     addAuthenticationItem( m_ui->authenticationCombo, t );
