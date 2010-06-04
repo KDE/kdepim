@@ -945,7 +945,7 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   {
     // TODO: Put these back in when we can somehow determine the path
     //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
-    headerStr += "  <div style=\"position:absolute; top: 70px; left: 15px; font-size: 15px; color: #24353F;\">" + messagePath() + "</div>\n";
+    headerStr += "  <div style=\"position:absolute; top: 70px; left: 47px; font-size: 15px; color: #24353F;\">" + messagePath() + "</div>\n";
   }
   headerStr += "  <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px;\">sent: ";
   headerStr += dateString( message, isPrinting(), /* shortDate = */ false ) + "</div>\n";
