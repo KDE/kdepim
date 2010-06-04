@@ -416,3 +416,21 @@ void KDeclarativeMainView::restorePersistedSelection(const QString& key)
   restorer->restoreSelection(selection);
 }
 
+int KDeclarativeMainView::numSelectedAccounts()
+{
+  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
+  if (list.isEmpty())
+    return 0;
+
+  QSet<QString> resources;
+
+  foreach (const QModelIndex &index, list)
+  {
+    const Collection col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if (!col.isValid())
+      continue;
+    resources.insert(col.resource());
+  }
+  return resources.size();
+}
+
