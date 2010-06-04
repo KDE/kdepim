@@ -118,6 +118,11 @@ protected:
     void init();
 
     /**
+     * Updates the progress bar
+     */
+    void updateProgressBar(int direction);
+
+    /**
      * Initiates calendar loading process.
      * @param url URL to load calendar data from.
      */

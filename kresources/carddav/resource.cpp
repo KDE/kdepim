@@ -95,24 +95,25 @@ ResourceCardDav::~ResourceCardDav() {
         mWriteRetryTimer->stop();	// Unfortunately we cannot do anything at this point; if this timer is still running something is seriously wrong
     }
 
+    if (mLoader) {
+        readLockout = true;
+        mLoader->terminate();
+        mLoader->wait(TERMINATION_WAITING_TIME);
+        mLoadingQueueReady = true;
+    }
+
     while ((mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady) {
         readLockout = true;
         sleep(1);
         qApp->processEvents(QEventLoop::ExcludeUserInput);
     }
 
-    if (mLoader) {
-        mLoader->terminate();
-    }
     if (mWriter) {
         mWriter->terminate();
     }
 
     log("waiting for jobs terminated");
 
-    if (mLoader) {
-        mLoader->wait(TERMINATION_WAITING_TIME);
-    }
     if (mWriter) {
         mWriter->wait(TERMINATION_WAITING_TIME);
     }
@@ -128,7 +129,8 @@ ResourceCardDav::~ResourceCardDav() {
 }
 
 bool ResourceCardDav::isSaving() {
-    return (((mWriteRetryTimer != NULL) ? mWriteRetryTimer->isActive() : 0) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady);
+    doSave();
+    return (((mWriteRetryTimer != NULL) ? 1 : 0) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady || readLockout);
 }
 
 /*=========================================================================
@@ -138,7 +140,7 @@ bool ResourceCardDav::isSaving() {
 bool ResourceCardDav::load() {
     bool syncCache = true;
 
-    if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true) || (readLockout == true)) {
+    if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true) || (isSaving() == true)) {
         return true;	// Silently fail; the user has obviously not responded to a dialog and we don't need to pop up more of them!
     }
 
@@ -189,6 +191,13 @@ bool ResourceCardDav::doSave() {
         // FIXME: Calling clearChanges() here is not the ideal way since the
         // upload might fail, but there is no other place to call it...
         clearChanges();
+        if (mWriteRetryTimer != NULL) {
+            if (mWriteRetryTimer->isActive() == false) {
+                disconnect( mWriteRetryTimer, SIGNAL(timeout()), this, SLOT(doSave()) );
+                delete mWriteRetryTimer;
+                mWriteRetryTimer = NULL;
+            }
+        }
         return true;
     }
     else return true;	// We do not need to alert the user to this transient failure; a timer has been started to retry the save
@@ -267,6 +276,34 @@ void ResourceCardDav::setReadOnly(bool v) {
     ensureReadOnlyFlagHonored();
 }
 
+void ResourceCardDav::updateProgressBar(int direction) {
+    int current_queued_events;
+    static int original_queued_events;
+
+    // See if anything is in the queues
+    current_queued_events = mWritingQueue.count() + mLoadingQueue.count();
+    if ((direction == 0) && (mLoader->running() == true)) current_queued_events++;
+    if ((direction == 1) && (mWriter->running() == true)) current_queued_events++;
+    if (current_queued_events > original_queued_events) {
+        original_queued_events = current_queued_events;
+    }
+
+    if (current_queued_events == 0) {
+        if ( mProgress != NULL) {
+            mProgress->setComplete();
+            mProgress = NULL;
+            original_queued_events = 0;
+        }
+    }
+    else {
+        if (mProgress == NULL) {
+            if (direction == 0) mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Downloading Contacts") );
+            if (direction == 1) mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Uploading Contacts") );
+        }
+        mProgress->setProgress( ((((float)original_queued_events-(float)current_queued_events)*100)/(float)original_queued_events) );
+    }
+}
+
 /*=========================================================================
 | READING METHODS
  ========================================================================*/
@@ -274,16 +311,13 @@ void ResourceCardDav::setReadOnly(bool v) {
 void ResourceCardDav::loadingQueuePush(const LoadingTask *task) {
    if ((mLoadingQueue.isEmpty() == true) && (mLoader->running() == false)) {
         mLoadingQueue.enqueue(task);
+        updateProgressBar(0);
         loadingQueuePop();
-        if (mProgress == NULL) {
-            mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
-            mProgress->setProgress( 0 );
-        }
     }
 }
 
 void ResourceCardDav::loadingQueuePop() {
-    if (!mLoadingQueueReady || mLoadingQueue.isEmpty() || (mWritingQueue.isEmpty() == false) || (mWriter->running() == true) || !mWritingQueueReady) {
+    if (!mLoadingQueueReady || mLoadingQueue.isEmpty() || (isSaving() == true)) {
         return;
     }
 
@@ -311,6 +345,7 @@ void ResourceCardDav::loadingQueuePop() {
 
     // if all ok, removing the task from the queue
     mLoadingQueue.dequeue();
+    updateProgressBar(0);
 
     delete t;
 }
@@ -325,11 +360,6 @@ void ResourceCardDav::loadFinished() {
     CardDavReader* loader = mLoader;
 
     log("load finished");
-
-    if ( mProgress != NULL) {
-        mProgress->setComplete();
-        mProgress = NULL;
-    }
 
     if (!loader) {
         log("loader is NULL");
@@ -387,7 +417,10 @@ void ResourceCardDav::loadFinished() {
 
     // Loading queue and mLoadingQueueReady flag are not shared resources, i.e. only one thread has an access to them.
     // That's why no mutexes are required.
+    mLoader->terminate();
+    mLoader->wait(TERMINATION_WAITING_TIME);
     mLoadingQueueReady = true;
+    updateProgressBar(0);
     loadingQueuePop();
 }
 
@@ -494,11 +527,8 @@ void ResourceCardDav::writingQueuePush(const WritingTask *task) {
 //     printf("task->deleted: %s\n\r", task->deleted.ascii());
 //     printf("task->changed: %s\n\r", task->changed.ascii());
     mWritingQueue.enqueue(task);
+    updateProgressBar(1);
     writingQueuePop();
-    if (mProgress == NULL) {
-        mProgress = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), i18n("Saving Calendar") );
-        mProgress->setProgress( 0 );
-    }
 }
 
 void ResourceCardDav::writingQueuePop() {
@@ -548,6 +578,7 @@ void ResourceCardDav::writingQueuePop() {
 
     // if all ok, remove the task from the queue
     mWritingQueue.dequeue();
+    updateProgressBar(1);
 
     delete t;
 }
@@ -602,11 +633,6 @@ bool ResourceCardDav::startWriting(const QString& url) {
 void ResourceCardDav::writingFinished() {
     log("writing finished");
 
-    if ( mProgress != NULL) {
-        mProgress->setComplete();
-        mProgress = NULL;
-    }
-
     if (!mWriter) {
         log("mWriter is NULL");
         return;
@@ -642,7 +668,10 @@ void ResourceCardDav::writingFinished() {
 
     // Writing queue and mWritingQueueReady flag are not shared resources, i.e. only one thread has an access to them.
     // That's why no mutexes are required.
+    mWriter->terminate();
+    mWriter->wait(TERMINATION_WAITING_TIME);
     mWritingQueueReady = true;
+    updateProgressBar(1);
     writingQueuePop();
 }
 

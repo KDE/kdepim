@@ -95,15 +95,19 @@ ResourceCalDav::~ResourceCalDav() {
         mWriteRetryTimer->stop();	// Unfortunately we cannot do anything at this point; if this timer is still running something is seriously wrong
     }
 
+    if (mLoader) {
+        readLockout = true;
+        mLoader->terminate();
+        mLoader->wait(TERMINATION_WAITING_TIME);
+        mLoadingQueueReady = true;
+    }
+
     while ((mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady) {
         readLockout = true;
         sleep(1);
         qApp->processEvents(QEventLoop::ExcludeUserInput);
     }
 
-    if (mLoader) {
-        mLoader->terminate();
-    }
     if (mWriter) {
         mWriter->terminate();
     }
@@ -128,7 +132,8 @@ ResourceCalDav::~ResourceCalDav() {
 }
 
 bool ResourceCalDav::isSaving() {
-    return (((mWriteRetryTimer != NULL) ? mWriteRetryTimer->isActive() : 0) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady);
+    doSave();
+    return (((mWriteRetryTimer != NULL) ? 1 : 0) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady || readLockout);
 }
 
 /*=========================================================================
@@ -138,7 +143,7 @@ bool ResourceCalDav::isSaving() {
 bool ResourceCalDav::doLoad() {
     bool syncCache = true;
 
-    if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true) || (readLockout == true)) {
+    if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true) || (isSaving() == true)) {
         return true;	// Silently fail; the user has obviously not responded to a dialog and we don't need to pop up more of them!
     }
 
@@ -189,6 +194,13 @@ bool ResourceCalDav::doSave() {
         // FIXME: Calling clearChanges() here is not the ideal way since the
         // upload might fail, but there is no other place to call it...
         clearChanges();
+        if (mWriteRetryTimer != NULL) {
+            if (mWriteRetryTimer->isActive() == false) {
+                disconnect( mWriteRetryTimer, SIGNAL(timeout()), this, SLOT(doSave()) );
+                delete mWriteRetryTimer;
+                mWriteRetryTimer = NULL;
+            }
+        }
         return true;
     }
     else return true;	// We do not need to alert the user to this transient failure; a timer has been started to retry the save
@@ -277,6 +289,8 @@ void ResourceCalDav::updateProgressBar(int direction) {
 
     // See if anything is in the queues
     current_queued_events = mWritingQueue.count() + mLoadingQueue.count();
+    if ((direction == 0) && (mLoader->running() == true)) current_queued_events++;
+    if ((direction == 1) && (mWriter->running() == true)) current_queued_events++;
     if (current_queued_events > original_queued_events) {
         original_queued_events = current_queued_events;
     }
@@ -304,13 +318,13 @@ void ResourceCalDav::updateProgressBar(int direction) {
 void ResourceCalDav::loadingQueuePush(const LoadingTask *task) {
    if ((mLoadingQueue.isEmpty() == true) && (mLoader->running() == false)) {
         mLoadingQueue.enqueue(task);
-        loadingQueuePop();
         updateProgressBar(0);
+        loadingQueuePop();
     }
 }
 
 void ResourceCalDav::loadingQueuePop() {
-    if (!mLoadingQueueReady || mLoadingQueue.isEmpty() || (mWritingQueue.isEmpty() == false) || (mWriter->running() == true) || !mWritingQueueReady || (readLockout == true)) {
+    if (!mLoadingQueueReady || mLoadingQueue.isEmpty() || (isSaving() == true)) {
         return;
     }
 
@@ -335,10 +349,10 @@ void ResourceCalDav::loadingQueuePop() {
 
     log("starting actual download job");
     mLoader->start(QThread::LowestPriority);
-    updateProgressBar(0);
 
     // if all ok, removing the task from the queue
     mLoadingQueue.dequeue();
+    updateProgressBar(0);
 
     delete t;
 }
@@ -353,8 +367,6 @@ void ResourceCalDav::loadFinished() {
     CalDavReader* loader = mLoader;
 
     log("load finished");
-
-    updateProgressBar(0);
 
     if (!loader) {
         log("loader is NULL");
@@ -411,7 +423,10 @@ void ResourceCalDav::loadFinished() {
 
     // Loading queue and mLoadingQueueReady flag are not shared resources, i.e. only one thread has an access to them.
     // That's why no mutexes are required.
+    mLoader->terminate();
+    mLoader->wait(TERMINATION_WAITING_TIME);
     mLoadingQueueReady = true;
+    updateProgressBar(0);
     loadingQueuePop();
 }
 
@@ -515,8 +530,8 @@ void ResourceCalDav::writingQueuePush(const WritingTask *task) {
 //     printf("task->deleted: %s\n\r", task->deleted.ascii());
 //     printf("task->changed: %s\n\r", task->changed.ascii());
     mWritingQueue.enqueue(task);
-    writingQueuePop();
     updateProgressBar(1);
+    writingQueuePop();
 }
 
 void ResourceCalDav::writingQueuePop() {
@@ -563,10 +578,10 @@ void ResourceCalDav::writingQueuePop() {
 
     log("starting actual write job");
     mWriter->start(QThread::LowestPriority);
-    updateProgressBar(1);
 
     // if all ok, remove the task from the queue
     mWritingQueue.dequeue();
+    updateProgressBar(1);
 
     delete t;
 }
@@ -667,8 +682,6 @@ bool ResourceCalDav::startWriting(const QString& url) {
 void ResourceCalDav::writingFinished() {
     log("writing finished");
 
-    updateProgressBar(1);
-
     if (!mWriter) {
         log("mWriter is NULL");
         return;
@@ -707,7 +720,10 @@ void ResourceCalDav::writingFinished() {
 
     // Writing queue and mWritingQueueReady flag are not shared resources, i.e. only one thread has an access to them.
     // That's why no mutexes are required.
+    mWriter->terminate();
+    mWriter->wait(TERMINATION_WAITING_TIME);
     mWritingQueueReady = true;
+    updateProgressBar(1);
     writingQueuePop();
 }
 
