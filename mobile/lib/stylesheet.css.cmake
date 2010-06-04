@@ -27,7 +27,15 @@ QCheckBox, QLabel, QPushButton, QRadioButton:off {
 }
 
 /* idle button background */
-QCheckBox, QComboBox, QRadioButton, QPushButton, QSpinBox::down-button, QSpinBox::up-button {
+QCheckBox,
+QComboBox,
+QDateTimeEdit::down-button,
+QDateTimeEdit::up-button,
+QRadioButton,
+QPushButton,
+QSpinBox::down-button,
+QSpinBox::up-button
+{
   border-image: url(@STYLE_IMAGE_PATH@/button-border.png) 10 10 10 10 repeat stretch;
   border-top: 10px;
   border-bottom: 10px;
@@ -37,13 +45,23 @@ QCheckBox, QComboBox, QRadioButton, QPushButton, QSpinBox::down-button, QSpinBox
 }
 
 /* active button background */
-QPushButton:pressed, QRadioButton:on, QSpinBox::down-button:pressed, QSpinBox::up-button:pressed {
+QDateTimeEdit::down-button:pressed,
+QDateTimeEdit::up-button:pressed,
+QPushButton:pressed,
+QRadioButton:on,
+QSpinBox::down-button:pressed,
+QSpinBox::up-button:pressed
+{
   border-image: url(@STYLE_IMAGE_PATH@/button-border-active.png) 10 10 10 10 repeat stretch;
   color: white;
 }
 
 /* text input frames */
-QLineEdit, QTextEdit, QSpinBox {
+QDateTimeEdit,
+QLineEdit,
+QTextEdit,
+QSpinBox
+{
   border: 2px;
   border-color: grey;
   border-radius: 8px;
@@ -78,49 +96,76 @@ QRadioButton::indicator {
 }
 
 
-/* QSpinBox */
-QSpinBox {
+/* QSpinBox and QDateTimeEdit */
+QDateTimeEdit, QSpinBox {
   margin-left: 68px;
   margin-right: 68px;
   margin-top: 16px;
   margin-bottom: 16px;
   text-align: center;
+  /* for some reason padding is increased by margin here... */
+  padding-left: -64px;
+  padding-right: -64px;
 }
 
-QSpinBox::down-button, QSpinBox::up-button {
+QDateTimeEdit::down-button,
+QDateTimeEdit::up-button,
+QSpinBox::down-button,
+QSpinBox::up-button
+{
   subcontrol-origin: margin;
   height: 48px;
   width: 48px;
 }
 
-QSpinBox::down-button {
+QDateTimeEdit::down-button,
+QSpinBox::down-button
+{
   subcontrol-position: left;
 }
 
-QSpinBox::up-button {
+QDateTimeEdit::up-button,
+QSpinBox::up-button
+{
   subcontrol-position: right;
 }
 
-QSpinBox::down-arrow {
+QDateTimeEdit::down-arrow,
+QSpinBox::down-arrow
+{
   image: url(@STYLE_IMAGE_PATH@/button-minus.png);
 }
 
-QSpinBox::down-arrow:pressed {
+QDateTimeEdit::down-arrow:pressed,
+QSpinBox::down-arrow:pressed
+{
   image: url(@STYLE_IMAGE_PATH@/button-minus-active.png);
 }
 
-QSpinBox::down-arrow:disabled, QSpinBox::down-arrow:off {
+QDateTimeEdit::down-arrow:disabled,
+QDateTimeEdit::down-arrow:off,
+QSpinBox::down-arrow:disabled,
+QSpinBox::down-arrow:off
+{
   image: url(@STYLE_IMAGE_PATH@/button-minus-disabled.png);
 }
 
-QSpinBox::up-arrow {
+QDateTimeEdit::up-arrow,
+QSpinBox::up-arrow
+{
   image: url(@STYLE_IMAGE_PATH@/button-plus.png);
 }
 
-QSpinBox::up-arrow:pressed {
+QDateTimeEdit::up-arrow:pressed,
+QSpinBox::up-arrow:pressed
+{
   image: url(@STYLE_IMAGE_PATH@/button-plus-active.png);
 }
 
-QSpinBox::up-arrow:disabled, QSpinBox::up-arrow:off {
+QDateTimeEdit::up-arrow:disabled,
+QDateTimeEdit::up-arrow:off,
+QSpinBox::up-arrow:disabled,
+QSpinBox::up-arrow:off
+{
   image: url(@STYLE_IMAGE_PATH@/button-plus-disabled.png);
 }
