@@ -37,7 +37,6 @@ public:
     explicit MainView( QWidget *parent = 0 );
 
 public slots:
-    void showFavoriteCalendar();
     void showRegularCalendar();
 
     void setCurrentEventItemId( qint64 id );

@@ -375,7 +375,6 @@ KPIM.MainView {
     target: homePage
     onAccountSelected : {
       application.setSelectedAccount(row);
-      application.showRegularCalendar();
     }
   }
 
@@ -383,15 +382,13 @@ KPIM.MainView {
     target: homePage
     onFavoriteSelected : {
       application.loadFavorite(favName);
-      application.showFavoriteCalendar();
     }
   }
-  
+
   Connections {
     target: collectionView
     onChildCollectionSelected : {
       application.setSelectedChildCollectionRow( row );
-      application.showRegularCalendar();
     }
   }
 
@@ -399,7 +396,6 @@ KPIM.MainView {
     target: collectionView
     onBreadcrumbCollectionSelected : {
       application.setSelectedBreadcrumbCollectionRow( row );
-      application.showRegularCalendar();
     }
   }
 }

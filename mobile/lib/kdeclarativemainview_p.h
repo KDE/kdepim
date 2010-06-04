@@ -46,7 +46,6 @@ public: /// members
   Akonadi::EntityMimeTypeFilterModel *mItemFilter;
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
-  QAbstractItemModel                 *mFavSelectedChildItems;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
   QItemSelectionModel                *mItemSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;

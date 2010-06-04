@@ -336,11 +336,6 @@ QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
   return d->mItemFilter;
 }
 
-QAbstractItemModel* KDeclarativeMainView::favoriteSelectedItems() const
-{
-  return d->mFavSelectedChildItems;
-}
-
 Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
 {
   const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );

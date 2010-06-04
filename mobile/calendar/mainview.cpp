@@ -44,11 +44,6 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
 }
 
-void MainView::showFavoriteCalendar()
-{
-  m_calendar->setUnfilteredModel(favoriteSelectedItems());
-}
-
 void MainView::showRegularCalendar()
 {
   m_calendar->setUnfilteredModel(regularSelectedItems());
