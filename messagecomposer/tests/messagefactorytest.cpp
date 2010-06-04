@@ -41,6 +41,7 @@
 #include <kmime/kmime_dateformatter.h>
 
 #include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
 #include <qtest_kde.h>
 #include <QDateTime>
 using namespace Message;
@@ -133,21 +134,33 @@ void MessageFactoryTest::testCreateForward()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( ", " ) + KGlobal::locale()->formatTime( date.time(), true );
 
-  QString fwdMsg = QString::fromLatin1( "\n"
-                                        "----------  Forwarded Message  ----------\n"
+  QString fwdMsg = QString::fromLatin1("Content-Type: text/plain\n"
+                      "Subject: Fwd: Test Email Subject\n"
+                      "Date: %2\n"
+                      "User-Agent: %3\n"
+                      "MIME-Version: 1.0\n"
+                      "X-KMail-Link-Message: 0\n"
+                      "X-KMail-Link-Type: forward\n"
+                      "\n"
+                      "\n"
+                      "----------  Forwarded Message  ----------\n"
                       "\n"
                       "Subject: Test Email Subject\n"
                       "Date: %1\n"
                       "From: me@me.me\n"
                       "To: you@you.you\n"
+                      "CC: cc@cc.cc\n"
                       "\n"
                       "All happy families are alike; each unhappy family is unhappy in its own way.\n"
                       "-----------------------------------------" );
-  fwdMsg = fwdMsg.arg( datetime );
+  fwdMsg = fwdMsg.arg( datetime ).arg( fw->date()->asUnicodeString() ).arg( fw->userAgent()->asUnicodeString() );
+
+  
+//   kDebug() << "got:" << fw->encodedContent() << "against" << fwdMsg.toLatin1();
   
   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QVERIFY( fw->subject()->asUnicodeString() == QLatin1String( "Fwd: Test Email Subject" ) );
-  QVERIFY( fw->body() == fwdMsg.toLatin1() );
+  QVERIFY( fw->encodedContent() == fwdMsg.toLatin1() );
 
 }
 
@@ -156,7 +169,11 @@ void MessageFactoryTest::testCreateRedirect()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
-
+  KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
+  ident.setFullName( QLatin1String( "another" ) );
+  ident.setEmailAddr( QLatin1String( "another@another.com" ) );
+  identMan->commit();
+  
   MessageFactory factory( msg, 0 );
   factory.setIdentityManager( identMan );
 
@@ -167,7 +184,7 @@ void MessageFactoryTest::testCreateRedirect()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime = rdir->date()->asUnicodeString();
 
-  kDebug() << rdir->encodedContent();
+//   kDebug() << rdir->encodedContent();
   
   QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
 
@@ -175,6 +192,8 @@ void MessageFactoryTest::testCreateRedirect()
   rx.indexIn( QString::fromAscii( rdir->head() ) );
   
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
+                                          "Cc: cc@cc.cc\n"
+                                          "Bcc: bcc@bcc.bcc\n"
                                           "Subject: Test Email Subject\n"
                                           "Date: %2\n"
                                           "Disposition-Notification-To: me@me.me\n"
@@ -183,15 +202,19 @@ void MessageFactoryTest::testCreateRedirect()
                                           "Content-Type: text/plain; charset=\"us-ascii\"\n"
                                           "Resent-Message-ID: %3\n"
                                           "Resent-Date: %4\n"
+                                          "Resent-From: %5\n"
                                           "To: %1\n"
-                                          "Resent-To:  <>\n"
-                                          "X-KMail-Redirect-From: me@me.me (by way of  <>)\n"
+                                          "Resent-To: redir@redir.com\n"
+                                          "Resent-Cc: cc@cc.cc\n"
+                                          "Resent-Bcc: bcc@bcc.bcc\n"
+                                          "X-KMail-Redirect-From: me@me.me (by way of another <another@another.com>)\n"
                                           "X-KMail-Recipients: redir@redir.com\n"
                                           "\n"
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
-  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( rx.cap(1) ).arg( datetime );
+  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( rx.cap(1) ).arg( datetime ).arg( QLatin1String( "another <another@another.com>" ) );
 
-  kDebug() << baseline.toLatin1();
+//   kDebug() << baseline.toLatin1();
+//   kDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QVERIFY( rdir->subject()->asUnicodeString() == QLatin1String( "Test Email Subject" ) );
@@ -243,6 +266,8 @@ KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
   composer->globalPart()->setFallbackCharsetEnabled( true );
   composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
   composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
+  composer->infoPart()->setCc( QStringList( QString::fromLatin1( "cc@cc.cc" ) ) );
+  composer->infoPart()->setBcc( QStringList( QString::fromLatin1( "bcc@bcc.bcc" ) ) );
   composer->textPart()->setWrappedPlainText( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
   composer->infoPart()->setSubject( QLatin1String( "Test Email Subject" ) );
   composer->globalPart()->setMDNRequested( true );
