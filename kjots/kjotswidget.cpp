@@ -397,7 +397,7 @@ KJotsWidget::~KJotsWidget()
 void KJotsWidget::restoreState()
 {
   ETMStateSaver *saver = new ETMStateSaver;
-  saver->setTreeView( treeview );
+  saver->setView( treeview );
   KConfigGroup cfg( KGlobal::config(), "TreeState" );
   saver->restoreState( cfg );
 }
@@ -405,7 +405,7 @@ void KJotsWidget::restoreState()
 void KJotsWidget::saveState()
 {
   ETMStateSaver saver;
-  saver.setTreeView( treeview );
+  saver.setView( treeview );
   KConfigGroup cfg( KGlobal::config(), "TreeState" );
   saver.saveState( cfg );
   cfg.sync();

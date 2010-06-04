@@ -255,7 +255,7 @@ void MainWidget::restoreState()
   // collection view
   {
     ETMStateSaver *saver = new ETMStateSaver;
-    saver->setTreeView( mCollectionView );
+    saver->setView( mCollectionView );
 
     const KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
     saver->restoreState( group );
@@ -273,7 +273,7 @@ void MainWidget::restoreState()
   // item view
   {
     ETMStateSaver *saver = new ETMStateSaver;
-    saver->setTreeView( mItemView );
+    saver->setView( mItemView );
     saver->setSelectionModel( mItemView->selectionModel() );
 
     const KConfigGroup group( Settings::self()->config(), "ItemViewState" );
@@ -286,7 +286,7 @@ void MainWidget::saveState()
   // collection view
   {
     ETMStateSaver saver;
-    saver.setTreeView( mCollectionView );
+    saver.setView( mCollectionView );
 
     KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
     saver.saveState( group );
@@ -306,7 +306,7 @@ void MainWidget::saveState()
   // item view
   {
     ETMStateSaver saver;
-    saver.setTreeView( mItemView );
+    saver.setView( mItemView );
     saver.setSelectionModel( mItemView->selectionModel() );
 
     KConfigGroup group( Settings::self()->config(), "ItemViewState" );
