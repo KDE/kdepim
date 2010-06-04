@@ -133,6 +133,10 @@ KPIM.MainView {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
     }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+    }
     styleSheet: window.styleSheet
   }
 
