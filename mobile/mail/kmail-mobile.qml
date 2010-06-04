@@ -226,14 +226,12 @@ KPIM.MainView {
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
-      collectionView.state = "favOverlay";
       application.clearPersistedSelection("preFavSelection");
     }
     onCanceled : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
       application.restorePersistedSelection("preFavSelection");
-      collectionView.state = "";
     }
   }
 
@@ -360,7 +358,6 @@ KPIM.MainView {
     target: startPage
     onFavoriteSelected : {
       application.loadFavorite(favName);
-      collectionView.state = "favOverlay";
     }
   }
 
