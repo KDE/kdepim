@@ -124,6 +124,7 @@ KPIM.MainView {
           id : favoriteSelector
           anchors.fill : parent
           visible : false
+          styleSheet: window.styleSheet
           onFinished : {
             favoriteSelector.visible = false;
             startPage.visible = true;
