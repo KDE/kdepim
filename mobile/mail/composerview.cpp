@@ -88,6 +88,18 @@ ComposerView::ComposerView(QWidget* parent) :
   m_attachmentModel = new Message::AttachmentModel(this);
   engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( m_attachmentModel ) ) );
   m_attachmentController = new Message::AttachmentControllerBase(m_attachmentModel, this, actionCollection());
+
+  action = actionCollection()->addAction("sign_email");
+  action->setText( i18n( "Sign" ) );
+  action->setIcon( KIcon( "document-sign" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(signEmail(bool)));
+
+  action = actionCollection()->addAction("encrypt_email");
+  action->setText( i18n( "Encrypt" ) );
+  action->setIcon( KIcon( "mail-encrypt" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(encryptEmail(bool)));
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
