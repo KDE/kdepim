@@ -77,8 +77,7 @@ ComposerView::ComposerView(QWidget* parent) :
   qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
 
   // TODO: Really make this application-global;
-  mActionCollection = new KActionCollection( this );
-  KAction *action = mActionCollection->addAction( "add_attachment" );
+  KAction *action = actionCollection()->addAction( "add_attachment" );
   action->setText( i18n( "Add Attachment" ) );
   action->setIcon( KIcon( "list-add" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(addAttachment()));
@@ -88,8 +87,7 @@ ComposerView::ComposerView(QWidget* parent) :
 
   m_attachmentModel = new Message::AttachmentModel(this);
   engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( m_attachmentModel ) ) );
-  m_attachmentController = new Message::AttachmentControllerBase(m_attachmentModel, this, mActionCollection);
-
+  m_attachmentController = new Message::AttachmentControllerBase(m_attachmentModel, this, actionCollection());
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -390,15 +388,10 @@ void ComposerView::setSubject ( const QString& subject )
     setWindowTitle( i18n( "New mail" ) );
 }
 
-KActionCollection* ComposerView::actionCollection() const
-{
-  return mActionCollection;
-}
-
 QObject* ComposerView::getAction( const QString &name ) const
 {
-  kDebug() << mActionCollection << mActionCollection->action( name );
-  return mActionCollection->action( name );
+  kDebug() << actionCollection() << actionCollection()->action( name );
+  return actionCollection()->action( name );
 }
 
 void ComposerView::configureIdentity()

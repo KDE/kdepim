@@ -66,8 +66,6 @@ class ComposerView : public KDeclarativeFullScreenView
     bool encrypt() const { return m_encrypt; }
     void setEncrypt( bool encrypt ) { m_encrypt = encrypt; }
 
-    KActionCollection* actionCollection() const;
-
     void setMessage( const KMime::Message::Ptr &msg );
 
   public slots:
@@ -98,7 +96,6 @@ class ComposerView : public KDeclarativeFullScreenView
     Message::AttachmentModel *m_attachmentModel;
     Message::AttachmentControllerBase *m_attachmentController;
     QString m_subject;
-    KActionCollection *mActionCollection;
     KMime::Message::Ptr m_message;
     int m_jobCount;
     bool m_sign;
