@@ -38,7 +38,7 @@ QPushButton,
 QSpinBox::down-button,
 QSpinBox::up-button
 {
-  border-image: url(@STYLE_IMAGE_PATH@/button-border.png) 10 10 10 10 repeat stretch;
+  border-image: url(@STYLE_IMAGE_PATH@/button-border.png) 14 14 14 14 repeat stretch;
   border-top: 10px;
   border-bottom: 10px;
   border-left: 10px;
@@ -56,7 +56,7 @@ QRadioButton:on,
 QSpinBox::down-button:pressed,
 QSpinBox::up-button:pressed
 {
-  border-image: url(@STYLE_IMAGE_PATH@/button-border-active.png) 10 10 10 10 repeat stretch;
+  border-image: url(@STYLE_IMAGE_PATH@/button-border-active.png) 14 14 14 14 repeat stretch;
   color: white;
 }
 
