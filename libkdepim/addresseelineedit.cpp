@@ -33,6 +33,8 @@
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
 
+#include <KPIMUtils/Email>
+
 #include <KLDAP/LdapServer>
 
 #include <KMime/Util>
@@ -723,8 +725,11 @@ void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
 
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
-  const Akonadi::ContactSearchJob *contactJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
-  const Akonadi::ContactGroupSearchJob *groupJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+  const Akonadi::ContactSearchJob *contactJob =
+    qobject_cast<Akonadi::ContactSearchJob*>( job );
+  const Akonadi::ContactGroupSearchJob *groupJob =
+    qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+
   if ( contactJob ) {
     kDebug() << "Found" << contactJob->contacts().size() << "contacts";
   } else if ( groupJob ) {
@@ -1024,6 +1029,27 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
         setText( contents );
         setModified( true );
         return;
+      }
+    } else {
+      // Let's see if this drop contains a comma separated list of emails
+      QStringList addrs =
+        KPIMUtils::splitAddressList( QString::fromUtf8( event->encodedData( "text/plain" ) ) );
+      if ( addrs.count() > 0 ) {
+        QStringList::ConstIterator it;
+        QStringList emails;
+        for ( it = addrs.begin(); it != addrs.end(); ++it ) {
+          QString name, mail;
+          if ( KPIMUtils::extractEmailAddressAndName( (*it), mail, name ) ) {
+            emails.append( mail );
+          } else {
+            continue;
+          }
+        }
+        if ( emails.count() > 0 ) {
+          setText( emails.join( "," ) );
+          setModified( true );
+          return;
+        }
       }
     }
   }
