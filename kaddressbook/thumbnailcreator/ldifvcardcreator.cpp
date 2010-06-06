@@ -75,7 +75,13 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   text.truncate(0);
 
   // read the file
+#if defined(KABC_VCARD_ENCODING_FIX)
+  const QByteArray data = file.readAll();
+  const QString contents( data );
+  const QCString contentsRaw( data.data(), data.size() );
+#else
   QString contents = file.readAll();
+#endif
   file.close();
 
   // convert the file contents to a KABC::Addressee address
@@ -83,7 +89,11 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   KABC::Addressee addr;
   KABC::VCardConverter converter;
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+  addrList = converter.parseVCardsRaw( contentsRaw );
+#else
   addrList = converter.parseVCards( contents );
+#endif
   if ( addrList.count() == 0 )
     if ( !KABC::LDIFConverter::LDIFToAddressee( contents, addrList ) )
 	return false;

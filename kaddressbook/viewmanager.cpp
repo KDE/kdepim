@@ -419,7 +419,7 @@ void ViewManager::dropped( QDropEvent *e )
   if ( e->source() == this )
     return;
 
-  QString clipText, vcards;
+  KABC::Addressee::List list;
   KURL::List urls;
 
   if ( KURLDrag::decode( e, urls) ) {
@@ -433,10 +433,7 @@ void ViewManager::dropped( QDropEvent *e )
       }
     } else if ( c == 1 )
       emit urlDropped( *it );
-  } else if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::VCardConverter converter;
-
-    const KABC::Addressee::List list = converter.parseVCards( vcards );
+  } else if ( KVCardDrag::decode( e, list ) ) {
     KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::Addressee a = mCore->addressBook()->findByUid( (*it).uid() );
@@ -467,7 +464,11 @@ void ViewManager::startDrag()
   KMultipleDrag *drag = new KMultipleDrag( this );
 
   KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+  QCString vcards = converter.createVCardsRaw( addrList );
+#else
   QString vcards = converter.createVCards( addrList );
+#endif
 
   // Best text representation is given by textdrag, so it must be first
   drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
@@ -484,7 +485,11 @@ void ViewManager::startDrag()
 
     QFile tempFile( tempDir.name() + "/" + fileName );
     if ( tempFile.open( IO_WriteOnly ) ) {
+#if defined(KABC_VCARD_ENCODING_FIX)
+      tempFile.writeBlock( vcards, vcards.length() );
+#else
       tempFile.writeBlock( vcards.utf8() );
+#endif
       tempFile.close();
 
       KURLDrag *urlDrag = new KURLDrag( KURL( tempFile.name() ), this );

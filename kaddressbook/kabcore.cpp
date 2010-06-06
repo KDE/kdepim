@@ -407,7 +407,12 @@ void KABCore::setContactSelected( const QString &uid )
 
   if ( mReadWrite ) {
     QClipboard *cb = QApplication::clipboard();
+#if defined(KABC_VCARD_ENCODING_FIX)
+    const QMimeSource *data = cb->data( QClipboard::Clipboard );
+    list = AddresseeUtil::clipboardToAddressees( data->encodedData( "text/x-vcard" ) );
+#else
     list = AddresseeUtil::clipboardToAddressees( cb->text() );
+#endif
     mActionPaste->setEnabled( !list.isEmpty() );
   }
 }
@@ -507,12 +512,15 @@ void KABCore::copyContacts()
 {
   KABC::Addressee::List addrList = mViewManager->selectedAddressees();
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+  QByteArray clipText = AddresseeUtil::addresseesToClipboard( addrList );
+  QClipboard *cb = QApplication::clipboard();
+  cb->setText( QString::fromUtf8( clipText.data() ) );
+#else
   QString clipText = AddresseeUtil::addresseesToClipboard( addrList );
-
-  kdDebug(5720) << "KABCore::copyContacts: " << clipText << endl;
-
   QClipboard *cb = QApplication::clipboard();
   cb->setText( clipText );
+#endif
 }
 
 void KABCore::cutContacts()
@@ -530,9 +538,12 @@ void KABCore::cutContacts()
 void KABCore::pasteContacts()
 {
   QClipboard *cb = QApplication::clipboard();
-
+#if defined(KABC_VCARD_ENCODING_FIX)
+  const QMimeSource *data = cb->data( QClipboard::Clipboard );
+  KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( data->encodedData( "text/x-vcard" ) );
+#else
   KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
-
+#endif
   pasteContacts( list );
 }
 

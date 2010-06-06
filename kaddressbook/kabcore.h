@@ -159,7 +159,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     /**
       sets the distribution list to display. If null, the regular
-      address book is to be displayed.  
+      address book is to be displayed.
      */
     virtual void setSelectedDistributionList( const QString &name );
 #endif
@@ -310,7 +310,7 @@ class KDE_EXPORT KABCore : public KAB::Core
      */
     virtual void newContact();
 
-    /** 
+    /**
      DCOP METHOD: Opens distribution list editor to create a new distribution list
     */
     virtual void newDistributionList();
@@ -344,7 +344,7 @@ class KDE_EXPORT KABCore : public KAB::Core
      * If the adding to the new resource is successfull, the contact is
      * removed from the old one, unless the Copy flag is given. */
     void storeContactIn( const QString &uid = QString::null, bool copy = false );
-    
+
     /**
      * Lets the user chose a different resource for the selected contacts and
      * copies it there.
@@ -418,7 +418,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();
-    void sendMailToDistributionList( const QString &id ); 
+    void sendMailToDistributionList( const QString &id );
 
   private:
     void initGUI();

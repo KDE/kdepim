@@ -23,6 +23,7 @@
 
 #include <qpixmap.h>
 #include <kio/thumbcreator.h>
+#include <kabc/vcardparser.h> // for KABC_VCARD_ENCODING_FIX define
 
 class KPixmapSplitter;
 

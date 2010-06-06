@@ -26,6 +26,7 @@
 
 #include <qstring.h>
 #include <kabc/addressee.h>
+#include <kabc/vcardparser.h> // for KABC_VCARD_ENCODING_FIX define
 
 /**
   This class provides some utility methods for transposing an
@@ -43,15 +44,23 @@ class AddresseeUtil
     /**
       Same as above function, except that an entire list of KABC::Addressee
       objects will be converted to vCard and put in the string.
-     */
+    */
+#if defined(KABC_VCARD_ENCODING_FIX)
+    static QByteArray addresseesToClipboard( const KABC::Addressee::List &addrList );
+#else
     static QString addresseesToClipboard( const KABC::Addressee::List &addrList );
+#endif
 
     /**
       Convert a string from the clipboard into a list of addressee objects.
       If the clipboard text was not a valid vcard, an empty list
       will be returned.
      */
+#if defined(KABC_VCARD_ENCODING_FIX)
+    static KABC::Addressee::List clipboardToAddressees( const QByteArray &clipboard );
+#else
     static KABC::Addressee::List clipboardToAddressees( const QString &clipboard );
+#endif
 
     /**
       Converts the list of addressee objects into a list of email addresses.

@@ -25,6 +25,7 @@
 #define VCARD_XXPORT_H
 
 #include <xxport.h>
+#include <kabc/vcardparser.h> // for KABC_VCARD_ENCODING_FIX define
 
 class VCardXXPort : public KAB::XXPort
 {
@@ -40,8 +41,13 @@ class VCardXXPort : public KAB::XXPort
     KABC::AddresseeList importContacts( const QString &data ) const;
 
   private:
-    KABC::AddresseeList parseVCard( const QString &data ) const;
-    bool doExport( const KURL &url, const QString &data );
+#if defined(KABC_VCARD_ENCODING_FIX)
+    KABC::AddresseeList parseVCard( const QByteArray &data ) const;
+    bool doExport( const KURL &url, const QByteArray &data );
+#else
+  KABC::AddresseeList parseVCard( const QString &data ) const;
+  bool doExport( const KURL &url, const QString &data );
+#endif
     void addKey( KABC::Addressee &addr, KABC::Key::Types type );
 
     KABC::AddresseeList filterContacts( const KABC::AddresseeList& );

@@ -94,7 +94,11 @@ void ResourceCached::loadCache()
 
 
   KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+  KABC::Addressee::List list = converter.parseVCardsRaw( file.readAll().data() );
+#else
   KABC::Addressee::List list = converter.parseVCards( QString::fromUtf8( file.readAll() ) );
+#endif
   KABC::Addressee::List::Iterator it;
 
   for ( it = list.begin(); it != list.end(); ++it ) {
@@ -119,8 +123,13 @@ void ResourceCached::saveCache()
   KABC::Addressee::List list = mAddrMap.values();
 
   KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+  QCString vCard = converter.createVCardsRaw( list );
+  file.writeBlock( vCard, vCard.length() );
+#else
   QString vCard = converter.createVCards( list );
   file.writeBlock( vCard.utf8(), vCard.utf8().length() );
+#endif
   file.close();
 }
 
@@ -133,7 +142,11 @@ void ResourceCached::cleanUpCache( const KABC::Addressee::List &addrList )
 
 
   KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+  KABC::Addressee::List list = converter.parseVCardsRaw( file.readAll().data() );
+#else
   KABC::Addressee::List list = converter.parseVCards( QString::fromUtf8( file.readAll() ) );
+#endif
   KABC::Addressee::List::Iterator cacheIt;
   KABC::Addressee::List::ConstIterator it;
 
@@ -225,9 +238,14 @@ void ResourceCached::saveChangesCache( const QMap<QString, KABC::Addressee> &map
     }
 
     KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    const QCString vCards = converter.createVCardsRaw( list );
+    file.writeBlock( vCards, vCards.length() );
+#else
     const QString vCards = converter.createVCards( list );
     QCString content = vCards.utf8();
     file.writeBlock( content, content.length() );
+#endif
   }
 }
 
@@ -246,7 +264,11 @@ void ResourceCached::loadChangesCache( QMap<QString, KABC::Addressee> &map, cons
 
   KABC::VCardConverter converter;
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+  const KABC::Addressee::List list = converter.parseVCardsRaw( file.readAll().data() );
+#else
   const KABC::Addressee::List list = converter.parseVCards( QString::fromUtf8( file.readAll() ) );
+#endif
   KABC::Addressee::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     map.insert( (*it).uid(), *it );

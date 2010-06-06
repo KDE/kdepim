@@ -160,7 +160,11 @@ QString KABC::ResourceKolab::loadContact( const QString& contactData,
     contact.saveTo( &addr );
   } else {
     KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    addr = converter.parseVCardRaw( contactData.utf8() );
+#else
     addr = converter.parseVCard( contactData );
+#endif
   }
 
   addr.setResource( this );
@@ -377,7 +381,11 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   } else {
     mimetype = s_inlineMimeType;
     KABC::VCardConverter converter;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    data = QString::fromUtf8( converter.createVCardRaw( addr ) );
+#else
     data = converter.createVCard( addr );
+#endif
     subject.prepend( "vCard " ); // as per kolab1 spec
   }
   bool rc = kmailUpdate( subResource, sernum, data, mimetype, subject,

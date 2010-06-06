@@ -26,6 +26,7 @@
 #include <qstring.h>
 
 #include <kabc/addressee.h>
+#include <kabc/vcardparser.h> // for KABC_VCARD_ENCODING_FIX define
 #include <kdepimmacros.h>
 
 class KVCardDragPrivate;
@@ -49,14 +50,21 @@ class KDE_EXPORT KVCardDrag : public QStoredDrag
     /**
      * Constructs a vcard drag with the @p addressee.
      */
+#if defined(KABC_VCARD_ENCODING_FIX)
+    KVCardDrag( const QByteArray &content, QWidget *dragsource = 0, const char *name = 0 );
+#else
     KVCardDrag( const QString &content, QWidget *dragsource = 0, const char *name = 0 );
+#endif
     virtual ~KVCardDrag() {}
 
     /**
      * Sets the vcard of the drag to @p content.
      */
+#if defined(KABC_VCARD_ENCODING_FIX)
+    void setVCard( const QByteArray &content );
+#else
     void setVCard( const QString &content );
-
+#endif
     /**
      * Returns true if the MIME source @p e contains a vcard object.
      */
@@ -65,7 +73,11 @@ class KDE_EXPORT KVCardDrag : public QStoredDrag
     /**
      * Decodes the MIME source @p e and puts the resulting vcard into @p content.
      */
+#if defined(KABC_VCARD_ENCODING_FIX)
+    static bool decode( QMimeSource *e, QByteArray &content );
+#else
     static bool decode( QMimeSource *e, QString &content );
+#endif
 
     /**
      * Decodes the MIME source @p e and puts the resulting vcard into @p addresseess.

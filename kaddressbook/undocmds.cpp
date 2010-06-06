@@ -290,7 +290,11 @@ void CutCommand::execute()
   QClipboard *cb = QApplication::clipboard();
   mOldText = cb->text();
   kapp->processEvents();
+#if defined(KABC_VCARD_ENCODING_FIX)
+  cb->setText( QString::fromUtf8( mClipText.data() ) );
+#else
   cb->setText( mClipText );
+#endif
 }
 
 CopyToCommand::CopyToCommand( KABC::AddressBook *addressBook, const QStringList &uidList,

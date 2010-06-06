@@ -29,6 +29,21 @@
 
 #include "addresseeutil.h"
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+QByteArray AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
+{
+  KABC::VCardConverter converter;
+
+  return converter.createVCardsRaw( list );
+}
+
+KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QByteArray &data )
+{
+  KABC::VCardConverter converter;
+
+  return converter.parseVCardsRaw( data.data() );
+}
+#else
 QString AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
 {
   KABC::VCardConverter converter;
@@ -42,6 +57,7 @@ KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data 
 
   return converter.parseVCards( data );
 }
+#endif
 
 QString AddresseeUtil::addresseesToEmails( const KABC::Addressee::List &addrList )
 {

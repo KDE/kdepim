@@ -118,9 +118,15 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
       return true;
 
     if ( data == "v21" )
+#if defined(KABC_VCARD_ENCODING_FIX)
+      ok = doExport( url, converter.createVCardsRaw( list, KABC::VCardConverter::v2_1 ) );
+    else
+      ok = doExport( url, converter.createVCardsRaw( list, KABC::VCardConverter::v3_0 ) );
+#else
       ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
     else
       ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
+#endif
   } else {
     QString msg = i18n( "You have selected a list of contacts, shall they be "
                         "exported to several files?" );
@@ -151,10 +157,15 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
           tmpList.append( *it );
 
           if ( data == "v21" )
+#if defined(KABC_VCARD_ENCODING_FIX)
+            tmpOk = doExport( url, converter.createVCardsRaw( tmpList, KABC::VCardConverter::v2_1 ) );
+          else
+            tmpOk = doExport( url, converter.createVCardsRaw( tmpList, KABC::VCardConverter::v3_0 ) );
+#else
             tmpOk = doExport( url, converter.createVCards( tmpList, KABC::VCardConverter::v2_1 ) );
           else
             tmpOk = doExport( url, converter.createVCards( tmpList, KABC::VCardConverter::v3_0 ) );
-
+#endif
           ok = ok && tmpOk;
         }
         break;
@@ -166,9 +177,15 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
           return true;
 
         if ( data == "v21" )
+#if defined(KABC_VCARD_ENCODING_FIX)
+          ok = doExport( url, converter.createVCardsRaw( list, KABC::VCardConverter::v2_1 ) );
+        else
+          ok = doExport( url, converter.createVCardsRaw( list, KABC::VCardConverter::v3_0 ) );
+#else
           ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
         else
           ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
+#endif
       }
     }
   }
@@ -182,9 +199,14 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
   KABC::AddresseeList addrList;
   KURL::List urls;
 
-  if ( !XXPortManager::importData.isEmpty() )
+  if ( !XXPortManager::importData.isEmpty() ) {
+#if defined(KABC_VCARD_ENCODING_FIX)
+    QCString data = XXPortManager::importData.ascii();
+    addrList = parseVCard( data );
+#else
     addrList = parseVCard( XXPortManager::importData );
-  else {
+#endif
+  } else {
     if ( XXPortManager::importURL.isEmpty() )
       urls = KFileDialog::getOpenURLs( QString::null, "*.vcf|vCards", parentWidget(),
                                        i18n( "Select vCard to Import" ) );
@@ -203,6 +225,12 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
         QFile file( fileName );
 
         if ( file.open( IO_ReadOnly ) ) {
+#if defined(KABC_VCARD_ENCODING_FIX)
+          QByteArray data = file.readAll();
+          file.close();
+          if ( data.size() > 0 )
+            addrList += parseVCard( data );
+#else
           QByteArray rawData = file.readAll();
           file.close();
           if ( rawData.size() > 0 ) {
@@ -218,7 +246,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
             }
             addrList += parseVCard( vCardText );
           }
-
+#endif
           KIO::NetAccess::removeTempFile( fileName );
         } else {
           QString text = i18n( "<qt>When trying to read the vCard, there was an error opening the file '%1': %2</qt>" );
@@ -254,6 +282,29 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
   return addrList;
 }
 
+#if defined(KABC_VCARD_ENCODING_FIX)
+KABC::AddresseeList VCardXXPort::parseVCard( const QByteArray &data ) const
+{
+  KABC::VCardConverter converter;
+
+  return converter.parseVCardsRaw( data.data() );
+}
+
+bool VCardXXPort::doExport( const KURL &url, const QByteArray &data )
+{
+  if( QFileInfo(url.path()).exists() ) {
+    if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"").arg( url.path()) ) == KMessageBox::No)
+      return false;
+  }
+  KTempFile tmpFile;
+  tmpFile.setAutoDelete( true );
+
+  tmpFile.file()->writeBlock( data.data(), data.size() );
+  tmpFile.close();
+
+  return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
+}
+#else
 KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
 {
   KABC::VCardConverter converter;
@@ -264,9 +315,9 @@ KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
 bool VCardXXPort::doExport( const KURL &url, const QString &data )
 {
   if( QFileInfo(url.path()).exists() ) {
-      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"").arg( url.path()) ) == KMessageBox::No)
-        return false;
-  }	
+    if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"").arg( url.path()) ) == KMessageBox::No)
+      return false;
+  }
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );
 
@@ -278,6 +329,7 @@ bool VCardXXPort::doExport( const KURL &url, const QString &data )
 
   return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
 }
+#endif
 
 KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addrList )
 {

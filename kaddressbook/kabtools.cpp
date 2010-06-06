@@ -80,12 +80,15 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
       KABC::VCardConverter converter;
       KABC::Addressee::List list;
       list.append( addressee );
+#if defined(KABC_VCARD_ENCODING_FIX)
+      const QCString vcard = converter.createVCardsRaw( list, KABC::VCardConverter::v3_0 );
+      file.writeBlock( vcard, vcard.length() );
+#else
       QString vcard = converter.createVCards( list, KABC::VCardConverter::v3_0 );
-
       QTextStream t( &file );
       t.setEncoding( QTextStream::UnicodeUTF8 );
       t << vcard;
-
+#endif
       file.close();
 
       KURL url( path );

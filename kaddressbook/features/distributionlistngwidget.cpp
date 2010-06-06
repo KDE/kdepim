@@ -71,12 +71,11 @@ void KAB::DistributionListNg::ListBox::dropEvent( QDropEvent *event )
     if ( !item || index( item ) == 0 )
         return;
 
-    QString vcards;
-    if ( !KVCardDrag::decode( event, vcards ) )
+    KABC::Addressee::List list;
+    if ( !KVCardDrag::decode( event, list ) )
         return;
 
-    KABC::VCardConverter converter;
-    emit dropped( item->text(), converter.parseVCards( vcards ) );
+    emit dropped( item->text(), list );
 }
 
 namespace KAB {

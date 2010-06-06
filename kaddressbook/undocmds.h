@@ -32,6 +32,8 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <kabc/vcardparser.h> // for KABC_VCARD_ENCODING_FIX define
+
 #include <kcommand.h>
 
 #include "kablock.h"
@@ -94,7 +96,11 @@ class CutCommand : public Command
   private:
     KABC::Addressee::List mAddresseeList;
     QStringList mUIDList;
+#if defined(KABC_VCARD_ENCODING_FIX)
+    QByteArray mClipText;
+#else
     QString mClipText;
+#endif
     QString mOldText;
 };
 

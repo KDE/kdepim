@@ -32,9 +32,9 @@
 using namespace KABC;
 
 
-AddressBookUploadItem::AddressBookUploadItem( 
-                                        KPIM::GroupwareDataAdaptor *adaptor, 
-                                        KABC::Addressee addr, 
+AddressBookUploadItem::AddressBookUploadItem(
+                                        KPIM::GroupwareDataAdaptor *adaptor,
+                                        KABC::Addressee addr,
                                         GroupwareUploadItem::UploadType type )
     : GroupwareUploadItem( type )
 {
@@ -42,7 +42,11 @@ AddressBookUploadItem::AddressBookUploadItem(
   setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
   setUid( addr.uid() );
   KABC::VCardConverter vcard;
+#if defined(KABC_VCARD_ENCODING_FIX)
+  setData( vcard.createVCardRaw( addr ) );
+#else
   setData( vcard.createVCard( addr ) );
+#endif
 }
 
 
@@ -105,12 +109,12 @@ void AddressBookAdaptor::addressbookItemDownloaded( KABC::Addressee addr,
   deleteItem( newLocalId );
   QString localId = idMapper()->localId( remoteId.path() );
   if ( !localId.isEmpty() ) deleteItem( localId );
-  
+
   // add the new item
   addr.insertCustom( identifier(), "storagelocation", storagelocation );
   if ( !localId.isEmpty() ) addr.setUid( localId );
   addItem( addr );
-  
+
   // update the fingerprint and the ids in the idMapper
   idMapper()->removeRemoteId( localId );
   idMapper()->removeRemoteId( newLocalId );
@@ -123,7 +127,7 @@ void AddressBookAdaptor::clearChange( const QString &uid )
   mResource->clearChange( uid );
 }
 
-KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem( 
+KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem(
               KABC::Addressee addr, KPIM::GroupwareUploadItem::UploadType type )
 {
   return new AddressBookUploadItem( this, addr, type );
