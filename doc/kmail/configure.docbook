@@ -143,9 +143,9 @@ standard values.</para>
 <varlistentry>
 <term><guilabel>Use Control Center settings</guilabel></term>
 <listitem>
-<para>Uses the values from <menuchoice><guimenu>Personal</guimenu><guimenuitem>About Me</guimenuitem>
+<para>Uses the values from <menuchoice><guimenu>Account Details</guimenu>
 <guimenuitem>Password &amp; User Account</guimenuitem></menuchoice> in the
-&systemsettings;.</para>
+&systemsettings; category <guilabel>Application Appearance and Behavior</guilabel>.</para>
 </listitem>
 </varlistentry>
 

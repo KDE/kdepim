@@ -222,6 +222,9 @@ public:
   virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
   virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
+  /// Called when user initiates a drag from the messagelist
+  virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
+  
 Q_SIGNALS:
   /**
    * Notify the outside when updating the status bar with a message

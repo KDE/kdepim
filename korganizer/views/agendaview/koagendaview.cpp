@@ -44,6 +44,7 @@
 #include <akonadi/kcal/utils.h>
 
 #include <KCal/CalFilter>
+#include <KCal/CalFormat>
 
 #include <KCalendarSystem>
 #include <KGlobalSettings>
@@ -121,7 +122,8 @@ KOAgendaView::KOAgendaView( QWidget *parent, bool isSideBySide ) :
   mUpdateItem( 0 ),
   mCollectionId( -1 ),
   mIsSideBySide( isSideBySide ),
-  mPendingChanges( true )
+  mPendingChanges( true ),
+  mAreDatesInitialized( false )
 {
   mSelectedDates.append( QDate::currentDate() );
 
@@ -258,7 +260,7 @@ void KOAgendaView::setCalendar( Akonadi::Calendar *cal )
   mAllDayAgenda->setCalendar( calendar() );
 }
 
-void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
+void KOAgendaView::connectAgenda( KOAgenda *agenda, KOEventPopupMenu *popup,
                                   KOAgenda *otherAgenda )
 {
   connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
@@ -1090,6 +1092,8 @@ void KOAgendaView::showDates( const QDate &start, const QDate &end )
     d = d.addDays( 1 );
   }
 
+  mAreDatesInitialized = true;
+
   // and update the view
   fillAgenda();
 }
@@ -1321,6 +1325,10 @@ void KOAgendaView::fillAgenda( const QDate & )
 
 void KOAgendaView::fillAgenda()
 {
+  if ( !mAreDatesInitialized ) {
+    return;
+  }
+
   mPendingChanges = false;
 
   /* Remember the item Ids of the selected items. In case one of the
@@ -1548,7 +1556,7 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
 
 void KOAgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &gpos, bool allDay )
 {
-  if ( gpos.x() < 0 || gpos.y() < 0 ) {
+  if ( gpos.x() < 0 || gpos.y() < 0  || !calendar() ) {
     return;
   }
 
@@ -1558,14 +1566,29 @@ void KOAgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint
   newTime.setDateOnly( allDay );
 
   Q_FOREACH( const Todo::Ptr &todo, items ) {
-    todo->setDtDue( newTime );
-    todo->setAllDay( allDay );
-    todo->setHasDueDate( true );
-    Akonadi::Collection selectedCollection;
-    int dialogCode = 0;
-    if ( !mChanger->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
-      if ( dialogCode != QDialog::Rejected ) {
-        KOHelper::showSaveIncidenceErrorMsg( this, todo );
+    Akonadi::Item item = calendar()->itemForIncidenceUid( todo->uid() );
+    if ( item.isValid() && Akonadi::hasTodo( item ) ) {
+      Todo::Ptr oldTodo( Akonadi::todo( item )->clone() );
+      Todo::Ptr newTodo = Akonadi::todo( item );
+
+      newTodo->setDtDue( newTime );
+      newTodo->setAllDay( allDay );
+      newTodo->setHasDueDate( true );
+
+      // We know this incidence, just change it's date/time
+      mChanger->changeIncidence( oldTodo, item, IncidenceChanger::DATE_MODIFIED, this );
+    } else {
+      // The drop came from another application create a new todo
+      todo->setDtDue( newTime );
+      todo->setAllDay( allDay );
+      todo->setHasDueDate( true );
+      todo->setUid( KCal::CalFormat::createUniqueId() );
+      Akonadi::Collection selectedCollection;
+      int dialogCode = 0;
+      if ( !mChanger->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
+        if ( dialogCode != QDialog::Rejected ) {
+          KOHelper::showSaveIncidenceErrorMsg( this, todo );
+        }
       }
     }
   }
@@ -1784,7 +1807,7 @@ void KOAgendaView::calendarIncidenceChanged( const Item &incidence )
   mPendingChanges = true;
 }
 
-void KOAgendaView::calendarIncidenceRemoved( const Item &incidence )
+void KOAgendaView::calendarIncidenceDeleted( const Item &incidence )
 {
   Q_UNUSED( incidence );
   mPendingChanges = true;

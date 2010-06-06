@@ -41,6 +41,8 @@
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/utils.h>
 #include <akonadi/kcal/incidencechanger.h>
+#include <akonadi/kcal/dndfactory.h>
+#include <akonadi/kcal/calendaradaptor.h>
 
 #include <KPIMUtils/Email>
 
@@ -228,12 +230,12 @@ void KOTodoModel::reloadTodos()
   for ( it = todoList.constBegin(); it != todoList.constEnd(); ++it ) {
     TodoTreeNode *tmp = findTodo( Akonadi::incidence( *it )->uid() );
     if ( !tmp ) {
+      kDebug()<<"Inserting " << Akonadi::todo(*it)->summary() << Akonadi::todo(*it)->relatedToUid() << Akonadi::todo(*it)->relatedTo();
       insertTodo( *it );
     } else {
       // update pointer to the todo
       // apparently this is necessary because undo's and redo's don't modify
       // the modified todos but replace pointers to them with others
-      // TODO check if that's true, and if this is OK
       tmp->mTodo = *it;
 
       // the todo is still in the calendar, we don't delete it
@@ -285,12 +287,17 @@ void KOTodoModel::processChange( const Item & aitem, int action )
     // somebody should assure that all todo's which relate to this one
     // are un-linked before deleting this one
     Q_ASSERT( !ttTodo->hasChildren() );
-
+    
     // find the model index of the deleted incidence
     QModelIndex miDeleted = getModelIndex( ttTodo );
 
     beginRemoveRows( miDeleted.parent(), miDeleted.row(), miDeleted.row() );
     ttTodo->mParent->removeChild( miDeleted.row() );
+
+    if ( ttTodo->hasChildren() ) {
+      moveIfParentChanged( ttTodo, aitem, true );
+    }
+
     delete ttTodo;
     endRemoveRows();
   } else {
@@ -323,8 +330,6 @@ QModelIndex KOTodoModel::getModelIndex( TodoTreeNode *node ) const
 QModelIndex KOTodoModel::moveIfParentChanged( TodoTreeNode *curNode, const Item &aitem,
                                               bool addParentIfMissing )
 {
-  kDebug(); //pending(AKONADI_PORT); review the newParent stuff down there
-
   const Todo::Ptr todo = Akonadi::todo( aitem );
   // find the model index of the changed incidence
   QModelIndex miChanged = getModelIndex( curNode );
@@ -347,10 +352,13 @@ QModelIndex KOTodoModel::moveIfParentChanged( TodoTreeNode *curNode, const Item 
   }
 
   // check if the relation to the parent has changed
-  if ( ( newParent == 0 && Akonadi::hasTodo( ttOldParent->mTodo ) ) ||
-       ( newParent != 0 && !Akonadi::hasTodo( ttOldParent->mTodo ) ) ||
-       ( newParent != 0 && !Akonadi::hasTodo( ttOldParent->mTodo ) &&
+  if ( ( newParent == 0 && Akonadi::hasTodo( ttOldParent->mTodo ) )  ||  // became parentless  OR
+       ( newParent != 0 && !Akonadi::hasTodo( ttOldParent->mTodo ) ) ||  // gained a parent    OR 
+       ( newParent != 0 && Akonadi::hasTodo( ttOldParent->mTodo ) &&     // changed parent
          newParent->uid() != Akonadi::todo( ttOldParent->mTodo )->uid() ) ) {
+
+    kDebug() << "parent changed";
+
     // find the node and model index of the new parent
     TodoTreeNode *ttNewParent = 0;
     if ( newParent ) {
@@ -908,29 +916,30 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
     kDebug() << "No action other than MoveAction currently supported!"; //TODO
     return false;
   }
-#ifdef AKONADI_PORT_DISABLED
+
   if ( mCalendar && mChanger &&
        ( ICalDrag::canDecode( data ) || VCalDrag::canDecode( data ) ) ) {
-    Todo *todo = mDndFactory->createDropTodo( data );
-    Event *event = mDndFactory->createDropEvent( data );
+    Akonadi::DndFactory dndFactory ( new CalendarAdaptor( mCalendar, 0 ), true );
+    Todo *t = dndFactory.createDropTodo( data );
+    Event *e = dndFactory.createDropEvent( data );
 
-    if ( todo ) {
+    if ( t ) {
       // we don't want to change the created todo, but the one which is already
       // stored in our calendar / tree
-      TodoTreeNode *ttTodo = findTodo( todo );
+      TodoTreeNode *ttTodo = findTodo( t->uid() );
       Q_ASSERT( ttTodo ); //TODO if the todo is not found, just insert a new one
-      delete todo;
-      todo = ttTodo->mTodo;
+      delete t;
+      Todo::Ptr todo = Akonadi::todo( ttTodo->mTodo );
 
-      Todo *destTodo = 0;
+      Todo::Ptr destTodo;
       if ( parent.isValid() ) {
         TodoTreeNode *node = static_cast<TodoTreeNode *>( parent.internalPointer() );
         if ( node->isValid() ) {
-          destTodo = node->mTodo;
+          destTodo = Akonadi::todo( node->mTodo );
         }
       }
 
-      Incidence *tmp = destTodo;
+      Incidence *tmp = destTodo.get();
       while ( tmp ) {
         if ( tmp->uid() == todo->uid() ) {
           KMessageBox::information(
@@ -942,17 +951,14 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
         tmp = tmp->relatedTo();
       }
 
-
-      Todo *oldTodo = todo->clone();
-      todo->setRelatedTo( destTodo );
-      mChanger->changeIncidence( oldTodo, todo, Akonadi::IncidenceChanger::RELATION_MODIFIED, 0 );
-      mChanger->endChange( todo );
+      Todo::Ptr oldTodo = Todo::Ptr( todo->clone() );
+      todo->setRelatedTo( destTodo.get() );
+      mChanger->changeIncidence( oldTodo, ttTodo->mTodo, Akonadi::IncidenceChanger::RELATION_MODIFIED, 0 );
 
       // again, no need to emit dataChanged, that's done by processChange
-      delete oldTodo;
       return true;
 
-    } else if ( event ) {
+    } else if ( e ) {
       // TODO: Implement dropping an event onto a to-do: Generate a relationship to the event!
     } else {
       if ( !parent.isValid() ) {
@@ -962,13 +968,12 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
       }
 
       TodoTreeNode *node = static_cast<TodoTreeNode *>( parent.internalPointer() );
-      Todo *destTodo = node->mTodo;
+      Todo::Ptr destTodo = Akonadi::todo( node->mTodo );
 
       if ( data->hasText() ) {
         QString text = data->text();
 
-
-        Todo *oldTodo = destTodo->clone();
+        Todo::Ptr oldTodo = Todo::Ptr( destTodo->clone() );
 
         if( text.startsWith( QLatin1String( "file:" ) ) ) {
           destTodo->addAttachment( new Attachment( text ) );
@@ -983,19 +988,12 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
             }
           }
         }
-        mChanger->changeIncidence( oldTodo, destTodo, Akonadi::IncidenceChanger::RELATION_MODIFIED, 0 );
-
-        delete oldTodo;
+        mChanger->changeIncidence( oldTodo, node->mTodo, Akonadi::IncidenceChanger::RELATION_MODIFIED, 0 );
         return true;
-        }
       }
     }
-  } else {
-    kDebug() << "Drop was not decodable";
-    return false;
   }
-#endif
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+
   return false;
 }
 #endif /*KORG_NODND*/

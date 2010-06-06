@@ -45,6 +45,11 @@ KJotsEntity::KJotsEntity(const QModelIndex &index, QObject *parent)
   m_index = QPersistentModelIndex(index);
 }
 
+void KJotsEntity::setIndex(const QModelIndex &index)
+{
+  m_index = QPersistentModelIndex(index);
+}
+
 QString KJotsEntity::title() const
 {
   return m_index.data().toString();

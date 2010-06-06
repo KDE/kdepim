@@ -78,6 +78,9 @@ public:
 
   QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
 
+
+  QList<Akonadi::Item::Id> mDeletedItemIds;
+  
 public slots:
   void performNextChange( Akonadi::Item::Id );
 

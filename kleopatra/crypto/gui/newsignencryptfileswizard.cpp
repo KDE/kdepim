@@ -814,8 +814,9 @@ namespace {
 
             if ( QWizard * wiz = wizard() ) {
                 // need to do this here, since wizard() == 0 in the ctor
-                disconnect( wiz, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()) );
-                connect( wiz, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()) );
+                const NewSignEncryptFilesWizard *filesWizard = qobject_cast<NewSignEncryptFilesWizard*>( wiz );
+                disconnect( filesWizard, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()) );
+                connect( filesWizard, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()) );
             }
 
             bool pgp = effectiveProtocol() == OpenPGP;

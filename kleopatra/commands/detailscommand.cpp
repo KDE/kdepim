@@ -59,7 +59,7 @@ private:
         CertificateDetailsDialog * dlg = new CertificateDetailsDialog;
         applyWindowID( dlg );
         dlg->setAttribute( Qt::WA_DeleteOnClose );
-        connect( dlg, SIGNAL(rejected()), q, SLOT(slotDialogClosed()) );
+        connect( dlg, SIGNAL(rejected()), q_func(), SLOT(slotDialogClosed()) );
 
         dialog = dlg;
     }

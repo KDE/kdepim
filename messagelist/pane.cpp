@@ -365,6 +365,8 @@ void Pane::Private::onCurrentTabChanged()
 
   connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
            q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
+
+  emit q->currentTabChanged();
 }
 
 void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
@@ -650,5 +652,16 @@ void Pane::reloadGlobalConfiguration()
 
   Core::Settings::self()->writeConfig();
 }
+
+QItemSelectionModel* Pane::currentItemSelectionModel()
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 )
+    return 0;
+  return w->view()->selectionModel();
+}
+
+
+
 
 #include "pane.moc"

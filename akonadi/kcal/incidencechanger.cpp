@@ -164,6 +164,11 @@ bool IncidenceChanger::Private::performChange( Change *change )
   // never locked, we can't unlock it with endChange().
 
   mCurrentChanges[newItem.id()] = change;
+
+  // Don't write back remote revision since we can't make sure it is the current one
+  // fixes problems with DAV resource
+  newItem.setRemoteRevision( QString() );
+
   ItemModifyJob *job = new ItemModifyJob( newItem );
   connect( job, SIGNAL(result( KJob*)), this, SLOT(changeIncidenceFinished(KJob*)) );
   return true;
@@ -300,6 +305,9 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
   if( !doDelete ) {
     return false;
   }
+
+  d->mDeletedItemIds.append( aitem.id() );
+
   emit incidenceToBeDeleted( aitem );
   d->cancelChanges( aitem.id() ); //abort changes to this incidence cause we will just delete it
   ItemDeleteJob* job = new ItemDeleteJob( aitem );
@@ -323,6 +331,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
                               i18n( tmp->type() ),
                               tmp->summary(),
                               job->errorString( )) );
+    d->mDeletedItemIds.removeOne( items.first().id() );
     emit incidenceDeleteFinished( items.first(), false );
     return;
   }
@@ -590,4 +599,16 @@ void IncidenceChanger::setDestinationPolicy( DestinationPolicy destinationPolicy
 IncidenceChanger::DestinationPolicy IncidenceChanger::destinationPolicy() const
 {
   return d->mDestinationPolicy;
+}
+
+bool IncidenceChanger::isNotDeleted( Akonadi::Item::Id id ) const
+{
+  if ( mCalendar->incidence( id ).isValid() ) {
+    // it's inside the calendar, but maybe it's being deleted by a job or was
+    // deleted but the ETM doesn't know yet
+    return !d->mDeletedItemIds.contains( id );
+  } else {
+    // not inside the calendar, i don't know it
+    return false;
+  }
 }

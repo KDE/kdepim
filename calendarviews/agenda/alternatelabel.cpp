@@ -107,9 +107,27 @@ QSize AlternateLabel::minimumSizeHint() const
   return sh;
 }
 
-void AlternateLabel::setText( const QString &text )
+AlternateLabel::TextType AlternateLabel::largestFittingTextType() const
 {
-  mLongText = text;
-  squeezeTextToLabel();
+  QFontMetrics fm( fontMetrics() );
+  const int labelWidth = size().width();
+  const int longTextWidth = fm.width( mLongText );
+  const int extensiveTextWidth = fm.width( mExtensiveText );
+  if ( extensiveTextWidth <= labelWidth ) {
+    return Extensive;
+  } else if ( longTextWidth <= labelWidth ) {
+    return Long;
+  } else {
+    return Short;
+  }
 }
 
+void AlternateLabel::setFixedType( TextType type )
+{
+  switch ( type )
+  {
+    case Extensive: useExtensiveText(); break;
+    case Long: useLongText(); break;
+    case Short: useShortText(); break;
+  }
+}

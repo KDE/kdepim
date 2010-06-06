@@ -24,6 +24,7 @@ set(messagecore_LIB_SRCS
    kmfawidgets.cpp
    globalsettings.cpp
    messagehelpers.cpp
+   taglistmonitor.cpp
 )
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS

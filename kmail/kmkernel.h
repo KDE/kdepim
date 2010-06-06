@@ -7,7 +7,6 @@
 #include <QList>
 #include <QObject>
 #include <QString>
-#include <QPointer>
 #include <QDBusObjectPath>
 
 #include <kconfig.h>
@@ -362,12 +361,15 @@ public:
 
 
   void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
+
+  void stopAgentInstance();
+
 public slots:
 
   /** Custom templates have changed, so all windows using them need
       to regenerate their menus */
   void updatedTemplates();
-  
+
   /// Save contents of all open composer widnows to ~/dead.letter
   void dumpDeadLetters();
 
@@ -390,6 +392,7 @@ public slots:
   void slotRunBackgroundTasks();
 
   void slotConfigChanged();
+    void slotDefaultCollectionsChanged();
 
 signals:
   void configChanged();
@@ -410,12 +413,12 @@ private:
 
 
 
-  Akonadi::Collection the_inboxCollectionFolder;
-  Akonadi::Collection the_outboxCollectionFolder;
-  Akonadi::Collection the_sentCollectionFolder;
-  Akonadi::Collection the_trashCollectionFolder;
-  Akonadi::Collection the_draftsCollectionFolder;
-  Akonadi::Collection the_templatesCollectionFolder;
+  Akonadi::Collection::Id the_inboxCollectionFolder;
+  Akonadi::Collection::Id the_outboxCollectionFolder;
+  Akonadi::Collection::Id the_sentCollectionFolder;
+  Akonadi::Collection::Id the_trashCollectionFolder;
+  Akonadi::Collection::Id the_draftsCollectionFolder;
+  Akonadi::Collection::Id the_templatesCollectionFolder;
 
   UndoStack *the_undoStack;
   KMFilterMgr *the_filterMgr;

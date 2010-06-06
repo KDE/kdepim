@@ -42,7 +42,6 @@ using KMail::FolderRequester;
 #include "kmmainwidget.h"
 #include "composer.h"
 #include "tag.h"
-#include "tagactionmanager.h"
 
 #include "foldertreewidget.h"
 
@@ -61,6 +60,7 @@ using KPIM::RecentAddresses;
 #include "messageviewer/invitationsettings.h"
 #include "messagelist/core/settings.h"
 #include "messagecore/globalsettings.h"
+#include "messagecore/taglistmonitor.h"
 
 #include "templateparser/templatesconfiguration_kfg.h"
 #include "templateparser/templatesconfiguration.h"
@@ -104,13 +104,11 @@ using MailTransport::TransportManagementWidget;
 #include <kicondialog.h>
 #include <kkeysequencewidget.h>
 #include <KIconButton>
-#include <KRandom>
 #include <KColorScheme>
 #include <KComboBox>
 #include <Nepomuk/Tag>
 
 // Qt headers:
-#include <QBoxLayout>
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -120,15 +118,12 @@ using MailTransport::TransportManagementWidget;
 #include <QList>
 #include <QRadioButton>
 #include <QGroupBox>
-#include <QToolTip>
 #include <QListWidget>
-#include <QValidator>
 #include <QVBoxLayout>
 #include <QWhatsThis>
 #include <QDBusConnection>
 #include <QHostInfo>
 #include <QTextCodec>
-#include <QMenu>
 
 // other headers:
 #include <assert.h>
@@ -1043,7 +1038,7 @@ void AppearancePage::LayoutTab::doLoadOther()
 {
   loadWidget( mFolderListGroupBox, mFolderListGroup, GlobalSettings::self()->folderListItem() );
   loadWidget( mReaderWindowModeGroupBox, mReaderWindowModeGroup, GlobalSettings::self()->readerWindowModeItem() );
-  mFavoriteFolderViewCB->setChecked( GlobalSettings::self()->enableFavoriteFolderView() );
+  mFavoriteFolderViewCB->setChecked( GlobalSettings::self()->enableFavoriteCollectionView() );
   mFolderQuickSearchCB->setChecked( GlobalSettings::self()->enableFolderQuickSearch() );
   const KConfigGroup mainFolderView( KMKernel::config(), "MainFolderView" );
   const int checkedFolderToolTipsPolicy = mainFolderView.readEntry( "ToolTipDisplayPolicy", 0 );
@@ -1055,7 +1050,7 @@ void AppearancePage::LayoutTab::save()
 {
   saveButtonGroup( mFolderListGroup, GlobalSettings::self()->folderListItem() );
   saveButtonGroup( mReaderWindowModeGroup, GlobalSettings::self()->readerWindowModeItem() );
-  GlobalSettings::self()->setEnableFavoriteFolderView( mFavoriteFolderViewCB->isChecked() );
+  GlobalSettings::self()->setEnableFavoriteCollectionView( mFavoriteFolderViewCB->isChecked() );
   GlobalSettings::self()->setEnableFolderQuickSearch( mFolderQuickSearchCB->isChecked() );
   KConfigGroup mainFolderView( KMKernel::config(), "MainFolderView" );
   mainFolderView.writeEntry( "ToolTipDisplayPolicy", mFolderToolTipsGroup->checkedId() );
@@ -1906,7 +1901,7 @@ void AppearancePage::MessageTagTab::save()
     tag->saveToNepomuk( saveFlags );
   }
 
-  KMail::TagActionManager::triggerUpdate();
+  MessageCore::TagListMonitor::triggerUpdate();
 }
 
 

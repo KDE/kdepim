@@ -134,11 +134,9 @@
 #include <kio/scheduler.h>
 
 // Qt includes
-#include <QBuffer>
 #include <QClipboard>
 #include <QEvent>
 #include <QSplitter>
-#include <QTextList>
 #include <QUuid>
 #include <QDir>
 
@@ -1775,9 +1773,9 @@ void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
 
   // Set the editor text and charset
   mEditor->setText( otp.textualContent() );
-  bool shouldSetCharset = true;
-  if ( !( mContext == Reply || mContext == ReplyToAll || mContext == Forward ) && MessageComposer::MessageComposerSettings::forceReplyCharset() )
-    shouldSetCharset = false;
+  bool shouldSetCharset = false;
+  if ( ( mContext == Reply || mContext == ReplyToAll || mContext == Forward ) && MessageComposer::MessageComposerSettings::forceReplyCharset() )
+    shouldSetCharset = true;
   if ( shouldSetCharset && !otp.textualContentCharset().isEmpty() )
     mOriginalPreferredCharset = otp.textualContentCharset();
   // always set auto charset, but prefer original when composing if force reply is set.
@@ -2309,6 +2307,7 @@ void KMComposeWin::fillInfoPart( Message::InfoPart *infoPart, RecipientExpansion
   }
   infoPart->setSubject( subject() );
   infoPart->setUserAgent( "KMail" );
+  infoPart->setUrgent( mUrgentAction->isChecked());
 
   KMime::Headers::Base::List extras;
   if( mMsg->headerByType( "X-KMail-SignatureActionEnabled" ) )
@@ -2404,7 +2403,9 @@ void KMComposeWin::saveMessage( KMime::Message::Ptr message, KMComposeWin::SaveI
   }
 
   if ( !target.isValid() ) {
+    // TODO: Show an error message to the user
     kWarning() << "No default collection for" << saveIn;
+    setEnabled( true );
     return;
   }
 
@@ -2427,7 +2428,9 @@ void KMComposeWin::slotCreateItemResult( KJob *job )
   Q_ASSERT( mPendingCreateItemJobs >= 0 );
 
   if( job->error() ) {
-    kDebug() << "Failed to save a message:" << job->errorString();
+    // TODO: Show an error message to the user
+    kWarning() << "Failed to save a message:" << job->errorString();
+    setEnabled( true );
     return;
   }
 
@@ -3659,7 +3662,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotSpellcheckConfig()
 {
-  mEditor->showSpellConfigDialog( "kmailrc" );
+  mEditor->showSpellConfigDialog( "kmail2rc" );
 }
 
 //-----------------------------------------------------------------------------

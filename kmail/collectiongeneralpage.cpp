@@ -132,7 +132,8 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
   topLayout->setMargin( 0 );
 
   // Musn't be able to edit details for a non-resource, system folder.
-  if ( ( !mIsLocalSystemFolder || mIsResourceFolder ) && !( col.rights() & Akonadi::Collection::ReadOnly ) ) {
+  if ( ( !mIsLocalSystemFolder || mIsResourceFolder )
+       && !mFolderCollection->isReadOnly() ) {
 
     QHBoxLayout *hl = new QHBoxLayout();
     topLayout->addItem( hl );
@@ -145,8 +146,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
     mNameEdit->setEnabled( col.rights() & Collection::CanChangeCollection );
     label->setBuddy( mNameEdit );
     hl->addWidget( mNameEdit );
-    connect( mNameEdit, SIGNAL( textChanged( const QString & ) ),
-                    this, SLOT( slotFolderNameChanged( const QString & ) ) );
   }
 
 
@@ -350,59 +349,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
   topLayout->addStretch( 100 ); // eat all superfluous space
 }
 
-#if 0
-void FolderDialogGeneralTab::initializeWithValuesFromFolder( KMFolder* folder ) {
-
-  if (folder->folderType() == KMFolderTypeImap)
-  {
-    KMFolderImap* imapFolder = static_cast<KMFolderImap*>(folder->storage());
-    bool checked = imapFolder->includeInMailCheck();
-    mNewMailCheckBox->setChecked(checked);
-  }
-
-  if ( mIncidencesForComboBox ) {
-    KMFolderCachedImap* dimap = static_cast<KMFolderCachedImap *>( folder->storage() );
-    mIncidencesForComboBox->setCurrentIndex( dimap->incidencesFor() );
-    mIncidencesForComboBox->setDisabled( mDlg->folder()->isReadOnly() );
-  }
-  if ( mAlarmsBlockedCheckBox ) {
-    KMFolderCachedImap* dimap = static_cast<KMFolderCachedImap *>( folder->storage() );
-    mAlarmsBlockedCheckBox->setChecked( dimap->alarmsBlocked() );
-  }
-  if ( mSharedSeenFlagsCheckBox ) {
-    KMFolderCachedImap *dimap = static_cast<KMFolderCachedImap*>( folder->storage() );
-    ImapAccountBase *account = dynamic_cast<ImapAccountBase*>( dimap->account() );
-    mSharedSeenFlagsCheckBox->setChecked( dimap->sharedSeenFlags() );
-    mSharedSeenFlagsCheckBox->setDisabled( folder->isReadOnly() );
-    if ( account && account->hasCapability( "x-kmail-sharedseen" ) )
-      mSharedSeenFlagsCheckBox->show();
-    else
-      mSharedSeenFlagsCheckBox->hide();
-  }
-}
-
-//-----------------------------------------------------------------------------
-void FolderDialogGeneralTab::slotFolderContentsSelectionChanged( int )
-{
-  KMail::FolderContentsType type =
-    static_cast<KMail::FolderContentsType>( mContentsComboBox->currentIndex() );
-  if( type != KMail::ContentsTypeMail && GlobalSettings::self()->hideGroupwareFolders() ) {
-    QString message = i18n("You have configured this folder to contain groupware information "
-        "and the general configuration option to hide groupware folders is "
-        "set. That means that this folder will disappear once the configuration "
-        "dialog is closed. If you want to remove the folder again, you will need "
-        "to temporarily disable hiding of groupware folders to be able to see it.");
-    KMessageBox::information( this, message );
-  }
-
-  const bool enable = type == KMail::ContentsTypeCalendar || type == KMail::ContentsTypeTask;
-  if ( mIncidencesForComboBox )
-      mIncidencesForComboBox->setEnabled( enable );
-  if ( mAlarmsBlockedCheckBox )
-      mAlarmsBlockedCheckBox->setEnabled( enable );
-}
-#endif
-
 
 void CollectionGeneralPage::load(const Akonadi::Collection & col)
 {
@@ -427,9 +373,9 @@ void CollectionGeneralPage::load(const Akonadi::Collection & col)
   // ignore new mail
   mNotifyOnNewMailCheckBox->setChecked( !mFolderCollection->ignoreNewMail() );
 
-  const bool keepInFolder = !mFolderCollection->isReadOnly() && mFolderCollection->putRepliesInSameFolder();
+  const bool keepInFolder = mFolderCollection->canCreateMessages() && mFolderCollection->putRepliesInSameFolder();
   mKeepRepliesInSameFolderCheckBox->setChecked( keepInFolder );
-  mKeepRepliesInSameFolderCheckBox->setDisabled( mFolderCollection->isReadOnly() );
+  mKeepRepliesInSameFolderCheckBox->setEnabled( mFolderCollection->canCreateMessages() );
 #if 0
   mHideInSelectionDialogCheckBox->setChecked( mFolderCollection->hideInSelectionDialog() );
 #endif
@@ -471,12 +417,6 @@ void CollectionGeneralPage::save(Collection & col)
 #endif
 
   }
-}
-
-void CollectionGeneralPage::slotFolderNameChanged( const QString& str )
-{
-  //TODO .????
-  //enableButtonOk( !str.isEmpty() );
 }
 
 void CollectionGeneralPage::slotIdentityCheckboxChanged()

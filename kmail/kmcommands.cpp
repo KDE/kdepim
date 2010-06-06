@@ -133,15 +133,10 @@ using namespace KMime;
 
 #include <gpgme++/error.h>
 
-#include <QClipboard>
-#include <QDBusMessage>
 #include <QDBusConnection>
-#include <QMenu>
 #include <QByteArray>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QList>
-#include <QProgressBar>
 
 #include <boost/bind.hpp>
 #include <algorithm>
@@ -553,8 +548,9 @@ void KMUrlSaveCommand::slotUrlSaveResult( KJob *job )
 }
 
 
-KMEditMsgCommand::KMEditMsgCommand( QWidget *parent, const Akonadi::Item&msg )
+KMEditMsgCommand::KMEditMsgCommand( QWidget *parent, const Akonadi::Item&msg, bool deleteFromSource )
   :KMCommand( parent, msg )
+  , mDeleteFromSource( deleteFromSource )
 {
   fetchScope().fetchFullPayload( true );
   fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
@@ -564,16 +560,16 @@ KMEditMsgCommand::KMEditMsgCommand( QWidget *parent, const Akonadi::Item&msg )
 KMCommand::Result KMEditMsgCommand::execute()
 {
   Akonadi::Item item = retrievedMessage();
-  if (!item.isValid() || !item.parentCollection().isValid() ||
-      ( !kmkernel->folderIsDraftOrOutbox( item.parentCollection() ) &&
-        !kmkernel->folderIsTemplates( item.parentCollection() ) ) ) {
+  if (!item.isValid() || !item.parentCollection().isValid() ) {
     return Failed;
   }
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotDeleteItem( KJob* ) ) );
+  if ( mDeleteFromSource ) {
+    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( item );
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotDeleteItem( KJob* ) ) );
+  }
   KMail::Composer *win = KMail::makeComposer();
   win->setMsg( msg, false, true );
   win->setFolder( item.parentCollection() );
@@ -1863,44 +1859,6 @@ Akonadi::Collection KMTrashMsgCommand::findTrashFolder( const Akonadi::Collectio
   return Akonadi::Collection();
 }
 
-
-KMUrlClickedCommand::KMUrlClickedCommand( const KUrl &url, uint identity,
-  KMReaderWin *readerWin, bool htmlPref, KMMainWidget *mainWidget )
-  :mUrl( url ), mIdentity( identity ), mReaderWin( readerWin ),
-   mHtmlPref( htmlPref ), mMainWidget( mainWidget )
-{
-}
-
-KMCommand::Result KMUrlClickedCommand::execute()
-{
-  KMime::Message::Ptr msg;
-
-  if (mUrl.protocol() == "mailto")
-  {
-    msg = KMime::Message::Ptr( new KMime::Message );
-    MessageHelper::initHeader( msg, KMKernel::self()->identityManager(), mIdentity );
-    msg->contentType()->setCharset("utf-8");
-
-    QMap<QString, QString> fields =  MessageCore::StringUtil::parseMailtoUrl( mUrl );
-
-    msg->to()->fromUnicodeString( fields.value( "to" ),"utf-8" );
-    if ( !fields.value( "subject" ).isEmpty() )
-      msg->subject()->fromUnicodeString( fields.value( "subject" ),"utf-8" );
-    if ( !fields.value( "body" ).isEmpty() )
-      msg->setBody( fields.value( "body" ).toUtf8() );
-    if ( !fields.value( "cc" ).isEmpty() )
-      msg->cc()->fromUnicodeString( fields.value( "cc" ),"utf-8" );
-
-    KMail::Composer * win = KMail::makeComposer( msg, KMail::Composer::New, mIdentity );
-    win->setFocusToSubject();
-    win->show();
-  }
-  else
-    return Failed;
-
-  return OK;
-}
-
 KMSaveAttachmentsCommand::KMSaveAttachmentsCommand( QWidget *parent, const Akonadi::Item& msg )
   : KMCommand( parent, msg )
 {
@@ -1976,32 +1934,23 @@ KMCommand::Result KMMailingListCommand::execute()
   QString handler = ( mFolder->mailingList().handler() == MailingList::KMail )
     ? "mailto" : "https";
 
-  KMCommand *command = 0;
+  KUrl urlToHandle;
   for ( KUrl::List::Iterator itr = lst.begin(); itr != lst.end(); ++itr ) {
     if ( handler == (*itr).protocol() ) {
-      command = new KMUrlClickedCommand( *itr, mFolder->identity(), 0, false );
+      urlToHandle = *itr;
+      break;
     }
   }
-  if ( !command && !lst.empty() ) {
-    command =
-      new KMUrlClickedCommand( lst.first(), mFolder->identity(), 0, false );
+  if ( urlToHandle.isEmpty() && !lst.empty() ) {
+    urlToHandle = lst.first();
   }
-  if ( command ) {
-    connect( command, SIGNAL( completed( KMCommand * ) ),
-             this, SLOT( commandCompleted( KMCommand * ) ) );
-    setDeletesItself( true );
-    setEmitsCompletedItself( true );
-    command->start();
-    return OK;
-  }
-  return Failed;
-}
 
-void KMMailingListCommand::commandCompleted( KMCommand *command )
-{
-  setResult( command->result() );
-  emit completed( this );
-  deleteLater();
+  if ( !urlToHandle.isEmpty() ) {
+    KMail::Util::handleClickedURL( urlToHandle, mFolder->identity() );
+    return OK;
+  } else {
+    return Failed;
+  }
 }
 
 KMMailingListPostCommand::KMMailingListPostCommand( QWidget *parent, const QSharedPointer<FolderCollection> &folder )

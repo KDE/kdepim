@@ -75,7 +75,7 @@ void InsertTextFileJob::setEncoding( const QString &encoding )
 
 void InsertTextFileJob::start()
 {
-  KIO::Job *job = KIO::get( mUrl );
+  KIO::TransferJob *job = KIO::get( mUrl );
   connect( job, SIGNAL( result( KJob* ) ),
            this, SLOT( slotGetJobFinished( KJob* ) ) );
   connect( job, SIGNAL( data( KIO::Job*, const QByteArray& ) ),

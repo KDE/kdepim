@@ -33,15 +33,7 @@
 #include "kmcommands.h"
 #include "mdnadvicedialog.h"
 #include <QByteArray>
-#include <QImageReader>
-#include <QCloseEvent>
-#include <QEvent>
 #include <QVBoxLayout>
-#include <QResizeEvent>
-#include <QMouseEvent>
-#include <QScrollArea>
-#include <QScrollBar>
-#include <QSignalMapper>
 #include "messageviewer/headerstrategy.h"
 #include "messageviewer/headerstyle.h"
 #include "messageviewer/mailwebview.h"
@@ -97,12 +89,6 @@ using MessageComposer::MessageFactory;
 #include <kconfiggroup.h>
 
 #include <QClipboard>
-#include <QCursor>
-#include <QTextCodec>
-#include <QLayout>
-#include <QLabel>
-#include <QSplitter>
-#include <QStyle>
 
 // X headers...
 #undef Never
@@ -667,16 +653,13 @@ void KMReaderWin::update( bool force )
 
 void KMReaderWin::slotUrlClicked( const Akonadi::Item & item, const KUrl & url )
 {
-  KMMainWidget *mainWidget = dynamic_cast<KMMainWidget*>(mMainWindow);
+  KMMainWidget *mainWidget = dynamic_cast<KMMainWidget*>( mMainWindow );
   uint identity = 0;
   if ( item.isValid() && item.parentCollection().isValid() ) {
     QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection() );
     identity = fd->identity();
   }
-
-  KMCommand *command = new KMUrlClickedCommand( url, identity, this,
-                                                false, mainWidget );
-  command->start();
+  KMail::Util::handleClickedURL( url, identity );
 }
 
 void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const QString &encoding )

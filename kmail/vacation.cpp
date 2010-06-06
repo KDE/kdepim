@@ -44,7 +44,6 @@ using KMime::Types::AddrSpecList;
 
 
 #include <QByteArray>
-#include <QDateTime>
 
 #include <cassert>
 #include <vector>
@@ -675,10 +674,12 @@ namespace KMail {
 
     // and commit the dialog's settings to the server:
     mSieveJob = SieveJob::put( mUrl, script, active, mWasActive );
-    connect( mSieveJob, SIGNAL(gotScript(KMail::SieveJob*,bool,const QString&,bool)),
-             active
-                 ? SLOT(slotPutActiveResult(KMail::SieveJob*,bool))
-                 : SLOT(slotPutInactiveResult(KMail::SieveJob*,bool)) );
+    if ( active )
+      connect( mSieveJob, SIGNAL(gotScript(KMail::SieveJob*,bool,const QString&,bool)),
+               SLOT(slotPutActiveResult(KMail::SieveJob*,bool)) );
+    else
+      connect( mSieveJob, SIGNAL(gotScript(KMail::SieveJob*,bool,const QString&,bool)),
+               SLOT(slotPutInactiveResult(KMail::SieveJob*,bool)) );
 
     // destroy the dialog:
     mDialog->delayedDestruct();

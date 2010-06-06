@@ -72,6 +72,8 @@ public:
   virtual QModelIndex parent( const QModelIndex &index ) const;
   virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
+  virtual QMimeData* mimeData( QList< MessageList::Core::MessageItem* > ) const;
+  
   virtual void prepareForScan();
 
   Akonadi::Item itemForRow( int row ) const;

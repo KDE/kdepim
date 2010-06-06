@@ -186,7 +186,7 @@ void FreeBusyItem::setFreeBusyPeriods( FreeBusy *fb )
       newSubItem->setColors( Qt::red, Qt::red, Qt::red );
 
       QString toolTip = "<qt>";
-      toolTip += "<b>" + i18nc( "@info:tooltip", "Freebusy Period" ) + "</b>";
+      toolTip += "<b>" + i18nc( "@info:tooltip", "Free/Busy Period" ) + "</b>";
       toolTip += "<hr>";
       if ( !per.summary().isEmpty() ) {
         toolTip += "<i>" + i18nc( "@info:tooltip", "Summary:" ) + "</i>" + "&nbsp;";

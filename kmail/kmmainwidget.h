@@ -271,6 +271,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
 
 
     KAction *akonadiStandardAction( Akonadi::StandardActionManager::Type type );
+    
+    void refreshMessageListSelection();
   signals:
     void messagesTransfered( bool );
     void captionChangeRequest( const QString &caption );
@@ -299,8 +301,10 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
 
   protected slots:
     void slotCheckOneAccount( QAction* );
+#if 0
     void slotMailChecked( bool newMail, bool sendOnCheck,
                           const QMap<QString, int> & newInFolder );
+#endif
     void getAccountMenu();
     void getTransportMenu();
     void slotHelp();
@@ -444,6 +448,9 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotShowExpiryProperties();
     void slotItemAdded( const Akonadi::Item &, const Akonadi::Collection& col);
     void slotItemRemoved( const Akonadi::Item & );
+    void slotItemMoved( Akonadi::Item item, Akonadi::Collection from, Akonadi::Collection to );
+
+    void slotAkonadiStandardActionUpdated();
   private:
     /** Get override character encoding. */
     QString overrideEncoding() const;
@@ -509,7 +516,7 @@ private:
       *mDeleteThreadAction, *mSaveAsAction, *mUseAction,
       *mSendAgainAction, *mApplyAllFiltersAction, *mFindInMessageAction,
       *mSaveAttachmentsAction, *mOpenAction, *mViewSourceAction,
-      *mMoveMsgToFolderAction, *mCollectionProperties;
+      *mMoveMsgToFolderAction, *mCollectionProperties, *mSendQueued;
     // Filter actions
     KActionMenu *mFilterMenu;
     KAction *mSubjectFilterAction, *mFromFilterAction, *mToFilterAction,

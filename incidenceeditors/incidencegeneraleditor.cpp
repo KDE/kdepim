@@ -234,7 +234,7 @@ void IncidenceGeneralEditor::updateAlarmWidgets()
     mUi->mAlarmStack->setCurrentIndex( AdvancedAlarmLabel );
     mUi->mAlarmInfoLabel->setText( i18ncp( "@label",
                                            "1 reminder configured",
-                                           "%1  reminders configured",
+                                           "%1 reminders configured",
                                            mAlarmList.count() ) );
   } else {
     mUi->mAlarmEditButton->setEnabled( true );

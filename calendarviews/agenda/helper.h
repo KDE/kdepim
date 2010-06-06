@@ -65,8 +65,9 @@ namespace EventViews
 
   /**
     Returns the number of years between the @p start QDate and the @p end QDate
+    (i.e. the difference in the year number of both dates)
   */
-  qint64 yearDiff( const QDate &start, const QDate &end );
+  int yearDiff( const QDate &start, const QDate &end );
 }
 
 #endif

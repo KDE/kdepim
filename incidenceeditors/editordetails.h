@@ -38,6 +38,8 @@ namespace IncidenceEditors {
   typedef CustomListViewItem<KCal::Attendee *> AttendeeListItem;
 }
 
+class AttendeeListView;
+
 /** AttendeeListView is a child class of K3ListView  which supports
  *  dropping of attendees (e.g. from kaddressbook) onto it. If an attendeee
  *  was dropped, the signal dropped(Attendee*)  is emitted.
@@ -102,7 +104,7 @@ class EditorDetails : public AttendeeEditor
   private:
     bool mDisableItemUpdate;
 
-    K3ListView *mListView;
+    AttendeeListView *mListView;
 };
 
 #endif

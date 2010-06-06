@@ -183,8 +183,8 @@ void EncryptJob::process()
                                                    encryptedBody );
 
   if ( res.error() ) {
-    kDebug() << "encrypt failed:" << res.error().asString();
-    //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
+    setError( res.error().code() );
+    setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
   }
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, encryptedBody, d->format, false );
 

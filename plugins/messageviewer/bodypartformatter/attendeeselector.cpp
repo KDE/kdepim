@@ -54,7 +54,7 @@ QStringList AttendeeSelector::attendees() const
 
     // Build a nice address for this attendee including the CN.
     QString tname, temail;
-    KPIMUtils::extractEmailAddressAndName( addr, tname, temail );  // ignore return value
+    KPIMUtils::extractEmailAddressAndName( addr, temail, tname );  // ignore return value
                                                                    // which is always false
     rv << temail;
   }

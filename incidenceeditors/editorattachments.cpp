@@ -668,7 +668,7 @@ void EditorAttachments::saveAttachment( QListWidgetItem *item )
   QString saveAsFile =  KFileDialog::getSaveFileName(
     att->label(),
     QString(), 0,
-    i18nc( "@title", "Save  Attachment" ) );
+    i18nc( "@title", "Save Attachment" ) );
 
   if ( saveAsFile.isEmpty() ||
        ( QFile( saveAsFile ).exists() &&
@@ -748,7 +748,7 @@ void EditorAttachments::slotRemove()
   if ( KMessageBox::questionYesNo(
          this,
          i18nc( "@info",
-                "Do you really want to remove these attachments?<nl>%1</nl>", labelsStr ),
+                "Do you really want to remove these attachments?<nl/>%1", labelsStr ),
          i18nc( "@title:window", "Remove Attachments?" ),
          KStandardGuiItem::yes(), KStandardGuiItem::no(),
          "calendarRemoveAttachments" ) != KMessageBox::Yes ) {

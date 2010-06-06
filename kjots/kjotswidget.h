@@ -157,6 +157,9 @@ private slots:
   void actionSortChildrenAlpha();
   void actionSortChildrenByDate();
 
+  void saveState();
+  void restoreState();
+
 private:
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;

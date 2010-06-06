@@ -210,17 +210,6 @@ public:
   cancelled the editing, true in all other cases! */
   bool editAttachment( KMime::Content* node, bool showWarning = true );
 
-  void emitUrlClicked( const KUrl & url, int button ) {
-    emit urlClicked( url, button );
-  }
-
-  void emitPopupMenu( const KUrl & url, const QPoint & p ) {
-    if ( mMessage )
-      emit popupMenu( *mMessage, url, p );
-    if ( mMessageItem.isValid() )
-      emit popupMenu( mMessageItem, url, p );
-  }
-
   /** Access to the MailWebView used for the viewer. Use with
       care! */
   MailWebView *htmlPart() const { return mViewer; }
@@ -246,7 +235,7 @@ public:
                                  bool weAreReplacingTheRootNode = false,
                                  int recCount = 0 );
 
-  KMime::Message* createDecryptedMessage();
+  void createDecryptedMessage();
   void removeEncryptedPart( KMime::Content* node );
 
   QString createAtmFileLink( const QString& atmFileName ) const;
@@ -344,7 +333,6 @@ public:
 
 
   /** Print message. */
-  void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
   void resetStateForNewMessage();
@@ -478,6 +466,8 @@ private slots:
 
   void itemModifiedResult( KJob* job );
 
+  void collectionFetchResult( KJob* job );
+
   void slotMimePartDestroyed();
 
 public slots:
@@ -558,10 +548,11 @@ public slots:
   /** Copy the selected text to the clipboard */
   void slotCopySelectedText();
 
+  void viewerSelectionChanged();
+  
   /** Select message body. */
   void selectAll();
 
-  void slotUrlClicked();
   /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
       beginning of URL before copying. */
   void slotUrlCopy();
@@ -572,9 +563,7 @@ public slots:
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
-  void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
-  void urlClicked(const KUrl &url, int button);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );

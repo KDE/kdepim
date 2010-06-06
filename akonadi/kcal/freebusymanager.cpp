@@ -76,7 +76,7 @@ FreeBusyDownloadJob::FreeBusyDownloadJob( const QString &email, const KUrl &url,
                                           QWidget *parentWidget )
   : QObject( manager ), mManager( manager ), mEmail( email )
 {
-  KIO::Job *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
+  KIO::TransferJob *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
 
   job->ui()->setWindow( parentWidget );
 

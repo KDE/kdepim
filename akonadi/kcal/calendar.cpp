@@ -186,7 +186,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
 
   if ( alreadyExisted && m_itemDateForItemId.contains( item.id() )) {
     // for changed items, we must remove existing date entries (they might have changed)
-    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()] );
+    m_itemIdsForDate.remove( m_itemDateForItemId[item.id()], item.id() );
     m_itemDateForItemId.remove( item.id() );
   }
 
@@ -206,7 +206,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
     return;
   }
 
-  if ( !m_itemIdsForDate.contains( date, item.id() ) ) {
+  if ( !m_itemIdsForDate.contains( date, item.id() ) && !date.isEmpty() ) {
     m_itemIdsForDate.insert( date, item.id() );
     m_itemDateForItemId.insert( item.id(), date );
   }
@@ -237,6 +237,11 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   }
 
   if ( alreadyExisted ) {
+    if ( m_uidToItemId.value( ui ) != item.id() ) {
+      kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
+              << "item uid = "  << ui.uid;
+    }
+
     Q_ASSERT( m_uidToItemId.value( ui ) == item.id() );
     QHash<Item::Id,Item::Id>::Iterator oldParentIt = m_childToParent.find( id );
     if ( oldParentIt != m_childToParent.end() ) {
@@ -282,6 +287,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
 
     Q_FOREACH ( const Item::Id &cid, orphanedChildren ) {
       m_childToParent.insert( cid, id );
+      Akonadi::incidence( m_itemMap[cid] )->setRelatedTo( incidence.get() );
     }
 
     m_unseenParentToChildren.remove( ui );
@@ -499,7 +505,7 @@ void Calendar::incidenceUpdated( KCal::IncidenceBase *incidence )
 #endif
 }
 
-Item Calendar::event( const Item::Id &id )
+Item Calendar::event( const Item::Id &id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::event( item ) )
@@ -508,7 +514,7 @@ Item Calendar::event( const Item::Id &id )
     return Item();
 }
 
-Item Calendar::todo( const Item::Id &id )
+Item Calendar::todo( const Item::Id &id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::todo( item ) )
@@ -561,12 +567,12 @@ KCal::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to )
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     const Item item = i.next().value();
-    KCal::Incidence::Ptr e = Akonadi::event( item );
-    if ( !e ) {
+    KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
+    if ( !incidence ) {
       continue;
     }
 
-    if ( e->recurs() ) {
+    if ( incidence->recurs() ) {
       appendRecurringAlarms( alarmList, item, from, to );
     } else {
       appendAlarms( alarmList, item, from, to );
@@ -692,7 +698,7 @@ Item::List Calendar::rawEvents( EventSortField sortField, SortDirection sortDire
 }
 
 
-Item Calendar::journal( const Item::Id &id )
+Item Calendar::journal( const Item::Id &id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::journal( item ) ) {
@@ -748,7 +754,7 @@ bool Calendar::isChild( const Item &parent, const Item &child ) const
   return d->m_childToParent.value( child.id() ) == parent.id();
 }
 
-Item::Id Calendar::itemIdForIncidenceUid(const QString &uid) const
+Item::Id Calendar::itemIdForIncidenceUid( const QString &uid ) const
 {
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
@@ -764,6 +770,10 @@ Item::Id Calendar::itemIdForIncidenceUid(const QString &uid) const
   return -1;
 }
 
+Item Calendar::itemForIncidenceUid( const QString &uid ) const
+{
+  return incidence( itemIdForIncidenceUid( uid ) );
+}
 
 // calendarbase.cpp
 
@@ -1148,7 +1158,7 @@ KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &item,
   return KCal::Incidence::Ptr( newInc );
 }
 
-Item Calendar::incidence( const Item::Id &uid )
+Item Calendar::incidence( const Item::Id &uid ) const
 {
   Item i = event( uid );
   if ( i.isValid() ) {

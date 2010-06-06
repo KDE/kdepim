@@ -19,7 +19,6 @@ using KPIM::MessageStatus;
 
 #include <QPointer>
 #include <QList>
-#include <QMenu>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/collection.h>
@@ -226,11 +225,12 @@ class KMAIL_EXPORT KMEditMsgCommand : public KMCommand
   Q_OBJECT
 
 public:
-  KMEditMsgCommand( QWidget *parent, const Akonadi::Item &msg );
+  KMEditMsgCommand( QWidget *parent, const Akonadi::Item &msg, bool deleteFromSource = true );
 private slots:
   void slotDeleteItem( KJob *job );
 private:
   virtual Result execute();
+  bool mDeleteFromSource;
 };
 
 class KMAIL_EXPORT KMUseTemplateCommand : public KMCommand
@@ -697,24 +697,6 @@ private:
 
 };
 
-class KMAIL_EXPORT KMUrlClickedCommand : public KMCommand
-{
-  Q_OBJECT
-
-public:
-  KMUrlClickedCommand( const KUrl &url, uint identity,
-    KMReaderWin *readerWin, bool mHtmlPref, KMMainWidget *mainWidget = 0 );
-
-private:
-  virtual Result execute();
-
-  KUrl mUrl;
-  uint mIdentity;
-  KMReaderWin *mReaderWin;
-  bool mHtmlPref;
-  KMMainWidget *mMainWidget;
-};
-
 class KMAIL_EXPORT KMResendMessageCommand : public KMCommand
 {
   Q_OBJECT
@@ -726,6 +708,8 @@ private:
   virtual Result execute();
 };
 
+// TODO: Remove this class. There is no reason why the mailing list stuff should be based
+//       on KMCommand, they should instead be utilty methods.
 class KMAIL_EXPORT KMMailingListCommand : public KMCommand
 {
   Q_OBJECT
@@ -733,8 +717,6 @@ public:
   KMMailingListCommand( QWidget *parent, const QSharedPointer<FolderCollection> &parentFolder );
 private:
   virtual Result execute();
-private slots:
-  void commandCompleted( KMCommand *command );
 protected:
   virtual KUrl::List urls() const =0;
 protected:

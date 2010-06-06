@@ -43,9 +43,10 @@
 #include <KLocale> // i18n
 #include <KIconLoader> // SmallIcon
 
-#include <QDropEvent>
-#include <QLineEdit>
+#include <QDrag>
 #include <QHeaderView>
+#include <QLineEdit>
+#include <QMimeData>
 
 namespace KMail {
 

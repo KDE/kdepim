@@ -222,10 +222,11 @@ void View::setLeftView( QAbstractItemView* aiv )
     d->leftWidget = aiv;
     d->splitter.insertWidget( 0, d->leftWidget );
 
-    if( qobject_cast<QTreeView*>(d->leftWidget) ) {
-      connect( d->leftWidget,  SIGNAL( collapsed( const QModelIndex& ) ),
+    const QTreeView *treeView = qobject_cast<QTreeView*>(d->leftWidget);
+    if ( treeView ) {
+      connect( treeView, SIGNAL( collapsed( const QModelIndex& ) ),
 	       this, SLOT( slotCollapsed( const QModelIndex& ) ) );
-      connect( d->leftWidget,  SIGNAL( expanded( const QModelIndex& ) ),
+      connect( treeView, SIGNAL( expanded( const QModelIndex& ) ),
 	       this, SLOT( slotExpanded( const QModelIndex& ) ) );
     }
 

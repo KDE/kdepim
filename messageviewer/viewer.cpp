@@ -35,6 +35,8 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 
+#include <mailtransport/errorattribute.h>
+
 //KDE includes
 #include <QWebView>
 #include <QWebPage>
@@ -48,8 +50,6 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
 {
   connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ),
           SIGNAL( replaceMsgByUnencryptedVersion() ) );
-  connect( d_ptr, SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ),
-           SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ) );
   connect( d_ptr, SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ),
            SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
   connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ),
@@ -117,12 +117,6 @@ void Viewer::printMessage( const Akonadi::Item &msg )
 {
   Q_D( Viewer );
   d->printMessage( msg );
-}
-
-void Viewer::printMessage( KMime::Message::Ptr message )
-{
-   Q_D(Viewer);
-   d->printMessage( message );
 }
 
 void Viewer::print()
@@ -424,12 +418,6 @@ void Viewer::writeConfig( bool force )
   d->writeConfig( force );
 }
 
-void Viewer::slotUrlClicked()
-{
-  Q_D( Viewer );
-  d->slotUrlClicked();
-}
-
 KUrl Viewer::urlClicked() const
 {
   Q_D( const Viewer );
@@ -471,6 +459,7 @@ Akonadi::ItemFetchJob* Viewer::createFetchJob( const Akonadi::Item &item )
   job->fetchScope().fetchAllAttributes();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   job->fetchScope().fetchFullPayload( true );
+  job->fetchScope().fetchAttribute<MailTransport::ErrorAttribute>();
   return job;
 }
 

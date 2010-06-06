@@ -32,6 +32,10 @@ class QItemSelectionModel;
 
 class KDateTime;
 
+namespace KCal {
+  class CalFilter;
+}
+
 namespace Akonadi {
 
     class CollectionSelectionProxyModel;
@@ -72,6 +76,8 @@ namespace Akonadi {
 
         IncidenceTypes incidenceTypes() const;
         void setIncidenceTypes( IncidenceTypes types );
+
+        void setFilter( KCal::CalFilter *filter );
 
     public Q_SLOTS:
         void setStartDate( const KDateTime& startDate );

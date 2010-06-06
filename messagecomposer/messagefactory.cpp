@@ -406,17 +406,11 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 KMime::Message::Ptr MessageFactory::createResend()
 {
   KMime::Message::Ptr msg( new KMime::Message );
-  MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
   msg->setContent( m_origMsg->encodedContent() );
   msg->parse();
   msg->removeHeader( "Message-Id" );
   uint originalIdentity = identityUoid( m_origMsg );
 
-  // Remove all unnecessary headers
-  msg->removeHeader("Bcc");
-  msg->removeHeader( "Cc" );
-  msg->removeHeader( "To" );
-  msg->removeHeader( "Subject" );
   // Set the identity from above
   KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( originalIdentity ), "utf-8" );
   msg->setHeader( header );
@@ -455,9 +449,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
     .arg( ident.emailAddr() );
 
   // format the current date to be used in Resent-Date:
-  QString origDate = msg->date()->asUnicodeString();
-  msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
-  QString newDate = msg->date()->asUnicodeString();
+  QString newDate = KDateTime::currentLocalDateTime().toString( KDateTime::RFCDateDay );
 
   // prepend Resent-*: headers (c.f. RFC2822 3.6.6)
   QString msgIdSuffix;
@@ -473,12 +465,25 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   header = new KMime::Headers::Generic( "Resent-Date", msg.get(), newDate, "utf-8" );
   msg->setHeader( header );
 
+  header = new KMime::Headers::Generic( "Resent-From", msg.get(), strFrom, "utf-8" );
+  msg->setHeader( header );
+  
   KMime::Headers::To* headerT = new KMime::Headers::To( msg.get(), toStr, "utf-8" );
   msg->setHeader( headerT );
   
-  header = new KMime::Headers::Generic( "Resent-To", msg.get(), strFrom, "utf-8" );
+  header = new KMime::Headers::Generic( "Resent-To", msg.get(), toStr, "utf-8" );
   msg->setHeader( header );
 
+  if( msg->cc( false ) ) {
+    header = new KMime::Headers::Generic( "Resent-Cc", msg.get(), m_origMsg->cc()->asUnicodeString(), "utf-8" );
+    msg->setHeader( header );
+  }
+
+  if( msg->bcc( false ) ) {
+    header = new KMime::Headers::Generic( "Resent-Bcc", msg.get(), m_origMsg->bcc()->asUnicodeString(), "utf-8" );
+    msg->setHeader( header );
+  }
+  
   header = new KMime::Headers::Generic( "X-KMail-Redirect-From", msg.get(), strByWayOf, "utf-8" );
   msg->setHeader( header );
   header = new KMime::Headers::Generic( "X-KMail-Recipients", msg.get(), toStr, "utf-8" );
@@ -548,7 +553,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
 
   // extract where to send to:
   QString receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
-  if ( receiptTo.trimmed().isEmpty() ) receiptTo = m_origMsg->from()->asUnicodeString();
+  if( receiptTo.trimmed().isEmpty() ) return KMime::Message::Ptr( new KMime::Message );
   receiptTo.remove( QChar::fromLatin1('\n') );
 
 
@@ -739,6 +744,16 @@ void MessageFactory::putRepliesInSameFolder( Akonadi::Entity::Id parentColId )
 {
   m_parentFolderId = parentColId;
 }
+
+bool MessageFactory::MDNRequested(KMime::Message::Ptr msg)
+{
+  // extract where to send to:
+  QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+  if ( receiptTo.trimmed().isEmpty() ) return false;
+  receiptTo.remove( QChar::fromLatin1('\n') );
+  return !receiptTo.isEmpty();
+}
+
 
 bool MessageFactory::MDNConfirmMultipleRecipients( KMime::Message::Ptr msg )
 {

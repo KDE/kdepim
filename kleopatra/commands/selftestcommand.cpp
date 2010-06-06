@@ -94,11 +94,11 @@ private:
         dialog->setAttribute( Qt::WA_DeleteOnClose );
 
         connect( dialog, SIGNAL(updateRequested()),
-                 q, SLOT(slotUpdateRequested()) );
+                 q_func(), SLOT(slotUpdateRequested()) );
         connect( dialog, SIGNAL(accepted()),
-                 q, SLOT(slotDialogAccepted()) );
+                 q_func(), SLOT(slotDialogAccepted()) );
         connect( dialog, SIGNAL(rejected()),
-                 q, SLOT(slotDialogRejected()) );
+                 q_func(), SLOT(slotDialogRejected()) );
 
         dialog->setRunAtStartUp( runAtStartUp() );
         dialog->setAutomaticMode( automatic );

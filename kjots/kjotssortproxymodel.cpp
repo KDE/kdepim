@@ -27,7 +27,7 @@
 KJotsSortProxyModel::KJotsSortProxyModel( QObject* parent )
   : QSortFilterProxyModel( parent )
 {
-
+  setDynamicSortFilter(true);
 }
 
 KJotsSortProxyModel::~KJotsSortProxyModel()

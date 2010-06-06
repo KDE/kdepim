@@ -163,7 +163,10 @@ void MultiAgendaView::recreateViews()
     }
   } else {
     Q_FOREACH( const Collection &i, collectionSelection()->selectedCollections() ) {
-      addView( i );
+      if ( i.contentMimeTypes().contains(
+             QLatin1String( "application/x-vnd.akonadi.calendar.event" ) ) ) {
+        addView( i );
+      }
     }
   }
   // no resources activated, so stop here to avoid crashing somewhere down the line
@@ -316,7 +319,8 @@ void MultiAgendaView::showDates( const QDate &start, const QDate &end )
 {
   mStartDate = start;
   mEndDate = end;
-  recreateViews();
+  slotResizeScrollView();
+  mTimeLabelsZone->updateAll();
   foreach ( KOAgendaView *agendaView, mAgendaViews ) {
     agendaView->showDates( start, end );
   }

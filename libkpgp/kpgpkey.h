@@ -844,7 +844,8 @@ typedef QList<Key*> KeyList;
 
 inline bool KeyCompare( Key* left, Key* right )
 {
-  return QString::compare( left->primaryUserID().toLower(), right->primaryUserID().toLower() );
+  const int result = QString::compare( left->primaryUserID().toLower(), right->primaryUserID().toLower() );
+  return result == -1;
 }
 
 } // namespace Kpgp

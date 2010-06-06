@@ -85,7 +85,7 @@ Name[x-test]=xxEncrypt & Sign Filexx
 Name[zh_CN]=加密并签名文件
 Name[zh_TW]=加密與簽署檔案
 Icon=kleopatra
-Exec=kleopatra --sign-encrypt %F
+Exec=kleopatra --encrypt-sign %F
 
 [Desktop Action kleoencryptfiles]
 Name=Encrypt File

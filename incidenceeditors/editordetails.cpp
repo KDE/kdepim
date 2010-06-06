@@ -201,8 +201,8 @@ EditorDetails::EditorDetails( int spacing, QWidget *parent )
   connect( mListView, SIGNAL(selectionChanged(Q3ListViewItem*)),
            SLOT(updateAttendeeInput()) );
 #ifndef KORG_NODND
-  connect( mListView, SIGNAL( dropped( Attendee * ) ),
-           SLOT( slotInsertAttendee( Attendee * ) ) );
+  connect( mListView, SIGNAL( dropped( KCal::Attendee * ) ),
+           SLOT( slotInsertAttendee( KCal::Attendee * ) ) );
 #endif
   topLayout->addWidget( mListView );
 

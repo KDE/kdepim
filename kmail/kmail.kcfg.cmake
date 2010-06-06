@@ -7,7 +7,7 @@
   <include>kglobalsettings.h</include>
   <include>kcolorscheme.h</include>
   <include>composer.h</include>
-  <kcfgfile name="kmailrc"/>
+  <kcfgfile name="kmail2rc"/>
   <group name="Behaviour">
       <entry name="ActionEnterFolder"  type="Enum">
         <label></label>
@@ -422,16 +422,13 @@
         </entry>
     </group>
 
-  <group name="FavoriteFolderView">
-    <entry name="EnableFavoriteFolderView" type="Bool">
+  <group name="FavoriteCollectionView">
+    <entry name="EnableFavoriteCollectionView" type="Bool">
       <default>true</default>
     </entry>
-    <entry name="FavoriteFolderViewHeight" type="Int">
+    <entry name="FavoriteCollectionViewHeight" type="Int">
       <default>100</default>
     </entry>
-    <entry name="FavoriteFolderIds" type="IntList"/>
-    <entry name="FavoriteFolderNames" type="StringList"/>
-    <entry name="FavoriteFolderViewSeenInboxes" type="IntList"/>
   </group>
 
  <group name="Search">

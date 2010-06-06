@@ -47,11 +47,14 @@
 #include <kurl.h>
 
 #include <messagecore/stringutil.h>
+#include <libkdepim/broadcaststatus.h>
 
 #include <kmime/kmime_content.h>
 #include <KPIMUtils/Email>
 
 #include <KStandardDirs>
+#include <KRun>
+#include <KMimeType>
 
 #include <QProcess>
 #include <algorithm>
@@ -175,16 +178,18 @@ namespace {
         { return QString(); }
   };
 
-  class FallBackURLHandler : public URLHandler {
+  class KRunURLHandler : public URLHandler {
   public:
-    FallBackURLHandler() : URLHandler() {}
-    ~FallBackURLHandler() {}
+      KRunURLHandler() : URLHandler()
+        {}
+      ~KRunURLHandler()
+        {}
 
-    bool handleClick( const KUrl &, ViewerPrivate * ) const;
-    bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const;
-    QString statusBarMessage( const KUrl & url, ViewerPrivate * ) const {
-      return url.prettyUrl();
-    }
+      bool handleClick( const KUrl &, ViewerPrivate * ) const;
+      bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const {
+        return false;
+      }
+      QString statusBarMessage( const KUrl &, ViewerPrivate * ) const { return QString(); }
   };
 
 } // anon namespace
@@ -310,7 +315,7 @@ URLHandlerManager::URLHandlerManager() {
   registerHandler( mBodyPartURLHandlerManager = new BodyPartURLHandlerManager() );
   registerHandler( new ShowAuditLogURLHandler() );
   registerHandler( new InternalImageURLHandler );
-  registerHandler( new FallBackURLHandler() );
+  registerHandler( new KRunURLHandler() );
 }
 
 URLHandlerManager::~URLHandlerManager() {
@@ -753,8 +758,12 @@ namespace {
     if ( !name.isEmpty() )
       return i18n( "Attachment: %1", name );
     else if ( dynamic_cast<KMime::Message*>( node ) ) {
-      return i18n( "Encapsulated Message (Subject: %1)",
-                   node->header<KMime::Headers::Subject>()->asUnicodeString() );
+      if ( node->header<KMime::Headers::Subject>() ) {
+        return i18n( "Encapsulated Message (Subject: %1)",
+                     node->header<KMime::Headers::Subject>()->asUnicodeString() );
+      } else {
+        return i18n( "Encapsulated Message" );
+      }
     }
     return i18n( "Unnamed attachment" );
   }
@@ -813,15 +822,35 @@ namespace {
 }
 
 namespace {
-  bool FallBackURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-    if ( w )
-      w->emitUrlClicked( url, Qt::LeftButton );
-    return true;
-  }
+  bool KRunURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const
+  {
+    if ( ( url.protocol() == "http" ) || ( url.protocol() == "https" ) ||
+         ( url.protocol() == "ftp" )  || ( url.protocol() == "file" )  ||
+         ( url.protocol() == "ftps" ) || ( url.protocol() == "sftp" ) ||
+         ( url.protocol() == "help" ) || ( url.protocol() == "vnc" )   ||
+         ( url.protocol() == "smb" )  || ( url.protocol() == "fish" )  ||
+         ( url.protocol() == "news" ) )
+    {
+      KPIM::BroadcastStatus::instance()->setTransientStatusMsg( i18n("Opening URL..."));
+      QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT( reset() ) );
 
-  bool FallBackURLHandler::handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w ) const {
-    if ( w )
-      w->emitPopupMenu( url, p );
-    return true;
+      KMimeType::Ptr mime = KMimeType::findByUrl( url );
+      if (mime->name() == "application/x-desktop" ||
+          mime->name() == "application/x-executable" ||
+          mime->name() == "application/x-ms-dos-executable" ||
+          mime->name() == "application/x-shellscript" )
+      {
+        if ( KMessageBox::warningYesNo( 0, i18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
+            url.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
+          return true;
+      }
+      if ( !MessageViewer::Util::handleUrlOnMac( url.pathOrUrl() ) ) {
+        KRun *runner = new KRun( url, w->viewer() ); // will delete itself
+        runner->setRunExecutables( false );
+      }
+
+      return true;
+    }
+    else return false;
   }
 }

@@ -77,10 +77,27 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
   content += " </head>\n";
   content += " <body>\n";
   foreach ( const KABC::Addressee &contact, contacts ) {
-    const QString name = contact.realName();
+    QString name = contact.realName();
+    if ( !contact.title().isEmpty() || !contact.role().isEmpty() ) {
+      QStringList content;
+      if ( !contact.title().isEmpty() )
+        content << contact.title();
+      if ( !contact.role().isEmpty() )
+        content << contact.role();
+      name += QString::fromLatin1( " (%1)" ).arg( content.join( QLatin1String( ", " ) ) );
+    }
+
     const QString birthday = KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
 
     ContactBlock::List blocks;
+
+    if ( !contact.organization().isEmpty() ) {
+      ContactBlock block;
+      block.header = i18n( "Organization:" );
+      block.entries.append( contact.organization() );
+
+      blocks.append( block );
+    }
 
     if ( !contact.emails().isEmpty() ) {
       ContactBlock block;

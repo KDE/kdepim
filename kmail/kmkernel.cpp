@@ -64,6 +64,7 @@ using KMail::MailServiceImpl;
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
 #include <kprocess.h>
+#include <KCrash>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_util.h>
@@ -119,34 +120,47 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   Akonadi::AttributeFactory::registerAttribute<Akonadi::SearchDescriptionAttribute>();
 
   // Akonadi migration
-  KConfig config( "kmail-migratorrc" );
-  KConfigGroup migrationCfg( &config, "Migration" );
-  const bool enabled = migrationCfg.readEntry( "Enabled", false );
-  const int currentVersion = migrationCfg.readEntry( "Version", 0 );
-  const int targetVersion = migrationCfg.readEntry( "TargetVersion", 1 );
-  if ( enabled && currentVersion < targetVersion ) {
-    kDebug() << "Performing Akonadi migration. Good luck!";
-    KProcess proc;
-    QStringList args = QStringList() << "--interactive-on-change";
-    const QString path = KStandardDirs::findExe( QLatin1String("kmail-migrator" ) );
-    proc.setProgram( path, args );
-    proc.start();
-    bool result = proc.waitForStarted();
-    if ( result ) {
-      result = proc.waitForFinished();
+  // check if there is something to migrate at all
+  bool needMigration = true;
+  const QFileInfo oldConfigFileInfo( KStandardDirs::locateLocal( "config", "kmailrc" ) );
+  if ( !oldConfigFileInfo.exists() || !oldConfigFileInfo.isFile() ) {
+    const QFileInfo oldDataDirFileInfo( KStandardDirs::locateLocal( "data", "kmail" ) );
+    if ( !oldDataDirFileInfo.exists() || !oldDataDirFileInfo.isDir() ) {
+      // neither config or data, the migrator cannot do anything useful anyways
+      needMigration = false;
     }
-    if ( result && proc.exitCode() == 0 ) {
-      kDebug() << "Akonadi migration has been successful";
-      migrationCfg.writeEntry( "Version", targetVersion );
-      migrationCfg.sync();
-    } else {
-      // exit code 1 means it is already running, so we are probably called by a migrator instance
-      kError() << "Akonadi migration failed!";
-      kError() << "command was: " << proc.program();
-      kError() << "exit code: " << proc.exitCode();
-      kError() << "stdout: " << proc.readAllStandardOutput();
-      kError() << "stderr: " << proc.readAllStandardError();
-      exit( 42 );
+  }
+
+  if ( needMigration ) {
+    KConfig config( "kmail-migratorrc" );
+    KConfigGroup migrationCfg( &config, "Migration" );
+    const bool enabled = migrationCfg.readEntry( "Enabled", false );
+    const int currentVersion = migrationCfg.readEntry( "Version", 0 );
+    const int targetVersion = migrationCfg.readEntry( "TargetVersion", 1 );
+    if ( enabled && currentVersion < targetVersion ) {
+      kDebug() << "Performing Akonadi migration. Good luck!";
+      KProcess proc;
+      QStringList args = QStringList() << "--interactive-on-change";
+      const QString path = KStandardDirs::findExe( QLatin1String("kmail-migrator" ) );
+      proc.setProgram( path, args );
+      proc.start();
+      bool result = proc.waitForStarted();
+      if ( result ) {
+        result = proc.waitForFinished( -1 );
+      }
+      if ( result && proc.exitCode() == 0 ) {
+        kDebug() << "Akonadi migration has been successful";
+        migrationCfg.writeEntry( "Version", targetVersion );
+        migrationCfg.sync();
+      } else {
+        // exit code 1 means it is already running, so we are probably called by a migrator instance
+        kError() << "Akonadi migration failed!";
+        kError() << "command was: " << proc.program();
+        kError() << "exit code: " << proc.exitCode();
+        kError() << "stdout: " << proc.readAllStandardOutput();
+        kError() << "stderr: " << proc.readAllStandardError();
+        exit( 42 );
+      }
     }
   }
 #ifdef __GNUC__
@@ -223,6 +237,13 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   }
   // till here ================================================
 
+  the_draftsCollectionFolder = -1;
+  the_inboxCollectionFolder = -1;
+  the_outboxCollectionFolder = -1;
+  the_sentCollectionFolder = -1;
+  the_templatesCollectionFolder = -1;
+  the_trashCollectionFolder = -1;
+
   mFolderCollectionMonitor = new FolderCollectionMonitor( this );
   Akonadi::Session *session = new Akonadi::Session( "KMail Kernel ETM", this );
   monitor()->setSession( session );
@@ -250,6 +271,7 @@ KMKernel::~KMKernel ()
   delete mMailService;
   mMailService = 0;
 
+  //stopAgentInstance();
   slotSyncConfig();
   mySelf = 0;
   kDebug();
@@ -426,6 +448,8 @@ void KMKernel::checkMail () //might create a new reader but won't show!!
     return;
   Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach( Akonadi::AgentInstance type, lst ) {
+    if ( !type.isOnline() )
+      type.setIsOnline( true );
     type.synchronize();
   }
 }
@@ -835,6 +859,11 @@ void KMKernel::stopNetworkJobs()
   if ( GlobalSettings::self()->networkState() == GlobalSettings::EnumNetworkState::Offline )
     return;
 
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  foreach ( Akonadi::AgentInstance type, lst ) {
+    type.setIsOnline( false );
+  }
+
   GlobalSettings::setNetworkState( GlobalSettings::EnumNetworkState::Offline );
   BroadcastStatus::instance()->setStatusMsg( i18n("KMail is set to be offline; all network jobs are suspended"));
   emit onlineStatusChanged( (GlobalSettings::EnumNetworkState::type)GlobalSettings::networkState() );
@@ -845,6 +874,11 @@ void KMKernel::resumeNetworkJobs()
 {
   if ( GlobalSettings::self()->networkState() == GlobalSettings::EnumNetworkState::Online )
     return;
+
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  foreach ( Akonadi::AgentInstance type, lst ) {
+    type.setIsOnline( true );
+  }
 
   GlobalSettings::setNetworkState( GlobalSettings::EnumNetworkState::Online );
   BroadcastStatus::instance()->setStatusMsg( i18n("KMail is set to be online; all network jobs resumed"));
@@ -1009,18 +1043,38 @@ void KMKernel::createDefaultCollectionDone( KJob * job)
   const Akonadi::Collection col = requestJob->collection();
   if ( !( col.rights() & Akonadi::Collection::AllRights ) )
     emergencyExit( i18n("You do not have read/write permission to your inbox folder.") );
+
+  connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
+           this, SLOT( slotDefaultCollectionsChanged () ) );
 }
+
+void KMKernel::slotDefaultCollectionsChanged()
+{
+  initFolders();
+}
+
 
 //-----------------------------------------------------------------------------
 void KMKernel::initFolders()
 {
-
+  the_draftsCollectionFolder = the_inboxCollectionFolder = the_outboxCollectionFolder = the_sentCollectionFolder
+    = the_templatesCollectionFolder = the_trashCollectionFolder = -1;
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Drafts );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Trash );
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Templates );
+}
+
+static void kmCrashHandler( int sigId )
+{
+  fprintf( stderr, "*** KMail got signal %d (Exiting)\n", sigId );
+  // try to cleanup all windows
+  if ( kmkernel ) {
+    kmkernel->dumpDeadLetters();
+    fprintf( stderr, "*** Dead letters dumped.\n" );
+  }
 }
 
 void KMKernel::init()
@@ -1058,6 +1112,7 @@ void KMKernel::init()
   mBackgroundTasksTimer->start( 5 * 60000 ); // 5 minutes, singleshot
 #endif
 
+  KCrash::setEmergencySaveFunction( kmCrashHandler );
 }
 
 void KMKernel::readConfig()
@@ -1139,10 +1194,10 @@ void KMKernel::cleanup(void)
 
   KSharedConfig::Ptr config =  KMKernel::config();
   KConfigGroup group(config, "General");
-  if ( the_trashCollectionFolder.isValid() ) {
+  if ( the_trashCollectionFolder > 0 ) {
     if ( group.readEntry( "empty-trash-on-exit", false ) ) {
-      if ( the_trashCollectionFolder.statistics().count() > 0 ) {
-        mFolderCollectionMonitor->expunge( the_trashCollectionFolder );
+      if ( collectionFromId( the_trashCollectionFolder ).statistics().count() > 0 ) {
+        mFolderCollectionMonitor->expunge( collectionFromId( the_trashCollectionFolder ) );
       }
     }
   }
@@ -1253,7 +1308,7 @@ void KMKernel::slotConfigChanged()
 //static
 QString KMKernel::localDataPath()
 {
-  return KStandardDirs::locateLocal( "data", "kmail/" );
+  return KStandardDirs::locateLocal( "data", "kmail2/" );
 }
 
 //-------------------------------------------------------------------------------
@@ -1465,7 +1520,7 @@ KSharedConfig::Ptr KMKernel::config()
   assert( mySelf );
   if ( !mySelf->mConfig )
   {
-    mySelf->mConfig = KSharedConfig::openConfig( "kmailrc" );
+    mySelf->mConfig = KSharedConfig::openConfig( "kmail2rc" );
     // Check that all updates have been run on the config file:
     KMail::checkConfigUpdates();
     MessageList::Core::Settings::self()->setSharedConfig( mySelf->mConfig );
@@ -1694,44 +1749,44 @@ void KMKernel::updatedTemplates()
 
 Akonadi::Collection KMKernel::inboxCollectionFolder()
 {
-  if ( !the_inboxCollectionFolder.isValid() )
-    the_inboxCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox );
-  return the_inboxCollectionFolder;
+  if ( the_inboxCollectionFolder < 0 )
+    the_inboxCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).id();
+  return collectionFromId( the_inboxCollectionFolder );
 }
 
 Akonadi::Collection KMKernel::outboxCollectionFolder()
 {
-  if ( !the_outboxCollectionFolder.isValid() )
-    the_outboxCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Outbox );
-  return the_outboxCollectionFolder;
+  if ( the_outboxCollectionFolder < 0 )
+    the_outboxCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Outbox ).id();
+  return collectionFromId( the_outboxCollectionFolder );
 }
 
 Akonadi::Collection KMKernel::sentCollectionFolder()
 {
-  if ( !the_sentCollectionFolder.isValid() )
-    the_sentCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail );
-  return the_sentCollectionFolder;
+  if ( the_sentCollectionFolder < 0 )
+    the_sentCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail ).id();
+  return collectionFromId( the_sentCollectionFolder );
 }
 
 Akonadi::Collection KMKernel::trashCollectionFolder()
 {
-  if ( !the_trashCollectionFolder.isValid() )
-    the_trashCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash );
-  return the_trashCollectionFolder;
+  if ( the_trashCollectionFolder < 0 )
+    the_trashCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash ).id();
+  return collectionFromId( the_trashCollectionFolder );
 }
 
 Akonadi::Collection KMKernel::draftsCollectionFolder()
 {
-  if ( !the_draftsCollectionFolder.isValid() )
-    the_draftsCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
-  return the_draftsCollectionFolder;
+  if ( the_draftsCollectionFolder < 0 )
+    the_draftsCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts ).id();
+  return collectionFromId( the_draftsCollectionFolder );
 }
 
 Akonadi::Collection KMKernel::templatesCollectionFolder()
 {
-  if ( !the_templatesCollectionFolder.isValid() )
-    the_templatesCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates );
-  return the_templatesCollectionFolder;
+  if ( the_templatesCollectionFolder < 0 )
+    the_templatesCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates ).id();
+  return collectionFromId( the_templatesCollectionFolder );
 }
 
 bool KMKernel::isSystemFolderCollection( const Akonadi::Collection &col)
@@ -1754,5 +1809,15 @@ bool KMKernel::isImapFolder( const Akonadi::Collection &col )
   Akonadi::AgentInstance agentInstance = Akonadi::AgentManager::self()->instance( col.resource() );
   return agentInstance.type().identifier() == IMAP_RESOURCE_IDENTIFIER;
 }
+
+
+void KMKernel::stopAgentInstance()
+{
+  Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  foreach( Akonadi::AgentInstance type, lst ) {
+    type.setIsOnline( false );
+  }
+}
+
 
 #include "kmkernel.moc"

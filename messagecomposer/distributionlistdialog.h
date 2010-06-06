@@ -44,6 +44,7 @@ class DistributionListDialog : public KDialog
   private Q_SLOTS:
     void slotDelayedSetRecipients( KJob* );
     void slotDelayedUser1( KJob* );
+    void slotContactGroupCreateJobResult( KJob* );
 
   private:
     KLineEdit *mTitleEdit;

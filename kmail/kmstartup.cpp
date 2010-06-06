@@ -27,7 +27,6 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
-#include <kcrash.h>
 #include <kglobal.h>
 #include <kaboutdata.h>
 #include <kiconloader.h>
@@ -46,40 +45,6 @@
 #include <qfile.h>
 
 #undef Status // stupid X headers
-
-extern "C" {
-
-// Crash recovery signal handler
-void kmsignalHandler(int sigId)
-{
-  kmsetSignalHandler(SIG_DFL);
-  fprintf(stderr, "*** KMail got signal %d (Exiting)\n", sigId);
-  // try to cleanup all windows
-  if (kmkernel) kmkernel->dumpDeadLetters();
-  ::exit(-1); //
-}
-
-// Crash recovery signal handler
-void kmcrashHandler(int sigId)
-{
-  kmsetSignalHandler(SIG_DFL);
-  fprintf(stderr, "*** KMail got signal %d (Crashing)\n", sigId);
-  // try to cleanup all windows
-  if (kmkernel) kmkernel->dumpDeadLetters();
-  // Return to DrKonqi.
-}
-//-----------------------------------------------------------------------------
-
-
-void kmsetSignalHandler(void (*handler)(int))
-{
-  KDE_signal(SIGTERM, handler);
-  KDE_signal(SIGHUP,  handler);
-  KCrash::setEmergencySaveFunction(kmcrashHandler);
-}
-
-}
-//-----------------------------------------------------------------------------
 
 namespace KMail {
 
@@ -129,7 +94,7 @@ void lockOrDie() {
 // Check and create a lock file to prevent concurrent access to kmail files
   QString appName = KGlobal::mainComponent().componentName();
   if ( appName.isEmpty() )
-    appName = "kmail";
+    appName = "kmail2";
 
   QString programName;
   const KAboutData *about = KGlobal::mainComponent().aboutData();
@@ -138,7 +103,7 @@ void lockOrDie() {
   if ( programName.isEmpty() )
     programName = i18n("KMail");
 
-  QString lockLocation = KStandardDirs::locateLocal("data", "kmail/lock");
+  QString lockLocation = KStandardDirs::locateLocal("data", "kmail2/lock");
   KConfig config(lockLocation, KConfig::SimpleConfig);
   KConfigGroup group(&config, "");
   int oldPid = group.readEntry("pid", -1 );
@@ -263,7 +228,7 @@ void insertLibraryCataloguesAndIcons() {
 
 void cleanup()
 {
-  const QString lockLocation = KStandardDirs::locateLocal("data", "kmail/lock");
+  const QString lockLocation = KStandardDirs::locateLocal("data", "kmail2/lock");
   KConfig config(lockLocation, KConfig::SimpleConfig);
   KConfigGroup group(&config, "");
   group.writeEntry("pid", -1);

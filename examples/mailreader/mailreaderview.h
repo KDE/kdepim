@@ -71,7 +71,7 @@ signals:
 private slots:
     void switchColors();
     void settingsChanged();
-    void urlClicked( const KUrl& url, Qt::MouseButton button);
+    void urlClicked( const Akonadi::Item &, const KUrl& );
 };
 
 #endif // mailreaderVIEW_H

@@ -94,6 +94,46 @@ using namespace KCal;
 namespace {
 
 #ifndef KDEPIM_NO_KRESOURCES
+
+static bool hasMyWritableEventsFolders( const QString &family )
+{
+  QString myfamily = family;
+  if ( family.isEmpty() ) {
+    myfamily = "calendar";
+  }
+
+  CalendarResourceManager manager( myfamily );
+  manager.readConfig();
+
+  CalendarResourceManager::ActiveIterator it;
+  for ( it=manager.activeBegin(); it != manager.activeEnd(); ++it ) {
+    if ( (*it)->readOnly() ) {
+      continue;
+    }
+
+    const QStringList subResources = (*it)->subresources();
+    if ( subResources.isEmpty() ) {
+      return true;
+    }
+
+    QStringList::ConstIterator subIt;
+    for ( subIt=subResources.begin(); subIt != subResources.end(); ++subIt ) {
+      if ( !(*it)->subresourceActive( (*subIt) ) ) {
+        continue;
+      }
+      if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
+        if ( (*it)->subresourceType( ( *subIt ) ) == "todo" ||
+             (*it)->subresourceType( ( *subIt ) ) == "journal" ||
+             !(*subIt).contains( "/.INBOX.directory/" ) ) {
+          continue;
+        }
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
 class CalendarManager
 {
   public:
@@ -465,15 +505,23 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
+      
       if ( !MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
         msg->setBody( iCal.toUtf8() );
+      } else {
+        KMime::Content *text = new KMime::Content;
+        text->contentType()->from7BitString( "text/plain; charset=\"us-ascii\"" );
+        text->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+        text->setBody("");
+        msg->addContent( text );
+        KMime::Content *body = new KMime::Content;
+        body->contentType()->from7BitString( "text/calendar; name=\"cal.ics\";method=\"reply\"" );
+        text->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+        body->setBody( iCal.toUtf8() );
+        msg->addContent( body );
       }
-      KMime::Content *body = new KMime::Content;
-      body->contentType()->setMimeType( "text/calendar" );
-      body->setBody( iCal.toUtf8() );
-      msg->addContent( body );
-
+      
       // Try and match the receiver with an identity.
       // Setting the identity here is important, as that is used to select the correct
       // transport later
@@ -911,7 +959,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                       const QString &path ) const
     {
 #ifndef KDEPIM_NO_KRESOURCES
-      if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
+      if ( !hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "

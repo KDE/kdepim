@@ -151,7 +151,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     /* reimplemented from KCal::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const Akonadi::Item &incidence );
     void calendarIncidenceChanged( const Akonadi::Item &incidence );
-    void calendarIncidenceRemoved( const Akonadi::Item &incidence );
+    void calendarIncidenceDeleted( const Akonadi::Item &incidence );
 
   public slots:
     virtual void updateView();
@@ -214,7 +214,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     /** Fill agenda using the current set value for the start date */
     void fillAgenda();
 
-    void connectAgenda( KOAgenda *agenda, QMenu *popup, KOAgenda *otherAgenda );
+    void connectAgenda( KOAgenda *agenda, KOEventPopupMenu *popup, KOAgenda *otherAgenda );
 
     /**
       Set the masks on the agenda widgets indicating, which days are holidays.
@@ -309,6 +309,14 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
 
     bool mIsSideBySide;
     bool mPendingChanges;
+
+    // the current date is inserted into mSelectedDates in the constructor
+    // however whe should only show events when setDates is called, otherwise
+    // we see day view with current date for a few milisecs, then we see something else
+    // because someone called setDates with the real dates that should be displayed.
+    // Other solution would be not initializing mSelectedDates in the ctor, but that requires
+    // lots of changes in koagenda.cpp and koagendaview.cpp
+    bool mAreDatesInitialized;
 };
 
 #endif

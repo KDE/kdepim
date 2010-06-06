@@ -10,15 +10,11 @@
 #include "kmail_export.h"
 #include "configmodule.h"
 
-#include <QPointer>
 #include <QString>
 #include <QStringList>
 #include <QLabel>
 #include <QList>
 #include <QShowEvent>
-#include <QResizeEvent>
-#include <QStackedWidget>
-#include <QTreeWidget>
 #include <QHash>
 #include <QSharedPointer>
 
@@ -123,7 +119,6 @@ public:
       : QWidget( parent )
       {}
   ~ConfigModuleTab() {}
-  void load();
   virtual void save() = 0;
   void defaults();
 signals:
@@ -131,6 +126,7 @@ signals:
   void changed(bool);
 public slots:
   void slotEmitChanged();
+  void load();
 private:
   // reimplement this for loading values of settings which are available
   // via GlobalSettings

@@ -292,7 +292,7 @@ void MessageActions::updateActions()
   mToggleFlagAction->setEnabled( flagsAvailable );
   mToggleToActAction->setEnabled( flagsAvailable );
 
-  if ( mCurrentItem.isValid() ) {
+  if ( mCurrentItem.hasPayload<KMime::Message::Ptr>() ) {
     KPIM::MessageStatus status;
     status.setStatusFromFlags( mCurrentItem.flags() );
     mToggleToActAction->setChecked( status.isToAct() );
@@ -562,9 +562,9 @@ void MessageActions::editCurrentMessage()
        && ( KMKernel::self()->folderIsDraftOrOutbox( col ) ||
             KMKernel::self()->folderIsTemplates( col ) )
     )
-    command = new KMEditMsgCommand( mParent, mCurrentItem );
+    command = new KMEditMsgCommand( mParent, mCurrentItem, true );
   else
-    command = new KMResendMessageCommand( mParent, mCurrentItem );
+    command = new KMEditMsgCommand( mParent, mCurrentItem, false );
   command->start();
 }
 

@@ -599,13 +599,12 @@ void KOTodoView::printTodo( bool preview )
 void KOTodoView::deleteTodo()
 {
   QModelIndexList selection = mView->selectionModel()->selectedRows();
-  if ( selection.size() != 1 ) {
-    return;
+  if ( selection.size() == 1 ) {
+    const Item todoItem = selection[0].data ( KOTodoModel::TodoRole ).value<Item>();
+    if ( mChanger->isNotDeleted( todoItem.id() ) ) {
+      emit deleteIncidenceSignal( todoItem );
+    }
   }
-
-  const Item todoItem = selection[0].data ( KOTodoModel::TodoRole ).value<Item>();
-
-  emit deleteIncidenceSignal( todoItem );
 }
 
 void KOTodoView::newTodo()
@@ -822,6 +821,13 @@ void KOTodoView::setFlatView( bool flatView )
 {
   mView->setRootIsDecorated( !flatView );
   mModel->setFlatView( flatView );
+
+  if ( flatView ) {
+    // In flatview dropping confuses users and it's very easy to drop into a child item
+    mView->setDragDropMode( QAbstractItemView::DragOnly );
+  } else {
+    mView->setDragDropMode( QAbstractItemView::DragDrop );
+  }
 }
 
 void KOTodoView::getHighlightMode( bool &highlightEvents,

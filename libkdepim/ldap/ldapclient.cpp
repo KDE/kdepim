@@ -74,7 +74,7 @@ class LdapClient::Private
     QString mScope;
     QStringList mAttrs;
 
-    QPointer<KIO::SimpleJob> mJob;
+    QPointer<KIO::TransferJob> mJob;
     bool mActive;
 
     KLDAP::LdapObject mCurrentObject;

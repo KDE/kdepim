@@ -184,6 +184,8 @@ void SignJob::process()
   if ( res.error() ) {
     kDebug() << "signing failed:" << res.error().asString();
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
+    setError( res.error().code() );
+    setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
   }
 
   // exec'ed jobs don't delete themselves
@@ -192,7 +194,6 @@ void SignJob::process()
   QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
   
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, signature, d->format, true, signatureHashAlgo );
-//  d->resultContent->setBody( signature );
   emitResult();
 }
 

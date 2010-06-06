@@ -148,7 +148,7 @@ class RecipientLine : public QWidget
 
   private:
     friend class RecipientsView;
-    KComboBox *mCombo;
+    RecipientComboBox *mCombo;
     RecipientLineEdit *mEdit;
     int mRecipientsCount;
     bool mModified;

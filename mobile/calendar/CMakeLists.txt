@@ -4,6 +4,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
+  ${Boost_INCLUDE_DIR}
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -20,6 +21,8 @@ target_link_libraries(korganizer-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDE4_KDECORE_LIBRARY}
   ${KDE4_KDEUI_LIBRARY}
+  ${KDEPIMLIBS_KCAL_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   akonadi-kcal_next
   incidenceeditors

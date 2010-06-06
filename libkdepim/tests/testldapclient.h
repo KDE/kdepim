@@ -28,8 +28,6 @@ class LdapClient;
 class LdapObject;
 }
 
-typedef KLDAP::LdapClient LdapClient;
-
 class TestLDAPClient : public QObject
 {
     Q_OBJECT
@@ -47,14 +45,14 @@ class TestLDAPClient : public QObject
     void leaveModality();
 
   private Q_SLOTS:
-    void slotLDAPResult( const LdapClient&, const KLDAP::LdapObject& );
+    void slotLDAPResult( const KLDAP::LdapClient&, const KLDAP::LdapObject& );
     void slotLDAPError( const QString& );
     void slotLDAPDone();
 
   private:
     bool check( const QString&, QString, QString );
 
-    LdapClient* mClient;
+    KLDAP::LdapClient* mClient;
 };
 
 #endif

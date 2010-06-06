@@ -33,6 +33,7 @@ class InfoPart::Private
     QString replyTo;
     QString userAgent;
     int transportId;
+    bool urgent;
     KMime::Headers::Base::List extraHeaders;
 };
 
@@ -41,6 +42,7 @@ InfoPart::InfoPart( QObject *parent )
   , d( new Private )
 {
   d->transportId = 0;
+  d->urgent = false;
 }
 
 InfoPart::~InfoPart()
@@ -128,6 +130,17 @@ QString InfoPart::fcc() const
 {
   return d->fcc;
 }
+
+bool InfoPart::urgent() const
+{
+  return d->urgent;
+}
+
+void InfoPart::setUrgent( bool urgent )
+{
+  d->urgent = urgent;
+}
+
 
 void InfoPart::setExtraHeaders( KMime::Headers::Base::List headers )
 {
