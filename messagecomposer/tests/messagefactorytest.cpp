@@ -221,6 +221,55 @@ void MessageFactoryTest::testCreateRedirect()
   QVERIFY( rdir->encodedContent() == baseline.toLatin1() );
 }
 
+void MessageFactoryTest::testCreateResend()
+{
+  KMime::Message::Ptr msg = createPlainTestMessage();
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
+  ident.setFullName( QLatin1String( "another" ) );
+  ident.setEmailAddr( QLatin1String( "another@another.com" ) );
+  identMan->commit();
+
+  MessageFactory factory( msg, 0 );
+  factory.setIdentityManager( identMan );
+
+  KMime::Message::Ptr rdir =  factory.createResend();
+
+  QDateTime date = rdir->date()->dateTime().dateTime();
+  QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+  datetime = rdir->date()->asUnicodeString();
+
+//   kDebug() << msg->encodedContent();
+
+  QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
+
+  QRegExp rx( QString::fromAscii( "Resent-Message-ID: ([^\n]*)" ) );
+  rx.indexIn( QString::fromAscii( rdir->head() ) );
+
+  QString baseline = QString::fromLatin1( "From: me@me.me\n"
+                                          "To: %1\n"
+                                          "Reply-To: \n"
+                                          "Cc: cc@cc.cc\n"
+                                          "Bcc: bcc@bcc.bcc\n"
+                                          "Subject: Test Email Subject\n"
+                                          "Date: %2\n"
+                                          "Disposition-Notification-To: me@me.me\n"
+                                          "MIME-Version: 1.0\n"
+                                          "Content-Transfer-Encoding: 7Bit\n"
+                                          "Content-Type: text/plain; charset=\"us-ascii\"\n"
+                                          "\n"
+                                          "All happy families are alike; each unhappy family is unhappy in its own way." );
+  baseline = baseline.arg( msg->to()->asUnicodeString() ).arg( datetime );
+
+//   kDebug() << baseline.toLatin1();
+//   kDebug() << "instead:" << rdir->encodedContent();
+
+//   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
+  QVERIFY( rdir->subject()->asUnicodeString() == QLatin1String( "Test Email Subject" ) );
+  QVERIFY( rdir->encodedContent() == baseline.toLatin1() );
+}
+
+
 void MessageFactoryTest::testCreateMDN()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();

@@ -123,9 +123,10 @@ bool CollectionSelectionProxyModel::setData( const QModelIndex &index, const QVa
       return false;
     }
 
-    const bool checked = (value.toInt() == Qt::Checked);
+    const bool checked = ( value.toInt() == Qt::Checked );
     d->selectionModel->select( index, checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
 
+    emit dataChanged( index, index );
     return true;
   }
 
