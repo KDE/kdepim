@@ -141,7 +141,7 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
   include(SopranoAddOntology)
 
-  find_package(Grantlee)
+  find_package(Grantlee REQUIRED)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
 
   find_package(Nepomuk)
