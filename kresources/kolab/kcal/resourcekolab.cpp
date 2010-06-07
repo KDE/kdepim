@@ -350,7 +350,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         // real duplicate, remove the second one
         result = local;
       } else {
-        KIncidenceChooser* ch = new KIncidenceChooser( labelForSubresource( subresource ) );
+        KIncidenceChooser* ch = new KIncidenceChooser();
         ch->setIncidence( local ,inc );
         if ( KIncidenceChooser::chooseMode == KIncidenceChooser::ask ) {
           connect ( this, SIGNAL( useGlobalMode() ), ch, SLOT (  useGlobalMode() ) );
