@@ -23,6 +23,7 @@
 
 #include "incidenceeditor-ng.h"
 
+class QButtonGroup;
 class QCheckBox;
 
 namespace Ui {
@@ -49,8 +50,11 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
+    void loadPreset( const KCal::Recurrence &preset );
+    void removeRecurrence();
+
   private slots:
-    void updateRecerrenceLabel( int recurrenceRadioIndex );
+    void updateRecurrenceLabel( int recurrenceRadioIndex );
 
   private:
     QBitArray days() const;
@@ -74,6 +78,7 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
     KCal::DateList mExceptionDates;
 
     Ui::IncidenceRecurrenceEditor *mUi;
+    QButtonGroup *mTypeButtonGroup;
     QCheckBox *mDayBoxes[7];
 };
 

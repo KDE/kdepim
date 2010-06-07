@@ -31,8 +31,7 @@ IncidenceRecurrenceDialog::IncidenceRecurrenceDialog( QWidget *parent  )
   setButtons( KDialog::Ok | KDialog::Cancel );
 }
 
-IncidenceEditor *IncidenceRecurrenceDialog::editor() const
+IncidenceRecurrenceEditor *IncidenceRecurrenceDialog::editor() const
 {
   return mEditor;
 }
-

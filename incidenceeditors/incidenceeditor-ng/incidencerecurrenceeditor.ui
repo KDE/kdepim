@@ -108,9 +108,6 @@
            <property name="checked">
             <bool>false</bool>
            </property>
-           <attribute name="buttonGroup">
-            <string>mTypeButtonGroup</string>
-           </attribute>
           </widget>
          </item>
          <item row="1" column="0">
@@ -124,9 +121,6 @@
            <property name="checked">
             <bool>true</bool>
            </property>
-           <attribute name="buttonGroup">
-            <string>mTypeButtonGroup</string>
-           </attribute>
           </widget>
          </item>
          <item row="2" column="0">
@@ -137,9 +131,6 @@
            <property name="text">
             <string extracomment="@option:radio recur monthly">&amp;Monthly</string>
            </property>
-           <attribute name="buttonGroup">
-            <string>mTypeButtonGroup</string>
-           </attribute>
           </widget>
          </item>
          <item row="3" column="0">
@@ -150,9 +141,6 @@
            <property name="text">
             <string extracomment="@option:radio recur yearly">&amp;Yearly</string>
            </property>
-           <attribute name="buttonGroup">
-            <string>mTypeButtonGroup</string>
-           </attribute>
           </widget>
          </item>
         </layout>
@@ -204,7 +192,7 @@
          <bool>false</bool>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="daily">
          <layout class="QGridLayout" name="gridLayout_4"/>
@@ -338,7 +326,318 @@
               <widget class="KComboBox" name="mMonthlyByPosWeekdayCombo"/>
              </item>
              <item row="0" column="1">
-              <widget class="KComboBox" name="mMonthlyByDayCombo"/>
+              <widget class="KComboBox" name="mMonthlyByDayCombo">
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">1st</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">2nd</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">3rd</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">4th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">5th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">6th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">7th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">8th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">9th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">10th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">11th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">12th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">13th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">14th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">15th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">16th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">17th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">18th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">19th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">20th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">21st</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">22nd</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">23rd</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">24th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">25th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">26th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">27th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">28th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">29th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">30th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">31st</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox last day of the month">Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">2nd Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">3rd Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">4th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">5th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">6th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">7th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">8th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">9th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">10th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">11th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">12th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">13th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">14th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">15th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">16th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">17th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">18th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">19th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">20th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">21st Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">22nd Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">23rd Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">24th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">25th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">26th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">27th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">28th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">29th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">30th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string extracomment="@item:inlistbox">31st Last</string>
+                </property>
+               </item>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -1164,27 +1463,10 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>mTypeButtonGroup</sender>
-   <signal>buttonClicked(int)</signal>
-   <receiver>mRuleStack</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>401</x>
-     <y>205</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="mRangeButtonGroup"/>
-  <buttongroup name="mTypeButtonGroup"/>
-  <buttongroup name="mMonthlyButtonGroup"/>
   <buttongroup name="mYearlyButtonGroup"/>
+  <buttongroup name="mMonthlyButtonGroup"/>
+  <buttongroup name="mRangeButtonGroup"/>
  </buttongroups>
 </ui>

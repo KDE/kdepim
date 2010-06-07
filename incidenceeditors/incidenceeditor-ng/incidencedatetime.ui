@@ -131,48 +131,7 @@
    <item row="5" column="1" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="KComboBox" name="mRecurrenceCombo">
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Incidence does not repeat">Does not repeat</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Incidence repeats every day on the same time">Daily</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Incidence repeats every week on the same day">Weekly</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Incidence repeats every work day on the same time">Every workday</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Incidence repeats bi weekly on the same day and time">Bi-weekly</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Incidence repeats every month on the same day and time">Monthly</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Incidence repeats every year on the same day and time">Yearly</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string extracomment="@item:inlistbox Custom repeat settings">Custom</string>
-        </property>
-       </item>
-      </widget>
+      <widget class="KComboBox" name="mRecurrenceCombo"/>
      </item>
      <item>
       <widget class="QPushButton" name="mRecurrenceEditButton">

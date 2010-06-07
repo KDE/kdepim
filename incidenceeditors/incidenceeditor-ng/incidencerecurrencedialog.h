@@ -23,6 +23,10 @@
 
 #include <KDialog>
 
+namespace KCal {
+class Recurrence;
+}
+
 namespace IncidenceEditorsNG {
 
 class IncidenceEditor;  
@@ -33,7 +37,7 @@ class IncidenceRecurrenceDialog : public KDialog
   public:
     IncidenceRecurrenceDialog( QWidget *parent = 0 );
 
-    IncidenceEditor *editor() const;
+    IncidenceRecurrenceEditor *editor() const;
 
   private:
     IncidenceRecurrenceEditor *mEditor;

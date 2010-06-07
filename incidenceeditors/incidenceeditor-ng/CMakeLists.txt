@@ -23,6 +23,7 @@ include_directories(
 
 set(incidenceeditors_ng_shared_LIB_SRCS
   itemeditor.cpp # TODO: Move to akonadi libs when finished
+  recurrencepresets.cpp
   incidenceeditor.cpp
   combinedincidenceeditor.cpp
   incidencegeneraleditor.cpp

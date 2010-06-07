@@ -25,6 +25,8 @@
 #include <KSystemTimeZones>
 
 #include "incidencerecurrencedialog.h"
+#include "incidencerecurrenceeditor.h"
+#include "recurrencepresets.h"
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_iedatetimemobile.h"
@@ -56,6 +58,12 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
+
+  QStringList recurrencePresets;
+  recurrencePresets << i18nc( "@item:inlistbox Incidence has no recurrence", "Does not repeat" );
+  recurrencePresets << RecurrencePresets::availablePresets();
+  recurrencePresets << i18nc( "@item:inlistbox Custom recurrence configuration", "Custom" );
+  mUi->mRecurrenceCombo->insertItems( 0, recurrencePresets );
   mUi->mRecurrenceEditButton->setEnabled( false );
 
   mRecurrenceDialog = new IncidenceRecurrenceDialog( this );
@@ -64,7 +72,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
-  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)), SLOT(updateRecurrence()) );
+  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)), SLOT(updateRecurrencePreset(int)) );
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
 #endif
 
@@ -242,15 +250,29 @@ void IncidenceDateTimeEditor::startSpecChanged()
 //   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
 }
 
-void IncidenceDateTimeEditor::updateRecurrence()
+void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
 {
 #ifndef KDEPIM_MOBILE_UI
   mUi->mRecurrenceEditButton->setEnabled( mUi->mRecurrenceCombo->currentIndex() > 0 );
-  if ( mUi->mRecurrenceCombo->currentIndex() > 0 ) {
+
+  if ( index == 0 ) { // No recurrence
+    mRecurrenceDialog->editor()->removeRecurrence();
+  } else if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
+    // Configure a custom recurrence, use by default the Weekly recurrence preset
+    KDateTime start = currentEndDateTime();
+    start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
+    QScopedPointer<Recurrence> rec( RecurrencePresets::preset( i18nc( "@item:inlistbox", "Weekly" ), start ) );
+    mRecurrenceDialog->editor()->loadPreset( *rec );
+    mRecurrenceDialog->show();
+  } else {
+    // Load a preset
+    KDateTime start = currentEndDateTime();
+    start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
+    QScopedPointer<Recurrence> rec( RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start ) );
+    mRecurrenceDialog->editor()->loadPreset( *rec );
   }
 #endif
 }
-
 
 void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )
 {

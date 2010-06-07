@@ -64,7 +64,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public CombinedIncide
     void startTimeChanged( const QTime &newTime );
     void startDateChanged( const QDate &newDate );
     void startSpecChanged();
-    void updateRecurrence();
+    void updateRecurrencePreset( int index );
     void updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence );
 
   private slots: /// Todo specific

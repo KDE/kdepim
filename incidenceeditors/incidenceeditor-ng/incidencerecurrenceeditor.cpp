@@ -20,6 +20,8 @@
 
 #include "incidencerecurrenceeditor.h"
 
+#include <QtCore/QDebug>
+
 #include <KCalendarSystem>
 #include <KSystemTimeZones>
 
@@ -33,6 +35,7 @@ using namespace KCal;
 IncidenceRecurrenceEditor::IncidenceRecurrenceEditor( QWidget *parent )
   : IncidenceEditor( parent )
   , mUi( new Ui::IncidenceRecurrenceEditor )
+  , mTypeButtonGroup( new QButtonGroup( this ) )
 {
   mUi->setupUi( this );
 
@@ -62,8 +65,18 @@ IncidenceRecurrenceEditor::IncidenceRecurrenceEditor( QWidget *parent )
       i18nc( "@info:tooltip", "Recur on %1", longDayName ) );
   }
 
-  connect( mUi->mTypeButtonGroup, SIGNAL(buttonClicked(int)),
-           SLOT(updateRecerrenceLabel(int)) );
+  for ( int i=1; i <= 12; ++i ) // use an arbitrary year, we just need the month name...
+    mUi->mYearlyByMonthCombo->addItem( KGlobal::locale()->calendar()->monthName( QDate( 2005, i, 1 ) ) );
+
+  mTypeButtonGroup->addButton( mUi->mDailyButton, 0 );
+  mTypeButtonGroup->addButton( mUi->mWeeklyButton, 1 );
+  mTypeButtonGroup->addButton( mUi->mMonthlyButton, 2 );
+  mTypeButtonGroup->addButton( mUi->mYearlyButton, 3 );
+
+  connect( mTypeButtonGroup, SIGNAL(buttonClicked(int)),
+           mUi->mRuleStack, SLOT(setCurrentIndex(int)) );
+  connect( mTypeButtonGroup, SIGNAL(buttonClicked(int)),
+           SLOT(updateRecurrenceLabel(int)) );
 }
 
 void IncidenceRecurrenceEditor::load( KCal::Incidence::ConstPtr inc )
@@ -233,7 +246,7 @@ void IncidenceRecurrenceEditor::save( KCal::Incidence::Ptr incidence )
     endDate = mUi->mEndDateEdit->date();
   }
 
-  int recurrenceType = mUi->mTypeButtonGroup->checkedId();
+  int recurrenceType = mTypeButtonGroup->checkedId();
   if ( recurrenceType == Daily ) {
     r->setDaily( mUi->mFrequencyEdit->value() );
   } else if ( recurrenceType == Weekly ) {
@@ -288,9 +301,42 @@ bool IncidenceRecurrenceEditor::isDirty() const
   return false;
 }
 
+void IncidenceRecurrenceEditor::loadPreset( const Recurrence &preset )
+{
+  if ( !mUi->mEnabledCheck->isChecked() )
+    mUi->mEnabledCheck->toggle();
+
+  switch ( preset.recurrenceType() ) {
+  case Recurrence::rDaily:
+    setType( Daily );
+    setDays( preset.days() );
+    break;
+  case Recurrence::rWeekly:
+    setType( Weekly );
+    setDays( preset.days() );
+    break;
+  case Recurrence::rMonthlyDay:
+    setType( Monthly );
+    setByDay( Monthly, preset.monthDays().first() );
+    break;
+  default:
+    setType( Yearly );
+    setByMonth( preset.yearDates().first(), preset.yearMonths().first() );
+    break;
+  }
+
+  setFrequency( preset.frequency() );
+}
+
+void IncidenceRecurrenceEditor::removeRecurrence()
+{
+  if ( mUi->mEnabledCheck->isChecked() )
+    mUi->mEnabledCheck->toggle();
+}
+
 /// Private slots
 
-void IncidenceRecurrenceEditor::updateRecerrenceLabel( int recurrenceRadioIndex )
+void IncidenceRecurrenceEditor::updateRecurrenceLabel( int recurrenceRadioIndex )
 {
   switch ( recurrenceRadioIndex ) {
     case 0:
@@ -421,7 +467,7 @@ void IncidenceRecurrenceEditor::setDateTimes( const QDateTime &start,
 
   // Now set the defaults for all unused types, use the start time for it
   bool enabled = mUi->mEnabledCheck->isChecked();
-  int type = mUi->mTypeButtonGroup->checkedId();
+  int type = mTypeButtonGroup->checkedId();
 
   if ( !enabled || type != Weekly ) {
     QBitArray days( 7 );
@@ -521,16 +567,20 @@ void IncidenceRecurrenceEditor::setType( RecurrenceType type )
   switch ( type ) {
   case Daily:
     mUi->mDailyButton->setChecked( true );
+    mUi->mRuleStack->setCurrentIndex( 0 );
     break;
   case Weekly:
     mUi->mWeeklyButton->setChecked( true );
+    mUi->mRuleStack->setCurrentIndex( 1 );
     break;
   case Monthly:
     mUi->mMonthlyButton->setChecked( true );
+    mUi->mRuleStack->setCurrentIndex( 2 );
     break;
   case Yearly:
   default:
     mUi->mYearlyButton->setChecked( true );
+    mUi->mRuleStack->setCurrentIndex( 3 );
     break;
   }
 }
