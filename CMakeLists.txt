@@ -324,7 +324,7 @@ set(libkdgantt1_SRCS
 endif (KDEPIM_ONLY_KLEO)
 
 # doc must be a subdir of kdepim or packagers will kill us
-#macro_optional_add_subdirectory(doc)
+macro_optional_add_subdirectory(doc)
 
 
 # We really want to encourage users to enable/install QGpgME from kdepimlibs

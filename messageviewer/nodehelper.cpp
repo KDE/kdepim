@@ -84,7 +84,8 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.append( node );
-//   kDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString() << " decodedContent" << node->decodedContent();
+  kDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
+           //<< " decodedContent" << node->decodedContent();
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
