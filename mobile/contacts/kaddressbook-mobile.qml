@@ -177,45 +177,42 @@ KPIM.MainView {
               folderPanel.collapse()
             }
           }
-          Rectangle {
+          Item {
             id : headerActionOverlay
             opacity : { contactList.count > 0 ? 0 : 1; }
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.left: collectionView.right
-            KPIM.Button {
+            /*KPIM.Button2 {
               id : newEmailButton
               anchors.top : parent.top
               anchors.left : parent.left
               anchors.right : parent.right
-              height : 30
               buttonText : KDE.i18n( "Add Contact" )
               onClicked : {
                 console.log("Write new");
               }
             }
-            KPIM.Button {
+            KPIM.Button2 {
               id : searchEmailButton
               anchors.top : newEmailButton.bottom
               anchors.left : parent.left
               anchors.right : parent.right
-              height : 30
               buttonText : KDE.i18n( "Search for Contact" )
               onClicked : {
                 console.log("Search email");
               }
             }
-            KPIM.Button {
+            KPIM.Button2 {
               anchors.top : searchEmailButton.bottom
               anchors.left : parent.left
               anchors.right : parent.right
-              height : 30
               buttonText : KDE.i18n( "Configure Account" )
               onClicked : {
                 console.log("Configure");
               }
-            }
+            }*/
           }
         }
       ]
