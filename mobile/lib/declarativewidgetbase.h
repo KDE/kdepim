@@ -88,6 +88,9 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
       m_proxy->setWidget( m_widget );
       setWidth( m_widget->width() );
       setHeight( m_widget->height() );
+
+      setFocusProxy( m_proxy );
+      m_proxy->setFocusPolicy( Qt::StrongFocus );
     }
 };
 
