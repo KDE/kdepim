@@ -857,8 +857,9 @@ HeaderStyle::HeaderStyle()
     Grantlee::FileSystemTemplateLoader::Ptr loader(new Grantlee::FileSystemTemplateLoader());
 
     engine->addTemplateLoader( loader );
-    loader->setTemplateDirs( QStringList() << KStandardDirs::locate("data","themes/kmail/") );
-    engine->setPluginPaths( QStringList() << KStandardDirs::locate("data","themes/") );
+    // TODO: We should use KStandardDirs
+    loader->setTemplateDirs( QStringList() << GRANTLEE_TEMPLATE_PATH << (QDir::currentPath() + "/kmail/"));
+    engine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH );
 }
 
 HeaderStyle::~HeaderStyle() {
