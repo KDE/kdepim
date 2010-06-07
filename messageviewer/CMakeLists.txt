@@ -11,7 +11,8 @@ ${PROJECT_SOURCE_DIR}/themes ${PROJECT_BINARY_DIR}/themes)
 
 add_subdirectory(tests)
 add_subdirectory(pics)
-add_subdirectory(themes)
+
+install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
 
 if(KDEPIM_MOBILE_UI)
   add_subdirectory(qml)
