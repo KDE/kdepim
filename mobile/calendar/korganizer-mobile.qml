@@ -93,15 +93,25 @@ KPIM.MainView {
     anchors.fill: parent
     color: "#D2D1D0" // TODO: make palette work correctly. palette.window
 
-    KPIM.Button {
+    Rectangle {
       id : backToMessageListButton
-      y : 250
-      width : 48
-      height : 48
-      icon: KDE.iconPath("korganizer", 48)
-      onClicked: {
-        agendaView.visible = false;
-        mainWorkView.visible = true;
+      height: 48
+      width: 48
+      z: 5
+      color: "#00000000"
+      anchors.right : parent.right
+      anchors.rightMargin : 70
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : 70
+      Image {
+        source : "back-to-message-list.png"
+        MouseArea {
+          anchors.fill : parent;
+          onClicked : {
+            agendaView.visible = false;
+            mainWorkView.visible = true;
+          }
+        }
       }
     }
 
@@ -232,7 +242,7 @@ KPIM.MainView {
           id: dateEdit
           width: parent.width
           height: 480 / 6
-          displayFormat: "MM dd yyyy"
+          displayFormat: "MM.dd.yyyy"
           styleSheet: window.styleSheet
         }
       }
@@ -319,7 +329,7 @@ KPIM.MainView {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
-      handlePosition : 40
+      handlePosition : 300
       anchors.fill : parent
       contentWidth: 240
       content: [
