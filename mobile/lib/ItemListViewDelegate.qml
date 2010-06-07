@@ -25,7 +25,6 @@ Item {
   property alias summaryContent: itemSummary.data
 
   width: itemListView.width
-  clip: true
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
