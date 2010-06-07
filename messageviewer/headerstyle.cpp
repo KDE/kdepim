@@ -70,6 +70,8 @@ using KPIMUtils::LinkLocator;
 #include <grantlee/context.h>
 #include <grantlee/engine.h>
 
+#include "grantlee_paths.h"
+
 using namespace MessageCore;
 
 //
