@@ -18,12 +18,18 @@ endif(KMAIL_SUPPORTED)
 
 target_link_libraries(kontact_summaryplugin ${KDE4_KCMUTILS_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} kdepim kontactinterface)
 
+set(kcmkontactsummary_SRCS kcmkontactsummary.cpp )
+kde4_add_plugin(kcmkontactsummary ${kcmkontactsummary_SRCS})
+target_link_libraries(kcmkontactsummary ${KDE4_KCMUTILS_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} kdepim kontactinterface)
 
 ########### install files ###############
 
 install(TARGETS kontact_summaryplugin  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kcmkontactsummary DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES summaryplugin.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kontact)
 install(FILES kontactsummary_part.rc  DESTINATION ${DATA_INSTALL_DIR}/kontactsummary)
+install(FILES kcmkontactsummary.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
+install(FILES plasma-default-layoutrc DESTINATION ${DATA_INSTALL_DIR}/kontactsummary)
 install(FILES summary.setdlg DESTINATION ${DATA_INSTALL_DIR}/kontact/ksettingsdialog)
