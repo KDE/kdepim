@@ -331,6 +331,7 @@ KPIM.MainView {
             }
           },
           KPIM.Button {
+            id : writeNewEmailButton
             anchors.top: saveFavoriteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
@@ -338,6 +339,18 @@ KPIM.MainView {
             buttonText : KDE.i18n( "Write new Email" )
             onClicked : {
               application.startComposer();
+              actionPanel.collapse();
+            }
+          },
+          KPIM.Button {
+            visible : !collectionView.hasSelection
+            anchors.top: writeNewEmailButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText : KDE.i18n( "New Account" )
+            onClicked : {
+              application.launchAccountWizard();
               actionPanel.collapse();
             }
           }
