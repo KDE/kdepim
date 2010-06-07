@@ -94,7 +94,7 @@ QCheckBox::indicator:disabled {
 QColumnView,
 QColumnView .QWidget,
 QColumnView .QAbstractItemView,
-QListView
+QColumnView QListView
 {
   background-color: rgba(0,0,0,0);
   color: black;
