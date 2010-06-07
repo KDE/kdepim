@@ -393,6 +393,7 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
     if( attachment->isSigned() ) {
       kDebug() << "adding signjob for late attachment";
       SignJob* sJob = new SignJob( q );
+      sJob->setContent( 0 );
       sJob->setCryptoMessageFormat( format );
       sJob->setSigningKeys( signers );
 
