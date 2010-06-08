@@ -72,6 +72,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 #endif
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
+  d->mChangeRecorder->fetchCollection( true );
   d->mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
   d->mChangeRecorder->itemFetchScope().fetchFullPayload(); // By default fetch the full payload
 
