@@ -28,6 +28,7 @@ namespace Akonadi {
 
 class AKONADI_KCAL_NEXT_EXPORT CalendarModel : public EntityTreeModel
 {
+    Q_OBJECT
   public:
     enum ItemColumn {
       Summary=0,
