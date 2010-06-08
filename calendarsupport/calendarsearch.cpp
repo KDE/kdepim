@@ -349,7 +349,6 @@ void CalendarSearch::Private::rowsInserted( const QModelIndex &parent, int start
       KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
       if ( incidence && 
            !( rights & Collection::CanDeleteItem ) &&
-           !( rights & Collection::CanCreateItem ) &&
            !( rights & Collection::CanChangeItem ) &&
            !incidence->isReadOnly() ) {
         kWarning() << "Resource forgot to set incidence read only!";

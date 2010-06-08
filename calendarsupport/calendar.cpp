@@ -184,7 +184,6 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
     // new-only goes here
     const Collection::Rights rights = item.parentCollection().rights();
     if ( !( rights & Collection::CanDeleteItem ) &&
-         !( rights & Collection::CanCreateItem ) &&
          !( rights & Collection::CanChangeItem ) &&
          !incidence->isReadOnly() ) {
       kWarning() << "Resource forgot to set incidence read only!";
