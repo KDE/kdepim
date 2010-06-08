@@ -174,15 +174,23 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   kDebug()<<"id="<<item.id()<<"version="<<item.revision()<<"alreadyExisted="<<alreadyExisted;
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
 
+  const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
+  Q_ASSERT( incidence );
+
   if ( alreadyExisted ) {
     Q_ASSERT( item.storageCollectionId() == m_itemMap.value( id ).storageCollectionId() ); // there was once a bug that resulted in items forget their collectionId...
     // update-only goes here
   } else {
     // new-only goes here
+    const Collection::Rights rights = item.parentCollection().rights();
+    if ( !( rights & Collection::CanDeleteItem ) &&
+         !( rights & Collection::CanCreateItem ) &&
+         !( rights & Collection::CanChangeItem ) &&
+         !incidence->isReadOnly() ) {
+      kWarning() << "Resource forgot to set incidence read only!";
+      incidence->setReadOnly( true );
+    }
   }
-
-  const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
-  Q_ASSERT( incidence );
 
   if ( alreadyExisted && m_itemDateForItemId.contains( item.id() )) {
     // for changed items, we must remove existing date entries (they might have changed)
