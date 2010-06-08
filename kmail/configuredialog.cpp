@@ -3388,6 +3388,18 @@ void ComposerPage::HeadersTab::doLoadOther()
   }
 }
 
+void ComposerPage::HeadersTab::doResetToDefaultsOther()
+{
+  mMessageIdSuffixEdit->setText( "" );
+  mCreateOwnMessageIdCheck->setChecked( false );
+  mTagList->clear();
+  mTagNameEdit->clear();
+  mTagValueEdit->clear();
+  // disable the "Remove" button
+  mRemoveHeaderButton->setEnabled( false );
+}
+
+
 void ComposerPage::HeadersTab::save()
 {
   KConfigGroup general( KMKernel::config(), "General" );

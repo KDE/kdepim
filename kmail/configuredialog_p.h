@@ -421,7 +421,7 @@ public:
 private: // methods
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
+  //virtual void doResetToDefaultsOther();
   void setDateDisplay( int id, const QString & format );
 
 private: // data
@@ -722,7 +722,7 @@ private slots:
 private:
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
+  virtual void doResetToDefaultsOther();
 
 private:
   QCheckBox   *mCreateOwnMessageIdCheck;
