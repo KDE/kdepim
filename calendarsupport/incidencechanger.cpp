@@ -519,7 +519,7 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
 {
 
   const Collection defaultCollection = mCalendar->collection( d->mDefaultCollectionId );
-  
+
   if ( d->mDestinationPolicy == ASK_DESTINATION ||
        !defaultCollection.isValid() ) {
     selectedCollection = Akonadi::selectCollection( parent,
