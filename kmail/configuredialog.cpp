@@ -3066,6 +3066,13 @@ void ComposerPage::SubjectTab::save()
   GlobalSettings::self()->setForwardPrefixes( mForwardListEditor->stringList() );
 }
 
+void ComposerPage::CharsetTab::doResetToDefaultsOther()
+{
+  mCharsetListEditor->setStringList( QStringList()<<"us-ascii"<<"iso-8859-1"<<"locale"<<"utf-8" );
+  mKeepReplyCharsetCheck->setChecked( false );
+  slotEmitChanged();
+}
+
 QString ComposerPage::CharsetTab::helpAnchor() const
 {
   return QString::fromLatin1("configure-composer-charset");
