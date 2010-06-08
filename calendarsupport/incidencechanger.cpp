@@ -299,7 +299,11 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
     return false;
   }
 
-  kDebug() << "\"" << incidence->summary() << "\"";
+  if ( !( aitem.parentCollection().rights() & Collection::CanDeleteItem ) ) {
+    kWarning() << "insufficient rights to delete incidence";
+    return false;
+  }
+
   bool doDelete = sendGroupwareMessage( aitem, KCal::iTIPCancel,
                                         INCIDENCEDELETED, parent );
   if( !doDelete ) {
@@ -490,10 +494,14 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
                                         WhatChanged action,
                                         QWidget *parent )
 {
-
   if ( !Akonadi::hasIncidence( newItem ) ||
        !newItem.isValid() ) {
     kDebug() << "Skipping invalid item id=" << newItem.id();
+    return false;
+  }
+
+  if ( !( newItem.parentCollection().rights() & Collection::CanChangeItem ) ) {
+    kWarning() << "insufficient rights to change incidence";
     return false;
   }
 
@@ -540,10 +548,14 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
 bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
                                      const Collection &collection, QWidget *parent )
 {
-  if( !incidence || !collection.isValid() ) {
+  if ( !incidence || !collection.isValid() ) {
     return false;
   }
-  kDebug() << "\"" << incidence->summary() << "\"";
+
+  if ( !( collection.rights() & Collection::CanCreateItem ) ) {
+    kWarning() << "insufficient rights to create incidence";
+    return false;
+  }
 
   Item item;
   item.setPayload<KCal::Incidence::Ptr>( incidence );
@@ -559,7 +571,8 @@ bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
   return true;
 }
 
-void IncidenceChanger::addIncidenceFinished( KJob* j ) {
+void IncidenceChanger::addIncidenceFinished( KJob* j )
+{
   kDebug();
   const Akonadi::ItemCreateJob* job = qobject_cast<const Akonadi::ItemCreateJob*>( j );
   Q_ASSERT( job );
