@@ -2913,6 +2913,7 @@ QString ComposerPage::TemplatesTab::helpAnchor() const
   return QString::fromLatin1("configure-composer-templates");
 }
 
+
 ComposerPageTemplatesTab::ComposerPageTemplatesTab( QWidget * parent )
   : ConfigModuleTab ( parent )
 {
@@ -2935,6 +2936,11 @@ void ComposerPage::TemplatesTab::doLoadFromGlobalSettings()
 void ComposerPage::TemplatesTab::save()
 {
     mWidget->saveToGlobal();
+}
+
+void ComposerPage::TemplatesTab::doResetToDefaultsOther()
+{
+  mWidget->resetToDefault();
 }
 
 QString ComposerPage::CustomTemplatesTab::helpAnchor() const

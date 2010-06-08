@@ -39,6 +39,7 @@ class TemplatesConfiguration : public QWidget, Ui::TemplatesConfigurationBase
     void saveToIdentity( uint id );
     void loadFromFolder( const QString &id, uint identity = 0 );
     void saveToFolder( const QString &id );
+    void resetToDefault();
 
     static QString defaultNewMessage();
     static QString defaultReply();

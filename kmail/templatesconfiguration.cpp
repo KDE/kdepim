@@ -101,6 +101,15 @@ void TemplatesConfiguration::slotTextChanged()
   emit changed();
 }
 
+void TemplatesConfiguration::resetToDefault()
+{
+  textEdit_new->setText( defaultNewMessage() );
+  textEdit_reply->setText( defaultReply() );
+  textEdit_reply_all->setText( defaultReplyAll() );
+  textEdit_forward->setText( defaultForward() );
+  lineEdit_quote->setText( defaultQuoteString() );
+}
+
 void TemplatesConfiguration::loadFromGlobal()
 {
   QString str;
