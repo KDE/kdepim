@@ -98,6 +98,16 @@ namespace Akonadi
   AKONADI_KCAL_NEXT_EXPORT bool hasJournal( const Akonadi::Item &item );
 
   /**
+   * returns whether this item can be deleted
+   */
+  AKONADI_KCAL_NEXT_EXPORT bool hasDeleteRights( const Akonadi::Item &item );
+
+  /**
+   * returns whether this item can be changed
+   */
+  AKONADI_KCAL_NEXT_EXPORT bool hasChangeRights( const Akonadi::Item &item );
+
+  /**
   * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
   */
   AKONADI_KCAL_NEXT_EXPORT bool isValidIncidenceItemUrl( const KUrl &url, const QStringList &supportedMimeTypes );
