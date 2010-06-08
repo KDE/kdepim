@@ -280,7 +280,7 @@ void KOEditorGeneralTodo::readTodo( Todo *todo, const QDate &date, bool tmpl )
   KDateTime dueDT = todo->dtDue();
 
   if ( todo->hasDueDate() ) {
-    enableAlarm( true );    
+    enableAlarm( true );
     if ( todo->recurs() && date.isValid() ) {
       KDateTime dt( date, QTime( 0, 0, 0 ) );
       dt = dt.addSecs( -1 );
@@ -474,12 +474,12 @@ void KOEditorGeneralTodo::enableTimeEdits( bool enable )
   if( mStartCheck->isChecked() ) {
     mStartTimeEdit->setEnabled( enable );
     mTimeZoneComboStart->setEnabled( enable );
-    mTimeZoneComboStart->setFloating( !enable, mStartSpec );
+    mTimeZoneComboStart->setFloating( !enable );
   }
   if( mDueCheck->isChecked() ) {
     mDueTimeEdit->setEnabled( enable );
     mTimeZoneComboDue->setEnabled( enable );
-    mTimeZoneComboDue->setFloating( !enable, mDueSpec );
+    mTimeZoneComboDue->setFloating( !enable );
   }
 }
 
