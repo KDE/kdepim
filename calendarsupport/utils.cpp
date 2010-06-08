@@ -317,14 +317,21 @@ Item::List Akonadi::itemsFromModel( const QAbstractItemModel* model,
                                     const QModelIndex &parentIndex,
                                     int start,
                                     int end ) {
-  const int endRow = end >= 0 ? end : model->rowCount() - 1;
+  const int endRow = end >= 0 ? end : model->rowCount( parentIndex ) - 1;
   Item::List items;
   int row = start;
   QModelIndex i = model->index( row, 0, parentIndex );
   while ( row <= endRow ) {
     const Item item = itemFromIndex( i );
-    if ( Akonadi::hasIncidence( item ) )
+    if ( Akonadi::hasIncidence( item ) ) {
       items << item;
+    } else {
+      QModelIndex childIndex = i.child( 0, 0 );
+      if ( childIndex.isValid() ) {
+        items << itemsFromModel( model, i );
+      }
+    }
+
     ++row;
     i = i.sibling( row, 0 );
   }

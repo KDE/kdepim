@@ -127,15 +127,9 @@ CalendarSearch::Private::Private( CalendarSearch* qq )
     selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
     selectionProxyModel->setSourceModel( calendarModel );
 
-    filterProxy = new EntityMimeTypeFilterModel( q );
-    filterProxy->setHeaderGroup( EntityTreeModel::ItemListHeaders );
-    filterProxy->setSortRole( CalendarModel::SortRole );
-    filterProxy->setSourceModel( selectionProxyModel );
-    filterProxy->setDynamicSortFilter( true );
-
     incidenceFilterProxyModel = new IncidenceFilterProxyModel( q );
     incidenceFilterProxyModel->setDynamicSortFilter( true );
-    incidenceFilterProxyModel->setSourceModel( filterProxy );
+    incidenceFilterProxyModel->setSourceModel( selectionProxyModel );
     incidenceFilterProxyModel->showAll();
 
     kcalFilterProxyModel = new CalFilterProxyModel( q );

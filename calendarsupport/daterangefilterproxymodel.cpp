@@ -53,7 +53,7 @@ KDateTime DateRangeFilterProxyModel::startDate() const
 
 void DateRangeFilterProxyModel::setStartDate( const KDateTime &date )
 {
-  if ( date.isValid() ) {  
+  if ( date.isValid() ) {
     d->mStart = date;
   }
   invalidateFilter();
@@ -101,6 +101,14 @@ void DateRangeFilterProxyModel::setEndDateColumn( int column )
 
 bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const
 {
+
+  const Collection collection = sourceModel()->index( source_row, 0, source_parent ).data(
+                                EntityTreeModel::CollectionRole ).value<Collection>();
+
+  if ( collection.isValid() ) {
+    return true;
+  }
+
   if ( d->mEnd.isValid() ) {
     const QModelIndex idx = sourceModel()->index( source_row, d->mStartColumn, source_parent );
     const QVariant v = idx.data( filterRole() );
