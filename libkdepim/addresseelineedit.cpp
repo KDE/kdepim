@@ -389,23 +389,12 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       }
     } else {
       // Let's see if this drop contains a comma separated list of emails
-      QStringList addrs = splitEmailAddrList( QString::fromUtf8( e->encodedData( "text/plain" ) ) );
+      QString dropData = QString::fromUtf8( e->encodedData( "text/plain" ) );
+      QStringList addrs = splitEmailAddrList( dropData );
       if ( addrs.count() > 0 ) {
-        QStringList::ConstIterator it;
-        QStringList emails;
-        for ( it = addrs.begin(); it != addrs.end(); ++it ) {
-          QString name, mail;
-          if ( getNameAndMail( (*it), name, mail ) ) {
-            emails.append( mail );
-          } else {
-            continue;
-          }
-        }
-        if ( emails.count() > 0 ) {
-          setText( emails.join( "," ) );
-          setEdited( true );
-          return;
-        }
+        setText( normalizeAddressesAndDecodeIDNs( dropData ) );
+        setEdited( true );
+        return;
       }
     }
   }
