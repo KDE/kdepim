@@ -216,11 +216,20 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 bool ResourceKolab::doLoad()
 {
   if (!mUidMap.isEmpty() ) {
+    emit resourceLoaded( this );
     return true;
   }
   mUidMap.clear();
 
-  return loadAllEvents() & loadAllTodos() & loadAllJournals();
+  bool result = loadAllEvents() & loadAllTodos() & loadAllJournals();
+  if ( result ) {
+    emit resourceLoaded( this );
+  } else {
+    // FIXME: anyone know if the resource correctly calls loadError()
+    // if it has one?
+  }
+
+  return result;
 }
 
 bool ResourceKolab::doLoadAll( ResourceMap& map, const char* mimetype )
@@ -305,7 +314,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
     /* We are currently processing this event ( removing and readding or
      * adding it ). If so, ignore this update. Keep the last of these around
      * and process once we hear back from KMail on this event. */
-    mPendingUpdates.replace( uid, incidencebase );
+    mPendingUpdates.remove( uid );
+    mPendingUpdates.insert( uid, incidencebase );
     return;
   }
 
@@ -344,7 +354,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
     Incidence* local = mCalendar.incidence( origUid );
     Incidence* localIncidence = 0;
     Incidence* addedIncidence = 0;
-    Incidence*  result = 0;
+    Incidence* result = 0;
     if ( local ) {
       if (*local == *inc) {
         // real duplicate, remove the second one
@@ -456,15 +466,23 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   QStringList attURLs, attMimeTypes, attNames;
   QValueList<KTempFile*> tmpFiles;
   for ( KCal::Attachment::List::ConstIterator it = atts.constBegin(); it != atts.constEnd(); ++it ) {
-    KTempFile* tempFile = new KTempFile;
-    QCString decoded = KCodecs::base64Decode( QCString( (*it)->data() ) );
-    tempFile->file()->writeBlock( decoded.data(), decoded.length() );
-    tempFile->close();
-    KURL url;
-    url.setPath( tempFile->name() );
-    attURLs.append( url.url() );
-    attMimeTypes.append( (*it)->mimeType() );
-    attNames.append( (*it)->label() );
+    if ( (*it)->isUri() ) {
+      continue;
+    }
+    KTempFile *tempFile = new KTempFile;
+    if ( tempFile->status() == 0 ) { // open ok
+      QCString decoded = KCodecs::base64Decode( QCString( (*it)->data() ) );
+      tempFile->file()->writeBlock( decoded.data(), decoded.length() );
+      KURL url;
+      url.setPath( tempFile->name() );
+      attURLs.append( url.url() );
+      attMimeTypes.append( (*it)->mimeType() );
+      attNames.append( (*it)->label() );
+      tempFile->close();
+      tmpFiles.append( tempFile );
+    } else {
+      kdWarning(5006) << "Cannot open temporary file for attachment";
+    }
   }
   QStringList deletedAtts;
   if ( kmailListAttachments( deletedAtts, subresource, sernum ) ) {
@@ -1187,6 +1205,7 @@ bool ResourceKolab::unloadSubResource( const QString& subResource )
     const bool silent = mSilent;
     mSilent = true;
     Kolab::UidMap::Iterator mapIt = mUidMap.begin();
+    QPtrList<KCal::Incidence> incidences;
     while ( mapIt != mUidMap.end() )
     {
         Kolab::UidMap::Iterator it = mapIt++;
@@ -1195,10 +1214,17 @@ bool ResourceKolab::unloadSubResource( const QString& subResource )
         // FIXME incidence() is expensive
         KCal::Incidence* incidence = mCalendar.incidence( it.key() );
         if( incidence ) {
-            incidence->unRegisterObserver( this );
-            mCalendar.deleteIncidence( incidence );
+          // register all observers first before actually deleting them
+          // in case of inter-incidence relations the other part will get
+          // the change notification otherwise
+          incidence->unRegisterObserver( this );
+          incidences.append( incidence );
         }
         mUidMap.remove( it );
+    }
+    QPtrListIterator<KCal::Incidence> it( incidences );
+    for ( ; it.current(); ++it ) {
+      mCalendar.deleteIncidence( it.current() );
     }
     mSilent = silent;
     return true;
