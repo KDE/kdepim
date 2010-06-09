@@ -47,26 +47,31 @@ IncidenceRecurrenceEditor::IncidenceRecurrenceEditor( QWidget *parent )
   mDayBoxes[5] = mUi->mDay5Check;
   mDayBoxes[6] = mUi->mDay6Check;
 
-  int weekStart=KGlobal::locale()->weekStartDay();
+  const int weekStart = KGlobal::locale()->weekStartDay();
+
   for ( int i = 0; i < 7; ++i ) {
     // i is the nr of the combobox, not the day of week!
     // label=(i+weekStart+6)%7 + 1;
     // index in CheckBox array(=day): label-1
+    const int index = ( i + weekStart + 6 ) % 7;
+
     const KCalendarSystem *calSys = KGlobal::locale()->calendar();
-    QString weekDayName = calSys->weekDayName( ( i + weekStart + 6 ) % 7 + 1,
-                                               KCalendarSystem::ShortDayName );
-    QString longDayName = calSys->weekDayName( ( i + weekStart + 6 ) % 7 + 1,
-                                               KCalendarSystem::LongDayName );
-    mDayBoxes[ ( i + weekStart + 6 ) % 7 ]->setText( weekDayName );
-    mDayBoxes[ ( i + weekStart + 6 ) % 7 ]->setWhatsThis(
+    QString weekDayName = calSys->weekDayName( index + 1, KCalendarSystem::ShortDayName );
+    QString longDayName = calSys->weekDayName( index + 1, KCalendarSystem::LongDayName );
+    mDayBoxes[ index ]->setText( weekDayName );
+    mDayBoxes[ index ]->setWhatsThis(
       i18nc( "@info:whatsthis",
              "Set %1 as the day when this event or to-do should recur.", longDayName ) );
-    mDayBoxes[ ( i + weekStart + 6 ) % 7 ]->setToolTip(
-      i18nc( "@info:tooltip", "Recur on %1", longDayName ) );
+    mDayBoxes[ index ]->setToolTip( i18nc( "@info:tooltip", "Recur on %1", longDayName ) );
+
+    mUi->mMonthlyByPosWeekdayCombo->addItem( KGlobal::locale()->calendar()->weekDayName( i + 1 ) );
   }
 
   for ( int i=1; i <= 12; ++i ) // use an arbitrary year, we just need the month name...
     mUi->mYearlyByMonthCombo->addItem( KGlobal::locale()->calendar()->monthName( QDate( 2005, i, 1 ) ) );
+
+  const int today = QDate::currentDate().dayOfWeek() - 1; // Returns 0 - 6, 0 being monday
+  mUi->mMonthlyByPosWeekdayCombo->setCurrentIndex( ( today + weekStart + 6 ) % 7 );
 
   mTypeButtonGroup->addButton( mUi->mDailyButton, 0 );
   mTypeButtonGroup->addButton( mUi->mWeeklyButton, 1 );
@@ -306,6 +311,8 @@ void IncidenceRecurrenceEditor::loadPreset( const Recurrence &preset )
   if ( !mUi->mEnabledCheck->isChecked() )
     mUi->mEnabledCheck->toggle();
 
+  setDateTimes( preset.startDateTime().dateTime() );
+
   switch ( preset.recurrenceType() ) {
   case Recurrence::rDaily:
     setType( Daily );
@@ -400,6 +407,8 @@ int IncidenceRecurrenceEditor::yearlyPosCount() const
 
 void IncidenceRecurrenceEditor::setByPos( int count, int weekday )
 {
+  Q_ASSERT( weekday >=1 && weekday <= 7 );
+
   mUi->mMonthlyByPosRadio->setChecked( true );
   if ( count > 0 ) {
     mUi->mMonthlyByPosCountCombo->setCurrentIndex( count - 1 );
@@ -476,7 +485,7 @@ void IncidenceRecurrenceEditor::setDateTimes( const QDateTime &start,
     setDays( days );
   }
   if ( !enabled || type != Monthly ) {
-    setByPos( ( start.date().day() - 1 ) / 7 + 1, start.date().dayOfWeek() - 1 );
+    setByPos( ( start.date().day() - 1 ) / 7 + 1, start.date().dayOfWeek() );
     setByDay( Monthly, start.date().day() );
   }
   if ( !enabled || type != Yearly ) {
@@ -568,19 +577,23 @@ void IncidenceRecurrenceEditor::setType( RecurrenceType type )
   case Daily:
     mUi->mDailyButton->setChecked( true );
     mUi->mRuleStack->setCurrentIndex( 0 );
+    updateRecurrenceLabel( 0 );
     break;
   case Weekly:
     mUi->mWeeklyButton->setChecked( true );
     mUi->mRuleStack->setCurrentIndex( 1 );
+    updateRecurrenceLabel( 1 );
     break;
   case Monthly:
     mUi->mMonthlyButton->setChecked( true );
     mUi->mRuleStack->setCurrentIndex( 2 );
+    updateRecurrenceLabel( 2 );
     break;
   case Yearly:
   default:
     mUi->mYearlyButton->setChecked( true );
     mUi->mRuleStack->setCurrentIndex( 3 );
+    updateRecurrenceLabel( 3 );
     break;
   }
 }
