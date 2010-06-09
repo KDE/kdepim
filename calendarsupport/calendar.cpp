@@ -74,7 +74,7 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   // use the unfiltered model to catch collections
   connect( m_treeModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInTreeModel(QModelIndex,int,int)) );
   connect( m_treeModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemovedInTreeModel(QModelIndex,int,int)) );
-  
+  connect( m_treeModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChangedInTreeModel(QModelIndex,QModelIndex)) );
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -149,6 +149,22 @@ void Calendar::Private::dataChanged( const QModelIndex& topLeft, const QModelInd
   emit q->calendarChanged();
 }
 
+void Calendar::Private::dataChangedInTreeModel( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+{
+  Q_ASSERT( topLeft.row() <= bottomRight.row() );
+  const int endRow = bottomRight.row();
+  QModelIndex i( topLeft );
+  int row = i.row();
+  while ( row <= endRow ) {
+    const Collection col = collectionFromIndex( i );
+    if ( col.isValid() ) {
+      emit q->calendarChanged();
+      return;
+    }
+    ++row;
+    i = i.sibling( row, topLeft.column() );
+  }
+}
 
 Calendar::Private::~Private()
 {
