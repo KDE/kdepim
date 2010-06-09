@@ -2340,7 +2340,7 @@ void AppearancePage::MessageTagTab::swapTagsInListBox( const int first,
 
 void AppearancePage::MessageTagTab::slotRecordTagSettings( int aIndex )
 {
-  if ( ( aIndex < 0 ) || ( aIndex >= int( mTagListBox->count() ) ) )
+  if ( ( aIndex < 0 ) || ( aIndex >= int( mTagListBox->count() ) ) || (mMsgTagList.count() <= aIndex) )
     return;
 
   KMMessageTagDescription *tmp_desc = mMsgTagList->at( aIndex );
@@ -2369,7 +2369,7 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets( int aIndex )
   //We are just updating the display, so no need to mark dirty
   mEmitChanges = false;
   //Check if selection is valid
-  if ( ( aIndex < 0 ) || ( mTagListBox->currentRow() < 0 ) ) {
+  if ( ( aIndex < 0 ) || ( mTagListBox->currentRow() < 0 ) || ( mMsgTagList.count() <= aIndex ) ) {
     mTagRemoveButton->setEnabled( false );
     mTagUpButton->setEnabled( false );
     mTagDownButton->setEnabled( false );
