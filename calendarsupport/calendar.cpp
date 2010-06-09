@@ -202,7 +202,6 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
     if ( !( rights & Collection::CanDeleteItem ) &&
          !( rights & Collection::CanChangeItem ) &&
          !incidence->isReadOnly() ) {
-      kWarning() << "Resource forgot to set incidence read only!";
       incidence->setReadOnly( true );
     }
   }
