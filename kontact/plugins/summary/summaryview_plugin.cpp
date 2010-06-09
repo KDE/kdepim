@@ -28,6 +28,8 @@
 #include <kgenericfactory.h>
 #include <kicon.h>
 #include <kparts/componentfactory.h>
+#include <kdialog.h>
+#include <KDebug>
 
 EXPORT_KONTACT_PLUGIN( SummaryPlugin, summary )
 
@@ -35,6 +37,12 @@ SummaryPlugin::SummaryPlugin( KontactInterface::Core *core, const QVariantList &
     : KontactInterface::Plugin( core, core, "Summary" )
 {
     setComponentData( KontactPluginFactory::componentData() );
+
+    setXMLFile("kontactsummary.rc");
+
+    KAction* action = new KAction("&Configure", actionCollection());
+    connect(action, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
+    actionCollection()->addAction("summaryview_configure", action);
 }
 
 SummaryPlugin::~SummaryPlugin()
@@ -43,11 +51,11 @@ SummaryPlugin::~SummaryPlugin()
 
 KParts::ReadOnlyPart *SummaryPlugin::createPart()
 {
-KParts::ReadOnlyPart *part = loadPart();
+    m_part = loadPart();
 
-connect( part, SIGNAL(showPart()), this, SLOT(showPart()) );
+    connect( m_part, SIGNAL(showPart()), this, SLOT(showPart()) );
 
-return part;
+    return m_part;
 }
 
 void SummaryPlugin::readProperties( const KConfigGroup &config )
@@ -60,8 +68,37 @@ void SummaryPlugin::saveProperties( KConfigGroup &config )
 
 void SummaryPlugin::showPart()
 {
-core()->selectPlugin( this );
+    core()->selectPlugin( this );
 }
 
+void SummaryPlugin::optionsPreferences()
+{
+    if( !m_dialog )
+    {
+        QWidget* widget = 0;
+        m_dialog = new KDialog(qobject_cast<QWidget*>(this));
+        widget = new QWidget(m_dialog);
+
+
+        m_dialog->setMainWidget( widget );
+        createConfigurationInterface(widget);
+
+        m_dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
+        m_dialog->show();
+    }
+    else
+    {
+        m_dialog->show();
+    }
+}
+
+QWidget* SummaryPlugin::createConfigurationInterface(QWidget* parent)
+{
+    connect(this,SIGNAL(sigCreateConfigurationInterface(QWidget*)), m_part, SLOT(createConfigurationInterface(QWidget*)));
+
+    emit sigCreateConfigurationInterface(parent);
+
+    disconnect(m_part,SLOT(createConfigurationInterface(QWidget*)));
+}
 
 #include "summaryview_plugin.moc"

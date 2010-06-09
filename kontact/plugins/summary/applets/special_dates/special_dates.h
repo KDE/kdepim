@@ -1,6 +1,6 @@
 /*
  *   Copyright 2010 Ryan Rix <ry@n.rix.si>
- * 
+ *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
  *   published by the Free Software Foundation; either version 2, or
@@ -17,44 +17,41 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SUMMARYVIEW_PLUGIN_H
-#define SUMMARYVIEW_PLUGIN_H
+#ifndef SPECIAL_DATES_H
+#define SPECIAL_DATES_H
 
-#include <kontactinterface/plugin.h>
-#include <kparts/part.h>
+#include <Plasma/Applet>
 
-class KDialog;
+namespace Plasma {
+    class Svg;
+    class DataEngine;
+}
 
-class SummaryPlugin : public KontactInterface::Plugin
+class QPainter;
+#include <QGraphicsLinearLayout>
+
+class SpecialDatesApplet : public Plasma::Applet
 {
-  Q_OBJECT
-
-  public:
-    SummaryPlugin( KontactInterface::Core *core, const QVariantList & );
-    ~SummaryPlugin();
-
-    virtual void readProperties( const KConfigGroup &config );
-    virtual void saveProperties( KConfigGroup &config );
-
-
+Q_OBJECT
+public:
+    SpecialDatesApplet( QObject* parent, QVariantList args );
     
+    void paintInterface(QPainter* p,
+                        const QStyleOptionGraphicsItem* option,
+                        const QRect& contentsRect);
+    void init();
+
 public Q_SLOTS:
-  void optionsPreferences();
-  QWidget* createConfigurationInterface(QWidget* parent);
-  
-Q_SIGNALS:
-  QWidget* sigCreateConfigurationInterface(QWidget* parent);
+    void updateSpecialDates();
+    void configChanged();
     
-  private slots:
-    void showPart();
-
-  protected:
-    KParts::ReadOnlyPart *createPart();
-
 private:
-  KDialog* m_dialog;
-  KParts::ReadOnlyPart *m_part;
-  
+    Plasma::Svg m_svg;
+    QGraphicsLinearLayout* m_layout;
+    Plasma::DataEngine* m_engine;
+    
+    int m_numDays; // How many days into the future do we show?
+    QString m_locale; // What locale are the holidays we are looking for?
 };
 
 #endif
