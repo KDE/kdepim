@@ -64,6 +64,7 @@ public:
   Akonadi::CollectionComboBox *mCalSelector;
   IncidenceAttachmentEditor *mAttachtmentPage;
   IncidenceEditorGeneralPage *mGeneralPage;
+  QTabWidget *mTabWidget;
 
 public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
@@ -74,6 +75,7 @@ public:
   void save();
   void setupMonitor();
   void slotButtonClicked( KDialog::ButtonCode button );
+  void updateAttachmentCount( int newCount );
   void updateButtonStatus( bool isDirty );
 };
 
@@ -84,8 +86,9 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   , mMonitor( 0 )
   , mAcceptOnSuccessFullSave( false )
   , mCalSelector( new Akonadi::CollectionComboBox( q->mainWidget() ) )
-  , mAttachtmentPage( new IncidenceAttachmentEditor )
-  , mGeneralPage( new IncidenceEditorGeneralPage )
+  , mAttachtmentPage( new IncidenceAttachmentEditor( q->mainWidget() ) )
+  , mGeneralPage( new IncidenceEditorGeneralPage( q->mainWidget() ) )
+  , mTabWidget( new QTabWidget( q->mainWidget() ) )
 {
   mGeneralPage->combine( mAttachtmentPage );
 }
@@ -225,6 +228,13 @@ void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
   q->enableButton( KDialog::Ok, isDirty );
 }
 
+void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
+{
+  mTabWidget->setTabText( 2,
+    i18nc( "@title:tab event or todo attachments", "A&ttachments (%1)",
+           newCount ) );
+}
+
 /// Class EventOrTodoDialog
 
 EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
@@ -246,20 +256,20 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
   callayout->addWidget( d->mCalSelector, 1 );
 
   // Tab widget and pages
-  QTabWidget *tabWidget = new QTabWidget( mainWidget() );
-  tabWidget->addTab( d->mGeneralPage,
-                     i18nc( "@title:tab general event or todo settings", "&General" ) );
-  tabWidget->addTab( new QWidget(),
-                     i18nc( "@title:tab event or todo attendees", "&Attendees" ) );
-  tabWidget->addTab( d->mAttachtmentPage,
-                     i18nc( "@title:tab event or todo attachments", "A&ttachments" ) );
+  d->mTabWidget->addTab( d->mGeneralPage,
+                      i18nc( "@title:tab general event or todo settings", "&General" ) );
+  d->mTabWidget->addTab( new QWidget(),
+                      i18nc( "@title:tab event or todo attendees", "&Attendees" ) );
+  d->mTabWidget->addTab( d->mAttachtmentPage,
+                      i18nc( "@title:tab event or todo attachments", "A&ttachments (%1)",
+                             d->mAttachtmentPage->attachmentCount() ) );
 
   // Overall layout of the complete dialog
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
   layout->setMargin( 0 );
   layout->setSpacing( 0 );
   layout->addLayout( callayout );
-  layout->addWidget( tabWidget );
+  layout->addWidget( d->mTabWidget );
 
   mainWidget()->setLayout( layout );
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
@@ -278,6 +288,8 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
 
   connect( d->mGeneralPage, SIGNAL(dirtyStatusChanged(bool)),
            SLOT(updateButtonStatus(bool)) );
+  connect( d->mAttachtmentPage, SIGNAL(attachmentCountChanged(int)),
+           SLOT(updateAttachmentCount(int)) );
 }
 
 EventOrTodoDialog::~EventOrTodoDialog()

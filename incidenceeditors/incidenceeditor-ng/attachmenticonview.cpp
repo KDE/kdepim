@@ -175,6 +175,7 @@ AttachmentIconView::AttachmentIconView( QWidget *parent )
   setSelectionRectVisible( false );
   setIconSize( QSize( KIconLoader::SizeLarge, KIconLoader::SizeLarge ) );
   setFlow( LeftToRight );
+  setWrapping( true );
   setDragDropMode( DragDrop );
   setDragEnabled( true );
   setEditTriggers( EditKeyPressed );

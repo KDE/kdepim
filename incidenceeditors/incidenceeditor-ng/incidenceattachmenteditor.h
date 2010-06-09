@@ -45,6 +45,11 @@ class IncidenceAttachmentEditor : public IncidenceEditor
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
     
+    int attachmentCount() const;
+
+  signals:
+    void attachmentCountChanged( int newCount );
+
   private slots:
     void addAttachment();
     void copyToClipboard(); /// Copies selected items to clip board

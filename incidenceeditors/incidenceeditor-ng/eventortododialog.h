@@ -67,6 +67,7 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
     Q_PRIVATE_SLOT(d_ptr, void itemFetchResult(KJob*))
     Q_PRIVATE_SLOT(d_ptr, void modifyFinished(KJob*))
     Q_PRIVATE_SLOT(d_ptr, void save())
+    Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int))
     Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
 };
 

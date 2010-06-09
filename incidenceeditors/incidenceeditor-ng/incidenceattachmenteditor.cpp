@@ -132,6 +132,11 @@ bool IncidenceAttachmentEditor::isDirty() const
   return false;
 }
 
+int IncidenceAttachmentEditor::attachmentCount() const
+{
+  return mAttachmentView->count();
+}
+
 
 /// Private slots
 
@@ -143,6 +148,8 @@ void IncidenceAttachmentEditor::addAttachment()
   dlg->setCaption( i18nc( "@title", "Add Attachment" ) );
   if ( dlg->exec() == KDialog::Rejected )
     delete item;
+  else
+    emit attachmentCountChanged( mAttachmentView->count() );
 
   delete dlg;
 
@@ -211,6 +218,7 @@ void IncidenceAttachmentEditor::removeSelectedAttachments()
   }
 
   mAttachmentView->update();
+  emit attachmentCountChanged( mAttachmentView->count() );
   checkDirtyStatus();
 }
 
