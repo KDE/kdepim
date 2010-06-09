@@ -90,7 +90,6 @@ void IncidenceRecurrenceEditor::load( KCal::Incidence::ConstPtr inc )
 
   mLoadedIncidence = inc;
 
-  QBitArray rDays( 7 );
   int day = 0;
   int count = 0;
   int month = 0;
@@ -224,8 +223,8 @@ void IncidenceRecurrenceEditor::load( KCal::Incidence::ConstPtr inc )
   setType( recurrenceType );
   mUi->mRuleStack->setCurrentIndex( recurrenceType );
 
-  setDateTimes(
-    mLoadedIncidence->recurrence()->startDateTime().toTimeSpec( timeSpec ).dateTime() );
+  QDateTime start = mLoadedIncidence->recurrence()->startDateTime().toTimeSpec( timeSpec ).dateTime();
+  setDateTimes( start.isValid() ? start : QDateTime::currentDateTime() );
 
   if ( mLoadedIncidence->recurs() && r ) {
     setDuration( r->duration() );
@@ -316,7 +315,6 @@ void IncidenceRecurrenceEditor::loadPreset( const Recurrence &preset )
   switch ( preset.recurrenceType() ) {
   case Recurrence::rDaily:
     setType( Daily );
-    setDays( preset.days() );
     break;
   case Recurrence::rWeekly:
     setType( Weekly );
@@ -460,6 +458,7 @@ void IncidenceRecurrenceEditor::setByMonth( int day, int month )
 void IncidenceRecurrenceEditor::setDateTimes( const QDateTime &start,
                                               const QDateTime & )
 {
+  Q_ASSERT( start.isValid() );
   mUi->mStartDateLabel->setText(
     i18nc( "@label", "Begins on: %1", KGlobal::locale()->formatDate( start.date() ) ) );
 
@@ -505,11 +504,15 @@ void IncidenceRecurrenceEditor::setDays( const QBitArray &days )
 
 void IncidenceRecurrenceEditor::setDefaults( const QDateTime &from, const QDateTime &to )
 {
-  setDateTimes( from, to );
+  QDateTime lFrom = from;
+  if ( !lFrom.isValid() )
+    lFrom = QDateTime::currentDateTime();
+
+  setDateTimes( lFrom, to );
   setRecurrenceEnabled( false );
 
   mUi->mNoEndDateButton->setChecked( true );
-  mUi->mEndDateEdit->setDate( from.date() );
+  mUi->mEndDateEdit->setDate( lFrom.date() );
 
   setType( IncidenceRecurrenceEditor::Weekly );
   mUi->mRuleStack->setCurrentIndex( IncidenceRecurrenceEditor::Weekly );
@@ -518,16 +521,16 @@ void IncidenceRecurrenceEditor::setDefaults( const QDateTime &from, const QDateT
 
   QBitArray days( 7 );
   days.fill( 0 );
-  days.setBit( ( from.date().dayOfWeek() + 6 ) % 7 );
+  days.setBit( ( lFrom.date().dayOfWeek() + 6 ) % 7 );
   setDays( days );
 
-  setByPos( ( from.date().day() - 1 ) / 7 + 1, from.date().dayOfWeek() );
-  setByDay( Monthly, from.date().day() );
+  setByPos( ( lFrom.date().day() - 1 ) / 7 + 1, lFrom.date().dayOfWeek() );
+  setByDay( Monthly, lFrom.date().day() );
 
-  setByDay( Yearly, from.date().dayOfYear() );
-  setByPos( ( from.date().day() - 1 ) / 7 + 1,
-            from.date().dayOfWeek() - 1, from.date().month() );
-  setByMonth( from.date().day(), from.date().month() );
+  setByDay( Yearly, lFrom.date().dayOfYear() );
+  setByPos( ( lFrom.date().day() - 1 ) / 7 + 1,
+            lFrom.date().dayOfWeek() - 1, lFrom.date().month() );
+  setByMonth( lFrom.date().day(), lFrom.date().month() );
 }
 
 void IncidenceRecurrenceEditor::setDuration( int duration )
