@@ -358,8 +358,6 @@ void AccountDialog::setupSettings()
 
     if ( acctLocal->procmailLockFileName().isEmpty() )
       acctLocal->setProcmailLockFileName( procmailrcParser.getLockFilesList().first() );
-    else
-      mLocal.ui.procmailLockFileName->addItem( acctLocal->procmailLockFileName() );
 
     mLocal.ui.nameEdit->setText( mAccount->name() );
     mLocal.ui.nameEdit->setFocus();
