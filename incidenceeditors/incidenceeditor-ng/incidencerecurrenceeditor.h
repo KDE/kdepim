@@ -60,6 +60,7 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
     void updateExceptionButtons( const QDate &currentDate );
     void updateExceptionButtons( const QString &selectedDate );
     void updateRecurrenceLabel( int recurrenceRadioIndex );
+    void updateStackWidgetVisibility( int index );
 
   private:
     QBitArray days() const;
@@ -76,14 +77,12 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
     void setDuration( int duration );
     void setExceptionDates( const KCal::DateList &dates );
     void setFrequency( int f );
-    void setRecurrenceEnabled( bool enabled );
     void setType( RecurrenceType type );
 
   private:
     KCal::DateList mExceptionDates;
 
     Ui::IncidenceRecurrenceEditor *mUi;
-    QButtonGroup *mTypeButtonGroup;
     QCheckBox *mDayBoxes[7];
 };
 
