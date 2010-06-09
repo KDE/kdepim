@@ -54,6 +54,11 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
     void removeRecurrence();
 
   private slots:
+    void addException();
+    void changeException();
+    void deleteException();
+    void updateExceptionButtons( const QDate &currentDate );
+    void updateExceptionButtons( const QString &selectedDate );
     void updateRecurrenceLabel( int recurrenceRadioIndex );
 
   private:

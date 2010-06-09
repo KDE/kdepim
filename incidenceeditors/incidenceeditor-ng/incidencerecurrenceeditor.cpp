@@ -79,10 +79,23 @@ IncidenceRecurrenceEditor::IncidenceRecurrenceEditor( QWidget *parent )
   mTypeButtonGroup->addButton( mUi->mMonthlyButton, 2 );
   mTypeButtonGroup->addButton( mUi->mYearlyButton, 3 );
 
+  mUi->mChangeExceptionButton->setEnabled( false );
+  mUi->mDeleteExceptionButton->setEnabled( false );
+
   connect( mTypeButtonGroup, SIGNAL(buttonClicked(int)),
            mUi->mRuleStack, SLOT(setCurrentIndex(int)) );
   connect( mTypeButtonGroup, SIGNAL(buttonClicked(int)),
            SLOT(updateRecurrenceLabel(int)) );
+  connect( mUi->mAddExceptionButton, SIGNAL(clicked()),
+           SLOT(addException()) );
+  connect( mUi->mChangeExceptionButton, SIGNAL(clicked()),
+           SLOT(changeException()) );
+  connect( mUi->mDeleteExceptionButton, SIGNAL(clicked()),
+           SLOT(deleteException()) );
+  connect( mUi->mExceptionList, SIGNAL(currentTextChanged(QString)),
+           SLOT(updateExceptionButtons(QString)) );
+  connect( mUi->mExceptionDateEdit, SIGNAL(dateChanged(QDate)),
+           SLOT(updateExceptionButtons(QDate)) );
 }
 
 void IncidenceRecurrenceEditor::load( KCal::Incidence::ConstPtr inc )
@@ -341,6 +354,75 @@ void IncidenceRecurrenceEditor::removeRecurrence()
 }
 
 /// Private slots
+
+void IncidenceRecurrenceEditor::addException()
+{
+  const QDate date = mUi->mExceptionDateEdit->date();
+  const QString dateStr = KGlobal::locale()->formatDate( date );
+  if( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() ) {
+    mExceptionDates.append( date );
+    mUi->mExceptionList->addItem( dateStr );
+  }
+
+  mUi->mAddExceptionButton->setEnabled( false );
+}
+
+void IncidenceRecurrenceEditor::changeException()
+{
+  const int pos = mUi->mExceptionList->currentRow();
+  if ( pos < 0 )
+    return;
+
+  const QDate date = mUi->mExceptionDateEdit->date();
+  mExceptionDates[ pos ] = date;
+  QListWidgetItem *item = mUi->mExceptionList->item( pos );
+  item->setText( KGlobal::locale()->formatDate( date ) );
+
+  mUi->mAddExceptionButton->setEnabled( false );
+  mUi->mChangeExceptionButton->setEnabled( false );
+}
+
+void IncidenceRecurrenceEditor::deleteException()
+{
+  const int pos = mUi->mExceptionList->currentRow();
+  if ( pos < 0 )
+    return;
+
+  mExceptionDates.removeAt( pos );
+  delete( mUi->mExceptionList->takeItem( pos ) );
+
+  // Enable the add button when we deleted the currently selected date in the date selector
+  const QDate date = mUi->mExceptionDateEdit->date();
+  const QString dateStr = KGlobal::locale()->formatDate( date );
+  mUi->mAddExceptionButton->setEnabled( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() );
+}
+
+void IncidenceRecurrenceEditor::updateExceptionButtons( const QDate &currentDate )
+{
+  if ( !currentDate.isValid() ) {
+    mUi->mAddExceptionButton->setEnabled( false );
+    mUi->mChangeExceptionButton->setEnabled( false );
+    return;
+  }
+
+  const QString dateStr = KGlobal::locale()->formatDate( currentDate );
+  mUi->mAddExceptionButton->setEnabled( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() );
+  if ( mUi->mExceptionList->currentRow() < 0 )
+    mUi->mChangeExceptionButton->setEnabled( false );
+  else
+    mUi->mChangeExceptionButton->setEnabled( dateStr != mUi->mExceptionList->currentItem()->text() );
+}
+
+void IncidenceRecurrenceEditor::updateExceptionButtons( const QString &selectedDate )
+{
+  mUi->mDeleteExceptionButton->setEnabled( !selectedDate.isEmpty() );
+
+  const QDate date = mUi->mExceptionDateEdit->date();
+  const QString dateStr = KGlobal::locale()->formatDate( date );
+  mUi->mChangeExceptionButton->setEnabled( !selectedDate.isEmpty()
+                                           && selectedDate != dateStr
+                                           && mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty());
+}
 
 void IncidenceRecurrenceEditor::updateRecurrenceLabel( int recurrenceRadioIndex )
 {
