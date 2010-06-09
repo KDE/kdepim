@@ -21,13 +21,19 @@
 #include "incidencerecurrencedialog.h"
 #include "incidencerecurrenceeditor.h"
 
+#include <QtGui/QVBoxLayout>
+
 using namespace IncidenceEditorsNG;
 
 IncidenceRecurrenceDialog::IncidenceRecurrenceDialog( QWidget *parent  )
   : KDialog( parent )
   , mEditor( new IncidenceRecurrenceEditor( this ) )
 {
-  setMainWidget( mEditor );
+  QWidget *widget = new QWidget( this );
+  QVBoxLayout *layout = new QVBoxLayout( widget );
+  layout->addWidget( mEditor );
+  layout->addItem( new QSpacerItem( 0,0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding ) );
+  setMainWidget( widget );
   setButtons( KDialog::Ok | KDialog::Cancel );
 }
 
