@@ -192,7 +192,7 @@
          <bool>false</bool>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="daily">
          <layout class="QGridLayout" name="gridLayout_4"/>
@@ -320,7 +320,58 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="KComboBox" name="mMonthlyByPosCountCombo"/>
+              <widget class="KComboBox" name="mMonthlyByPosCountCombo">
+               <item>
+                <property name="text">
+                 <string>1st</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2nd</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3rd</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>5th</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2nd Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3rd Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4th Last</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>5th Last</string>
+                </property>
+               </item>
+              </widget>
              </item>
              <item row="1" column="2">
               <widget class="KComboBox" name="mMonthlyByPosWeekdayCombo"/>
