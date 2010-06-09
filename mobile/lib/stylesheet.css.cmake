@@ -28,6 +28,14 @@ QCheckBox, QLabel, QPushButton, QRadioButton:off
   color: black
 }
 
+/* Dialogs/Message boxes, shouldn't be affected by this stylesheet at all, but apparently that's not always true... */
+QDialog,
+QDialog QLabel
+{
+  color: white;
+}
+
+
 /* idle button background */
 QCheckBox,
 QComboBox,
