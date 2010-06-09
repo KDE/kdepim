@@ -94,7 +94,6 @@ Recurrence *preset( const QString &name, const KDateTime &start )
   } else if ( rec->recurrenceType() == Recurrence::rMonthlyDay ) {
     rec->addMonthlyDate( start.date().day() );
   } else if ( rec->recurrenceType() == Recurrence::rYearlyMonth ) {
-    qDebug() << "YEARLY DAY!!!";
     rec->addYearlyDate( start.date().day() );
     rec->addYearlyMonth( start.date().month() );
   }
