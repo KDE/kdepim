@@ -65,13 +65,14 @@ IncidenceRecurrenceEditor::IncidenceRecurrenceEditor( QWidget *parent )
     mDayBoxes[ index ]->setToolTip( i18nc( "@info:tooltip", "Recur on %1", longDayName ) );
 
     mUi->mMonthlyByPosWeekdayCombo->addItem( KGlobal::locale()->calendar()->weekDayName( i + 1 ) );
+    mUi->mYearlyByPosWeekdayCombo->addItem( KGlobal::locale()->calendar()->weekDayName( i + 1 ) );
   }
 
-  for ( int i=1; i <= 12; ++i ) // use an arbitrary year, we just need the month name...
-    mUi->mYearlyByMonthCombo->addItem( KGlobal::locale()->calendar()->monthName( QDate( 2005, i, 1 ) ) );
-
-  const int today = QDate::currentDate().dayOfWeek() - 1; // Returns 0 - 6, 0 being monday
-  mUi->mMonthlyByPosWeekdayCombo->setCurrentIndex( ( today + weekStart + 6 ) % 7 );
+  for ( int i=1; i <= 12; ++i ) { // use an arbitrary year, we just need the month name...
+    const QString month = KGlobal::locale()->calendar()->monthName( QDate( 2005, i, 1 ) );
+    mUi->mYearlyByMonthCombo->addItem( month );
+    mUi->mYearlyByPosMonthCombo->addItem( month );
+  }
 
   mTypeButtonGroup->addButton( mUi->mDailyButton, 0 );
   mTypeButtonGroup->addButton( mUi->mWeeklyButton, 1 );
