@@ -298,7 +298,7 @@ Collection::List Akonadi::collectionsFromModel( const QAbstractItemModel* model,
                                                 const QModelIndex &parentIndex,
                                                 int start,
                                                 int end ) {
-  const int endRow = end >= 0 ? end : model->rowCount() - 1;
+  const int endRow = end >= 0 ? end : model->rowCount( parentIndex ) - 1;
   Collection::List collections;
   int row = start;
   QModelIndex i = model->index( row, 0, parentIndex );
@@ -306,6 +306,11 @@ Collection::List Akonadi::collectionsFromModel( const QAbstractItemModel* model,
     const Collection collection = collectionFromIndex( i );
     if ( collection.isValid() ) {
       collections << collection;
+    } else {
+      QModelIndex childIndex = i.child( 0, 0 );
+      if ( childIndex.isValid() ) {
+        collections << collectionsFromModel( model, i );
+      }
     }
     ++row;
     i = i.sibling( row, 0 );
