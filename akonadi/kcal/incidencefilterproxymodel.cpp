@@ -132,6 +132,12 @@ bool IncidenceFilterProxyModel::filterAcceptsRow( int source_row, const QModelIn
   const QModelIndex idx = sourceModel()->index( source_row, 0, source_parent );
   if ( !idx.isValid() )
     return false;
+  const Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+
+  if ( collection.isValid() ) {
+    return true;
+  }
+
   const Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
   if ( !item.isValid() || !item.hasPayload<Incidence::Ptr>() )
     return false;

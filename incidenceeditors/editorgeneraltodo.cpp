@@ -498,12 +498,12 @@ void EditorGeneralTodo::enableTimeEdits( bool enable )
   if( mStartCheck->isChecked() ) {
     mStartTimeEdit->setEnabled( enable );
     mTimeZoneComboStart->setEnabled( enable );
-    mTimeZoneComboStart->setFloating( !enable, mStartSpec );
+    mTimeZoneComboStart->setFloating( !enable );
   }
   if( mDueCheck->isChecked() ) {
     mDueTimeEdit->setEnabled( enable );
     mTimeZoneComboDue->setEnabled( enable );
-    mTimeZoneComboDue->setFloating( !enable, mDueSpec );
+    mTimeZoneComboDue->setFloating( !enable );
   }
 }
 

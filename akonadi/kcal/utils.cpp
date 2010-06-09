@@ -105,8 +105,19 @@ bool Akonadi::hasTodo( const Item& item ) {
   return item.hasPayload<Todo::Ptr>();
 }
 
-bool Akonadi::hasJournal( const Item& item ) {
+bool Akonadi::hasJournal( const Item& item )
+{
   return item.hasPayload<Journal::Ptr>();
+}
+
+bool Akonadi::hasChangeRights( const Akonadi::Item &item )
+{
+  return item.parentCollection().rights() & Collection::CanChangeItem;
+}
+
+bool Akonadi::hasDeleteRights( const Akonadi::Item &item )
+{
+  return item.parentCollection().rights() & Collection::CanDeleteItem;
 }
 
 QMimeData* Akonadi::createMimeData( const Item::List &items, const KDateTime::Spec &timeSpec ) {
@@ -275,7 +286,8 @@ Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
   return collection;
 }
 
-Item Akonadi::itemFromIndex( const QModelIndex& idx ) {
+Item Akonadi::itemFromIndex( const QModelIndex& idx )
+{
   Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
   item.setParentCollection( idx.data( EntityTreeModel::ParentCollectionRole ).value<Collection>() );
   return item;
@@ -305,14 +317,21 @@ Item::List Akonadi::itemsFromModel( const QAbstractItemModel* model,
                                     const QModelIndex &parentIndex,
                                     int start,
                                     int end ) {
-  const int endRow = end >= 0 ? end : model->rowCount() - 1;
+  const int endRow = end >= 0 ? end : model->rowCount( parentIndex ) - 1;
   Item::List items;
   int row = start;
   QModelIndex i = model->index( row, 0, parentIndex );
   while ( row <= endRow ) {
     const Item item = itemFromIndex( i );
-    if ( Akonadi::hasIncidence( item ) )
+    if ( Akonadi::hasIncidence( item ) ) {
       items << item;
+    } else {
+      QModelIndex childIndex = i.child( 0, 0 );
+      if ( childIndex.isValid() ) {
+        items << itemsFromModel( model, i );
+      }
+    }
+
     ++row;
     i = i.sibling( row, 0 );
   }

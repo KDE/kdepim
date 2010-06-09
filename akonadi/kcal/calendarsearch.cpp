@@ -127,15 +127,9 @@ CalendarSearch::Private::Private( CalendarSearch* qq )
     selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
     selectionProxyModel->setSourceModel( calendarModel );
 
-    filterProxy = new EntityMimeTypeFilterModel( q );
-    filterProxy->setHeaderGroup( EntityTreeModel::ItemListHeaders );
-    filterProxy->setSortRole( CalendarModel::SortRole );
-    filterProxy->setSourceModel( selectionProxyModel );
-    filterProxy->setDynamicSortFilter( true );
-
     incidenceFilterProxyModel = new IncidenceFilterProxyModel( q );
     incidenceFilterProxyModel->setDynamicSortFilter( true );
-    incidenceFilterProxyModel->setSourceModel( filterProxy );
+    incidenceFilterProxyModel->setSourceModel( selectionProxyModel );
     incidenceFilterProxyModel->showAll();
 
     kcalFilterProxyModel = new CalFilterProxyModel( q );
@@ -341,6 +335,22 @@ void CalendarSearch::Private::rowsInserted( const QModelIndex &parent, int start
   for ( int i = start; i <= end; ++i ) {
     const QModelIndex idx = calendarModel->index( i, 0, parent );
     const Collection::Id id = Akonadi::collectionIdFromIndex( idx );
+
+    const Item item = Akonadi::itemFromIndex( idx );
+
+    if ( item.isValid() ) {
+      const Collection::Rights rights = item.parentCollection().rights();
+      KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
+      if ( incidence && 
+           !( rights & Collection::CanDeleteItem ) &&
+           !( rights & Collection::CanChangeItem ) &&
+           !incidence->isReadOnly() ) {
+        kWarning() << "Resource forgot to set incidence read only!";
+        incidence->setReadOnly( true );
+      }
+      continue;
+    }
+
     for ( int j = 0; j < preselectedCollections.size(); ++j ) {
       if ( preselectedCollections[j] == id ) {
         selectionModel->select( idx, QItemSelectionModel::Select );
