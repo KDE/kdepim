@@ -259,14 +259,14 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
     mRecurrenceDialog->editor()->removeRecurrence();
   } else if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
     // Configure a custom recurrence, use by default the Weekly recurrence preset
-    KDateTime start = currentEndDateTime();
+    KDateTime start = currentStartDateTime();
     start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
     QScopedPointer<Recurrence> rec( RecurrencePresets::preset( i18nc( "@item:inlistbox", "Weekly" ), start ) );
     mRecurrenceDialog->editor()->loadPreset( *rec );
     mRecurrenceDialog->show();
   } else {
     // Load a preset
-    KDateTime start = currentEndDateTime();
+    KDateTime start = currentStartDateTime();
     start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
     QScopedPointer<Recurrence> rec( RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start ) );
     mRecurrenceDialog->editor()->loadPreset( *rec );
