@@ -35,7 +35,6 @@
 #include "egroupwarewizard.h"
 #include "kolabwizard.h"
 #include "sloxwizard.h"
-#include "groupwisewizard.h"
 #include "exchangewizard.h"
 
 #include "overviewpage.h"
@@ -75,26 +74,22 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addMultiCellWidget( button, 5, 5, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardSlox() ) );
 
-  button = new QPushButton( i18n("Novell GroupWise"), this );
-  layout->addMultiCellWidget( button, 6, 6, 0, 3 );
-  connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
-
   button = new QPushButton( i18n("Microsoft Exchange"), this );
   button->hide(); // not quite ready yet
-  layout->addMultiCellWidget( button, 7, 7, 0, 3 );
+  layout->addMultiCellWidget( button, 6, 6, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardExchange() ) );
 
 
   QFrame *frame = new QFrame( this );
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-  layout->addMultiCellWidget( frame, 8, 8, 0, 3 );
+  layout->addMultiCellWidget( frame, 7, 7, 0, 3 );
 
   QPushButton *cancelButton = new KPushButton( KStdGuiItem::close(), this );
-  layout->addWidget( cancelButton, 9, 3 );
+  layout->addWidget( cancelButton, 8, 3 );
 
   connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );
 
-  layout->setRowStretch( 8, 1 );
+  layout->setRowStretch( 7, 1 );
 
   KAcceleratorManager::manage( this );
 }
@@ -118,12 +113,6 @@ void OverViewPage::showWizardKolab()
 void OverViewPage::showWizardSlox()
 {
   SloxWizard wizard;
-  wizard.exec();
-}
-
-void OverViewPage::showWizardGroupwise()
-{
-  GroupwiseWizard wizard;
   wizard.exec();
 }
 
