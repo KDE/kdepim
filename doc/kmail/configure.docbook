@@ -767,7 +767,7 @@ folder will be selected in &kmail;'s main window.
 	</varlistentry>
   <varlistentry id="configure-composer-general-quote-selection-only">
     <term>
-      <guilabel>Only quote selected text when repyling</guilabel>
+      <guilabel>Only quote selected text when replying</guilabel>
     </term>
     <listitem>
       <para>

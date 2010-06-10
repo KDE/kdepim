@@ -345,7 +345,6 @@ void CalendarSearch::Private::rowsInserted( const QModelIndex &parent, int start
            !( rights & Collection::CanDeleteItem ) &&
            !( rights & Collection::CanChangeItem ) &&
            !incidence->isReadOnly() ) {
-        kWarning() << "Resource forgot to set incidence read only!";
         incidence->setReadOnly( true );
       }
       continue;

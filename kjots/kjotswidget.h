@@ -29,7 +29,7 @@
 #include <QWidget>
 #include <QModelIndexList>
 #include <QItemSelection>
-
+#include <QAbstractItemDelegate>
 #include <akonadi/item.h>
 
 #include <grantlee/templateloader.h>
@@ -130,7 +130,7 @@ private slots:
   void delayedInitialization();
   void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight );
-
+  void bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint );
   bool canGo( int role, int step ) const;
 
   void newPageResult( KJob *job );
