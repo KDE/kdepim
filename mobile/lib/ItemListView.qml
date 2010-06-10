@@ -51,7 +51,7 @@ QML.Item {
     id: itemListView
     anchors.fill: parent
     highlightFollowsCurrentItem: true
-    highlightRangeMode: "StrictlyEnforceRange"
+    highlightRangeMode: "ApplyRange"
     focus: true
     clip: true
   }
