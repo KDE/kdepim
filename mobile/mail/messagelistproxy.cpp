@@ -39,7 +39,16 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
       case SubjectRole:
         return msg->subject()->asUnicodeString();
       case FromRole:
-        return msg->from()->asUnicodeString();
+      {
+        QStringList l;
+        foreach ( const KMime::Types::Mailbox &mbox, msg->from()->mailboxes() ) {
+          if ( mbox.hasName() )
+            l.append( mbox.name() );
+          else
+            l.append(  mbox.addrSpec().asPrettyString() );
+        }
+        return l.join( ", " );
+      }
       case DateRole:
         return msg->date()->asUnicodeString();
       case IsNewRole:
