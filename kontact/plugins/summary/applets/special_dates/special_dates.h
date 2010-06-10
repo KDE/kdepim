@@ -29,6 +29,7 @@ namespace Plasma {
 
 class QPainter;
 #include <QGraphicsLinearLayout>
+class QTimer;
 
 class SpecialDatesApplet : public Plasma::Applet
 {
@@ -47,13 +48,16 @@ public Q_SLOTS:
     
     void dataUpdated(const QString& sourceName, const Plasma::DataEngine::Data& data);
     void addSource(QString sourceName);
+    void updateUI();
+    
     
 private:
     Plasma::Svg m_svg;
     QGraphicsLinearLayout* m_layout;
     Plasma::DataEngine* m_calEngine;
     Plasma::DataEngine* m_akoEngine;
-    QHash<QString,QVariant> m_specialDates; // date, data
+    QMap<QString,QVariant> m_specialDates; // date, data
+    QTimer* m_updateTimer;
     
     int m_numDays; // How many days into the future do we show?
     QString m_locale; // What locale are the holidays we are looking for?
