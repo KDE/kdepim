@@ -29,6 +29,8 @@
 
 MessageListProxy::MessageListProxy(QObject* parent) : ListProxy(parent)
 {
+  setDynamicSortFilter( true );
+  sort( 0, Qt::DescendingOrder );
 }
 
 QVariant MessageListProxy::data(const QModelIndex& index, int role) const
@@ -86,6 +88,19 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( IsActionItemRole, "is_action_item" );
   setRoleNames( names );
   kDebug() << names << sourceModel->roleNames();
+}
+
+bool MessageListProxy::lessThan(const QModelIndex& left, const QModelIndex& right) const
+{
+  const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  if ( !leftItem.hasPayload<KMime::Message::Ptr>() || !rightItem.hasPayload<KMime::Message::Ptr>() )
+    return leftItem.id() < rightItem.id();
+
+  const KMime::Message::Ptr leftMsg = leftItem.payload<KMime::Message::Ptr>();
+  const KMime::Message::Ptr rightMsg = rightItem.payload<KMime::Message::Ptr>();
+
+  return leftMsg->date()->dateTime() < rightMsg->date()->dateTime();
 }
 
 #include "messagelistproxy.moc"
