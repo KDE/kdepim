@@ -135,6 +135,12 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
     save( event );
   else
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
+
+  if ( mLastRecurrence ) { // The recurrence was modified
+    *incidence->recurrence() = *mLastRecurrence;
+  } else {
+    incidence->recurrence()->unsetRecurs();
+  }
 }
 
 bool IncidenceDateTimeEditor::isDirty() const
