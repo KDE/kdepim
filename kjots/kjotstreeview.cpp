@@ -160,6 +160,9 @@ void KJotsTreeView::copyLinkAddress()
 
   Item item = rows.at( 0 ).data( KJotsModel::ItemRole ).value<Item>();
 
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+
   KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
   QString title = msg->subject()->asUnicodeString();
