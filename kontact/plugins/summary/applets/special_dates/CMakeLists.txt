@@ -1,5 +1,7 @@
 ### Build applet ###
-set(plasma_applet_special_dates_SRCS special_dates.cpp)
+set(plasma_applet_special_dates_SRCS 
+    special_dates.cpp
+    specialdateswidget.cpp)
 
 # Now make sure all files get to the right place
 kde4_add_plugin(plasma_applet_special_dates ${plasma_applet_special_dates_SRCS})
