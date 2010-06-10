@@ -57,27 +57,52 @@ void SpecialDatesApplet::init()
     m_calEngine = dataEngine("calendar");
     m_akoEngine = dataEngine("akonadi");
     connect(m_akoEngine, SIGNAL(sourceAdded(QString)), this, SLOT(addSource(QString)));
+    connect(m_akoEngine, SIGNAL(sourceRemoved(QString)), this, SLOT(removeSource(QString)));
     
     // Load configuration
     configChanged();
     
     updateSpecialDates();
+}
+
+void SpecialDatesApplet::addSource(QString sourceName)
+{
+    // kDebug() << "Connecting to source" << sourceName;
     
+    m_akoEngine->connectSource(sourceName, this);
 }
 
 void SpecialDatesApplet::paintInterface(QPainter* p,
                                      const QStyleOptionGraphicsItem* option, const QRect& contentsRect)
 {
-    /*p->setRenderHint(QPainter::SmoothPixmapTransform);
+    p->setRenderHint(QPainter::SmoothPixmapTransform);
     p->setRenderHint(QPainter::Antialiasing);
     
     p->save();
     p->setPen(Qt::white);
     p->drawText(contentsRect,
-                Qt::AlignBottom | Qt::AlignHCenter,
-                "Hello Plasmoid!");
+                Qt::AlignTop | Qt::AlignHCenter,
+                "Special Dates");
     p->restore();
-    */
+}
+
+void SpecialDatesApplet::updateUI()
+{
+    kDebug() << "Constructing interface based on m_specialDates";
+    kDebug() << m_specialDates;
+    
+    for( int i = 0; i < m_layout->count(); i++ )
+    {
+        m_layout->removeAt(i);
+    }
+    
+    QMapIterator<QString,QVariant> it(m_specialDates);
+    while( it.hasNext() )
+    {
+        it.next();
+        SpecialDate* widget = new SpecialDate(it.key(), it.value().toString() );
+        m_layout->addItem(widget);
+    }
 }
 
 void SpecialDatesApplet::configChanged()
@@ -108,18 +133,7 @@ void SpecialDatesApplet::updateSpecialDates()
     }
     
     m_akoEngine->connectSource("ContactCollections", this);
-    
-    //updateUI();
 }
-
-void SpecialDatesApplet::addSource(QString sourceName)
-{
-    // kDebug() << "Connecting to source" << sourceName;
-    
-    m_akoEngine->connectSource(sourceName, this);
-}
-
-// TODO: Implement removeSource
 
 void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::DataEngine::Data& data)
 {
@@ -152,7 +166,6 @@ void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::Da
         // individual contact entries
         QDate birthday = data.value("Birthday").toDate();
         
-        
         if( !birthday.isNull() )
         {
             kDebug() << birthday;
@@ -175,27 +188,6 @@ void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::Da
             }
         }
     }
-}
-
-void SpecialDatesApplet::updateUI()
-{
-    kDebug() << "Constructing interface based on m_specialDates";
-    kDebug() << m_specialDates;
-    
-    for( int i = 0; i < m_layout->count(); i++ )
-    {
-        m_layout->removeAt(i);
-    }
-    
-    QMapIterator<QString,QVariant> it(m_specialDates);
-    while( it.hasNext() )
-    {
-        it.next();
-        SpecialDate* widget = new SpecialDate(it.key(), it.value().toString() );
-        m_layout->addItem(widget);
-    }
-    
-    //setLayout(m_layout);
 }
 
 #include "special_dates.moc"
