@@ -46,6 +46,11 @@ public:
     SendImmediate = true,
     SendLater = false
   };
+  enum SaveIn {
+    SaveInNone,
+    SaveInDrafts,
+    SaveInTemplates
+  };
   /**
      Send given message.
 

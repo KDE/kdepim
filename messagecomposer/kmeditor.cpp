@@ -95,6 +95,8 @@ class KMeditorPrivate
     QString extEditorPath;
     KMeditor *q;
     bool useExtEditor;
+    
+    QString quotePrefix;
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
@@ -349,6 +351,40 @@ QString KMeditorPrivate::addQuotesToText( const QString &inputText )
   answer.prepend( indentStr );
   answer += QLatin1Char( '\n' );
   return q->smartQuote( answer );
+}
+
+
+const QString KMeditor::defaultQuoteSign() const
+{
+  if ( !d->quotePrefix.simplified().isEmpty() )
+    return d->quotePrefix;
+  else
+    return KPIMTextEdit::TextEdit::defaultQuoteSign();
+}
+
+int KMeditor::quoteLength( const QString& line ) const
+{
+  if ( !d->quotePrefix.simplified().isEmpty() ) {
+    if ( line.startsWith( d->quotePrefix ) )
+      return d->quotePrefix.length();
+    else
+      return 0;
+  }
+  else
+    return KPIMTextEdit::TextEdit::quoteLength( line );
+}
+
+void KMeditor::setQuotePrefixName( const QString &quotePrefix )
+{
+  d->quotePrefix = quotePrefix;
+}
+
+QString KMeditor::quotePrefixName() const
+{
+  if ( !d->quotePrefix.simplified().isEmpty() )
+    return d->quotePrefix;
+  else
+    return QLatin1String( ">" );
 }
 
 QString KMeditor::smartQuote( const QString &msg )

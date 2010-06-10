@@ -22,6 +22,7 @@ set( messagecomposer_src
      messagefactory.cpp
      messageinfo.cpp
      messagecomposersettings.cpp
+     composerviewbase.cpp
 
      messagepart.cpp
      globalpart.cpp
