@@ -24,6 +24,9 @@
 
 #include <messagecore/messagestatus.h>
 
+#include <KLocale>
+#include <KGlobal>
+
 MessageListProxy::MessageListProxy(QObject* parent) : ListProxy(parent)
 {
 }
@@ -50,7 +53,12 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         return l.join( ", " );
       }
       case DateRole:
-        return msg->date()->asUnicodeString();
+      {
+        const KDateTime& dt = msg->date()->dateTime();
+        if ( dt.date() == QDate::currentDate() )
+          return KGlobal::locale()->formatTime( dt.time() );
+        return KGlobal::locale()->formatDate( dt.date(), KLocale::FancyShortDate );
+      }
       case IsNewRole:
         return messageStatus.isNew();
       case IsUnreadRole:

@@ -28,7 +28,7 @@ KPIM.ItemListView {
       height : itemListView.height / 7
       summaryContent : [
         QML.Text {
-          id : subjectLabel
+          id: fromLabel
           anchors.top : parent.top
           anchors.topMargin : 1
           anchors.left : parent.left
@@ -36,9 +36,19 @@ KPIM.ItemListView {
           text : model.from
           color : "#0C55BB"
           font.pixelSize: 16
+          elide: "ElideRight"
+          width: parent.width - dateLabel.width - anchors.leftMargin - dateLabel.anchors.rightMargin
         },
         QML.Text {
-          anchors.top : subjectLabel.bottom
+          id: dateLabel
+          anchors { top: parent.top; topMargin: 1; right: parent.right; rightMargin: deleteAction.width }
+          text: model.date
+          color: "#0C55BB"
+          font.pixelSize: 16
+          horizontalAlignment: "AlignRight"
+        },
+        QML.Text {
+          anchors.top : fromLabel.bottom
           anchors.topMargin : 1
           anchors.left : parent.left
           anchors.leftMargin : 10
