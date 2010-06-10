@@ -36,13 +36,14 @@
 #include <KActionCollection>
 #include <KAction>
 #include <Akonadi/ItemModifyJob>
+#include <Akonadi/ItemFetchScope>
 #include "mailactionmanager.h"
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
   addMimeType( KMime::Message::mimeType() );
-  setListPayloadPart( Akonadi::MessagePart::Header );
+  itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   setWindowTitle( i18n( "KMail Mobile" ) );
 
   MailActionManager *mailActionManager = new MailActionManager(actionCollection(), this);

@@ -22,6 +22,7 @@
 #include "mainview.h"
 
 #include <akonadi/entitytreemodel.h>
+#include <Akonadi/ItemFetchScope>
 #include <akonadi/kcal/incidencemimetypevisitor.h>
 #include <akonadi/kcal/calendar.h>
 
@@ -39,6 +40,7 @@ using namespace KCal;
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
   addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
+  itemFetchScope().fetchFullPayload();
 
   m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local(), this );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );

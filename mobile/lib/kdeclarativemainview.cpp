@@ -74,7 +74,6 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
   d->mChangeRecorder->fetchCollection( true );
   d->mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
-  d->mChangeRecorder->itemFetchScope().fetchFullPayload(); // By default fetch the full payload
 
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
@@ -217,9 +216,9 @@ bool KDeclarativeMainView::childCollectionHasChildren( int row )
   return d->mBnf->childCollectionHasChildren( row );
 }
 
-void KDeclarativeMainView::setListPayloadPart( const QByteArray &payloadPart )
+ItemFetchScope& KDeclarativeMainView::itemFetchScope()
 {
-  d->mChangeRecorder->itemFetchScope().fetchPayloadPart( payloadPart );
+  return d->mChangeRecorder->itemFetchScope();
 }
 
 void KDeclarativeMainView::addMimeType( const QString &mimeType )

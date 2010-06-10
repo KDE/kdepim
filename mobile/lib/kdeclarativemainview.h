@@ -28,6 +28,7 @@ class QAbstractItemModel;
 namespace Akonadi {
 class EntityTreeModel;
 class Item;
+class ItemFetchScope;
 }
 
 class ListProxy;
@@ -61,10 +62,10 @@ public:
   virtual ~KDeclarativeMainView();
 
   /**
-    * By default the view fetches the full payloads for the list. Use this method
-    * to fetch only a specific part.
+    * Item fetch scope to specify how much data should be loaded for the list view.
+    * By default nothing is loaded.
     */
-  void setListPayloadPart( const QByteArray &payloadPart );
+  Akonadi::ItemFetchScope& itemFetchScope();
 
   /** Mime type of the items handled by this application. */
   void addMimeType( const QString &mimeType );

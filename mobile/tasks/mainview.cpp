@@ -30,6 +30,7 @@
 #include <kcal/incidence.h>
 #include <akonadi/kcal/incidencemimetypevisitor.h>
 #include <akonadi/entitytreemodel.h>
+#include <Akonadi/ItemFetchScope>
 
 #include "tasklistproxy.h"
 
@@ -38,7 +39,7 @@ using namespace Akonadi;
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
 {
   addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
-
+  itemFetchScope().fetchFullPayload();
 }
 
 void MainView::setPercentComplete(int row, int percentComplete)

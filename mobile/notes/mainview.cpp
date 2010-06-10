@@ -28,6 +28,7 @@
 #include <KStandardDirs>
 
 #include <akonadi/entitytreemodel.h>
+#include <Akonadi/ItemFetchScope>
 
 #include "notelistproxy.h"
 #include <QDeclarativeContext>
@@ -38,6 +39,7 @@ using namespace Akonadi;
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
   addMimeType( "text/x-vnd.akonadi.note" );
+  itemFetchScope().fetchFullPayload();
 }
 
 QString MainView::noteTitle(int row)

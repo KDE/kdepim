@@ -24,11 +24,13 @@
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+#include <Akonadi/ItemFetchScope>
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
 {
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
+  itemFetchScope().fetchFullPayload();
 }
 
 #include "mainview.moc"
