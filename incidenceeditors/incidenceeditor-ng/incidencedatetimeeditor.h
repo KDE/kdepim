@@ -37,7 +37,7 @@ namespace IncidenceEditorsNG {
 
 class IncidenceRecurrenceDialog;
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public CombinedIncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:

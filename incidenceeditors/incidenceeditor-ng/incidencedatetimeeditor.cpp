@@ -38,7 +38,7 @@ using namespace IncidenceEditorsNG;
 using namespace KCal;
 
 IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
-  : CombinedIncidenceEditor( parent )
+  : IncidenceEditor( parent )
   , mTimeZones( new ICalTimeZones )
   , mUi( new Ui::IncidenceDateTimeEditor )
   , mLastRecurrence( 0 )
@@ -90,7 +90,6 @@ IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
 
 void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 {
-  CombinedIncidenceEditor::load( incidence );
   mLoadedIncidence = incidence;
 
   // We can only handle events or todos.
@@ -130,7 +129,6 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 
 void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 {
-  CombinedIncidenceEditor::save( incidence );
   if ( KCal::Todo::Ptr todo = IncidenceDateTimeEditor::incidence<Todo>( incidence ) )
     save( todo );
   else if ( KCal::Event::Ptr event = IncidenceDateTimeEditor::incidence<Event>( incidence ) )
@@ -141,6 +139,20 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceDateTimeEditor::isDirty() const
 {
+  // TODO Alarms
+
+  // Check if a recurrence was set on a non recurring event
+  if ( !mLoadedIncidence->recurs() && mLastRecurrence )
+    return true;
+
+  // Check if the recurrence is removed
+  if ( mLoadedIncidence->recurs() && !mLastRecurrence )
+    return true;
+
+  // Check if the recurrence has changed.
+  if ( mLastRecurrence && *mLastRecurrence != *mLoadedIncidence->recurrence() )
+    return true;
+
   if ( KCal::Todo::ConstPtr todo = IncidenceDateTimeEditor::incidence<Todo>() ) {
     return isDirty( todo );
   } else if ( KCal::Event::ConstPtr event = IncidenceDateTimeEditor::incidence<Event>() ) {
@@ -271,6 +283,7 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
   if ( index == 0 ) { // No recurrence
     delete mLastRecurrence;
     mLastRecurrence = 0;
+    checkDirtyStatus();
     return;
   }
 
@@ -290,6 +303,8 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
     delete mLastRecurrence;
     mLastRecurrence = RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start );
   }
+
+  checkDirtyStatus();
 #endif
 }
 
@@ -392,9 +407,6 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
       return true;
   }
 
-  // TODO Recurrence
-  // TODO Alarms
-
   return false;
 }
 
@@ -415,9 +427,6 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Event::ConstPtr event ) const
     if ( currentEndDateTime() != mInitialEndDT )
       return true;
   }
-
-  // TODO Recurrence
-  // TODO Alarms
   
   return false;
 }
