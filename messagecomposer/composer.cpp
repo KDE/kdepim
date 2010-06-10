@@ -337,6 +337,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     headers->setHeader( skeletonMessage->from() );
     headers->setHeader( skeletonMessage->to() );
     headers->setHeader( skeletonMessage->subject() );
+    headers->setHeader( skeletonMessage->date() );
 
     KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc( headers );
     foreach( const QString &a, eJob->recipients() ) {

@@ -205,6 +205,7 @@ private slots:
   void slotEmailAddressResolved( KJob* );
   void slotSendComposeResult( KJob* );
   void slotQueueResult( KJob *job );
+  void slotCreateItemResult( KJob * );
 private:
   bool isHTMLMail( KMime::Content* root );
   /**
@@ -227,7 +228,6 @@ private:
   void queueMessage( KMime::Message::Ptr message, Composer* composer );
   void saveMessage( KMime::Message::Ptr message, MessageSender::SaveIn saveIn );
   void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart );
-  void slotCreateItemResult( KJob *job );
 
   KMime::Message::Ptr m_msg;
   AttachmentControllerBase* m_attachmentController;
