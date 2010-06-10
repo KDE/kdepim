@@ -24,8 +24,8 @@
 
 namespace Plasma {
     class Svg;
-    class DataEngine;
 }
+#include <Plasma/DataEngine>
 
 class QPainter;
 #include <QGraphicsLinearLayout>
@@ -45,10 +45,15 @@ public Q_SLOTS:
     void updateSpecialDates();
     void configChanged();
     
+    void dataUpdated(const QString& sourceName, const Plasma::DataEngine::Data& data);
+    void addSource(QString sourceName);
+    
 private:
     Plasma::Svg m_svg;
     QGraphicsLinearLayout* m_layout;
-    Plasma::DataEngine* m_engine;
+    Plasma::DataEngine* m_calEngine;
+    Plasma::DataEngine* m_akoEngine;
+    QHash<QString,QVariant> m_specialDates; // date, data
     
     int m_numDays; // How many days into the future do we show?
     QString m_locale; // What locale are the holidays we are looking for?

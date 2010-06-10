@@ -34,7 +34,9 @@ K_EXPORT_PLASMA_APPLET(special_dates, SpecialDatesApplet)
 SpecialDatesApplet::SpecialDatesApplet( QObject* parent, QVariantList args )
     : Plasma::Applet( parent, args ),
       m_svg(this),
-      m_numDays(7)
+      m_numDays(7),
+      m_calEngine(0),
+      m_akoEngine(0)
 {
     Q_UNUSED(args);
     
@@ -45,7 +47,9 @@ SpecialDatesApplet::SpecialDatesApplet( QObject* parent, QVariantList args )
 void SpecialDatesApplet::init()
 {
     m_layout = new QGraphicsLinearLayout(Qt::Vertical, this);
-    m_engine = dataEngine("calendar");
+    m_calEngine = dataEngine("calendar");
+    m_akoEngine = dataEngine("akonadi");
+    connect(m_akoEngine, SIGNAL(sourceAdded(QString)), this, SLOT(addSource(QString)));
     
     // Load configuration
     configChanged();
@@ -59,10 +63,6 @@ void SpecialDatesApplet::paintInterface(QPainter* p,
 {
     p->setRenderHint(QPainter::SmoothPixmapTransform);
     p->setRenderHint(QPainter::Antialiasing);
-    
-    // Now we draw the applet, starting with our svg
-    m_svg.resize((int)contentsRect.width(), (int)contentsRect.height());
-    m_svg.paint(p, (int)contentsRect.left(), (int)contentsRect.top());
     
     p->save();
     p->setPen(Qt::white);
@@ -86,10 +86,64 @@ void SpecialDatesApplet::updateSpecialDates()
     
     QString query = QString("holidays:%1:%2:%3");
     query = query.arg(m_locale, date.toString("yyyy-MM-dd"), date.addDays(m_numDays).toString("yyyy-MM-dd"));
+    kDebug() << "Query calendar DataSource" << query;
     
-    kDebug() << "Query DataSource" << query;
+    m_specialDates = m_calEngine->query(query);
     
+    m_akoEngine->connectSource("ContactCollections", this);
+}
+
+void SpecialDatesApplet::addSource(QString sourceName)
+{
+    // kDebug() << "Connecting to source" << sourceName;
     
+    m_akoEngine->connectSource(sourceName, this);
+}
+
+void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::DataEngine::Data& data)
+{
+    // kDebug() << data;
+    
+    if( sourceName == "ContactCollections" )
+    {
+        // data.key() is the collection name
+        QHashIterator<QString,QVariant> it(data);
+        while( it.hasNext() )
+        {
+            it.next();
+            QString query = it.key();
+            
+            kDebug() << "Query Akonadi Engine for " << query;
+            
+            m_akoEngine->query(query);
+        }
+    }
+    else if( sourceName.startsWith("Contact-"))
+    {
+        // individual contact entries
+        QDate birthday = data.value("Birthday").toDate();
+        
+        
+        if( !birthday.isNull() )
+        {
+            kDebug() << birthday;
+            
+            QDate currentDate = QDate::currentDate();
+            
+            // make the QDate reference this year.
+            QDate birthday2 = QDate(currentDate.year(), birthday.month(), birthday.day() );
+            // TODO Could I just daysTo % 365?
+            
+            int daysTo = currentDate.daysTo(birthday2);
+            
+            if( daysTo >= 0 && daysTo <= m_numDays )
+            {
+                kDebug() << daysTo;
+                
+                m_specialDates[birthday2.toString("yyyy-MM-dd")] = QString("%1's Birthday").arg( data.value("Name").toString() );
+            }
+        }
+    }
 }
 
 #include "special_dates.moc"
