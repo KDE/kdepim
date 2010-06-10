@@ -500,6 +500,13 @@ void KJotsWidget::delayedInitialization()
   updateMenu();
 }
 
+void KJotsWidget::bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint )
+{
+    // Make sure the editor gets focus again after naming a new book/page.
+    activeEditor()->setFocus();
+}
+
+
 void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type )
 {
   // Akonadi migration
