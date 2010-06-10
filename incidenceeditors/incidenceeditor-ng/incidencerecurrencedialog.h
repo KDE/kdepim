@@ -25,22 +25,30 @@
 
 namespace KCal {
 class Recurrence;
+class Incidence;
 }
 
 namespace IncidenceEditorsNG {
 
-class IncidenceEditor;  
+class IncidenceEditor;
 class IncidenceRecurrenceEditor;
-  
+
 class IncidenceRecurrenceDialog : public KDialog
 {
+  Q_OBJECT
   public:
     IncidenceRecurrenceDialog( QWidget *parent = 0 );
+    ~IncidenceRecurrenceDialog();
 
-    IncidenceRecurrenceEditor *editor() const;
+    void load( const KCal::Recurrence &rec, const QDateTime &from, const QDateTime &to );
+    void save( KCal::Recurrence *rec );
+    void setDefaults( const QDateTime &from, const QDateTime &to );
 
   private:
-    IncidenceRecurrenceEditor *mEditor;
+    class Private;
+    Private *d;
+
+    Q_DISABLE_COPY( IncidenceRecurrenceDialog );
 };
 
 } // IncidenceEditorsNG

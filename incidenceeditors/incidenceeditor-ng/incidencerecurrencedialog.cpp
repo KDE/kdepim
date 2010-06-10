@@ -21,23 +21,50 @@
 #include "incidencerecurrencedialog.h"
 #include "incidencerecurrenceeditor.h"
 
+#include <QtCore/QDebug>
 #include <QtGui/QVBoxLayout>
 
 using namespace IncidenceEditorsNG;
 
+struct IncidenceRecurrenceDialog::Private
+{
+  IncidenceRecurrenceEditor *mEditor;
+
+  Private();
+};
+
+IncidenceRecurrenceDialog::Private::Private()
+  : mEditor ( new IncidenceRecurrenceEditor )
+{ }
+
 IncidenceRecurrenceDialog::IncidenceRecurrenceDialog( QWidget *parent  )
   : KDialog( parent )
-  , mEditor( new IncidenceRecurrenceEditor( this ) )
+  , d( new IncidenceRecurrenceDialog::Private )
 {
   QWidget *widget = new QWidget( this );
   QVBoxLayout *layout = new QVBoxLayout( widget );
-  layout->addWidget( mEditor );
+  layout->addWidget( d->mEditor );
   layout->addItem( new QSpacerItem( 0,0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding ) );
   setMainWidget( widget );
   setButtons( KDialog::Ok | KDialog::Cancel );
 }
 
-IncidenceRecurrenceEditor *IncidenceRecurrenceDialog::editor() const
+IncidenceRecurrenceDialog::~IncidenceRecurrenceDialog()
 {
-  return mEditor;
+  delete d;
+}
+
+void IncidenceRecurrenceDialog::load( const KCal::Recurrence &rec, const QDateTime &from, const QDateTime &to )
+{
+  d->mEditor->loadPreset( rec, from, to );
+}
+
+void IncidenceRecurrenceDialog::IncidenceRecurrenceDialog::save( KCal::Recurrence *rec )
+{
+  d->mEditor->savePreset( rec );
+}
+
+void IncidenceRecurrenceDialog::setDefaults( const QDateTime &from, const QDateTime &to )
+{
+  d->mEditor->setDefaults( from, to );
 }

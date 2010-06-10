@@ -92,9 +92,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public CombinedIncide
     KCal::ICalTimeZones *mTimeZones;
     Ui::IncidenceDateTimeEditor *mUi;
 
-#ifndef KDEPIM_MOBILE_UI
-    IncidenceRecurrenceDialog *mRecurrenceDialog;
-#endif
+    KCal::Recurrence *mLastRecurrence;
 
     QDate mActiveDate;
     /**

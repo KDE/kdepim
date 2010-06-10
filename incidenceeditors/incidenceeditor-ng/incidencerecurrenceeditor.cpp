@@ -247,14 +247,160 @@ void IncidenceRecurrenceEditor::save( KCal::Incidence::Ptr incidence )
 {
   // clear out any old settings;
   Recurrence *r = incidence->recurrence();
-  r->unsetRecurs();
+  r->unsetRecurs(); // Why not clear() ?
 
 //  if ( !mUi->mEnabledCheck->isChecked() || !isEnabled() )
 //    return;
 
-  int duration = mUi->mEndDurationEdit->value();
+  savePreset( r );
+}
+
+bool IncidenceRecurrenceEditor::isDirty() const
+{
+  return false;
+}
+
+void IncidenceRecurrenceEditor::loadPreset( const Recurrence &recurrence,
+                                            const QDateTime &from,
+                                            const QDateTime &to )
+{
+  setDefaults( from, to );
+
+  int day = 0;
+  int count = 0;
+  int month = 0;
+
+  uint recurs = recurrence.recurrenceType();
+  RecurrenceType recurrenceType = IncidenceRecurrenceEditor::Weekly;
+
+  switch ( recurs ) {
+  case Recurrence::rNone:
+    break;
+  case Recurrence::rDaily:
+    recurrenceType = IncidenceRecurrenceEditor::Daily;
+    setFrequency( recurrence.frequency() );
+    break;
+  case Recurrence::rWeekly:
+    recurrenceType = IncidenceRecurrenceEditor::Weekly;
+    setFrequency( recurrence.frequency() );
+    setDays( recurrence.days() );
+    break;
+  case Recurrence::rMonthlyPos:
+  {
+    // TODO: we only handle one possibility in the list right now,
+    // so I have hardcoded calls with first().  If we make the GUI
+    // more extended, this can be changed.
+    recurrenceType = IncidenceRecurrenceEditor::Monthly;
+
+    QList<RecurrenceRule::WDayPos> rmp = recurrence.monthPositions();
+    if ( !rmp.isEmpty() ) {
+      setByPos( rmp.first().pos(), rmp.first().day() );
+    }
+
+    setFrequency( recurrence.frequency() );
+    break;
+  }
+  case Recurrence::rMonthlyDay:
+  {
+    recurrenceType = IncidenceRecurrenceEditor::Monthly;
+
+    QList<int> rmd = recurrence.monthDays();
+    // check if we have any setting for which day (vcs import is broken and
+    // does not set any day, thus we need to check)
+    if ( rmd.isEmpty() ) {
+      day = from.date().day();
+    } else {
+      day = rmd.first();
+    }
+    setByDay( Monthly, day );
+    setFrequency( recurrence.frequency() );
+    break;
+  }
+  case Recurrence::rYearlyMonth:
+  {
+    recurrenceType = IncidenceRecurrenceEditor::Yearly;
+    QList<int> rmd = recurrence.yearDates();
+    if ( rmd.isEmpty() ) {
+      day = from.date().day();
+    } else {
+      day = rmd.first();
+    }
+    int month = from.date().month();
+    rmd = recurrence.yearMonths();
+    if ( !rmd.isEmpty() ) {
+      month = rmd.first();
+    }
+    setByMonth( day, month );
+    setFrequency( recurrence.frequency() );
+    break;
+  }
+  case Recurrence::rYearlyPos:
+  {
+    recurrenceType = IncidenceRecurrenceEditor::Yearly;
+
+    QList<int> months = recurrence.yearMonths();
+    if ( months.isEmpty() ) {
+      month = from.date().month();
+    } else {
+      month = months.first();
+    }
+
+    QList<RecurrenceRule::WDayPos> pos = recurrence.yearPositions();
+
+    if ( pos.isEmpty() ) {
+      // Use dtStart if nothing is given (shouldn't happen!)
+      count = ( from.date().day() - 1 ) / 7;
+      day = from.date().dayOfWeek();
+    } else {
+      count = pos.first().pos();
+      day = pos.first().day();
+    }
+    setByPos( count, day, month );
+    setFrequency( recurrence.frequency() );
+    break;
+  }
+  case Recurrence::rYearlyDay:
+  {
+    recurrenceType = IncidenceRecurrenceEditor::Yearly;
+    QList<int> days = recurrence.yearDays();
+    if ( days.isEmpty() ) {
+      day = from.date().dayOfYear();
+    } else {
+      day = days.first();
+    }
+    setByDay( Yearly, day );
+    setFrequency( recurrence.frequency() );
+    break;
+  }
+  default:
+    break;
+  }
+
+  setType( recurrenceType );
+  mUi->mRuleStack->setCurrentIndex( recurrenceType );
+
+  KDateTime::Spec timeSpec = KSystemTimeZones::local();
+  QDateTime start = recurrence.startDateTime().toTimeSpec( timeSpec ).dateTime();
+  setDateTimes( start.isValid() ? start : QDateTime::currentDateTime() );
+
+  setDuration( recurrence.duration() );
+  if ( recurrence.duration() == 0 )
+    mUi->mEndDateEdit->setDate( recurrence.endDate() );
+
+  setExceptionDates( recurrence.exDates() );
+}
+
+void IncidenceRecurrenceEditor::savePreset( Recurrence *r ) const
+{
+  // clear out any old settings;
+  r->unsetRecurs(); // Why not clear() ?
+
+//  if ( !mUi->mEnabledCheck->isChecked() || !isEnabled() )
+//    return;
+
+  const int lDuration = duration();
   QDate endDate;
-  if ( duration == 0 ) {
+  if ( lDuration == 0 ) {
     endDate = mUi->mEndDateEdit->date();
   }
 
@@ -300,48 +446,12 @@ void IncidenceRecurrenceEditor::save( KCal::Incidence::Ptr incidence )
     }
   } // end "Yearly"
 
-  if ( duration > 0 ) {
-    r->setDuration( duration );
-  } else if ( duration == 0 ) {
+  if ( lDuration > 0 ) {
+    r->setDuration( lDuration );
+  } else if ( lDuration == 0 ) {
     r->setEndDate( endDate );
   }
-  incidence->recurrence()->setExDates( mExceptionDates );
-}
-
-bool IncidenceRecurrenceEditor::isDirty() const
-{
-  return false;
-}
-
-void IncidenceRecurrenceEditor::loadPreset( const Recurrence &preset )
-{
-  setDateTimes( preset.startDateTime().dateTime() );
-
-  switch ( preset.recurrenceType() ) {
-  case Recurrence::rDaily:
-    setType( Daily );
-    break;
-  case Recurrence::rWeekly:
-    setType( Weekly );
-    setDays( preset.days() );
-    break;
-  case Recurrence::rMonthlyDay:
-    setType( Monthly );
-    setByDay( Monthly, preset.monthDays().first() );
-    break;
-  default:
-    setType( Yearly );
-    setByMonth( preset.yearDates().first(), preset.yearMonths().first() );
-    break;
-  }
-
-  setFrequency( preset.frequency() );
-}
-
-void IncidenceRecurrenceEditor::removeRecurrence()
-{
-//  if ( mUi->mEnabledCheck->isChecked() )
-//    mUi->mEnabledCheck->toggle();
+  r->setExDates( mExceptionDates );
 }
 
 /// Private slots
@@ -450,6 +560,17 @@ QBitArray IncidenceRecurrenceEditor::days() const
     days.setBit( i, mDayBoxes[ i ]->isChecked() );
 
   return days;
+}
+
+int IncidenceRecurrenceEditor::duration() const
+{
+  if ( mUi->mNoEndDateButton->isChecked() ) {
+    return -1;
+  } else if ( mUi->mEndDurationButton->isChecked() ) {
+    return mUi->mEndDurationEdit->value();
+  } else {
+    return 0;
+  }
 }
 
 int IncidenceRecurrenceEditor::monthlyDay() const

@@ -41,6 +41,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   : CombinedIncidenceEditor( parent )
   , mTimeZones( new ICalTimeZones )
   , mUi( new Ui::IncidenceDateTimeEditor )
+  , mLastRecurrence( 0 )
 {
   mUi->setupUi( this );
   setTimeZonesVisibility( false );
@@ -66,10 +67,6 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mRecurrenceCombo->insertItems( 0, recurrencePresets );
   mUi->mRecurrenceEditButton->setEnabled( false );
 
-  mRecurrenceDialog = new IncidenceRecurrenceDialog( this );
-  mRecurrenceDialog->hide();
-  combine( mRecurrenceDialog->editor() );
-
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
   connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)), SLOT(updateRecurrencePreset(int)) );
@@ -88,9 +85,6 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
 {
-#ifndef KDEPIM_MOBILE_UI
-  delete mRecurrenceDialog;
-#endif
   delete mTimeZones;
 }
 
@@ -167,7 +161,26 @@ void IncidenceDateTimeEditor::setActiveDate( const QDate &activeDate )
 void IncidenceDateTimeEditor::editRecurrence()
 {
 #ifndef KDEPIM_MOBILE_UI
-  mRecurrenceDialog->show();
+  Q_ASSERT( mLastRecurrence );
+  Q_ASSERT( mUi->mRecurrenceCombo->currentIndex() ); // a preset or custom should be selected
+
+  QScopedPointer<IncidenceRecurrenceDialog> dialog( new IncidenceRecurrenceDialog );
+  dialog->load( *mLastRecurrence, currentStartDateTime().dateTime(), currentEndDateTime().dateTime() );
+  if ( dialog->exec() == QDialog::Accepted ) {
+    dialog->save( mLastRecurrence );
+
+    if (  mUi->mRecurrenceCombo->currentIndex() < mUi->mRecurrenceCombo->count() - 1 ) {
+      KDateTime start = currentStartDateTime();
+      QScopedPointer<Recurrence>
+        preset( RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start ) );
+      qDebug() << ( *preset != *mLastRecurrence ) << preset.data() << mLastRecurrence;
+      if ( *preset != *mLastRecurrence ) {
+        mUi->mRecurrenceCombo->blockSignals( true );
+        mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
+        mUi->mRecurrenceCombo->blockSignals( false );
+      }
+    }
+  }
 #endif
 }
 
@@ -256,20 +269,26 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
   mUi->mRecurrenceEditButton->setEnabled( mUi->mRecurrenceCombo->currentIndex() > 0 );
 
   if ( index == 0 ) { // No recurrence
-    mRecurrenceDialog->editor()->removeRecurrence();
-  } else if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
+    delete mLastRecurrence;
+    mLastRecurrence = 0;
+    return;
+  }
+
+  QScopedPointer<Recurrence> rec;
+  KDateTime start = currentStartDateTime();
+  start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
+
+  if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
     // Configure a custom recurrence, use by default the Weekly recurrence preset
-    KDateTime start = currentStartDateTime();
-    start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
-    QScopedPointer<Recurrence> rec( RecurrencePresets::preset( i18nc( "@item:inlistbox", "Weekly" ), start ) );
-    mRecurrenceDialog->editor()->loadPreset( *rec );
-    mRecurrenceDialog->show();
+    rec.reset( RecurrencePresets::preset( i18nc( "@item:inlistbox", "Weekly" ), start ) );
+    QScopedPointer<IncidenceRecurrenceDialog> dialog( new IncidenceRecurrenceDialog );
+    dialog->load( *rec, currentStartDateTime().dateTime(), currentEndDateTime().dateTime() );
+    if ( dialog->exec() == QDialog::Accepted )
+      dialog->save( mLastRecurrence );
   } else {
     // Load a preset
-    KDateTime start = currentStartDateTime();
-    start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
-    QScopedPointer<Recurrence> rec( RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start ) );
-    mRecurrenceDialog->editor()->loadPreset( *rec );
+    delete mLastRecurrence;
+    mLastRecurrence = RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start );
   }
 #endif
 }

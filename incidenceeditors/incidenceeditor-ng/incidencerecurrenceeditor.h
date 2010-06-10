@@ -50,8 +50,11 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
-    void loadPreset( const KCal::Recurrence &preset );
-    void removeRecurrence();
+    void loadPreset( const KCal::Recurrence &preset,
+                     const QDateTime &from,
+                     const QDateTime &to );
+    void savePreset( KCal::Recurrence *r ) const;
+    void setDefaults( const QDateTime &from, const QDateTime &to );
 
   private slots:
     void addException();
@@ -64,6 +67,7 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
 
   private:
     QBitArray days() const;
+    int duration() const;
     int monthlyDay() const;
     int monthlyPos() const;
     int yearlyPosCount() const;
@@ -73,7 +77,6 @@ class IncidenceRecurrenceEditor : public IncidenceEditor
     void setByPos( int count, int weekday, int month );
     void setDateTimes( const QDateTime &from, const QDateTime &to = QDateTime() );
     void setDays( const QBitArray &days );
-    void setDefaults( const QDateTime &from, const QDateTime &to );
     void setDuration( int duration );
     void setExceptionDates( const KCal::DateList &dates );
     void setFrequency( int f );
