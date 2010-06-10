@@ -38,7 +38,12 @@ void SpecialDate::init()
     QDate currentDate = QDate::currentDate();
     m_date = QDate::fromString(m_dateString, "yyyy-MM-dd");
     
-    QString text = "<table><tr><td width='33%'><h4>%1</h4></td><td width='57%' style='text-align:center'>%2</td><td width='10%' style='foreground:red'><b>%3<b></td></tr><table>";
+    QString text = "<table> \
+                    <tr> \
+                    <td width='33%'><h4>%1</h4></td><td width='57%' style='text-align:center'>%2</td> \
+                    <td width='10%' style='foreground:red'><b>%3<b></td> \
+                    </tr> \
+                    <table>";
     text = text.arg( m_date.toString("ddd, d MMM") );
     text = text.arg( m_name );
     text = text.arg( currentDate.daysTo(m_date) );

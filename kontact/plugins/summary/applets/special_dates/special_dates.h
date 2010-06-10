@@ -30,6 +30,7 @@ namespace Plasma {
 class QPainter;
 #include <QGraphicsLinearLayout>
 class QTimer;
+class SpecialDate;
 
 class SpecialDatesApplet : public Plasma::Applet
 {
