@@ -137,7 +137,8 @@ void KJotsTreeView::renameEntry()
   QModelIndex idx = rows.at( 0 );
 
   Item item = idx.data( KJotsModel::ItemRole ).value<Item>();
-
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
   KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
   QString title = msg->subject()->asUnicodeString();
