@@ -27,6 +27,7 @@
 #include "incidencerecurrencedialog.h"
 #include "incidencerecurrenceeditor.h"
 #include "recurrencepresets.h"
+#include "reminderpresets.h"
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_iedatetimemobile.h"
@@ -56,6 +57,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 #else
   mUi->mReminderEditButton->setPixmap( SmallIcon( "task-reminder" ) );
   mUi->mReminderEditButton->setEnabled( false );
+  mUi->mReminderCombo->insertItems( 1, ReminderPresets::availablePresets() );
   mUi->mReminderCombo->setEnabled( false );
   mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
 
