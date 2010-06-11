@@ -24,10 +24,10 @@
 #include <KDebug>
 #include <KSystemTimeZones>
 
+#include "alarmpresets.h"
 #include "incidencerecurrencedialog.h"
 #include "incidencerecurrenceeditor.h"
 #include "recurrencepresets.h"
-#include "reminderpresets.h"
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_iedatetimemobile.h"
@@ -55,10 +55,9 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
 #else
-  mUi->mReminderEditButton->setPixmap( SmallIcon( "task-reminder" ) );
-  mUi->mReminderEditButton->setEnabled( false );
-  mUi->mReminderCombo->insertItems( 1, ReminderPresets::availablePresets() );
-  mUi->mReminderCombo->setEnabled( false );
+  mUi->mAlarmEditButton->setPixmap( SmallIcon( "task-reminder" ) );
+  mUi->mAlarmEditButton->setEnabled( false );
+  mUi->mAlarmCombo->insertItems( 1, AlarmPresets::availablePresets() );
   mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
 
   QStringList recurrencePresets;
@@ -70,10 +69,10 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
-  connect( mUi->mReminderCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(updateReminderPreset(int)) );
+  connect( mUi->mAlarmCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(updateAlarmPreset(int)) );
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()),
-           SLOT(editReminder()) );
+           SLOT(editAlarm()) );
   connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(updateRecurrencePreset(int)) );
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
@@ -213,6 +212,13 @@ void IncidenceDateTimeEditor::setActiveDate( const QDate &activeDate )
 
 /// private slots for General
 
+void IncidenceDateTimeEditor::editAlarm()
+{
+#ifndef KDEPIM_MOBILE_UI
+#endif
+}
+
+
 void IncidenceDateTimeEditor::editRecurrence()
 {
 #ifndef KDEPIM_MOBILE_UI
@@ -239,17 +245,10 @@ void IncidenceDateTimeEditor::editRecurrence()
 #endif
 }
 
-void IncidenceDateTimeEditor::editReminder()
-{
-#ifndef KDEPIM_MOBILE_UI
-#endif
-}
-
 void IncidenceDateTimeEditor::enableAlarm( bool enable )
 {
 #ifndef KDEPIM_MOBILE_UI
-  mUi->mReminderCombo->setEnabled( enable );
-  mUi->mReminderEditButton->setEnabled( enable && mUi->mReminderCombo->currentIndex() > 0 );
+  mUi->mAlarmEditButton->setEnabled( enable && mUi->mAlarmCombo->currentIndex() > 0 );
 #endif
 }
 
@@ -364,10 +363,10 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
 #endif
 }
 
-void IncidenceDateTimeEditor::updateReminderPreset( int index )
+void IncidenceDateTimeEditor::updateAlarmPreset( int index )
 {
 #ifndef KDEPIM_MOBILE_UI
-  mUi->mReminderEditButton->setEnabled( index > 0 );
+  mUi->mAlarmEditButton->setEnabled( index > 0 );
   checkDirtyStatus();
 #endif
 }

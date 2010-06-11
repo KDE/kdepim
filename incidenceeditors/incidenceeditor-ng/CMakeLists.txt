@@ -22,9 +22,9 @@ include_directories(
 #    incidenceeditor-ng/incidencerecurrenceeditor.ui
 
 set(incidenceeditors_ng_shared_LIB_SRCS
+  alarmpresets.cpp
   itemeditor.cpp # TODO: Move to akonadi libs when finished
   recurrencepresets.cpp
-  reminderpresets.cpp
   incidenceeditor.cpp
   combinedincidenceeditor.cpp
   incidencegeneraleditor.cpp

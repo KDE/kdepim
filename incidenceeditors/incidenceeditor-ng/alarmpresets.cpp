@@ -16,7 +16,7 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 */
-#include "reminderpresets.h"
+#include "alarmpresets.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -29,7 +29,7 @@ typedef boost::shared_ptr<Alarm> Ptr;
 
 namespace IncidenceEditorsNG {
 
-namespace ReminderPresets {
+namespace AlarmPresets {
 
 // Don't use a map, because order matters
 static QStringList sPresetNames;
@@ -115,7 +115,6 @@ Alarm *preset( const QString &name )
   Q_ASSERT( sPresetNames.count( name ) == 1 ); // The name should exists and only once
 
   Alarm *alarm = new Alarm( *sPresets.at( sPresetNames.indexOf( name ) ) );
-
   return alarm;
 }
 
@@ -136,5 +135,5 @@ int presetIndex( const KCal::Alarm &alarm )
 
 }
 
-} // ReminderPresets
+} // AlarmPresets
 } // IncidenceEditorsNG

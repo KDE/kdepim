@@ -28,7 +28,7 @@ namespace KCal {
 
 namespace IncidenceEditorsNG {
 
-namespace ReminderPresets {
+namespace AlarmPresets {
 
   /**
    * Returns the availble presets.
