@@ -88,16 +88,19 @@ void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
              this, SLOT( menuActivated( QAction* ) ) );
 
     popup->addSeparator();
-    popup->addAction(actionCollection->action("copyIntoTitle"));
-    popup->addAction(actionCollection->action("insert_checkmark"));
+    QAction * act = actionCollection->action("copyIntoTitle");
+    popup->addAction(act);
+    act = actionCollection->action("insert_checkmark");
+    act->setEnabled( !isReadOnly() );
+    popup->addAction(act);
 
     if (!KApplication::kApplication()->clipboard()->text().isEmpty())
     {
-        popup->addAction(actionCollection->action("paste_plain_text"));
+      act = actionCollection->action("paste_plain_text");
+      act->setEnabled( !isReadOnly() );
+      popup->addAction( act );
     }
-
     popup->exec( event->globalPos() );
-
     delete popup;
 }
 
