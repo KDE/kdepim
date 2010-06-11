@@ -35,6 +35,7 @@
 
 #include <kabc/addressee.h>
 #include <kabc/addressbook.h>
+#include <kcal/freebusyurlstore.h>
 #include <libkdepim/distributionlist.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
@@ -1128,6 +1129,11 @@ void Contact::setFields( const KABC::Addressee* addressee, KABC::AddressBook* ad
     }
   }
 
+  QString url = KCal::FreeBusyUrlStore::self()->readUrl( addressee->preferredEmail() );
+  if ( !url.isEmpty() ) {
+    setFreeBusyUrl( url );
+  }
+
   // Those fields, although defined in Addressee, are not used in KDE
   // (e.g. not visible in kaddressbook/addresseeeditorwidget.cpp)
   // So it doesn't matter much if we don't have them in the XML.
@@ -1135,9 +1141,6 @@ void Contact::setFields( const KABC::Addressee* addressee, KABC::AddressBook* ad
 
   // Things KAddressBook can't handle, so they are saved as unhandled tags:
   // initials, children, gender, language
-
-  // TODO: Free/Busy URL. This is done rather awkward in KAddressBook -
-  // it stores it in a local file through a korganizer file :-(
 }
 
 // The loading is: xml -> Contact -> addressee, this is the second part
