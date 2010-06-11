@@ -57,6 +57,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
 
   private slots: /// General
     void editRecurrence();
+    void editReminder();
     void enableAlarm( bool enable );
     void setDuration();
     void setTimeZonesVisibility( bool visible );
@@ -65,6 +66,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
     void startDateChanged( const QDate &newDate );
     void startSpecChanged();
     void updateRecurrencePreset( int index );
+    void updateReminderPreset( int index );
     void updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence );
 
   private slots: /// Todo specific

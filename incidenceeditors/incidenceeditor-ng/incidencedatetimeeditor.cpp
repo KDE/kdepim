@@ -53,12 +53,11 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
-  mUi->mAlarmEditButton->setVisible( false ); // TODO: IMPLEMENT
 #else
-  mUi->mAlarmBell->setPixmap( SmallIcon( "task-reminder" ) );
-  mUi->mRecurrenceEditButton->setIcon(
-    KIconLoader::global()->loadIcon(
-      "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
+  mUi->mReminderEditButton->setPixmap( SmallIcon( "task-reminder" ) );
+  mUi->mReminderEditButton->setEnabled( false );
+  mUi->mReminderCombo->setEnabled( false );
+  mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
 
   QStringList recurrencePresets;
   recurrencePresets << i18nc( "@item:inlistbox Incidence has no recurrence", "Does not repeat" );
@@ -69,7 +68,12 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
-  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)), SLOT(updateRecurrencePreset(int)) );
+  connect( mUi->mReminderCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(updateReminderPreset(int)) );
+  connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()),
+           SLOT(editReminder()) );
+  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(updateRecurrencePreset(int)) );
   connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
 #endif
 
@@ -233,10 +237,18 @@ void IncidenceDateTimeEditor::editRecurrence()
 #endif
 }
 
+void IncidenceDateTimeEditor::editReminder()
+{
+#ifndef KDEPIM_MOBILE_UI
+#endif
+}
+
 void IncidenceDateTimeEditor::enableAlarm( bool enable )
 {
-  mUi->mAlarmStack->setEnabled( enable );
-  mUi->mAlarmEditButton->setEnabled( enable );
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mReminderCombo->setEnabled( enable );
+  mUi->mReminderEditButton->setEnabled( enable && mUi->mReminderCombo->currentIndex() > 0 );
+#endif
 }
 
 void IncidenceDateTimeEditor::setTimeZonesVisibility( bool visible )
@@ -346,6 +358,14 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
     mLastRecurrence = RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start );
   }
 
+  checkDirtyStatus();
+#endif
+}
+
+void IncidenceDateTimeEditor::updateReminderPreset( int index )
+{
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mReminderEditButton->setEnabled( index > 0 );
   checkDirtyStatus();
 #endif
 }

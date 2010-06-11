@@ -7,17 +7,24 @@
     <x>0</x>
     <y>0</y>
     <width>638</width>
-    <height>197</height>
+    <height>191</height>
    </rect>
   </property>
   <property name="whatsThis">
    <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <item row="1" column="0">
+   <item row="0" column="2" colspan="3">
+    <widget class="QCheckBox" name="mHasTimeCheck">
+     <property name="whatsThis">
+      <string>Set if this to-do's start and due dates have times associated with them.</string>
+     </property>
+     <property name="text">
+      <string>Ti&amp;me associated</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
       <widget class="QLabel" name="mStartLabel">
@@ -47,7 +54,73 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0">
+   <item row="1" column="2" colspan="3">
+    <widget class="KPIM::KDateEdit" name="mStartDateEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string extracomment="@info:tooltip">Set the start date</string>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Sets the start date for this to-do</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5" colspan="2">
+    <widget class="KPIM::KTimeEdit" name="mStartTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="whatsThis">
+      <string>Sets the start time for this to-do.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="7">
+    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="8">
+    <widget class="QLabel" name="mTimeZoneLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <underline>false</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>&lt;a href=&quot;hide&quot;&gt;&lt;font color='blue'&gt;&amp;lt;&amp;lt; Time zones&lt;/font&gt;&lt;/a&gt;</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="mEndLabel">
@@ -77,8 +150,57 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="1" colspan="4">
+   <item row="2" column="2" colspan="3">
+    <widget class="KPIM::KDateEdit" name="mEndDateEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string>Sets the due date for this to-do.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5" colspan="2">
+    <widget class="KPIM::KTimeEdit" name="mEndTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="whatsThis">
+      <string>Sets the due time for this to-do.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Duration:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2" colspan="7">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
      <item>
       <widget class="QLabel" name="mDurationLabel">
        <property name="text">
@@ -128,340 +250,158 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="1" colspan="4">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="KComboBox" name="mRecurrenceCombo"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="mRecurrenceEditButton">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="mRecurrenceLabel">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item row="6" column="0" colspan="5">
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QLabel" name="mAlarmBell">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>alarmBellImage</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QStackedWidget" name="mAlarmStack">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="SimpleAlarmPage">
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item>
-          <widget class="QCheckBox" name="mAlarmButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string extracomment="@info:tooltip">Set a reminder</string>
-           </property>
-           <property name="whatsThis">
-            <string extracomment="@info:whatsthis">Activates a reminder for this event or to-do.</string>
-           </property>
-           <property name="text">
-            <string extracomment="@option:check">&amp;Reminder</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="mAlarmTimeEdit">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string extracomment="@info:tooltip">Set an alarm</string>
-           </property>
-           <property name="whatsThis">
-            <string extracomment="@info:whatsthis">Sets how long before the event occurs the reminder will be triggered.</string>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>99999</number>
-           </property>
-           <property name="value">
-            <number>15</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="mAlarmIncrCombo">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string extracomment="@info:tooltip">Set an alarm</string>
-           </property>
-           <property name="whatsThis">
-            <string extracomment="@info:whatsthis">Sets how long before the event occurs the reminder will be triggered.</string>
-           </property>
-           <property name="sizeAdjustPolicy">
-            <enum>QComboBox::AdjustToContents</enum>
-           </property>
-           <item>
-            <property name="text">
-             <string extracomment="@item:inlistbox alarm expressed in minutes">minute(s)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string extracomment="@item:inlistbox alarm expressed in hours">hour(s)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string extracomment="@item:inlistbox alarm expressed in days">day(s)</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="AdvancedAlarmLabel">
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="mAlarmInfoLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>XXX reminders configured</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="mAlarmEditButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string extracomment="@info:tooltip">Set an advanced alarm</string>
-       </property>
-       <property name="whatsThis">
-        <string extracomment="@info:whatsthis">Push this button to create an advanced alarm for this event or to-do</string>
-       </property>
-       <property name="text">
-        <string extracomment="@action:button advanced alarm settings">Ad&amp;vanced...</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_5">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="1">
-    <widget class="KPIM::KDateEdit" name="mStartDateEdit">
+   <item row="8" column="3">
+    <widget class="KComboBox" name="mRecurrenceCombo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="toolTip">
-      <string extracomment="@info:tooltip">Set the start date</string>
-     </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Sets the start date for this to-do</string>
-     </property>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="KPIM::KTimeEdit" name="mStartTimeEdit">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="whatsThis">
-      <string>Sets the start time for this to-do.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+   <item row="8" column="4" colspan="2">
+    <widget class="QPushButton" name="mRecurrenceEditButton">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="KPIM::KDateEdit" name="mEndDateEdit">
+   <item row="8" column="6" colspan="2">
+    <widget class="QLabel" name="mRecurrenceLabel">
+     <property name="text">
+      <string>Does not recur</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="8" rowspan="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="9" column="0" colspan="2">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Reminder:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="3">
+    <widget class="KComboBox" name="mReminderCombo">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="whatsThis">
-      <string>Sets the due date for this to-do.</string>
-     </property>
+     <item>
+      <property name="text">
+       <string>None</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>5 minutes before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>10 minutes before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>15 minutes before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>30 minutes before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>45 minutes before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>1 day before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2 days before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>5 days before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>1 week before</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Custom</string>
+      </property>
+     </item>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="KPIM::KTimeEdit" name="mEndTimeEdit">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="whatsThis">
-      <string>Sets the due time for this to-do.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+   <item row="9" column="4" colspan="2">
+    <widget class="QPushButton" name="mReminderEditButton">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QCheckBox" name="mHasTimeCheck">
-     <property name="whatsThis">
-      <string>Set if this to-do's start and due dates have times associated with them.</string>
-     </property>
      <property name="text">
-      <string>Ti&amp;me associated</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Recurrence:</string>
+   <item row="9" column="8">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Duration:</string>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>89</width>
+       <height>22</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
-   <item row="4" column="0" colspan="5">
+   <item row="5" column="0" colspan="9">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="1" column="4" rowspan="2">
-    <widget class="QLabel" name="mTimeZoneLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <underline>false</underline>
-      </font>
-     </property>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>&lt;a href=&quot;hide&quot;&gt;&lt;font color='blue'&gt;&amp;lt;&amp;lt; Time zones&lt;/font&gt;&lt;/a&gt;</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::RichText</enum>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      <string>Recurrence:</string>
      </property>
     </widget>
    </item>
@@ -490,38 +430,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>mAlarmButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>mAlarmTimeEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>115</x>
-     <y>146</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>240</x>
-     <y>142</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mAlarmButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>mAlarmIncrCombo</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>159</x>
-     <y>135</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>316</x>
-     <y>136</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
