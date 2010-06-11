@@ -191,6 +191,13 @@ public:
   void updateAutoSave();
 
   /**
+    * Sets the filename to use when autosaving something. This is used when the client recovers
+    * the autosave files: It calls this method, so that the composer uses the same filename again.
+    * That way, the recovered autosave file is properly cleaned up in cleanupAutoSave():
+    */
+  void setAutoSaveFileName( const QString &fileName );
+
+  /**
    * Save the message.
    */
   void autoSaveMessage();
@@ -260,13 +267,6 @@ private:
   * KMime::Messages
   */
   void writeAutoSaveToDisk( KMime::Message::Ptr message );
-
-  /**
-    * Sets the filename to use when autosaving something. This is used when the client recovers
-    * the autosave files: It calls this method, so that the composer uses the same filename again.
-    * That way, the recovered autosave file is properly cleaned up in cleanupAutoSave():
-    */
-  void setAutoSaveFileName( const QString &fileName );
 
   /**
     * Returns the autosave interval in milliseconds (as needed for QTimer).

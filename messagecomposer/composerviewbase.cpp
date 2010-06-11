@@ -80,6 +80,8 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_autoSaveInterval( 2 * 1000 * 60 ) // default of 2 min
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
+
+  initAutoSave();
 }
 
 Message::ComposerViewBase::~ComposerViewBase()
@@ -784,7 +786,7 @@ void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
 
   Q_ASSERT( dynamic_cast< Composer* >( job ) );
   Composer* composer = dynamic_cast< Composer* >( job );
-  Q_ASSERT( mMiscComposers.contains( composer ) );
+  Q_ASSERT( m_composers.contains( composer ) );
   m_composers.removeAll( composer );
 
   if( composer->error() == Composer::NoError ) {
@@ -830,7 +832,7 @@ void Message::ComposerViewBase::writeAutoSaveToDisk( KMime::Message::Ptr message
   if ( !errorMessage.isEmpty() ) {
     kWarning() << "Auto saving failed:" << errorMessage << file.errorString();
     if ( !m_autoSaveErrorShown ) {
-      KMessageBox::sorry( this, i18n( "Autosaving the message as %1 failed.\n"
+      KMessageBox::sorry( m_parentWidget, i18n( "Autosaving the message as %1 failed.\n"
                                       "%2\n"
                                       "Reason: %3",
                                       filename,
