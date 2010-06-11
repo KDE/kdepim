@@ -198,16 +198,19 @@ public:
   void setAutoSaveFileName( const QString &fileName );
 
   /**
-   * Save the message.
-   */
-  void autoSaveMessage();
-  /**
     * Stop autosaving and delete the autosaved message.
     */
   void cleanupAutoSave();
   
   void setParentWidgetForGui( QWidget* );
 
+public slots:
+
+  /**
+   * Save the message.
+   */
+  void autoSaveMessage();
+  
 signals:
   /**
    * Message sending completed successfully.
