@@ -70,6 +70,20 @@
 #include <iostream>
 #include <cassert>
 
+// this should go into stl_util.h, which has since moved into messageviewer.
+// for lack of a better place put it in here for now.
+namespace kdtools {
+template <typename Iterator, typename UnaryPredicate>
+bool any( Iterator first, Iterator last, UnaryPredicate p )
+{
+  while ( first != last )
+    if ( p( *first ) )
+      return true;
+    else
+      ++first;
+  return false;
+}
+} // namespace kdtools
 
 //
 // some predicates to be used in STL algorithms:
@@ -344,9 +358,21 @@ namespace {
 
     const Kleo::CryptoMessageFormat format;
   };
+
+  struct IsForFormat : std::unary_function<GpgME::Key,bool> {
+    explicit IsForFormat( Kleo::CryptoMessageFormat f )
+      : protocol( isOpenPGP( f ) ? GpgME::OpenPGP :
+                  isSMIME( f )   ? GpgME::CMS :
+                                   GpgME::UnknownProtocol ) {}
+
+    bool operator()( const GpgME::Key & key ) const {
+      return key.protocol() == protocol;
+    }
+
+    const GpgME::Protocol protocol;
+  };
+
 }
-
-
 
 class Kleo::KeyResolver::SigningPreferenceCounter : public std::unary_function<Kleo::KeyResolver::Item,void> {
 public:
@@ -1732,8 +1758,11 @@ void Kleo::KeyResolver::addKeys( const std::vector<Item> & items ) {
     SplitInfo si( QStringList( it->address ) );
     CryptoMessageFormat f = AutoFormat;
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-      if ( concreteCryptoMessageFormats[i] & it->format ) {
-        f = concreteCryptoMessageFormats[i];
+      const CryptoMessageFormat fmt = concreteCryptoMessageFormats[i];
+      if ( ( fmt & it->format ) &&
+           kdtools::any( it->keys.begin(), it->keys.end(), IsForFormat( fmt ) ) )
+      {
+        f = fmt;
         break;
       }
     }
