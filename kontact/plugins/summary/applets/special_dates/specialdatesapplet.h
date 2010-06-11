@@ -24,13 +24,13 @@
 
 namespace Plasma {
     class Svg;
+    class GroupBox;
 }
 #include <Plasma/DataEngine>
 
 class QPainter;
-#include <QGraphicsLinearLayout>
 class QTimer;
-class SpecialDate;
+class QGraphicsLinearLayout;
 
 class SpecialDatesApplet : public Plasma::Applet
 {
@@ -53,11 +53,11 @@ public Q_SLOTS:
     
     
 private:
-    Plasma::Svg m_svg;
     QGraphicsLinearLayout* m_layout;
+    Plasma::Svg m_svg;
     Plasma::DataEngine* m_calEngine;
     Plasma::DataEngine* m_akoEngine;
-    QMap<QString,QVariant> m_specialDates; // date, data
+    QMap<QString,Plasma::GroupBox*> m_specialDates; // date, widget
     QTimer* m_updateTimer;
     
     int m_numDays; // How many days into the future do we show?
