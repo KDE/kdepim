@@ -23,7 +23,7 @@
 #include <kdemacros.h>
 
 #ifndef MOBILEUI_EXPORT
-# if defined(MAKE_MOBILEUI_LIB)
+# if defined(MAKE_KDEPIMMOBILEUI_LIB)
    /* We are building this library */
 #  define MOBILEUI_EXPORT KDE_EXPORT
 # else
