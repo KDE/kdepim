@@ -117,7 +117,7 @@ friend class KJotsEntry;
         static KJotsBook *createNewBook( void );
 
         void setEditable(bool editable);    //items can be made read-only with this.
-        bool isEditable();                  //check if an item is read-only
+        bool isEditable() const;                  //check if an item is read-only
 
     private:
         QString getToc();
@@ -154,7 +154,7 @@ class KJotsPage : public KJotsEntry
         static KJotsPage *createNewPage( int );
 
         void setEditable(bool editable);    //items can be made read-only with this.
-        bool isEditable();                  //check if an item is read-only
+        bool isEditable() const;                  //check if an item is read-only
 
     protected slots:
         void documentModified(bool);
