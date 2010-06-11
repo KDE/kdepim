@@ -120,6 +120,10 @@ void Attachment::setDecodedData( const QByteArray &data )
 {
   QByteArray encoded;
   KCodecs::base64Encode( data, encoded );
+
+  encoded.resize( encoded.count() + 1 );
+  encoded[encoded.count()-1] = '\0';
+
   setData( encoded.data() );
   mDataCache = data;
   mSize = mDataCache.size();
