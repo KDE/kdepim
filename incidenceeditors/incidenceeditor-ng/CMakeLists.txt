@@ -110,7 +110,6 @@ if (KDEPIM_MOBILE_UI)
   )
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES
-    DEFINE_SYMBOL KDEPIM_MOBILE_UI
     VERSION ${GENERIC_LIB_VERSION}
     SOVERSION ${GENERIC_LIB_SOVERSION}
   )

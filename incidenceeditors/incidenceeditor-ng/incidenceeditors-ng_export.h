@@ -23,7 +23,7 @@
 #include <kdemacros.h>
 
 #ifndef INCIDENCEEDITORS_NG_EXPORT
-# if defined(MAKE_INCIDENCEEDITORSNG_LIB)
+# if defined(MAKE_INCIDENCEEDITORSNG_LIB) || defined(MAKE_INCIDENCEEDITORSNGMOBILE_LIB)
    /* We are building this library */ 
 #  define INCIDENCEEDITORS_NG_EXPORT KDE_EXPORT
 # else

@@ -815,3 +815,5 @@ void IncidenceDateTimeEditor::setDuration()
            "current start and end dates and times." ) );
 #endif
 }
+
+#include "moc_incidencedatetimeeditor.cpp"
