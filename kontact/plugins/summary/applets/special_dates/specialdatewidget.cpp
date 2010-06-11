@@ -35,8 +35,8 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
     : Plasma::GroupBox(parent),
       m_date(date),
       m_icon(0),
-      m_layout(0),
-      m_uri(uri)
+      m_uri(uri),
+      m_layout(0)
 {    
     // create icon
     KIcon ic = KIcon(iconName);
@@ -73,7 +73,7 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
 
 void SpecialDateWidget::click()
 {
-    kDebug() << "click :)";
+    //kDebug() << "click :)";
 }
 
 Plasma::IconWidget* SpecialDateWidget::icon()

@@ -66,7 +66,7 @@ void SpecialDatesApplet::init()
 
 void SpecialDatesApplet::addSource(QString sourceName)
 {
-    kDebug() << "Connecting to source" << sourceName;
+    //kDebug() << "Connecting to source" << sourceName;
     
     m_akoEngine->connectSource(sourceName, this);
 }
@@ -93,7 +93,7 @@ void SpecialDatesApplet::updateSpecialDates()
     QString query = QString("holidays:%1:%2:%3");
     query = query.arg(m_locale, date.toString("yyyy-MM-dd"), date.addDays(m_numDays).toString("yyyy-MM-dd"));
     
-    kDebug() << "Query calendar DataSource" << query;
+    //kDebug() << "Query calendar DataSource" << query;
     
     Plasma::DataEngine::Data holidays = m_calEngine->query(query);
     
@@ -107,7 +107,7 @@ void SpecialDatesApplet::updateSpecialDates()
         
         QString text = data["name"].toString();
         
-        kDebug() << date << it.key();
+        //kDebug() << date << it.key();
         
         m_specialDates[it.key()] = new SpecialDateWidget(this,text,"view-calendar-holiday",KUrl(),date);
     }
@@ -118,8 +118,8 @@ void SpecialDatesApplet::updateSpecialDates()
 
 void SpecialDatesApplet::updateUI()
 {
-    kDebug() << "Constructing interface based on m_specialDates";
-    kDebug() << m_specialDates;
+    //kDebug() << "Constructing interface based on m_specialDates";
+    //kDebug() << m_specialDates;
     
     for( int i = 0; i < m_layout->count(); i++ )
     {
@@ -137,7 +137,7 @@ void SpecialDatesApplet::updateUI()
 
 void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::DataEngine::Data& data)
 {
-    kDebug() << data;
+    //kDebug() << data;
     if( sourceName == "ContactCollections" )
     {
         // data.key() is the collection name
@@ -147,7 +147,7 @@ void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::Da
             it.next();
             QString query = it.key();
             
-            kDebug() << "Query Akonadi Engine for " << query;
+            //kDebug() << "Query Akonadi Engine for " << query;
             
             m_akoEngine->query(query);
             
@@ -168,7 +168,7 @@ void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::Da
         
         if( !birthday.isNull() )
         {
-            kDebug() << birthday;
+            //kDebug() << birthday;
             
             QDate currentDate = QDate::currentDate();
             
