@@ -201,7 +201,7 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
 
     KPIM::DistributionListEditor::Line* const last = d->addLineForEntry( KPIM::DistributionList::Entry() );
     const QSize hint = sizeHint();
-    resize( hint.width() * 1.5, hint.height() );
+    resize( hint.width() * 3L/2, hint.height() );
 }
 
 KPIM::DistributionListEditor::EditorWidget::~EditorWidget()
