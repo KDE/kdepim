@@ -497,7 +497,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
       composer->setSigningKeys( signingKeys );
       composer->setMessageCryptoFormat( concreteSignFormat );
-      composer->setSignAndEncrypt( m_sign, m_sign );
+      composer->setSignAndEncrypt( m_sign, m_encrypt );
 
       composers.append( composer );
     }
