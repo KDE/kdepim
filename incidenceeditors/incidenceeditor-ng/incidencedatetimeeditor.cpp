@@ -86,6 +86,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
 {
   delete mTimeZones;
+  delete mLastRecurrence;
 }
 
 void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
@@ -124,6 +125,32 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
             || ! mUi->mTimeZoneComboEnd->selectedTimeSpec().isLocalZone() ) )
     setTimeZonesVisibility( true );
 
+#ifndef KDEPIM_MOBILE_UI
+  if ( incidence->recurs() ) {
+    // Note: we use a copy, because  mLastRecurrence gets deleted when the recurrence
+    //       change.
+    mLastRecurrence = new Recurrence( *incidence->recurrence() );
+    Q_ASSERT( *mLastRecurrence == *incidence->recurrence() );
+    KDateTime startDt = currentStartDateTime();
+    startDt.setDateOnly( !mUi->mHasTimeCheck->isChecked() && mUi->mStartCheck->isChecked() );
+
+    const int index = RecurrencePresets::presetIndex( *mLastRecurrence, startDt );
+    if ( index == -1 ) { // Custom recurrence
+      mUi->mRecurrenceCombo->blockSignals( true );
+      mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
+      mUi->mRecurrenceCombo->blockSignals( false );
+    } else {
+      mUi->mRecurrenceCombo->blockSignals( true );
+      mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
+      mUi->mRecurrenceEditButton->setEnabled( true );
+      mUi->mRecurrenceCombo->blockSignals( false );
+    }
+
+  } else {
+    mUi->mRecurrenceCombo->setCurrentIndex( 0 );
+  }
+#endif
+
   mWasDirty = false;
 }
 
@@ -136,11 +163,15 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
   else
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
 
-  if ( mLastRecurrence ) { // The recurrence was modified
+#ifndef KDEPIM_MOBILE_UI
+  if ( mUi->mRecurrenceCombo->currentIndex() > 0 ) {
+    Q_ASSERT( mLastRecurrence );
     *incidence->recurrence() = *mLastRecurrence;
+    Q_ASSERT( *mLastRecurrence == *incidence->recurrence() );
   } else {
     incidence->recurrence()->unsetRecurs();
   }
+#endif
 }
 
 bool IncidenceDateTimeEditor::isDirty() const
@@ -191,7 +222,7 @@ void IncidenceDateTimeEditor::editRecurrence()
       KDateTime start = currentStartDateTime();
       QScopedPointer<Recurrence>
         preset( RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start ) );
-      qDebug() << ( *preset != *mLastRecurrence ) << preset.data() << mLastRecurrence;
+
       if ( *preset != *mLastRecurrence ) {
         mUi->mRecurrenceCombo->blockSignals( true );
         mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
@@ -295,7 +326,7 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
 
   QScopedPointer<Recurrence> rec;
   KDateTime start = currentStartDateTime();
-  start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && !mUi->mStartCheck->isChecked() );
+  start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && mUi->mStartCheck->isChecked() );
 
   if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
     // Configure a custom recurrence, use by default the Weekly recurrence preset
@@ -304,6 +335,11 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
     dialog->load( *rec, currentStartDateTime().dateTime(), currentEndDateTime().dateTime() );
     if ( dialog->exec() == QDialog::Accepted )
       dialog->save( mLastRecurrence );
+    else {
+      delete mLastRecurrence;
+      mLastRecurrence = 0;
+      mUi->mRecurrenceCombo->setCurrentIndex( 0 );
+    }
   } else {
     // Load a preset
     delete mLastRecurrence;
