@@ -59,7 +59,7 @@ void IncidenceRecurrenceDialog::load( const KCal::Recurrence &rec, const QDateTi
   d->mEditor->loadPreset( rec, from, to );
 }
 
-void IncidenceRecurrenceDialog::IncidenceRecurrenceDialog::save( KCal::Recurrence *rec )
+void IncidenceRecurrenceDialog::save( KCal::Recurrence *rec )
 {
   d->mEditor->savePreset( rec );
 }
