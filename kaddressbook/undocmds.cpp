@@ -28,6 +28,8 @@
 #include <klocale.h>
 #include <kapplication.h>
 
+#include <kabc/resource.h>
+
 #include "addresseeutil.h"
 #include "addresseeconfig.h"
 #include "core.h"
