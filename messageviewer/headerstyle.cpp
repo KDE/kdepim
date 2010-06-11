@@ -767,9 +767,9 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   if(isTopLevel())
     headerStr +=
       "<div style=\"position: fixed; top: 0px; left: 0px; background-color: #606060; "
-      "background-image: url("+imgpath+"s_left.png); width: 10px; min-height: 100%;\">&nbsp;</div>"
+      "width: 10px; min-height: 100%;\">&nbsp;</div>"
       "<div style=\"position: fixed; top: 0px; right: 0px;  background-color: #606060; "
-      "background-image: url("+imgpath+"s_right.png); width: 10px; min-height: 100%;\">&nbsp;</div>";
+      "width: 10px; min-height: 100%;\">&nbsp;</div>";
 
   headerStr +=
     "<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">"
