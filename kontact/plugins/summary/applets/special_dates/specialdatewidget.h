@@ -17,26 +17,51 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SPECIAL_DATES_WIDGET_H
-#define SPECIAL_DATES_WIDGET_H
+#ifndef SPECIALDATEWIDGET_H
+#define SPECIALDATEWIDGET_H
 
-#include <Plasma/Label>
+#include <Plasma/GroupBox>
 
-class QPainter;
-#include <QGraphicsLinearLayout>
+namespace Plasma {
+    class IconWidget;
+}
 
-class SpecialDate : public Plasma::Label
+class KUrl;
+
+class QVariant;
+class QIcon;
+class QGraphicsLinearLayout;
+#include <QDate>
+#include <KUrl>
+
+class SpecialDateWidget : public Plasma::GroupBox
 {
 Q_OBJECT
 public:
-    SpecialDate(QString date, QString name);
+    explicit SpecialDateWidget(QGraphicsWidget* parent, QString text, QString icon, KUrl uri, QDate date);
+    
+    Plasma::IconWidget* icon();
+    void setIcon(Plasma::IconWidget* icon);
 
+    QDate date();
+    void setDate(QDate date);
+    
     void init();
     
+    KUrl uri();
+    void setUri(KUrl uri);
+    
+private slots:
+    void click();
+
 private:
-    QString m_dateString;
-    QString m_name;
+    QVariant m_data;
     QDate m_date;
+    Plasma::IconWidget* m_icon;
+    QString m_text;
+    KUrl m_uri;
+    
+    QGraphicsLinearLayout* m_layout;
 };
 
 #endif
