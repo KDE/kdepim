@@ -101,6 +101,19 @@ Recurrence *preset( const QString &name, const KDateTime &start )
   return rec;
 }
 
+int presetIndex( const Recurrence &recurrence, const KDateTime &start )
+{
+  const QStringList presets = availablePresets();
+
+  for ( int i = 0; i < presets.size(); ++i  ) {
+    QScopedPointer<Recurrence> presetRec( preset( presets.at( i ), start ) );
+    if ( *presetRec == recurrence )
+      return i;
+  }
+
+  return -1;
+}
+
 
 } // RecurrencePresets
 } // IncidenceEditorsNG

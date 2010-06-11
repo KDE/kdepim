@@ -29,6 +29,12 @@ namespace RecurrencePresets {
    */
   KCal::Recurrence* preset( const QString &name, const KDateTime &start);
 
+  /**
+   * Returns the index of the preset in availablePresets for the given recurrence,
+   * or -1 if no preset is equal to the given recurrence.
+   */
+  int presetIndex( const KCal::Recurrence &recurrence, const KDateTime &start );
+
 } // RecurrencePresets
 
 } // IncidenceEditorsNG
