@@ -1,5 +1,7 @@
 /*
     Copyright (c) 2009 Jonathan Armond <jon.armond@gmail.com>
+    Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+    Author: Kevin Krammer, krake@kdab.com
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -22,11 +24,21 @@
 
 #include "kmigratorbase.h"
 
-#include <QStringList>
+#include <KSharedConfig>
 
-class MixedTreeConverter;
-class KConfig;
+#include <QStringList>
+#include <QHash>
+
+class AbstractCollectionMigrator;
 class KJob;
+class MixedMaildirStore;
+class OrgKdeAkonadiImapSettingsInterface;
+class OrgKdeAkonadiPOP3SettingsInterface;
+
+namespace KWallet
+{
+  class Wallet;
+}
 
 namespace KMail
 {
@@ -44,11 +56,19 @@ class KMailMigrator : public KMigratorBase
 
     void migrate();
 
+    void migrateTags();
+    void migrateRCFiles();
     void migrateNext();
     void migrateLocalFolders();
     void migrationDone();
+    void deleteOldGroup();
 
-  private slots:
+  Q_SIGNALS:
+    void status( const QString &msg );
+    void progress( int value );
+    void progress( int min, int max, int value );
+
+  private Q_SLOTS:
     void imapAccountCreated( KJob *job );
     void imapDisconnectedAccountCreated( KJob *job );
     void pop3AccountCreated( KJob *job );
@@ -57,25 +77,64 @@ class KMailMigrator : public KMigratorBase
     void localMaildirCreated( KJob *job );
 
     void localFoldersMigrationFinished( const Akonadi::AgentInstance &instance, const QString &error );
-    void dimapFoldersMigrationFinished( const Akonadi::AgentInstance &instance, const QString &error );
+    void imapFoldersMigrationFinished( const Akonadi::AgentInstance &instance, const QString &error );
 
     void collectionMigratorMessage( int type, const QString &msg );
+    void collectionMigratorFinished();
+    void collectionMigratorEmittedNotification();
 
-  private:
+    void instanceStatusChanged( const Akonadi::AgentInstance &instance );
+    void instanceProgressChanged( const Akonadi::AgentInstance &instance );
+
+    void imapCacheImportFinished( const Akonadi::AgentInstance &instance, const QString &error );
+    void imapCacheCleanupFinished( const Akonadi::AgentInstance &instance );
+
+    void specialColDefaultResourceCheckFinished( const Akonadi::AgentInstance &instance );
+
+    private:
+    void deleteOldGroup( const QString& );
     void migrateImapAccount( KJob *job, bool disconnected );
     bool migrateCurrentAccount();
-    void migrationCompleted( const Akonadi::AgentInstance &instance );
     void migrationFailed( const QString &errorMsg, const Akonadi::AgentInstance &instance
                           = Akonadi::AgentInstance() );
+    void migrationCompleted( const Akonadi::AgentInstance &instance );
+
+    void connectCollectionMigrator( AbstractCollectionMigrator *migrator );
+
+    void evaluateCacheHandlingOptions();
+    void migrateInstanceTrashFolder();
+
+    void migratePassword( const QString &idString, const Akonadi::AgentInstance &instance,
+                          const QString &newFolder );
+    OrgKdeAkonadiImapSettingsInterface* createImapSettingsInterface( const Akonadi::AgentInstance& instance );
+    OrgKdeAkonadiPOP3SettingsInterface* createPop3SettingsInterface( const Akonadi::AgentInstance& instance );
 
   private:
-    KConfig *mConfig;
+    KWallet::Wallet *mWallet;
+    KSharedConfigPtr mConfig;
+    KSharedConfigPtr mEmailIdentityConfig;
+    KSharedConfigPtr mKcmKmailSummaryConfig;
     QString mCurrentAccount;
     QStringList mAccounts;
     QString mLocalMaildirPath;
     typedef QStringList::iterator AccountIterator;
     AccountIterator mIt;
-    MixedTreeConverter *mConverter;
+    Akonadi::AgentInstance mCurrentInstance;
+    bool mDeleteCacheAfterImport;
+    MixedMaildirStore *mDImapCache;
+    MixedMaildirStore *mImapCache;
+    int mRunningCacheImporterCount;
+    bool mLocalFoldersDone;
+
+    struct AccountConfig {
+      AccountConfig() : imapAccount( false ){ }
+      Akonadi::AgentInstance instance;
+      bool imapAccount;
+    };
+    QHash<QString, AccountConfig> mAccountInstance;
+    QList<Akonadi::AgentInstance> mFailedInstances;
+
+    bool mForwardResourceNotifications;
 };
 
 } // namespace KMail
