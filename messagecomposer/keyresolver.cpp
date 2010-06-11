@@ -274,8 +274,7 @@ static QStringList keysAsStrings( const std::vector<GpgME::Key>& keys ) {
   return strings;
 }
 
-static std::vector<GpgME::Key> TrustedOrConfirmed( const std::vector<GpgME::Key> & keys, const QString & address ) {
-
+static std::vector<GpgME::Key> trustedOrConfirmed( const std::vector<GpgME::Key> & keys, const QString & address, bool & canceled ) {
   // PENDING(marc) work on UserIDs here?
   std::vector<GpgME::Key> fishies;
   std::vector<GpgME::Key> ickies;
@@ -329,6 +328,7 @@ static std::vector<GpgME::Key> TrustedOrConfirmed( const std::vector<GpgME::Key>
           == KMessageBox::Continue )
     return keys;
   else
+    canceled = true;
     return std::vector<GpgME::Key>();
 }
 
@@ -1621,7 +1621,10 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
               "be used for this recipient.", person),
             keys );
       }
-      keys = TrustedOrConfirmed( keys, address );
+      bool canceled = false;
+      keys = trustedOrConfirmed( keys, address, canceled );
+      if ( canceled )
+          return std::vector<GpgME::Key>();
 
       if ( !keys.empty() )
         return keys;
@@ -1645,15 +1648,18 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
   // if called with quite == true (from EncryptionPreferenceCounter), we only want to
   // check if there are keys for this recipients, not (yet) their validity, so
   // don't show the untrusted encryption key warning in that case
+  bool canceled = false;
   if ( !quiet )
-    matchingKeys = TrustedOrConfirmed( matchingKeys, address );
+    matchingKeys = trustedOrConfirmed( matchingKeys, address, canceled );
+  if ( canceled )
+    return std::vector<GpgME::Key>();
   if ( quiet || matchingKeys.size() == 1 )
     return matchingKeys;
 
   // no match until now, or more than one key matches; let the user
   // choose the key(s)
   // FIXME: let user get the key from keyserver
-  return TrustedOrConfirmed( selectKeys( person,
+  return trustedOrConfirmed( selectKeys( person,
           matchingKeys.empty()
           ? i18nc("if in your language something like "
               "'key(s)' is not possible please "
@@ -1671,7 +1677,9 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
               "More than one key matches \"%1\".\n\n"
               "Select the key(s) which should "
               "be used for this recipient.", person),
-          matchingKeys ), address );
+          matchingKeys ), address, canceled );
+  // we can ignore 'canceled' here, since trustedOrConfirmed() returns
+  // an empty vector when canceled == true, and we'd just do the same
 }
 
 
