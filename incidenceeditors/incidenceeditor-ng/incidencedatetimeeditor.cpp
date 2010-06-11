@@ -32,6 +32,7 @@
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_iedatetimemobile.h"
 #else
+#include "../editoralarms.h"
 #include "ui_incidencedatetime.h"
 #endif
 
@@ -55,7 +56,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
 #else
-  mUi->mAlarmEditButton->setPixmap( SmallIcon( "task-reminder" ) );
+  mUi->mAlarmEditButton->setIcon( SmallIcon( "task-reminder" ) );
   mUi->mAlarmEditButton->setEnabled( false );
   mUi->mAlarmCombo->insertItems( 1, AlarmPresets::availablePresets() );
   mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
@@ -71,7 +72,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
            SLOT(toggleTimeZoneVisibility()) );
   connect( mUi->mAlarmCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(updateAlarmPreset(int)) );
-  connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()),
+  connect( mUi->mAlarmEditButton, SIGNAL(clicked()),
            SLOT(editAlarm()) );
   connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(updateRecurrencePreset(int)) );
@@ -215,6 +216,9 @@ void IncidenceDateTimeEditor::setActiveDate( const QDate &activeDate )
 void IncidenceDateTimeEditor::editAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
+  KCal::Alarm::List list;
+  QScopedPointer<EditorAlarms> dialog( new EditorAlarms( mLoadedIncidence->type(), &list, this ) );
+  dialog->exec();
 #endif
 }
 

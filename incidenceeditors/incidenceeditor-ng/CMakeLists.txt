@@ -36,6 +36,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
   ../categoryselectdialog.cpp
+  ../editoralarms.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
 )

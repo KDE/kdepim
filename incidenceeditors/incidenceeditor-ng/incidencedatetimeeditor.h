@@ -95,6 +95,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
     Ui::IncidenceDateTimeEditor *mUi;
 
     KCal::Recurrence *mLastRecurrence;
+    KCal::Alarm::List *mLastAlarms;
 
     QDate mActiveDate;
     /**
