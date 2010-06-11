@@ -77,6 +77,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_urgent( false )
  , m_cryptoMessageFormat( Kleo::AutoFormat )
  , m_pendingQueueJobs( 0 )
+ , m_autoSaveTimer( 0 )
  , m_autoSaveInterval( 2 * 1000 * 60 ) // default of 2 min
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
