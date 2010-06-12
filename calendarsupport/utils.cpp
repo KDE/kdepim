@@ -316,7 +316,6 @@ Collection::List Akonadi::collectionsFromModel( const QAbstractItemModel* model,
     const Collection collection = collectionFromIndex( i );
     if ( collection.isValid() ) {
       collections << collection;
-    } else {
       QModelIndex childIndex = i.child( 0, 0 );
       if ( childIndex.isValid() ) {
         collections << collectionsFromModel( model, i );
