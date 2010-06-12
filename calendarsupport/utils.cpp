@@ -296,17 +296,6 @@ Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
   return collection;
 }
 
-Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
-                                               int dialogCode,
-                                               const Akonadi::Collection &defaultCollection )
-{
-  QStringList mimeTypes;
-  mimeTypes << Akonadi::IncidenceMimeTypeVisitor::todoMimeType()
-            << Akonadi::IncidenceMimeTypeVisitor::eventMimeType()
-            << Akonadi::IncidenceMimeTypeVisitor::journalMimeType();
-  return selectCollection( parent, dialogCode, mimeTypes, defaultCollection );
-}
-
 Item Akonadi::itemFromIndex( const QModelIndex& idx )
 {
   Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();

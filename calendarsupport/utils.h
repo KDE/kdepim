@@ -176,10 +176,6 @@ namespace Akonadi
   * there was no collection selected.
   */
 
-  // TODO: remove me
-  AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection selectCollection( QWidget *parent, int dialogCode,
-                                                                 const Akonadi::Collection& defaultCollection = Akonadi::Collection() );
-
   AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection selectCollection( QWidget *parent, int dialogCode,
                                                                  const QStringList &mimeTypes,
                                                                  const Akonadi::Collection& defaultCollection = Akonadi::Collection() );
