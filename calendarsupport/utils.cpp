@@ -375,7 +375,7 @@ QString Akonadi::displayName( const Collection &c )
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
 }
 
-QString subMimeTypeForIncidence( KCal::Incidence *incidence )
+QString Akonadi::subMimeTypeForIncidence( KCal::Incidence *incidence )
 {
   IncidenceMimeTypeVisitor visitor;
   incidence->accept( visitor );

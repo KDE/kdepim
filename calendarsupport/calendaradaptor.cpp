@@ -194,10 +194,7 @@ bool CalendarAdaptor::addIncidence( const Incidence::Ptr &incidence )
   }
   Akonadi::Collection collection;
 
-  //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
-  //PENDING(AKONADI_PORT) shouldn't be hardcoded?
-  const QString incidenceMimeType = QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" ).arg(
-                                    QLatin1String( incidence->type().toLower() ) );
+  const QString incidenceMimeType = Akonadi::subMimeTypeForIncidence( incidence.get() );
 
   if ( mStoreDefaultCollection && mDefaultCollection.isValid() ) {
     collection = mDefaultCollection;

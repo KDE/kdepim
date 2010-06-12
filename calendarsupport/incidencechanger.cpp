@@ -559,9 +559,8 @@ bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
 
   Item item;
   item.setPayload<KCal::Incidence::Ptr>( incidence );
-  //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
-  //PENDING(AKONADI_PORT) shouldn't be hardcoded?
-  item.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" ).arg( QLatin1String( incidence->type().toLower() ) ) );
+
+  item.setMimeType( Akonadi::subMimeTypeForIncidence( incidence.get() ) );
   ItemCreateJob *job = new ItemCreateJob( item, collection );
 
   // The connection needs to be queued to be sure addIncidenceFinished is called after the kjob finished
