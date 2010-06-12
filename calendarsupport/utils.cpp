@@ -374,3 +374,10 @@ QString Akonadi::displayName( const Collection &c )
   const EntityDisplayAttribute* attr = c.attribute<EntityDisplayAttribute>();
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
 }
+
+QString subMimeTypeForIncidence( KCal::Incidence *incidence )
+{
+  IncidenceMimeTypeVisitor visitor;
+  incidence->accept( visitor );
+  return visitor.mimeType();  
+}
