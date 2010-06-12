@@ -253,12 +253,16 @@ bool MailScheduler::acceptCounterProposal( KCal::Incidence *incidence )
     //FIXME: Add error handling
   } else {
     int dialogCode = 0;
-    Akonadi::Collection collection = Akonadi::selectCollection( 0, dialogCode );
+    //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
+    //PENDING(AKONADI_PORT) shouldn't be hardcoded?
+    const QString incidenceMimeType = QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" ).arg(
+                                        QLatin1String( incidence->type().toLower() ) );    
+    QStringList mimeTypes( incidenceMimeType );
+    Akonadi::Collection collection = Akonadi::selectCollection( 0, dialogCode, mimeTypes );
 
     Akonadi::Item item;
     item.setPayload( Incidence::Ptr( incidence->clone() ) );
-    //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
-    item.setMimeType( QString::fromLatin1("application/x-vnd.akonadi.calendar.%1").arg(QLatin1String(incidence->type().toLower())) ); //PENDING(AKONADI_PORT) shouldn't be hardcoded?
+    item.setMimeType( incidenceMimeType );
 
     new Akonadi::ItemCreateJob( item, collection );
     //FIXME: Add error handling

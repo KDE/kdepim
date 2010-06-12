@@ -264,15 +264,12 @@ QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spe
 
 Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
                                                int dialogCode,
+                                               const QStringList &mimeTypes,
                                                const Akonadi::Collection &defaultCollection )
 {
   QPointer<CollectionDialog> dlg( new CollectionDialog( parent ) );
-  QStringList mimetypes;
-  mimetypes << Akonadi::IncidenceMimeTypeVisitor::todoMimeType();
-  mimetypes << Akonadi::IncidenceMimeTypeVisitor::journalMimeType();
-  mimetypes << Akonadi::IncidenceMimeTypeVisitor::eventMimeType();
 
-  dlg->setMimeTypeFilter( mimetypes );
+  dlg->setMimeTypeFilter( mimeTypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   if ( defaultCollection.isValid() ) {
     dlg->setDefaultCollection( defaultCollection );
@@ -284,6 +281,17 @@ Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
   }
   delete dlg;
   return collection;
+}
+
+Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
+                                               int dialogCode,
+                                               const Akonadi::Collection &defaultCollection )
+{
+  QStringList mimeTypes;
+  mimeTypes << Akonadi::IncidenceMimeTypeVisitor::todoMimeType()
+            << Akonadi::IncidenceMimeTypeVisitor::eventMimeType()
+            << Akonadi::IncidenceMimeTypeVisitor::journalMimeType();
+  return selectCollection( parent, dialogCode, mimeTypes, defaultCollection );
 }
 
 Item Akonadi::itemFromIndex( const QModelIndex& idx )

@@ -194,11 +194,17 @@ bool CalendarAdaptor::addIncidence( const Incidence::Ptr &incidence )
   }
   Akonadi::Collection collection;
 
+  //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
+  //PENDING(AKONADI_PORT) shouldn't be hardcoded?
+  const QString incidenceMimeType = QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" ).arg(
+                                    QLatin1String( incidence->type().toLower() ) );
+
   if ( mStoreDefaultCollection && mDefaultCollection.isValid() ) {
     collection = mDefaultCollection;
   } else {
     int dialogCode = 0;
-    collection = Akonadi::selectCollection( mParent, dialogCode );
+    QStringList mimeTypes( incidenceMimeType );
+    collection = Akonadi::selectCollection( mParent, dialogCode, mimeTypes );
   }
 
   if ( !collection.isValid() ) {
@@ -213,10 +219,8 @@ bool CalendarAdaptor::addIncidence( const Incidence::Ptr &incidence )
 
   Akonadi::Item item;
   item.setPayload( incidence );
-  //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
-  //PENDING(AKONADI_PORT) shouldn't be hardcoded?
-  item.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" ).arg(
-                      QLatin1String( incidence->type().toLower() ) ) );
+
+  item.setMimeType( incidenceMimeType );
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
   // The connection needs to be queued to be sure addIncidenceFinished is called after the kjob finished
   // it's eventloop. That's needed cause Groupware uses synchron job->exec() calls.
