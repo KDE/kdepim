@@ -58,17 +58,6 @@ using namespace boost;
 using namespace KCal;
 using namespace Akonadi;
 
-static QLatin1String sEventType( "application/x-vnd.akonadi.calendar.event" );
-static QLatin1String sTodoType( "application/x-vnd.akonadi.calendar.todo" );
-static QLatin1String sJournalType( "application/x-vnd.akonadi.calendar.journal" );
-static QLatin1String sFreeBusyType( "application/x-vnd.akonadi.calendar.freebusy" );
-
-static QStringList kcalTypes() {
-  QStringList l;
-  l << sEventType << sTodoType << sJournalType << sFreeBusyType;
-  return l;
-}
-
 Incidence::Ptr Akonadi::incidence( const Item &item ) {
   return item.hasPayload<Incidence::Ptr>() ? item.payload<Incidence::Ptr>() : Incidence::Ptr();
 }
@@ -211,8 +200,11 @@ bool Akonadi::isValidIncidenceItemUrl( const KUrl &url, const QStringList &suppo
   return supportedMimeTypes.contains( url.queryItem( QLatin1String("type") ) );
 }
 
-bool Akonadi::isValidIncidenceItemUrl( const KUrl &url ) {
-  return isValidIncidenceItemUrl( url, kcalTypes() );
+bool Akonadi::isValidIncidenceItemUrl( const KUrl &url )
+{
+  IncidenceMimeTypeVisitor visitor;
+  
+  return isValidIncidenceItemUrl( url, visitor.allMimeTypes() );
 }
 
 static bool containsValidIncidenceItemUrl( const QList<QUrl>& urls ) {
@@ -224,7 +216,7 @@ bool Akonadi::isValidTodoItemUrl( const KUrl &url ) {
     return false;
   if ( url.scheme() != QLatin1String("akonadi") )
     return false;
-  return url.queryItem( QLatin1String("type") ) == sTodoType;
+  return url.queryItem( QLatin1String("type") ) == IncidenceMimeTypeVisitor::todoMimeType();
 }
 
 bool Akonadi::canDecode( const QMimeData* md ) {
@@ -243,7 +235,7 @@ QList<KUrl> Akonadi::incidenceItemUrls( const QMimeData* mimeData ) {
 QList<KUrl> Akonadi::todoItemUrls( const QMimeData* mimeData ) {
   QList<KUrl> urls;
   Q_FOREACH( const KUrl& i, mimeData->urls() )
-    if ( isValidIncidenceItemUrl( i , QStringList() << sTodoType ) )
+    if ( isValidIncidenceItemUrl( i , QStringList() << IncidenceMimeTypeVisitor::todoMimeType() ) )
       urls.push_back( i );
   return urls;
 }
