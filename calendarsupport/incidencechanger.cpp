@@ -530,8 +530,10 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
 
   if ( d->mDestinationPolicy == ASK_DESTINATION ||
        !defaultCollection.isValid() ) {
+    QStringList mimeTypes( Akonadi::subMimeTypeForIncidence( incidence.get() ) );
     selectedCollection = Akonadi::selectCollection( parent,
                                                     dialogCode,
+                                                    mimeTypes,
                                                     defaultCollection );
   } else {
     dialogCode = QDialog::Accepted;
