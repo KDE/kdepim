@@ -92,7 +92,7 @@ void CategoryHierarchyReader::read( QStringList categories )
 
     // make the node and any non-existent ancestors
     while ( !_path.isEmpty() ) {
-      addChild( _path.first() );
+      addChild( _path.first(), QVariant( *it ) );
       _path.pop_front();
     }
   }
@@ -108,11 +108,11 @@ void CategoryHierarchyReaderQComboBox::goUp()
   mCurrentDepth--;
 }
 
-void CategoryHierarchyReaderQComboBox::addChild( const QString &label )
+void CategoryHierarchyReaderQComboBox::addChild( const QString &label, const QVariant &userData )
 {
   QString spaces;
   spaces.fill( ' ', 2 * mCurrentDepth );
-  mBox->addItem( spaces + label );
+  mBox->addItem( spaces + label, userData );
   mCurrentDepth++;
 }
 
@@ -133,8 +133,10 @@ void CategoryHierarchyReaderQTreeWidget::goUp()
   --mCurrentDepth;
 }
 
-void CategoryHierarchyReaderQTreeWidget::addChild( const QString &label )
+void CategoryHierarchyReaderQTreeWidget::addChild( const QString &label, const QVariant &userData )
 {
+  Q_UNUSED( userData );
+  
   if ( mItem ) {
     mItem = new QTreeWidgetItem( mItem, QStringList() << label );
   } else {
