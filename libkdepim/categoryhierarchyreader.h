@@ -21,6 +21,8 @@
 #ifndef KDEPIM_CATEGORYHIERARCHYREADER_H
 #define KDEPIM_CATEGORYHIERARCHYREADER_H
 
+#include <QVariant>
+
 #include "kdepim_export.h"
 
 class QComboBox;
@@ -42,7 +44,7 @@ class KDEPIM_EXPORT CategoryHierarchyReader
     CategoryHierarchyReader() { }
     virtual void clear() = 0;
     virtual void goUp() = 0;
-    virtual void addChild( const QString &label ) = 0;
+    virtual void addChild( const QString &label, const QVariant &userData = QVariant() ) = 0;
     virtual int depth() const = 0;
 };
 
@@ -56,7 +58,7 @@ class KDEPIM_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyR
   protected:
     virtual void clear();
     virtual void goUp();
-    virtual void addChild( const QString &label );
+    virtual void addChild( const QString &label, const QVariant &userData = QVariant() );
     virtual int depth() const;
   private:
     QComboBox *mBox;
@@ -73,7 +75,7 @@ class CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
   protected:
     virtual void clear();
     virtual void goUp();
-    virtual void addChild( const QString &label );
+    virtual void addChild( const QString &label, const QVariant &userData = QVariant() );
     virtual int depth() const;
 
   private:
