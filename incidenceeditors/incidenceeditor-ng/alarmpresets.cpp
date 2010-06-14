@@ -39,61 +39,61 @@ void initPresets()
 {
   Ptr alarm( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 5 * 60 ); // 5 minutes before
+  alarm->setStartOffset( -5 * 60 ); // 5 minutes before
   sPresetNames.append( i18nc( "@item:inlistbox", "5 minutes before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 10 * 60 ); // 10 minutes before
+  alarm->setStartOffset( -10 * 60 ); // 10 minutes before
   sPresetNames.append( i18nc( "@item:inlistbox", "10 minutes before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 15 * 60 ); // 15 minutes before
+  alarm->setStartOffset( -15 * 60 ); // 15 minutes before
   sPresetNames.append( i18nc( "@item:inlistbox", "15 minutes before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 30 * 60 ); // 30 minutes before
+  alarm->setStartOffset( -30 * 60 ); // 30 minutes before
   sPresetNames.append( i18nc( "@item:inlistbox", "30 minutes before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 45 * 60 ); // 45 minutes before
+  alarm->setStartOffset( -45 * 60 ); // 45 minutes before
   sPresetNames.append( i18nc( "@item:inlistbox", "45 minutes before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 60 * 60 );
+  alarm->setStartOffset( -60 * 60 );
   sPresetNames.append( i18nc( "@item:inlistbox", "1 hour before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 2 * 60 * 60 );
+  alarm->setStartOffset( -2 * 60 * 60 );
   sPresetNames.append( i18nc( "@item:inlistbox", "2 hours before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 24 * 60 * 60 );
+  alarm->setStartOffset( -24 * 60 * 60 );
   sPresetNames.append( i18nc( "@item:inlistbox", "1 day before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 2 * 24 * 60 * 60 );
+  alarm->setStartOffset( -2 * 24 * 60 * 60 );
   sPresetNames.append( i18nc( "@item:inlistbox", "2 days before" ) );
   sPresets.append( alarm );
 
   alarm = Ptr( new Alarm( 0 ) );
   alarm->setType( Alarm::Display );
-  alarm->setStartOffset( 5 * 24 * 60 * 60 );
+  alarm->setStartOffset( -5 * 24 * 60 * 60 );
   sPresetNames.append( i18nc( "@item:inlistbox", "5 days before" ) );
   sPresets.append( alarm );
 }
