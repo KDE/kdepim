@@ -5,19 +5,11 @@ Problems addressed
 
 * Add a context menu for business card attachments in mails
 * Remove groupwise and groupdav resources
-* kolab/issue3548: D'n'D a contact with umlauts, doesn't create a wrong "to"-header in a mail.
-* kolab/issue3548: D'n'D a contact with umlauts to Calendar or Todo part creates attendees with wrong encoding in their name
-* kolab/issue3320: Export a contact with umlauts in his name as VCard3 and import it, breaks the umlaut
-* kolab/issue4204: Copying a contact to different resource breaks the umlauts.
-* kolab/issue4054: Umlauts and sending contacts problem (rt#5956)
 * kolab/issue3411: kmail drag and drop (DnD) of email addresses with umlauts from reader to composer exposes encoded-word encoding
 * kolab/issue4352: Wish: Reminder: horizontal slider between event list and event details (rt#6142)
-* kolab/issue4405: The reminder should be in the foreground
-* kolab/issue4407: event with attachment: png attachment size changes
 * kolab/issue4414: print todos: in the result the priority and summary header overlap
 * kolab/issue4413: Todos: Print, but print events is selected
-* kolab/issue4408: event with attachment: textfield selection creates invitation without attchment
-* kolab/issue4406: Change write to read rights of a shared calendar folder, can lead to a focus problem (rt#6167)
+* kolab/issue4408: event with attachment: textfield selection creates invitation without attachment
 
 
 Friday, June 4th 2010
