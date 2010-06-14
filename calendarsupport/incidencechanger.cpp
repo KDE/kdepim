@@ -186,21 +186,21 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
 
   const Item newItem = job->item();
 
+  if ( !mCurrentChanges.contains( newItem.id() ) ) {
+    kDebug() << "Item was deleted? Great.";
+    cancelChanges( newItem.id() );
+    emit incidenceChangeFinished( Item(), newItem, UNKNOWN_MODIFIED  , true );
+    return;
+  }
+
   const Private::Change *change = mCurrentChanges[newItem.id()];
   const Incidence::Ptr oldInc = change->oldInc;
-  
+
   Item oldItem;
   oldItem.setPayload<Incidence::Ptr>( oldInc );
   oldItem.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" )
                        .arg( QLatin1String( oldInc->type().toLower() ) ) );
   oldItem.setId( newItem.id() );
-
-  if ( !mCurrentChanges.contains( newItem.id() ) ) {
-    kDebug() << "Item was deleted? Great.";
-    cancelChanges( newItem.id() );
-    emit incidenceChangeFinished( oldItem, newItem, change->action, true );
-    return;
-  }
 
   if ( job->error() ) {
     kWarning( 5250 ) << "Item modify failed:" << job->errorString();
