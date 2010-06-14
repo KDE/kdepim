@@ -1,8 +1,8 @@
-{# Plain Template #}
+<html>
+<head>
+<title></title>
 
-{% extends "base.html" %}
-
-{% block style %}
+<style>
 
 body {
     color: #000000 ! important;
@@ -10,17 +10,19 @@ body {
 }
 
 div.header {
-    font-family: "{{ font-family }}" ! important;
-    font-size: {{ font-size }} ! important;
+    font-family: "Times New Roman" ! important;
+    font-size: 14px ! important;
 }
 
-{% endblock %}
+</style>
 
-{% block content %}
+</head>
+
+<body>
 
 {% if message %}
   <div class="header" dir="ltr">
-    {{ message }}
+    {{ message|safe }}
   </div>
 {% endif %}
 
@@ -28,44 +30,44 @@ div.header {
 
 {% if subject %}
   <div dir="{{ subjectDir }}">
-    <b style="font-size:130%">{{ subject }}</b>
+    <b style="font-size:130%">{{ subject|safe }}</b>
   </div>
   <br />
 {% endif %}
 
-  Date:  {{ date }}
+{% if date %}
+  Date:  {{ date|safe }}
   <br />
+{% endif %}
 
-  From:  {{ from }}
+  From:  {{ from|safe }}
 
 {% if vCardName %}
-  &nbsp;&nbsp;<a href="{{ vCardName }}">[vCard]</a>
+  &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
 {% endif %}
 
 {% if organization %}
-  &nbsp;&nbsp;("{{ organization }}")
+  &nbsp;&nbsp;("{{ organization|safe }}")
 {% endif %}
 
   <br/>
 
-  To:  {{ to }}
+  To:  {{ to|safe }}
   <br />
 
 {% if cc %}
-  CC:  {{ cc }}
+  CC:  {{ cc|safe }}
   <br />
 {% endif %}
 
 {% if bcc %}
-  BCC:  {{ bcc }}
+  BCC:  {{ bcc|safe }}
   <br />
 {% endif %}
 
 {% if replyTo %}
-  Reply to: {{ replyTo }}
+  Reply to: {{ replyTo|safe }}
   <br />
 {% endif %}
 
 </div>
-
-{% endblock %}

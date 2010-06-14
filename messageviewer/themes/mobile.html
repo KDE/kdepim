@@ -93,10 +93,10 @@ tr.messagePath_date {
   <td class="from_header">From:</td>
 
   <td colspan="2">
-  {{ from }}
+  {{ from|safe }}
 
   {% if vCardName %}
-       &nbsp;&nbsp;<a href="{{ vCardName }}" class="linkColor">[vCard]</a>
+       &nbsp;&nbsp;<a href="{{ vCardName|safe }}" class="linkColor">[vCard]</a>
   {% endif %}
 
   </td>
@@ -104,17 +104,17 @@ tr.messagePath_date {
 
   <tr class="subject">
     <td class="subject_header">Subject:</td>
-    <td colspan="2" class="subject_content">{{ subject }} </td>
+    <td colspan="2" class="subject_content">{{ subject|safe }} </td>
   </tr>
 
   <tr class="messagePath_date">
 
   {% if messagePath %}
-    <td colspan="2" class="messagePath">{{ messagePath }}</td>
+    <td colspan="2" class="messagePath">{{ messagePath|safe }}</td>
   {% endif %}
 
     <td>&nbsp;</td>
-    <td colspan="2" class="date">sent: {{ date }}</td>
+    <td colspan="2" class="date">sent: {{ date|safe }}</td>
   </tr>
 
   </table>

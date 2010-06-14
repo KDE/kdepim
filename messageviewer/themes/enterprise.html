@@ -1,15 +1,15 @@
-{# Enterprise Template #}
+<html>
+<head>
+<title>Enterprise</title>
 
-{% extends "base.html" %}
-
-{% block style %}
+<style>
 
 body {
     color: #000000 ! important;
     background-color: #ffffff ! important;
 }
 
-div.date {
+.date {
     margin-left: 10px;
     top: 0px;
 }
@@ -19,7 +19,7 @@ div.date {
     font-weight: bold;
 }
 
-div.left, div.right {
+.left, .right {
     position: fixed;
     top: 0px;
     left: 0px;
@@ -28,131 +28,136 @@ div.left, div.right {
     min-height: 100%;
 }
 
-div.left {
-    background-image:url('{% media_finder "enterprise_s_left.png" %}');
+
+.left {
+    background-image:url('{% media_finder "images/enterprise_s_left.png" %}');
 }
 
-div.right {
-    background-image:url('{% media_finder "enterprise_s_right.png" %}');
+.right {
+    background-image:url('{% media_finder "images/enterprise_s_right.png" %}');
 }
 
-table.main {
+.main {
     background: "{{ activeColorDark }}";
     border-collapse:collapse;
     top: 14px;
     min-width: 200px;
-    cellpadding:0px;
+    padding:0px;
 }
 
-td.top_left {
+.top_left {
     min-width: 6px;
-    background-image:url('{% media_finder "enterprise_top_left.png" %}');
+    background-image:url('{% media_finder "images/enterprise_top_left.png" %}');;
 }
 
-td.top_right {
+.top_right {
     min-width: 6px;
-    background:url('{% media_finder "enterprise_top_right.png" %}');
+    background:url('{% media_finder "images/enterprise_top_right.png" %}');
 }
 
-td.top {
+.top {
     height: 6px;
     width: 100%;
-    background:url('{% media_finder "enterprise_top.png" %}');
+    background:url('{% media_finder "images/enterprise_top.png" %}');
 }
 
-td.left {
+.left {
     min-width: 6px;
     max-width: 6px; 
-    background:url('{% media_finder "enterprise_left.png" %}');
+    background:url('{% media_finder "images/enterprise_left.png" %}');
 }
 
-table.sec {
+.sec {
     color: "{{ fontColor }}" ! important;
     margin: 1px;
     border-spacing: 0px;
-    cellpadding: 0px;
+    padding: 0px;
 }
 
-td.subject_header,td.subject,td.from,td.from_header,td.to_header,td.to {
+.subject_header,td.subject,td.from,td.from_header,td.to_header,td.to {
     padding-top: 0px;
     padding-bottom: 0px;
     border-width: 0px
 }
 
-td.subject_header {
+.subject_header {
     font-size: 6px;
     text-align: right;
     padding-left: 5px;
     padding-right: 24px;
 }
 
-td.subject {
+.subject {
     font-weight: bolder;
     font-size: 120%;
     padding-right: 91px;
 }
 
-td.from_header {
+.from_header {
     font-size: 10px;
     padding-left: 5px;
     padding-right: 24px;
     text-align: right;
 }
 
-td.to_header { 
+.to_header {
     font-size: 6px;
     text-align: right;
     padding-left: 5px;
     padding-right: 24px;
 }
 
-td.s_left {
+.s_left {
     min-width: 6px;
-    background-image:url('{% media_finder "enterprise_s_left.png" %}');
+    background-image:url('{% media_finder "images/enterprise_s_left.png" %}');
 }
 
-td.s_right {
+.s_right {
     min-width: 6px;
-    background-image:url('{% media_finder "enterprise_s_right.png" %}');
+    background-image:url('{% media_finder "images/enterprise_s_right.png" %}');
 }
 
-img.sw {
+.sw {
     margin: 0px;
     height: 30px;
     overflow:hidden;
 }
 
-img.sp_right {
+.sp_right {
     float: right;
 }
 
-td.bottom_right {
+.bottom_right {
     min-width: 6px;
     max-height: 15px;
-    background:url('{% media_finder "enterprise_right.png" %}');
+    background:url('{% media_finder "images/enterprise_right.png" %}');
 }
 
-td.bottom_middle {
+.bottom_middle {
     height: 35px;
     width: 80%;
-    background:url('{% media_finder "enterprise_sbar.png" %}');
+    background:url('{% media_finder "images/enterprise_sbar.png" %}');
 }
 
-div.noprint , div.noprint_atachment {
+.noprint , .noprint_attachment {
     display:none ! important;
     position: absolute;
 }
 
-div.noprint {
+.noprint {
     top: -14px;
     right: 30px;
     width: 91px;
     height: 91px;
 }
 
-div.noprint_atachment {
+.noprint_attachment {
     top: 60px;
     right: 20px;
+}
+
+a {
+    color: #ffffff ! important;
 }
 
 a {
@@ -160,109 +165,113 @@ a {
 }
 
 a.white {
-    color: white ! important;
+    color: #ffffff ! important;
 }
 
 a.black {
-    color: black ! important;
+    color: #000000 ! important;
 }
 
-{% endblock %}
+</style>
 
-{% block content %}
+</head>
 
-  <div class="left">&nbsp;</div>     
-  <div class="right">&nbsp;</div>
+<body>
 
-  <div class="date">
-    <span class="span_date">"
-      {{ date }}
+  <div style="position: fixed; top: 0px; left: 0px; background-color: #606060; width: 10px; min-height: 100%; background-image: url('{% media_finder "images/enterprise_s_left.png" %}');"  >&nbsp;
+  </div>
+
+  <div style="position: fixed; top: 0px; right: 0px;  background-color: #606060; width: 10px; min-height: 100%; background-image: url('{% media_finder "images/enterprise_s_right.png" %}');"  >&nbsp;</div>
+
+  <div style="margin-left: 10px; top: 0px;">
+    <span font-size: 10px; font-weight: bold;>
+      {{ date|safe }}
     </span>
   </div>
 
-  <table class="main">
+  <table style="background: {{ activeColorDark }}; border-collapse:collapse; top: 14px; min-width: 200px;" cellpadding=0>
     <tr>
-      <td class="top_left"></td>
-      <td class="top"></td>
-      <td class="top_right"></td>
+      <td style="min-width: 6px; background-image: url('{% media_finder "images/enterprise_top_left.png" %}'); "></td>
+      <td style="height: 6px; width: 100%; background: url('{% media_finder "images/enterprise_top.png" %}'); "></td>
+      <td style="min-width: 6px; background: url('{% media_finder "images/enterprise_top_right.png" %}'); "></td>
    </tr>
 
    <tr> 
-     <td class="left"></td>
+     <td style="min-width: 6px; max-width: 6px; background: url('{% media_finder "images/enterprise_left.png" %}'); "></td>
      <td> 
 
-     <table class="sec">
+     <table style="color: {{ fontColor }} ! important; margin: 1px; border-spacing: 0px;" cellpadding=0>
 
      {% if subject %}
      <tr> 
-     <td class="subject_header"></td>
+     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"></td>
 
-     <td class="subject">{{ subject }}</td>
+     <td style="font-weight: bolder; font-size: 120%; padding-right: 91px;padding-top: 0px; padding-bottom: 0px; border-width: 0px; ">{{ subject|safe }}</td>
      </tr>
      {% endif %}
 
      <tr>
-     <td class="from_header">From:</td>
-     <td class="from">
-     {{ from }}
+     <td style="font-size: 10px; padding-left: 5px; padding-right: 24px; text-align: right;padding-top: 0px; padding-bottom: 0px; border-width: 0px;">From:</td>
+     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">
+     {{ from|safe }}
 
      {% if vCardName %}
-       &nbsp;&nbsp;<a href="{{ vCardName }}" class ="{{ linkColor }}">[vCard]</a>
+       &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
      {% endif %}
- 
+
      </td>
      </tr>
 
      <tr>
-     <td class="to_header"> To: </td>
-     <td class="to">{{ to }}</td>
+     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> To: </td>
+     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ to|safe }}</td>
      </tr>
 
-     {% if cc %}
+    {% if cc %}
      <tr>
-     <td class="to_header"> CC: </td>
-     <td class="to">{{ cc }}</td>
+     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> CC: </td>
+     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ cc|safe }}</td>
      </tr>
      {% endif %}
 
      {% if bcc %}
      <tr>
-     <td class="to_header"> BCC: </td>
-     <td class="to">{{ bcc }}</td>
+     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> BCC: </td>
+     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ bcc|safe }}</td>
      </tr>
      {% endif %}
+
+
 
      </table>
      </td>
 
-    <td></td>
+    <td style="min-width: 6px; max-height: 15px; url('{% media_finder "images/enterprise_right.png" %}'); "></td>
     </tr>
 
     <tr> 
-    <td class="s_left"></td>
-    <td class="bottom_middle">
-      <img src="{% media_finder "enterprise_sw.png" %}" class="sw">
-      <img src="{% media_finder "enterprise_sp_right.png" %}" class="sp_right">
+    <td style="min-width: 6px; background: url('{% media_finder "images/enterprise_s_left.png" %}'); "></td>
+    <td style="height: 35px; width: 80%; background: url('{% media_finder "images/enterprise_sbar.png" %}');">
+      <img src="{% media_finder "images/enterprise_sw.png" %}" style="margin: 0px; height: 30px; overflow:hidden;">
+      <img src="{% media_finder "images/enterprise_sp_right.png" %}" style="float: right; ">
     </td>
 
-    <td class="s_right"></td>
+    <td style="min-width: 6px; background: url('{% media_finder "images/enterprise_s_right.png" %}'); "></td>
     </tr>
   </table>
 
-{% if isTopLevel %}
-  <div class="noprint">
-    <img src="{% media_finder "enterprise_icon.png" %}" class="sp_right">
+  <div style="position: absolute; top: -14px; right: 30px; width: 91px; height: 91px;">
+    <img src="{% media_finder "images/enterprise_icon.png" %}" style="float: right;">
   </div>
 
-  <div class="noprint_attachment">
+
+  <div style="position: absolute;top: 60px;right: 20px; display:none ! important;">
     <div id="attachmentInjectionPoint"></div>
   </div>
-{% endif %}
 
 {% if isPrinting %}
-   <div style=\"padding: 6px; padding-left: 10px;\">
+   <div style="padding: 6px; padding-left: 10px;">
 {% else %}
-  <div style=\"padding: 6px;\">
+  <div style="padding: 6px;">
 {% endif %}
 
-{% endblock %}

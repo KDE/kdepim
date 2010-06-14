@@ -1,121 +1,109 @@
-{# Fancy Template #}
+<html>
+<head>
+<title></title>
 
-{% extends "base.html" %}
-
-{% block style %}
+<style>
 
 body {
     color: #000000 ! important;
     background-color: #ffffff ! important;
 }
 
-div.fancy.header, div a {
-    color: herecolor ! important;
+.fancy_header, a {
+    color: #304D69 ! important;
 }
 
-div a:hover {
+a:hover {
     text-decoration: underline ! important;
 }
 
-div.fancy.header,, table.outer {
-    background-color: herecolor ! important;
+.fancy_header, .table.outer {
+    background-color: #3384b3 ! important;
 }
 
-div.fancy.header {
+.fancy_header {
     padding: 4px ! important;
-    border: solid herecolor 1px ! important;
+    border: solid #000000 1px ! important;
 }
 
-div.fancy.header, table.outer {
-    border-bottom: solid herecolor 1px ! important;
-    border-left: solid herecolor 1px ! important;
-    border-right: solid herecolor 1px ! important;
+.fancy.header, .table.outer {
+    border-bottom: solid #000 1px ! important;
+    border-left: solid #000 1px ! important;
+    border-right: solid #000 1px ! important;
 }
 
-div.senderpic {
+.senderpic {
     font-size:0.8em ! important;
     border:1px solid black ! important;
-    background-color:herecolor ! important;
+    background-color:#3384b3 ! important;
 }
 
-div.spamheader {
+.spamheader {
     display:none ! important;
 }
 
-{% endblock %}
+</style>
 
-{% block content %}
+</head>
 
-<div class="fancy header" dir="{{ dir }}">
+<body>
+
+<div style="color: #000 ! important; background-color: #41AEF7 ! important;padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;" dir="{{ dir }}">
 
 {% if subject %}
-    <div dir="{{ subjectDir }}"> {{ subject }} </div>
+    <div dir="{{ subjectDir }}" style="padding: 4px ! important;"> {{ subject|safe }} </div>
 {% else %}
     No Subject 
 {% endif %}
 
-<table class="outer">
+<table width="100%" style="background-color: #DFD7D7 ! important;border-top: solid #000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;">
     <tr>
     <td width="100%">
 
     <table>
 
     <tr>
-    <th>From: </th>
-    <td>{{ from }}
+    <th align="left">From: </th>
+    <td>{{ from|safe }}
 
     {% if resentFrom %}
-      &nbsp; Resent-From: resentFrom
+      &nbsp; Resent-From: {{ resentFrom|safe }}
     {% endif %}
 
     {% if vCardName %}
-      &nbsp;&nbsp;<a href="{{ vCardName }}">[vCard]</a>
+      &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
     {% endif %}
 
     {% if organization %}
-      &nbsp;&nbsp;("{{ organization }}")
+      &nbsp;&nbsp;("{{ organization|safe }}")
     {% endif %}
 
     </td>
     </tr>
 
     <tr>
-    <th>To: </th>
-    <td>{{ to }}</td>
+    <th align="left">To: </th>
+    <td>{{ to|safe }}</td>
     </tr>
 
 {% if cc %}
     <tr>
-    <th>CC: </th>
-    <td>{{ CC }}</td>
+    <th align="left">CC: </th>
+    <td>{{ cc|safe }}</td>
     </tr>
 {% endif %}
 
 {% if bcc %}
     <tr>
-    <th>BCC: </th>
-    <td>{{ BCC }}</td>
+    <th align="left">BCC: </th>
+    <td>{{ bcc|safe }}</td>
     </tr>
 {% endif %}
 
     <tr>
-    <th>Date: </th>
+    <th align="left">Date: </th>
     <td dir="{{ dateDir }}">{{ date|safe }}</td>
     </tr>
-
-{% if user-agent %}
-    <tr>
-    <th>User-Agent: </th>
-    <td>{{ user-agent|safe }}</td>
-    </tr>
-{% endif %}
-
-{% if x-mailer %}
-    <tr>
-    <th>X-Mailer: </th>
-    <td>{{ x-mailer|safe }}</td>
-    </tr>
-{% endif %}
 
     <tr>
     <td colspan="2"><div id="attachmentInjectionPoint"></div></td>
@@ -126,7 +114,7 @@ div.spamheader {
 
 {% if photoURL %}
     <td align="center">    
-    <div class="senderpic">
+    <div style="font-size:0.8em ! important;border:1px solid black ! important;background-color:#3384b3 ! important;">
       <img src="{{ photoURL }}" width="{{ photoWidth }}" height="{{ photoHeight }}">
     </div>
     </td>
@@ -137,12 +125,10 @@ div.spamheader {
 </table>
 
 {% if spamHTML %}
-  <div class="spamheader" dir="{{ subjectDir }}">
+  <div style="display:none ! important;" dir="{{ subjectDir }}">
       <b>Spam Status</b>&nbsp;
-      <span style="padding-left: 20px;">{{ spamHTML }}</span>
+      <span style="padding-left: 20px;">{{ spamHTML|safe }}</span>
   </div>
 {% endif %}
 
 </div>
-
-{% endblock %}

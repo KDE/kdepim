@@ -1,8 +1,8 @@
-{# Brief Template #}
+<html>
+<head>
+<title></title>
 
-{% extends "base.html" %}
-
-{% block style %}
+<style>
 
 body {
     color: #000000 ! important;
@@ -10,47 +10,45 @@ body {
 }
 
 div.header {
-    font-family: "{{ font-family }}" ! important;
-    font-size: {{ font-size }} ! important;
+    font-family: "Times New Roman" ! important;
+    font-size: 14px ! important;
 }
 
-{% endblock %}
+</style>
 
-{% block content %}
+</head>
+
+<body>
 
 <div class="header" dir="{{ dir }}">
 
 {% if subject %}
   <div dir="{{ subjectDir }}">
-    <b style="font-size:130%">{{ subject }}</b>
+    <b style="font-size:130%">{{ subject|safe }}</b>
   </div>
   <br />
 {% endif %}
 
-  From:  {{ from }}
-
-{% if vCardName %}
-  &nbsp;&nbsp;<a href="{{ vCardName }}">[vCard]</a>
-{% endif %}
-
-<br/>
-
 (
 
+{{ from|safe }},
+
+{% if vCardName %}
+  &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
+{% endif %}
+
 {% if cc %}
-  CC:  {{ cc }}&nbsp;
+  CC:  {{ cc|safe }}&nbsp;
 {% endif %}
 
 {% if bcc %}
-  BCC:  {{ bcc }}&nbsp;
+  BCC:  {{ bcc|safe }}&nbsp;
 {% endif %}
 
 {% if date %}
-  {{ date }}&nbsp;
+  {{ date|safe }}&nbsp;
 {% endif %}
 
 )
 
 </div>
-
-{% endblock %}
