@@ -294,7 +294,28 @@ void IncidenceDateTimeEditor::editAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
   QScopedPointer<EditorAlarms> dialog( new EditorAlarms( mLoadedIncidence->type(), &mLastAlarms, this ) );
-  dialog->exec();
+
+  if ( dialog->exec() == KDialog::Accepted ) {
+    mUi->mAlarmCombo->blockSignals( true );
+    if ( mLastAlarms.isEmpty() )
+      mUi->mAlarmCombo->setCurrentIndex( 0 );
+    else if ( mLastAlarms.size() > 1 )
+      mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 ); // Custom
+    else { // Only one alarm
+      const int index = AlarmPresets::presetIndex( *mLastAlarms.first() );
+      if ( index == -1 )
+        mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
+      else {
+        // Add one to cope with the "no alarm" option in the combo, which is not
+        // in the presets.
+        mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
+        mUi->mRecurrenceEditButton->setEnabled( true );
+      }
+    }
+
+    mUi->mAlarmCombo->blockSignals( false );
+  }
+
 #endif
 }
 
@@ -448,7 +469,12 @@ void IncidenceDateTimeEditor::updateAlarmPreset( int index )
 #ifndef KDEPIM_MOBILE_UI
   mUi->mAlarmEditButton->setEnabled( index > 0 );
 
-
+  mLastAlarms.clearAll();
+  if ( index == mUi->mAlarmCombo->count() - 1 ) { // Custom
+    editAlarm();
+  } else if ( index > 0 ) { // One of the presets.
+    mLastAlarms.append( AlarmPresets::preset( mUi->mAlarmCombo->currentText() ) );
+  }
 
   checkDirtyStatus();
 #endif
