@@ -93,7 +93,7 @@ void EventArchiver::run( Calendar *calendar, const QDate &limitDate, QWidget *wi
     Todo::List t = calendar->rawTodos();
     Todo::List::ConstIterator it;
     for ( it = t.constBegin(); it != t.constEnd(); ++it ) {
-      if ( (*it) && ( (*it)->isCompleted() ) &&  ( (*it)->completed().date() < limitDate ) ) {
+      if ( isSubTreeComplete( *it, limitDate ) ) {
         todos.append( *it );
       }
     }
@@ -242,6 +242,34 @@ void EventArchiver::archiveIncidences( Calendar *calendar, const QDate &limitDat
     calendar->deleteIncidence( *it );
   }
   emit eventsDeleted();
+}
+
+bool EventArchiver::isSubTreeComplete( const Todo *todo, const QDate &limitDate, QStringList checkedUids ) const
+{
+  if ( !todo || !todo->isCompleted() || todo->completed().date() >= limitDate ) {
+    return false;
+  }
+
+  // This QList is only to prevent infinit recursion
+  if ( checkedUids.contains( todo->uid() ) ) {
+    // Probably will never happen, calendar.cpp checks for this
+    kWarning() << "To-do hierarchy loop detected!";
+    return false;
+  }
+
+  checkedUids.append( todo->uid() );
+
+  foreach( const Incidence *i, todo->relations() ) {
+
+    if ( i->type() == "Todo" ) {
+      const Todo *t = static_cast<const Todo*>( i );
+      if ( !isSubTreeComplete( t, limitDate, checkedUids ) ) {
+        return false;
+      }      
+    }
+  }
+
+  return true;
 }
 
 #include "eventarchiver.moc"
