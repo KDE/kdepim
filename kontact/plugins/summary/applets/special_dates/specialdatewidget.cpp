@@ -73,6 +73,16 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
 
 void SpecialDateWidget::click()
 {
+    // We need to handle the click to open the specified application to the
+    // entry for this event. How though? kontact provides interfaces to all of
+    // the KDEPIM applications in pimlibs/kontactinterfaces. The question is,
+    // how can a plasma applet get access to those engines? A plasma service?
+    // But how would that service have access to the necessary bits? Is that
+    // even possible?
+    // This is an issue that all of the applets will be having. I guess it's
+    // one of the issues with having plasma applets, they run more or less in
+    // silos.
+    
     //kDebug() << "click :)";
 }
 

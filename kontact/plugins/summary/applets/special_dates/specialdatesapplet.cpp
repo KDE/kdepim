@@ -46,8 +46,6 @@ SpecialDatesApplet::SpecialDatesApplet( QObject* parent, QVariantList args )
     m_svg.setImagePath("widgets/background");
     setBackgroundHints(DefaultBackground);
     
-    resize(500,200);
-    
     m_layout = new QGraphicsLinearLayout(Qt::Vertical, this);
     setLayout(m_layout);
 }
@@ -95,21 +93,23 @@ void SpecialDatesApplet::updateSpecialDates()
     
     //kDebug() << "Query calendar DataSource" << query;
     
-    Plasma::DataEngine::Data holidays = m_calEngine->query(query);
+    // when did this change? rrix 20100613
+    Plasma::DataEngine::Data holidayQuery = m_calEngine->query(query);
+    QVariantList holidayList = holidayQuery[query].toList();
+    QHash<QString,QVariant> holidays = holidayList.first().toHash();
     
     // unpack the hash
-    QHashIterator<QString,QVariant> it(holidays);
+    QListIterator<QVariant> it(holidayList);
     while( it.hasNext() )
     {
-        it.next();
-        QHash<QString,QVariant> data = it.value().toHash();
-        QDate date = QDate::fromString( it.key(), "yyyy-MM-dd" );
+        QHash<QString,QVariant> data = it.next().toHash();
+        QDate date = QDate::fromString( data["date"].toString(), "yyyy-MM-dd" );
         
         QString text = data["name"].toString();
         
-        //kDebug() << date << it.key();
+        //kDebug() << date << text;
         
-        m_specialDates[it.key()] = new SpecialDateWidget(this,text,"view-calendar-holiday",KUrl(),date);
+        m_specialDates[data["date"].toString()] = new SpecialDateWidget(this,text,"view-calendar-holiday",KUrl(),date);
     }
     
     m_akoEngine->connectSource("ContactCollections", this);
