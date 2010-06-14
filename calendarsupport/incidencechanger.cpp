@@ -505,6 +505,11 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
     return false;
   }
 
+  if ( !isNotDeleted( newItem.id() ) ) {
+    kDebug() << "Skipping change, the item got deleted";
+    return false;
+  }  
+
   Private::Change *change = new Private::Change();
   change->action = action;
   change->newItem = newItem;
