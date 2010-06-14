@@ -1,6 +1,5 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Copyright (C) 2010  Bertjan Broeksema <broeksema@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,7 +17,7 @@
 
 */
 
-#include "itemeditor.h"
+#include "editoritemmanager.h"
 
 #include <QtCore/QPointer>
 #include <QtGui/QMessageBox>
@@ -260,4 +259,4 @@ bool ItemEditorUi::isValid()
   return true;
 }
 
-#include "itemeditor.moc"
+#include "editoritemmanager.moc"

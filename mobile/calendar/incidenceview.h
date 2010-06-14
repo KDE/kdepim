@@ -24,7 +24,7 @@
 #include <KCal/Incidence>
 
 #include <incidenceeditors/incidenceeditor-ng/combinedincidenceeditor.h>
-#include <incidenceeditors/incidenceeditor-ng/itemeditor.h>
+#include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
 
 #include "kdeclarativefullscreenview.h"
 

@@ -1,6 +1,5 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Copyright (C) 2010  Bertjan Broeksema <broeksema@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,8 +17,8 @@
 
 */
 
-#ifndef ITEMEDITOR_H
-#define ITEMEDITOR_H
+#ifndef EDITORITEMMANAGER_H
+#define EDITORITEMMANAGER_H
 
 #include <QtCore/QObject>
 
@@ -148,4 +147,4 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
 
 }
 
-#endif // ITEMEDITOR_H
+#endif // EDITORITEMMANAGER_H

@@ -21,7 +21,7 @@
 
 #include "declarativeeditors.h"
 
-#include <incidenceeditors/incidenceeditor-ng/itemeditor.h>
+#include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
