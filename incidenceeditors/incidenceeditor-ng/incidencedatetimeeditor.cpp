@@ -147,6 +147,8 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
       mUi->mRecurrenceCombo->blockSignals( false );
     } else {
       mUi->mRecurrenceCombo->blockSignals( true );
+      // Add one to cope with the "no recurrence" option in the combo, which is
+      // not in the presets.
       mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
       mUi->mRecurrenceEditButton->setEnabled( true );
       mUi->mRecurrenceCombo->blockSignals( false );
@@ -154,6 +156,31 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 
   } else {
     mUi->mRecurrenceCombo->setCurrentIndex( 0 );
+  }
+
+  if ( incidence->isAlarmEnabled() ) {
+    if ( incidence->alarms().size() > 1 ) { // Must be custom
+      mUi->mRecurrenceCombo->blockSignals( true );
+      mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
+      mUi->mRecurrenceEditButton->setEnabled( true );
+      mUi->mRecurrenceCombo->blockSignals( false );
+    } else {
+      // Find out if the alarm is a custom one or one of the presets.
+      const int index = AlarmPresets::presetIndex( *incidence->alarms().first() );
+      if ( index == -1 ) {
+        mUi->mRecurrenceCombo->blockSignals( true );
+        mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
+        mUi->mRecurrenceCombo->blockSignals( false );
+      } else {
+        // Add one to cope with the "no alarm" option in the combo, which is not
+        // in the presets.
+        mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
+        mUi->mRecurrenceEditButton->setEnabled( true );
+      }
+
+    }
+  } else {
+    mUi->mAlarmCombo->setCurrentIndex( 0 );
   }
 #endif
 
