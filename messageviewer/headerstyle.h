@@ -63,6 +63,7 @@ class MESSAGEVIEWER_EXPORT HeaderStyle {
 protected:
   HeaderStyle();
   virtual ~HeaderStyle();
+  Grantlee::Engine *mEngine;
 
 public:
   //
@@ -127,9 +128,7 @@ public:
 
   static QString dateStr(const KDateTime &dateTime);
   static QByteArray dateShortStr(const KDateTime &dateTime);
-
-  Grantlee::Engine *engine;
-
+  
 private:
 
   QString mMessagePath;
@@ -140,7 +139,6 @@ private:
   NodeHelper *mNodeHelper;
   bool mAllowAsync;
   QObject *mSourceObject;
-
 
 };
 }

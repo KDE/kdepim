@@ -130,7 +130,7 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
   // The direction of the header is determined according to the direction
   // of the application layout.
 
-  Grantlee::Template t = engine->loadByName( QLatin1String( "brief.html" ) );
+  Grantlee::Template t = mEngine->loadByName( QLatin1String( "brief.html" ) );
   QVariantHash data;
 
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
@@ -149,7 +149,7 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
     subjectDir = directionOf( i18n("No Subject") );
 
   if ( strategy->showHeader( "subject" ) )
-    data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString()) );
+    data.insert( QLatin1String( "subject" ) , strToHtml( message->subject()->asUnicodeString()) );
     data.insert( QLatin1String( "subjectDir" ) , subjectDir );
 
   if ( strategy->showHeader( "from" ) ) {
@@ -176,8 +176,10 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
   // ### iterate over the rest of strategy->headerToDisplay() (or
   // ### all headers if DefaultPolicy == Display) (elsewhere, too)
   Grantlee::Context c( data );
-  c.setRelativeMediaPath("images/");
+  //c.setRelativeMediaPath("images/");
   QString headerStr = t->render( &c );
+
+  kDebug() << headerStr;
 
   return headerStr;
 }
@@ -214,7 +216,7 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
   // The direction of the header is determined according to the direction
   // of the application layout.
 
-  Grantlee::Template t = engine->loadByName( QLatin1String( "plain.html" ) );
+  Grantlee::Template t = mEngine->loadByName( QLatin1String( "plain.html" ) );
   QVariantHash data;
   
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
@@ -246,7 +248,7 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
   }   
 
   if ( strategy->showHeader( "date" ) )
-    data.insert( QLatin1String( "date" ) , strToHtml(dateString(message,isPrinting(),false)) );
+    data.insert( QLatin1String( "date" ) , strToHtml( dateString(message,isPrinting(),false) ) );
 
   if ( strategy->showHeader( "from" ) ) {
     data.insert( QLatin1String( "from" ) , StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
@@ -423,7 +425,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   // The direction of the header is determined according to the direction
   // of the application layout.
 
-  Grantlee::Template t = engine->loadByName( QLatin1String( "fancy.html" ) );
+  Grantlee::Template t = mEngine->loadByName( QLatin1String( "fancy.html" ) );
   QVariantHash data;
 
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
@@ -568,7 +570,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 ( GlobalSettings::self()->showEmoticons() ?
                   LinkLocator::ReplaceSmileys : 0 );
 
-    data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString(), flags ) );
+    data.insert( QLatin1String( "subject" ) , strToHtml( message->subject()->asUnicodeString(), flags ) );
     data.insert( QLatin1String( "subjectDir" ) , subjectDir );
   }
 
@@ -696,7 +698,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   // The direction of the header is determined according to the direction
   // of the application layout.
 
-  Grantlee::Template t = engine->loadByName( QLatin1String( "enterprise.html" ) );
+  Grantlee::Template t = mEngine->loadByName( QLatin1String( "enterprise.html" ) );
   QVariantHash data;  
 
   QString dir = ( QApplication::layoutDirection() == Qt::RightToLeft ) ? "rtl" : "ltr" ;
@@ -729,10 +731,11 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
   }
 
   // 3D borders
-  if(isTopLevel())
+  if(isTopLevel()) {
     data.insert( QLatin1String( "date" ), strToHtml( dateString( message, isPrinting(), false ) ) );
     data.insert( QLatin1String( "activeColorDark" ), activeColorDark.name() );
     data.insert( QLatin1String( "fontColor" ), fontColor.name() );
+  } 
 
   if ( strategy->showHeader( "subject" ) ) {
     data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString()) );
@@ -816,7 +819,7 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   // Use always the brief strategy for the mobile headers.
   const HeaderStrategy *strategy = HeaderStrategy::brief();
 
-  Grantlee::Template t = engine->loadByName( QLatin1String( "mobile.html" ) );
+  Grantlee::Template t = mEngine->loadByName( QLatin1String( "mobile.html" ) );
   QVariantHash data;  
 
   data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly) );
@@ -854,18 +857,18 @@ HeaderStyle::HeaderStyle()
   : mStrategy( 0 ), mPrinting( false ), mTopLevel( true ), mNodeHelper( 0 ), mAllowAsync( false ),
     mSourceObject( 0 )
 {
-    engine = new Grantlee::Engine();
+    mEngine = new Grantlee::Engine();
 
     Grantlee::FileSystemTemplateLoader::Ptr loader(new Grantlee::FileSystemTemplateLoader());
 
-    engine->addTemplateLoader( loader );
+    mEngine->addTemplateLoader( loader );
     loader->setTemplateDirs( QStringList() << KStandardDirs::locate("data","messageviewer/themes/") );
     // TODO: We should use KStandardDirs
-    engine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH );
+    mEngine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH );
 }
 
 HeaderStyle::~HeaderStyle() {
-
+    delete mEngine;
 }
 
 HeaderStyle * HeaderStyle::create( Type type ) {
