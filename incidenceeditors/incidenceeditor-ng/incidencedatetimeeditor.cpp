@@ -214,7 +214,39 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceDateTimeEditor::isDirty() const
 {
-  // TODO Alarms
+  // When no alarm was set on the loaded incidence, the last alarms array should
+  // be empty, otherwise the alarms have changed.
+  if ( !mLoadedIncidence->isAlarmEnabled() && mUi->mAlarmCombo->currentIndex() > 0 )
+    return true;
+
+  if ( mLoadedIncidence->isAlarmEnabled() && mUi->mAlarmCombo->currentIndex() == 0 )
+    return true;
+
+  if ( mLoadedIncidence->isAlarmEnabled() ) {
+    const Alarm::List alarms = mLoadedIncidence->alarms();
+
+    if ( alarms.size() != mLastAlarms.size() )
+      return true; // The number of alarms has changed
+
+    // Note: Not the most efficient algorithm but I'm assuming that we're only
+    //       dealing with a couple, at most tens of alarms.
+    for ( int i = 0; i < alarms.size(); ++i ) {
+      bool found = false;
+      const Alarm *curAllarm = alarms.at( i );
+      foreach ( Alarm *alarm, mLastAlarms ) {
+        if ( *curAllarm == *alarm ) {
+          found  = true;
+          break;
+        }
+      }
+
+      if ( !found ) {
+        // There was an alarm in the mLoadedIncidence->alarms() that wasn't found
+        // in mLastAlarms. This means that one of the alarms was modified.
+        return true;
+      }
+    }
+  }
 
   // Check if a recurrence was set on a non recurring event
   if ( !mLoadedIncidence->recurs() && mLastRecurrence )
