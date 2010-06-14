@@ -20,7 +20,7 @@
 import Qt 4.7
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
-import org.kde.contacteditors 4.5 as IncidenceEditors
+import org.kde.contacteditors 4.5 as ContactEditors
 
 KPIM.MainView {
   Flickable {
@@ -76,5 +76,5 @@ KPIM.MainView {
     height: parent.height / 6;
     buttonText: KDE.i18n( "Ok" );
     onClicked: window.save();
-  }  
+  }
 }
