@@ -39,6 +39,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <cstdio>
+
 class QString;
 
 namespace Kleo {
