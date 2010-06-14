@@ -194,6 +194,13 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   Q_ASSERT( incidence );
 
   if ( alreadyExisted ) {
+
+    if ( !m_itemMap.contains( id ) ) {
+      // Item was deleted almost at the same time the change was made
+      // ignore this change
+      return;
+    }
+    
     Q_ASSERT( item.storageCollectionId() == m_itemMap.value( id ).storageCollectionId() ); // there was once a bug that resulted in items forget their collectionId...
     // update-only goes here
   } else {
