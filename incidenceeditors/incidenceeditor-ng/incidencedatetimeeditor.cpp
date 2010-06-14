@@ -56,37 +56,42 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
 #else
+  connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
+           SLOT(toggleTimeZoneVisibility()) );
+#endif
+
   mUi->mAlarmEditButton->setIcon( SmallIcon( "task-reminder" ) );
   mUi->mAlarmEditButton->setEnabled( false );
   mUi->mAlarmCombo->insertItems( 1, AlarmPresets::availablePresets() );
-  mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
 
-  QStringList recurrencePresets;
-  recurrencePresets << i18nc( "@item:inlistbox Incidence has no recurrence", "Does not repeat" );
-  recurrencePresets << RecurrencePresets::availablePresets();
-  recurrencePresets << i18nc( "@item:inlistbox Custom recurrence configuration", "Custom" );
-  mUi->mRecurrenceCombo->insertItems( 0, recurrencePresets );
+  mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
+  mUi->mRecurrenceCombo->insertItems( 1, RecurrencePresets::availablePresets() );
   mUi->mRecurrenceEditButton->setEnabled( false );
 
-  connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
-           SLOT(toggleTimeZoneVisibility()) );
+  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(updateRecurrencePreset(int)) );
+  connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()),
+           SLOT(editRecurrence()) );
   connect( mUi->mAlarmCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(updateAlarmPreset(int)) );
   connect( mUi->mAlarmEditButton, SIGNAL(clicked()),
            SLOT(editAlarm()) );
-  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(updateRecurrencePreset(int)) );
-  connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()), SLOT(editRecurrence()) );
-#endif
-
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(setDuration()) );
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)), SLOT(setDuration()) );
-  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(setDuration()) );
-  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(setDuration()) );
-  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(setDuration()) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(setDuration()) );
-  connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(setDuration()) );
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
+           SLOT(setDuration()) );
+  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
+           SLOT(setDuration()) );
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
+           SLOT(setDuration()) );
+  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)),
+           SLOT(setDuration()) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
+           SLOT(setDuration()) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
+           SLOT(setDuration()) );
+  connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
+           SLOT(setDuration()) );
 }
 
 IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
@@ -131,7 +136,6 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
             || ! mUi->mTimeZoneComboEnd->selectedTimeSpec().isLocalZone() ) )
     setTimeZonesVisibility( true );
 
-#ifndef KDEPIM_MOBILE_UI
   if ( incidence->recurs() ) {
     // Note: we use a copy, because  mLastRecurrence gets deleted when the recurrence
     //       change.
@@ -189,7 +193,6 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
   } else {
     mUi->mAlarmCombo->setCurrentIndex( 0 );
   }
-#endif
 
   mWasDirty = false;
 }
@@ -203,7 +206,6 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
   else
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
 
-#ifndef KDEPIM_MOBILE_UI
   if ( mUi->mRecurrenceCombo->currentIndex() > 0 ) {
     Q_ASSERT( mLastRecurrence );
     *incidence->recurrence() = *mLastRecurrence;
@@ -223,7 +225,6 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
       incidence->addAlarm( al );
     }
   }
-#endif
 }
 
 bool IncidenceDateTimeEditor::isDirty() const
@@ -349,9 +350,7 @@ void IncidenceDateTimeEditor::editRecurrence()
 
 void IncidenceDateTimeEditor::enableAlarm( bool enable )
 {
-#ifndef KDEPIM_MOBILE_UI
   mUi->mAlarmEditButton->setEnabled( enable && mUi->mAlarmCombo->currentIndex() > 0 );
-#endif
 }
 
 void IncidenceDateTimeEditor::setTimeZonesVisibility( bool visible )
@@ -429,7 +428,6 @@ void IncidenceDateTimeEditor::startSpecChanged()
 
 void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
 {
-#ifndef KDEPIM_MOBILE_UI
   mUi->mRecurrenceEditButton->setEnabled( mUi->mRecurrenceCombo->currentIndex() > 0 );
 
   if ( index == 0 ) { // No recurrence
@@ -462,12 +460,10 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
   }
 
   checkDirtyStatus();
-#endif
 }
 
 void IncidenceDateTimeEditor::updateAlarmPreset( int index )
 {
-#ifndef KDEPIM_MOBILE_UI
   mUi->mAlarmEditButton->setEnabled( index > 0 );
 
   mLastAlarms.clearAll();
@@ -478,7 +474,6 @@ void IncidenceDateTimeEditor::updateAlarmPreset( int index )
   }
 
   checkDirtyStatus();
-#endif
 }
 
 void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )

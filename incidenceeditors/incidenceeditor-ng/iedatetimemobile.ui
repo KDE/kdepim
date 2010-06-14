@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>545</width>
-    <height>174</height>
+    <width>697</width>
+    <height>234</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="2">
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
       <widget class="QLabel" name="mStartLabel">
@@ -41,14 +41,14 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="2">
+   <item row="0" column="1">
     <widget class="QDateEdit" name="mStartDateEdit">
      <property name="displayFormat">
       <string>MM.dd.yyyy</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
+   <item row="0" column="2">
     <widget class="QTimeEdit" name="mStartTimeEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -58,7 +58,23 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
+   <item row="1" column="1" colspan="2">
+    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_8">
      <item>
       <widget class="QLabel" name="mEndLabel">
@@ -88,7 +104,7 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="2">
+   <item row="2" column="1">
     <widget class="QDateEdit" name="mEndDateEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -101,7 +117,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3">
+   <item row="2" column="2">
     <widget class="QTimeEdit" name="mEndTimeEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -111,7 +127,33 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="3" column="1" colspan="2">
+    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QCheckBox" name="mHasTimeCheck">
+     <property name="whatsThis">
+      <string>Set if this to-do's start and due dates have times associated with them.</string>
+     </property>
+     <property name="text">
+      <string>Ti&amp;me associated</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="QLabel" name="mFreeBusyLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -124,7 +166,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="2" colspan="3">
+   <item row="5" column="1" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QRadioButton" name="mFreeRadio">
@@ -142,45 +184,132 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="2" colspan="3">
-    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QCheckBox" name="mHasTimeCheck">
-     <property name="whatsThis">
-      <string>Set if this to-do's start and due dates have times associated with them.</string>
-     </property>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>Ti&amp;me associated</string>
+      <string>Recurrence:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="2" colspan="2">
-    <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+   <item row="6" column="1" rowspan="2" colspan="2">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="KComboBox" name="mRecurrenceCombo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Does not recur</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Custom</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="mRecurrenceEditButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="KComboBox" name="mAlarmCombo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>5 minutes before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>10 minutes before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>15 minutes before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>30 minutes before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>45 minutes before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 day before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2 days before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>5 days before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 week before</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Custom</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="mAlarmEditButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Reminder:</string>
      </property>
     </widget>
    </item>
