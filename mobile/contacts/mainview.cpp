@@ -18,6 +18,7 @@
 */
 
 #include "mainview.h"
+#include "contacteditorview.h"
 #include "contactlistproxy.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
@@ -31,6 +32,19 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobi
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();
+}
+
+void MainView::newContact()
+{
+  ContactEditorView *editor = new ContactEditorView( ContactEditorView::Create );
+  editor->show();
+}
+
+void MainView::editContact( const Akonadi::Item &item )
+{
+  ContactEditorView *editor = new ContactEditorView( ContactEditorView::Edit );
+  editor->loadContact( item );
+  editor->show();
 }
 
 #include "mainview.moc"

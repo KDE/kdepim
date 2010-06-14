@@ -12,6 +12,8 @@ set(kab_mobile_srcs
   mainview.cpp
   main.cpp
   contactlistproxy.cpp
+  contacteditorview.cpp
+  declarativeeditors.cpp
 )
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
@@ -24,6 +26,7 @@ target_link_libraries(kaddressbook-mobile
     akonadi_next
     kdepim
     kdepimmobileui
+    incidenceeditorsngmobile
 )
 
 install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

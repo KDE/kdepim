@@ -95,7 +95,7 @@ KPIM.MainView {
                   height : 480 / 6
                   width : parent.width - 75
                   buttonText : KDE.i18n( "New Contact" )
-                  onClicked : { console.log( "New Contact clicked" ); }
+                  onClicked : { application.newContact(); }
                 }
                 KPIM.Button {
                   height : 480 / 6
@@ -184,17 +184,17 @@ KPIM.MainView {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.left: collectionView.right
-            /*KPIM.Button2 {
-              id : newEmailButton
+            KPIM.Button2 {
+              id : newContactButton
               anchors.top : parent.top
               anchors.left : parent.left
               anchors.right : parent.right
               buttonText : KDE.i18n( "Add Contact" )
               onClicked : {
-                console.log("Write new");
+                application.newContact();
               }
             }
-            KPIM.Button2 {
+            /*KPIM.Button2 {
               id : searchEmailButton
               anchors.top : newEmailButton.bottom
               anchors.left : parent.left

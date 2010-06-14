@@ -23,11 +23,20 @@
 
 #include "kdeclarativemainview.h"
 
+namespace Akonadi
+{
+  class Item;
+}
+
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
   public:
     explicit MainView( QWidget *parent = 0 );
+
+  public Q_SLOTS:
+    void newContact();
+    void editContact( const Akonadi::Item &item );
 };
 
 #endif // MAINVIEW_H
