@@ -160,22 +160,24 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
 
   if ( incidence->isAlarmEnabled() ) {
     if ( incidence->alarms().size() > 1 ) { // Must be custom
-      mUi->mRecurrenceCombo->blockSignals( true );
-      mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
-      mUi->mRecurrenceEditButton->setEnabled( true );
-      mUi->mRecurrenceCombo->blockSignals( false );
+      mUi->mAlarmCombo->blockSignals( true );
+      mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 );
+      mUi->mAlarmEditButton->setEnabled( true );
+      mUi->mAlarmCombo->blockSignals( false );
     } else {
       // Find out if the alarm is a custom one or one of the presets.
       const int index = AlarmPresets::presetIndex( *incidence->alarms().first() );
       if ( index == -1 ) {
-        mUi->mRecurrenceCombo->blockSignals( true );
-        mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
-        mUi->mRecurrenceCombo->blockSignals( false );
+        mUi->mAlarmCombo->blockSignals( true );
+        mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 );
+        mUi->mAlarmCombo->blockSignals( false );
       } else {
         // Add one to cope with the "no alarm" option in the combo, which is not
         // in the presets.
-        mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
-        mUi->mRecurrenceEditButton->setEnabled( true );
+        mUi->mAlarmCombo->blockSignals( true );
+        mUi->mAlarmCombo->setCurrentIndex( index + 1 );
+        mUi->mAlarmCombo->blockSignals( false );
+        mUi->mAlarmEditButton->setEnabled( true );
       }
 
       mLastAlarms.setAutoDelete( true );
@@ -216,7 +218,6 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
     for ( it = mLastAlarms.constBegin(); it != mLastAlarms.constEnd(); ++it ) {
       Alarm *al = new Alarm( *(*it) );
       al->setParent( incidence.get() );
-      al->setEnabled( true );
       // We need to make sure that both lists are the same in the end for isDirty.
       Q_ASSERT( *al == *(*it) );
       incidence->addAlarm( al );
