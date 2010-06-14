@@ -209,6 +209,19 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
   } else {
     incidence->recurrence()->unsetRecurs();
   }
+
+  incidence->clearAlarms();
+  if ( mUi->mAlarmCombo->currentIndex() > 0 ) {
+    Alarm::List::ConstIterator it;
+    for ( it = mLastAlarms.constBegin(); it != mLastAlarms.constEnd(); ++it ) {
+      Alarm *al = new Alarm( *(*it) );
+      al->setParent( incidence.get() );
+      al->setEnabled( true );
+      // We need to make sure that both lists are the same in the end for isDirty.
+      Q_ASSERT( *al == *(*it) );
+      incidence->addAlarm( al );
+    }
+  }
 #endif
 }
 
