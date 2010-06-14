@@ -26,6 +26,8 @@
 
 #include <KCal/Incidence>
 
+#include "incidenceeditors-ng_export.h"
+
 namespace IncidenceEditorsNG {
 
 /**
@@ -34,7 +36,7 @@ namespace IncidenceEditorsNG {
  * approach to this complexity. An IncidenceEditor is an editor for a specific
  * part(s) of an Incidence.
  */
-class IncidenceEditor : public QWidget
+class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QWidget
 {
   Q_OBJECT
   public:
