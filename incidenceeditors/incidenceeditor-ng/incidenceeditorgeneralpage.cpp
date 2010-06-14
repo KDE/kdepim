@@ -60,9 +60,6 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
   layout->addWidget( ieDescription, 4 );
 
-  mDirtyLabel = new QLabel( i18n( "Clean" ), this );
-  layout->addWidget( mDirtyLabel );
-
   connect( this, SIGNAL(dirtyStatusChanged(bool)),
            SLOT(updateDirtyLabel(bool)));
   
@@ -70,14 +67,6 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   combine( ieGeneral );
   combine( ieDateTime );
   combine( ieDescription );
-}
-
-void IncidenceEditorGeneralPage::updateDirtyLabel( bool isDirty )
-{
-  if ( isDirty )
-    mDirtyLabel->setText( i18n( "Dirty" ) );
-  else
-    mDirtyLabel->setText( i18n( "Clean" ) );
 }
 
 #include "moc_incidenceeditorgeneralpage.cpp"

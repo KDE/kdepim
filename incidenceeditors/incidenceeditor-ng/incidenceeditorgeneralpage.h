@@ -32,12 +32,6 @@ class IncidenceEditorGeneralPage : public CombinedIncidenceEditor
   Q_OBJECT
   public:
     IncidenceEditorGeneralPage( QWidget *parent = 0 );
-
-  private slots:
-    void updateDirtyLabel( bool isDirty );
-
-  private:
-    QLabel *mDirtyLabel;
 };
 
 } // IncidenceEditorsNG
