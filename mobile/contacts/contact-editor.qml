@@ -37,7 +37,7 @@ KPIM.MainView {
     height: parent.height - parent.height / 6 - collectionSelector.height;
     contentHeight: contactEditor.height;
     clip: true;
-    flickDirection: "VerticalFlick"
+    flickableDirection: "VerticalFlick"
 
     Column {
       anchors.fill: parent
