@@ -293,8 +293,7 @@ void IncidenceDateTimeEditor::setActiveDate( const QDate &activeDate )
 void IncidenceDateTimeEditor::editAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
-  KCal::Alarm::List list;
-  QScopedPointer<EditorAlarms> dialog( new EditorAlarms( mLoadedIncidence->type(), &list, this ) );
+  QScopedPointer<EditorAlarms> dialog( new EditorAlarms( mLoadedIncidence->type(), &mLastAlarms, this ) );
   dialog->exec();
 #endif
 }
