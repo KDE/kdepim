@@ -178,6 +178,11 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
         mUi->mRecurrenceEditButton->setEnabled( true );
       }
 
+      mLastAlarms.setAutoDelete( true );
+      mLastAlarms.clearAll();
+      for ( int i = 0; i < incidence->alarms().size(); ++i )
+        mLastAlarms.append( new Alarm( *incidence->alarms().at( i ) ) );
+
     }
   } else {
     mUi->mAlarmCombo->setCurrentIndex( 0 );
@@ -398,6 +403,9 @@ void IncidenceDateTimeEditor::updateAlarmPreset( int index )
 {
 #ifndef KDEPIM_MOBILE_UI
   mUi->mAlarmEditButton->setEnabled( index > 0 );
+
+
+
   checkDirtyStatus();
 #endif
 }
