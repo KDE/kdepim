@@ -78,7 +78,7 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_cryptoMessageFormat( Kleo::AutoFormat )
  , m_pendingQueueJobs( 0 )
  , m_autoSaveTimer( 0 )
- , m_autoSaveInterval( 2 * 1000 * 60 ) // default of 2 min
+ , m_autoSaveInterval( 1 * 1000 * 60 ) // default of 1 min
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
 
@@ -1053,6 +1053,20 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
     m_recipientsEditor->removeRecipient( oldIdent.bcc(), Recipient::Bcc );
     m_recipientsEditor->addRecipient( ident.bcc(), Recipient::Bcc );
     m_recipientsEditor->setFocusBottom();
+  }
+
+
+  KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>
+                                               ( oldIdent ).signature();
+  KPIMIdentities::Signature newSig = const_cast<KPIMIdentities::Identity&>
+                                               ( ident ).signature();
+
+  //replace existing signatures
+  const bool replaced = editor()->replaceSignature( oldSig, newSig );
+
+  // Just append the signature if there was no old signature
+  if ( !replaced && (/* msgCleared ||*/ oldSig.rawText().isEmpty() ) ) {
+    signatureController()->applySignature( newSig );
   }
 
 }

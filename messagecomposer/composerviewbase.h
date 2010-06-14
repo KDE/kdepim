@@ -150,7 +150,6 @@ public:
   
   void setIdentityCombo( KPIMIdentities::IdentityCombo* identCombo );
   KPIMIdentities::IdentityCombo* identityCombo();
-  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
 
   void setIdentityManager( KPIMIdentities::IdentityManager* identMan );
   KPIMIdentities::IdentityManager* identityManager();
@@ -206,6 +205,8 @@ public:
 
 public slots:
 
+  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
+  
   /**
    * Save the message.
    */
