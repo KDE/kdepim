@@ -25,6 +25,7 @@
 #include "incidencechanger.h"
 #include "incidencechanger_p.h"
 #include "groupware.h"
+#include "kcalprefs.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendaradaptor.h>
