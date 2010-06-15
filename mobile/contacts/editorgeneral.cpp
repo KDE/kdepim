@@ -57,7 +57,9 @@ class EditorGeneral::Private
   EditorGeneral *const q;
  
   public:
-    explicit Private( EditorGeneral *parent ) : q( parent )
+    explicit Private( EditorGeneral *parent )
+      : q( parent ),
+        mDefaultPhoto( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge ) )
     {
       mUi.setupUi( parent );
 
@@ -71,6 +73,9 @@ class EditorGeneral::Private
       mLastPhoneRow = 4; // fifth row
 
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+
+      mUi.pictureButton->setIconSize( mDefaultPhoto.size() );
+      mUi.pictureButton->setIcon( mDefaultPhoto );      
     }
 
     void ensureEmailRows( int emailCount )
@@ -95,6 +100,8 @@ class EditorGeneral::Private
 
     int mLastEmailRow;
     int mLastPhoneRow;
+
+    const QPixmap mDefaultPhoto;
     
   public: // slots
     void nameTextChanged( const QString &text )
@@ -241,6 +248,13 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact )
 
     ++widgetIt;
   }
+
+  QPixmap photo = d->mDefaultPhoto;
+  if ( !contact.photo().isEmpty() ) {
+    photo = QPixmap::fromImage( contact.photo().data() );
+  }
+  d->mUi.pictureButton->setIconSize( photo.size().boundedTo( d->mDefaultPhoto.size() ) );
+  d->mUi.pictureButton->setIcon( photo );
 }
 
 void EditorGeneral::saveContact( KABC::Addressee &contact )
