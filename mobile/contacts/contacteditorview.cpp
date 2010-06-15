@@ -97,11 +97,16 @@ void ContactEditorView::Private::saveFailed( const QString &errorMessage )
 
 void ContactEditorView::Private::load( const Item &item )
 {
+  Q_ASSERT( item.hasPayload<KABC::Addressee>() );
+ 
   mItem = item;
   mCollection = item.parentCollection();
 
+  const KABC::Addressee contact = mItem.payload<KABC::Addressee>();
+  
   if ( mEditor != 0 ) {
     mEditor->setDefaultCollection( mCollection );
+    mEditor->loadContact( contact );
   }
 }
 
@@ -110,6 +115,13 @@ Item ContactEditorView::Private::save( const Item &item )
   Item result = item;
 
   result.setMimeType( KABC::Addressee::mimeType() );
+
+  KABC::Addressee contact;
+  if ( mEditor != 0 ) {
+    mEditor->saveContact( contact );
+  }
+
+  result.setPayload<KABC::Addressee>( contact );
 
   return result;
 }
