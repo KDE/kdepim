@@ -84,9 +84,19 @@ KPIM.MainView {
       handleHeight: 120
 
       content: [
-        ContactEditors.ContactEditorLocation {
-          id: editorLocation
-          anchors.fill: parent
+        Flickable {
+          anchors.fill: parent;
+          contentHeight: editorLocation.height;
+          clip: true;
+          flickableDirection: "VerticalFlick"
+
+          Column {
+            anchors.fill: parent
+            ContactEditors.ContactEditorLocation {
+              id: editorLocation
+              width: parent.width;
+            }
+          }
         }
       ]
     }

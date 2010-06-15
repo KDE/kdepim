@@ -17,11 +17,13 @@ set(kab_mobile_srcs
   editorbase.cpp
   editorbusiness.cpp
   editorgeneral.cpp
+  editorlocation.cpp
 )
 
 kde4_add_ui_files(kab_mobile_srcs
   editorbusiness.ui
   editorgeneral.ui
+  editorlocation.ui
 )
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
