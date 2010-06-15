@@ -37,6 +37,9 @@ class EditorLocation : public EditorBase
   private:
     class Private;
     Private *const d;
+
+    Q_PRIVATE_SLOT( d, void addAddress() )
+    Q_PRIVATE_SLOT( d, void removeAddress() )
 };
 
 #endif

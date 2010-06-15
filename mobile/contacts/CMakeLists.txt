@@ -18,6 +18,7 @@ set(kab_mobile_srcs
   editorbusiness.cpp
   editorgeneral.cpp
   editorlocation.cpp
+  locationmodel.cpp
 )
 
 kde4_add_ui_files(kab_mobile_srcs

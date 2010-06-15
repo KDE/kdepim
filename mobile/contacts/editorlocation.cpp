@@ -19,9 +19,12 @@
 
 #include "editorlocation.h"
 
+#include "locationmodel.h"
 #include "ui_editorlocation.h"
 
 #include <KABC/Addressee>
+
+#include <QtGui/QDataWidgetMapper>
 
 class EditorLocation::Private
 {
@@ -31,12 +34,47 @@ class EditorLocation::Private
     explicit Private( EditorLocation *parent ) : q( parent )
     {
       mUi.setupUi( parent );
+      mModel = new LocationModel( q );
+
+      mUi.addressSelectionCombo->setModel( mModel );
+      mUi.addressSelectionCombo->setModelColumn( 0 );
+
+      mMapper = new QDataWidgetMapper( q );
+      mMapper->setModel( mModel );
+      mMapper->addMapping( mUi.streetLineEdit, 1 );
+      mMapper->addMapping( mUi.postOfficeBoxLineEdit, 2 );
+      mMapper->addMapping( mUi.localityLineEdit, 3 );
+      mMapper->addMapping( mUi.regionLineEdit, 4 );
+      mMapper->addMapping( mUi.postalCodeLineEdit, 5 );
+      mMapper->addMapping( mUi.countryLineEdit, 6 );
+      mMapper->addMapping( mUi.editLabelLineEdit, 7 );
+      mMapper->toFirst();
+
+      q->connect( mUi.addressSelectionCombo, SIGNAL( activated( int ) ),
+                  mMapper, SLOT( setCurrentIndex( int ) ) );
+      q->connect( mUi.addAddressButton, SIGNAL( clicked() ),
+                  SLOT( addAddress() ) );
+      q->connect( mUi.deleteAddressButton, SIGNAL( clicked() ),
+                  SLOT( removeAddress() ) );
+    }
+
+    void addAddress()
+    {
+      //TODO: show new dialog to ask for type
+      mModel->insertRows( 0, 1 );
+    }
+
+    void removeAddress()
+    {
+      mModel->removeRows( mMapper->currentIndex(), 1 );
     }
 
   public:
     Ui::EditorLocation mUi;
 
     KABC::Addressee mContact;
+    LocationModel *mModel;
+    QDataWidgetMapper *mMapper;
 };
 
 
