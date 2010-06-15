@@ -306,6 +306,11 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
     return false;
   }
 
+  if ( !isNotDeleted( aitem.id() ) ) {
+    kDebug() << "Item already deleted, skipping and returning true";
+    return true;
+  }
+
   if ( !( aitem.parentCollection().rights() & Collection::CanDeleteItem ) ) {
     kWarning() << "insufficient rights to delete incidence";
     return false;
