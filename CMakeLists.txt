@@ -152,7 +152,7 @@ else(KDEPIM_ONLY_KLEO)
 
 ############### Desktop vs. Mobile options ##############
 
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" TRUE)
+option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 if (KDEPIM_MOBILE_UI)
   macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" TRUE "4.7" "Required for building mobile UI")
   add_definitions( -DKDEPIM_MOBILE_UI )
