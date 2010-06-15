@@ -103,6 +103,7 @@ void ContactEditorView::Private::addDetailEditor( EditorBase *editor )
 void ContactEditorView::Private::saveFinished()
 {
   kDebug();
+  q->deleteLater();
 }
 
 void ContactEditorView::Private::saveFailed( const QString &errorMessage )
