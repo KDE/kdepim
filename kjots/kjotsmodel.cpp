@@ -171,6 +171,11 @@ bool KJotsModel::setData( const QModelIndex& index, const QVariant& value, int r
     {
       Collection col = index.data( CollectionRole ).value<Collection>();
       col.setName( value.toString() );
+      if (col.hasAttribute<EntityDisplayAttribute>())
+      {
+        EntityDisplayAttribute *eda = col.attribute<EntityDisplayAttribute>();
+        eda->setDisplayName(value.toString());
+      }
       return EntityTreeModel::setData(index, QVariant::fromValue( col ), CollectionRole );
     }
     KMime::Message::Ptr m = item.payload<KMime::Message::Ptr>();
@@ -180,9 +185,8 @@ bool KJotsModel::setData( const QModelIndex& index, const QVariant& value, int r
     item.setPayload<KMime::Message::Ptr>( m );
 
     if ( item.hasAttribute<EntityDisplayAttribute>() ) {
-      EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
+      EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>();
       displayAttribute->setDisplayName( value.toString() );
-      item.addAttribute( displayAttribute );
     }
     return EntityTreeModel::setData(index, QVariant::fromValue<Item>( item ), ItemRole);
   }
