@@ -24,6 +24,7 @@ set(kdepim_LIB_SRCS
    maillistdrag.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
+   kcheckcombobox.cpp
    ktimezonecombobox.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp
