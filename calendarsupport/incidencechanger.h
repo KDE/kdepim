@@ -46,7 +46,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
   public:
     IncidenceChanger( Akonadi::Calendar *cal,
                       QObject *parent,
-                      Akonadi::Entity::Id defaultCollectionId );
+                      Akonadi::Entity::Id defaultCollectionId = -1 );
     ~IncidenceChanger();
 
     enum HowChanged {
@@ -99,7 +99,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
                           QWidget *parent );
 
     // returns true if the delete job was created
-    bool deleteIncidence( const Akonadi::Item &incidence, QWidget *parent );
+    bool deleteIncidence( const Akonadi::Item &incidence, QWidget *parent = 0 );
 
     bool cutIncidences( const Akonadi::Item::List &incidences, QWidget *parent );
     bool cutIncidence( const Akonadi::Item &incidence, QWidget *parent );
