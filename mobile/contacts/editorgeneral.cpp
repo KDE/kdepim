@@ -63,12 +63,26 @@ class EditorGeneral::Private
 
       mEmailInputs << mUi.email1;
       mEmailInputs << mUi.email2;
+      mLastEmailRow = 2; // third row
       
       mPhoneWidgets << new PhoneWidgets( mUi.phone1, mUi.phone1Type );
       mPhoneWidgets << new PhoneWidgets( mUi.phone2, mUi.phone2Type );
       mUi.phone2Type->setCurrentIndex( 1 );
+      mLastPhoneRow = 4; // fifth row
 
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+    }
+
+    void ensureEmailRows( int emailCount )
+    {
+      // TODO delete unnecessary rows?
+      addEmailRows( emailCount );
+    }
+
+    void ensurePhoneRows( int phoneCount )
+    {
+      // TODO delete unnecessary rows?
+      addPhoneRows( phoneCount );
     }
 
   public:
@@ -78,7 +92,10 @@ class EditorGeneral::Private
 
     QList<QLineEdit*> mEmailInputs;
     QList<PhoneWidgets*> mPhoneWidgets;
-   
+
+    int mLastEmailRow;
+    int mLastPhoneRow;
+    
   public: // slots
     void nameTextChanged( const QString &text )
     {
@@ -87,14 +104,91 @@ class EditorGeneral::Private
 
     void addEmailClicked();
     void addPhoneClicked();
+
+  private:
+    void addEmailRows( int newRowCount );
+    void addPhoneRows( int newRowCount );
 };
 
 void EditorGeneral::Private::addEmailClicked()
 {
+  addEmailRows( mEmailInputs.count() + 1 );
 }
 
 void EditorGeneral::Private::addPhoneClicked()
 {
+  addPhoneRows( mPhoneWidgets.count() + 1 );
+}
+
+void EditorGeneral::Private::addEmailRows( int newRowCount )
+{
+  if ( newRowCount <= mEmailInputs.count() ) {
+    return;
+  }
+
+  // remove widgets from layout
+  mUi.gridLayout->removeWidget( mUi.addEmailButton );
+
+  QList<PhoneWidgets*>::const_iterator widgetIt = mPhoneWidgets.constBegin();
+  for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt ) {
+    mUi.gridLayout->removeWidget( (*widgetIt)->mInput );
+    mUi.gridLayout->removeWidget( (*widgetIt)->mType );
+  }
+
+  mUi.gridLayout->removeWidget( mUi.phoneLabel );
+  mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+  mUi.gridLayout->removeWidget( mUi.saveButton );
+  mUi.gridLayout->removeWidget( mUi.collectionSelector );
+
+  int row = mLastEmailRow + 1;
+  
+  // add new widgets
+  for ( ; mEmailInputs.count() < newRowCount; ++row, ++mLastEmailRow, ++mLastPhoneRow ) {
+    QLineEdit *lineEdit = new QLineEdit( q );
+    mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
+    mEmailInputs << lineEdit;
+  }
+
+  // re-add widgets
+  mUi.gridLayout->addWidget( mUi.addEmailButton, mLastEmailRow, 2, 1, 1 );
+
+  mUi.gridLayout->addWidget( mUi.phoneLabel, row, 0, 1, 1 );
+  widgetIt = mPhoneWidgets.constBegin();
+  for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt, ++row ) {
+    mUi.gridLayout->addWidget( (*widgetIt)->mInput, row, 1, 1, 1 );
+    mUi.gridLayout->addWidget( (*widgetIt)->mType, row, 2, 1, 1 );
+  }
+
+  mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 2 );
+  mUi.gridLayout->addWidget( mUi.collectionSelector, row, 3, 1, 1 );
+}
+
+void EditorGeneral::Private::addPhoneRows( int newRowCount )
+{
+  if ( newRowCount <= mPhoneWidgets.count() ) {
+    return;
+  }
+
+  // remove widgets from layout
+  mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+  mUi.gridLayout->removeWidget( mUi.saveButton );
+  mUi.gridLayout->removeWidget( mUi.collectionSelector );
+
+  int row = mLastPhoneRow + 1;
+  // add new widgets
+  for ( ; mPhoneWidgets.count() < newRowCount; ++row, ++mLastPhoneRow ) {
+    QLineEdit *lineEdit = new QLineEdit( q );
+    mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
+    QComboBox *combo = new QComboBox( q );
+    mUi.gridLayout->addWidget( combo, row, 2, 1, 1 );
+    mPhoneWidgets << new PhoneWidgets( lineEdit, combo );
+  }
+
+  // re-add widgets
+  mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 1, 1, 2 );
+  mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 3, 1, 1 );
 }
 
 EditorGeneral::EditorGeneral( QWidget *parent )
@@ -125,9 +219,7 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact )
   d->mUi.fullName->blockSignals( false );
 
   const QStringList emails = contact.emails();
-  if ( emails.count() > d->mEmailInputs.count() ) {
-    // TODO add more rows
-  }
+  d->ensureEmailRows( emails.count() );
 
   QList<QLineEdit*>::iterator inputIt = d->mEmailInputs.begin();
   Q_FOREACH( const QString &email, emails ) {
@@ -136,10 +228,8 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact )
   }
   
   const KABC::PhoneNumber::List phones = contact.phoneNumbers();
-  if ( phones.count() > d->mPhoneWidgets.count() ) {
-    // TODO add more rows
-  }
-
+  d->ensurePhoneRows( phones.count() );
+  
   QList<PhoneWidgets*>::iterator widgetIt = d->mPhoneWidgets.begin();
   Q_FOREACH( const KABC::PhoneNumber &phone, phones ) {
     PhoneWidgets* widgets = *widgetIt;
