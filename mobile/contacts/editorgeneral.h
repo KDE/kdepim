@@ -42,6 +42,8 @@ class EditorGeneral : public EditorBase
 
     void saveContact( KABC::Addressee &contact );
 
+    Akonadi::Collection selectedCollection() const;
+    
   Q_SIGNALS:
     void collectionChanged( const Akonadi::Collection &collection );
 
@@ -51,7 +53,9 @@ class EditorGeneral : public EditorBase
     class Private;
     Private *const d;
 
-  Q_PRIVATE_SLOT( d, void nameTextChanged( const QString& ) )
+    Q_PRIVATE_SLOT( d, void nameTextChanged( const QString& ) )
+    Q_PRIVATE_SLOT( d, void addEmailClicked() )
+    Q_PRIVATE_SLOT( d, void addPhoneClicked() )
 };
 
 #endif
