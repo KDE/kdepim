@@ -174,23 +174,35 @@ void KJotsTreeView::copyLinkAddress()
   if ( rows.size() != 1 )
     return;
 
-  Item item = rows.at( 0 ).data( KJotsModel::ItemRole ).value<Item>();
+  QModelIndex idx = rows.at( 0 );
 
-  if ( !item.hasPayload<KMime::Message::Ptr>() )
-    return;
+  QString title = idx.data().toString();
 
-  KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-
-  QString title = msg->subject()->asUnicodeString();
+  Item item = idx.data( KJotsModel::ItemRole ).value<Item>();
 
   QMimeData *mimeData = new QMimeData();
 
-  QString link = QString( "<a href=\"%1\">%2</a>" ).arg( item.url().url() ).arg( title );
+  QString link;
+  if ( item.isValid() )
+  {
+    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
+    if ( !item.hasPayload<KMime::Message::Ptr>() )
+      return;
+
+    link = QString( "<a href=\"%1\">%2</a>" ).arg( item.url().url() ).arg( title );
+  } else {
+    Collection col = idx.data( KJotsModel::CollectionRole ).value<Collection>();
+
+    Q_ASSERT(col.isValid());
+    if (!col.isValid())
+      return;
+
+    link = QString( "<a href=\"%1\">%2</a>" ).arg( col.url().url() ).arg( title );
+  }
 
   mimeData->setData( "kjots/internal_link", link.toUtf8() );
   mimeData->setText( title );
   QApplication::clipboard()->setMimeData( mimeData );
-  return;
 }
 
 void KJotsTreeView::changeColor()
