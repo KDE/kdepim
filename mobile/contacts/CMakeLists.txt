@@ -14,6 +14,12 @@ set(kab_mobile_srcs
   contactlistproxy.cpp
   contacteditorview.cpp
   declarativeeditors.cpp
+  editorbase.cpp
+  editorgeneral.cpp
+)
+
+kde4_add_ui_files(kab_mobile_srcs
+  editorgeneral.ui
 )
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )

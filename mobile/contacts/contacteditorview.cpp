@@ -36,7 +36,7 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
   public:
     explicit Private( ContactEditorView *parent )
-      : q( parent ), mItemManager( new EditorItemManager( this ) ), mCollectionSelector( 0 ), mEditor( 0 )
+      : q( parent ), mItemManager( new EditorItemManager( this ) ), mEditor( 0 )
     {
     }
 
@@ -48,6 +48,7 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
   public: // slots
     void saveFinished();
     void saveFailed( const QString &errorMessage );
+    void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorUi interface
     bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const
@@ -77,11 +78,11 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
   public:
     Item mItem;
+    Collection mCollection;
 
     EditorItemManager *mItemManager;
 
-    CollectionComboBox *mCollectionSelector;
-    ContactEditor *mEditor;
+    EditorGeneral *mEditor;
 };
 
 void ContactEditorView::Private::saveFinished()
@@ -97,9 +98,10 @@ void ContactEditorView::Private::saveFailed( const QString &errorMessage )
 void ContactEditorView::Private::load( const Item &item )
 {
   mItem = item;
+  mCollection = item.parentCollection();
 
-  if ( mCollectionSelector != 0 ) {
-    mCollectionSelector->setDefaultCollection( mItem.parentCollection() );
+  if ( mEditor != 0 ) {
+    mEditor->setDefaultCollection( mCollection );
   }
 }
 
@@ -112,9 +114,14 @@ Item ContactEditorView::Private::save( const Item &item )
   return result;
 }
 
+void ContactEditorView::Private::collectionChanged( const Akonadi::Collection &collection )
+{
+  mCollection = collection;
+}
+
 Collection ContactEditorView::Private::selectedCollection() const
 {
-  return ( mCollectionSelector != 0 ? mCollectionSelector->currentCollection() : Collection() );
+  return mCollection;
 }
 
 void ContactEditorView::Private::reject( RejectReason reason, const QString &errorMessage )
@@ -132,16 +139,11 @@ void ContactEditorView::Private::reject( RejectReason reason, const QString &err
   q->deleteLater();
 }
 
-ContactEditorView::ContactEditorView( Mode mode, QWidget *parent )
+ContactEditorView::ContactEditorView( QWidget *parent )
   : KDeclarativeFullScreenView( QLatin1String( "contact-editor" ), parent ),
     d( new Private( this ) )
 {
-  qmlRegisterType<DeclarativeCollectionSelector>( "org.kde.contacteditors", 4, 5, "CollectionSelector" );
-  if ( mode == Create ) {
-    qmlRegisterType<DeclarativeContactCreator>( "org.kde.contacteditors", 4, 5, "ContactEditor" );
-  } else {
-    qmlRegisterType<DeclarativeContactEditor>( "org.kde.contacteditors", 4, 5, "ContactEditor" );
-  }
+  qmlRegisterType<DeclarativeEditorGeneral>( "org.kde.contacteditors", 4, 5, "ContactEditorGeneral" );
   
   connect( d->mItemManager, SIGNAL( itemSaveFinished() ), SLOT( saveFinished() ) );
   connect( d->mItemManager, SIGNAL( itemSaveFailed( QString ) ), SLOT( saveFailed( QString ) ) );
@@ -154,11 +156,7 @@ ContactEditorView::~ContactEditorView()
 
 void ContactEditorView::save()
 {
-  if ( d->mEditor != 0 ) {
-    d->mEditor->saveContact();
-  } else {
-    d->mItemManager->save();
-  }
+  d->mItemManager->save();
 }
 
 void ContactEditorView::cancel()
@@ -166,38 +164,23 @@ void ContactEditorView::cancel()
   deleteLater();
 }
 
-void ContactEditorView::setCollectionSelector( CollectionComboBox *comboBox )
-{
-  d->mCollectionSelector = comboBox;
-
-  if ( d->mCollectionSelector != 0 ) {
-    d->mCollectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
-    d->mCollectionSelector->setDefaultCollection( d->mItem.parentCollection() );
-  }
-}
-
-void ContactEditorView::setCreatorWidget( ContactCreateWidget *editor )
-{
-  d->mEditor = editor;
-}
-
-void ContactEditorView::setEditorWidget( ContactEditWidget *editor )
+void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
 {
   d->mEditor = editor;
 
   if ( d->mEditor != 0 ) {
-    d->mEditor->loadContact( d->mItem );
+    if ( d->mCollection.isValid() ) {
+      d->mEditor->setDefaultCollection( d->mCollection );
+    }
+    connect( d->mEditor, SIGNAL( saveClicked() ), SLOT( save() ) );
+    connect( d->mEditor, SIGNAL( collectionChanged( Akonadi::Collection ) ),
+             SLOT( collectionChanged( Akonadi::Collection ) ) );
   }
 }
 
 void ContactEditorView::loadContact( const Item &item )
 {
-  if ( d->mEditor != 0 ) {
-    d->mItem = item;
-    d->mEditor->loadContact( d->mItem );
-  } else {
-    d->mItemManager->load( item );
-  }
+  d->mItemManager->load( item );
 }
 
 #include "contacteditorview.moc"

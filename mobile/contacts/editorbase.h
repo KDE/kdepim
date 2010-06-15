@@ -17,43 +17,28 @@
     02110-1301, USA.
 */
 
-#ifndef CONTACTEDITORVIEW_H
-#define CONTACTEDITORVIEW_H
+#ifndef EDITORBASE_H
+#define EDITORBASE_H
 
-#include "kdeclarativefullscreenview.h"
+#include <QtGui/QWidget>
 
-namespace Akonadi
+namespace KABC
 {
-  class Collection;
-  class Item;
+  class Addressee;
 }
 
-class EditorGeneral;
-
-class ContactEditorView : public KDeclarativeFullScreenView
+class EditorBase : public QWidget
 {
   Q_OBJECT
- 
+
   public:
-    explicit ContactEditorView( QWidget *parent = 0 );
+    explicit EditorBase( QWidget *parent = 0 );
 
-    ~ContactEditorView();
-
-    void setEditorGeneral( EditorGeneral *editor );
+    ~EditorBase();
     
-    void loadContact( const Akonadi::Item &item );
+    virtual void loadContact( const KABC::Addressee &contact ) = 0;
 
-  public Q_SLOTS:
-    void save();
-    void cancel();
-    
-  private:
-    class Private;
-    Private *const d;
-
-    Q_PRIVATE_SLOT( d, void saveFinished() );
-    Q_PRIVATE_SLOT( d, void saveFailed( const QString& ) );
-    Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection& ) )
+    virtual void saveContact( KABC::Addressee &contact ) = 0;
 };
 
 #endif

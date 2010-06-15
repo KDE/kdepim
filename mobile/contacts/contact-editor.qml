@@ -34,47 +34,17 @@ KPIM.MainView {
     anchors.rightMargin: 4;
 
     width: parent.width;
-    height: parent.height - parent.height / 6 - collectionSelector.height;
-    contentHeight: contactEditor.height;
+    height: parent.height;
+    contentHeight: editorGeneral.height;
     clip: true;
     flickableDirection: "VerticalFlick"
 
     Column {
       anchors.fill: parent
-      ContactEditors.ContactEditor {
-        id: contactEditor;
+      ContactEditors.ContactEditorGeneral {
+        id: editorGeneral;
         width: parent.width;
       }
     }
-  }
-
-  ContactEditors.CollectionSelector {
-    id: collectionSelector
-    anchors.bottom: parent.bottom;
-    anchors.right: cancelButton.left;
-    anchors.left: parent.left;
-
-    width: parent.width;
-    height: parent.height / 6;
-  }
-
-  KPIM.Button {
-    id: cancelButton
-    anchors.bottom: parent.bottom;
-    anchors.right: okButton.left;
-    width: 100;
-    height: parent.height / 6;
-    buttonText: KDE.i18n( "Cancel" );
-    onClicked: window.cancel();
-  }
-
-  KPIM.Button {
-    id: okButton;
-    anchors.bottom: parent.bottom;
-    anchors.right: parent.right;
-    width: 100;
-    height: parent.height / 6;
-    buttonText: KDE.i18n( "Ok" );
-    onClicked: window.save();
   }
 }

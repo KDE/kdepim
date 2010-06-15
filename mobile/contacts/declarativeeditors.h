@@ -22,57 +22,15 @@
 
 #include "contacteditorview.h"
 #include "declarativewidgetbase.h"
+#include "editorgeneral.h"
 
-#include <Akonadi/Contact/ContactEditor>
-#include <Akonadi/CollectionComboBox>
-
-class DeclarativeCollectionSelector
-  : public DeclarativeWidgetBase<Akonadi::CollectionComboBox,
-                                 ContactEditorView,
-                                 &ContactEditorView::setCollectionSelector>
-{
-  Q_OBJECT
- 
-  public:
-    explicit DeclarativeCollectionSelector( QDeclarativeItem *parent = 0 );
-};
-
-class ContactCreateWidget : public Akonadi::ContactEditor
+class DeclarativeEditorGeneral
+  : public DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral>
 {
   Q_OBJECT
 
   public:
-    explicit ContactCreateWidget( QWidget *parent = 0 );
-};
-
-class ContactEditWidget : public Akonadi::ContactEditor
-{
-  Q_OBJECT
-
-  public:
-    explicit ContactEditWidget( QWidget *parent = 0 );
-};
-
-class DeclarativeContactCreator
-  : public DeclarativeWidgetBase<ContactCreateWidget,
-                                 ContactEditorView,
-                                 &ContactEditorView::setCreatorWidget>
-{
-  Q_OBJECT
-
-  public:
-    explicit DeclarativeContactCreator( QDeclarativeItem *parent = 0 );
-};
-
-class DeclarativeContactEditor
-  : public DeclarativeWidgetBase<ContactEditWidget,
-                                 ContactEditorView,
-                                 &ContactEditorView::setEditorWidget>
-{
-  Q_OBJECT
-
-  public:
-    explicit DeclarativeContactEditor( QDeclarativeItem *parent = 0 );
-};
+    explicit DeclarativeEditorGeneral( QDeclarativeItem *parent = 0 );
+};                         
 
 #endif

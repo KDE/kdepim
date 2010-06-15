@@ -36,13 +36,13 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobi
 
 void MainView::newContact()
 {
-  ContactEditorView *editor = new ContactEditorView( ContactEditorView::Create );
+  ContactEditorView *editor = new ContactEditorView;
   editor->show();
 }
 
 void MainView::editContact( const Akonadi::Item &item )
 {
-  ContactEditorView *editor = new ContactEditorView( ContactEditorView::Edit );
+  ContactEditorView *editor = new ContactEditorView;
   editor->loadContact( item );
   editor->show();
 }

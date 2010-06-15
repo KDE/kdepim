@@ -19,28 +19,8 @@
 
 #include "declarativeeditors.h"
 
-DeclarativeCollectionSelector::DeclarativeCollectionSelector( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<Akonadi::CollectionComboBox, ContactEditorView, &ContactEditorView::setCollectionSelector>( parent )
-{
-}
-
-ContactCreateWidget::ContactCreateWidget( QWidget *parent )
-  : Akonadi::ContactEditor( Akonadi::ContactEditor::CreateMode, parent )
-{
-}
-
-ContactEditWidget::ContactEditWidget( QWidget *parent )
-  : Akonadi::ContactEditor( Akonadi::ContactEditor::EditMode, parent )
-{
-}
-
-DeclarativeContactCreator::DeclarativeContactCreator( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<ContactCreateWidget, ContactEditorView, &ContactEditorView::setCreatorWidget>( parent )
-{
-}
-
-DeclarativeContactEditor::DeclarativeContactEditor( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<ContactEditWidget, ContactEditorView, &ContactEditorView::setEditorWidget>( parent )
+DeclarativeEditorGeneral::DeclarativeEditorGeneral( QDeclarativeItem *parent )
+  : DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral>( parent )
 {
 }
 
