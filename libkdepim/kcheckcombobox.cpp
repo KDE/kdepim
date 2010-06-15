@@ -25,9 +25,10 @@
 
 #include "kcheckcombobox.h"
 
-#include <QAbstractItemView>
-#include <QKeyEvent>
-#include <QLineEdit>
+#include <QtGui/QAbstractItemView>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QLineEdit>
+#include <QtGui/QStandardItemModel>
 
 using namespace KPIM;
 
@@ -46,6 +47,7 @@ class KCheckComboBox::Private
       , mIgnoreHide( false )
     { }
 
+    void makeInsertedItemsCheckable(const QModelIndex &, int start, int end);
     void updateCheckedItems( const QModelIndex &topLeft = QModelIndex(),
                              const QModelIndex &bottomRight = QModelIndex() );
     void toggleCheckState( int pos );
@@ -57,6 +59,16 @@ class KCheckComboBox::Private
     bool mIgnoreHide;
 };
 
+}
+
+void KCheckComboBox::Private::makeInsertedItemsCheckable(const QModelIndex &parent, int start, int end)
+{
+  QStandardItemModel *model = qobject_cast<QStandardItemModel *>( q->model() );
+  Q_ASSERT( model );
+  for ( int r = start; r <= end; ++r ) {
+    QStandardItem *item = model->item( r, 0 );
+    item->setCheckable( true );
+  }
 }
 
 void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
@@ -101,6 +113,8 @@ KCheckComboBox::KCheckComboBox( QWidget *parent )
   , d( new KCheckComboBox::Private( this ) )
 {
   connect( this, SIGNAL(activated(int)), this, SLOT(toggleCheckState(int)) );
+  connect( model(), SIGNAL(rowsInserted (const QModelIndex &, int, int)),
+           SLOT(makeInsertedItemsCheckable(const QModelIndex &, int, int)) );
   connect( model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
            this, SLOT(updateCheckedItems(const QModelIndex &, const QModelIndex &)) );
 
