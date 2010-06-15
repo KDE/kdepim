@@ -136,18 +136,34 @@ void KJotsTreeView::renameEntry()
 
   QModelIndex idx = rows.at( 0 );
 
-  Item item = idx.data( KJotsModel::ItemRole ).value<Item>();
-  if ( !item.hasPayload<KMime::Message::Ptr>() )
-    return;
-  KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  QString title = idx.data().toString();
 
-  QString title = msg->subject()->asUnicodeString();
+  Item item = idx.data( KJotsModel::ItemRole ).value<Item>();
+  if ( item.isValid() )
+  {
+      Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
+      if ( !item.hasPayload<KMime::Message::Ptr>() )
+          return;
+
+      bool ok;
+      QString name = KInputDialog::getText( i18n( "Rename Page" ),
+          i18n( "Page title:" ), title, &ok, this );
+
+      if ( ok )
+        model()->setData( idx, name, Qt::EditRole );
+      return;
+  }
+
+  Collection col = idx.data( KJotsModel::CollectionRole ).value<Collection>();
+  Q_ASSERT( col.isValid() );
+  if (!col.isValid())
+    return;
 
   bool ok;
-  QString name = KInputDialog::getText(i18n( "Rename Book" ),
-      i18n( "Book name:" ), title, &ok, this);
+  QString name = KInputDialog::getText( i18n( "Rename Book" ),
+      i18n( "Book name:" ), title, &ok, this );
 
-  if (ok)
+  if ( ok )
     model()->setData( idx, name, Qt::EditRole );
 }
 
