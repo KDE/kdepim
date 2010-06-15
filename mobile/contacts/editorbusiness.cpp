@@ -31,6 +31,7 @@ class EditorBusiness::Private
     explicit Private( EditorBusiness *parent ) : q( parent )
     {
       mUi.setupUi( parent );
+      mUi.logoButton->setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
     }
 
   public:
