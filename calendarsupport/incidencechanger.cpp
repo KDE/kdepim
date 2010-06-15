@@ -185,9 +185,6 @@ bool IncidenceChanger::Private::performChange( Change *change )
 
 void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
 {
-  //AKONADI_PORT this is from the respective method in the old Akonadi::Calendar, so I leave it here: --Frank
-  kDebug();
-
   // we should probably update the revision number here,or internally in the Event
   // itself when certain things change. need to verify with ical documentation.
   const ItemModifyJob* job = qobject_cast<const ItemModifyJob*>( j );
