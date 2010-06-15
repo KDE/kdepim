@@ -28,7 +28,11 @@ namespace Akonadi
   class Item;
 }
 
+class EditorBusiness;
+class EditorCrypto;
 class EditorGeneral;
+class EditorLocation;
+class EditorMore;
 
 class ContactEditorView : public KDeclarativeFullScreenView
 {
@@ -40,7 +44,15 @@ class ContactEditorView : public KDeclarativeFullScreenView
     ~ContactEditorView();
 
     void setEditorGeneral( EditorGeneral *editor );
+
+    void setEditorBusiness( EditorBusiness *editor );
     
+    void setEditorLocation( EditorLocation *editor );
+
+    void setEditorCrypto( EditorCrypto *editor );
+
+    void setEditorMore( EditorMore *editor );
+
     void loadContact( const Akonadi::Item &item );
 
   public Q_SLOTS:

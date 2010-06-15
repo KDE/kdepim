@@ -24,4 +24,24 @@ DeclarativeEditorGeneral::DeclarativeEditorGeneral( QDeclarativeItem *parent )
 {
 }
 
+DeclarativeEditorBusiness::DeclarativeEditorBusiness( QDeclarativeItem *parent )
+  : DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness>( parent )
+{
+}
+
+DeclarativeEditorLocation::DeclarativeEditorLocation( QDeclarativeItem *parent )
+  : DeclarativeWidgetBase<EditorLocation, ContactEditorView, &ContactEditorView::setEditorLocation>( parent )
+{
+}
+
+DeclarativeEditorCrypto::DeclarativeEditorCrypto( QDeclarativeItem *parent )
+  : DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorView::setEditorCrypto>( parent )
+{
+}
+
+DeclarativeEditorMore::DeclarativeEditorMore( QDeclarativeItem *parent )
+  : DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore>( parent )
+{
+}
+
 #include "declarativeeditors.moc"

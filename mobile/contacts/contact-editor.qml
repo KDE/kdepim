@@ -47,4 +47,66 @@ KPIM.MainView {
       }
     }
   }
+
+  SlideoutPanelContainer {
+    anchors.fill: parent
+    z: 50
+
+    SlideoutPanel {
+      anchors.fill: parent
+      id: businessPanel
+      titleText: KDE.i18n( "Business" )
+      handlePosition: 30
+      handleHeight: 120
+
+      content: [
+        ContactEditors.ContactEditorBusiness {
+          id: editorBusiness
+          anchors.fill: parent
+        }
+      ]
+    }
+    SlideoutPanel {
+      anchors.fill: parent
+      id: locationPanel
+      titleText: KDE.i18n( "Location" )
+      handlePosition: 30 + 120
+      handleHeight: 120
+
+      content: [
+        ContactEditors.ContactEditorLocation {
+          id: editorLocation
+          anchors.fill: parent
+        }
+      ]
+    }
+    SlideoutPanel {
+      anchors.fill: parent
+      id: cryptoPanel
+      titleText: KDE.i18n( "Crypto" )
+      handlePosition: 30 + 120 + 120
+      handleHeight: 100
+
+      content: [
+        ContactEditors.ContactEditorCrypto {
+          id: editorCrypto
+          anchors.fill: parent
+        }
+      ]
+    }
+    SlideoutPanel {
+      anchors.fill: parent
+      id: morePanel
+      titleText: KDE.i18n( "More" )
+      handlePosition: 30 + 120 + 120 + 100
+      handleHeight: 100
+
+      content: [
+        ContactEditors.ContactEditorMore {
+          id: editorMore
+          anchors.fill: parent
+        }
+      ]
+    }
+  }
 }

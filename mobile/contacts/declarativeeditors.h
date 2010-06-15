@@ -24,6 +24,36 @@
 #include "declarativewidgetbase.h"
 #include "editorgeneral.h"
 
+class EditorDummy : public EditorBase
+{
+  Q_OBJECT
+
+  public:
+    void loadContact( const KABC::Addressee &contact ) { Q_UNUSED( contact ); }
+
+    void saveContact( KABC::Addressee &contact ) { Q_UNUSED( contact ); }
+};
+
+class  EditorBusiness : public EditorDummy
+{
+  Q_OBJECT
+};
+
+class  EditorLocation : public EditorDummy
+{
+  Q_OBJECT
+};
+
+class  EditorCrypto : public EditorDummy
+{
+  Q_OBJECT
+};
+
+class  EditorMore : public EditorDummy
+{
+  Q_OBJECT
+};
+
 class DeclarativeEditorGeneral
   : public DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral>
 {
@@ -32,5 +62,41 @@ class DeclarativeEditorGeneral
   public:
     explicit DeclarativeEditorGeneral( QDeclarativeItem *parent = 0 );
 };                         
+
+class DeclarativeEditorBusiness
+  : public DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness>
+{
+  Q_OBJECT
+
+  public:
+    explicit DeclarativeEditorBusiness( QDeclarativeItem *parent = 0 );
+};
+
+class DeclarativeEditorLocation
+  : public DeclarativeWidgetBase<EditorLocation, ContactEditorView, &ContactEditorView::setEditorLocation>
+{
+  Q_OBJECT
+
+  public:
+    explicit DeclarativeEditorLocation( QDeclarativeItem *parent = 0 );
+};
+
+class DeclarativeEditorCrypto
+  : public DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorView::setEditorCrypto>
+{
+  Q_OBJECT
+
+  public:
+    explicit DeclarativeEditorCrypto( QDeclarativeItem *parent = 0 );
+};
+
+class DeclarativeEditorMore
+  : public DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore>
+{
+  Q_OBJECT
+
+  public:
+    explicit DeclarativeEditorMore( QDeclarativeItem *parent = 0 );
+};
 
 #endif
