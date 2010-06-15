@@ -33,7 +33,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Photo</string>
      </property>
     </widget>
    </item>
