@@ -187,7 +187,8 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   const bool alreadyExisted = m_itemMap.contains( item.id() );
   const Item::Id id = item.id();
 
-  kDebug()<<"id="<<item.id()<<"version="<<item.revision()<<"alreadyExisted="<<alreadyExisted;
+  kDebug()<<"id="<<item.id()<<"version="<<item.revision()<<"alreadyExisted="
+          << alreadyExisted << "; calendar = " << q;
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
 
   const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
@@ -206,7 +207,8 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
       kDebug() << "item.storageCollectionId() = " << item.storageCollectionId()
                << "; m_itemMap.value( id ).storageCollectionId() = "
                << m_itemMap.value( id ).storageCollectionId()
-               << "; item.isValid() = " << item.isValid();
+               << "; item.isValid() = " << item.isValid()
+               << "; calendar = " << q;
       Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
     }
     // update-only goes here
@@ -275,7 +277,8 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   if ( alreadyExisted ) {
     if ( m_uidToItemId.value( ui ) != item.id() ) {
       kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
-              << "item uid = "  << ui.uid;
+              << "item uid = "  << ui.uid
+              << "; calendar = " << q;
     }
 
     Q_ASSERT( m_uidToItemId.value( ui ) == item.id() );
@@ -446,7 +449,9 @@ void Calendar::Private::itemsRemoved( const Item::List &items )
     kDebug()<<item.id();
     Q_ASSERT( ci.hasPayload<KCal::Incidence::Ptr>() );
     const KCal::Incidence::Ptr incidence = ci.payload<KCal::Incidence::Ptr>();
-    kDebug() << "Remove uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
+    kDebug() << "Remove uid=" << incidence->uid() << "summary=" << incidence->summary()
+             << "type=" << incidence->type() << "; id= " << item.id() << "; revision=" << item.revision()
+             << " calendar = " << q;
 
     if ( const KCal::Event::Ptr e = dynamic_pointer_cast<KCal::Event>( incidence ) ) {
       if ( !e->recurs() ) {
