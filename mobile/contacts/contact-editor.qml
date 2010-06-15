@@ -25,7 +25,7 @@ import org.kde.contacteditors 4.5 as ContactEditors
 KPIM.MainView {
   Flickable {
     anchors.top: parent.top
-    anchors.bottom: cancelButton.top
+    anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
 
@@ -39,12 +39,10 @@ KPIM.MainView {
     clip: true;
     flickableDirection: "VerticalFlick"
 
-    Column {
+    ContactEditors.ContactEditorGeneral {
       anchors.fill: parent
-      ContactEditors.ContactEditorGeneral {
-        id: editorGeneral;
-        width: parent.width;
-      }
+      id: editorGeneral;
+      width: parent.width;
     }
   }
 
