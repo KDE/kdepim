@@ -31,6 +31,7 @@
 #include <KUrl>
 #include <kleo/enum.h>
 
+class QTimer;
 class QAction;
 class KJob;
 class QWidget;
@@ -149,7 +150,6 @@ public:
   
   void setIdentityCombo( KPIMIdentities::IdentityCombo* identCombo );
   KPIMIdentities::IdentityCombo* identityCombo();
-  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
 
   void setIdentityManager( KPIMIdentities::IdentityManager* identMan );
   KPIMIdentities::IdentityManager* identityManager();
@@ -180,9 +180,38 @@ public:
   void setCharsets( const QList< QByteArray >& charsets );
   void setMDNRequested( bool mdnRequested );
   void setUrgent( bool urgent );
+
+  void setAutoSaveInterval( int interval );
+
+  /**
+   * Enables/disables autosaving depending on the value of the autosave
+   * interval.
+   */
+  void updateAutoSave();
+
+  /**
+    * Sets the filename to use when autosaving something. This is used when the client recovers
+    * the autosave files: It calls this method, so that the composer uses the same filename again.
+    * That way, the recovered autosave file is properly cleaned up in cleanupAutoSave():
+    */
+  void setAutoSaveFileName( const QString &fileName );
+
+  /**
+    * Stop autosaving and delete the autosaved message.
+    */
+  void cleanupAutoSave();
   
   void setParentWidgetForGui( QWidget* );
 
+public slots:
+
+  void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent );
+  
+  /**
+   * Save the message.
+   */
+  void autoSaveMessage();
+  
 signals:
   /**
    * Message sending completed successfully.
@@ -193,6 +222,12 @@ signals:
    */
   void failed( const QString& errorMessage );
 
+  /**
+   * The composer was modified. This can happen behind the users' back
+   *  when, for example, and autosaved message was recovered.
+   */
+  void modified( bool isModified );
+  
   /**
    * Enabling or disabling HTML in the editor is affected
    *  by various client options, so when that would otherwise happen,
@@ -206,6 +241,7 @@ private slots:
   void slotSendComposeResult( KJob* );
   void slotQueueResult( KJob *job );
   void slotCreateItemResult( KJob * );
+  void slotAutoSaveComposeResult( KJob *job );
 private:
   bool isHTMLMail( KMime::Content* root );
   /**
@@ -229,6 +265,24 @@ private:
   void saveMessage( KMime::Message::Ptr message, MessageSender::SaveIn saveIn );
   void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart );
 
+  /**
+  * Writes out autosave data to the disk from the KMime::Message message.
+  * Also appends the msgNum to the filename as a message can have a number of
+  * KMime::Messages
+  */
+  void writeAutoSaveToDisk( KMime::Message::Ptr message );
+
+  /**
+    * Returns the autosave interval in milliseconds (as needed for QTimer).
+    */
+  int autoSaveInterval() const;
+
+  /**
+    * Initialize autosaving (timer and filename).
+    */
+  void initAutoSave();
+
+  
   KMime::Message::Ptr m_msg;
   AttachmentControllerBase* m_attachmentController;
   AttachmentModel* m_attachmentModel;
@@ -252,7 +306,12 @@ private:
   QStringList mExpandedTo, mExpandedCc, mExpandedBcc;
   QList< QByteArray > m_charsets;
   int m_pendingQueueJobs;
-  
+
+  QTimer *m_autoSaveTimer;
+  QString m_autoSaveUUID;
+  bool m_autoSaveErrorShown; // Stops an error message being shown every time autosave is executed.
+  int m_autoSaveInterval;
+
   MessageSender::SendMethod mSendMethod;
   MessageSender::SaveIn mSaveIn;
 };

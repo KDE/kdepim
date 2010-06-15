@@ -175,7 +175,9 @@ namespace Akonadi
   * @return The select collection or an invalid collection if
   * there was no collection selected.
   */
+
   AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection selectCollection( QWidget *parent, int dialogCode,
+                                                                 const QStringList &mimeTypes,
                                                                  const Akonadi::Collection& defaultCollection = Akonadi::Collection() );
 
   AKONADI_KCAL_NEXT_EXPORT Akonadi::Item itemFromIndex( const QModelIndex &index );
@@ -197,6 +199,8 @@ namespace Akonadi
   AKONADI_KCAL_NEXT_EXPORT Collection::List collectionsFromIndexes( const QModelIndexList &indexes );
 
   AKONADI_KCAL_NEXT_EXPORT QString displayName( const Akonadi::Collection &coll );
+
+  AKONADI_KCAL_NEXT_EXPORT QString subMimeTypeForIncidence( KCal::Incidence *incidence );
 
 }
 

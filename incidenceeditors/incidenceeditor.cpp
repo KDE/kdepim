@@ -62,8 +62,8 @@ using namespace KCal;
 using namespace IncidenceEditors;
 
 IncidenceEditor::IncidenceEditor( const QString &caption, const QStringList& mimetypes, QWidget *parent )
-  : KDialog( parent ), mAttendeeEditor( 0 ), mIsCounter( false ),
-    mIsCreateTask( false ), mApplyClicked( false ), mMonitor( 0 ), mChanger( 0 )
+  : KDialog( parent ), mAttendeeEditor( 0 ), mChanger( 0 ), mIsCounter( false ),
+    mIsCreateTask( false ), mApplyClicked( false ), mMonitor( 0 )
 {
   setCaption( caption );
   setButtons( Ok | Apply | Cancel | Default );

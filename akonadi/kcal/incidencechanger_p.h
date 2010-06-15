@@ -48,10 +48,12 @@ public:
     QWidget *parent;
   };
 
-  explicit Private( Entity::Id defaultCollectionId ) :
-                    mDefaultCollectionId( defaultCollectionId ),
-                    mGroupware( 0 ),
-                    mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ) { }
+  Private( Entity::Id defaultCollectionId, Calendar *calendar ) :
+           mDefaultCollectionId( defaultCollectionId ),
+           mGroupware( 0 ),
+           mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ),
+           mCalendar( calendar )
+           { }
 
   ~Private() {}
   void queueChange( Change * );
@@ -80,6 +82,8 @@ public:
 
 
   QList<Akonadi::Item::Id> mDeletedItemIds;
+
+  Calendar *mCalendar;
   
 public slots:
   void performNextChange( Akonadi::Item::Id );

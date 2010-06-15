@@ -641,8 +641,8 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     if ( newSig.rawText().isEmpty() &&
          text.mid( currentMatch - 4, 4 ) == QLatin1String( "-- \n" ) ) {
       cursor.movePosition( QTextCursor::PreviousCharacter,
-                           QTextCursor::MoveAnchor, 4 );
-      additionalMove = 4;
+                           QTextCursor::MoveAnchor, 5 );
+      additionalMove = 5;
     }
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor,
                          oldSigText.length() + additionalMove );

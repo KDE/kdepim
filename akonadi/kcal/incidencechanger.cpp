@@ -108,8 +108,17 @@ bool IncidenceChanger::Private::performChange( Change *change )
               "type="                << newinc->type()       <<
               "storageCollectionId=" << newItem.storageCollectionId();
 
-  // There not any job modifying this item, so mCurrentChanges[item.id] can't exist
+  // There's not any job modifying this item, so mCurrentChanges[item.id] can't exist
   Q_ASSERT( !mCurrentChanges.contains( newItem.id() ) );
+
+  // Check if the item was deleted, we already check in changeIncidence() but
+  // this change could be already in the queue when the item was deleted
+  if ( !mCalendar->incidence( newItem.id() ).isValid() ||
+       mDeletedItemIds.contains( newItem.id() ) ) {
+    kDebug() << "Incidence deleted";
+    // return true, the user doesn't want to see errors because he was too fast
+    return true;
+  }
 
   if ( incidencesEqual( newinc.get(), oldinc.get() ) ) {
     // Don't do anything
@@ -176,9 +185,6 @@ bool IncidenceChanger::Private::performChange( Change *change )
 
 void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
 {
-  //AKONADI_PORT this is from the respective method in the old Akonadi::Calendar, so I leave it here: --Frank
-  kDebug();
-
   // we should probably update the revision number here,or internally in the Event
   // itself when certain things change. need to verify with ical documentation.
   const ItemModifyJob* job = qobject_cast<const ItemModifyJob*>( j );
@@ -186,21 +192,21 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
 
   const Item newItem = job->item();
 
+  if ( !mCurrentChanges.contains( newItem.id() ) ) {
+    kDebug() << "Item was deleted? Great.";
+    cancelChanges( newItem.id() );
+    emit incidenceChangeFinished( Item(), newItem, UNKNOWN_MODIFIED  , true );
+    return;
+  }
+
   const Private::Change *change = mCurrentChanges[newItem.id()];
   const Incidence::Ptr oldInc = change->oldInc;
-  
+
   Item oldItem;
   oldItem.setPayload<Incidence::Ptr>( oldInc );
   oldItem.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" )
                        .arg( QLatin1String( oldInc->type().toLower() ) ) );
   oldItem.setId( newItem.id() );
-
-  if ( !mCurrentChanges.contains( newItem.id() ) ) {
-    kDebug() << "Item was deleted? Great.";
-    cancelChanges( newItem.id() );
-    emit incidenceChangeFinished( oldItem, newItem, change->action, true );
-    return;
-  }
 
   if ( job->error() ) {
     kWarning( 5250 ) << "Item modify failed:" << job->errorString();
@@ -228,7 +234,7 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
 IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
                                     QObject *parent,
                                     Entity::Id defaultCollectionId )
-  : QObject( parent ), mCalendar( cal ), d( new Private( defaultCollectionId ) )
+  : QObject( parent) , d( new Private( defaultCollectionId, cal ) )
 {
   connect( d, SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)),
            SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)) );
@@ -286,7 +292,7 @@ void IncidenceChanger::cancelAttendees( const Item &aitem )
       // manually.
       // FIXME: Groupware scheduling should be factored out to it's own class
       //        anyway
-      Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(mCalendar) );
+      Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(d->mCalendar) );
       scheduler.performTransaction( incidence.get(), iTIPCancel );
     }
   }
@@ -360,7 +366,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
 
     if ( d->mGroupware ) {
       if ( !d->mGroupware->doNotNotify() && notifyOrganizer ) {
-        Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(mCalendar) );
+        Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(d->mCalendar) );
         scheduler.performTransaction( tmp.get(), KCal::iTIPReply );
       }
       //reset the doNotNotify flag
@@ -386,7 +392,7 @@ bool IncidenceChanger::cutIncidences( const Item::List &list, QWidget *parent )
       }
     }
    }
-  Akonadi::CalendarAdaptor *cal = new Akonadi::CalendarAdaptor( mCalendar, parent );
+  Akonadi::CalendarAdaptor *cal = new Akonadi::CalendarAdaptor( d->mCalendar, parent );
   Akonadi::DndFactory factory( cal, true /*delete calendarAdaptor*/ );
 
   if ( factory.cutIncidences( itemsToCut ) ) {
@@ -505,6 +511,11 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
     return false;
   }
 
+  if ( !isNotDeleted( newItem.id() ) ) {
+    kDebug() << "Skipping change, the item got deleted";
+    return false;
+  }  
+
   Private::Change *change = new Private::Change();
   change->action = action;
   change->newItem = newItem;
@@ -525,13 +536,18 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
                                      QWidget *parent, Akonadi::Collection &selectedCollection,
                                      int &dialogCode )
 {
+  const Collection defaultCollection = d->mCalendar->collection( d->mDefaultCollectionId );
 
-  const Collection defaultCollection = mCalendar->collection( d->mDefaultCollectionId );
+  const QString incidenceMimeType = Akonadi::subMimeTypeForIncidence( incidence.get() );
+  const bool defaultCollSupportsMimeType = defaultCollection.contentMimeTypes().contains( incidenceMimeType );
 
   if ( d->mDestinationPolicy == ASK_DESTINATION ||
-       !defaultCollection.isValid() ) {
+       !defaultCollection.isValid() ||
+       !defaultCollSupportsMimeType ) {
+    QStringList mimeTypes( incidenceMimeType );
     selectedCollection = Akonadi::selectCollection( parent,
                                                     dialogCode,
+                                                    mimeTypes,
                                                     defaultCollection );
   } else {
     dialogCode = QDialog::Accepted;
@@ -559,9 +575,8 @@ bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
 
   Item item;
   item.setPayload<KCal::Incidence::Ptr>( incidence );
-  //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
-  //PENDING(AKONADI_PORT) shouldn't be hardcoded?
-  item.setMimeType( QString::fromLatin1( "application/x-vnd.akonadi.calendar.%1" ).arg( QLatin1String( incidence->type().toLower() ) ) );
+
+  item.setMimeType( Akonadi::subMimeTypeForIncidence( incidence.get() ) );
   ItemCreateJob *job = new ItemCreateJob( item, collection );
 
   // The connection needs to be queued to be sure addIncidenceFinished is called after the kjob finished
@@ -616,7 +631,7 @@ IncidenceChanger::DestinationPolicy IncidenceChanger::destinationPolicy() const
 
 bool IncidenceChanger::isNotDeleted( Akonadi::Item::Id id ) const
 {
-  if ( mCalendar->incidence( id ).isValid() ) {
+  if ( d->mCalendar->incidence( id ).isValid() ) {
     // it's inside the calendar, but maybe it's being deleted by a job or was
     // deleted but the ETM doesn't know yet
     return !d->mDeletedItemIds.contains( id );

@@ -23,32 +23,40 @@
 #include "attachmentcontrollerbase.h"
 #include "attachmentmodel.h"
 #include "signaturecontroller.h"
-#include <messagecore/stringutil.h>
-#include <krichtextwidget.h>
+#include "kmeditor.h"
+#include "emailaddressresolvejob.h"
+#include "keyresolver.h"
+#include "globalpart.h"
+#include "kleo_util.h"
+#include "infopart.h"
+#include "composer.h"
+
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
-#include "kmeditor.h"
+#include <messagecore/stringutil.h>
+#include <mailtransport/transportcombobox.h>
+#include <mailtransport/messagequeuejob.h>
+#include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/itemcreatejob.h>
+#include <kpimidentities/identitycombo.h>
 #include <messagecore/attachmentcollector.h>
 #include <messagecore/nodehelper.h>
 #include <messageviewer/kcursorsaver.h>
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/recipientseditor.h>
 #include <akonadi/collectioncombobox.h>
+#include <kpimidentities/identitymanager.h>
+
+#include <KSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include "emailaddressresolvejob.h"
-#include "keyresolver.h"
-#include <kpimidentities/identitycombo.h>
-#include <kpimidentities/identitymanager.h>
-#include "kleo_util.h"
-#include "infopart.h"
-#include "composer.h"
-#include <mailtransport/messagequeuejob.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/itemcreatejob.h>
-#include <mailtransport/transportcombobox.h>
-#include <QtCore/qtextcodec.h>
-#include "globalpart.h"
+#include <krichtextwidget.h>
+#include <KStandardDirs>
+
+#include <QDir>
+#include <QTimer>
+#include <QUuid>
+#include <QtCore/QTextCodec>
 
 Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  : QObject ( parent )
@@ -69,8 +77,12 @@ Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  , m_urgent( false )
  , m_cryptoMessageFormat( Kleo::AutoFormat )
  , m_pendingQueueJobs( 0 )
+ , m_autoSaveTimer( 0 )
+ , m_autoSaveInterval( 1 * 1000 * 60 ) // default of 1 min
 {
   m_charsets << "utf-8"; // default, so we have a backup in case client code forgot to set.
+
+  initAutoSave();
 }
 
 Message::ComposerViewBase::~ComposerViewBase()
@@ -497,7 +509,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
 
       composer->setSigningKeys( signingKeys );
       composer->setMessageCryptoFormat( concreteSignFormat );
-      composer->setSignAndEncrypt( m_sign, m_sign );
+      composer->setSignAndEncrypt( m_sign, m_encrypt );
 
       composers.append( composer );
     }
@@ -680,8 +692,164 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
     qjob->addressAttribute().setBcc( infoPart->bcc() );
   }
 }
+void Message::ComposerViewBase::initAutoSave()
+{
+  kDebug() << "initalising autosave";
+
+  // Ensure that the autosave directory exsits.
+  QDir dataDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) );
+  if( !dataDirectory.exists( QLatin1String( "autosave" ) ) ) {
+    kDebug() << "Creating autosave directory.";
+    dataDirectory.mkdir( QLatin1String( "autosave" ) );
+  }
+
+  // Construct a file name
+  if ( m_autoSaveUUID.isEmpty() ) {
+    m_autoSaveUUID = QUuid::createUuid().toString();
+  }
+
+  updateAutoSave();
+}
 
 
+void Message::ComposerViewBase::updateAutoSave()
+{
+  if ( m_autoSaveInterval == 0 ) {
+    delete m_autoSaveTimer; m_autoSaveTimer = 0;
+  } else {
+    if ( !m_autoSaveTimer ) {
+      m_autoSaveTimer = new QTimer( this );
+      connect( m_autoSaveTimer, SIGNAL( timeout() ),
+               this, SLOT( autoSaveMessage() ) );
+    }
+    m_autoSaveTimer->start( m_autoSaveInterval );
+  }
+}
+
+void Message::ComposerViewBase::cleanupAutoSave()
+{
+  delete m_autoSaveTimer; m_autoSaveTimer = 0;
+  if ( !m_autoSaveUUID.isEmpty() ) {
+
+    kDebug() << "deleting autosave files" << m_autoSaveUUID;
+
+    // Delete the autosave files
+    QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave" ) );
+
+    // Filter out only this composer window's autosave files
+    QStringList autoSaveFilter;
+    autoSaveFilter << m_autoSaveUUID + QLatin1String( "*" );
+    autoSaveDir.setNameFilters( autoSaveFilter );
+
+    // Return the files to be removed
+    QStringList autoSaveFiles = autoSaveDir.entryList();
+    kDebug() << "There are" << autoSaveFiles.count() << "to be deleted.";
+
+    // Delete each file
+    foreach( const QString &file, autoSaveFiles ) {
+      autoSaveDir.remove( file );
+    }
+    m_autoSaveUUID.clear();
+  }
+}
+
+//-----------------------------------------------------------------------------
+void Message::ComposerViewBase::autoSaveMessage()
+{
+  kDebug() << "Autosaving message";
+
+  if ( m_autoSaveTimer ) {
+    m_autoSaveTimer->stop();
+  }
+
+  if( !m_composers.isEmpty() ) {
+    // This may happen if e.g. the autosave timer calls applyChanges.
+    kDebug() << "Called while composer active; ignoring.";
+    return;
+  }
+
+  Message::Composer * const composer = createSimpleComposer();
+  m_composers.append( composer );
+  connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotAutoSaveComposeResult(KJob*)) );
+  composer->start();
+}
+
+void Message::ComposerViewBase::setAutoSaveFileName( const QString &fileName )
+{
+  m_autoSaveUUID = fileName;
+
+  emit modified( true );
+}
+
+void Message::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
+{
+  using Message::Composer;
+
+  Q_ASSERT( dynamic_cast< Composer* >( job ) );
+  Composer* composer = dynamic_cast< Composer* >( job );
+  Q_ASSERT( m_composers.contains( composer ) );
+  m_composers.removeAll( composer );
+
+  if( composer->error() == Composer::NoError ) {
+
+    // The messages were composed successfully. Only save the first message, there should
+    // only be one anyway, since crypto is disabled.
+    writeAutoSaveToDisk( composer->resultMessages().first() );
+    Q_ASSERT( composer->resultMessages().size() == 1 );
+
+    if( m_autoSaveInterval > 0 ) {
+      updateAutoSave();
+    }
+  } else {
+    kWarning() << "Composer for autosaving failed:" << composer->errorString();
+  }
+}
+
+void Message::ComposerViewBase::writeAutoSaveToDisk( KMime::Message::Ptr message )
+{
+  const QString filename = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave/" ) +
+    m_autoSaveUUID;
+  KSaveFile file( filename );
+  QString errorMessage;
+  kDebug() << "Writing message to disk as" << filename;
+
+  if( file.open() ) {
+    file.setPermissions( QFile::ReadUser | QFile::WriteUser );
+
+    if( file.write( message->encodedContent() ) !=
+        static_cast<qint64>( message->encodedContent().size() ) ) {
+      errorMessage = i18n( "Could not write all data to file." );
+    }
+    else {
+      if( !file.finalize() ) {
+        errorMessage = i18n( "Could not finalize the file." );
+      }
+    }
+  }
+  else {
+    errorMessage = i18n( "Could not open file." );
+  }
+
+  if ( !errorMessage.isEmpty() ) {
+    kWarning() << "Auto saving failed:" << errorMessage << file.errorString();
+    if ( !m_autoSaveErrorShown ) {
+      KMessageBox::sorry( m_parentWidget, i18n( "Autosaving the message as %1 failed.\n"
+                                      "%2\n"
+                                      "Reason: %3",
+                                      filename,
+                                      errorMessage,
+                                      file.errorString() ),
+                          i18n( "Autosaving Message Failed" ) );
+
+      // Error dialog shown, hide the errors the next time
+      m_autoSaveErrorShown = true;
+    }
+  }
+  else {
+    // No error occurred, the next error should be shown again
+    m_autoSaveErrorShown = false;
+  }
+}
 
 void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, MessageSender::SaveIn saveIn )
 {
@@ -887,6 +1055,20 @@ void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity
     m_recipientsEditor->setFocusBottom();
   }
 
+
+  KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>
+                                               ( oldIdent ).signature();
+  KPIMIdentities::Signature newSig = const_cast<KPIMIdentities::Identity&>
+                                               ( ident ).signature();
+
+  //replace existing signatures
+  const bool replaced = editor()->replaceSignature( oldSig, newSig );
+
+  // Just append the signature if there was no old signature
+  if ( !replaced && (/* msgCleared ||*/ oldSig.rawText().isEmpty() ) ) {
+    signatureController()->applySignature( newSig );
+  }
+
 }
 
 void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
@@ -964,6 +1146,11 @@ void Message::ComposerViewBase::setReplyTo(const QString& replyTo)
 void Message::ComposerViewBase::setSubject(const QString& subject)
 {
   m_subject = subject;
+}
+
+void Message::ComposerViewBase::setAutoSaveInterval( int interval )
+{
+  m_autoSaveInterval = interval;
 }
 
 

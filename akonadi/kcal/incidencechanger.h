@@ -124,9 +124,6 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
   public Q_SLOTS:
     void cancelAttendees( const Akonadi::Item &incidence );
 
-  protected:
-    Akonadi::Calendar *mCalendar;
-
   Q_SIGNALS:
     // Signals emited by the Item*Job, the bool parameter is the success of the operation
     void incidenceAddFinished( const Akonadi::Item &, bool );

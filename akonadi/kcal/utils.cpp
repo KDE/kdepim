@@ -58,26 +58,18 @@ using namespace boost;
 using namespace KCal;
 using namespace Akonadi;
 
-static QLatin1String sEventType( "application/x-vnd.akonadi.calendar.event" );
-static QLatin1String sTodoType( "application/x-vnd.akonadi.calendar.todo" );
-static QLatin1String sJournalType( "application/x-vnd.akonadi.calendar.journal" );
-static QLatin1String sFreeBusyType( "application/x-vnd.akonadi.calendar.freebusy" );
-
-static QStringList kcalTypes() {
-  QStringList l;
-  l << sEventType << sTodoType << sJournalType << sFreeBusyType;
-  return l;
-}
-
-Incidence::Ptr Akonadi::incidence( const Item &item ) {
+Incidence::Ptr Akonadi::incidence( const Item &item )
+{
   return item.hasPayload<Incidence::Ptr>() ? item.payload<Incidence::Ptr>() : Incidence::Ptr();
 }
 
-Event::Ptr Akonadi::event( const Item &item ) {
+Event::Ptr Akonadi::event( const Item &item )
+{
   return item.hasPayload<Event::Ptr>() ? item.payload<Event::Ptr>() : Event::Ptr();
 }
 
-QList<Event::Ptr> Akonadi::eventsFromItems( const Item::List &items ) {
+QList<Event::Ptr> Akonadi::eventsFromItems( const Item::List &items )
+{
   QList<Event::Ptr> events;
   Q_FOREACH ( const Item &item, items )
     if ( const Event::Ptr e = Akonadi::event( item ) )
@@ -85,23 +77,28 @@ QList<Event::Ptr> Akonadi::eventsFromItems( const Item::List &items ) {
   return events;
 }
 
-Todo::Ptr Akonadi::todo( const Item &item ) {
+Todo::Ptr Akonadi::todo( const Item &item )
+{
   return item.hasPayload<Todo::Ptr>() ? item.payload<Todo::Ptr>() : Todo::Ptr();
 }
 
-Journal::Ptr Akonadi::journal( const Item &item ) {
+Journal::Ptr Akonadi::journal( const Item &item )
+{
   return item.hasPayload<Journal::Ptr>() ? item.payload<Journal::Ptr>() : Journal::Ptr();
 }
 
-bool Akonadi::hasIncidence( const Item& item ) {
+bool Akonadi::hasIncidence( const Item& item )
+{
   return item.hasPayload<Incidence::Ptr>();
 }
 
-bool Akonadi::hasEvent( const Item& item ) {
+bool Akonadi::hasEvent( const Item& item )
+{
   return item.hasPayload<Event::Ptr>();
 }
 
-bool Akonadi::hasTodo( const Item& item ) {
+bool Akonadi::hasTodo( const Item& item )
+{
   return item.hasPayload<Todo::Ptr>();
 }
 
@@ -120,7 +117,8 @@ bool Akonadi::hasDeleteRights( const Akonadi::Item &item )
   return item.parentCollection().rights() & Collection::CanDeleteItem;
 }
 
-QMimeData* Akonadi::createMimeData( const Item::List &items, const KDateTime::Spec &timeSpec ) {
+QMimeData* Akonadi::createMimeData( const Item::List &items, const KDateTime::Spec &timeSpec )
+{
   if ( items.isEmpty() )
     return 0;
 
@@ -151,11 +149,13 @@ QMimeData* Akonadi::createMimeData( const Item::List &items, const KDateTime::Sp
   return mimeData.release();
 }
 
-QMimeData* Akonadi::createMimeData( const Item &item, const KDateTime::Spec &timeSpec )  {
+QMimeData* Akonadi::createMimeData( const Item &item, const KDateTime::Spec &timeSpec )
+{
   return createMimeData( Item::List() << item, timeSpec );
 }
 
-QDrag* Akonadi::createDrag( const Item &item, const KDateTime::Spec &timeSpec, QWidget* parent ) {
+QDrag* Akonadi::createDrag( const Item &item, const KDateTime::Spec &timeSpec, QWidget* parent )
+{
   return createDrag( Item::List() << item, timeSpec, parent );
 }
 
@@ -174,7 +174,8 @@ static QByteArray findMostCommonType( const Item::List &items ) {
   return prev;
 }
 
-QDrag* Akonadi::createDrag( const Item::List &items, const KDateTime::Spec &timeSpec, QWidget* parent ) {
+QDrag* Akonadi::createDrag( const Item::List &items, const KDateTime::Spec &timeSpec, QWidget* parent )
+{
   std::auto_ptr<QDrag> drag( new QDrag( parent ) );
   drag->setMimeData( Akonadi::createMimeData( items, timeSpec ) );
 
@@ -188,7 +189,8 @@ QDrag* Akonadi::createDrag( const Item::List &items, const KDateTime::Spec &time
   return drag.release();
 }
 
-static bool itemMatches( const Item& item, const CalFilter* filter ) {
+static bool itemMatches( const Item& item, const CalFilter* filter )
+{
   assert( filter );
   Incidence::Ptr inc = Akonadi::incidence( item );
   if ( !inc )
@@ -203,7 +205,8 @@ Item::List Akonadi::applyCalFilter( const Item::List &items_, const CalFilter* f
   return items;
 }
 
-bool Akonadi::isValidIncidenceItemUrl( const KUrl &url, const QStringList &supportedMimeTypes ) {
+bool Akonadi::isValidIncidenceItemUrl( const KUrl &url, const QStringList &supportedMimeTypes )
+{
   if ( !url.isValid() )
     return false;
   if ( url.scheme() != QLatin1String("akonadi") )
@@ -211,28 +214,35 @@ bool Akonadi::isValidIncidenceItemUrl( const KUrl &url, const QStringList &suppo
   return supportedMimeTypes.contains( url.queryItem( QLatin1String("type") ) );
 }
 
-bool Akonadi::isValidIncidenceItemUrl( const KUrl &url ) {
-  return isValidIncidenceItemUrl( url, kcalTypes() );
+bool Akonadi::isValidIncidenceItemUrl( const KUrl &url )
+{
+  IncidenceMimeTypeVisitor visitor;
+  
+  return isValidIncidenceItemUrl( url, visitor.allMimeTypes() );
 }
 
-static bool containsValidIncidenceItemUrl( const QList<QUrl>& urls ) {
+static bool containsValidIncidenceItemUrl( const QList<QUrl>& urls )
+{
   return std::find_if( urls.begin(), urls.end(), bind( Akonadi::isValidIncidenceItemUrl, _1 ) ) != urls.constEnd();
 }
 
-bool Akonadi::isValidTodoItemUrl( const KUrl &url ) {
+bool Akonadi::isValidTodoItemUrl( const KUrl &url )
+{
   if ( !url.isValid() )
     return false;
   if ( url.scheme() != QLatin1String("akonadi") )
     return false;
-  return url.queryItem( QLatin1String("type") ) == sTodoType;
+  return url.queryItem( QLatin1String("type") ) == IncidenceMimeTypeVisitor::todoMimeType();
 }
 
-bool Akonadi::canDecode( const QMimeData* md ) {
+bool Akonadi::canDecode( const QMimeData* md )
+{
   Q_ASSERT( md );
   return containsValidIncidenceItemUrl( md->urls() ) || ICalDrag::canDecode( md ) || VCalDrag::canDecode( md );
 }
 
-QList<KUrl> Akonadi::incidenceItemUrls( const QMimeData* mimeData ) {
+QList<KUrl> Akonadi::incidenceItemUrls( const QMimeData* mimeData )
+{
   QList<KUrl> urls;
   Q_FOREACH( const KUrl& i, mimeData->urls() )
     if ( isValidIncidenceItemUrl( i ) )
@@ -240,19 +250,22 @@ QList<KUrl> Akonadi::incidenceItemUrls( const QMimeData* mimeData ) {
   return urls;
 }
 
-QList<KUrl> Akonadi::todoItemUrls( const QMimeData* mimeData ) {
+QList<KUrl> Akonadi::todoItemUrls( const QMimeData* mimeData )
+{
   QList<KUrl> urls;
   Q_FOREACH( const KUrl& i, mimeData->urls() )
-    if ( isValidIncidenceItemUrl( i , QStringList() << sTodoType ) )
+    if ( isValidIncidenceItemUrl( i , QStringList() << IncidenceMimeTypeVisitor::todoMimeType() ) )
       urls.push_back( i );
   return urls;
 }
 
-bool Akonadi::mimeDataHasTodo( const QMimeData* mimeData ) {
+bool Akonadi::mimeDataHasTodo( const QMimeData* mimeData )
+{
   return !todoItemUrls( mimeData ).isEmpty() || !todos( mimeData, KDateTime::Spec() ).isEmpty();
 }
 
-QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spec &spec ) {
+QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spec &spec )
+{
   std::auto_ptr<KCal::Calendar> cal( KCal::DndFactory::createDropCalendar( mimeData, spec ) );
   if ( !cal.get() )
     return QList<Todo::Ptr>();
@@ -264,15 +277,12 @@ QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spe
 
 Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
                                                int dialogCode,
+                                               const QStringList &mimeTypes,
                                                const Akonadi::Collection &defaultCollection )
 {
   QPointer<CollectionDialog> dlg( new CollectionDialog( parent ) );
-  QStringList mimetypes;
-  mimetypes << Akonadi::IncidenceMimeTypeVisitor::todoMimeType();
-  mimetypes << Akonadi::IncidenceMimeTypeVisitor::journalMimeType();
-  mimetypes << Akonadi::IncidenceMimeTypeVisitor::eventMimeType();
 
-  dlg->setMimeTypeFilter( mimetypes );
+  dlg->setMimeTypeFilter( mimeTypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   if ( defaultCollection.isValid() ) {
     dlg->setDefaultCollection( defaultCollection );
@@ -306,7 +316,6 @@ Collection::List Akonadi::collectionsFromModel( const QAbstractItemModel* model,
     const Collection collection = collectionFromIndex( i );
     if ( collection.isValid() ) {
       collections << collection;
-    } else {
       QModelIndex childIndex = i.child( 0, 0 );
       if ( childIndex.isValid() ) {
         collections << collectionsFromModel( model, i );
@@ -365,4 +374,11 @@ QString Akonadi::displayName( const Collection &c )
 {
   const EntityDisplayAttribute* attr = c.attribute<EntityDisplayAttribute>();
   return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
+}
+
+QString Akonadi::subMimeTypeForIncidence( KCal::Incidence *incidence )
+{
+  IncidenceMimeTypeVisitor visitor;
+  incidence->accept( visitor );
+  return visitor.mimeType();  
 }
