@@ -15,10 +15,12 @@ set(kab_mobile_srcs
   contacteditorview.cpp
   declarativeeditors.cpp
   editorbase.cpp
+  editorbusiness.cpp
   editorgeneral.cpp
 )
 
 kde4_add_ui_files(kab_mobile_srcs
+  editorbusiness.ui
   editorgeneral.ui
 )
 

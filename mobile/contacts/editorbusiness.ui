@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditorBusiness</class>
+ <widget class="QWidget" name="EditorBusiness">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>333</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0" rowspan="2">
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="organizationLabel">
+         <property name="text">
+          <string>Organization</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="organizationLineEdit"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="professionLabel">
+         <property name="text">
+          <string>Profession</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="professionLineEdit"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="titleLabel">
+         <property name="text">
+          <string>Title</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="titleLineEdit"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="departmentLabel">
+         <property name="text">
+          <string>Department</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="departmentLineEdit"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="officeLabel">
+         <property name="text">
+          <string>Office</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="officeLineEdit"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="managerSNameLabel">
+         <property name="text">
+          <string>Manager's name</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="managerLineEdit"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="assistantSNameLabel">
+         <property name="text">
+          <string>Assistant's Name</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="assistantLineEdit"/>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="logoButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>120</horstretch>
+         <verstretch>160</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>160</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>160</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Logo</string>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>100</width>
+         <height>130</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Notes:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="textEdit"/>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
