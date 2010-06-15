@@ -202,6 +202,12 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
       return;
     }
 
+    if ( item.storageCollectionId() == -1 ) {
+      // A valid item can have an invalid storage id if it was deleted while
+      // fetching the ancestor
+      return;
+    }
+
     if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
       // there was once a bug that resulted in items forget their collectionId...
       kDebug() << "item.storageCollectionId() = " << item.storageCollectionId()
