@@ -44,10 +44,12 @@ class KCheckComboBox::Private
     Private( KCheckComboBox *qq )
       : q( qq )
       , mSeparator( QLatin1String( "," ) )
+      , mSqueezeText( false )
       , mIgnoreHide( false )
     { }
 
     void makeInsertedItemsCheckable(const QModelIndex &, int start, int end);
+    QString squeeze( const QString &text );
     void updateCheckedItems( const QModelIndex &topLeft = QModelIndex(),
                              const QModelIndex &bottomRight = QModelIndex() );
     void toggleCheckState( int pos );
@@ -56,6 +58,7 @@ class KCheckComboBox::Private
   public:
     QString mSeparator;
     QString mDefaultText;
+    bool mSqueezeText;
     bool mIgnoreHide;
 };
 
@@ -69,6 +72,21 @@ void KCheckComboBox::Private::makeInsertedItemsCheckable(const QModelIndex &pare
     QStandardItem *item = model->item( r, 0 );
     item->setCheckable( true );
   }
+}
+
+QString KCheckComboBox::Private::squeeze( const QString &text )
+{
+  QFontMetrics fm( q->fontMetrics() );
+  // NOTE: the 25 substracted is to take in account the space taken by the drop
+  //       image. It quite ugly and probably differs per style, but I don't know
+  //       better way to do this.
+  int labelWidth = q->lineEdit()->width() - 25;
+
+  int lineWidth = fm.width( text );
+  if ( lineWidth > labelWidth )
+    return fm.elidedText( text, Qt::ElideMiddle, labelWidth );
+
+  return text;
 }
 
 void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
@@ -85,7 +103,10 @@ void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
     text = items.join( mSeparator );
   }
 
-  q->setEditText( text );
+  if ( mSqueezeText )
+    text = squeeze( text );
+
+  q->lineEdit()->setText( text );
 
   emit q->checkedItemsChanged( items );
 }
@@ -120,6 +141,7 @@ KCheckComboBox::KCheckComboBox( QWidget *parent )
 
   // read-only contents
   setEditable( true );
+  lineEdit()->setAlignment( Qt::AlignLeft );
   lineEdit()->setReadOnly( true );
   setInsertPolicy( KComboBox::NoInsert );
 
@@ -192,6 +214,19 @@ void KCheckComboBox::setDefaultText( const QString &text )
   }
 }
 
+bool KCheckComboBox::squeezeText() const
+{
+  return d->mSqueezeText;
+}
+
+void KCheckComboBox::setSqueezeText( bool squeeze )
+{
+  if ( d->mSqueezeText != squeeze ) {
+    d->mSqueezeText = squeeze;
+    d->updateCheckedItems();
+  }
+}
+
 QString KCheckComboBox::separator() const
 {
   return d->mSeparator;
@@ -229,6 +264,13 @@ void KCheckComboBox::wheelEvent( QWheelEvent *event )
 {
   // discard mouse wheel events on the combo box
   event->accept();
+}
+
+void KCheckComboBox::resizeEvent( QResizeEvent * event )
+{
+  KComboBox::resizeEvent( event );
+  if ( d->mSqueezeText )
+    d->updateCheckedItems();
 }
 
 bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )

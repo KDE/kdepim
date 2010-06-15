@@ -45,6 +45,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
 
   Q_PROPERTY( QString separator READ separator WRITE setSeparator )
   Q_PROPERTY( QString defaultText READ defaultText WRITE setDefaultText )
+  Q_PROPERTY( bool squeezeText READ squeezeText WRITE setSqueezeText )
   Q_PROPERTY( QStringList checkedItems READ checkedItems WRITE setCheckedItems )
 
   public:
@@ -76,6 +77,22 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
      * @param text The new default text
      */
     void setDefaultText( const QString &text );
+
+
+    /**
+     * Returns wether or not the text will be squeezed to fit in the combo's line
+     * edit. This property is false by default.
+     *
+     * @see KSqueezedTextLabel
+     */
+    bool squeezeText() const;
+
+    /**
+     * Sets wheter or not the text must be squeezed
+     *
+     * @param squeeze The new squeeze status
+     */
+    void setSqueezeText( bool squeeze );
 
     /**
      * Returns the check state of item at given index.
@@ -130,6 +147,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
   protected:
     virtual bool eventFilter( QObject *receiver, QEvent *event );
     virtual void keyPressEvent( QKeyEvent *event );
+    virtual void resizeEvent( QResizeEvent * event );
     virtual void wheelEvent( QWheelEvent *event );
 
   private:
