@@ -48,6 +48,8 @@ class EditorGeneral::Private
       fillPhoneTypeCombo( mUi.phone1Type );
       fillPhoneTypeCombo( mUi.phone2Type );
       mUi.phone2Type->setCurrentIndex( 1 );
+
+      mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
     }
 
   public:
