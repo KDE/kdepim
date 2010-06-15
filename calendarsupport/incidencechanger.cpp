@@ -108,8 +108,17 @@ bool IncidenceChanger::Private::performChange( Change *change )
               "type="                << newinc->type()       <<
               "storageCollectionId=" << newItem.storageCollectionId();
 
-  // There not any job modifying this item, so mCurrentChanges[item.id] can't exist
+  // There's not any job modifying this item, so mCurrentChanges[item.id] can't exist
   Q_ASSERT( !mCurrentChanges.contains( newItem.id() ) );
+
+  // Check if the item was deleted, we already check in changeIncidence() but
+  // this change could be already in the queue when the item was deleted
+  if ( !mCalendar->incidence( newItem.id() ).isValid() ||
+       mDeletedItemIds.contains( newItem.id() ) ) {
+    kDebug() << "Incidence deleted";
+    // return true, the user doesn't want to see errors because he was too fast
+    return true;
+  }
 
   if ( incidencesEqual( newinc.get(), oldinc.get() ) ) {
     // Don't do anything
@@ -228,7 +237,7 @@ void IncidenceChanger::Private::changeIncidenceFinished( KJob* j )
 IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
                                     QObject *parent,
                                     Entity::Id defaultCollectionId )
-  : QObject( parent ), mCalendar( cal ), d( new Private( defaultCollectionId ) )
+  : QObject( parent) , d( new Private( defaultCollectionId, cal ) )
 {
   connect( d, SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)),
            SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)) );
@@ -286,7 +295,7 @@ void IncidenceChanger::cancelAttendees( const Item &aitem )
       // manually.
       // FIXME: Groupware scheduling should be factored out to it's own class
       //        anyway
-      Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(mCalendar) );
+      Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(d->mCalendar) );
       scheduler.performTransaction( incidence.get(), iTIPCancel );
     }
   }
@@ -360,7 +369,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
 
     if ( d->mGroupware ) {
       if ( !d->mGroupware->doNotNotify() && notifyOrganizer ) {
-        Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(mCalendar) );
+        Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(d->mCalendar) );
         scheduler.performTransaction( tmp.get(), KCal::iTIPReply );
       }
       //reset the doNotNotify flag
@@ -386,7 +395,7 @@ bool IncidenceChanger::cutIncidences( const Item::List &list, QWidget *parent )
       }
     }
    }
-  Akonadi::CalendarAdaptor *cal = new Akonadi::CalendarAdaptor( mCalendar, parent );
+  Akonadi::CalendarAdaptor *cal = new Akonadi::CalendarAdaptor( d->mCalendar, parent );
   Akonadi::DndFactory factory( cal, true /*delete calendarAdaptor*/ );
 
   if ( factory.cutIncidences( itemsToCut ) ) {
@@ -530,7 +539,7 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
                                      QWidget *parent, Akonadi::Collection &selectedCollection,
                                      int &dialogCode )
 {
-  const Collection defaultCollection = mCalendar->collection( d->mDefaultCollectionId );
+  const Collection defaultCollection = d->mCalendar->collection( d->mDefaultCollectionId );
 
   const QString incidenceMimeType = Akonadi::subMimeTypeForIncidence( incidence.get() );
   const bool defaultCollSupportsMimeType = defaultCollection.contentMimeTypes().contains( incidenceMimeType );
@@ -625,7 +634,7 @@ IncidenceChanger::DestinationPolicy IncidenceChanger::destinationPolicy() const
 
 bool IncidenceChanger::isNotDeleted( Akonadi::Item::Id id ) const
 {
-  if ( mCalendar->incidence( id ).isValid() ) {
+  if ( d->mCalendar->incidence( id ).isValid() ) {
     // it's inside the calendar, but maybe it's being deleted by a job or was
     // deleted but the ETM doesn't know yet
     return !d->mDeletedItemIds.contains( id );
