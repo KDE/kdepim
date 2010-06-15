@@ -200,8 +200,15 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
       // ignore this change
       return;
     }
-    
-    Q_ASSERT( item.storageCollectionId() == m_itemMap.value( id ).storageCollectionId() ); // there was once a bug that resulted in items forget their collectionId...
+
+    if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
+      // there was once a bug that resulted in items forget their collectionId...
+      kDebug() << "item.storageCollectionId() = " << item.storageCollectionId()
+               << "; m_itemMap.value( id ).storageCollectionId() = "
+               << m_itemMap.value( id ).storageCollectionId()
+               << "; item.isValid() = " << item.isValid();
+      Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
+    }
     // update-only goes here
   } else {
     // new-only goes here
