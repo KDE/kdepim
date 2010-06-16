@@ -79,7 +79,6 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory(this);
-//   d->mBnf->setBreadcrumbDepth(2);
   d->mBnf->setModel(d->mEtm, this);
 
   d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
@@ -129,11 +128,6 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
-
-  QTreeView *view = new QTreeView;
-  view->setModel(d->mEtm);
-  view->setWindowTitle("SelectedItem");
-  view->show();
 
 #if 0
   QTreeView *etmView = new QTreeView;

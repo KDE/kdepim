@@ -704,29 +704,16 @@ void KJotsWidget::deleteBook()
   if ( selectedRows.size() != 1 )
     return;
 
-  const QModelIndex idx = selectedRows.at( 0 );
-  Collection col = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+  Collection col = selectedRows.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
 
   if ( !col.isValid() )
     return;
 
-  if ( col.parentCollection() == Collection::root() )
+  if (col.parentCollection() == Collection::root())
     return;
 
-  if( col.hasAttribute<KJotsLockAttribute>() ) {
-
-      KMessageBox::information(topLevelWidget(),
-          i18n("This book is locked. You can only delete it when you first unlock it."),
-          i18n("Item is locked"));
-      return;
-  }
-  if ( KMessageBox::warningContinueCancel(topLevelWidget(),
-      i18nc("remove the book, by title", "<qt>Are you sure you want to delete the book <strong>%1</strong>?</qt>", idx.data().toString()),
-      i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeleteBookWarning") == KMessageBox::Cancel) {
-        return;
-  }
-
   (void) new Akonadi::CollectionDeleteJob( col, this );
+
 }
 
 void KJotsWidget::newBook()
