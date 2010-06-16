@@ -62,11 +62,14 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
   } else if ( uri.startsWith( QLatin1String( "uid:" ) ) ) {
 
     Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, ( QWidget* )0 );
-    if ( item.isValid() )
+    if ( item.isValid() ) {
       dlg->setContact( item );
-    dlg->show();
-    return true;
-
+      dlg->show();
+      return true;
+    } else {
+      kDebug()<<"Item is not valid.";
+      return false;
+    }
   } else if ( uri.startsWith( QLatin1String( "urn:x-ical" ) ) ) {
     // make sure korganizer is running or the part is shown
     KToolInvocation::startServiceByDesktopPath( "korganizer" );
