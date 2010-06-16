@@ -28,21 +28,7 @@
 #include "editorcrypto.h"
 #include "editorgeneral.h"
 #include "editorlocation.h"
-
-class EditorDummy : public EditorBase
-{
-  Q_OBJECT
-
-  public:
-    void loadContact( const KABC::Addressee &contact ) { Q_UNUSED( contact ); }
-
-    void saveContact( KABC::Addressee &contact ) { Q_UNUSED( contact ); }
-};
-
-class  EditorMore : public EditorDummy
-{
-  Q_OBJECT
-};
+#include "editormore.h"
 
 class DeclarativeEditorGeneral
   : public DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral>
@@ -51,7 +37,7 @@ class DeclarativeEditorGeneral
 
   public:
     explicit DeclarativeEditorGeneral( QDeclarativeItem *parent = 0 );
-};                         
+};
 
 class DeclarativeEditorBusiness
   : public DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness>

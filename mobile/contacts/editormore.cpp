@@ -1,0 +1,107 @@
+/*
+    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#include "editormore.h"
+
+#include "ui_editormore.h"
+
+#include <KABC/Addressee>
+
+#include <QtCore/QSignalMapper>
+#include <QtGui/QLabel>
+
+class EditorMore::Private
+{
+  EditorMore *const q;
+
+  public:
+    explicit Private( EditorMore *parent ) : q( parent )
+    {
+      mUi.setupUi( parent );
+
+      mMapper = new QSignalMapper( q );
+      mMapper->setMapping( mUi.namePageButton, 0 );
+      mMapper->setMapping( mUi.internetPageButton, 1 );
+      mMapper->setMapping( mUi.personalPageButton, 2 );
+      mMapper->setMapping( mUi.customFieldsPageButton, 3 );
+
+      QWidget *namePage = new QLabel( "Name Page" );
+      QWidget *internetPage = new QLabel( "Internet Page" );
+      QWidget *personalPage = new QLabel( "Personal Page" );
+      QWidget *customFieldsPage = new QLabel( "CustomFields Page" );
+
+      mUi.pageWidget->insertWidget( 0, namePage );
+      mUi.pageWidget->insertWidget( 1, internetPage );
+      mUi.pageWidget->insertWidget( 2, personalPage );
+      mUi.pageWidget->insertWidget( 3, customFieldsPage );
+
+      connect( mUi.namePageButton, SIGNAL( clicked() ),
+               mMapper, SLOT( map() ) );
+      connect( mUi.internetPageButton, SIGNAL( clicked() ),
+               mMapper, SLOT( map() ) );
+      connect( mUi.personalPageButton, SIGNAL( clicked() ),
+               mMapper, SLOT( map() ) );
+      connect( mUi.customFieldsPageButton, SIGNAL( clicked() ),
+               mMapper, SLOT( map() ) );
+      connect( mMapper, SIGNAL( mapped( int ) ),
+               mUi.pageWidget, SLOT( setCurrentIndex( int ) ) );
+
+      mUi.pageWidget->setCurrentIndex( 0 );
+    }
+
+  public:
+    Ui::EditorMore mUi;
+    QSignalMapper *mMapper;
+
+    KABC::Addressee mContact;
+};
+
+static QString loadCustom( const KABC::Addressee &contact, const QString &key )
+{
+  return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
+}
+
+static void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value )
+{
+  if ( value.isEmpty() )
+    contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), key );
+  else
+    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), key, value );
+}
+
+
+EditorMore::EditorMore( QWidget *parent )
+  : EditorBase( parent ), d( new Private( this ) )
+{
+}
+
+EditorMore::~EditorMore()
+{
+  delete d;
+}
+
+void EditorMore::loadContact( const KABC::Addressee &contact )
+{
+}
+
+void EditorMore::saveContact( KABC::Addressee &contact )
+{
+}
+
+#include "editormore.moc"

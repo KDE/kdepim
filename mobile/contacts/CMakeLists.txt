@@ -22,6 +22,7 @@ set(kab_mobile_srcs
   editorcrypto.cpp
   editorgeneral.cpp
   editorlocation.cpp
+  editormore.cpp
   locationmodel.cpp
 )
 
@@ -31,6 +32,7 @@ kde4_add_ui_files(kab_mobile_srcs
   editorcrypto.ui
   editorgeneral.ui
   editorlocation.ui
+  editormore.ui
 )
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
