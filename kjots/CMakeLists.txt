@@ -73,10 +73,6 @@ set (kjots_common_SRCS
 # Auto creation for local notes.
 #########################################################################
 
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/../runtime/resources/maildir
-)
-
 macro(add_resource_iface _kcfgFile _ifaceName _className)
   kcfg_generate_dbus_interface(${_kcfgFile} ${_ifaceName})
   string(TOLOWER ${_className} _codeFile)
@@ -86,7 +82,7 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   )
 endmacro(add_resource_iface)
 
-add_resource_iface( maildirresource.kcfg
+add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
                     org.kde.Akonadi.Maildir.Settings MaildirSettings )
 
 
