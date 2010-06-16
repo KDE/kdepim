@@ -22,6 +22,7 @@
 #include "ui_editormore.h"
 #include "ui_editormore_namepage.h"
 #include "ui_editormore_internetpage.h"
+#include "ui_editormore_personalpage.h"
 
 #include <KABC/Addressee>
 
@@ -49,7 +50,9 @@ class EditorMore::Private
       QWidget *internetPage = new QWidget;
       mInternetPage.setupUi( internetPage );
 
-      QWidget *personalPage = new QLabel( "Personal Page" );
+      QWidget *personalPage = new QWidget;
+      mPersonalPage.setupUi( personalPage );
+
       QWidget *customFieldsPage = new QLabel( "CustomFields Page" );
 
       mUi.pageWidget->insertWidget( 0, namePage );
@@ -80,6 +83,7 @@ class EditorMore::Private
     Ui::EditorMore mUi;
     Ui::NamePage mNamePage;
     Ui::InternetPage mInternetPage;
+    Ui::PersonalPage mPersonalPage;
     QSignalMapper *mMapper;
 
     KABC::Addressee mContact;
@@ -120,6 +124,12 @@ void EditorMore::loadContact( const KABC::Addressee &contact )
   d->mInternetPage.urlLineEdit->setText( contact.url().url() );
   d->mInternetPage.blogLineEdit->setText( loadCustom( contact, QLatin1String( "BlogFeed" ) ) );
   d->mInternetPage.messagingLineEdit->setText( loadCustom( contact, QLatin1String( "X-IMAddress" ) ) );
+
+  // personal page
+  d->mPersonalPage.birthdayDateEdit->setDate( contact.birthday().date() );
+  const QDate anniversary = QDate::fromString( loadCustom( contact, QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
+  d->mPersonalPage.anniversaryDateEdit->setDate( anniversary );
+  d->mPersonalPage.partnerLineEdit->setText( loadCustom( contact, QLatin1String( "X-SpousesName" ) ) );
 }
 
 void EditorMore::saveContact( KABC::Addressee &contact ) const
@@ -133,6 +143,12 @@ void EditorMore::saveContact( KABC::Addressee &contact ) const
   contact.setUrl( d->mInternetPage.urlLineEdit->text() );
   storeCustom( contact, QLatin1String( "BlogFeed" ), d->mInternetPage.blogLineEdit->text() );
   storeCustom( contact, QLatin1String( "X-IMAddress" ), d->mInternetPage.messagingLineEdit->text() );
+
+  // personal page
+  storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPersonalPage.partnerLineEdit->text() );
+  contact.setBirthday( QDateTime( d->mPersonalPage.birthdayDateEdit->date(), QTime(), contact.birthday().timeSpec() ) );
+  const QString anniversary = d->mPersonalPage.anniversaryDateEdit->date().toString( Qt::ISODate );
+  storeCustom( contact, QLatin1String( "X-Anniversary" ), anniversary );
 }
 
 void EditorMore::updateOrganization( const QString &organization )
