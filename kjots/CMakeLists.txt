@@ -37,7 +37,6 @@ endif(KJOTS_BUILD_KONTACT_PLUGIN)
 add_subdirectory( icons )
 add_subdirectory( plasmoid )
 
-
 #########################################################################
 # Code common to the kjots application and the kontact plugin
 # Don't make it a static library, this code needs to be compiled
@@ -64,10 +63,32 @@ set (kjots_common_SRCS
      kjotswidget.cpp
      kjotsbrowser.cpp
      kjotslinkdialog.cpp
+     localresourcecreator.cpp
      kjotsbookshelfentryvalidator.cpp
      note.cpp
      knowitimporter.cpp ${kjots_config_SRCS}
 )
+
+#########################################################################
+# Auto creation for local notes.
+#########################################################################
+
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../runtime/resources/maildir
+)
+
+macro(add_resource_iface _kcfgFile _ifaceName _className)
+  kcfg_generate_dbus_interface(${kdepim-runtime_SOURCE_DIR}/resources/${_kcfgFile} ${_ifaceName})
+  string(TOLOWER ${_className} _codeFile)
+  set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
+  qt4_add_dbus_interface(kjots_common_SRCS
+    ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
+  )
+endmacro(add_resource_iface)
+
+add_resource_iface( maildir/maildirresource.kcfg
+                    org.kde.Akonadi.Maildir.Settings MaildirSettings )
+
 
 #########################################################################
 # D-Bus interface

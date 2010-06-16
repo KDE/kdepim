@@ -99,6 +99,7 @@
 
 #include <memory>
 #include "kjotslockattribute.h"
+#include "localresourcecreator.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
@@ -110,7 +111,15 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
     : QWidget( parent, f ), m_xmlGuiClient( xmlGuiClient )
 {
   Akonadi::Control::widgetNeedsAkonadi( this );
-  Akonadi::Control::start( this );
+
+  KConfigGroup migrationCfg( KGlobal::config(), "General" );
+  const bool autoCreate = migrationCfg.readEntry( "AutoCreateResourceOnStart", true );
+  migrationCfg.writeEntry("AutoCreateResourceOnStart", autoCreate);
+  migrationCfg.sync();
+  if (autoCreate) {
+    LocalResourceCreator *creator = new LocalResourceCreator( this );
+    creator->createIfMissing();
+  }
 
   m_splitter = new QSplitter( this );
 
@@ -697,6 +706,9 @@ void KJotsWidget::deleteBook()
   Collection col = selectedRows.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
 
   if ( !col.isValid() )
+    return;
+
+  if (col.parentCollection() == Collection::root())
     return;
 
   (void) new Akonadi::CollectionDeleteJob( col, this );
