@@ -545,11 +545,12 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
   const Collection defaultCollection = d->mCalendar->collection( d->mDefaultCollectionId );
 
   const QString incidenceMimeType = Akonadi::subMimeTypeForIncidence( incidence.get() );
-  const bool defaultCollSupportsMimeType = defaultCollection.contentMimeTypes().contains( incidenceMimeType );
+  const bool defaultIsOk = defaultCollection.contentMimeTypes().contains( incidenceMimeType ) &&
+                           defaultCollection.rights() & Collection::CanCreateItem;
 
   if ( d->mDestinationPolicy == ASK_DESTINATION ||
        !defaultCollection.isValid() ||
-       !defaultCollSupportsMimeType ) {
+       !defaultIsOk ) {
     QStringList mimeTypes( incidenceMimeType );
     selectedCollection = Akonadi::selectCollection( parent,
                                                     dialogCode,
