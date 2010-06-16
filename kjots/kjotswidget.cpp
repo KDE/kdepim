@@ -496,6 +496,11 @@ void KJotsWidget::delayedInitialization()
   multiselectionActions.insert( actionCollection->action("save_to") );
   multiselectionActions.insert( actionCollection->action("change_color") );
 
+  m_autosaveTimer = new QTimer(this);
+  updateConfiguration();
+
+  connect(m_autosaveTimer, SIGNAL(timeout()), editor, SLOT(savePage()));
+  connect(treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), m_autosaveTimer, SLOT(start()) );
 
   treeview->delayedInitialization();
   editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
@@ -655,6 +660,16 @@ void KJotsWidget::configure()
   KJotsConfigDlg *dialog = new KJotsConfigDlg( i18n( "Settings" ), this );
   connect( dialog, SIGNAL(configCommitted()), SLOT(updateConfiguration()) );
   dialog->show();
+}
+
+void KJotsWidget::updateConfiguration()
+{
+    if (KJotsSettings::autoSave())
+    {
+        m_autosaveTimer->setInterval(KJotsSettings::autoSaveInterval()*1000*60);
+        m_autosaveTimer->start();
+    } else
+        m_autosaveTimer->stop();
 }
 
 void KJotsWidget::copySelectionToTitle()

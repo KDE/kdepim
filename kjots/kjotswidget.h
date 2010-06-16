@@ -172,6 +172,8 @@ private slots:
 
   void currentCharFormatChanged(const QTextCharFormat &);
 
+  void updateConfiguration();
+
 private:
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
@@ -185,6 +187,7 @@ private:
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
   QSplitter *m_splitter;
+  QTimer *m_autosaveTimer;
 
   QString activeAnchor;
 
