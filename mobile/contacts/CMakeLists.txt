@@ -5,6 +5,7 @@ add_subdirectory( qmlplugin )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
+  ${CMAKE_SOURCE_DIR}/libkleo/
   ${Boost_INCLUDE_DIR}
 )
 
@@ -16,6 +17,7 @@ set(kab_mobile_srcs
   declarativeeditors.cpp
   editorbase.cpp
   editorbusiness.cpp
+  editorcrypto.cpp
   editorgeneral.cpp
   editorlocation.cpp
   locationmodel.cpp
@@ -23,6 +25,7 @@ set(kab_mobile_srcs
 
 kde4_add_ui_files(kab_mobile_srcs
   editorbusiness.ui
+  editorcrypto.ui
   editorgeneral.ui
   editorlocation.ui
 )
@@ -37,6 +40,7 @@ target_link_libraries(kaddressbook-mobile
     akonadi_next
     kdepim
     kdepimmobileui
+    kleo
     incidenceeditorsngmobile
 )
 

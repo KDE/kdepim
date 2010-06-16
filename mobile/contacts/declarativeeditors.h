@@ -23,6 +23,7 @@
 #include "contacteditorview.h"
 #include "declarativewidgetbase.h"
 #include "editorbusiness.h"
+#include "editorcrypto.h"
 #include "editorgeneral.h"
 #include "editorlocation.h"
 
@@ -34,11 +35,6 @@ class EditorDummy : public EditorBase
     void loadContact( const KABC::Addressee &contact ) { Q_UNUSED( contact ); }
 
     void saveContact( KABC::Addressee &contact ) { Q_UNUSED( contact ); }
-};
-
-class  EditorCrypto : public EditorDummy
-{
-  Q_OBJECT
 };
 
 class  EditorMore : public EditorDummy

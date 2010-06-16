@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditorCrypto</class>
+ <widget class="QWidget" name="EditorCrypto">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>382</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_5">
+   <item>
+    <widget class="QGroupBox" name="protocolGroupBox">
+     <property name="title">
+      <string>Allow the following protocols</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QCheckBox" name="inlineOpenPGPCheckBox">
+        <property name="text">
+         <string>Inline OpenPGP (deprecated)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="openPGPCheckBox">
+        <property name="text">
+         <string>OpenPGP / MIME</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="smimeCheckBox">
+        <property name="text">
+         <string>S/MIME</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="smimeOpaqueCheckBox">
+        <property name="text">
+         <string>S/MIME Opaque</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="pgpKeyGroupBox">
+     <property name="title">
+      <string>Preferred Open/PGP encryption key</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="Kleo::EncryptionKeyRequester" name="openPGPKeyRequester" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="smimeKeyGroupBox">
+     <property name="title">
+      <string>Preferred S/MIME encryption certificate</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="Kleo::EncryptionKeyRequester" name="smimeCertificateRequester" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="messagePreferencesGroupBox">
+     <property name="title">
+      <string>Message Preference</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="signLabel">
+          <property name="text">
+           <string>Sign</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="signComboBox"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="encryptLabel">
+          <property name="text">
+           <string>Encrypt</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KComboBox" name="encryptComboBox"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kleo::EncryptionKeyRequester</class>
+   <extends>QWidget</extends>
+   <header>libkleo/ui/keyrequester.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
