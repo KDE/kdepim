@@ -406,14 +406,6 @@ void KJotsEdit::savePage()
     if (!item.hasPayload<KMime::Message::Ptr>())
       return;
 
-    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-
-    KMime::Content* c =msg->mainBodyPart();
-    c->fromUnicodeString( toPlainText() );
-    msg->assemble();
-
-    item.setPayload( msg );
-
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_selectionModel->model());
 
     document()->setModified( false );
