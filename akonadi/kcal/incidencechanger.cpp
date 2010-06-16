@@ -25,6 +25,7 @@
 #include "incidencechanger.h"
 #include "incidencechanger_p.h"
 #include "groupware.h"
+#include "kcalprefs.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendaradaptor.h>
@@ -305,6 +306,11 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
     return false;
   }
 
+  if ( !isNotDeleted( aitem.id() ) ) {
+    kDebug() << "Item already deleted, skipping and returning true";
+    return true;
+  }
+
   if ( !( aitem.parentCollection().rights() & Collection::CanDeleteItem ) ) {
     kWarning() << "insufficient rights to delete incidence";
     return false;
@@ -539,11 +545,12 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
   const Collection defaultCollection = d->mCalendar->collection( d->mDefaultCollectionId );
 
   const QString incidenceMimeType = Akonadi::subMimeTypeForIncidence( incidence.get() );
-  const bool defaultCollSupportsMimeType = defaultCollection.contentMimeTypes().contains( incidenceMimeType );
+  const bool defaultIsOk = defaultCollection.contentMimeTypes().contains( incidenceMimeType ) &&
+                           defaultCollection.rights() & Collection::CanCreateItem;
 
   if ( d->mDestinationPolicy == ASK_DESTINATION ||
        !defaultCollection.isValid() ||
-       !defaultCollSupportsMimeType ) {
+       !defaultIsOk ) {
     QStringList mimeTypes( incidenceMimeType );
     selectedCollection = Akonadi::selectCollection( parent,
                                                     dialogCode,

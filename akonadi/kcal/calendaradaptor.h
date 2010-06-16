@@ -26,7 +26,6 @@
 #include "akonadi-kcal_next_export.h"
 
 #include "groupware.h"
-#include "kcalprefs.h"
 #include "mailscheduler.h"
 #include "incidencechanger.h"
 
