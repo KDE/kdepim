@@ -761,7 +761,11 @@ void KJotsWidget::newPage()
 
   if ( !col.isValid() )
     return;
+  doCreateNewPage(col);
+}
 
+void KJotsWidget::doCreateNewPage(const Collection &collection)
+{
   Item newItem;
   newItem.setMimeType( Note::mimeType() );
 
@@ -785,7 +789,7 @@ void KJotsWidget::newPage()
   eda->setIconName( "text-plain" );
   newItem.addAttribute(eda);
 
-  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, collection, this );
   connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
 
 }
@@ -798,8 +802,18 @@ void KJotsWidget::newPageResult( KJob* job )
 
 void KJotsWidget::newBookResult( KJob* job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     kDebug() << job->errorString();
+    return;
+  }
+  Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
+  if ( !createJob )
+    return;
+  const Collection collection = createJob->collection();
+  if ( !collection.isValid() )
+    return;
+
+  doCreateNewPage(collection);
 }
 
 QString KJotsWidget::renderSelectionToHtml()
