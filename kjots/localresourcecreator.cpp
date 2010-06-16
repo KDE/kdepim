@@ -23,7 +23,7 @@
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
-#include "runtime/migration/kjots/maildirsettings.h"
+#include "maildirsettings.h"
 
 #include <KDebug>
 #include <KGlobal>
