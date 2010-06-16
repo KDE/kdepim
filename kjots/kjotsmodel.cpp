@@ -24,6 +24,8 @@
 #include <QColor>
 #include <QTextDocument>
 
+#include <KIcon>
+
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 
@@ -36,6 +38,7 @@
 #include <grantlee/markupdirector.h>
 #include <grantlee/texthtmlbuilder.h>
 #include <grantlee/plaintextmarkupbuilder.h>
+#include "kjotslockattribute.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
 
@@ -226,9 +229,10 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
     return QVariant::fromValue(obj);
   }
 
+
   if ( role == KJotsModel::DocumentRole )
   {
-    Item item = index.data( ItemRole ).value<Item>();
+    const Item item = index.data( ItemRole ).value<Item>();
     Entity::Id itemId = item.id();
     if ( m_documents.contains( itemId ) )
       return QVariant::fromValue( m_documents.value( itemId ) );
@@ -249,7 +253,7 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
 
   if ( role == KJotsModel::DocumentCursorPositionRole )
   {
-    Item item = EntityTreeModel::data( index, EntityTreeModel::ItemRole ).value<Item>();
+    const Item item = index.data( ItemRole ).value<Item>();
     if (!item.isValid())
       return 0;
 
@@ -257,6 +261,19 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
       return m_cursorPositions.value( item.id() );
 
     return 0;
+  }
+
+  if ( role == Qt::DecorationRole )
+  {
+    const Item item = index.data( ItemRole ).value<Item>();
+    if ( item.isValid() && item.hasAttribute<KJotsLockAttribute>() ) {
+        return KIcon( "emblem-locked" );
+    } else {
+      const Collection col = index.data( CollectionRole ).value<Collection>();
+      if ( col.isValid() && col.hasAttribute<KJotsLockAttribute>() ) {
+        return KIcon( "emblem-locked" );
+      }
+    }
   }
 
   return EntityTreeModel::data(index, role);
