@@ -63,6 +63,8 @@ class EditorContactGroup : public QWidget
     Q_PRIVATE_SLOT( d, void nameTextChanged( const QString& ) )
     Q_PRIVATE_SLOT( d, void addRecipientClicked() )
     Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void completed( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void textEdited( const QString& ) )
 };
 
 #endif

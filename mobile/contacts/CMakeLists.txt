@@ -12,9 +12,10 @@ include_directories(
 set(kab_mobile_srcs
   mainview.cpp
   main.cpp
-  contactlistproxy.cpp
+  contactcompletionmodel.cpp
   contacteditorview.cpp
   contactgroupeditorview.cpp
+  contactlistproxy.cpp
   declarativeeditors.cpp
   displaynameeditwidget.cpp
   editorbase.cpp
