@@ -22,9 +22,24 @@
 #include "ui_editorcontactgroup.h"
 
 #include <Akonadi/Collection>
+#include <Akonadi/Item>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
+
+class Recipient
+{
+  public:
+    Recipient( QLineEdit *input ) : mInput( input ) {}
+   
+  public:
+    QLineEdit* mInput;
+    
+    Akonadi::Item mItem;
+    QString mPreferredEmail;
+};
 
 class EditorContactGroup::Private
 {
@@ -36,8 +51,8 @@ class EditorContactGroup::Private
     {
       mUi.setupUi( parent );
 
-      mInputs << mUi.recipient1;
-      mInputs << mUi.recipient2;
+      mInputs << new Recipient( mUi.recipient1 );
+      mInputs << new Recipient( mUi.recipient2 );
       mLastRow = 2; // third row
       
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
@@ -54,7 +69,7 @@ class EditorContactGroup::Private
 
     KABC::ContactGroup mContactGroup;
 
-    QList<QLineEdit*> mInputs;
+    QList<Recipient*> mInputs;
 
     int mLastRow;
 
@@ -66,6 +81,8 @@ class EditorContactGroup::Private
    
     void addRecipientClicked();
 
+    void fetchResult( KJob *job );
+    
   private:
     void addRows( int newRowCount );
 };
@@ -73,6 +90,34 @@ class EditorContactGroup::Private
 void EditorContactGroup::Private::addRecipientClicked()
 {
   addRows( mInputs.count() + 1 );
+}
+
+void EditorContactGroup::Private::fetchResult( KJob *job )
+{
+  Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  Q_ASSERT( fetchJob != 0 );
+  
+  int index = fetchJob->property( "RecipientIndex" ).value<int>();
+  Q_ASSERT( index >= 0 && index < mInputs.count() );
+  Recipient *recipient = mInputs[ index ];
+
+  const Akonadi::Item item = fetchJob->items().isEmpty() ? recipient->mItem : fetchJob->items().first();
+  if ( fetchJob->error() != 0 ) {
+    kError() << "Fetching contact item" << item.id() << "failed:" << fetchJob->errorString();
+  } else if ( !item.hasPayload<KABC::Addressee>() ) {
+    kError() << "Fetching contact item" << item.id() << "worked but it is not a contact";
+  } else {
+    const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    
+    recipient->mItem = item;
+    recipient->mInput->setEnabled( true );
+
+    if ( recipient->mPreferredEmail.isEmpty() ) {
+      recipient->mInput->setText( contact.fullEmail( contact.preferredEmail() ) );
+    } else {
+      recipient->mInput->setText( contact.fullEmail( recipient->mPreferredEmail ) );
+    }
+  }
 }
 
 void EditorContactGroup::Private::addRows( int newRowCount )
@@ -93,7 +138,7 @@ void EditorContactGroup::Private::addRows( int newRowCount )
   for ( ; mInputs.count() < newRowCount; ++row, ++mLastRow ) {
     QLineEdit *lineEdit = new QLineEdit( q );
     mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
-    mInputs << lineEdit;
+    mInputs << new Recipient( lineEdit );
   }
 
   // re-add widgets
@@ -125,30 +170,45 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
   d->mUi.groupName->setText( contactGroup.name() );
 
   KABC::Addressee contact;
+
+  d->ensureRows( contactGroup.dataCount() + contactGroup.contactReferenceCount() );
+
+  int count = 0;
   
   QStringList emails;
-  for ( uint i = 0; i < contactGroup.dataCount(); ++i ) {
+  for ( uint i = 0; i < contactGroup.dataCount(); ++i, ++count ) {
     const KABC::ContactGroup::Data &data = contactGroup.data( i );
     contact.setNameFromString( data.name() );
     emails << contact.fullEmail( data.email() );
   }
   
-  d->ensureRows( emails.count() );
-
-  QList<QLineEdit*>::iterator inputIt = d->mInputs.begin();
+  QList<Recipient*>::const_iterator inputIt = d->mInputs.constBegin();
   Q_FOREACH( const QString &email, emails ) {
-    (*inputIt)->setText( email );
+    (*inputIt)->mInput->setText( email );
     ++inputIt;
-  }  
+  }
+
+  for ( uint i = 0; inputIt != d->mInputs.constEnd(); ++inputIt, ++i, ++count ) {
+    const KABC::ContactGroup::ContactReference &ref = contactGroup.contactReference( i );
+    (*inputIt)->mItem.setId( ref.uid().toLongLong() );
+    (*inputIt)->mPreferredEmail = ref.preferredEmail();
+    (*inputIt)->mInput->setText( i18nc( "@info:status", "Loading..." ) );
+    (*inputIt)->mInput->setEnabled( false );
+
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( (*inputIt)->mItem );
+    job->fetchScope().fetchFullPayload( true );
+    job->setProperty( "RecipientIndex", count );
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
+  }
 }
 
-void EditorContactGroup::saveContactGroup( KABC::ContactGroup &contactGroup )
+void EditorContactGroup::saveContactGroup( KABC::ContactGroup &contactGroup ) const
 {
   contactGroup.setName(  d->mUi.groupName->text() );
   contactGroup.setId( d->mContactGroup.id() );
 
-  Q_FOREACH( QLineEdit *input, d->mInputs ) {
-    const QString email = input->text().trimmed();
+  Q_FOREACH( Recipient *input, d->mInputs ) {
+    const QString email = input->mInput->text().trimmed();
     if ( !email.isEmpty() ) {
       QString namePart;
       QString emailPart;
@@ -157,7 +217,19 @@ void EditorContactGroup::saveContactGroup( KABC::ContactGroup &contactGroup )
         namePart = emailPart;
       }
 
-      if ( !emailPart.isEmpty() ) {
+      if ( input->mItem.isValid() ) {
+        const Akonadi::Item item = input->mItem;
+        KABC::ContactGroup::ContactReference ref;
+        ref.setUid( QString::number( item.id() ) );
+
+        if ( !emailPart.isEmpty() ) {
+          if ( !item.hasPayload<KABC::Addressee>() || item.payload<KABC::Addressee>().preferredEmail() != emailPart ) {
+            ref.setPreferredEmail( emailPart );
+          }
+        }
+
+        contactGroup.append( ref );
+      } else if ( !emailPart.isEmpty() ) {
         contactGroup.append( KABC::ContactGroup::Data( namePart, emailPart ) );
       }
     }

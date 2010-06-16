@@ -32,6 +32,8 @@ namespace KABC
   class ContactGroup;
 }
 
+class KJob;
+
 class EditorContactGroup : public QWidget
 {
   Q_OBJECT
@@ -45,7 +47,7 @@ class EditorContactGroup : public QWidget
     
     void loadContactGroup( const KABC::ContactGroup &contactGroup );
 
-    void saveContactGroup( KABC::ContactGroup &contactGroup );
+    void saveContactGroup( KABC::ContactGroup &contactGroup ) const;
 
     Akonadi::Collection selectedCollection() const;
     
@@ -60,6 +62,7 @@ class EditorContactGroup : public QWidget
 
     Q_PRIVATE_SLOT( d, void nameTextChanged( const QString& ) )
     Q_PRIVATE_SLOT( d, void addRecipientClicked() )
+    Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
 };
 
 #endif
