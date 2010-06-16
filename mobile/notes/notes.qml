@@ -21,7 +21,7 @@
 
 import Qt 4.7 as QML
 import org.kde 4.5
-import org.kde.akonadi 4.5
+import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.MainView {
@@ -29,10 +29,6 @@ KPIM.MainView {
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
 
-  gradient: QML.Gradient {
-    QML.GradientStop { position: 0.0; color: "lightgrey" }
-    QML.GradientStop { position: 0.5; color: "grey" }
-  }
   NoteView {
     id: noteView
     anchors.left: parent.left
@@ -42,12 +38,146 @@ KPIM.MainView {
     anchors.rightMargin : 10
     width: parent.width
     height: parent.height
+    visible : false
   }
 
+  QML.Rectangle {
+    id : backToMessageListButton
+    anchors.right : notesMobile.right
+    anchors.rightMargin : 70
+    anchors.bottom : notesMobile.bottom
+    anchors.bottomMargin : 100
+    visible : false
+    QML.Image {
+      source : "back-to-message-list.png"
+      QML.MouseArea {
+        anchors.fill : parent;
+        onClicked : {
+          messageView.visible = false;
+          backToMessageListButton.visible = false;
+          collectionView.visible = true;
+          emailListPage.visible = true;
+        }
+      }
+    }
+  }
+
+
+  QML.Item {
+    id : mainWorkView
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+
+    Akonadi.AkonadiBreadcrumbNavigationView {
+      id : collectionView
+      anchors.top: parent.top
+      width: 1/3 * parent.width
+      anchors.bottom : selectButton.top
+      //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
+      anchors.left: parent.left
+
+      multipleSelectionText : KDE.i18na("You have selected \n%1 folders\nfrom %2 accounts\n%3 notes", [collectionView.numSelected,
+                                                                                                        application.numSelectedAccounts,
+                                                                                                        headerList.count])
+      breadcrumbItemsModel : breadcrumbCollectionsModel
+      selectedItemModel : selectedCollectionModel
+      childItemsModel : childCollectionsModel
+    }
+    KPIM.Button2 {
+      id : selectButton
+      anchors.left: collectionView.left
+      anchors.right: collectionView.right
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : { (collectionView.numSelected == 1) ? -selectButton.height : 0 }
+      buttonText : (collectionView.numSelected <= 1) ? KDE.i18n("Select") : KDE.i18n("Change Selection")
+      opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
+      onClicked : {
+        application.persistCurrentSelection("preFavSelection");
+        favoriteSelector.visible = true;
+        mainWorkView.visible = false;
+      }
+    }
+
+    KPIM.StartCanvas {
+      id : startPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      anchors.leftMargin : 10
+      anchors.rightMargin : 10
+
+      opacity : collectionView.hasSelection ? 0 : 1
+      showAccountsList : false
+      favoritesModel : favoritesList
+
+      contextActions : [
+        QML.Column {
+          anchors.fill: parent
+          height : 70
+          KPIM.Button2 {
+            width: parent.width
+            buttonText : KDE.i18n( "Write new Note" )
+            onClicked : {
+//               application.startComposer();
+            }
+          }
+        }
+      ]
+    }
+
+    QML.Rectangle {
+      id : emptyFolderPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : (collectionView.hasBreadcrumbs && headerList.count == 0 ) ? 1 : 0
+      QML.Text {
+        text : KDE.i18n("No notes in this notebook");
+        height : 20;
+        font.italic : true
+        horizontalAlignment : QML.Text.AlignHCenter
+        anchors.verticalCenter : parent.verticalCenter;
+        anchors.horizontalCenter : parent.horizontalCenter
+      }
+    }
+
+    QML.Rectangle {
+      id : notesListPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : headerList.count > 0 ? 1 : 0
+
+      NotesListView {
+        id: headerList
+        model: itemModel
+        anchors.fill : parent
+        onItemSelected: {
+          // Prevent reloading of the message, perhaps this should be done
+          // in messageview itself.
+          if ( noteView.noteId != headerList.currentItemId )
+          {
+            noteView.noteId = headerList.currentItemId;
+            noteView.currentNoteRow = -1;
+            noteView.currentNoteRow = headerList.currentIndex;
+          }
+        }
+      }
+    }
+  }
 
   SlideoutPanelContainer {
     anchors.fill: parent
 
+/*
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
@@ -81,14 +211,13 @@ KPIM.MainView {
               buttonText : KDE.i18n( "Add Notebook" )
               onClicked : {
                 console.log( "Add Notebook clicked" );
-                application.launchAccountWizard();
+//                 application.launchAccountWizard();
               }
             }
           ]
         }
       ]
     }
-
     SlideoutPanel {
       id: folderPanel
       titleText: KDE.i18n( "Notebooks" )
@@ -149,14 +278,14 @@ KPIM.MainView {
         }
       ]
     }
-
+*/
     SlideoutPanel {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       anchors.fill : parent
       contentWidth: 240
-      content: [
+//       content: [
 //           Button {
 //             id: moveButton
 //             anchors.top: actionLabel.bottom;
@@ -202,7 +331,14 @@ KPIM.MainView {
 //               actionPanel.collapse();
 //             }
 //           }
-      ]
+//       ]
+    }
+  }
+
+  QML.Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
     }
   }
 
