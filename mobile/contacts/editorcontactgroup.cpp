@@ -23,6 +23,7 @@
 
 #include <Akonadi/Collection>
 
+#include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
 class EditorContactGroup::Private
@@ -121,7 +122,17 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
 {
   d->mContactGroup = contactGroup;
 
-  const QStringList emails; // TODO
+  d->mUi.groupName->setText( contactGroup.name() );
+
+  KABC::Addressee contact;
+  
+  QStringList emails;
+  for ( uint i = 0; i < contactGroup.dataCount(); ++i ) {
+    const KABC::ContactGroup::Data &data = contactGroup.data( i );
+    contact.setNameFromString( data.name() );
+    emails << contact.fullEmail( data.email() );
+  }
+  
   d->ensureRows( emails.count() );
 
   QList<QLineEdit*>::iterator inputIt = d->mInputs.begin();
@@ -133,10 +144,22 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
 
 void EditorContactGroup::saveContactGroup( KABC::ContactGroup &contactGroup )
 {
+  contactGroup.setName(  d->mUi.groupName->text() );
+  contactGroup.setId( d->mContactGroup.id() );
+
   Q_FOREACH( QLineEdit *input, d->mInputs ) {
     const QString email = input->text().trimmed();
     if ( !email.isEmpty() ) {
-      // TODO
+      QString namePart;
+      QString emailPart;
+      KABC::Addressee::parseEmailAddress( email, namePart, emailPart );
+      if ( namePart.isEmpty() ) {
+        namePart = emailPart;
+      }
+
+      if ( !emailPart.isEmpty() ) {
+        contactGroup.append( KABC::ContactGroup::Data( namePart, emailPart ) );
+      }
     }
   }
 }
