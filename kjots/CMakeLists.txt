@@ -78,7 +78,7 @@ include_directories(
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
-  kcfg_generate_dbus_interface(${kdepim-runtime_SOURCE_DIR}/resources/${_kcfgFile} ${_ifaceName})
+  kcfg_generate_dbus_interface(${_kcfgFile} ${_ifaceName})
   string(TOLOWER ${_className} _codeFile)
   set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
   qt4_add_dbus_interface(kjots_common_SRCS
@@ -86,7 +86,7 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   )
 endmacro(add_resource_iface)
 
-add_resource_iface( maildir/maildirresource.kcfg
+add_resource_iface( maildirresource.kcfg
                     org.kde.Akonadi.Maildir.Settings MaildirSettings )
 
 
