@@ -112,7 +112,7 @@ void EditorMore::loadContact( const KABC::Addressee &contact )
   d->mInternetPage.messagingLineEdit->setText( loadCustom( contact, QLatin1String( "X-IMAddress" ) ) );
 }
 
-void EditorMore::saveContact( KABC::Addressee &contact )
+void EditorMore::saveContact( KABC::Addressee &contact ) const
 {
   // internet page
   contact.setUrl( d->mInternetPage.urlLineEdit->text() );

@@ -207,7 +207,7 @@ void EditorLocation::loadContact( const KABC::Addressee &contact )
   d->mModel->setLocations( contact.addresses() );
 }
 
-void EditorLocation::saveContact( KABC::Addressee &contact )
+void EditorLocation::saveContact( KABC::Addressee &contact ) const
 {
   const KABC::Address::List oldAddresses = contact.addresses();
   foreach ( const KABC::Address &oldAddress, oldAddresses )

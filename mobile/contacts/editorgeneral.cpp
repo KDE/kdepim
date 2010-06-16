@@ -55,7 +55,7 @@ class PhoneWidgets
 class EditorGeneral::Private
 {
   EditorGeneral *const q;
- 
+
   public:
     explicit Private( EditorGeneral *parent )
       : q( parent ),
@@ -66,7 +66,7 @@ class EditorGeneral::Private
       mEmailInputs << mUi.email1;
       mEmailInputs << mUi.email2;
       mLastEmailRow = 2; // third row
-      
+
       mPhoneWidgets << new PhoneWidgets( mUi.phone1, mUi.phone1Type );
       mPhoneWidgets << new PhoneWidgets( mUi.phone2, mUi.phone2Type );
       mUi.phone2Type->setCurrentIndex( 1 );
@@ -75,7 +75,7 @@ class EditorGeneral::Private
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
 
       mUi.pictureButton->setIconSize( mDefaultPhoto.size() );
-      mUi.pictureButton->setIcon( mDefaultPhoto );      
+      mUi.pictureButton->setIcon( mDefaultPhoto );
     }
 
     ~Private()
@@ -107,7 +107,7 @@ class EditorGeneral::Private
     int mLastPhoneRow;
 
     const QPixmap mDefaultPhoto;
-    
+
   public: // slots
     void nameTextChanged( const QString &text )
     {
@@ -154,7 +154,7 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
   mUi.gridLayout->removeWidget( mUi.collectionSelector );
 
   int row = mLastEmailRow + 1;
-  
+
   // add new widgets
   for ( ; mEmailInputs.count() < newRowCount; ++row, ++mLastEmailRow, ++mLastPhoneRow ) {
     QLineEdit *lineEdit = new QLineEdit( q );
@@ -210,9 +210,9 @@ EditorGeneral::EditorGeneral( QWidget *parent )
   connect( d->mUi.fullName, SIGNAL( textChanged( QString ) ), SLOT( nameTextChanged( QString ) ) );
 
   connect( d->mUi.addEmailButton, SIGNAL( clicked() ), SLOT( addEmailClicked() ) );
-  
+
   connect( d->mUi.addPhoneButton, SIGNAL( clicked() ), SLOT( addPhoneClicked() ) );
- 
+
   connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
   connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),
            SIGNAL( collectionChanged( Akonadi::Collection ) ) );
@@ -239,10 +239,10 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact )
     (*inputIt)->setText( email );
     ++inputIt;
   }
-  
+
   const KABC::PhoneNumber::List phones = contact.phoneNumbers();
   d->ensurePhoneRows( phones.count() );
-  
+
   QList<PhoneWidgets*>::iterator widgetIt = d->mPhoneWidgets.begin();
   Q_FOREACH( const KABC::PhoneNumber &phone, phones ) {
     PhoneWidgets* widgets = *widgetIt;
@@ -263,7 +263,7 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact )
   d->mUi.pictureButton->setIcon( photo );
 }
 
-void EditorGeneral::saveContact( KABC::Addressee &contact )
+void EditorGeneral::saveContact( KABC::Addressee &contact ) const
 {
   contact.setPrefix( d->mContact.prefix() );
   contact.setGivenName( d->mContact.givenName() );
@@ -277,7 +277,7 @@ void EditorGeneral::saveContact( KABC::Addressee &contact )
       contact.insertEmail( email );
     }
   }
-  
+
   Q_FOREACH( PhoneWidgets *widgets, d->mPhoneWidgets ) {
     const QString number = widgets->mInput->text().trimmed();
     const QVariant typeVar = widgets->mType->itemData( widgets->mType->currentIndex() );

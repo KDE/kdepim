@@ -35,10 +35,10 @@ class EditorBase : public QWidget
     explicit EditorBase( QWidget *parent = 0 );
 
     ~EditorBase();
-    
+
     virtual void loadContact( const KABC::Addressee &contact ) = 0;
 
-    virtual void saveContact( KABC::Addressee &contact ) = 0;
+    virtual void saveContact( KABC::Addressee &contact ) const = 0;
 };
 
 #endif

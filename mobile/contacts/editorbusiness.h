@@ -32,7 +32,7 @@ class EditorBusiness : public EditorBase
     ~EditorBusiness();
 
     void loadContact( const KABC::Addressee &contact );
-    void saveContact( KABC::Addressee &contact );
+    void saveContact( KABC::Addressee &contact ) const;
 
   private:
     class Private;

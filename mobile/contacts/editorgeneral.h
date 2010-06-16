@@ -37,18 +37,18 @@ class EditorGeneral : public EditorBase
     ~EditorGeneral();
 
     void setDefaultCollection( const Akonadi::Collection &collection );
-    
+
     void loadContact( const KABC::Addressee &contact );
 
-    void saveContact( KABC::Addressee &contact );
+    void saveContact( KABC::Addressee &contact ) const;
 
     Akonadi::Collection selectedCollection() const;
-    
+
   Q_SIGNALS:
     void collectionChanged( const Akonadi::Collection &collection );
 
     void saveClicked();
-    
+
   private:
     class Private;
     Private *const d;

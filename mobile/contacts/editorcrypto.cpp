@@ -99,7 +99,7 @@ void EditorCrypto::loadContact( const KABC::Addressee &contact )
   d->mUi.smimeCertificateRequester->setFingerprints( loadCustom( contact, QLatin1String( "SMIMEFP" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts ) );
 }
 
-void EditorCrypto::saveContact( KABC::Addressee &contact )
+void EditorCrypto::saveContact( KABC::Addressee &contact ) const
 {
   uint cryptoFormats = 0;
   uint msgFormat = 1;
