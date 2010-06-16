@@ -53,10 +53,10 @@ KPIM.MainView {
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
-          messageView.visible = false;
+          noteView.visible = false;
           backToMessageListButton.visible = false;
           collectionView.visible = true;
-          emailListPage.visible = true;
+          notesListPage.visible = true;
         }
       }
     }
@@ -168,6 +168,11 @@ KPIM.MainView {
             noteView.noteId = headerList.currentItemId;
             noteView.currentNoteRow = -1;
             noteView.currentNoteRow = headerList.currentIndex;
+
+            noteView.visible = true;
+            backToMessageListButton.visible = true;
+            collectionView.visible = false;
+            notesListPage.visible = false;
           }
         }
       }
