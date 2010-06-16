@@ -92,6 +92,7 @@ public slots:
 
   void updateCaption();
   void updateMenu();
+  void doCreateNewPage( const Akonadi::Collection &collection );
 
   Q_SCRIPTABLE void newPage();
   Q_SCRIPTABLE void newBook();

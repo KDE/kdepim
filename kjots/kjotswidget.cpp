@@ -100,6 +100,7 @@
 #include <memory>
 #include "kjotslockattribute.h"
 #include "localresourcecreator.h"
+#include <krandom.h>
 
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
@@ -731,8 +732,13 @@ void KJotsWidget::newBook()
   newCollection.setParentCollection( col );
 
   QString title = i18nc( "The default name for new books.", "New Book" );
-  newCollection.setName( title );
-  newCollection.setContentMimeTypes( QStringList() << Note::mimeType() );
+  newCollection.setName( KRandom::randomString( 10 ) );
+  newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Note::mimeType() );
+
+  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+  eda->setIconName( "x-office-address-book" );
+  eda->setDisplayName( title );
+  newCollection.addAttribute( eda );
 
   Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( newCollection );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(newBookResult(KJob*)) );
@@ -757,7 +763,11 @@ void KJotsWidget::newPage()
 
   if ( !col.isValid() )
     return;
+  doCreateNewPage(col);
+}
 
+void KJotsWidget::doCreateNewPage(const Collection &collection)
+{
   Item newItem;
   newItem.setMimeType( Note::mimeType() );
 
@@ -777,7 +787,11 @@ void KJotsWidget::newPage()
 
   newItem.setPayload( newPage );
 
-  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
+  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+  eda->setIconName( "text-plain" );
+  newItem.addAttribute(eda);
+
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, collection, this );
   connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
 
 }
@@ -790,8 +804,18 @@ void KJotsWidget::newPageResult( KJob* job )
 
 void KJotsWidget::newBookResult( KJob* job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     kDebug() << job->errorString();
+    return;
+  }
+  Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
+  if ( !createJob )
+    return;
+  const Collection collection = createJob->collection();
+  if ( !collection.isValid() )
+    return;
+
+  doCreateNewPage(collection);
 }
 
 QString KJotsWidget::renderSelectionToHtml()
