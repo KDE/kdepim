@@ -14,16 +14,6 @@
    <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="1">
-    <widget class="QCheckBox" name="mHasTimeCheck">
-     <property name="whatsThis">
-      <string>Set if this to-do's start and due dates have times associated with them.</string>
-     </property>
-     <property name="text">
-      <string>Ti&amp;me associated</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
@@ -105,26 +95,15 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="mTimeZoneLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <underline>false</underline>
-        </font>
+      <widget class="QCheckBox" name="mWholeDayCheck">
+       <property name="whatsThis">
+        <string>Set if this to-do's start and due dates have times associated with them.</string>
        </property>
        <property name="text">
-        <string>&lt;a href=&quot;hide&quot;&gt;&lt;font color='blue'&gt;&amp;lt;&amp;lt; Time zones&lt;/font&gt;&lt;/a&gt;</string>
+        <string>Whole day</string>
        </property>
-       <property name="textFormat">
-        <enum>Qt::RichText</enum>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -208,7 +187,31 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
+      <widget class="QLabel" name="mTimeZoneLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <underline>false</underline>
+        </font>
+       </property>
+       <property name="text">
+        <string>&lt;a href=&quot;hide&quot;&gt;&lt;font color='blue'&gt;&amp;lt;&amp;lt; Time zones&lt;/font&gt;&lt;/a&gt;</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::RichText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

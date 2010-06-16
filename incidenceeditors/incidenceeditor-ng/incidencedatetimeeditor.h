@@ -72,7 +72,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
   private slots: /// Todo specific
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
-    void enableTimeEdits( bool enable );
+    void enableTimeEdits();
     bool isDirty( KCal::Todo::ConstPtr todo ) const;
 
   private slots: /// Event specific

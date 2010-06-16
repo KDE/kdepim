@@ -56,6 +56,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
 #else
+  mUi->mTimeZoneLabel->setVisible( !mUi->mWholeDayCheck->isChecked() );
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
 #endif
@@ -76,9 +77,9 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
            SLOT(updateAlarmPreset(int)) );
   connect( mUi->mAlarmEditButton, SIGNAL(clicked()),
            SLOT(editAlarm()) );
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)),
            SLOT(setDuration()) );
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)),
            SLOT(checkDirtyStatus()) );
   connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(setDuration()) );
@@ -118,7 +119,7 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
   mInitialStartDT = currentStartDateTime();
   mInitialEndDT = currentEndDateTime();
 
-  enableTimeEdits( mUi->mHasTimeCheck->isChecked() );
+  enableTimeEdits();
 
   if ( mUi->mTimeZoneComboStart->currentIndex() == 0 ) // Floating
     mInitialStartDT.setTimeSpec( mInitialStartDT.toLocalZone().timeSpec() );
@@ -142,7 +143,7 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
     mLastRecurrence = new Recurrence( *incidence->recurrence() );
     Q_ASSERT( *mLastRecurrence == *incidence->recurrence() );
     KDateTime startDt = currentStartDateTime();
-    startDt.setDateOnly( !mUi->mHasTimeCheck->isChecked() && mUi->mStartCheck->isChecked() );
+    startDt.setDateOnly( mUi->mWholeDayCheck->isChecked() && mUi->mStartCheck->isChecked() );
 
     const int index = RecurrencePresets::presetIndex( *mLastRecurrence, startDt );
     if ( index == -1 ) { // Custom recurrence
@@ -439,7 +440,7 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
 
   QScopedPointer<Recurrence> rec;
   KDateTime start = currentStartDateTime();
-  start.setDateOnly( !mUi->mHasTimeCheck->isChecked() && mUi->mStartCheck->isChecked() );
+  start.setDateOnly( mUi->mWholeDayCheck->isChecked() && mUi->mStartCheck->isChecked() );
 
   if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
     // Configure a custom recurrence, use by default the Weekly recurrence preset
@@ -496,15 +497,15 @@ void IncidenceDateTimeEditor::enableStartEdit( bool enable )
   mUi->mStartDateEdit->setEnabled( enable );
 
   if( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
-    mUi->mHasTimeCheck->setEnabled( true );
+    mUi->mWholeDayCheck->setEnabled( true );
   } else {
-    mUi->mHasTimeCheck->setEnabled( false );
-    mUi->mHasTimeCheck->setChecked( false );
+    mUi->mWholeDayCheck->setEnabled( false );
+    mUi->mWholeDayCheck->setChecked( true );
   }
 
   if ( enable ) {
-    mUi->mStartTimeEdit->setEnabled( mUi->mHasTimeCheck->isChecked() );
-    mUi->mTimeZoneComboStart->setEnabled( mUi->mHasTimeCheck->isChecked() );
+    mUi->mStartTimeEdit->setEnabled( !mUi->mWholeDayCheck->isChecked() );
+    mUi->mTimeZoneComboStart->setEnabled( !mUi->mWholeDayCheck->isChecked() );
   } else {
     mUi->mStartTimeEdit->setEnabled( false );
     mUi->mTimeZoneComboStart->setEnabled( false );
@@ -519,14 +520,14 @@ void IncidenceDateTimeEditor::enableEndEdit( bool enable )
   mUi->mEndDateEdit->setEnabled( enable );
 
   if( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
-    mUi->mHasTimeCheck->setEnabled( true );
+    mUi->mWholeDayCheck->setEnabled( true );
   } else {
-    mUi->mHasTimeCheck->setEnabled( false );
+    mUi->mWholeDayCheck->setEnabled( false );
   }
 
   if ( enable ) {
-    mUi->mEndTimeEdit->setEnabled( mUi->mHasTimeCheck->isChecked() );
-    mUi->mTimeZoneComboEnd->setEnabled( mUi->mHasTimeCheck->isChecked() );
+    mUi->mEndTimeEdit->setEnabled( !mUi->mWholeDayCheck->isChecked() );
+    mUi->mTimeZoneComboEnd->setEnabled( !mUi->mWholeDayCheck->isChecked() );
   } else {
     mUi->mEndTimeEdit->setEnabled( false );
     mUi->mTimeZoneComboEnd->setEnabled( false );
@@ -536,19 +537,28 @@ void IncidenceDateTimeEditor::enableEndEdit( bool enable )
   checkDirtyStatus();
 }
 
-void IncidenceDateTimeEditor::enableTimeEdits( bool enable )
+void IncidenceDateTimeEditor::enableTimeEdits()
 {
   // NOTE: assumes that the initial times are initialized.
+  const bool wholeDayChecked = mUi->mWholeDayCheck->isChecked();
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mTimeZoneLabel->setVisible( !wholeDayChecked );
+#endif
+
   if( mUi->mStartCheck->isChecked() ) {
-    mUi->mStartTimeEdit->setEnabled( enable );
-    mUi->mTimeZoneComboStart->setEnabled( enable );
-    mUi->mTimeZoneComboStart->setFloating( !enable, mInitialStartDT.timeSpec() );
+    mUi->mStartTimeEdit->setEnabled( !wholeDayChecked );
+    mUi->mTimeZoneComboStart->setEnabled( !wholeDayChecked );
+    mUi->mTimeZoneComboStart->setFloating( wholeDayChecked, mInitialStartDT.timeSpec() );
   }
   if( mUi->mEndCheck->isChecked() ) {
-    mUi->mEndTimeEdit->setEnabled( enable );
-    mUi->mTimeZoneComboEnd->setEnabled( enable );
-    mUi->mTimeZoneComboEnd->setFloating( !enable, mInitialEndDT.timeSpec() );
+    mUi->mEndTimeEdit->setEnabled( !wholeDayChecked );
+    mUi->mTimeZoneComboEnd->setEnabled( !wholeDayChecked );
+    mUi->mTimeZoneComboEnd->setFloating( wholeDayChecked, mInitialEndDT.timeSpec() );
   }
+
+#ifndef KDEPIM_MOBILE_UI
+  setTimeZonesVisibility( !wholeDayChecked && mUi->mTimeZoneLabel->text().startsWith( "<<" ) );
+#endif
 }
 
 bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
@@ -585,7 +595,7 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Event::ConstPtr event ) const
   // When the check box is checked, it has time associated and thus is not an all
   // day event. So the editor is dirty when the event is allDay and the checkbox
   // is checked.
-  if ( event->allDay() == mUi->mHasTimeCheck->isChecked() )
+  if ( event->allDay() != mUi->mWholeDayCheck->isChecked() )
     return true;
 
   if ( !event->allDay() ) {
@@ -628,10 +638,8 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
   mUi->mEndCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
 
   // All day
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
-           SLOT(enableTimeEdits(bool)) );
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)),
-           SLOT(enableAlarm(bool)) );
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)),
+           SLOT(enableTimeEdits()) );
   // Start time
   connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
            SLOT(startTimeChanged(QTime)) );
@@ -647,8 +655,8 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
-  mUi->mHasTimeCheck->setChecked( !event->allDay() );
-  enableTimeEdits( !event->allDay() );
+  mUi->mWholeDayCheck->setChecked( event->allDay() );
+  enableTimeEdits();
 
   bool isTemplate = false; // TODO
   if ( !isTemplate ) {
@@ -732,7 +740,7 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
 #endif
   mUi->mFreeBusyLabel->setVisible( false );
 
-  mUi->mHasTimeCheck->setChecked( !todo->allDay() );
+  mUi->mWholeDayCheck->setChecked( todo->allDay() );
 
   // Connect to the right logic
   connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
@@ -749,7 +757,7 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
-  connect( mUi->mHasTimeCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits(bool)));
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()));
 
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );
@@ -784,13 +792,7 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
 
 void IncidenceDateTimeEditor::save( KCal::Event::Ptr event )
 {
-  if ( mUi->mHasTimeCheck->isChecked() ) { // Timed event
-    event->setAllDay( false );
-
-    // set date/time end
-    event->setDtStart( currentStartDateTime() );
-    event->setDtEnd( currentEndDateTime() );
-  } else { // All day event
+  if ( mUi->mWholeDayCheck->isChecked() ) { // Timed event
     event->setAllDay( true );
 
     // need to change this.
@@ -798,6 +800,12 @@ void IncidenceDateTimeEditor::save( KCal::Event::Ptr event )
     eventDT.setDateOnly( true );
     event->setDtStart( eventDT );
     event->setDtEnd( eventDT );
+  } else { // All day event
+    event->setAllDay( false );
+
+    // set date/time end
+    event->setDtStart( currentStartDateTime() );
+    event->setDtEnd( currentEndDateTime() );
   }
 
   // Free == Event::Transparant
@@ -879,7 +887,7 @@ void IncidenceDateTimeEditor::setDuration()
   KDateTime startDateTime = currentStartDateTime();
   KDateTime endDateTime = currentEndDateTime();
 
-  if ( !mUi->mHasTimeCheck->isChecked() && startDateTime.date() <= endDateTime.date() ) {
+  if ( mUi->mWholeDayCheck->isChecked() && startDateTime.date() <= endDateTime.date() ) {
     int daydiff = startDateTime.date().daysTo( endDateTime.date() ) + 1;
     tmpStr = i18ncp( "@label", "1 Day", "%1 Days", daydiff );
   } else if ( startDateTime < endDateTime ) {

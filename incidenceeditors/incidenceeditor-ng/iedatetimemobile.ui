@@ -50,6 +50,9 @@
    </item>
    <item row="0" column="2">
     <widget class="QTimeEdit" name="mStartTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -119,6 +122,9 @@
    </item>
    <item row="2" column="2">
     <widget class="QTimeEdit" name="mEndTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -144,12 +150,15 @@
     </widget>
    </item>
    <item row="4" column="1" colspan="2">
-    <widget class="QCheckBox" name="mHasTimeCheck">
+    <widget class="QCheckBox" name="mWholeDayCheck">
      <property name="whatsThis">
       <string>Set if this to-do's start and due dates have times associated with them.</string>
      </property>
      <property name="text">
-      <string>Ti&amp;me associated</string>
+      <string>Whole day</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
