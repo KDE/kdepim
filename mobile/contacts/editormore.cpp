@@ -26,6 +26,9 @@
 
 #include <KABC/Addressee>
 
+#include <phonon/mediaobject.h>
+
+#include <QtCore/QBuffer>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QLabel>
 
@@ -77,6 +80,22 @@ class EditorMore::Private
                mNamePage.displayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
       connect( mNamePage.namePartsWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
                q, SIGNAL( nameChanged( const KABC::Addressee& ) ) );
+      connect( mNamePage.pronunciationLabel, SIGNAL( linkActivated( const QString& ) ),
+               q, SLOT( playPronunciation() ) );
+    }
+
+    void playPronunciation()
+    {
+      if ( mContact.sound().data().isEmpty() )
+        return;
+
+      Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
+      QBuffer* soundData = new QBuffer( player );
+      soundData->setData( mContact.sound().data() );
+      player->setCurrentSource( soundData );
+      player->setParent( q );
+      connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
+      player->play();
     }
 
   public:
@@ -115,10 +134,13 @@ EditorMore::~EditorMore()
 
 void EditorMore::loadContact( const KABC::Addressee &contact )
 {
+  d->mContact = contact;
+
   // name page
   d->mNamePage.nicknameLineEdit->setText( contact.nickName() );
   d->mNamePage.namePartsWidget->loadContact( contact );
   d->mNamePage.displayNameWidget->loadContact( contact );
+  d->mNamePage.pronunciationLabel->setEnabled( !contact.sound().data().isEmpty() );
 
   // internet page
   d->mInternetPage.urlLineEdit->setText( contact.url().url() );
