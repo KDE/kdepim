@@ -24,6 +24,7 @@
 #include "contactgroupeditorview.h"
 #include "declarativewidgetbase.h"
 #include "editorbusiness.h"
+#include "editorcontactgroup.h"
 #include "editorcrypto.h"
 #include "editorgeneral.h"
 #include "editorlocation.h"
@@ -41,22 +42,6 @@ class EditorDummy : public EditorBase
 class  EditorMore : public EditorDummy
 {
   Q_OBJECT
-};
-
-namespace KABC
-{
-  class ContactGroup;
-}
-
-class EditorContactGroup : public QWidget
-{
-  Q_OBJECT
-
-  public:
-    void setDefaultCollection( const Akonadi::Collection &collection ) { Q_UNUSED( collection ); }
-    //Akonadi::Collection selectedCollection() const;
-    void loadContactGroup( const KABC::ContactGroup &contactGroup ) { Q_UNUSED( contactGroup ); }
-    void saveContactGroup( KABC::ContactGroup &contactGroup ) { Q_UNUSED( contactGroup ); }
 };
 
 class DeclarativeEditorGeneral

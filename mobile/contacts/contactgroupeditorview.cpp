@@ -136,8 +136,7 @@ void ContactGroupEditorView::Private::collectionChanged( const Akonadi::Collecti
 
 Collection ContactGroupEditorView::Private::selectedCollection() const
 {
-  //return ( !mCollection.isValid() && mEditor != 0 ? mEditor->selectedCollection() : mCollection );
-  return mCollection;
+  return ( !mCollection.isValid() && mEditor != 0 ? mEditor->selectedCollection() : mCollection );
 }
 
 void ContactGroupEditorView::Private::reject( RejectReason reason, const QString &errorMessage )

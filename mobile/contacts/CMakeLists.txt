@@ -18,6 +18,7 @@ set(kab_mobile_srcs
   declarativeeditors.cpp
   editorbase.cpp
   editorbusiness.cpp
+  editorcontactgroup.cpp
   editorcrypto.cpp
   editorgeneral.cpp
   editorlocation.cpp
@@ -26,6 +27,7 @@ set(kab_mobile_srcs
 
 kde4_add_ui_files(kab_mobile_srcs
   editorbusiness.ui
+  editorcontactgroup.ui
   editorcrypto.ui
   editorgeneral.ui
   editorlocation.ui
