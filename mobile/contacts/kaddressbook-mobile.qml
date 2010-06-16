@@ -44,7 +44,20 @@ KPIM.MainView {
       if ( contactView.itemId >= 0 )
         contactList.previousItem();
     }
-}
+
+    KPIM.Button2 {
+      id : editContactButton
+      anchors.bottom : parent.bottom
+      anchors.left : parent.left
+      anchors.right : parent.right
+      buttonText : KDE.i18n( "Edit Contact" )
+      visible : false
+      onClicked : {
+        application.editContact( parent.item );
+      }
+    }
+  }
+ 
   Akonadi.ContactGroupView {
     id: contactGroupView
     z: 0
@@ -168,11 +181,13 @@ KPIM.MainView {
                 contactView.itemId = contactList.currentItemId;
                 contactView.visible = true;
                 contactGroupView.visible = false;
+                editContactButton.visible = true;
               }
               if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
                 contactGroupView.itemId = contactList.currentItemId;
                 contactView.visible = false;
                 contactGroupView.visible = true;
+                editContactButton.visible = false;
               }
               folderPanel.collapse()
             }
