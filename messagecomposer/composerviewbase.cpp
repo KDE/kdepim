@@ -46,6 +46,7 @@
 #include <messagecomposer/recipientseditor.h>
 #include <akonadi/collectioncombobox.h>
 #include <kpimidentities/identitymanager.h>
+#include <kpimutils/email.h>
 
 #include <KSaveFile>
 #include <KLocalizedString>
@@ -664,7 +665,7 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
 
 void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart )
 {
-  qjob->addressAttribute().setFrom( infoPart->from() );
+  qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
 
   if( m_editor && !infoPart->bcc().isEmpty() ) // have to deal with multiple message contents
   {
@@ -674,22 +675,22 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
       foreach( QByteArray address, message->bcc()->addresses()  ) {
         bcc << QString::fromUtf8( address );
       }
-      kDebug() << "sending with-bcc encr mail to a secondary recipient:" << bcc;
-      qjob->addressAttribute().setTo( bcc );
+      qjob->addressAttribute().setTo( cleanEmailList( bcc ) );
+      kDebug() << "sending with-bcc encr mail to a secondary recipient:" <<  qjob->addressAttribute().to();
     } else {
       // the main mail in the encrypted set, just don't set the bccs here
-      qjob->addressAttribute().setTo( infoPart->to() );
-      qjob->addressAttribute().setCc( infoPart->cc() );
+      qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
+      qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
 
-      kDebug() << "sending with-bcc encrypted mail to orig recipients:" <<infoPart->to() << infoPart->cc();
+      kDebug() << "sending with-bcc encrypted mail to orig recipients:" << qjob->addressAttribute().to() <<  qjob->addressAttribute().cc();
 
     }
   } else {
     // continue as normal
     kDebug() << "no bccs";
-    qjob->addressAttribute().setTo( infoPart->to() );
-    qjob->addressAttribute().setCc( infoPart->cc() );
-    qjob->addressAttribute().setBcc( infoPart->bcc() );
+    qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
+    qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
+    qjob->addressAttribute().setBcc( cleanEmailList( infoPart->bcc() ) );
   }
 }
 void Message::ComposerViewBase::initAutoSave()
@@ -1176,6 +1177,20 @@ void Message::ComposerViewBase::setUrgent( bool urgent )
 {
   m_urgent = urgent;
 }
+
+QStringList Message::ComposerViewBase::cleanEmailList(const QStringList& emails)
+{
+  QStringList clean;
+  foreach( const QString& email, emails )
+    clean << KPIMUtils::extractEmailAddress( email );
+  return clean;
+}
+
+int Message::ComposerViewBase::autoSaveInterval() const
+{
+  return m_autoSaveInterval;
+}
+
 
 //-----------------------------------------------------------------------------
 void Message::ComposerViewBase::collectImages( KMime::Content *root )
