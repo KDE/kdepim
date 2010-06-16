@@ -19,6 +19,7 @@
 
 #include "mainview.h"
 #include "contacteditorview.h"
+#include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
@@ -44,6 +45,19 @@ void MainView::editContact( const Akonadi::Item &item )
 {
   ContactEditorView *editor = new ContactEditorView;
   editor->loadContact( item );
+  editor->show();
+}
+
+void MainView::newContactGroup()
+{
+  ContactGroupEditorView *editor = new ContactGroupEditorView;
+  editor->show();
+}
+
+void MainView::editContactGroup( const Akonadi::Item &item )
+{
+  ContactGroupEditorView *editor = new ContactGroupEditorView;
+  editor->loadContactGroup( item );
   editor->show();
 }
 

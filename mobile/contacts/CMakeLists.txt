@@ -14,6 +14,7 @@ set(kab_mobile_srcs
   main.cpp
   contactlistproxy.cpp
   contacteditorview.cpp
+  contactgroupeditorview.cpp
   declarativeeditors.cpp
   editorbase.cpp
   editorbusiness.cpp
@@ -49,6 +50,7 @@ install(FILES kaddressbook-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kaddressbook-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   contact-editor.qml
+  contactgroup-editor.qml
   kaddressbook-mobile.qml
   ContactListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile

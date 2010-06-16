@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Kevin Krammer <kevin.krammer@gmx.at>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,28 +17,42 @@
     02110-1301, USA.
 */
 
-#ifndef MAINVIEW_H
-#define MAINVIEW_H
+#ifndef CONTACTGROUPEDITORVIEW_H
+#define CONTACTGROUPEDITORVIEW_H
 
-#include "kdeclarativemainview.h"
+#include "kdeclarativefullscreenview.h"
 
 namespace Akonadi
 {
+  class Collection;
   class Item;
 }
 
-class MainView : public KDeclarativeMainView
+class EditorContactGroup;
+
+class ContactGroupEditorView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
+ 
   public:
-    explicit MainView( QWidget *parent = 0 );
+    explicit ContactGroupEditorView( QWidget *parent = 0 );
+
+    ~ContactGroupEditorView();
+
+    void setEditor( EditorContactGroup *editor );
+
+    void loadContactGroup( const Akonadi::Item &item );
 
   public Q_SLOTS:
-    void newContact();
-    void editContact( const Akonadi::Item &item );
+    void save();
+    
+  private:
+    class Private;
+    Private *const d;
 
-    void newContactGroup();
-    void editContactGroup( const Akonadi::Item &item );
+    Q_PRIVATE_SLOT( d, void saveFinished() );
+    Q_PRIVATE_SLOT( d, void saveFailed( const QString& ) );
+    Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection& ) )
 };
 
-#endif // MAINVIEW_H
+#endif

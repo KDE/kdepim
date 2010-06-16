@@ -21,6 +21,7 @@
 #define DECLARATIVEEDITORS_H
 
 #include "contacteditorview.h"
+#include "contactgroupeditorview.h"
 #include "declarativewidgetbase.h"
 #include "editorbusiness.h"
 #include "editorcrypto.h"
@@ -40,6 +41,22 @@ class EditorDummy : public EditorBase
 class  EditorMore : public EditorDummy
 {
   Q_OBJECT
+};
+
+namespace KABC
+{
+  class ContactGroup;
+}
+
+class EditorContactGroup : public QWidget
+{
+  Q_OBJECT
+
+  public:
+    void setDefaultCollection( const Akonadi::Collection &collection ) { Q_UNUSED( collection ); }
+    //Akonadi::Collection selectedCollection() const;
+    void loadContactGroup( const KABC::ContactGroup &contactGroup ) { Q_UNUSED( contactGroup ); }
+    void saveContactGroup( KABC::ContactGroup &contactGroup ) { Q_UNUSED( contactGroup ); }
 };
 
 class DeclarativeEditorGeneral
@@ -85,6 +102,15 @@ class DeclarativeEditorMore
 
   public:
     explicit DeclarativeEditorMore( QDeclarativeItem *parent = 0 );
+};
+
+class DeclarativeEditorContactGroup
+  : public DeclarativeWidgetBase<EditorContactGroup, ContactGroupEditorView, &ContactGroupEditorView::setEditor>
+{
+  Q_OBJECT
+
+  public:
+    explicit DeclarativeEditorContactGroup( QDeclarativeItem *parent = 0 );
 };
 
 #endif

@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Kevin Krammer <kevin.krammer@gmx.at>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,28 +17,32 @@
     02110-1301, USA.
 */
 
-#ifndef MAINVIEW_H
-#define MAINVIEW_H
+import Qt 4.7
+import org.kde 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.contacteditors 4.5 as ContactEditors
 
-#include "kdeclarativemainview.h"
+KPIM.MainView {
+  Flickable {
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
 
-namespace Akonadi
-{
-  class Item;
+    anchors.topMargin: 40
+    anchors.leftMargin: 40;
+    anchors.rightMargin: 4;
+
+    width: parent.width;
+    height: parent.height;
+    contentHeight: editorGeneral.height;
+    clip: true;
+    flickableDirection: "VerticalFlick"
+
+    ContactEditors.ContactGroupEditor {
+      anchors.fill: parent
+      id: editor;
+      width: parent.width;
+    }
+  }
 }
-
-class MainView : public KDeclarativeMainView
-{
-  Q_OBJECT
-  public:
-    explicit MainView( QWidget *parent = 0 );
-
-  public Q_SLOTS:
-    void newContact();
-    void editContact( const Akonadi::Item &item );
-
-    void newContactGroup();
-    void editContactGroup( const Akonadi::Item &item );
-};
-
-#endif // MAINVIEW_H

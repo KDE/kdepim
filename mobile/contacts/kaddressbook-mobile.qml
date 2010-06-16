@@ -76,6 +76,18 @@ KPIM.MainView {
       if ( contactGroupView.itemId >= 0 )
         contactList.previousItem();
     }
+
+    KPIM.Button2 {
+      id : editContactGroupButton
+      anchors.bottom : parent.bottom
+      anchors.left : parent.left
+      anchors.right : parent.right
+      buttonText : KDE.i18n( "Edit Contact Group" )
+      visible : false
+      onClicked : {
+        application.editContactGroup( parent.item );
+      }
+    }
   }
 
   SlideoutPanelContainer {
@@ -114,7 +126,7 @@ KPIM.MainView {
                   height : 480 / 6
                   width : parent.width - 75
                   buttonText : KDE.i18n( "New Contact Group" )
-                  onClicked : { console.log( "New Group clicked" ); }
+                  onClicked : { application.newContactGroup(); }
 
                 }
                 KPIM.Button {
@@ -207,6 +219,16 @@ KPIM.MainView {
               buttonText : KDE.i18n( "Add Contact" )
               onClicked : {
                 application.newContact();
+              }
+            }
+            KPIM.Button2 {
+              id : newContactGroupButton
+              anchors.top : newContactButton.bottom
+              anchors.left : parent.left
+              anchors.right : parent.right
+              buttonText : KDE.i18n( "Add Contact Group" )
+              onClicked : {
+                application.newContactGroup();
               }
             }
             /*KPIM.Button2 {

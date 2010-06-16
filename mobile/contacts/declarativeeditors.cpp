@@ -44,4 +44,9 @@ DeclarativeEditorMore::DeclarativeEditorMore( QDeclarativeItem *parent )
 {
 }
 
+DeclarativeEditorContactGroup::DeclarativeEditorContactGroup( QDeclarativeItem *parent )
+  : DeclarativeWidgetBase<EditorContactGroup, ContactGroupEditorView, &ContactGroupEditorView::setEditor>( parent )
+{
+}
+
 #include "declarativeeditors.moc"
