@@ -20,6 +20,7 @@
 #include "editormore.h"
 
 #include "ui_editormore.h"
+#include "ui_editormore_namepage.h"
 #include "ui_editormore_internetpage.h"
 
 #include <KABC/Addressee>
@@ -42,7 +43,8 @@ class EditorMore::Private
       mMapper->setMapping( mUi.personalPageButton, 2 );
       mMapper->setMapping( mUi.customFieldsPageButton, 3 );
 
-      QWidget *namePage = new QLabel( "Name Page" );
+      QWidget *namePage = new QWidget;
+      mNamePage.setupUi( namePage );
 
       QWidget *internetPage = new QWidget;
       mInternetPage.setupUi( internetPage );
@@ -71,6 +73,7 @@ class EditorMore::Private
 
   public:
     Ui::EditorMore mUi;
+    Ui::NamePage mNamePage;
     Ui::InternetPage mInternetPage;
     QSignalMapper *mMapper;
 

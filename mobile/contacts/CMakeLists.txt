@@ -16,6 +16,7 @@ set(kab_mobile_srcs
   contacteditorview.cpp
   contactgroupeditorview.cpp
   declarativeeditors.cpp
+  displaynameeditwidget.cpp
   editorbase.cpp
   editorbusiness.cpp
   editorcontactgroup.cpp
@@ -24,6 +25,7 @@ set(kab_mobile_srcs
   editorlocation.cpp
   editormore.cpp
   locationmodel.cpp
+  namepartseditwidget.cpp
 )
 
 kde4_add_ui_files(kab_mobile_srcs
@@ -33,6 +35,7 @@ kde4_add_ui_files(kab_mobile_srcs
   editorgeneral.ui
   editorlocation.ui
   editormore.ui
+  editormore_namepage.ui
   editormore_internetpage.ui
 )
 
