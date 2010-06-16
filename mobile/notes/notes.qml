@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 import org.kde 4.5
 import org.kde.akonadi 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
@@ -27,11 +27,11 @@ import org.kde.pim.mobileui 4.5 as KPIM
 KPIM.MainView {
   id: notesMobile
 
-  SystemPalette { id: palette; colorGroup: "Active" }
+  QML.SystemPalette { id: palette; colorGroup: "Active" }
 
-  gradient: Gradient {
-    GradientStop { position: 0.0; color: "lightgrey" }
-    GradientStop { position: 0.5; color: "grey" }
+  gradient: QML.Gradient {
+    QML.GradientStop { position: 0.0; color: "lightgrey" }
+    QML.GradientStop { position: 0.5; color: "grey" }
   }
   NoteView {
     id: noteView
@@ -95,7 +95,7 @@ KPIM.MainView {
       handleHeight: 150
       anchors.fill : parent
       content: [
-        Item {
+        QML.Item {
           anchors.fill: parent
 
            AkonadiBreadcrumbNavigationView {
@@ -116,12 +116,12 @@ KPIM.MainView {
                KPIM.ItemListViewDelegate {
                  height : itemListView.height / 7
                  summaryContent: [
-                  Column {
+                  QML.Column {
                     anchors.fill: parent
-                    Text {
+                    QML.Text {
                       text: KDE.i18na( "Title: %1", [model.title] )
                     }
-                    Text {
+                    QML.Text {
                       text: KDE.i18na( "Content: %1", [model.plainContent] )
                     }
                   }
@@ -206,12 +206,12 @@ KPIM.MainView {
     }
   }
 
-   Connections {
+   QML.Connections {
      target: collectionView
      onChildCollectionSelected : { application.setSelectedChildCollectionRow( row ); }
    }
 
-   Connections {
+   QML.Connections {
      target: collectionView
      onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
    }
