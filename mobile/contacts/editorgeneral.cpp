@@ -113,6 +113,8 @@ class EditorGeneral::Private
     {
       mContact.setNameFromString( text );
       mUi.saveButton->setEnabled( !text.trimmed().isEmpty() );
+
+      emit q->nameChanged( mContact );
     }
 
     void addEmailClicked();
@@ -299,6 +301,16 @@ Akonadi::Collection EditorGeneral::selectedCollection() const
 void EditorGeneral::setDefaultCollection( const Akonadi::Collection &collection )
 {
   d->mUi.collectionSelector->setDefaultCollection( collection );
+}
+
+void EditorGeneral::updateName( const KABC::Addressee &contact )
+{
+  // this slot is called when the name parts have been changed in the 'More' page
+  blockSignals( true );
+  d->mContact = contact;
+  d->mUi.fullName->setText( d->mContact.assembledName() );
+  d->mUi.saveButton->setEnabled( !d->mUi.fullName->text().trimmed().isEmpty() );
+  blockSignals( false );
 }
 
 #include "editorgeneral.moc"

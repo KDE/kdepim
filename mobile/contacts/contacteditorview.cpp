@@ -36,7 +36,8 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
   public:
     explicit Private( ContactEditorView *parent )
-      : q( parent ), mItemManager( new EditorItemManager( this ) ), mEditorGeneral( 0 )
+      : q( parent ), mItemManager( new EditorItemManager( this ) ),
+        mEditorBusiness( 0 ), mEditorGeneral( 0 ), mEditorMore( 0 )
     {
     }
 
@@ -57,21 +58,21 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
     {
       return partIdentifiers.contains( Item::FullPayload );
     }
-    
+
     bool hasSupportedPayload( const Item &item ) const
     {
       return item.hasPayload<KABC::Addressee>();
     }
-    
+
     bool isDirty() const
     {
       return true;
     }
-  
+
     bool isValid()
     {
       return true;
-    }    
+    }
 
     void load( const Item &item );
     Item save( const Item &item );
@@ -84,7 +85,9 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
     EditorItemManager *mItemManager;
 
+    EditorBusiness *mEditorBusiness;
     EditorGeneral *mEditorGeneral;
+    EditorMore *mEditorMore;
 
     QList<EditorBase*> mDetailEditors;
 };
@@ -114,12 +117,12 @@ void ContactEditorView::Private::saveFailed( const QString &errorMessage )
 void ContactEditorView::Private::load( const Item &item )
 {
   Q_ASSERT( item.hasPayload<KABC::Addressee>() );
- 
+
   mItem = item;
   mCollection = item.parentCollection();
 
   const KABC::Addressee contact = mItem.payload<KABC::Addressee>();
-  
+
   if ( mEditorGeneral != 0 ) {
     mEditorGeneral->setDefaultCollection( mCollection );
     mEditorGeneral->loadContact( contact );
@@ -140,7 +143,7 @@ Item ContactEditorView::Private::save( const Item &item )
   if ( mEditorGeneral != 0 ) {
     mEditorGeneral->saveContact( contact );
   }
- 
+
   Q_FOREACH( EditorBase *editor, mDetailEditors ) {
     editor->saveContact( contact );
   }
@@ -171,7 +174,7 @@ void ContactEditorView::Private::reject( RejectReason reason, const QString &err
       kWarning() << "Item has Invalid Payload:" << errorMessage;
       break;
   }
-  
+
   q->deleteLater();
 }
 
@@ -184,10 +187,10 @@ ContactEditorView::ContactEditorView( QWidget *parent )
   qmlRegisterType<DeclarativeEditorLocation>( "org.kde.contacteditors", 4, 5, "ContactEditorLocation" );
   qmlRegisterType<DeclarativeEditorCrypto>( "org.kde.contacteditors", 4, 5, "ContactEditorCrypto" );
   qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
-  
+
   connect( d->mItemManager, SIGNAL( itemSaveFinished() ), SLOT( saveFinished() ) );
   connect( d->mItemManager, SIGNAL( itemSaveFailed( QString ) ), SLOT( saveFailed( QString ) ) );
-}    
+}
 
 ContactEditorView::~ContactEditorView()
 {
@@ -221,6 +224,7 @@ void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
 void ContactEditorView::setEditorBusiness( EditorBusiness *editor )
 {
   d->addDetailEditor( editor );
+  d->mEditorBusiness = editor;
 }
 
 void ContactEditorView::setEditorLocation( EditorLocation *editor )
@@ -236,6 +240,19 @@ void ContactEditorView::setEditorCrypto( EditorCrypto *editor )
 void ContactEditorView::setEditorMore( EditorMore *editor )
 {
   d->addDetailEditor( editor );
+  d->mEditorMore = editor;
+
+  if ( d->mEditorBusiness ) {
+    connect( d->mEditorBusiness, SIGNAL( organizationChanged( const QString& ) ),
+             d->mEditorMore, SLOT( updateOrganization( const QString& ) ) );
+  } else {
+    qWarning( "No business editor set!" );
+  }
+
+  connect( d->mEditorGeneral, SIGNAL( nameChanged( const KABC::Addressee& ) ),
+           d->mEditorMore, SLOT( updateName( const KABC::Addressee& ) ) );
+  connect( d->mEditorMore, SIGNAL( nameChanged( const KABC::Addressee& ) ),
+           d->mEditorGeneral, SLOT( updateName( const KABC::Addressee& ) ) );
 }
 
 void ContactEditorView::loadContact( const Item &item )

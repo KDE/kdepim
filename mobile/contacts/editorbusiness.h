@@ -34,6 +34,9 @@ class EditorBusiness : public EditorBase
     void loadContact( const KABC::Addressee &contact );
     void saveContact( KABC::Addressee &contact ) const;
 
+  Q_SIGNALS:
+    void organizationChanged( const QString &organization );
+
   private:
     class Private;
     Private *const d;

@@ -70,7 +70,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="NamePartsEditWidget" name="widget" native="true"/>
+      <widget class="NamePartsEditWidget" name="namePartsWidget" native="true"/>
      </item>
     </layout>
    </item>
@@ -100,7 +100,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="DisplayNameEditWidget" name="widget_2" native="true"/>
+      <widget class="DisplayNameEditWidget" name="displayNameWidget" native="true"/>
      </item>
     </layout>
    </item>

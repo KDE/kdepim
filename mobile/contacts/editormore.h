@@ -34,6 +34,13 @@ class EditorMore : public EditorBase
     void loadContact( const KABC::Addressee &contact );
     void saveContact( KABC::Addressee &contact ) const;
 
+  public Q_SLOTS:
+    void updateOrganization( const QString &organization );
+    void updateName( const KABC::Addressee &contact );
+
+  Q_SIGNALS:
+    void nameChanged( const KABC::Addressee &contact );
+
   private:
     class Private;
     Private *const d;

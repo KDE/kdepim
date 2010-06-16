@@ -32,6 +32,9 @@ class EditorBusiness::Private
     {
       mUi.setupUi( parent );
       mUi.logoButton->setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
+
+      q->connect( mUi.organizationLineEdit, SIGNAL( textChanged( const QString& ) ),
+                  q, SIGNAL( organizationChanged( const QString& ) ) );
     }
 
   public:

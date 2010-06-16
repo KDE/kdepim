@@ -69,6 +69,11 @@ class EditorMore::Private
                mUi.pageWidget, SLOT( setCurrentIndex( int ) ) );
 
       mUi.pageWidget->setCurrentIndex( 0 );
+
+      connect( mNamePage.namePartsWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
+               mNamePage.displayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
+      connect( mNamePage.namePartsWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
+               q, SIGNAL( nameChanged( const KABC::Addressee& ) ) );
     }
 
   public:
@@ -106,6 +111,11 @@ EditorMore::~EditorMore()
 
 void EditorMore::loadContact( const KABC::Addressee &contact )
 {
+  // name page
+  d->mNamePage.nicknameLineEdit->setText( contact.nickName() );
+  d->mNamePage.namePartsWidget->loadContact( contact );
+  d->mNamePage.displayNameWidget->loadContact( contact );
+
   // internet page
   d->mInternetPage.urlLineEdit->setText( contact.url().url() );
   d->mInternetPage.blogLineEdit->setText( loadCustom( contact, QLatin1String( "BlogFeed" ) ) );
@@ -114,10 +124,29 @@ void EditorMore::loadContact( const KABC::Addressee &contact )
 
 void EditorMore::saveContact( KABC::Addressee &contact ) const
 {
+  // name page
+  contact.setNickName( d->mNamePage.nicknameLineEdit->text() );
+  d->mNamePage.namePartsWidget->storeContact( contact );
+  d->mNamePage.displayNameWidget->storeContact( contact );
+
   // internet page
   contact.setUrl( d->mInternetPage.urlLineEdit->text() );
   storeCustom( contact, QLatin1String( "BlogFeed" ), d->mInternetPage.blogLineEdit->text() );
   storeCustom( contact, QLatin1String( "X-IMAddress" ), d->mInternetPage.messagingLineEdit->text() );
+}
+
+void EditorMore::updateOrganization( const QString &organization )
+{
+  d->mNamePage.displayNameWidget->changeOrganization( organization );
+}
+
+void EditorMore::updateName( const KABC::Addressee &contact )
+{
+  // this slot is called when the name has been changed in the 'General' page
+  blockSignals( true );
+  d->mNamePage.namePartsWidget->loadContact( contact );
+  d->mNamePage.displayNameWidget->changeName( contact );
+  blockSignals( false );
 }
 
 #include "editormore.moc"

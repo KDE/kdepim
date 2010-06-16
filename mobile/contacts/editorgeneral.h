@@ -44,8 +44,12 @@ class EditorGeneral : public EditorBase
 
     Akonadi::Collection selectedCollection() const;
 
+  public Q_SLOTS:
+    void updateName( const KABC::Addressee& );
+
   Q_SIGNALS:
     void collectionChanged( const Akonadi::Collection &collection );
+    void nameChanged( const KABC::Addressee& );
 
     void saveClicked();
 
