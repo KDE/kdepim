@@ -732,7 +732,11 @@ void KJotsWidget::newBook()
 
   QString title = i18nc( "The default name for new books.", "New Book" );
   newCollection.setName( title );
-  newCollection.setContentMimeTypes( QStringList() << Note::mimeType() );
+  newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Note::mimeType() );
+
+  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+  eda->setIconName( "x-office-address-book" );
+  newCollection.addAttribute( eda );
 
   Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( newCollection );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(newBookResult(KJob*)) );
@@ -776,6 +780,10 @@ void KJotsWidget::newPage()
   newPage->assemble();
 
   newItem.setPayload( newPage );
+
+  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+  eda->setIconName( "text-plain" );
+  newItem.addAttribute(eda);
 
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
   connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
