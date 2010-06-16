@@ -24,6 +24,7 @@
 #include <KDialog>
 
 class QLabel;
+class QAbstractItemModel;
 class QString;
 class QRadioButton;
 class QTreeView;
@@ -35,7 +36,7 @@ class KJotsLinkDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KJotsLinkDialog(QWidget *parent = 0 );
+    explicit KJotsLinkDialog (QAbstractItemModel *kjotsModel, QWidget *parent = 0 );
 
 
     /**
@@ -74,6 +75,8 @@ public:
         QRadioButton* linkUrlLineEditRadioButton;
         QRadioButton* hrefComboRadioButton;
         QTreeView* tree;
+        QAbstractItemModel *m_kjotsModel;
+        QAbstractItemModel *m_descendantsProxyModel;
 };
 
 #endif

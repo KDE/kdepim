@@ -264,7 +264,7 @@ void KJotsEdit::onAutoDecimal( void )
 void KJotsEdit::onLinkify ( void )
 {
     selectLinkText();
-    QPointer<KJotsLinkDialog> linkDialog = new KJotsLinkDialog(this);
+    QPointer<KJotsLinkDialog> linkDialog = new KJotsLinkDialog( const_cast<QAbstractItemModel *>(m_selectionModel->model()), this);
     linkDialog->setLinkText(currentLinkText());
     linkDialog->setLinkUrl(currentLinkUrl());
 

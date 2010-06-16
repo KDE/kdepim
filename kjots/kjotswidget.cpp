@@ -516,6 +516,26 @@ void KJotsWidget::bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::E
     activeEditor()->setFocus();
 }
 
+void KJotsWidget::currentCharFormatChanged(const QTextCharFormat & fmt)
+{
+    QString selectedAnchor = fmt.anchorHref();
+    if (selectedAnchor != activeAnchor)
+    {
+        activeAnchor = selectedAnchor;
+        if (!selectedAnchor.isEmpty())
+        {
+            QTextCursor c(editor->textCursor());
+            editor->selectLinkText(&c);
+            QString selectedText = c.selectedText();
+            if (!selectedText.isEmpty())
+            {
+              emit activeAnchorChanged(selectedAnchor, selectedText);
+            }
+        } else {
+            emit activeAnchorChanged(QString(), QString());
+        }
+    }
+}
 
 void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type )
 {
