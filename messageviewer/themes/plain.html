@@ -1,24 +1,10 @@
-<html>
-<head>
-<title></title>
-
 <style>
 
-body {
-    color: #000000 ! important;
-    background-color: #ffffff ! important;
-}
-
 div.header {
-    font-family: "Times New Roman" ! important;
-    font-size: 14px ! important;
+    font-size: 10px ! important;
 }
 
 </style>
-
-</head>
-
-<body>
 
 {% if message %}
   <div class="header" dir="ltr">
@@ -30,7 +16,7 @@ div.header {
 
 {% if subject %}
   <div dir="{{ subjectDir }}">
-    <b style="font-size:130%">{{ subject|safe }}</b>
+    <b style="font-size:120%">{{ subject|safe }}</b>
   </div>
   <br />
 {% endif %}

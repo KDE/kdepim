@@ -1,13 +1,4 @@
-<html>
-<head>
-<title></title>
-
 <style>
-
-body {
-    color: #000000 ! important;
-    background-color: #ffffff ! important;
-}
 
 .fancy_header, a {
     color: #304D69 ! important;
@@ -44,27 +35,23 @@ a:hover {
 
 </style>
 
-</head>
-
-<body>
-
-<div style="color: #000 ! important; background-color: #41AEF7 ! important;padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;" dir="{{ dir }}">
+<div style="color: #000 ! important; background-color: #418AD7 ! important;padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;" dir="{{ dir }}">
 
 {% if subject %}
-    <div dir="{{ subjectDir }}" style="padding: 4px ! important;"> {{ subject|safe }} </div>
+    <div dir="{{ subjectDir }}" style="color:#fff; padding: 4px ! important;"> {{ subject|safe }} </div>
 {% else %}
     No Subject 
 {% endif %}
 
-<table width="100%" style="background-color: #DFD7D7 ! important;border-top: solid #000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;">
+<table width="100%" style="background-color: #E7DFDF ! important;border-top: solid #000 1px ! important;">
     <tr>
     <td width="100%">
 
     <table>
 
     <tr>
-    <th align="left">From: </th>
-    <td>{{ from|safe }}
+    <th align="left" style="font-size: 10px;">From: </th>
+    <td style="font-size: 10px;">{{ from|safe }}
 
     {% if resentFrom %}
       &nbsp; Resent-From: {{ resentFrom|safe }}
@@ -82,27 +69,27 @@ a:hover {
     </tr>
 
     <tr>
-    <th align="left">To: </th>
-    <td>{{ to|safe }}</td>
+    <th align="left" style="font-size: 10px;">To: </th>
+    <td style="font-size: 10px;">{{ to|safe }}</td>
     </tr>
 
 {% if cc %}
     <tr>
-    <th align="left">CC: </th>
-    <td>{{ cc|safe }}</td>
+    <th align="left" style="font-size: 10px;">CC: </th>
+    <td style="font-size: 10px;">{{ cc|safe }}</td>
     </tr>
 {% endif %}
 
 {% if bcc %}
     <tr>
-    <th align="left">BCC: </th>
-    <td>{{ bcc|safe }}</td>
+    <th align="left" style="font-size: 10px;">BCC: </th>
+    <td style="font-size: 10px;">{{ bcc|safe }}</td>
     </tr>
 {% endif %}
 
     <tr>
-    <th align="left">Date: </th>
-    <td dir="{{ dateDir }}">{{ date|safe }}</td>
+    <th align="left" style="font-size: 10px;">Date: </th>
+    <td dir="{{ dateDir }}" style="font-size: 10px;">{{ date|safe }}</td>
     </tr>
 
     <tr>
@@ -122,13 +109,17 @@ a:hover {
 
     </tr>
 
-</table>
-
 {% if spamHTML %}
-  <div style="display:none ! important;" dir="{{ subjectDir }}">
-      <b>Spam Status</b>&nbsp;
-      <span style="padding-left: 20px;">{{ spamHTML|safe }}</span>
-  </div>
+  <table width="100%" style="background-color: #CECECE ! important; border-top: solid #000 1px ! important;" >
+  <tr>
+    <td dir="{{ subjectDir }}">
+      <span style="padding-top: 1px ! important;font-size: 10px;"><b>Spam Status</b></span>&nbsp;
+      <span style="padding-left: 20px; padding-top: 1px ! important;">{{ spamHTML }}</span>
+    </td>
+  </tr>
+  </table>
 {% endif %}
+
+</table>
 
 </div>

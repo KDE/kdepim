@@ -1,13 +1,4 @@
-<html>
-<head>
-<title>Enterprise</title>
-
 <style>
-
-body {
-    color: #000000 ! important;
-    background-color: #ffffff ! important;
-}
 
 .date {
     margin-left: 10px;
@@ -158,9 +149,7 @@ body {
 
 a {
     color: #ffffff ! important;
-}
-
-a {
+    font-size: 10px;
     text-decoration: none ! important;
 }
 
@@ -173,10 +162,6 @@ a.black {
 }
 
 </style>
-
-</head>
-
-<body>
 
   <div style="position: fixed; top: 0px; left: 0px; background-color: #606060; width: 10px; min-height: 100%; background-image: url('{% media_finder "images/enterprise_s_left.png" %}');"  >&nbsp;
   </div>
@@ -204,9 +189,9 @@ a.black {
 
      {% if subject %}
      <tr> 
-     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"></td>
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"></td>
 
-     <td style="font-weight: bolder; font-size: 120%; padding-right: 91px;padding-top: 0px; padding-bottom: 0px; border-width: 0px; ">{{ subject|safe }}</td>
+     <td style="font-weight: bolder; font-size: 90%; padding-right: 91px;padding-top: 0px; padding-bottom: 0px; border-width: 0px; ">{{ subject|safe }}</td>
      </tr>
      {% endif %}
 
@@ -223,25 +208,23 @@ a.black {
      </tr>
 
      <tr>
-     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> To: </td>
-     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ to|safe }}</td>
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> To: </td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ to|safe }}</td>
      </tr>
 
     {% if cc %}
      <tr>
-     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> CC: </td>
-     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ cc|safe }}</td>
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> CC: </td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ cc|safe }}</td>
      </tr>
      {% endif %}
 
      {% if bcc %}
      <tr>
-     <td style="font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> BCC: </td>
-     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ bcc|safe }}</td>
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> BCC: </td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ bcc|safe }}</td>
      </tr>
      {% endif %}
-
-
 
      </table>
      </td>

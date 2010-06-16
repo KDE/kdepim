@@ -1,37 +1,20 @@
-<html>
-<head>
-<title></title>
-
 <style>
 
-body {
-    color: #000000 ! important;
-    background-color: #ffffff ! important;
-}
-
 div.header {
-    font-family: "Times New Roman" ! important;
-    font-size: 14px ! important;
+    font-size: 10px ! important;
 }
 
 </style>
-
-</head>
-
-<body>
 
 <div class="header" dir="{{ dir }}">
 
 {% if subject %}
   <div dir="{{ subjectDir }}">
-    <b style="font-size:130%">{{ subject|safe }}</b>
+    <b style="font-size:110%">{{ subject|safe }}</b>
   </div>
-  <br />
 {% endif %}
 
-(
-
-{{ from|safe }},
+({{ from|safe }},
 
 {% if vCardName %}
   &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
@@ -46,9 +29,7 @@ div.header {
 {% endif %}
 
 {% if date %}
-  {{ date|safe }}&nbsp;
-{% endif %}
-
-)
+  {{ date|safe }}
+{% endif %})
 
 </div>
