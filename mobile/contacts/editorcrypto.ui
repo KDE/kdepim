@@ -6,107 +6,252 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>382</height>
+    <width>470</width>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_5">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="protocolGroupBox">
-     <property name="title">
-      <string>Allow the following protocols</string>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Allow the following protocols:</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QCheckBox" name="inlineOpenPGPCheckBox">
-        <property name="text">
-         <string>Inline OpenPGP (deprecated)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="openPGPCheckBox">
-        <property name="text">
-         <string>OpenPGP / MIME</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="smimeCheckBox">
-        <property name="text">
-         <string>S/MIME</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="smimeOpaqueCheckBox">
-        <property name="text">
-         <string>S/MIME Opaque</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="pgpKeyGroupBox">
-     <property name="title">
-      <string>Preferred Open/PGP encryption key</string>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="inlineOpenPGPCheckBox">
+       <property name="text">
+        <string>Inline OpenPGP (deprecated)</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="openPGPCheckBox">
+       <property name="text">
+        <string>OpenPGP / MIME</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="smimeCheckBox">
+       <property name="text">
+        <string>S/MIME</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="smimeOpaqueCheckBox">
+       <property name="text">
+        <string>S/MIME Opaque</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Preferred Open/PGP encryption key:</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="Kleo::EncryptionKeyRequester" name="openPGPKeyRequester" native="true"/>
-      </item>
-     </layout>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="smimeKeyGroupBox">
-     <property name="title">
-      <string>Preferred S/MIME encryption certificate</string>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="Kleo::EncryptionKeyRequester" name="openPGPKeyRequester" native="true"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Preferred S/MIME encryption certificate:</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="Kleo::EncryptionKeyRequester" name="smimeCertificateRequester" native="true"/>
-      </item>
-     </layout>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="messagePreferencesGroupBox">
-     <property name="title">
-      <string>Message Preference</string>
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <item>
+      <spacer name="horizontalSpacer_6">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="Kleo::EncryptionKeyRequester" name="smimeCertificateRequester" native="true"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Message Preference:</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="signLabel">
-          <property name="text">
-           <string>Sign</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="KComboBox" name="signComboBox"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="encryptLabel">
-          <property name="text">
-           <string>Encrypt</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="KComboBox" name="encryptComboBox"/>
-        </item>
-       </layout>
-      </item>
-     </layout>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_7">
+     <item>
+      <spacer name="horizontalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>15</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
+       <item row="0" column="1">
+        <widget class="KComboBox" name="signComboBox"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="encryptLabel">
+         <property name="text">
+          <string>Encrypt:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="KComboBox" name="encryptComboBox"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="signLabel">
+         <property name="text">
+          <string>Sign:</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>168</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

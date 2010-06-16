@@ -66,20 +66,27 @@
    </item>
    <item>
     <layout class="QFormLayout" name="formLayout">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::ExpandingFieldsGrow</enum>
+     </property>
+     <property name="labelAlignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
      <item row="0" column="0">
       <widget class="QLabel" name="streetLabel">
        <property name="text">
-        <string>Street</string>
+        <string>Street:</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="streetLineEdit"/>
+      <widget class="QTextEdit" name="streetLineEdit"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="postOfficeBoxLabel">
        <property name="text">
-        <string>Post Office Box</string>
+        <string>Post Office
+Box:</string>
        </property>
       </widget>
      </item>
@@ -89,7 +96,7 @@
      <item row="2" column="0">
       <widget class="QLabel" name="localityLabel">
        <property name="text">
-        <string>Locality</string>
+        <string>Locality:</string>
        </property>
       </widget>
      </item>
@@ -99,7 +106,7 @@
      <item row="3" column="0">
       <widget class="QLabel" name="regionLabel">
        <property name="text">
-        <string>Region</string>
+        <string>Region:</string>
        </property>
       </widget>
      </item>
@@ -109,7 +116,7 @@
      <item row="4" column="0">
       <widget class="QLabel" name="postalCodeLabel">
        <property name="text">
-        <string>Postal Code</string>
+        <string>Postal Code:</string>
        </property>
       </widget>
      </item>
@@ -119,7 +126,7 @@
      <item row="5" column="0">
       <widget class="QLabel" name="countryLabel">
        <property name="text">
-        <string>Country</string>
+        <string>Country:</string>
        </property>
       </widget>
      </item>
@@ -129,7 +136,7 @@
      <item row="6" column="0">
       <widget class="QLabel" name="editLabelLabel">
        <property name="text">
-        <string>Edit Label</string>
+        <string>Edit Label:</string>
        </property>
       </widget>
      </item>

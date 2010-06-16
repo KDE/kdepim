@@ -159,7 +159,13 @@ class EditorLocation::Private
         // QDataWidgetMapper does not handle a non-existing index
         for ( int column = 1; column < 8; ++column ) {
           QLineEdit *lineEdit = qobject_cast<QLineEdit*>( mMapper->mappedWidgetAt( column ) );
-          lineEdit->clear();
+          if ( lineEdit )
+            lineEdit->clear();
+          else {
+            QTextEdit *textEdit = qobject_cast<QTextEdit*>( mMapper->mappedWidgetAt( column ) );
+            if ( textEdit )
+              textEdit->clear();
+          }
         }
       }
     }
@@ -171,8 +177,9 @@ class EditorLocation::Private
       mUi.addressSelectionCombo->setEnabled( enabled );
       mUi.deleteAddressButton->setEnabled( enabled );
       for ( int column = 1; column < 8; ++column ) {
-        QLineEdit *lineEdit = qobject_cast<QLineEdit*>( mMapper->mappedWidgetAt( column ) );
-        lineEdit->setEnabled( enabled );
+        QWidget *widget = mMapper->mappedWidgetAt( column );
+        if ( widget )
+          widget->setEnabled( enabled );
       }
     }
 
