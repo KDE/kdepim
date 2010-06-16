@@ -33,6 +33,7 @@ kde4_add_ui_files(kab_mobile_srcs
   editorgeneral.ui
   editorlocation.ui
   editormore.ui
+  editormore_internetpage.ui
 )
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )

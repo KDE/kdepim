@@ -20,6 +20,7 @@
 #include "editormore.h"
 
 #include "ui_editormore.h"
+#include "ui_editormore_internetpage.h"
 
 #include <KABC/Addressee>
 
@@ -42,7 +43,10 @@ class EditorMore::Private
       mMapper->setMapping( mUi.customFieldsPageButton, 3 );
 
       QWidget *namePage = new QLabel( "Name Page" );
-      QWidget *internetPage = new QLabel( "Internet Page" );
+
+      QWidget *internetPage = new QWidget;
+      mInternetPage.setupUi( internetPage );
+
       QWidget *personalPage = new QLabel( "Personal Page" );
       QWidget *customFieldsPage = new QLabel( "CustomFields Page" );
 
@@ -67,6 +71,7 @@ class EditorMore::Private
 
   public:
     Ui::EditorMore mUi;
+    Ui::InternetPage mInternetPage;
     QSignalMapper *mMapper;
 
     KABC::Addressee mContact;
@@ -98,10 +103,18 @@ EditorMore::~EditorMore()
 
 void EditorMore::loadContact( const KABC::Addressee &contact )
 {
+  // internet page
+  d->mInternetPage.urlLineEdit->setText( contact.url().url() );
+  d->mInternetPage.blogLineEdit->setText( loadCustom( contact, QLatin1String( "BlogFeed" ) ) );
+  d->mInternetPage.messagingLineEdit->setText( loadCustom( contact, QLatin1String( "X-IMAddress" ) ) );
 }
 
 void EditorMore::saveContact( KABC::Addressee &contact )
 {
+  // internet page
+  contact.setUrl( d->mInternetPage.urlLineEdit->text() );
+  storeCustom( contact, QLatin1String( "BlogFeed" ), d->mInternetPage.blogLineEdit->text() );
+  storeCustom( contact, QLatin1String( "X-IMAddress" ), d->mInternetPage.messagingLineEdit->text() );
 }
 
 #include "editormore.moc"
