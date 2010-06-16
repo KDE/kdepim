@@ -22,9 +22,69 @@
 #include "locationmodel.h"
 #include "ui_editorlocation.h"
 
-#include <KABC/Addressee>
+#include <KDE/KABC/Addressee>
+#include <KDE/KMessageBox>
 
+#include <QtGui/QCheckBox>
 #include <QtGui/QDataWidgetMapper>
+#include <QtGui/QGroupBox>
+
+class AddressTypeDialog : public KDialog
+{
+  public:
+    AddressTypeDialog( QWidget *parent = 0 )
+      : KDialog( parent)
+    {
+      setCaption( i18nc( "street/postal", "New Address" ) );
+
+      QWidget *page = new QWidget(this);
+      setMainWidget( page );
+      QVBoxLayout *layout = new QVBoxLayout( page );
+      layout->setSpacing( KDialog::spacingHint() );
+      layout->setMargin( 0 );
+
+      QGroupBox *box  = new QGroupBox( i18nc( "street/postal", "Address Types" ), page );
+      layout->addWidget( box );
+      mGroup = new QButtonGroup( box );
+      mGroup->setExclusive ( false );
+
+      QGridLayout *buttonLayout = new QGridLayout( box );
+
+      mTypeList = KABC::Address::typeList();
+      mTypeList.removeAll( KABC::Address::Pref );
+
+      KABC::Address::TypeList::ConstIterator it;
+      int i = 0;
+      int row = 0;
+      for ( it = mTypeList.constBegin(); it != mTypeList.constEnd(); ++it, ++i ) {
+        QCheckBox *checkBox = new QCheckBox( KABC::Address::typeLabel( *it ), box );
+        buttonLayout->addWidget( checkBox, row, i % 3 );
+
+        if ( i % 3 == 2 )
+            ++row;
+
+        mGroup->addButton( checkBox );
+      }
+    }
+
+    KABC::Address::Type type() const
+    {
+      KABC::Address::Type type;
+      for ( int i = 0; i < mGroup->buttons().count(); ++i ) {
+        QCheckBox *box = dynamic_cast<QCheckBox*>( mGroup->buttons().at( i ) );
+        if ( box && box->isChecked() )
+          type |= mTypeList[ i ];
+      }
+
+      return type;
+    }
+
+  private:
+    QButtonGroup *mGroup;
+
+    KABC::Address::TypeList mTypeList;
+};
+
 
 class EditorLocation::Private
 {
@@ -56,17 +116,64 @@ class EditorLocation::Private
                   SLOT( addAddress() ) );
       q->connect( mUi.deleteAddressButton, SIGNAL( clicked() ),
                   SLOT( removeAddress() ) );
+      q->connect( mModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+                  SLOT( addressCountChanged() ) );
+      q->connect( mModel, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
+                  SLOT( addressCountChanged() ) );
+
+      addressCountChanged();
     }
 
     void addAddress()
     {
-      //TODO: show new dialog to ask for type
-      mModel->insertRows( 0, 1 );
+      AddressTypeDialog dlg( q );
+      if ( !dlg.exec() )
+        return;
+
+      const KABC::Address::Type addressType = dlg.type();
+
+      if ( mModel->insertRows( 0, 1 ) ) {
+        mModel->setData( mModel->index( 0, 0 ), QVariant::fromValue( static_cast<int>( addressType ) ) );
+        mUi.addressSelectionCombo->setCurrentIndex( 0 );
+        mMapper->setCurrentIndex( 0 );
+      }
     }
 
     void removeAddress()
     {
-      mModel->removeRows( mMapper->currentIndex(), 1 );
+      const int answer = KMessageBox::questionYesNo( q, i18n( "Do you really want to delete this address?" ),
+                                                        i18n( "Delete Address" ),
+                                                        KGuiItem( "Delete" ) );
+      if ( answer == KMessageBox::No )
+        return;
+
+      const int index = mMapper->currentIndex();
+      mModel->removeRows( index, 1 );
+      if ( index >= mModel->rowCount() )
+        mMapper->setCurrentIndex( mModel->rowCount() - 1 );
+      else
+        mMapper->setCurrentIndex( index );
+
+      if ( mModel->rowCount() == 0 ) {
+        // We have to cleanup the fields ourself in this case,
+        // QDataWidgetMapper does not handle a non-existing index
+        for ( int column = 1; column < 8; ++column ) {
+          QLineEdit *lineEdit = qobject_cast<QLineEdit*>( mMapper->mappedWidgetAt( column ) );
+          lineEdit->clear();
+        }
+      }
+    }
+
+    void addressCountChanged()
+    {
+      const bool enabled = (mModel->rowCount() > 0);
+
+      mUi.addressSelectionCombo->setEnabled( enabled );
+      mUi.deleteAddressButton->setEnabled( enabled );
+      for ( int column = 1; column < 8; ++column ) {
+        QLineEdit *lineEdit = qobject_cast<QLineEdit*>( mMapper->mappedWidgetAt( column ) );
+        lineEdit->setEnabled( enabled );
+      }
     }
 
   public:
@@ -90,10 +197,17 @@ EditorLocation::~EditorLocation()
 
 void EditorLocation::loadContact( const KABC::Addressee &contact )
 {
+  d->mModel->setLocations( contact.addresses() );
 }
 
 void EditorLocation::saveContact( KABC::Addressee &contact )
 {
+  const KABC::Address::List oldAddresses = contact.addresses();
+  foreach ( const KABC::Address &oldAddress, oldAddresses )
+    contact.removeAddress( oldAddress );
+
+  foreach ( const KABC::Address &newAddress, d->mModel->locations() )
+    contact.insertAddress( newAddress );
 }
 
 #include "editorlocation.moc"

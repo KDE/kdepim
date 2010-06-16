@@ -22,18 +22,6 @@
 LocationModel::LocationModel( QObject *parent )
   : QAbstractTableModel( parent )
 {
-  for ( int i = 0; i < 7; ++i ) {
-    KABC::Address address( (KABC::Address::Type)(1 << i) );
-    address.setStreet( QString( "MyStreet %1" ).arg( i ) );
-    address.setPostOfficeBox( QString( "MyPOB %1" ).arg( i ) );
-    address.setLocality( QString( "MyLocality %1" ).arg( i ) );
-    address.setRegion( QString( "MyRegion %1" ).arg( i ) );
-    address.setPostalCode( QString( "MyPostalCode %1" ).arg( i ) );
-    address.setCountry( QString( "MyCountry %1" ).arg( i ) );
-    address.setLabel( QString( "MyLabel %1" ).arg( i ) );
-
-    mLocations.append( address );
-  }
 }
 
 LocationModel::~LocationModel()
@@ -143,34 +131,42 @@ bool LocationModel::setData( const QModelIndex &index, const QVariant &value, in
     switch ( index.column() ) {
       case 0:
         address.setType( KABC::Address::Type( value.toInt() ) );
+        emit dataChanged( index, index );
         return true;
         break;
       case 1:
         address.setStreet( value.toString() );
+        emit dataChanged( index, index );
         return true;
         break;
       case 2:
         address.setPostOfficeBox( value.toString() );
+        emit dataChanged( index, index );
         return true;
         break;
       case 3:
         address.setLocality( value.toString() );
+        emit dataChanged( index, index );
         return true;
         break;
       case 4:
         address.setRegion( value.toString() );
+        emit dataChanged( index, index );
         return true;
         break;
       case 5:
         address.setPostalCode( value.toString() );
+        emit dataChanged( index, index );
         return true;
         break;
       case 6:
         address.setCountry( value.toString() );
+        emit dataChanged( index, index );
         return true;
         break;
       case 7:
         address.setLabel( value.toString() );
+        emit dataChanged( index, index );
         return true;
         break;
     }
@@ -186,7 +182,7 @@ Qt::ItemFlags LocationModel::flags( const QModelIndex &index ) const
 
 bool LocationModel::insertRows( int row, int count, const QModelIndex &parent )
 {
-  if ( row < 0 || row >= mLocations.count() || parent.isValid() )
+  if ( row < 0 || row > mLocations.count() || parent.isValid() )
     return false;
 
   beginInsertRows( parent, row, row + count - 1 );

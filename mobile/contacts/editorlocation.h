@@ -40,6 +40,7 @@ class EditorLocation : public EditorBase
 
     Q_PRIVATE_SLOT( d, void addAddress() )
     Q_PRIVATE_SLOT( d, void removeAddress() )
+    Q_PRIVATE_SLOT( d, void addressCountChanged() )
 };
 
 #endif
