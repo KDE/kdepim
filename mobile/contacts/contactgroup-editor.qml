@@ -35,7 +35,7 @@ KPIM.MainView {
 
     width: parent.width;
     height: parent.height;
-    contentHeight: editorGeneral.height;
+    contentHeight: editor.height;
     clip: true;
     flickableDirection: "VerticalFlick"
 
