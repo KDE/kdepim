@@ -194,12 +194,14 @@ KPIM.MainView {
                 contactView.visible = true;
                 contactGroupView.visible = false;
                 editContactButton.visible = true;
+                editContactGroupButton.visible = false;
               }
               if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
                 contactGroupView.itemId = contactList.currentItemId;
                 contactView.visible = false;
                 contactGroupView.visible = true;
                 editContactButton.visible = false;
+                editContactGroupButton.visible = true;
               }
               folderPanel.collapse()
             }
