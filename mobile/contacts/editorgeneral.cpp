@@ -112,6 +112,7 @@ class EditorGeneral::Private
     void nameTextChanged( const QString &text )
     {
       mContact.setNameFromString( text );
+      mUi.saveButton->setEnabled( !text.trimmed().isEmpty() );
     }
 
     void addEmailClicked();
