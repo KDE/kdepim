@@ -699,6 +699,9 @@ void KJotsWidget::deleteBook()
   if ( !col.isValid() )
     return;
 
+  if (col.parentCollection() == Collection::root())
+    return;
+
   (void) new Akonadi::CollectionDeleteJob( col, this );
 
 }
