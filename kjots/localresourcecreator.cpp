@@ -190,11 +190,13 @@ void LocalResourceCreator::topLevelFetchFinished(KJob* job)
 
   Akonadi::Collection collection;
   collection.setParentCollection( Akonadi::Collection(id) );
-  collection.setName( i18nc( "The default name for new books.", "New Book" ) );
+  QString title = i18nc( "The default name for new books.", "New Book" );
+  collection.setName( KRandom::randomString( 10 ) );
   collection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Note::mimeType() );
 
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
   eda->setIconName( "x-office-address-book" );
+  eda->setDisplayName( title );
   collection.addAttribute(eda);
 
   Akonadi::CollectionCreateJob *createJob = new Akonadi::CollectionCreateJob( collection, this );

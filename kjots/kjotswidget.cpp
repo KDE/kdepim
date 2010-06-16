@@ -100,6 +100,7 @@
 #include <memory>
 #include "kjotslockattribute.h"
 #include "localresourcecreator.h"
+#include <krandom.h>
 
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
@@ -731,11 +732,12 @@ void KJotsWidget::newBook()
   newCollection.setParentCollection( col );
 
   QString title = i18nc( "The default name for new books.", "New Book" );
-  newCollection.setName( title );
+  newCollection.setName( KRandom::randomString( 10 ) );
   newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Note::mimeType() );
 
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
   eda->setIconName( "x-office-address-book" );
+  eda->setDisplayName( title );
   newCollection.addAttribute( eda );
 
   Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( newCollection );
