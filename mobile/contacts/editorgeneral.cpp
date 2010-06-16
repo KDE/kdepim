@@ -78,6 +78,11 @@ class EditorGeneral::Private
       mUi.pictureButton->setIcon( mDefaultPhoto );      
     }
 
+    ~Private()
+    {
+      qDeleteAll( mPhoneWidgets );
+    }
+
     void ensureEmailRows( int emailCount )
     {
       // TODO delete unnecessary rows?
