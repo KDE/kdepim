@@ -58,6 +58,7 @@ KPIM.MainView {
           backToMessageListButton.visible = false;
           collectionView.visible = true;
           notesListPage.visible = true;
+          noteView.noteId = -1;
         }
       }
     }
