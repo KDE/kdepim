@@ -45,6 +45,7 @@ class ContactFields
       Anniversary,
 
       HomeAddressStreet,
+      HomeAddressPostOfficeBox,
       HomeAddressLocality,
       HomeAddressRegion,
       HomeAddressPostalCode,
@@ -52,6 +53,7 @@ class ContactFields
       HomeAddressLabel,
 
       BusinessAddressStreet,
+      BusinessAddressPostOfficeBox,
       BusinessAddressLocality,
       BusinessAddressRegion,
       BusinessAddressPostalCode,

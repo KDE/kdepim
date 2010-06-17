@@ -36,12 +36,14 @@ QString ContactFields::label( Field field )
     case Birthday: return KABC::Addressee::birthdayLabel(); break;
     case Anniversary: return i18n( "Anniversary" ); break;
     case HomeAddressStreet: return KABC::Addressee::homeAddressStreetLabel(); break;
+    case HomeAddressPostOfficeBox: return KABC::Addressee::homeAddressPostOfficeBoxLabel(); break;
     case HomeAddressLocality: return KABC::Addressee::homeAddressLocalityLabel(); break;
     case HomeAddressRegion: return KABC::Addressee::homeAddressRegionLabel(); break;
     case HomeAddressPostalCode: return KABC::Addressee::homeAddressPostalCodeLabel(); break;
     case HomeAddressCountry: return KABC::Addressee::homeAddressCountryLabel(); break;
     case HomeAddressLabel: return KABC::Addressee::homeAddressLabelLabel(); break;
     case BusinessAddressStreet: return KABC::Addressee::businessAddressStreetLabel(); break;
+    case BusinessAddressPostOfficeBox: return KABC::Addressee::businessAddressPostOfficeBoxLabel(); break;
     case BusinessAddressLocality: return KABC::Addressee::businessAddressLocalityLabel(); break;
     case BusinessAddressRegion: return KABC::Addressee::businessAddressRegionLabel(); break;
     case BusinessAddressPostalCode: return KABC::Addressee::businessAddressPostalCodeLabel(); break;
@@ -89,12 +91,14 @@ ContactFields::Fields ContactFields::allFields()
          << Email3
          << Email4
          << HomeAddressStreet
+         << HomeAddressPostOfficeBox
          << HomeAddressLocality
          << HomeAddressRegion
          << HomeAddressPostalCode
          << HomeAddressCountry
          << HomeAddressLabel
          << BusinessAddressStreet
+         << BusinessAddressPostOfficeBox
          << BusinessAddressLocality
          << BusinessAddressRegion
          << BusinessAddressPostalCode
@@ -246,6 +250,13 @@ void ContactFields::setValue( Field field, const QString &value, KABC::Addressee
         contact.insertAddress( address );
       }
       break;
+    case ContactFields::HomeAddressPostOfficeBox:
+      {
+        KABC::Address address = contact.address( KABC::Address::Home );
+        address.setPostOfficeBox( value );
+        contact.insertAddress( address );
+      }
+      break;
     case ContactFields::HomeAddressLocality:
       {
         KABC::Address address = contact.address( KABC::Address::Home );
@@ -285,6 +296,13 @@ void ContactFields::setValue( Field field, const QString &value, KABC::Addressee
       {
         KABC::Address address = contact.address( KABC::Address::Work );
         address.setStreet( value );
+        contact.insertAddress( address );
+      }
+      break;
+    case ContactFields::BusinessAddressPostOfficeBox:
+      {
+        KABC::Address address = contact.address( KABC::Address::Work );
+        address.setPostOfficeBox( value );
         contact.insertAddress( address );
       }
       break;
@@ -353,6 +371,12 @@ QString ContactFields::value( Field field, const KABC::Addressee &contact )
         return address.street();
       }
       break;
+    case HomeAddressPostOfficeBox:
+      {
+        const KABC::Address address = contact.address( KABC::Address::Home );
+        return address.postOfficeBox();
+      }
+      break;
     case HomeAddressLocality:
       {
         const KABC::Address address = contact.address( KABC::Address::Home );
@@ -387,6 +411,12 @@ QString ContactFields::value( Field field, const KABC::Addressee &contact )
       {
         const KABC::Address address = contact.address( KABC::Address::Work );
         return address.street();
+      }
+      break;
+    case BusinessAddressPostOfficeBox:
+      {
+        const KABC::Address address = contact.address( KABC::Address::Work );
+        return address.postOfficeBox();
       }
       break;
     case BusinessAddressLocality:
