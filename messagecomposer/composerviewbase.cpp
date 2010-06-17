@@ -58,6 +58,8 @@
 #include <QTimer>
 #include <QUuid>
 #include <QtCore/QTextCodec>
+#include <recentaddresses.h>
+#include "messagecomposersettings.h"
 
 Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  : QObject ( parent )
@@ -590,6 +592,7 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
         saveMessage( composer->resultMessages().at( i ), mSaveIn );
       }
     }
+    saveRecentAddresses( composer->resultMessages().at( 0 ) );
   } else if( composer->error() == Message::Composer::UserCancelledError ) {
     // The job warned the user about something, and the user chose to return
     // to the message.  Nothing to do.
@@ -609,6 +612,17 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
 
   m_composers.removeAll( composer );
 }
+
+void Message::ComposerViewBase::saveRecentAddresses( KMime::Message::Ptr msg )
+{
+  foreach( QByteArray address, msg->to()->addresses() )
+    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
+  foreach( QByteArray address, msg->cc()->addresses() )
+    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
+  foreach( QByteArray address, msg->bcc()->addresses() )
+    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
+}
+
 
 void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Message::Composer* composer )
 {
