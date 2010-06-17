@@ -185,6 +185,10 @@ a.black {
      <td style="min-width: 6px; max-width: 6px; background: url('{% media_finder "images/enterprise_left.png" %}'); "></td>
      <td> 
 
+     <div style="z-index: 1; float: right; position: relative; top: -35px; right: 20px;">
+       <img src="{% media_finder "images/enterprise_icon.png" %}">
+     </div>
+
      <table style="color: {{ fontColor }} ! important; margin: 1px; border-spacing: 0px;" cellpadding=0>
 
      {% if subject %}
@@ -242,11 +246,6 @@ a.black {
     <td style="min-width: 6px; background: url('{% media_finder "images/enterprise_s_right.png" %}'); "></td>
     </tr>
   </table>
-
-  <div style="position: absolute; top: -14px; right: 30px; width: 91px; height: 91px;">
-    <img src="{% media_finder "images/enterprise_icon.png" %}" style="float: right;">
-  </div>
-
 
   <div style="position: absolute;top: 60px;right: 20px; display:none ! important;">
     <div id="attachmentInjectionPoint"></div>
