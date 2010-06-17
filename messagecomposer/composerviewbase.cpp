@@ -669,7 +669,8 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
 
   if( m_editor && !infoPart->bcc().isEmpty() ) // have to deal with multiple message contents
   {
-    // if the bcc isn't empty, then we send it to the bcc because this is an encrypted message with secondary recipients
+    // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
+    //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
     if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
       KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
       qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
@@ -677,7 +678,8 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
       message->assemble();
       kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
     } else {
-      // the main mail in the encrypted set, just don't set the bccs here
+      // this shouldn't happen, but guard against it just in case so the mail still gets sent.
+      //  ComposerViewBase should set the intended recipient for mails with secondary recipients.
       qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
       qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
 
