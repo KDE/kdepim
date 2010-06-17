@@ -185,7 +185,7 @@ class DefaultNormalViewFormatter::SummaryVisitor : public TreeNodeVisitor
 
 QString DefaultNormalViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    //Grantlee::Template t = mEngine->loadByName( QLatin1String( "default.html" ) );
+    Grantlee::Template t = mEngine->loadByName( QLatin1String( "default.html" ) );
     QVariantHash data;
     
     QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
@@ -265,12 +265,11 @@ QString DefaultNormalViewFormatter::formatArticle(const Article& article, IconOp
         }
     }
 
-    /*Grantlee::Context c( data );
+    Grantlee::Context c( data );
     c.setRelativeMediaPath("images/");
     QString headerStr= t->render( &c );
 
-    return headerStr;*/
-    return "hola";
+    return headerStr;
 }
 
 QString DefaultNormalViewFormatter::getCss() const
@@ -372,7 +371,7 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 
 QString DefaultCombinedViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    //Grantlee::Template t = mEngine->loadByName( QLatin1String( "combined.html" ) );
+    Grantlee::Template t = mEngine->loadByName( QLatin1String( "combined.html" ) );
     QVariantHash data;
 
     QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
@@ -452,12 +451,11 @@ QString DefaultCombinedViewFormatter::formatArticle(const Article& article, Icon
         }
     }
 
-    /*Grantlee::Context c( data );
+    Grantlee::Context c( data );
     c.setRelativeMediaPath("images/");
     QString headerStr= t->render( &c );
 
-    return headerStr;*/
-    return "bye";
+    return headerStr;
 }
 
 QString DefaultCombinedViewFormatter::getCss() const
