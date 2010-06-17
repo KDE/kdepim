@@ -53,7 +53,7 @@ ProgressItem::~ProgressItem()
 
 void ProgressItem::setComplete()
 {
-  kDebug() << label();
+//   kDebug() << label();
 
   if ( mChildren.isEmpty() ) {
     if ( !mCanceled ) {
