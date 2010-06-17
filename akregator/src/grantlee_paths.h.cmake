@@ -1,0 +1,2 @@
+#define GRANTLEE_PLUGIN_PATH "@Grantlee_PLUGIN_PATH@"
+

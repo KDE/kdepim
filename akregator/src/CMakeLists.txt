@@ -3,10 +3,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 add_subdirectory( about ) 
 add_subdirectory( icons )
 
+configure_file(grantlee_paths.h.cmake ${PROJECT_BINARY_DIR}/grantlee_paths.h)
+install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/akregator PATTERN *.svn EXCLUDE )
+
 include_directories (
     ${Boost_INCLUDE_DIR} 
     ${CMAKE_SOURCE_DIR}/akregator/interfaces 
-    ${CMAKE_BINARY_DIR}/akregator/interfaces 
+    ${CMAKE_BINARY_DIR}/akregator/interfaces
+    ${Grantlee_INCLUDE_DIRS}
 )
 
 ########### next target ###############
@@ -18,7 +22,7 @@ kde4_add_app_icon(akregator_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/akregator.png")
 kde4_add_executable(akregator ${akregator_SRCS})
 
 target_link_libraries(akregator ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} kdepim akregatorprivate
-                      akregatorinterfaces)
+                      akregatorinterfaces ${Grantlee_CORE_LIBRARIES} ${Grantlee_GUI_LIBRARIES})
 
 install(TARGETS akregator  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
@@ -111,7 +115,7 @@ kde4_add_ui_files(akregatorpart_PART_SRCS
 
 kde4_add_plugin(akregatorpart ${akregatorpart_PART_SRCS})
 
-target_link_libraries(akregatorpart  ${KDE4_KCMUTILS_LIBS} ${KDE4_KNOTIFYCONFIG_LIBS} ${KDE4_SOLID_LIBRARY} akregatorinterfaces akregatorprivate kdepim ${KDEPIMLIBS_SYNDICATION_LIBS} ${KDEPIMLIBS_KPIMUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} )
+target_link_libraries(akregatorpart  ${KDE4_KCMUTILS_LIBS} ${KDE4_KNOTIFYCONFIG_LIBS} ${KDE4_SOLID_LIBRARY} akregatorinterfaces akregatorprivate kdepim ${KDEPIMLIBS_SYNDICATION_LIBS} ${KDEPIMLIBS_KPIMUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS})
 
 install(TARGETS akregatorpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 

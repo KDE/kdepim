@@ -30,6 +30,11 @@
 class QPaintDevice;
 class QString;
 
+namespace Grantlee
+{
+    class Engine;
+}
+
 namespace Akregator {
 
 class Article;
@@ -43,7 +48,7 @@ class ArticleFormatter
             NoIcon,
             ShowIcon
         };
-        
+
         explicit ArticleFormatter( QPaintDevice* device = 0 );
         
         virtual ~ArticleFormatter();
@@ -55,15 +60,15 @@ class ArticleFormatter
         virtual QString formatSummary(TreeNode* node) const = 0;
         
         virtual QString getCss() const = 0;
-        
-    protected:
-        
+      
+    protected:        
         int pointsToPixel(int pointSize) const;
-        
+        Grantlee::Engine *mEngine;
+               
     private:
         class Private;
         Private* const d;
-        Q_DISABLE_COPY( ArticleFormatter )
+        Q_DISABLE_COPY( ArticleFormatter )              
 };
 
 class DefaultNormalViewFormatter : public ArticleFormatter
