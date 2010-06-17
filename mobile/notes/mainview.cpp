@@ -103,3 +103,108 @@ QString MainView::noteContent(int row)
   return note->mainBodyPart()->decodedText();
 }
 
+void MainView::saveNote(const QString& title, const QString& content)
+{
+  QAbstractItemModel *model = const_cast<QAbstractItemModel*>(itemSelectionModel()->model());
+
+  if (!model->hasChildren())
+    return;
+
+  static const int column = 0;
+  static const int row = 0;
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+
+  if (list.size() != 1)
+    return;
+
+  const QModelIndex idx = list.first();
+
+  Q_ASSERT( idx.isValid() );
+
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  if (!item.isValid())
+    return;
+
+  if (!item.hasPayload<KMime::Message::Ptr>())
+    return;
+
+  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+  note->subject()->fromUnicodeString(title, "utf-8");
+  KMime::Content *c = note->mainBodyPart();
+  c->fromUnicodeString(content);
+
+  note->assemble();
+
+  model->setData(idx, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+}
+
+
+void MainView::saveCurrentNoteTitle(const QString& title)
+{
+  QAbstractItemModel *model = const_cast<QAbstractItemModel*>(itemSelectionModel()->model());
+
+  if (!model->hasChildren())
+    return;
+
+  static const int column = 0;
+  static const int row = 0;
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+
+  if (list.size() != 1)
+    return;
+
+  const QModelIndex idx = list.first();
+
+  Q_ASSERT( idx.isValid() );
+
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  if (!item.isValid())
+    return;
+
+  if (!item.hasPayload<KMime::Message::Ptr>())
+    return;
+
+  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+  note->subject()->fromUnicodeString(title, "utf-8");
+
+  note->assemble();
+
+  model->setData(idx, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+}
+
+void MainView::saveCurrentNoteContent(const QString& content)
+{
+  QAbstractItemModel *model = const_cast<QAbstractItemModel*>(itemSelectionModel()->model());
+
+  if (!model->hasChildren())
+    return;
+
+  static const int column = 0;
+  static const int row = 0;
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+
+  if (list.size() != 1)
+    return;
+
+  const QModelIndex idx = list.first();
+
+  Q_ASSERT( idx.isValid() );
+
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  if (!item.isValid())
+    return;
+
+  if (!item.hasPayload<KMime::Message::Ptr>())
+    return;
+
+  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+  KMime::Content *c = note->mainBodyPart();
+  c->fromUnicodeString(content);
+
+  note->assemble();
+
+  model->setData(idx, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+}

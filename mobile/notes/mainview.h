@@ -36,6 +36,10 @@ class MainView : public KDeclarativeMainView
     QString noteTitle( int row );
     QString noteContent( int row );
 
+    void saveNote(const QString &title, const QString &content);
+    void saveCurrentNoteTitle(const QString &title);
+    void saveCurrentNoteContent(const QString &content);
+
 };
 
 #endif // MAINVIEW_H

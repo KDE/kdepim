@@ -53,6 +53,7 @@ KPIM.MainView {
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
+          noteView.saveNote();
           noteView.visible = false;
           backToMessageListButton.visible = false;
           collectionView.visible = true;

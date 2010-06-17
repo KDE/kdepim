@@ -33,6 +33,11 @@ Rectangle {
     contentEdit.text = application.noteContent( currentNoteRow );
   }
 
+  function saveNote()
+  {
+    application.saveNote(titleInput.text, contentEdit.text);
+  }
+
   Rectangle {
     border.color : "blue"
     color: "#00000000"
@@ -49,7 +54,10 @@ Rectangle {
       anchors.leftMargin : 10
       anchors.rightMargin : 10
 
-  //    text : note.title
+      /*
+      onClicked : {
+        application.saveCurrentNoteContent(contentEdit.text);
+      } */
     }
 
   }
@@ -70,7 +78,10 @@ Rectangle {
       anchors.leftMargin : 10
       anchors.rightMargin : 10
 
-//       text : note.content
+      /*
+      onClicked : {
+        application.saveCurrentNoteTitle(titleInput.text);
+      } */
     }
   }
 }
