@@ -68,6 +68,7 @@ KPIM.MainView {
           backToMessageListButton.visible = false;
           collectionView.visible = true;
           emailListPage.visible = true;
+          messageView.itemId = -1;
         }
       }
     }
