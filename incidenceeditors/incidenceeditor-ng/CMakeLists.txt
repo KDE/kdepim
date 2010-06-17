@@ -52,10 +52,13 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   incidencedescriptioneditor.cpp
 
   incidenceeditorgeneralpage.cpp
-  eventortododialog.cpp
+  #eventortododialog.cpp
+  eventortododialogng.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
+  eventortododialog.ui
+
   attachmenteditdialog.ui
   incidencegeneraleditor.ui
   incidencedatetime.ui

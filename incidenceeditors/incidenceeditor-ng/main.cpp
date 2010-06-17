@@ -34,6 +34,7 @@
 
 #include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
+#include "eventortododialogng.h"
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
@@ -94,8 +95,10 @@ int main( int argc, char **argv )
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
-  EventOrTodoDialog *dialog = new EventOrTodoDialog;
-  dialog->resize( QSize( 600, 600 ).expandedTo( dialog->minimumSizeHint() ) );
+//  EventOrTodoDialog *dialog = new EventOrTodoDialog;
+  QScopedPointer<EventOrTodoDialogNG> dialog( new EventOrTodoDialogNG );
+  dialog->resize( QSize( 600, 450 ).expandedTo( dialog->minimumSizeHint() ) );
+  dialog->show();
   dialog->load( item );
 
   return app.exec();
