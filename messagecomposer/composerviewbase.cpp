@@ -669,14 +669,13 @@ void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueue
 
   if( m_editor && !infoPart->bcc().isEmpty() ) // have to deal with multiple message contents
   {
-    // if the bcc isn't empty, then we send it to the bcc because this is the bcc-only encrypted body
-    if( !message->bcc()->addresses().isEmpty() ) {
-      QStringList bcc;
-      foreach( QByteArray address, message->bcc()->addresses()  ) {
-        bcc << QString::fromUtf8( address );
-      }
-      qjob->addressAttribute().setTo( cleanEmailList( bcc ) );
-      kDebug() << "sending with-bcc encr mail to a secondary recipient:" <<  qjob->addressAttribute().to();
+    // if the bcc isn't empty, then we send it to the bcc because this is an encrypted message with secondary recipients
+    if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
+      KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
+      qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
+      message->removeHeader( "X-KMail-EncBccRecipients" );
+      message->assemble();
+      kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
     } else {
       // the main mail in the encrypted set, just don't set the bccs here
       qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
