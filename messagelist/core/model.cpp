@@ -54,6 +54,7 @@
 #include "core/messageitemsetmanager.h"
 
 #include <messagecore/messagestatus.h>
+#include "messagecore/stringutil.h"
 
 #include <QApplication>
 #include <QTimer>
@@ -1310,17 +1311,17 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
 
     case Aggregation::GroupBySenderOrReceiver:
       date = mi->date();
-      groupLabel = mi->senderOrReceiver();
+      groupLabel = MessageCore::StringUtil::stripEmailAddr( mi->senderOrReceiver() );
       break;
 
     case Aggregation::GroupBySender:
       date = mi->date();
-      groupLabel = mi->sender();
+      groupLabel = MessageCore::StringUtil::stripEmailAddr( mi->sender() );
       break;
 
     case Aggregation::GroupByReceiver:
       date = mi->date();
-      groupLabel = mi->receiver();
+      groupLabel = MessageCore::StringUtil::stripEmailAddr( mi->receiver() );
       break;
 
     case Aggregation::NoGrouping:
