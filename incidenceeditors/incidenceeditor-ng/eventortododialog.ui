@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>584</width>
-    <height>441</height>
+    <width>603</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_12">
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
@@ -26,6 +26,9 @@
       <string>Calendar:</string>
      </property>
     </widget>
+   </item>
+   <item row="0" column="1" colspan="3">
+    <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
@@ -103,14 +106,14 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="4">
+   <item row="3" column="0" rowspan="3" colspan="4">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="label_8">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -123,7 +126,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="5" column="1" rowspan="2">
     <widget class="QCheckBox" name="mWholeDayCheck">
      <property name="whatsThis">
       <string>Set if this to-do's start and due dates have times associated with them.</string>
@@ -136,7 +139,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
+   <item row="6" column="2">
     <widget class="QLabel" name="mFreeBusyLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -152,7 +155,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="3">
+   <item row="4" column="3" rowspan="3">
     <widget class="QComboBox" name="mFreeBusyCombo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -175,7 +178,7 @@
      </item>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="mStartLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -191,7 +194,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="3">
+   <item row="7" column="1" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="KPIM::KDateEdit" name="mStartDateEdit">
@@ -280,7 +283,7 @@
      </item>
     </layout>
    </item>
-   <item row="6" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="mEndLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -296,7 +299,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1" colspan="3">
+   <item row="8" column="1" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="KPIM::KDateEdit" name="mEndDateEdit">
@@ -358,17 +361,17 @@
      </item>
     </layout>
    </item>
-   <item row="7" column="0" colspan="4">
+   <item row="9" column="0" colspan="4">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="8" column="0" colspan="4">
+   <item row="10" column="0" colspan="4">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -468,6 +471,340 @@
       <attribute name="title">
        <string>Attendees</string>
       </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Organizer:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="4">
+        <widget class="QComboBox" name="comboBox_6">
+         <item>
+          <property name="text">
+           <string>Identity 1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Identity 2</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0" rowspan="2" colspan="5">
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4" rowspan="2">
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="text">
+          <string>Select...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Participants:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>X time conflicts</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QPushButton" name="pushButton_7">
+         <property name="text">
+          <string>Solve...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>235</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="4" column="0" colspan="5">
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>573</width>
+            <height>165</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_13">
+           <item row="0" column="0">
+            <widget class="QComboBox" name="comboBox_8">
+             <item>
+              <property name="text">
+               <string>Participant</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Optional</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Observer</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Chair</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="KLineEdit" name="klineedit">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QComboBox" name="comboBox_7">
+             <item>
+              <property name="text">
+               <string>Needs Action</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Accepted</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Declined</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tentative</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Delegated</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Completed</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>in Process</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="text">
+              <string>Ask for response</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="comboBox_10">
+             <item>
+              <property name="text">
+               <string>Participant</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Optional</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Observer</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Chair</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="KLineEdit" name="klineedit_2">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QComboBox" name="comboBox_9">
+             <item>
+              <property name="text">
+               <string>Needs Action</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Accepted</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Declined</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tentative</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Delegated</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Completed</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>in Process</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QCheckBox" name="checkBox_2">
+             <property name="text">
+              <string>Ask for response</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QComboBox" name="comboBox_12">
+             <item>
+              <property name="text">
+               <string>Participant</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Optional</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Observer</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Chair</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="KLineEdit" name="klineedit_3">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QComboBox" name="comboBox_11">
+             <item>
+              <property name="text">
+               <string>Needs Action</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Accepted</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Declined</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tentative</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Delegated</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Completed</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>in Process</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QCheckBox" name="checkBox_3">
+             <property name="text">
+              <string>Ask for response</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="4">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
@@ -562,7 +899,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>110</width>
+           <width>135</width>
            <height>22</height>
           </size>
          </property>
@@ -593,7 +930,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>88</width>
-           <height>61</height>
+           <height>120</height>
           </size>
          </property>
         </spacer>
@@ -1065,7 +1402,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>413</width>
+           <width>438</width>
            <height>20</height>
           </size>
          </property>
@@ -1115,9 +1452,6 @@
       </layout>
      </widget>
     </widget>
-   </item>
-   <item row="0" column="1" colspan="3">
-    <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
    </item>
   </layout>
  </widget>
