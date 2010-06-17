@@ -33,6 +33,8 @@
 #include "core/storagemodelbase.h"
 #include "core/widgetbase.h"
 
+#include "messagecore/stringutil.h"
+
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
 #include <QHelpEvent>
@@ -2276,8 +2278,8 @@ bool View::event( QEvent *e )
               "</td>" \
             "</tr>" );
 
-      tip += htmlCodeForStandardRow.arg( i18n( "From" ) ).arg( mi->sender() );
-      tip += htmlCodeForStandardRow.arg( i18nc( "Receiver of the emial", "To" ) ).arg( mi->receiver() );
+      tip += htmlCodeForStandardRow.arg( i18n( "From" ) ).arg( MessageCore::StringUtil::stripEmailAddr( mi->sender() ) );
+      tip += htmlCodeForStandardRow.arg( i18nc( "Receiver of the emial", "To" ) ).arg( MessageCore::StringUtil::stripEmailAddr( mi->receiver() ) );
       tip += htmlCodeForStandardRow.arg( i18n( "Date" ) ).arg( mi->formattedDate() );;
 
       QString status = mi->statusDescription();

@@ -46,6 +46,7 @@
 #include <messagecomposer/recipientseditor.h>
 #include <akonadi/collectioncombobox.h>
 #include <kpimidentities/identitymanager.h>
+#include <kpimutils/email.h>
 
 #include <KSaveFile>
 #include <KLocalizedString>
@@ -57,6 +58,8 @@
 #include <QTimer>
 #include <QUuid>
 #include <QtCore/QTextCodec>
+#include <recentaddresses.h>
+#include "messagecomposersettings.h"
 
 Message::ComposerViewBase::ComposerViewBase ( QObject* parent )
  : QObject ( parent )
@@ -589,6 +592,7 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
         saveMessage( composer->resultMessages().at( i ), mSaveIn );
       }
     }
+    saveRecentAddresses( composer->resultMessages().at( 0 ) );
   } else if( composer->error() == Message::Composer::UserCancelledError ) {
     // The job warned the user about something, and the user chose to return
     // to the message.  Nothing to do.
@@ -608,6 +612,17 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
 
   m_composers.removeAll( composer );
 }
+
+void Message::ComposerViewBase::saveRecentAddresses( KMime::Message::Ptr msg )
+{
+  foreach( QByteArray address, msg->to()->addresses() )
+    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
+  foreach( QByteArray address, msg->cc()->addresses() )
+    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
+  foreach( QByteArray address, msg->bcc()->addresses() )
+    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( QLatin1String( address ) );
+}
+
 
 void Message::ComposerViewBase::queueMessage( KMime::Message::Ptr message, Message::Composer* composer )
 {
@@ -664,32 +679,33 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
 
 void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart )
 {
-  qjob->addressAttribute().setFrom( infoPart->from() );
+  qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
 
   if( m_editor && !infoPart->bcc().isEmpty() ) // have to deal with multiple message contents
   {
-    // if the bcc isn't empty, then we send it to the bcc because this is the bcc-only encrypted body
-    if( !message->bcc()->addresses().isEmpty() ) {
-      QStringList bcc;
-      foreach( QByteArray address, message->bcc()->addresses()  ) {
-        bcc << QString::fromUtf8( address );
-      }
-      kDebug() << "sending with-bcc encr mail to a secondary recipient:" << bcc;
-      qjob->addressAttribute().setTo( bcc );
+    // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
+    //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
+    if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
+      KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
+      qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
+      message->removeHeader( "X-KMail-EncBccRecipients" );
+      message->assemble();
+      kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
     } else {
-      // the main mail in the encrypted set, just don't set the bccs here
-      qjob->addressAttribute().setTo( infoPart->to() );
-      qjob->addressAttribute().setCc( infoPart->cc() );
+      // this shouldn't happen, but guard against it just in case so the mail still gets sent.
+      //  ComposerViewBase should set the intended recipient for mails with secondary recipients.
+      qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
+      qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
 
-      kDebug() << "sending with-bcc encrypted mail to orig recipients:" <<infoPart->to() << infoPart->cc();
+      kDebug() << "sending with-bcc encrypted mail to orig recipients:" << qjob->addressAttribute().to() <<  qjob->addressAttribute().cc();
 
     }
   } else {
     // continue as normal
     kDebug() << "no bccs";
-    qjob->addressAttribute().setTo( infoPart->to() );
-    qjob->addressAttribute().setCc( infoPart->cc() );
-    qjob->addressAttribute().setBcc( infoPart->bcc() );
+    qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
+    qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
+    qjob->addressAttribute().setBcc( cleanEmailList( infoPart->bcc() ) );
   }
 }
 void Message::ComposerViewBase::initAutoSave()
@@ -1176,6 +1192,20 @@ void Message::ComposerViewBase::setUrgent( bool urgent )
 {
   m_urgent = urgent;
 }
+
+QStringList Message::ComposerViewBase::cleanEmailList(const QStringList& emails)
+{
+  QStringList clean;
+  foreach( const QString& email, emails )
+    clean << KPIMUtils::extractEmailAddress( email );
+  return clean;
+}
+
+int Message::ComposerViewBase::autoSaveInterval() const
+{
+  return m_autoSaveInterval;
+}
+
 
 //-----------------------------------------------------------------------------
 void Message::ComposerViewBase::collectImages( KMime::Content *root )

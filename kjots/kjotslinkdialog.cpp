@@ -30,12 +30,15 @@
 #include <KComboBox>
 #include <KLineEdit>
 
+#include <Akonadi/Item>
+
 #include "KJotsSettings.h"
 #include "kjotsbookshelfentryvalidator.h"
-// #include "kdescendantsproxymodel_p.h"
+#include "kdescendantsproxymodel_p.h"
+#include <Akonadi/EntityTreeModel>
 
-KJotsLinkDialog::KJotsLinkDialog(QWidget *parent) :
-        KDialog(parent)
+KJotsLinkDialog::KJotsLinkDialog( QAbstractItemModel *kjotsModel, QWidget *parent)
+  : KDialog(parent), m_kjotsModel(kjotsModel)
 {
     setCaption(i18n("Manage Link"));
     setButtons(Ok | Cancel);
@@ -43,9 +46,11 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent) :
     setModal(true);
     showButtonSeparator(true);
 
-//     KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( this );
-//     proxyModel->setSourceModel(  );
-//     proxyModel->setAncestorSeparator( QLatin1String( " / " ) );
+    KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( this );
+    proxyModel->setSourceModel( kjotsModel );
+    proxyModel->setAncestorSeparator( QLatin1String( " / " ) );
+
+    m_descendantsProxyModel = proxyModel;
 
     QWidget *entries = new QWidget(this);
 
@@ -60,18 +65,18 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent) :
     linkUrlLineEdit->setClearButtonShown(true);
 
     tree = new QTreeView();
-//     tree->setModel(proxyModel);
+    tree->setModel(proxyModel);
     tree->expandAll();
     tree->setColumnHidden(1, true);
-//     hrefCombo->setModel(proxyModel);
+    hrefCombo->setModel(proxyModel);
     hrefCombo->setView(tree);
 
     hrefCombo->setEditable(true);
-//     QCompleter *completer = new QCompleter(proxyModel, this);
-//     completer->setCaseSensitivity(Qt::CaseInsensitive);
-//     hrefCombo->setCompleter(completer);
-//     KJotsBookshelfEntryValidator* validator = new KJotsBookshelfEntryValidator( proxyModel, this );
-//     hrefCombo->setValidator( validator );
+    QCompleter *completer = new QCompleter(proxyModel, this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    hrefCombo->setCompleter(completer);
+    KJotsBookshelfEntryValidator* validator = new KJotsBookshelfEntryValidator( proxyModel, this );
+    hrefCombo->setValidator( validator );
 
     QGridLayout* linkLayout = new QGridLayout();
     linkUrlLineEditRadioButton = new QRadioButton(entries);
@@ -111,39 +116,34 @@ void KJotsLinkDialog::setLinkText(const QString &linkText)
 
 void KJotsLinkDialog::setLinkUrl(const QString &linkUrl)
 {
-// TODO PORT
-#if 0
-    if (KJotsEntry::isKJotsLink(linkUrl)) {
+    Akonadi::Item item = Akonadi::Item::fromUrl(KUrl(linkUrl));
+    Akonadi::Collection collection = Akonadi::Collection::fromUrl(KUrl(linkUrl));
 
-        quint64 id = KJotsEntry::idFromLinkUrl(linkUrl);
-        KJotsEntry* item = mBookshelf->entryFromId(id);
-        if ( item ) {
-
-            QModelIndex index = hrefCombo->model()->index(0,1);
-            if ( hrefCombo->model()->data(index).toULongLong() == id )
-            {
-                hrefCombo->view()->setCurrentIndex(index);
-                hrefCombo->setCurrentIndex( index.row() );
-            } else {
-                while ( index.sibling(index.row() + 1, 1).isValid() )
-                {
-                    index = index.sibling(index.row() + 1, 1);
-
-                    if ( hrefCombo->model()->data(index).toULongLong() == id )
-                    {
-                        hrefCombo->view()->setCurrentIndex(index);
-                        hrefCombo->setCurrentIndex( index.row() );
-                        break;
-                    }
-                }
-            }
-        }
-        hrefComboRadioButton->setChecked(true);
-    } else {
+    if (!item.isValid() && !collection.isValid()) {
         linkUrlLineEdit->setText(linkUrl);
         linkUrlLineEditRadioButton->setChecked(true);
+        return;
     }
-#endif
+
+    QModelIndex idx;
+
+    if (collection.isValid()) {
+        idx = Akonadi::EntityTreeModel::modelIndexForCollection( m_descendantsProxyModel, collection );
+    } else if (item.isValid()) {
+        const QModelIndexList list = Akonadi::EntityTreeModel::modelIndexesForItem( m_descendantsProxyModel, item );
+        if (list.isEmpty())
+            return;
+
+        idx = list.first();
+    }
+
+    if (!idx.isValid())
+        return;
+
+    hrefComboRadioButton->setChecked(true);
+
+    hrefCombo->view()->setCurrentIndex( idx );
+    hrefCombo->setCurrentIndex( idx.row() );
 }
 
 QString KJotsLinkDialog::linkText() const
@@ -166,16 +166,10 @@ void KJotsLinkDialog::trySetEntry(const QString & text)
 
 QString KJotsLinkDialog::linkUrl() const
 {
-  return QString();
-//  TODO PORT
-#if 0
     if (hrefComboRadioButton->isChecked()){
-        QModelIndex index = hrefCombo->view()->currentIndex();
-        index = index.sibling(index.row(), 1);
-        quint64 id = hrefCombo->model()->data(index).toULongLong();
-        return KJotsEntry::kjotsLinkUrlFromId(id);
+        const QModelIndex index = hrefCombo->view()->currentIndex();
+        return index.data(Akonadi::EntityTreeModel::EntityUrlRole).toString();
     } else {
         return linkUrlLineEdit->text();
     }
-#endif
 }

@@ -17,7 +17,6 @@
 */
 
 #include "kjotsconfigdlg.h"
-#include <kdemacros.h>
 
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )

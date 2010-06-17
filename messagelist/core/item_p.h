@@ -24,6 +24,8 @@
 #include "core/item.h"
 #include "core/subjectutils_p.h"
 
+#include "messagecore/stringutil.h"
+
 // See the MessageList::ItemPrivate::insertChildItem() function below for an explaination of this macro.
 #if __GNUC__ >= 3
   #define GCC_DONT_INLINE_THIS __attribute__((noinline))
@@ -330,7 +332,8 @@ class ItemSenderComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = first->sender().compare( second->sender(), Qt::CaseInsensitive );
+    int ret = MessageCore::StringUtil::stripEmailAddr( first->sender() ).compare(
+      MessageCore::StringUtil::stripEmailAddr( second->sender() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
     // compare by date when senders are equal
@@ -349,7 +352,8 @@ class ItemReceiverComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = first->receiver().compare( second->receiver(), Qt::CaseInsensitive );
+    int ret = MessageCore::StringUtil::stripEmailAddr( first->receiver() ).compare(
+      MessageCore::StringUtil::stripEmailAddr( second->receiver() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
     // compare by date when receivers are equal
@@ -368,7 +372,8 @@ class ItemSenderOrReceiverComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = first->senderOrReceiver().compare( second->senderOrReceiver(), Qt::CaseInsensitive );
+    int ret = MessageCore::StringUtil::stripEmailAddr( first->senderOrReceiver() ).compare(
+      MessageCore::StringUtil::stripEmailAddr( second->senderOrReceiver() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
     // compare by date when sender/receiver are equal

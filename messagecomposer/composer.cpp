@@ -336,19 +336,17 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     headers = new KMime::Message;
     headers->setHeader( skeletonMessage->from() );
     headers->setHeader( skeletonMessage->to() );
+    headers->setHeader( skeletonMessage->cc() );
     headers->setHeader( skeletonMessage->subject() );
     headers->setHeader( skeletonMessage->date() );
 
-    KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc( headers );
-    foreach( const QString &a, eJob->recipients() ) {
-      KMime::Types::Mailbox address;
-      address.fromUnicodeString( a );
-      bcc->addAddress( address );
-    }
+    KMime::Headers::Generic *realTo =
+      new KMime::Headers::Generic( "X-KMail-EncBccRecipients",
+                                   headers, eJob->recipients().join( QLatin1String( "%" ) ),  "utf-8" );
 
-    kDebug() << "got one of multiple messages sending to:" << bcc->asUnicodeString();
+    kDebug() << "got one of multiple messages sending to:" << realTo->asUnicodeString();
     kDebug() << "sending to recipients:" << recipients;
-    headers->setHeader( bcc );
+    headers->setHeader( realTo );
     headers->assemble();
   } else { // just use the saved headers from before
     if( encData.size() > 0 ) {
