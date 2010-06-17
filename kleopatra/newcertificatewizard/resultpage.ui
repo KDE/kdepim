@@ -51,35 +51,35 @@
       <item>
        <widget class="QPushButton" name="saveRequestToFilePB" >
         <property name="text" >
-         <string>Save Request To File...</string>
+         <string>Save Certificate Request To File...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="sendRequestByEMailPB" >
         <property name="text" >
-         <string>Send Request By EMail...</string>
+         <string>Send Certificate Request By EMail...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="makeBackupPB" >
         <property name="text" >
-         <string>Make a Backup Of Your Certificate...</string>
+         <string>Make a Backup Of Your Secret Certificate...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="sendCertificateByEMailPB" >
         <property name="text" >
-         <string>Send Certificate By EMail...</string>
+         <string>Send Public Certificate By EMail...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="uploadToKeyserverPB" >
         <property name="text" >
-         <string>Upload Certificate To Directory Service...</string>
+         <string>Upload Public Certificate To Directory Service...</string>
         </property>
        </widget>
       </item>
