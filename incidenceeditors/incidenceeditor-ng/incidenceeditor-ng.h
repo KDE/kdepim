@@ -36,7 +36,7 @@ namespace IncidenceEditorsNG {
  * approach to this complexity. An IncidenceEditor is an editor for a specific
  * part(s) of an Incidence.
  */
-class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QWidget
+class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QWidget // Get rid of qwidget
 {
   Q_OBJECT
   public:
