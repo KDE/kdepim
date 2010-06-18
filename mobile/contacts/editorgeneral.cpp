@@ -241,7 +241,7 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact )
     widgets->mId = phone.id();
     widgets->mInput->setText( phone.number() );
 
-    // TODO type
+    widgets->mType->setType( phone.type() );
 
     ++widgetIt;
   }
@@ -271,9 +271,8 @@ void EditorGeneral::saveContact( KABC::Addressee &contact ) const
 
   Q_FOREACH( PhoneWidgets *widgets, d->mPhoneWidgets ) {
     const QString number = widgets->mInput->text().trimmed();
-    const QVariant typeVar = widgets->mType->itemData( widgets->mType->currentIndex() );
     if ( !number.isEmpty() ) {
-      KABC::PhoneNumber phone( number, (KABC::PhoneNumber::TypeFlag)typeVar.value<int>() );
+      KABC::PhoneNumber phone( number, widgets->mType->type() );
       if ( !widgets->mId.isEmpty() ) {
         phone.setId( widgets->mId );
       }

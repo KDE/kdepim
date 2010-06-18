@@ -32,8 +32,6 @@ class PhoneTypeCombo::Private
       for ( int i = 0; i < KABC::PhoneNumber::typeList().count(); ++i )
         mTypeList.append( KABC::PhoneNumber::typeList().at( i ) );
 
-      mTypeList.prepend( KABC::PhoneNumber::Pref ); // Default
-
       update();
     }
 
@@ -42,10 +40,7 @@ class PhoneTypeCombo::Private
       q->clear();
 
       for ( int i = 0; i < mTypeList.count(); ++i ) {
-        if ( mTypeList.at( i ) == KABC::PhoneNumber::Pref ) // "Default" entry
-          q->addItem( i18nc( "@item:inlistbox Category of contact info field", "Default" ) );
-        else
-          q->addItem( KABC::PhoneNumber::fullTypeLabel( KABC::PhoneNumber::Type( mTypeList.at( i ) ) ) );
+        q->addItem( KABC::PhoneNumber::fullTypeLabel( KABC::PhoneNumber::Type( mTypeList.at( i ) ) ) );
       }
 
       q->setCurrentIndex( mLastSelected = mTypeList.indexOf( mType ) );
@@ -68,8 +63,7 @@ void PhoneTypeCombo::Private::selected( int pos )
 
 PhoneTypeCombo::PhoneTypeCombo( QWidget *parent ) : QComboBox( parent ), d( new Private( this ) )
 {
-  connect( this, SIGNAL( activated( int ) ),
-           this, SLOT( selected( int ) ) );
+  connect( this, SIGNAL( activated( int ) ), SLOT( selected( int ) ) );
 }
 
 PhoneTypeCombo::~PhoneTypeCombo()
