@@ -56,6 +56,8 @@
 
 #include "akonadi_next/entityorderproxymodel.h"
 #include "akonadi_next/etmstatesaver.h"
+#include "akonadi_next/note.h"
+#include "akonadi_next/notecreatorandselector.h"
 
 // Grantlee
 #include <grantlee/template.h>
@@ -91,7 +93,6 @@
 #include "kjotstreeview.h"
 #include "kjotsconfigdlg.h"
 #include "kjotsreplacenextdialog.h"
-#include "note.h"
 #include "KJotsSettings.h"
 #include "kjotslockjob.h"
 
@@ -150,7 +151,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   monitor->fetchCollection( true );
   monitor->setItemFetchScope( scope );
   monitor->setCollectionMonitored( Collection::root() );
-  monitor->setMimeTypeMonitored( Note::mimeType() );
+  monitor->setMimeTypeMonitored( Akonotes::Note::mimeType() );
 
   m_kjotsModel = new KJotsModel( monitor, this );
 
@@ -795,7 +796,7 @@ void KJotsWidget::newBook()
 
   QString title = i18nc( "The default name for new books.", "New Book" );
   newCollection.setName( KRandom::randomString( 10 ) );
-  newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Note::mimeType() );
+  newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType() );
 
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
   eda->setIconName( "x-office-address-book" );
@@ -830,32 +831,8 @@ void KJotsWidget::newPage()
 
 void KJotsWidget::doCreateNewPage(const Collection &collection)
 {
-  Item newItem;
-  newItem.setMimeType( Note::mimeType() );
-
-  KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
-
-  QString title = i18nc( "The default name for new pages.", "New Page" );
-  QByteArray encoding( "utf-8" );
-
-  newPage->subject( true )->fromUnicodeString( title, encoding );
-  newPage->contentType( true )->setMimeType( "text/plain" );
-  newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-  newPage->from( true )->fromUnicodeString( "Kjots@kde4", encoding );
-  // Need a non-empty body part so that the serializer regards this as a valid message.
-  newPage->mainBodyPart()->fromUnicodeString( " " );
-
-  newPage->assemble();
-
-  newItem.setPayload( newPage );
-
-  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-  eda->setIconName( "text-plain" );
-  newItem.addAttribute(eda);
-
-  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, collection, this );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
-
+  Akonotes::NoteCreatorAndSelector *creatorAndSelector = new Akonotes::NoteCreatorAndSelector(treeview->selectionModel());
+  creatorAndSelector->createNote(collection);
 }
 
 void KJotsWidget::newPageResult( KJob* job )

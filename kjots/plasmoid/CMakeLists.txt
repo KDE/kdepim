@@ -4,14 +4,12 @@ add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
 set(akonotes_note_plasmoid_SRCS
     akonotes_noteapplet.cpp
-    ../note.cpp
 )
 
 set(akonotes_noteslist_plasmoid_SRCS
     akonotes_noteslistapplet.cpp
     ../kjotslockattribute.cpp
     ../kjotsmodel.cpp
-    ../note.cpp
     plasmatreeview.cpp
 )
 

@@ -65,7 +65,6 @@ set (kjots_common_SRCS
      kjotslinkdialog.cpp
      localresourcecreator.cpp
      kjotsbookshelfentryvalidator.cpp
-     note.cpp
      knowitimporter.cpp ${kjots_config_SRCS}
 )
 
