@@ -264,6 +264,7 @@ void KOAgenda::init()
   mOldUpperScrollValue = -1;
 
   mClickedItem = 0;
+  mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
 
   mActionItem = 0;
   mActionType = NOP;
