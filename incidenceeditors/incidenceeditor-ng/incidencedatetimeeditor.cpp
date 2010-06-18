@@ -65,7 +65,7 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( Ui::EventOrTodoDesktop *ui )
 
   mUi->mAlarmEditButton->setIcon( SmallIcon( "task-reminder" ) );
   mUi->mAlarmEditButton->setEnabled( false );
-  mUi->mAlarmCombo->insertItems( 1, AlarmPresets::availablePresets() );
+  mUi->mAlarmCombo->insertItems( 0, AlarmPresets::availablePresets() );
 
 //  mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
 //  mUi->mRecurrenceCombo->insertItems( 1, RecurrencePresets::availablePresets() );
