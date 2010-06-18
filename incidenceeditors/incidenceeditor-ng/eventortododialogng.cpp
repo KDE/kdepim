@@ -14,7 +14,7 @@
 #include "incidencedatetimeeditor.h"
 #include "incidencedescriptioneditor.h"
 #include "incidencegeneraleditor.h"
-#include "ui_eventortododialog.h"
+#include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
 
@@ -24,7 +24,7 @@ class EventOrTodoDialogNGPrivate : public Akonadi::ItemEditorUi
   Q_DECLARE_PUBLIC( EventOrTodoDialogNG )
 
 public:
-  Ui::EventOrTodoDestop *mUi;
+  Ui::EventOrTodoDesktop *mUi;
   Akonadi::CollectionComboBox *mCalSelector;
 
   Akonadi::EditorItemManager *mItemManager;
@@ -50,7 +50,7 @@ public:
 
 EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq )
   : q_ptr( qq )
-  , mUi( new Ui::EventOrTodoDestop )
+  , mUi( new Ui::EventOrTodoDesktop )
   , mCalSelector( new Akonadi::CollectionComboBox )
   , mItemManager( new Akonadi::EditorItemManager( this ) )
   , mEditor( new CombinedIncidenceEditor )

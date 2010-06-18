@@ -24,11 +24,11 @@
 #include <KDE/KActionCollection>
 #include <KDE/KToolBar>
 
-#include "ui_eventortododialog.h"
+#include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
 
-IncidenceDescriptionEditor::IncidenceDescriptionEditor( Ui::EventOrTodoDestop *ui )
+IncidenceDescriptionEditor::IncidenceDescriptionEditor( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {

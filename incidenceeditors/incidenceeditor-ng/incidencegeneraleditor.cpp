@@ -31,13 +31,13 @@
 #include "categoryhierarchyreader.h"
 #include "categoryselectdialog.h"
 #include "editorconfig.h"
-#include "ui_eventortododialog.h"
+#include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
 
 
-IncidenceGeneralEditor::IncidenceGeneralEditor( Ui::EventOrTodoDestop *ui )
+IncidenceGeneralEditor::IncidenceGeneralEditor( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {

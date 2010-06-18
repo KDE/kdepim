@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EventOrTodoDestop</class>
- <widget class="QWidget" name="EventOrTodoDestop">
+ <class>EventOrTodoDesktop</class>
+ <widget class="QWidget" name="EventOrTodoDesktop">
   <property name="geometry">
    <rect>
     <x>0</x>

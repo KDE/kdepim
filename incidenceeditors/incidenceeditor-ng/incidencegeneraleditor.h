@@ -24,7 +24,7 @@
 #include "incidenceeditor-ng.h"
 
 namespace Ui {
-class EventOrTodoDestop;
+class EventOrTodoDesktop;
 }
 
 namespace IncidenceEditorsNG {
@@ -39,7 +39,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneralEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceGeneralEditor( Ui::EventOrTodoDestop *ui = 0 );
+    IncidenceGeneralEditor( Ui::EventOrTodoDesktop *ui = 0 );
 
     virtual void load(KCal::Incidence::ConstPtr incidence);
     virtual void save(KCal::Incidence::Ptr incidence);
@@ -55,7 +55,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneralEditor : public IncidenceEditor
 
   private:
     QStringList mSelectedCategories;
-    Ui::EventOrTodoDestop *mUi;
+    Ui::EventOrTodoDesktop *mUi;
 };
 
 } // IncidenceEditorsNG

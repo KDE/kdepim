@@ -30,7 +30,7 @@ class ICalTimeZones;
 }
 
 namespace Ui {
-class EventOrTodoDestop;
+class EventOrTodoDesktop;
 }
 
 namespace IncidenceEditorsNG {
@@ -41,7 +41,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
 {
   Q_OBJECT
   public:
-    IncidenceDateTimeEditor( Ui::EventOrTodoDestop *ui = 0 );
+    IncidenceDateTimeEditor( Ui::EventOrTodoDesktop *ui = 0 );
     ~IncidenceDateTimeEditor();
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
@@ -91,7 +91,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
 
   private:
     KCal::ICalTimeZones *mTimeZones;
-    Ui::EventOrTodoDestop *mUi;
+    Ui::EventOrTodoDesktop *mUi;
 
     KCal::Recurrence *mLastRecurrence;
     KCal::Alarm::List mLastAlarms;

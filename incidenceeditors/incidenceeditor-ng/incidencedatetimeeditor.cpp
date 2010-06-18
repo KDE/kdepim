@@ -36,13 +36,13 @@
 //#include "ui_incidencedatetime.h"
 //#endif
 
-#include "ui_eventortododialog.h"
+#include "ui_eventortododesktop.h"
 #include "../editoralarms.h"
 
 using namespace IncidenceEditorsNG;
 using namespace KCal;
 
-IncidenceDateTimeEditor::IncidenceDateTimeEditor( Ui::EventOrTodoDestop *ui )
+IncidenceDateTimeEditor::IncidenceDateTimeEditor( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mTimeZones( new ICalTimeZones )
   , mUi( ui )
