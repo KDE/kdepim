@@ -1,3 +1,24 @@
+Friday, June 18th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4031: sending mail to OpenPGP-only and S/MIME-only recipient sends only OpenPGP (rt#5938)
+* kolab/issue4410: event attachment cannot be opend after restart. (rt#6172)
+* kolab/issue4369: KMail: Pressing Cancel in untrusted certificates warning dialog doesn't cancel, but continue 
+* kolab/issue4411: todos alarm: configured alarm changed after opening the todo twice
+* kolab/issue4401: The contacts free-busy-url is not saved in the contact mail but in kde/share/apps/korganizer/freebusyurls
+* kolab/issue3726: A changed Navigator toolbars is displayed without changes after restart (rt#5805)
+* kolab/issue4032: Todos summary shows no todos in offline (rt#5944)
+* kolab/issue4406: Change write to read rights of a shared calendar folder, can lead to a focus problem (rt#6167)
+* kolab/issue4405: The reminder should be in the foreground
+* kolab/issue4418: details view of a large multipart/mixed mail shows empty Message-ID (rt#5842)
+* kolab/issue4245: Wish: searchbar should also search for mail addresses (rt#6071)
+* kolab/issue4240: Wish: Maillist icons for invitations and update mails (rt#6065)
+* kolab/issue4419: Accept an invitation with set "Exchange compatible", update mail contains an untranslated
+                   "Accepted" in the subject. (rt#5903)
+
+
 Friday, June 11th 2010
 
 Problems addressed
