@@ -50,6 +50,7 @@ namespace MessageList
 {
 
 class Widget;
+class StorageModel;
 
 /**
  * This is the main MessageList panel for Akonadi applications.
@@ -71,6 +72,10 @@ public:
    */
   explicit Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
   ~Pane();
+
+
+  virtual MessageList::StorageModel *createStorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent );
+
 
   /**
    * Sets the XML GUI client which the pane is used in.
@@ -323,7 +328,7 @@ public:
    * Returns the QItemSelectionModel for the currently displayed tab.
    */
   QItemSelectionModel* currentItemSelectionModel();
-  
+
   /**
    * Sets the current folder to be displayed by this Pane.
    * If the specified folder is already open in one of the tabs

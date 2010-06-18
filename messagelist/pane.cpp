@@ -412,13 +412,18 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
   }
 }
 
+MessageList::StorageModel *Pane::createStorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent )
+{
+  return new MessageList::StorageModel( model, selectionModel, parent );
+}
+
 void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
     QItemSelectionModel *s = d->mWidgetSelectionHash[w];
-    MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
+    MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
     w->setStorageModel( m, preSelectionMode );
     if ( !overrideLabel.isEmpty() ) {
        int index = indexOf( w );
@@ -434,7 +439,7 @@ void Pane::createNewTab()
   addTab( w, i18nc( "@title:tab Empty messagelist", "Empty" ) );
 
   QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
-  MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
+  MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
   w->setStorageModel( m );
 
   d->mWidgetSelectionHash[w] = s;

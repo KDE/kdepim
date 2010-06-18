@@ -172,16 +172,23 @@ QString StorageModel::id() const
   return ids.join(":");
 }
 
+bool StorageModel::isOutBoundFolder( const Akonadi::Collection& c ) const
+{
+  if ( c.hasAttribute<MessageFolderAttribute>()
+      && c.attribute<MessageFolderAttribute>()->isOutboundFolder() ) {
+    return true;
+  }
+  return false;
+}
+
 bool StorageModel::containsOutboundMessages() const
 {
   QModelIndexList indexes = d->mSelectionModel->selectedRows();
 
   foreach ( const QModelIndex &index, indexes ) {
     Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-    if ( c.isValid()
-      && c.hasAttribute<MessageFolderAttribute>()
-      && c.attribute<MessageFolderAttribute>()->isOutboundFolder() ) {
-      return true;
+    if ( c.isValid() ) {
+      return isOutBoundFolder( c );
     }
   }
 
