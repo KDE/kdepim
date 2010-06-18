@@ -60,7 +60,6 @@ kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
   eventortododesktop.ui
 
   attachmenteditdialog.ui
-  incidenceattachmenteditor.ui
   incidencerecurrenceeditor.ui
 )
 

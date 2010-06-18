@@ -11,6 +11,7 @@
 
 #include "combinedincidenceeditor.h"
 #include "editoritemmanager.h"
+#include "incidenceattachmenteditor.h"
 #include "incidencedatetimeeditor.h"
 #include "incidencedescriptioneditor.h"
 #include "incidencegeneraleditor.h"
@@ -73,6 +74,9 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( mUi );
   mEditor->combine( ieDescription );
+
+  IncidenceAttachmentEditor *ieAttachments = new IncidenceAttachmentEditor( mUi );
+  mEditor->combine( ieAttachments );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
              SLOT(updateButtonStatus(bool)) );

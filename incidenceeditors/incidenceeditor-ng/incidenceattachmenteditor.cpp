@@ -41,19 +41,15 @@
 
 #include "attachmenticonview.h"
 #include "attachmenteditdialog.h"
-#include "ui_incidenceattachmenteditor.h"
+#include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
 
-IncidenceAttachmentEditor::IncidenceAttachmentEditor( QWidget *parent )
-  : IncidenceEditor( parent )
-  , mUi( new Ui::IncidenceAttachmentEditor )
+IncidenceAttachmentEditor::IncidenceAttachmentEditor( Ui::EventOrTodoDesktop *ui )
+  : IncidenceEditor( 0 )
+  , mUi( ui )
   , mPopupMenu( new KMenu( this ) )
 {
-  mUi->setupUi( this );
-  mUi->mAddButton->setIcon( KIcon( "list-add" ) );
-  mUi->mRemoveButton->setIcon( KIcon( "list-remove" ) );
-
   setupActions();
   setupAttachmentIconView();
   

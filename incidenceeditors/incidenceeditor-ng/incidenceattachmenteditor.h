@@ -28,7 +28,7 @@ class QListWidgetItem;
 class QMimeData;
 
 namespace Ui {
-class IncidenceAttachmentEditor;
+class EventOrTodoDesktop;
 }
 
 namespace IncidenceEditorsNG {
@@ -39,7 +39,7 @@ class IncidenceAttachmentEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceAttachmentEditor( QWidget *parent = 0 );
+    IncidenceAttachmentEditor( Ui::EventOrTodoDesktop *ui = 0 );
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -81,7 +81,7 @@ class IncidenceAttachmentEditor : public IncidenceEditor
     
   private:
     AttachmentIconView *mAttachmentView;
-    Ui::IncidenceAttachmentEditor *mUi;
+    Ui::EventOrTodoDesktop *mUi;
 
     KMenu *mPopupMenu;
     KAction *mOpenAction;
