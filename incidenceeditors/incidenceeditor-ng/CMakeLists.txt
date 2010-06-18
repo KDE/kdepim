@@ -93,6 +93,8 @@ if (KDEPIM_MOBILE_UI)
 
   kde4_add_ui_files(incidenceeditors_ng_mobile_LIB_SRCS
     ../categoryselectdialog_base.ui
+    eventortododesktop.ui
+    ../editoralarms_base.ui
     incidencerecurrenceeditor.ui
     iegeneralmobile.ui
     iedatetimemobile.ui
