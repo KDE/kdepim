@@ -40,7 +40,7 @@ class PhoneTypeCombo::Private
       q->clear();
 
       for ( int i = 0; i < mTypeList.count(); ++i ) {
-        q->addItem( KABC::PhoneNumber::fullTypeLabel( KABC::PhoneNumber::Type( mTypeList.at( i ) ) ) );
+        q->addItem( KABC::PhoneNumber::typeLabel( KABC::PhoneNumber::Type( mTypeList.at( i ) ) ) );
       }
 
       q->setCurrentIndex( mLastSelected = mTypeList.indexOf( mType ) );
