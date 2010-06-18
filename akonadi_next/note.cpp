@@ -17,20 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef KJOTS_NOTE_H
-#define KJOTS_NOTE_H
+#include "note.h"
 
-#include <QtCore/QString>
+using namespace Akonotes;
 
-/**
-  This is to become a convenience wrapper around KMime::Message::Ptr.
-*/
-class Note
+QString Note::mimeType()
 {
-public:
+  return "text/x-vnd.akonadi.note";
+}
 
-  static QString mimeType();
-
-};
-
-#endif
