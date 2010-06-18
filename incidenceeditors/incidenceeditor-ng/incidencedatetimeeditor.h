@@ -41,7 +41,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEdito
 {
   Q_OBJECT
   public:
-    IncidenceDateTimeEditor( Ui::EventOrTodoDestop *ui );
+    IncidenceDateTimeEditor( Ui::EventOrTodoDestop *ui = 0 );
     ~IncidenceDateTimeEditor();
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
