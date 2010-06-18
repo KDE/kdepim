@@ -19,8 +19,6 @@
 
 #include "incidencegeneraleditor.h"
 
-#include <QtCore/QDebug>
-
 #ifdef KDEPIM_MOBILE_UI
 #include <QtGui/QTreeWidgetItem>
 #include <KDialog>
@@ -41,9 +39,7 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
-  qDebug() << this << mUi->mSecrecyCombo->count();
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
-  qDebug() << this << mUi->mSecrecyCombo->count();
 
 #ifdef KDEPIM_MOBILE_UI
 //  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
@@ -69,7 +65,6 @@ void IncidenceGeneralEditor::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
-    qDebug() << this << mUi->mSecrecyCombo->count();
     Q_ASSERT( mUi->mSecrecyCombo->count() == KCal::Incidence::secrecyList().count() );
     mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
     mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
