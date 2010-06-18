@@ -117,7 +117,6 @@ bool IncidenceGeneralEditor::isDirty() const
   }
 #endif
 
-  qDebug() << "LOADED INCIDENCE" << mLoadedIncidence;
   if ( mLoadedIncidence ) {
     return ( mUi->mSummaryEdit->text() != mLoadedIncidence->summary() )
       || ( mUi->mLocationEdit->text() != mLoadedIncidence->location() )
