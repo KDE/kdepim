@@ -291,6 +291,7 @@ KPIM.MainView {
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       anchors.fill : parent
+      handlePosition : 225
       contentWidth: 240
 //       content: [
 //           Button {
