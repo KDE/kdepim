@@ -279,7 +279,6 @@ void ComposerTest::testBCCEncrypt()
 
   QVERIFY( secMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( secMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
-  QVERIFY( secMessage->bcc()->asUnicodeString() == QString::fromLocal8Bit( "bcc@bcc.org" ) );
 
 }
 
