@@ -2409,18 +2409,22 @@ void KMComposeWin::slotAttachFileResult( KJob *job )
     if ( mimeType == "text/html" ) {
       name = "index.html";
     } else {
+      name = QString( "unknown" );
       // try to determine a reasonable extension
-      QStringList patterns( KMimeType::mimeType( mimeType )->patterns() );
-      QString ext;
-      if ( !patterns.isEmpty() ) {
-        ext = patterns[0];
-        int i = ext.lastIndexOf( '.' );
-        if( i == -1 )
-          ext.prepend( '.' );
-        else if( i > 0 )
-          ext = ext.mid( i );
+      KMimeType::Ptr mtype = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+      if ( mtype ) {
+        QStringList patterns( mtype->patterns() );
+        QString ext;
+        if ( !patterns.isEmpty() ) {
+          ext = patterns[0];
+          int i = ext.lastIndexOf( '.' );
+          if( i == -1 )
+            ext.prepend( '.' );
+          else if( i > 0 )
+            ext = ext.mid( i );
+        }
+        name += ext;
       }
-      name = QString( "unknown" ) + ext;
     }
   }
 
