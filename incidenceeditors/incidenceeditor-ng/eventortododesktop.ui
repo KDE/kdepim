@@ -411,7 +411,7 @@
    <item row="10" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>4</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -882,7 +882,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="KComboBox" name="mAlarmCombo">
+        <widget class="KComboBox" name="mAlarmPresetCombo">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -937,7 +937,7 @@
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QPushButton" name="mAlarmEditButton">
+        <widget class="QPushButton" name="mAlarmAddPresetButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -962,18 +962,15 @@
          </property>
         </spacer>
        </item>
-       <item row="1" column="0" rowspan="4" colspan="4">
-        <widget class="QListView" name="listView"/>
-       </item>
        <item row="2" column="4">
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="mAlarmConfigureButton">
          <property name="text">
           <string>Configure</string>
          </property>
         </widget>
        </item>
        <item row="3" column="4">
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="mAlarmRemoveButton">
          <property name="text">
           <string>Remove</string>
          </property>
@@ -993,9 +990,16 @@
         </spacer>
        </item>
        <item row="1" column="4">
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="mAlarmNewButton">
          <property name="text">
           <string>New</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" rowspan="4" colspan="4">
+        <widget class="QListWidget" name="mAlarmList">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
          </property>
         </widget>
        </item>
