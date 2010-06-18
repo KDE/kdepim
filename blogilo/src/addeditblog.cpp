@@ -113,6 +113,7 @@ void AddEditBlog::autoConfigure()
         return;
     }
     showWaitWidget( i18n("Trying to guess blog and API type...") );
+    QString textUrl;
     ///Guess API with Url:
     if ( ui.txtUrl->text().contains( "xmlrpc.php", Qt::CaseInsensitive ) ) {
         ui.comboApi->setCurrentIndex( 3 );
@@ -126,7 +127,11 @@ void AddEditBlog::autoConfigure()
     }
     if ( ui.txtUrl->text().contains( "wordpress", Qt::CaseInsensitive ) ) {
         ui.comboApi->setCurrentIndex( 3 );
-        ui.txtUrl->setText( ui.txtUrl->text() + "/xmlrpc.php" );
+	textUrl = ui.txtUrl->text();
+	while (textUrl.endsWith(QChar('/'))) {
+	    textUrl.remove(textUrl.length()-1, 1);
+	}
+        ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
         fetchBlogId();
         return;
     }
@@ -161,6 +166,7 @@ void AddEditBlog::gotHtml( KJob *job )
     QString httpData( dynamic_cast<KIO::StoredTransferJob*>( job )->data() );
     job->deleteLater();
 
+    QString textUrl;
     QRegExp rxGData( QString( "content='blogger' name='generator'" ) );
     if ( rxGData.indexIn( httpData ) != -1 ) {
         kDebug() << "content='blogger' name='generator' matched";
@@ -188,13 +194,22 @@ void AddEditBlog::gotHtml( KJob *job )
         kDebug() << "name=\"generator\" content=\"WordPress matched";
         mFetchAPITimer->deleteLater();
         ui.comboApi->setCurrentIndex( 3 );
-        ui.txtUrl->setText( ui.txtUrl->text() + "/xmlrpc.php" );
+	
+	textUrl = ui.txtUrl->text();
+	while (textUrl.endsWith(QChar('/'))) {
+	    textUrl.remove(textUrl.length()-1, 1);
+	}
+        ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
         fetchBlogId();
         return;
     }
 
     // add MT for WordpressBuggy -> URL/xmlrpc.php exists
-    KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( ui.txtUrl->text() + "/xmlrpc.php",
+    textUrl = ui.txtUrl->text();
+    while (textUrl.endsWith(QChar('/'))) {
+	textUrl.remove(textUrl.length()-1, 1);
+    }
+    KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( textUrl + "/xmlrpc.php",
                                                             KIO::NoReload, KIO::HideProgressInfo );
 
     connect( testXmlRpcJob, SIGNAL( result( KJob* ) ), this, SLOT( gotXmlRpcTest( KJob* ) ) );
@@ -215,7 +230,11 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
 but has found an XMLRPC interface and is trying to use it.\
 \nThe MovableType API is assumed for now; choose another API if you know the server supports it."));
     ui.comboApi->setCurrentIndex( 2 );
-    ui.txtUrl->setText( ui.txtUrl->text() + "/xmlrpc.php" );
+    QString textUrl = ui.txtUrl->text();
+    while (textUrl.endsWith(QChar('/'))) {
+	    textUrl.remove(textUrl.length()-1, 1);
+    }
+    ui.txtUrl->setText( textUrl + "/xmlrpc.php" );
     fetchBlogId();
 }
 
