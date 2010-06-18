@@ -24,15 +24,14 @@
 #include <KDE/KActionCollection>
 #include <KDE/KToolBar>
 
-#include "ui_incidencedescription.h"
+#include "ui_eventortododialog.h"
 
 using namespace IncidenceEditorsNG;
 
-IncidenceDescriptionEditor::IncidenceDescriptionEditor( QWidget *parent )
-  : IncidenceEditor( parent )
-  , mUi( new Ui::IncidenceDescriptionEditor )
+IncidenceDescriptionEditor::IncidenceDescriptionEditor( Ui::EventOrTodoDestop *ui )
+  : IncidenceEditor( 0 )
+  , mUi( ui )
 {
-  mUi->setupUi( this );
   mUi->mDescriptionEdit->setRichTextSupport( KRichTextWidget::SupportBold |
                                              KRichTextWidget::SupportBold |
                                              KRichTextWidget::SupportItalic |

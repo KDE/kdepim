@@ -12,6 +12,7 @@
 #include "combinedincidenceeditor.h"
 #include "editoritemmanager.h"
 #include "incidencedatetimeeditor.h"
+#include "incidencedescriptioneditor.h"
 #include "incidencegeneraleditor.h"
 #include "ui_eventortododialog.h"
 
@@ -69,6 +70,9 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 
   IncidenceDateTimeEditor *ieDateTime = new IncidenceDateTimeEditor( mUi );
   mEditor->combine( ieDateTime );
+
+  IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( mUi );
+  mEditor->combine( ieDescription );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
              SLOT(updateButtonStatus(bool)) );

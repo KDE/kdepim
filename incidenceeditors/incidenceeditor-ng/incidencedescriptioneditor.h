@@ -23,7 +23,7 @@
 #include "incidenceeditor-ng.h"
 
 namespace Ui {
-class IncidenceDescriptionEditor;
+class EventOrTodoDestop;
 }
 
 namespace IncidenceEditorsNG {
@@ -36,7 +36,7 @@ class IncidenceDescriptionEditor : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDescriptionEditor( QWidget *parent = 0 );
+    IncidenceDescriptionEditor( Ui::EventOrTodoDestop *ui = 0 );
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -50,7 +50,7 @@ class IncidenceDescriptionEditor : public IncidenceEditor
     void setupToolBar();
 
   private:
-    Ui::IncidenceDescriptionEditor *mUi;
+    Ui::EventOrTodoDestop *mUi;
 };
 
 } // IncidenceEditorsNG
