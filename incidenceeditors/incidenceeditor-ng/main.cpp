@@ -97,7 +97,7 @@ int main( int argc, char **argv )
 
 //  EventOrTodoDialog *dialog = new EventOrTodoDialog;
   QScopedPointer<EventOrTodoDialogNG> dialog( new EventOrTodoDialogNG );
-  dialog->resize( QSize( 600, 450 ).expandedTo( dialog->minimumSizeHint() ) );
+  dialog->resize( QSize( 600, 500 ).expandedTo( dialog->minimumSizeHint() ) );
   dialog->show();
   dialog->load( item );
 
