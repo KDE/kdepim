@@ -29,26 +29,28 @@
 #include "incidencerecurrenceeditor.h"
 #include "recurrencepresets.h"
 
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_iedatetimemobile.h"
-#else
+//#ifdef KDEPIM_MOBILE_UI
+//#include "ui_iedatetimemobile.h"
+//#else
+//#include "../editoralarms.h"
+//#include "ui_incidencedatetime.h"
+//#endif
+
+#include "ui_eventortododialog.h"
 #include "../editoralarms.h"
-#include "ui_incidencedatetime.h"
-#endif
 
 using namespace IncidenceEditorsNG;
 using namespace KCal;
 
-IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
-  : IncidenceEditor( parent )
+IncidenceDateTimeEditor::IncidenceDateTimeEditor( Ui::EventOrTodoDestop *ui )
+  : IncidenceEditor( 0 )
   , mTimeZones( new ICalTimeZones )
-  , mUi( new Ui::IncidenceDateTimeEditor )
+  , mUi( ui )
   , mLastRecurrence( 0 )
 {
-  mUi->setupUi( this );
   setTimeZonesVisibility( false );
 
-#ifdef KDEPIM_MOBILE_UI
+#if 0 //def KDEPIM_MOBILE_UI
   QButtonGroup *freeBusyGroup = new QButtonGroup( this );
   freeBusyGroup->addButton( mUi->mFreeRadio );
   freeBusyGroup->addButton( mUi->mBusyRadio );
@@ -65,14 +67,14 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( QWidget *parent )
   mUi->mAlarmEditButton->setEnabled( false );
   mUi->mAlarmCombo->insertItems( 1, AlarmPresets::availablePresets() );
 
-  mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
-  mUi->mRecurrenceCombo->insertItems( 1, RecurrencePresets::availablePresets() );
-  mUi->mRecurrenceEditButton->setEnabled( false );
+//  mUi->mRecurrenceEditButton->setIcon( SmallIcon( "task-recurring" ) );
+//  mUi->mRecurrenceCombo->insertItems( 1, RecurrencePresets::availablePresets() );
+//  mUi->mRecurrenceEditButton->setEnabled( false );
 
-  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(updateRecurrencePreset(int)) );
-  connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()),
-           SLOT(editRecurrence()) );
+//  connect( mUi->mRecurrenceCombo, SIGNAL(currentIndexChanged(int)),
+//           SLOT(updateRecurrencePreset(int)) );
+//  connect( mUi->mRecurrenceEditButton, SIGNAL(clicked()),
+//           SLOT(editRecurrence()) );
   connect( mUi->mAlarmCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(updateAlarmPreset(int)) );
   connect( mUi->mAlarmEditButton, SIGNAL(clicked()),
@@ -123,63 +125,63 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
             || ! mUi->mTimeZoneComboEnd->selectedTimeSpec().isLocalZone() ) )
     setTimeZonesVisibility( true );
 
-  if ( incidence->recurs() ) {
-    // Note: we use a copy, because  mLastRecurrence gets deleted when the recurrence
-    //       change.
-    mLastRecurrence = new Recurrence( *incidence->recurrence() );
-    Q_ASSERT( *mLastRecurrence == *incidence->recurrence() );
-    KDateTime startDt = currentStartDateTime();
-    startDt.setDateOnly( mUi->mWholeDayCheck->isChecked() && mUi->mStartCheck->isChecked() );
+//  if ( incidence->recurs() ) {
+//    // Note: we use a copy, because  mLastRecurrence gets deleted when the recurrence
+//    //       change.
+//    mLastRecurrence = new Recurrence( *incidence->recurrence() );
+//    Q_ASSERT( *mLastRecurrence == *incidence->recurrence() );
+//    KDateTime startDt = currentStartDateTime();
+//    startDt.setDateOnly( mUi->mWholeDayCheck->isChecked() && mUi->mStartCheck->isChecked() );
 
-    const int index = RecurrencePresets::presetIndex( *mLastRecurrence, startDt );
-    if ( index == -1 ) { // Custom recurrence
-      mUi->mRecurrenceCombo->blockSignals( true );
-      mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
-      mUi->mRecurrenceCombo->blockSignals( false );
-    } else {
-      mUi->mRecurrenceCombo->blockSignals( true );
-      // Add one to cope with the "no recurrence" option in the combo, which is
-      // not in the presets.
-      mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
-      mUi->mRecurrenceEditButton->setEnabled( true );
-      mUi->mRecurrenceCombo->blockSignals( false );
-    }
+//    const int index = RecurrencePresets::presetIndex( *mLastRecurrence, startDt );
+//    if ( index == -1 ) { // Custom recurrence
+//      mUi->mRecurrenceCombo->blockSignals( true );
+//      mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
+//      mUi->mRecurrenceCombo->blockSignals( false );
+//    } else {
+//      mUi->mRecurrenceCombo->blockSignals( true );
+//      // Add one to cope with the "no recurrence" option in the combo, which is
+//      // not in the presets.
+//      mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
+//      mUi->mRecurrenceEditButton->setEnabled( true );
+//      mUi->mRecurrenceCombo->blockSignals( false );
+//    }
 
-  } else {
-    mUi->mRecurrenceCombo->setCurrentIndex( 0 );
-  }
+//  } else {
+//    mUi->mRecurrenceCombo->setCurrentIndex( 0 );
+//  }
 
-  if ( incidence->isAlarmEnabled() ) {
-    if ( incidence->alarms().size() > 1 ) { // Must be custom
-      mUi->mAlarmCombo->blockSignals( true );
-      mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 );
-      mUi->mAlarmEditButton->setEnabled( true );
-      mUi->mAlarmCombo->blockSignals( false );
-    } else {
-      // Find out if the alarm is a custom one or one of the presets.
-      const int index = AlarmPresets::presetIndex( *incidence->alarms().first() );
-      if ( index == -1 ) {
-        mUi->mAlarmCombo->blockSignals( true );
-        mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 );
-        mUi->mAlarmCombo->blockSignals( false );
-      } else {
-        // Add one to cope with the "no alarm" option in the combo, which is not
-        // in the presets.
-        mUi->mAlarmCombo->blockSignals( true );
-        mUi->mAlarmCombo->setCurrentIndex( index + 1 );
-        mUi->mAlarmCombo->blockSignals( false );
-        mUi->mAlarmEditButton->setEnabled( true );
-      }
+//  if ( incidence->isAlarmEnabled() ) {
+//    if ( incidence->alarms().size() > 1 ) { // Must be custom
+//      mUi->mAlarmCombo->blockSignals( true );
+//      mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 );
+//      mUi->mAlarmEditButton->setEnabled( true );
+//      mUi->mAlarmCombo->blockSignals( false );
+//    } else {
+//      // Find out if the alarm is a custom one or one of the presets.
+//      const int index = AlarmPresets::presetIndex( *incidence->alarms().first() );
+//      if ( index == -1 ) {
+//        mUi->mAlarmCombo->blockSignals( true );
+//        mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 );
+//        mUi->mAlarmCombo->blockSignals( false );
+//      } else {
+//        // Add one to cope with the "no alarm" option in the combo, which is not
+//        // in the presets.
+//        mUi->mAlarmCombo->blockSignals( true );
+//        mUi->mAlarmCombo->setCurrentIndex( index + 1 );
+//        mUi->mAlarmCombo->blockSignals( false );
+//        mUi->mAlarmEditButton->setEnabled( true );
+//      }
 
-      mLastAlarms.setAutoDelete( true );
-      mLastAlarms.clearAll();
-      for ( int i = 0; i < incidence->alarms().size(); ++i )
-        mLastAlarms.append( new Alarm( *incidence->alarms().at( i ) ) );
+//      mLastAlarms.setAutoDelete( true );
+//      mLastAlarms.clearAll();
+//      for ( int i = 0; i < incidence->alarms().size(); ++i )
+//        mLastAlarms.append( new Alarm( *incidence->alarms().at( i ) ) );
 
-    }
-  } else {
-    mUi->mAlarmCombo->setCurrentIndex( 0 );
-  }
+//    }
+//  } else {
+//    mUi->mAlarmCombo->setCurrentIndex( 0 );
+//  }
 
   mWasDirty = false;
 }
@@ -193,13 +195,13 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
   else
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
 
-  if ( mUi->mRecurrenceCombo->currentIndex() > 0 ) {
-    Q_ASSERT( mLastRecurrence );
-    *incidence->recurrence() = *mLastRecurrence;
-    Q_ASSERT( *mLastRecurrence == *incidence->recurrence() );
-  } else {
-    incidence->recurrence()->unsetRecurs();
-  }
+//  if ( mUi->mRecurrenceCombo->currentIndex() > 0 ) {
+//    Q_ASSERT( mLastRecurrence );
+//    *incidence->recurrence() = *mLastRecurrence;
+//    Q_ASSERT( *mLastRecurrence == *incidence->recurrence() );
+//  } else {
+//    incidence->recurrence()->unsetRecurs();
+//  }
 
   incidence->clearAlarms();
   if ( mUi->mAlarmCombo->currentIndex() > 0 ) {
@@ -216,51 +218,51 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceDateTimeEditor::isDirty() const
 {
-  // When no alarm was set on the loaded incidence, the last alarms array should
-  // be empty, otherwise the alarms have changed.
-  if ( !mLoadedIncidence->isAlarmEnabled() && mUi->mAlarmCombo->currentIndex() > 0 )
-    return true;
+//  // When no alarm was set on the loaded incidence, the last alarms array should
+//  // be empty, otherwise the alarms have changed.
+//  if ( !mLoadedIncidence->isAlarmEnabled() && mUi->mAlarmCombo->currentIndex() > 0 )
+//    return true;
 
-  if ( mLoadedIncidence->isAlarmEnabled() && mUi->mAlarmCombo->currentIndex() == 0 )
-    return true;
+//  if ( mLoadedIncidence->isAlarmEnabled() && mUi->mAlarmCombo->currentIndex() == 0 )
+//    return true;
 
-  if ( mLoadedIncidence->isAlarmEnabled() ) {
-    const Alarm::List alarms = mLoadedIncidence->alarms();
+//  if ( mLoadedIncidence->isAlarmEnabled() ) {
+//    const Alarm::List alarms = mLoadedIncidence->alarms();
 
-    if ( alarms.size() != mLastAlarms.size() )
-      return true; // The number of alarms has changed
+//    if ( alarms.size() != mLastAlarms.size() )
+//      return true; // The number of alarms has changed
 
-    // Note: Not the most efficient algorithm but I'm assuming that we're only
-    //       dealing with a couple, at most tens of alarms.
-    for ( int i = 0; i < alarms.size(); ++i ) {
-      bool found = false;
-      const Alarm *curAllarm = alarms.at( i );
-      foreach ( Alarm *alarm, mLastAlarms ) {
-        if ( *curAllarm == *alarm ) {
-          found  = true;
-          break;
-        }
-      }
+//    // Note: Not the most efficient algorithm but I'm assuming that we're only
+//    //       dealing with a couple, at most tens of alarms.
+//    for ( int i = 0; i < alarms.size(); ++i ) {
+//      bool found = false;
+//      const Alarm *curAllarm = alarms.at( i );
+//      foreach ( Alarm *alarm, mLastAlarms ) {
+//        if ( *curAllarm == *alarm ) {
+//          found  = true;
+//          break;
+//        }
+//      }
 
-      if ( !found ) {
-        // There was an alarm in the mLoadedIncidence->alarms() that wasn't found
-        // in mLastAlarms. This means that one of the alarms was modified.
-        return true;
-      }
-    }
-  }
+//      if ( !found ) {
+//        // There was an alarm in the mLoadedIncidence->alarms() that wasn't found
+//        // in mLastAlarms. This means that one of the alarms was modified.
+//        return true;
+//      }
+//    }
+//  }
 
-  // Check if a recurrence was set on a non recurring event
-  if ( !mLoadedIncidence->recurs() && mLastRecurrence )
-    return true;
+//  // Check if a recurrence was set on a non recurring event
+//  if ( !mLoadedIncidence->recurs() && mLastRecurrence )
+//    return true;
 
-  // Check if the recurrence is removed
-  if ( mLoadedIncidence->recurs() && !mLastRecurrence )
-    return true;
+//  // Check if the recurrence is removed
+//  if ( mLoadedIncidence->recurs() && !mLastRecurrence )
+//    return true;
 
-  // Check if the recurrence has changed.
-  if ( mLastRecurrence && *mLastRecurrence != *mLoadedIncidence->recurrence() )
-    return true;
+//  // Check if the recurrence has changed.
+//  if ( mLastRecurrence && *mLastRecurrence != *mLoadedIncidence->recurrence() )
+//    return true;
 
   if ( KCal::Todo::ConstPtr todo = IncidenceDateTimeEditor::incidence<Todo>() ) {
     return isDirty( todo );
@@ -292,13 +294,13 @@ void IncidenceDateTimeEditor::editAlarm()
       mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 ); // Custom
     else { // Only one alarm
       const int index = AlarmPresets::presetIndex( *mLastAlarms.first() );
-      if ( index == -1 )
-        mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
-      else {
+      if ( index == -1 ) {
+//        mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
+      } else {
         // Add one to cope with the "no alarm" option in the combo, which is not
         // in the presets.
-        mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
-        mUi->mRecurrenceEditButton->setEnabled( true );
+//        mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
+//        mUi->mRecurrenceEditButton->setEnabled( true );
       }
     }
 
@@ -311,7 +313,7 @@ void IncidenceDateTimeEditor::editAlarm()
 
 void IncidenceDateTimeEditor::editRecurrence()
 {
-#ifndef KDEPIM_MOBILE_UI
+#if 0 //ifndef KDEPIM_MOBILE_UI
   Q_ASSERT( mLastRecurrence );
   Q_ASSERT( mUi->mRecurrenceCombo->currentIndex() ); // a preset or custom should be selected
 
@@ -415,36 +417,36 @@ void IncidenceDateTimeEditor::startSpecChanged()
 
 void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
 {
-  mUi->mRecurrenceEditButton->setEnabled( mUi->mRecurrenceCombo->currentIndex() > 0 );
+//  mUi->mRecurrenceEditButton->setEnabled( mUi->mRecurrenceCombo->currentIndex() > 0 );
 
-  if ( index == 0 ) { // No recurrence
-    delete mLastRecurrence;
-    mLastRecurrence = 0;
-    checkDirtyStatus();
-    return;
-  }
+//  if ( index == 0 ) { // No recurrence
+//    delete mLastRecurrence;
+//    mLastRecurrence = 0;
+//    checkDirtyStatus();
+//    return;
+//  }
 
-  QScopedPointer<Recurrence> rec;
-  KDateTime start = currentStartDateTime();
-  start.setDateOnly( mUi->mWholeDayCheck->isChecked() && mUi->mStartCheck->isChecked() );
+//  QScopedPointer<Recurrence> rec;
+//  KDateTime start = currentStartDateTime();
+//  start.setDateOnly( mUi->mWholeDayCheck->isChecked() && mUi->mStartCheck->isChecked() );
 
-  if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
-    // Configure a custom recurrence, use by default the Weekly recurrence preset
-    rec.reset( RecurrencePresets::preset( i18nc( "@item:inlistbox", "Weekly" ), start ) );
-    QScopedPointer<IncidenceRecurrenceDialog> dialog( new IncidenceRecurrenceDialog );
-    dialog->load( *rec, currentStartDateTime().dateTime(), currentEndDateTime().dateTime() );
-    if ( dialog->exec() == QDialog::Accepted )
-      dialog->save( mLastRecurrence );
-    else {
-      delete mLastRecurrence;
-      mLastRecurrence = 0;
-      mUi->mRecurrenceCombo->setCurrentIndex( 0 );
-    }
-  } else {
-    // Load a preset
-    delete mLastRecurrence;
-    mLastRecurrence = RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start );
-  }
+//  if ( index == (mUi->mRecurrenceCombo->count() - 1) ) {
+//    // Configure a custom recurrence, use by default the Weekly recurrence preset
+//    rec.reset( RecurrencePresets::preset( i18nc( "@item:inlistbox", "Weekly" ), start ) );
+//    QScopedPointer<IncidenceRecurrenceDialog> dialog( new IncidenceRecurrenceDialog );
+//    dialog->load( *rec, currentStartDateTime().dateTime(), currentEndDateTime().dateTime() );
+//    if ( dialog->exec() == QDialog::Accepted )
+//      dialog->save( mLastRecurrence );
+//    else {
+//      delete mLastRecurrence;
+//      mLastRecurrence = 0;
+//      mUi->mRecurrenceCombo->setCurrentIndex( 0 );
+//    }
+//  } else {
+//    // Load a preset
+//    delete mLastRecurrence;
+//    mLastRecurrence = RecurrencePresets::preset( mUi->mRecurrenceCombo->currentText(), start );
+//  }
 
   checkDirtyStatus();
 }
@@ -468,11 +470,11 @@ void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr
 #ifdef KDEPIM_MOBILE_UI
   Q_UNUSED( incidence );
 #else
-  if ( incidence->recurs() ) {
-    mUi->mRecurrenceLabel->setText( IncidenceFormatter::recurrenceString( const_cast<Incidence *>( incidence.get() ) ) );
-  } else {
-    mUi->mRecurrenceLabel->setText( QString() );
-  }
+//  if ( incidence->recurs() ) {
+//    mUi->mRecurrenceLabel->setText( IncidenceFormatter::recurrenceString( const_cast<Incidence *>( incidence.get() ) ) );
+//  } else {
+//    mUi->mRecurrenceLabel->setText( QString() );
+//  }
 #endif
 }
 
@@ -681,14 +683,14 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
 
   switch( event->transparency() ) {
   case Event::Transparent:
-#ifdef KDEPIM_MOBILE_UI
+#if 0 //def KDEPIM_MOBILE_UI
     mUi->mFreeRadio->setChecked( true );
 #else
     mUi->mFreeBusyCombo->setCurrentIndex( 1 );
 #endif
     break;
   case Event::Opaque:
-#ifdef KDEPIM_MOBILE_UI
+#if 0 //def KDEPIM_MOBILE_UI
     mUi->mBusyRadio->setChecked( true );
 #else
     mUi->mFreeBusyCombo->setCurrentIndex( 0 );
@@ -718,7 +720,7 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   mUi->mTimeZoneComboEnd->setEnabled( todo->hasDueDate() );
 
   // These fields where not enabled in the old code either:
-#ifdef KDEPIM_MOBILE_UI
+#if 0 //def KDEPIM_MOBILE_UI
   mUi->mFreeRadio->setVisible( false );
   mUi->mBusyRadio->setVisible( false );
 #else
@@ -794,7 +796,7 @@ void IncidenceDateTimeEditor::save( KCal::Event::Ptr event )
 
   // Free == Event::Transparant
   // Busy == Event::Opaque
-#ifdef KDEPIM_MOBILE_UI
+#if 0 //def KDEPIM_MOBILE_UI
   event->setTransparency( mUi->mFreeRadio->isChecked() ?
                           KCal::Event::Transparent : KCal::Event::Opaque );
 #else

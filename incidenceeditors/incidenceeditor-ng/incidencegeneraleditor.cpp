@@ -19,6 +19,8 @@
 
 #include "incidencegeneraleditor.h"
 
+#include <QtCore/QDebug>
+
 #ifdef KDEPIM_MOBILE_UI
 #include <QtGui/QTreeWidgetItem>
 #include <KDialog>
@@ -39,7 +41,9 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( Ui::EventOrTodoDestop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
+  qDebug() << this << mUi->mSecrecyCombo->count();
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
+  qDebug() << this << mUi->mSecrecyCombo->count();
 
 #ifdef KDEPIM_MOBILE_UI
 //  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
@@ -65,6 +69,8 @@ void IncidenceGeneralEditor::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
+    qDebug() << this << mUi->mSecrecyCombo->count();
+    Q_ASSERT( mUi->mSecrecyCombo->count() == KCal::Incidence::secrecyList().count() );
     mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
     mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
     mUi->mLocationEdit->setText( mLoadedIncidence->location() );
@@ -102,14 +108,16 @@ bool IncidenceGeneralEditor::isDirty() const
 {
 #ifndef KDEPIM_MOBILE_UI
   if ( mLoadedIncidence ) {
-    if ( mLoadedIncidence->secrecy() != mUi->mSecrecyCombo->currentIndex() )
+    if ( mLoadedIncidence->secrecy() != mUi->mSecrecyCombo->currentIndex() ) {
       return true;
+    }
   } else {
     if ( mUi->mSecrecyCombo->currentIndex() != 0 )
       return true;
   }
 #endif
 
+  qDebug() << "LOADED INCIDENCE" << mLoadedIncidence;
   if ( mLoadedIncidence ) {
     return ( mUi->mSummaryEdit->text() != mLoadedIncidence->summary() )
       || ( mUi->mLocationEdit->text() != mLoadedIncidence->location() )

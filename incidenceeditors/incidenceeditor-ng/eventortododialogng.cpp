@@ -11,6 +11,7 @@
 
 #include "combinedincidenceeditor.h"
 #include "editoritemmanager.h"
+#include "incidencedatetimeeditor.h"
 #include "incidencegeneraleditor.h"
 #include "ui_eventortododialog.h"
 
@@ -61,8 +62,13 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
 
+  // Now instantiate the logic of the dialog. These editors update the ui, validate
+  // fields and load/store incidences in the ui.
   IncidenceGeneralEditor *ieGeneral = new IncidenceGeneralEditor( mUi );
   mEditor->combine( ieGeneral );
+
+  IncidenceDateTimeEditor *ieDateTime = new IncidenceDateTimeEditor( mUi );
+  mEditor->combine( ieDateTime );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
              SLOT(updateButtonStatus(bool)) );

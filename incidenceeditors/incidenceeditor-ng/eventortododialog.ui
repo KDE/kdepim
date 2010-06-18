@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>605</width>
-    <height>482</height>
+    <width>609</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="4">
+   <item row="0" column="1">
     <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
    </item>
    <item row="1" column="0">
@@ -58,7 +58,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" colspan="4">
+   <item row="1" column="1">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -90,7 +90,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="4">
+   <item row="2" column="1">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -103,13 +103,6 @@
      </property>
      <property name="whatsThis">
       <string extracomment="@info:whatsthis">Sets where the event or to-do will take place.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" rowspan="3" colspan="5">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -127,33 +120,82 @@
     </widget>
    </item>
    <item row="5" column="1" rowspan="2">
-    <widget class="QCheckBox" name="mWholeDayCheck">
-     <property name="whatsThis">
-      <string>Set if this to-do's start and due dates have times associated with them.</string>
-     </property>
-     <property name="text">
-      <string>Whole day</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2">
-    <widget class="QLabel" name="mFreeBusyLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Show time as:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QCheckBox" name="mWholeDayCheck">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="whatsThis">
+        <string>Set if this to-do's start and due dates have times associated with them.</string>
+       </property>
+       <property name="text">
+        <string>Whole day</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>30</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="mFreeBusyLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Show time as:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="mFreeBusyCombo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string extracomment="@info:tooltip">Set this event as Busy or Free time</string>
+       </property>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox show event as busy time">Busy</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="@item:inlistbox show event as free time">Free</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item row="7" column="0">
     <widget class="QLabel" name="mStartLabel">
@@ -171,8 +213,15 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="4">
+   <item row="7" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QCheckBox" name="mStartCheck">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="KPIM::KDateEdit" name="mStartDateEdit">
        <property name="sizePolicy">
@@ -276,8 +325,15 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1" colspan="4">
+   <item row="8" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QCheckBox" name="mEndCheck">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="KPIM::KDateEdit" name="mEndDateEdit">
        <property name="sizePolicy">
@@ -338,14 +394,14 @@
      </item>
     </layout>
    </item>
-   <item row="9" column="0" colspan="5">
+   <item row="9" column="0" colspan="2">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="10" column="0" colspan="5">
+   <item row="10" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
       <number>0</number>
@@ -512,7 +568,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>237</width>
+           <width>241</width>
            <height>20</height>
           </size>
          </property>
@@ -528,8 +584,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>575</width>
-            <height>183</height>
+            <width>579</width>
+            <height>200</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_13">
@@ -876,7 +932,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>137</width>
+           <width>141</width>
            <height>22</height>
           </size>
          </property>
@@ -907,7 +963,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>88</width>
-           <height>138</height>
+           <height>155</height>
           </size>
          </property>
         </spacer>
@@ -1379,7 +1435,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>440</width>
+           <width>444</width>
            <height>20</height>
           </size>
          </property>
@@ -1430,27 +1486,11 @@
      </widget>
     </widget>
    </item>
-   <item row="6" column="3" colspan="2">
-    <widget class="QComboBox" name="mFreeBusyCombo">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="3" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <property name="toolTip">
-      <string extracomment="@info:tooltip">Set this event as Busy or Free time</string>
-     </property>
-     <item>
-      <property name="text">
-       <string extracomment="@item:inlistbox show event as busy time">Busy</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string extracomment="@item:inlistbox show event as free time">Free</string>
-      </property>
-     </item>
     </widget>
    </item>
   </layout>
