@@ -179,11 +179,7 @@ void EditorContactGroup::Private::completed( const QModelIndex &index )
       recipient->mItem = item;
 
       const KABC::Addressee contact = item.payload<KABC::Addressee>();
-      kDebug() << "contact: " << contact.assembledName() << contact.preferredEmail()
-               << contact.fullEmail( contact.preferredEmail() );
-      kDebug() << recipient->mInput->text();
       recipient->mInput->setText( contact.fullEmail( contact.preferredEmail() ) );
-      kDebug() << recipient->mInput->text();
 
       // if the text is edited afterwards, this might no longer be a contact reference
       QObject::connect( recipient->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
