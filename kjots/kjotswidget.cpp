@@ -578,7 +578,6 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
       kError() << "exit code: " << proc.exitCode();
       kError() << "stdout: " << proc.readAllStandardOutput();
       kError() << "stderr: " << proc.readAllStandardError();
-      exit( 42 );
     }
   }
 }
