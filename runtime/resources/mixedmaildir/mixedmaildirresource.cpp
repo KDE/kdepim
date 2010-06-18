@@ -48,6 +48,9 @@
 
 #include <kmime/kmime_message.h>
 
+#include <Nepomuk/Tag>
+#include <Nepomuk/Resource>
+
 #include <KDebug>
 #include <KLocale>
 #include <KWindowSystem>
@@ -76,8 +79,12 @@ MixedMaildirResource::MixedMaildirResource( const QString &id )
   setHierarchicalRemoteIdentifiersEnabled( true );
 
   if ( ensureSaneConfiguration() ) {
+    const bool changeName = name().isEmpty() || name() == identifier() ||
+                            name() == mStore->topLevelCollection().name();
     mStore->setPath( Settings::self()->path() );
-    setName( mStore->topLevelCollection().name() );
+    if ( changeName ) {
+      setName( mStore->topLevelCollection().name() );
+    }
   }
 }
 
@@ -99,15 +106,31 @@ void MixedMaildirResource::configure( WId windowId )
   if ( windowId ) {
     KWindowSystem::setMainWindow( &dlg, windowId );
   }
+
+  bool fullSync = false;
+
   if ( dlg.exec() ) {
+    const bool changeName = name().isEmpty() || name() == identifier() ||
+                            name() == mStore->topLevelCollection().name();
+
+    const QString oldPath = mStore->path();
     mStore->setPath( Settings::self()->path() );
-    setName( mStore->topLevelCollection().name() );
+
+    fullSync = oldPath != mStore->path();
+
+    if ( changeName ) {
+      setName( mStore->topLevelCollection().name() );
+    }
     emit configurationDialogAccepted();
   } else {
     emit configurationDialogRejected();
   }
 
   if ( ensureDirExists() ) {
+    if ( fullSync ) {
+      mSynchronizedCollections.clear();
+      mPendingSynchronizeCollections.clear();
+    }
     synchronizeCollectionTree();
   }
 }
@@ -346,10 +369,38 @@ bool MixedMaildirResource::ensureSaneConfiguration()
   return true;
 }
 
+void MixedMaildirResource::checkForInvalidatedIndexCollections( KJob * job )
+{
+  // when operations invalidate the on-disk index, we need to make sure all index
+  // data has been transferred into Akonadi by synchronizing the collections
+  const QVariant var = job->property( "onDiskIndexInvalidated" );
+  if ( var.isValid() ) {
+    const Collection::List collections = var.value<Collection::List>();
+    kDebug( KDE_DEFAULT_DEBUG_AREA ) << "On disk index of" << collections.count()
+      << "collections invalidated after" << job->metaObject()->className();
+
+    Q_FOREACH( const Collection &collection, collections ) {
+      const Collection::Id id = collection.id();
+      if ( !mSynchronizedCollections.contains( id ) && !mPendingSynchronizeCollections.contains( id ) ) {
+        kDebug( KDE_DEFAULT_DEBUG_AREA ) << "Requesting sync of collection" << collection.name()
+          << ", id=" << collection.id();
+        mPendingSynchronizeCollections << id;
+        synchronizeCollection( id );
+      }
+    }
+  }
+}
+
 void MixedMaildirResource::reapplyConfiguration()
 {
   if ( ensureSaneConfiguration() && ensureDirExists() ) {
+    const QString oldPath = mStore->path();
     mStore->setPath( Settings::self()->path() );
+
+    if ( oldPath != mStore->path() ) {
+      mSynchronizedCollections.clear();
+      mPendingSynchronizeCollections.clear();
+    }
     synchronizeCollectionTree();
   }
 }
@@ -366,8 +417,13 @@ void MixedMaildirResource::retrieveCollectionsResult( KJob *job )
   FileStore::CollectionFetchJob *fetchJob = qobject_cast<FileStore::CollectionFetchJob*>( job );
   Q_ASSERT( fetchJob != 0 );
 
+  Collection topLevelCollection = mStore->topLevelCollection();
+  if ( !name().isEmpty() && name() != identifier() ) {
+    topLevelCollection.setName( name() );
+  }
+
   Collection::List collections;
-  collections << mStore->topLevelCollection();
+  collections << topLevelCollection;
   collections << fetchJob->collections();
   collectionsRetrieved( collections );
 }
@@ -384,7 +440,44 @@ void MixedMaildirResource::retrieveItemsResult( KJob *job )
   FileStore::ItemFetchJob *fetchJob = qobject_cast<FileStore::ItemFetchJob*>( job );
   Q_ASSERT( fetchJob != 0 );
 
-  itemsRetrieved( fetchJob->items() );
+  const Item::List items = fetchJob->items();
+
+  // if some items have tags, we need to complete the retrieval and schedule tagging
+  // to a later time so we can then fetch the items to get their Akonadi URLs
+  const QVariant var = fetchJob->property( "remoteIdToTagList" );
+  if ( var.isValid() ) {
+    const QHash<QString, QVariant> tagListHash = var.value< QHash<QString, QVariant> >();
+    if ( !tagListHash.isEmpty() ) {
+      kDebug() << tagListHash.count() << "of" << items.count()
+               << "items in collection" << fetchJob->collection().remoteId() << "have tags";
+
+      TagContextList taggedItems;
+      Q_FOREACH( const Item &item, items ) {
+        const QVariant tagListVar = tagListHash[ item.remoteId() ];
+        if ( tagListVar.isValid() ) {
+          const QStringList tagList = tagListVar.value<QStringList>();
+          if ( !tagListHash.isEmpty() ) {
+            TagContext tag;
+            tag.mItem = item;
+            tag.mTagList = tagList;
+
+            taggedItems << tag;
+          }
+        }
+      }
+
+      if ( !taggedItems.isEmpty() ) {
+        mTagContextByColId.insert( fetchJob->collection().id(), taggedItems );
+
+        scheduleCustomTask( this, "restoreTags", QVariant::fromValue<Collection>( fetchJob->collection() ) );
+      }
+    }
+  }
+
+  mSynchronizedCollections << fetchJob->collection().id();
+  mPendingSynchronizeCollections.remove( fetchJob->collection().id() );
+
+  itemsRetrieved( items );
 }
 
 void MixedMaildirResource::retrieveItemResult( KJob *job )
@@ -416,6 +509,8 @@ void MixedMaildirResource::itemAddedResult( KJob *job )
   Q_ASSERT( itemJob != 0 );
 
   changeCommitted( itemJob->item() );
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::itemChangedResult( KJob *job )
@@ -442,6 +537,8 @@ void MixedMaildirResource::itemChangedResult( KJob *job )
   if ( ok ) {
     scheduleCustomTask( this, "compactStore", QVariant() );
   }
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::itemMovedResult( KJob *job )
@@ -467,6 +564,8 @@ void MixedMaildirResource::itemMovedResult( KJob *job )
   if ( ok ) {
     scheduleCustomTask( this, "compactStore", QVariant() );
   }
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::itemRemovedResult( KJob *job )
@@ -492,6 +591,8 @@ void MixedMaildirResource::itemRemovedResult( KJob *job )
   if ( ok ) {
     scheduleCustomTask( this, "compactStore", QVariant() );
   }
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::collectionAddedResult( KJob *job )
@@ -507,6 +608,8 @@ void MixedMaildirResource::collectionAddedResult( KJob *job )
   Q_ASSERT( colJob != 0 );
 
   changeCommitted( colJob->collection() );
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::collectionChangedResult( KJob *job )
@@ -522,6 +625,8 @@ void MixedMaildirResource::collectionChangedResult( KJob *job )
   Q_ASSERT( colJob != 0 );
 
   changeCommitted( colJob->collection() );
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::collectionMovedResult( KJob *job )
@@ -537,6 +642,8 @@ void MixedMaildirResource::collectionMovedResult( KJob *job )
   Q_ASSERT( colJob != 0 );
 
   changeCommitted( colJob->collection() );
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::collectionRemovedResult( KJob *job )
@@ -552,6 +659,8 @@ void MixedMaildirResource::collectionRemovedResult( KJob *job )
   Q_ASSERT( colJob != 0 );
 
   changeCommitted( colJob->collection() );
+
+  checkForInvalidatedIndexCollections( job );
 }
 
 void MixedMaildirResource::compactStore( const QVariant &arg )
@@ -602,6 +711,77 @@ void MixedMaildirResource::compactStoreResult( KJob *job )
   }
 
   taskDone();
+
+  checkForInvalidatedIndexCollections( job );
+}
+
+void MixedMaildirResource::restoreTags( const QVariant &arg )
+{
+  if ( !arg.isValid() ) {
+    kError() << "Given variant is not valid";
+    cancelTask();
+    return;
+  }
+
+  const Collection collection = arg.value<Collection>();
+  if ( !collection.isValid() ) {
+    kError() << "Given variant is not valid";
+    cancelTask();
+    return;
+  }
+
+  const TagContextList taggedItems = mTagContextByColId[ collection.id() ];
+  mPendingTagContexts << taggedItems;
+
+  QMetaObject::invokeMethod( this, "processNextTagContext", Qt::QueuedConnection );
+  taskDone();
+}
+
+void MixedMaildirResource::processNextTagContext()
+{
+  kDebug() << mPendingTagContexts.count() << "items to go";
+  if ( mPendingTagContexts.isEmpty() ) {
+    return;
+  }
+
+  const TagContext tagContext = mPendingTagContexts.front();
+  mPendingTagContexts.pop_front();
+
+  ItemFetchJob *fetchJob = new ItemFetchJob( tagContext.mItem );
+  fetchJob->setProperty( "tagList", tagContext.mTagList );
+  connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( tagFetchJobResult( KJob* ) ) );
+}
+
+void MixedMaildirResource::tagFetchJobResult( KJob *job )
+{
+  if ( job->error() != 0 ) {
+    kError() << job->errorString();
+    processNextTagContext();
+    return;
+  }
+
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  Q_ASSERT( fetchJob != 0 );
+
+  Q_ASSERT( !fetchJob->items().isEmpty() );
+
+  const Item item = fetchJob->items()[ 0 ];
+  const QStringList tagList = job->property( "tagList" ).value<QStringList>();
+  kDebug() << "Tagging item" << item.url() << "with" << tagList;
+
+  QList<Nepomuk::Tag> nepomukTags;
+  Q_FOREACH( const QString &tag, tagList ) {
+    if ( tag.isEmpty() ) {
+      kWarning() << "TagList for item" << item.url() << "contains an empty tag";
+    } else {
+      nepomukTags << Nepomuk::Tag( tag );
+    }
+  }
+
+  Nepomuk::Resource nepomukResource( item.url() );
+  nepomukResource.setTags( nepomukTags );
+
+  processNextTagContext();
 }
 
 #include "mixedmaildirresource.moc"

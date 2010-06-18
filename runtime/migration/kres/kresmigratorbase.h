@@ -52,9 +52,6 @@ class KResMigratorBase : public KMigratorBase
     void migrationFailed( const QString &errorMsg, const Akonadi::AgentInstance &instance = Akonadi::AgentInstance() );
 
   protected:
-    void createKolabResource();
-
-  protected:
     QString mType;
     QString mBridgeType;
     QStringList mPendingBridgedResources;
@@ -62,6 +59,11 @@ class KResMigratorBase : public KMigratorBase
     bool mOmitClientBridge;
     KRES::Resource *mCurrentKResource;
     bool mBridgingInProgress;
+
+  protected:
+    void migrationCompleted( const Akonadi::AgentInstance &instance, const QString &kresId, const QString &kresName );
+
+    void createKolabResource( const QString &kresId, const QString &kresName );
 
   private slots:
     void resourceBridgeCreated( KJob *job );
