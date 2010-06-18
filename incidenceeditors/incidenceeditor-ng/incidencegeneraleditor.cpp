@@ -29,27 +29,21 @@
 #include "categoryhierarchyreader.h"
 #include "categoryselectdialog.h"
 #include "editorconfig.h"
-
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_iegeneralmobile.h"
-#else
-#include "ui_incidencegeneraleditor.h"
-#endif
+#include "ui_eventortododialog.h"
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
 
 
-IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
-  : IncidenceEditor( parent )
-  , mUi( new Ui::IncidenceGeneralEditor )
+IncidenceGeneralEditor::IncidenceGeneralEditor( Ui::EventOrTodoDestop *ui )
+  : IncidenceEditor( 0 )
+  , mUi( ui )
 {
-  mUi->setupUi( this );
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
 
 #ifdef KDEPIM_MOBILE_UI
-  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
-           SLOT(selectCategories()) );
+//  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
+//           SLOT(selectCategories()) );
 #else
   CategoryConfig cc( EditorConfig::instance()->config() );
   mUi->mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
@@ -170,7 +164,7 @@ void IncidenceGeneralEditor::setCategories( const QStringList &categories )
 {
   mSelectedCategories = categories;
 #ifdef KDEPIM_MOBILE_UI
-  mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
+//  mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
 #endif
   checkDirtyStatus();
 }

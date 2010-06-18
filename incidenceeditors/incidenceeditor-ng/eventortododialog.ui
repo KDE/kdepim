@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EventOrTodoDialog</class>
- <widget class="QWidget" name="EventOrTodoDialog">
+ <class>EventOrTodoDestop</class>
+ <widget class="QWidget" name="EventOrTodoDestop">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
-    <height>464</height>
+    <width>605</width>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="3">
+   <item row="0" column="1" colspan="4">
     <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
    </item>
    <item row="1" column="0">
@@ -58,7 +58,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" colspan="3">
+   <item row="1" column="1" colspan="4">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -90,7 +90,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="3">
+   <item row="2" column="1" colspan="4">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -106,7 +106,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" rowspan="3" colspan="4">
+   <item row="3" column="0" rowspan="3" colspan="5">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -155,29 +155,6 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="3" rowspan="3">
-    <widget class="QComboBox" name="mFreeBusyCombo">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string extracomment="@info:tooltip">Set this event as Busy or Free time</string>
-     </property>
-     <item>
-      <property name="text">
-       <string extracomment="@item:inlistbox show event as busy time">Busy</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string extracomment="@item:inlistbox show event as free time">Free</string>
-      </property>
-     </item>
-    </widget>
-   </item>
    <item row="7" column="0">
     <widget class="QLabel" name="mStartLabel">
      <property name="sizePolicy">
@@ -194,7 +171,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="3">
+   <item row="7" column="1" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="KPIM::KDateEdit" name="mStartDateEdit">
@@ -299,7 +276,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1" colspan="3">
+   <item row="8" column="1" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="KPIM::KDateEdit" name="mEndDateEdit">
@@ -361,17 +338,17 @@
      </item>
     </layout>
    </item>
-   <item row="9" column="0" colspan="4">
+   <item row="9" column="0" colspan="5">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="10" column="0" colspan="4">
+   <item row="10" column="0" colspan="5">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -535,7 +512,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>235</width>
+           <width>237</width>
            <height>20</height>
           </size>
          </property>
@@ -551,8 +528,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>573</width>
-            <height>165</height>
+            <width>575</width>
+            <height>183</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_13">
@@ -899,7 +876,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>135</width>
+           <width>137</width>
            <height>22</height>
           </size>
          </property>
@@ -930,7 +907,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>88</width>
-           <height>120</height>
+           <height>138</height>
           </size>
          </property>
         </spacer>
@@ -1402,7 +1379,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>438</width>
+           <width>440</width>
            <height>20</height>
           </size>
          </property>
@@ -1451,6 +1428,29 @@
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item row="6" column="3" colspan="2">
+    <widget class="QComboBox" name="mFreeBusyCombo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string extracomment="@info:tooltip">Set this event as Busy or Free time</string>
+     </property>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox show event as busy time">Busy</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox show event as free time">Free</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>
@@ -1516,7 +1516,7 @@
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>149</x>
+     <x>131</x>
      <y>289</y>
     </hint>
     <hint type="destinationlabel">

@@ -11,6 +11,7 @@
 
 #include "combinedincidenceeditor.h"
 #include "editoritemmanager.h"
+#include "incidencegeneraleditor.h"
 #include "ui_eventortododialog.h"
 
 using namespace IncidenceEditorsNG;
@@ -21,7 +22,7 @@ class EventOrTodoDialogNGPrivate : public Akonadi::ItemEditorUi
   Q_DECLARE_PUBLIC( EventOrTodoDialogNG )
 
 public:
-  Ui::EventOrTodoDialog *mUi;
+  Ui::EventOrTodoDestop *mUi;
   Akonadi::CollectionComboBox *mCalSelector;
 
   Akonadi::EditorItemManager *mItemManager;
@@ -47,7 +48,7 @@ public:
 
 EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq )
   : q_ptr( qq )
-  , mUi( new Ui::EventOrTodoDialog )
+  , mUi( new Ui::EventOrTodoDestop )
   , mCalSelector( new Akonadi::CollectionComboBox )
   , mItemManager( new Akonadi::EditorItemManager( this ) )
   , mEditor( new CombinedIncidenceEditor )
@@ -59,6 +60,9 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   layout->addWidget( mCalSelector );
 
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+
+  IncidenceGeneralEditor *ieGeneral = new IncidenceGeneralEditor( mUi );
+  mEditor->combine( ieGeneral );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
              SLOT(updateButtonStatus(bool)) );
