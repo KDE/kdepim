@@ -60,8 +60,6 @@ kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
   eventortododialog.ui
 
   attachmenteditdialog.ui
-  incidencedatetime.ui
-  incidencedescription.ui
   incidenceattachmenteditor.ui
   incidencerecurrenceeditor.ui
 )
