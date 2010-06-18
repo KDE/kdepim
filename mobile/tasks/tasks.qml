@@ -128,13 +128,13 @@ KPIM.MainView {
                    Text {
                      anchors.top: parent.top
                      anchors.left: parent.left
-                     text: KDE.i18na( "Task: %1", [model.summary] )
+                     text: KDE.i18n( "Task: %1", model.summary )
                      font.bold: true
                    },
                    Text {
                      anchors.top: parent.top
                      anchors.right: parent.right
-                     text: KDE.i18na( "%1%", [model.percentComplete] )
+                     text: KDE.i18n( "%1%", model.percentComplete )
                    }
                  ]
                  detailsContent: [
@@ -147,19 +147,19 @@ KPIM.MainView {
                           id: summaryLabel
                           anchors.top: parent.top
                           anchors.left: parent.left
-                          text: KDE.i18na( "Task: %1",  [model.summary] )
+                          text: KDE.i18n( "Task: %1",  model.summary )
                           font.bold: true
                           color: palette.highlightedText
                         }
                         Text {
                           anchors.top: parent.top
                           anchors.right: parent.right
-                          text: KDE.i18na( "%1%", [model.percentComplete] )
+                          text: KDE.i18n( "%1%", model.percentComplete )
                           color: palette.highlightedText
                         }
                       }
                       Text {
-                        text: KDE.i18na( "Details: %1", [model.description] )
+                        text: KDE.i18n( "Details: %1", model.description )
                         color: palette.highlightedText
                       }
                     }

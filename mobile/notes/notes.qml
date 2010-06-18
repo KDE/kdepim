@@ -117,7 +117,7 @@ KPIM.MainView {
                  summaryContent: [
                    Text {
                      anchors.fill: parent
-                     text: KDE.i18na( "Title: %1", [model.title] )
+                     text: KDE.i18n( "Title: %1", model.title )
                      font.bold: true
                    }
                  ]
@@ -125,11 +125,11 @@ KPIM.MainView {
                   Column {
                     anchors.fill: parent
                     Text {
-                      text: KDE.i18na( "Title: %1", [model.title] )
+                      text: KDE.i18n( "Title: %1", model.title )
                       color: palette.highlightedText
                     }
                     Text {
-                      text: KDE.i18na( "Content: %1", [model.plainContent] )
+                      text: KDE.i18n( "Content: %1", model.plainContent )
                       color: palette.highlightedText
                     }
                   }
