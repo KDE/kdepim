@@ -68,13 +68,13 @@
     <widget class="QLineEdit" name="phone1"/>
    </item>
    <item row="3" column="2">
-    <widget class="QComboBox" name="phone1Type"/>
+    <widget class="PhoneTypeCombo" name="phone1Type"/>
    </item>
    <item row="4" column="1">
     <widget class="QLineEdit" name="phone2"/>
    </item>
    <item row="4" column="2">
-    <widget class="QComboBox" name="phone2Type"/>
+    <widget class="PhoneTypeCombo" name="phone2Type"/>
    </item>
    <item row="4" column="3">
     <widget class="QPushButton" name="addPhoneButton">
@@ -100,6 +100,11 @@
    <class>Akonadi::CollectionComboBox</class>
    <extends>QComboBox</extends>
    <header location="global">akonadi/collectioncombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PhoneTypeCombo</class>
+   <extends>QComboBox</extends>
+   <header>phonetypecombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

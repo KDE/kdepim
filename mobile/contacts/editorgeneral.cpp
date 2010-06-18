@@ -26,30 +26,19 @@
 #include <KABC/Addressee>
 #include <KABC/PhoneNumber>
 
-static void fillPhoneTypeCombo( QComboBox *combo )
-{
-  static KABC::PhoneNumber::TypeFlag usedTypes[] =
-    { KABC::PhoneNumber::Pref, KABC::PhoneNumber::Home, KABC::PhoneNumber::Work, KABC::PhoneNumber::Cell };
-
-  for ( uint i = 0; i < sizeof( usedTypes ) / sizeof( KABC::PhoneNumber::TypeFlag ); ++i ) {
-    combo->addItem( KABC::PhoneNumber::typeLabel( usedTypes[ i ] ), QVariant::fromValue<int>( usedTypes[ i ] ) );
-  }
-}
-
 class PhoneWidgets
 {
   public:
-    PhoneWidgets( QLineEdit *input, QComboBox *type )
+    PhoneWidgets( QLineEdit *input, PhoneTypeCombo *type )
       : mInput( input ), mType( type )
     {
-      fillPhoneTypeCombo( mType );
     }
 
 
   public:
     QString mId;
     QLineEdit *mInput;
-    QComboBox *mType;
+    PhoneTypeCombo *mType;
 };
 
 class EditorGeneral::Private
@@ -68,8 +57,8 @@ class EditorGeneral::Private
       mLastEmailRow = 2; // third row
 
       mPhoneWidgets << new PhoneWidgets( mUi.phone1, mUi.phone1Type );
+      mUi.phone1Type->setType( KABC::PhoneNumber::Pref );
       mPhoneWidgets << new PhoneWidgets( mUi.phone2, mUi.phone2Type );
-      mUi.phone2Type->setCurrentIndex( 1 );
       mLastPhoneRow = 4; // fifth row
 
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
@@ -195,7 +184,7 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
   for ( ; mPhoneWidgets.count() < newRowCount; ++row, ++mLastPhoneRow ) {
     QLineEdit *lineEdit = new QLineEdit( q );
     mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
-    QComboBox *combo = new QComboBox( q );
+    PhoneTypeCombo *combo = new PhoneTypeCombo( q );
     mUi.gridLayout->addWidget( combo, row, 2, 1, 1 );
     mPhoneWidgets << new PhoneWidgets( lineEdit, combo );
   }

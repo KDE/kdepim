@@ -27,6 +27,7 @@ set(kab_mobile_srcs
   editormore.cpp
   locationmodel.cpp
   namepartseditwidget.cpp
+  phonetypecombo.cpp
 )
 
 kde4_add_ui_files(kab_mobile_srcs
