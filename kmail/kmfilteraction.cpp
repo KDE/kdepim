@@ -306,6 +306,7 @@ QWidget* KMFilterActionWithFolder::createParamWidget( QWidget* parent ) const
 {
   FolderRequester *req = new FolderRequester( parent );
   req->setFolderTree( kmkernel->getKMMainWidget()->mainFolderView() );
+  req->setShowOutbox( false );
   setParamWidgetValue( req );
   return req;
 }
