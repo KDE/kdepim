@@ -231,8 +231,6 @@ class AgendaItem : public QWidget, public CellItem
 
     int mCellXLeft, mCellXRight;
     int mCellYTop, mCellYBottom;
-    int mSubCell;   // subcell number of this item
-    int mSubCells;  // Total number of subcells in cell of this item
 
     EventView *mEventView;
     Akonadi::Calendar *mCalendar;
