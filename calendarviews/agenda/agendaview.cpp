@@ -827,7 +827,13 @@ void AgendaView::updateTimeBarWidth()
 
 void AgendaView::updateEventDates( AgendaItem *item )
 {
-  kDebug() << item->text();
+  kDebug() << "KOAgendaView::updateEventDates(): " << item->text()
+           << "; item->cellXLeft(): " << item->cellXLeft()
+           << "; item->cellYTop(): " << item->cellYTop()
+           << "; item->lastMultiItem(): " << item->lastMultiItem()
+           << "; item->itemPos(): " << item->itemPos()
+           << "; item->itemCount(): " << item->itemCount()
+           << endl;
 
   KDateTime startDt, endDt;
 
@@ -1339,7 +1345,7 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
     if ( endY < startY ) {
       endY = startY;
     }
-    d->mAgenda->insertItem( aitem, columnDate, curCol, startY, endY );
+    d->mAgenda->insertItem( aitem, columnDate, curCol, startY, endY, 1, 1 );
     if ( startY < d->mMinY[curCol] ) {
       d->mMinY[curCol] = startY;
     }

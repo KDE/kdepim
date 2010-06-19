@@ -1036,7 +1036,8 @@ void Agenda::performItemAction( const QPoint &pos )
               newFirst->move( cpos.x(), cpos.y() );
             } else {
               newFirst = insertItem( moveItem->incidence(), moveItem->itemDate(),
-                                     moveItem->cellXLeft() - 1, rows() + newY, rows() - 1 ) ;
+                                     moveItem->cellXLeft() - 1, rows() + newY, rows() - 1,
+                                     moveItem->itemPos(), moveItem->itemCount() ) ;
             }
             if ( newFirst ) {
               newFirst->show();
@@ -1086,7 +1087,8 @@ void Agenda::performItemAction( const QPoint &pos )
               newLast->move( cpos.x(), cpos.y() );
             } else {
               newLast = insertItem( moveItem->incidence(), moveItem->itemDate(),
-                                    moveItem->cellXLeft() + 1, 0, newY - rows() - 1 ) ;
+                                    moveItem->cellXLeft() + 1, 0, newY - rows() - 1,
+                                    moveItem->itemPos(), moveItem->itemCount() ) ;
             }
             moveItem->appendMoveItem( newLast );
             newLast->show();
@@ -1687,7 +1689,7 @@ void Agenda::setStartTime( const QTime &startHour )
   Insert AgendaItem into agenda.
 */
 AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
-                                int X, int YTop, int YBottom )
+                                int X, int YTop, int YBottom, int itemPos, int itemCount )
 {
   if ( d->mAllDayMode ) {
     kDebug() << "using this in all-day mode is illegal.";
@@ -1696,7 +1698,9 @@ AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
 
   d->mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence, qd, this );
+  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence,
+                                           itemPos, itemCount, qd, this );
+
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1742,7 +1746,7 @@ AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
 
   d->mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence, qd, this );
+  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence, 1, 1, qd, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1804,7 +1808,7 @@ void Agenda::insertMultiItem( const Item &event, const QDate &qd, int XBegin,
       newtext = QString( "(%1/%2): " ).arg( count ).arg( width );
       newtext.append( ev->summary() );
 
-      current = insertItem( event, qd, cellX, cellYTop, cellYBottom );
+      current = insertItem( event, qd, cellX, cellYTop, cellYBottom, count, width );
       current->setText( newtext );
       multiItems.append( current );
     }

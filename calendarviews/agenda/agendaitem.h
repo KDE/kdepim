@@ -96,6 +96,7 @@ class AgendaItem : public QWidget, public CellItem
   Q_OBJECT
   public:
     AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const Akonadi::Item &incidence,
+                int itemPos, int itemCount,
                 const QDate &qd, QWidget *parent );
     ~AgendaItem();
 
@@ -105,6 +106,9 @@ class AgendaItem : public QWidget, public CellItem
     int cellYBottom() const { return mCellYBottom; }
     int cellHeight() const;
     int cellWidth() const;
+
+    int itemPos() const { return mItemPos; }
+    int itemCount() const { return mItemCount; }
 
     void setCellXY( int X, int YTop, int YBottom );
     void setCellY( int YTop, int YBottom );
@@ -243,6 +247,11 @@ class AgendaItem : public QWidget, public CellItem
     bool mIconAlarm, mIconRecur, mIconReadonly;
     bool mIconReply, mIconGroup, mIconGroupTent;
     bool mIconOrganizer, mSpecialEvent;
+
+    // For incidences that expand through more than 1 day
+    // Will be 1 for single day incidences
+    int mItemPos;
+    int mItemCount;
 
     // Multi item pointers
     MultiItemInfo *mMultiItemInfo;
