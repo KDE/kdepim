@@ -275,6 +275,7 @@ void CSVImportDialog::initGUI()
 
   mUrlRequester = new KUrlRequester( page );
   mUrlRequester->setFilter( "*.csv" );
+  mUrlRequester->lineEdit()->setTrapReturnKey( true );
   hbox->addWidget( mUrlRequester );
 
   layout->addLayout( hbox, 0, 0, 1, 5 );
