@@ -27,6 +27,11 @@ namespace KABC
   class Addressee;
 }
 
+namespace Akonadi
+{
+  class ContactMetaData;
+}
+
 class EditorBase : public QWidget
 {
   Q_OBJECT
@@ -36,9 +41,9 @@ class EditorBase : public QWidget
 
     ~EditorBase();
 
-    virtual void loadContact( const KABC::Addressee &contact ) = 0;
+    virtual void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData ) = 0;
 
-    virtual void saveContact( KABC::Addressee &contact ) const = 0;
+    virtual void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const = 0;
 };
 
 #endif

@@ -214,7 +214,7 @@ EditorGeneral::~EditorGeneral()
   delete d;
 }
 
-void EditorGeneral::loadContact( const KABC::Addressee &contact )
+void EditorGeneral::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   d->mContact = contact;
 
@@ -254,7 +254,7 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact )
   d->mUi.pictureButton->setIcon( photo );
 }
 
-void EditorGeneral::saveContact( KABC::Addressee &contact ) const
+void EditorGeneral::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
   contact.setPrefix( d->mContact.prefix() );
   contact.setGivenName( d->mContact.givenName() );

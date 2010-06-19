@@ -19,12 +19,15 @@
 
 #include "contacteditorview.h"
 
+#include "contactmetadata_p.h"
+#include "contactmetadataattribute_p.h"
 #include "declarativeeditors.h"
 
 #include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
+#include <Akonadi/ItemFetchScope>
 
 #include <KABC/Addressee>
 
@@ -39,6 +42,8 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
       : q( parent ), mItemManager( new EditorItemManager( this ) ),
         mEditorBusiness( 0 ), mEditorGeneral( 0 ), mEditorMore( 0 )
     {
+      // tokoe: enable when ContactMetaData is part of public API
+      // mItemManager->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
     }
 
     ~Private()
@@ -81,6 +86,7 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
   public:
     Item mItem;
+    ContactMetaData mContactMetaData;
     Collection mCollection;
 
     EditorItemManager *mItemManager;
@@ -98,7 +104,10 @@ void ContactEditorView::Private::addDetailEditor( EditorBase *editor )
     mDetailEditors << editor;
 
     if ( mItem.hasPayload<KABC::Addressee>() ) {
-      editor->loadContact( mItem.payload<KABC::Addressee>() );
+      const KABC::Addressee contact = mItem.payload<KABC::Addressee>();
+      // tokoe: enable when ContactMetaData is part of public API
+      // mContactMetaData.load( mItem );
+      editor->loadContact( contact, mContactMetaData );
     }
   }
 }
@@ -122,14 +131,16 @@ void ContactEditorView::Private::load( const Item &item )
   mCollection = item.parentCollection();
 
   const KABC::Addressee contact = mItem.payload<KABC::Addressee>();
+  // tokoe: enable when ContactMetaData is part of public API
+  // mContactMetaData.load( mItem );
 
   if ( mEditorGeneral != 0 ) {
     mEditorGeneral->setDefaultCollection( mCollection );
-    mEditorGeneral->loadContact( contact );
+    mEditorGeneral->loadContact( contact, mContactMetaData );
   }
 
   Q_FOREACH( EditorBase *editor, mDetailEditors ) {
-    editor->loadContact( contact );
+    editor->loadContact( contact, mContactMetaData );
   }
 }
 
@@ -141,14 +152,16 @@ Item ContactEditorView::Private::save( const Item &item )
 
   KABC::Addressee contact;
   if ( mEditorGeneral != 0 ) {
-    mEditorGeneral->saveContact( contact );
+    mEditorGeneral->saveContact( contact, mContactMetaData );
   }
 
   Q_FOREACH( EditorBase *editor, mDetailEditors ) {
-    editor->saveContact( contact );
+    editor->saveContact( contact, mContactMetaData );
   }
 
   result.setPayload<KABC::Addressee>( contact );
+  // tokoe: enable when ContactMetaData is part of public API
+  // mContactMetaData.store( result );
 
   return result;
 }

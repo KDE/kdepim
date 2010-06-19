@@ -31,8 +31,8 @@ class EditorBusiness : public EditorBase
 
     ~EditorBusiness();
 
-    void loadContact( const KABC::Addressee &contact );
-    void saveContact( KABC::Addressee &contact ) const;
+    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
 
   Q_SIGNALS:
     void organizationChanged( const QString &organization );

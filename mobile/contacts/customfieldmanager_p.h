@@ -1,4 +1,6 @@
 /*
+    This file is part of Akonadi Contact.
+
     Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -17,26 +19,19 @@
     02110-1301, USA.
 */
 
-#ifndef EDITORCRYPTO_H
-#define EDITORCRYPTO_H
+#ifndef CUSTOMFIELDMANAGER_P_H
+#define CUSTOMFIELDMANAGER_P_H
 
-#include "editorbase.h"
+#include "customfields_p.h"
 
-class EditorCrypto : public EditorBase
+/**
+ * @short A class that manages the descriptions of all custom fields with global scope.
+ */
+class CustomFieldManager
 {
-  Q_OBJECT
-
   public:
-    explicit EditorCrypto( QWidget *parent = 0 );
-
-    ~EditorCrypto();
-
-    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
-
-  private:
-    class Private;
-    Private *const d;
+    static void setGlobalCustomFieldDescriptions( const CustomField::List &customFields );
+    static CustomField::List globalCustomFieldDescriptions();
 };
 
 #endif

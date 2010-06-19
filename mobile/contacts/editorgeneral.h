@@ -38,9 +38,9 @@ class EditorGeneral : public EditorBase
 
     void setDefaultCollection( const Akonadi::Collection &collection );
 
-    void loadContact( const KABC::Addressee &contact );
+    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
 
-    void saveContact( KABC::Addressee &contact ) const;
+    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
 
     Akonadi::Collection selectedCollection() const;
 

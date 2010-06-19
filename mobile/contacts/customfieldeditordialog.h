@@ -1,4 +1,6 @@
 /*
+    This file is part of Akonadi Contact.
+
     Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -17,26 +19,33 @@
     02110-1301, USA.
 */
 
-#ifndef EDITORCRYPTO_H
-#define EDITORCRYPTO_H
+#ifndef CUSTOMFIELDEDITORDIALOG_H
+#define CUSTOMFIELDEDITORDIALOG_H
 
-#include "editorbase.h"
+#include <kdialog.h>
 
-class EditorCrypto : public EditorBase
+#include "customfields_p.h"
+
+class KComboBox;
+class KLineEdit;
+class QCheckBox;
+
+class CustomFieldEditorDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    explicit EditorCrypto( QWidget *parent = 0 );
+    CustomFieldEditorDialog( QWidget *parent = 0 );
 
-    ~EditorCrypto();
-
-    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void setCustomField( const CustomField &field );
+    CustomField customField() const;
 
   private:
-    class Private;
-    Private *const d;
+    KLineEdit *mTitle;
+    KComboBox *mType;
+    QCheckBox *mScope;
+    KLineEdit *mKey;
+    CustomField mCustomField;
 };
 
 #endif

@@ -67,7 +67,7 @@ EditorBusiness::~EditorBusiness()
   delete d;
 }
 
-void EditorBusiness::loadContact( const KABC::Addressee &contact )
+void EditorBusiness::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   if ( contact.logo().isEmpty() )
     d->mUi.logoButton->setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
@@ -83,7 +83,7 @@ void EditorBusiness::loadContact( const KABC::Addressee &contact )
   d->mUi.assistantLineEdit->setText( loadCustom( contact, QLatin1String( "X-AssistantsName" ) ) );
 }
 
-void EditorBusiness::saveContact( KABC::Addressee &contact ) const
+void EditorBusiness::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
   contact.setOrganization( d->mUi.organizationLineEdit->text().trimmed() );
   storeCustom( contact, QLatin1String( "X-Profession" ), d->mUi.professionLineEdit->text().trimmed() );

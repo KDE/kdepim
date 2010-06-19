@@ -31,8 +31,8 @@ class EditorMore : public EditorBase
 
     ~EditorMore();
 
-    void loadContact( const KABC::Addressee &contact );
-    void saveContact( KABC::Addressee &contact ) const;
+    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
 
   public Q_SLOTS:
     void updateOrganization( const QString &organization );
@@ -42,10 +42,14 @@ class EditorMore : public EditorBase
     void nameChanged( const KABC::Addressee &contact );
 
   private:
+    void loadCustomFields( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void saveCustomFields( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+
     class Private;
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void playPronunciation() )
+    Q_PRIVATE_SLOT( d, void addCustomField() )
 };
 
 #endif

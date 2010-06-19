@@ -83,7 +83,7 @@ EditorCrypto::~EditorCrypto()
   delete d;
 }
 
-void EditorCrypto::loadContact( const KABC::Addressee &contact )
+void EditorCrypto::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   const QStringList protocolPrefs = loadCustom( contact, QLatin1String( "CRYPTOPROTOPREF" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
   const uint cryptoFormats = Kleo::stringListToCryptoMessageFormats( protocolPrefs );
@@ -99,7 +99,7 @@ void EditorCrypto::loadContact( const KABC::Addressee &contact )
   d->mUi.smimeCertificateRequester->setFingerprints( loadCustom( contact, QLatin1String( "SMIMEFP" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts ) );
 }
 
-void EditorCrypto::saveContact( KABC::Addressee &contact ) const
+void EditorCrypto::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
   uint cryptoFormats = 0;
   uint msgFormat = 1;

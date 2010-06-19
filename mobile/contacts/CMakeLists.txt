@@ -16,6 +16,12 @@ set(kab_mobile_srcs
   contacteditorview.cpp
   contactgroupeditorview.cpp
   contactlistproxy.cpp
+  contactmetadata.cpp
+  contactmetadataattribute.cpp
+  customfieldeditordialog.cpp
+  customfieldeditwidget.cpp
+  customfieldmanager.cpp
+  customfields.cpp
   declarativeeditors.cpp
   displaynameeditwidget.cpp
   editorbase.cpp
@@ -25,6 +31,7 @@ set(kab_mobile_srcs
   editorgeneral.cpp
   editorlocation.cpp
   editormore.cpp
+  kwidgetlister.cpp
   locationmodel.cpp
   namepartseditwidget.cpp
   phonetypecombo.cpp
@@ -37,6 +44,7 @@ kde4_add_ui_files(kab_mobile_srcs
   editorgeneral.ui
   editorlocation.ui
   editormore.ui
+  editormore_customfieldspage.ui
   editormore_namepage.ui
   editormore_internetpage.ui
   editormore_personalpage.ui
