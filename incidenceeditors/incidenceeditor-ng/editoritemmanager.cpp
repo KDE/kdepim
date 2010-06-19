@@ -46,6 +46,7 @@ class ItemEditorPrivate
 
   public:
     Item mItem;
+    ItemFetchScope mFetchScope;
     Monitor *mItemMonitor;
     ItemEditorUi *mItemUi;
 
@@ -62,7 +63,10 @@ class ItemEditorPrivate
 
 ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
   : q_ptr( qq ), mItemMonitor( 0 )
-{ }
+{
+  mFetchScope.fetchFullPayload();
+  mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+}
 
 void ItemEditorPrivate::itemFetchResult( KJob *job )
 {
@@ -149,8 +153,7 @@ void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
 
     if ( dlg->exec() == QMessageBox::AcceptRole ) {
       Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
-      job->fetchScope().fetchFullPayload();
-      job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+      job->setFetchScope( mFetchScope );
 
       mItem = item;
 
@@ -195,8 +198,7 @@ void EditorItemManager::load( const Akonadi::Item &item )
     d->setupMonitor();
   } else {
     ItemFetchJob *job = new ItemFetchJob( item, this );
-    job->fetchScope().fetchFullPayload();
-    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    job->setFetchScope( d->mFetchScope );
 
     connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
     return;
@@ -249,6 +251,20 @@ void EditorItemManager::save()
       new ItemCreateJob( d->mItem, d->mItemUi->selectedCollection() );
     connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
   }
+}
+
+void EditorItemManager::setFetchScope( const ItemFetchScope &fetchScope )
+{
+  Q_D( ItemEditor );
+
+  d->mFetchScope = fetchScope;
+}
+
+ItemFetchScope &EditorItemManager::fetchScope()
+{
+  Q_D( ItemEditor );
+
+  return d->mFetchScope;
 }
 
 ItemEditorUi::~ItemEditorUi()
