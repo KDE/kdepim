@@ -857,7 +857,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
   }
 
   int daysLength = 0;
-//  startDt.setDate( startDate );
+  //  startDt.setDate( startDate );
 
   const Item aitem = item->incidence();
   Incidence::Ptr incidence = Akonadi::incidence( aitem );
@@ -877,8 +877,26 @@ void AgendaView::updateEventDates( AgendaItem *item )
     if ( item->lastMultiItem() ) {
       endTime = d->mAgenda->gyToTime( item->lastMultiItem()->cellYBottom() + 1 );
       daysLength = item->lastMultiItem()->cellXLeft() - item->cellXLeft();
-    } else {
+    } else if ( item->itemPos() == item->itemCount() && item->itemCount() > 1 ) {
+      /* multiitem handling in agenda assumes two things:
+         - The start (first KOAgendaItem) is always visible.
+         - The first KOAgendaItem of the incidence has a non-null item->lastMultiItem()
+             pointing to the last KOagendaItem.
+
+        But those aren't always met, for example when in day-view.
+        kolab/issue4417
+       */
+
+      // Cornercase 1: - Resizing the end of the event but the start isn't visible
       endTime = d->mAgenda->gyToTime( item->cellYBottom() + 1 );
+      daysLength = item->itemCount() - 1;
+      startTime = incidence->dtStart().time();
+    } else if ( item->itemPos() == 1 && item->itemCount() > 1 ) {
+      // Cornercase 2: - Resizing the start of the event but the end isn't visible
+      endTime = incidence->dtEnd().time();
+      daysLength = item->itemCount() - 1;
+    } else {
+      endTime =d-> mAgenda->gyToTime( item->cellYBottom() + 1 );
     }
   }
 
