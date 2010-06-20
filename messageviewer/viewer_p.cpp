@@ -218,6 +218,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   //        like in KMMainWidget::slotMessageActivated().
   Akonadi::ItemFetchScope fs;
   fs.fetchFullPayload();
+  fs.fetchAttribute<MailTransport::ErrorAttribute>();
   mMonitor.setItemFetchScope( fs );
   connect( &mMonitor, SIGNAL( itemChanged( Akonadi::Item,QSet<QByteArray> ) ),
            this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
