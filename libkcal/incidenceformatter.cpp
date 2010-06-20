@@ -3818,43 +3818,46 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   case Recurrence::rMonthlyPos:
   {
     recurStr = i18n( "Recurs monthly", "Recurs every %n months", recur->frequency() );
-
-    KCal::RecurrenceRule::WDayPos rule = recur->monthPositions()[0];
-    if ( recur->duration() != -1 ) {
-      txt = i18n( "%1 on the %2 %3 until %4" ).
+    if ( !recur->monthPositions().isEmpty() ) {
+      KCal::RecurrenceRule::WDayPos rule = recur->monthPositions()[0];
+      if ( recur->duration() != -1 ) {
+        txt = i18n( "%1 on the %2 %3 until %4" ).
+              arg( recurStr ).
+              arg( dayList[rule.pos() + 31] ).
+              arg( calSys->weekDayName( rule.day(), false ) ).
+              arg( recurEnd( incidence ) );
+        if ( recur->duration() >  0 ) {
+          txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+        }
+        return txt;
+      }
+      txt = i18n( "%1 on the %2 %3" ).
             arg( recurStr ).
             arg( dayList[rule.pos() + 31] ).
-            arg( calSys->weekDayName( rule.day(), false ) ).
-            arg( recurEnd( incidence ) );
-      if ( recur->duration() >  0 ) {
-        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
-      }
+            arg( calSys->weekDayName( rule.day(), false ) );
       return txt;
     }
-    txt = i18n( "%1 on the %2 %3" ).
-          arg( recurStr ).
-          arg( dayList[rule.pos() + 31] ).
-          arg( calSys->weekDayName( rule.day(), false ) );
-    return txt;
   }
 
   case Recurrence::rMonthlyDay:
   {
     recurStr = i18n( "Recurs monthly", "Recurs every %n months", recur->frequency() );
 
-    int days = recur->monthDays()[0];
-    if ( recur->duration() != -1 ) {
-      txt = i18n( "%1 on the %2 day until %3" ).
-            arg( recurStr ).
-            arg( dayList[days + 31] ).
-            arg( recurEnd( incidence ) );
-      if ( recur->duration() >  0 ) {
-        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+    if ( !recur->monthDays().isEmpty() ) {
+      int days = recur->monthDays()[0];
+      if ( recur->duration() != -1 ) {
+        txt = i18n( "%1 on the %2 day until %3" ).
+              arg( recurStr ).
+              arg( dayList[days + 31] ).
+              arg( recurEnd( incidence ) );
+        if ( recur->duration() >  0 ) {
+          txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+        }
+        return txt;
       }
+      txt = i18n( "%1 on the %2 day" ).arg( recurStr ).arg( dayList[days + 31] );
       return txt;
     }
-    txt = i18n( "%1 on the %2 day" ).arg( recurStr ).arg( dayList[days + 31] );
-    return txt;
   }
 
   case Recurrence::rYearlyMonth:
