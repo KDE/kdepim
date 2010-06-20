@@ -135,22 +135,24 @@ class StandardContactActionManager::Private
         }
       }
 
+      bool enableAddressBookActions = false;
       if ( mCollectionSelectionModel ) {
         if ( mCollectionSelectionModel->selectedRows().count() == 1 ) {
           const QModelIndex index = mCollectionSelectionModel->selectedRows().first();
           if ( index.isValid() ) {
             const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( collection.isValid() ) {
-              // action is only enabled if the collection is a resource collection
-              bool isEnabled = (collection.parentCollection() == Collection::root());
-              if ( mActions.contains( StandardContactActionManager::DeleteAddressBook ) )
-                mActions[ StandardContactActionManager::DeleteAddressBook ]->setEnabled( isEnabled );
-              if ( mActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
-                mActions[ StandardContactActionManager::ConfigureAddressBook ]->setEnabled( isEnabled );
+              // actions are only enabled if the collection is a resource collection
+              enableAddressBookActions = (collection.parentCollection() == Collection::root());
             }
           }
         }
       }
+
+      if ( mActions.contains( StandardContactActionManager::DeleteAddressBook ) )
+        mActions[ StandardContactActionManager::DeleteAddressBook ]->setEnabled( enableAddressBookActions );
+      if ( mActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
+        mActions[ StandardContactActionManager::ConfigureAddressBook ]->setEnabled( enableAddressBookActions );
 
       if ( mActions.contains( StandardContactActionManager::CreateContact ) )
         mActions[ StandardContactActionManager::CreateContact ]->setEnabled( hasWritableCollection( KABC::Addressee::mimeType() ) );
