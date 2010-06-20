@@ -74,6 +74,35 @@ class StandardContactActionManager::Private
       delete mGenericManager;
     }
 
+    static bool hasWritableCollection( const QModelIndex &index, const QString &mimeType )
+    {
+      const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      if ( collection.isValid() ) {
+        if ( collection.contentMimeTypes().contains( mimeType ) && (collection.rights() & Akonadi::Collection::CanCreateItem) )
+          return true;
+      }
+
+      const QAbstractItemModel *model = index.model();
+      if ( !model )
+        return false;
+
+      for ( int row = 0; row < model->rowCount( index ); ++row ) {
+        if ( hasWritableCollection( model->index( row, 0, index ), mimeType ) )
+          return true;
+      }
+
+      return false;
+    }
+
+    bool hasWritableCollection( const QString &mimeType ) const
+    {
+      if ( !mCollectionSelectionModel )
+        return false;
+
+      const QAbstractItemModel *collectionModel = mCollectionSelectionModel->model();
+      return hasWritableCollection( collectionModel->index( 0, 0 ), mimeType );
+    }
+
     void updateActions()
     {
       int itemCount = 0;
@@ -118,16 +147,15 @@ class StandardContactActionManager::Private
                 mActions[ StandardContactActionManager::DeleteAddressBook ]->setEnabled( isEnabled );
               if ( mActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
                 mActions[ StandardContactActionManager::ConfigureAddressBook ]->setEnabled( isEnabled );
-
-              // only enable 'Create Contact Group' action if current collection supports contact groups
-              if ( mActions.contains( StandardContactActionManager::CreateContactGroup ) ) {
-                const bool isEnabled = collection.contentMimeTypes().contains( KABC::ContactGroup::mimeType() );
-                mActions[ StandardContactActionManager::CreateContactGroup ]->setEnabled( isEnabled );
-              }
             }
           }
         }
       }
+
+      if ( mActions.contains( StandardContactActionManager::CreateContact ) )
+        mActions[ StandardContactActionManager::CreateContact ]->setEnabled( hasWritableCollection( KABC::Addressee::mimeType() ) );
+      if ( mActions.contains( StandardContactActionManager::CreateContactGroup ) )
+        mActions[ StandardContactActionManager::CreateContactGroup ]->setEnabled( hasWritableCollection( KABC::ContactGroup::mimeType() ) );
 
       if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
         bool canEditItem = true;
@@ -277,8 +305,14 @@ void StandardContactActionManager::setCollectionSelectionModel( QItemSelectionMo
   d->mCollectionSelectionModel = selectionModel;
   d->mGenericManager->setCollectionSelectionModel( selectionModel );
 
+  connect( selectionModel->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+           SLOT( updateActions() ) );
+  connect( selectionModel->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
+           SLOT( updateActions() ) );
   connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            SLOT( updateActions() ) );
+
+  d->updateActions();
 }
 
 void StandardContactActionManager::setItemSelectionModel( QItemSelectionModel* selectionModel )
@@ -288,6 +322,8 @@ void StandardContactActionManager::setItemSelectionModel( QItemSelectionModel* s
 
   connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            SLOT( updateActions() ) );
+
+  d->updateActions();
 }
 
 KAction* StandardContactActionManager::createAction( Type type )
@@ -375,6 +411,8 @@ void StandardContactActionManager::createAllActions()
   createAction( ConfigureAddressBook );
 
   d->mGenericManager->createAllActions();
+
+  d->updateActions();
 }
 
 KAction* StandardContactActionManager::action( Type type ) const
