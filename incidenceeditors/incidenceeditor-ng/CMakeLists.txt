@@ -23,6 +23,7 @@ include_directories(
 
 set(incidenceeditors_ng_shared_LIB_SRCS
   alarmpresets.cpp
+  alarmdialog.cpp
   editoritemmanager.cpp # TODO: Move to akonadi libs when finished
   recurrencepresets.cpp
   incidenceeditor.cpp
@@ -59,7 +60,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
   eventortododesktop.ui
-
+  alarmdialog.ui
   attachmenteditdialog.ui
   incidencerecurrenceeditor.ui
 )

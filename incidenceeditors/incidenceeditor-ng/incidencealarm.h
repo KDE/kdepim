@@ -20,7 +20,9 @@ class IncidenceAlarm : public IncidenceEditor
     virtual bool isDirty() const;
 
   private Q_SLOTS:
-    void addAlarm();
+    void editCurrentAlarm();
+    void newAlarm();
+    void newAlarmFromPreset();
     void removeCurrentAlarm();
     void updateAlarmList();
     void updateButtons();

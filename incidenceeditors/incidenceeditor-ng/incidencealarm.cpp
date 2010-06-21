@@ -1,5 +1,6 @@
 #include "incidencealarm.h"
 
+#include "alarmdialog.h"
 #include "alarmpresets.h"
 #include "ui_eventortododesktop.h"
 
@@ -19,9 +20,13 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mAlarmPresetCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(updateAlarmPreset(int)) );
   connect( mUi->mAlarmAddPresetButton, SIGNAL(clicked()),
-           SLOT(addAlarm()) );
+           SLOT(newAlarmFromPreset()) );
   connect( mUi->mAlarmList, SIGNAL(itemSelectionChanged ()),
            SLOT(updateButtons()) );
+  connect( mUi->mAlarmNewButton, SIGNAL(clicked()),
+           SLOT(newAlarm()));
+  connect( mUi->mAlarmConfigureButton, SIGNAL(clicked()),
+           SLOT(editCurrentAlarm()) );
   connect( mUi->mAlarmRemoveButton, SIGNAL(clicked()),
            SLOT(removeCurrentAlarm()) );
 }
@@ -104,35 +109,41 @@ bool IncidenceAlarm::isDirty() const
  return false;
 }
 
-//void IncidenceAlarm::editAlarm()
-//{
-//#ifndef KDEPIM_MOBILE_UI
-//  QScopedPointer<EditorAlarms> dialog( new EditorAlarms( mLoadedIncidence->type(), &mLastAlarms, this ) );
+void IncidenceAlarm::editCurrentAlarm()
+{
+#ifndef KDEPIM_MOBILE_UI
 
-//  if ( dialog->exec() == KDialog::Accepted ) {
-//    mUi->mAlarmCombo->blockSignals( true );
-//    if ( mLastAlarms.isEmpty() )
-//      mUi->mAlarmCombo->setCurrentIndex( 0 );
-//    else if ( mLastAlarms.size() > 1 )
-//      mUi->mAlarmCombo->setCurrentIndex( mUi->mAlarmCombo->count() - 1 ); // Custom
-//    else { // Only one alarm
-//      const int index = AlarmPresets::presetIndex( *mLastAlarms.first() );
-//      if ( index == -1 ) {
-////        mUi->mRecurrenceCombo->setCurrentIndex( mUi->mRecurrenceCombo->count() - 1 );
-//      } else {
-//        // Add one to cope with the "no alarm" option in the combo, which is not
-//        // in the presets.
-////        mUi->mRecurrenceCombo->setCurrentIndex( index + 1 );
-////        mUi->mRecurrenceEditButton->setEnabled( true );
-//      }
-//    }
+  KCal::Alarm *currentAlarm = mEnabledAlarms.at( mUi->mAlarmList->currentRow() );
 
-//    mUi->mAlarmCombo->blockSignals( false );
-//  }
-//#endif
-//}
+  QScopedPointer<AlarmDialog> dialog( new AlarmDialog );
+  dialog->load( currentAlarm );
 
-void IncidenceAlarm::addAlarm()
+  if ( dialog->exec() == KDialog::Accepted ) {
+    dialog->save( currentAlarm );
+    updateAlarmList();
+  }
+
+#endif
+}
+
+void IncidenceAlarm::newAlarm()
+{
+#ifndef KDEPIM_MOBILE_UI
+
+  QScopedPointer<AlarmDialog> dialog( new AlarmDialog );
+
+  if ( dialog->exec() == KDialog::Accepted ) {
+    KCal::Alarm *newAlarm = new KCal::Alarm( 0 );
+    dialog->save( newAlarm );
+    newAlarm->setEnabled( true );
+    mEnabledAlarms.append( newAlarm );
+    updateAlarmList();
+  }
+
+#endif
+}
+
+void IncidenceAlarm::newAlarmFromPreset()
 {
   mEnabledAlarms.append( AlarmPresets::preset( mUi->mAlarmPresetCombo->currentText() ) );
   updateAlarmList();
@@ -206,10 +217,14 @@ QString IncidenceAlarm::stringForAlarm( KCal::Alarm *alarm )
     useoffset = offset / 60;
   }
 
+  QString repeatStr;
+  if ( alarm->repeatCount() > 0 )
+    repeatStr = i18nc( "The alarm is configured to repeat after snooze","(Repeats)");
+
   if ( useoffset > 0 )
-    return i18n( "%1 %2 %3 after the event started", action, QString::number( useoffset ), offsetUnit );
+    return i18n( "%1 %2 %3 after the event started %4", action, QString::number( useoffset ), offsetUnit, repeatStr );
   else if ( useoffset < 0 )
-    return i18n( "%1 %2 %3 before the event starts", action, QString::number( qAbs( useoffset ) ), offsetUnit );
+    return i18n( "%1 %2 %3 before the event starts %4", action, QString::number( qAbs( useoffset ) ), offsetUnit, repeatStr );
 
   // useoffset == 0
   return i18n( "%1 when the event starts", action );
