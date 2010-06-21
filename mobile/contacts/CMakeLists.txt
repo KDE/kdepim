@@ -66,7 +66,7 @@ target_link_libraries(kaddressbook-mobile
 configure_file(kaddressbook-mobile.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh)
 
 install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kaddressbook-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   contact-editor.qml
