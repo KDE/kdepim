@@ -568,9 +568,6 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
     }
     if ( result && proc.exitCode() == 0 ) {
       kDebug() << "Akonadi migration has been successful";
-      migrationCfg.writeEntry( "Version", targetVersion );
-      migrationCfg.writeEntry( "Completed", true );
-      migrationCfg.sync();
     } else {
       // exit code 1 means it is already running, so we are probably called by a migrator instance
       kError() << "Akonadi migration failed!";
@@ -579,6 +576,9 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
       kError() << "stdout: " << proc.readAllStandardOutput();
       kError() << "stderr: " << proc.readAllStandardError();
     }
+    migrationCfg.writeEntry( "Version", targetVersion );
+    migrationCfg.writeEntry( "Completed", true );
+    migrationCfg.sync();
   }
 }
 

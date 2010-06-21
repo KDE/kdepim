@@ -218,9 +218,12 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   //        like in KMMainWidget::slotMessageActivated().
   Akonadi::ItemFetchScope fs;
   fs.fetchFullPayload();
+  fs.fetchAttribute<MailTransport::ErrorAttribute>();
   mMonitor.setItemFetchScope( fs );
   connect( &mMonitor, SIGNAL( itemChanged( Akonadi::Item,QSet<QByteArray> ) ),
            this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
+  connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
+           this, SLOT( slotClear() ) );
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -2913,6 +2916,11 @@ void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByte
     return;
   }
   setMessageItem( item );
+}
+
+void ViewerPrivate::slotClear()
+{
+  q->clear( Viewer::Force );
 }
 
 #include "viewer_p.moc"
