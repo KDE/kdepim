@@ -16,8 +16,6 @@ set(kab_mobile_srcs
   contacteditorview.cpp
   contactgroupeditorview.cpp
   contactlistproxy.cpp
-  contactmetadata.cpp
-  contactmetadataattribute.cpp
   customfieldeditordialog.cpp
   customfieldeditwidget.cpp
   customfieldmanager.cpp

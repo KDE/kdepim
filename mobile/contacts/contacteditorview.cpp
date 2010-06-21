@@ -20,7 +20,6 @@
 #include "contacteditorview.h"
 
 #include "contactmetadata_p.h"
-#include "contactmetadataattribute_p.h"
 #include "declarativeeditors.h"
 
 #include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
@@ -42,8 +41,6 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
       : q( parent ), mItemManager( new EditorItemManager( this ) ),
         mEditorBusiness( 0 ), mEditorGeneral( 0 ), mEditorMore( 0 )
     {
-      // tokoe: enable when ContactMetaData is part of public API
-      // mItemManager->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
     }
 
     ~Private()

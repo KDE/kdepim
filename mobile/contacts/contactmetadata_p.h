@@ -31,7 +31,7 @@ namespace Akonadi
 class Item;
 
 /**
- * @short A helper class for storing contact specific settings.
+ * @short A dummy class until we can access the ContactMetaData class from kdepimlibs
  */
 class ContactMetaData
 {
@@ -39,34 +39,34 @@ class ContactMetaData
     /**
      * Creates a contact meta data object.
      */
-    ContactMetaData();
+    ContactMetaData() {}
 
     /**
      * Destroys the contact meta data object.
      */
-    ~ContactMetaData();
+    ~ContactMetaData() {}
 
     /**
      * Loads the meta data for the given @p contact.
      */
-    void load( const Akonadi::Item &contact );
+    void load( const Akonadi::Item &contact ) {}
 
     /**
      * Stores the meta data to the given @p contact.
      */
-    void store( Akonadi::Item &contact );
+    void store( Akonadi::Item &contact ) {}
 
     /**
      * Sets the mode that is used for the display
      * name of that contact.
      */
-    void setDisplayNameMode( int mode );
+    void setDisplayNameMode( int mode ) {}
 
     /**
      * Returns the mode that is used for the display
      * name of that contact.
      */
-    int displayNameMode() const;
+    int displayNameMode() const { return 0; }
 
     /**
      * Sets the @p descriptions of the custom fields of that contact.
@@ -84,20 +84,12 @@ class ContactMetaData
      *       - time
      *       - datetime
      */
-    void setCustomFieldDescriptions( const QVariantList &descriptions );
+    void setCustomFieldDescriptions( const QVariantList &descriptions ) {}
 
     /**
      * Returns the descriptions of the custom fields of the contact.
      */
-    QVariantList customFieldDescriptions() const;
-
-  private:
-    //@cond PRIVATE
-    Q_DISABLE_COPY( ContactMetaData )
-
-    class Private;
-    Private* const d;
-    //@endcond
+    QVariantList customFieldDescriptions() const { return QVariantList(); }
 };
 
 }
