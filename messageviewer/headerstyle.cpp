@@ -168,16 +168,14 @@ QString HeaderStyle::setTheming( const QString &styleName, KMime::Message *messa
     linkColor = "black";
   }
 
+  // 3D borders
+  data.insert( QLatin1String( "activeColorDark" ), activeColorDark.name() );
+  data.insert( QLatin1String( "fontColor" ), fontColor.name() );
+  // kmail icon
+  data.insert( QLatin1String( "isTopLevel" ) , "isTopLevel" );
+
   // Data managed only for the Enterprise Style
   if ( strategy == HeaderStrategy::brief() ) {
-    // 3D borders
-    if(isTopLevel()) {
-      data.insert( QLatin1String( "activeColorDark" ), activeColorDark.name() );
-      data.insert( QLatin1String( "fontColor" ), fontColor.name() );
-      // kmail icon
-      data.insert( QLatin1String( "isTopLevel" ) , "isTopLevel" );
-    }
-
     data.insert( QLatin1String( "linkColor" ) , linkColor );
 
     if ( isPrinting() ) {
@@ -635,7 +633,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     kDebug() << "Spam:" << spamHTML;
   }*/
 
-  return setTheming( "fancy.html", message );
+  return setTheming( "fancy", message );
 }
 
 QString FancyHeaderStyle::imgToDataUrl( const QImage &image )
@@ -674,7 +672,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
 {
   if ( !message ) return QString();
   
-  return setTheming( "enterprise.html", message );
+  return setTheming( "enterprise", message );
 }
 
 // #####################
