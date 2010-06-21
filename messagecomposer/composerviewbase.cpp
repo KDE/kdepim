@@ -457,6 +457,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
     /// TODO handle failure
     kDebug() << "failed to resolve keys! oh noes";
+    // add when i18n freeze is over emit failed( QLatin1String( "Failed to resolve keys. Please report a bug." );
     return composers;
   }
   kDebug() << "done resolving keys:";
@@ -499,14 +500,12 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     Kleo::CryptoMessageFormat concreteSignFormat = Kleo::AutoFormat;
 
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
-        continue;
 
       if ( !(concreteCryptoMessageFormats[i] & m_cryptoMessageFormat) )
         continue;
 
       concreteSignFormat = concreteCryptoMessageFormats[i];
-      std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteEncryptFormat );
+      std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteSignFormat );
 
       Message::Composer* composer =  new Message::Composer;
 

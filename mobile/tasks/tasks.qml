@@ -133,7 +133,7 @@ KPIM.MainView {
                         anchors.topMargin : 1
                         anchors.left : parent.left
                         anchors.leftMargin : 10
-                        text: KDE.i18na( "Task: %1", [model.summary] )
+                        text: KDE.i18n( "Task: %1", model.summary )
                         color : "#0C55BB"
                         font.pixelSize: 16
                     },
@@ -143,7 +143,7 @@ KPIM.MainView {
                       anchors.left : parent.left
                       anchors.leftMargin : 10
                       height : 30;
-                      text: KDE.i18na( "Details: %1", [model.description] )
+                      text: KDE.i18n( "Details: %1", model.description )
                       color: "#3B3B3B"
                       font.pointSize: 14
                     },

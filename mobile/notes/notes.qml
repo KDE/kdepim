@@ -255,10 +255,10 @@ KPIM.MainView {
                   QML.Column {
                     anchors.fill: parent
                     QML.Text {
-                      text: KDE.i18na( "Title: %1", [model.title] )
+                      text: KDE.i18n( "Title: %1", model.title )
                     }
                     QML.Text {
-                      text: KDE.i18na( "Content: %1", [model.plainContent] )
+                      text: KDE.i18n( "Content: %1", model.plainContent )
                     }
                   }
                  ]
