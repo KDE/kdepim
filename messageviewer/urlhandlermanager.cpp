@@ -816,7 +816,7 @@ namespace {
     if ( url.protocol() == "data" && url.path().startsWith( "image" ) )
       return true;
 
-    const QString imagePath = KStandardDirs::locate( "data", "libmessageviewer/pics/" );
+    const QString imagePath = KStandardDirs::locate( "data", "messageviewer/themes/images/" );
     return url.path().contains( imagePath );
   }
 }
