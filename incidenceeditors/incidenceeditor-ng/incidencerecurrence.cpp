@@ -1,13 +1,28 @@
 #include "incidencerecurrence.h"
 
+#include <KCalendarSystem>
+
 #include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
 
-IncidenceRecurrence::IncidenceRecurrence( Ui::EventOrTodoDesktop *ui )
+IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui )
   : mUi( ui )
+  , mDateTime( dateTime )
 {
   toggleRecurrenceWidgets( false );
+
+  const int weekStart = KGlobal::locale()->weekStartDay();
+  for ( int i = 0; i < 7; ++i ) {
+    // i is the nr of the combobox, not the day of week!
+    // label=(i+weekStart+6)%7 + 1;
+    // index in CheckBox array(=day): label-1
+    const int index = ( i + weekStart + 6 ) % 7;
+
+    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+    QString weekDayName = calSys->weekDayName( index + 1, KCalendarSystem::ShortDayName );
+    mUi->mWeekDayCombo->addItem( weekDayName );
+  }
 
   connect( mUi->mTypeCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(handleRecurrenceTypeChange(int)));
@@ -36,6 +51,22 @@ bool IncidenceRecurrence::isValid()
 void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
 {
   toggleRecurrenceWidgets( currentIndex > 0 );
+  switch ( currentIndex ) {
+  case 1:
+    mUi->mRecurrenceRuleLabel->setText( i18n("day(s)") );
+    break;
+  case 2:
+    mUi->mRecurrenceRuleLabel->setText( i18n("week(s)") );
+    break;
+  case 3:
+    mUi->mRecurrenceRuleLabel->setText( i18n("month(s)") );
+    break;
+  case 4:
+    mUi->mRecurrenceRuleLabel->setText( i18n("year(s)") );
+    break;
+  default:
+    mUi->mRecurrenceRuleLabel->setText( i18n("day(s)") );
+  }
 }
 
 void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )

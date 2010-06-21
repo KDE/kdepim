@@ -83,7 +83,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
 
-  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( mUi );
+  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( ieDateTime, mUi );
   mEditor->combine( ieRecurrence );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),

@@ -1148,6 +1148,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="mExceptionAddButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Add</string>
            </property>
@@ -1351,41 +1354,6 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <item>
-              <property name="text">
-               <string>Mon</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tue</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Wed</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Thu</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Fri</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sat</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sun</string>
-              </property>
-             </item>
             </widget>
            </item>
           </layout>

@@ -9,11 +9,13 @@ class EventOrTodoDesktop;
 
 namespace IncidenceEditorsNG {
 
+class IncidenceDateTime;
+
 class IncidenceRecurrence : public IncidenceEditor
 {
     Q_OBJECT
 public:
-    IncidenceRecurrence(  Ui::EventOrTodoDesktop *ui = 0  );
+    IncidenceRecurrence( IncidenceDateTime *dateTime = 0, Ui::EventOrTodoDesktop *ui = 0 );
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -28,6 +30,8 @@ private:
 
 private:
     Ui::EventOrTodoDesktop *mUi;
+
+    IncidenceDateTime *mDateTime;
 };
 
 }
