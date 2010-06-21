@@ -26,13 +26,13 @@ DCollectionCombo::DCollectionCombo( QDeclarativeItem *parent )
 { }
 
 DIEGeneral::DIEGeneral( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceGeneralEditor,
+  : DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceGeneral,
                           IncidenceView,
                           &IncidenceView::setGeneralEditor>( parent )
 { }
 
 DIEDateTime::DIEDateTime( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceDateTimeEditor,
+  : DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceDateTime,
                           IncidenceView,
                           &IncidenceView::setDateTimeEditor>( parent )
 { }

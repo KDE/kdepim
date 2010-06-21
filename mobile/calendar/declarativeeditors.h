@@ -22,8 +22,8 @@
 
 #include <Akonadi/CollectionComboBox>
 
-#include <incidenceeditors/incidenceeditor-ng/incidencegeneraleditor.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencedatetimeeditor.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
 
 #include "declarativewidgetbase.h"
 #include "incidenceview.h"
@@ -39,7 +39,7 @@ class DCollectionCombo
 };
 
 class DIEGeneral
-  : public DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceGeneralEditor,
+  : public DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceGeneral,
                                  IncidenceView,
                                  &IncidenceView::setGeneralEditor>
 {
@@ -49,7 +49,7 @@ class DIEGeneral
 };
 
 class DIEDateTime
-  : public DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceDateTimeEditor,
+  : public DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceDateTime,
                                  IncidenceView,
                                  &IncidenceView::setDateTimeEditor>
 {

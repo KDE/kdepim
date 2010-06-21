@@ -35,8 +35,8 @@ class CollectionComboBox;
 }
 
 namespace IncidenceEditorsNG {
-class IncidenceGeneralEditor;
-class IncidenceDateTimeEditor;
+class IncidenceGeneral;
+class IncidenceDateTime;
 }
 
 
@@ -50,8 +50,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEdi
     void load( const Akonadi::Item &item, const QDate &date );
 
     void setCollectionCombo( Akonadi::CollectionComboBox * );
-    void setDateTimeEditor( IncidenceEditorsNG::IncidenceDateTimeEditor * );
-    void setGeneralEditor( IncidenceEditorsNG::IncidenceGeneralEditor * );
+    void setDateTimeEditor( IncidenceEditorsNG::IncidenceDateTime * );
+    void setGeneralEditor( IncidenceEditorsNG::IncidenceGeneral * );
 
   public: /// ItemEditorUi function implementations
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
