@@ -32,6 +32,7 @@ set(kab_mobile_srcs
   kwidgetlister.cpp
   locationmodel.cpp
   namepartseditwidget.cpp
+  mobilelineedit.cpp
   phonetypecombo.cpp
 )
 

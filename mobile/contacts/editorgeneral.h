@@ -60,6 +60,7 @@ class EditorGeneral : public EditorBase
     Q_PRIVATE_SLOT( d, void nameTextChanged( const QString& ) )
     Q_PRIVATE_SLOT( d, void addEmailClicked() )
     Q_PRIVATE_SLOT( d, void addPhoneClicked() )
+    Q_PRIVATE_SLOT( d, void clearEmailClicked() )
 };
 
 #endif

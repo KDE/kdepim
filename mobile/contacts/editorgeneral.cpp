@@ -52,6 +52,8 @@ class EditorGeneral::Private
     {
       mUi.setupUi( parent );
 
+      QObject::connect( mUi.email1, SIGNAL( clearClicked() ), q, SLOT( clearEmailClicked() ) );
+      QObject::connect( mUi.email2, SIGNAL( clearClicked() ), q, SLOT( clearEmailClicked() ) );
       mEmailInputs << mUi.email1;
       mEmailInputs << mUi.email2;
       mLastEmailRow = 2; // third row
@@ -89,7 +91,7 @@ class EditorGeneral::Private
 
     KABC::Addressee mContact;
 
-    QList<QLineEdit*> mEmailInputs;
+    QList<MobileLineEdit*> mEmailInputs;
     QList<PhoneWidgets*> mPhoneWidgets;
 
     int mLastEmailRow;
@@ -108,6 +110,7 @@ class EditorGeneral::Private
 
     void addEmailClicked();
     void addPhoneClicked();
+    void clearEmailClicked();
 
   private:
     void addEmailRows( int newRowCount );
@@ -122,6 +125,64 @@ void EditorGeneral::Private::addEmailClicked()
 void EditorGeneral::Private::addPhoneClicked()
 {
   addPhoneRows( mPhoneWidgets.count() + 1 );
+}
+
+void EditorGeneral::Private::clearEmailClicked()
+{
+  int index = 0;
+  for ( ; index < mEmailInputs.count(); ++index ) {
+    if ( mEmailInputs[ index ] == q->sender() ) {
+      break;
+    }
+  }
+
+  Q_ASSERT( index >= 0 && index < mEmailInputs.count() );
+
+  for ( int i = index + 1; i < mEmailInputs.count(); ++i ) {
+    mEmailInputs[ i - 1 ]->setText( mEmailInputs[ i ]->text() );
+  }
+
+  MobileLineEdit *last = mEmailInputs.last();
+  if ( mEmailInputs.count() > 2 ) {
+    // remove widgets from layout
+    mUi.gridLayout->removeWidget( last );
+    mUi.gridLayout->removeWidget( mUi.addEmailButton );
+
+    QList<PhoneWidgets*>::const_iterator widgetIt = mPhoneWidgets.constBegin();
+    for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt ) {
+      mUi.gridLayout->removeWidget( (*widgetIt)->mInput );
+      mUi.gridLayout->removeWidget( (*widgetIt)->mType );
+    }
+
+    mUi.gridLayout->removeWidget( mUi.phoneLabel );
+    mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+    mUi.gridLayout->removeWidget( mUi.saveButton );
+    mUi.gridLayout->removeWidget( mUi.collectionSelector );
+
+    // delete the now obsolete widget
+    --mLastEmailRow;
+    --mLastPhoneRow;
+    mEmailInputs.pop_back();
+    delete last;
+   
+    // re-add widgets
+    mUi.gridLayout->addWidget( mUi.addEmailButton, mLastEmailRow, 2, 1, 1 );
+
+    int row = mLastEmailRow + 1;
+    mUi.gridLayout->addWidget( mUi.phoneLabel, row, 0, 1, 1 );
+    widgetIt = mPhoneWidgets.constBegin();
+    for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt, ++row ) {
+      mUi.gridLayout->addWidget( (*widgetIt)->mInput, row, 1, 1, 1 );
+      mUi.gridLayout->addWidget( (*widgetIt)->mType, row, 2, 1, 1 );
+    }
+
+    mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 3, 1, 1 );
+    //q->adjustSize();
+  } else {
+    last->clear();
+  }
 }
 
 void EditorGeneral::Private::addEmailRows( int newRowCount )
@@ -148,8 +209,9 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
 
   // add new widgets
   for ( ; mEmailInputs.count() < newRowCount; ++row, ++mLastEmailRow, ++mLastPhoneRow ) {
-    QLineEdit *lineEdit = new QLineEdit( q );
+    MobileLineEdit *lineEdit = new MobileLineEdit( q );
     mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
+    QObject::connect( lineEdit, SIGNAL( clearClicked() ), q, SLOT( clearEmailClicked() ) );
     mEmailInputs << lineEdit;
   }
 
@@ -225,7 +287,7 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact, const Akonadi::
   const QStringList emails = contact.emails();
   d->ensureEmailRows( emails.count() );
 
-  QList<QLineEdit*>::iterator inputIt = d->mEmailInputs.begin();
+  QList<MobileLineEdit*>::iterator inputIt = d->mEmailInputs.begin();
   Q_FOREACH( const QString &email, emails ) {
     (*inputIt)->setText( email );
     ++inputIt;
@@ -262,7 +324,7 @@ void EditorGeneral::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaD
   contact.setFamilyName( d->mContact.familyName() );
   contact.setSuffix( d->mContact.suffix() );
 
-  Q_FOREACH( QLineEdit *input, d->mEmailInputs ) {
+  Q_FOREACH( MobileLineEdit *input, d->mEmailInputs ) {
     const QString email = input->text().trimmed();
     if ( !email.isEmpty() ) {
       contact.insertEmail( email );

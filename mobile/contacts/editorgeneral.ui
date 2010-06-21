@@ -7,91 +7,108 @@
     <x>0</x>
     <y>0</y>
     <width>453</width>
-    <height>218</height>
+    <height>173</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Name</string>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="fullName"/>
+     </item>
+     <item row="0" column="3" rowspan="3">
+      <widget class="QPushButton" name="pictureButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>E-Mail</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="MobileLineEdit" name="email1" native="true"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="MobileLineEdit" name="email2" native="true"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="addEmailButton">
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="phoneLabel">
+       <property name="text">
+        <string>Phone</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="phone1"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="PhoneTypeCombo" name="phone1Type"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="phone2"/>
+     </item>
+     <item row="4" column="2">
+      <widget class="PhoneTypeCombo" name="phone2Type"/>
+     </item>
+     <item row="4" column="3">
+      <widget class="QPushButton" name="addPhoneButton">
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1" colspan="2">
+      <widget class="QPushButton" name="saveButton">
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="Akonadi::CollectionComboBox" name="collectionSelector"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="1" colspan="2">
-    <widget class="QLineEdit" name="fullName"/>
-   </item>
-   <item row="0" column="3" rowspan="3">
-    <widget class="QPushButton" name="pictureButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>8</height>
+      </size>
      </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>E-Mail</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="email1"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLineEdit" name="email2"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="addEmailButton">
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="phoneLabel">
-     <property name="text">
-      <string>Phone</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLineEdit" name="phone1"/>
-   </item>
-   <item row="3" column="2">
-    <widget class="PhoneTypeCombo" name="phone1Type"/>
-   </item>
-   <item row="4" column="1">
-    <widget class="QLineEdit" name="phone2"/>
-   </item>
-   <item row="4" column="2">
-    <widget class="PhoneTypeCombo" name="phone2Type"/>
-   </item>
-   <item row="4" column="3">
-    <widget class="QPushButton" name="addPhoneButton">
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1" colspan="2">
-    <widget class="QPushButton" name="saveButton">
-     <property name="text">
-      <string>Save</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="3">
-    <widget class="Akonadi::CollectionComboBox" name="collectionSelector"/>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -105,6 +122,11 @@
    <class>PhoneTypeCombo</class>
    <extends>QComboBox</extends>
    <header>phonetypecombo.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MobileLineEdit</class>
+   <extends>QWidget</extends>
+   <header>mobilelineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
