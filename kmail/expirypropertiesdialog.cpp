@@ -94,6 +94,7 @@ ExpiryPropertiesDialog::ExpiryPropertiesDialog( MainFolderView* tree, KMFolder* 
   moveToHBox->addWidget( moveToRB );
 
   folderSelector = new KMail::FolderRequester( privateLayoutWidget );
+  folderSelector->setShowOutbox( false );
   folderSelector->setFolderTree( tree );
   folderSelector->setMustBeReadWrite( true );
   moveToHBox->addWidget( folderSelector );
