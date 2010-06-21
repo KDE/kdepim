@@ -250,6 +250,7 @@ void EditorContactGroup::Private::clearRecipientClicked()
 
     const int row = mLastRow;
     --mLastRow;
+    mInputs.pop_back();
     delete last->mInput;
     delete last;
 
