@@ -50,4 +50,14 @@ Item {
     border.color: palette.mid
     opacity: 0.25
   }
+
+  Connections {
+    target : application
+    onSelectedItemChanged : {
+      itemViewTopLevel.ListView.view.currentIndex = row;
+      itemViewTopLevel.ListView.view.parent.currentItemId = itemId;
+
+      itemViewTopLevel.ListView.view.parent.itemSelected();
+    }
+  }
 }

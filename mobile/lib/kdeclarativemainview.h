@@ -100,6 +100,7 @@ public slots:
 
 signals:
   void numSelectedAccountsChanged();
+  void selectedItemChanged( int row, qlonglong itemId );
 
 protected:
   QItemSelectionModel* regularSelectionModel() const;
