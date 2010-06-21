@@ -212,7 +212,7 @@ void EditorGeneral::Private::clearEmailClicked()
     --mLastEmailRow;
     --mLastPhoneRow;
     mEmailInputs.pop_back();
-    delete last;
+    last->deleteLater();
 
     // re-add widgets
     mUi.gridLayout->addWidget( mUi.addEmailButton, mLastEmailRow, 2, 1, 1 );
@@ -291,8 +291,8 @@ void EditorGeneral::Private::clearPhoneClicked()
 
     --mLastPhoneRow;
     mPhoneWidgets.pop_back();
-    delete last->mInput;
-    delete last->mType;
+    last->mInput->deleteLater();
+    last->mType->deleteLater();
     delete last;
     
     // re-add widgets

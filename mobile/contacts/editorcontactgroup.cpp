@@ -251,7 +251,7 @@ void EditorContactGroup::Private::clearRecipientClicked()
     const int row = mLastRow;
     --mLastRow;
     mInputs.pop_back();
-    delete last->mInput;
+    last->mInput->deleteLater();
     delete last;
 
     // re-add widgets
