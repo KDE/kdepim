@@ -67,13 +67,13 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="phone1"/>
+      <widget class="MobileLineEdit" name="phone1"/>
      </item>
      <item row="3" column="2">
       <widget class="PhoneTypeCombo" name="phone1Type"/>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="phone2"/>
+      <widget class="MobileLineEdit" name="phone2"/>
      </item>
      <item row="4" column="2">
       <widget class="PhoneTypeCombo" name="phone2Type"/>

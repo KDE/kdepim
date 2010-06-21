@@ -29,7 +29,7 @@
 class PhoneWidgets
 {
   public:
-    PhoneWidgets( QLineEdit *input, PhoneTypeCombo *type )
+    PhoneWidgets( MobileLineEdit *input, PhoneTypeCombo *type )
       : mInput( input ), mType( type )
     {
     }
@@ -37,7 +37,7 @@ class PhoneWidgets
 
   public:
     QString mId;
-    QLineEdit *mInput;
+    MobileLineEdit *mInput;
     PhoneTypeCombo *mType;
 };
 
@@ -58,6 +58,8 @@ class EditorGeneral::Private
       mEmailInputs << mUi.email2;
       mLastEmailRow = 2; // third row
 
+      QObject::connect( mUi.phone1, SIGNAL( clearClicked() ), q, SLOT( clearPhoneClicked() ) );
+      QObject::connect( mUi.phone2, SIGNAL( clearClicked() ), q, SLOT( clearPhoneClicked() ) );
       mPhoneWidgets << new PhoneWidgets( mUi.phone1, mUi.phone1Type );
       mUi.phone1Type->setType( KABC::PhoneNumber::Pref );
       mPhoneWidgets << new PhoneWidgets( mUi.phone2, mUi.phone2Type );
@@ -109,8 +111,9 @@ class EditorGeneral::Private
     }
 
     void addEmailClicked();
-    void addPhoneClicked();
     void clearEmailClicked();
+    void addPhoneClicked();
+    void clearPhoneClicked();
 
   private:
     void addEmailRows( int newRowCount );
@@ -125,64 +128,6 @@ void EditorGeneral::Private::addEmailClicked()
 void EditorGeneral::Private::addPhoneClicked()
 {
   addPhoneRows( mPhoneWidgets.count() + 1 );
-}
-
-void EditorGeneral::Private::clearEmailClicked()
-{
-  int index = 0;
-  for ( ; index < mEmailInputs.count(); ++index ) {
-    if ( mEmailInputs[ index ] == q->sender() ) {
-      break;
-    }
-  }
-
-  Q_ASSERT( index >= 0 && index < mEmailInputs.count() );
-
-  for ( int i = index + 1; i < mEmailInputs.count(); ++i ) {
-    mEmailInputs[ i - 1 ]->setText( mEmailInputs[ i ]->text() );
-  }
-
-  MobileLineEdit *last = mEmailInputs.last();
-  if ( mEmailInputs.count() > 2 ) {
-    // remove widgets from layout
-    mUi.gridLayout->removeWidget( last );
-    mUi.gridLayout->removeWidget( mUi.addEmailButton );
-
-    QList<PhoneWidgets*>::const_iterator widgetIt = mPhoneWidgets.constBegin();
-    for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt ) {
-      mUi.gridLayout->removeWidget( (*widgetIt)->mInput );
-      mUi.gridLayout->removeWidget( (*widgetIt)->mType );
-    }
-
-    mUi.gridLayout->removeWidget( mUi.phoneLabel );
-    mUi.gridLayout->removeWidget( mUi.addPhoneButton );
-    mUi.gridLayout->removeWidget( mUi.saveButton );
-    mUi.gridLayout->removeWidget( mUi.collectionSelector );
-
-    // delete the now obsolete widget
-    --mLastEmailRow;
-    --mLastPhoneRow;
-    mEmailInputs.pop_back();
-    delete last;
-   
-    // re-add widgets
-    mUi.gridLayout->addWidget( mUi.addEmailButton, mLastEmailRow, 2, 1, 1 );
-
-    int row = mLastEmailRow + 1;
-    mUi.gridLayout->addWidget( mUi.phoneLabel, row, 0, 1, 1 );
-    widgetIt = mPhoneWidgets.constBegin();
-    for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt, ++row ) {
-      mUi.gridLayout->addWidget( (*widgetIt)->mInput, row, 1, 1, 1 );
-      mUi.gridLayout->addWidget( (*widgetIt)->mType, row, 2, 1, 1 );
-    }
-
-    mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
-    mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 2 );
-    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 3, 1, 1 );
-    //q->adjustSize();
-  } else {
-    last->clear();
-  }
 }
 
 void EditorGeneral::Private::addEmailRows( int newRowCount )
@@ -230,6 +175,64 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
   mUi.gridLayout->addWidget( mUi.collectionSelector, row, 3, 1, 1 );
 }
 
+void EditorGeneral::Private::clearEmailClicked()
+{
+  int index = 0;
+  for ( ; index < mEmailInputs.count(); ++index ) {
+    if ( mEmailInputs[ index ] == q->sender() ) {
+      break;
+    }
+  }
+
+  Q_ASSERT( index >= 0 && index < mEmailInputs.count() );
+
+  // shift data
+  for ( int i = index + 1; i < mEmailInputs.count(); ++i ) {
+    mEmailInputs[ i - 1 ]->setText( mEmailInputs[ i ]->text() );
+  }
+
+  MobileLineEdit *last = mEmailInputs.last();
+  if ( mEmailInputs.count() > 2 ) {
+    // remove widgets from layout
+    mUi.gridLayout->removeWidget( last );
+    mUi.gridLayout->removeWidget( mUi.addEmailButton );
+
+    QList<PhoneWidgets*>::const_iterator widgetIt = mPhoneWidgets.constBegin();
+    for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt ) {
+      mUi.gridLayout->removeWidget( (*widgetIt)->mInput );
+      mUi.gridLayout->removeWidget( (*widgetIt)->mType );
+    }
+
+    mUi.gridLayout->removeWidget( mUi.phoneLabel );
+    mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+    mUi.gridLayout->removeWidget( mUi.saveButton );
+    mUi.gridLayout->removeWidget( mUi.collectionSelector );
+
+    // delete the now obsolete widget
+    --mLastEmailRow;
+    --mLastPhoneRow;
+    mEmailInputs.pop_back();
+    delete last;
+
+    // re-add widgets
+    mUi.gridLayout->addWidget( mUi.addEmailButton, mLastEmailRow, 2, 1, 1 );
+
+    int row = mLastEmailRow + 1;
+    mUi.gridLayout->addWidget( mUi.phoneLabel, row, 0, 1, 1 );
+    widgetIt = mPhoneWidgets.constBegin();
+    for ( ; widgetIt != mPhoneWidgets.constEnd(); ++widgetIt, ++row ) {
+      mUi.gridLayout->addWidget( (*widgetIt)->mInput, row, 1, 1, 1 );
+      mUi.gridLayout->addWidget( (*widgetIt)->mType, row, 2, 1, 1 );
+    }
+
+    mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 3, 1, 1 );
+  } else {
+    last->clear();
+  }
+}
+
 void EditorGeneral::Private::addPhoneRows( int newRowCount )
 {
   if ( newRowCount <= mPhoneWidgets.count() ) {
@@ -244,10 +247,12 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
   int row = mLastPhoneRow + 1;
   // add new widgets
   for ( ; mPhoneWidgets.count() < newRowCount; ++row, ++mLastPhoneRow ) {
-    QLineEdit *lineEdit = new QLineEdit( q );
+    MobileLineEdit *lineEdit = new MobileLineEdit( q );
     mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
     PhoneTypeCombo *combo = new PhoneTypeCombo( q );
     mUi.gridLayout->addWidget( combo, row, 2, 1, 1 );
+
+    QObject::connect( lineEdit, SIGNAL( clearClicked() ), q, SLOT( clearPhoneClicked() ) );
     mPhoneWidgets << new PhoneWidgets( lineEdit, combo );
   }
 
@@ -255,6 +260,50 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
   mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
   mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 1, 1, 2 );
   mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 3, 1, 1 );
+}
+
+void EditorGeneral::Private::clearPhoneClicked()
+{
+  int index = 0;
+  for ( ; index < mPhoneWidgets.count(); ++index ) {
+    if ( mPhoneWidgets[ index ]->mInput == q->sender() ) {
+      break;
+    }
+  }
+
+  Q_ASSERT( index >= 0 && index < mPhoneWidgets.count() );
+
+  // shift data
+  for ( int i = index + 1; i < mPhoneWidgets.count(); ++i ) {
+    PhoneWidgets *source = mPhoneWidgets[ i ];
+    PhoneWidgets *target = mPhoneWidgets[ i - 1 ];
+    target->mInput->setText( source->mInput->text() );
+    target->mType->setType( source->mType->type() );
+    target->mId = source->mId;
+  }
+
+  PhoneWidgets *last = mPhoneWidgets.last();
+  if ( mPhoneWidgets.count() > 2 ) {
+    // remove widgets from layout
+    mUi.gridLayout->removeWidget( mUi.addPhoneButton );
+    mUi.gridLayout->removeWidget( mUi.saveButton );
+    mUi.gridLayout->removeWidget( mUi.collectionSelector );
+
+    --mLastPhoneRow;
+    mPhoneWidgets.pop_back();
+    delete last->mInput;
+    delete last->mType;
+    delete last;
+    
+    // re-add widgets
+    mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 1, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 3, 1, 1 );
+  } else {
+    last->mInput->clear();
+    last->mType->setType( KABC::PhoneNumber::Home );
+    last->mId = QString();
+  }
 }
 
 EditorGeneral::EditorGeneral( QWidget *parent )
