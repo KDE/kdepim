@@ -1,7 +1,10 @@
 #include "incidencerecurrence.h"
 
+#include <QtCore/QDebug>
+
 #include <KCalendarSystem>
 
+#include "incidencedatetime.h"
 #include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
@@ -24,6 +27,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
     mUi->mWeekDayCombo->addItem( weekDayName );
   }
 
+  connect( mUi->mExceptionDateEdit, SIGNAL(dateChanged(QDate)),
+           SLOT(handleExceptionDateChange(QDate)) );
   connect( mUi->mTypeCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(handleRecurrenceTypeChange(int)));
 }
@@ -46,6 +51,11 @@ bool IncidenceRecurrence::isDirty() const
 bool IncidenceRecurrence::isValid()
 {
   return true;
+}
+
+void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
+{
+  mUi->mExceptionAddButton->setEnabled( currentDate >= mDateTime->startDate() );
 }
 
 void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
@@ -84,6 +94,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
   mUi->mExceptionsLabel->setVisible( enable );
   mUi->mExceptionDateEdit->setVisible( enable );
   mUi->mExceptionAddButton->setVisible( enable );
+  mUi->mExceptionAddButton->setEnabled( mUi->mExceptionDateEdit->date() >= mDateTime->startDate() );
   mUi->mExceptionList->setVisible( enable );
   mUi->mExceptionSeperator->setVisible( enable );
 }

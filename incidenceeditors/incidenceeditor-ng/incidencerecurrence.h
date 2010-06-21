@@ -23,7 +23,8 @@ public:
     virtual bool isValid();
 
 private Q_SLOTS:
-    void handleRecurrenceTypeChange(int);
+    void handleExceptionDateChange( const QDate &currentDate );
+    void handleRecurrenceTypeChange( int currentIndex );
 
 private:
     void toggleRecurrenceWidgets( bool enable );
