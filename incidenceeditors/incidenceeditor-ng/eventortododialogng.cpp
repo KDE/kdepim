@@ -16,6 +16,7 @@
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
 #include "incidencegeneral.h"
+#include "incidencerecurrence.h"
 #include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
@@ -82,7 +83,8 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
 
-
+  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( mUi );
+  mEditor->combine( ieRecurrence );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
              SLOT(updateButtonStatus(bool)) );

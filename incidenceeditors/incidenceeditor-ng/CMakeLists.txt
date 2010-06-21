@@ -15,6 +15,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencealarm.cpp
   incidencegeneral.cpp
   incidencedatetime.cpp
+  incidencerecurrence.cpp
   incidencerecurrenceeditor.cpp
   incidencerecurrencedialog.cpp
 
