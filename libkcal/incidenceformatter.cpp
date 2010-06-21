@@ -3814,10 +3814,10 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
     txt = i18n( "%1 on %2" ).arg( recurStr ).arg( dayNames );
     return txt;
   }
-
   case Recurrence::rMonthlyPos:
   {
     recurStr = i18n( "Recurs monthly", "Recurs every %n months", recur->frequency() );
+
     if ( !recur->monthPositions().isEmpty() ) {
       KCal::RecurrenceRule::WDayPos rule = recur->monthPositions()[0];
       if ( recur->duration() != -1 ) {
@@ -3836,9 +3836,11 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
             arg( dayList[rule.pos() + 31] ).
             arg( calSys->weekDayName( rule.day(), false ) );
       return txt;
+    } else {
+      return recurStr;
     }
+    break;
   }
-
   case Recurrence::rMonthlyDay:
   {
     recurStr = i18n( "Recurs monthly", "Recurs every %n months", recur->frequency() );
@@ -3857,9 +3859,11 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
       }
       txt = i18n( "%1 on the %2 day" ).arg( recurStr ).arg( dayList[days + 31] );
       return txt;
+    } else {
+      return recurStr;
     }
+    break;
   }
-
   case Recurrence::rYearlyMonth:
   {
     recurStr = i18n( "Recurs yearly", "Recurs every %n years", recur->frequency() );
@@ -3897,8 +3901,8 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
       }
       return txt;
     }
+    break;
   }
-
   case Recurrence::rYearlyDay:
   {
     recurStr = i18n( "Recurs yearly", "Recurs every %n years", recur->frequency() );
@@ -3915,7 +3919,10 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
       }
       txt = i18n( "%1 on day %2" ).arg( recurStr ).arg( recur->yearDays()[0] );
       return txt;
+    } else {
+      return recurStr;
     }
+    break;
   }
   case Recurrence::rYearlyPos:
   {
@@ -3940,12 +3947,14 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
             arg( calSys->weekDayName( rule.day(), false ) ).
             arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) );
       return txt;
+    } else {
+      return recurStr;
     }
+   break; 
+  }
   }
 
-  default:
-    return i18n( "Incidence recurs" );
-  }
+  return i18n( "Incidence recurs" );
 }
 
 QString IncidenceFormatter::timeToString( const QDateTime &date, bool shortfmt )
