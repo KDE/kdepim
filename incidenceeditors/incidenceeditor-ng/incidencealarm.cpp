@@ -17,8 +17,6 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
   mDisabledAlarms.setAutoDelete( true );
   mEnabledAlarms.setAutoDelete( true );
 
-  connect( mUi->mAlarmPresetCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(updateAlarmPreset(int)) );
   connect( mUi->mAlarmAddPresetButton, SIGNAL(clicked()),
            SLOT(newAlarmFromPreset()) );
   connect( mUi->mAlarmList, SIGNAL(itemSelectionChanged ()),
