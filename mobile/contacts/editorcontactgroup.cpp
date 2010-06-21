@@ -232,6 +232,7 @@ void EditorContactGroup::Private::clearRecipientClicked()
     Recipient *target = mInputs[ i - 1 ];
     target->mInput->setText( source->mInput->text() );
     target->mItem = source->mItem;
+    target->mPreferredEmail = source->mPreferredEmail;
 
     if ( source->mItem.isValid() ) {
       QObject::disconnect( source->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
@@ -260,6 +261,7 @@ void EditorContactGroup::Private::clearRecipientClicked()
   } else {
     last->mInput->clear();
     last->mItem = Akonadi::Item();
+    last->mPreferredEmail = QString();
   }
 }
 
