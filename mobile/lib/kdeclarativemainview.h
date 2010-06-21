@@ -108,6 +108,7 @@ protected:
   QAbstractItemModel *regularSelectedItems() const;
   QAbstractItemModel *favoriteSelectedItems() const;
   QItemSelectionModel* itemSelectionModel() const;
+  QAbstractItemModel* selectedItemsModel() const;
 
   Akonadi::Item itemFromId( quint64 id ) const;
 

@@ -426,3 +426,8 @@ int KDeclarativeMainView::numSelectedAccounts()
   return resources.size();
 }
 
+QAbstractItemModel* KDeclarativeMainView::selectedItemsModel() const
+{
+  return d->mBnf->selectedItemModel();
+}
+
