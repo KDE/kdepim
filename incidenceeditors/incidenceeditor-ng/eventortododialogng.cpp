@@ -73,7 +73,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( ieDateTime );
 
-  IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( mUi );
+  IncidenceDescription *ieDescription = new IncidenceDescription( mUi );
   mEditor->combine( ieDescription );
 
   IncidenceAlarm *ieAlarm = new IncidenceAlarm( mUi );

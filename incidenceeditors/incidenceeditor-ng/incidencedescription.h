@@ -32,11 +32,11 @@ namespace IncidenceEditorsNG {
  * The IncidenceDescriptionEditor keeps track of the following Incidence parts:
  * - description
  */
-class IncidenceDescriptionEditor : public IncidenceEditor
+class IncidenceDescription : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDescriptionEditor( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceDescription( Ui::EventOrTodoDesktop *ui = 0 );
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );

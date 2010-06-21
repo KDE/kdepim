@@ -28,7 +28,7 @@
 
 using namespace IncidenceEditorsNG;
 
-IncidenceDescriptionEditor::IncidenceDescriptionEditor( Ui::EventOrTodoDesktop *ui )
+IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
@@ -49,7 +49,7 @@ IncidenceDescriptionEditor::IncidenceDescriptionEditor( Ui::EventOrTodoDesktop *
            this, SLOT(checkDirtyStatus()) );
 }
 
-void IncidenceDescriptionEditor::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceDescription::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( incidence ) {
@@ -66,7 +66,7 @@ void IncidenceDescriptionEditor::load( KCal::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceDescriptionEditor::save( KCal::Incidence::Ptr incidence )
+void IncidenceDescription::save( KCal::Incidence::Ptr incidence )
 {
   if ( mUi->mEditToolBarPlaceHolder->isVisible() ) {
     incidence->setDescription( mUi->mDescriptionEdit->toHtml(), true );
@@ -75,7 +75,7 @@ void IncidenceDescriptionEditor::save( KCal::Incidence::Ptr incidence )
   }
 }
 
-bool IncidenceDescriptionEditor::isDirty() const
+bool IncidenceDescription::isDirty() const
 {
   if ( mUi->mEditToolBarPlaceHolder->isVisible() ) {
     return !mLoadedIncidence->descriptionIsRich() ||
@@ -86,7 +86,7 @@ bool IncidenceDescriptionEditor::isDirty() const
   }
 }
 
-void IncidenceDescriptionEditor::enableRichTextDescription( bool enable )
+void IncidenceDescription::enableRichTextDescription( bool enable )
 {
   QString rt( i18nc( "@info:label", "Enable rich text" ) );
   QString placeholder( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
@@ -106,12 +106,12 @@ void IncidenceDescriptionEditor::enableRichTextDescription( bool enable )
   checkDirtyStatus();
 }
 
-void IncidenceDescriptionEditor::toggleRichTextDescription()
+void IncidenceDescription::toggleRichTextDescription()
 {
   enableRichTextDescription( !mUi->mEditToolBarPlaceHolder->isVisible() );
 }
 
-void IncidenceDescriptionEditor::setupToolBar()
+void IncidenceDescription::setupToolBar()
 {
   KActionCollection *collection = new KActionCollection( this ); //krazy:exclude=tipsandthis
   mUi->mDescriptionEdit->createActions( collection );
