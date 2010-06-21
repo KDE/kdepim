@@ -7,52 +7,69 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>144</height>
+    <height>115</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Name</string>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="groupName"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Recipient</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="MobileLineEdit" name="recipient1" native="true"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="MobileLineEdit" name="recipient2" native="true"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="addRecipientButton">
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="saveButton">
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="Akonadi::CollectionComboBox" name="collectionSelector"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLineEdit" name="groupName"/>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Recipient</string>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>25</height>
+      </size>
      </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="recipient1"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLineEdit" name="recipient2"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="addRecipientButton">
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QPushButton" name="saveButton">
-     <property name="text">
-      <string>Save</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="Akonadi::CollectionComboBox" name="collectionSelector"/>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -61,6 +78,11 @@
    <class>Akonadi::CollectionComboBox</class>
    <extends>QComboBox</extends>
    <header location="global">akonadi/collectioncombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MobileLineEdit</class>
+   <extends>QWidget</extends>
+   <header>mobilelineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

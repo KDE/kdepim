@@ -48,6 +48,8 @@ MobileLineEdit::MobileLineEdit( QWidget *parent )
   d->mEdit = new QLineEdit( this );
   box->addWidget( d->mEdit );
 
+  connect( d->mEdit, SIGNAL( textEdited( QString ) ), SIGNAL( textEdited( QString ) ) );
+  
   d->mButton = new QPushButton( this );
   d->mButton->setText( QLatin1String( "X" ) ); // TODO icon
   d->mButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
@@ -70,6 +72,11 @@ void MobileLineEdit::setText( const QString &text )
 QString MobileLineEdit::text() const
 {
   return d->mEdit->text();
+}
+
+void MobileLineEdit::setCompleter( QCompleter *completer )
+{
+  d->mEdit->setCompleter( completer );
 }
 
 void MobileLineEdit::clear()

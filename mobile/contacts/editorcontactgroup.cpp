@@ -61,7 +61,7 @@ class ContactsWithEmailFilterModel : public QSortFilterProxyModel
 class Recipient
 {
   public:
-    Recipient( QLineEdit *input, QObject *receiver ) : mInput( input )
+    Recipient( MobileLineEdit *input, QObject *receiver ) : mInput( input )
     {
       ContactsWithEmailFilterModel *filter = new ContactsWithEmailFilterModel( mInput );
       filter->setSourceModel( Akonadi::ContactCompletionModel::self() );
@@ -72,10 +72,12 @@ class Recipient
 
       QObject::connect( completer, SIGNAL( activated( const QModelIndex& ) ), receiver, SLOT( completed( const QModelIndex& ) ) );
       mInput->setCompleter( completer );
+
+      QObject::connect( mInput, SIGNAL( clearClicked() ), receiver, SLOT( clearRecipientClicked() ) );
     }
    
   public:
-    QLineEdit* mInput;
+    MobileLineEdit* mInput;
     
     Akonadi::Item mItem;
     QString mPreferredEmail;
@@ -126,6 +128,8 @@ class EditorContactGroup::Private
     void completed( const QModelIndex &index );
 
     void textEdited( const QString &text );
+
+    void clearRecipientClicked();
     
   private:
     void addRows( int newRowCount );
@@ -211,6 +215,54 @@ void EditorContactGroup::Private::textEdited( const QString &text )
   }  
 }
 
+void EditorContactGroup::Private::clearRecipientClicked()
+{
+  int index = 0;
+  for ( ; index < mInputs.count(); ++index ) {
+    if ( mInputs[ index ]->mInput == q->sender() ) {
+      break;
+    }
+  }
+
+  Q_ASSERT( index >= 0 && index < mInputs.count() );
+
+  // shift data
+  for ( int i = index + 1; i < mInputs.count(); ++i ) {
+    Recipient *source = mInputs[ i ];
+    Recipient *target = mInputs[ i - 1 ];
+    target->mInput->setText( source->mInput->text() );
+    target->mItem = source->mItem;
+
+    if ( source->mItem.isValid() ) {
+      QObject::disconnect( source->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
+      QObject::connect( target->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
+    }
+  }
+
+  Recipient *last = mInputs.last();
+  if ( mInputs.count() > 2 ) {
+    // remove widgets from layout
+    mUi.gridLayout->removeWidget( mUi.addRecipientButton );
+
+    mUi.gridLayout->removeWidget( mUi.saveButton );
+    mUi.gridLayout->removeWidget( mUi.collectionSelector );
+
+    const int row = mLastRow;
+    --mLastRow;
+    delete last->mInput;
+    delete last;
+
+    // re-add widgets
+    mUi.gridLayout->addWidget( mUi.addRecipientButton, mLastRow, 2, 1, 1 );
+
+    mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 2, 1, 1 );
+  } else {
+    last->mInput->clear();
+    last->mItem = Akonadi::Item();
+  }
+}
+
 void EditorContactGroup::Private::addRows( int newRowCount )
 {
   if ( newRowCount <= mInputs.count() ) {
@@ -227,7 +279,7 @@ void EditorContactGroup::Private::addRows( int newRowCount )
   
   // add new widgets
   for ( ; mInputs.count() < newRowCount; ++row, ++mLastRow ) {
-    QLineEdit *lineEdit = new QLineEdit( q );
+    MobileLineEdit *lineEdit = new MobileLineEdit( q );
     mUi.gridLayout->addWidget( lineEdit, row, 1, 1, 1 );
     mInputs << new Recipient( lineEdit, q );
   }

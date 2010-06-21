@@ -22,6 +22,8 @@
 
 #include <QtGui/QWidget>
 
+class QCompleter;
+
 class MobileLineEdit : public QWidget
 {
   Q_OBJECT
@@ -35,8 +37,11 @@ class MobileLineEdit : public QWidget
 
     QString text() const;
 
+    void setCompleter( QCompleter *completer );
+    
   Q_SIGNALS:
     void clearClicked();
+    void textEdited( const QString &text );
 
   public Q_SLOTS:
     void clear();
