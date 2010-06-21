@@ -17,7 +17,7 @@
 
 */
 
-#include "incidenceattachmenteditor.h"
+#include "incidenceattachment.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QMimeData>
@@ -45,7 +45,7 @@
 
 using namespace IncidenceEditorsNG;
 
-IncidenceAttachmentEditor::IncidenceAttachmentEditor( Ui::EventOrTodoDesktop *ui )
+IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
   , mPopupMenu( new KMenu( this ) )
@@ -57,7 +57,7 @@ IncidenceAttachmentEditor::IncidenceAttachmentEditor( Ui::EventOrTodoDesktop *ui
   connect( mUi->mRemoveButton, SIGNAL(clicked()), SLOT(removeSelectedAttachments()) );
 }
 
-void IncidenceAttachmentEditor::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceAttachment::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   mAttachmentView->clear();
@@ -68,7 +68,7 @@ void IncidenceAttachmentEditor::load( KCal::Incidence::ConstPtr incidence )
     new AttachmentIconItem( (*it), mAttachmentView );
 }
 
-void IncidenceAttachmentEditor::save( KCal::Incidence::Ptr incidence )
+void IncidenceAttachment::save( KCal::Incidence::Ptr incidence )
 {
   incidence->clearAttachments();
 
@@ -80,7 +80,7 @@ void IncidenceAttachmentEditor::save( KCal::Incidence::Ptr incidence )
   }
 }
 
-bool IncidenceAttachmentEditor::isDirty() const
+bool IncidenceAttachment::isDirty() const
 {
   if ( mLoadedIncidence ) {
     if ( mAttachmentView->count() != mLoadedIncidence->attachments().count() )
@@ -128,7 +128,7 @@ bool IncidenceAttachmentEditor::isDirty() const
   return false;
 }
 
-int IncidenceAttachmentEditor::attachmentCount() const
+int IncidenceAttachment::attachmentCount() const
 {
   return mAttachmentView->count();
 }
@@ -136,7 +136,7 @@ int IncidenceAttachmentEditor::attachmentCount() const
 
 /// Private slots
 
-void IncidenceAttachmentEditor::addAttachment()
+void IncidenceAttachment::addAttachment()
 {
   AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachmentView );
 
@@ -152,23 +152,23 @@ void IncidenceAttachmentEditor::addAttachment()
   checkDirtyStatus();
 }
 
-void IncidenceAttachmentEditor::copyToClipboard()
+void IncidenceAttachment::copyToClipboard()
 {
   QApplication::clipboard()->setMimeData( mAttachmentView->mimeData(), QClipboard::Clipboard );
 }
 
-void IncidenceAttachmentEditor::openURL( const KUrl &url )
+void IncidenceAttachment::openURL( const KUrl &url )
 {
   QString uri = url.url();
   UriHandler::process( uri );
 }
 
-void IncidenceAttachmentEditor::pasteFromClipboard()
+void IncidenceAttachment::pasteFromClipboard()
 {
   handlePasteOrDrop( QApplication::clipboard()->mimeData() );
 }
 
-void IncidenceAttachmentEditor::removeSelectedAttachments()
+void IncidenceAttachment::removeSelectedAttachments()
 {
   QList<QListWidgetItem *> selected;
   QStringList labels;
@@ -218,7 +218,7 @@ void IncidenceAttachmentEditor::removeSelectedAttachments()
   checkDirtyStatus();
 }
 
-void IncidenceAttachmentEditor::saveAttachment( QListWidgetItem *item )
+void IncidenceAttachment::saveAttachment( QListWidgetItem *item )
 {
   Q_ASSERT( item );
   Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
@@ -257,7 +257,7 @@ void IncidenceAttachmentEditor::saveAttachment( QListWidgetItem *item )
   }
 }
 
-void IncidenceAttachmentEditor::saveSelectedAttachments()
+void IncidenceAttachment::saveSelectedAttachments()
 {
   for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
@@ -266,7 +266,7 @@ void IncidenceAttachmentEditor::saveSelectedAttachments()
   }
 }
 
-void IncidenceAttachmentEditor::showAttachment( QListWidgetItem *item )
+void IncidenceAttachment::showAttachment( QListWidgetItem *item )
 {
   Q_ASSERT( item );
   Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
@@ -282,7 +282,7 @@ void IncidenceAttachmentEditor::showAttachment( QListWidgetItem *item )
   }
 }
 
-void IncidenceAttachmentEditor::showContextMenu( const QPoint &pos )
+void IncidenceAttachment::showContextMenu( const QPoint &pos )
 {
   QListWidgetItem *item = mAttachmentView->itemAt( pos );
   const bool enable = item != 0;
@@ -305,7 +305,7 @@ void IncidenceAttachmentEditor::showContextMenu( const QPoint &pos )
   mPopupMenu->exec( mAttachmentView->mapToGlobal( pos ) );
 }
 
-void IncidenceAttachmentEditor::showSelectedAttachments()
+void IncidenceAttachment::showSelectedAttachments()
 {
   for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
@@ -314,13 +314,13 @@ void IncidenceAttachmentEditor::showSelectedAttachments()
   }
 }
 
-void IncidenceAttachmentEditor::cutToClipboard()
+void IncidenceAttachment::cutToClipboard()
 {
   copyToClipboard();
   removeSelectedAttachments();
 }
 
-void IncidenceAttachmentEditor::editSelectedAttachments()
+void IncidenceAttachment::editSelectedAttachments()
 {
   for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
@@ -339,7 +339,7 @@ void IncidenceAttachmentEditor::editSelectedAttachments()
   }
 }
 
-void IncidenceAttachmentEditor::slotItemRenamed ( QListWidgetItem *item )
+void IncidenceAttachment::slotItemRenamed ( QListWidgetItem *item )
 {
   Q_ASSERT( item );
   Q_ASSERT( dynamic_cast<AttachmentIconItem *>( item ) );
@@ -347,7 +347,7 @@ void IncidenceAttachmentEditor::slotItemRenamed ( QListWidgetItem *item )
   checkDirtyStatus();
 }
 
-void IncidenceAttachmentEditor::slotSelectionChanged()
+void IncidenceAttachment::slotSelectionChanged()
 {
   bool selected = false;
   for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
@@ -363,7 +363,7 @@ void IncidenceAttachmentEditor::slotSelectionChanged()
 
 /// Private functions
 
-void IncidenceAttachmentEditor::handlePasteOrDrop( const QMimeData *mimeData )
+void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
 {
   KUrl::List urls;
   bool probablyWeHaveUris = false;
@@ -450,7 +450,7 @@ void IncidenceAttachmentEditor::handlePasteOrDrop( const QMimeData *mimeData )
   }
 }
 
-void IncidenceAttachmentEditor::setupActions()
+void IncidenceAttachment::setupActions()
 {
   KActionCollection *ac = new KActionCollection( this );
   ac->addAssociatedWidget( this );
@@ -492,7 +492,7 @@ void IncidenceAttachmentEditor::setupActions()
   mPopupMenu->addAction( mEditAction );
 }
 
-void IncidenceAttachmentEditor::setupAttachmentIconView()
+void IncidenceAttachment::setupAttachmentIconView()
 {
   mAttachmentView = new AttachmentIconView( this );
   mAttachmentView->setWhatsThis( i18nc( "@info:whatsthis",
@@ -518,7 +518,7 @@ void IncidenceAttachmentEditor::setupAttachmentIconView()
 //   new AttachmentIconItem( attachment, mAttachmentView );
 // }
 
-void IncidenceAttachmentEditor::addDataAttachment( const QByteArray &data,
+void IncidenceAttachment::addDataAttachment( const QByteArray &data,
                                                    const QString &mimeType,
                                                    const QString &label )
 {
@@ -544,7 +544,7 @@ void IncidenceAttachmentEditor::addDataAttachment( const QByteArray &data,
   checkDirtyStatus();
 }
 
-void IncidenceAttachmentEditor::addUriAttachment( const QString &uri,
+void IncidenceAttachment::addUriAttachment( const QString &uri,
                                                   const QString &mimeType,
                                                   const QString &label,
                                                   bool inLine )
@@ -580,3 +580,5 @@ void IncidenceAttachmentEditor::addUriAttachment( const QString &uri,
     KIO::NetAccess::removeTempFile( tmpFile );
   }
 }
+
+#include "moc_incidenceattachment.cpp"

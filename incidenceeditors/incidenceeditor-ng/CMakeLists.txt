@@ -2,35 +2,19 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-#     incidenceeditor-ng/incidenceeditor.cpp
-#     incidenceeditor-ng/combinedincidenceeditor.cpp
-#     incidenceeditor-ng/incidencegeneraleditor.cpp
-#     incidenceeditor-ng/incidencedatetimeeditor.cpp
-#     incidenceeditor-ng/incidencedescriptioneditor.cpp
-#     incidenceeditor-ng/incidenceattachmenteditor.cpp
-#     incidenceeditor-ng/incidencerecurrenceeditor.cpp
-#     incidenceeditor-ng/incidencerecurrencedialog.cpp
-#     incidenceeditor-ng/incidenceeditorgeneralpage.cpp
-
-
-   # IncidenceEditorsNG ui files
-#    incidenceeditor-ng/attachmenteditdialog.ui
-#    incidenceeditor-ng/incidencegeneraleditor.ui
-#    incidenceeditor-ng/incidencedatetime.ui
-#    incidenceeditor-ng/incidencedescription.ui
-#    incidenceeditor-ng/incidenceattachmenteditor.ui
-#    incidenceeditor-ng/incidencerecurrenceeditor.ui
-
 set(incidenceeditors_ng_shared_LIB_SRCS
   alarmpresets.cpp
   alarmdialog.cpp
   editoritemmanager.cpp # TODO: Move to akonadi libs when finished
   recurrencepresets.cpp
+
+  # Shared incidence editors code
   incidenceeditor.cpp
   combinedincidenceeditor.cpp
+  # Specific editors
   incidencealarm.cpp
-  incidencegeneraleditor.cpp
-  incidencedatetimeeditor.cpp
+  incidencegeneral.cpp
+  incidencedatetime.cpp
   incidencerecurrenceeditor.cpp
   incidencerecurrencedialog.cpp
 
@@ -38,7 +22,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
   ../categoryselectdialog.cpp
-  ../editoralarms.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
 )
@@ -50,8 +33,8 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
 
   attachmenticonview.cpp
   attachmenteditdialog.cpp
-  incidenceattachmenteditor.cpp
-  incidencedescriptioneditor.cpp
+  incidenceattachment.cpp
+  incidencedescription.cpp
 
   #incidenceeditorgeneralpage.cpp
   #eventortododialog.cpp

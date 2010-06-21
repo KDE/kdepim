@@ -37,12 +37,12 @@ namespace IncidenceEditorsNG {
 
 class IncidenceRecurrenceDialog;
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTimeEditor : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDateTimeEditor( Ui::EventOrTodoDesktop *ui = 0 );
-    ~IncidenceDateTimeEditor();
+    IncidenceDateTime( Ui::EventOrTodoDesktop *ui = 0 );
+    ~IncidenceDateTime();
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );

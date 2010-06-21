@@ -17,7 +17,7 @@
 
 */
 
-#include "incidencegeneraleditor.h"
+#include "incidencegeneral.h"
 
 #ifdef KDEPIM_MOBILE_UI
 #include <QtGui/QTreeWidgetItem>
@@ -35,7 +35,7 @@ using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
 
 
-IncidenceGeneralEditor::IncidenceGeneralEditor( Ui::EventOrTodoDesktop *ui )
+IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
@@ -61,7 +61,7 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( Ui::EventOrTodoDesktop *ui )
            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceGeneralEditor::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceGeneral::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
@@ -80,7 +80,7 @@ void IncidenceGeneralEditor::load( KCal::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceGeneralEditor::save( KCal::Incidence::Ptr incidence )
+void IncidenceGeneral::save( KCal::Incidence::Ptr incidence )
 {
   Q_ASSERT( incidence );
   incidence->setSummary( mUi->mSummaryEdit->text() );
@@ -99,7 +99,7 @@ void IncidenceGeneralEditor::save( KCal::Incidence::Ptr incidence )
   }
 }
 
-bool IncidenceGeneralEditor::isDirty() const
+bool IncidenceGeneral::isDirty() const
 {
 #ifndef KDEPIM_MOBILE_UI
   if ( mLoadedIncidence ) {
@@ -123,7 +123,7 @@ bool IncidenceGeneralEditor::isDirty() const
   }
 }
 
-bool IncidenceGeneralEditor::isValid()
+bool IncidenceGeneral::isValid()
 {
   if ( mUi->mSummaryEdit->text().isEmpty() ) {
     mUi->mSummaryEdit->setFocus();
@@ -133,7 +133,7 @@ bool IncidenceGeneralEditor::isValid()
   return true;
 }
 
-bool IncidenceGeneralEditor::categoriesChanged() const
+bool IncidenceGeneral::categoriesChanged() const
 {
   // If no Incidence was loaded, mSelectedCategories should be empty.
   bool categoriesEqual = mSelectedCategories.isEmpty();
@@ -149,7 +149,7 @@ bool IncidenceGeneralEditor::categoriesChanged() const
   return !categoriesEqual;
 }
 
-void IncidenceGeneralEditor::selectCategories()
+void IncidenceGeneral::selectCategories()
 {
 #ifdef KDEPIM_MOBILE_UI
   CategoryConfig cc( EditorConfig::instance()->config() );
@@ -162,7 +162,7 @@ void IncidenceGeneralEditor::selectCategories()
 #endif
 }
 
-void IncidenceGeneralEditor::setCategories( const QStringList &categories )
+void IncidenceGeneral::setCategories( const QStringList &categories )
 {
   mSelectedCategories = categories;
 #ifdef KDEPIM_MOBILE_UI
@@ -171,4 +171,4 @@ void IncidenceGeneralEditor::setCategories( const QStringList &categories )
   checkDirtyStatus();
 }
 
-#include "moc_incidencegeneraleditor.cpp"
+#include "moc_incidencegeneral.cpp"

@@ -17,7 +17,7 @@
 
 */
 
-#include "incidencedescriptioneditor.h"
+#include "incidencedescription.h"
 
 #include <QtCore/QDebug>
 
@@ -143,4 +143,4 @@ void IncidenceDescriptionEditor::setupToolBar()
   mUi->mEditToolBarPlaceHolder->setVisible( false );
 }
 
-#include "moc_incidencedescriptioneditor.cpp"
+#include "moc_incidencedescription.cpp"

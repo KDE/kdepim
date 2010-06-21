@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "incidencedatetimeeditor.h"
+#include "incidencedatetime.h"
 
 #include <KCal/ICalTimeZones>
 #include <KCal/IncidenceFormatter>
@@ -41,7 +41,7 @@
 using namespace IncidenceEditorsNG;
 using namespace KCal;
 
-IncidenceDateTimeEditor::IncidenceDateTimeEditor( Ui::EventOrTodoDesktop *ui )
+IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mTimeZones( new ICalTimeZones )
   , mUi( ui )
@@ -74,20 +74,20 @@ IncidenceDateTimeEditor::IncidenceDateTimeEditor( Ui::EventOrTodoDesktop *ui )
            SLOT(checkDirtyStatus()) );
 }
 
-IncidenceDateTimeEditor::~IncidenceDateTimeEditor()
+IncidenceDateTime::~IncidenceDateTime()
 {
   delete mTimeZones;
   delete mLastRecurrence;
 }
 
-void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceDateTime::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
 
   // We can only handle events or todos.
-  if ( KCal::Todo::ConstPtr todo = IncidenceDateTimeEditor::incidence<Todo>() ) {
+  if ( KCal::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
     load( todo );
-  } else if ( KCal::Event::ConstPtr event = IncidenceDateTimeEditor::incidence<Event>() ) {
+  } else if ( KCal::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
     load( event );
   } else {
     kDebug() << "Not an event or an todo.";
@@ -177,11 +177,11 @@ void IncidenceDateTimeEditor::load( KCal::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
+void IncidenceDateTime::save( KCal::Incidence::Ptr incidence )
 {
-  if ( KCal::Todo::Ptr todo = IncidenceDateTimeEditor::incidence<Todo>( incidence ) )
+  if ( KCal::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>( incidence ) )
     save( todo );
-  else if ( KCal::Event::Ptr event = IncidenceDateTimeEditor::incidence<Event>( incidence ) )
+  else if ( KCal::Event::Ptr event = IncidenceDateTime::incidence<Event>( incidence ) )
     save( event );
   else
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
@@ -195,7 +195,7 @@ void IncidenceDateTimeEditor::save( KCal::Incidence::Ptr incidence )
 //  }
 }
 
-bool IncidenceDateTimeEditor::isDirty() const
+bool IncidenceDateTime::isDirty() const
 {
 //  // When no alarm was set on the loaded incidence, the last alarms array should
 //  // be empty, otherwise the alarms have changed.
@@ -212,9 +212,9 @@ bool IncidenceDateTimeEditor::isDirty() const
 //  if ( mLastRecurrence && *mLastRecurrence != *mLoadedIncidence->recurrence() )
 //    return true;
 
-  if ( KCal::Todo::ConstPtr todo = IncidenceDateTimeEditor::incidence<Todo>() ) {
+  if ( KCal::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
     return isDirty( todo );
-  } else if ( KCal::Event::ConstPtr event = IncidenceDateTimeEditor::incidence<Event>() ) {
+  } else if ( KCal::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
     return isDirty( event );
   } else {
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::isDirty", "Only implemented for todos and events" );
@@ -222,14 +222,14 @@ bool IncidenceDateTimeEditor::isDirty() const
   }
 }
 
-void IncidenceDateTimeEditor::setActiveDate( const QDate &activeDate )
+void IncidenceDateTime::setActiveDate( const QDate &activeDate )
 {
   mActiveDate = activeDate;
 }
 
 /// private slots for General
 
-void IncidenceDateTimeEditor::editRecurrence()
+void IncidenceDateTime::editRecurrence()
 {
 #if 0 //ifndef KDEPIM_MOBILE_UI
   Q_ASSERT( mLastRecurrence );
@@ -255,7 +255,7 @@ void IncidenceDateTimeEditor::editRecurrence()
 #endif
 }
 
-void IncidenceDateTimeEditor::setTimeZonesVisibility( bool visible )
+void IncidenceDateTime::setTimeZonesVisibility( bool visible )
 {
   static const QString tz( i18nc( "@info:label", "Time zones" ) );
 
@@ -274,12 +274,12 @@ void IncidenceDateTimeEditor::setTimeZonesVisibility( bool visible )
   mUi->mTimeZoneComboEnd->setVisible( visible );
 }
 
-void IncidenceDateTimeEditor::toggleTimeZoneVisibility()
+void IncidenceDateTime::toggleTimeZoneVisibility()
 {
   setTimeZonesVisibility( !mUi->mTimeZoneComboStart->isVisible() );
 }
 
-void IncidenceDateTimeEditor::startTimeChanged( const QTime &newTime )
+void IncidenceDateTime::startTimeChanged( const QTime &newTime )
 {
   if ( !newTime.isValid() )
     return;
@@ -299,7 +299,7 @@ void IncidenceDateTimeEditor::startTimeChanged( const QTime &newTime )
   checkDirtyStatus();
 }
 
-void IncidenceDateTimeEditor::startDateChanged( const QDate &newDate )
+void IncidenceDateTime::startDateChanged( const QDate &newDate )
 {
   if ( !newDate.isValid() )
     return;
@@ -318,7 +318,7 @@ void IncidenceDateTimeEditor::startDateChanged( const QDate &newDate )
   checkDirtyStatus();
 }
 
-void IncidenceDateTimeEditor::startSpecChanged()
+void IncidenceDateTime::startSpecChanged()
 {
   if ( mUi->mEndCheck->isChecked()
     && currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() )
@@ -328,7 +328,7 @@ void IncidenceDateTimeEditor::startSpecChanged()
 //   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
 }
 
-void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
+void IncidenceDateTime::updateRecurrencePreset( int index )
 {
 //  mUi->mRecurrenceEditButton->setEnabled( mUi->mRecurrenceCombo->currentIndex() > 0 );
 
@@ -364,7 +364,7 @@ void IncidenceDateTimeEditor::updateRecurrencePreset( int index )
   checkDirtyStatus();
 }
 
-void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )
+void IncidenceDateTime::updateRecurrenceSummary( KCal::Incidence::ConstPtr incidence )
 {
 #ifdef KDEPIM_MOBILE_UI
   Q_UNUSED( incidence );
@@ -379,7 +379,7 @@ void IncidenceDateTimeEditor::updateRecurrenceSummary( KCal::Incidence::ConstPtr
 
 /// private slots for Todo
 
-void IncidenceDateTimeEditor::enableStartEdit( bool enable )
+void IncidenceDateTime::enableStartEdit( bool enable )
 {
   mUi->mStartDateEdit->setEnabled( enable );
 
@@ -402,7 +402,7 @@ void IncidenceDateTimeEditor::enableStartEdit( bool enable )
   checkDirtyStatus();
 }
 
-void IncidenceDateTimeEditor::enableEndEdit( bool enable )
+void IncidenceDateTime::enableEndEdit( bool enable )
 {
   mUi->mEndDateEdit->setEnabled( enable );
 
@@ -424,7 +424,7 @@ void IncidenceDateTimeEditor::enableEndEdit( bool enable )
   checkDirtyStatus();
 }
 
-void IncidenceDateTimeEditor::enableTimeEdits()
+void IncidenceDateTime::enableTimeEdits()
 {
   // NOTE: assumes that the initial times are initialized.
   const bool wholeDayChecked = mUi->mWholeDayCheck->isChecked();
@@ -448,7 +448,7 @@ void IncidenceDateTimeEditor::enableTimeEdits()
 #endif
 }
 
-bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
+bool IncidenceDateTime::isDirty( KCal::Todo::ConstPtr todo ) const
 {
   Q_ASSERT( todo );
 
@@ -477,7 +477,7 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Todo::ConstPtr todo ) const
 
 /// Event specific methods
 
-bool IncidenceDateTimeEditor::isDirty( KCal::Event::ConstPtr event ) const
+bool IncidenceDateTime::isDirty( KCal::Event::ConstPtr event ) const
 {
   // When the check box is checked, it has time associated and thus is not an all
   // day event. So the editor is dirty when the event is allDay and the checkbox
@@ -498,7 +498,7 @@ bool IncidenceDateTimeEditor::isDirty( KCal::Event::ConstPtr event ) const
 
 /// Private methods
 
-KDateTime IncidenceDateTimeEditor::currentStartDateTime() const
+KDateTime IncidenceDateTime::currentStartDateTime() const
 {
   return KDateTime(
     mUi->mStartDateEdit->date(),
@@ -506,7 +506,7 @@ KDateTime IncidenceDateTimeEditor::currentStartDateTime() const
     mUi->mTimeZoneComboStart->selectedTimeSpec() );
 }
 
-KDateTime IncidenceDateTimeEditor::currentEndDateTime() const
+KDateTime IncidenceDateTime::currentEndDateTime() const
 {
   return KDateTime(
     mUi->mEndDateEdit->date(),
@@ -514,7 +514,7 @@ KDateTime IncidenceDateTimeEditor::currentEndDateTime() const
     mUi->mTimeZoneComboEnd->selectedTimeSpec() );
 }
 
-void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
+void IncidenceDateTime::load( KCal::Event::ConstPtr event )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartLabel->setVisible( true );
@@ -600,7 +600,7 @@ void IncidenceDateTimeEditor::load( KCal::Event::ConstPtr event )
   updateRecurrenceSummary( event );
 }
 
-void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
+void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartLabel->setVisible( false );
@@ -673,7 +673,7 @@ void IncidenceDateTimeEditor::load( KCal::Todo::ConstPtr todo )
   updateRecurrenceSummary( todo );
 }
 
-void IncidenceDateTimeEditor::save( KCal::Event::Ptr event )
+void IncidenceDateTime::save( KCal::Event::Ptr event )
 {
   if ( mUi->mWholeDayCheck->isChecked() ) { // Timed event
     event->setAllDay( true );
@@ -702,12 +702,12 @@ void IncidenceDateTimeEditor::save( KCal::Event::Ptr event )
 #endif
 }
 
-void IncidenceDateTimeEditor::save( KCal::Todo::Ptr todo )
+void IncidenceDateTime::save( KCal::Todo::Ptr todo )
 {
   Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "not implemented" );
 }
 
-void IncidenceDateTimeEditor::setDateTimes( const KDateTime &start, const KDateTime &end )
+void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &end )
 {
   if ( start.isValid() ) {
     mUi->mStartDateEdit->setDate( start.date() );
@@ -734,7 +734,7 @@ void IncidenceDateTimeEditor::setDateTimes( const KDateTime &start, const KDateT
   mCurrentStartDateTime = currentStartDateTime();
 }
 
-void IncidenceDateTimeEditor::setTimes( const KDateTime &start, const KDateTime &end )
+void IncidenceDateTime::setTimes( const KDateTime &start, const KDateTime &end )
 {
   // like setDateTimes(), but it set only the start/end time, not the date
   // it is used while applying a template to an event.
@@ -750,4 +750,4 @@ void IncidenceDateTimeEditor::setTimes( const KDateTime &start, const KDateTime 
 //   emitDateTimeStr();
 }
 
-#include "moc_incidencedatetimeeditor.cpp"
+#include "moc_incidencedatetime.cpp"

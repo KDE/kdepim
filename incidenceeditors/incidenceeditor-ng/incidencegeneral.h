@@ -35,11 +35,11 @@ namespace IncidenceEditorsNG {
  * - Location
  * - Categories
  */
-class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneralEditor : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneral : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceGeneralEditor( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceGeneral( Ui::EventOrTodoDesktop *ui = 0 );
 
     virtual void load(KCal::Incidence::ConstPtr incidence);
     virtual void save(KCal::Incidence::Ptr incidence);

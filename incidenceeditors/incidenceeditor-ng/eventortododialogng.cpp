@@ -12,10 +12,10 @@
 #include "combinedincidenceeditor.h"
 #include "editoritemmanager.h"
 #include "incidencealarm.h"
-#include "incidenceattachmenteditor.h"
-#include "incidencedatetimeeditor.h"
-#include "incidencedescriptioneditor.h"
-#include "incidencegeneraleditor.h"
+#include "incidenceattachment.h"
+#include "incidencedatetime.h"
+#include "incidencedescription.h"
+#include "incidencegeneral.h"
 #include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
@@ -67,10 +67,10 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 
   // Now instantiate the logic of the dialog. These editors update the ui, validate
   // fields and load/store incidences in the ui.
-  IncidenceGeneralEditor *ieGeneral = new IncidenceGeneralEditor( mUi );
+  IncidenceGeneral *ieGeneral = new IncidenceGeneral( mUi );
   mEditor->combine( ieGeneral );
 
-  IncidenceDateTimeEditor *ieDateTime = new IncidenceDateTimeEditor( mUi );
+  IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( ieDateTime );
 
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( mUi );
@@ -79,7 +79,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceAlarm *ieAlarm = new IncidenceAlarm( mUi );
   mEditor->combine( ieAlarm );
 
-  IncidenceAttachmentEditor *ieAttachments = new IncidenceAttachmentEditor( mUi );
+  IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
 
 

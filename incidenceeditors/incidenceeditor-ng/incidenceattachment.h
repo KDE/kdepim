@@ -35,11 +35,11 @@ namespace IncidenceEditorsNG {
 
 class AttachmentIconView;
 
-class IncidenceAttachmentEditor : public IncidenceEditor
+class IncidenceAttachment : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceAttachmentEditor( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAttachment( Ui::EventOrTodoDesktop *ui = 0 );
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
