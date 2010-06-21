@@ -290,9 +290,7 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(kalarm)
   endif (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW)
 
-  if (Grantlee_FOUND)
-    macro_optional_add_subdirectory(kjots)
-  endif (Grantlee_FOUND)
+  macro_optional_add_subdirectory(kjots)
   if (KDEPIMLIBS_KRESOURCES_LIBRARY)
     macro_optional_add_subdirectory(knotes)
   endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
