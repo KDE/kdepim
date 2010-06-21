@@ -66,6 +66,7 @@ class KCheckComboBox::Private
 
 void KCheckComboBox::Private::makeInsertedItemsCheckable(const QModelIndex &parent, int start, int end)
 {
+  Q_UNUSED( parent );
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>( q->model() );
   Q_ASSERT( model );
   for ( int r = start; r <= end; ++r ) {
@@ -184,6 +185,9 @@ QStringList KCheckComboBox::checkedItems() const
     QModelIndexList indexes = model()->match( index, Qt::CheckStateRole,
                                               Qt::Checked, -1, Qt::MatchExactly );
     foreach ( const QModelIndex &index, indexes ) {
+      if ( index.data( Qt::UserRole ).isNull() )
+        items += index.data( Qt::DisplayRole ).toString();
+      else
       items += index.data( Qt::UserRole ).toString();
     }
   }
