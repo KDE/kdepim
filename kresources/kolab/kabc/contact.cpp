@@ -486,6 +486,11 @@ void Contact::saveCustomAttributes( QDomElement& element ) const
     if ( (*it).app == s_unhandledTagAppName ) {
       writeString( element, (*it).name, (*it).value );
     } else {
+      // skip writing the freebusyurl as it is a hack we need to remove eventually
+      if ( (*it).name == QString::fromLatin1( "X-KADDRESSBOOK-FreeBusyURL" ) ) {
+        continue;
+      }
+
       // Let's use attributes so that other tag-preserving-code doesn't need sub-elements
       QDomElement e = element.ownerDocument().createElement( "x-custom" );
       element.appendChild( e );

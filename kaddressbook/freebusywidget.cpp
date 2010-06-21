@@ -58,7 +58,8 @@ void FreeBusyWidget::loadContact( KABC::Addressee *addr )
   if ( addr->preferredEmail().isEmpty() )
     return;
 
-  mURL->setURL( KCal::FreeBusyUrlStore::self()->readUrl( addr->preferredEmail() ) );
+  mOrigURL = KCal::FreeBusyUrlStore::self()->readUrl( addr->preferredEmail() );
+  mURL->setURL( mOrigURL );
 }
 
 void FreeBusyWidget::storeContact( KABC::Addressee *addr )
@@ -68,6 +69,13 @@ void FreeBusyWidget::storeContact( KABC::Addressee *addr )
 
   KCal::FreeBusyUrlStore::self()->writeUrl( addr->preferredEmail(), mURL->url() );
   KCal::FreeBusyUrlStore::self()->sync();
+  if ( mURL->url() != mOrigURL ) {
+    if ( mURL->url().isEmpty() ) {
+      addr->removeCustom( "KADDRESSBOOK", "X-KADDRESSBOOK-FreeBusyURL" );
+    } else {
+      addr->insertCustom( "KADDRESSBOOK", "X-KADDRESSBOOK-FreeBusyURL", mURL->url() );
+    }
+  }
 }
 
 void FreeBusyWidget::setReadOnly( bool readOnly )
