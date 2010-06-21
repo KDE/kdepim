@@ -64,7 +64,7 @@ protected:
   HeaderStyle();
   virtual ~HeaderStyle();
   Grantlee::Engine *mEngine;
-
+  
 public:
   //
   // Factory methods:
@@ -89,7 +89,6 @@ public:
 #ifdef KDEPIM_MOBILE_UI
   static HeaderStyle * mobile();
 #endif
-
   //
   // Methods for handling the styles:
   //
@@ -101,6 +100,7 @@ public:
   // HeaderStyle interface:
   //
   virtual QString format( KMime::Message *message ) const = 0;
+  QString formatAllMessageHeaders( KMime::Message *message ) const;
 
   void setMessagePath( const QString &path ) { mMessagePath = path; }
   QString messagePath() const { return mMessagePath; }
@@ -128,7 +128,10 @@ public:
 
   static QString dateStr(const KDateTime &dateTime);
   static QByteArray dateShortStr(const KDateTime &dateTime);
-  
+
+  // method to set up the theme in the header Styles
+  QString setTheming( const QString &styleName , KMime::Message *message ) const;
+
 private:
 
   QString mMessagePath;

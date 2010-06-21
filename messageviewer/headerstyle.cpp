@@ -106,35 +106,19 @@ static QString dateString( KMime::Message *message, bool printing, bool shortDat
 //   Show everything in a single line, don't show header field names.
 //
 namespace MessageViewer {
-class BriefHeaderStyle : public HeaderStyle {
-  friend class HeaderStyle;
-protected:
-  BriefHeaderStyle() : HeaderStyle() {}
-  virtual ~BriefHeaderStyle() {}
 
-public:
-  const char * name() const { return "brief"; }
-  HeaderStyle * next() const { return plain(); }
-  HeaderStyle * prev() const { return fancy(); }
-
-  QString format( KMime::Message *message ) const;
-};
-
-QString BriefHeaderStyle::format( KMime::Message *message ) const {
-  if ( !message ) return QString();
+QString HeaderStyle::setTheming( const QString &styleName, KMime::Message *message ) const {
 
   const HeaderStrategy *strategy = headerStrategy();
-  if ( !strategy )
-    strategy = HeaderStrategy::brief();
+  
+  Grantlee::Template t = mEngine->loadByName( styleName + ".html" );
+  QVariantHash data;
 
   // The direction of the header is determined according to the direction
   // of the application layout.
 
-  Grantlee::Template t = mEngine->loadByName( QLatin1String( "brief.html" ) );
-  QVariantHash data;
-
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  data.insert( QLatin1String( "dir" ) , dir );
+  data.insert( QLatin1String( "dir" ) , "ltr" );
 
   // However, the direction of the message subject within the header is
   // determined according to the contents of the subject itself. Since
@@ -148,40 +132,221 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
   else
     subjectDir = directionOf( i18n("No Subject") );
 
-  if ( strategy->showHeader( "subject" ) )
-    data.insert( QLatin1String( "subject" ) , strToHtml( message->subject()->asUnicodeString()) );
+  if ( strategy->showHeader( "subject" ) ) {
+    // the subject line and box below for details
+    if ( strategy == HeaderStrategy::rich() ) {
+      const int flags = LinkLocator::PreserveSpaces |
+                ( GlobalSettings::self()->showEmoticons() ?
+                  LinkLocator::ReplaceSmileys : 0 );
+      data.insert( QLatin1String( "subject" ) , strToHtml( message->subject()->asUnicodeString(), flags ) );
+    }   
+    else {
+      data.insert( QLatin1String( "subject" ) , strToHtml( message->subject()->asUnicodeString()) );
+    }  
     data.insert( QLatin1String( "subjectDir" ) , subjectDir );
+   }
 
+  if ( strategy->showHeader( "date" ) ) {
+    if ( strategy == HeaderStrategy::brief() ) {
+      data.insert( QLatin1String( "date" ) , strToHtml( dateString(message,isPrinting(),true ) ) );
+    } else {
+      data.insert( QLatin1String( "date" ) , strToHtml( dateString(message,isPrinting(),false ) ) );
+    }  
+    data.insert( QLatin1String( "dateDir" ), directionOf( dateStr( message->date()->dateTime() ) ) );
+  }
+
+  // colors depend on if it is encapsulated or not
+  QColor fontColor( Qt::white );
+  QString linkColor = "white";
+  const QColor activeColor = KColorScheme( QPalette::Active, KColorScheme::Selection ).
+                                  background().color();
+  QColor activeColorDark = activeColor.dark(130);
+  // reverse colors for encapsulated
+  if( !isTopLevel() ){
+    activeColorDark = activeColor.dark(50);
+    fontColor = QColor(Qt::black);
+    linkColor = "black";
+  }
+
+  // Data managed only for the Enterprise Style
+  if ( strategy == HeaderStrategy::brief() ) {
+    // 3D borders
+    if(isTopLevel()) {
+      data.insert( QLatin1String( "activeColorDark" ), activeColorDark.name() );
+      data.insert( QLatin1String( "fontColor" ), fontColor.name() );
+      // kmail icon
+      data.insert( QLatin1String( "isTopLevel" ) , "isTopLevel" );
+    }
+
+    data.insert( QLatin1String( "linkColor" ) , linkColor );
+
+    if ( isPrinting() ) {
+      //provide a bit more left padding when printing
+      //kolab/issue3254 (printed mail cut at the left side)
+      data.insert( QLatin1String( "isPrinting" ) , "isPrinting" );
+    }
+  }
+
+  // Data only for the Fancy Style
+  if ( strategy == HeaderStrategy::rich() ) {
+    // Get the resent-from header into a Mailbox
+    QList<KMime::Types::Mailbox> resentFrom;
+    if ( message->headerByType( "Resent-From" ) ) {
+      const QByteArray data = message->headerByType( "Resent-From" )->as7BitString( false );
+      const char * start = data.data();
+      const char * end = start + data.length();
+      KMime::Types::AddressList addressList;
+      KMime::HeaderParsing::parseAddressList( start, end, addressList );
+      foreach ( const KMime::Types::Address &addr, addressList ) {
+        foreach ( const KMime::Types::Mailbox &mbox, addr.mailboxList ) {
+          resentFrom.append( mbox );
+        }
+      }
+    }
+
+    if ( message->headerByType( "Resent-From" ) ) {
+      data.insert( QLatin1String( "resentFrom" ), StringUtil::emailAddrAsAnchor( resentFrom, StringUtil::DisplayFullAddress ) );
+    }
+
+    if ( GlobalSettings::self()->showUserAgent() ) {
+      if ( strategy->showHeader( "user-agent" ) ) {
+        if ( message->headerByType("User-Agent") ) {
+          data.insert( QLatin1String( "user-agent" ), strToHtml( message->headerByType("User-Agent")->as7BitString() ) );
+        }
+      }
+
+      if ( strategy->showHeader( "x-mailer" ) ) {
+        if ( message->headerByType("X-Mailer") ) {
+          data.insert( QLatin1String( "x-mailer" ), strToHtml( message->headerByType("X-Mailer")->as7BitString() ) );
+        }
+      }
+      
+    }
+  }    
+
+  // from
   if ( strategy->showHeader( "from" ) ) {
-/*TODO(Andras) review if it can happen or not
-    if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
-      fromStr = message->fromStrip(); // let's use that
-*/
-    data.insert( QLatin1String( "from" ) ,  StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly ) );
+    if ( strategy == HeaderStrategy::brief() ) {
+      data.insert( QLatin1String( "from" ) ,  StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly ) );  
+    }
+    else if ( strategy == HeaderStrategy::standard() ) {
+      data.insert( QLatin1String( "from" ) , StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
+    }
+    else if ( strategy == HeaderStrategy::rich() ) {
+      data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress ) );
+    }
+    else {
+      data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor ));
+    } 
 
     if ( !vCardName().isEmpty() )
       data.insert( QLatin1String( "vCardName" ) , vCardName() );
+      
+    if ( strategy->showHeader( "organization" ) && message->headerByType("Organization"))
+      data.insert( QLatin1String( "organization" ) , strToHtml(message->headerByType("Organization")->asUnicodeString()) );
   }
 
-  if ( strategy->showHeader( "cc" ) && message->cc(false) )
-    data.insert( QLatin1String( "cc" ) , StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly ) );
+  // to line
+  if ( strategy->showHeader( "to" ) ) {
+    if ( strategy == HeaderStrategy::standard() ) {
+      data.insert( QLatin1String( "to" ) , StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) );
+    }
+    else if ( strategy == HeaderStrategy::rich() ) {
+      data.insert( QLatin1String( "to" ), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
+                                                                     QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
+                                                                     "FullToAddressList",
+                                                                     GlobalSettings::self()->numberOfAddressesToShow() ) );
+    }
+    else {
+      data.insert( QLatin1String( "to" ) , StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor ) );
+    }  
+  }  
 
-  if ( strategy->showHeader( "bcc" ) && message->bcc(false) )
-    data.insert( QLatin1String( "bcc" ) , StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly ) );
+  // cc line, if any
+  if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
+    if ( strategy == HeaderStrategy::brief() ) {
+      data.insert( QLatin1String( "cc" ) , StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly ) );
+    }
+    else if ( strategy == HeaderStrategy::standard() ) {
+      data.insert( QLatin1String( "cc" ) , StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) );
+    }
+    else if ( strategy == HeaderStrategy::rich() ) {
+      data.insert( QLatin1String( "cc" ), StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress,
+                                                                       QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
+                                                                       "FullCcAddressList",
+                                                                       GlobalSettings::self()->numberOfAddressesToShow() ) );
+    }
+    else {
+      data.insert( QLatin1String( "cc" ) , StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor ) );
+    }
+  } 
 
-  if ( strategy->showHeader( "date" ) )
-    data.insert( QLatin1String( "date" ) , strToHtml( dateString(message,isPrinting(),true) ) );
+  // bcc line, if any
+  if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
+    if ( strategy == HeaderStrategy::brief() ) {
+      data.insert( QLatin1String( "bcc" ) , StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly ) );
+    }
+    else if ( strategy == HeaderStrategy::standard() || strategy == HeaderStrategy::rich() ) {
+      data.insert( QLatin1String( "bcc" ) , StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) );
+    }
+    else {
+      data.insert( QLatin1String( "bcc" ) , StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress, linkColor ) );
+    }
+  }    
 
+  // Data managed only for the Plain Style
+  if ( strategy == HeaderStrategy::standard() ) {
+    if ( strategy->headersToDisplay().isEmpty()
+      && strategy->defaultPolicy() == HeaderStrategy::Display ) {
+      // crude way to emulate "all" headers - Note: no strings have
+      // i18n(), so direction should always be ltr.
+      data.insert( QLatin1String( "message" ) , formatAllMessageHeaders( message ) );
+    }
+  
+    if ( strategy->showHeader( "reply-to" ) && message->replyTo( false ) ) {
+      data.insert( QLatin1String( "replyTo" ) , StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) );
+    }
+  }
 
-  // ### iterate over the rest of strategy->headerToDisplay() (or
-  // ### all headers if DefaultPolicy == Display) (elsewhere, too)
+ // Data managed only for the Mobile Style
+ 
+   // Bertjan: This is a highly simplified header for mobile devices. It lacks
+  //          currently about almost everything except for the stuff that was in
+  //          the mockup of Nuno. We might want to add additional items such as
+  //          encryption I guess.
+
+ 
+  if ( !messagePath().isEmpty() )
+  {
+    // TODO: Put these back in when we can somehow determine the path
+    //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
+    data.insert( QLatin1String( "messagePath" ) , messagePath() );
+  }
+
   Grantlee::Context c( data );
-  //c.setRelativeMediaPath("images/");
   QString headerStr = t->render( &c );
-
-  kDebug() << headerStr;
-
   return headerStr;
+
+}
+
+class BriefHeaderStyle : public HeaderStyle {
+  friend class HeaderStyle;
+protected:
+  BriefHeaderStyle() : HeaderStyle() {}
+  virtual ~BriefHeaderStyle() {}
+
+public:
+  const char * name() const { return "brief"; }
+  HeaderStyle * next() const { return plain(); }
+  HeaderStyle * prev() const { return fancy(); }
+
+  QString format( KMime::Message *message ) const; 
+};
+
+QString BriefHeaderStyle::format( KMime::Message *message ) const {
+  if ( !message ) return QString();
+ 
+  return setTheming( "brief" , message );
 }
 
 //
@@ -201,85 +366,17 @@ public:
   HeaderStyle * next() const { return fancy(); }
   HeaderStyle * prev() const { return brief(); }
 
-  QString format( KMime::Message *message ) const;
-
-private:
-  QString formatAllMessageHeaders( KMime::Message *message ) const;
+  QString format( KMime::Message *message ) const; 
+  
 };
 
 QString PlainHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
-  const HeaderStrategy *strategy = headerStrategy();
-  if ( !strategy )
-    strategy = HeaderStrategy::rich();
 
-  // The direction of the header is determined according to the direction
-  // of the application layout.
-
-  Grantlee::Template t = mEngine->loadByName( QLatin1String( "plain.html" ) );
-  QVariantHash data;
-  
-  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  data.insert( QLatin1String( "dir" ) , dir );
-
-  // However, the direction of the message subject within the header is
-  // determined according to the contents of the subject itself. Since
-  // the "Re:" and "Fwd:" prefixes would always cause the subject to be
-  // considered left-to-right, they are ignored when determining its
-  // direction.
-
-  QString subjectDir;
-  if (message->subject(false))
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
-
-  if ( strategy->headersToDisplay().isEmpty()
-        && strategy->defaultPolicy() == HeaderStrategy::Display ) {
-    // crude way to emulate "all" headers - Note: no strings have
-    // i18n(), so direction should always be ltr.
-    data.insert( QLatin1String( "message" ) , formatAllMessageHeaders( message ) );
-  }
-
-  //case HdrLong:
-  if ( strategy->showHeader( "subject" ) ) {
-    data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString()) );
-    data.insert( QLatin1String( "subjectDir" ) , subjectDir );
-  }   
-
-  if ( strategy->showHeader( "date" ) )
-    data.insert( QLatin1String( "date" ) , strToHtml( dateString(message,isPrinting(),false) ) );
-
-  if ( strategy->showHeader( "from" ) ) {
-    data.insert( QLatin1String( "from" ) , StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
-    
-    if ( !vCardName().isEmpty() )
-      data.insert( QLatin1String( "vCardName" ) , vCardName() );
-
-    if ( strategy->showHeader( "organization" ) && message->headerByType("Organization"))
-      data.insert( QLatin1String( "organization" ) , strToHtml(message->headerByType("Organization")->asUnicodeString()) );
-   }
-
-  if ( strategy->showHeader( "to" ) )
-    data.insert( QLatin1String( "to" ) , StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) );
-
-  if ( strategy->showHeader( "cc" ) && message->cc( false ) )
-    data.insert( QLatin1String( "cc" ) , StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) );
-
-  if ( strategy->showHeader( "bcc" ) && message->bcc( false ) )
-    data.insert( QLatin1String( "bcc" ) , StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) );
-
-  if ( strategy->showHeader( "reply-to" ) && message->replyTo( false ) )
-    data.insert( QLatin1String( "replyTo" ) , StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) );
-
-  Grantlee::Context c( data );
-  c.setRelativeMediaPath("images/");
-  QString headerStr = t->render( &c );
-
-  return headerStr;
+  return setTheming( "plain" , message );
 }
 
-QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message *message ) const {
+QString HeaderStyle::formatAllMessageHeaders( KMime::Message *message ) const {
   QByteArray head = message->head();
   KMime::Headers::Generic *header = message->nextHeader(head);
   QString result;
@@ -289,7 +386,6 @@ QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message *message ) con
     delete header;
     header = message->nextHeader(head);
   }
-
   return result;
 }
 
@@ -417,38 +513,8 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
 
 QString FancyHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
-  const HeaderStrategy *strategy = headerStrategy();
-  if ( !strategy )
-    strategy = HeaderStrategy::rich();
 
-  // ### from kmreaderwin begin
-  // The direction of the header is determined according to the direction
-  // of the application layout.
-
-  Grantlee::Template t = mEngine->loadByName( QLatin1String( "fancy.html" ) );
-  QVariantHash data;
-
-  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  data.insert( QLatin1String( "dir" ) , dir );
-
-  // However, the direction of the message subject within the header is
-  // determined according to the contents of the subject itself. Since
-  // the "Re:" and "Fwd:" prefixes would always cause the subject to be
-  // considered left-to-right, they are ignored when determining its
-  // direction.
-
-  QString subjectDir;
-  if ( message->subject(false) )
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
-
-  // Spam header display.
-  // If the spamSpamStatus config value is true then we look for headers
-  // from a few spam filters and try to create visually meaningful graphics
-  // out of the spam scores.
-
-  QString spamHTML;
+  /*QString spamHTML;
 
   if ( GlobalSettings::self()->showSpamStatus() ) {
     SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
@@ -552,7 +618,6 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
       photoURL = imgToDataUrl( xf.toImage( xfhead ) );
       photoWidth = 48;
       photoHeight = 48;
-
     }
   }
 
@@ -562,97 +627,15 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     data.insert( QLatin1String( "photoURL" ), photoURL );
     data.insert( QLatin1String( "photoWidth" ), photoWidth );
     data.insert( QLatin1String( "photoHeight" ), photoHeight );
-  }
-
-  // the subject line and box below for details
-  if ( strategy->showHeader( "subject" ) ) {
-    const int flags = LinkLocator::PreserveSpaces |
-                ( GlobalSettings::self()->showEmoticons() ?
-                  LinkLocator::ReplaceSmileys : 0 );
-
-    data.insert( QLatin1String( "subject" ) , strToHtml( message->subject()->asUnicodeString(), flags ) );
-    data.insert( QLatin1String( "subjectDir" ) , subjectDir );
-  }
-
-  if ( strategy->showHeader( "from" ) ) {
-
-    // Get the resent-from header into a Mailbox
-    QList<KMime::Types::Mailbox> resentFrom;
-    if ( message->headerByType( "Resent-From" ) ) {
-      const QByteArray data = message->headerByType( "Resent-From" )->as7BitString( false );
-      const char * start = data.data();
-      const char * end = start + data.length();
-      KMime::Types::AddressList addressList;
-      KMime::HeaderParsing::parseAddressList( start, end, addressList );
-      foreach ( const KMime::Types::Address &addr, addressList ) {
-        foreach ( const KMime::Types::Mailbox &mbox, addr.mailboxList ) {
-          resentFrom.append( mbox );
-        }
-      }
-    }
-
-    data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress ) );
-
-    if ( message->headerByType( "Resent-From" ) )
-      data.insert( QLatin1String( "resentFrom" ), StringUtil::emailAddrAsAnchor( resentFrom, StringUtil::DisplayFullAddress ) );
-
-    if ( !vCardName().isEmpty() )
-      data.insert( QLatin1String( "vCardName" ) , vCardName() );
-
-    if ( strategy->showHeader( "organization" ) && message->headerByType("Organization"))
-      data.insert( QLatin1String( "organization" ) , strToHtml( message->headerByType("Organization")->asUnicodeString() ) );
-   
-  }
-  // to line
-
-  if ( strategy->showHeader( "to" ) ) {
-    data.insert( QLatin1String( "to" ), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
-                                                                     QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                                                     "FullToAddressList",
-                                                                     GlobalSettings::self()->numberOfAddressesToShow() ) );
-  }
-
-  // cc line, if an
-  if ( strategy->showHeader( "cc" ) && message->cc(false)) {
-    data.insert( QLatin1String( "cc" ), StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress,
-                                                                       QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                                                       "FullCcAddressList",
-                                                                       GlobalSettings::self()->numberOfAddressesToShow() ) );
-  }
-
-  // Bcc line, if any
-  if ( strategy->showHeader( "bcc" ) && message->bcc(false)) {
-    data.insert( QLatin1String( "bcc" ), StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) );
-  }
-
-  if ( strategy->showHeader( "date" ) ) {
-    data.insert( QLatin1String( "dateDir" ), directionOf( dateStr( message->date()->dateTime() ) ) );
-    data.insert( QLatin1String( "date" ), strToHtml( dateString( message, isPrinting(), false ) ) );
-   }
-
-  if ( GlobalSettings::self()->showUserAgent() ) {
-    if ( strategy->showHeader( "user-agent" ) ) {
-      if ( message->headerByType("User-Agent") ) {
-        data.insert( QLatin1String( "user-agent" ), strToHtml( message->headerByType("User-Agent")->as7BitString() ) );
-      }
-    }
-
-    if ( strategy->showHeader( "x-mailer" ) ) {
-      if ( message->headerByType("X-Mailer") ) {
-        data.insert( QLatin1String( "x-mailer" ), strToHtml( message->headerByType("X-Mailer")->as7BitString() ) );
-      }
-    }
+    kDebug() << "Got a photo:" << photoURL;
   }
 
   if ( !spamHTML.isEmpty() ) {
-    data.insert( QLatin1String( "spamHTML" ), spamHTML );
-  }
+    //data.insert( QLatin1String( "spamHTML" ), spamHTML );
+    kDebug() << "Spam:" << spamHTML;
+  }*/
 
-  Grantlee::Context c( data );
-  c.setRelativeMediaPath("images/");
-  QString headerStr= t->render( &c );
-
-  return headerStr;
+  return setTheming( "fancy.html", message );
 }
 
 QString FancyHeaderStyle::imgToDataUrl( const QImage &image )
@@ -690,103 +673,8 @@ public:
 QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
 {
   if ( !message ) return QString();
-  const HeaderStrategy *strategy = headerStrategy();
-  if ( !strategy ) {
-    strategy = HeaderStrategy::brief();
-  }
-
-  // The direction of the header is determined according to the direction
-  // of the application layout.
-
-  Grantlee::Template t = mEngine->loadByName( QLatin1String( "enterprise.html" ) );
-  QVariantHash data;  
-
-  QString dir = ( QApplication::layoutDirection() == Qt::RightToLeft ) ? "rtl" : "ltr" ;
-  data.insert( QLatin1String( "dir" ) , dir );
-
-  // However, the direction of the message subject within the header is
-  // determined according to the contents of the subject itself. Since
-  // the "Re:" and "Fwd:" prefixes would always cause the subject to be
-  // considered left-to-right, they are ignored when determining its
-  // direction.
-
-//TODO(Andras) this is duplicate code, try to factor out!
-  QString subjectDir;
-  if (message->subject(false))
-    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
-  else
-    subjectDir = directionOf( i18n("No Subject") );
-
-  // colors depend on if it is encapsulated or not
-  QColor fontColor( Qt::white );
-  QString linkColor = "white";
-  const QColor activeColor = KColorScheme( QPalette::Active, KColorScheme::Selection ).
-                                  background().color();
-  QColor activeColorDark = activeColor.dark(130);
-  // reverse colors for encapsulated
-  if( !isTopLevel() ){
-    activeColorDark = activeColor.dark(50);
-    fontColor = QColor(Qt::black);
-    linkColor = "black";
-  }
-
-  // 3D borders
-  if(isTopLevel()) {
-    data.insert( QLatin1String( "date" ), strToHtml( dateString( message, isPrinting(), false ) ) );
-    data.insert( QLatin1String( "activeColorDark" ), activeColorDark.name() );
-    data.insert( QLatin1String( "fontColor" ), fontColor.name() );
-  } 
-
-  if ( strategy->showHeader( "subject" ) ) {
-    data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString()) );
-  }
-
-  // from
-  if ( strategy->showHeader( "from" ) ) {
-    // TODO vcard
-    // We by design use the stripped mail address here, it is more enterprise-like.
-    data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor ));
-
-    if ( !vCardName().isEmpty() )
-      data.insert( QLatin1String( "vCardName" ) , vCardName() );
-      data.insert( QLatin1String( "linkColor" ) , linkColor );
-  }
-
-  // to line
-  if ( strategy->showHeader( "to" ) ) {
-    data.insert( QLatin1String( "to" ) , StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor ) );
-  }
-
-  // cc line, if any
-  if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
-    data.insert( QLatin1String( "cc" ) , StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor ) );
-  }
-
-  // bcc line, if any
-  if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
-    data.insert( QLatin1String( "bcc" ) , StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress, linkColor ) );
-  }
-
-  // kmail icon
-  if( isTopLevel() ) {
-    data.insert( QLatin1String( "isTopLevel" ) , "isTopLevel" );
-  }
-
-  if ( isPrinting() ) {
-    //provide a bit more left padding when printing
-    //kolab/issue3254 (printed mail cut at the left side)
-    data.insert( QLatin1String( "isPrinting" ) , "isPrinting" );
-  }
-
-  // TODO
-  // spam status
-  // ### iterate over the rest of strategy->headerToDisplay() (or
-  // ### all headers if DefaultPolicy == Display) (elsewhere, too)
-  Grantlee::Context c( data );
-  c.setRelativeMediaPath("images/");
-  QString headerStr= t->render( &c );
-
-  return headerStr;
+  
+  return setTheming( "enterprise.html", message );
 }
 
 // #####################
@@ -810,39 +698,8 @@ public:
 QString MobileHeaderStyle::format( KMime::Message *message ) const
 {
   if ( !message ) return QString();
-
-  // Bertjan: This is a highly simplified header for mobile devices. It lacks
-  //          currently about almost everything except for the stuff that was in
-  //          the mockup of Nuno. We might want to add additional items such as
-  //          encryption I guess.
-
-  // Use always the brief strategy for the mobile headers.
-  const HeaderStrategy *strategy = HeaderStrategy::brief();
-
-  Grantlee::Template t = mEngine->loadByName( QLatin1String( "mobile.html" ) );
-  QVariantHash data;  
-
-  data.insert( QLatin1String( "from" ), StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly) );
-  data.insert( QLatin1String( "subject" ) , strToHtml(message->subject()->asUnicodeString()) );
-
-  if ( !vCardName().isEmpty() )
-    data.insert( QLatin1String( "vCardName" ) , vCardName() );
-
-  if ( !messagePath().isEmpty() )
-  {
-    // TODO: Put these back in when we can somehow determine the path
-    //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
-    data.insert( QLatin1String( "messagePath" ) , messagePath() );
-  }
-
-  data.insert( QLatin1String( "date" ) , dateString( message, isPrinting(), false ) );
-
-  //kDebug() << headerStr;
-  Grantlee::Context c( data );
-  c.setRelativeMediaPath("images/");
-  QString headerStr= t->render( &c );
-
-  return headerStr;
+  
+  return setTheming( "mobile" , message );
 }
 
 #endif
