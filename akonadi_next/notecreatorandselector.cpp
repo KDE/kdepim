@@ -93,16 +93,16 @@ void NoteCreatorAndSelector::doCreateNote()
   newPage->subject( true )->fromUnicodeString( title, encoding );
   newPage->contentType( true )->setMimeType( "text/plain" );
   newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-  newPage->from( true )->fromUnicodeString( "Kjots@kde4", encoding );
+  newPage->from( true )->fromUnicodeString( QString::fromLatin1( "Kjots@kde4" ), encoding );
   // Need a non-empty body part so that the serializer regards this as a valid message.
-  newPage->mainBodyPart()->fromUnicodeString( " " );
+  newPage->mainBodyPart()->fromUnicodeString( QString::fromLatin1( " " ) );
 
   newPage->assemble();
 
   newItem.setPayload( newPage );
 
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-  eda->setIconName( "text-plain" );
+  eda->setIconName( QString::fromLatin1( "text-plain" ) );
   newItem.addAttribute(eda);
 
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
