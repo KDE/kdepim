@@ -126,7 +126,6 @@ KPIM.MainView {
       id : collectionView
       anchors.top: parent.top
       width: 1/3 * parent.width
-      showUnread : true
       anchors.bottom : selectButton.top
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
