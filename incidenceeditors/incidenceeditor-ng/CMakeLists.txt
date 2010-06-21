@@ -16,8 +16,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencegeneral.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
-  incidencerecurrenceeditor.cpp
-  incidencerecurrencedialog.cpp
+  #incidencerecurrenceeditor.cpp
+  #incidencerecurrencedialog.cpp
 
   ../autochecktreewidget.cpp
   ../categoryconfig.cpp
