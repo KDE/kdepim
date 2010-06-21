@@ -124,7 +124,7 @@ KPIM.MainView {
             width: parent.width
             buttonText : KDE.i18n( "Write new Note" )
             onClicked : {
-//               application.startComposer();
+              application.startComposer();
             }
           }
         }
@@ -293,7 +293,19 @@ KPIM.MainView {
       anchors.fill : parent
       handlePosition : 225
       contentWidth: 240
-//       content: [
+      content: [
+        KPIM.Button {
+          id : createNoteAction
+          anchors.top : parent.top
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          buttonText: KDE.i18n("New Note")
+          onClicked: {
+            application.startComposer();
+            actionPanel.collapse();
+          }
+        }
 //           Button {
 //             id: moveButton
 //             anchors.top: actionLabel.bottom;
@@ -339,7 +351,7 @@ KPIM.MainView {
 //               actionPanel.collapse();
 //             }
 //           }
-//       ]
+      ]
     }
   }
 
