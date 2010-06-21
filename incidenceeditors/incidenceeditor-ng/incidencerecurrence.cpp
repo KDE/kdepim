@@ -1,6 +1,7 @@
 #include "incidencerecurrence.h"
 
 #include <QtCore/QDebug>
+#include <QtGui/QListWidgetItem>
 
 #include <KCalendarSystem>
 
@@ -27,8 +28,14 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
     mUi->mWeekDayCombo->addItem( weekDayName );
   }
 
+  connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
+           SLOT(addException()));
+  connect( mUi->mExceptionRemoveButton, SIGNAL(clicked()),
+           SLOT(removeExceptions()) );
   connect( mUi->mExceptionDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(handleExceptionDateChange(QDate)) );
+  connect( mUi->mExceptionList, SIGNAL(itemSelectionChanged()),
+           SLOT(updateRemoveExceptionButton()) );
   connect( mUi->mTypeCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(handleRecurrenceTypeChange(int)));
 }
@@ -53,9 +60,25 @@ bool IncidenceRecurrence::isValid()
   return true;
 }
 
+void IncidenceRecurrence::addException()
+{
+  const QDate date = mUi->mExceptionDateEdit->date();
+  const QString dateStr = KGlobal::locale()->formatDate( date );
+  if( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() ) {
+    mExceptionDates.append( date );
+    mUi->mExceptionList->addItem( dateStr );
+  }
+
+  mUi->mExceptionAddButton->setEnabled( false );
+}
+
 void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
 {
-  mUi->mExceptionAddButton->setEnabled( currentDate >= mDateTime->startDate() );
+  const QDate date = mUi->mExceptionDateEdit->date();
+  const QString dateStr = KGlobal::locale()->formatDate( date );
+
+  mUi->mExceptionAddButton->setEnabled( currentDate >= mDateTime->startDate()
+                                        && mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() );
 }
 
 void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
@@ -79,6 +102,23 @@ void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
   }
 }
 
+void IncidenceRecurrence::removeExceptions()
+{
+  QList<QListWidgetItem *> selectedExceptions = mUi->mExceptionList->selectedItems();
+  foreach ( QListWidgetItem *selectedException, selectedExceptions ) {
+    const int row = mUi->mExceptionList->row( selectedException );
+    mExceptionDates.removeAt( row );
+    delete mUi->mExceptionList->takeItem( row );
+  }
+
+  handleExceptionDateChange( mUi->mExceptionDateEdit->date() );
+}
+
+void IncidenceRecurrence::updateRemoveExceptionButton()
+{
+  mUi->mExceptionRemoveButton->setEnabled( mUi->mExceptionList->selectedItems().count() > 0 );
+}
+
 void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
 {
   mUi->mFrequencyLabel->setVisible( enable );
@@ -95,6 +135,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
   mUi->mExceptionDateEdit->setVisible( enable );
   mUi->mExceptionAddButton->setVisible( enable );
   mUi->mExceptionAddButton->setEnabled( mUi->mExceptionDateEdit->date() >= mDateTime->startDate() );
+  mUi->mExceptionRemoveButton->setVisible( enable );
+  mUi->mExceptionRemoveButton->setEnabled( mUi->mExceptionList->selectedItems().count() > 0 );
   mUi->mExceptionList->setVisible( enable );
-  mUi->mExceptionSeperator->setVisible( enable );
 }

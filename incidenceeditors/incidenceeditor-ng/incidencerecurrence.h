@@ -23,16 +23,19 @@ public:
     virtual bool isValid();
 
 private Q_SLOTS:
+    void addException();
     void handleExceptionDateChange( const QDate &currentDate );
     void handleRecurrenceTypeChange( int currentIndex );
+    void removeExceptions();
+    void updateRemoveExceptionButton();
 
 private:
     void toggleRecurrenceWidgets( bool enable );
 
 private:
     Ui::EventOrTodoDesktop *mUi;
-
     IncidenceDateTime *mDateTime;
+    KCal::DateList mExceptionDates;
 };
 
 }
