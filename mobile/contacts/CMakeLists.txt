@@ -73,6 +73,7 @@ install(FILES
   contactgroup-editor.qml
   kaddressbook-mobile.qml
   ContactListView.qml
+  back-to-message-list.png
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )

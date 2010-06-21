@@ -18,9 +18,9 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 import org.kde 4.5
-import org.kde.akonadi 4.5
+import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi.contacts 4.5 as Akonadi
 
@@ -90,172 +90,216 @@ KPIM.MainView {
     }
   }
 
+  QML.Rectangle {
+    id : backToFolderListButton
+    anchors.right : kaddressbookMobile.right
+    anchors.rightMargin : 70
+    anchors.bottom : kaddressbookMobile.bottom
+    anchors.bottomMargin : 100
+    visible : false
+    QML.Image {
+      source : "back-to-message-list.png"
+      QML.MouseArea {
+        anchors.fill : parent;
+        onClicked : {
+          contactView.visible = false;
+          contactGroupView.visible = false;
+          backToFolderListButton.visible = false;
+          collectionView.visible = true;
+          contactListPage.visible = true;
+          contactView.itemId = -1;
+          contactGroupView.itemId = -1;
+        }
+      }
+    }
+  }
+
+  QML.Item {
+    id : mainWorkView
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+
+    Akonadi.AkonadiBreadcrumbNavigationView {
+      id : collectionView
+      anchors.top: parent.top
+      width: 1/3 * parent.width
+      showUnread : true
+      anchors.bottom : selectButton.top
+      //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
+      anchors.left: parent.left
+
+      multipleSelectionText : KDE.i18n("You have selected \n%1 addressbooks\nfrom %2 accounts\n%3 contacts", collectionView.numSelected,
+                                                                                                        application.numSelectedAccounts,
+                                                                                                        contactList.count)
+      breadcrumbItemsModel : breadcrumbCollectionsModel
+      selectedItemModel : selectedCollectionModel
+      childItemsModel : childCollectionsModel
+    }
+    KPIM.Button2 {
+      id : selectButton
+      anchors.left: collectionView.left
+      anchors.right: collectionView.right
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : { (collectionView.numSelected == 1) ? -selectButton.height : 0 }
+      buttonText : (collectionView.numSelected <= 1) ? KDE.i18n("Select") : KDE.i18n("Change Selection")
+      opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
+      onClicked : {
+        application.persistCurrentSelection("preFavSelection");
+        favoriteSelector.visible = true;
+        mainWorkView.visible = false;
+      }
+    }
+
+    KPIM.StartCanvas {
+      id : startPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      anchors.leftMargin : 10
+      anchors.rightMargin : 10
+
+      opacity : collectionView.hasSelection ? 0 : 1
+      showAccountsList : false
+      favoritesModel : favoritesList
+
+      contextActions : [
+        QML.Column {
+          anchors.fill: parent
+          height : 70
+          KPIM.Button2 {
+            width: parent.width
+            buttonText : KDE.i18n( "New Contact" )
+            onClicked : {
+              application.newContact();
+            }
+          }
+          KPIM.Button2 {
+            width: parent.width
+            buttonText : KDE.i18n( "New Contact Group" )
+            onClicked : {
+              application.newContactGroup();
+            }
+          }
+        }
+      ]
+    }
+
+    QML.Rectangle {
+      id : accountPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : (collectionView.hasSelection && !collectionView.hasBreadcrumbs) && (contactList.count == 0) ? 1 : 0
+
+
+      KPIM.Button2 {
+        id : newContactButton
+        anchors.top : parent.top
+        anchors.topMargin : 30
+        anchors.left : parent.left
+        anchors.right : parent.right
+        anchors.leftMargin : 10
+        anchors.rightMargin : 10
+        buttonText : KDE.i18n( "New Contact" )
+        onClicked : {
+          application.newContact();
+        }
+      }
+      KPIM.Button2 {
+        anchors.bottom : parent.bottom
+        anchors.bottomMargin : 10
+        anchors.right : parent.right
+        anchors.rightMargin : 35
+        width : 230
+        buttonText : KDE.i18n( "Configure Account" )
+        onClicked : {
+          application.configureCurrentAccount();
+        }
+      }
+    }
+
+    QML.Rectangle {
+      id : emptyFolderPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : (collectionView.hasBreadcrumbs && contactList.count == 0 ) ? 1 : 0
+      // TODO: content
+      QML.Text {
+        text : KDE.i18n("No contacts in this addressbook");
+        height : 20;
+        font.italic : true
+        horizontalAlignment : QML.Text.AlignHCenter
+        anchors.verticalCenter : parent.verticalCenter;
+        anchors.horizontalCenter : parent.horizontalCenter
+      }
+    }
+
+    QML.Rectangle {
+      id : contactListPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : contactList.count > 0 ? 1 : 0
+
+      ContactListView {
+        id: contactList
+        model: itemModel
+        anchors.fill : parent
+        onItemSelected: {
+          if ( itemModel.typeForIndex( contactList.currentIndex ) == "contact" ) {
+            contactView.itemId = contactList.currentItemId;
+            contactView.visible = true;
+            contactGroupView.visible = false;
+            editContactButton.visible = true;
+            editContactGroupButton.visible = false;
+            backToFolderListButton.visible = true;
+            collectionView.visible = false;
+            contactListPage.visible = false;
+          }
+          if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
+            contactGroupView.itemId = contactList.currentItemId;
+            contactView.visible = false;
+            contactGroupView.visible = true;
+            editContactButton.visible = false;
+            editContactGroupButton.visible = true;
+            backToFolderListButton.visible = true;
+            collectionView.visible = false;
+            contactListPage.visible = false;
+          }
+        }
+      }
+    }
+  }
+  Akonadi.FavoriteSelector {
+    id : favoriteSelector
+    anchors.fill : parent
+    visible : false
+    styleSheet: window.styleSheet
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.clearPersistedSelection("preFavSelection");
+    }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.restorePersistedSelection("preFavSelection");
+    }
+  }
+
   SlideoutPanelContainer {
     anchors.fill: parent
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: startPanel
-      titleIcon: KDE.iconPath( "view-pim-contacts", 48 )
-      handlePosition: 30
-      handleHeight: 78
-      content: [
-        KPIM.StartCanvas {
-          id : startPage
-          anchors.fill : parent
-          anchors.leftMargin : 50
-          startText: KDE.i18n( "Address book start page" )
-          favoritesModel : favoritesList
-
-          contextActions : [
-            Flickable { // Use a flickable because we've more than 3 actions.
-              clip: true
-              anchors.fill: parent
-              height: 480 / 6 * 3
-              contentWidth: width
-              contentHeight: 480 / 6 * 4
-              Column {
-                anchors.fill: parent
-                KPIM.Button {
-                  height : 480 / 6
-                  width : parent.width - 75
-                  buttonText : KDE.i18n( "New Contact" )
-                  onClicked : { application.newContact(); }
-                }
-                KPIM.Button {
-                  height : 480 / 6
-                  width : parent.width - 75
-                  buttonText : KDE.i18n( "New Contact Group" )
-                  onClicked : { application.newContactGroup(); }
-
-                }
-                KPIM.Button {
-                  height: 480 / 6
-                  width : parent.width - 75
-                  buttonText : KDE.i18n( "Add Account" )
-                  onClicked : { application.launchAccountWizard(); }
-                }
-                KPIM.Button {
-                  height: 480 / 6
-                  width : parent.width - 75
-                  buttonText : KDE.i18n( "Favorites" )
-                  onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
-                }
-              }
-            }
-          ]
-        },
-        FavoriteSelector {
-          id : favoriteSelector
-          anchors.fill : parent
-          visible : false
-          styleSheet: window.styleSheet
-          onFinished : {
-            favoriteSelector.visible = false;
-            startPage.visible = true;
-            application.saveFavorite( favoriteSelector.favoriteName );
-          }
-        }
-      ]
-    }
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: folderPanel
-      titleText: KDE.i18n( "Address books" )
-      handleHeight: 150
-      content: [
-        Item {
-          anchors.fill: parent
-
-          AkonadiBreadcrumbNavigationView {
-            id : collectionView
-            width: 1/3 * folderPanel.contentWidth
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.rightMargin: 4
-            breadcrumbItemsModel : breadcrumbCollectionsModel
-            selectedItemModel : selectedCollectionModel
-            childItemsModel : childCollectionsModel
-          }
-
-          ContactListView {
-            id: contactList
-            opacity : { contactList.count > 0 ? 1 : 0; }
-            model: itemModel
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.left: collectionView.right
-            onItemSelected: {
-              if ( itemModel.typeForIndex( contactList.currentIndex ) == "contact" ) {
-                contactView.itemId = contactList.currentItemId;
-                contactView.visible = true;
-                contactGroupView.visible = false;
-                editContactButton.visible = true;
-                editContactGroupButton.visible = false;
-              }
-              if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
-                contactGroupView.itemId = contactList.currentItemId;
-                contactView.visible = false;
-                contactGroupView.visible = true;
-                editContactButton.visible = false;
-                editContactGroupButton.visible = true;
-              }
-              folderPanel.collapse()
-            }
-          }
-          Item {
-            id : headerActionOverlay
-            opacity : { contactList.count > 0 ? 0 : 1; }
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.left: collectionView.right
-            KPIM.Button2 {
-              id : newContactButton
-              anchors.top : parent.top
-              anchors.left : parent.left
-              anchors.right : parent.right
-              buttonText : KDE.i18n( "Add Contact" )
-              onClicked : {
-                application.newContact();
-              }
-            }
-            KPIM.Button2 {
-              id : newContactGroupButton
-              anchors.top : newContactButton.bottom
-              anchors.left : parent.left
-              anchors.right : parent.right
-              buttonText : KDE.i18n( "Add Contact Group" )
-              onClicked : {
-                application.newContactGroup();
-              }
-            }
-            /*KPIM.Button2 {
-              id : searchEmailButton
-              anchors.top : newEmailButton.bottom
-              anchors.left : parent.left
-              anchors.right : parent.right
-              buttonText : KDE.i18n( "Search for Contact" )
-              onClicked : {
-                console.log("Search email");
-              }
-            }
-            KPIM.Button2 {
-              anchors.top : searchEmailButton.bottom
-              anchors.left : parent.left
-              anchors.right : parent.right
-              buttonText : KDE.i18n( "Configure Account" )
-              onClicked : {
-                console.log("Configure");
-              }
-            }*/
-          }
-        }
-      ]
-    }
 
     SlideoutPanel {
       anchors.fill: parent
@@ -313,7 +357,7 @@ KPIM.MainView {
     }
   }
 
-  Connections {
+  QML.Connections {
     target: startPage
     onAccountSelected : {
       application.setSelectedAccount(row);
@@ -321,12 +365,12 @@ KPIM.MainView {
     }
   }
 
-  Connections {
+  QML.Connections {
     target: collectionView
     onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
   }
 
-  Connections {
+  QML.Connections {
     target: collectionView
     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
