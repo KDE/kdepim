@@ -3902,44 +3902,45 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   case Recurrence::rYearlyDay:
   {
     recurStr = i18n( "Recurs yearly", "Recurs every %n years", recur->frequency() );
-
-    if ( recur->duration() != -1 ) {
-      txt = i18n( "%1 on day %2 until %3" ).
-            arg( recurStr ).
-            arg( recur->yearDays()[0] ).
-            arg( recurEnd( incidence ) );
-      if ( recur->duration() >  0 ) {
-        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+    if ( !recur->yearDays().isEmpty() ) {
+      if ( recur->duration() != -1 ) {
+        txt = i18n( "%1 on day %2 until %3" ).
+              arg( recurStr ).
+              arg( recur->yearDays()[0] ).
+              arg( recurEnd( incidence ) );
+        if ( recur->duration() >  0 ) {
+          txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+        }
+        return txt;
       }
+      txt = i18n( "%1 on day %2" ).arg( recurStr ).arg( recur->yearDays()[0] );
       return txt;
     }
-    txt = i18n( "%1 on day %2" ).arg( recurStr ).arg( recur->yearDays()[0] );
-    return txt;
   }
-
   case Recurrence::rYearlyPos:
   {
     recurStr = i18n( "Every year", "Every %n years", recur->frequency() );
-
-    KCal::RecurrenceRule::WDayPos rule = recur->yearPositions()[0];
-    if ( recur->duration() != -1 ) {
-      txt = i18n( "%1 on the %2 %3 of %4 until %5" ).
-            arg( recurStr ).
-            arg( dayList[rule.pos() + 31] ).
-            arg( calSys->weekDayName( rule.day(), false ) ).
-            arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) ).
-            arg( recurEnd( incidence ) );
+    if ( !recur->yearPositions().isEmpty() && !recur->yearMonths().isEmpty() ) {
+      KCal::RecurrenceRule::WDayPos rule = recur->yearPositions()[0];
+      if ( recur->duration() != -1 ) {
+        txt = i18n( "%1 on the %2 %3 of %4 until %5" ).
+              arg( recurStr ).
+              arg( dayList[rule.pos() + 31] ).
+              arg( calSys->weekDayName( rule.day(), false ) ).
+              arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) ).
+              arg( recurEnd( incidence ) );
       if ( recur->duration() >  0 ) {
         txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
       }
       return txt;
+      }
+      txt = i18n( "%1 on the %2 %3 of %4" ).
+            arg( recurStr ).
+            arg( dayList[rule.pos() + 31] ).
+            arg( calSys->weekDayName( rule.day(), false ) ).
+            arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) );
+      return txt;
     }
-    txt = i18n( "%1 on the %2 %3 of %4" ).
-          arg( recurStr ).
-          arg( dayList[rule.pos() + 31] ).
-          arg( calSys->weekDayName( rule.day(), false ) ).
-          arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) );
-    return txt;
   }
 
   default:
