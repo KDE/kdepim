@@ -171,9 +171,7 @@ KPIM.MainView {
       // It's not possible to get the number of items in a model. We have to
       // put the model in a view and count the items in the view.
       ListView { id : dummyItemView; model : calendarModel }
-      multipleSelectionText : KDE.i18na("You have selected \n%1 folders\nfrom %2 accounts\n%3 events", [collectionView.numSelected,
-                                                                                                        application.numSelectedAccounts,
-                                                                                                        dummyItemView.count])
+      multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 events", collectionView.numSelected, application.numSelectedAccounts, dummyItemView.count)
     }
 
     KPIM.Button2 {
