@@ -39,6 +39,7 @@ install(FILES tasks-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES tasks-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   tasks.qml
+  back-to-message-list.png
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )
