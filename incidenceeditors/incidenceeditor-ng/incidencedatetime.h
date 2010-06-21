@@ -55,6 +55,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
      */
     void setActiveDate( const QDate &activeDate );
 
+    QDate startDate() const; /// Returns the current start date.
+
   private slots: /// General
     void setTimeZonesVisibility( bool visible );
     void toggleTimeZoneVisibility();

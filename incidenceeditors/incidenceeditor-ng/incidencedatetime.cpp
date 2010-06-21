@@ -132,6 +132,11 @@ void IncidenceDateTime::setActiveDate( const QDate &activeDate )
   mActiveDate = activeDate;
 }
 
+QDate IncidenceDateTime::startDate() const
+{
+  return currentStartDateTime().date();
+}
+
 /// private slots for General
 
 void IncidenceDateTime::setTimeZonesVisibility( bool visible )
