@@ -118,7 +118,7 @@ QString HeaderStyle::setTheming( const QString &styleName, KMime::Message *messa
   // of the application layout.
 
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  data.insert( QLatin1String( "dir" ) , "ltr" );
+  data.insert( QLatin1String( "dir" ) , dir );
 
   // However, the direction of the message subject within the header is
   // determined according to the contents of the subject itself. Since
