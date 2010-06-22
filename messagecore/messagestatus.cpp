@@ -91,7 +91,6 @@ void MessageStatus::set( const MessageStatus &other )
   if ( other.mStatus & KMMsgStatusRead ) {
     setRead();
   }
-
   if ( other.isDeleted() ) {
     setDeleted();
   }
@@ -576,6 +575,7 @@ QSet<QByteArray> MessageStatus::getStatusFlags() const
 void MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
 {
   mStatus = KMMsgStatusUnknown;
+  setUnread();
   // Non handled status:
   // * KMMsgStatusQueued
   // * KMMsgStatusSent
