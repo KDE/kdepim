@@ -34,7 +34,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   kDebug() << "OMG!";
   QGridLayout *grid = qobject_cast< QGridLayout* >( mUi->mAttendeeTab->layout() );
   if( grid )
-    grid->addWidget( mAttendeeEditor, 4, 0, 1, 5 );
+    grid->addWidget( mAttendeeEditor, 5, 0, 1, 5 );
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
