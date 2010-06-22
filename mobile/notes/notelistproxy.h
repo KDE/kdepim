@@ -30,7 +30,8 @@ public:
   enum Role {
     Title,
     Content,
-    PlainContent
+    PlainContent,
+    ShortContent
   };
 
 public:

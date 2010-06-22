@@ -47,12 +47,27 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
     case Content:
       return note->mainBodyPart()->decodedText();
     case PlainContent:
-      {
-        QTextDocument doc;
-        doc.setHtml(note->mainBodyPart()->decodedText());
-
-        return doc.toPlainText();
-      }
+    {
+      QTextDocument doc;
+      if ( note->contentType()->asUnicodeString() == QLatin1String( "text/plain" ) )
+        doc.setPlainText( note->mainBodyPart()->decodedText() );
+      else
+        doc.setHtml( note->mainBodyPart()->decodedText() );
+      return doc.toPlainText();
+    }
+    case ShortContent:
+    {
+      QTextDocument doc;
+      if ( note->contentType()->asUnicodeString() == QLatin1String( "text/plain" ) )
+        doc.setPlainText( note->mainBodyPart()->decodedText() );
+      else
+        doc.setHtml( note->mainBodyPart()->decodedText() );
+      const QString plain = doc.toPlainText();
+      const QStringList list = plain.split( QLatin1Char( '\n' ) );
+      if ( list.isEmpty() )
+        return QString();
+      return list.first();
+    }
     }
   }
 
@@ -68,6 +83,7 @@ void NoteListProxy::setSourceModel( QAbstractItemModel* sourceModel )
   names.insert( absoluteCustomRole( Title ), "title" );
   names.insert( absoluteCustomRole( Content ), "content" );
   names.insert( absoluteCustomRole( PlainContent ), "plainContent" );
+  names.insert( absoluteCustomRole( ShortContent ), "shortContent" );
   setRoleNames( names );
 }
 
