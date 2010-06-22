@@ -426,7 +426,9 @@ void AttachmentControllerBase::createActions()
   collection->addAction( QLatin1String( "remove" ), d->removeAction );
   collection->addAction( QLatin1String( "attach_save" ), d->saveAsAction );
   collection->addAction( QLatin1String( "attach_properties" ), d->propertiesAction );
+  
 
+  setSelectedParts( AttachmentPart::List());
   emit actionsCreated();
 }
 
