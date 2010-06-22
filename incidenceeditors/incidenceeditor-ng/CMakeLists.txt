@@ -3,6 +3,9 @@ include_directories(
 )
 
 set(incidenceeditors_ng_shared_LIB_SRCS
+  attendeedata.cpp
+  attendeeline.cpp
+  attendeeeditor.cpp
   alarmpresets.cpp
   alarmdialog.cpp
   editoritemmanager.cpp # TODO: Move to akonadi libs when finished
@@ -16,6 +19,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencegeneral.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
+  incidenceattendee.cpp
   #incidencerecurrenceeditor.cpp
   #incidencerecurrencedialog.cpp
 

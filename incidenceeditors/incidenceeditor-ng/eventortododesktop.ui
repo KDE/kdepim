@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>609</width>
+    <width>648</width>
     <height>501</height>
    </rect>
   </property>
@@ -103,6 +103,13 @@
      </property>
      <property name="whatsThis">
       <string extracomment="@info:whatsthis">Sets where the event or to-do will take place.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -401,17 +408,10 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
    <item row="10" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -524,7 +524,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_7">
+     <widget class="QWidget" name="mAttendeeTab">
       <attribute name="title">
        <string>Attendees</string>
       </attribute>
@@ -536,8 +536,8 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1" colspan="4">
-        <widget class="QComboBox" name="comboBox_6">
+       <item row="0" column="1">
+        <widget class="QComboBox" name="mOrganizerCombo">
          <item>
           <property name="text">
            <string>Identity 1</string>
@@ -550,17 +550,10 @@
          </item>
         </widget>
        </item>
-       <item row="1" column="0" rowspan="2" colspan="5">
+       <item row="1" column="0" colspan="5">
         <widget class="Line" name="line_3">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4" rowspan="2">
-        <widget class="QPushButton" name="pushButton_5">
-         <property name="text">
-          <string>Select...</string>
          </property>
         </widget>
        </item>
@@ -572,14 +565,14 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="mConflictsLabel">
          <property name="text">
           <string>X time conflicts</string>
          </property>
         </widget>
        </item>
        <item row="3" column="2">
-        <widget class="QPushButton" name="pushButton_7">
+        <widget class="QPushButton" name="mSolveButton">
          <property name="text">
           <string>Solve...</string>
          </property>
@@ -598,267 +591,11 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="0" colspan="5">
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="widgetResizable">
-          <bool>true</bool>
+       <item row="3" column="4">
+        <widget class="QPushButton" name="mSelectButton">
+         <property name="text">
+          <string>Select...</string>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>579</width>
-            <height>200</height>
-           </rect>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_13">
-           <item row="0" column="0">
-            <widget class="QComboBox" name="comboBox_8">
-             <item>
-              <property name="text">
-               <string>Participant</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Optional</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Observer</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Chair</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="KLineEdit" name="klineedit">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QComboBox" name="comboBox_7">
-             <item>
-              <property name="text">
-               <string>Needs Action</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Accepted</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Declined</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tentative</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Delegated</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Completed</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>in Process</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QCheckBox" name="checkBox">
-             <property name="text">
-              <string>Ask for response</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QComboBox" name="comboBox_10">
-             <item>
-              <property name="text">
-               <string>Participant</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Optional</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Observer</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Chair</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="KLineEdit" name="klineedit_2">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QComboBox" name="comboBox_9">
-             <item>
-              <property name="text">
-               <string>Needs Action</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Accepted</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Declined</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tentative</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Delegated</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Completed</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>in Process</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QCheckBox" name="checkBox_2">
-             <property name="text">
-              <string>Ask for response</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="comboBox_12">
-             <item>
-              <property name="text">
-               <string>Participant</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Optional</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Observer</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Chair</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="KLineEdit" name="klineedit_3">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="QComboBox" name="comboBox_11">
-             <item>
-              <property name="text">
-               <string>Needs Action</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Accepted</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Declined</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tentative</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Delegated</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Completed</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>in Process</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QCheckBox" name="checkBox_3">
-             <property name="text">
-              <string>Ask for response</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0" colspan="4">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
         </widget>
        </item>
       </layout>
