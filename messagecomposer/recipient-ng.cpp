@@ -28,6 +28,7 @@
 #include <klocale.h>
 
 using namespace KPIM;
+using namespace MessageComposer;
 
 Recipient::Recipient( const QString &email, Recipient::Type type )
   : mEmail( email ), mType( type )

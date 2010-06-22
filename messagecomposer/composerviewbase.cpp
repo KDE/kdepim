@@ -132,26 +132,26 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
 
   m_msg = msg;
 
-  m_recipientsEditor->setRecipientString( m_msg->to()->mailboxes(), Recipient::To );
-  m_recipientsEditor->setRecipientString( m_msg->cc()->mailboxes(), Recipient::Cc );
-  m_recipientsEditor->setRecipientString( m_msg->bcc()->mailboxes(), Recipient::Bcc );
+  m_recipientsEditor->setRecipientString( m_msg->to()->mailboxes(), MessageComposer::Recipient::To );
+  m_recipientsEditor->setRecipientString( m_msg->cc()->mailboxes(), MessageComposer::Recipient::Cc );
+  m_recipientsEditor->setRecipientString( m_msg->bcc()->mailboxes(), MessageComposer::Recipient::Bcc );
   m_recipientsEditor->setFocusBottom();
 
   // If we are loading from a draft, load unexpanded aliases as well
   if( m_msg->hasHeader( "X-KMail-UnExpanded-To" ) ) {
       QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-To" )->asUnicodeString().split( QLatin1String( "," ) );
       foreach( QString addr, spl )
-        m_recipientsEditor->addRecipient( addr, Recipient::To );
+        m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::To );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-CC" ) ) {
       QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-CC" )->asUnicodeString().split( QLatin1String( "," ) );
       foreach( QString addr, spl )
-        m_recipientsEditor->addRecipient( addr, Recipient::Cc );
+        m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Cc );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-BCC" ) ) {
       QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-BCC" )->asUnicodeString().split( QLatin1String( "," ) );
       foreach( QString addr, spl )
-        m_recipientsEditor->addRecipient( addr, Recipient::Bcc );
+        m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Bcc );
   }
 
   // First, we copy the message and then parse it to the object tree parser.
@@ -292,9 +292,9 @@ void Message::ComposerViewBase::readyForSending()
   // first, expand all addresses
   MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
   job->setFrom( from() );
-  job->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
-  job->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
-  job->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
+  job->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
+  job->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
+  job->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotEmailAddressResolved( KJob* ) ) );
   job->start();
   
@@ -321,12 +321,12 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     mExpandedBcc = resolveJob->expandedBcc();
  } else { // saved to draft, so keep the old values, not very nice.
     mExpandedFrom = from();
-    foreach( const Recipient::Ptr &r, m_recipientsEditor->recipients() ) {
+    foreach( const MessageComposer::Recipient::Ptr &r, m_recipientsEditor->recipients() ) {
       switch( r->type() ) {
-        case Recipient::To: mExpandedTo << r->email(); break;
-        case Recipient::Cc: mExpandedCc << r->email(); break;
-        case Recipient::Bcc: mExpandedBcc << r->email(); break;
-        case Recipient::Undefined: Q_ASSERT( !"Unknown recpient type!" ); break;
+        case MessageComposer::Recipient::To: mExpandedTo << r->email(); break;
+        case MessageComposer::Recipient::Cc: mExpandedCc << r->email(); break;
+        case MessageComposer::Recipient::Bcc: mExpandedBcc << r->email(); break;
+        case MessageComposer::Recipient::Undefined: Q_ASSERT( !"Unknown recpient type!" ); break;
       }
     }
     QStringList unExpandedTo, unExpandedCc, unExpandedBcc;
@@ -548,9 +548,9 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     infoPart->setBcc( mExpandedBcc );
   } else {
     infoPart->setFrom( from() );
-    infoPart->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
-    infoPart->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
-    infoPart->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
+    infoPart->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
+    infoPart->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
+    infoPart->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
   }
   infoPart->setSubject( subject() );
   infoPart->setUserAgent( QLatin1String( "KMail" ) );
@@ -977,19 +977,19 @@ static QString cleanedUpHeaderString( const QString &s )
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::to() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( Recipient::To ) );
+  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::To ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::cc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( Recipient::Cc ) );
+  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Cc ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::bcc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( Recipient::Bcc ) );
+  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Bcc ) );
 }
 
 QString Message::ComposerViewBase::from() const
@@ -1065,8 +1065,8 @@ KPIMIdentities::IdentityCombo* Message::ComposerViewBase::identityCombo()
 void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
 {
   if ( oldIdent.bcc() != ident.bcc() ) {
-    m_recipientsEditor->removeRecipient( oldIdent.bcc(), Recipient::Bcc );
-    m_recipientsEditor->addRecipient( ident.bcc(), Recipient::Bcc );
+    m_recipientsEditor->removeRecipient( oldIdent.bcc(), MessageComposer::Recipient::Bcc );
+    m_recipientsEditor->addRecipient( ident.bcc(), MessageComposer::Recipient::Bcc );
     m_recipientsEditor->setFocusBottom();
   }
 

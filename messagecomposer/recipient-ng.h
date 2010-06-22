@@ -31,7 +31,7 @@
 
 #include <QString>
 #include <QSharedPointer>
-// namespace MessageComposer {
+namespace MessageComposer {
 
 /** Represents a mail recipient. */
 class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
@@ -66,6 +66,6 @@ class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
     Type mType;
 };
 
-// }
+}
 
 #endif
