@@ -141,7 +141,7 @@ class EditorLocation::Private
 
     void removeAddress()
     {
-      const int answer = KMessageBox::questionYesNo( q, i18n( "Do you really want to delete this address?" ),
+      const int answer = KMessageBox::questionYesNo( 0, i18n( "Do you really want to delete this address?" ),
                                                         i18n( "Delete Address" ),
                                                         KGuiItem( "Delete" ) );
       if ( answer == KMessageBox::No )
@@ -205,6 +205,9 @@ EditorLocation::~EditorLocation()
 void EditorLocation::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   d->mModel->setLocations( contact.addresses() );
+  d->mUi.addressSelectionCombo->setCurrentIndex( 0 );
+  d->mMapper->setCurrentIndex( 0 );
+  d->addressCountChanged();
 }
 
 void EditorLocation::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
