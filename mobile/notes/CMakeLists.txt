@@ -23,6 +23,7 @@ target_link_libraries(notes-mobile
   ${KDEPIMLIBS_KMIME_LIBRARY}
   kdepimmobileui
   kdepim
+  akonadi_next
 )
 
 install(TARGETS notes-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
