@@ -49,10 +49,10 @@ KPIM.MainView {
 
   QML.Rectangle {
     id : editContactButton
-    anchors.right : backToFolderListButton.left
+    anchors.right : kaddressbookMobile.right
     anchors.rightMargin : 70
-    anchors.bottom : kaddressbookMobile.bottom
-    anchors.bottomMargin : 100
+    anchors.bottom : backToFolderListButton.top
+    anchors.bottomMargin : 70
     visible : false
     QML.Image {
       source : KDE.iconPath( "edit-undo", 64 );
@@ -87,10 +87,10 @@ KPIM.MainView {
 
   QML.Rectangle {
     id : editContactGroupButton
-    anchors.right : backToFolderListButton.left
+    anchors.right : kaddressbookMobile.right
     anchors.rightMargin : 70
-    anchors.bottom : kaddressbookMobile.bottom
-    anchors.bottomMargin : 100
+    anchors.bottom : backToFolderListButton.top
+    anchors.bottomMargin : 70
     visible : false
     QML.Image {
       source : KDE.iconPath( "edit-undo", 64 );
