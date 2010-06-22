@@ -487,7 +487,7 @@ void Contact::saveCustomAttributes( QDomElement& element ) const
       writeString( element, (*it).name, (*it).value );
     } else {
       // skip writing the freebusyurl as it is a hack we need to remove eventually
-      if ( (*it).name == QString::fromLatin1( "X-KADDRESSBOOK-FreeBusyURL" ) ) {
+      if ( (*it).name == QString::fromLatin1( "FreeBusyURL" ) ) {
         continue;
       }
 
