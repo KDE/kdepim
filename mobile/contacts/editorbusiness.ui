@@ -147,7 +147,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QTextEdit" name="textEdit"/>
+    <widget class="QTextEdit" name="noteTextEdit"/>
    </item>
   </layout>
  </widget>

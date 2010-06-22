@@ -23,6 +23,8 @@
 
 #include <KABC/Addressee>
 
+#include <QtGui/QAbstractTextDocumentLayout>
+
 class EditorBusiness::Private
 {
   EditorBusiness *const q;
@@ -77,6 +79,9 @@ void EditorBusiness::loadContact( const KABC::Addressee &contact, const Akonadi:
   d->mUi.officeLineEdit->setText( loadCustom( contact, QLatin1String( "X-Office" ) ) );
   d->mUi.managerLineEdit->setText( loadCustom( contact, QLatin1String( "X-ManagersName" ) ) );
   d->mUi.assistantLineEdit->setText( loadCustom( contact, QLatin1String( "X-AssistantsName" ) ) );
+  d->mUi.noteTextEdit->setPlainText( contact.note() );
+
+  d->mUi.noteTextEdit->setMinimumHeight( qMax( 200, (int)d->mUi.noteTextEdit->document()->documentLayout()->documentSize().height() + 50 ) );
 }
 
 void EditorBusiness::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
@@ -89,6 +94,7 @@ void EditorBusiness::saveContact( KABC::Addressee &contact, Akonadi::ContactMeta
   storeCustom( contact, QLatin1String( "X-Office" ), d->mUi.officeLineEdit->text().trimmed() );
   storeCustom( contact, QLatin1String( "X-ManagersName" ), d->mUi.managerLineEdit->text().trimmed() );
   storeCustom( contact, QLatin1String( "X-AssistantsName" ), d->mUi.assistantLineEdit->text().trimmed() );
+  contact.setNote( d->mUi.noteTextEdit->toPlainText() );
 }
 
 #include "editorbusiness.moc"
