@@ -431,6 +431,8 @@ void KOEditorGeneralEvent::readEvent( Event *event, const QDate &date, bool isTe
   if ( !isTemplate ) {
     KDateTime startDT = event->dtStart();
     KDateTime endDT = event->dtEnd();
+    Q_UNUSED( date );
+    /*
     if ( event->recurs() && date.isValid() ) {
       // Consider the active date when editing recurring Events.
       KDateTime kdt( date, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
@@ -447,6 +449,7 @@ void KOEditorGeneralEvent::readEvent( Event *event, const QDate &date, bool isTe
         }
       }
     }
+    */
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
     if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();
