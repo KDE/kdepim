@@ -22,15 +22,22 @@
 
 #include <QtCore/QString>
 
+#include "akonadi_next_export.h"
+
+namespace Akonotes
+{
+
 /**
   This is to become a convenience wrapper around KMime::Message::Ptr.
 */
-class Note
+class AKONADI_NEXT_EXPORT Note
 {
 public:
 
   static QString mimeType();
 
 };
+
+}
 
 #endif

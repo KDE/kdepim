@@ -98,8 +98,6 @@ void SignJob::setContent( KMime::Content* content )
 {
   Q_D( SignJob );
 
-  Q_ASSERT( content );
-
   d->content = content;
 }
 
@@ -137,7 +135,7 @@ void SignJob::process()
 
   // if setContent hasn't been called, we assume that a subjob was added
   // and we want to use that
-  if( !d->content || !d->content->hasContent() ) {
+  if( !d->content ) {
     Q_ASSERT( d->subjobContents.size() == 1 );
     d->content = d->subjobContents.first();
   }

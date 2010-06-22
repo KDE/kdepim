@@ -1,5 +1,7 @@
 /*
-    Copyright (c) 2009 Stephen Kelly <steveire@gmail.com>
+    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
+        a KDAB Group company, info@kdab.net,
+        author Stephen Kelly <stephen@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,10 +19,35 @@
     02110-1301, USA.
 */
 
-#include "note.h"
+#ifndef LOCALRESOURCECREATOR_H
+#define LOCALRESOURCECREATOR_H
 
-QString Note::mimeType()
+#include <QObject>
+
+class KJob;
+
+/**
+ * @brief Creates a notes resource, a book and a page if one does not already exist.
+ */
+class LocalResourceCreator : public QObject
 {
-  return "text/x-vnd.akonadi.note";
-}
+  Q_OBJECT
+public:
+  LocalResourceCreator(QObject* parent = 0);
 
+  void createIfMissing();
+
+private:
+  void createInstance();
+
+private slots:
+  void instanceCreated( KJob *job );
+  void syncDone( KJob *job );
+  void rootFetchFinished( KJob *job );
+  void topLevelFetchFinished( KJob *job );
+  void createFinished( KJob *job );
+  void itemCreateFinished( KJob *job );
+
+};
+
+#endif

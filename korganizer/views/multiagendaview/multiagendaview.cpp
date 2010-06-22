@@ -26,6 +26,7 @@
 #include "ui_multiagendaviewconfigwidget.h"
 
 #include <Akonadi/EntityTreeView>
+#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendarmodel.h>
 #include <akonadi/kcal/collectionselection.h>
@@ -163,8 +164,7 @@ void MultiAgendaView::recreateViews()
     }
   } else {
     Q_FOREACH( const Collection &i, collectionSelection()->selectedCollections() ) {
-      if ( i.contentMimeTypes().contains(
-             QLatin1String( "application/x-vnd.akonadi.calendar.event" ) ) ) {
+      if ( i.contentMimeTypes().contains( IncidenceMimeTypeVisitor::eventMimeType() ) ) {
         addView( i );
       }
     }
@@ -307,7 +307,7 @@ DateList MultiAgendaView::selectedIncidenceDates()
   return list;
 }
 
-int MultiAgendaView::currentDateCount()
+int MultiAgendaView::currentDateCount() const
 {
   foreach ( KOAgendaView *agendaView, mAgendaViews ) {
     return agendaView->currentDateCount();
@@ -348,7 +348,7 @@ void MultiAgendaView::changeIncidenceDisplay( const Item &incidence, int mode )
   }
 }
 
-int MultiAgendaView::maxDatesHint()
+int MultiAgendaView::maxDatesHint() const
 {
   foreach ( KOAgendaView *agendaView, mAgendaViews ) {
     return agendaView->maxDatesHint();

@@ -95,6 +95,12 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <label>The maximum size in MB that email attachments are allowed to have (-1 for no limit).</label>
         <default>-1</default>
     </entry>
+    <entry name="OutlookCompatibleAttachments" type="Bool" key="outlook-compatible-attachments">
+      <label>Outlook-compatible attachment naming</label>
+      <whatsthis>Turn this option on to make Outlook &#8482; understand attachment names containing non-English characters</whatsthis>
+      <default>false</default>
+    </entry>
+
 
   </group>
 

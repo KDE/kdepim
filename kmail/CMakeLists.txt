@@ -54,6 +54,8 @@ if (QT_QT3SUPPORT_FOUND)
 set(kmailprivate_LIB_SRCS
    foldercollectionmonitor.cpp
    readablecollectionproxymodel.cpp
+   entitycollectionorderproxymodel.cpp
+   collectionpane.cpp
    foldertreewidget.cpp
    folderselectiondialog.cpp
    foldercollection.cpp
@@ -69,6 +71,7 @@ set(kmailprivate_LIB_SRCS
    colorlistbox.cpp
    imapaclattribute.cpp
    kmmainwin.cpp
+   configagentdelegate.cpp
    configuredialoglistview.cpp
    configuredialog.cpp
    configuredialog_p.cpp
@@ -159,6 +162,9 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
 endmacro(add_resource_iface)
 
 add_resource_iface( imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings )
+# Pop3
+add_resource_iface( settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings )
+
 
 # TODO PORT
 # qt4_generate_dbus_interface(kmcomposewin.h org.kde.kmail.mailcomposer.xml OPTIONS -a)
@@ -314,7 +320,7 @@ install(FILES
   kmcomposerui.rc
   kmmainwin.rc
   kmreadermainwin.rc
-  kmail.notifyrc
+  kmail2.notifyrc
   kmail_part.rc
   DESTINATION ${DATA_INSTALL_DIR}/kmail2
 )

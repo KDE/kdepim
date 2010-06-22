@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
-  
+
   Parts based on KMail code by various authors.
 
   This library is free software; you can redistribute it and/or modify it
@@ -79,8 +79,13 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
   kDebug() << "Mimetype is" << tjob->mimetype();
   QString filename = url.fileName();
   if( filename.isEmpty() ) {
-    filename = i18nc( "a file called 'unknown.ext'", "unknown%1",
-                  KMimeType::mimeType( mimeType )->mainExtension() );
+    KMimeType::Ptr mtype = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+    if ( mtype ) {
+      filename = i18nc( "a file called 'unknown.ext'", "unknown%1",
+                        mtype->mainExtension() );
+    } else {
+      filename = i18nc( "a filed called 'unknown'", "unknown" );
+    }
   }
 
   // Create the AttachmentPart.

@@ -70,6 +70,7 @@ QPixmap *KOAgendaItem::completedPxmp = 0;
 //-----------------------------------------------------------------------------
 
 KOAgendaItem::KOAgendaItem( Akonadi::Calendar *calendar, const Item &item,
+                            int itemPos, int itemCount,
                             const QDate &qd, QWidget *parent )
   : QWidget( parent ), mCalendar( calendar ), mIncidence( item ),
     mDate( qd ), mValid( true ), mCloned( false ), mSpecialEvent( false )
@@ -105,6 +106,9 @@ KOAgendaItem::KOAgendaItem( Akonadi::Calendar *calendar, const Item &item,
   mMultiItemInfo = 0;
   mStartMoveInfo = 0;
 
+  mItemPos = itemPos;
+  mItemCount = itemCount;
+
   QPalette pal = palette();
   pal.setColor( QPalette::Window, Qt::transparent );
   setPalette( pal );
@@ -133,7 +137,10 @@ void KOAgendaItem::updateIcons()
   }
   Incidence::Ptr incidence = Akonadi::incidence( mIncidence );
   Q_ASSERT( incidence );
-  mIconReadonly = incidence->isReadOnly();
+
+  // enough to have the lock icon, IMHO, even if he has delete rights
+  mIconReadonly = !Akonadi::hasChangeRights( mIncidence );
+
   mIconRecur = incidence->recurs();
   mIconAlarm = incidence->isAlarmEnabled();
   if ( incidence->attendeeCount() > 1 ) {
@@ -741,14 +748,14 @@ void KOAgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
     return;
   }
 
-  QPixmap tPxmp;
-  if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+  QPixmap tPxmp;    
+  if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     mSpecialEvent = true;
-    if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-      tPxmp = KOGlobals::self()->smallIcon( "view-calendar-wedding-anniversary" );
-    } else {
-      tPxmp = KOGlobals::self()->smallIcon( "view-calendar-birthday" );
-    }
+    tPxmp = KOGlobals::self()->smallIcon( "view-calendar-wedding-anniversary" );
+    conditionalPaint( p, true, x, y, ft, tPxmp );
+  } else if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+    mSpecialEvent = true;
+    tPxmp = KOGlobals::self()->smallIcon( "view-calendar-birthday" );
     conditionalPaint( p, true, x, y, ft, tPxmp );
   } else {
     // Disabling the event Pixmap because:

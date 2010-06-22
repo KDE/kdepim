@@ -681,7 +681,7 @@ void KJotsBook::setEditable(bool editable)
     setDirty(true);
 }
 
-bool KJotsBook::isEditable()
+bool KJotsBook::isEditable() const
 {
     return m_editable;
 }
@@ -934,7 +934,7 @@ void KJotsPage::setEditable(bool editable)
     m_editable = editable;
 }
 
-bool KJotsPage::isEditable()
+bool KJotsPage::isEditable() const
 {
     return m_editable;
 }

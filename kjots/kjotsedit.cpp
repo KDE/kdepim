@@ -88,16 +88,19 @@ void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
              this, SLOT( menuActivated( QAction* ) ) );
 
     popup->addSeparator();
-    popup->addAction(actionCollection->action("copyIntoTitle"));
-    popup->addAction(actionCollection->action("insert_checkmark"));
+    QAction * act = actionCollection->action("copyIntoTitle");
+    popup->addAction(act);
+    act = actionCollection->action("insert_checkmark");
+    act->setEnabled( !isReadOnly() );
+    popup->addAction(act);
 
     if (!KApplication::kApplication()->clipboard()->text().isEmpty())
     {
-        popup->addAction(actionCollection->action("paste_plain_text"));
+      act = actionCollection->action("paste_plain_text");
+      act->setEnabled( !isReadOnly() );
+      popup->addAction( act );
     }
-
     popup->exec( event->globalPos() );
-
     delete popup;
 }
 
@@ -261,7 +264,7 @@ void KJotsEdit::onAutoDecimal( void )
 void KJotsEdit::onLinkify ( void )
 {
     selectLinkText();
-    QPointer<KJotsLinkDialog> linkDialog = new KJotsLinkDialog(this);
+    QPointer<KJotsLinkDialog> linkDialog = new KJotsLinkDialog( const_cast<QAbstractItemModel *>(m_selectionModel->model()), this);
     linkDialog->setLinkText(currentLinkText());
     linkDialog->setLinkUrl(currentLinkUrl());
 
@@ -402,14 +405,6 @@ void KJotsEdit::savePage()
 
     if (!item.hasPayload<KMime::Message::Ptr>())
       return;
-
-    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-
-    KMime::Content* c =msg->mainBodyPart();
-    c->fromUnicodeString( toPlainText() );
-    msg->assemble();
-
-    item.setPayload( msg );
 
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_selectionModel->model());
 

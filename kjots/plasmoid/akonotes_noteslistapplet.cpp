@@ -34,9 +34,10 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
 
+#include "akonadi_next/note.h"
+
 #include "../kjotsmodel.h"
 #include "plasmatreeview.h"
-#include "note.h"
 
 using namespace Akonadi;
 
@@ -68,7 +69,7 @@ void AkonotesListApplet::setupModel( Collection::Id id )
   monitor->setItemFetchScope( scope );
 
   monitor->setCollectionMonitored( Collection( id ) );
-  monitor->setMimeTypeMonitored( Note::mimeType() );
+  monitor->setMimeTypeMonitored( Akonotes::Note::mimeType() );
 
   EntityTreeModel *model = new KJotsModel( monitor, this );
   model->setCollectionFetchStrategy( EntityTreeModel::FetchNoCollections );
@@ -102,14 +103,14 @@ void AkonotesListApplet::createConfigurationInterface(KConfigDialog *configDialo
   // TODO: Refactor into a collection chooser widget.
   Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
   monitor->fetchCollection( true );
-  monitor->setMimeTypeMonitored( Note::mimeType(), true );
+  monitor->setMimeTypeMonitored( Akonotes::Note::mimeType(), true );
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
 
   EntityTreeModel *model = new EntityTreeModel( monitor, this );
   model->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
   CollectionFilterProxyModel *mimeTypeFilterModel = new CollectionFilterProxyModel( this );
-  mimeTypeFilterModel->addMimeTypeFilter( Note::mimeType() );
+  mimeTypeFilterModel->addMimeTypeFilter( Akonotes::Note::mimeType() );
   mimeTypeFilterModel->setSourceModel( model );
 
   EntityRightsFilterModel *rightsFilterModel = new EntityRightsFilterModel( this );

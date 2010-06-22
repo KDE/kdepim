@@ -74,7 +74,7 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   // use the unfiltered model to catch collections
   connect( m_treeModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInTreeModel(QModelIndex,int,int)) );
   connect( m_treeModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemovedInTreeModel(QModelIndex,int,int)) );
-  
+  connect( m_treeModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChangedInTreeModel(QModelIndex,QModelIndex)) );
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -149,6 +149,22 @@ void Calendar::Private::dataChanged( const QModelIndex& topLeft, const QModelInd
   emit q->calendarChanged();
 }
 
+void Calendar::Private::dataChangedInTreeModel( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+{
+  Q_ASSERT( topLeft.row() <= bottomRight.row() );
+  const int endRow = bottomRight.row();
+  QModelIndex i( topLeft );
+  int row = i.row();
+  while ( row <= endRow ) {
+    const Collection col = collectionFromIndex( i );
+    if ( col.isValid() ) {
+      emit q->calendarChanged();
+      return;
+    }
+    ++row;
+    i = i.sibling( row, topLeft.column() );
+  }
+}
 
 Calendar::Private::~Private()
 {
@@ -171,18 +187,46 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   const bool alreadyExisted = m_itemMap.contains( item.id() );
   const Item::Id id = item.id();
 
-  kDebug()<<"id="<<item.id()<<"version="<<item.revision()<<"alreadyExisted="<<alreadyExisted;
+  kDebug()<<"id="<<item.id()<<"version="<<item.revision()<<"alreadyExisted="
+          << alreadyExisted << "; calendar = " << q;
   Q_ASSERT( mode == DontCare || alreadyExisted == ( mode == AssertExists ) );
-
-  if ( alreadyExisted ) {
-    Q_ASSERT( item.storageCollectionId() == m_itemMap.value( id ).storageCollectionId() ); // there was once a bug that resulted in items forget their collectionId...
-    // update-only goes here
-  } else {
-    // new-only goes here
-  }
 
   const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
   Q_ASSERT( incidence );
+
+  if ( alreadyExisted ) {
+
+    if ( !m_itemMap.contains( id ) ) {
+      // Item was deleted almost at the same time the change was made
+      // ignore this change
+      return;
+    }
+
+    if ( item.storageCollectionId() == -1 ) {
+      // A valid item can have an invalid storage id if it was deleted while
+      // fetching the ancestor
+      return;
+    }
+
+    if ( item.storageCollectionId() != m_itemMap.value( id ).storageCollectionId() ) {
+      // there was once a bug that resulted in items forget their collectionId...
+      kDebug() << "item.storageCollectionId() = " << item.storageCollectionId()
+               << "; m_itemMap.value( id ).storageCollectionId() = "
+               << m_itemMap.value( id ).storageCollectionId()
+               << "; item.isValid() = " << item.isValid()
+               << "; calendar = " << q;
+      Q_ASSERT_X( false, "updateItem", "updated item has different collection id" );
+    }
+    // update-only goes here
+  } else {
+    // new-only goes here
+    const Collection::Rights rights = item.parentCollection().rights();
+    if ( !( rights & Collection::CanDeleteItem ) &&
+         !( rights & Collection::CanChangeItem ) &&
+         !incidence->isReadOnly() ) {
+      incidence->setReadOnly( true );
+    }
+  }
 
   if ( alreadyExisted && m_itemDateForItemId.contains( item.id() )) {
     // for changed items, we must remove existing date entries (they might have changed)
@@ -239,7 +283,8 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   if ( alreadyExisted ) {
     if ( m_uidToItemId.value( ui ) != item.id() ) {
       kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
-              << "item uid = "  << ui.uid;
+              << "item uid = "  << ui.uid
+              << "; calendar = " << q;
     }
 
     Q_ASSERT( m_uidToItemId.value( ui ) == item.id() );
@@ -410,7 +455,9 @@ void Calendar::Private::itemsRemoved( const Item::List &items )
     kDebug()<<item.id();
     Q_ASSERT( ci.hasPayload<KCal::Incidence::Ptr>() );
     const KCal::Incidence::Ptr incidence = ci.payload<KCal::Incidence::Ptr>();
-    kDebug() << "Remove uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
+    kDebug() << "Remove uid=" << incidence->uid() << "summary=" << incidence->summary()
+             << "type=" << incidence->type() << "; id= " << item.id() << "; revision=" << item.revision()
+             << " calendar = " << q;
 
     if ( const KCal::Event::Ptr e = dynamic_pointer_cast<KCal::Event>( incidence ) ) {
       if ( !e->recurs() ) {

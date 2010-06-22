@@ -70,6 +70,7 @@ QPixmap *AgendaItem::completedPxmp = 0;
 //-----------------------------------------------------------------------------
 
 AgendaItem::AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const Item &item,
+                        int itemPos, int itemCount,
                         const QDate &qd, QWidget *parent )
   : QWidget( parent ), mEventView( eventView ), mCalendar( calendar ), mIncidence( item ),
     mDate( qd ), mValid( true ), mCloned( false ), mSpecialEvent( false )
@@ -104,6 +105,9 @@ AgendaItem::AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const
   mIconOrganizer = false;
   mMultiItemInfo = 0;
   mStartMoveInfo = 0;
+
+  mItemPos = itemPos;
+  mItemCount = itemCount;
 
   QPalette pal = palette();
   pal.setColor( QPalette::Window, Qt::transparent );
@@ -740,14 +744,14 @@ void AgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
     return;
   }
 
-  QPixmap tPxmp;
-  if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+  QPixmap tPxmp;  
+  if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     mSpecialEvent = true;
-    if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-      tPxmp = SmallIcon( "view-calendar-wedding-anniversary" );
-    } else {
-      tPxmp = SmallIcon( "view-calendar-birthday" );
-    }
+    tPxmp = SmallIcon( "view-calendar-wedding-anniversary" );
+    conditionalPaint( p, true, x, y, ft, tPxmp );
+  } else if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+    mSpecialEvent = true;
+    tPxmp = SmallIcon( "view-calendar-birthday" );
     conditionalPaint( p, true, x, y, ft, tPxmp );
   } else {
     // Disabling the event Pixmap because:

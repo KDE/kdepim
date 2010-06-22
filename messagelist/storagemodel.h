@@ -60,6 +60,9 @@ public:
 
   virtual QString id() const;
   virtual bool containsOutboundMessages() const;
+
+  virtual bool isOutBoundFolder( const Akonadi::Collection& c ) const;
+
   virtual int initialUnreadRowCountGuess() const;
   virtual bool initializeMessageItem( MessageList::Core::MessageItem *mi, int row, bool bUseReceiver ) const;
   virtual void fillMessageItemThreadingData( MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset ) const;
@@ -73,7 +76,7 @@ public:
   virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
   virtual QMimeData* mimeData( QList< MessageList::Core::MessageItem* > ) const;
-  
+
   virtual void prepareForScan();
 
   Akonadi::Item itemForRow( int row ) const;

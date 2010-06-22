@@ -83,6 +83,9 @@ void ConfigureWidget::writeConfig()
       mSettingsUi->overrideCharacterEncoding->currentIndex() == 0 ?
         QString() :
         NodeHelper::encodingForName( mSettingsUi->overrideCharacterEncoding->currentText() ) );
+
+    KMime::setFallbackCharEncoding( NodeHelper::encodingForName( mSettingsUi->fallbackCharacterEncoding->currentText() ) );
+
 }
 
 void ConfigureWidget::readCurrentFallbackCodec()

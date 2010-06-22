@@ -399,13 +399,11 @@ bool IncidenceMonthItem::allDay() const
 
 bool IncidenceMonthItem::isMoveable() const
 {
-  const Incidence::Ptr incidence = Akonadi::incidence( mIncidence );
-  return !incidence->isReadOnly();
+  return Akonadi::hasChangeRights( mIncidence );
 }
 bool IncidenceMonthItem::isResizable() const
 {
-  const Incidence::Ptr incidence = Akonadi::incidence( mIncidence );
-  return mIsEvent && !incidence->isReadOnly();
+  return mIsEvent && Akonadi::hasChangeRights( mIncidence );
 }
 
 void IncidenceMonthItem::finalizeMove( const QDate &newStartDate )
@@ -574,14 +572,13 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
   const Incidence::Ptr incidence = Akonadi::incidence( mIncidence );
 
   bool specialEvent = false;
-  if ( mIsEvent ) {
-    if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+  if ( mIsEvent ) {      
+    if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
       specialEvent = true;
-      if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-        ret << monthScene()->anniversaryPixmap();
-      } else {
-        ret << monthScene()->birthdayPixmap();
-      }
+      ret << monthScene()->anniversaryPixmap();
+    } else if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+      specialEvent = true;
+      ret << monthScene()->birthdayPixmap();
     }
     // smartins: Disabling the event Pixmap because:
     // 1. Save precious space so we can read the event's title better.
@@ -604,7 +601,8 @@ QList<QPixmap *> IncidenceMonthItem::icons() const
   } else if ( mIsJournal ) {
     ret << monthScene()->journalPixmap();
   }
-  if ( incidence->isReadOnly() && !specialEvent ) {
+
+  if ( !Akonadi::hasChangeRights( mIncidence ) && !specialEvent ) {
     ret << monthScene()->readonlyPixmap();
   }
 #if 0

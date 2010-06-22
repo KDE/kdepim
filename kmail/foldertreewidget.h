@@ -20,6 +20,7 @@
 #define FOLDERTREEWIDGET_H
 
 #include "kmail_export.h"
+#include "readablecollectionproxymodel.h"
 #include <QWidget>
 
 #include <QAbstractItemView>
@@ -28,8 +29,8 @@
 class KXMLGUIClient;
 class QItemSelectionModel;
 class FolderTreeView;
-class ReadableCollectionProxyModel;
 class KLineEdit;
+class EntityCollectionOrderProxyModel;
 
 namespace Akonadi {
   class StatisticsProxyModel;
@@ -49,12 +50,14 @@ public:
   {
     None = 0,
     ShowUnreadCount = 1,
-    UseLineEditForFiltering = 2
+    UseLineEditForFiltering = 2,
+    UseDistinctSelectionModel = 4
   };
   Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
 
   FolderTreeWidget( QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
-                    TreeViewOptions option = ShowUnreadCount );
+                    TreeViewOptions option = ShowUnreadCount,
+                    ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy = ReadableCollectionProxyModel::None );
   ~FolderTreeWidget();
 
   /**
@@ -98,6 +101,8 @@ public:
 
   ReadableCollectionProxyModel *readableCollectionProxyModel();
 
+  EntityCollectionOrderProxyModel *entityOrderProxy();
+
   void quotaWarningParameters( const QColor &color, qreal threshold );
   void readQuotaConfig();
 
@@ -113,6 +118,7 @@ protected:
 
 protected slots:
   void slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
+  void slotManualSortingChanged( bool );
 
 private:
   class FolderTreeWidgetPrivate;

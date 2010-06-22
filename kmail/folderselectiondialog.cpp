@@ -62,11 +62,25 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   FolderTreeWidget::TreeViewOptions opt= FolderTreeWidget::None;
   if ( options & FolderSelectionDialog::ShowUnreadCount )
     opt |= FolderTreeWidget::ShowUnreadCount;
+  opt |= FolderTreeWidget::UseDistinctSelectionModel;
 
-  d->folderTreeWidget = new FolderTreeWidget( this, 0, opt);
+  ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy = ReadableCollectionProxyModel::None;
+
+  if ( options & FolderSelectionDialog::HideVirtualFolder )
+    optReadableProxy |= ReadableCollectionProxyModel::HideVirtualFolder;
+  optReadableProxy |= ReadableCollectionProxyModel::HideSpecificFolder;
+  if ( options & FolderSelectionDialog::HideOutboxFolder )
+    optReadableProxy |= ReadableCollectionProxyModel::HideOutboxFolder;
+  if ( options & FolderSelectionDialog::HideImapFolder )
+    optReadableProxy |= ReadableCollectionProxyModel::HideImapFolder;
+
+  d->folderTreeWidget = new FolderTreeWidget( this, 0, opt, optReadableProxy);
+
   d->folderTreeWidget->disableContextMenuAndExtraColumn();
+
   d->folderTreeWidget->readableCollectionProxyModel()->setEnabledCheck( ( options & EnableCheck ) );
   d->folderTreeWidget->readableCollectionProxyModel()->setAccessRights( Akonadi::Collection::CanCreateCollection );
+
   d->folderTreeWidget->folderTreeView()->setTooltipsPolicy( FolderTreeWidget::DisplayNever );
   d->folderTreeWidget->folderTreeView()->setDragDropMode( QAbstractItemView::NoDragDrop );
   layout->addWidget( d->folderTreeWidget );
@@ -84,6 +98,7 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
   connect( d->folderTreeWidget->folderTreeView(), SIGNAL( doubleClicked(const QModelIndex&) ),
            this, SLOT( accept() ) );
   readConfig();
+  d->folderTreeWidget->folderTreeView()->expandAll();
 }
 
 FolderSelectionDialog::~FolderSelectionDialog()

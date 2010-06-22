@@ -20,6 +20,8 @@ include_directories(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set( akonadi_next_SRCS
+  note.cpp
+  notecreatorandselector.cpp
   entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
   kbreadcrumbselectionmodel.cpp

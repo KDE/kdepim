@@ -52,7 +52,7 @@ class KUrl;
 class OrgKdeAkonadiImapSettingsInterface;
 
 #define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
-
+#define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
 namespace KMail
 {
     /**
@@ -93,7 +93,7 @@ namespace Util {
      *  attribute set.
      */
     Akonadi::Item::Id putRepliesInSameFolder( const Akonadi::Item& item );
-    
+
     KUrl findSieveUrlForAccount( OrgKdeAkonadiImapSettingsInterface *a,  const QString &ident);
     OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
 
@@ -110,6 +110,11 @@ namespace Util {
      * Currently only support mailto.
      */
     void handleClickedURL( const KUrl &url, uint identity );
+
+
+    bool isVirtualCollection(const Akonadi::Collection & col);
+
+    QString fullCollectionPath( const Akonadi::Collection& collection );
 
 }
 }

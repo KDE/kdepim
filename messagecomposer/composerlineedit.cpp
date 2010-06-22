@@ -51,6 +51,7 @@ ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
     m_recentAddressConfig( MessageComposerSettings::self()->config() )
 {
   allowSemicolonAsSeparator( MessageComposerSettings::allowSemicolonAsAddressSeparator() );
+  loadContacts();
 }
 
 

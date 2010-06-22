@@ -287,8 +287,6 @@ void ActionManager::createCalendarAkonadi()
 
   connect( mCalendar, SIGNAL(calendarChanged()),
            mCalendarView, SLOT(resourcesChanged()) );
-  connect( mCalendar, SIGNAL(calendarLoaded()),
-           mCalendarView, SLOT(resourcesChanged()) );
   connect( mCalendar, SIGNAL(signalErrorMessage(const QString &)),
            mCalendarView, SLOT(showErrorMessage(const QString &)) );
   connect( mCalendarView, SIGNAL(configChanged()), SLOT(updateConfig()) );
@@ -779,6 +777,8 @@ void ActionManager::slotResourcesChanged( bool enabled )
   mNewSubtodoAction->setEnabled( enabled && Akonadi::hasTodo( item ) );
 
   mNewJournalAction->setEnabled( enabled );
+
+  mCalendarView->setCreatingEnabled( enabled );
 }
 
 void ActionManager::setItems( const QStringList &lst, int idx )
@@ -1662,7 +1662,7 @@ void ActionManager::processIncidenceSelection( const Akonadi::Item &item, const 
 
   enableIncidenceActions( true );
 
-  if ( incidence->isReadOnly() ) {
+  if ( !Akonadi::hasDeleteRights( item ) ) {
     mCutAction->setEnabled( false );
     mDeleteAction->setEnabled( false );
   }

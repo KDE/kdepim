@@ -1,5 +1,5 @@
 /*
- *  kcalendar.h  -  kcal library calendar and event categorisation
+ *  kacalendar.h  -  KAlarm kcal library calendar and event categorisation
  *  Program:  kalarm
  *  Copyright © 2005-2008,2010 by David Jarvie <djarvie@kde.org>
  *
@@ -18,8 +18,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef KCALENDAR_H
-#define KCALENDAR_H
+#ifndef KACALENDAR_H
+#define KACALENDAR_H
 
 #include "kalarm_cal_export.h"
 #include <QByteArray>
@@ -31,12 +31,21 @@ namespace KCal {
   class CalendarLocal;
 }
 
-class KALARM_CAL_EXPORT KCalendar
+namespace KAlarm
+{
+
+#ifdef USE_AKONADI
+extern const QLatin1String KALARM_CAL_EXPORT MIME_BASE;      //!< The base mime type for KAlarm alarms
+extern const QLatin1String KALARM_CAL_EXPORT MIME_ACTIVE;    //!< The mime type for KAlarm active alarms
+extern const QLatin1String KALARM_CAL_EXPORT MIME_ARCHIVED;  //!< The mime type for KAlarm archived alarms
+extern const QLatin1String KALARM_CAL_EXPORT MIME_TEMPLATE;  //!< The mime type for KAlarm alarm templates
+#endif
+
+class KALARM_CAL_EXPORT Calendar
 {
     public:
-        static QByteArray APPNAME;
         /** Compatibility of resource calendar format. */
-        enum Status
+        enum Compat
         {
             Current,       // in current KAlarm format
             Converted,     // in current KAlarm format, but not yet saved
@@ -67,6 +76,8 @@ class KALARM_CAL_EXPORT KCalendar
          */
         static QByteArray  icalProductId();
 
+        static const QByteArray APPNAME;           //!< The application name ("KALARM") used in calendar properties
+
     private:
         static int  readKAlarmVersion(KCal::CalendarLocal&, const QString& localFile, QString& subVersion, QString& versionString);
         static void insertKAlarmCatalog();
@@ -75,11 +86,11 @@ class KALARM_CAL_EXPORT KCalendar
         static bool mHaveKAlarmCatalog;
 };
 
-class KALARM_CAL_EXPORT KCalEvent
+class KALARM_CAL_EXPORT CalEvent
 {
     public:
         /** The category of an event, indicated by the middle part of its UID. */
-        enum Status
+        enum Type
         {
             EMPTY      = 0,       // the event has no alarms
             ACTIVE     = 0x01,    // the event is currently active
@@ -87,14 +98,25 @@ class KALARM_CAL_EXPORT KCalEvent
             TEMPLATE   = 0x04,    // the event is an alarm template
             DISPLAYING = 0x08     // the event is currently being displayed
         };
-        Q_DECLARE_FLAGS(Statuses, Status);
+        Q_DECLARE_FLAGS(Types, Type);
 
-        static QString uid(const QString& id, Status);
-        static Status  status(const KCal::Event*, QString* param = 0);
-        static void    setStatus(KCal::Event*, Status, const QString& param = QString());
+        static QString uid(const QString& id, Type);
+        static Type    status(const KCal::Event*, QString* param = 0);
+        static void    setStatus(KCal::Event*, Type, const QString& param = QString());
+
+#ifdef USE_AKONADI
+        /** Return the alarm Type for a mime type string. */
+        static Type    type(const QString& mimeType);
+        /** Return the alarm Types for a list of mime type strings. */
+        static Types   types(const QStringList& mimeTypes);
+        /** Return the mime type string corresponding to an alarm Type. */
+        static QString mimeType(Type);
+#endif
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KCalEvent::Statuses);
+Q_DECLARE_OPERATORS_FOR_FLAGS(CalEvent::Types);
+
+} // namespace KAlarm
 
 #endif
 

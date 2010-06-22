@@ -24,18 +24,22 @@
 #include <QColor>
 #include <QTextDocument>
 
+#include <KIcon>
+
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
+
+#include "akonadi_next/note.h"
 
 #include <kdebug.h>
 #include <KMime/KMimeMessage>
 
 #include <kpimtextedit/textutils.h>
 
-#include "note.h"
 #include <grantlee/markupdirector.h>
 #include <grantlee/texthtmlbuilder.h>
 #include <grantlee/plaintextmarkupbuilder.h>
+#include "kjotslockattribute.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
 
@@ -104,7 +108,7 @@ bool KJotsEntity::isBook() const
 
   if (col.isValid())
   {
-    return col.contentMimeTypes().contains( Note::mimeType() );
+    return col.contentMimeTypes().contains( Akonotes::Note::mimeType() );
   }
   return false;
 }
@@ -171,6 +175,11 @@ bool KJotsModel::setData( const QModelIndex& index, const QVariant& value, int r
     {
       Collection col = index.data( CollectionRole ).value<Collection>();
       col.setName( value.toString() );
+      if (col.hasAttribute<EntityDisplayAttribute>())
+      {
+        EntityDisplayAttribute *eda = col.attribute<EntityDisplayAttribute>();
+        eda->setDisplayName(value.toString());
+      }
       return EntityTreeModel::setData(index, QVariant::fromValue( col ), CollectionRole );
     }
     KMime::Message::Ptr m = item.payload<KMime::Message::Ptr>();
@@ -180,9 +189,8 @@ bool KJotsModel::setData( const QModelIndex& index, const QVariant& value, int r
     item.setPayload<KMime::Message::Ptr>( m );
 
     if ( item.hasAttribute<EntityDisplayAttribute>() ) {
-      EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
+      EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>();
       displayAttribute->setDisplayName( value.toString() );
-      item.addAttribute( displayAttribute );
     }
     return EntityTreeModel::setData(index, QVariant::fromValue<Item>( item ), ItemRole);
   }
@@ -222,9 +230,10 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
     return QVariant::fromValue(obj);
   }
 
+
   if ( role == KJotsModel::DocumentRole )
   {
-    Item item = index.data( ItemRole ).value<Item>();
+    const Item item = index.data( ItemRole ).value<Item>();
     Entity::Id itemId = item.id();
     if ( m_documents.contains( itemId ) )
       return QVariant::fromValue( m_documents.value( itemId ) );
@@ -245,7 +254,7 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
 
   if ( role == KJotsModel::DocumentCursorPositionRole )
   {
-    Item item = EntityTreeModel::data( index, EntityTreeModel::ItemRole ).value<Item>();
+    const Item item = index.data( ItemRole ).value<Item>();
     if (!item.isValid())
       return 0;
 
@@ -253,6 +262,19 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
       return m_cursorPositions.value( item.id() );
 
     return 0;
+  }
+
+  if ( role == Qt::DecorationRole )
+  {
+    const Item item = index.data( ItemRole ).value<Item>();
+    if ( item.isValid() && item.hasAttribute<KJotsLockAttribute>() ) {
+        return KIcon( "emblem-locked" );
+    } else {
+      const Collection col = index.data( CollectionRole ).value<Collection>();
+      if ( col.isValid() && col.hasAttribute<KJotsLockAttribute>() ) {
+        return KIcon( "emblem-locked" );
+      }
+    }
   }
 
   return EntityTreeModel::data(index, role);

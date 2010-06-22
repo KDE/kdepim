@@ -129,7 +129,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setStartTime( const QTime &startHour );
 
     AgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
-                             int YBottom );
+                             int YBottom, int itemPos, int itemCount );
 
     AgendaItem *insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
                                    int XEnd );

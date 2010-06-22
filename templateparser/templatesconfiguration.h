@@ -42,6 +42,7 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
     void saveToIdentity( uint id );
     void loadFromFolder( const QString &id, uint identity = 0 );
     void saveToFolder( const QString &id );
+    void resetToDefault();
 
     static QString defaultNewMessage();
     static QString defaultReply();

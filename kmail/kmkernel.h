@@ -16,6 +16,7 @@
 #include "globalsettings.h"
 #include <kcomponentdata.h>
 #include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/servermanager.h>
 
 #define kmkernel KMKernel::self()
 #define kmconfig KMKernel::config()
@@ -31,7 +32,9 @@ namespace KIO {
   class Job;
 }
 
-class KStatusNotifierItem;
+namespace KPIM {
+  class ProgressItem;
+}
 
 class MessageSender;
 
@@ -66,6 +69,7 @@ class KMainWindow;
 class KMMainWidget;
 class ConfigureDialog;
 class FolderCollectionMonitor;
+class KMSystemTray;
 
 /**
  * @short Central point of coordination in KMail
@@ -202,6 +206,7 @@ public Q_SLOTS:
 
 
 public:
+  void checkMailOnStartup();
 
   /** A static helper function that asks the user
    * if they want to go online.
@@ -239,12 +244,11 @@ public:
   Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
 
   void recoverDeadLetters();
-  void initFolders();
   void closeAllKMailWindows();
   void cleanup(void);
   void quit();
   bool doSessionManagement();
-  bool firstInstance() { return the_firstInstance; }
+  bool firstInstance() const { return the_firstInstance; }
   void setFirstInstance(bool value) { the_firstInstance = value; }
   void action( bool mailto, bool check, const QString &to, const QString &cc,
                const QString &bcc, const QString &subj, const QString &body,
@@ -317,8 +321,8 @@ public:
    */
   bool haveSystemTrayApplet();
 
-  bool registerSystemTrayApplet( const KStatusNotifierItem* );
-  bool unregisterSystemTrayApplet( const KStatusNotifierItem* );
+  bool registerSystemTrayApplet( KMSystemTray* );
+  bool unregisterSystemTrayApplet( KMSystemTray* );
 
   /// Reimplemented from KMailIface
   void emergencyExit( const QString& reason );
@@ -336,6 +340,9 @@ public:
    * is empty at startup.
    */
   Akonadi::Collection::List allFolders() const;
+
+  void selectCollectionFromId( const Akonadi::Collection::Id id);
+
 
   /**
    * Returns the collection associated with the given @p id, or an invalid collection if not found.
@@ -363,6 +370,8 @@ public:
   void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
 
   void stopAgentInstance();
+
+  void updateSystemTray();
 
 public slots:
 
@@ -399,14 +408,22 @@ signals:
   void onlineStatusChanged( GlobalSettings::EnumNetworkState::type );
   void customTemplatesChanged();
 
+  void startCheckMail();
+  void endCheckMail();
+
+
 private slots:
   /** Updates identities when a transport has been deleted. */
   void transportRemoved( int id, const QString &name );
   /** Updates identities when a transport has been renamed. */
   void transportRenamed( int id, const QString &oldName, const QString &newName );
   void itemDispatchStarted();
+  void instanceProgressChanged( Akonadi::AgentInstance );
   void createDefaultCollectionDone( KJob * job);
 
+  void initFolders();
+  void akonadiStateChanged( Akonadi::ServerManager::State );
+  void slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item);
 private:
   void openReader( bool onlyCheck );
   QSharedPointer<FolderCollection> currentFolderCollection();
@@ -450,11 +467,13 @@ private:
   KMMainWin *mWin;
   MailServiceImpl *mMailService;
 
-  QList<const KStatusNotifierItem*> systemTrayApplets;
+  QList<KMSystemTray*> systemTrayApplets;
 
   FolderCollectionMonitor *mFolderCollectionMonitor;
   Akonadi::EntityTreeModel *mEntityTreeModel;
   Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
+
+  QList<KPIM::ProgressItem *>mListProgressItem;
 
   int mWrapCol;
 };

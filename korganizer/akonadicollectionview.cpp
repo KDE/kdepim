@@ -54,6 +54,7 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
+#include <akonadi/entitydisplayattribute.h>
 #include <akonadi/standardactionmanager.h>
 #include <akonadi/agenttypedialog.h>
 #include <akonadi/agentinstancewidget.h>
@@ -92,16 +93,20 @@ namespace {
             return QVariant();
         if ( role == Qt::DecorationRole ) {
           const Akonadi::Collection collection = Akonadi::collectionFromIndex( index );
+
           if ( !collection.contentMimeTypes().isEmpty() ) {
-            QColor col = KOHelper::resourceColor( collection );
-            if ( col.isValid() )
-              return col;
-            else
-              return QVariant();
+            if ( collection.hasAttribute<EntityDisplayAttribute>() &&
+                 !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
+              return collection.attribute<EntityDisplayAttribute>()->icon();
+            } else {
+              QColor col = KOHelper::resourceColor( collection );
+              return col.isValid() ? col : QVariant();
+            }
           }
         } else if ( role == Qt::FontRole ) {
           const Akonadi::Collection collection = Akonadi::collectionFromIndex( index );
-          if ( !collection.contentMimeTypes().isEmpty() && KOHelper::isStandardCalendar( collection.id() ) ) {
+          if ( !collection.contentMimeTypes().isEmpty() && KOHelper::isStandardCalendar( collection.id() ) &&
+               collection.rights() & Collection::CanCreateItem) {
             QFont font = qvariant_cast<QFont>( QSortFilterProxyModel::data( index, Qt::FontRole ) );
             font.setBold( true );
             if ( !mInitDefaultCalendar ) {
@@ -339,22 +344,35 @@ void AkonadiCollectionView::updateMenu()
     enableAction = enableAction && ( KOPrefs::instance()->agendaViewColors() != KOPrefs::CategoryOnly );
     mAssignColor->setEnabled( enableAction );
     QModelIndex index = mCollectionview->selectionModel()->currentIndex(); //selectedRows()
+
+    bool disableStuff = false;
+    
     if ( index.isValid() ) {
       const Akonadi::Collection collection = collectionFromIndex( index );
       Q_ASSERT( collection.isValid() );
 
-      const QString identifier = QString::number( collection.id() );
-      const QColor defaultColor = KOPrefs::instance()->resourceColor( identifier );
-      enableAction = enableAction && defaultColor.isValid();
-      mDisableColor->setEnabled( enableAction );
-      const QString resource = collection.resource();
-      Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( resource );
-      mEditAction->setEnabled( !instance.type().capabilities().contains( QLatin1String( "NoConfig" ) ) );
-      mDefaultCalendar->setEnabled( !KOHelper::isStandardCalendar( collection.id() ) );
+      if ( !collection.contentMimeTypes().isEmpty() ) {
+        const QString identifier = QString::number( collection.id() );
+        const QColor defaultColor = KOPrefs::instance()->resourceColor( identifier );
+        enableAction = enableAction && defaultColor.isValid();
+        mDisableColor->setEnabled( enableAction );
+        const QString resource = collection.resource();
+        Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( resource );
+        mEditAction->setEnabled( !instance.type().capabilities().contains( QLatin1String( "NoConfig" ) ) );
+        mDefaultCalendar->setEnabled( !KOHelper::isStandardCalendar( collection.id() ) &&
+                                      collection.rights() & Collection::CanCreateItem );
+      } else {
+        disableStuff = true;
+      }
     } else {
+      disableStuff = true;
+    }
+    
+    if ( disableStuff ) {
       mDisableColor->setEnabled( false );
       mEditAction->setEnabled( false );
       mDefaultCalendar->setEnabled( false );
+      mAssignColor->setEnabled( false );
     }
   }
 }

@@ -43,9 +43,6 @@
 #include <messagelist/core/view.h>
 #include "foldertreewidget.h"
 
-namespace MessageList {
-  class Pane;
-}
 namespace Akonadi {
   class EntityListView;
 }
@@ -63,7 +60,7 @@ class FolderTreeView;
 class KMMetaFilterActionCommand;
 class KMSystemTray;
 class CustomTemplatesMenu;
-
+class CollectionPane;
 
 template <typename T, typename S> class QMap;
 
@@ -121,7 +118,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     /** Easy access to main components of the window. */
     KMReaderWin* messageView() const { return mMsgView; }
     /** Access to the header list pane. */
-    MessageList::Pane* messageListPane() const { return mMessagePane; }
+    CollectionPane* messageListPane() const { return mMessagePane; }
 
     QSharedPointer<FolderCollection> currentFolder() const;
 
@@ -213,6 +210,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
 
     void slotCheckMail();
 
+    void slotCheckMailOnStartup();
+
     /**
       Select the given folder
       If the folder is 0 the intro is shown
@@ -246,7 +245,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void startUpdateMessageActionsTimer();
 
     /** Update message actions */
-    void updateMessageActions();
+    void updateMessageActions( bool fast = false );
+    void updateMessageActionsDelayed();
 
     /** Clear and create actions for marked filters */
     void clearFilterActions();
@@ -271,8 +271,12 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
 
 
     KAction *akonadiStandardAction( Akonadi::StandardActionManager::Type type );
-    
+
     void refreshMessageListSelection();
+
+    void slotStartCheckMail();
+    void slotEndCheckMail();
+
   signals:
     void messagesTransfered( bool );
     void captionChangeRequest( const QString &caption );
@@ -603,7 +607,7 @@ private:
 
     KMail::MessageActions *mMsgActions;
     Akonadi::StandardActionManager *mAkonadiStandardActionManager;
-    MessageList::Pane *mMessagePane;
+    CollectionPane *mMessagePane;
     QSharedPointer<FolderCollection> mCurrentFolder;
 
     FolderTreeWidget *mFolderTreeWidget;
@@ -615,6 +619,25 @@ private:
     MessageList::Core::PreSelectionMode mPreSelectionMode;
 
     KPIM::ProgressItem *mFilterProgressItem;
+
+    struct collectionInfo {
+      collectionInfo( const Akonadi::Collection& collection = Akonadi::Collection(), int nb = 0 ) {
+        col = collection;
+        nbMail = nb;
+      }
+      collectionInfo & operator=( const collectionInfo & other) {
+        if ( this == &other )
+          return *this;
+        col = other.col;
+        nbMail = other.nbMail;
+        return *this;
+      }
+      Akonadi::Collection col;
+      int nbMail;
+    };
+
+    QMap<QString, collectionInfo> mCheckMail;
+    bool mCheckMailInProgress;
 };
 
 #endif

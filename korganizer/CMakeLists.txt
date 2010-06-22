@@ -48,7 +48,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
                     ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
                     ${CMAKE_BINARY_DIR}/libkdepimdbusinterfaces
                     ${CMAKE_SOURCE_DIR}/incidenceeditors
-                    ${CMAKE_CURRENT_BINARY_DIR}
                     ${AKONADI_INCLUDE_DIR}
                     ${Boost_INCLUDE_DIRS}
                     ${QT_INCLUDES} ${ZLIB_INCLUDE_DIR} )
@@ -169,7 +168,6 @@ set(korganizerprivate_LIB_SRCS
   timelabels.cpp
   timescaleconfigdialog.cpp
   datenavigator.cpp
-  kcheckcombobox.cpp
   kdatenavigator.cpp
   datenavigatorcontainer.cpp
   datechecker.cpp

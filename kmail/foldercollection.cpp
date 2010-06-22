@@ -65,7 +65,8 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
     mIgnoreNewMail( false ),
     mPutRepliesInSameFolder( false ),
     mHideInSelectionDialog( false ),
-    mWriteConfig( writeconfig )
+    mWriteConfig( writeconfig ),
+    mOldIgnoreNewMail( false )
 {
   mIdentity = KMKernel::self()->identityManager()->defaultIdentity().uoid();
 
@@ -171,16 +172,10 @@ void FolderCollection::readConfig()
   mIdentity = configGroup.readEntry("Identity", defaultIdentity );
   slotIdentitiesChanged();
 
-  setUserWhoField( configGroup.readEntry( "WhoField" ), false );
-  uint savedId = configGroup.readEntry( "Id", 0 );
-#if 0 //TODO ???
-  // make sure that we don't overwrite a valid id
-  if ( savedId != 0 && mId == 0 )
-    mId = savedId;
-#endif
   mPutRepliesInSameFolder = configGroup.readEntry( "PutRepliesInSameFolder", false );
   mHideInSelectionDialog = configGroup.readEntry( "HideInSelectionDialog", false );
   mIgnoreNewMail = configGroup.readEntry( "IgnoreNewMail", false );
+  mOldIgnoreNewMail = mIgnoreNewMail;
 
 
   QString shortcut( configGroup.readEntry( "Shortcut" ) );
@@ -235,10 +230,6 @@ void FolderCollection::writeConfig() const
   else
       configGroup.deleteEntry("Identity");
 
-  configGroup.writeEntry("WhoField", mUserWhoField);
-#if 0 //TODO ????
-  configGroup.writeEntry("Id", mId);
-#endif
   configGroup.writeEntry( "PutRepliesInSameFolder", mPutRepliesInSameFolder );
   configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
   configGroup.writeEntry( "IgnoreNewMail", mIgnoreNewMail );
@@ -246,6 +237,9 @@ void FolderCollection::writeConfig() const
     configGroup.writeEntry( "Shortcut", mShortcut.toString() );
   else
     configGroup.deleteEntry( "Shortcut" );
+  if ( mIgnoreNewMail != mOldIgnoreNewMail ) {
+    KMKernel::self()->updateSystemTray();
+  }
 }
 
 void FolderCollection::setShortcut( const KShortcut &sc, KMMainWidget *main )
@@ -256,51 +250,6 @@ void FolderCollection::setShortcut( const KShortcut &sc, KMMainWidget *main )
       main->folderShortcutActionManager()->shortcutChanged( mCollection );
     }
   }
-}
-
-
-void FolderCollection::setUserWhoField( const QString& whoField, bool _writeConfig )
-{
-  if ( mUserWhoField == whoField && !whoField.isEmpty() )
-    return;
-
-  if ( whoField.isEmpty() )
-  {
-    // default setting
-    const KPIMIdentities::Identity & identity =
-      kmkernel->identityManager()->identityForUoidOrDefault( mIdentity );
-
-    if ( kmkernel->isSystemFolderCollection(mCollection) && !kmkernel->isImapFolder( mCollection ) ) {
-      // local system folders
-      if ( mCollection == kmkernel->inboxCollectionFolder() ||
-           mCollection == kmkernel->trashCollectionFolder() )
-        mWhoField = "From";
-      if ( mCollection == kmkernel->outboxCollectionFolder() ||
-           mCollection == kmkernel->sentCollectionFolder() ||
-           mCollection == kmkernel->templatesCollectionFolder() ||
-           mCollection == kmkernel->draftsCollectionFolder() )
-        mWhoField = "To";
-    } else if ( identity.drafts() == idString() ||
-                identity.templates() == idString() ||
-                identity.fcc() == idString() )
-      // drafts, templates or sent of the identity
-      mWhoField = "To";
-    else
-      mWhoField = "From";
-  } else if ( whoField == "From" || whoField == "To" )
-    // set the whoField according to the user-setting
-    mWhoField = whoField;
-  else {
-    // this should not happen...
-    kDebug() << "Illegal setting" << whoField << "for userWhoField!";
-    return; // don't use the value
-  }
-  mUserWhoField = whoField;
-
-  if (_writeConfig)
-    writeConfig();
-  //TODO fixme !!!
-  emit viewConfigChanged();
 }
 
 void FolderCollection::setUseDefaultIdentity( bool useDefaultIdentity )
@@ -511,8 +460,10 @@ void FolderCollection::removeCollection()
 void FolderCollection::slotDeletionCollectionResult( KJob * job )
 {
   if ( job->error() ) {
-    // handle errors
-    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    if ( static_cast<KIO::Job*>( job )->ui() ) {
+      // handle errors
+      static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    }
   }
 }
 

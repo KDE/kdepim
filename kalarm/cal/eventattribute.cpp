@@ -23,6 +23,8 @@
 #include <QList>
 #include <QByteArray>
 
+namespace KAlarm
+{
 
 EventAttribute* EventAttribute::clone() const
 {
@@ -52,5 +54,7 @@ void EventAttribute::deserialize(const QByteArray& data)
             break;
     }
 }
+
+} // namespace KAlarm
 
 // vim: et sw=4:

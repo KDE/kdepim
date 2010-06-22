@@ -625,16 +625,6 @@ Q_SIGNALS:
   void calendarChanged();
 
   /**
-    Signals that the calendar has been saved.
-   */
-  void calendarSaved();
-
-  /**
-    Signals that the calendar has been loaded into memory.
-   */
-  void calendarLoaded();
-
-  /**
     @see beginBatchAdding()
     @since 4.4
    */

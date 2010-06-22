@@ -56,6 +56,8 @@
 
 #include "akonadi_next/entityorderproxymodel.h"
 #include "akonadi_next/etmstatesaver.h"
+#include "akonadi_next/note.h"
+#include "akonadi_next/notecreatorandselector.h"
 
 // Grantlee
 #include <grantlee/template.h>
@@ -91,7 +93,6 @@
 #include "kjotstreeview.h"
 #include "kjotsconfigdlg.h"
 #include "kjotsreplacenextdialog.h"
-#include "note.h"
 #include "KJotsSettings.h"
 #include "kjotslockjob.h"
 
@@ -99,6 +100,8 @@
 
 #include <memory>
 #include "kjotslockattribute.h"
+#include "localresourcecreator.h"
+#include <krandom.h>
 
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
@@ -110,7 +113,15 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
     : QWidget( parent, f ), m_xmlGuiClient( xmlGuiClient )
 {
   Akonadi::Control::widgetNeedsAkonadi( this );
-  Akonadi::Control::start( this );
+
+  KConfigGroup migrationCfg( KGlobal::config(), "General" );
+  const bool autoCreate = migrationCfg.readEntry( "AutoCreateResourceOnStart", true );
+  migrationCfg.writeEntry("AutoCreateResourceOnStart", autoCreate);
+  migrationCfg.sync();
+  if (autoCreate) {
+    LocalResourceCreator *creator = new LocalResourceCreator( this );
+    creator->createIfMissing();
+  }
 
   m_splitter = new QSplitter( this );
 
@@ -140,7 +151,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   monitor->fetchCollection( true );
   monitor->setItemFetchScope( scope );
   monitor->setCollectionMonitored( Collection::root() );
-  monitor->setMimeTypeMonitored( Note::mimeType() );
+  monitor->setMimeTypeMonitored( Akonotes::Note::mimeType() );
 
   m_kjotsModel = new KJotsModel( monitor, this );
 
@@ -486,6 +497,11 @@ void KJotsWidget::delayedInitialization()
   multiselectionActions.insert( actionCollection->action("save_to") );
   multiselectionActions.insert( actionCollection->action("change_color") );
 
+  m_autosaveTimer = new QTimer(this);
+  updateConfiguration();
+
+  connect(m_autosaveTimer, SIGNAL(timeout()), editor, SLOT(savePage()));
+  connect(treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), m_autosaveTimer, SLOT(start()) );
 
   treeview->delayedInitialization();
   editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
@@ -498,6 +514,33 @@ void KJotsWidget::delayedInitialization()
   connect( editor, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
       SLOT(currentCharFormatChanged(const QTextCharFormat &)) );
   updateMenu();
+}
+
+void KJotsWidget::bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint )
+{
+    // Make sure the editor gets focus again after naming a new book/page.
+    activeEditor()->setFocus();
+}
+
+void KJotsWidget::currentCharFormatChanged(const QTextCharFormat & fmt)
+{
+    QString selectedAnchor = fmt.anchorHref();
+    if (selectedAnchor != activeAnchor)
+    {
+        activeAnchor = selectedAnchor;
+        if (!selectedAnchor.isEmpty())
+        {
+            QTextCursor c(editor->textCursor());
+            editor->selectLinkText(&c);
+            QString selectedText = c.selectedText();
+            if (!selectedText.isEmpty())
+            {
+              emit activeAnchorChanged(selectedAnchor, selectedText);
+            }
+        } else {
+            emit activeAnchorChanged(QString(), QString());
+        }
+    }
 }
 
 void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type )
@@ -525,9 +568,6 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
     }
     if ( result && proc.exitCode() == 0 ) {
       kDebug() << "Akonadi migration has been successful";
-      migrationCfg.writeEntry( "Version", targetVersion );
-      migrationCfg.writeEntry( "Completed", true );
-      migrationCfg.sync();
     } else {
       // exit code 1 means it is already running, so we are probably called by a migrator instance
       kError() << "Akonadi migration failed!";
@@ -535,8 +575,10 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
       kError() << "exit code: " << proc.exitCode();
       kError() << "stdout: " << proc.readAllStandardOutput();
       kError() << "stderr: " << proc.readAllStandardError();
-      exit( 42 );
     }
+    migrationCfg.writeEntry( "Version", targetVersion );
+    migrationCfg.writeEntry( "Completed", true );
+    migrationCfg.sync();
   }
 }
 
@@ -620,6 +662,16 @@ void KJotsWidget::configure()
   dialog->show();
 }
 
+void KJotsWidget::updateConfiguration()
+{
+    if (KJotsSettings::autoSave())
+    {
+        m_autosaveTimer->setInterval(KJotsSettings::autoSaveInterval()*1000*60);
+        m_autosaveTimer->start();
+    } else
+        m_autosaveTimer->stop();
+}
+
 void KJotsWidget::copySelectionToTitle()
 {
   QString newTitle( editor->textCursor().selectedText() );
@@ -671,13 +723,27 @@ void KJotsWidget::deletePage()
   if ( selectedRows.size() != 1 )
     return;
 
-  Item item = selectedRows.at( 0 ).data( EntityTreeModel::ItemRole ).value<Item>();
+  const QModelIndex idx = selectedRows.at( 0 );
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
 
   if ( !item.isValid() )
     return;
 
-  (void) new Akonadi::ItemDeleteJob( item, this );
+  if( item.hasAttribute<KJotsLockAttribute>() ) {
 
+        KMessageBox::information(topLevelWidget(),
+            i18n("This page is locked. You can only delete it when you first unlock it."),
+            i18n("Item is locked"));
+        return;
+  }
+
+  if ( KMessageBox::warningContinueCancel(topLevelWidget(),
+          i18nc("remove the page, by title", "<qt>Are you sure you want to delete the page <strong>%1</strong>?</qt>", idx.data().toString()),
+          i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeletePageWarning") == KMessageBox::Cancel) {
+      return;
+  }
+
+  (void) new Akonadi::ItemDeleteJob( item, this );
 }
 
 void KJotsWidget::deleteBook()
@@ -687,13 +753,29 @@ void KJotsWidget::deleteBook()
   if ( selectedRows.size() != 1 )
     return;
 
-  Collection col = selectedRows.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+  const QModelIndex idx = selectedRows.at( 0 );
+  Collection col = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
   if ( !col.isValid() )
     return;
 
-  (void) new Akonadi::CollectionDeleteJob( col, this );
+  if ( col.parentCollection() == Collection::root() )
+    return;
 
+  if( col.hasAttribute<KJotsLockAttribute>() ) {
+
+      KMessageBox::information(topLevelWidget(),
+          i18n("This book is locked. You can only delete it when you first unlock it."),
+          i18n("Item is locked"));
+      return;
+  }
+  if ( KMessageBox::warningContinueCancel(topLevelWidget(),
+      i18nc("remove the book, by title", "<qt>Are you sure you want to delete the book <strong>%1</strong>?</qt>", idx.data().toString()),
+      i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeleteBookWarning") == KMessageBox::Cancel) {
+        return;
+  }
+
+  (void) new Akonadi::CollectionDeleteJob( col, this );
 }
 
 void KJotsWidget::newBook()
@@ -712,8 +794,13 @@ void KJotsWidget::newBook()
   newCollection.setParentCollection( col );
 
   QString title = i18nc( "The default name for new books.", "New Book" );
-  newCollection.setName( title );
-  newCollection.setContentMimeTypes( QStringList() << Note::mimeType() );
+  newCollection.setName( KRandom::randomString( 10 ) );
+  newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType() );
+
+  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+  eda->setIconName( "x-office-address-book" );
+  eda->setDisplayName( title );
+  newCollection.addAttribute( eda );
 
   Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( newCollection );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(newBookResult(KJob*)) );
@@ -738,29 +825,13 @@ void KJotsWidget::newPage()
 
   if ( !col.isValid() )
     return;
+  doCreateNewPage(col);
+}
 
-  Item newItem;
-  newItem.setMimeType( Note::mimeType() );
-
-  KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
-
-  QString title = i18nc( "The default name for new pages.", "New Page" );
-  QByteArray encoding( "utf-8" );
-
-  newPage->subject( true )->fromUnicodeString( title, encoding );
-  newPage->contentType( true )->setMimeType( "text/plain" );
-  newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-  newPage->from( true )->fromUnicodeString( "Kjots@kde4", encoding );
-  // Need a non-empty body part so that the serializer regards this as a valid message.
-  newPage->mainBodyPart()->fromUnicodeString( " " );
-
-  newPage->assemble();
-
-  newItem.setPayload( newPage );
-
-  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
-
+void KJotsWidget::doCreateNewPage(const Collection &collection)
+{
+  Akonotes::NoteCreatorAndSelector *creatorAndSelector = new Akonotes::NoteCreatorAndSelector(treeview->selectionModel());
+  creatorAndSelector->createNote(collection);
 }
 
 void KJotsWidget::newPageResult( KJob* job )
@@ -771,8 +842,18 @@ void KJotsWidget::newPageResult( KJob* job )
 
 void KJotsWidget::newBookResult( KJob* job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     kDebug() << job->errorString();
+    return;
+  }
+  Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
+  if ( !createJob )
+    return;
+  const Collection collection = createJob->collection();
+  if ( !collection.isValid() )
+    return;
+
+  doCreateNewPage(collection);
 }
 
 QString KJotsWidget::renderSelectionToHtml()

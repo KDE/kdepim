@@ -64,6 +64,22 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 
     virtual ~KMeditor();
 
+    virtual int quoteLength( const QString& line ) const;
+    virtual const QString defaultQuoteSign() const;
+
+    /**
+     * Sets a quote prefix. Lines starting with the passed quote prefix will
+     * be highlighted as quotes (in addition to lines that are starting with
+     * '>' and '|').
+     */
+    void setQuotePrefixName( const QString &quotePrefix );
+
+    /**
+     * @return the quote prefix set before with setQuotePrefixName(), or an empty
+     *         string if that was never called.
+     */
+    virtual QString quotePrefixName() const;
+
     //Redefine it for each apps
     virtual QString smartQuote( const QString & msg ); //need by kmail
 

@@ -30,6 +30,7 @@ using KPIM::RecentAddresses;
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/dispatcherinterface.h>
+#include <akonadi/servermanager.h>
 
 #include <kde_file.h>
 #include <kwindowsystem.h>
@@ -122,8 +123,10 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   // Akonadi migration
   // check if there is something to migrate at all
   bool needMigration = true;
-  const QFileInfo oldConfigFileInfo( KStandardDirs::locateLocal( "config", "kmailrc" ) );
-  if ( !oldConfigFileInfo.exists() || !oldConfigFileInfo.isFile() ) {
+  KConfig oldKMailConfig( "kmailrc", KConfig::NoGlobals );
+  if ( oldKMailConfig.groupList().isEmpty() ||
+       ( oldKMailConfig.groupList().count() == 1 &&
+         oldKMailConfig.groupList().first() == "$Version" ) ) {
     const QFileInfo oldDataDirFileInfo( KStandardDirs::locateLocal( "data", "kmail" ) );
     if ( !oldDataDirFileInfo.exists() || !oldDataDirFileInfo.isDir() ) {
       // neither config or data, the migrator cannot do anything useful anyways
@@ -168,14 +171,14 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
 #endif
   if ( KMessageBox::questionYesNo(
         0,
-        i18n( "You are attempting to start an <b>unstable development version</b> of KMail.<br>"
+        i18n( "You are attempting to start an <b>unstable development version</b> of KMail.<br />"
               "KMail 2 is currently being ported to Akonadi and is under heavy development. "
               "Do not use this version for real mails, you will <b>lose data</b>. If you use this "
               "version now, your mails will not be correctly migrated, and you will not be able to "
-              "migrate them afterwards.<br>"
+              "migrate them afterwards.<br />"
               "Because of the current development, there are many bugs and regressions as well as "
-              "missing features. <b>Essentially KMail 2 does not work at the moment, do not try to use it.</b><br>"
-              "Please do not report any bugs for this version yet.<br><br>"
+              "missing features. <b>Essentially KMail 2 does not work at the moment, do not try to use it.</b><br />"
+              "Please do not report any bugs for this version yet.<br /><br />"
               "If you want to use KMail for real mails, please use the version from the KDE SC 4.4 branch instead." ),
         i18n( "Unstable Development version of KMail" ),
         KGuiItem( i18n( "Lose Data" ) ),
@@ -212,6 +215,8 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   mJobScheduler = new JobScheduler( this );
   mXmlGuiInstance = KComponentData();
 
+  KMime::setFallbackCharEncoding( MessageCore::GlobalSettings::self()->fallbackCharacterEncoding() );
+  KMime::setUseOutlookAttachmentEncoding( MessageComposer::MessageComposerSettings::self()->outlookCompatibleAttachments() );
 
   // cberzan: this crap moved to CodecManager ======================
   netCodec = QTextCodec::codecForName( KGlobal::locale()->encoding() );
@@ -249,8 +254,9 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   monitor()->setSession( session );
   mEntityTreeModel = new Akonadi::EntityTreeModel( monitor(), this );
   mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+
   mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
-  mCollectionModel->setSourceModel( entityTreeModel() );
+  mCollectionModel->setSourceModel( mEntityTreeModel );
   mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
   mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
   mCollectionModel->setDynamicSortFilter( true );
@@ -264,6 +270,10 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
            SLOT(transportRenamed(int,QString,QString)) );
 
   QDBusConnection::sessionBus().connect(QString(), QLatin1String( "/MailDispatcherAgent" ), "org.freedesktop.Akonadi.MailDispatcherAgent", "itemDispatchStarted",this, SLOT(itemDispatchStarted()) );
+  connect( Akonadi::AgentManager::self(), SIGNAL( instanceProgressChanged( Akonadi::AgentInstance ) ), this, SLOT( instanceProgressChanged( Akonadi::AgentInstance ) ) ) ;
+
+  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCompleted( KPIM::ProgressItem * ) ), this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
+  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ), this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
 }
 
 KMKernel::~KMKernel ()
@@ -271,7 +281,7 @@ KMKernel::~KMKernel ()
   delete mMailService;
   mMailService = 0;
 
-  //stopAgentInstance();
+  stopAgentInstance();
   slotSyncConfig();
   mySelf = 0;
   kDebug();
@@ -394,7 +404,8 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
   if ( !calledWithSession ) {
     // only read additional command line arguments if kmail/kontact is
     // not called with "-session foo"
-    for(int i= 0; i < args->count(); i++)
+    const int nbArgs = args->count();
+    for(int i= 0; i < nbArgs; i++)
     {
       if ( args->arg(i).startsWith( QLatin1String( "mailto:" ), Qt::CaseInsensitive ) ) {
         QMap<QString, QString> values = MessageCore::StringUtil::parseMailtoUrl( args->url( i ) );
@@ -446,18 +457,24 @@ void KMKernel::checkMail () //might create a new reader but won't show!!
 {
   if ( !kmkernel->askToGoOnline() )
     return;
-  Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+
+  const QString resourceGroupPattern( "Resource %1" );
+
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach( Akonadi::AgentInstance type, lst ) {
-    if ( !type.isOnline() )
-      type.setIsOnline( true );
-    type.synchronize();
+    KConfigGroup group( KMKernel::config(), resourceGroupPattern.arg( type.identifier() ) );
+    if ( group.readEntry( "IncludeInManualChecks", true ) ) {
+      if ( !type.isOnline() )
+        type.setIsOnline( true );
+      type.synchronize();
+    }
   }
 }
 
 QStringList KMKernel::accounts()
 {
   QStringList accountLst;
-  Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach ( const Akonadi::AgentInstance& type, lst )
   {
     // Explicitly make a copy, as we're not changing values of the list but only
@@ -897,6 +914,29 @@ bool KMKernel::isOffline()
     return false;
 }
 
+void KMKernel::checkMailOnStartup()
+{
+  if ( !kmkernel->askToGoOnline() )
+    return;
+
+  const QString resourceGroupPattern( "Resource %1" );
+
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  foreach( Akonadi::AgentInstance type, lst ) {
+    KConfigGroup group( KMKernel::config(), resourceGroupPattern.arg( type.identifier() ) );
+    if ( group.readEntry( "CheckOnStartup", false ) ) {
+      if ( !type.isOnline() )
+        type.setIsOnline( true );
+      type.synchronize();
+    }
+
+    if ( group.readEntry( "OfflineOnShutdown", false ) ) {
+      if ( !type.isOnline() )
+        type.setIsOnline( true );
+    }
+  }
+}
+
 bool KMKernel::askToGoOnline()
 {
   // already asking means we are offline and need to wait anyhow
@@ -1005,7 +1045,7 @@ void KMKernel::recoverDeadLetters()
 
       // Show the a new composer dialog for the message
       KMail::Composer * autoSaveWin = KMail::makeComposer();
-      autoSaveWin->setMsg( autoSaveMessage );
+      autoSaveWin->setMsg( autoSaveMessage, false );
       autoSaveWin->setAutoSaveFileName( file.fileName() );
       autoSaveWin->show();
       autoSaveFile.close();
@@ -1057,6 +1097,7 @@ void KMKernel::slotDefaultCollectionsChanged()
 //-----------------------------------------------------------------------------
 void KMKernel::initFolders()
 {
+  kDebug() << "KMail is initialize and looking for default specialcollection folders.";
   the_draftsCollectionFolder = the_inboxCollectionFolder = the_outboxCollectionFolder = the_sentCollectionFolder
     = the_templatesCollectionFolder = the_trashCollectionFolder = -1;
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
@@ -1067,6 +1108,14 @@ void KMKernel::initFolders()
   findCreateDefaultCollection( Akonadi::SpecialMailCollections::Templates );
 }
 
+void  KMKernel::akonadiStateChanged( Akonadi::ServerManager::State state )
+{
+  kDebug() << "KMKernel has akonadi state changed to:" << state;
+
+  if( state == Akonadi::ServerManager::Running ) {
+    initFolders();
+  }
+}
 static void kmCrashHandler( int sigId )
 {
   fprintf( stderr, "*** KMail got signal %d (Exiting)\n", sigId );
@@ -1096,7 +1145,6 @@ void KMKernel::init()
   the_popFilterMgr     = new KMFilterMgr(true);
   the_filterActionDict = new KMFilterActionDict;
 
-  initFolders();
   the_filterMgr->readConfig();
   the_popFilterMgr->readConfig();
   the_msgSender = new AkonadiSender;
@@ -1113,6 +1161,14 @@ void KMKernel::init()
 #endif
 
   KCrash::setEmergencySaveFunction( kmCrashHandler );
+
+  kDebug() << "KMail init with akonadi server state:" << Akonadi::ServerManager::state();
+  if( Akonadi::ServerManager::state() == Akonadi::ServerManager::Running ) {
+    initFolders();
+  }
+
+  connect( Akonadi::ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ), this, SLOT( akonadiStateChanged( Akonadi::ServerManager::State ) ) );
+
 }
 
 void KMKernel::readConfig()
@@ -1318,7 +1374,17 @@ bool KMKernel::haveSystemTrayApplet()
   return !systemTrayApplets.isEmpty();
 }
 
-bool KMKernel::registerSystemTrayApplet( const KStatusNotifierItem* applet )
+void KMKernel::updateSystemTray()
+{
+  if ( haveSystemTrayApplet() ) {
+    const int nbSystemTray = systemTrayApplets.count();
+    for (int i = 0; i < nbSystemTray; ++i) {
+      systemTrayApplets.at( i )->updateSystemTray();
+    }
+  }
+}
+
+bool KMKernel::registerSystemTrayApplet( KMSystemTray* applet )
 {
   if ( !systemTrayApplets.contains( applet ) ) {
     systemTrayApplets.append( applet );
@@ -1328,7 +1394,7 @@ bool KMKernel::registerSystemTrayApplet( const KStatusNotifierItem* applet )
     return false;
 }
 
-bool KMKernel::unregisterSystemTrayApplet( const KStatusNotifierItem* applet )
+bool KMKernel::unregisterSystemTrayApplet( KMSystemTray* applet )
 {
   return systemTrayApplets.removeAll( applet ) > 0;
 }
@@ -1412,7 +1478,7 @@ bool KMKernel::folderIsTrash( const Akonadi::Collection & col )
 {
   if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash ) )
     return true;
-  Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach ( const Akonadi::AgentInstance& type, lst ) {
     //TODO verify it.
     if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
@@ -1494,10 +1560,11 @@ void KMKernel::slotEmptyTrash()
   Akonadi::Collection trash = trashCollectionFolder();
   mFolderCollectionMonitor->expunge( trash );
 
-  Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach ( const Akonadi::AgentInstance& type, lst ) {
-    //TODO verify it.
     if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+      if ( type.status() == Akonadi::AgentInstance::Broken )
+        continue;
       OrgKdeAkonadiImapSettingsInterface *iface = KMail::Util::createImapSettingsInterface( type.identifier() );
       if ( iface->isValid() ) {
         int trashImap = iface->trashCollection();
@@ -1537,6 +1604,18 @@ KSharedConfig::Ptr KMKernel::config()
   return mySelf->mConfig;
 }
 
+void KMKernel::selectCollectionFromId( const Akonadi::Collection::Id id)
+{
+  KMMainWidget *widget = getKMMainWidget();
+  Q_ASSERT( widget );
+  if ( !widget )
+    return;
+
+  Akonadi::Collection colFolder = collectionFromId( id );
+
+  if( colFolder.isValid() )
+    widget->selectCollectionFolder( colFolder );
+}
 
 void KMKernel::selectFolder( const QString &folder )
 {
@@ -1737,9 +1816,37 @@ void KMKernel::itemDispatchStarted()
       i18n( "Sending messages" ),
       i18n( "Initiating sending process..." ),
       true );
-  kDebug() << "Created ProgressItem";
 }
 
+void KMKernel::instanceProgressChanged( Akonadi::AgentInstance agent )
+{
+  // we're only interested in rfc822 resources
+  if ( !agent.type().mimeTypes().contains( KMime::Message::mimeType() ) )
+    return;
+  KPIM::ProgressItem *progress =  KPIM::ProgressManager::createProgressItem( 0,
+      agent,
+      agent.identifier(),
+      agent.name(),
+      agent.statusMessage(),
+      true );
+  if( progress->progress() == 0) {
+    if ( mListProgressItem.isEmpty() )
+      emit startCheckMail();
+
+    if ( !mListProgressItem.contains( progress ) )
+      mListProgressItem.append( progress );
+  }
+}
+
+void KMKernel::slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item)
+{
+  if ( mListProgressItem.contains( item ) ) {
+    mListProgressItem.removeAll( item );
+    if ( mListProgressItem.isEmpty() ) {
+      emit endCheckMail();
+    }
+  }
+}
 
 void KMKernel::updatedTemplates()
 {
@@ -1806,16 +1913,20 @@ bool KMKernel::isMainFolderCollection( const Akonadi::Collection &col )
 
 bool KMKernel::isImapFolder( const Akonadi::Collection &col )
 {
-  Akonadi::AgentInstance agentInstance = Akonadi::AgentManager::self()->instance( col.resource() );
-  return agentInstance.type().identifier() == IMAP_RESOURCE_IDENTIFIER;
+  const Akonadi::AgentInstance agentInstance = Akonadi::AgentManager::self()->instance( col.resource() );
+  return (agentInstance.type().identifier() == IMAP_RESOURCE_IDENTIFIER);
 }
 
 
 void KMKernel::stopAgentInstance()
 {
+  const QString resourceGroupPattern( "Resource %1" );
+
   Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach( Akonadi::AgentInstance type, lst ) {
-    type.setIsOnline( false );
+    KConfigGroup group( KMKernel::config(), resourceGroupPattern.arg( type.identifier() ) );
+    if ( group.readEntry( "OfflineOnShutdown", false ) )
+      type.setIsOnline( false );
   }
 }
 

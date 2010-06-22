@@ -167,6 +167,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
             "messages. This is useful for ignoring any new/unread mail in "
             "your trash and spam folder.</p></qt>" ) );
   hbl->addWidget( mNotifyOnNewMailCheckBox );
+#if 0
   if ( KMKernel::self()->isImapFolder( col ) ) {
     // should this folder be included in new-mail-checks?
 
@@ -185,6 +186,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
     nml->addWidget( mNewMailCheckBox );
     nml->addStretch( 1 );
   }
+#endif
   // should replies to mails in this folder be kept in this same folder?
   hbl = new QHBoxLayout();
   topLayout->addItem( hbl );
@@ -198,7 +200,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
                          "after sending, instead of in the configured sent-mail folder." ) );
   hbl->addWidget( mKeepRepliesInSameFolderCheckBox );
   hbl->addStretch( 1 );
-#if 0
   // should this folder be shown in the folder selection dialog?
   hbl = new QHBoxLayout();
   topLayout->addItem( hbl );
@@ -212,7 +213,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
                           "Jump to Folder</interface> dialog." ) );
   hbl->addWidget( mHideInSelectionDialogCheckBox );
   hbl->addStretch( 1 );
-#endif
+
   addLine( this, topLayout );
   // use grid layout for the following combobox settings
   QGridLayout *gl = new QGridLayout();
@@ -284,8 +285,9 @@ void CollectionGeneralPage::init(const Akonadi::Collection &col)
   }
 #endif
   mIncidencesForComboBox = 0;
+#if 0
   mAlarmsBlockedCheckBox = 0;
-
+#endif
   // Kolab incidences-for annotation.
   // Show incidences-for combobox if the contents type can be changed (new folder),
   // or if it's set to calendar or task (existing folder)
@@ -376,9 +378,8 @@ void CollectionGeneralPage::load(const Akonadi::Collection & col)
   const bool keepInFolder = mFolderCollection->canCreateMessages() && mFolderCollection->putRepliesInSameFolder();
   mKeepRepliesInSameFolderCheckBox->setChecked( keepInFolder );
   mKeepRepliesInSameFolderCheckBox->setEnabled( mFolderCollection->canCreateMessages() );
-#if 0
   mHideInSelectionDialogCheckBox->setChecked( mFolderCollection->hideInSelectionDialog() );
-#endif
+
 }
 
 void CollectionGeneralPage::save(Collection & col)
@@ -412,9 +413,7 @@ void CollectionGeneralPage::save(Collection & col)
 
     mFolderCollection->setIgnoreNewMail( !mNotifyOnNewMailCheckBox->isChecked() );
     mFolderCollection->setPutRepliesInSameFolder( mKeepRepliesInSameFolderCheckBox->isChecked() );
-#if 0
     mFolderCollection->setHideInSelectionDialog( mHideInSelectionDialogCheckBox->isChecked() );
-#endif
 
   }
 }

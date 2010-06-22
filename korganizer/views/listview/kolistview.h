@@ -69,11 +69,11 @@ class KOListView : public KOEventView
 {
   Q_OBJECT
   public:
-    explicit KOListView( QWidget *parent = 0 );
+    explicit KOListView( QWidget *parent = 0,  bool nonInteractive = false );
     ~KOListView();
 
-    virtual int maxDatesHint();
-    virtual int currentDateCount();
+    virtual int maxDatesHint() const;
+    virtual int currentDateCount() const;
     virtual Akonadi::Item::List selectedIncidences();
     virtual DateList selectedIncidenceDates();
 
@@ -121,6 +121,9 @@ class KOListView : public KOEventView
     QDate mStartDate;
     QDate mEndDate;
     DateList mSelectedDates;
+
+    // if it's non interactive we disable context menu, and incidence editing
+    bool mIsNonInteractive;
 };
 
 #endif

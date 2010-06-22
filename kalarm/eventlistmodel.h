@@ -28,7 +28,7 @@
 #include <QList>
 #include <QSize>
 
-#include "kcalendar.h"
+#include "kacalendar.h"
 #include "alarmresources.h"
 #include "kaevent.h"
 
@@ -42,14 +42,6 @@ class EventListModel : public QAbstractTableModel
 {
 		Q_OBJECT
 	public:
-		enum Type
-		{
-			DISPLAY = 0x01,
-			COMMAND = 0x02,
-			EMAIL   = 0x04,
-			AUDIO   = 0x08,
-			ALL     = DISPLAY | COMMAND | EMAIL | AUDIO
-		};
 		enum {   // data columns
 			TimeColumn, TimeToColumn, RepeatColumn, ColourColumn, TypeColumn, TextColumn,
 			TemplateNameColumn,
@@ -105,7 +97,7 @@ class EventListModel : public QAbstractTableModel
 		void     slotResourceStatusChanged(AlarmResource*, AlarmResources::Change);
 
 	private:
-		explicit EventListModel(KCalEvent::Statuses, QObject* parent = 0);
+		explicit EventListModel(KAlarm::CalEvent::Types, QObject* parent = 0);
 		bool     updateEvent(int row);
 		void     removeEvent(int row);
 		int      findEvent(const QString& eventId) const;
@@ -127,9 +119,9 @@ class EventListModel : public QAbstractTableModel
 		static QSize    mIconSize;      // maximum size of any icon
 		static int      mTimeHourPos;   // position of hour within time string, or -1 if leading zeroes included
 
-		KAEvent::List       mEvents;
-		KCalEvent::Statuses mStatus;    // types of events contained in this model
-		bool                mHaveEvents;// there are events in this model
+		KAEvent::List           mEvents;
+		KAlarm::CalEvent::Types mStatus;    // types of events contained in this model
+		bool                    mHaveEvents;// there are events in this model
 
 		using QObject::event;   // prevent "hidden" warning
 };

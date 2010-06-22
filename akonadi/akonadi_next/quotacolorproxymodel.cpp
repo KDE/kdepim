@@ -48,6 +48,7 @@ QuotaColorProxyModel::QuotaColorProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
+  setDynamicSortFilter(true);
 }
 
 QuotaColorProxyModel::~QuotaColorProxyModel()

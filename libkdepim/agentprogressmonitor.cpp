@@ -55,7 +55,7 @@ void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance
 {
   if( agent == instance ) {
     agent = instance;
-    kDebug() << "Progress changed to" << agent.progress();
+//     kDebug() << "Progress changed to" << agent.progress();
     if( agent.progress() >= 0 ) {
       item->setProgress( agent.progress() );
     }
@@ -66,7 +66,7 @@ void AgentProgressMonitor::Private::instanceStatusChanged( const AgentInstance &
 {
   if( agent == instance ) {
     agent = instance;
-    kDebug() << "Status changed to" << agent.status() << "message" << agent.statusMessage();
+//     kDebug() << "Status changed to" << agent.status() << "message" << agent.statusMessage();
     item->setStatus( agent.statusMessage() );
     switch( agent.status() ) {
       case AgentInstance::Idle:

@@ -23,6 +23,8 @@
 #include "core/groupheaderitem.h"
 #include "core/manager.h"
 
+#include "messagecore/stringutil.h"
+
 #include <QStyle>
 #include <QPainter>
 #include <QFont>
@@ -839,13 +841,16 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
           paint_right_aligned_elided_text( item->subject(), ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::SenderOrReceiver:
-          paint_right_aligned_elided_text( item->senderOrReceiver(), ci, painter, l, top, r, layoutDir, font );
+          paint_right_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->senderOrReceiver() ),
+                                           ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::Receiver:
-          paint_right_aligned_elided_text( item->receiver(), ci, painter, l, top, r, layoutDir, font );
+          paint_right_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->receiver() ),
+                                           ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::Sender:
-          paint_right_aligned_elided_text( item->sender(), ci, painter, l, top, r, layoutDir, font );
+          paint_right_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->sender() ),
+                                           ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::Date:
           paint_right_aligned_elided_text( item->formattedDate(), ci, painter, l, top, r, layoutDir, font );
@@ -999,13 +1004,16 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
           paint_left_aligned_elided_text( item->subject(), ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::SenderOrReceiver:
-          paint_left_aligned_elided_text( item->senderOrReceiver(), ci, painter, l, top, r, layoutDir, font );
+          paint_left_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->senderOrReceiver() ),
+                                          ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::Receiver:
-          paint_left_aligned_elided_text( item->receiver(), ci, painter, l, top, r, layoutDir, font );
+          paint_left_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->receiver() ),
+                                          ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::Sender:
-          paint_left_aligned_elided_text( item->sender(), ci, painter, l, top, r, layoutDir, font );
+          paint_left_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->sender() ),
+                                          ci, painter, l, top, r, layoutDir, font );
         break;
         case Theme::ContentItem::Date:
           paint_left_aligned_elided_text( item->formattedDate(), ci, painter, l, top, r, layoutDir, font );
@@ -1246,13 +1254,16 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
           compute_bounding_rect_for_right_aligned_elided_text( mHitItem->subject(), l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::SenderOrReceiver:
-          compute_bounding_rect_for_right_aligned_elided_text( mHitItem->senderOrReceiver(), l, top, r, mHitContentItemRect, layoutDir, font );
+          compute_bounding_rect_for_right_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( mHitItem->senderOrReceiver() ),
+                                                               l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::Receiver:
-          compute_bounding_rect_for_right_aligned_elided_text( mHitItem->receiver(), l, top, r, mHitContentItemRect, layoutDir, font );
+          compute_bounding_rect_for_right_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( mHitItem->receiver() ),
+                                                               l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::Sender:
-          compute_bounding_rect_for_right_aligned_elided_text( mHitItem->sender(), l, top, r, mHitContentItemRect, layoutDir, font );
+          compute_bounding_rect_for_right_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( mHitItem->sender() ),
+                                                               l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::Date:
           compute_bounding_rect_for_right_aligned_elided_text( mHitItem->formattedDate(), l, top, r, mHitContentItemRect, layoutDir, font );
@@ -1392,13 +1403,16 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
           compute_bounding_rect_for_left_aligned_elided_text( mHitItem->subject(), l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::SenderOrReceiver:
-          compute_bounding_rect_for_left_aligned_elided_text( mHitItem->senderOrReceiver(), l, top, r, mHitContentItemRect, layoutDir, font );
+          compute_bounding_rect_for_left_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( mHitItem->senderOrReceiver() ),
+                                                              l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::Receiver:
-          compute_bounding_rect_for_left_aligned_elided_text( mHitItem->receiver(), l, top, r, mHitContentItemRect, layoutDir, font );
+          compute_bounding_rect_for_left_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( mHitItem->receiver() ),
+                                                              l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::Sender:
-          compute_bounding_rect_for_left_aligned_elided_text( mHitItem->sender(), l, top, r, mHitContentItemRect, layoutDir, font );
+          compute_bounding_rect_for_left_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( mHitItem->sender() ),
+                                                              l, top, r, mHitContentItemRect, layoutDir, font );
         break;
         case Theme::ContentItem::Date:
           compute_bounding_rect_for_left_aligned_elided_text( mHitItem->formattedDate(), l, top, r, mHitContentItemRect, layoutDir, font );

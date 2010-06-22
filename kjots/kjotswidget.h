@@ -29,7 +29,7 @@
 #include <QWidget>
 #include <QModelIndexList>
 #include <QItemSelection>
-
+#include <QAbstractItemDelegate>
 #include <akonadi/item.h>
 
 #include <grantlee/templateloader.h>
@@ -37,6 +37,7 @@
 class QCheckBox;
 class QTextCursor;
 class QTextEdit;
+class QTextCharFormat;
 class QSplitter;
 class QStackedWidget;
 class QModelIndex;
@@ -92,6 +93,7 @@ public slots:
 
   void updateCaption();
   void updateMenu();
+  void doCreateNewPage( const Akonadi::Collection &collection );
 
   Q_SCRIPTABLE void newPage();
   Q_SCRIPTABLE void newBook();
@@ -103,6 +105,14 @@ signals:
   void canGoPreviousBookChanged( bool );
 
   void captionChanged( const QString &newCaption );
+
+  /**
+    Signals that the text cursor in the editor is now on a different anchor, or not on
+    an anchor anymore.
+    @param anchorTarget The href of the focused anchor.
+    @param anchorText The display text of the focused anchor.
+  */
+  void activeAnchorChanged(const QString &anchorTarget, const QString &anchorText);
 
 protected:
   QString renderSelectionToHtml();
@@ -130,7 +140,7 @@ private slots:
   void delayedInitialization();
   void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight );
-
+  void bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint );
   bool canGo( int role, int step ) const;
 
   void newPageResult( KJob *job );
@@ -160,6 +170,10 @@ private slots:
   void saveState();
   void restoreState();
 
+  void currentCharFormatChanged(const QTextCharFormat &);
+
+  void updateConfiguration();
+
 private:
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
@@ -173,6 +187,9 @@ private:
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
   QSplitter *m_splitter;
+  QTimer *m_autosaveTimer;
+
+  QString activeAnchor;
 
   Grantlee::Engine *m_templateEngine;
   Grantlee::FileSystemTemplateLoader::Ptr m_loader;

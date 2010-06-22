@@ -42,7 +42,7 @@
 #include <akonadi/kcal/mailclient.h>
 #include <akonadi/kcal/utils.h>
 
-#include <mailtransport/transportmanager.h>
+#include <Mailtransport/TransportManager>
 
 #include <KComboBox>
 #include <KDebug>
@@ -434,7 +434,7 @@ void AlarmDialog::edit()
     return;
   }
   Incidence::Ptr incidence = Akonadi::incidence( selection.first()->mIncidence );
-  if ( incidence->isReadOnly() ) {
+  if ( !Akonadi::hasChangeRights( selection.first()->mIncidence ) ) {
     KMessageBox::sorry(
       this,
       i18nc( "@info",
@@ -593,8 +593,9 @@ void AlarmDialog::show()
     KDialog::move( mPos );
   }
   KWindowSystem::unminimizeWindow( winId(), false );
-  KWindowSystem::setState( winId(), NET::KeepAbove );
+  KWindowSystem::setState( winId(), NET::KeepAbove | NET::DemandsAttention );
   KWindowSystem::setOnAllDesktops( winId(), true );
+  KWindowSystem::activateWindow( winId() );
 
   // Audio, Procedure, and EMail alarms
   eventNotification();

@@ -22,6 +22,7 @@
 #ifndef KALARMRESOURCE_H
 #define KALARMRESOURCE_H
 
+#include "kacalendar.h"
 #include <icalresourcebase.h>
 
 class KAlarmMimeTypeVisitor;
@@ -33,18 +34,19 @@ class KAlarmResource : public ICalResourceBase
     public:
         KAlarmResource(const QString& id);
         virtual ~KAlarmResource();
-        static QString mimeType(const KAEvent&);
 
     protected Q_SLOTS:
         void doRetrieveItems(const Akonadi::Collection&);
         bool doRetrieveItem(const Akonadi::Item&, const QSet<QByteArray>& parts);
 
     protected:
+        virtual bool readFromFile(const QString& fileName);
         virtual void itemAdded(const Akonadi::Item&, const Akonadi::Collection&);
         virtual void itemChanged(const Akonadi::Item&, const QSet<QByteArray>& parts);
 
     private:
-        KAlarmMimeTypeVisitor* mMimeVisitor;
+        KAlarmMimeTypeVisitor*   mMimeVisitor;
+        KAlarm::Calendar::Compat mCompatibility;
 };
 
 #endif

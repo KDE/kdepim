@@ -209,10 +209,23 @@ private slots:
   void slotModifySelectedAccount();
   void slotRemoveSelectedAccount();
   void slotEditNotifications();
+  void slotShowMailCheckMenu( const QString &, const QPoint & );
+  void slotIncludeInCheckChanged( bool checked );
+  void slotOfflineOnShutdownChanged( bool checked );
 
 private:
   virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
+
+  struct RetrievalOptions {
+    RetrievalOptions( bool manualCheck, bool offline )
+    : IncludeInManualChecks( manualCheck )
+    , OfflineOnShutdown( offline ) {}
+    bool IncludeInManualChecks;
+    bool OfflineOnShutdown;
+  };
+
+  QHash<QString, QSharedPointer<RetrievalOptions> > mRetrievalHash;
   //FIXME virtual void doResetToDefaultsOther();
 
 private:
@@ -325,7 +338,7 @@ public:
 private: // methods
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
+  // virtual void doResetToDefaultsOther();
   void setDateDisplay( int id, const QString & format );
 
 private: // data
@@ -546,7 +559,7 @@ private slots:
 
 private:
   virtual void doLoadFromGlobalSettings();
-
+  virtual void doResetToDefaultsOther();
 private:
     TemplatesConfiguration* mWidget;
 };
@@ -600,7 +613,7 @@ private slots:
 private:
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
+  virtual void doResetToDefaultsOther();
 
 private:
   SimpleStringListEditor *mCharsetListEditor;
@@ -625,7 +638,7 @@ private slots:
 private:
   //virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
-  //FIXME virtual void doResetToDefaultsOther();
+  virtual void doResetToDefaultsOther();
 
 private:
   QCheckBox   *mCreateOwnMessageIdCheck;

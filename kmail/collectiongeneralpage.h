@@ -66,14 +66,16 @@ private slots:
 private:
   KComboBox *mContentsComboBox;
   KComboBox *mIncidencesForComboBox;
+#if 0
   QCheckBox *mAlarmsBlockedCheckBox;
+#endif
   QCheckBox *mSharedSeenFlagsCheckBox;
+#if 0
   QCheckBox   *mNewMailCheckBox;
+#endif
   QCheckBox   *mNotifyOnNewMailCheckBox;
   QCheckBox   *mKeepRepliesInSameFolderCheckBox;
-#if 0
   QCheckBox   *mHideInSelectionDialogCheckBox;
-#endif
   QCheckBox   *mUseDefaultIdentityCheckBox;
   KLineEdit   *mNameEdit;
   KPIMIdentities::IdentityCombo *mIdentityComboBox;

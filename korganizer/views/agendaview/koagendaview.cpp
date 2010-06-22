@@ -610,13 +610,13 @@ void KOAgendaView::enableAgendaUpdate( bool enable )
   mAllowAgendaUpdate = enable;
 }
 
-int KOAgendaView::maxDatesHint()
+int KOAgendaView::maxDatesHint() const
 {
   // Not sure about the max number of events, so return 0 for now.
   return 0;
 }
 
-int KOAgendaView::currentDateCount()
+int KOAgendaView::currentDateCount() const
 {
   return mSelectedDates.count();
 }
@@ -763,7 +763,13 @@ void KOAgendaView::updateTimeBarWidth()
 
 void KOAgendaView::updateEventDates( KOAgendaItem *item )
 {
-  kDebug() << item->text();
+  kDebug() << "KOAgendaView::updateEventDates(): " << item->text()
+           << "; item->cellXLeft(): " << item->cellXLeft()
+           << "; item->cellYTop(): " << item->cellYTop()
+           << "; item->lastMultiItem(): " << item->lastMultiItem()
+           << "; item->itemPos(): " << item->itemPos()
+           << "; item->itemCount(): " << item->itemCount()
+           << endl;
 
   KDateTime startDt, endDt;
 
@@ -808,6 +814,24 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
     if ( item->lastMultiItem() ) {
       endTime = mAgenda->gyToTime( item->lastMultiItem()->cellYBottom() + 1 );
       daysLength = item->lastMultiItem()->cellXLeft() - item->cellXLeft();
+    } else if ( item->itemPos() == item->itemCount() && item->itemCount() > 1 ) {
+      /* multiitem handling in agenda assumes two things:
+         - The start (first KOAgendaItem) is always visible.
+         - The first KOAgendaItem of the incidence has a non-null item->lastMultiItem()
+             pointing to the last KOagendaItem.
+
+        But those aren't always met, for example when in day-view.
+        kolab/issue4417
+       */
+
+      // Cornercase 1: - Resizing the end of the event but the start isn't visible
+      endTime = mAgenda->gyToTime( item->cellYBottom() + 1 );
+      daysLength = item->itemCount() - 1;
+      startTime = incidence->dtStart().time();
+    } else if ( item->itemPos() == 1 && item->itemCount() > 1 ) {
+      // Cornercase 2: - Resizing the start of the event but the end isn't visible
+      endTime = incidence->dtEnd().time();
+      daysLength = item->itemCount() - 1;
     } else {
       endTime = mAgenda->gyToTime( item->cellYBottom() + 1 );
     }
@@ -1252,7 +1276,7 @@ void KOAgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
     if ( endY < startY ) {
       endY = startY;
     }
-    mAgenda->insertItem( aitem, columnDate, curCol, startY, endY );
+    mAgenda->insertItem( aitem, columnDate, curCol, startY, endY, 1, 1 );
     if ( startY < mMinY[curCol] ) {
       mMinY[curCol] = startY;
     }

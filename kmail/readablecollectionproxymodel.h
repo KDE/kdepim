@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Laurent Montel <montel@kde.org>
+    Copyright (c) 2009, 2010 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -28,7 +28,17 @@ class ReadableCollectionProxyModel : public Akonadi::EntityRightsFilterModel
   Q_OBJECT
 
 public:
-  explicit ReadableCollectionProxyModel( QObject *parent = 0 );
+  enum ReadableCollectionOption
+  {
+    None = 0,
+    HideVirtualFolder = 1,
+    HideSpecificFolder = 2,
+    HideOutboxFolder = 4,
+    HideImapFolder = 8
+  };
+  Q_DECLARE_FLAGS( ReadableCollectionOptions, ReadableCollectionOption )
+
+  explicit ReadableCollectionProxyModel( QObject *parent = 0, ReadableCollectionOptions = ReadableCollectionProxyModel::None );
 
   virtual ~ReadableCollectionProxyModel();
 
@@ -37,7 +47,24 @@ public:
   void setEnabledCheck( bool enable );
   bool enabledCheck() const;
 
+  void setHideVirtualFolder( bool exclude );
+  bool hideVirtualFolder() const;
+
+
+  void setHideSpecificFolder( bool hide );
+  bool hideSpecificFolder() const;
+
+
+  void setHideOutboxFolder( bool hide );
+  bool hideOutboxFolder() const;
+
+  void setHideImapFolder( bool hide );
+  bool hideImapFolder() const;
+
   void setNecessaryRight( Akonadi::Collection::Rights right );
+
+protected:
+  virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
 
 private:
   class Private;
