@@ -167,8 +167,8 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
   }
 
   mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
-  mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 2 );
-  mUi.gridLayout->addWidget( mUi.collectionSelector, row, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 2 );
 }
 
 void EditorGeneral::Private::clearEmailClicked()
@@ -222,8 +222,8 @@ void EditorGeneral::Private::clearEmailClicked()
     }
 
     mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
-    mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 2 );
-    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 2 );
   } else {
     last->clear();
   }
@@ -254,8 +254,8 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
 
   // re-add widgets
   mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
-  mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 1, 1, 2 );
-  mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 3, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 2 );
 }
 
 void EditorGeneral::Private::clearPhoneClicked()
@@ -290,11 +290,11 @@ void EditorGeneral::Private::clearPhoneClicked()
     last->mInput->deleteLater();
     last->mType->deleteLater();
     delete last;
-    
+
     // re-add widgets
     mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
-    mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 1, 1, 2 );
-    mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 3, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 2 );
   } else {
     last->mInput->clear();
     last->mType->setType( KABC::PhoneNumber::Home );
