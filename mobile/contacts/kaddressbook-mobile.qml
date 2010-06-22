@@ -45,19 +45,26 @@ KPIM.MainView {
         contactList.previousItem();
     }
 
-    KPIM.Button2 {
-      id : editContactButton
-      anchors.bottom : parent.bottom
-      anchors.left : parent.left
-      anchors.right : parent.right
-      buttonText : KDE.i18n( "Edit Contact" )
-      visible : false
-      onClicked : {
-        application.editContact( parent.item );
+  }
+
+  QML.Rectangle {
+    id : editContactButton
+    anchors.right : backToFolderListButton.left
+    anchors.rightMargin : 70
+    anchors.bottom : kaddressbookMobile.bottom
+    anchors.bottomMargin : 100
+    visible : false
+    QML.Image {
+      source : KDE.iconPath( "edit-undo", 64 );
+      QML.MouseArea {
+        anchors.fill : parent;
+        onClicked : {
+          application.editContact( contactView.item );
+        }
       }
     }
   }
- 
+
   Akonadi.ContactGroupView {
     id: contactGroupView
     z: 0
@@ -76,16 +83,22 @@ KPIM.MainView {
       if ( contactGroupView.itemId >= 0 )
         contactList.previousItem();
     }
+  }
 
-    KPIM.Button2 {
-      id : editContactGroupButton
-      anchors.bottom : parent.bottom
-      anchors.left : parent.left
-      anchors.right : parent.right
-      buttonText : KDE.i18n( "Edit Contact Group" )
-      visible : false
-      onClicked : {
-        application.editContactGroup( parent.item );
+  QML.Rectangle {
+    id : editContactGroupButton
+    anchors.right : backToFolderListButton.left
+    anchors.rightMargin : 70
+    anchors.bottom : kaddressbookMobile.bottom
+    anchors.bottomMargin : 100
+    visible : false
+    QML.Image {
+      source : KDE.iconPath( "edit-undo", 64 );
+      QML.MouseArea {
+        anchors.fill : parent;
+        onClicked : {
+          application.editContactGroup( contactGroupView.item );
+        }
       }
     }
   }
@@ -104,6 +117,8 @@ KPIM.MainView {
         onClicked : {
           contactView.visible = false;
           contactGroupView.visible = false;
+          editContactButton.visible = false;
+          editContactGroupButton.visible = false;
           backToFolderListButton.visible = false;
           collectionView.visible = true;
           contactListPage.visible = true;
