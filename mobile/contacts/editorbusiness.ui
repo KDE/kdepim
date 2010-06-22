@@ -74,8 +74,7 @@
        <item row="5" column="0">
         <widget class="QLabel" name="managerSNameLabel">
          <property name="text">
-          <string>Manager's
-name:</string>
+          <string>Manager:</string>
          </property>
         </widget>
        </item>
@@ -85,8 +84,7 @@ name:</string>
        <item row="6" column="0">
         <widget class="QLabel" name="assistantSNameLabel">
          <property name="text">
-          <string>Assistant's
-Name:</string>
+          <string>Assistant:</string>
          </property>
         </widget>
        </item>
