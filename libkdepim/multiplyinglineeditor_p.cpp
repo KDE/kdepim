@@ -42,8 +42,9 @@ MultiplyingLineView::MultiplyingLineView( MultiplyingLineFactory* factory, Multi
   mCompletionMode = KGlobalSettings::completionMode();
   setWidgetResizable( true );
   setFrameStyle( QFrame::NoFrame );
-#warning currently KGlobalSettings returns a useless font on Maemo5, remove this hack once this is fixed in kdelibs
+
 #ifndef KDEPIM_MOBILE_UI
+#warning currently KGlobalSettings returns a useless font on Maemo5, remove this hack once this is fixed in kdelibs
   mEditFont = KGlobalSettings::generalFont();
 #else
   mEditFont = QApplication::font();

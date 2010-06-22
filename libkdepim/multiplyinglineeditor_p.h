@@ -52,12 +52,13 @@ class MultiplyingLineView : public QScrollArea
     QList<MultiplyingLineData::Ptr> allData() const;
 
     /** Removes data provided it can be found. The Data class must support operator==
-        @param data The data you want to add.
+        @param data The data you want to remove.
     */
     void removeData( MultiplyingLineData::Ptr data );
 
     /** Returns true if the user has made any modifications to the list of
         recipients.
+        @return whether the view is modified or not.
     */
     bool isModified();
 
@@ -65,6 +66,7 @@ class MultiplyingLineView : public QScrollArea
     */
     void clearModified();
 
+     /** Activates the line */
     void activateLine( MultiplyingLine * );
 
     /**QScrollArea

@@ -46,23 +46,6 @@ MultiplyingLineEditor::MultiplyingLineEditor( MultiplyingLineFactory* factory, Q
     SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ) );
   connect( mView, SIGNAL( lineDeleted( int ) ), SIGNAL( lineDeleted( int ) ) );
   connect( mView, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ), SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ) );
-// TODO fix sidewidget
-//   mSideWidget = new SideWidget( mView, this );
-// #ifdef KDEPIM_MOBILE_UI
-  // needs to much space on mobile and brings up too big sub-dialogs
-//   mSideWidget->hide();
-// #endif
-//   topLayout->addWidget( mSideWidget );
-//   connect( mSideWidget, SIGNAL( pickedRecipient( const Recipient & ) ),
-//     SLOT( slotPickedRecipient( const Recipient & ) ) );
-//   connect( mSideWidget, SIGNAL( saveDistributionList() ),
-//     SLOT( saveDistributionList() ) );
-
-//   connect( mView, SIGNAL( totalChanged( int, int ) ),
-//     mSideWidget, SLOT( setTotal( int, int ) ) );
-//   connect( mView, SIGNAL( focusRight() ),
-//     mSideWidget, SLOT( setFocus() ) );
-
   connect( mView, SIGNAL( sizeHintChanged() ),
            SIGNAL( sizeHintChanged() ) );
 }

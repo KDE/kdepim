@@ -55,7 +55,10 @@ class KDEPIM_EXPORT MultiplyingLineData
 };
 
 /**
- @short ABC representing a line in the Multiplying line wideget
+ @short Abstract Base Class representing a line in the Multiplying line widget.
+ This class (and its subclasses) represent the lines in the MultiplyingLineEditor. Users of the
+ MultiplyingLineEditor widget should subclass this class, and add their own input widgets as members,
+ then implement the pure virtual methods and connect all the appropriate slots.
  @author Casey Link
 */
 class KDEPIM_EXPORT MultiplyingLine : public QWidget
