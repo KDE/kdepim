@@ -96,6 +96,9 @@ class EditorMore::Private
 
       connect( mCustomFieldsPage.addCustomFieldButton, SIGNAL( clicked() ),
                q, SLOT( addCustomField() ) );
+
+      mPersonalPage.birthdayDateEdit->setDate( QDate() );
+      mPersonalPage.anniversaryDateEdit->setDate( QDate() );
     }
 
     void playPronunciation()
