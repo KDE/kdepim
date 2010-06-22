@@ -232,9 +232,9 @@ void RecipientLineNG::moveCompletionPopup()
   }
 }
 
-void RecipientLineNG::setCompletionMode(KGlobalSettings::Completion )
+void RecipientLineNG::setCompletionMode( KGlobalSettings::Completion mode )
 {
-
+  mEdit->setCompletionMode( mode );
 }
 
 Recipient::Type RecipientLineNG::recipientType() const

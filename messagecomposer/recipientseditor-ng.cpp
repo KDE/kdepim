@@ -42,7 +42,7 @@
 using namespace MessageComposer;
 using namespace KPIM;
 
-RecipientsEditorNG::RecipientsEditorNG( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( parent ), parent )
+RecipientsEditorNG::RecipientsEditorNG( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( this ), parent )
 {
   mSideWidget = new RecipientsEditorSideWidget( this, this );
 #ifdef KDEPIM_MOBILE_UI
