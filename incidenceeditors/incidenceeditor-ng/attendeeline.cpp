@@ -128,7 +128,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mStateCombo->addItem( SmallIcon( "help-about" ),
                          AttendeeData::statusName( AttendeeData::InProcess ) );
 
-  mResponseCheck->setText( i18nc( "@option:check", "Request response" ) );
+  mResponseCheck->setText( i18nc( "@option:check", "Request RSVP" ) );
   mResponseCheck->setToolTip(i18nc( "@info:tooltip", "Request a response from the attendee" ) );
   mResponseCheck->setWhatsThis( i18nc( "@info:whatsthis",
            "Edits whether to send an email to the "

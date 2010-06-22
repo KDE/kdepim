@@ -29,7 +29,7 @@ AttendeeEditor::AttendeeEditor( QWidget* parent )
 {
   connect( this, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ), SLOT( slotLineAdded( KPIM::MultiplyingLine* ) ) );
   connect( this, SIGNAL( lineDeleted( int ) ), SLOT( slotLineDeleted( int ) ) );
-  
+
   addData();
 }
 
