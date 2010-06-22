@@ -83,7 +83,7 @@ class RecipientLineNG : public KPIM::MultiplyingLine
     virtual QWidget* tabOut() const;
     
     virtual void moveCompletionPopup();
-    virtual void setCompletionMode( KGlobalSettings::Completion );
+    virtual void setCompletionMode( KGlobalSettings::Completion mode );
     
     virtual int setColumnWidth( int w );
 
