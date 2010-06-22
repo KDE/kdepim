@@ -85,6 +85,7 @@ void SkeletonMessageJobPrivate::doStart()
   }
 
   // Reply To:
+  if( !infoPart->replyTo().isEmpty() )
   {
     KMime::Headers::ReplyTo *replyTo = new KMime::Headers::ReplyTo( message );
     KMime::Types::Mailbox address;

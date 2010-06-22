@@ -513,6 +513,9 @@ QModelIndex Model::index( Item *item, int column ) const
   if ( !d->mModelForItemFunctions )
     return QModelIndex(); // called with disconnected UI: the item isn't known on the Qt side, yet
 
+  if ( !item ) {
+    return QModelIndex();
+  }
   // FIXME: This function is a bottleneck
   Item * par = item->parent();
   if ( !par )

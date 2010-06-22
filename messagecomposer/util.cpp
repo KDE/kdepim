@@ -144,7 +144,7 @@ void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::Cryp
         kDebug() << "setting headers for SMIME";
         content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
         content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pkcs7-signature" ) );
-        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "pgp-" + hashAlgo ).toLower() );
+        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( hashAlgo ).toLower() );
         return;
       }
       // fall through (for encryption, there's no difference between
