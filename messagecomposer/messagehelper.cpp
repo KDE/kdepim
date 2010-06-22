@@ -80,8 +80,6 @@ void initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &
   if ( !ok || id == 0 )
     id = identMan->identityForAddress( msg->to()->asUnicodeString() + QString::fromLatin1(", ") + msg->cc()->asUnicodeString() ).uoid();
 
-
-  kDebug() << "Using id to apply:" << id << "from:" << msg->from()->asUnicodeString();
   if ( idHeaders )
     MessageHelper::initHeader( msg, identMan, id );
   else {
