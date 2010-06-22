@@ -64,6 +64,9 @@ class ArticleFormatter
     protected:        
         int pointsToPixel(int pointSize) const;
         Grantlee::Engine *mEngine;
+
+        // method to set up the theme in the default and combined views
+        QString setTheming( const QString &viewName , const Article& article, IconOption icon) const;       
                
     private:
         class Private;

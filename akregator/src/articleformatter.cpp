@@ -110,6 +110,97 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
     return ( pointSize * d->device->logicalDpiY() + 36 ) / 72 ;
 }
 
+QString ArticleFormatter::setTheming( const QString &viewName , const Article& article, IconOption icon) const {
+
+    Grantlee::Template t = mEngine->loadByName( viewName + ".html" );
+    QVariantHash data;
+
+    QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
+    const QString enc = formatEnclosure( *article.enclosure() );
+
+    data.insert( QLatin1String( "dir" ) , dir );
+
+    const QString strippedTitle = Utils::stripTags( article.title() );
+    if (!strippedTitle.isEmpty())
+    {
+        data.insert( QLatin1String( "directionOfstrippedTitle" ) , Utils::directionOf(strippedTitle) );
+
+        if (article.link().isValid()) {
+          data.insert( QLatin1String( "article.link" ) , article.link().url() );
+          data.insert( QLatin1String( "strippedTitle" ) , strippedTitle );
+        }
+    }
+
+    if (article.pubDate().isValid())
+    {
+        data.insert( QLatin1String( "directionOfDate" ) , Utils::directionOf(i18n("Date")) );
+        data.insert( QLatin1String( "date" ) , KGlobal::locale()->formatDateTime(article.pubDate(), KLocale::FancyLongDate) );
+    }
+
+    const QString author = article.authorAsHtml();
+    if (!author.isEmpty())
+    {
+        data.insert( QLatin1String( "directionOfAuthor" ) , Utils::directionOf(i18n("Author")) );
+        data.insert( QLatin1String( "author" ) , author );
+    }
+
+    if (!enc.isEmpty())
+    {
+        data.insert( QLatin1String( "directionOfEnclosure" ) , Utils::directionOf(i18n("Enclosure")) );
+        data.insert( QLatin1String( "enc" ) , enc );
+    }
+
+    if (icon == ShowIcon && article.feed() && !article.feed()->image().isNull())
+    {
+        const Feed* feed = article.feed();
+        QString file = Utils::fileNameForUrl(feed->xmlUrl());
+        KUrl m_imageDir;
+        KUrl u(m_imageDir);
+        u.setFileName(file);
+
+        data.insert( QLatin1String( "imageUrl" ) , feed->htmlUrl() );
+        data.insert( QLatin1String( "imageName" ) , u.url() );
+    }
+
+    const QString content = article.content( Article::DescriptionAsFallback );
+    if (!content.isEmpty())
+    {
+        data.insert( QLatin1String( "directionOfContent" ) , Utils::directionOf(Utils::stripTags(content)) );
+        data.insert( QLatin1String( "content" ) , content );
+    }
+
+    if (article.commentsLink().isValid())
+    {
+        data.insert( QLatin1String( "article.commentsLink" ) , article.commentsLink().url() );
+
+        if (article.comments())
+        {
+            data.insert( QLatin1String( "article.comments" ) , QString::number(article.comments()) );
+        }
+    }
+
+    if (article.link().isValid() || (article.guidIsPermaLink() && KUrl(article.guid()).isValid()))
+    {
+        // in case link isn't valid, fall back to the guid permaLink.
+        if (article.link().isValid())
+        {
+            data.insert( QLatin1String( "article.linkComplete" ) , article.link().url() );
+        }
+        else
+        {
+            data.insert( QLatin1String( "article.linkComplete" ) , article.guid() );
+
+        }
+    }
+
+    Grantlee::Context c( data );
+    c.setRelativeMediaPath("images/");
+    QString viewStr = t->render( &c );
+
+    return viewStr;
+}  
+  
+
 class DefaultNormalViewFormatter::SummaryVisitor : public TreeNodeVisitor
 {
     public:
@@ -185,91 +276,7 @@ class DefaultNormalViewFormatter::SummaryVisitor : public TreeNodeVisitor
 
 QString DefaultNormalViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    Grantlee::Template t = mEngine->loadByName( QLatin1String( "default.html" ) );
-    QVariantHash data;
-    
-    QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
-    const QString enc = formatEnclosure( *article.enclosure() );
-
-    data.insert( QLatin1String( "dir" ) , dir );
-
-    const QString strippedTitle = Utils::stripTags( article.title() );    
-    if (!strippedTitle.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfstrippedTitle" ) , Utils::directionOf(strippedTitle) );
-                
-        if (article.link().isValid()) {            
-          data.insert( QLatin1String( "article.link" ) , article.link().url() );
-          data.insert( QLatin1String( "strippedTitle" ) , strippedTitle );
-        }  
-    }
-    
-    if (article.pubDate().isValid())
-    {
-        data.insert( QLatin1String( "directionOfDate" ) , Utils::directionOf(i18n("Date")) );
-        data.insert( QLatin1String( "date" ) , KGlobal::locale()->formatDateTime(article.pubDate(), KLocale::FancyLongDate) );
-    }
-    
-    const QString author = article.authorAsHtml();
-    if (!author.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfAuthor" ) , Utils::directionOf(i18n("Author")) );
-        data.insert( QLatin1String( "author" ) , author );
-    }
-
-    if (!enc.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfEnclosure" ) , Utils::directionOf(i18n("Enclosure")) );
-        data.insert( QLatin1String( "enc" ) , enc );
-    }
-
-    if (icon == ShowIcon && article.feed() && !article.feed()->image().isNull())
-    {
-        const Feed* feed = article.feed();
-        QString file = Utils::fileNameForUrl(feed->xmlUrl());
-        KUrl u(m_imageDir);
-        u.setFileName(file);
-        
-        data.insert( QLatin1String( "imageUrl" ) , feed->htmlUrl() );
-        data.insert( QLatin1String( "imageName" ) , u.url() );
-    }
-
-    const QString content = article.content( Article::DescriptionAsFallback );
-    if (!content.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfContent" ) , Utils::directionOf(Utils::stripTags(content)) );
-        data.insert( QLatin1String( "content" ) , content );
-    }
-
-    if (article.commentsLink().isValid())
-    {
-        data.insert( QLatin1String( "article.commentsLink" ) , article.commentsLink().url() );
-        
-        if (article.comments())
-        {
-            data.insert( QLatin1String( "article.comments" ) , QString::number(article.comments()) );
-        }
-    }
-
-    if (article.link().isValid() || (article.guidIsPermaLink() && KUrl(article.guid()).isValid()))
-    {
-        // in case link isn't valid, fall back to the guid permaLink.
-        if (article.link().isValid())
-        {
-            data.insert( QLatin1String( "article.linkComplete" ) , article.link().url() );
-        }
-        else
-        {
-            data.insert( QLatin1String( "article.linkComplete" ) , article.guid() );
-
-        }
-    }
-
-    Grantlee::Context c( data );
-    c.setRelativeMediaPath("images/");
-    QString headerStr= t->render( &c );
-
-    return headerStr;
+    return setTheming( "default" , article, icon );
 }
 
 QString DefaultNormalViewFormatter::getCss() const
@@ -371,91 +378,7 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 
 QString DefaultCombinedViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    Grantlee::Template t = mEngine->loadByName( QLatin1String( "combined.html" ) );
-    QVariantHash data;
-
-    QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
-    const QString enc = formatEnclosure( *article.enclosure() );
-
-    data.insert( QLatin1String( "dir" ) , dir );
-  
-    const QString strippedTitle = Utils::stripTags( article.title() );
-
-    if (!strippedTitle.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfstrippedTitle" ) , Utils::directionOf(strippedTitle) );
-
-        if (article.link().isValid()) {
-          data.insert( QLatin1String( "article.link" ) , article.link().url() );
-          data.insert( QLatin1String( "strippedTitle" ) , strippedTitle );
-        }  
-    }
-    if (article.pubDate().isValid())
-    {
-        data.insert( QLatin1String( "directionOfDate" ) , Utils::directionOf(i18n("Date")) );
-        data.insert( QLatin1String( "date" ) , KGlobal::locale()->formatDateTime(article.pubDate(), KLocale::FancyLongDate) );
-    }
-
-    const QString author = article.authorAsHtml();
-    if (!author.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfAuthor" ) , Utils::directionOf(i18n("Author")) );
-        data.insert( QLatin1String( "author" ) , author );
-    }
-
-    if (!enc.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfEnclosure" ) , Utils::directionOf(i18n("Enclosure")) );
-        data.insert( QLatin1String( "enc" ) , enc );
-    }
-
-    if (icon == ShowIcon && article.feed() && !article.feed()->image().isNull())
-    {
-        const Feed* feed = article.feed();
-        QString file = Utils::fileNameForUrl(feed->xmlUrl());
-        KUrl u(m_imageDir);
-        u.setFileName(file);
-
-        data.insert( QLatin1String( "imageUrl" ) , feed->htmlUrl() );
-        data.insert( QLatin1String( "imageName" ) , u.url() );
-    }
-
-    const QString content = article.content( Article::DescriptionAsFallback );
-    if (!content.isEmpty())
-    {
-        data.insert( QLatin1String( "directionOfContent" ) , Utils::directionOf(Utils::stripTags(content)) );
-        data.insert( QLatin1String( "content" ) , content );
-    }
-
-    if (article.commentsLink().isValid())
-    {
-        data.insert( QLatin1String( "article.commentsLink" ) , article.commentsLink().url() );
-
-        if (article.comments())
-        {
-            data.insert( QLatin1String( "article.comments" ) , QString::number(article.comments()) );
-        }
-    }
-
-    if (article.link().isValid() || (article.guidIsPermaLink() && KUrl(article.guid()).isValid()))
-    {
-        // in case link isn't valid, fall back to the guid permaLink.
-        if (article.link().isValid())
-        {
-            data.insert( QLatin1String( "article.linkComplete" ) , article.link().url() );
-        }
-        else
-        {
-            data.insert( QLatin1String( "article.linkComplete" ) , article.guid() );
-
-        }
-    }
-
-    Grantlee::Context c( data );
-    c.setRelativeMediaPath("images/");
-    QString headerStr= t->render( &c );
-
-    return headerStr;
+    return setTheming( "combined" , article, icon );
 }
 
 QString DefaultCombinedViewFormatter::getCss() const
