@@ -43,12 +43,6 @@ MultiplyingLineView::MultiplyingLineView( MultiplyingLineFactory* factory, Multi
   setWidgetResizable( true );
   setFrameStyle( QFrame::NoFrame );
 
-#ifndef KDEPIM_MOBILE_UI
-#warning currently KGlobalSettings returns a useless font on Maemo5, remove this hack once this is fixed in kdelibs
-  mEditFont = KGlobalSettings::generalFont();
-#else
-  mEditFont = QApplication::font();
-#endif
   mPage = new QWidget;
 
   mPage->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
@@ -79,7 +73,6 @@ MultiplyingLine* MultiplyingLineView::addLine()
 {
   MultiplyingLine* line = mMultiplyingLineFactory->newLine( widget() );
 
-  line->setEditFont( mEditFont );
   mTopLayout->addWidget( line );
   line->setCompletionMode( mCompletionMode );
   line->show();
@@ -356,14 +349,6 @@ int MultiplyingLineView::setFirstColumnWidth( int w )
 
   resizeView();
   return mFirstColumnWidth;
-}
-
-void MultiplyingLineView::setEditFont( const QFont& font )
-{
-  mEditFont = font;
-  foreach ( MultiplyingLine *line, mLines ) {
-    line->setEditFont( mEditFont );
-  }
 }
 
 void MultiplyingLineView::moveCompletionPopup()

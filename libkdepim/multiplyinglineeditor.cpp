@@ -108,11 +108,6 @@ void MultiplyingLineEditor::setCompletionMode( KGlobalSettings::Completion mode 
   mView->setCompletionMode( mode );
 }
 
-void MultiplyingLineEditor::setEditFont( const QFont& font )
-{
-  mView->setEditFont( font );
-}
-
 MultiplyingLineFactory* MultiplyingLineEditor::factory() const
 {
   return mMultiplyingLineFactory;

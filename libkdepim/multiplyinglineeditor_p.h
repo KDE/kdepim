@@ -77,11 +77,6 @@ class MultiplyingLineView : public QScrollArea
       */
     int setFirstColumnWidth( int );
 
-    /**
-     * Sets the font which will be used for the lineedits.
-     */
-    void setEditFont( const QFont& font );
-
     QList<MultiplyingLine*> lines() const;
 
   public slots:
@@ -116,7 +111,6 @@ class MultiplyingLineView : public QScrollArea
 
   private:
     QList<MultiplyingLine*> mLines;
-    QFont mEditFont;
     QPointer<MultiplyingLine> mCurDelLine;
     int mLineHeight;
     int mFirstColumnWidth;

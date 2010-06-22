@@ -86,7 +86,6 @@ class RecipientLineNG : public KPIM::MultiplyingLine
     virtual void setCompletionMode( KGlobalSettings::Completion );
     
     virtual int setColumnWidth( int w );
-    virtual void setEditFont( const QFont& font );
 
     // recipient specific methods
     int recipientsCount() const;

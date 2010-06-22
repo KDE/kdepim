@@ -123,11 +123,6 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
       */
     void setCompletionMode( KGlobalSettings::Completion );
 
-    /**
-     * Sets the font which will be used for the lineedits.
-     */
-    void setEditFont( const QFont& font );
-
   signals:
     void focusUp();
     void focusDown();

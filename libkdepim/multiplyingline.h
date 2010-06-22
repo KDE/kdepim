@@ -169,12 +169,6 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
       */
     virtual void moveCompletionPopup() = 0;
 
-    /**
-      Sets the font which will be used for the lineedits.
-      @param font the font to use for the lineedits.
-     */
-    virtual void setEditFont( const QFont& font ) = 0;
-
   signals:
     /**
       Emitted when the return/enter key is pressed

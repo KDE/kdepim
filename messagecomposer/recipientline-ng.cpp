@@ -221,11 +221,6 @@ void RecipientLineNG::clear()
   mEdit->clear();
 }
 
-void RecipientLineNG::setEditFont( const QFont& font )
-{
-  mEdit->setFont( font );
-}
-
 void RecipientLineNG::moveCompletionPopup()
 {
   if ( mEdit->completionBox( false ) ) {
