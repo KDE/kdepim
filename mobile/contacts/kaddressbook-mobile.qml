@@ -356,7 +356,7 @@ KPIM.MainView {
           },
           KPIM.Button {
             visible : !collectionView.hasSelection
-            anchors.top: newcContactGroupButton.bottom;
+            anchors.top: newContactGroupButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
