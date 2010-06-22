@@ -305,20 +305,12 @@ KPIM.MainView {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
+      handlePosition: 225
       contentWidth: 240
       content: [
-          KPIM.Button {
-            id: moveButton
-            anchors.top: parent.top;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Move" )
-            onClicked: actionPanel.collapse();
-          },
           KPIM.Action {
             id: deleteButton
-            anchors.top: moveButton.bottom;
+            anchors.top: parent.top;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
@@ -326,29 +318,51 @@ KPIM.MainView {
             onTriggered: actionPanel.collapse();
           },
           KPIM.Button {
-            id: previousButton
+            id : saveFavoriteButton
             anchors.top: deleteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
+            buttonText: KDE.i18n( "Save Favorite" )
             width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Previous" )
-            onClicked: {
-              if ( contactView.itemId >= 0 )
-                contactList.previousItem();
-
+            height: collectionView.hasSelection ? parent.height / 6 : 0
+            visible : collectionView.hasSelection
+            onClicked : {
+              application.saveFavorite();
               actionPanel.collapse();
             }
           },
           KPIM.Button {
-            anchors.top: previousButton.bottom;
+            id : newContactButton2
+            anchors.top: saveFavoriteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: KDE.i18n( "Next" )
-            onClicked: {
-              if ( contactView.itemId >= 0 )
-                contactList.nextItem();
-
+            buttonText : KDE.i18n( "New Contact" )
+            onClicked : {
+              application.newContact();
+              actionPanel.collapse();
+            }
+          },
+          KPIM.Button {
+            id : newContactGroupButton
+            anchors.top: newContactButton2.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText : KDE.i18n( "New Group" )
+            onClicked : {
+              application.newContactGroup();
+              actionPanel.collapse();
+            }
+          },
+          KPIM.Button {
+            visible : !collectionView.hasSelection
+            anchors.top: newcContactGroupButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText : KDE.i18n( "New Addressbook" )
+            onClicked : {
+              application.launchAccountWizard();
               actionPanel.collapse();
             }
           }
