@@ -31,7 +31,7 @@ class EditorBusiness::Private
     explicit Private( EditorBusiness *parent ) : q( parent )
     {
       mUi.setupUi( parent );
-      mUi.logoButton->setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
+      mUi.logoButton->setType( ImageWidget::Logo );
 
       q->connect( mUi.organizationLineEdit, SIGNAL( textChanged( const QString& ) ),
                   q, SIGNAL( organizationChanged( const QString& ) ) );
@@ -69,11 +69,7 @@ EditorBusiness::~EditorBusiness()
 
 void EditorBusiness::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
 {
-  if ( contact.logo().isEmpty() )
-    d->mUi.logoButton->setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
-  else
-    d->mUi.logoButton->setIcon( QPixmap::fromImage( contact.logo().data() ) );
-
+  d->mUi.logoButton->loadContact( contact );
   d->mUi.organizationLineEdit->setText( contact.organization() );
   d->mUi.professionLineEdit->setText( loadCustom( contact, QLatin1String( "X-Profession" ) ) );
   d->mUi.titleLineEdit->setText( contact.title() );
@@ -85,6 +81,7 @@ void EditorBusiness::loadContact( const KABC::Addressee &contact, const Akonadi:
 
 void EditorBusiness::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
+  d->mUi.logoButton->storeContact( contact );
   contact.setOrganization( d->mUi.organizationLineEdit->text().trimmed() );
   storeCustom( contact, QLatin1String( "X-Profession" ), d->mUi.professionLineEdit->text().trimmed() );
   contact.setTitle( d->mUi.titleLineEdit->text().trimmed() );

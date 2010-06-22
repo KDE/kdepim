@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>333</height>
+    <height>343</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -96,7 +96,7 @@ Name:</string>
       </layout>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="logoButton">
+      <widget class="ImageWidget" name="logoButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>120</horstretch>
@@ -153,6 +153,13 @@ Name:</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ImageWidget</class>
+   <extends>QPushButton</extends>
+   <header>imagewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

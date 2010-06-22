@@ -47,8 +47,7 @@ class EditorGeneral::Private
 
   public:
     explicit Private( EditorGeneral *parent )
-      : q( parent ),
-        mDefaultPhoto( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge ) )
+      : q( parent )
     {
       mUi.setupUi( parent );
 
@@ -67,8 +66,7 @@ class EditorGeneral::Private
 
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
 
-      mUi.pictureButton->setIconSize( mDefaultPhoto.size() );
-      mUi.pictureButton->setIcon( mDefaultPhoto );
+      mUi.pictureButton->setType( ImageWidget::Photo );
     }
 
     ~Private()
@@ -98,8 +96,6 @@ class EditorGeneral::Private
 
     int mLastEmailRow;
     int mLastPhoneRow;
-
-    const QPixmap mDefaultPhoto;
 
   public: // slots
     void nameTextChanged( const QString &text )
@@ -357,12 +353,7 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact, const Akonadi::
     ++widgetIt;
   }
 
-  QPixmap photo = d->mDefaultPhoto;
-  if ( !contact.photo().isEmpty() ) {
-    photo = QPixmap::fromImage( contact.photo().data() );
-  }
-  d->mUi.pictureButton->setIconSize( photo.size().boundedTo( d->mDefaultPhoto.size() ) );
-  d->mUi.pictureButton->setIcon( photo );
+  d->mUi.pictureButton->loadContact( contact );
 }
 
 void EditorGeneral::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
@@ -390,6 +381,8 @@ void EditorGeneral::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaD
       contact.insertPhoneNumber( phone );
     }
   }
+
+  d->mUi.pictureButton->storeContact( contact );
 }
 
 Akonadi::Collection EditorGeneral::selectedCollection() const

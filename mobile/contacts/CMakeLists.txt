@@ -29,6 +29,7 @@ set(kab_mobile_srcs
   editorgeneral.cpp
   editorlocation.cpp
   editormore.cpp
+  imagewidget.cpp
   kwidgetlister.cpp
   locationmodel.cpp
   namepartseditwidget.cpp
