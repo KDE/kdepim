@@ -37,18 +37,16 @@ using namespace KPIM;
 MultiplyingLineView::MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent )
   : QScrollArea( parent ), mCurDelLine( 0 ),
     mLineHeight( 0 ), mFirstColumnWidth( 0 ),
-    mModified( false ), mMultiplyingLineFactory( factory )
+    mModified( false ), mCompletionMode( KGlobalSettings::completionMode() ),
+    mPage( new QWidget( this ) ), mTopLayout( new QVBoxLayout( this ) ),
+    mMultiplyingLineFactory( factory )
 {
-  mCompletionMode = KGlobalSettings::completionMode();
   setWidgetResizable( true );
   setFrameStyle( QFrame::NoFrame );
-
-  mPage = new QWidget;
 
   mPage->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   setWidget( mPage );
 
-  mTopLayout = new QVBoxLayout;
   mTopLayout->setMargin( 0 );
   mTopLayout->setSpacing( 0 );
   mPage->setLayout( mTopLayout );

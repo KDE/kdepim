@@ -39,7 +39,7 @@ class MultiplyingLineView : public QScrollArea
 {
     Q_OBJECT
   public:
-    explicit MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent );
+    MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent );
     ~MultiplyingLineView(){}
 
     QSize minimumSizeHint() const;
