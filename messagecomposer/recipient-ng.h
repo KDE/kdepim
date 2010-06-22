@@ -43,22 +43,21 @@ class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
     enum Type { To, Cc, Bcc, Undefined };
 
     Recipient( const QString &email = QString(), Type type = To ); //krazy:exclude=explicit
-    virtual ~Recipient(){}
 
-    void setType( Type );
+    void setType( Type type );
     Type type() const;
 
-    void setEmail( const QString & );
+    void setEmail( const QString & email );
     QString email() const;
 
     virtual bool isEmpty() const;
     virtual void clear();
 
-    static int typeToId( Type );
-    static Type idToType( int );
+    static int typeToId( Type type);
+    static Type idToType( int id );
 
     QString typeLabel() const;
-    static QString typeLabel( Type );
+    static QString typeLabel( Type type );
     static QStringList allTypeLabels();
 
   private:
