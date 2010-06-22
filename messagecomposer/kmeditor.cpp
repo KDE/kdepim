@@ -22,6 +22,7 @@
 
 #include "kmeditor.h"
 #include "textpart.h"
+#include "messageviewer/nodehelper.h"
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -269,7 +270,7 @@ KUrl KMeditor::insertFile()
   KUrl url;
   if ( fdlg->exec() ) {
     url = fdlg->selectedUrl();
-    url.setFileEncoding( fdlg->selectedEncoding() );
+    url.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( fdlg->selectedEncoding() ) );
   }
   delete fdlg;
   return url;

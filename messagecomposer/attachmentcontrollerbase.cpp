@@ -28,6 +28,7 @@
 #include "messagecomposer/composer.h"
 #include "messagecomposer/globalpart.h"
 #include "messageviewer/editorwatcher.h"
+#include "messageviewer/nodehelper.h"
 
 #include <akonadi/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
@@ -631,7 +632,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
     const KUrl::List files = dialog->selectedUrls();
     foreach( const KUrl &url, files ) {
       KUrl urlWithEncoding = url;
-      urlWithEncoding.setFileEncoding( dialog->selectedEncoding() );
+      urlWithEncoding.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() ) );
       addAttachment( urlWithEncoding );
     }
   }
