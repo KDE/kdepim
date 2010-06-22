@@ -49,7 +49,6 @@ void AttendeeEditor::slotLineDeleted( int /*pos*/ )
 
 void AttendeeEditor::slotCalculateTotal()
 {
-  int count = 0;
   int empty = 0;
 
   foreach( KPIM::MultiplyingLine *line, lines() ) {
@@ -60,7 +59,6 @@ void AttendeeEditor::slotCalculateTotal()
   }
 
   // We always want at least one empty line
-  kDebug() << "empty: " << empty;
   if ( empty == 0 )
     addData();
 }

@@ -49,12 +49,11 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
 
 bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
 {
-  //TODO: implement isDirty
-  return false;
+  return mAttendeeEditor->isModified();
 }
 
 bool IncidenceEditorsNG::IncidenceAttendee::isValid()
 {
-  //TODO: implement isDirty
+  //TODO: implement isValid
   return true;
 }
