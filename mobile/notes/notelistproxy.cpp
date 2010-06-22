@@ -48,10 +48,10 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
       return note->mainBodyPart()->decodedText();
     case PlainContent:
       {
-QTextDocument doc;
-doc.setHtml(note->mainBodyPart()->decodedText());
+        QTextDocument doc;
+        doc.setHtml(note->mainBodyPart()->decodedText());
 
-return doc.toPlainText();
+        return doc.toPlainText();
       }
     }
   }
