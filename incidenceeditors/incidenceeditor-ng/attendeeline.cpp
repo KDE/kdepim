@@ -64,7 +64,7 @@ AttendeeLineEdit::AttendeeLineEdit( QWidget* parent )
 
 void AttendeeLineEdit::keyPressEvent( QKeyEvent* ev )
 {
-  if ( (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) &&
+  if ( (ev->key() == Qt::Key_Enter || ev->key() == Qt::Key_Return) &&
       !completionBox()->isVisible() )
   {
     emit downPressed();
