@@ -125,6 +125,12 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
       */
     void setCompletionMode( KGlobalSettings::Completion mode );
 
+    /**
+     Set the underlying view's frame shape, default is none.
+     @param shape of type QFrame::Shape
+     */
+    void setFrameStyle( int shape );
+
   signals:
     void focusUp();
     void focusDown();

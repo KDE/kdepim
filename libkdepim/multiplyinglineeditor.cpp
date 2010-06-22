@@ -134,6 +134,12 @@ MultiplyingLine* MultiplyingLineEditor::activeLine() const
   return mView->activeLine();
 }
 
+void MultiplyingLineEditor::setFrameStyle( int shape )
+{
+  mView->setFrameStyle( shape );
+}
+
+
 
 
 #include "multiplyinglineeditor.moc"
