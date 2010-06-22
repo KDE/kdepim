@@ -288,9 +288,7 @@ QAbstractItemModel* KDeclarativeMainView::itemModel() const
 void KDeclarativeMainView::launchAccountWizard()
 {
   QStringList args;
-
-  foreach ( const QString &mimetype, d->mChangeRecorder->mimeTypesMonitored() )
-   args << QLatin1String( "--type" ) << mimetype;
+  args << QLatin1String( "--type" ) << d->mChangeRecorder->mimeTypesMonitored().join( "," );
 
   int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), args );
   if ( !pid )
