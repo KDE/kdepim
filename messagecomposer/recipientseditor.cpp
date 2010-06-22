@@ -22,10 +22,10 @@
     02110-1301, USA.
 */
 
-#include "recipientseditor-ng.h"
+#include "recipientseditor.h"
 
-#include "recipient-ng.h"
-#include "recipientline-ng.h"
+#include "recipient.h"
+#include "recipientline.h"
 #include "recipientseditorsidewidget.h"
 
 #include "messagecomposersettings.h"
@@ -278,4 +278,4 @@ RecipientLineNG* RecipientsEditorNG::activeLine() const
 
 
 
-#include "recipientseditor-ng.moc"
+#include "recipientseditor.moc"

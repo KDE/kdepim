@@ -23,7 +23,7 @@
 
 #include "messagecomposer_export.h"
 #include "messagesender.h"
-#include "recipient-ng.h"
+#include "recipient.h"
 
 #include <KDE/KMime/Message>
 

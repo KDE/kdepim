@@ -43,7 +43,7 @@
 #include <messagecore/nodehelper.h>
 #include <messageviewer/kcursorsaver.h>
 #include <mailtransport/transportmanager.h>
-#include <messagecomposer/recipientseditor-ng.h>
+#include <messagecomposer/recipientseditor.h>
 #include <akonadi/collectioncombobox.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>

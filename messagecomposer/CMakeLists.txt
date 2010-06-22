@@ -43,13 +43,11 @@ set( messagecomposer_src
      inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
-#     recipient.cpp
      distributionlistdialog.cpp
      recipientspicker.cpp
-  #   recipientseditor.cpp
-     recipient-ng.cpp
-     recipientline-ng.cpp
-     recipientseditor-ng.cpp
+     recipient.cpp
+     recipientline.cpp
+     recipientseditor.cpp
      recipientseditorsidewidget.cpp
      kwindowpositioner.cpp
 

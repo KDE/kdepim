@@ -25,7 +25,7 @@
 #ifndef RECIPIENTSEDITORSIDEWIDGET_H
 #define RECIPIENTSEDITORSIDEWIDGET_H
 
-#include "recipientseditor-ng.h"
+#include "recipientseditor.h"
 
 class QLabel;
 class QPushButton;

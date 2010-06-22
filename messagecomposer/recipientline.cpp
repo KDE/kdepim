@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-#include "recipientline-ng.h"
+#include "recipientline.h"
 
 #include <kpimutils/email.h>
 #include <KDialog>
@@ -258,4 +258,4 @@ Recipient::Ptr RecipientLineNG::recipient() const
 }
 
 
-#include "recipientline-ng.moc"
+#include "recipientline.moc"

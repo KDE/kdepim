@@ -23,7 +23,7 @@
 
 #include <QSharedPointer>
 
-#include "messagecomposer/recipient-ng.h"
+#include "messagecomposer/recipient.h"
 
 #include <libkdepim/multiplyingline.h>
 #include <messagecomposer/composerlineedit.h>

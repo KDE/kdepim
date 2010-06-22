@@ -23,7 +23,7 @@
 */
 
 
-#include "recipient-ng.h"
+#include "recipient.h"
 
 #include <klocale.h>
 

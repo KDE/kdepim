@@ -26,7 +26,7 @@
 
 #include "messagecomposer_export.h"
 
-#include "recipientline-ng.h"
+#include "recipientline.h"
 
 #include <libkdepim/multiplyinglineeditor.h>
 
