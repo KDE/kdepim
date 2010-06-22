@@ -43,7 +43,7 @@
 #include <messagecore/nodehelper.h>
 #include <messageviewer/kcursorsaver.h>
 #include <mailtransport/transportmanager.h>
-#include <messagecomposer/recipientseditor.h>
+#include <messagecomposer/recipientseditor-ng.h>
 #include <akonadi/collectioncombobox.h>
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
@@ -321,11 +321,11 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     mExpandedBcc = resolveJob->expandedBcc();
  } else { // saved to draft, so keep the old values, not very nice.
     mExpandedFrom = from();
-    foreach( const Recipient &r, m_recipientsEditor->recipients() ) {
-      switch( r.type() ) {
-        case Recipient::To: mExpandedTo << r.email(); break;
-        case Recipient::Cc: mExpandedCc << r.email(); break;
-        case Recipient::Bcc: mExpandedBcc << r.email(); break;
+    foreach( const Recipient::Ptr &r, m_recipientsEditor->recipients() ) {
+      switch( r->type() ) {
+        case Recipient::To: mExpandedTo << r->email(); break;
+        case Recipient::Cc: mExpandedCc << r->email(); break;
+        case Recipient::Bcc: mExpandedBcc << r->email(); break;
         case Recipient::Undefined: Q_ASSERT( !"Unknown recpient type!" ); break;
       }
     }
@@ -1032,12 +1032,12 @@ Message::AttachmentModel* Message::ComposerViewBase::attachmentModel()
   return m_attachmentModel;
 }
 
-void Message::ComposerViewBase::setRecipientsEditor ( MessageComposer::RecipientsEditor* recEditor )
+void Message::ComposerViewBase::setRecipientsEditor ( MessageComposer::RecipientsEditorNG* recEditor )
 {
   m_recipientsEditor = recEditor;
 }
 
-MessageComposer::RecipientsEditor* Message::ComposerViewBase::recipientsEditor()
+MessageComposer::RecipientsEditorNG* Message::ComposerViewBase::recipientsEditor()
 {
   return m_recipientsEditor;
 }

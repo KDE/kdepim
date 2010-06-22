@@ -23,7 +23,7 @@
 
 #include "messagecomposer_export.h"
 #include "messagesender.h"
-#include "recipient.h"
+#include "recipient-ng.h"
 
 #include <KDE/KMime/Message>
 
@@ -57,7 +57,7 @@ namespace KPIMIdentities
 
 namespace MessageComposer
 {
-  class RecipientsEditor;
+  class RecipientsEditorNG;
 }
 
 namespace Message {
@@ -142,8 +142,8 @@ public:
   void setAttachmentController( AttachmentControllerBase* controller );
   AttachmentControllerBase* attachmentController();
   
-  void setRecipientsEditor( MessageComposer::RecipientsEditor* recEditor );
-  MessageComposer::RecipientsEditor* recipientsEditor();
+  void setRecipientsEditor( MessageComposer::RecipientsEditorNG* recEditor );
+  MessageComposer::RecipientsEditorNG* recipientsEditor();
 
   void setSignatureController( SignatureController* sigController );
   SignatureController* signatureController();
@@ -288,7 +288,7 @@ private:
   AttachmentControllerBase* m_attachmentController;
   AttachmentModel* m_attachmentModel;
   SignatureController* m_signatureController;
-  MessageComposer::RecipientsEditor* m_recipientsEditor;
+  MessageComposer::RecipientsEditorNG * m_recipientsEditor;
   KPIMIdentities::IdentityCombo *m_identityCombo;
   KPIMIdentities::IdentityManager* m_identMan;
   Message::KMeditor* m_editor;
