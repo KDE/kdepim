@@ -75,10 +75,10 @@ class Recipient
 
       QObject::connect( mInput, SIGNAL( clearClicked() ), receiver, SLOT( clearRecipientClicked() ) );
     }
-   
+
   public:
     MobileLineEdit* mInput;
-    
+
     Akonadi::Item mItem;
     QString mPreferredEmail;
 };
@@ -86,7 +86,7 @@ class Recipient
 class EditorContactGroup::Private
 {
   EditorContactGroup *const q;
- 
+
   public:
     explicit Private( EditorContactGroup *parent )
       : q( parent )
@@ -96,7 +96,7 @@ class EditorContactGroup::Private
       mInputs << new Recipient( mUi.recipient1, q );
       mInputs << new Recipient( mUi.recipient2, q );
       mLastRow = 2; // third row
-      
+
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
     }
 
@@ -120,7 +120,7 @@ class EditorContactGroup::Private
     {
       mUi.saveButton->setEnabled( !text.trimmed().isEmpty() );
     }
-   
+
     void addRecipientClicked();
 
     void fetchResult( KJob *job );
@@ -130,7 +130,7 @@ class EditorContactGroup::Private
     void textEdited( const QString &text );
 
     void clearRecipientClicked();
-    
+
   private:
     void addRows( int newRowCount );
 };
@@ -144,7 +144,7 @@ void EditorContactGroup::Private::fetchResult( KJob *job )
 {
   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
   Q_ASSERT( fetchJob != 0 );
-  
+
   int index = fetchJob->property( "RecipientIndex" ).value<int>();
   Q_ASSERT( index >= 0 && index < mInputs.count() );
   Recipient *recipient = mInputs[ index ];
@@ -156,7 +156,7 @@ void EditorContactGroup::Private::fetchResult( KJob *job )
     kError() << "Fetching contact item" << item.id() << "worked but it is not a contact";
   } else {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
-    
+
     recipient->mItem = item;
     recipient->mInput->setEnabled( true );
 
@@ -209,10 +209,10 @@ void EditorContactGroup::Private::textEdited( const QString &text )
 
         QObject::disconnect( recipient->mInput, SIGNAL( textEdited( QString ) ), q, SLOT( textEdited( QString ) ) );
       }
-      
+
       break;
     }
-  }  
+  }
 }
 
 void EditorContactGroup::Private::clearRecipientClicked()
@@ -257,8 +257,8 @@ void EditorContactGroup::Private::clearRecipientClicked()
     // re-add widgets
     mUi.gridLayout->addWidget( mUi.addRecipientButton, mLastRow, 2, 1, 1 );
 
-    mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 1 );
-    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 2, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.saveButton, row, 2, 1, 1 );
+    mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 1 );
   } else {
     last->mInput->clear();
     last->mItem = Akonadi::Item();
@@ -279,7 +279,7 @@ void EditorContactGroup::Private::addRows( int newRowCount )
   mUi.gridLayout->removeWidget( mUi.collectionSelector );
 
   int row = mLastRow + 1;
-  
+
   // add new widgets
   for ( ; mInputs.count() < newRowCount; ++row, ++mLastRow ) {
     MobileLineEdit *lineEdit = new MobileLineEdit( q );
@@ -290,15 +290,15 @@ void EditorContactGroup::Private::addRows( int newRowCount )
   // re-add widgets
   mUi.gridLayout->addWidget( mUi.addRecipientButton, mLastRow, 2, 1, 1 );
 
-  mUi.gridLayout->addWidget( mUi.saveButton, row, 1, 1, 1 );
-  mUi.gridLayout->addWidget( mUi.collectionSelector, row, 2, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.saveButton, row, 2, 1, 1 );
+  mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 1 );
 }
 
 EditorContactGroup::EditorContactGroup( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   connect( d->mUi.addRecipientButton, SIGNAL( clicked() ), SLOT( addRecipientClicked() ) );
-  
+
   connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
   connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),
            SIGNAL( collectionChanged( Akonadi::Collection ) ) );
@@ -320,14 +320,14 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
   d->ensureRows( contactGroup.dataCount() + contactGroup.contactReferenceCount() );
 
   int count = 0;
-  
+
   QStringList emails;
   for ( uint i = 0; i < contactGroup.dataCount(); ++i, ++count ) {
     const KABC::ContactGroup::Data &data = contactGroup.data( i );
     contact.setNameFromString( data.name() );
     emails << contact.fullEmail( data.email() );
   }
-  
+
   QList<Recipient*>::const_iterator inputIt = d->mInputs.constBegin();
   Q_FOREACH( const QString &email, emails ) {
     (*inputIt)->mInput->setText( email );

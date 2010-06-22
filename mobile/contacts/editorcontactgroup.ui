@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>115</height>
+    <height>136</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,14 +46,14 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="3" column="2">
       <widget class="QPushButton" name="saveButton">
        <property name="text">
         <string>Save</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
+     <item row="3" column="1">
       <widget class="Akonadi::CollectionComboBox" name="collectionSelector"/>
      </item>
     </layout>
