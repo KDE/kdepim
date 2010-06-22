@@ -60,7 +60,7 @@ class MultiplyingLineView : public QScrollArea
         recipients.
         @return whether the view is modified or not.
     */
-    bool isModified();
+    bool isModified() const;
 
     /** Resets the modified flag to false.
     */

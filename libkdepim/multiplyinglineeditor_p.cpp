@@ -275,7 +275,7 @@ void MultiplyingLineView::removeData( MultiplyingLineData::Ptr data )
     line->slotPropagateDeletion();
 }
 
-bool MultiplyingLineView::isModified()
+bool MultiplyingLineView::isModified() const
 {
   if ( mModified )
     return true;
