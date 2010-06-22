@@ -55,7 +55,7 @@ KPIM.MainView {
     anchors.bottomMargin : 70
     visible : false
     QML.Image {
-      source : KDE.iconPath( "edit-undo", 64 );
+      source : KDE.iconPath( "document-edit", 64 );
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
@@ -93,7 +93,7 @@ KPIM.MainView {
     anchors.bottomMargin : 70
     visible : false
     QML.Image {
-      source : KDE.iconPath( "edit-undo", 64 );
+      source : KDE.iconPath( "document-edit", 64 );
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
