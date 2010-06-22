@@ -281,7 +281,7 @@ void ImageWidget::changeImage()
   if ( mReadOnly )
     return;
 
-  const KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), this );
+  const KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), 0 );
   if ( url.isValid() ) {
     bool ok = false;
     const QImage image = imageLoader()->loadImage( url, &ok );
@@ -295,7 +295,7 @@ void ImageWidget::changeImage()
 
 void ImageWidget::saveImage()
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), KImageIO::pattern(), this );
+  const QString fileName = KFileDialog::getSaveFileName( KUrl(), KImageIO::pattern(), 0 );
   if ( !fileName.isEmpty() )
     mImage.save( fileName );
 }

@@ -126,7 +126,7 @@ class EditorLocation::Private
 
     void addAddress()
     {
-      AddressTypeDialog dlg( q );
+      AddressTypeDialog dlg;
       if ( !dlg.exec() )
         return;
 
