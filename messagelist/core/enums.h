@@ -45,8 +45,7 @@ namespace Core
   {
     PreSelectNone,                     //< no pre-selection at all
     PreSelectLastSelected,             //< pre-select the last message that was selected in this folder (default)
-    PreSelectFirstNewCentered,         //< pre-select the first new message and center it, fallback to unread if not found
-    PreSelectFirstNewOrUnreadCentered, //< pre-select the first new or the first unread message and center it
+    PreSelectFirstUnreadCentered,      //< pre-select the first unread message and center it
     PreSelectNewestCentered,           //< pre-select the newest message, by date
     PreSelectOldestCentered            //< pre-select the oldest message, by date
   };
@@ -57,8 +56,6 @@ namespace Core
   enum MessageTypeFilter
   {
     MessageTypeAny,                    //< Select any message
-    MessageTypeNewOnly,                //< Select only new messages
-    MessageTypeNewOrUnreadOnly,        //< Select only new or unread messages
     MessageTypeUnreadOnly              //< Select only unread messages
   };
 

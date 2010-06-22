@@ -185,17 +185,16 @@ public:
 
   /**
    * A structure used with MessageList::Item::childItemStats().
-   * Contains counts of total, new and unread messages in a subtree.
+   * Contains counts of total and unread messages in a subtree.
    */
   class ChildItemStats
   {
   public:
     unsigned int mTotalChildCount;   // total
-    unsigned int mNewChildCount;     // new+unread
     unsigned int mUnreadChildCount;  // unread only
   public:
     ChildItemStats()
-      : mTotalChildCount( 0 ), mNewChildCount( 0 ), mUnreadChildCount( 0 )
+      : mTotalChildCount( 0 ), mUnreadChildCount( 0 )
       {};
   };
 

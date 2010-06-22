@@ -41,7 +41,7 @@ namespace KPIM {
   values can't be set at the same time, however they can
   be unset at the same time.
 
-  The stati New/Unread/Read/Old are mutually exclusive.
+  The stati Unread/Read are mutually exclusive.
 */
 class MESSAGECORE_EXPORT MessageStatus
 {
@@ -85,7 +85,7 @@ class MESSAGECORE_EXPORT MessageStatus
     /** Toggle one or more stati described by another MessageStatus object.
         Internally the setters are used to ensure the integrity of the
         resulting status.
-        Toggling of the stati New, Unread, Read and Old is not supported.
+        Toggling of the stati Unread, Read is not supported.
         These stati are completely ignored.
     */
     void toggle( const MessageStatus &other );
@@ -97,13 +97,8 @@ class MESSAGECORE_EXPORT MessageStatus
     */
     bool isOfUnknownStatus() const;
 
-    /** Check for New status. Ignored messages are not new.
-        @return true if status is new.
-    */
-    bool isNew() const;
-
-    /** Check for Unread status. Note that new messages are not unread.
-        Ignored messages are not unread as well.
+    /** Check for Unread status.
+        Ignored messages are not unread.
         @return true if status is unread.
     */
     bool isUnread() const;
@@ -112,11 +107,6 @@ class MESSAGECORE_EXPORT MessageStatus
         @return true if status is read.
     */
     bool isRead() const;
-
-    /** Check for Old status.
-        @return true if status is old.
-    */
-    bool isOld() const;
 
     /** Check for Deleted status.
         @return true if status is deleted.
@@ -180,17 +170,11 @@ class MESSAGECORE_EXPORT MessageStatus
 
     /* ----- setters ----------------------------------------------------- */
 
-    /** Set the status to new. */
-    void setNew();
-
     /** Set the status to unread. */
     void setUnread();
 
     /** Set the status to read. */
     void setRead();
-
-    /** Set the status to old. */
-    void setOld();
 
     /** Set the status for deleted.
         @param deleted Set (true) or unset (false) this status flag.
@@ -299,12 +283,6 @@ class MESSAGECORE_EXPORT MessageStatus
 
     /* ----- static accessors to simple states --------------------------- */
 
-    /** Return a predefined status initialized as New as is useful
-        e.g. when providing a state for comparison.
-        @return A reference to a status instance initialized as New.
-    */
-    static MessageStatus statusNew();
-
     /** Return a predefined status initialized as Read as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Read.
@@ -316,18 +294,6 @@ class MESSAGECORE_EXPORT MessageStatus
         @return A reference to a status instance initialized as Unread.
     */
     static MessageStatus statusUnread();
-
-    /** Return a predefined status initialized as New and Unread as is
-        useful e.g. when searching for unread messages.
-        @return A reference to a status instance initialized as New | Unread.
-    */
-    static MessageStatus statusNewAndUnread();
-
-    /** Return a predefined status initialized as Old as is useful
-        e.g. when providing a state for comparison.
-        @return A reference to a status instance initialized as Old.
-    */
-    static MessageStatus statusOld();
 
     /** Return a predefined status initialized as Deleted as is useful
         e.g. when providing a state for comparison.
