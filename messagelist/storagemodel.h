@@ -76,6 +76,7 @@ public:
   virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
   virtual QMimeData* mimeData( QList< MessageList::Core::MessageItem* > ) const;
+  using MessageList::Core::StorageModel::mimeData;
 
   virtual void prepareForScan();
 
