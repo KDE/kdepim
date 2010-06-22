@@ -59,8 +59,7 @@ MultiplyingLine* MultiplyingLineView::activeLine() const
 
 MultiplyingLine* MultiplyingLineView::emptyLine() const
 {
-  MultiplyingLine* line;
-  foreach( line, mLines ) {
+  foreach( MultiplyingLine* line, mLines ) {
     if ( line->isEmpty() )
       return line;
   }
