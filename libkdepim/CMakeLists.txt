@@ -43,7 +43,7 @@ set(kdepim_LIB_SRCS
    pimmessagebox.cpp
    multiplyingline.cpp
    multiplyinglineeditor.cpp
-   multiplyinglineeditor_p.cpp
+   multiplyinglineview_p.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBRARY)

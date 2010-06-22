@@ -21,7 +21,7 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "multiplyinglineeditor_p.h"
+#include "multiplyinglineview_p.h"
 
 #include <KDebug>
 
@@ -363,4 +363,4 @@ QList< MultiplyingLine* > MultiplyingLineView::lines() const
 }
 
 
-#include "multiplyinglineeditor_p.moc"
+#include "multiplyinglineview_p.moc"

@@ -23,7 +23,7 @@
 */
 
 #include "multiplyinglineeditor.h"
-#include "multiplyinglineeditor_p.h"
+#include "multiplyinglineview_p.h"
 
 #include <KDebug>
 #include <KDialog>
