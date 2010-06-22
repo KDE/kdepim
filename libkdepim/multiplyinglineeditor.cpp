@@ -54,7 +54,7 @@ MultiplyingLineEditor::~MultiplyingLineEditor()
 {
 }
 
-void MultiplyingLineEditor::addData( MultiplyingLineData::Ptr data )
+void MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
 {
   MultiplyingLine* line = mView->emptyLine();
   if( !line )
@@ -63,7 +63,7 @@ void MultiplyingLineEditor::addData( MultiplyingLineData::Ptr data )
     line->setData( data );
 }
 
-void MultiplyingLineEditor::removeData( MultiplyingLineData::Ptr data )
+void MultiplyingLineEditor::removeData( const MultiplyingLineData::Ptr &data )
 {
   mView->removeData( data );
 }

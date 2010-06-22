@@ -67,7 +67,7 @@ class MultiplyingLineView : public QScrollArea
     void clearModified();
 
      /** Activates the line */
-    void activateLine( MultiplyingLine * );
+    void activateLine( MultiplyingLine *line );
 
     /**QScrollArea
       * Set the width of the left most column to be the argument width.
@@ -80,7 +80,7 @@ class MultiplyingLineView : public QScrollArea
     QList<MultiplyingLine*> lines() const;
 
   public slots:
-    void setCompletionMode( KGlobalSettings::Completion );
+    void setCompletionMode( KGlobalSettings::Completion mode );
     MultiplyingLine *addLine();
 
     void setFocus();

@@ -137,7 +137,7 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
     virtual void fixTabOrder( QWidget *previous ) = 0;
 
     /**
-      The final widget in this line on which if the user presses
+      @return The final widget in this line on which if the user presses
       tab focus should be given to the next line. This will commonly
       be used as the parameter of fixTabOrder( QWidget *previous ).
       @see fixTabOrder( QWidget *previous )
@@ -151,8 +151,9 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
 
     /**
       Sets the type of completion to be used for KLineEdits in this line
+      @param mode the completion mode
       */
-    virtual void setCompletionMode( KGlobalSettings::Completion ) = 0;
+    virtual void setCompletionMode( KGlobalSettings::Completion mode ) = 0;
 
     /**
       If the view is resized while the completion popup is open, things might start

@@ -103,25 +103,27 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
         @param data The data you want to add.
         Can be used to add an empty/default  line.
     */
-    void addData( MultiplyingLineData::Ptr data = MultiplyingLineData::Ptr() );
+    void addData( const MultiplyingLineData::Ptr &data = MultiplyingLineData::Ptr() );
 
     /** Removes data provided it can be found. The Data class must support operator==
         @param data The data you want to add.
     */
-    void removeData( MultiplyingLineData::Ptr data );
+    void removeData( const MultiplyingLineData::Ptr &data );
 
     /**
-      * Set the width of the left most column to be the argument width.
-      * This method allows other widgets to align their label/combobox column with ours
-      * by communicating how many pixels that first column is for them.
-      * Returns the width that is actually being used.
+      Set the width of the left most column to be the argument width.
+      This method allows other widgets to align their label/combobox column with ours
+      by communicating how many pixels that first column is for them.
+      @param w what the left most column width should be
+      @return the width that is actually being used.
       */
-    int setFirstColumnWidth( int );
+    int setFirstColumnWidth( int w );
 
     /**
-      * Set completion mode for all lines
+      Set completion mode for all lines
+      @param mode the completion mode
       */
-    void setCompletionMode( KGlobalSettings::Completion );
+    void setCompletionMode( KGlobalSettings::Completion mode );
 
   signals:
     void focusUp();
