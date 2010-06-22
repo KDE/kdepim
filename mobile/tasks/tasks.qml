@@ -212,26 +212,33 @@ KPIM.MainView {
             height : itemListView.height / 7
             summaryContent: [
               QML.Text {
-                  id : summaryLabel
-                  anchors.top : parent.top
-                  anchors.topMargin : 1
-                  anchors.left : parent.left
-                  anchors.leftMargin : 10
-                  text: KDE.i18n( "Task: %1", model.summary )
-                  color : "#0C55BB"
-                  font.pixelSize: 16
+                id : summaryLabel
+                anchors.top : parent.top
+                anchors.topMargin : 1
+                anchors.left : parent.left
+                anchors.leftMargin : 10
+                anchors.right: parent.right
+                anchors.rightMargin: completionSlider.width
+                text: KDE.i18n( "Task: %1", model.summary )
+                color : "#0C55BB"
+                font.pixelSize: 16
+                elide: "ElideRight"
               },
               QML.Text {
                 anchors.top : summaryLabel.bottom
                 anchors.topMargin : 1
                 anchors.left : parent.left
                 anchors.leftMargin : 10
+                anchors.right: parent.right
+                anchors.rightMargin: completionSlider.width
                 height : 30;
                 text: KDE.i18n( "Details: %1", model.description )
                 color: "#3B3B3B"
                 font.pointSize: 14
+                elide: "ElideRight"
               },
               KPIM.CompletionSlider {
+                id: completionSlider
                 anchors.top: parent.top
                 anchors.right: parent.right
                 percentComplete : model.percentComplete
