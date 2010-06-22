@@ -31,7 +31,7 @@
 #include <QHBoxLayout>
 using namespace KPIM;
 MultiplyingLineEditor::MultiplyingLineEditor( MultiplyingLineFactory* factory, QWidget *parent )
-  : QWidget( parent ), mMultiplyingLineFactory( factory ),  mModified( false )
+  : QWidget( parent ), mModified( false ), mMultiplyingLineFactory( factory )
 {
   QBoxLayout *topLayout = new QHBoxLayout();
   topLayout->setSpacing( KDialog::spacingHint() );
