@@ -54,7 +54,7 @@ class MultiplyingLineView : public QScrollArea
     /** Removes data provided it can be found. The Data class must support operator==
         @param data The data you want to remove.
     */
-    void removeData( MultiplyingLineData::Ptr data );
+    void removeData( const MultiplyingLineData::Ptr &data );
 
     /** Returns true if the user has made any modifications to the list of
         recipients.

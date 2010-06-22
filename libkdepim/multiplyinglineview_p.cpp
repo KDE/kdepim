@@ -259,7 +259,7 @@ void MultiplyingLineView::setCompletionMode ( KGlobalSettings::Completion mode )
   emit completionModeChanged( mode ); //report change to MultiplyingLineEditor
 }
 
-void MultiplyingLineView::removeData( MultiplyingLineData::Ptr data )
+void MultiplyingLineView::removeData( const MultiplyingLineData::Ptr &data )
 {
     // search a line which matches recipient and type
   QListIterator<MultiplyingLine*> it( mLines );
