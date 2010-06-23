@@ -32,6 +32,12 @@ private Q_SLOTS:
 
 private:
     QString numberToString( int number ) const;
+    void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
+    void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
+    void setDays( const QBitArray &days );
+    void setDuration( int duration );
+    void setExceptionDates( const KCal::DateList &dates );
+    void setFrequency( int freq );
     void toggleRecurrenceWidgets( bool enable );
     int weekdayCountForMonth( const QDate &date );
     int weekdayOfMonth( const QDate &date );
