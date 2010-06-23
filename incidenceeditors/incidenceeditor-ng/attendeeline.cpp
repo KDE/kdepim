@@ -277,8 +277,11 @@ void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr& data )
 
 void AttendeeLine::slotEditingFinished()
 {
-  if ( mEdit->text().isEmpty() )
+  if ( mEdit->text().isEmpty() ) {
     emit deleteLine( this );
+  } else {
+    mEdit->setCursorPosition( 0 );
+  }
 }
 
 void AttendeeLine::slotTextChanged( const QString& /*str*/ )
