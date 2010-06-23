@@ -31,23 +31,40 @@
 
 #include <QCheckBox>
 #include <QKeyEvent>
+#include <QToolButton>
+
+class QMenu;
 
 namespace IncidenceEditorsNG {
 
 class Attendee;
 
-class AttendeeComboBox : public KComboBox
+class AttendeeComboBox : public QToolButton
 {
     Q_OBJECT
   public:
     explicit AttendeeComboBox( QWidget *parent );
 
+    void addItem( const QIcon & icon, const QString & text );
+    void addItems( const QStringList & texts );
+
+    int currentIndex() const;
+
   signals:
     void rightPressed();
     void leftPressed();
 
+  public slots:
+    void setCurrentIndex( int index );
+
   protected:
     void keyPressEvent( QKeyEvent *ev );
+  private slots:
+    void slotActionTriggered();
+  private:
+    QMenu *mMenu;
+    QList<QPair<QString, QIcon> > mList;
+    int mCurrentIndex;
 };
 
 class AttendeeCheckBox : public QCheckBox

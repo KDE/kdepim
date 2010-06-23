@@ -24,9 +24,11 @@
 
 #include <KCompletionBox>
 #include <KDialog>
+#include <KDebug>
 #include <KLocale>
 
 #include <QBoxLayout>
+#include <QMenu>
 
 using namespace IncidenceEditorsNG;
 using namespace KPIM;
@@ -45,9 +47,51 @@ void AttendeeCheckBox::keyPressEvent(QKeyEvent* ev)
     QAbstractButton::keyPressEvent( ev );
 }
 
+typedef QPair<QString, QIcon> TextIconPair;
+
 AttendeeComboBox::AttendeeComboBox( QWidget* parent )
-  : KComboBox( parent )
-{}
+  : QToolButton( parent ), mMenu( new QMenu( this  ) ), mCurrentIndex( -1 )
+{
+  setPopupMode( QToolButton::InstantPopup );
+  setToolButtonStyle( Qt::ToolButtonIconOnly );
+  setMenu( mMenu );
+}
+
+void AttendeeComboBox::addItem( const QIcon& icon, const QString& text )
+{
+  mList.append( TextIconPair( text, icon )  );
+  if( mCurrentIndex == -1 )
+    setCurrentIndex( 0 );
+  int index = mList.size() - 1;
+  QAction *act = menu()->addAction( icon, text, this, SLOT( slotActionTriggered() ) );
+  act->setData( index );
+}
+
+void AttendeeComboBox::addItems(const QStringList& texts)
+{
+  foreach( QString str, texts )
+    addItem( QIcon(), str );
+  if( mCurrentIndex == -1 )
+    setCurrentIndex( 0 );
+}
+
+int AttendeeComboBox::currentIndex() const
+{
+  return mCurrentIndex;
+}
+
+void AttendeeComboBox::setCurrentIndex( int index )
+{
+  Q_ASSERT( index < mList.size() );
+  mCurrentIndex = index;
+  setIcon( mList.at( index ).second );
+}
+
+void AttendeeComboBox::slotActionTriggered()
+{
+  int index = qobject_cast<QAction*> ( sender() )->data().toInt();
+  setCurrentIndex( index );
+}
 
 void AttendeeComboBox::keyPressEvent(QKeyEvent* ev)
 {
@@ -56,7 +100,7 @@ void AttendeeComboBox::keyPressEvent(QKeyEvent* ev)
   } else if ( ev->key() == Qt::Key_Right ) {  
     emit rightPressed();
   } else {
-    QComboBox::keyPressEvent( ev );
+    QToolButton::keyPressEvent( ev );
   }
 }
 
