@@ -292,6 +292,8 @@ set(libkdgantt1_SRCS
 
   if (Grantlee_FOUND)
     macro_optional_add_subdirectory(kjots)
+  else (Grantlee_FOUND)
+    SET(BUILD_kjots off)
   endif (Grantlee_FOUND)
   if (KDEPIMLIBS_KRESOURCES_LIBRARY)
     macro_optional_add_subdirectory(knotes)
