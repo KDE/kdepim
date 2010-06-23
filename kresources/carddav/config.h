@@ -59,6 +59,7 @@ private:
     QLineEdit *mUsername;
     QLineEdit *mPassword;
     QCheckBox *mRememberPassword;
+    QCheckBox *mUseUriNotUID;
     CardDavReloadConfig* mReloadConfig;
     CardDavSaveConfig* mSaveConfig;
 

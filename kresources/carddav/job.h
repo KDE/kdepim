@@ -53,6 +53,13 @@ public:
     }
 
     /**
+     * Sets whether to use UID (false) or URI (true) as an object's unique identifier
+     */
+    virtual void setUseURI(bool b) {
+        mUseURI = b;
+    }
+
+    /**
      * Sets the parent qobject.
      */
     virtual void setParent(QObject *s) {
@@ -71,6 +78,13 @@ public:
      */
     virtual QString url() const {
         return mUrl;
+    }
+
+    /**
+     * @return whether to use UID (false) or URI (true) as an object's unique identifier
+     */
+    virtual bool getUseURI() {
+         return mUseURI;
     }
 
     /**
@@ -151,6 +165,7 @@ private:
     long mErrorNumber;
     QObject *mParent;
     int mType;
+    bool mUseURI;
 
     void enableCarddavDebug(runtime_info*);
 };

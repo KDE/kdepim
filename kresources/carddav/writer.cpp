@@ -24,9 +24,9 @@
 // Use carddav_modify_object() function.
 // If it's not set, a pair of carddav_delete_object/carddav_add_object
 // is used for modifying objects.
-// It's done, because, for some reason, SOGo server returns an error
-// on carddav_modify_object. DAViCAL works fine both ways.
-#define USE_CARDDAV_MODIFY
+// It's done, because, for some reason, Zimbra returns an error
+// on carddav_modify_object.
+//#define USE_CARDDAV_MODIFY
 
 /*=========================================================================
 | NAMESPACE
@@ -52,20 +52,35 @@ int CardDavWriter::runJob(runtime_info* RT) {
     if (OK == res) {
 #ifdef USE_CARDDAV_MODIFY
         kdDebug() << "pushing changed objects";
-        res = pushObjects(mChanged, carddav_modify_object, OK, RT);
+        if (getUseURI() == false)
+            res = pushObjects(mChanged, carddav_modify_object, OK, RT);
+        else
+            res = pushObjects(mChanged, carddav_modify_object_by_uri, OK, RT);
         if (OK == res) {
             kdDebug() << "pushing deleted objects";
-            res = pushObjects(mDeleted, carddav_delete_object, OK, RT);
+            if (getUseURI() == false)
+                res = pushObjects(mDeleted, carddav_delete_object, OK, RT);
+            else
+                res = pushObjects(mDeleted, carddav_delete_object_by_uri, OK, RT);
         }
 #else // if USE_CARDDAV_MODIFY
         kdDebug() << "pushing changed objects (delete)";
-        res = pushObjects(mChanged, carddav_delete_object, OK, RT);
+        if (getUseURI() == false)
+            res = pushObjects(mChanged, carddav_delete_object, OK, RT);
+        else
+            res = pushObjects(mChanged, carddav_delete_object_by_uri, OK, RT);
         if (OK == res) {
             kdDebug() << "pushing changed objects (add)";
-            res = pushObjects(mChanged, carddav_add_object, OK, RT);
+            if (getUseURI() == false)
+                res = pushObjects(mChanged, carddav_add_object, OK, RT);
+            else
+                res = pushObjects(mChanged, carddav_add_object, OK, RT);
             if (OK == res) {
                 kdDebug() << "pushing deleted objects";
-                res = pushObjects(mDeleted, carddav_delete_object, OK, RT);
+                if (getUseURI() == false)
+                    res = pushObjects(mDeleted, carddav_delete_object, OK, RT);
+                else
+                    res = pushObjects(mDeleted, carddav_delete_object_by_uri, OK, RT);
             }
         }
 #endif // if USE_CARDDAV_MODIFY

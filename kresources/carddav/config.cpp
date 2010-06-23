@@ -87,6 +87,7 @@ void ResourceCardDavConfig::loadSettings( KRES::Resource *resource ) {
         mUsername->setText(p->username());
         mRememberPassword->setChecked(p->rememberPassword());
         mPassword->setText(p->password());
+        mUseUriNotUID->setChecked(p->useURI());
 
         mReloadConfig->loadSettings(res);
         mSaveConfig->loadSettings(res);
@@ -105,6 +106,7 @@ void ResourceCardDavConfig::saveSettings( KRES::Resource *resource ) {
             p->setUsername(mUsername->text());
             p->setRememberPassword(mRememberPassword->isChecked());
             p->setPassword(mPassword->text());
+            p->setUseURI(mUseUriNotUID->isChecked());
         }
     }
 }
@@ -136,6 +138,9 @@ void ResourceCardDavConfig::setupUI() {
     // Remember password checkbox
     mRememberPassword = new QCheckBox( i18n("Remember password"), this );
     mainLayout->addWidget(mRememberPassword, 4, 1);
+
+    mUseUriNotUID = new QCheckBox( i18n( "Use URI instead of UID when modifying existing contacts" ), this );
+    mainLayout->addWidget( mUseUriNotUID, 5, 1 );
 
     // configs
     QHBoxLayout* horizontal = new QHBoxLayout(this);

@@ -35,7 +35,7 @@ using namespace KABC;
 | CONSTRUCTOR AND DESTRUCTOR
  ========================================================================*/
 
-CardDavJob::CardDavJob(const QString& url) {
+CardDavJob::CardDavJob(const QString& url) : mUseURI(false) {
     cleanJob();
     setUrl(url);
 }

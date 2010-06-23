@@ -22,5 +22,9 @@
    <label>Remember password</label>
   </entry>
 
+  <entry key="UseURI" type="Bool" >
+   <label>Use URI instead of UID</label>
+  </entry>
+
  </group>
 </kcfg>

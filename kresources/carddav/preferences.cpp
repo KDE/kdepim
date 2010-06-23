@@ -206,6 +206,10 @@ void CardDavPrefs::readConfig() {
     }*/
 }
 
+bool CardDavPrefs::getUseURI() {
+    return useURI();
+}
+
 QString CardDavPrefs::getFullUrl() {
 
     QUrl t(url());

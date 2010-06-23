@@ -333,6 +333,7 @@ void ResourceCardDav::loadingQueuePop() {
     mLoader->setUrl(t->url);
     mLoader->setParent(this);
     mLoader->setType(0);
+    mLoader->setUseURI(mPrefs->getUseURI());
 
     //QDateTime dt(QDate::currentDate());
     //mLoader->setRange(dt.addDays(-CACHE_DAYS), dt.addDays(CACHE_DAYS));
@@ -394,17 +395,11 @@ void ResourceCardDav::loadFinished() {
         QString data = loader->data();
 
         if (!data.isNull() && !data.isEmpty()) {
-            // TODO: I don't know why, but some schedules on http://carddav-test.ioda.net/ (I used it for testing)
-            // have some lines separated by single \r rather than \n or \r\n.
-            // ICalFormat fails to parse that.
             data.replace("\r\n", "\n"); // to avoid \r\n becomes \n\n after the next line
             data.replace('\r', '\n');
 
             log("trying to parse...");
-            //printf("PARSING:\n\r%s\n\r", data.ascii());
             if (parseData(data)) {
-                // FIXME: The agenda view can crash when a change is 
-                // made on a remote server and a reload is requested!
                 log("... parsing is ok");
                 log("clearing changes");
                 //enableChangeNotification();
@@ -550,6 +545,7 @@ void ResourceCardDav::writingQueuePop() {
     mWriter->setUrl(t->url);
     mWriter->setParent(this);
     mWriter->setType(1);
+    mWriter->setUseURI(mPrefs->getUseURI());
 
 #ifdef KCARDDAV_DEBUG
     const QString fout_path = "/tmp/kcarddav_upload_" + identifier() + ".tmp";
@@ -673,6 +669,11 @@ void ResourceCardDav::writingFinished() {
     mWritingQueueReady = true;
     updateProgressBar(1);
     writingQueuePop();
+
+    // If a URI is required we will need to retrieve it from the server after the new record is committed...
+    if (mPrefs->getUseURI() == true) {
+        startLoading(mPrefs->getFullUrl());
+    }
 }
 
 // EOF ========================================================================

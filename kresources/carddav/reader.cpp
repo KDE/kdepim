@@ -38,13 +38,11 @@ int CardDavReader::runJob(runtime_info* RT) {
     response* result = carddav_get_response();
     CARDDAV_RESPONSE res = OK;
 
-    if (mGetAll) {
-        kdDebug() << "getting all objects";
-    	res = carddav_getall_object(result, std::string(url().ascii()).c_str(), RT);
-    } else {
-        kdDebug() << "getting object from the specified time range";
-        res = carddav_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(url().ascii()).c_str(), RT);
-    }
+    kdDebug() << "getting all objects";
+    if (getUseURI() == false)
+        res = carddav_getall_object(result, std::string(url().ascii()).c_str(), RT);
+    else
+        res = carddav_getall_object_by_uri(result, std::string(url().ascii()).c_str(), RT);
 
     if (OK == res) {
         kdDebug() << "success";

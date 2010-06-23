@@ -86,6 +86,8 @@ public:
      */
     QString getFullUrl();
 
+    bool getUseURI();
+
 protected:
 
     /**
