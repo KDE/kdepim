@@ -602,6 +602,10 @@ void MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
       setWatched();
     } else if ( flag.toUpper() == QByteArray( "$IGNORED" ) ) {
       setIgnored();
+    } else if ( flag.toUpper() == QByteArray( "$JUNK" ) ) {
+      setSpam();
+    } else if ( flag.toUpper() == QByteArray( "$NOTJUNK" ) ) {
+      setHam();
     } else {
       kWarning() << "Unknown flag:" << flag;
     }
