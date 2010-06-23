@@ -30,43 +30,64 @@
 #include <KPIMUtils/Email>
 
 #include <QGridLayout>
+#include <QLabel>
 
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
   : mUi( ui )
   , mAttendeeEditor(  new AttendeeEditor( this ) )
+  , mOrganizerCombo( 0 )
+  , mOrganizerLabel( 0 )
 {
   kDebug() << "OMG!";
-  QGridLayout *grid = qobject_cast< QGridLayout* >( mUi->mAttendeeTab->layout() );
-  if( grid )
-    grid->addWidget( mAttendeeEditor, 3, 0, 1, 3 );
+
+  gridLayout()->addWidget( mAttendeeEditor, 3, 0, 1, 3 );
 
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
-    QString whatsThis =
-    i18nc( "@info:whatsthis",
-           "Sets the identity corresponding to "
-           "the organizer of this to-do or event. "
-           "Identities can be set in the 'Personal' section "
-           "of the KOrganizer configuration, or in the "
-           "'Personal'->'About Me'->'Password & User Account' "
-           "section of the System Settings. In addition, "
-           "identities are gathered from your KMail settings "
-           "and from your address book. If you choose "
-           "to set it globally for KDE in the System Settings, "
-           "be sure to check 'Use email settings from "
-           "System Settings' in the 'Personal' section of the "
-           "KOrganizer configuration." );
-  mUi->mOrganizerCombo->setWhatsThis( whatsThis );
-  mUi->mOrganizerCombo->setToolTip(
-    i18nc( "@info:tooltip", "Set the organizer identity" ) );
-  fillOrganizerCombo();
+  mOrganizerLabel = new QLabel( this );
+  gridLayout()->addWidget( mOrganizerLabel, 0, 1, 1, 1);
+  mOrganizerLabel->hide();
+
+  makeOrganizerCombo();
   mUi->mSolveButton->setDisabled( true );
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
 {
-  //TODO: implement load
+  const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
+  if ( itsMe || incidence->organizer().isEmpty() ) {
+    if ( !mOrganizerCombo ) {
+      makeOrganizerCombo();
+    }
+    mOrganizerLabel->hide();
+    int found = -1;
+    QString fullOrganizer = incidence->organizer().fullName();
+    for ( int i = 0; i < mOrganizerCombo->count(); ++i ) {
+      if ( mOrganizerCombo->itemText( i ) == fullOrganizer ) {
+        found = i;
+        mOrganizerCombo->setCurrentIndex( i );
+        break;
+      }
+    }
+    if ( found < 0 ) {
+      mOrganizerCombo->addItem( fullOrganizer, 0 );
+      mOrganizerCombo->setCurrentIndex( 0 );
+    }
+  } else { // someone else is the organizer
+    if ( mOrganizerCombo ) {
+      delete mOrganizerCombo;
+      mOrganizerCombo = 0;
+    }
+    mOrganizerLabel->setText( incidence->organizer().fullName() );
+    mOrganizerLabel->show();
+  }
+
+  KCal::Attendee::List al = incidence->attendees();
+  foreach( const KCal::Attendee* a, al ) {
+    if( a )
+      mAttendeeEditor->addAttendee( *a );
+  }
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence )
