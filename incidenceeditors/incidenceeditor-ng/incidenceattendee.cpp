@@ -25,6 +25,8 @@
 #include "../editorconfig.h"
 
 #include <KDebug>
+#include <KMessageBox>
+#include <KPIMUtils/Email>
 
 #include <QGridLayout>
 
@@ -68,7 +70,33 @@ void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr inci
 
 void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence )
 {
-  //TODO: implement save
+  incidence->clearAttendees();
+
+  AttendeeData::List attendees = mAttendeeEditor->attendees();
+
+  foreach( AttendeeData::Ptr attPtr, attendees ) {
+    KCal::Attendee *attendee = attPtr.data();
+    Q_ASSERT( attendee );
+    // we create a new attendee object because the original
+    // is guarded by qsharedpointer, and the Incidence
+    // takes control of the attendee.
+    attendee = new KCal::Attendee( *attendee );
+
+    bool skip = false;
+    if ( KPIMUtils::isValidAddress( attendee->email() ) ) {
+        if ( KMessageBox::warningYesNo(
+               this,
+               i18nc( "@info",
+                      "%1 does not look like a valid email address. "
+                      "Are you sure you want to invite this participant?",
+                      attendee->email() ),
+               i18nc( "@title:window", "Invalid Email Address" ) ) != KMessageBox::Yes ) {
+          skip = true;
+        }
+      }
+    if( !skip  )
+      incidence->addAttendee( attendee );
+  }
 }
 
 bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
