@@ -97,6 +97,7 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
     if( !skip  )
       incidence->addAttendee( attendee );
   }
+  incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
 }
 
 bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
