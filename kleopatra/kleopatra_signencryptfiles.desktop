@@ -8,8 +8,8 @@ Name=Kleopatra Sign/Encrypt Files
 Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfilescms;
 
 [Desktop Action kleoencryptsignfiles]
-Name=Encrypt & Sign File
-Name[de]=Datei signieren und verschlüsseln
+Name=Sign & Encrypt File
+Name[de]=Datei verschlüsseln und signieren
 Icon=kleopatra
 Exec=kleopatra --sign-encrypt %F
 
