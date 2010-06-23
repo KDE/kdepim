@@ -43,7 +43,7 @@ namespace Message
 
 namespace MessageComposer
 {
-  class RecipientsEditor;  
+  class RecipientsEditor;
 }
 
 /** The new KMMainWidget ;-) */
@@ -51,6 +51,7 @@ class ComposerView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
   Q_PROPERTY( QString subject READ subject WRITE setSubject NOTIFY changed )
+  Q_PROPERTY( bool busy READ busy WRITE setBusy NOTIFY busyChanged)
 
   public:
     explicit ComposerView(QWidget* parent = 0);
@@ -64,6 +65,9 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void setMessage( const KMime::Message::Ptr &msg );
 
+    bool busy() const;
+    void setBusy(bool busy);
+
   public slots:
     /// Send clicked in the user interface
     void send( MessageSender::SaveIn saveIn = MessageSender::SaveInNone );
@@ -71,10 +75,10 @@ class ComposerView : public KDeclarativeFullScreenView
     void configureIdentity();
     void configureTransport();
     void slotSendSuccessful();
-    
+
   signals:
     void changed();
-
+    void busyChanged();
 
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
@@ -90,6 +94,7 @@ class ComposerView : public KDeclarativeFullScreenView
     int m_jobCount;
     bool m_sign;
     bool m_encrypt;
+    bool m_busy;
 };
 
 #endif

@@ -68,7 +68,8 @@ ComposerView::ComposerView(QWidget* parent) :
   m_composerBase( 0 ),
   m_jobCount( 0 ),
   m_sign( false ),
-  m_encrypt( false )
+  m_encrypt( false ),
+  m_busy(false)
 {
   setSubject( QString() );
 
@@ -171,6 +172,8 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 void ComposerView::send( MessageSender::SaveIn saveIn )
 {
   kDebug();
+  setBusy(true);
+
   // TODO no send later support in UI atm, so hard code
   MessageSender::SendMethod method = MessageSender::SendDefault;
   const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
@@ -201,6 +204,20 @@ void ComposerView::setSubject ( const QString& subject )
     setWindowTitle( subject );
   else
     setWindowTitle( i18n( "New mail" ) );
+}
+
+bool ComposerView::busy() const
+{
+    return m_busy;
+}
+
+void ComposerView::setBusy(bool busy)
+{
+    if (m_busy == busy)
+        return;
+
+    m_busy = busy;
+    emit busyChanged();
 }
 
 QObject* ComposerView::getAction( const QString &name ) const
