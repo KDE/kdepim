@@ -118,6 +118,7 @@ public:
    *    Called when the user initiates a drag from the messagelist.
    */
   virtual QMimeData* mimeData( QList< MessageItem* > ) const = 0;
+  using QAbstractItemModel::mimeData;
 };
 
 } // namespace Core

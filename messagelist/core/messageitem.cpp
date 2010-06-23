@@ -368,9 +368,7 @@ void MessageItem::invalidateTagCache()
 QColor MessageItem::textColor() const
 {
   QColor clr;
-  if ( status().isNew() ) {
-    clr = d->mColorNewMessage;
-  } else if ( status().isUnread() ) {
+  if ( status().isUnread() ) {
     clr = d->mColorUnreadMessage;
   } else if ( status().isImportant() ) {
     clr = d->mColorImportantMessage;
@@ -408,8 +406,6 @@ QFont MessageItem::font() const
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
   if ( status().isImportant() ) {
     font = d->mFontImportantMessage;
-  } else if ( status().isNew() ) {
-    font = d->mFontNewMessage;
   } else if ( status().isUnread() ) {
     font = d->mFontUnreadMessage;
   } else if ( status().isToAct() ) {

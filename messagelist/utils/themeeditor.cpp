@@ -224,7 +224,6 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   stat.fromQInt32( 0x7fffffff );
   stat.setQueued( false );
   stat.setSent( false );
-  stat.setNew();
   stat.setSpam( true );
   stat.setWatched( true );
   //stat.setHasAttachment( false );

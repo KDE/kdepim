@@ -33,10 +33,8 @@ using namespace KPIM;
     when switching a thread to Ignored and back. */
 enum MsgStatus {
     KMMsgStatusUnknown =           0x00000000,
-    KMMsgStatusNew =               0x00000001,
     KMMsgStatusUnread =            0x00000002,
     KMMsgStatusRead =              0x00000004,
-    KMMsgStatusOld =               0x00000008,
     KMMsgStatusDeleted =           0x00000010,
     KMMsgStatusReplied =           0x00000020,
     KMMsgStatusForwarded =         0x00000040,
@@ -87,19 +85,12 @@ void MessageStatus::set( const MessageStatus &other )
   // Those stati are exclusive, but we have to lock at the
   // internal representation because Ignored can manipulate
   // the result of the getter methods.
-  if ( other.mStatus & KMMsgStatusNew ) {
-    setNew();
-  }
   if ( other.mStatus & KMMsgStatusUnread ) {
     setUnread();
   }
   if ( other.mStatus & KMMsgStatusRead ) {
     setRead();
   }
-  if ( other.mStatus & KMMsgStatusOld ) {
-    setOld();
-  }
-
   if ( other.isDeleted() ) {
     setDeleted();
   }
@@ -185,11 +176,6 @@ bool MessageStatus::isOfUnknownStatus() const
   return ( mStatus == KMMsgStatusUnknown );
 }
 
-bool MessageStatus::isNew() const
-{
-  return ( mStatus & KMMsgStatusNew && !( mStatus & KMMsgStatusIgnored ) );
-}
-
 bool MessageStatus::isUnread() const
 {
   return ( mStatus & KMMsgStatusUnread && !( mStatus & KMMsgStatusIgnored ) );
@@ -198,11 +184,6 @@ bool MessageStatus::isUnread() const
 bool MessageStatus::isRead() const
 {
   return ( mStatus & KMMsgStatusRead || mStatus & KMMsgStatusIgnored );
-}
-
-bool MessageStatus::isOld() const
-{
-  return ( mStatus & KMMsgStatusOld );
 }
 
 bool MessageStatus::isDeleted() const
@@ -265,38 +246,18 @@ bool MessageStatus::hasAttachment() const
   return ( mStatus & KMMsgStatusHasAttach );
 }
 
-void MessageStatus::setNew()
-{
-  // new overrides old and read
-  mStatus &= ~KMMsgStatusOld;
-  mStatus &= ~KMMsgStatusRead;
-  mStatus &= ~KMMsgStatusUnread;
-  mStatus |= KMMsgStatusNew;
-}
-
 void MessageStatus::setUnread()
 {
   // unread overrides read
-  mStatus &= ~KMMsgStatusOld;
   mStatus &= ~KMMsgStatusRead;
-  mStatus &= ~KMMsgStatusNew;
   mStatus |= KMMsgStatusUnread;
 }
 
 void MessageStatus::setRead()
 {
-  // Unset unread and new, set read
+  // Unset unread and set read
   mStatus &= ~KMMsgStatusUnread;
-  mStatus &= ~KMMsgStatusNew;
   mStatus |= KMMsgStatusRead;
-}
-
-void MessageStatus::setOld()
-{
-  // old can't be new or unread
-  mStatus &= ~KMMsgStatusNew;
-  mStatus &= ~KMMsgStatusUnread;
-  mStatus |= KMMsgStatusOld;
 }
 
 void MessageStatus::setDeleted( bool deleted )
@@ -341,7 +302,6 @@ void MessageStatus::setSent( bool sent )
     mStatus &= ~KMMsgStatusQueued;
     // FIXME to be discussed if sent messages are Read
     mStatus &= ~KMMsgStatusUnread;
-    mStatus &= ~KMMsgStatusNew;
     mStatus |= KMMsgStatusSent;
   } else {
     mStatus &= ~KMMsgStatusSent;
@@ -430,14 +390,8 @@ void MessageStatus::fromQInt32( qint32 status )
 QString MessageStatus::getStatusStr() const
 {
   QString sstr;
-  if ( mStatus & KMMsgStatusNew ) {
-    sstr += 'N';
-  }
   if ( mStatus & KMMsgStatusUnread ) {
     sstr += 'U';
-  }
-  if ( mStatus & KMMsgStatusOld ) {
-    sstr += 'O';
   }
   if ( mStatus & KMMsgStatusRead ) {
     sstr += 'R';
@@ -486,14 +440,8 @@ void MessageStatus::setStatusFromStr( const QString& aStr )
 {
   mStatus = KMMsgStatusUnknown;
 
-  if ( aStr.contains( 'N' ) ) {
-    setNew();
-  }
   if ( aStr.contains( 'U' ) ) {
     setUnread();
-  }
-  if ( aStr.contains( 'O' ) ) {
-    setOld();
   }
   if ( aStr.contains( 'R' ) ) {
     setRead();
@@ -551,16 +499,9 @@ QString MessageStatus::getSortRank() const
     sstr[0] = 'c';
   }
 
-  // Second level. One of new, old, read, unread
-  if ( mStatus & KMMsgStatusNew ) {
-    sstr[1] = 'a';
-  }
   if ( mStatus & KMMsgStatusUnread ) {
     sstr[1] = 'b';
   }
-  //if ( mStatus & KMMsgStatusOld ) {
-  //  sstr[1] = 'c';
-  //}
   //if ( mStatus & KMMsgStatusRead ) {
   //  sstr[1] = 'c';
   //}
@@ -611,7 +552,7 @@ QSet<QByteArray> MessageStatus::getStatusFlags() const
   if ( mStatus & KMMsgStatusDeleted ) {
     flags+= "\\DELETED";
   } else {
-    if ( mStatus & ( KMMsgStatusOld | KMMsgStatusRead ) )
+    if ( mStatus &  KMMsgStatusRead )
       flags+= "\\SEEN ";
     if ( mStatus & KMMsgStatusReplied )
       flags+= "\\ANSWERED ";
@@ -634,8 +575,7 @@ QSet<QByteArray> MessageStatus::getStatusFlags() const
 void MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
 {
   mStatus = KMMsgStatusUnknown;
-  setNew();
-
+  setUnread();
   // Non handled status:
   // * KMMsgStatusQueued
   // * KMMsgStatusSent
@@ -668,13 +608,6 @@ void MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
   }
 }
 
-MessageStatus MessageStatus::statusNew()
-{
-  MessageStatus st;
-  st.setNew();
-  return st;
-}
-
 MessageStatus MessageStatus::statusRead()
 {
   MessageStatus st;
@@ -686,22 +619,6 @@ MessageStatus MessageStatus::statusUnread()
 {
   MessageStatus st;
   st.setUnread();
-  return st;
-}
-
-MessageStatus MessageStatus::statusNewAndUnread()
-{
-  MessageStatus st;
-  // set the "new and unread" pseudo status; we have to set the internal
-  // representation directly because new and unread are mutually exclusive
-  st.fromQInt32( statusNew().toQInt32() | statusUnread().toQInt32() );
-  return st;
-}
-
-MessageStatus MessageStatus::statusOld()
-{
-  MessageStatus st;
-  st.setOld();
   return st;
 }
 

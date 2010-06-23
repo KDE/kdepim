@@ -109,7 +109,7 @@ public:
   enum ThreadExpandPolicy
   {
     NeverExpandThreads,                                ///< Never expand any thread, this is fast
-    ExpandThreadsWithNewMessages,                      ///< Expand threads with new messages only
+    ExpandThreadsWithNewMessages,                      ///< DEPRECATED. New message status no longer exists.
     ExpandThreadsWithUnreadMessages,                   ///< Expand threads with unread messages (this includes new)
     AlwaysExpandThreads,                               ///< Expand all threads (this might be very slow)
     ExpandThreadsWithUnreadOrImportantMessages         ///< Expand threads with "hot" messages (this includes new, unread, important, todo)

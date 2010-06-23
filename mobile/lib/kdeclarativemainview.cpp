@@ -249,7 +249,7 @@ void KDeclarativeMainView::setListSelectedRow( int row )
   Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
   KPIM::MessageStatus status;
   status.setStatusFromFlags(item.flags());
-  if (status.isUnread() || status.isNew())
+  if ( status.isUnread() )
   {
     status.setRead();
     item.setFlags(status.getStatusFlags());

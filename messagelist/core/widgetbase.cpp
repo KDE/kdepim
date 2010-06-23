@@ -197,13 +197,9 @@ void Widget::populateStatusFilterCombo()
   d->mStatusFilterCombo->setItemIcon( 0, SmallIcon("system-run") );
   d->mStatusFilterCombo->setItemData( 0, QVariant( static_cast< int >( 0 ) ) );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "New" ) );
-  d->mStatusFilterCombo->setItemIcon( 1, SmallIcon("mail-unread-new") );
-  d->mStatusFilterCombo->setItemData( 1, QVariant( static_cast< int >( KPIM::MessageStatus::statusNew().toQInt32() ) ) );
-
   d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Unread" ) );
   d->mStatusFilterCombo->setItemIcon( 2, SmallIcon("mail-unread") );
-  d->mStatusFilterCombo->setItemData( 2, QVariant( static_cast< int >( KPIM::MessageStatus::statusUnread().toQInt32() | KPIM::MessageStatus::statusNew().toQInt32() ) ) );
+  d->mStatusFilterCombo->setItemData( 2, QVariant( static_cast< int >( KPIM::MessageStatus::statusUnread().toQInt32() ) ) );
 
   d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Replied" ) );
   d->mStatusFilterCombo->setItemIcon( 3, SmallIcon("mail-replied") );

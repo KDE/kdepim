@@ -990,6 +990,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
   if ( ac.attachments().empty() || mMode != Forward ) {
     mMsg->contentType()->clear(); // to get rid of old boundary
     mMsg->contentType()->setMimeType( "text/plain" );
+    mMsg->contentType()->setCharset( "utf-8" );
     mMsg->setBody( body.toUtf8() );
     mMsg->assemble();
   }

@@ -1041,14 +1041,8 @@ static inline bool message_type_matches( Item * item, MessageTypeFilter messageT
     case MessageTypeAny:
       return true;
     break;
-    case MessageTypeNewOnly:
-      return item->status().isNew();
-    break;
     case MessageTypeUnreadOnly:
       return item->status().isUnread();
-    break;
-    case MessageTypeNewOrUnreadOnly:
-      return item->status().isNew() || item->status().isUnread();
     break;
     default:
       // nuthin here
@@ -2320,12 +2314,11 @@ bool View::event( QEvent *e )
 
         statsText = i18np( "<b>%1</b> reply", "<b>%1</b> replies", mi->childItemCount() );
         statsText += QLatin1String( ", " );
-
+        
         statsText += i18np(
-            "<b>%1</b> message in subtree (<b>%2</b> new + <b>%3</b> unread)",
-            "<b>%1</b> messages in subtree (<b>%2</b> new + <b>%3</b> unread)",
+            "<b>%1</b> message in subtree (<b>%2</b> unread)",
+            "<b>%1</b> messages in subtree (<b>%2</b> unread)",
             stats.mTotalChildCount,
-            stats.mNewChildCount,
             stats.mUnreadChildCount
           );
 
@@ -2520,10 +2513,9 @@ bool View::event( QEvent *e )
         }
 
         statsText += i18np(
-            "<b>%1</b> message (<b>%2</b> new + <b>%3</b> unread)",
-            "<b>%1</b> messages (<b>%2</b> new + <b>%3</b> unread)",
+            "<b>%1</b> message (<b>%2</b> unread)",
+            "<b>%1</b> messages (<b>%2</b> unread)",
             stats.mTotalChildCount,
-            stats.mNewChildCount,
             stats.mUnreadChildCount
           );
 

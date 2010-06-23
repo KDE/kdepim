@@ -34,7 +34,6 @@ class MessageListProxy : public ListProxy
       SubjectRole = Akonadi::EntityTreeModel::UserRole,
       FromRole,
       DateRole,
-      IsNewRole,
       IsUnreadRole,
       IsImportantRole,
       IsActionItemRole

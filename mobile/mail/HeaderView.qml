@@ -58,8 +58,7 @@ KPIM.ItemListView {
           height : 30;
           text : model.subject
           font.pointSize: 14
-          // No indication of new yet. Possibly does not make sense on mobile anyway.
-          color : (model.is_unread || model.is_new) ? "#E10909" : "#3B3B3B"
+          color : model.is_unread ? "#E10909" : "#3B3B3B"
           elide: "ElideRight"
         },
         QML.Image {

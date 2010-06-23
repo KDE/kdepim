@@ -114,7 +114,7 @@ public:
     DateChanged = 1,
     MaxDateChanged = (1 << 1),
     ActionItemStatusChanged = (1 << 2),
-    NewUnreadStatusChanged = (1 << 3)
+    UnreadStatusChanged = (1 << 3)
   };
 
   /**
@@ -346,12 +346,7 @@ public:
   /**
    * Cached bits that we use for fast status checks
    */
-  qint32 mCachedNewStatusBits;
-
-  /**
-   * Cached bits that we use for fast status checks
-   */
-  qint32 mCachedNewOrUnreadStatusBits;
+  qint32 mCachedUnreadStatusBits;
 
   /**
    * Flag signaling a possibly long job batch. This is checked by other

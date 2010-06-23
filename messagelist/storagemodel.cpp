@@ -100,6 +100,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
 
   d->mModel = itemFilter;
 
+  kDebug() << "Using model:" << model->metaObject()->className();
   connect( d->mSopranoModel.data(), SIGNAL(statementAdded(Soprano::Statement)),
            SLOT(statementChanged(Soprano::Statement)) );
   connect( d->mSopranoModel.data(), SIGNAL(statementRemoved(Soprano::Statement)),

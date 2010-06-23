@@ -80,7 +80,6 @@ void initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &
   if ( !ok || id == 0 )
     id = identMan->identityForAddress( msg->to()->asUnicodeString() + QString::fromLatin1(", ") + msg->cc()->asUnicodeString() ).uoid();
 
-
   if ( idHeaders )
     MessageHelper::initHeader( msg, identMan, id );
   else {
@@ -102,17 +101,17 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
   if(ident.fullEmailAddr().isEmpty())
     message->from()->clear();
   else
-    message->from()->addAddress(ident.fullEmailAddr().toUtf8());
+    message->from()->addAddress(ident.emailAddr().toUtf8(), ident.fullName());
 
   if(ident.replyToAddr().isEmpty())
     message->replyTo()->clear();
   else
-    message->replyTo()->addAddress(ident.replyToAddr().toUtf8());
+    message->replyTo()->addAddress(ident.emailAddr().toUtf8(), ident.fullName());
 
   if(ident.bcc().isEmpty())
     message->bcc()->clear();
   else
-    message->bcc()->addAddress(ident.bcc().toUtf8());
+    message->bcc()->addAddress(ident.emailAddr().toUtf8(), ident.fullName());
 
   if ( ident.organization().isEmpty() )
     message->removeHeader("Organization");

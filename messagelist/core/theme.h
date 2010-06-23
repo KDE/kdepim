@@ -149,7 +149,7 @@ public:
        */
       Size                         = 6 | DisplaysText | CanUseCustomColor | ApplicableToMessageItems,
       /**
-       * The icon that displays the new/unread/read state (never disabled)
+       * The icon that displays the unread/read state (never disabled)
        */
       ReadStateIcon                = 7 | ApplicableToMessageItems | IsIcon,
       /**
@@ -205,7 +205,7 @@ public:
        */
       MostRecentDate               = 20 | DisplaysText | CanUseCustomColor | ApplicableToMessageItems | ApplicableToGroupHeaderItems,
       /**
-       * The combined icon that displays the new/unread/read/replied/forwarded state (never disabled)
+       * The combined icon that displays the unread/read/replied/forwarded state (never disabled)
        */
       CombinedReadRepliedStateIcon = 21 | ApplicableToMessageItems | IsIcon,
       /**
