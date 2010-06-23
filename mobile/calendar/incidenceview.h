@@ -34,11 +34,8 @@ namespace Akonadi {
 class CollectionComboBox;
 }
 
-namespace IncidenceEditorsNG {
-class IncidenceGeneral;
-class IncidenceDateTime;
-}
-
+class MobileIncidenceDateTime;
+class MobileIncidenceGeneral;
 
 class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEditorUi
 {
@@ -50,8 +47,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEdi
     void load( const Akonadi::Item &item, const QDate &date );
 
     void setCollectionCombo( Akonadi::CollectionComboBox * );
-    void setDateTimeEditor( IncidenceEditorsNG::IncidenceDateTime * );
-    void setGeneralEditor( IncidenceEditorsNG::IncidenceGeneral * );
+    void setDateTimeEditor( MobileIncidenceDateTime * );
+    void setGeneralEditor( MobileIncidenceGeneral * );
 
   public: /// ItemEditorUi function implementations
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;

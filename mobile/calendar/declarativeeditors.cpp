@@ -19,20 +19,35 @@
 
 #include "declarativeeditors.h"
 
+#include "ui_eventortodomobile.h"
+
 DCollectionCombo::DCollectionCombo( QDeclarativeItem *parent )
   : DeclarativeWidgetBase<Akonadi::CollectionComboBox,
                           IncidenceView,
                           &IncidenceView::setCollectionCombo>( parent )
 { }
 
+MobileIncidenceGeneral::MobileIncidenceGeneral( QWidget *parent )
+  : IncidenceEditorsNG::IncidenceGeneral( new Ui::EventOrTodoDesktop )
+{
+  Q_UNUSED( parent );
+}
+
+
 DIEGeneral::DIEGeneral( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceGeneral,
+  : DeclarativeWidgetBase<MobileIncidenceGeneral,
                           IncidenceView,
                           &IncidenceView::setGeneralEditor>( parent )
 { }
 
+MobileIncidenceDateTime::MobileIncidenceDateTime( QWidget *parent )
+  : IncidenceEditorsNG::IncidenceDateTime( new Ui::EventOrTodoDesktop )
+{
+  Q_UNUSED( parent );
+}
+
 DIEDateTime::DIEDateTime( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceDateTime,
+  : DeclarativeWidgetBase<MobileIncidenceDateTime,
                           IncidenceView,
                           &IncidenceView::setDateTimeEditor>( parent )
 { }

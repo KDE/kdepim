@@ -16,6 +16,10 @@ set(korganizer_mobile_SRCS
   main.cpp
 )
 
+kde4_add_ui_files(korganizer_mobile_SRCS
+  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomobile.ui
+)
+
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 target_link_libraries(korganizer-mobile
   ${QT_QTDECLARATIVE_LIBRARY}

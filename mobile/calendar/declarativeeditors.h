@@ -38,8 +38,15 @@ class DCollectionCombo
     explicit DCollectionCombo( QDeclarativeItem *parent = 0 );
 };
 
+class MobileIncidenceGeneral : public IncidenceEditorsNG::IncidenceGeneral
+{
+  Q_OBJECT
+  public:
+    explicit MobileIncidenceGeneral( QWidget *parent = 0 );
+};
+
 class DIEGeneral
-  : public DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceGeneral,
+  : public DeclarativeWidgetBase<MobileIncidenceGeneral,
                                  IncidenceView,
                                  &IncidenceView::setGeneralEditor>
 {
@@ -48,8 +55,15 @@ class DIEGeneral
     explicit DIEGeneral( QDeclarativeItem *parent = 0 );
 };
 
+class MobileIncidenceDateTime : public IncidenceEditorsNG::IncidenceDateTime
+{
+  Q_OBJECT
+  public:
+    explicit MobileIncidenceDateTime( QWidget *parent = 0 );
+};
+
 class DIEDateTime
-  : public DeclarativeWidgetBase<IncidenceEditorsNG::IncidenceDateTime,
+  : public DeclarativeWidgetBase<MobileIncidenceDateTime,
                                  IncidenceView,
                                  &IncidenceView::setDateTimeEditor>
 {

@@ -80,7 +80,7 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
   mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
 
-void IncidenceView::setDateTimeEditor( IncidenceDateTime *editor )
+void IncidenceView::setDateTimeEditor( MobileIncidenceDateTime *editor )
 {
   editor->setActiveDate( mActiveDate );
   // TODO: ugly dynamic pointer cast should get removed when payload method supports
@@ -89,7 +89,7 @@ void IncidenceView::setDateTimeEditor( IncidenceDateTime *editor )
   mEditor->combine( editor );
 }
 
-void IncidenceView::setGeneralEditor( IncidenceGeneral *editor )
+void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
 {
   editor->load( mItem.payload<Incidence::Ptr>() );
   mEditor->combine( editor );
