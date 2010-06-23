@@ -38,6 +38,8 @@ class AttendeeData : public KPIM::MultiplyingLineData, public KCal::Attendee
               bool rsvp = false, Attendee::PartStat status = Attendee::None,
               Attendee::Role role = Attendee::ReqParticipant, const QString &uid = QString() )
               : KCal::Attendee( name, email, rsvp, status, role, uid ) {}
+    AttendeeData( const KCal::Attendee &attendee ) : KCal::Attendee( attendee ) {}
+
     virtual void clear();
     virtual bool isEmpty() const;
 };

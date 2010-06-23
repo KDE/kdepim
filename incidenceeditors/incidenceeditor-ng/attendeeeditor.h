@@ -46,6 +46,8 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
 
     AttendeeData::List attendees() const;
 
+    void addAttendee( const KCal::Attendee &attendee );
+
   protected slots:
     void slotLineAdded( KPIM::MultiplyingLine* );
     void slotLineDeleted( int pos );
