@@ -19,6 +19,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
            SLOT(fillCombos()) );
+  connect( mDateTime, SIGNAL(startDateChanged(QDate)), mUi->mExceptionDateEdit,
+           SLOT(setDate(QDate)) );
   connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
            SLOT(addException()));
   connect( mUi->mExceptionRemoveButton, SIGNAL(clicked()),
