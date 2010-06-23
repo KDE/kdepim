@@ -80,7 +80,8 @@ public slots:
   void setSelectedBreadcrumbCollectionRow( int row );
   int selectedCollectionRow();
 
-  void setListSelectedRow( int row );
+  // FIXME: make non-virtual again once mark-as-read logic is in messageviewer
+  virtual void setListSelectedRow( int row );
 
   /** Returns wheter or not the child collection at row @param row has children. */
   bool childCollectionHasChildren( int row );

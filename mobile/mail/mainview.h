@@ -45,6 +45,9 @@ class MainView : public KDeclarativeMainView
     void modifyDone(KJob *job);
     void dataChanged();
 
+    // HACK until mark-as-read logic is in messageviewer
+    virtual void setListSelectedRow(int row);
+
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
 };

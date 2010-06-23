@@ -172,4 +172,22 @@ void MainView::dataChanged()
   actionCollection()->action("mark_message_action_item")->setChecked(status.isToAct());
 }
 
+// FIXME: remove and put mark-as-read logic into messageviewer (shared with kmail)
+void MainView::setListSelectedRow(int row)
+{
+  static const int column = 0;
+  const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
+  itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+  Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+  KPIM::MessageStatus status;
+  status.setStatusFromFlags(item.flags());
+  if ( status.isUnread() )
+  {
+    status.setRead();
+    item.setFlags(status.getStatusFlags());
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
+  }
+}
+
+
 #include "mainview.moc"
