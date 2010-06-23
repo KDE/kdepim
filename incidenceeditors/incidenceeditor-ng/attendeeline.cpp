@@ -39,6 +39,8 @@ void AttendeeCheckBox::keyPressEvent(QKeyEvent* ev)
 {
   if ( ev->key() == Qt::Key_Left )
     emit leftPressed();
+  else  if ( ev->key() == Qt::Key_Right )
+    emit rightPressed();
   else
     QAbstractButton::keyPressEvent( ev );
 }

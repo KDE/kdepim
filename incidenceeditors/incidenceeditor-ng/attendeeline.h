@@ -58,6 +58,7 @@ class AttendeeCheckBox : public QCheckBox
 
   signals:
     void leftPressed();
+    void rightPressed();
 
   protected:
     void keyPressEvent( QKeyEvent *ev );
