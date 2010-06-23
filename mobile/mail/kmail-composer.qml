@@ -25,11 +25,13 @@ import org.kde.messagecomposer 4.5 as MessageComposer
 KPIM.MainView {
 
   EditorView {
+    enabled: !window.busy
     id: editorView
     anchors.fill: parent
   }
 
   SlideoutPanelContainer {
+    enabled: !window.busy
     anchors.fill: parent
 
     SlideoutPanel {
@@ -125,6 +127,16 @@ KPIM.MainView {
         }
       ]
     }
+  }
+
+  Rectangle {
+      id: busyView
+      visible: window.busy;
+      z: 99
+
+      color: "grey"
+      opacity: 0.5
+      anchors.fill: parent
   }
 
 }
