@@ -57,6 +57,8 @@
 #include <KAction>
 #include <QInputDialog>
 
+#include "kresettingproxymodel.h"
+
 using namespace Akonadi;
 
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
@@ -93,7 +95,12 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
   engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
   engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectedItemModel() ) ) );
-  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->breadcrumbItemModel() ) ) );
+
+  // Temporary workaround for QML model bugs.
+  KResettingProxyModel *resettingModel = new KResettingProxyModel( this );
+  resettingModel->setSourceModel( d->mBnf->breadcrumbItemModel() );
+
+  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( resettingModel ) ) );
   engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->childItemModel() ) ) );
   engine()->rootContext()->setContextProperty( "folderSelectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectionModel() ) ) );
   if ( listProxy )

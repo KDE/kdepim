@@ -8,6 +8,7 @@ set(mobileui_SRCS
     breadcrumbnavigation.cpp
     kbreadcrumbnavigationcomponentfactory.cpp
     akonadibreadcrumbnavigationfactory.cpp
+    kresettingproxymodel.cpp
     declarativeakonadiitem.cpp
     kdeclarativeapplication.cpp
     kdeclarativemainview_p.cpp
