@@ -57,12 +57,15 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 
     QDate startDate() const; /// Returns the current start date.
 
+  signals:
+    void startDateChanged( const QDate &newDate );
+
   private slots: /// General
     void setTimeZonesVisibility( bool visible );
     void toggleTimeZoneVisibility();
-    void startTimeChanged( const QTime &newTime );
-    void startDateChanged( const QDate &newDate );
-    void startSpecChanged();
+    void updateStartTime( const QTime &newTime );
+    void updateStartDate( const QDate &newDate );
+    void updateStartSpec();
 
   private slots: /// Todo specific
     void enableStartEdit( bool enable );

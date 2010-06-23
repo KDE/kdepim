@@ -163,7 +163,7 @@ void IncidenceDateTime::toggleTimeZoneVisibility()
   setTimeZonesVisibility( !mUi->mTimeZoneComboStart->isVisible() );
 }
 
-void IncidenceDateTime::startTimeChanged( const QTime &newTime )
+void IncidenceDateTime::updateStartTime( const QTime &newTime )
 {
   if ( !newTime.isValid() )
     return;
@@ -183,10 +183,13 @@ void IncidenceDateTime::startTimeChanged( const QTime &newTime )
   checkDirtyStatus();
 }
 
-void IncidenceDateTime::startDateChanged( const QDate &newDate )
+void IncidenceDateTime::updateStartDate( const QDate &newDate )
 {
   if ( !newDate.isValid() )
     return;
+
+  const bool dateChanged = mCurrentStartDateTime.date().day() != newDate.day()
+                           || mCurrentStartDateTime.date().month() != newDate.month();
 
   KDateTime endDateTime = currentEndDateTime();
   int daysep = mCurrentStartDateTime.daysTo( endDateTime );
@@ -200,16 +203,25 @@ void IncidenceDateTime::startDateChanged( const QDate &newDate )
   }
 
   checkDirtyStatus();
+
+  if ( dateChanged )
+    emit startDateChanged( mCurrentStartDateTime.date() );
 }
 
-void IncidenceDateTime::startSpecChanged()
+void IncidenceDateTime::updateStartSpec()
 {
+  QDate prevDate = mCurrentStartDateTime.date();
+
   if ( mUi->mEndCheck->isChecked()
     && currentEndDateTime().timeSpec() == mCurrentStartDateTime.timeSpec() )
     mUi->mTimeZoneComboEnd->selectTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
 
   mCurrentStartDateTime.setTimeSpec( mUi->mTimeZoneComboStart->selectedTimeSpec() );
-//   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
+
+  const bool dateChanged = mCurrentStartDateTime.date().day() != prevDate.day()
+                           || mCurrentStartDateTime.date().month() != prevDate.month();
+  if ( dateChanged )
+    emit startDateChanged( mCurrentStartDateTime.date() );
 }
 
 /// private slots for Todo
@@ -364,11 +376,11 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
            SLOT(enableTimeEdits()) );
   // Start time
   connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
-           SLOT(startTimeChanged(QTime)) );
+           SLOT(updateStartTime(QTime)) );
   connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
-           SLOT(startDateChanged(QDate)) );
+           SLOT(updateStartDate(QDate)) );
   connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)),
-           SLOT(startSpecChanged()) );
+           SLOT(updateStartSpec()) );
   // End time
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
            SLOT(checkDirtyStatus()) );
@@ -465,7 +477,7 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
   // Connect to the right logic
   connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
   connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(startTimeChanged(QTime)) );
+  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(updateStartTime(QTime)) );
   connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
