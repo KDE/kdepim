@@ -42,6 +42,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
   Q_PROPERTY(int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged)
+  Q_PROPERTY(bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged)
 
 protected:
   /**
@@ -57,6 +58,14 @@ protected:
   Akonadi::EntityTreeModel* entityTreeModel() const;
   /** Returns the filtered and QML-adapted item model. */
   QAbstractItemModel* itemModel() const;
+
+  /**
+   * Returns whether the currently selected item is being loaded.
+   * Note that results appear asynchronously in chunks while loading the contents
+   * of a collection. That means that the number of items can be greater then zero
+   * while isLoadingSelected returns true.
+   */
+  bool isLoadingSelected();
 
 public:
   virtual ~KDeclarativeMainView();
@@ -102,6 +111,7 @@ public slots:
 signals:
   void numSelectedAccountsChanged();
   void selectedItemChanged( int row, qlonglong itemId );
+  void isLoadingSelectedChanged();
 
 protected:
   QItemSelectionModel* regularSelectionModel() const;

@@ -182,6 +182,10 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
   connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
 
+  connect( d->mBnf->selectedItemModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SIGNAL(isLoadingSelectedChanged()));
+  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
+  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
+
   d->restoreState();
 
   connect( d->mBnf->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(numSelectedAccountsChanged()));
@@ -417,5 +421,17 @@ int KDeclarativeMainView::numSelectedAccounts()
 QAbstractItemModel* KDeclarativeMainView::selectedItemsModel() const
 {
   return d->mBnf->selectedItemModel();
+}
+
+bool KDeclarativeMainView::isLoadingSelected()
+{
+  const QModelIndex idx = d->mBnf->selectedItemModel()->index(0, 0);
+  if (!idx.isValid())
+    return false;
+
+  const QVariant fetchStateData = idx.data(EntityTreeModel::FetchStateRole);
+  Q_ASSERT(fetchStateData.isValid());
+  const EntityTreeModel::FetchState fetchState = static_cast<EntityTreeModel::FetchState>(fetchStateData.toInt());
+  return fetchState == EntityTreeModel::FetchingState;
 }
 
