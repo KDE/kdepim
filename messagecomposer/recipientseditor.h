@@ -52,12 +52,12 @@ class MESSAGECOMPOSER_EXPORT RecipientLineFactory : public KPIM::MultiplyingLine
 class RecipientsPicker;
 class RecipientsEditorSideWidget;
 
-class MESSAGECOMPOSER_EXPORT RecipientsEditorNG : public KPIM::MultiplyingLineEditor
+class MESSAGECOMPOSER_EXPORT RecipientsEditor : public KPIM::MultiplyingLineEditor
 {
     Q_OBJECT
   public:
-    explicit RecipientsEditorNG( QWidget *parent = 0 );
-    ~RecipientsEditorNG();
+    explicit RecipientsEditor( QWidget *parent = 0 );
+    ~RecipientsEditor();
 
     Recipient::List recipients() const;
     QSharedPointer<Recipient> activeRecipient() const;

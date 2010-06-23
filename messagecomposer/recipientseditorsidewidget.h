@@ -39,7 +39,7 @@ class RecipientsEditorSideWidget : public QWidget
 {
     Q_OBJECT
   public:
-    RecipientsEditorSideWidget( RecipientsEditorNG *editor, QWidget *parent );
+    RecipientsEditorSideWidget( RecipientsEditor *editor, QWidget *parent );
     ~RecipientsEditorSideWidget();
 
     MessageComposer::RecipientsPicker* picker() const;
@@ -55,7 +55,7 @@ class RecipientsEditorSideWidget : public QWidget
     void saveDistributionList();
 
   private:
-    RecipientsEditorNG *mEditor;
+    RecipientsEditor *mEditor;
     QLabel *mTotalLabel;
     QPushButton *mDistributionListButton;
     QPushButton *mSelectButton;

@@ -1032,12 +1032,12 @@ Message::AttachmentModel* Message::ComposerViewBase::attachmentModel()
   return m_attachmentModel;
 }
 
-void Message::ComposerViewBase::setRecipientsEditor ( MessageComposer::RecipientsEditorNG* recEditor )
+void Message::ComposerViewBase::setRecipientsEditor ( MessageComposer::RecipientsEditor* recEditor )
 {
   m_recipientsEditor = recEditor;
 }
 
-MessageComposer::RecipientsEditorNG* Message::ComposerViewBase::recipientsEditor()
+MessageComposer::RecipientsEditor* Message::ComposerViewBase::recipientsEditor()
 {
   return m_recipientsEditor;
 }

@@ -42,7 +42,7 @@
 using namespace MessageComposer;
 using namespace KPIM;
 
-RecipientsEditorNG::RecipientsEditorNG( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( this ), parent )
+RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( this ), parent )
 {
   mSideWidget = new RecipientsEditorSideWidget( this, this );
 #ifdef KDEPIM_MOBILE_UI
@@ -66,16 +66,16 @@ RecipientsEditorNG::RecipientsEditorNG( QWidget* parent ): MultiplyingLineEditor
   addData(); // one defaut line
 }
 
-RecipientsEditorNG::~RecipientsEditorNG()
+RecipientsEditor::~RecipientsEditor()
 {
 }
 
-void RecipientsEditorNG::addRecipient( const QString& recipient, Recipient::Type type )
+void RecipientsEditor::addRecipient( const QString& recipient, Recipient::Type type )
 {
   addData( Recipient::Ptr(  new Recipient ( recipient, type ) ) );
 }
 
-void RecipientsEditorNG::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, Recipient::Type type )
+void RecipientsEditor::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, Recipient::Type type )
 {
   clear();
 
@@ -95,7 +95,7 @@ void RecipientsEditorNG::setRecipientString( const QList< KMime::Types::Mailbox 
   }
 }
 
-Recipient::List RecipientsEditorNG::recipients() const
+Recipient::List RecipientsEditor::recipients() const
 {
   QList<MultiplyingLineData::Ptr> dataList = allData();
   Recipient::List recList;
@@ -108,18 +108,18 @@ Recipient::List RecipientsEditorNG::recipients() const
   return recList;
 }
 
-Recipient::Ptr RecipientsEditorNG::activeRecipient() const
+Recipient::Ptr RecipientsEditor::activeRecipient() const
 {
    return qSharedPointerDynamicCast<Recipient>( activeData() );
 }
 
 
-QString RecipientsEditorNG::recipientString( Recipient::Type type ) const
+QString RecipientsEditor::recipientString( Recipient::Type type ) const
 {
   return recipientStringList( type ).join( QLatin1String(", ") );
 }
 
-QStringList RecipientsEditorNG::recipientStringList( Recipient::Type type ) const
+QStringList RecipientsEditor::recipientStringList( Recipient::Type type ) const
 {
   QStringList selectedRecipients;
   foreach( const Recipient::Ptr &r, recipients() ) {
@@ -130,7 +130,7 @@ QStringList RecipientsEditorNG::recipientStringList( Recipient::Type type ) cons
   return selectedRecipients;
 }
 
-void RecipientsEditorNG::removeRecipient(const QString& recipient, Recipient::Type type)
+void RecipientsEditor::removeRecipient(const QString& recipient, Recipient::Type type)
 {
   // search a line which matches recipient and type
   QListIterator<MultiplyingLine*> it( lines() );
@@ -149,19 +149,19 @@ void RecipientsEditorNG::removeRecipient(const QString& recipient, Recipient::Ty
     line->slotPropagateDeletion();
 }
 
-void RecipientsEditorNG::saveDistributionList()
+void RecipientsEditor::saveDistributionList()
 {
   MessageViewer::AutoQPointer<MessageComposer::DistributionListDialog> dlg( new MessageComposer::DistributionListDialog( this ) );
   dlg->setRecipients( recipients() );
   dlg->exec();
 }
 
-void RecipientsEditorNG::selectRecipients()
+void RecipientsEditor::selectRecipients()
 {
   mSideWidget->pickRecipient();
 }
 
-void MessageComposer::RecipientsEditorNG::setRecentAddressConfig(KConfig* config)
+void MessageComposer::RecipientsEditor::setRecentAddressConfig(KConfig* config)
 {
   mRecentAddressConfig = config;
   if ( config ) {
@@ -174,19 +174,19 @@ void MessageComposer::RecipientsEditorNG::setRecentAddressConfig(KConfig* config
   }
 }
 
-void MessageComposer::RecipientsEditorNG::slotPickedRecipient( const Recipient& rec )
+void MessageComposer::RecipientsEditor::slotPickedRecipient( const Recipient& rec )
 {
   Recipient::Type t = rec.type();
   addRecipient( rec.email(), t == Recipient::Undefined ? Recipient::To : t );
   mModified = true;
 }
 
-RecipientsPicker* RecipientsEditorNG::picker() const
+RecipientsPicker* RecipientsEditor::picker() const
 {
   return mSideWidget->picker();
 }
 
-void RecipientsEditorNG::slotLineAdded( MultiplyingLine* line )
+void RecipientsEditor::slotLineAdded( MultiplyingLine* line )
 {
   
   // subtract 1 here, because we want the number of lines
@@ -224,7 +224,7 @@ void RecipientsEditorNG::slotLineAdded( MultiplyingLine* line )
 //            SLOT( slotCalculateTotal() ) );
 }
 
-void RecipientsEditorNG::slotLineDeleted( int pos )
+void RecipientsEditor::slotLineDeleted( int pos )
 {
   bool atLeastOneToLine = false;
   int firstCC = -1;
@@ -248,7 +248,7 @@ void RecipientsEditorNG::slotLineDeleted( int pos )
   slotCalculateTotal();
 }
 
-void RecipientsEditorNG::slotCalculateTotal()
+void RecipientsEditor::slotCalculateTotal()
 {
   int count = 0;
   int empty = 0;
@@ -270,7 +270,7 @@ void RecipientsEditorNG::slotCalculateTotal()
   mSideWidget->setTotal( count, lines().count() );
 }
 
-RecipientLineNG* RecipientsEditorNG::activeLine() const
+RecipientLineNG* RecipientsEditor::activeLine() const
 {
   MultiplyingLine* line = MultiplyingLineEditor::activeLine();
   return qobject_cast< RecipientLineNG* >( line );

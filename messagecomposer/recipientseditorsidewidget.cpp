@@ -38,7 +38,7 @@
 
 using namespace MessageComposer;
 
-RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditorNG *view, QWidget *parent )
+RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, QWidget *parent )
   : QWidget( parent ), mEditor( view ), mRecipientPicker( 0 )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );

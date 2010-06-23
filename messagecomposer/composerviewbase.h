@@ -57,7 +57,7 @@ namespace KPIMIdentities
 
 namespace MessageComposer
 {
-  class RecipientsEditorNG;
+  class RecipientsEditor;
 }
 
 namespace Message {
@@ -142,8 +142,8 @@ public:
   void setAttachmentController( AttachmentControllerBase* controller );
   AttachmentControllerBase* attachmentController();
   
-  void setRecipientsEditor( MessageComposer::RecipientsEditorNG* recEditor );
-  MessageComposer::RecipientsEditorNG* recipientsEditor();
+  void setRecipientsEditor( MessageComposer::RecipientsEditor* recEditor );
+  MessageComposer::RecipientsEditor* recipientsEditor();
 
   void setSignatureController( SignatureController* sigController );
   SignatureController* signatureController();
@@ -288,7 +288,7 @@ private:
   AttachmentControllerBase* m_attachmentController;
   AttachmentModel* m_attachmentModel;
   SignatureController* m_signatureController;
-  MessageComposer::RecipientsEditorNG * m_recipientsEditor;
+  MessageComposer::RecipientsEditor * m_recipientsEditor;
   KPIMIdentities::IdentityCombo *m_identityCombo;
   KPIMIdentities::IdentityManager* m_identMan;
   Message::KMeditor* m_editor;
