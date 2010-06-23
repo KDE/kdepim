@@ -34,7 +34,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   kDebug() << "OMG!";
   QGridLayout *grid = qobject_cast< QGridLayout* >( mUi->mAttendeeTab->layout() );
   if( grid )
-    grid->addWidget( mAttendeeEditor, 5, 0, 1, 5 );
+    grid->addWidget( mAttendeeEditor, 3, 0, 1, 3 );
 
    mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
    mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
