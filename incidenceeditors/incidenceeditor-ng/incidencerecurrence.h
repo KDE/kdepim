@@ -30,7 +30,11 @@ private Q_SLOTS:
     void updateRemoveExceptionButton();
 
 private:
+    void fillCombos();
+    QString numberToString( int number ) const;
     void toggleRecurrenceWidgets( bool enable );
+    int weekdayCountForMonth( const QDate &date );
+    int weekdayOfMonth( const QDate &date );
 
 private:
     Ui::EventOrTodoDesktop *mUi;

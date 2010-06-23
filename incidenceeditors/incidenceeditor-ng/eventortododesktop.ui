@@ -411,7 +411,7 @@
    <item row="10" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -860,7 +860,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="never_page"/>
          <widget class="QWidget" name="daily_page">
@@ -893,28 +893,27 @@
             <number>0</number>
            </property>
            <item row="0" column="0">
-            <widget class="QComboBox" name="comboBox">
-             <item>
-              <property name="text">
-               <string>the nth</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>the (last - nth) last day</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>the nth ${weekday}</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>the (last-nth) last ${weekday}</string>
-              </property>
-             </item>
+            <widget class="QComboBox" name="mMonthlyCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
             </widget>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_11">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -924,33 +923,27 @@
             <number>0</number>
            </property>
            <item row="0" column="0">
-            <widget class="QComboBox" name="comboBox_3">
-             <item>
-              <property name="text">
-               <string>the nth of ${month}</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>the (last-nth) last day of ${month}</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>the yth ${weekday} of ${month}</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>the (last - yth) ${weekday} of ${month}</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>the mth day of year</string>
-              </property>
-             </item>
+            <widget class="QComboBox" name="mYearlyCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
             </widget>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
