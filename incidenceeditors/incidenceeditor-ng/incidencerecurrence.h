@@ -24,13 +24,13 @@ public:
 
 private Q_SLOTS:
     void addException();
+    void fillCombos();
     void handleExceptionDateChange( const QDate &currentDate );
     void handleRecurrenceTypeChange( int currentIndex );
     void removeExceptions();
     void updateRemoveExceptionButton();
 
 private:
-    void fillCombos();
     QString numberToString( int number ) const;
     void toggleRecurrenceWidgets( bool enable );
     int weekdayCountForMonth( const QDate &date );

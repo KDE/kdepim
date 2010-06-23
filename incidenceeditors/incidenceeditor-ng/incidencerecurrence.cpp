@@ -17,6 +17,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   toggleRecurrenceWidgets( false );
   fillCombos();
 
+  connect( mDateTime, SIGNAL(startDateChanged(QDate)),
+           SLOT(fillCombos()) );
   connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
            SLOT(addException()));
   connect( mUi->mExceptionRemoveButton, SIGNAL(clicked()),
@@ -59,6 +61,79 @@ void IncidenceRecurrence::addException()
   }
 
   mUi->mExceptionAddButton->setEnabled( false );
+}
+
+void IncidenceRecurrence::fillCombos()
+{
+  // First fill the weekly combo, but only when it is not empy because it is not
+  // dependend on the start day of the event
+  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const int weekStart = KGlobal::locale()->weekStartDay();
+  if (mUi->mWeekDayCombo->count() == 0 ) {
+    for ( int i = 0; i < 7; ++i ) {
+      // i is the nr of the combobox, not the day of week!
+      // label=(i+weekStart+6)%7 + 1;
+      // index in CheckBox array(=day): label-1
+      const int index = ( i + weekStart + 6 ) % 7;
+
+      QString weekDayName = calSys->weekDayName( index + 1, KCalendarSystem::ShortDayName );
+      mUi->mWeekDayCombo->addItem( weekDayName );
+    }
+  }
+
+  // Next the monthly combo. This contains the following elements:
+  // - nth day of the month
+  // - (month.lastDay() - n)th day of the month
+  // - the ith ${weekday} of the month
+  // - the (month.weekCount() - i)th day of the month
+  const int currentMonthlyIndex = mUi->mMonthlyCombo->currentIndex();
+  mUi->mMonthlyCombo->clear();
+  const QDate startDate = mDateTime->startDate();
+  QString item = "the " + numberToString( startDate.day() );
+  mUi->mMonthlyCombo->addItem( item );
+
+  item = "the " + numberToString( startDate.daysInMonth() - startDate.day() ) + " last day";
+  mUi->mMonthlyCombo->addItem( item );
+
+  const int weekOfMonthNr = weekdayOfMonth( startDate );
+  item = "the " + numberToString( weekOfMonthNr ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+  mUi->mMonthlyCombo->addItem( item );
+
+  const int weekOfMonthNrFromEnd = weekdayCountForMonth( startDate ) + 1 - weekOfMonthNr;
+  if ( weekOfMonthNrFromEnd == 1 )
+    item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+  else
+    item = "the " + numberToString( weekOfMonthNrFromEnd ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+  mUi->mMonthlyCombo->addItem( item );
+  mUi->mMonthlyCombo->setCurrentIndex( currentMonthlyIndex == -1 ? 0 : currentMonthlyIndex );
+
+  // Finally the yearly combo. This contains the following options:
+  // - ${n}th of ${long-month-name}
+  // - ${month.lastDay() - n}th last day of ${long-month-name}
+  // - the ${i}th ${weekday} of ${long-month-name}
+  // - the ${month.weekCount() - i}th day of ${long-month-name}
+  // - the ${m}th day of the year
+  const int currentYearlyIndex = mUi->mYearlyCombo->currentIndex();
+  mUi->mYearlyCombo->clear();
+  const QString longMonthName = calSys->monthName( startDate );
+  item = "the " + numberToString( startDate.day() ) + " of " + longMonthName;
+  mUi->mYearlyCombo->addItem( item );
+
+  item = "the " + numberToString( startDate.daysInMonth() - startDate.day() ) + " last day of " + longMonthName;
+  mUi->mYearlyCombo->addItem( item );
+
+  item = "the " + numberToString( weekOfMonthNr ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
+  mUi->mYearlyCombo->addItem( item );
+
+  if ( weekOfMonthNrFromEnd == 1 )
+    item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+  else
+    item = "the " + numberToString( weekOfMonthNrFromEnd ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
+  mUi->mYearlyCombo->addItem( item );
+
+  item = "the " + numberToString( startDate.dayOfYear() ) + " day of the year";
+  mUi->mYearlyCombo->addItem( item );
+  mUi->mYearlyCombo->setCurrentIndex( currentYearlyIndex == -1 ? 0 : currentYearlyIndex );
 }
 
 void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
@@ -106,75 +181,6 @@ void IncidenceRecurrence::removeExceptions()
 void IncidenceRecurrence::updateRemoveExceptionButton()
 {
   mUi->mExceptionRemoveButton->setEnabled( mUi->mExceptionList->selectedItems().count() > 0 );
-}
-
-void IncidenceRecurrence::fillCombos()
-{
-  // First fill the weekly combo, but only when it is not empy because it is not
-  // dependend on the start day of the event
-  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
-  const int weekStart = KGlobal::locale()->weekStartDay();
-  if (mUi->mWeekDayCombo->count() == 0 ) {
-    for ( int i = 0; i < 7; ++i ) {
-      // i is the nr of the combobox, not the day of week!
-      // label=(i+weekStart+6)%7 + 1;
-      // index in CheckBox array(=day): label-1
-      const int index = ( i + weekStart + 6 ) % 7;
-
-      QString weekDayName = calSys->weekDayName( index + 1, KCalendarSystem::ShortDayName );
-      mUi->mWeekDayCombo->addItem( weekDayName );
-    }
-  }
-
-  // Next the monthly combo. This contains the following elements:
-  // - nth day of the month
-  // - (month.lastDay() - n)th day of the month
-  // - the ith ${weekday} of the month
-  // - the (month.weekCount() - i)th day of the month
-  mUi->mMonthlyCombo->clear();
-  const QDate startDate = mDateTime->startDate();
-  QString item = "the " + numberToString( startDate.day() );
-  mUi->mMonthlyCombo->addItem( item );
-
-  item = "the " + numberToString( startDate.daysInMonth() - startDate.day() ) + " last day";
-  mUi->mMonthlyCombo->addItem( item );
-
-  const int weekOfMonthNr = weekdayOfMonth( startDate );
-  item = "the " + numberToString( weekOfMonthNr ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
-  mUi->mMonthlyCombo->addItem( item );
-
-  const int weekOfMonthNrFromEnd = weekdayCountForMonth( startDate ) + 1 - weekOfMonthNr;
-  if ( weekOfMonthNrFromEnd == 1 )
-    item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
-  else
-    item = "the " + numberToString( weekOfMonthNrFromEnd ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
-  mUi->mMonthlyCombo->addItem( item );
-
-  // Finally the yearly combo. This contains the following options:
-  // - ${n}th of ${long-month-name}
-  // - ${month.lastDay() - n}th last day of ${long-month-name}
-  // - the ${i}th ${weekday} of ${long-month-name}
-  // - the ${month.weekCount() - i}th day of ${long-month-name}
-  // - the ${m}th day of the year
-  mUi->mYearlyCombo->clear();
-  const QString longMonthName = calSys->monthName( startDate );
-  item = "the " + numberToString( startDate.day() ) + " of " + longMonthName;
-  mUi->mYearlyCombo->addItem( item );
-
-  item = "the " + numberToString( startDate.daysInMonth() - startDate.day() ) + " last day of " + longMonthName;
-  mUi->mYearlyCombo->addItem( item );
-
-  item = "the " + numberToString( weekOfMonthNr ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
-  mUi->mYearlyCombo->addItem( item );
-
-  if ( weekOfMonthNrFromEnd == 1 )
-    item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
-  else
-    item = "the " + numberToString( weekOfMonthNrFromEnd ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
-  mUi->mYearlyCombo->addItem( item );
-
-  item = "the " + numberToString( startDate.dayOfYear() ) + " day of the year";
-  mUi->mYearlyCombo->addItem( item );
 }
 
 QString IncidenceRecurrence::numberToString( int number ) const
