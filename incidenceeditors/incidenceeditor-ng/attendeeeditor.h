@@ -44,7 +44,7 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
   public:
     explicit AttendeeEditor( QWidget *parent = 0 );
 
-    //TODO public api for retrieving attendees
+    AttendeeData::List attendees() const;
 
   protected slots:
     void slotLineAdded( KPIM::MultiplyingLine* );

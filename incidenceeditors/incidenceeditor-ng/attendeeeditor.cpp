@@ -22,6 +22,8 @@
 
 #include <KDebug>
 
+#include <QList>
+
 using namespace IncidenceEditorsNG;
 
 AttendeeEditor::AttendeeEditor( QWidget* parent )
@@ -62,6 +64,20 @@ void AttendeeEditor::slotCalculateTotal()
   if ( empty == 0 )
     addData();
 }
+
+AttendeeData::List AttendeeEditor::attendees() const
+{
+  QList<KPIM::MultiplyingLineData::Ptr> dataList = allData();
+  AttendeeData::List attList;
+  foreach( KPIM::MultiplyingLineData::Ptr datum, dataList ) {
+    AttendeeData::Ptr att = qSharedPointerDynamicCast<AttendeeData>( datum );
+    if( !att )
+      continue;
+    attList << att;
+  }
+  return attList;
+}
+
 
 
 
