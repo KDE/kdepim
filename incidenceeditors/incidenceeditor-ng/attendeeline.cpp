@@ -174,6 +174,10 @@ void AttendeeLine::activate()
 void AttendeeLine::clear()
 {
   mEdit->clear();
+  mRoleCombo->setCurrentIndex( 0 );
+  mStateCombo->setCurrentIndex( 0 );
+  mResponseCheck->setChecked( true );
+  mUid.clear();
 }
 
 void AttendeeLine::clearModified()
@@ -197,6 +201,7 @@ void AttendeeLine::dataFromFields()
   mData->setRole( AttendeeData::Role( mRoleCombo->currentIndex() ) );
   mData->setStatus( AttendeeData::PartStat( mStateCombo->currentIndex() ) );
   mData->setRSVP( mResponseCheck->isChecked() );
+  mData->setUid( mUid );
 }
 
 void AttendeeLine::fieldsFromData()
@@ -211,6 +216,7 @@ void AttendeeLine::fieldsFromData()
   } else {
     mStateCombo->setCurrentIndex( AttendeeData::NeedsAction );
   }
+  mUid = mData->uid();
 }
 
 void AttendeeLine::fixTabOrder( QWidget* previous )

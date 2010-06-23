@@ -122,6 +122,7 @@ class AttendeeLine : public KPIM::MultiplyingLine
     AttendeeCheckBox *mResponseCheck;
     AttendeeLineEdit *mEdit;
     QSharedPointer<AttendeeData> mData;
+    QString mUid;
     bool mModified;
     
 
