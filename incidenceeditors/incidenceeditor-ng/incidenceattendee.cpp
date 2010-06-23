@@ -43,8 +43,6 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   , mOrganizerCombo( 0 )
   , mOrganizerLabel( 0 )
 {
-  kDebug() << "OMG!";
-
   gridLayout()->addWidget( mAttendeeEditor, 3, 0, 1, 3 );
 
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );

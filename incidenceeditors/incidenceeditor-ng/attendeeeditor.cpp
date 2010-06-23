@@ -37,7 +37,6 @@ AttendeeEditor::AttendeeEditor( QWidget* parent )
 
 void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine* line )
 {
-  kDebug() << "line added";
   AttendeeLine* att = qobject_cast<AttendeeLine*>( line );
   if( !att )
     return;
@@ -46,7 +45,6 @@ void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine* line )
 
 void AttendeeEditor::slotLineDeleted( int /*pos*/ )
 {
-  kDebug() << "line deleted";
 }
 
 void AttendeeEditor::slotCalculateTotal()
