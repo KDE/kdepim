@@ -22,6 +22,7 @@
 #include "ui_eventortododesktop.h"
 
 #include "attendeeeditor.h"
+#include "../editorconfig.h"
 
 #include <KDebug>
 
@@ -36,9 +37,27 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   if( grid )
     grid->addWidget( mAttendeeEditor, 3, 0, 1, 3 );
 
-   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
-   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
+  mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
+  mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
+    QString whatsThis =
+    i18nc( "@info:whatsthis",
+           "Sets the identity corresponding to "
+           "the organizer of this to-do or event. "
+           "Identities can be set in the 'Personal' section "
+           "of the KOrganizer configuration, or in the "
+           "'Personal'->'About Me'->'Password & User Account' "
+           "section of the System Settings. In addition, "
+           "identities are gathered from your KMail settings "
+           "and from your address book. If you choose "
+           "to set it globally for KDE in the System Settings, "
+           "be sure to check 'Use email settings from "
+           "System Settings' in the 'Personal' section of the "
+           "KOrganizer configuration." );
+  mUi->mOrganizerCombo->setWhatsThis( whatsThis );
+  mUi->mOrganizerCombo->setToolTip(
+    i18nc( "@info:tooltip", "Set the organizer identity" ) );
+  fillOrganizerCombo();
   mUi->mSolveButton->setDisabled( true );
 }
 
@@ -62,3 +81,20 @@ bool IncidenceEditorsNG::IncidenceAttendee::isValid()
   //TODO: implement isValid
   return true;
 }
+
+void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
+{
+  Q_ASSERT( mUi->mOrganizerCombo );
+  mUi->mOrganizerCombo->clear();
+  // Get all emails from KOPrefs (coming from various places),
+  // and insert them - removing duplicates
+  const QStringList lst = IncidenceEditors::EditorConfig::instance()->fullEmails();
+  QStringList uniqueList;
+  for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+    if ( !uniqueList.contains( *it ) ) {
+      uniqueList << *it;
+    }
+  }
+  mUi->mOrganizerCombo->addItems( uniqueList );
+}
+

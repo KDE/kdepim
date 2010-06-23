@@ -43,6 +43,8 @@ public:
     virtual bool isValid();
 
 private:
+    void fillOrganizerCombo();
+
     Ui::EventOrTodoDesktop *mUi;
     AttendeeEditor *mAttendeeEditor;
 };
