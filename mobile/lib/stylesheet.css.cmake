@@ -210,7 +210,8 @@ QSpinBox::up-arrow:off
 
 /* Recipients editor does not have a transparent background by default on Maemo and tries very hard to avoid getting one :-/ */
 MessageComposer--RecipientLine,
-MessageComposer--RecipientsView > * > QWidget
+MessageComposer--RecipientsView > * > QWidget,
+KPIM--MultiplyingLineView > * > QWidget
 {
   background-color: rgba(0,0,0,0);
 }
