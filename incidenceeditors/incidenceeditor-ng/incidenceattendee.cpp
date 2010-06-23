@@ -38,6 +38,8 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
 
    mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
    mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
+
+  mUi->mSolveButton->setDisabled( true );
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
