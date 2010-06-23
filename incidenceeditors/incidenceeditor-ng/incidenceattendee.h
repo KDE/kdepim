@@ -23,6 +23,10 @@
 
 #include "incidenceeditor-ng.h"
 
+class KComboBox;
+class QGridLayout;
+class QLabel;
+
 namespace Ui {
 class EventOrTodoDesktop;
 }
@@ -30,7 +34,7 @@ class EventOrTodoDesktop;
 namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
-  
+
 class IncidenceAttendee : public IncidenceEditor
 {
   Q_OBJECT
@@ -43,10 +47,13 @@ public:
     virtual bool isValid();
 
 private:
-    void fillOrganizerCombo();
+    QGridLayout* gridLayout();
+    void makeOrganizerCombo();
 
     Ui::EventOrTodoDesktop *mUi;
     AttendeeEditor *mAttendeeEditor;
+    KComboBox *mOrganizerCombo;
+    QLabel *mOrganizerLabel;
 };
 
 }

@@ -507,20 +507,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QComboBox" name="mOrganizerCombo">
-         <item>
-          <property name="text">
-           <string>Joe Blow &lt;joe@super.com&gt;</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Identity 2</string>
-          </property>
-         </item>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">

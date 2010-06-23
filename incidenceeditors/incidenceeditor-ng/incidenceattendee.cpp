@@ -24,6 +24,7 @@
 #include "attendeeeditor.h"
 #include "../editorconfig.h"
 
+#include <KComboBox>
 #include <KDebug>
 #include <KMessageBox>
 #include <KPIMUtils/Email>
@@ -97,7 +98,7 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
     if( !skip  )
       incidence->addAttendee( attendee );
   }
-  incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
+  incidence->setOrganizer( mOrganizerCombo->currentText() );
 }
 
 bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
@@ -111,10 +112,31 @@ bool IncidenceEditorsNG::IncidenceAttendee::isValid()
   return true;
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
+void IncidenceEditorsNG::IncidenceAttendee::makeOrganizerCombo()
 {
-  Q_ASSERT( mUi->mOrganizerCombo );
-  mUi->mOrganizerCombo->clear();
+  if ( mOrganizerCombo ) {
+      delete mOrganizerCombo;
+  }
+  mOrganizerCombo = new KComboBox( this );
+  gridLayout()->addWidget( mOrganizerCombo, 0, 1, 1, 1);
+  QString whatsThis =
+    i18nc( "@info:whatsthis",
+            "Sets the identity corresponding to "
+            "the organizer of this to-do or event. "
+            "Identities can be set in the 'Personal' section "
+            "of the KOrganizer configuration, or in the "
+            "'Personal'->'About Me'->'Password & User Account' "
+            "section of the System Settings. In addition, "
+            "identities are gathered from your KMail settings "
+            "and from your address book. If you choose "
+            "to set it globally for KDE in the System Settings, "
+            "be sure to check 'Use email settings from "
+            "System Settings' in the 'Personal' section of the "
+            "KOrganizer configuration." );
+  mOrganizerCombo->setWhatsThis( whatsThis );
+  mOrganizerCombo->setToolTip(
+    i18nc( "@info:tooltip", "Set the organizer identity" ) );
+
   // Get all emails from KOPrefs (coming from various places),
   // and insert them - removing duplicates
   const QStringList lst = IncidenceEditors::EditorConfig::instance()->fullEmails();
@@ -124,6 +146,14 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
       uniqueList << *it;
     }
   }
-  mUi->mOrganizerCombo->addItems( uniqueList );
+  mOrganizerCombo->addItems( uniqueList );
 }
+
+QGridLayout* IncidenceEditorsNG::IncidenceAttendee::gridLayout()
+{
+  QGridLayout *grid = qobject_cast< QGridLayout* >( mUi->mAttendeeTab->layout() );
+  Q_ASSERT( grid );
+  return grid;
+}
+
 
