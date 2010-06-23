@@ -29,7 +29,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
            SLOT(handleExceptionDateChange(QDate)) );
   connect( mUi->mExceptionList, SIGNAL(itemSelectionChanged()),
            SLOT(updateRemoveExceptionButton()) );
-  connect( mUi->mTypeCombo, SIGNAL(currentIndexChanged(int)),
+  connect( mUi->mRecurrenceTypeCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(handleRecurrenceTypeChange(int)));
 }
 
@@ -206,7 +206,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
   mUi->mFrequencyLabel->setVisible( enable );
   mUi->mFrequencyEdit->setVisible( enable );
   mUi->mRecurrenceRuleLabel->setVisible( enable );
-  mUi->mRepeatStack->setVisible( enable && mUi->mTypeCombo->currentIndex() > 1 );
+  mUi->mRepeatStack->setVisible( enable && mUi->mRecurrenceTypeCombo->currentIndex() > 1 );
   mUi->mRecurrenceEndLabel->setVisible( enable );
   mUi->mRecurrenceEndCombo->setVisible( enable );
   mUi->mEndDurationEdit->setVisible( enable );

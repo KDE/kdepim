@@ -432,14 +432,14 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
 #if 0 //def KDEPIM_MOBILE_UI
     mUi->mFreeRadio->setChecked( true );
 #else
-    mUi->mFreeBusyCombo->setCurrentIndex( 1 );
+    mUi->mFreeBusyCheck->setChecked( false );
 #endif
     break;
   case Event::Opaque:
 #if 0 //def KDEPIM_MOBILE_UI
     mUi->mBusyRadio->setChecked( true );
 #else
-    mUi->mFreeBusyCombo->setCurrentIndex( 0 );
+    mUi->mFreeBusyCheck->setChecked( true );
 #endif
     break;
   }
@@ -468,9 +468,9 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
   mUi->mFreeRadio->setVisible( false );
   mUi->mBusyRadio->setVisible( false );
 #else
-  mUi->mFreeBusyCombo->setVisible( false );
+  mUi->mFreeBusyCheck->setVisible( false );
 #endif
-  mUi->mFreeBusyLabel->setVisible( false );
+//  mUi->mFreeBusyLabel->setVisible( false );
 
   mUi->mWholeDayCheck->setChecked( todo->allDay() );
 
@@ -541,8 +541,7 @@ void IncidenceDateTime::save( KCal::Event::Ptr event )
   event->setTransparency( mUi->mFreeRadio->isChecked() ?
                           KCal::Event::Transparent : KCal::Event::Opaque );
 #else
-  event->setTransparency( mUi->mFreeBusyCombo->currentIndex() > 0 ?
-                          KCal::Event::Transparent : KCal::Event::Opaque );
+  event->setTransparency( mUi->mFreeBusyCheck->isChecked() ? Event::Opaque : Event::Transparent );
 #endif
 }
 
