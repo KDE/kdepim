@@ -29,7 +29,11 @@
 #include "categoryhierarchyreader.h"
 #include "categoryselectdialog.h"
 #include "editorconfig.h"
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
@@ -39,7 +43,11 @@ IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
+  mUi->setupUi( this );
+ 
+#ifndef KDEPIM_MOBILE_UI
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
+#endif
 
 #ifdef KDEPIM_MOBILE_UI
 //  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
@@ -52,9 +60,9 @@ IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
 
   connect( mUi->mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
            SLOT(setCategories(QStringList)) );
-#endif
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
+#endif
   connect( mUi->mSummaryEdit, SIGNAL(textChanged(QString)),
            SLOT(checkDirtyStatus()));
   connect( mUi->mLocationEdit, SIGNAL(textChanged(QString)),
@@ -65,13 +73,17 @@ void IncidenceGeneral::load( KCal::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
+#ifndef KDEPIM_MOBILE_UI
     Q_ASSERT( mUi->mSecrecyCombo->count() == KCal::Incidence::secrecyList().count() );
     mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
+#endif    
     mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
     mUi->mLocationEdit->setText( mLoadedIncidence->location() );
     setCategories( mLoadedIncidence->categories() );
   } else {
+#ifndef KDEPIM_MOBILE_UI
     mUi->mSecrecyCombo->setCurrentIndex( 0 );
+#endif
     mUi->mSummaryEdit->clear();
     mUi->mLocationEdit->clear();
     mSelectedCategories.clear();
@@ -87,6 +99,7 @@ void IncidenceGeneral::save( KCal::Incidence::Ptr incidence )
   incidence->setLocation( mUi->mLocationEdit->text() );
   incidence->setCategories( mSelectedCategories );
 
+#ifndef KDEPIM_MOBILE_UI
   switch( mUi->mSecrecyCombo->currentIndex() ) {
   case 1:
     incidence->setSecrecy( KCal::Incidence::SecrecyPrivate );
@@ -97,6 +110,9 @@ void IncidenceGeneral::save( KCal::Incidence::Ptr incidence )
   default:
     incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
   }
+#else
+  incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
+#endif
 }
 
 bool IncidenceGeneral::isDirty() const

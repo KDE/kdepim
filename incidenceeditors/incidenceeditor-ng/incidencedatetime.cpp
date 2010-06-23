@@ -31,7 +31,12 @@
 //#include "ui_incidencedatetime.h"
 //#endif
 
+// TODO different UI file in case of mobile
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 #include "../editoralarms.h"
 
 using namespace IncidenceEditorsNG;
@@ -42,9 +47,11 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   , mTimeZones( new ICalTimeZones )
   , mUi( ui )
 {
+  mUi->setupUi( this );
+  
   setTimeZonesVisibility( false );
 
-#if 0 //def KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
   QButtonGroup *freeBusyGroup = new QButtonGroup( this );
   freeBusyGroup->addButton( mUi->mFreeRadio );
   freeBusyGroup->addButton( mUi->mBusyRadio );
@@ -429,14 +436,14 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
 
   switch( event->transparency() ) {
   case Event::Transparent:
-#if 0 //def KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
     mUi->mFreeRadio->setChecked( true );
 #else
     mUi->mFreeBusyCheck->setChecked( false );
 #endif
     break;
   case Event::Opaque:
-#if 0 //def KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
     mUi->mBusyRadio->setChecked( true );
 #else
     mUi->mFreeBusyCheck->setChecked( true );
@@ -464,7 +471,7 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
   mUi->mTimeZoneComboEnd->setEnabled( todo->hasDueDate() );
 
   // These fields where not enabled in the old code either:
-#if 0 //def KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
   mUi->mFreeRadio->setVisible( false );
   mUi->mBusyRadio->setVisible( false );
 #else
@@ -537,7 +544,7 @@ void IncidenceDateTime::save( KCal::Event::Ptr event )
 
   // Free == Event::Transparant
   // Busy == Event::Opaque
-#if 0 //def KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
   event->setTransparency( mUi->mFreeRadio->isChecked() ?
                           KCal::Event::Transparent : KCal::Event::Opaque );
 #else

@@ -48,6 +48,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
   eventortododesktop.ui
+  eventortodomobile.ui
   alarmdialog.ui
   attachmenteditdialog.ui
   incidencerecurrenceeditor.ui
