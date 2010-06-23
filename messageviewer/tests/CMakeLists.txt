@@ -6,10 +6,10 @@ include_directories(
 )
 
 ########### htmlquotecolorertest ###############
-set(htmlquotecolorertest_SRCS htmlquotecolorertest.cpp ../htmlquotecolorer.cpp)
-kde4_add_unit_test(htmlquotecolorertest TESTNAME messageviewer-quotecolorertest ${htmlquotecolorertest_SRCS})
+set(messageviewer_htmlquotecolorertest_SRCS htmlquotecolorertest.cpp ../htmlquotecolorer.cpp)
+kde4_add_unit_test(messageviewer_htmlquotecolorertest TESTNAME messageviewer-quotecolorertest ${htmlquotecolorertest_SRCS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-target_link_libraries(htmlquotecolorertest
+target_link_libraries(messageviewer_htmlquotecolorertest
   ${QT_QTTEST_LIBRARY}
   ${QT_QTCORE_LIBRARY}
   ${KDE4_KHTML_LIBRARY}
