@@ -51,6 +51,21 @@ private Q_SLOTS:
     void updateRemoveExceptionButton();
 
 private:
+    /**
+     * Return the day in the month/year on which the event recurs, starting at the
+     * beginning/end. Both return a positive number.
+     */
+    short dayOfMonthFromStart() const;
+    short dayOfMonthFromEnd() const;
+    short dayOfYearFromStart() const; // We don't need from end for year
+    /** Returns the days selected in the day combo */
+    QBitArray days() const;
+    int duration() const;
+
+    /** Returns the week number (1-5) of the month in which the start date occurs. */
+    short monthWeekFromStart() const;
+    short monthWeekFromEnd() const;
+
     QString numberToString( int number ) const;
     void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
     void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
@@ -60,8 +75,14 @@ private:
     void setExceptionDates( const KCal::DateList &dates );
     void setFrequency( int freq );
     void toggleRecurrenceWidgets( bool enable );
-    int weekdayCountForMonth( const QDate &date );
-    int weekdayOfMonth( const QDate &date );
+    /** Returns an array with the weekday on which the event occurs set to 1 */
+    QBitArray weekday() const;
+
+    /**
+     * Return how many times the weekday represented by @param date occurs in
+     * the month of @param date.
+     */
+    int weekdayCountForMonth( const QDate &date ) const;
 
 private:
     Ui::EventOrTodoDesktop *mUi;

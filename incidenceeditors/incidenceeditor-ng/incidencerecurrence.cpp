@@ -124,6 +124,62 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
 
 void IncidenceRecurrence::save( KCal::Incidence::Ptr incidence )
 {
+  // clear out any old settings;
+  KCal::Recurrence *r = incidence->recurrence();
+  r->unsetRecurs(); // Why not clear() ?
+
+  if ( mUi->mRecurrenceTypeCombo->currentIndex() == sRecurrenceNeverIndex )
+    return;
+
+  const int lDuration = duration();
+  QDate endDate;
+  if ( lDuration == 0 ) {
+    endDate = mUi->mEndDateEdit->date();
+  }
+
+  int recurrenceType = mUi->mRecurrenceTypeCombo->currentIndex();
+  if ( recurrenceType == sRecurrenceDailyIndex ) {
+    r->setDaily( mUi->mFrequencyEdit->value() );
+  } else if ( recurrenceType == sRecurrenceWeeklyIndex ) {
+    r->setWeekly( mUi->mFrequencyEdit->value(), days() );
+  } else if ( recurrenceType == sRecurrenceMonthlyIndex ) {
+    r->setMonthly( mUi->mFrequencyEdit->value() );
+
+    if ( mUi->mMonthlyCombo->currentIndex() == 0 )      // Every nth
+      r->addMonthlyDate( dayOfMonthFromStart() );
+    else if ( mUi->mMonthlyCombo->currentIndex() == 1 ) // Every (last - n)th last day
+      r->addMonthlyDate( -dayOfMonthFromEnd() );
+    else if ( mUi->mMonthlyCombo->currentIndex() == 2 ) // Every ith weekday
+      r->addMonthlyPos( monthWeekFromStart(), weekday() );
+    else // Every (last - i)th last weekday
+      r->addMonthlyPos( -monthWeekFromEnd(), weekday() );
+
+  } else if ( recurrenceType == sRecurrenceYearlyIndex ) {
+    r->setYearly( mUi->mFrequencyEdit->value() );
+
+    if ( mUi->mYearlyCombo->currentIndex() == 0 ) {        // Every nth of month
+      r->addYearlyDate( dayOfMonthFromStart() );
+      r->addYearlyMonth( mDateTime->startDate().month() );
+    } else if ( mUi->mYearlyCombo->currentIndex() == 1 ) { // Every (last - n)th last day of month
+      r->addYearlyDate( dayOfMonthFromEnd() );
+      r->addYearlyMonth( mDateTime->startDate().month() );
+    } else if ( mUi->mYearlyCombo->currentIndex() == 2 ) { // Every ith weekday of month
+      r->addYearlyMonth( mDateTime->startDate().month() );
+      r->addYearlyPos( monthWeekFromStart(), weekday() );
+    } else if ( mUi->mYearlyCombo->currentIndex() == 3 ) { // Every (last - i)th last weekday of month
+      r->addYearlyMonth( mDateTime->startDate().month() );
+      r->addYearlyPos( monthWeekFromEnd(), weekday() );
+    } else // The lth day of the year (l : 1 - 356)
+      r->addYearlyDay( dayOfYearFromStart() );
+  }
+
+  if ( lDuration > 0 ) {
+    r->setDuration( lDuration );
+  } else if ( lDuration == 0 ) {
+    r->setEndDate( endDate );
+  }
+
+  r->setExDates( mExceptionDates );
 
 }
 
@@ -175,21 +231,19 @@ void IncidenceRecurrence::fillCombos()
   const int currentMonthlyIndex = mUi->mMonthlyCombo->currentIndex();
   mUi->mMonthlyCombo->clear();
   const QDate startDate = mDateTime->startDate();
-  QString item = "the " + numberToString( startDate.day() );
+  QString item = "the " + numberToString( dayOfMonthFromStart() );
   mUi->mMonthlyCombo->addItem( item );
 
-  item = "the " + numberToString( startDate.daysInMonth() - startDate.day() ) + " last day";
+  item = "the " + numberToString( dayOfMonthFromEnd() ) + " last day";
   mUi->mMonthlyCombo->addItem( item );
 
-  const int weekOfMonthNr = weekdayOfMonth( startDate );
-  item = "the " + numberToString( weekOfMonthNr ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+  item = "the " + numberToString( monthWeekFromStart() ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
   mUi->mMonthlyCombo->addItem( item );
 
-  const int weekOfMonthNrFromEnd = weekdayCountForMonth( startDate ) + 1 - weekOfMonthNr;
-  if ( weekOfMonthNrFromEnd == 1 )
+  if ( monthWeekFromEnd() == 1 )
     item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
   else
-    item = "the " + numberToString( weekOfMonthNrFromEnd ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+    item = "the " + numberToString( monthWeekFromEnd() ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
   mUi->mMonthlyCombo->addItem( item );
   mUi->mMonthlyCombo->setCurrentIndex( currentMonthlyIndex == -1 ? 0 : currentMonthlyIndex );
 
@@ -208,13 +262,13 @@ void IncidenceRecurrence::fillCombos()
   item = "the " + numberToString( startDate.daysInMonth() - startDate.day() ) + " last day of " + longMonthName;
   mUi->mYearlyCombo->addItem( item );
 
-  item = "the " + numberToString( weekOfMonthNr ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
+  item = "the " + numberToString( monthWeekFromStart() ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
   mUi->mYearlyCombo->addItem( item );
 
-  if ( weekOfMonthNrFromEnd == 1 )
+  if ( monthWeekFromEnd() == 1 )
     item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
   else
-    item = "the " + numberToString( weekOfMonthNrFromEnd ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
+    item = "the " + numberToString( monthWeekFromEnd() ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
   mUi->mYearlyCombo->addItem( item );
 
   item = "the " + numberToString( startDate.dayOfYear() ) + " day of the year";
@@ -268,6 +322,80 @@ void IncidenceRecurrence::updateRemoveExceptionButton()
 {
   mUi->mExceptionRemoveButton->setEnabled( mUi->mExceptionList->selectedItems().count() > 0 );
 }
+
+short IncidenceRecurrence::dayOfMonthFromStart() const
+{
+  return mDateTime->startDate().day();
+}
+
+short IncidenceRecurrence::dayOfMonthFromEnd() const
+{
+  const QDate start = mDateTime->startDate();
+  return start.daysInMonth() - start.day();
+}
+
+short IncidenceRecurrence::dayOfYearFromStart() const
+{
+  return mDateTime->startDate().dayOfYear();
+}
+
+QBitArray IncidenceRecurrence::days() const
+{
+  QBitArray days( 7 );
+  const int weekStart = KGlobal::locale()->weekStartDay();
+
+  for ( int i = 0; i < 7; ++i ) {
+    // i is the nr of the combobox, not the day of week!
+    // label=(i+weekStart+6)%7 + 1;
+    // index in CheckBox array(=day): label-1
+    const int index = ( i + weekStart + 6 ) % 7;
+    days.setBit( i, mUi->mWeekDayCombo->itemCheckState( index ) == Qt::Checked );
+  }
+
+  return days;
+}
+
+int IncidenceRecurrence::duration() const
+{
+  if ( mUi->mRecurrenceEndCombo->currentIndex() == 0 ) {
+    return -1;
+  } else if ( mUi->mRecurrenceEndCombo->currentIndex() == 1 ) {
+    return mUi->mEndDurationEdit->value();
+  } else {
+    return 0;
+  }
+}
+
+short IncidenceRecurrence::monthWeekFromStart() const
+{
+  QDate date = mDateTime->startDate();
+
+  int count = 1;
+  QDate tmp = date.addDays( -7 );
+  while ( tmp.month() == date.month() ) {
+    tmp = tmp.addDays( -7 ); // Count backward
+    ++count;
+  }
+
+  // 1 is the first week, 4/5 is the last week of the month
+  return count;
+}
+
+short IncidenceRecurrence::monthWeekFromEnd() const
+{
+  QDate date = mDateTime->startDate();
+
+  int count = 1;
+  QDate tmp = date.addDays( 7 );
+  while ( tmp.month() == date.month() ) {
+    tmp = tmp.addDays( 7 );  // Count forward
+    ++count;
+  }
+
+  // 1 is the last week, 4/5 is the first week of the month
+  return count;
+}
+
 
 QString IncidenceRecurrence::numberToString( int number ) const
 {
@@ -410,7 +538,7 @@ void IncidenceRecurrence::setDefaults()
 {
   mUi->mRecurrenceEndCombo->setCurrentIndex( 0 ); // Ends never
   mUi->mRecurrenceEndDate->setDate( mDateTime->startDate() );
-  mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceWeeklyIndex );
+  mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceNeverIndex );
 
   setFrequency( 1 );
 
@@ -478,7 +606,15 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
   mUi->mExceptionList->setVisible( enable );
 }
 
-int IncidenceRecurrence::weekdayCountForMonth( const QDate &date )
+QBitArray IncidenceRecurrence::weekday() const
+{
+  QBitArray days( 7 );
+  // QDate::dayOfWeek() -> returns [1 - 7], 1 == monday
+  days.setBit(mDateTime->startDate().dayOfWeek() - 1, true );
+  return days;
+}
+
+int IncidenceRecurrence::weekdayCountForMonth( const QDate &date ) const
 {
   Q_ASSERT( date.isValid() );
   // This methods returns how often the weekday specified by @param date occurs
@@ -498,20 +634,4 @@ int IncidenceRecurrence::weekdayCountForMonth( const QDate &date )
   }
 
   return count;
-}
-
-int IncidenceRecurrence::weekdayOfMonth( const QDate &date )
-{
-  Q_ASSERT( date.isValid() );
-  // This methods returns the week number in the month containing @param date.
-  // The numbering starts at 1.
-
-  QDate prev = date.addDays( -7 );
-  int weeknr = 1;
-  while ( prev.month() == date.month() ) {
-    prev = prev.addDays( -7 );
-    ++weeknr;
-  }
-
-  return weeknr;
 }
