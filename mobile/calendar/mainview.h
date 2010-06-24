@@ -36,6 +36,8 @@ class MainView : public KDeclarativeMainView
 public:
     explicit MainView( QWidget *parent = 0 );
 
+    ~MainView();
+    
 public slots:
     void showRegularCalendar();
 

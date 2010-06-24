@@ -42,8 +42,13 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
   addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
   itemFetchScope().fetchFullPayload();
 
-  m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local(), this );
+  m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
+}
+
+MainView::~MainView()
+{
+  m_calendar->deleteLater();
 }
 
 void MainView::showRegularCalendar()
