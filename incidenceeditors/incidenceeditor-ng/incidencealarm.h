@@ -25,15 +25,20 @@
 
 namespace Ui {
 class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
 namespace IncidenceEditorsNG {
 
-class IncidenceAlarm : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 {
   Q_OBJECT
   public:
+#ifdef KDEPIM_MOBILE_UI
+    IncidenceAlarm( Ui::EventOrTodoMore *ui = 0 );
+#else
     IncidenceAlarm( Ui::EventOrTodoDesktop *ui = 0 );
+#endif
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -51,7 +56,11 @@ class IncidenceAlarm : public IncidenceEditor
     QString stringForAlarm( KCal::Alarm *alarm );
 
   private:
+#ifdef KDEPIM_MOBILE_UI
+    Ui::EventOrTodoMore *mUi;
+#else
     Ui::EventOrTodoDesktop *mUi;
+#endif
 
     KCal::Alarm::List mDisabledAlarms;
     KCal::Alarm::List mEnabledAlarms;

@@ -22,11 +22,20 @@
 
 #include "alarmdialog.h"
 #include "alarmpresets.h"
+
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomoremobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 
 using namespace IncidenceEditorsNG;
 
+#ifdef KDEPIM_MOBILE_UI
+IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoMore *ui )
+#else
 IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
+#endif
   : mUi( ui )
 {
   mUi->mAlarmConfigureButton->setEnabled( false );

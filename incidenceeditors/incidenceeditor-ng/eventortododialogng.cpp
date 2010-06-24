@@ -104,8 +104,10 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceDescription *ieDescription = new IncidenceDescription( mUi );
   mEditor->combine( ieDescription );
 
+#ifndef KDEPIM_MOBILE_UI
   IncidenceAlarm *ieAlarm = new IncidenceAlarm( mUi );
   mEditor->combine( ieAlarm );
+#endif
 
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
