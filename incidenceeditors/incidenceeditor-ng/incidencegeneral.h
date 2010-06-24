@@ -39,7 +39,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneral : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceGeneral( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceGeneral( Ui::EventOrTodoDesktop *ui );
 
     virtual void load(KCal::Incidence::ConstPtr incidence);
     virtual void save(KCal::Incidence::Ptr incidence);
