@@ -49,7 +49,7 @@ using namespace IncidenceEditorsNG;
 IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
-  , mPopupMenu( new KMenu( this ) )
+  , mPopupMenu( new KMenu )
 {
   setupActions();
   setupAttachmentIconView();
@@ -192,7 +192,7 @@ void IncidenceAttachment::removeSelectedAttachments()
   QString labelsStr = labels.join( "<br>" );
 
   if ( KMessageBox::questionYesNo(
-         this,
+         0,
          i18nc( "@info",
                 "Do you really want to remove these attachments?<nl>%1</nl>", labelsStr ),
          i18nc( "@title:window", "Remove Attachments?" ),
@@ -254,7 +254,7 @@ void IncidenceAttachment::saveAttachment( QListWidgetItem *item )
   // save the attachment url
   if ( !KIO::NetAccess::file_copy( sourceUrl, KUrl( saveAsFile ) ) &&
        KIO::NetAccess::lastError() ) {
-    KMessageBox::error( this, KIO::NetAccess::lastErrorString() );
+    KMessageBox::error( 0, KIO::NetAccess::lastErrorString() );
   }
 }
 
@@ -398,7 +398,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
     }
     probablyWeHaveUris = true;
   }
-  KMenu menu( this );
+  KMenu menu;
   QAction *linkAction = 0, *cancelAction;
   if ( probablyWeHaveUris ) {
     linkAction = menu.addAction( KIcon( "insert-link" ), i18nc( "@action:inmenu", "&Link here" ) );
@@ -454,7 +454,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
 void IncidenceAttachment::setupActions()
 {
   KActionCollection *ac = new KActionCollection( this );
-  ac->addAssociatedWidget( this );
+//  ac->addAssociatedWidget( this );
   
   mOpenAction = new KAction( i18nc( "@action:inmenu open the attachment in a viewer",
                                     "&Open" ), this );
@@ -495,7 +495,7 @@ void IncidenceAttachment::setupActions()
 
 void IncidenceAttachment::setupAttachmentIconView()
 {
-  mAttachmentView = new AttachmentIconView( this );
+  mAttachmentView = new AttachmentIconView;
   mAttachmentView->setWhatsThis( i18nc( "@info:whatsthis",
                                      "Displays items (files, mail, etc.) that "
                                      "have been associated with this event or to-do." ) );
@@ -569,7 +569,7 @@ void IncidenceAttachment::addUriAttachment( const QString &uri,
     }
   } else {
     QString tmpFile;
-    if ( KIO::NetAccess::download( uri, tmpFile, this ) ) {
+    if ( KIO::NetAccess::download( uri, tmpFile, 0 ) ) {
       QFile f( tmpFile );
       if ( !f.open( QIODevice::ReadOnly ) ) {
         return;

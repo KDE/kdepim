@@ -22,8 +22,8 @@
 
 using namespace IncidenceEditorsNG;
 
-IncidenceEditor::IncidenceEditor( QWidget *parent )
-  : QWidget( parent )
+IncidenceEditor::IncidenceEditor( QObject *parent )
+  : QObject( parent )
   , mWasDirty( false )
 { }
 

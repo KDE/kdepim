@@ -39,7 +39,7 @@
 
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
   : mUi( ui )
-  , mAttendeeEditor(  new AttendeeEditor( this ) )
+  , mAttendeeEditor(  new AttendeeEditor )
   , mOrganizerCombo( 0 )
   , mOrganizerLabel( 0 )
 {
@@ -48,7 +48,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
-  mOrganizerLabel = new QLabel( this );
+  mOrganizerLabel = new QLabel;
   gridLayout()->addWidget( mOrganizerLabel, 0, 1, 1, 1);
   mOrganizerLabel->hide();
 
@@ -110,7 +110,7 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
     bool skip = false;
     if ( KPIMUtils::isValidAddress( attendee->email() ) ) {
         if ( KMessageBox::warningYesNo(
-               this,
+               0,
                i18nc( "@info",
                       "%1 does not look like a valid email address. "
                       "Are you sure you want to invite this participant?",

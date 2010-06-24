@@ -37,7 +37,7 @@ namespace IncidenceEditorsNG {
  * approach to this complexity. An IncidenceEditor is an editor for a specific
  * part(s) of an Incidence.
  */
-class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QWidget // Get rid of qwidget
+class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 {
   Q_OBJECT
   public:
@@ -90,7 +90,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QWidget // Get rid of 
     
   protected:
     /** Only subclasses can instantiate IncidenceEditors */
-    IncidenceEditor( QWidget *parent = 0 );
+    IncidenceEditor( QObject *parent = 0 );
 
     template <typename IncidenceT>
     boost::shared_ptr<IncidenceT> incidence( KCal::Incidence::Ptr inc )
