@@ -20,6 +20,7 @@
 #include "declarativeeditors.h"
 
 #include "ui_eventortodomobile.h"
+#include "ui_eventortodomoremobile.h"
 
 DCollectionCombo::DCollectionCombo( QDeclarativeItem *parent )
   : DeclarativeWidgetBase<Akonadi::CollectionComboBox,
@@ -43,3 +44,32 @@ DIEGeneral::DIEGeneral( QDeclarativeItem *parent )
                           IncidenceView,
                           &IncidenceView::setGeneralEditor>( parent )
 { }
+
+MobileIncidenceMore::MobileIncidenceMore( QWidget *parent )
+  : QStackedWidget( parent ), mUi( new Ui::EventOrTodoMore )
+{
+  mUi->setupUi( this );
+}
+
+MobileIncidenceMore::~MobileIncidenceMore()
+{
+  delete mUi;
+}
+
+DIEMore::DIEMore( QDeclarativeItem *parent )
+  : DeclarativeWidgetBase<MobileIncidenceMore,
+                          IncidenceView,
+                          &IncidenceView::setMoreEditor>( parent )
+{ }
+
+int DIEMore::currentIndex() const
+{
+  return m_widget->currentIndex();
+}
+
+void DIEMore::setCurrentIndex( int index )
+{
+  m_widget->setCurrentIndex( index );
+}
+
+#include "declarativeeditors.moc"

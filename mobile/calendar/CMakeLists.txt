@@ -18,6 +18,7 @@ set(korganizer_mobile_SRCS
 
 kde4_add_ui_files(korganizer_mobile_SRCS
   ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomoremobile.ui
 )
 
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )

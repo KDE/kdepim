@@ -45,11 +45,7 @@ KPIM.MainView {
             height: 64
             icon: KDE.iconPath( "accessories-text-editor", 64 )
             onClicked: {
-              generalTab.visible = true
-              attendeeTab.visible = false
-              remindertabTab.visible = false
-              recurrenceTab.visible = false
-              attachmentTab.visible = false
+              moreEditors.currentIndex = 0
             }
           }
           KPIM.Button {
@@ -58,11 +54,7 @@ KPIM.MainView {
             height: 64
             icon: KDE.iconPath( "view-pim-contacts", 64 )
             onClicked: {
-              generalTab.visible = false
-              attendeeTab.visible = true
-              remindertabTab.visible = false
-              recurrenceTab.visible = false
-              attachmentTab.visible = false
+              moreEditors.currentIndex = 1
             }
           }
           KPIM.Button {
@@ -71,11 +63,7 @@ KPIM.MainView {
             height: 64
             icon: KDE.iconPath( "appointment-reminder", 64 )
             onClicked: {
-              generalTab.visible = false
-              attendeeTab.visible = false
-              remindertabTab.visible = true
-              recurrenceTab.visible = false
-              attachmentTab.visible = false
+              moreEditors.currentIndex = 2
             }
           }
           KPIM.Button {
@@ -84,11 +72,7 @@ KPIM.MainView {
             height: 64
             icon: KDE.iconPath( "appointment-recurring", 64 )
             onClicked: {
-              generalTab.visible = false
-              attendeeTab.visible = false
-              remindertabTab.visible = false
-              recurrenceTab.visible = true
-              attachmentTab.visible = false
+              moreEditors.currentIndex = 3
             }
           }
           KPIM.Button {
@@ -97,62 +81,18 @@ KPIM.MainView {
             height: 64
             icon: KDE.iconPath( "mail-attachment", 64 )
             onClicked: {
-              generalTab.visible = false
-              attendeeTab.visible = false
-              remindertabTab.visible = false
-              recurrenceTab.visible = false
-              attachmentTab.visible = true
+              moreEditors.currentIndex = 4
             }
           }
         },
 
-        // TODO: Add general tab, add attendees tab
-        Rectangle {
-          id: generalTab;
-          color: "#ffffff"
-          visible: true
-          anchors.left: buttonColumn.right
+        IncidenceEditors.MoreEditor {
+          id : moreEditors
           anchors.top: parent.top
-          anchors.right: parent.right
           anchors.bottom: parent.bottom
-        },
-        Rectangle {
-          id: attendeeTab;
-          color: "#ffdddd"
-          visible: false
           anchors.left: buttonColumn.right
-          anchors.top: parent.top
           anchors.right: parent.right
-          anchors.bottom: parent.bottom
-        },
-        Rectangle {
-          id: remindertabTab;
-          color: "#ffbbbb"
-          visible: false
-          anchors.left: buttonColumn.right
-          anchors.top: parent.top
-          anchors.right: parent.right
-          anchors.bottom: parent.bottom
-        },
-        Rectangle {
-          id: recurrenceTab;
-          color: "#ff9999"
-          visible: false
-          anchors.left: buttonColumn.right
-          anchors.top: parent.top
-          anchors.right: parent.right
-          anchors.bottom: parent.bottom
-        },
-        Rectangle {
-          id: attachmentTab;
-          color: "#ff7777"
-          visible: false
-          anchors.left: buttonColumn.right
-          anchors.top: parent.top
-          anchors.right: parent.right
-          anchors.bottom: parent.bottom
         }
-
       ]
     }
   }

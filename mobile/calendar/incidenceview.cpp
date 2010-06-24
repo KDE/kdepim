@@ -33,8 +33,9 @@
 
 #include "declarativeeditors.h"
 
-#include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencealarm.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
 
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
@@ -48,6 +49,7 @@ IncidenceView::IncidenceView( QWidget* parent )
 {
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
+  qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
 
   mItem.setPayload<KCal::Incidence::Ptr>( KCal::Incidence::Ptr( new KCal::Event ) );
   mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
@@ -92,6 +94,13 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
   editorDateTime->setActiveDate( mActiveDate );
   editorDateTime->load( mItem.payload<Incidence::Ptr>() );
   mEditor->combine( editorDateTime );
+}
+
+void IncidenceView::setMoreEditor( MobileIncidenceMore *editor )
+{
+  IncidenceEditorsNG::IncidenceAlarm *editorReminder = new IncidenceEditorsNG::IncidenceAlarm( editor->mUi );
+  editorReminder->load( mItem.payload<Incidence::Ptr>() );
+  mEditor->combine( editorReminder );
 }
 
 /// ItemEditorUi methods

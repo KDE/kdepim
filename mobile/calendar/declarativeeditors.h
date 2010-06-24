@@ -20,14 +20,17 @@
 #ifndef DECLRARATIVEEDITOR_H
 #define DECLRARATIVEEDITOR_H
 
+#include "incidenceview.h"
+#include "declarativewidgetbase.h"
+
 #include <Akonadi/CollectionComboBox>
 
-#include "declarativewidgetbase.h"
-#include "incidenceview.h"
+#include <QtGui/QStackedWidget>
 
 namespace Ui
 {
   class EventOrTodoDesktop;
+  class EventOrTodoMore;
 }
 
 class DCollectionCombo
@@ -60,6 +63,36 @@ class DIEGeneral
   Q_OBJECT
   public:
     explicit DIEGeneral( QDeclarativeItem *parent = 0 );
+};
+
+class MobileIncidenceMore : public QStackedWidget
+{
+  Q_OBJECT
+  public:
+    explicit MobileIncidenceMore( QWidget *parent = 0 );
+
+    ~MobileIncidenceMore();
+
+  public:
+    Ui::EventOrTodoMore *mUi;
+};
+
+class DIEMore
+  : public DeclarativeWidgetBase<MobileIncidenceMore,
+                                 IncidenceView,
+                                 &IncidenceView::setMoreEditor>
+{
+  Q_OBJECT
+
+  Q_PROPERTY( int currentIndex READ currentIndex WRITE setCurrentIndex )
+
+  public:
+    explicit DIEMore( QDeclarativeItem *parent = 0 );
+
+    int currentIndex() const;
+
+  public Q_SLOTS:
+    void setCurrentIndex( int index );
 };
 
 #endif

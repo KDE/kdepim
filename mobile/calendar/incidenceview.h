@@ -34,8 +34,8 @@ namespace Akonadi {
 class CollectionComboBox;
 }
 
-class MobileIncidenceDateTime;
 class MobileIncidenceGeneral;
+class MobileIncidenceMore;
 
 class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEditorUi
 {
@@ -48,6 +48,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEdi
 
     void setCollectionCombo( Akonadi::CollectionComboBox * );
     void setGeneralEditor( MobileIncidenceGeneral * );
+    void setMoreEditor( MobileIncidenceMore * );
 
   public: /// ItemEditorUi function implementations
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
