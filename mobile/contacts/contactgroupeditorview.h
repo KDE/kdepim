@@ -45,6 +45,7 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
 
   public Q_SLOTS:
     void save();
+    void cancel();
 
   Q_SIGNALS:
     void requestLaunchAccountWizard();

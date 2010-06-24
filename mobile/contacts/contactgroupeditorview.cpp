@@ -174,6 +174,11 @@ void ContactGroupEditorView::save()
   d->mItemManager->save();
 }
 
+void ContactGroupEditorView::cancel()
+{
+  deleteLater();
+}
+
 void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
 {
   d->mEditor = editor;
