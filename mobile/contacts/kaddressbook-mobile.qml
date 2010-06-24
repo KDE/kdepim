@@ -183,7 +183,7 @@ KPIM.MainView {
       contextActions : [
         QML.Column {
           anchors.fill: parent
-          height : 70 
+          height : kaddressbookMobile.height 
           KPIM.Button2 {
             width: parent.width
             buttonText : KDE.i18n( "New Contact" )
