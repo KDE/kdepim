@@ -36,6 +36,7 @@
 #include <incidenceeditors/incidenceeditor-ng/incidencealarm.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencerecurrence.h>
 
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
@@ -46,6 +47,7 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mItemManager( new EditorItemManager( this ) )
   , mCollectionCombo( 0 )
   , mEditor( new CombinedIncidenceEditor( parent ) )
+  , mEditorDateTime( 0 )
 {
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
@@ -90,10 +92,11 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
   editorGeneral->load( mItem.payload<Incidence::Ptr>() );
   mEditor->combine( editorGeneral );
 
-  IncidenceEditorsNG::IncidenceDateTime *editorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editor->mUi );
-  editorDateTime->setActiveDate( mActiveDate );
-  editorDateTime->load( mItem.payload<Incidence::Ptr>() );
-  mEditor->combine( editorDateTime );
+  Q_ASSERT( mEditorDateTime == 0 );
+  mEditorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editor->mUi );
+  mEditorDateTime->setActiveDate( mActiveDate );
+  mEditorDateTime->load( mItem.payload<Incidence::Ptr>() );
+  mEditor->combine( mEditorDateTime );
 }
 
 void IncidenceView::setMoreEditor( MobileIncidenceMore *editor )
@@ -101,6 +104,11 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editor )
   IncidenceEditorsNG::IncidenceAlarm *editorReminder = new IncidenceEditorsNG::IncidenceAlarm( editor->mUi );
   editorReminder->load( mItem.payload<Incidence::Ptr>() );
   mEditor->combine( editorReminder );
+
+  Q_ASSERT( mEditorDateTime != 0 );
+  IncidenceEditorsNG::IncidenceRecurrence *editorRecurrence = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, editor->mUi );
+  editorRecurrence->load( mItem.payload<Incidence::Ptr>() );
+  mEditor->combine( editorRecurrence );
 }
 
 /// ItemEditorUi methods

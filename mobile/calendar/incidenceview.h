@@ -34,6 +34,10 @@ namespace Akonadi {
 class CollectionComboBox;
 }
 
+namespace IncidenceEditorsNG {
+class IncidenceDateTime;
+}
+
 class MobileIncidenceGeneral;
 class MobileIncidenceMore;
 
@@ -74,6 +78,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEdi
     Akonadi::EditorItemManager *mItemManager;
     Akonadi::CollectionComboBox *mCollectionCombo;
     IncidenceEditorsNG::CombinedIncidenceEditor *mEditor;
+    IncidenceEditorsNG::IncidenceDateTime *mEditorDateTime;
 };
 
 #endif // INCIDENCEVIEW_H
