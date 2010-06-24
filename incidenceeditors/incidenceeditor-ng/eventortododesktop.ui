@@ -17,13 +17,19 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="text">
       <string>Calendar:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
@@ -33,7 +39,7 @@
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -50,8 +56,14 @@
      <property name="whatsThis">
       <string extracomment="@info:whatsthis">Sets the Title of this event or to-do.</string>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="text">
       <string extracomment="@label">T&amp;itle:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="buddy">
       <cstring>mSummaryEdit</cstring>
@@ -77,13 +89,19 @@
    <item row="2" column="0">
     <widget class="QLabel" name="label_4">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="text">
       <string extracomment="@label">&amp;Location:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="buddy">
       <cstring>mLocationEdit</cstring>
@@ -162,13 +180,19 @@
    <item row="6" column="0">
     <widget class="QLabel" name="mStartLabel">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="text">
       <string>&amp;Start:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="buddy">
       <cstring>mStartDateEdit</cstring>
@@ -274,13 +298,19 @@
    <item row="7" column="0">
     <widget class="QLabel" name="mEndLabel">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="text">
       <string>&amp;End:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="buddy">
       <cstring>mEndDateEdit</cstring>
@@ -366,13 +396,19 @@
    <item row="5" column="0">
     <widget class="QLabel" name="label_8">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="text">
       <string>Event:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>

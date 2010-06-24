@@ -85,6 +85,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   mUi->setupUi( q->mainWidget() );
 
   QGridLayout *layout = new QGridLayout( mUi->mCalSelectorPlaceHolder );
+  layout->setSpacing( 0 );
   layout->addWidget( mCalSelector );
 
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
