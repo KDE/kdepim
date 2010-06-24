@@ -133,7 +133,6 @@ EventOrTodoDialogNGPrivate::~EventOrTodoDialogNGPrivate()
 void EventOrTodoDialogNGPrivate::updateButtonStatus( bool isDirty )
 {
   Q_Q( EventOrTodoDialogNG );
-  qDebug() << "EventOrTodoDialogNGPrivate::updateButtonStatus" << isDirty;
   q->enableButton( KDialog::Apply, isDirty );
   q->enableButton( KDialog::Ok, isDirty );
 }
