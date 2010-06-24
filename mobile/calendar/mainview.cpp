@@ -82,6 +82,22 @@ void MainView::newEvent()
   editor->show();
 }
 
+void MainView::newTodo()
+{
+  IncidenceView *editor = new IncidenceView;
+  Item item;
+  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  KCal::Todo::Ptr todo( new KCal::Todo );
+
+  // make it due one day from now
+  todo->setDtStart( KDateTime::currentLocalDateTime() );
+  todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
+
+  item.setPayload<KCal::Todo::Ptr>( todo );
+  editor->load( item );
+  editor->show();
+}
+
 void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
 {
   IncidenceView *editor = new IncidenceView;

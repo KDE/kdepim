@@ -44,6 +44,7 @@ public slots:
     void setCurrentEventItemId( qint64 id );
 
     void newEvent();
+    void newTodo();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
 
 private:
