@@ -40,6 +40,7 @@ using namespace KCal;
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
   addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
+  addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 
   m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
