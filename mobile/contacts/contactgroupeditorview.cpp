@@ -169,16 +169,6 @@ ContactGroupEditorView::~ContactGroupEditorView()
   delete d;
 }
 
-void ContactGroupEditorView::save()
-{
-  d->mItemManager->save();
-}
-
-void ContactGroupEditorView::cancel()
-{
-  deleteLater();
-}
-
 void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
 {
   d->mEditor = editor;
@@ -198,6 +188,22 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
 void ContactGroupEditorView::loadContactGroup( const Item &item )
 {
   d->mItemManager->load( item );
+}
+
+void ContactGroupEditorView::save()
+{
+  d->mItemManager->save();
+}
+
+void ContactGroupEditorView::cancel()
+{
+  deleteLater();
+}
+
+void ContactGroupEditorView::closeEvent( QCloseEvent *event )
+{
+  Q_UNUSED( event );
+  cancel();
 }
 
 #include "contactgroupeditorview.moc"

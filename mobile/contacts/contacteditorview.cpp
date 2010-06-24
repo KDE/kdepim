@@ -207,21 +207,6 @@ ContactEditorView::~ContactEditorView()
   delete d;
 }
 
-void ContactEditorView::save()
-{
-  d->mItemManager->save();
-}
-
-void ContactEditorView::cancel()
-{
-  deleteLater();
-}
-
-void ContactEditorView::closeEvent( QCloseEvent *event )
-{
-  cancel();
-}
-
 void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
 {
   d->mEditorGeneral = editor;
@@ -275,6 +260,22 @@ void ContactEditorView::setEditorMore( EditorMore *editor )
 void ContactEditorView::loadContact( const Item &item )
 {
   d->mItemManager->load( item );
+}
+
+void ContactEditorView::save()
+{
+  d->mItemManager->save();
+}
+
+void ContactEditorView::cancel()
+{
+  deleteLater();
+}
+
+void ContactEditorView::closeEvent( QCloseEvent *event )
+{
+  Q_UNUSED( event );
+  cancel();
 }
 
 #include "contacteditorview.moc"

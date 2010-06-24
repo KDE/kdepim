@@ -50,6 +50,9 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
   Q_SIGNALS:
     void requestLaunchAccountWizard();
 
+  protected:
+    void closeEvent( QCloseEvent *event );
+    
   private:
     class Private;
     Private *const d;
