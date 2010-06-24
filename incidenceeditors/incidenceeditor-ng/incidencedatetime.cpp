@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
