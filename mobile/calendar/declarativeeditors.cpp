@@ -28,26 +28,18 @@ DCollectionCombo::DCollectionCombo( QDeclarativeItem *parent )
 { }
 
 MobileIncidenceGeneral::MobileIncidenceGeneral( QWidget *parent )
-  : IncidenceEditorsNG::IncidenceGeneral( new Ui::EventOrTodoDesktop )
+  : QWidget( parent ), mUi( new Ui::EventOrTodoDesktop )
 {
-  Q_UNUSED( parent );
+  mUi->setupUi( this );
 }
 
+MobileIncidenceGeneral::~MobileIncidenceGeneral()
+{
+  delete mUi;
+}
 
 DIEGeneral::DIEGeneral( QDeclarativeItem *parent )
   : DeclarativeWidgetBase<MobileIncidenceGeneral,
                           IncidenceView,
                           &IncidenceView::setGeneralEditor>( parent )
-{ }
-
-MobileIncidenceDateTime::MobileIncidenceDateTime( QWidget *parent )
-  : IncidenceEditorsNG::IncidenceDateTime( new Ui::EventOrTodoDesktop )
-{
-  Q_UNUSED( parent );
-}
-
-DIEDateTime::DIEDateTime( QDeclarativeItem *parent )
-  : DeclarativeWidgetBase<MobileIncidenceDateTime,
-                          IncidenceView,
-                          &IncidenceView::setDateTimeEditor>( parent )
 { }

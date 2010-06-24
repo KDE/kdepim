@@ -47,7 +47,6 @@ class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEdi
     void load( const Akonadi::Item &item, const QDate &date );
 
     void setCollectionCombo( Akonadi::CollectionComboBox * );
-    void setDateTimeEditor( MobileIncidenceDateTime * );
     void setGeneralEditor( MobileIncidenceGeneral * );
 
   public: /// ItemEditorUi function implementations

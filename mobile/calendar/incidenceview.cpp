@@ -33,6 +33,9 @@
 
 #include "declarativeeditors.h"
 
+#include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
+
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
 using namespace KCal;
@@ -45,7 +48,6 @@ IncidenceView::IncidenceView( QWidget* parent )
 {
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
-  qmlRegisterType<DIEDateTime>( "org.kde.incidenceeditors", 4, 5, "DateTimeEditor" );
 
   mItem.setPayload<KCal::Incidence::Ptr>( KCal::Incidence::Ptr( new KCal::Event ) );
   mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
@@ -80,19 +82,18 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
   mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
 
-void IncidenceView::setDateTimeEditor( MobileIncidenceDateTime *editor )
-{
-  editor->setActiveDate( mActiveDate );
-  // TODO: ugly dynamic pointer cast should get removed when payload method supports
-  //       retrieving const pointers.
-  editor->load( boost::dynamic_pointer_cast<const Incidence>( mItem.payload<Incidence::Ptr>() ) );
-  mEditor->combine( editor );
-}
-
 void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
 {
-  editor->load( mItem.payload<Incidence::Ptr>() );
-  mEditor->combine( editor );
+  IncidenceEditorsNG::IncidenceGeneral *editorGeneral = new IncidenceEditorsNG::IncidenceGeneral( editor->mUi );
+  editorGeneral->load( mItem.payload<Incidence::Ptr>() );
+  mEditor->combine( editorGeneral );
+
+  IncidenceEditorsNG::IncidenceDateTime *editorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editor->mUi );
+  editorDateTime->setActiveDate( mActiveDate );
+  // TODO: ugly dynamic pointer cast should get removed when payload method supports
+  //       retrieving const pointers.
+  editorDateTime->load( boost::dynamic_pointer_cast<const Incidence>( mItem.payload<Incidence::Ptr>() ) );
+  mEditor->combine( editorDateTime );
 }
 
 /// ItemEditorUi methods

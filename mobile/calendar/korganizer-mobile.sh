@@ -8,4 +8,4 @@ if [ "$?" -ne "0"  ]; then
 	export LD_LIBRARY_PATH=$QT_DIR:$LD_LIBRARY_PATH
 fi
 
-/usr/bin/korganizer-mobile
+/dvl/kde/branches/work/komo/install/bin/korganizer-mobile

@@ -22,11 +22,13 @@
 
 #include <Akonadi/CollectionComboBox>
 
-#include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
-
 #include "declarativewidgetbase.h"
 #include "incidenceview.h"
+
+namespace Ui
+{
+  class EventOrTodoDesktop;
+}
 
 class DCollectionCombo
   : public DeclarativeWidgetBase<Akonadi::CollectionComboBox,
@@ -38,11 +40,16 @@ class DCollectionCombo
     explicit DCollectionCombo( QDeclarativeItem *parent = 0 );
 };
 
-class MobileIncidenceGeneral : public IncidenceEditorsNG::IncidenceGeneral
+class MobileIncidenceGeneral : public QWidget
 {
   Q_OBJECT
   public:
     explicit MobileIncidenceGeneral( QWidget *parent = 0 );
+
+    ~MobileIncidenceGeneral();
+
+  public:
+    Ui::EventOrTodoDesktop *mUi;
 };
 
 class DIEGeneral
@@ -53,23 +60,6 @@ class DIEGeneral
   Q_OBJECT
   public:
     explicit DIEGeneral( QDeclarativeItem *parent = 0 );
-};
-
-class MobileIncidenceDateTime : public IncidenceEditorsNG::IncidenceDateTime
-{
-  Q_OBJECT
-  public:
-    explicit MobileIncidenceDateTime( QWidget *parent = 0 );
-};
-
-class DIEDateTime
-  : public DeclarativeWidgetBase<MobileIncidenceDateTime,
-                                 IncidenceView,
-                                 &IncidenceView::setDateTimeEditor>
-{
-  Q_OBJECT
-  public:
-    explicit DIEDateTime( QDeclarativeItem *parent = 0 );
 };
 
 #endif

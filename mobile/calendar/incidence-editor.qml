@@ -63,19 +63,14 @@ KPIM.MainView {
     
     width: parent.width;
     height: parent.height - parent.height / 6 - collectionCombo.height;
-    contentHeight: generalEditor.height + dateTimeEditor.height;
+    contentHeight: generalEditor.height;
     clip: true;
-    flickDirection: "VerticalFlick"
+    flickableDirection: "VerticalFlick"
 
     Column {
       anchors.fill: parent
       IncidenceEditors.GeneralEditor {
         id: generalEditor;
-        width: parent.width;
-      }
-
-      IncidenceEditors.DateTimeEditor {
-        id: dateTimeEditor;
         width: parent.width;
       }
     }
