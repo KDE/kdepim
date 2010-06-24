@@ -2909,13 +2909,14 @@ void ViewerPrivate::itemFetchResult( KJob* job )
   }
 }
 
-void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray> & )
+void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray> & parts )
 {
   if ( item.id() != messageItem().id() ) {
     kDebug() << "Update for an already forgotten item. Weird.";
     return;
   }
-  setMessageItem( item );
+  if( parts.contains( "PLD:RFC822" ) )
+    setMessageItem( item, Viewer::Force );
 }
 
 void ViewerPrivate::slotClear()
