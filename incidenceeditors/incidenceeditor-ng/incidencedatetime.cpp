@@ -473,10 +473,10 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
 #ifdef KDEPIM_MOBILE_UI
   mUi->mFreeRadio->setVisible( false );
   mUi->mBusyRadio->setVisible( false );
+  mUi->mFreeBusyLabel->setVisible( false );
 #else
   mUi->mFreeBusyCheck->setVisible( false );
 #endif
-//  mUi->mFreeBusyLabel->setVisible( false );
 
   mUi->mWholeDayCheck->setChecked( todo->allDay() );
 
