@@ -335,8 +335,13 @@ bool IncidenceDateTime::isDirty( KCal::Event::ConstPtr event ) const
   // When the check box is checked, it has time associated and thus is not an all
   // day event. So the editor is dirty when the event is allDay and the checkbox
   // is checked.
-  if ( event->allDay() != mUi->mWholeDayCheck->isChecked() )
-    return true;
+  if ( event->summary().isEmpty() ) { // New event
+    if ( mUi->mWholeDayCheck->isChecked() )
+      return true;
+  } else {
+    if ( event->allDay() != mUi->mWholeDayCheck->isChecked() )
+      return true;
+  }
 
   if ( !event->allDay() ) {
     if ( currentStartDateTime() != mInitialStartDT )
@@ -395,7 +400,9 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
-  mUi->mWholeDayCheck->setChecked( event->allDay() );
+  // When the summary is empty (which is invalid) we assume a new event and the
+  // default behavior should be that an event is timed.
+  mUi->mWholeDayCheck->setChecked( event->allDay() && !event->summary().isEmpty() );
   enableTimeEdits();
 
   bool isTemplate = false; // TODO
