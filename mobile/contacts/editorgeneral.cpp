@@ -65,8 +65,13 @@ class EditorGeneral::Private
       mLastPhoneRow = 4; // fifth row
 
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+      mUi.collectionSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanChangeItem );
 
       mUi.pictureButton->setType( ImageWidget::Photo );
+
+      QObject::connect( mUi.launchAccountWizardButton, SIGNAL( clicked() ), q, SIGNAL( requestLaunchAccountWizard() ) );
+
+      availableCollectionsChanged();
     }
 
     ~Private()
@@ -111,6 +116,13 @@ class EditorGeneral::Private
     void addPhoneClicked();
     void clearPhoneClicked();
 
+    void availableCollectionsChanged()
+    {
+      const bool available = mUi.collectionSelector->currentCollection().isValid();
+      mUi.collectionSelector->setVisible( available );
+      mUi.launchAccountWizardButton->setVisible( !available );
+    }
+
   private:
     void addEmailRows( int newRowCount );
     void addPhoneRows( int newRowCount );
@@ -145,6 +157,7 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
   mUi.gridLayout->removeWidget( mUi.addPhoneButton );
   mUi.gridLayout->removeWidget( mUi.saveButton );
   mUi.gridLayout->removeWidget( mUi.collectionSelector );
+  mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
 
   int row = mLastEmailRow + 1;
 
@@ -169,6 +182,7 @@ void EditorGeneral::Private::addEmailRows( int newRowCount )
   mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
   mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
   mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 2 );
+  mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, row, 1, 1, 2 );
 }
 
 void EditorGeneral::Private::clearEmailClicked()
@@ -203,6 +217,7 @@ void EditorGeneral::Private::clearEmailClicked()
     mUi.gridLayout->removeWidget( mUi.addPhoneButton );
     mUi.gridLayout->removeWidget( mUi.saveButton );
     mUi.gridLayout->removeWidget( mUi.collectionSelector );
+    mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
 
     // delete the now obsolete widget
     --mLastEmailRow;
@@ -224,6 +239,7 @@ void EditorGeneral::Private::clearEmailClicked()
     mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
     mUi.gridLayout->addWidget( mUi.saveButton, row, 3, 1, 1 );
     mUi.gridLayout->addWidget( mUi.collectionSelector, row, 1, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, row, 1, 1, 2 );
   } else {
     last->clear();
   }
@@ -239,6 +255,7 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
   mUi.gridLayout->removeWidget( mUi.addPhoneButton );
   mUi.gridLayout->removeWidget( mUi.saveButton );
   mUi.gridLayout->removeWidget( mUi.collectionSelector );
+  mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
 
   int row = mLastPhoneRow + 1;
   // add new widgets
@@ -256,6 +273,7 @@ void EditorGeneral::Private::addPhoneRows( int newRowCount )
   mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
   mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 3, 1, 1 );
   mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 2 );
+  mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, mLastPhoneRow + 1, 1, 1, 2 );
 }
 
 void EditorGeneral::Private::clearPhoneClicked()
@@ -284,6 +302,7 @@ void EditorGeneral::Private::clearPhoneClicked()
     mUi.gridLayout->removeWidget( mUi.addPhoneButton );
     mUi.gridLayout->removeWidget( mUi.saveButton );
     mUi.gridLayout->removeWidget( mUi.collectionSelector );
+    mUi.gridLayout->removeWidget( mUi.launchAccountWizardButton );
 
     --mLastPhoneRow;
     mPhoneWidgets.pop_back();
@@ -295,6 +314,7 @@ void EditorGeneral::Private::clearPhoneClicked()
     mUi.gridLayout->addWidget( mUi.addPhoneButton, mLastPhoneRow, 3, 1, 1 );
     mUi.gridLayout->addWidget( mUi.saveButton, mLastPhoneRow + 1, 3, 1, 1 );
     mUi.gridLayout->addWidget( mUi.collectionSelector, mLastPhoneRow + 1, 1, 1, 2 );
+    mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, mLastPhoneRow + 1, 1, 1, 2 );
   } else {
     last->mInput->clear();
     last->mType->setType( KABC::PhoneNumber::Home );
@@ -314,6 +334,11 @@ EditorGeneral::EditorGeneral( QWidget *parent )
   connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
   connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),
            SIGNAL( collectionChanged( Akonadi::Collection ) ) );
+
+  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+           SLOT( availableCollectionsChanged() ) );
+  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
+           SLOT( availableCollectionsChanged() ) );
 }
 
 EditorGeneral::~EditorGeneral()

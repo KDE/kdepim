@@ -33,7 +33,7 @@ class EditorContactGroup;
 class ContactGroupEditorView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
- 
+
   public:
     explicit ContactGroupEditorView( QWidget *parent = 0 );
 
@@ -45,7 +45,10 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
 
   public Q_SLOTS:
     void save();
-    
+
+  Q_SIGNALS:
+    void requestLaunchAccountWizard();
+
   private:
     class Private;
     Private *const d;

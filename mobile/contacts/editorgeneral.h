@@ -52,6 +52,7 @@ class EditorGeneral : public EditorBase
     void nameChanged( const KABC::Addressee& );
 
     void saveClicked();
+    void requestLaunchAccountWizard();
 
   private:
     class Private;
@@ -62,6 +63,7 @@ class EditorGeneral : public EditorBase
     Q_PRIVATE_SLOT( d, void addPhoneClicked() )
     Q_PRIVATE_SLOT( d, void clearEmailClicked() )
     Q_PRIVATE_SLOT( d, void clearPhoneClicked() )
+    Q_PRIVATE_SLOT( d, void availableCollectionsChanged() )
 };
 
 #endif

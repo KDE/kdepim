@@ -37,7 +37,7 @@ class EditorMore;
 class ContactEditorView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
- 
+
   public:
     explicit ContactEditorView( QWidget *parent = 0 );
 
@@ -46,7 +46,7 @@ class ContactEditorView : public KDeclarativeFullScreenView
     void setEditorGeneral( EditorGeneral *editor );
 
     void setEditorBusiness( EditorBusiness *editor );
-    
+
     void setEditorLocation( EditorLocation *editor );
 
     void setEditorCrypto( EditorCrypto *editor );
@@ -58,7 +58,10 @@ class ContactEditorView : public KDeclarativeFullScreenView
   public Q_SLOTS:
     void save();
     void cancel();
-    
+
+  Q_SIGNALS:
+    void requestLaunchAccountWizard();
+
   private:
     class Private;
     Private *const d;

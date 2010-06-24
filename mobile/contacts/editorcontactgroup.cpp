@@ -98,6 +98,11 @@ class EditorContactGroup::Private
       mLastRow = 2; // third row
 
       mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
+      mUi.collectionSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanChangeItem );
+
+      QObject::connect( mUi.launchAccountWizardButton, SIGNAL( clicked() ), q, SIGNAL( requestLaunchAccountWizard() ) );
+
+      availableCollectionsChanged();
     }
 
     void ensureRows( int recipientCount )
@@ -130,6 +135,13 @@ class EditorContactGroup::Private
     void textEdited( const QString &text );
 
     void clearRecipientClicked();
+
+    void availableCollectionsChanged()
+    {
+      const bool available = mUi.collectionSelector->currentCollection().isValid();
+      mUi.collectionSelector->setVisible( available );
+      mUi.launchAccountWizardButton->setVisible( !available );
+    }
 
   private:
     void addRows( int newRowCount );
@@ -302,6 +314,11 @@ EditorContactGroup::EditorContactGroup( QWidget *parent )
   connect( d->mUi.saveButton, SIGNAL( clicked() ), SIGNAL( saveClicked() ) );
   connect( d->mUi.collectionSelector, SIGNAL( currentChanged( Akonadi::Collection ) ),
            SIGNAL( collectionChanged( Akonadi::Collection ) ) );
+
+  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+           SLOT( availableCollectionsChanged() ) );
+  connect( d->mUi.collectionSelector->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
+           SLOT( availableCollectionsChanged() ) );
 }
 
 EditorContactGroup::~EditorContactGroup()

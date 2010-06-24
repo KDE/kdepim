@@ -38,12 +38,14 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobi
 void MainView::newContact()
 {
   ContactEditorView *editor = new ContactEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->show();
 }
 
 void MainView::editContact( const Akonadi::Item &item )
 {
   ContactEditorView *editor = new ContactEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContact( item );
   editor->show();
 }
@@ -51,12 +53,14 @@ void MainView::editContact( const Akonadi::Item &item )
 void MainView::newContactGroup()
 {
   ContactGroupEditorView *editor = new ContactGroupEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->show();
 }
 
 void MainView::editContactGroup( const Akonadi::Item &item )
 {
   ContactGroupEditorView *editor = new ContactGroupEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContactGroup( item );
   editor->show();
 }

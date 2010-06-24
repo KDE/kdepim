@@ -95,6 +95,13 @@
      <item row="5" column="1" colspan="2">
       <widget class="Akonadi::CollectionComboBox" name="collectionSelector"/>
      </item>
+     <item row="5" column="1" colspan="2">
+      <widget class="QPushButton" name="launchAccountWizardButton">
+       <property name="text">
+        <string>New Address Book</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

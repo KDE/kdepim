@@ -44,18 +44,19 @@ class EditorContactGroup : public QWidget
     ~EditorContactGroup();
 
     void setDefaultCollection( const Akonadi::Collection &collection );
-    
+
     void loadContactGroup( const KABC::ContactGroup &contactGroup );
 
     void saveContactGroup( KABC::ContactGroup &contactGroup ) const;
 
     Akonadi::Collection selectedCollection() const;
-    
+
   Q_SIGNALS:
     void collectionChanged( const Akonadi::Collection &collection );
 
     void saveClicked();
-    
+    void requestLaunchAccountWizard();
+
   private:
     class Private;
     Private *const d;
@@ -66,6 +67,7 @@ class EditorContactGroup : public QWidget
     Q_PRIVATE_SLOT( d, void completed( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void textEdited( const QString& ) )
     Q_PRIVATE_SLOT( d, void clearRecipientClicked() )
+    Q_PRIVATE_SLOT( d, void availableCollectionsChanged() )
 };
 
 #endif

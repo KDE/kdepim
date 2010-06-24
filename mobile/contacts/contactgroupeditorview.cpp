@@ -185,6 +185,8 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
     connect( d->mEditor, SIGNAL( saveClicked() ), SLOT( save() ) );
     connect( d->mEditor, SIGNAL( collectionChanged( Akonadi::Collection ) ),
              SLOT( collectionChanged( Akonadi::Collection ) ) );
+    connect( d->mEditor, SIGNAL( requestLaunchAccountWizard() ),
+             this, SIGNAL( requestLaunchAccountWizard() ) );
   }
 }
 

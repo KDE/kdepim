@@ -228,6 +228,8 @@ void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
     connect( d->mEditorGeneral, SIGNAL( saveClicked() ), SLOT( save() ) );
     connect( d->mEditorGeneral, SIGNAL( collectionChanged( Akonadi::Collection ) ),
              SLOT( collectionChanged( Akonadi::Collection ) ) );
+    connect( d->mEditorGeneral, SIGNAL( requestLaunchAccountWizard() ),
+             this, SIGNAL( requestLaunchAccountWizard() ) );
   }
 }
 
