@@ -785,6 +785,7 @@ void Message::ComposerViewBase::autoSaveMessage()
   }
 
   Message::Composer * const composer = createSimpleComposer();
+  composer->setAutoSave( true );
   m_composers.append( composer );
   connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotAutoSaveComposeResult(KJob*)) );
   composer->start();

@@ -73,6 +73,11 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     void setSigningKeys( std::vector<GpgME::Key>& signers );
     void setEncryptionKeys(QList<QPair<QStringList, std::vector<GpgME::Key> > > data );
 
+    /// Sets if this message being composed is an auto-saved message
+    ///  if so, might need different handling, such as no crypto attachments.
+    void setAutoSave( bool isAutoSave );
+    bool autoSave() const;
+
   public Q_SLOTS:
     virtual void start();
 
