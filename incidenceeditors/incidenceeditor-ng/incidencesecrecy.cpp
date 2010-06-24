@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+    Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,70 +18,68 @@
     02110-1301, USA.
 */
 
-#include "incidencegeneral.h"
+#include "incidencesecrecy.h"
 
-#include <KDebug>
-
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_eventortodomobile.h"
-#else
 #include "ui_eventortododesktop.h"
-#endif
 
 using namespace IncidenceEditorsNG;
 
-IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
-  : IncidenceEditor( 0 )
-  , mUi( ui )
+IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoDesktop *ui )
+  : mUi( ui )
 {
-  connect( mUi->mSummaryEdit, SIGNAL(textChanged(QString)),
-           SLOT(checkDirtyStatus()));
-  connect( mUi->mLocationEdit, SIGNAL(textChanged(QString)),
+  mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
+
+  connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceGeneral::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceSecrecy::load( KCal::Incidence::ConstPtr incidence )
 {
-  kDebug();
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
-    mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
-    mUi->mLocationEdit->setText( mLoadedIncidence->location() );
+    Q_ASSERT( mUi->mSecrecyCombo->count() == KCal::Incidence::secrecyList().count() );
+    mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
   } else {
-    mUi->mSummaryEdit->clear();
-    mUi->mLocationEdit->clear();
+    mUi->mSecrecyCombo->setCurrentIndex( 0 );
   }
 
   mWasDirty = false;
 }
 
-void IncidenceGeneral::save( KCal::Incidence::Ptr incidence )
+void IncidenceSecrecy::save( KCal::Incidence::Ptr incidence )
 {
   Q_ASSERT( incidence );
   incidence->setSummary( mUi->mSummaryEdit->text() );
   incidence->setLocation( mUi->mLocationEdit->text() );
+
+#ifndef KDEPIM_MOBILE_UI
+  switch( mUi->mSecrecyCombo->currentIndex() ) {
+  case 1:
+    incidence->setSecrecy( KCal::Incidence::SecrecyPrivate );
+    break;
+  case 2:
+    incidence->setSecrecy( KCal::Incidence::SecrecyConfidential );
+    break;
+  default:
+    incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
+  }
+#else
+  // ###FIXME
+  incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
+#endif
 }
 
-bool IncidenceGeneral::isDirty() const
+bool IncidenceSecrecy::isDirty() const
 {
-  kDebug();
   if ( mLoadedIncidence ) {
-    return ( mUi->mSummaryEdit->text() != mLoadedIncidence->summary() )
-      || ( mUi->mLocationEdit->text() != mLoadedIncidence->location() );
+    if ( mLoadedIncidence->secrecy() != mUi->mSecrecyCombo->currentIndex() ) {
+      return true;
+    }
   } else {
-    return mUi->mSummaryEdit->text().isEmpty()
-      && mUi->mLocationEdit->text().isEmpty();
+    if ( mUi->mSecrecyCombo->currentIndex() != 0 )
+      return true;
   }
+
+  return false;
 }
 
-bool IncidenceGeneral::isValid()
-{
-  if ( mUi->mSummaryEdit->text().isEmpty() ) {
-    mUi->mSummaryEdit->setFocus();
-    return false;
-  }
-    
-  return true;
-}
-
-#include "moc_incidencegeneral.cpp"

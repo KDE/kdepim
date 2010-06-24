@@ -38,6 +38,7 @@
 #include "incidencedescription.h"
 #include "incidencegeneral.h"
 #include "incidencerecurrence.h"
+#include "incidencesecrecy.h"
 #include "incidenceattendee.h"
 #include "ui_eventortododesktop.h"
 
@@ -111,6 +112,9 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( ieDateTime, mUi );
   mEditor->combine( ieRecurrence );
 
+  IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
+  mEditor->combine( ieSecrecy );
+
   IncidenceAttendee *ieAttendee= new IncidenceAttendee( mUi );
   mEditor->combine( ieAttendee );
 
@@ -129,6 +133,7 @@ EventOrTodoDialogNGPrivate::~EventOrTodoDialogNGPrivate()
 void EventOrTodoDialogNGPrivate::updateButtonStatus( bool isDirty )
 {
   Q_Q( EventOrTodoDialogNG );
+  qDebug() << "EventOrTodoDialogNGPrivate::updateButtonStatus" << isDirty;
   q->enableButton( KDialog::Apply, isDirty );
   q->enableButton( KDialog::Ok, isDirty );
 }
@@ -193,7 +198,6 @@ void EventOrTodoDialogNGPrivate::reject( RejectReason /*reason*/, const QString 
   kDebug() << "Rejecting:" << errorMessage;
   q->deleteLater();
 }
-
 
 /// EventOrTodoDialog
 

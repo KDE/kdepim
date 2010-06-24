@@ -14,13 +14,16 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   # Shared incidence editors code
   incidenceeditor.cpp
   combinedincidenceeditor.cpp
+
   # Specific editors
   incidencealarm.cpp
+  incidenceattendee.cpp
   incidencecategories.cpp
   incidencegeneral.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
-  incidenceattendee.cpp
+  incidencesecrecy.cpp
+
   #incidencerecurrenceeditor.cpp
   #incidencerecurrencedialog.cpp
 
