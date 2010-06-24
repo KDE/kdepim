@@ -24,20 +24,13 @@
 #include <KDialog>
 #endif
 
-#include "autochecktreewidget.h"
-#include "categoryconfig.h"
-#include "categoryhierarchyreader.h"
-#include "categoryselectdialog.h"
-#include "editorconfig.h"
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomobile.h"
 #else
 #include "ui_eventortododesktop.h"
 #endif
 
-using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
-
 
 IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
@@ -53,13 +46,6 @@ IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
 //  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
 //           SLOT(selectCategories()) );
 #else
-  CategoryConfig cc( EditorConfig::instance()->config() );
-  mUi->mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
-  mUi->mCategoryCombo->setSqueezeText( true );
-  CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( cc.customCategories() );
-
-  connect( mUi->mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
-           SLOT(setCategories(QStringList)) );
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
 #endif
@@ -79,7 +65,6 @@ void IncidenceGeneral::load( KCal::Incidence::ConstPtr incidence )
 #endif    
     mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
     mUi->mLocationEdit->setText( mLoadedIncidence->location() );
-    setCategories( mLoadedIncidence->categories() );
   } else {
 #ifndef KDEPIM_MOBILE_UI
     mUi->mSecrecyCombo->setCurrentIndex( 0 );
@@ -130,12 +115,10 @@ bool IncidenceGeneral::isDirty() const
 
   if ( mLoadedIncidence ) {
     return ( mUi->mSummaryEdit->text() != mLoadedIncidence->summary() )
-      || ( mUi->mLocationEdit->text() != mLoadedIncidence->location() )
-      || categoriesChanged();
+      || ( mUi->mLocationEdit->text() != mLoadedIncidence->location() );
   } else {
     return mUi->mSummaryEdit->text().isEmpty()
-      && mUi->mLocationEdit->text().isEmpty()
-      && categoriesChanged();
+      && mUi->mLocationEdit->text().isEmpty();
   }
 }
 
@@ -147,44 +130,6 @@ bool IncidenceGeneral::isValid()
   }
     
   return true;
-}
-
-bool IncidenceGeneral::categoriesChanged() const
-{
-  // If no Incidence was loaded, mSelectedCategories should be empty.
-  bool categoriesEqual = mSelectedCategories.isEmpty();
-
-  if ( mLoadedIncidence ) { // There was an Incidence loaded
-    categoriesEqual = ( mLoadedIncidence->categories().size() == mSelectedCategories.size() );
-    if ( categoriesEqual ) {
-      QStringListIterator it( mLoadedIncidence->categories() );
-      while ( it.hasNext() && categoriesEqual )
-        categoriesEqual = mSelectedCategories.contains( it.next() );
-    }
-  }
-  return !categoriesEqual;
-}
-
-void IncidenceGeneral::selectCategories()
-{
-#ifdef KDEPIM_MOBILE_UI
-  CategoryConfig cc( EditorConfig::instance()->config() );
-  QPointer<CategorySelectDialog> dialog( new CategorySelectDialog( &cc ) );
-  dialog->setSelected( mSelectedCategories );
-  dialog->exec();
-
-  setCategories( dialog->selectedCategories() );
-  delete dialog;
-#endif
-}
-
-void IncidenceGeneral::setCategories( const QStringList &categories )
-{
-  mSelectedCategories = categories;
-#ifdef KDEPIM_MOBILE_UI
-//  mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
-#endif
-  checkDirtyStatus();
 }
 
 #include "moc_incidencegeneral.cpp"

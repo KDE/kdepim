@@ -13,6 +13,7 @@
 #include "editoritemmanager.h"
 #include "incidencealarm.h"
 #include "incidenceattachment.h"
+#include "incidencecategories.h"
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
 #include "incidencegeneral.h"
@@ -71,6 +72,9 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   // fields and load/store incidences in the ui.
   IncidenceGeneral *ieGeneral = new IncidenceGeneral( mUi );
   mEditor->combine( ieGeneral );
+
+  IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
+  mEditor->combine( ieCategories );
 
   IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( ieDateTime );

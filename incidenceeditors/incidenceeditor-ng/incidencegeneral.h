@@ -46,13 +46,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneral : public IncidenceEditor
     virtual bool isDirty() const;
     virtual bool isValid();
 
-  private slots:
-    void selectCategories();
-    void setCategories( const QStringList &categories );
-
-  private:
-    bool categoriesChanged() const ;
-
   private:
     QStringList mSelectedCategories;
     Ui::EventOrTodoDesktop *mUi;

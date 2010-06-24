@@ -16,6 +16,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   combinedincidenceeditor.cpp
   # Specific editors
   incidencealarm.cpp
+  incidencecategories.cpp
   incidencegeneral.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
