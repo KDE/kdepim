@@ -48,8 +48,6 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   , mTimeZones( new ICalTimeZones )
   , mUi( ui )
 {
-  mUi->setupUi( this );
-  
   setTimeZonesVisibility( false );
 
 #ifdef KDEPIM_MOBILE_UI
