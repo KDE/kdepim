@@ -204,6 +204,7 @@ ContactEditorView::ContactEditorView( QWidget *parent )
 
 ContactEditorView::~ContactEditorView()
 {
+  kDebug();
   delete d;
 }
 
@@ -214,7 +215,14 @@ void ContactEditorView::save()
 
 void ContactEditorView::cancel()
 {
+  kDebug();
   deleteLater();
+}
+
+void ContactEditorView::closeEvent( QCloseEvent *event )
+{
+  kDebug();
+  cancel();
 }
 
 void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
