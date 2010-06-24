@@ -36,6 +36,11 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
   Q_OBJECT
   public:
     CombinedIncidenceEditor( QWidget *parent = 0 );
+    /**
+     * Deletes this editor as well as all editors which are combined into this
+     * one.
+     */
+    ~CombinedIncidenceEditor();
 
     void combine( IncidenceEditor *other );
     

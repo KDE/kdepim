@@ -29,6 +29,11 @@ CombinedIncidenceEditor::CombinedIncidenceEditor( QWidget *parent )
   , mDirtyEditorCount( 0 )
 { }
 
+CombinedIncidenceEditor::~CombinedIncidenceEditor()
+{
+  qDeleteAll( mCombinedEditors );
+}
+
 void CombinedIncidenceEditor::combine( IncidenceEditor *other )
 {
   Q_ASSERT( other );
