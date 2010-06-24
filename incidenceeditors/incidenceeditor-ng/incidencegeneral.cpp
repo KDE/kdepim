@@ -72,7 +72,6 @@ void IncidenceGeneral::load( KCal::Incidence::ConstPtr incidence )
 #endif
     mUi->mSummaryEdit->clear();
     mUi->mLocationEdit->clear();
-    mSelectedCategories.clear();
   }
 
   mWasDirty = false;
@@ -83,7 +82,6 @@ void IncidenceGeneral::save( KCal::Incidence::Ptr incidence )
   Q_ASSERT( incidence );
   incidence->setSummary( mUi->mSummaryEdit->text() );
   incidence->setLocation( mUi->mLocationEdit->text() );
-  incidence->setCategories( mSelectedCategories );
 
 #ifndef KDEPIM_MOBILE_UI
   switch( mUi->mSecrecyCombo->currentIndex() ) {

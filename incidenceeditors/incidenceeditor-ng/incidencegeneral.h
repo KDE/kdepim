@@ -48,7 +48,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceGeneral : public IncidenceEditor
     virtual bool isValid();
 
   private:
-    QStringList mSelectedCategories;
     Ui::EventOrTodoDesktop *mUi;
 };
 
