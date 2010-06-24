@@ -22,8 +22,11 @@
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
+#include <kdebug.h>
 
 #include "mainwindow.h"
+
+#include <stdlib.h>
 
 int main( int argc, char **argv )
 {
@@ -40,6 +43,18 @@ int main( int argc, char **argv )
   aboutData.addAuthor( ki18n( "Volker Krause" ),  ki18n( "Author" ), "vkrause@kde.org" );
 
   KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineOptions options;
+  options.add( "remote <server>", ki18n("Connect to an Akonadi remote debugging server"));
+  KCmdLineArgs::addCmdLineOptions( options );
+
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  if ( args->isSet( "remote" ) ) {
+    const QString akonadiAddr = QString::fromLatin1( "tcp:host=%1,port=31415" ).arg( args->getOption( "remote" ) );
+    const QString dbusAddr = QString::fromLatin1( "tcp:host=%1,port=31416" ).arg( args->getOption( "remote" ) );
+    setenv( "AKOANDI_SERVER_ADDRESS", akonadiAddr.toLatin1(), 1 );
+    setenv( "DBUS_SESSION_BUS_ADDRESS", dbusAddr.toLatin1(), 1 );
+  }
+
   KApplication app;
 
   MainWindow *window = new MainWindow;
