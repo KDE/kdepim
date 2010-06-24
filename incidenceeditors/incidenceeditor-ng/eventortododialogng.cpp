@@ -91,7 +91,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 
   // Now instantiate the logic of the dialog. These editors update the ui, validate
   // fields and load/store incidences in the ui.
-  IncidenceGeneral *ieGeneral = new IncidenceGeneral( mUi );
+  IncidenceWhatWhere *ieGeneral = new IncidenceWhatWhere( mUi );
   mEditor->combine( ieGeneral );
 
   IncidenceCategories *ieCategories = new IncidenceCategories( mUi );

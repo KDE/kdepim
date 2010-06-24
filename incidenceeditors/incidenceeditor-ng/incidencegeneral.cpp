@@ -30,7 +30,7 @@
 
 using namespace IncidenceEditorsNG;
 
-IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
+IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
@@ -40,7 +40,7 @@ IncidenceGeneral::IncidenceGeneral( Ui::EventOrTodoDesktop *ui )
            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceGeneral::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceWhatWhere::load( KCal::Incidence::ConstPtr incidence )
 {
   kDebug();
   mLoadedIncidence = incidence;
@@ -55,14 +55,14 @@ void IncidenceGeneral::load( KCal::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceGeneral::save( KCal::Incidence::Ptr incidence )
+void IncidenceWhatWhere::save( KCal::Incidence::Ptr incidence )
 {
   Q_ASSERT( incidence );
   incidence->setSummary( mUi->mSummaryEdit->text() );
   incidence->setLocation( mUi->mLocationEdit->text() );
 }
 
-bool IncidenceGeneral::isDirty() const
+bool IncidenceWhatWhere::isDirty() const
 {
   kDebug();
   if ( mLoadedIncidence ) {
@@ -74,7 +74,7 @@ bool IncidenceGeneral::isDirty() const
   }
 }
 
-bool IncidenceGeneral::isValid()
+bool IncidenceWhatWhere::isValid()
 {
   if ( mUi->mSummaryEdit->text().isEmpty() ) {
     mUi->mSummaryEdit->setFocus();

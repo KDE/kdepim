@@ -84,7 +84,7 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 
 void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
 {
-  IncidenceEditorsNG::IncidenceGeneral *editorGeneral = new IncidenceEditorsNG::IncidenceGeneral( editor->mUi );
+  IncidenceEditorsNG::IncidenceWhatWhere *editorGeneral = new IncidenceEditorsNG::IncidenceWhatWhere( editor->mUi );
   editorGeneral->load( mItem.payload<Incidence::Ptr>() );
   mEditor->combine( editorGeneral );
 
