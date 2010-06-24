@@ -112,8 +112,10 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
 
+#ifndef KDEPIM_MOBILE_UI
   IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( ieDateTime, mUi );
   mEditor->combine( ieRecurrence );
+#endif
 
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );

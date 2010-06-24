@@ -25,17 +25,22 @@
 
 namespace Ui {
 class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
 namespace IncidenceEditorsNG {
 
 class IncidenceDateTime;
 
-class IncidenceRecurrence : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
 {
     Q_OBJECT
 public:
+#ifdef KDEPIM_MOBILE_UI
+    IncidenceRecurrence( IncidenceDateTime *dateTime = 0, Ui::EventOrTodoMore *ui = 0 );
+#else
     IncidenceRecurrence( IncidenceDateTime *dateTime = 0, Ui::EventOrTodoDesktop *ui = 0 );
+#endif
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -86,7 +91,11 @@ private:
     int weekdayCountForMonth( const QDate &date ) const;
 
 private:
+#ifdef KDEPIM_MOBILE_UI
+    Ui::EventOrTodoMore *mUi;
+#else
     Ui::EventOrTodoDesktop *mUi;
+#endif
     IncidenceDateTime *mDateTime;
     KCal::DateList mExceptionDates;
 };

@@ -26,7 +26,12 @@
 #include <KCalendarSystem>
 
 #include "incidencedatetime.h"
+
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomoremobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 
 using namespace IncidenceEditorsNG;
 
@@ -37,7 +42,11 @@ static const int sRecurrenceWeeklyIndex = 2;
 static const int sRecurrenceMonthlyIndex = 3;
 static const int sRecurrenceYearlyIndex = 3;
 
+#ifdef KDEPIM_MOBILE_UI
+IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
+#else
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui )
+#endif
   : mUi( ui )
   , mDateTime( dateTime )
 {
@@ -117,8 +126,12 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
 
   if ( mLoadedIncidence->recurs() && r ) {
     setDuration( r->duration() );
+#ifdef KDEPIM_MOBILE_UI
+    // TODO
+#else
     if ( r->duration() == 0 )
       mUi->mEndDateEdit->setDate( r->endDate() );
+#endif
   }
 
   setExceptionDates( mLoadedIncidence->recurrence()->exDates() );
@@ -135,9 +148,13 @@ void IncidenceRecurrence::save( KCal::Incidence::Ptr incidence )
 
   const int lDuration = duration();
   QDate endDate;
+#ifdef KDEPIM_MOBILE_UI
+  // TODO
+#else
   if ( lDuration == 0 ) {
     endDate = mUi->mEndDateEdit->date();
   }
+#endif
 
   int recurrenceType = mUi->mRecurrenceTypeCombo->currentIndex();
   if ( recurrenceType == sRecurrenceDailyIndex ) {
