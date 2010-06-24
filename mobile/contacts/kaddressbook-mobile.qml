@@ -183,7 +183,7 @@ KPIM.MainView {
       contextActions : [
         QML.Column {
           anchors.fill: parent
-          height : 70
+          height : 70 
           KPIM.Button2 {
             width: parent.width
             buttonText : KDE.i18n( "New Contact" )
@@ -196,6 +196,13 @@ KPIM.MainView {
             buttonText : KDE.i18n( "New Contact Group" )
             onClicked : {
               application.newContactGroup();
+            }
+          }
+          KPIM.Button2 {
+            width: parent.width
+            buttonText: KDE.i18n( "New Address Book" )
+            onClicked : {
+              application.launchAccountWizard();
             }
           }
         }
@@ -375,7 +382,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText : KDE.i18n( "New Addressbook" )
+            buttonText : KDE.i18n( "New Address Book" )
             onClicked : {
               application.launchAccountWizard();
               actionPanel.collapse();
