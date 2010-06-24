@@ -58,6 +58,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
            SLOT(updateRemoveExceptionButton()) );
   connect( mUi->mRecurrenceTypeCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(handleRecurrenceTypeChange(int)));
+  connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
+           SLOT(handleFrequencyChange()) );
 }
 
 void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
@@ -285,25 +287,31 @@ void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
                                         && mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() );
 }
 
+void IncidenceRecurrence::handleFrequencyChange()
+{
+  handleRecurrenceTypeChange( mUi->mRecurrenceTypeCombo->currentIndex() );
+}
+
 void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
 {
   toggleRecurrenceWidgets( currentIndex > 0 );
+  QString text;
   switch ( currentIndex ) {
-  case 1:
-    mUi->mRecurrenceRuleLabel->setText( i18n("day(s)") );
-    break;
   case 2:
-    mUi->mRecurrenceRuleLabel->setText( i18n("week(s)") );
+    text = i18ncp( "Event recurs every n week(s)", "week", "weeks", mUi->mFrequencyEdit->value() );
     break;
   case 3:
-    mUi->mRecurrenceRuleLabel->setText( i18n("month(s)") );
+    text = i18ncp( "Event recurs every n month(s)", "month", "months", mUi->mFrequencyEdit->value() );
     break;
   case 4:
-    mUi->mRecurrenceRuleLabel->setText( i18n("year(s)") );
+    text = i18ncp( "Event recurs every n year(s)", "year", "years", mUi->mFrequencyEdit->value() );
     break;
   default:
-    mUi->mRecurrenceRuleLabel->setText( i18n("day(s)") );
+    text = i18ncp( "Event recurs every n day(s)", "day", "days", mUi->mFrequencyEdit->value() );
+    break;
   }
+
+  mUi->mRecurrenceRuleLabel->setText( text );
 }
 
 void IncidenceRecurrence::removeExceptions()

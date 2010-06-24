@@ -46,6 +46,7 @@ private Q_SLOTS:
     void addException();
     void fillCombos();
     void handleExceptionDateChange( const QDate &currentDate );
+    void handleFrequencyChange();
     void handleRecurrenceTypeChange( int currentIndex );
     void removeExceptions();
     void updateRemoveExceptionButton();
