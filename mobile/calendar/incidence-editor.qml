@@ -30,24 +30,130 @@ KPIM.MainView {
 
     SlideoutPanel {
       anchors.fill: parent
-//       id: startPanel
-      titleIcon: KDE.iconPath( "view-pim-contacts", 48 )
-      handlePosition: 30
+      titleText: "More..."
+      handlePosition: 250
       handleHeight: 120
-    }
-    SlideoutPanel {
-      anchors.fill: parent
-//       id: startPanel
-      titleIcon: KDE.iconPath( "appointment-recurring", 48 )
-      handlePosition: 30 + 120
-      handleHeight: 120
-    }
-    SlideoutPanel {
-      anchors.fill: parent
-//       id: startPanel
-      titleIcon: KDE.iconPath( "mail-attachment", 48 )
-      handlePosition: 30 + 120 + 120
-      handleHeight: 100
+      // TODO: Better icons for the buttons probably.
+      content: [
+        Column {
+          id: buttonColumn
+          width: 64;
+          height: parent.height;
+          KPIM.Button {
+            id: btnGeneral
+            width: 64
+            height: 64
+            icon: KDE.iconPath( "accessories-text-editor", 64 )
+            onClicked: {
+              generalTab.visible = true
+              attendeeTab.visible = false
+              remindertabTab.visible = false
+              recurrenceTab.visible = false
+              attachmentTab.visible = false
+            }
+          }
+          KPIM.Button {
+            id: btnAttendees
+            width: 64
+            height: 64
+            icon: KDE.iconPath( "view-pim-contacts", 64 )
+            onClicked: {
+              generalTab.visible = false
+              attendeeTab.visible = true
+              remindertabTab.visible = false
+              recurrenceTab.visible = false
+              attachmentTab.visible = false
+            }
+          }
+          KPIM.Button {
+            id: btnReminder
+            width: 64
+            height: 64
+            icon: KDE.iconPath( "appointment-reminder", 64 )
+            onClicked: {
+              generalTab.visible = false
+              attendeeTab.visible = false
+              remindertabTab.visible = true
+              recurrenceTab.visible = false
+              attachmentTab.visible = false
+            }
+          }
+          KPIM.Button {
+            id: btnRecurrence
+            width: 64
+            height: 64
+            icon: KDE.iconPath( "appointment-recurring", 64 )
+            onClicked: {
+              generalTab.visible = false
+              attendeeTab.visible = false
+              remindertabTab.visible = false
+              recurrenceTab.visible = true
+              attachmentTab.visible = false
+            }
+          }
+          KPIM.Button {
+            id: btnAttachment
+            width: 64
+            height: 64
+            icon: KDE.iconPath( "mail-attachment", 64 )
+            onClicked: {
+              generalTab.visible = false
+              attendeeTab.visible = false
+              remindertabTab.visible = false
+              recurrenceTab.visible = false
+              attachmentTab.visible = true
+            }
+          }
+        },
+
+        // TODO: Add general tab, add attendees tab
+        Rectangle {
+          id: generalTab;
+          color: "#ffffff"
+          visible: true
+          anchors.left: buttonColumn.right
+          anchors.top: parent.top
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+        },
+        Rectangle {
+          id: attendeeTab;
+          color: "#ffdddd"
+          visible: false
+          anchors.left: buttonColumn.right
+          anchors.top: parent.top
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+        },
+        Rectangle {
+          id: remindertabTab;
+          color: "#ffbbbb"
+          visible: false
+          anchors.left: buttonColumn.right
+          anchors.top: parent.top
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+        },
+        Rectangle {
+          id: recurrenceTab;
+          color: "#ff9999"
+          visible: false
+          anchors.left: buttonColumn.right
+          anchors.top: parent.top
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+        },
+        Rectangle {
+          id: attachmentTab;
+          color: "#ff7777"
+          visible: false
+          anchors.left: buttonColumn.right
+          anchors.top: parent.top
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+        }
+
+      ]
     }
   }
 
