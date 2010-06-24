@@ -415,7 +415,7 @@
    <item row="9" column="0" colspan="3">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -994,7 +994,7 @@
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="no_end">
             <layout class="QGridLayout" name="gridLayout_16">
@@ -1009,7 +1009,7 @@
               <number>0</number>
              </property>
              <item row="0" column="0">
-              <widget class="KPIM::KDateEdit" name="mEndDateEdit_2">
+              <widget class="KPIM::KDateEdit" name="mRecurrenceEndDate">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>

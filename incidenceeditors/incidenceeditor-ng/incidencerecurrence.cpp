@@ -69,7 +69,8 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
   // So don't depend on CombinedIncidenceEditor or whatever external factor to
   // load the date/time before loading the recurrence
   mDateTime->load( incidence );
-  //setDefaults( mDateTime->startDate() /*, mDateTime->endDate(), mDateTime->isWholeDay() */ );
+  fillCombos();
+  setDefaults();
 
   int f = 0;
   KCal::Recurrence *r = 0;
@@ -111,9 +112,6 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
   default:
     break;
   }
-
-//  QDateTime start = mLoadedIncidence->recurrence()->startDateTime().toTimeSpec( localTimeSpec ).dateTime();
-//  setDateTimes( start.isValid() ? start : QDateTime::currentDateTime() );
 
   if ( mLoadedIncidence->recurs() && r ) {
     setDuration( r->duration() );
@@ -406,6 +404,23 @@ void IncidenceRecurrence::setDays( const QBitArray &days )
   }
 
   mUi->mWeekDayCombo->setCheckedItems( checkedDays );
+}
+
+void IncidenceRecurrence::setDefaults()
+{
+  mUi->mRecurrenceEndCombo->setCurrentIndex( 0 ); // Ends never
+  mUi->mRecurrenceEndDate->setDate( mDateTime->startDate() );
+  mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceWeeklyIndex );
+
+  setFrequency( 1 );
+
+  QBitArray days( 7 );
+  days.fill( 0 );
+  days.setBit( ( mDateTime->startDate().dayOfWeek() + 6 ) % 7 );
+  setDays( days );
+
+  mUi->mMonthlyCombo->setCurrentIndex( 0 ); // Recur on the nth of the month
+  mUi->mYearlyCombo->setCurrentIndex( 0 );  // Recur on the nth of the month
 }
 
 void IncidenceRecurrence::setDuration( int duration )

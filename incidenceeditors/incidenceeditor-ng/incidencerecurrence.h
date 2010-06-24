@@ -55,6 +55,7 @@ private:
     void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
     void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
     void setDays( const QBitArray &days );
+    void setDefaults();
     void setDuration( int duration );
     void setExceptionDates( const KCal::DateList &dates );
     void setFrequency( int freq );
