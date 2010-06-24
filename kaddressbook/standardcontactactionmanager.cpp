@@ -100,7 +100,12 @@ class StandardContactActionManager::Private
         return false;
 
       const QAbstractItemModel *collectionModel = mCollectionSelectionModel->model();
-      return hasWritableCollection( collectionModel->index( 0, 0 ), mimeType );
+      for ( int row = 0; row < collectionModel->rowCount(); ++row ) {
+        if ( hasWritableCollection( collectionModel->index( row, 0, QModelIndex() ), mimeType ) )
+          return true;
+      }
+
+      return false;
     }
 
     void updateActions()

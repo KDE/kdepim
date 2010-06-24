@@ -281,13 +281,15 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   }
 
   if ( alreadyExisted ) {
+    const bool existedInUidMap = m_uidToItemId.contains( ui );
     if ( m_uidToItemId.value( ui ) != item.id() ) {
       kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
-              << "item uid = "  << ui.uid
-              << "; calendar = " << q;
+              << "; item uid = "  << ui.uid
+              << "; calendar = " << q
+              << "; existed in cache = " << existedInUidMap;
+      Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
     }
 
-    Q_ASSERT( m_uidToItemId.value( ui ) == item.id() );
     QHash<Item::Id,Item::Id>::Iterator oldParentIt = m_childToParent.find( id );
     if ( oldParentIt != m_childToParent.end() ) {
       const KCal::Incidence::Ptr parentInc = Akonadi::incidence( m_itemMap.value( oldParentIt.value() ) );
