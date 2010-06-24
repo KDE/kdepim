@@ -60,9 +60,19 @@ void MainView::setCurrentEventItemId(qint64 id)
   setListSelectedRow(list.first().row());
 }
 
-void MainView::newIncidence()
+void MainView::newEvent()
 {
   IncidenceView *editor = new IncidenceView;
+  Item item;
+  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  KCal::Event::Ptr event( new KCal::Event );
+
+  // make it take one hour from now
+  event->setDtStart( KDateTime::currentLocalDateTime() );
+  event->setDtEnd( KDateTime::currentLocalDateTime().addSecs( 3600 ) );
+
+  item.setPayload<KCal::Event::Ptr>( event );
+  editor->load( item );
   editor->show();
 }
 

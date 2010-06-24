@@ -215,7 +215,7 @@ KPIM.MainView {
           buttonText: KDE.i18n( "New Appointment" )
           // TODO: Make sure that the correct default calender is selected in
           //       the incidence editor.
-          onClicked : { application.newIncidence(); }
+          onClicked : { application.newEvent(); }
 
         }
       }
@@ -290,7 +290,7 @@ KPIM.MainView {
         buttonText: KDE.i18n( "New Appointment" )
         // TODO: Make sure that the correct default calender is selected in
         //       the incidence editor.
-        onClicked : { application.newIncidence(); }
+        onClicked : { application.newEvent(); }
 
       }
       KPIM.Button2 {
@@ -341,7 +341,7 @@ KPIM.MainView {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: KDE.i18n( "New Appointment" )
-            onClicked: { application.newIncidence(); actionPanel.collapse() }
+            onClicked: { application.newEvent(); actionPanel.collapse() }
           },
           KPIM.Action {
              id: deleteButton
