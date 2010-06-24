@@ -90,9 +90,7 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
 
   IncidenceEditorsNG::IncidenceDateTime *editorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editor->mUi );
   editorDateTime->setActiveDate( mActiveDate );
-  // TODO: ugly dynamic pointer cast should get removed when payload method supports
-  //       retrieving const pointers.
-  editorDateTime->load( boost::dynamic_pointer_cast<const Incidence>( mItem.payload<Incidence::Ptr>() ) );
+  editorDateTime->load( mItem.payload<Incidence::Ptr>() );
   mEditor->combine( editorDateTime );
 }
 
