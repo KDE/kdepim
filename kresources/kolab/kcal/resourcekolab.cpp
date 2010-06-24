@@ -471,8 +471,9 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     }
     KTempFile *tempFile = new KTempFile;
     if ( tempFile->status() == 0 ) { // open ok
-      QCString decoded = KCodecs::base64Decode( QCString( (*it)->data() ) );
-      tempFile->file()->writeBlock( decoded.data(), decoded.length() );
+      const QByteArray decoded = (*it)->decodedData() ;
+
+      tempFile->file()->writeBlock( decoded.data(), decoded.count() );
       KURL url;
       url.setPath( tempFile->name() );
       attURLs.append( url.url() );
