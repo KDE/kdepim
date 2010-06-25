@@ -269,21 +269,46 @@ namespace {
     };
 }
 
+static QString decode( const QString & encoded ) {
+    QString decoded;
+    decoded.reserve( encoded.size() );
+    bool shift = false;
+    Q_FOREACH( const QChar ch, encoded )
+        if ( shift ) {
+            switch ( ch.toLatin1() ) {
+            case '\\': decoded += QLatin1Char( '\\' ); break;
+            case 'n':  decoded += QLatin1Char( '\n' ); break;
+            case 'r':  decoded += QLatin1Char( '\r' ); break;
+            default:
+                qDebug() << Q_FUNC_INFO << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
+                decoded += ch;
+                break;
+            }
+            shift = false;
+        } else {
+            if ( ch == QLatin1Char( '\\' ) )
+                shift = true;
+            else
+                decoded += ch;
+        }
+    return decoded;
+}
+
 static std::vector<File> parse_sum_file( const QString & fileName ) {
     std::vector<File> files;
     QFile f( fileName );
     if ( f.open( QIODevice::ReadOnly ) ) {
         QTextStream s( &f );
-        QRegExp rx( "([a-f0-9A-F]+) ([ *])([^ *].*)[\n\r]*" );
+        QRegExp rx( "(\\?)([a-f0-9A-F]+) ([ *])([^ *].*)[\n\r]*" );
         while ( !s.atEnd() ) {
             const QString line = s.readLine();
             if ( rx.exactMatch( line ) ) {
-                assert( !rx.cap(3).endsWith( QLatin1Char('\n') ) );
-                assert( !rx.cap(3).endsWith( QLatin1Char('\r') ) );
+                assert( !rx.cap(4).endsWith( QLatin1Char('\n') ) );
+                assert( !rx.cap(4).endsWith( QLatin1Char('\r') ) );
                 const File file = {
-                    rx.cap( 3 ),
-                    rx.cap( 1 ).toLatin1(),
-                    rx.cap( 2 ) == QLatin1String("*"),
+                    rx.cap( 1 ) == QLatin1String("\\") ? decode( rx.cap( 4 ) ) : rx.cap( 4 ),
+                    rx.cap( 2 ).toLatin1(),
+                    rx.cap( 3 ) == QLatin1String("*"),
                 };
                 files.push_back( file );
             }
