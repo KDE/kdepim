@@ -78,6 +78,26 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
            SLOT(handleEndAfterOccurrencesChange(int)) );
   connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
            SLOT(handleFrequencyChange()) );
+
+  // Check the dirty status when the user changes values.
+  connect( mUi->mRecurrenceTypeCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mWeekDayCombo, SIGNAL(checkedItemsChanged(QStringList)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mMonthlyCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mYearlyCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mRecurrenceEndCombo, SIGNAL(currentIndexChanged(int)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndDurationEdit, SIGNAL(valueChanged(int)),
+           SLOT(checkDirtyStatus()) );
+  connect( mUi->mRecurrenceEndDate, SLOT(dateChanged(QDate)),
+           SLOT(checkDirtyStatus()) );
 }
 
 void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
@@ -204,12 +224,75 @@ void IncidenceRecurrence::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceRecurrence::isDirty() const
 {
-  return false;
-}
+  if ( mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() == 0 )
+    return true;
 
-bool IncidenceRecurrence::isValid()
-{
-  return true;
+  if ( !mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() > 0 )
+    return true;
+
+  // The incidence is not recurring and that hasn't changed, so don't check the
+  // other values.
+  if ( mUi->mRecurrenceTypeCombo->currentIndex() == 0 )
+    return false;
+
+  const KCal::Recurrence *recurrence = mLoadedIncidence->recurrence();
+  switch ( recurrence->recurrenceType() ) {
+  case KCal::Recurrence::rDaily:
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 1 )
+      return true;
+    break;
+  case KCal::Recurrence::rWeekly:
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 2 )
+      return true;
+    // TODO: Check weekdays
+    break;
+  case KCal::Recurrence::rMonthlyDay:
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 3 )
+      return true;
+    // TODO: Check values
+    break;
+  case KCal::Recurrence::rMonthlyPos:
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 3 )
+      return true;
+    // TODO: Check values
+    break;
+  case KCal::Recurrence::rYearlyDay:
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+      return true;
+    // TODO: Check values
+    break;
+  case KCal::Recurrence::rYearlyMonth:
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+      return true;
+    // TODO: Check values
+    break;
+  case KCal::Recurrence::rYearlyPos:
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+      return true;
+    // TODO: Check values
+    break;
+  }
+
+  // Recurrence end
+  if ( recurrence->duration() == -1 && mUi->mRecurrenceEndCombo->currentIndex() != 0 )
+    return true;
+  else if ( recurrence->duration() == 0 ) {
+    if ( mUi->mRecurrenceEndCombo->currentIndex() != 1 )
+      return true;
+
+    if ( recurrence->endDate() != mUi->mRecurrenceEndDate->date() )
+      return true;
+  } else if ( mUi->mEndDurationEdit->value() != recurrence->duration() )
+    return true;
+
+  // Exceptions
+  const KCal::DateList origExDates = recurrence->exDates();
+  foreach ( const QDate &origExDate, origExDates ) {
+    if ( !mExceptionDates.contains( origExDate) )
+      return true;
+  }
+
+  return false;
 }
 
 void IncidenceRecurrence::addException()
@@ -222,6 +305,7 @@ void IncidenceRecurrence::addException()
   }
 
   mUi->mExceptionAddButton->setEnabled( false );
+  checkDirtyStatus();
 }
 
 void IncidenceRecurrence::fillCombos()
@@ -347,6 +431,7 @@ void IncidenceRecurrence::removeExceptions()
   }
 
   handleExceptionDateChange( mUi->mExceptionDateEdit->date() );
+  checkDirtyStatus();
 }
 
 void IncidenceRecurrence::updateRemoveExceptionButton()
