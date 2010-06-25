@@ -148,7 +148,15 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
-  mRoleCombo->addItems( AttendeeData::roleList() );
+  mRoleCombo->addItem( SmallIcon( "meeting-participant" ), // TODO: Icon
+                       AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
+  mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
+                       AttendeeData::roleName( KCal::Attendee::OptParticipant ) );
+  mRoleCombo->addItem( SmallIcon( "meeting-observer" ),
+                       AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
+  mRoleCombo->addItem( SmallIcon( "meeting-organizer" ),  // TODO: Icon chair
+                       AttendeeData::roleName( KCal::Attendee::Chair ) );
+
   mRoleCombo->setToolTip( i18nc( "@info:tooltip", "Select the attendee participation role" ) );
 
   mEdit->setToolTip( i18n( "Enter the name or email address of the attendee." ) );
