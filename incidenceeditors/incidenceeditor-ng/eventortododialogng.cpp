@@ -34,6 +34,7 @@
 #include "incidencealarm.h"
 #include "incidenceattachment.h"
 #include "incidencecategories.h"
+#include "incidencecompletionpriority.h"
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
 #include "incidencegeneral.h"
@@ -102,6 +103,9 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 
   IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( ieDateTime );
+
+  IncidenceCompletionPriority *ieCompletionPriority = new IncidenceCompletionPriority( mUi );
+  mEditor->combine( ieCompletionPriority );
 
   IncidenceDescription *ieDescription = new IncidenceDescription( mUi );
   mEditor->combine( ieDescription );
