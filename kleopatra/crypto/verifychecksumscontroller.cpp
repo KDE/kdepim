@@ -269,21 +269,44 @@ namespace {
     };
 }
 
+static QString decode( const QString & encoded ) {
+    QString decoded;
+    decoded.reserve( encoded.size() );
+    bool shift = false;
+    Q_FOREACH( const QChar ch, encoded )
+        if ( shift ) {
+            switch ( ch.toLatin1() ) {
+            case '\\': decoded += QLatin1Char( '\\' ); break;
+            case 'n':  decoded += QLatin1Char( '\n' ); break;
+            default:
+                qDebug() << Q_FUNC_INFO << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
+                decoded += ch;
+                break;
+            }
+            shift = false;
+        } else {
+            if ( ch == QLatin1Char( '\\' ) )
+                shift = true;
+            else
+                decoded += ch;
+        }
+    return decoded;
+}
+
 static std::vector<File> parse_sum_file( const QString & fileName ) {
     std::vector<File> files;
     QFile f( fileName );
     if ( f.open( QIODevice::ReadOnly ) ) {
         QTextStream s( &f );
-        QRegExp rx( "([a-f0-9A-F]+) ([ *])([^ *].*)[\n\r]*" );
+        QRegExp rx( "(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*" );
         while ( !s.atEnd() ) {
             const QString line = s.readLine();
             if ( rx.exactMatch( line ) ) {
-                assert( !rx.cap(3).endsWith( QLatin1Char('\n') ) );
-                assert( !rx.cap(3).endsWith( QLatin1Char('\r') ) );
+                assert( !rx.cap(4).endsWith( QLatin1Char('\n') ) );
                 const File file = {
-                    rx.cap( 3 ),
-                    rx.cap( 1 ).toLatin1(),
-                    rx.cap( 2 ) == QLatin1String("*"),
+                    rx.cap( 1 ) == QLatin1String("\\") ? decode( rx.cap( 4 ) ) : rx.cap( 4 ),
+                    rx.cap( 2 ).toLatin1(),
+                    rx.cap( 3 ) == QLatin1String("*"),
                 };
                 files.push_back( file );
             }
@@ -506,16 +529,18 @@ static QString process( const SumFile & sumFile, bool * fatal, const QStringList
 
     qDebug( "[%p] Starting %s %s", &p, qPrintable( program ), qPrintable( arguments.join(" ") ) );
     p.start( program, arguments );
+    QByteArray remainder; // used for filenames with newlines in them
     while ( p.state() != QProcess::NotRunning ) {
         p.waitForReadyRead();
         while ( p.canReadLine() ) {
             const QByteArray line = p.readLine();
             const int colonIdx = line.lastIndexOf( ':' );
             if ( colonIdx < 0 ) {
-                qDebug( "%s: failed to parse line '%s'", Q_FUNC_INFO, line.data() );
+                remainder += line; // no colon -> probably filename with a newline
                 continue;
             }
-            const QString file = QFile::decodeName( line.left( colonIdx ) );
+            const QString file = QFile::decodeName( remainder + line.left( colonIdx ) );
+            remainder.clear();
             const VerifyChecksumsDialog::Status result = string2status( line.mid( colonIdx+1 ).trimmed() );
             status( sumFile.dir.absoluteFilePath( file ), result );
         }
