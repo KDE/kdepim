@@ -60,12 +60,12 @@ KPIM.MainView {
     }
 
     KPIM.Button {
-      anchors.bottom: parent.bottom
-      anchors.right: backButton.left
+      anchors.bottom: backButton.top
+      anchors.right: parent.right
       anchors.margins: 12
-      width: parent.height / 6
-      height: parent.height / 6
-      icon: KDE.iconPath( "document-edit", width );
+      width: 70
+      height: 70
+      icon: KDE.locate( "data", "mobileui/edit-button.png" );
       onClicked: {
         application.editIncidence( parent.item, parent.activeDate );
         eventView.visible = false;
@@ -77,8 +77,8 @@ KPIM.MainView {
       anchors.bottom: parent.bottom
       anchors.right: parent.right
       anchors.margins: 12
-      width: parent.height / 6
-      height: parent.height / 6
+      width: 70
+      height: 70
       icon: KDE.iconPath( "edit-undo", width );
       onClicked: {
         eventView.visible = false;

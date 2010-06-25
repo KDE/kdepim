@@ -47,21 +47,17 @@ KPIM.MainView {
 
   }
 
-  QML.Rectangle {
+  KPIM.Button {
     id : editContactButton
-    anchors.right : kaddressbookMobile.right
-    anchors.rightMargin : 70
-    anchors.bottom : backToFolderListButton.top
-    anchors.bottomMargin : 70
+    anchors.bottom: backToFolderListButton.top
+    anchors.right: parent.right
+    anchors.margins: 12
+    width: 70
+    height: 70
     visible : false
-    QML.Image {
-      source : KDE.iconPath( "document-edit", 64 );
-      QML.MouseArea {
-        anchors.fill : parent;
-        onClicked : {
-          application.editContact( contactView.item );
-        }
-      }
+    icon: KDE.locate( "data", "mobileui/edit-button.png" );
+    onClicked: {
+      application.editContact( contactView.item );
     }
   }
 
@@ -85,47 +81,39 @@ KPIM.MainView {
     }
   }
 
-  QML.Rectangle {
+  KPIM.Button {
     id : editContactGroupButton
-    anchors.right : kaddressbookMobile.right
-    anchors.rightMargin : 70
-    anchors.bottom : backToFolderListButton.top
-    anchors.bottomMargin : 70
+    anchors.bottom: backToFolderListButton.top
+    anchors.right: parent.right
+    anchors.margins: 12
+    width: 70
+    height: 70
     visible : false
-    QML.Image {
-      source : KDE.iconPath( "document-edit", 64 );
-      QML.MouseArea {
-        anchors.fill : parent;
-        onClicked : {
-          application.editContactGroup( contactGroupView.item );
-        }
-      }
+    icon: KDE.locate( "data", "mobileui/edit-button.png" );
+    onClicked: {
+      application.editContactGroup( contactGroupView.item );
     }
   }
 
-  QML.Rectangle {
+  KPIM.Button {
     id : backToFolderListButton
-    anchors.right : kaddressbookMobile.right
-    anchors.rightMargin : 70
-    anchors.bottom : kaddressbookMobile.bottom
-    anchors.bottomMargin : 100
+    anchors.bottom: kaddressbookMobile.bottom
+    anchors.right: kaddressbookMobile.right
+    anchors.margins: 12
+    width: 70
+    height: 70
     visible : false
-    QML.Image {
-      source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
-      QML.MouseArea {
-        anchors.fill : parent;
-        onClicked : {
-          contactView.visible = false;
-          contactGroupView.visible = false;
-          editContactButton.visible = false;
-          editContactGroupButton.visible = false;
-          backToFolderListButton.visible = false;
-          collectionView.visible = true;
-          contactListPage.visible = true;
-          contactView.itemId = -1;
-          contactGroupView.itemId = -1;
-        }
-      }
+    icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
+    onClicked: {
+      contactView.visible = false;
+      contactGroupView.visible = false;
+      editContactButton.visible = false;
+      editContactGroupButton.visible = false;
+      backToFolderListButton.visible = false;
+      collectionView.visible = true;
+      contactListPage.visible = true;
+      contactView.itemId = -1;
+      contactGroupView.itemId = -1;
     }
   }
 
