@@ -783,8 +783,14 @@
          </item>
          <item>
           <widget class="QPushButton" name="mSelectButton">
+           <property name="toolTip">
+            <string>Select attendees from your address book.</string>
+           </property>
+           <property name="whatsThis">
+            <string>Opens your address book, allowing you to select new attendees from it.</string>
+           </property>
            <property name="text">
-            <string>Select...</string>
+            <string>Select Attendees…</string>
            </property>
           </widget>
          </item>
