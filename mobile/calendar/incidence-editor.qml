@@ -92,6 +92,7 @@ KPIM.MainView {
           anchors.bottom: parent.bottom
           anchors.left: buttonColumn.right
           anchors.right: parent.right
+          currentIndex : 0
         }
       ]
     }
