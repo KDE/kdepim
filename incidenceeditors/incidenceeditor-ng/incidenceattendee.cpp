@@ -58,7 +58,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
   mOrganizerLabel = new QLabel;
-  gridLayout()->addWidget( mOrganizerLabel, 0, 1, 1, 1);
+  gridLayout()->addWidget( mOrganizerLabel, 0, 2, 1, 1);
   mOrganizerLabel->hide();
 
   makeOrganizerCombo();
@@ -151,7 +151,7 @@ void IncidenceEditorsNG::IncidenceAttendee::makeOrganizerCombo()
       delete mOrganizerCombo;
   }
   mOrganizerCombo = new KComboBox( this );
-  gridLayout()->addWidget( mOrganizerCombo, 0, 1, 1, 1);
+  gridLayout()->addWidget( mOrganizerCombo, 0, 2, 1, 1);
   QString whatsThis =
     i18nc( "@info:whatsthis",
             "Sets the identity corresponding to "
