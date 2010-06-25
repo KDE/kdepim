@@ -197,23 +197,13 @@ KPIM.MainView {
       }
     }
 
-    QML.Rectangle {
+     KPIM.Spinner {
       id : loadingFolderPage
       anchors.left : collectionView.right
       anchors.top : parent.top
       anchors.bottom : parent.bottom
       anchors.right : parent.right
-      color : "#00000000"
       opacity : application.isLoadingSelected ? 1 : 0
-      // TODO: content
-      QML.Text {
-        text : KDE.i18n("Loading Messages");
-        height : 20;
-        font.italic : true
-        horizontalAlignment : QML.Text.AlignHCenter
-        anchors.verticalCenter : parent.verticalCenter;
-        anchors.horizontalCenter : parent.horizontalCenter
-      }
     }
 
     QML.Rectangle {

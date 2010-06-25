@@ -1,7 +1,5 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
-        a KDAB Group company, info@kdab.net,
-        author Stephen Kelly <stephen@kdab.com>
+    Copyright (c) 2010 Artur Duque de Souza <asouza@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,35 +17,38 @@
     02110-1301, USA.
 */
 
-
 import Qt 4.7
-import org.kde 4.5
 
-Rectangle {
-  property real percentComplete : 0
-  color : "#00000000"
-  width : 155
-  height : 52
+Item {
+    id: spinner
 
-  Image {
-    anchors.fill : parent
-    source : "images/sliderbackground.png";
-  }
-  Image {
-    anchors.verticalCenter : parent.verticalCenter
-    x : 3 + ((percentComplete/100) * width)
-    source : "images/sliderhandle.png";
+    width: 28
+    height: 28
 
-    MouseArea {
-      anchors.fill : parent
-      drag.target: parent
-      drag.axis: "XAxis"
-      drag.minimumX: 3
-      drag.maximumX: width - 6
-      onReleased : {
-        percentComplete = ((parent.x - 3)/width) * 100
-      }
+    Image {
+        id: spinnerImage
+        property int n: 1
+
+        anchors.horizontalCenter: spinner.horizontalCenter;
+        anchors.verticalCenter: spinner.verticalCenter;
+
+        NumberAnimation on n {
+            target: spinnerImage
+            property: "n"
+            from: 1
+            to: 24
+            easing.type: "Linear"
+            duration: 5 * 10 * 24
+            loops: Animation.Infinite
+        }
+
+        source: "images/loading/loading_" + spinnerImage.n + ".png"
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                console.log("comecou");
+                animation.start();
+            }
+        }
     }
-  }
-
 }

@@ -8,3 +8,4 @@ ItemListViewDelegate 4.5 ItemListViewDelegate.qml
 MainView 4.5 MainView.qml
 WindowBar 4.5 WindowBar.qml
 StartCanvas 4.5 StartCanvas.qml
+Spinner 4.5 Spinner.qml

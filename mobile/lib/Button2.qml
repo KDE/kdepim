@@ -32,13 +32,13 @@ Rectangle {
 
   Image {
     id : leftPart
-    source : "button-left.png"
+    source : "images/button-left.png"
     anchors.left : parent.left
     anchors.top : parent.top
 //     anchors.bottom : parent.bottom
   }
   Image {
-    source : "button-center.png"
+    source : "images/button-center.png"
     anchors.left : leftPart.right
     anchors.right : rightPart.left
     fillMode : Image.TileHorizontally
@@ -47,7 +47,7 @@ Rectangle {
   }
   Image {
     id : rightPart
-    source : "button-right.png"
+    source : "images/button-right.png"
     anchors.right : parent.right
     anchors.top : parent.top
 //     anchors.bottom : parent.bottom

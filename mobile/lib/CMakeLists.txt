@@ -28,8 +28,10 @@ target_link_libraries(kdepimmobileui
   messagecore
 )
 
-set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui )
-configure_file( stylesheet.css.cmake ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css ) 
+set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
+configure_file( stylesheet.css.cmake ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css )
+
+add_subdirectory(images)
 
 install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
@@ -43,20 +45,8 @@ install(FILES
   ItemListViewDelegate.qml
   MainView.qml
   StartCanvas.qml
+  Spinner.qml
   WindowBar.qml
-  sliderbackground.png
-  sliderhandle.png
-  button-left.png
-  button-right.png
-  button-center.png
-  button-border.png
-  button-border-active.png
-  button-plus.png
-  button-plus-active.png
-  button-plus-disabled.png
-  button-minus.png
-  button-minus-active.png
-  button-minus-disabled.png
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
