@@ -33,7 +33,6 @@ install(FILES
   notes.qml
   NoteView.qml
   NotesListView.qml
-  delete-button.png
   DESTINATION ${DATA_INSTALL_DIR}/notes-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )

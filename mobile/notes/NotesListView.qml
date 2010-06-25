@@ -82,7 +82,7 @@ KPIM.ItemListView {
           onTriggered : {
             application.setListSelectedRow(model.index);
           }
-          image : "delete-button.png"
+          image : KDE.locate( "data", "mobileui/delete-button.png" );
         }
       ]
 
