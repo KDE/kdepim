@@ -20,8 +20,8 @@
 // WARNING: This is a temporary copy of kdepimlibs/akonadi/kdescendantsproxymodel
 // which exists until this class or its replacement can go into kdelibs.
 
-#ifndef DESCENDANTENTITIESPROXYMODEL_H
-#define DESCENDANTENTITIESPROXYMODEL_H
+#ifndef KDESCENDANTSPROXYMODEL_P_H
+#define KDESCENDANTSPROXYMODEL_P_H
 
 #include <QtGui/QAbstractProxyModel>
 
@@ -57,7 +57,7 @@ KDescendantsProxyModel *descProxy = new KDescendantesProxyModel(this);
 descProxy->setSourceModel(entityTree);
 
 // #### This is new
-descProxy->setDisplayAncestorData(true, QString(" / "));
+descProxy->setDisplayAncestorData(true, QString( " / " ));
 
 view->setModel(descProxy);
 
@@ -90,16 +90,6 @@ class KDEPIM_EXPORT KDescendantsProxyModel : public QAbstractProxyModel
      * Sets the source @p model of the proxy.
      */
     virtual void setSourceModel( QAbstractItemModel *model );
-
-    /**
-     * Sets the root index to @p index. This is the root of the proxy model.
-     *
-     * @param index The root index in the *source* model which will be shown in this model.
-     *              If the index is invalid, the model is empty.
-     *
-     * \note You must set the model before setting the root index.
-     */
-    void setRootIndex( const QModelIndex &index);
 
     /**
      * Set whether to show ancestor data in the model. If @p display is true, then
@@ -177,17 +167,10 @@ class KDEPIM_EXPORT KDescendantsProxyModel : public QAbstractProxyModel
 
     virtual Qt::DropActions supportedDropActions() const;
 
-    /**
-    Reimplemented to match all descendants.
-    */
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value,
-        int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
-
-
 private:
   Q_DECLARE_PRIVATE( KDescendantsProxyModel )
   //@cond PRIVATE
-  KDescendantsProxyModelPrivate *d_ptr;
+  KDescendantsProxyModelPrivate *const d_ptr;
 
   Q_PRIVATE_SLOT(d_func(), void sourceRowsAboutToBeInserted(const QModelIndex &, int, int))
   Q_PRIVATE_SLOT(d_func(), void sourceRowsInserted(const QModelIndex &, int, int))
@@ -200,6 +183,9 @@ private:
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutAboutToBeChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceDataChanged(const QModelIndex &, const QModelIndex &))
+
+  Q_PRIVATE_SLOT(d_func(), void processPendingParents())
+
 
   // Make these private, they shouldn't be called by applications
 //   virtual bool insertRows(int , int, const QModelIndex & = QModelIndex());
