@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>648</width>
-    <height>501</height>
+    <width>625</width>
+    <height>577</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="2">
+   <item row="0" column="1">
     <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
    </item>
    <item row="1" column="0">
@@ -70,7 +70,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" colspan="2">
+   <item row="1" column="1">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -124,10 +124,29 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" rowspan="2" colspan="3">
+   <item row="3" column="0" rowspan="2" colspan="2">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>Event:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
@@ -212,7 +231,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1" colspan="2">
+   <item row="6" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QCheckBox" name="mStartCheck">
@@ -330,7 +349,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="2">
+   <item row="7" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QCheckBox" name="mEndCheck">
@@ -399,33 +418,163 @@
      </item>
     </layout>
    </item>
-   <item row="8" column="0" colspan="3">
+   <item row="8" column="0" colspan="2">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="label_8">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>Event:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
+   <item row="9" column="0" colspan="2">
+    <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <item>
+       <widget class="QComboBox" name="mCompletionCombo">
+        <item>
+         <property name="text">
+          <string>0 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>10 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>20 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>30 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>40 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>50 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>60 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>70 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>80 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>90 %</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>100 %</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>completed</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_13">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>329</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Priority</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="mPriorityCombo">
+        <property name="currentIndex">
+         <number>5</number>
+        </property>
+        <item>
+         <property name="text">
+          <string>unspecified</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>1 (highest)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5 (medium)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>7</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>8</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>9 (lowest)</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="9" column="0" colspan="3">
+   <item row="10" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
       <number>3</number>
