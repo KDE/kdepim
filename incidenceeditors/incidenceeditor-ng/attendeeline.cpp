@@ -24,7 +24,6 @@
 
 #include <KCompletionBox>
 #include <KDialog>
-#include <KDebug>
 #include <KLocale>
 
 #include <QBoxLayout>
