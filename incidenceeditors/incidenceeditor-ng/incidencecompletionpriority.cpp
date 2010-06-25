@@ -34,7 +34,8 @@ class IncidenceCompletionPriority::Private
 {
   IncidenceCompletionPriority *const q;
   public:
-    explicit Private( IncidenceCompletionPriority *parent ) : q( parent ), mUi( 0 ), mDirty( false )
+    explicit Private( IncidenceCompletionPriority *parent )
+      : q( parent ), mUi( 0 ), mDirty( false ), mOrigPercentCompleted( -1 )
     {
     }
 
@@ -42,6 +43,7 @@ class IncidenceCompletionPriority::Private
     Ui::EventOrTodoDesktop *mUi;
 
     bool mDirty;
+    int mOrigPercentCompleted;
 
   public: // slots
     void comboValueChanged();
@@ -49,6 +51,9 @@ class IncidenceCompletionPriority::Private
 
 void IncidenceCompletionPriority::Private::comboValueChanged()
 {
+  if ( q->sender() == mUi->mCompletionCombo ) {
+    mOrigPercentCompleted = -1;
+  }
   mDirty = true;
   q->checkDirtyStatus();
 }
@@ -85,6 +90,7 @@ void IncidenceCompletionPriority::load( KCal::Incidence::ConstPtr incidence )
 
   d->mUi->mCompletionPriorityWidget->show();
 
+  d->mOrigPercentCompleted = todo->percentComplete();
   d->mUi->mCompletionCombo->blockSignals( true );
   d->mUi->mCompletionCombo->setCurrentIndex( todo->percentComplete() / 10 );
   d->mUi->mCompletionCombo->blockSignals( false );
@@ -106,7 +112,13 @@ void IncidenceCompletionPriority::save( KCal::Incidence::Ptr incidence )
     return;
   }
 
-  todo->setPercentComplete( d->mUi->mCompletionCombo->currentIndex() * 10 );
+  // we only have multiples of ten on our combo. If the combo did not change its value,
+  // see if we have an original value to restore
+  if ( d->mOrigPercentCompleted != -1 ) {
+    todo->setPercentComplete( d->mOrigPercentCompleted );
+  } else {
+    todo->setPercentComplete( d->mUi->mCompletionCombo->currentIndex() * 10 );
+  }
   todo->setPriority( d->mUi->mPriorityCombo->currentIndex() );
 
   // TODO reset dirty?
