@@ -86,7 +86,7 @@ void IncidenceCompletionPriority::load( KCal::Incidence::ConstPtr incidence )
   d->mUi->mCompletionPriorityWidget->show();
 
   d->mUi->mCompletionCombo->blockSignals( true );
-  d->mUi->mCompletionCombo->setCurrentIndex( todo->percentComplete() % 10 );
+  d->mUi->mCompletionCombo->setCurrentIndex( todo->percentComplete() / 10 );
   d->mUi->mCompletionCombo->blockSignals( false );
   
   d->mUi->mPriorityCombo->blockSignals( true );
