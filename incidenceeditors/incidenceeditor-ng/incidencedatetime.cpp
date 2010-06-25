@@ -560,7 +560,33 @@ void IncidenceDateTime::save( KCal::Event::Ptr event )
 
 void IncidenceDateTime::save( KCal::Todo::Ptr todo )
 {
-  Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "not implemented" );
+  if ( mUi->mWholeDayCheck->isChecked() ) { // All day todo
+    todo->setAllDay( true );
+
+    if ( mUi->mStartCheck->isChecked() ) {
+      KDateTime todoDT = currentStartDateTime();
+      todoDT.setDateOnly( true );
+      todo->setDtStart( todoDT );
+    }
+
+    if ( mUi->mEndCheck->isChecked() ) {
+      KDateTime todoDT = currentEndDateTime();
+      todoDT.setDateOnly( true );
+      todo->setDtDue( todoDT );
+    }
+  } else { // Timed todo
+    todo->setAllDay( false );
+
+    if ( mUi->mStartCheck->isChecked() ) {
+      KDateTime todoDT = currentStartDateTime();
+      todo->setDtStart( todoDT );
+    }
+
+    if ( mUi->mEndCheck->isChecked() ) {
+      KDateTime todoDT = currentEndDateTime();
+      todo->setDtDue( todoDT );
+    }
+  }
 }
 
 void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &end )
