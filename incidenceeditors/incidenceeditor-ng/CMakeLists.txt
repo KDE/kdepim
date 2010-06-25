@@ -24,9 +24,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencerecurrence.cpp
   incidencesecrecy.cpp
 
-  #incidencerecurrenceeditor.cpp
-  #incidencerecurrencedialog.cpp
-
   ../autochecktreewidget.cpp
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
@@ -54,7 +51,6 @@ kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
   eventortododesktop.ui
   alarmdialog.ui
   attachmenteditdialog.ui
-  incidencerecurrenceeditor.ui
 )
 
 kde4_add_library(incidenceeditorsng SHARED ${incidenceeditors_ng_desktop_LIB_SRCS})
@@ -88,7 +84,6 @@ if (KDEPIM_MOBILE_UI)
     ../categoryselectdialog_base.ui
     eventortododesktop.ui
     ../editoralarms_base.ui
-    incidencerecurrenceeditor.ui
     iegeneralmobile.ui
     iedatetimemobile.ui
     eventortodomobile.ui
