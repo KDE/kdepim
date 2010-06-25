@@ -45,6 +45,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QTreeView>
+#include <QScopedPointer>
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
@@ -159,7 +160,7 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
 
 void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
 {
-  QPointer<Akonadi::EmailAddressSelectionDialog> dia = new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor );
+  QScopedPointer<Akonadi::EmailAddressSelectionDialog> dia ( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
   dia->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
   if ( dia->exec() == QDialog::Accepted ) {
     foreach ( const Akonadi::EmailAddressSelection &selection, dia->selectedAddresses() ) {
@@ -173,7 +174,6 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
       insertAttendeeFromAddressee( contact );
     }
   }
-  delete dia;
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
