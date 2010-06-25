@@ -28,11 +28,17 @@
 #include "completionordereditor.h"
 #include "ldapclient.h"
 #include "distributionlist.h"
+#include "contactgroupsearchjob_p.h"
+#include "contactsearchjob_p.h"
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
 #include <kmime/kmime_util.h>
+
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/entitydisplayattribute.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <KCompletionBox>
 #include <KDebug>
@@ -74,6 +80,12 @@ QMap<QString,int>* s_completionSourceWeights = 0;
 // does not hold when clients are added later on
 QMap<int, int>* AddresseeLineEdit::s_ldapClientToCompletionSourceMap = 0;
 
+// holds the cached mapping from akonadi collection id to the completion source index
+QMap<Akonadi::Collection::Id, int> s_akonadiCollectionToCompletionSourceMap;
+
+// a list of akonadi items (contacts) that have not had their collection fetched yet
+Akonadi::Item::List s_akonadiPendingItems;
+
 static K3StaticDeleter<KMailCompletion> completionDeleter;
 static K3StaticDeleter<KPIM::CompletionItemsMap> completionItemsDeleter;
 static K3StaticDeleter<QTimer> ldapTimerDeleter;
@@ -82,6 +94,8 @@ static K3StaticDeleter<QString> ldapTextDeleter;
 static K3StaticDeleter<QStringList> completionSourcesDeleter;
 static K3StaticDeleter<QMap<QString,int> > completionSourceWeightsDeleter;
 static K3StaticDeleter<QMap<int, int> > ldapClientToCompletionSourceMapDeleter;
+static K3StaticDeleter<QMap<Akonadi::Collection::Id, int> > akonadiCollectionToCompletionSourceMapDeleter;
+static K3StaticDeleter<Akonadi::Item::List> akonadiPendingItemsDeleter;
 
 // needs to be unique, but the actual name doesn't matter much
 static QByteArray newLineEditObjectName()
@@ -216,6 +230,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
   if ( KStandardShortcut::shortcut( KStandardShortcut::SubstringCompletion ).contains( key ) ) {
     //TODO: add LDAP substring lookup, when it becomes available in KPIM::LDAPSearch
     updateSearchString();
+    akonadiPerformSearch();
     doCompletion( true );
     accept = true;
   } else if ( KStandardShortcut::shortcut( KStandardShortcut::TextCompletion ).contains( key ) ) {
@@ -223,6 +238,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
 
     if ( len == cursorPosition() ) { // at End?
       updateSearchString();
+      akonadiPerformSearch();
       doCompletion( true );
       accept = true;
     }
@@ -603,6 +619,23 @@ void AddresseeLineEdit::loadContacts()
   }
 }
 
+void AddresseeLineEdit::addItem( const Akonadi::Item &item, int weight, int source )
+{
+  if ( item.hasPayload<KABC::Addressee>() ) {
+    addContact( item.payload<KABC::Addressee>(), weight, source );
+  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+    addContactGroup( item.payload<KABC::ContactGroup>(), weight, source );
+  }
+}
+
+void AddresseeLineEdit::addContactGroup( const KABC::ContactGroup &group, int weight, int source )
+{
+  addCompletionItem( group.name(), weight, source );
+  QStringList keyWords;
+  keyWords.append( group.name() );
+  addCompletionItem( group.name(), weight, source, &keyWords );
+}
+
 void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
 {
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
@@ -942,6 +975,72 @@ void KPIM::AddresseeLineEdit::slotUserCancelled( const QString &cancelText )
   userCancelled( m_previousAddresses + cancelText ); // in KLineEdit
 }
 
+void KPIM::AddresseeLineEdit::slotAkonadiSearchResult( KJob *job )
+{
+  const Akonadi::ItemSearchJob *searchJob = qobject_cast<Akonadi::ItemSearchJob*>( job );
+
+  /* We have to fetch the collections of the items, so that
+     the source name can be correctly labeled.*/
+  const Akonadi::Item::List items = searchJob->items();
+  kDebug() << "Found" << searchJob->items().size() << "items";
+
+  foreach ( const Akonadi::Item &item, items ) {
+
+    // check the local cache of collections
+    const int sourceIndex =
+      s_akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
+    if ( sourceIndex == -1 ) {
+      kDebug() << "Fetching New collection: " << item.parentCollection().id();
+      // the collection isn't there, start the fetch job.
+      Akonadi::CollectionFetchJob *collectionJob =
+        new Akonadi::CollectionFetchJob( item.parentCollection(),
+                                         Akonadi::CollectionFetchJob::Base, this );
+      connect( collectionJob, SIGNAL(collectionsReceived(const Akonadi::Collection::List &)),
+               this, SLOT(slotAkonadiCollectionsReceived(const Akonadi::Collection::List &)) );
+      /* we don't want to start multiple fetch jobs for the same collection,
+         so insert the collection with an index value of -2 */
+      s_akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );
+      s_akonadiPendingItems.append( item );
+    } else if ( sourceIndex == -2 ) {
+      /* fetch job already started, don't need to start another one,
+         so just append the item as pending */
+      s_akonadiPendingItems.append( item );
+    } else {
+      addItem( item, 1, sourceIndex );
+    }
+  }
+
+  if ( items.size() > 0 ) {
+    const QListWidgetItem *current = completionBox()->currentItem();
+    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
+      doCompletion( m_lastSearchMode );
+    }
+  }
+}
+
+void KPIM::AddresseeLineEdit::slotAkonadiCollectionsReceived(
+  const Akonadi::Collection::List &collections )
+{
+  foreach ( const Akonadi::Collection &collection, collections ) {
+    if ( collection.isValid() ) {
+      const Akonadi::EntityDisplayAttribute *attribute =
+        collection.attribute<Akonadi::EntityDisplayAttribute>();
+      const QString sourceString = ( attribute ? attribute->displayName() : collection.name() );
+      const int index = addCompletionSource( sourceString, 1 );
+      kDebug() << "\treceived: " << sourceString << "index: " << index;
+      s_akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );
+    }
+  }
+
+  // now that we have added the new collections, recheck our list of pending contacts
+  akonadiHandlePending();
+  // do completion
+  const QListWidgetItem *current = completionBox()->currentItem();
+  if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
+    doCompletion( m_lastSearchMode );
+  }
+}
+
 void AddresseeLineEdit::updateSearchString()
 {
   m_searchString = text();
@@ -981,6 +1080,48 @@ void AddresseeLineEdit::updateSearchString()
   }
 }
 
+void AddresseeLineEdit::akonadiPerformSearch()
+{
+  kDebug() << "searching akonadi with:" << m_searchString;
+  KPIM::ContactSearchJob *contactJob = new KPIM::ContactSearchJob();
+  KPIM::ContactGroupSearchJob *groupJob = new KPIM::ContactGroupSearchJob();
+  contactJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  contactJob->setQuery( KPIM::ContactSearchJob::NameOrEmail, m_searchString,
+                        KPIM::ContactSearchJob::ContainsMatch );
+  groupJob->setQuery( KPIM::ContactGroupSearchJob::Name, m_searchString,
+                      KPIM::ContactGroupSearchJob::StartsWithMatch );
+  // FIXME: ContainsMatch is broken, even though it creates the correct SPARQL query, so use
+  //        StartsWith for now
+                      //KPIM::ContactGroupSearchJob::ContainsMatch );
+  connect( contactJob, SIGNAL(result(KJob *)),
+           this, SLOT(slotAkonadiSearchResult(KJob *)) );
+  connect( groupJob, SIGNAL(result(KJob *)),
+           this, SLOT(slotAkonadiSearchResult(KJob *)) );
+  akonadiHandlePending();
+}
+
+void AddresseeLineEdit::akonadiHandlePending()
+{
+  kDebug() << "Pending items: " << s_akonadiPendingItems.size();
+  Akonadi::Item::List::iterator it = s_akonadiPendingItems.begin();
+  while ( it != s_akonadiPendingItems.end() ) {
+    const Akonadi::Item item = *it;
+
+    const int sourceIndex =
+      s_akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
+    if ( sourceIndex >= 0 ) {
+      kDebug() << "identified collection: " << s_completionSources[sourceIndex];
+      addItem( item, 1, sourceIndex );
+
+      // remove from the pending
+      it = s_akonadiPendingItems.erase( it );
+    } else {
+      ++it;
+    }
+  }
+}
+
 void KPIM::AddresseeLineEdit::slotCompletion()
 {
   // Called by KLineEdit's keyPressEvent for CompletionModes
@@ -992,6 +1133,7 @@ void KPIM::AddresseeLineEdit::slotCompletion()
   if ( completionBox() ) {
     completionBox()->setCancelledText( m_searchString );
   }
+  akonadiPerformSearch();
   doCompletion( false );
 }
 

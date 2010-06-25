@@ -30,7 +30,10 @@
 #include "kmailcompletion.h"
 #include "kdepim_export.h"
 
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 #include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 
 #include <KLineEdit>
 
@@ -41,6 +44,8 @@ class QMenu;
 class QMouseEvent;
 class QObject;
 class QTimer;
+
+class KJob;
 
 namespace KPIM {
   class LdapSearch;
@@ -73,6 +78,9 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     void slotIMAPCompletionOrderChanged();
   protected:
     virtual void addContact( const KABC::Addressee &, int weight, int source = -1 );
+    void addContactGroup( const KABC::ContactGroup &group, int weight, int source = -1 );
+    void addItem( const Akonadi::Item &item, int weight, int source = -1 );
+
     virtual void keyPressEvent( QKeyEvent * );
     /**
      * Reimplemented for smart insertion of email addresses.
@@ -123,6 +131,8 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     void slotLDAPSearchData( const KPIM::LdapResultList & );
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
+    void slotAkonadiSearchResult( KJob * );
+    void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
 
   private:
     virtual bool eventFilter( QObject *o, QEvent *e );
@@ -137,6 +147,8 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     QString completionSearchText( QString & );
     const QStringList getAdjustedCompletionItems( bool fullSearch );
     void updateSearchString();
+    void akonadiPerformSearch();
+    void akonadiHandlePending();
 
     QString m_previousAddresses;
     QString m_searchString;
