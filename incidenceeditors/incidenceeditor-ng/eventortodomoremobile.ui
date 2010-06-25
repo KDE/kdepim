@@ -14,7 +14,7 @@
    <string>StackedWidget</string>
   </property>
   <property name="currentIndex">
-   <number>2</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="page">
    <layout class="QGridLayout" name="gridLayout_3">
@@ -44,16 +44,6 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="KPIM::KCheckComboBox" name="mCategoryCombo">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="0">
      <widget class="QLabel" name="mSecrecyLabel">
       <property name="sizePolicy">
@@ -76,7 +66,7 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="2" column="1" colspan="2">
      <widget class="QComboBox" name="mSecrecyCombo">
       <property name="toolTip">
        <string extracomment="@info:tooltip">Set the secrecy level</string>
@@ -85,6 +75,16 @@
        <string extracomment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
       </property>
      </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="mSelectCategoriesButton">
+      <property name="text">
+       <string>Select</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="KSqueezedTextLabel" name="mCategoriesLabel"/>
     </item>
    </layout>
   </widget>
@@ -800,6 +800,11 @@
    <class>KRichTextEdit</class>
    <extends>KTextEdit</extends>
    <header>krichtextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KSqueezedTextLabel</class>
+   <extends>QLabel</extends>
+   <header>ksqueezedtextlabel.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>

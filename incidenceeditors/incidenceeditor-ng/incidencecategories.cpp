@@ -42,6 +42,10 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
 #endif
   : mUi( ui )
 {
+#ifdef KDEPIM_MOBILE_UI
+  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
+           SLOT(selectCategories()) );
+#else
   CategoryConfig cc( EditorConfig::instance()->config() );
   mUi->mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
   mUi->mCategoryCombo->setSqueezeText( true );
@@ -49,6 +53,7 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
 
   connect( mUi->mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
            SLOT(setCategories(QStringList)) );
+#endif
 }
 
 void IncidenceCategories::load( KCal::Incidence::ConstPtr incidence )
@@ -101,7 +106,7 @@ void IncidenceCategories::setCategories( const QStringList &categories )
 {
   mSelectedCategories = categories;
 #ifdef KDEPIM_MOBILE_UI
-//  mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
+  mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
 #endif
   checkDirtyStatus();
 }
