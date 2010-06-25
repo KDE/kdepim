@@ -191,7 +191,7 @@ QFont MessageItem::Private::mFontImportantMessage;
 QFont MessageItem::Private::mFontToDoMessage;
 
 MessageItem::Private::Private()
-  : mTagList( 0 ), mAnnotationStateChecked( false )
+  : mAnnotationStateChecked( false ), mTagList( 0 )
 {
 }
 
