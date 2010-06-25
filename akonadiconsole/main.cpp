@@ -58,6 +58,8 @@ int main( int argc, char **argv )
   KApplication app;
 
   MainWindow *window = new MainWindow;
+  if ( args->isSet( "remote" ) )
+    window->setWindowTitle( i18n( "Remote Akonadi Console (%1)", args->getOption( "remote" ) ) );
   window->show();
 
   return app.exec();
