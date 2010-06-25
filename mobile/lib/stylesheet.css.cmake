@@ -98,11 +98,15 @@ QCheckBox::indicator:disabled {
 }
 
 
-/* QColumnView, QListView and hacks for column view internals */
+/* QColumnView, QListView and hacks for column view internals
+   TODO: find a way to style stand-alone QListView's but not those of a combo box
+*/
 QColumnView,
 QColumnView .QWidget,
 QColumnView .QAbstractItemView,
-QColumnView QListView
+QColumnView QListView,
+QListWidget,
+QListWidget::item:!selected
 {
   background-color: rgba(0,0,0,0);
   color: black;
