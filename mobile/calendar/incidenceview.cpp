@@ -34,6 +34,7 @@
 #include "declarativeeditors.h"
 
 #include <incidenceeditors/incidenceeditor-ng/incidencealarm.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencecategories.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencerecurrence.h>
@@ -99,16 +100,23 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
   mEditor->combine( mEditorDateTime );
 }
 
-void IncidenceView::setMoreEditor( MobileIncidenceMore *editor )
+void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
 {
-  IncidenceEditorsNG::IncidenceAlarm *editorReminder = new IncidenceEditorsNG::IncidenceAlarm( editor->mUi );
-  editorReminder->load( mItem.payload<Incidence::Ptr>() );
-  mEditor->combine( editorReminder );
+  Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
+  const Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
+  
+  IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( editorWidget->mUi );
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
+
+  editor = new IncidenceEditorsNG::IncidenceAlarm( editorWidget->mUi );
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
 
   Q_ASSERT( mEditorDateTime != 0 );
-  IncidenceEditorsNG::IncidenceRecurrence *editorRecurrence = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, editor->mUi );
-  editorRecurrence->load( mItem.payload<Incidence::Ptr>() );
-  mEditor->combine( editorRecurrence );
+  editor = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, editorWidget->mUi );
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
 }
 
 /// ItemEditorUi methods
