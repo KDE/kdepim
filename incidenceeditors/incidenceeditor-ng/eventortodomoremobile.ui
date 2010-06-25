@@ -14,7 +14,7 @@
    <string>StackedWidget</string>
   </property>
   <property name="currentIndex">
-   <number>3</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="page">
    <layout class="QGridLayout" name="gridLayout_3">
@@ -828,6 +828,22 @@
     <hint type="destinationlabel">
      <x>204</x>
      <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mRecurrenceTypeCombo</sender>
+   <signal>activated(int)</signal>
+   <receiver>mRepeatStack</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>115</x>
+     <y>43</y>
     </hint>
    </hints>
   </connection>

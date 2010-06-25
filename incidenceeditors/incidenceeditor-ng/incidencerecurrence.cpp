@@ -54,6 +54,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   mUi->mRecurrenceTypeCombo->setCurrentIndex( 0 );
   mUi->mRecurrenceEndCombo->setCurrentIndex( 0 );
   mUi->mRecurrenceEndStack->setCurrentIndex( 0 );
+  mUi->mRepeatStack->setCurrentIndex( 0 );
   mUi->mEndDurationEdit->setValue( 1 );
   handleEndAfterOccurrencesChange( 1 );
   toggleRecurrenceWidgets( false );
