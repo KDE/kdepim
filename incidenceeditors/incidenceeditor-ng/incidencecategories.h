@@ -25,6 +25,7 @@
 
 namespace Ui {
 class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
 namespace IncidenceEditorsNG {
@@ -34,7 +35,11 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
   Q_OBJECT
 
   public:
+#ifdef KDEPIM_MOBILE_UI   
+    IncidenceCategories( Ui::EventOrTodoMore *ui );
+#else
     IncidenceCategories( Ui::EventOrTodoDesktop *ui );
+#endif
 
     virtual void load(KCal::Incidence::ConstPtr incidence);
     virtual void save(KCal::Incidence::Ptr incidence);
@@ -46,7 +51,11 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 
   private:
     QStringList mSelectedCategories;
+#ifdef KDEPIM_MOBILE_UI
+    Ui::EventOrTodoMore *mUi;
+#else
     Ui::EventOrTodoDesktop *mUi;
+#endif
 };
 
 }

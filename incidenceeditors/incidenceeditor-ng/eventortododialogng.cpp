@@ -95,8 +95,10 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceWhatWhere *ieGeneral = new IncidenceWhatWhere( mUi );
   mEditor->combine( ieGeneral );
 
+#ifndef KDEPIM_MOBILE_UI
   IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
   mEditor->combine( ieCategories );
+#endif  
 
   IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( ieDateTime );

@@ -26,12 +26,20 @@
 #include "categoryselectdialog.h"
 #include "editorconfig.h"
 
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomoremobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
 
+#ifdef KDEPIM_MOBILE_UI
+IncidenceCategories::IncidenceCategories( Ui::EventOrTodoMore *ui )
+#else
 IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
+#endif
   : mUi( ui )
 {
   CategoryConfig cc( EditorConfig::instance()->config() );
