@@ -34,6 +34,7 @@
 #include "declarativeeditors.h"
 
 #include <incidenceeditors/incidenceeditor-ng/incidencealarm.h>
+#include <incidenceeditors/incidenceeditor-ng/incidenceattendee.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencecategories.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
@@ -106,6 +107,10 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
   const Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
   
   IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( editorWidget->mUi );
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
+
+  editor = new IncidenceEditorsNG::IncidenceAttendee( editorWidget->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
