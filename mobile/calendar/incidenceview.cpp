@@ -170,14 +170,18 @@ void IncidenceView::load( const Akonadi::Item &item )
 
 Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
 {
-  // TODO: Add support for todos
-  KCal::Event::Ptr event( new KCal::Event );
-  event->setUid( Akonadi::incidence( mItem )->uid() );
-  mEditor->save( event );
+  if ( !hasSupportedPayload( mItem ) ) {
+    kWarning() << "Item id=" << mItem.id() << "remoteId=" << mItem.remoteId()
+               << "mime=" << mItem.mimeType() << "does not have a supported MIME type";
+    return item;           
+  }
+ 
+  KCal::Incidence::Ptr incidence = Akonadi::incidence( mItem ); 
+  mEditor->save( incidence );
 
   Akonadi::Item result = item;
-  result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  result.setPayload<KCal::Event::Ptr>( event );
+  result.setPayload<KCal::Incidence::Ptr>( incidence );
+  result.setMimeType( mItem.mimeType() );
   return result;
 }
 
