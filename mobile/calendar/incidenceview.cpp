@@ -37,6 +37,7 @@
 #include <incidenceeditors/incidenceeditor-ng/incidenceattachment.h>
 #include <incidenceeditors/incidenceeditor-ng/incidenceattendee.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencecategories.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencecompletionpriority.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencerecurrence.h>
@@ -89,17 +90,25 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
   mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
 
-void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editor )
+void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 {
-  IncidenceEditorsNG::IncidenceWhatWhere *editorGeneral = new IncidenceEditorsNG::IncidenceWhatWhere( editor->mUi );
-  editorGeneral->load( mItem.payload<Incidence::Ptr>() );
-  mEditor->combine( editorGeneral );
+  Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
+  const Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
+  
+  IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceWhatWhere( editorWidget->mUi );
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
 
   Q_ASSERT( mEditorDateTime == 0 );
-  mEditorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editor->mUi );
+  mEditorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editorWidget->mUi );
   mEditorDateTime->setActiveDate( mActiveDate );
-  mEditorDateTime->load( mItem.payload<Incidence::Ptr>() );
-  mEditor->combine( mEditorDateTime );
+  editor = mEditorDateTime;
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
+
+  editor = new IncidenceEditorsNG::IncidenceCompletionPriority( editorWidget->mUi );
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
 }
 
 void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
