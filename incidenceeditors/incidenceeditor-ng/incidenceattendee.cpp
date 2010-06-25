@@ -34,6 +34,9 @@
 #include "attendeeeditor.h"
 #include "../editorconfig.h"
 
+#include <akonadi/contact/emailaddressselectiondialog.h>
+#include <kabc/addressee.h>
+
 #include <KComboBox>
 #include <KDebug>
 #include <KMessageBox>
@@ -41,6 +44,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QTreeView>
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
@@ -62,6 +66,8 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   fillOrganizerCombo();
   mUi->mSolveButton->setDisabled( true );
   mUi->mOrganizerLabel->setVisible( false );
+
+  connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
@@ -150,3 +156,42 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
   }
   mUi->mOrganizerCombo->addItems( uniqueList );
 }
+
+void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
+{
+  QPointer<Akonadi::EmailAddressSelectionDialog> dia = new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor );
+  dia->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+  if ( dia->exec() == QDialog::Accepted ) {
+    foreach ( const Akonadi::EmailAddressSelection &selection, dia->selectedAddresses() ) {
+      KABC::Addressee contact;
+      contact.setName( selection.name() );
+      contact.insertEmail( selection.email() );
+
+      if ( selection.item().hasPayload<KABC::Addressee>() )
+        contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
+
+      insertAttendeeFromAddressee( contact );
+    }
+  }
+  delete dia;
+}
+
+void IncidenceEditorsNG::IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
+{
+  const bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( a.preferredEmail() );
+  const bool sameAsOrganizer = mUi->mOrganizerCombo &&
+                         KPIMUtils::compareEmail( a.preferredEmail(),
+                                                  mUi->mOrganizerCombo->currentText(), false );
+  KCal::Attendee::PartStat partStat = KCal::Attendee::NeedsAction;
+  bool rsvp = true;
+
+  if ( myself && sameAsOrganizer ) {
+    partStat = KCal::Attendee::Accepted;
+    rsvp = false;
+  }
+  KCal::Attendee newAt( a.realName(), a.preferredEmail(), rsvp,
+                                  partStat, KCal::Attendee::ReqParticipant, a.uid() );;
+  mAttendeeEditor->addAttendee( newAt );
+}
+
+
