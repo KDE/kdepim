@@ -19,6 +19,8 @@
 * 02110-1301  USA
 */
 
+#include <QGLWidget>
+
 #include <kdeclarativeapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -34,7 +36,13 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication app;
 
+  QGLFormat format = QGLFormat::defaultFormat();
+  format.setSampleBuffers(false);
+  QGLWidget *glWidget = new QGLWidget(format); // make the declarative view use OpenGL ES2 backend.
+  glWidget->setAutoFillBackground(false);
+
   MainView view;
+  view.setViewport(glWidget);
   view.show();
 
   return app.exec();
