@@ -756,13 +756,16 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label_13">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="text">
           <string>Repeat:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -869,7 +872,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="never_page"/>
          <widget class="QWidget" name="daily_page">
@@ -961,13 +964,16 @@
        <item row="2" column="0">
         <widget class="QLabel" name="mRecurrenceEndLabel">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="text">
           <string>Ends:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -1092,13 +1098,16 @@
        <item row="3" column="0">
         <widget class="QLabel" name="mExceptionsLabel">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="text">
           <string>Exceptions:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -1312,12 +1321,12 @@
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>125</x>
-     <y>303</y>
+     <x>150</x>
+     <y>298</y>
     </hint>
     <hint type="destinationlabel">
-     <x>313</x>
-     <y>303</y>
+     <x>428</x>
+     <y>298</y>
     </hint>
    </hints>
   </connection>
