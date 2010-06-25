@@ -111,7 +111,7 @@ KPIM.MainView {
     anchors.bottomMargin : 100
     visible : false
     QML.Image {
-      source : "back-to-message-list.png"
+      source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {

@@ -45,7 +45,6 @@ install(FILES
   important-email.png
   action-item-email.png
   delete-button.png
-  back-to-message-list.png
   EditorView.qml
   kmail-composer.qml
   kmail-mobile.qml

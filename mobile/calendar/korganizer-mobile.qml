@@ -104,7 +104,7 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.bottomMargin : 70
       Image {
-        source : "back-to-message-list.png"
+        source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
         MouseArea {
           anchors.fill : parent;
           onClicked : {
