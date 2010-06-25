@@ -79,6 +79,7 @@ class Message::ComposerPrivate : public JobBasePrivate
     bool sign;
     bool encrypt;
     bool noCrypto;
+    bool autoSaving;
 
     Kleo::CryptoMessageFormat format;
     std::vector<GpgME::Key> signers;
@@ -164,7 +165,7 @@ void ComposerPrivate::composeStep2()
     while( iter.hasNext() ) {
       AttachmentPart::Ptr part = iter.next();
       kDebug() << "Checking attachment crypto policy..." << part->isSigned() << part->isEncrypted();
-      if( !noCrypto && ( sign != part->isSigned() || encrypt != part->isEncrypted() ) ) { // different policy
+      if( !noCrypto && !autoSaving && ( sign != part->isSigned() || encrypt != part->isEncrypted() ) ) { // different policy
         kDebug() << "got attachment with different crypto policy!";
         lateAttachmentParts.append( part );
         iter.remove();
@@ -577,6 +578,20 @@ void Composer::setNoCrypto(bool noCrypto)
   Q_D( Composer );
 
   d->noCrypto = noCrypto;
+}
+
+bool Composer::autoSave() const
+{
+  Q_D( const Composer );
+
+  return d->autoSaving;
+}
+
+void Composer::setAutoSave(bool isAutoSave)
+{
+  Q_D( Composer );
+
+  d->autoSaving = isAutoSave;
 }
 
     

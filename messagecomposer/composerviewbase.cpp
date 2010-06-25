@@ -500,7 +500,8 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     Kleo::CryptoMessageFormat concreteSignFormat = Kleo::AutoFormat;
 
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-
+      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
+        continue;
       if ( !(concreteCryptoMessageFormats[i] & m_cryptoMessageFormat) )
         continue;
 
@@ -784,6 +785,7 @@ void Message::ComposerViewBase::autoSaveMessage()
   }
 
   Message::Composer * const composer = createSimpleComposer();
+  composer->setAutoSave( true );
   m_composers.append( composer );
   connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotAutoSaveComposeResult(KJob*)) );
   composer->start();

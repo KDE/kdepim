@@ -142,6 +142,9 @@ public:
   /// Deletes the internal list of tags
   void invalidateTagCache();
 
+  /// Deletes the cache of the annotation
+  void invalidateAnnotationCache();
+
   ThreadingStatus mThreadingStatus;
   QString mMessageIdMD5;            ///< always set
   QString mInReplyToIdMD5;          ///< set only if we're doing threading
@@ -153,6 +156,9 @@ public:
   SignatureState mSignatureState;
   unsigned long mUniqueId;          ///< The unique id of this message (serial number of KMMsgBase at the moment of writing)
   bool mAboutToBeRemoved;           ///< Set to true when this item is going to be deleted and shouldn't be selectable
+
+  bool mAnnotationStateChecked;     ///< The state of the annotation below has been checked
+  bool mHasAnnotation;              ///< Cached value for hasAnnotation()
 
   static QColor mColorNewMessage;
   static QColor mColorUnreadMessage;
@@ -185,7 +191,7 @@ QFont MessageItem::Private::mFontImportantMessage;
 QFont MessageItem::Private::mFontToDoMessage;
 
 MessageItem::Private::Private()
-  : mTagList( 0 )
+  : mAnnotationStateChecked( false ), mTagList( 0 )
 {
 }
 
@@ -201,6 +207,11 @@ void MessageItem::Private::invalidateTagCache()
     delete mTagList;
     mTagList = 0;
   }
+}
+
+void MessageItem::Private::invalidateAnnotationCache()
+{
+  mAnnotationStateChecked = false;
 }
 
 const MessageItem::Tag* MessageItem::Private::bestTag() const
@@ -286,12 +297,18 @@ QList< MessageItem::Tag * > MessageItem::tagList() const
 
 bool MessageItem::hasAnnotation() const
 {
+  if ( d->mAnnotationStateChecked )
+    return d->mHasAnnotation;
+
   Nepomuk::Resource resource( d->mNepomukResourceUri );
   if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
-    return !resource.description().isEmpty();
+    d->mHasAnnotation = !resource.description().isEmpty();
   } else {
-    return false;
+    d->mHasAnnotation = false;
   }
+
+  d->mAnnotationStateChecked = true;
+  return d->mHasAnnotation;
 }
 
 QString MessageItem::annotation() const
@@ -308,6 +325,8 @@ void MessageItem::editAnnotation()
   KPIM::AnnotationEditDialog *dialog = new KPIM::AnnotationEditDialog( d->mNepomukResourceUri );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
+  // invalidate the cached mHasAnnotation value
+  d->mAnnotationStateChecked = false;
 }
 
 QString MessageItem::contentSummary() const
@@ -363,6 +382,11 @@ QString MessageItem::tagListDescription() const
 void MessageItem::invalidateTagCache()
 {
   d->invalidateTagCache();
+}
+
+void MessageItem::invalidateAnnotationCache()
+{
+  d->invalidateAnnotationCache();
 }
 
 QColor MessageItem::textColor() const

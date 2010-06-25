@@ -330,6 +330,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   }
 
   mi->invalidateTagCache();
+  mi->invalidateAnnotationCache();
 }
 
 void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
@@ -406,7 +407,9 @@ void StorageModel::prepareForScan()
 
 void StorageModel::Private::statementChanged( const Soprano::Statement &statement )
 {
-  if ( statement.predicate() == Soprano::Vocabulary::NAO::hasTag() ) {
+  if ( statement.predicate() == Soprano::Vocabulary::NAO::hasTag() ||
+       statement.predicate() == Soprano::Vocabulary::NAO::description() )
+  {
     const Akonadi::Item item = Item::fromUrl( statement.subject().uri() );
     if ( !item.isValid() ) {
       return;

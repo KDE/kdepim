@@ -310,7 +310,10 @@ Model::Model( View *pParent )
 Model::~Model()
 {
   setStorageModel( 0 );
+
   d->clearJobList();
+  d->mOldestItem = 0;
+  d->mNewestItem = 0;
   d->clearUnassignedMessageLists();
   d->clearOrphanChildrenHash();
   d->clearThreadingCacheMessageSubjectMD5ToMessageItem();
@@ -960,6 +963,14 @@ void ModelPrivate::clearUnassignedMessageLists()
 
   // Sometimes the things get a little complicated since in Pass2 and Pass3
   // we have transitional states in that the MessageItem object can be in two of these lists.
+
+  // WARNING: This function does NOT fixup mNewestItem and mOldestItem. If one of these
+  // two messages is in the lists below, it's deleted and the member becomes a dangling pointer.
+  // The caller must ensure that both mNewestItem and mOldestItem are set to 0
+  // and this is enforced in the assert below to avoid errors. This basically means
+  // that this function should be called only when the storage model changes or
+  // when the model is destroyed.
+  Q_ASSERT( ( mOldestItem == 0 ) && ( mNewestItem == 0 ) );
 
   QList< MessageItem * >::Iterator it;
 
@@ -4338,10 +4349,15 @@ void ModelPrivate::slotStorageModelRowsRemoved( const QModelIndex &parent, int f
         if ( to >= job->endIndex() )
         {
           // The change completely covers the job: kill it
-          delete job;
-          mViewItemJobs.removeAt( idx );
-          idx--;
-          jobCount--;
+
+          // We don't delete the job since we want the other passes to be completed
+          // This is because the Pass1Fill may have already filled mUnassignedMessageListForPass2
+          // and may have set mOldestItem and mNewestItem. We *COULD* clear the unassigned
+          // message list with clearUnassignedMessageLists() but mOldestItem and mNewestItem
+          // could be still dangling pointers. So we just move the current index of the job
+          // after the end (so storage model scan terminates) and let it complete spontaneously.
+          job->setCurrentIndex( job->endIndex() + 1 );
+          
         } else if ( to >= job->currentIndex() )
         {
           // The change partially covers the job. Only a part of it can be completed
