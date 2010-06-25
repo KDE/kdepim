@@ -33,6 +33,8 @@ namespace Ui
   class EventOrTodoMore;
 }
 
+/// DIE == DeclarativeIncidenceEditor
+
 class DCollectionCombo
   : public DeclarativeWidgetBase<Akonadi::CollectionComboBox,
                                  IncidenceView,
