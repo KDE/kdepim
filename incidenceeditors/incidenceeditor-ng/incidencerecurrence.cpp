@@ -126,12 +126,8 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
 
   if ( mLoadedIncidence->recurs() && r ) {
     setDuration( r->duration() );
-#ifdef KDEPIM_MOBILE_UI
-    // TODO
-#else
     if ( r->duration() == 0 )
-      mUi->mEndDateEdit->setDate( r->endDate() );
-#endif
+      mUi->mRecurrenceEndDate->setDate( r->endDate() );
   }
 
   setExceptionDates( mLoadedIncidence->recurrence()->exDates() );
@@ -148,13 +144,8 @@ void IncidenceRecurrence::save( KCal::Incidence::Ptr incidence )
 
   const int lDuration = duration();
   QDate endDate;
-#ifdef KDEPIM_MOBILE_UI
-  // TODO
-#else
-  if ( lDuration == 0 ) {
-    endDate = mUi->mEndDateEdit->date();
-  }
-#endif
+  if ( lDuration == 0 )
+    endDate = mUi->mRecurrenceEndDate->date();
 
   int recurrenceType = mUi->mRecurrenceTypeCombo->currentIndex();
   if ( recurrenceType == sRecurrenceDailyIndex ) {
