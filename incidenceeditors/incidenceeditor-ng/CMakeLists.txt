@@ -3,6 +3,8 @@ include_directories(
 )
 
 set(incidenceeditors_ng_shared_LIB_SRCS
+  attachmenteditdialog.cpp
+  attachmenticonview.cpp
   attendeedata.cpp
   attendeeline.cpp
   attendeeeditor.cpp
@@ -17,6 +19,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   # Specific editors
   incidencealarm.cpp
+  incidenceattachment.cpp
   incidenceattendee.cpp
   incidencecategories.cpp
   incidencegeneral.cpp
@@ -37,9 +40,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
 
-  attachmenticonview.cpp
   attachmenteditdialog.cpp
-  incidenceattachment.cpp
   incidencedescription.cpp
 
   #incidenceeditorgeneralpage.cpp
@@ -99,6 +100,7 @@ if (KDEPIM_MOBILE_UI)
     ${KDEPIMLIBS_KCAL_LIBS}
     kdepim            # For KPIM::K{Date|Time}Edit
     akonadi-kcal_next # For KCalPrefs
+    kdepimdbusinterfaces # For UriHandler
   )
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES

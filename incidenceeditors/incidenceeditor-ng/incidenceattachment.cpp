@@ -42,11 +42,19 @@
 
 #include "attachmenticonview.h"
 #include "attachmenteditdialog.h"
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomoremobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 
 using namespace IncidenceEditorsNG;
 
+#ifdef KDEPIM_MOBILE_UI
+IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoMore *ui )
+#else
 IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
+#endif
   : IncidenceEditor( 0 )
   , mUi( ui )
   , mPopupMenu( new KMenu )

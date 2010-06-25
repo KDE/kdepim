@@ -30,17 +30,22 @@ class QMimeData;
 
 namespace Ui {
 class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
 namespace IncidenceEditorsNG {
 
 class AttachmentIconView;
 
-class IncidenceAttachment : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
 {
   Q_OBJECT
   public:
+#ifdef KDEPIM_MOBILE_UI    
+    IncidenceAttachment( Ui::EventOrTodoMore *ui = 0 );
+#else    
     IncidenceAttachment( Ui::EventOrTodoDesktop *ui = 0 );
+#endif    
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -82,7 +87,11 @@ class IncidenceAttachment : public IncidenceEditor
     
   private:
     AttachmentIconView *mAttachmentView;
+#ifdef KDEPIM_MOBILE_UI
+    Ui::EventOrTodoMore *mUi;
+#else    
     Ui::EventOrTodoDesktop *mUi;
+#endif    
 
     KMenu *mPopupMenu;
     KAction *mOpenAction;

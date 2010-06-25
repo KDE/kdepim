@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>518</width>
-    <height>278</height>
+    <width>449</width>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>StackedWidget</string>
   </property>
   <property name="currentIndex">
-   <number>1</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="page">
    <layout class="QGridLayout" name="gridLayout_3">
@@ -750,23 +750,67 @@
    </layout>
   </widget>
   <widget class="QWidget" name="page_4">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Attachments</string>
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="0" rowspan="3">
+     <widget class="QWidget" name="mAttachmentViewPlaceHolder" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
      </widget>
     </item>
-    <item>
-     <spacer name="verticalSpacer">
+    <item row="0" column="1">
+     <widget class="QPushButton" name="mAddButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string extracomment="@info:tooltip">Add an attachment</string>
+      </property>
+      <property name="whatsThis">
+       <string extracomment="@info:whatsthis">Shows a dialog used to select an attachment to add to this event or to-do as link or as inline data.</string>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="mRemoveButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string extracomment="@info:tooltip">Remove the selected attachment</string>
+      </property>
+      <property name="whatsThis">
+       <string extracomment="@info:whatsthis">Removes the attachment selected in the list above from this event or to-do.</string>
+      </property>
+      <property name="text">
+       <string>Remove</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <spacer name="verticalSpacer_4">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>270</height>
+        <height>154</height>
        </size>
       </property>
      </spacer>
