@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>577</height>
+    <width>696</width>
+    <height>551</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -108,7 +108,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="1" colspan="2">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -193,19 +193,6 @@
         <string>Blocks me for other events</string>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_12">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>
@@ -577,7 +564,7 @@
    <item row="10" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -694,8 +681,8 @@
       <attribute name="title">
        <string>Attendees</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0" colspan="2">
+      <layout class="QGridLayout" name="gridLayout_13">
+       <item row="0" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>Meeting Organizer:</string>
@@ -703,6 +690,56 @@
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QStackedWidget" name="mOrganizerStack">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="i_am_organizer">
+          <layout class="QGridLayout" name="gridLayout">
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="KComboBox" name="mOrganizerCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string extracomment="@info:tooltip">Set the organizer identity</string>
+             </property>
+             <property name="whatsThis">
+              <string extracomment="@info:whatsthis">Sets the identity corresponding to the organizer of this to-do or event. Identities can be set in the 'Personal' section of the KOrganizer configuration, or in the Personal'-&gt;'About Me'-&gt;'Password &amp; User Account' section of the System Settings. In addition, identities are gathered from your KMail settings and from your address book. If you choose to set it globally for KDE in the System Settings, be sure to check 'Use email settings from System Settings' in the 'Personal' section of the KOrganizer configuration.</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="someone_else_is_organizer">
+          <layout class="QGridLayout" name="gridLayout_12">
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="mOrganizerLabel">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item row="1" column="0">
@@ -716,14 +753,14 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="mConflictsLabel">
-         <property name="text">
-          <string>X time conflicts</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
         <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QLabel" name="mConflictsLabel">
+           <property name="text">
+            <string>X time conflicts</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="mSolveButton">
            <property name="text">
@@ -752,6 +789,16 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QWidget" name="mAttendeWidgetPlaceHolder" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -1416,6 +1463,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>KPIM::KTimeZoneComboBox</class>
+   <extends>KComboBox</extends>
+   <header>libkdepim/ktimezonecombobox.h</header>
+  </customwidget>
+  <customwidget>
    <class>KPIM::KTimeEdit</class>
    <extends>QComboBox</extends>
    <header>libkdepim/ktimeedit.h</header>
@@ -1454,11 +1506,6 @@
    <class>KRichTextWidget</class>
    <extends>KRichTextEdit</extends>
    <header>krichtextwidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPIM::KTimeZoneComboBox</class>
-   <extends>KComboBox</extends>
-   <header>libkdepim/ktimezonecombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

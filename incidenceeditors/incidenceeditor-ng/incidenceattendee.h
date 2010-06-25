@@ -52,8 +52,7 @@ public:
     virtual bool isValid();
 
 private:
-    QGridLayout* gridLayout();
-    void makeOrganizerCombo();
+    void fillOrganizerCombo();
 
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
@@ -61,8 +60,6 @@ private:
     Ui::EventOrTodoDesktop *mUi;
 #endif    
     AttendeeEditor *mAttendeeEditor;
-    KComboBox *mOrganizerCombo;
-    QLabel *mOrganizerLabel;
 };
 
 }

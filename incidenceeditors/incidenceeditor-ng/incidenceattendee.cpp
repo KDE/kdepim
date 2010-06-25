@@ -48,51 +48,45 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* u
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
 #endif
   : mUi( ui )
-  , mAttendeeEditor(  new AttendeeEditor )
-  , mOrganizerCombo( 0 )
-  , mOrganizerLabel( 0 )
+  , mAttendeeEditor( new AttendeeEditor )
 {
-  gridLayout()->addWidget( mAttendeeEditor, 3, 0, 1, 3 );
+  QGridLayout *layout = new QGridLayout( mUi->mAttendeWidgetPlaceHolder );
+  layout->setSpacing( 0 );
+  layout->addWidget( mAttendeeEditor );
 
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
-  mOrganizerLabel = new QLabel;
-  gridLayout()->addWidget( mOrganizerLabel, 0, 2, 1, 1);
-  mOrganizerLabel->hide();
+  mUi->mOrganizerStack->setCurrentIndex( 0 );
 
-  makeOrganizerCombo();
+  fillOrganizerCombo();
   mUi->mSolveButton->setDisabled( true );
+  mUi->mOrganizerLabel->setVisible( false );
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
 {
   const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
+
   if ( itsMe || incidence->organizer().isEmpty() ) {
-    if ( !mOrganizerCombo ) {
-      makeOrganizerCombo();
-    }
-    mOrganizerLabel->hide();
+    mUi->mOrganizerStack->setCurrentIndex( 0 );
+
     int found = -1;
     QString fullOrganizer = incidence->organizer().fullName();
-    for ( int i = 0; i < mOrganizerCombo->count(); ++i ) {
-      if ( mOrganizerCombo->itemText( i ) == fullOrganizer ) {
+    for ( int i = 0; i < mUi->mOrganizerCombo->count(); ++i ) {
+      if ( mUi->mOrganizerCombo->itemText( i ) == fullOrganizer ) {
         found = i;
-        mOrganizerCombo->setCurrentIndex( i );
+        mUi->mOrganizerCombo->setCurrentIndex( i );
         break;
       }
     }
     if ( found < 0 ) {
-      mOrganizerCombo->addItem( fullOrganizer, 0 );
-      mOrganizerCombo->setCurrentIndex( 0 );
+      mUi->mOrganizerCombo->addItem( fullOrganizer, 0 );
+      mUi->mOrganizerCombo->setCurrentIndex( 0 );
     }
   } else { // someone else is the organizer
-    if ( mOrganizerCombo ) {
-      delete mOrganizerCombo;
-      mOrganizerCombo = 0;
-    }
-    mOrganizerLabel->setText( incidence->organizer().fullName() );
-    mOrganizerLabel->show();
+    mUi->mOrganizerStack->setCurrentIndex( 1 );
+    mUi->mOrganizerLabel->setText( incidence->organizer().fullName() );
   }
 
   KCal::Attendee::List al = incidence->attendees();
@@ -131,7 +125,7 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
     if( !skip  )
       incidence->addAttendee( attendee );
   }
-  incidence->setOrganizer( mOrganizerCombo->currentText() );
+  incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
 }
 
 bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
@@ -145,33 +139,8 @@ bool IncidenceEditorsNG::IncidenceAttendee::isValid()
   return true;
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::makeOrganizerCombo()
+void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
 {
-  if ( mOrganizerCombo ) {
-      delete mOrganizerCombo;
-  }
-  mOrganizerCombo = new KComboBox( this );
-  gridLayout()->addWidget( mOrganizerCombo, 0, 2, 1, 1);
-  QString whatsThis =
-    i18nc( "@info:whatsthis",
-            "Sets the identity corresponding to "
-            "the organizer of this to-do or event. "
-            "Identities can be set in the 'Personal' section "
-            "of the KOrganizer configuration, or in the "
-            "'Personal'->'About Me'->'Password & User Account' "
-            "section of the System Settings. In addition, "
-            "identities are gathered from your KMail settings "
-            "and from your address book. If you choose "
-            "to set it globally for KDE in the System Settings, "
-            "be sure to check 'Use email settings from "
-            "System Settings' in the 'Personal' section of the "
-            "KOrganizer configuration." );
-  mOrganizerCombo->setWhatsThis( whatsThis );
-  mOrganizerCombo->setToolTip(
-    i18nc( "@info:tooltip", "Set the organizer identity" ) );
-
-  // Get all emails from KOPrefs (coming from various places),
-  // and insert them - removing duplicates
   const QStringList lst = IncidenceEditors::EditorConfig::instance()->fullEmails();
   QStringList uniqueList;
   for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -179,14 +148,5 @@ void IncidenceEditorsNG::IncidenceAttendee::makeOrganizerCombo()
       uniqueList << *it;
     }
   }
-  mOrganizerCombo->addItems( uniqueList );
+  mUi->mOrganizerCombo->addItems( uniqueList );
 }
-
-QGridLayout* IncidenceEditorsNG::IncidenceAttendee::gridLayout()
-{
-  QGridLayout *grid = qobject_cast< QGridLayout* >( mUi->mAttendeeWidget->layout() );
-  Q_ASSERT( grid );
-  return grid;
-}
-
-
