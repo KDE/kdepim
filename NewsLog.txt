@@ -1,3 +1,19 @@
+Friday, June 25th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4417: Resizing a one day event changes the event wrongly (rt#6064)
+* kolab/issue4406: Change write to read rights of a shared calendar folder, can lead to a focus problem (rt#6167)
+* kolab/issue4407: event with attachment: png/zip attachment size changes
+* kolab/issue4401: The contacts free-busy-url is not saved in the contact mail but in kde/share/apps/korganizer/freebusyurls
+* kolab/issue2652: Kontact generate invalid charset declaration for attached text files
+* kolab/issue3974: Clicking on an ics/vcs-attachment doesn't import or display the events of the attachment (rt#5812)
+* kolab/issue4085: Wish: Mail attachments only in the header of a mail (rt#5987)
+* kolab/issue4410: event attachment cannot be opend after restart (rt#6172)
+* Fix crash when displaying an event (KDE bug 236462 and 242191)
+
+
 Friday, June 18th 2010
 
 Problems addressed
