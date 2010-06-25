@@ -64,7 +64,6 @@ void IncidenceWhatWhere::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceWhatWhere::isDirty() const
 {
-  kDebug();
   if ( mLoadedIncidence ) {
     return ( mUi->mSummaryEdit->text() != mLoadedIncidence->summary() )
       || ( mUi->mLocationEdit->text() != mLoadedIncidence->location() );
