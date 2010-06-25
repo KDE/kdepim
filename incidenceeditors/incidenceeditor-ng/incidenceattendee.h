@@ -29,17 +29,22 @@ class QLabel;
 
 namespace Ui {
 class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
 namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
 
-class IncidenceAttendee : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
   Q_OBJECT
 public:
+#ifdef KDEPIM_MOBILE_UI  
+    IncidenceAttendee( Ui::EventOrTodoMore *ui = 0 );
+#else
     IncidenceAttendee( Ui::EventOrTodoDesktop *ui = 0 );
+#endif
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -50,7 +55,11 @@ private:
     QGridLayout* gridLayout();
     void makeOrganizerCombo();
 
+#ifdef KDEPIM_MOBILE_UI
+    Ui::EventOrTodoMore *mUi;
+#else
     Ui::EventOrTodoDesktop *mUi;
+#endif    
     AttendeeEditor *mAttendeeEditor;
     KComboBox *mOrganizerCombo;
     QLabel *mOrganizerLabel;

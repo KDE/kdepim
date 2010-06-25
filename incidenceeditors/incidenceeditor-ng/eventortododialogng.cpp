@@ -122,8 +122,10 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
+#ifndef KDEPIM_MOBILE_UI
   IncidenceAttendee *ieAttendee= new IncidenceAttendee( mUi );
   mEditor->combine( ieAttendee );
+#endif  
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
              SLOT(updateButtonStatus(bool)) );

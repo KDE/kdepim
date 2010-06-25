@@ -528,7 +528,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="mAttendeeTab">
+     <widget class="QWidget" name="mAttendeeWidget">
       <attribute name="title">
        <string>Attendees</string>
       </attribute>
@@ -1242,11 +1242,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KTimeZoneComboBox</class>
-   <extends>KComboBox</extends>
-   <header>libkdepim/ktimezonecombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KPIM::KTimeEdit</class>
    <extends>QComboBox</extends>
    <header>libkdepim/ktimeedit.h</header>
@@ -1285,6 +1280,11 @@
    <class>KRichTextWidget</class>
    <extends>KRichTextEdit</extends>
    <header>krichtextwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KTimeZoneComboBox</class>
+   <extends>KComboBox</extends>
+   <header>libkdepim/ktimezonecombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

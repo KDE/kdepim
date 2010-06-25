@@ -24,7 +24,12 @@
 */
 
 #include "incidenceattendee.h"
+
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomoremobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 
 #include "attendeeeditor.h"
 #include "../editorconfig.h"
@@ -37,7 +42,11 @@
 #include <QGridLayout>
 #include <QLabel>
 
+#ifdef KDEPIM_MOBILE_UI
+IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
+#else
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
+#endif
   : mUi( ui )
   , mAttendeeEditor(  new AttendeeEditor )
   , mOrganizerCombo( 0 )
@@ -175,7 +184,7 @@ void IncidenceEditorsNG::IncidenceAttendee::makeOrganizerCombo()
 
 QGridLayout* IncidenceEditorsNG::IncidenceAttendee::gridLayout()
 {
-  QGridLayout *grid = qobject_cast< QGridLayout* >( mUi->mAttendeeTab->layout() );
+  QGridLayout *grid = qobject_cast< QGridLayout* >( mUi->mAttendeeWidget->layout() );
   Q_ASSERT( grid );
   return grid;
 }
