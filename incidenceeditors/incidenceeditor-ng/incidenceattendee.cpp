@@ -87,7 +87,7 @@ void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr inci
         break;
       }
     }
-    if ( found < 0 ) {
+    if ( found < 0 && !fullOrganizer.isEmpty() ) {
       mUi->mOrganizerCombo->addItem( fullOrganizer, 0 );
       mUi->mOrganizerCombo->setCurrentIndex( 0 );
     }
@@ -148,6 +148,7 @@ bool IncidenceEditorsNG::IncidenceAttendee::isValid()
 
 void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
 {
+  mUi->mOrganizerCombo->clear();
   const QStringList lst = IncidenceEditors::EditorConfig::instance()->fullEmails();
   QStringList uniqueList;
   for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
