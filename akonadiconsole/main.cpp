@@ -51,7 +51,7 @@ int main( int argc, char **argv )
   if ( args->isSet( "remote" ) ) {
     const QString akonadiAddr = QString::fromLatin1( "tcp:host=%1,port=31415" ).arg( args->getOption( "remote" ) );
     const QString dbusAddr = QString::fromLatin1( "tcp:host=%1,port=31416" ).arg( args->getOption( "remote" ) );
-    setenv( "AKOANDI_SERVER_ADDRESS", akonadiAddr.toLatin1(), 1 );
+    setenv( "AKONADI_SERVER_ADDRESS", akonadiAddr.toLatin1(), 1 );
     setenv( "DBUS_SESSION_BUS_ADDRESS", dbusAddr.toLatin1(), 1 );
   }
 
