@@ -35,6 +35,7 @@
 #include "breadcrumbnavigationcontext.h"
 #include <qcolumnview.h>
 #include <QFile>
+#include "kresettingproxymodel.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags f )
   : QWidget(parent, f)
@@ -133,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags f )
   QDeclarativeContext *context = m_declarativeView->engine()->rootContext();
 
   m_bnf = new KBreadcrumbNavigationFactory(this);
-  m_bnf->setBreadcrumbDepth(2);
+  m_bnf->setBreadcrumbDepth(1);
   m_bnf->createBreadcrumbContext( m_treeModel, this );
 
   widget->treeView()->setSelectionModel( m_bnf->selectionModel() );
@@ -153,8 +154,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags f )
   view3->setWindowTitle( "Child items model");
 #endif
 
+  KResettingProxyModel *resettingProxy = new KResettingProxyModel(this);
+  resettingProxy->setSourceModel(m_bnf->breadcrumbItemModel());
+
   context->setContextProperty( "_selectedItemModel", QVariant::fromValue( static_cast<QObject*>( m_bnf->selectedItemModel() ) ) );
-  context->setContextProperty( "_breadcrumbItemsModel", QVariant::fromValue( static_cast<QObject*>( m_bnf->breadcrumbItemModel() ) ) );
+  context->setContextProperty( "_breadcrumbItemsModel", QVariant::fromValue( static_cast<QObject*>( resettingProxy ) ) );
   context->setContextProperty( "_childItemsModel", QVariant::fromValue( static_cast<QObject*>( m_bnf->childItemModel() ) ) );
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
@@ -179,6 +183,15 @@ void MainWindow::setSelectedBreadcrumbCollectionRow( int row )
 {
   m_bnf->selectBreadcrumb( row );
 }
+
+int MainWindow::selectedCollectionRow()
+{
+  const QModelIndexList list = m_bnf->selectionModel()->selectedRows();
+  if (list.size() != 1)
+    return -1;
+  return list.first().row();
+}
+
 
 
 #include "mainwindow.moc"
