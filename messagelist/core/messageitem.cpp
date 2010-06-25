@@ -142,6 +142,9 @@ public:
   /// Deletes the internal list of tags
   void invalidateTagCache();
 
+  /// Deletes the cache of the annotation
+  void invalidateAnnotationCache();
+
   ThreadingStatus mThreadingStatus;
   QString mMessageIdMD5;            ///< always set
   QString mInReplyToIdMD5;          ///< set only if we're doing threading
@@ -204,6 +207,11 @@ void MessageItem::Private::invalidateTagCache()
     delete mTagList;
     mTagList = 0;
   }
+}
+
+void MessageItem::Private::invalidateAnnotationCache()
+{
+  mAnnotationStateChecked = false;
 }
 
 const MessageItem::Tag* MessageItem::Private::bestTag() const
@@ -374,6 +382,11 @@ QString MessageItem::tagListDescription() const
 void MessageItem::invalidateTagCache()
 {
   d->invalidateTagCache();
+}
+
+void MessageItem::invalidateAnnotationCache()
+{
+  d->invalidateAnnotationCache();
 }
 
 QColor MessageItem::textColor() const
