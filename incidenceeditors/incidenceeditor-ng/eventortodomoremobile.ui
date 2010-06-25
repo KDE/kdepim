@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>449</width>
-    <height>221</height>
+    <width>535</width>
+    <height>230</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>StackedWidget</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>3</number>
   </property>
   <widget class="QWidget" name="page">
    <layout class="QGridLayout" name="gridLayout_3">
@@ -327,20 +327,7 @@
   </widget>
   <widget class="QWidget" name="page_3">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_13">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Repeat:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
+    <item row="0" column="0" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout_9">
       <item>
        <widget class="KComboBox" name="mRecurrenceTypeCombo">
@@ -352,27 +339,27 @@
         </property>
         <item>
          <property name="text">
-          <string>Never</string>
+          <string>Repeat never</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Daily</string>
+          <string>Repeat daily</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Weekly</string>
+          <string>Repeat weekly</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Monthly</string>
+          <string>Repeat monthly</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Yearly</string>
+          <string>Repeat yearly</string>
          </property>
         </item>
        </widget>
@@ -431,7 +418,7 @@
       </item>
      </layout>
     </item>
-    <item row="1" column="1">
+    <item row="1" column="0" colspan="3">
      <widget class="QStackedWidget" name="mRepeatStack">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -440,7 +427,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="never_page"/>
       <widget class="QWidget" name="daily_page">
@@ -529,20 +516,7 @@
       </widget>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="mRecurrenceEndLabel">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Ends:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
+    <item row="2" column="0" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
        <number>0</number>
@@ -557,17 +531,17 @@
         </property>
         <item>
          <property name="text">
-          <string>never</string>
+          <string>Ends never</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>on</string>
+          <string>Ends on</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>after</string>
+          <string>Ends after</string>
          </property>
         </item>
        </widget>
@@ -591,20 +565,14 @@
          </layout>
         </widget>
         <widget class="QWidget" name="end_on">
-         <layout class="QGridLayout" name="gridLayout_14">
+         <layout class="QGridLayout" name="gridLayout_3">
           <property name="margin">
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="KPIM::KDateEdit" name="mRecurrenceEndDate">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="whatsThis">
-             <string extracomment="@info:whatsthis">Date after which the event or to-do should stop recurring</string>
+           <widget class="QDateEdit" name="mRecurrenceEndDate">
+            <property name="displayFormat">
+             <string>MM.dd.yyyy</string>
             </property>
            </widget>
           </item>
@@ -633,13 +601,16 @@
           </property>
           <item row="0" column="0">
            <widget class="QSpinBox" name="mEndDurationEdit">
+            <property name="minimum">
+             <number>1</number>
+            </property>
             <property name="maximum">
              <number>9999</number>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLabel" name="label_14">
+           <widget class="QLabel" name="mRecurrenceOccurrencesLabel">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -670,15 +641,12 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="3" column="1" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="KPIM::KDateEdit" name="mExceptionDateEdit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <widget class="QDateEdit" name="mExceptionDateEdit">
+        <property name="displayFormat">
+         <string>MM.dd.yyyy</string>
         </property>
        </widget>
       </item>
@@ -707,7 +675,7 @@
       </item>
      </layout>
     </item>
-    <item row="4" column="1">
+    <item row="4" column="0" colspan="2">
      <widget class="QListWidget" name="mExceptionList">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -825,11 +793,6 @@
    <header>libkdepim/kcheckcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::KDateEdit</class>
-   <extends>QComboBox</extends>
-   <header>libkdepim/kdateedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>KRichTextEdit</class>
    <extends>KTextEdit</extends>
    <header>krichtextedit.h</header>
@@ -851,5 +814,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>mRecurrenceEndCombo</sender>
+   <signal>activated(int)</signal>
+   <receiver>mRecurrenceEndStack</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>56</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

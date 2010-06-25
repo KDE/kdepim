@@ -50,6 +50,12 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   : mUi( ui )
   , mDateTime( dateTime )
 {
+  // Set some sane defaults
+  mUi->mRecurrenceTypeCombo->setCurrentIndex( 0 );
+  mUi->mRecurrenceEndCombo->setCurrentIndex( 0 );
+  mUi->mRecurrenceEndStack->setCurrentIndex( 0 );
+  mUi->mEndDurationEdit->setValue( 1 );
+  handleEndAfterOccurrencesChange( 1 );
   toggleRecurrenceWidgets( false );
   fillCombos();
 
@@ -67,6 +73,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
            SLOT(updateRemoveExceptionButton()) );
   connect( mUi->mRecurrenceTypeCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(handleRecurrenceTypeChange(int)));
+  connect( mUi->mEndDurationEdit, SIGNAL(valueChanged(int)),
+           SLOT(handleEndAfterOccurrencesChange(int)) );
   connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
            SLOT(handleFrequencyChange()) );
 }
@@ -284,6 +292,12 @@ void IncidenceRecurrence::fillCombos()
   item = "the " + numberToString( startDate.dayOfYear() ) + " day of the year";
   mUi->mYearlyCombo->addItem( item );
   mUi->mYearlyCombo->setCurrentIndex( currentYearlyIndex == -1 ? 0 : currentYearlyIndex );
+}
+
+void IncidenceRecurrence::handleEndAfterOccurrencesChange( int currentValue )
+{
+  mUi->mRecurrenceOccurrencesLabel->setText(
+      i18ncp( "Recurrence ends after n occurences", "occurence", "occurences", currentValue ) );
 }
 
 void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
@@ -603,11 +617,14 @@ void IncidenceRecurrence::setFrequency( int frequency )
 
 void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
 {
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mRecurrenceEndLabel->setVisible( enable );
+#endif
+
   mUi->mFrequencyLabel->setVisible( enable );
   mUi->mFrequencyEdit->setVisible( enable );
   mUi->mRecurrenceRuleLabel->setVisible( enable );
   mUi->mRepeatStack->setVisible( enable && mUi->mRecurrenceTypeCombo->currentIndex() > 1 );
-  mUi->mRecurrenceEndLabel->setVisible( enable );
   mUi->mRecurrenceEndCombo->setVisible( enable );
   mUi->mEndDurationEdit->setVisible( enable );
   mUi->mRecurrenceEndStack->setVisible( enable );
