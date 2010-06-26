@@ -780,7 +780,7 @@ void BilboEditor::sltMediaTypeFound( BilboMedia * media )
 //     }
     if ( mMediaList->contains( url ) ) {
         //media is already added.
-        delete media;
+        media->deleteLater();
     } else {
         mMediaList->insert( url, media );
 
