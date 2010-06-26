@@ -294,8 +294,12 @@ QHash<QModelIndex, QModelIndexList> KReparentingProxyModelPrivate::recreateMappi
     }
     QVector<QModelIndex>::iterator ancestorIt = qLowerBound(ancestors.begin(), ancestors.end(), nextIndex, LessThan(q));
 
-    QModelIndex parent = *(ancestorIt - 1);
-    kDebug() << parent << *ancestorIt;
+    QModelIndex parent;
+    if (ancestorIt != ancestors.begin())
+    {
+      parent = *(ancestorIt - 1);
+    }
+    //kDebug() << parent << *ancestorIt; // this crashes if ancestorIt == ancestors.end()
     ancestorIt = ancestors.insert(ancestorIt, nextIndex);
 
     if (ancestorIt != ancestors.end())
