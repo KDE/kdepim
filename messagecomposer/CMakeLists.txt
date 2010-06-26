@@ -75,6 +75,7 @@ kde4_add_kcfg_files(messagecomposer_src
 
 include_directories(
     ${Boost_INCLUDE_DIR}
+    ${SOPRANO_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkleo
 )
 
