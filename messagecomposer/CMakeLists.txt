@@ -1,5 +1,11 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+include_directories(
+    ${Boost_INCLUDE_DIR}
+    ${SOPRANO_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/libkleo
+)
+
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 if ( QT_QT3SUPPORT_FOUND )
@@ -70,13 +76,6 @@ configure_file(messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecom
 
 kde4_add_kcfg_files(messagecomposer_src
   messagecomposersettings_base.kcfgc 
-)
-
-
-include_directories(
-    ${Boost_INCLUDE_DIR}
-    ${SOPRANO_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}/libkleo
 )
 
 kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
