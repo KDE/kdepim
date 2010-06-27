@@ -317,6 +317,7 @@ else (NOT WINCE)
   add_subdirectory(runtime)
 endif (NOT WINCE)
   add_subdirectory(templateparser)
+  add_subdirectory(pimimport)
 
   if(QGPGME_FOUND)
     if (Boost_TOPOLOGICAL_SORT_DIR)
