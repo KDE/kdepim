@@ -70,6 +70,7 @@ namespace MessageViewer {
   class ObjectTreeParser;
   class HeaderStrategy;
   class HeaderStyle;
+  class HeaderTheme;
   class NodeHelper;
   class FindBar;
   class MimeTreeModel;
@@ -304,6 +305,10 @@ public:
     return mHeaderStyle;
   }
 
+  HeaderTheme * headerTheme() const {
+    return mHeaderTheme;
+  }
+
   /** Set the header style and strategy. We only want them to be set
       together. */
   void setHeaderStyleAndStrategy( HeaderStyle * style,
@@ -521,6 +526,7 @@ public slots:
   void slotPrintMsg();
 
   void slotSetEncoding();
+  void slotSetTheme();
   void injectAttachments();
   void slotSettingsChanged();
   void slotMimeTreeContextMenuRequested( const QPoint& pos );
@@ -588,10 +594,12 @@ public:
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
   HeaderStyle * mHeaderStyle;
+  HeaderTheme * mHeaderTheme;
   static const int delay;
   QTimer mUpdateReaderWinTimer;
   QTimer mResizeTimer;
   QString mOverrideEncoding;
+  QString mThemeName;
   QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
 
   /// This is true if the viewer currently is displaying a message. Can be false, for example when
@@ -611,6 +619,7 @@ public:
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
       *mViewSourceAction, *mSaveMessageAction;
   KSelectAction *mSelectEncodingAction;
+  KSelectAction *mSelectThemeAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mHoveredUrl;
@@ -640,6 +649,7 @@ public:
   bool mShowFullCcAddressList;
   Akonadi::Monitor mMonitor;
   QString mAppName;
+  QStringList m_dirs;
 
 };
 

@@ -108,6 +108,7 @@
 #include "editorwatcher.h"
 #include "globalsettings.h"
 #include "headerstyle.h"
+#include "headertheme.h"
 #include "headerstrategy.h"
 #include "htmlstatusbar.h"
 #include "webkitparthtmlwriter.h"
@@ -151,6 +152,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mAttachmentStrategy( 0 ),
     mHeaderStrategy( 0 ),
     mHeaderStyle( 0 ),
+    mHeaderTheme( 0 ),
     mUpdateReaderWinTimer( 0 ),
     mResizeTimer( 0 ),
     mOldGlobalOverrideEncoding( "---" ), // init with dummy value
@@ -167,6 +169,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mScrollUpMoreAction( 0 ),
     mScrollDownMoreAction( 0 ),
     mSelectEncodingAction( 0 ),
+    mSelectThemeAction( 0 ),
     mToggleFixFontAction( 0 ),
     mToggleDisplayModeAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
@@ -1046,8 +1049,6 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
 {
   if ( !headerStyle() )
     kFatal() << "trying to writeMsgHeader() without a header style set!";
-  if ( !headerStrategy() )
-    kFatal() << "trying to writeMsgHeader() without a header strategy set!";
   QString href;
   if ( vCardNode )
     href = mNodeHelper->asHREF( vCardNode, "body" );
@@ -1060,7 +1061,8 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
   headerStyle()->setSourceObject( this );
   headerStyle()->setNodeHelper( mNodeHelper );
   headerStyle()->setMessagePath( mMessagePath );
-  return headerStyle()->format( aMsg );
+
+  return headerStyle()->setTheming( mThemeName, aMsg );
 }
 
 void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
@@ -1483,57 +1485,25 @@ void ViewerPrivate::createActions()
   }
 
   KToggleAction *raction = 0;
-
-  // header style
-  KActionMenu *headerMenu  = new KActionMenu(i18nc("View->", "&Headers"), this);
-  ac->addAction("view_headers", headerMenu );
-  headerMenu->setHelpText( i18n("Choose display style of message headers") );
-
-  connect( headerMenu, SIGNAL(triggered(bool)),
-           this, SLOT(slotCycleHeaderStyles()) );
-
   QActionGroup *group = new QActionGroup( this );
-  raction = new KToggleAction( i18nc("View->headers->", "&Enterprise Headers"), this);
-  ac->addAction( "view_headers_enterprise", raction );
-  connect( raction, SIGNAL(triggered(bool)), SLOT(slotEnterpriseHeaders()) );
-  raction->setHelpText( i18n("Show the list of headers in Enterprise style") );
-  group->addAction( raction );
-  headerMenu->addAction( raction );
 
-  raction  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
-  ac->addAction("view_headers_fancy", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotFancyHeaders()));
-  raction->setHelpText( i18n("Show the list of headers in a fancy format") );
-  group->addAction( raction );
-  headerMenu->addAction( raction );
+  // Set themes submenu
+  mSelectThemeAction  = new KSelectAction(i18n("&Themes"), this);
+  mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
+  ac->addAction("view_themes", mSelectThemeAction );
+  connect(mSelectThemeAction,SIGNAL( triggered(int)),
+          SLOT( slotSetTheme() ));
+  QStringList themes;
+  //themes << "Brief" << "Plain" << "Fancy" << "Enterprise";
 
-  raction  = new KToggleAction(i18nc("View->headers->", "&Brief Headers"), this);
-  ac->addAction("view_headers_brief", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotBriefHeaders()));
-  raction->setHelpText( i18n("Show brief list of message headers") );
-  group->addAction( raction );
-  headerMenu->addAction( raction );
-
-  raction  = new KToggleAction(i18nc("View->headers->", "&Standard Headers"), this);
-  ac->addAction("view_headers_standard", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotStandardHeaders()));
-  raction->setHelpText( i18n("Show standard list of message headers") );
-  group->addAction( raction );
-  headerMenu->addAction( raction );
-
-  raction  = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
-  ac->addAction("view_headers_long", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotLongHeaders()));
-  raction->setHelpText( i18n("Show long list of message headers") );
-  group->addAction( raction );
-  headerMenu->addAction( raction );
-
-  raction  = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
-  ac->addAction("view_headers_all", raction );
-  connect(raction, SIGNAL(triggered(bool) ), SLOT(slotAllHeaders()));
-  raction->setHelpText( i18n("Show all message headers") );
-  group->addAction( raction );
-  headerMenu->addAction( raction );
+  // strange behaviour - Working on it
+  m_dirs = KGlobal::dirs()->findDirs("data", "messageviewer/themes/");
+  for( QStringList::Iterator dir = m_dirs.begin(); dir != m_dirs.end(); ++dir ) {
+    themes.append( *dir );
+  } 
+       
+  mSelectThemeAction->setItems( themes );
+  mSelectThemeAction->setCurrentItem( 0 );
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -2259,6 +2229,15 @@ void ViewerPrivate::slotSetEncoding()
   else
     mOverrideEncoding = NodeHelper::encodingForName( mSelectEncodingAction->currentText() );
   update( Viewer::Force );
+}
+
+void ViewerPrivate::slotSetTheme()
+{  
+  mThemeName = mSelectThemeAction->currentText();
+  update( Viewer::Force );
+  
+  if( !mExternalWindow )
+    writeConfig();
 }
 
 void ViewerPrivate::injectAttachments()
