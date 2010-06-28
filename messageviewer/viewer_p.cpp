@@ -224,6 +224,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
            this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
   connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
            this, SLOT( slotClear() ) );
+  connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
+           this, SIGNAL( itemRemoved() ) );
 }
 
 ViewerPrivate::~ViewerPrivate()

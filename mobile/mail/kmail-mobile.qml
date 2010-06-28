@@ -27,6 +27,14 @@ import org.kde.pim.mobileui 4.5 as KPIM
 KPIM.MainView {
   id: kmailMobile
 
+  function backToListing()
+  {
+    messageView.visible = false;
+    backToMessageListButton.visible = false;
+    collectionView.visible = true;
+    emailListPage.visible = true;
+    messageView.itemId = -1;
+  }
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
 
@@ -64,11 +72,7 @@ KPIM.MainView {
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
-          messageView.visible = false;
-          backToMessageListButton.visible = false;
-          collectionView.visible = true;
-          emailListPage.visible = true;
-          messageView.itemId = -1;
+          backToListing();
         }
       }
     }
@@ -419,6 +423,11 @@ KPIM.MainView {
   QML.Connections {
     target: collectionView
     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
+  }
+
+  QML.Connections {
+    target: messageView
+    onMailRemoved : { backToListing(); }
   }
 
 }

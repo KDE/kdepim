@@ -305,6 +305,9 @@ signals:
 
   void deleteMessage( const Akonadi::Item & );
 
+  /// Emitted when the item, previously set with setMessageItem, has been removed.
+  void itemRemoved();
+
 public slots:
 
   /**
