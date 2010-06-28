@@ -1,0 +1,259 @@
+<style>
+
+.date {
+    margin-left: 10px;
+    top: 0px;
+}
+
+.span_date {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.left, .right {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #606060; 
+    width: 10px;
+    min-height: 100%;
+}
+
+
+.left {
+    background-image:url('{% media_finder "images/enterprise_s_left.png" %}');
+}
+
+.right {
+    background-image:url('{% media_finder "images/enterprise_s_right.png" %}');
+}
+
+.main {
+    background: "{{ activeColorDark }}";
+    border-collapse:collapse;
+    top: 14px;
+    min-width: 200px;
+    padding:0px;
+}
+
+.top_left {
+    min-width: 6px;
+    background-image:url('{% media_finder "images/enterprise_top_left.png" %}');;
+}
+
+.top_right {
+    min-width: 6px;
+    background:url('{% media_finder "images/enterprise_top_right.png" %}');
+}
+
+.top {
+    height: 6px;
+    width: 100%;
+    background:url('{% media_finder "images/enterprise_top.png" %}');
+}
+
+.left {
+    min-width: 6px;
+    max-width: 6px; 
+    background:url('{% media_finder "images/enterprise_left.png" %}');
+}
+
+.sec {
+    color: "{{ fontColor }}" ! important;
+    margin: 1px;
+    border-spacing: 0px;
+    padding: 0px;
+}
+
+.subject_header,td.subject,td.from,td.from_header,td.to_header,td.to {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-width: 0px
+}
+
+.subject_header {
+    font-size: 6px;
+    text-align: right;
+    padding-left: 5px;
+    padding-right: 24px;
+}
+
+.subject {
+    font-weight: bolder;
+    font-size: 120%;
+    padding-right: 91px;
+}
+
+.from_header {
+    font-size: 10px;
+    padding-left: 5px;
+    padding-right: 24px;
+    text-align: right;
+}
+
+.to_header {
+    font-size: 6px;
+    text-align: right;
+    padding-left: 5px;
+    padding-right: 24px;
+}
+
+.s_left {
+    min-width: 6px;
+    background-image:url('{% media_finder "images/enterprise_s_left.png" %}');
+}
+
+.s_right {
+    min-width: 6px;
+    background-image:url('{% media_finder "images/enterprise_s_right.png" %}');
+}
+
+.sw {
+    margin: 0px;
+    height: 30px;
+    overflow:hidden;
+}
+
+.sp_right {
+    float: right;
+}
+
+.bottom_right {
+    min-width: 6px;
+    max-height: 15px;
+    background:url('{% media_finder "images/enterprise_right.png" %}');
+}
+
+.bottom_middle {
+    height: 35px;
+    width: 80%;
+    background:url('{% media_finder "images/enterprise_sbar.png" %}');
+}
+
+.noprint , .noprint_attachment {
+    display:none ! important;
+    position: absolute;
+}
+
+.noprint {
+    top: -14px;
+    right: 30px;
+    width: 91px;
+    height: 91px;
+}
+
+.noprint_attachment {
+    top: 60px;
+    right: 20px;
+}
+
+a {
+    color: #ffffff ! important;
+    font-size: 10px;
+    text-decoration: none ! important;
+}
+
+a.white {
+    color: #ffffff ! important;
+}
+
+a.black {
+    color: #000000 ! important;
+}
+
+</style>
+
+  <div style="position: fixed; top: 0px; left: 0px; background-color: #606060; width: 10px; min-height: 100%;"  >&nbsp;
+  </div>
+
+  <div style="position: fixed; top: 0px; right: 0px;  background-color: #606060; width: 10px; min-height: 100%;"  >&nbsp;</div>
+
+  <div style="margin-left: 10px; top: 0px;">
+    <span font-size: 10px; font-weight: bold;>
+      {{ date|safe }}
+    </span>
+  </div>
+
+  <table style="background: {{ activeColorDark }}; border-collapse:collapse; top: 14px; min-width: 200px;" cellpadding=0>
+    <tr>
+      <td style="min-width: 6px; background-image: url('{% media_finder "images/enterprise_top_left.png" %}'); "></td>
+      <td style="height: 6px; width: 100%; background: url('{% media_finder "images/enterprise_top.png" %}'); "></td>
+      <td style="min-width: 6px; background: url('{% media_finder "images/enterprise_top_right.png" %}'); "></td>
+   </tr>
+
+   <tr> 
+     <td style="min-width: 6px; max-width: 6px; background: url('{% media_finder "images/enterprise_left.png" %}'); "></td>
+     <td> 
+
+     <div class="noprint" style="z-index: 1; float: right; position: relative; top: -35px; right: 20px;">
+       <img src="{% media_finder "images/enterprise_icon.png" %}">
+     </div>
+
+     <table style="color: {{ fontColor }} ! important; margin: 1px; border-spacing: 0px;" cellpadding=0>
+
+     {% if subject %}
+     <tr> 
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"></td>
+
+     <td style="font-weight: bolder; font-size: 90%; padding-right: 91px;padding-top: 0px; padding-bottom: 0px; border-width: 0px; ">{{ subject|safe }}</td>
+     </tr>
+     {% endif %}
+
+     <tr>
+     <td style="font-size: 10px; padding-left: 5px; padding-right: 24px; text-align: right;padding-top: 0px; padding-bottom: 0px; border-width: 0px;">From:</td>
+     <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">
+     {{ from|safe }}
+
+     {% if vCardName %}
+       &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
+     {% endif %}
+
+     </td>
+     </tr>
+
+     <tr>
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> To: </td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ to|safe }}</td>
+     </tr>
+
+    {% if cc %}
+     <tr>
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> CC: </td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ cc|safe }}</td>
+     </tr>
+     {% endif %}
+
+     {% if bcc %}
+     <tr>
+     <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> BCC: </td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ bcc|safe }}</td>
+     </tr>
+     {% endif %}
+
+     </table>
+     </td>
+
+    <td style="min-width: 6px; max-height: 15px; url('{% media_finder "images/enterprise_right.png" %}'); "></td>
+    </tr>
+
+    <tr> 
+    <td style="min-width: 6px; background: url('{% media_finder "images/enterprise_s_left.png" %}'); "></td>
+    <td style="height: 35px; width: 80%; background: url('{% media_finder "images/enterprise_sbar.png" %}');">
+      <img src="{% media_finder "images/enterprise_sw.png" %}" style="margin: 0px; height: 30px; overflow:hidden;">
+      <img src="{% media_finder "images/enterprise_sp_right.png" %}" style="float: right; ">
+    </td>
+
+    <td style="min-width: 6px; background: url('{% media_finder "images/enterprise_s_right.png" %}'); "></td>
+    </tr>
+  </table>
+
+  <div class="noprint" style="position: absolute;top: 60px;right: 20px; display:none ! important;">
+    <div id="attachmentInjectionPoint"></div>
+  </div>
+
+{% if isPrinting %}
+   <div style="padding: 6px; padding-left: 10px;">
+{% else %}
+  <div style="padding: 6px;">
+{% endif %}
+

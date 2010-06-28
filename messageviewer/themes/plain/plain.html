@@ -1,0 +1,59 @@
+<style>
+
+div.header {
+    font-size: 10px ! important;
+}
+
+</style>
+
+{% if message %}
+  <div class="header" dir="ltr">
+    {{ message|safe }}
+  </div>
+{% endif %}
+
+<div class="header" dir="{{ dir }}">
+
+{% if subject %}
+  <div dir="{{ subjectDir }}">
+    <b style="font-size:120%">{{ subject|safe }}</b>
+  </div>
+  <br />
+{% endif %}
+
+{% if date %}
+  Date:  {{ date|safe }}
+  <br />
+{% endif %}
+
+  From:  {{ from|safe }}
+
+{% if vCardName %}
+  &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
+{% endif %}
+
+{% if organization %}
+  &nbsp;&nbsp;("{{ organization|safe }}")
+{% endif %}
+
+  <br/>
+
+  To:  {{ to|safe }}
+  <br />
+
+{% if cc %}
+  CC:  {{ cc|safe }}
+  <br />
+{% endif %}
+
+{% if bcc %}
+  BCC:  {{ bcc|safe }}
+  <br />
+{% endif %}
+
+{% if replyTo %}
+  Reply to: {{ replyTo|safe }}
+  <br />
+{% endif %}
+
+</div>
