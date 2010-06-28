@@ -51,7 +51,6 @@ Rectangle {
       id : titleInput
       color : "#000001" // yes, not exactly black, since QML maps black to white on the N900...
       anchors.fill : parent
-      anchors.topMargin : 8
       anchors.leftMargin : 10
       anchors.rightMargin : 10
 
