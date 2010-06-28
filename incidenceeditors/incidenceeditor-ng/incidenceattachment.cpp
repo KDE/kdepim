@@ -149,14 +149,16 @@ void IncidenceAttachment::addAttachment()
 {
   AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachmentView );
 
-  QPointer<AttachmentEditDialog> dlg = new AttachmentEditDialog( item, mAttachmentView );
+#ifdef KDEPIM_MOBILE_UI
+  QScopedPointer<AttachmentEditDialog> dlg( new AttachmentEditDialog( item, 0 ) );
+#else
+  QScopedPointer<AttachmentEditDialog> dlg( new AttachmentEditDialog( item, mAttachmentView ) );
+#endif
   dlg->setCaption( i18nc( "@title", "Add Attachment" ) );
   if ( dlg->exec() == KDialog::Rejected )
     delete item;
   else
     emit attachmentCountChanged( mAttachmentView->count() );
-
-  delete dlg;
 
   checkDirtyStatus();
 }
@@ -340,9 +342,15 @@ void IncidenceAttachment::editSelectedAttachments()
       if ( !attitem->attachment() )
         return;
 
-      AttachmentEditDialog *dialog = new AttachmentEditDialog( attitem, mAttachmentView, false );
+#ifdef KDEPIM_MOBILE_UI
+      QScopedPointer<AttachmentEditDialog> dialog(
+          new AttachmentEditDialog( attitem, 0, false ) );
+#else
+      QScopedPointer<AttachmentEditDialog> dialog(
+          new AttachmentEditDialog( attitem, mAttachmentView, false ) );
+#endif
       dialog->setModal( false );
-      connect( dialog, SIGNAL(hidden()), dialog, SLOT(delayedDestruct()) );
+      connect( dialog.data(), SIGNAL(hidden()), dialog.data(), SLOT(delayedDestruct()) );
       dialog->show();
     }
   }
