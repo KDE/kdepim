@@ -24,6 +24,7 @@ target_link_libraries(tasks-mobile
 #    ${KDEPIMLIBS_AKONADI_LIBRARY}
 #    akonadi_next
     kdepim
+    incidenceeditors
 )
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
