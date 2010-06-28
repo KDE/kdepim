@@ -27,6 +27,8 @@
 
 #include "entitytreewidget.h"
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/collectionfilterproxymodel.h>
+#include <akonadi/entityrightsfiltermodel.h>
 #include <kdescendantsproxymodel.h>
 
 #include <akonadi_next/modeltest.h>
@@ -39,10 +41,13 @@ DescTabWidget::DescTabWidget(QWidget* parent, Qt::WindowFlags f)
   layout->addWidget(splitter);
 
   m_etw = new EntityTreeWidget(splitter);
-  m_etw->init();
-  QTreeView *descView = new QTreeView(splitter);
 
-  QTimer::singleShot(5000, this, SLOT(connectProxy()));
+
+  m_etw->init();
+  
+  m_descView = new QTreeView(splitter);
+
+  QTimer::singleShot( 5000, this, SLOT(connectProxy()));
 
 }
 
@@ -53,10 +58,13 @@ void DescTabWidget::connectProxy()
 
   KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(this);
 
+  Akonadi::EntityRightsFilterModel *collectionFilter = new Akonadi::EntityRightsFilterModel( this );
+  collectionFilter->setSourceModel( m_etw->model() );
+
   kDebug() << descProxy;
-  descProxy->setSourceModel(m_etw->model());
+  descProxy->setSourceModel( collectionFilter );
 
-  new ModelTest(descProxy, this);
+//  new ModelTest(descProxy, this);
 
-//   descView->setModel(descProxy);
+  m_descView->setModel(descProxy);
 }

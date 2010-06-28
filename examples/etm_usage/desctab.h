@@ -25,6 +25,7 @@
 #include <QWidget>
 
 class EntityTreeWidget;
+class QTreeView;
 
 class DescTabWidget : public QWidget
 {
@@ -37,6 +38,7 @@ public slots:
 
 private:
   EntityTreeWidget *m_etw;
+  QTreeView* m_descView;
 
 
 };
