@@ -51,10 +51,6 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   setTimeZonesVisibility( false );
 
 #ifdef KDEPIM_MOBILE_UI
-  QButtonGroup *freeBusyGroup = new QButtonGroup( this );
-  freeBusyGroup->addButton( mUi->mFreeRadio );
-  freeBusyGroup->addButton( mUi->mBusyRadio );
-
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
 #else
@@ -440,18 +436,10 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
 
   switch( event->transparency() ) {
   case Event::Transparent:
-#ifdef KDEPIM_MOBILE_UI
-    mUi->mFreeRadio->setChecked( true );
-#else
     mUi->mFreeBusyCheck->setChecked( false );
-#endif
     break;
   case Event::Opaque:
-#ifdef KDEPIM_MOBILE_UI
-    mUi->mBusyRadio->setChecked( true );
-#else
     mUi->mFreeBusyCheck->setChecked( true );
-#endif
     break;
   }
 }
@@ -472,14 +460,7 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
   mUi->mTimeZoneComboEnd->setEnabled( todo->hasDueDate() );
 
   // These fields where not enabled in the old code either:
-#ifdef KDEPIM_MOBILE_UI
-  mUi->mFreeRadio->setVisible( false );
-  mUi->mBusyRadio->setVisible( false );
-  mUi->mFreeBusyLabel->setVisible( false );
-#else
   mUi->mFreeBusyCheck->setVisible( false );
-#endif
-
   mUi->mWholeDayCheck->setChecked( todo->allDay() );
 
   // Connect to the right logic
@@ -545,12 +526,7 @@ void IncidenceDateTime::save( KCal::Event::Ptr event )
 
   // Free == Event::Transparant
   // Busy == Event::Opaque
-#ifdef KDEPIM_MOBILE_UI
-  event->setTransparency( mUi->mFreeRadio->isChecked() ?
-                          KCal::Event::Transparent : KCal::Event::Opaque );
-#else
   event->setTransparency( mUi->mFreeBusyCheck->isChecked() ? Event::Opaque : Event::Transparent );
-#endif
 }
 
 void IncidenceDateTime::save( KCal::Todo::Ptr todo )

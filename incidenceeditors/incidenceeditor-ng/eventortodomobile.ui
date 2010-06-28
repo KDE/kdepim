@@ -229,7 +229,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="2">
+   <item row="7" column="1" colspan="3">
     <widget class="QCheckBox" name="mWholeDayCheck">
      <property name="whatsThis">
       <string>Set if this to-do's start and due dates have times associated with them.</string>
@@ -241,40 +241,6 @@
       <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="mFreeBusyLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Mark as:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1" colspan="3">
-    <layout class="QHBoxLayout" name="mFreeBusyLayout">
-     <item>
-      <widget class="QRadioButton" name="mFreeRadio">
-       <property name="text">
-        <string>Free</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="mBusyRadio">
-       <property name="text">
-        <string>Busy</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
    <item row="2" column="1" colspan="3">
     <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
@@ -454,6 +420,13 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1" colspan="3">
+    <widget class="QCheckBox" name="mFreeBusyCheck">
+     <property name="text">
+      <string>Blocks me for other events</string>
      </property>
     </widget>
    </item>
