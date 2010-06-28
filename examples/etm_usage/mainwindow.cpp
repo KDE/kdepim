@@ -23,6 +23,7 @@
 
 #include <akonadi/control.h>
 
+#include "desctab.h"
 #include "tab1widget.h"
 #include "tab2widget.h"
 #include "tab2_5widget.h"
@@ -44,6 +45,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 
   Akonadi::Control::start();
 
+  tabWidget->addTab(new DescTabWidget(tabWidget), "Desc");
   tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
   tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
   tabWidget->addTab(new Tab2_5Widget(tabWidget), "Type specific data");
