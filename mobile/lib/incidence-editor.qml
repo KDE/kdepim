@@ -106,20 +106,15 @@ KPIM.MainView {
     
     anchors.topMargin: 40
     anchors.leftMargin: 40;
-    anchors.rightMargin: 4;
-    
-    width: parent.width;
-    height: parent.height - parent.height / 6 - collectionCombo.height;
+    anchors.rightMargin: 10;
+
     contentHeight: generalEditor.height;
     clip: true;
     flickableDirection: "VerticalFlick"
 
-    Column {
+    IncidenceEditors.GeneralEditor {
+      id: generalEditor;
       anchors.fill: parent
-      IncidenceEditors.GeneralEditor {
-        id: generalEditor;
-        width: parent.width;
-      }
     }
   }
 
