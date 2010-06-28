@@ -154,7 +154,6 @@ KPIM.MainView {
 
 
       KPIM.Button2 {
-        id : newTaskButton
         anchors.top : parent.top
         anchors.topMargin : 30
         anchors.left : parent.left
@@ -163,7 +162,7 @@ KPIM.MainView {
         anchors.rightMargin : 10
         buttonText : KDE.i18n( "New Task" )
         onClicked : {
-          console.log( "Implement me!!!" );
+          application.newTask();
         }
       }
       KPIM.Button2 {
@@ -303,17 +302,20 @@ KPIM.MainView {
       contentWidth: 240
       content: [
           KPIM.Button {
-            id: moveButton
+            id: newTaskButton
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: KDE.i18n( "Move" )
-            onClicked: actionPanel.collapse();
+            buttonText: KDE.i18n( "New Task" )
+            onClicked: {
+              application.newTask();
+              actionPanel.collapse();
+            }
           },
           KPIM.Action {
              id: deleteButton
-             anchors.top: moveButton.bottom;
+             anchors.top: newTaskButton.bottom;
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
