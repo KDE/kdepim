@@ -27,6 +27,19 @@ import org.kde.akonadi.contacts 4.5 as Akonadi
 KPIM.MainView {
   id: kaddressbookMobile
 
+  function goBackToListing()
+  {
+    contactView.visible = false;
+    contactGroupView.visible = false;
+    editContactButton.visible = false;
+    editContactGroupButton.visible = false;
+    backToFolderListButton.visible = false;
+    collectionView.visible = true;
+    contactListPage.visible = true;
+    contactView.itemId = -1;
+    contactGroupView.itemId = -1;
+  }
+
   Akonadi.ContactView {
     id: contactView
     z: 0
@@ -105,15 +118,7 @@ KPIM.MainView {
     visible : false
     icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
     onClicked: {
-      contactView.visible = false;
-      contactGroupView.visible = false;
-      editContactButton.visible = false;
-      editContactGroupButton.visible = false;
-      backToFolderListButton.visible = false;
-      collectionView.visible = true;
-      contactListPage.visible = true;
-      contactView.itemId = -1;
-      contactGroupView.itemId = -1;
+      goBackToListing();
     }
   }
 
@@ -398,4 +403,13 @@ KPIM.MainView {
     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
 
+  QML.Connections {
+    target: contactView
+    onContactRemoved : { goBackToListing(); }
+  }
+
+  QML.Connections {
+    target: contactGroupView
+    onContactGroupRemoved : { goBackToListing(); }
+  }
 }

@@ -19,17 +19,29 @@
 
 #include "contactviewitem.h"
 
-#include <akonadi/contact/contactviewer.h>
 #include <akonadi/contact/contactdefaultactions.h>
 #include <akonadi/item.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Contact;
 
+ExtendedContactViewer::ExtendedContactViewer( QWidget *parent )
+  : ContactViewer( parent )
+{
+}
+
+void ExtendedContactViewer::itemRemoved()
+{
+  emit contactRemoved();
+}
+
+
 ContactViewItem::ContactViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
 {
-  m_viewer = new ContactViewer( 0 );
+  m_viewer = new ExtendedContactViewer( 0 );
+  connect( m_viewer, SIGNAL( contactRemoved() ), SIGNAL( contactRemoved() ) );
+
   ContactDefaultActions *actions = new ContactDefaultActions( this );
   actions->connectToView( m_viewer );
   setWidget( m_viewer );

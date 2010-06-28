@@ -19,16 +19,28 @@
 
 #include "contactgroupviewitem.h"
 
-#include <akonadi/contact/contactgroupviewer.h>
 #include <akonadi/item.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Contact;
 
+ExtendedContactGroupViewer::ExtendedContactGroupViewer( QWidget *parent )
+  : ContactGroupViewer( parent )
+{
+}
+
+void ExtendedContactGroupViewer::itemRemoved()
+{
+  emit contactGroupRemoved();
+}
+
+
 ContactGroupViewItem::ContactGroupViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
 {
-  m_viewer = new ContactGroupViewer( 0 );
+  m_viewer = new ExtendedContactGroupViewer( 0 );
+  connect( m_viewer, SIGNAL( contactGroupRemoved() ), SIGNAL( contactGroupRemoved() ) );
+
   setWidget( m_viewer );
 }
 
