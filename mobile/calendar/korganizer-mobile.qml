@@ -344,8 +344,17 @@ KPIM.MainView {
             onClicked: { application.newEvent(); actionPanel.collapse() }
           },
           KPIM.Action {
+            id: syncButton
+            anchors.top: newButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            hardcoded_height: parent.height / 6
+            action : application.getAction("akonadi_collection_sync")
+            onTriggered : actionPanel.collapse();
+          },
+          KPIM.Action {
              id: deleteButton
-             anchors.top: newButton.bottom;
+             anchors.top: syncButton.bottom;
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6

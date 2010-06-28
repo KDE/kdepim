@@ -133,7 +133,9 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
+  standardActionManager->setCollectionSelectionModel( regularSelectionModel() );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
+  standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
 
 #if 0
   QTreeView *etmView = new QTreeView;
