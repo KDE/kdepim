@@ -86,8 +86,6 @@ if (KDEPIM_MOBILE_UI)
     ../categoryselectdialog_base.ui
     eventortododesktop.ui
     ../editoralarms_base.ui
-    iegeneralmobile.ui
-    iedatetimemobile.ui
     eventortodomobile.ui
     eventortodomoremobile.ui
   )
