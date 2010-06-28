@@ -31,6 +31,12 @@ KPIM.MainView {
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
+  function backToAgendaView()
+  {
+    eventView.visible = false;
+    agendaView.visible = true;
+  }
+
   KCal.IncidenceView {
     id: eventView
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
@@ -81,8 +87,7 @@ KPIM.MainView {
       height: 70
       icon: KDE.iconPath( "edit-undo", width );
       onClicked: {
-        eventView.visible = false;
-        agendaView.visible = true;
+        backToAgendaView();
       }
     }
   }
@@ -427,6 +432,13 @@ KPIM.MainView {
     target: collectionView
     onBreadcrumbCollectionSelected : {
       application.setSelectedBreadcrumbCollectionRow( row );
+    }
+  }
+
+  Connections {
+    target: eventView
+    onIncidenceRemoved : {
+      backToAgendaView();
     }
   }
 }

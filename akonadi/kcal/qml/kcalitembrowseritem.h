@@ -22,14 +22,31 @@
 
 #include <QtCore/QAbstractItemModel>
 
+#include <akonadi/kcal/incidenceviewer.h>
 #include <mobile/lib/declarativeakonadiitem.h>
 
 namespace Akonadi {
 
-class IncidenceViewer;
 class Item;
 
 namespace KCal {
+
+/**
+ * @short A wrapper class to make the 'removed' signal available.
+ */
+class ExtendedIncidenceViewer : public IncidenceViewer
+{
+  Q_OBJECT
+
+  public:
+    ExtendedIncidenceViewer( QWidget *parent = 0 );
+
+  Q_SIGNALS:
+    void incidenceRemoved();
+
+  private:
+    virtual void itemRemoved();
+};
 
 class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
@@ -51,12 +68,13 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
     void setActiveDate( const QDate &date );
 
     QObject *attachmentModel() const;
-    
-  signals:
+
+  Q_SIGNALS:
     void attachmentModelChanged();
+    void incidenceRemoved();
 
   private:
-    IncidenceViewer *m_viewer;
+    ExtendedIncidenceViewer *m_viewer;
 };
 
 }
