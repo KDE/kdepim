@@ -27,6 +27,15 @@ import org.kde.kcal 4.5 as KCal
 KPIM.MainView {
   id: tasksMobile
 
+  function goBackToListing()
+  {
+    taskView.visible = false;
+    backToFolderListButton.visible = false;
+    collectionView.visible = true;
+    itemListPage.visible = true;
+    taskView.itemId = -1;
+  }
+
   KCal.IncidenceView {
     id: taskView
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
@@ -64,11 +73,7 @@ KPIM.MainView {
       QML.MouseArea {
         anchors.fill : parent;
         onClicked : {
-          taskView.visible = false;
-          backToFolderListButton.visible = false;
-          collectionView.visible = true;
-          itemListPage.visible = true;
-          taskView.itemId = -1;
+          goBackToListing();
         }
       }
     }
@@ -365,5 +370,10 @@ KPIM.MainView {
    QML.Connections {
      target: collectionView
      onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
+   }
+
+   QML.Connections {
+     target: taskView
+     onIncidenceRemoved : { goBackToListing(); }
    }
 }
