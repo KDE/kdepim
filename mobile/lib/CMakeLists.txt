@@ -10,6 +10,8 @@ set(mobileui_SRCS
     akonadibreadcrumbnavigationfactory.cpp
     kresettingproxymodel.cpp
     declarativeakonadiitem.cpp
+    declarativeeditors.cpp
+    incidenceview.cpp
     kdeclarativeapplication.cpp
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
@@ -17,6 +19,12 @@ set(mobileui_SRCS
     stylesheetloader.cpp
 )
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
+kde4_add_ui_files(mobileui_SRCS
+  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomoremobile.ui
+)
 
 kde4_add_library(kdepimmobileui SHARED ${mobileui_SRCS})
 set_target_properties(kdepimmobileui PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_VERSION})
@@ -24,7 +32,11 @@ set_target_properties(kdepimmobileui PROPERTIES VERSION ${GENERIC_LIB_VERSION} S
 target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
+  akonadi-kcal_next
   akonadi_next
+  incidenceeditorsngmobile
+  kdepim
   messagecore
 )
 
@@ -50,4 +62,5 @@ install(FILES
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
+  incidence-editor.qml
   DESTINATION ${DATA_INSTALL_DIR}/mobileui)

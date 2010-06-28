@@ -31,6 +31,7 @@ public:
     explicit MainView( QWidget *parent = 0 );
 
 public slots:
+    void newTask();
     void setPercentComplete(int row, int percentComplete);
 };
 

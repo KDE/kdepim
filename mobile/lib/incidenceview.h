@@ -41,7 +41,7 @@ class IncidenceDateTime;
 class MobileIncidenceGeneral;
 class MobileIncidenceMore;
 
-class IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEditorUi
+class MOBILEUI_EXPORT IncidenceView : public KDeclarativeFullScreenView, public Akonadi::ItemEditorUi
 {
   Q_OBJECT;
   public:

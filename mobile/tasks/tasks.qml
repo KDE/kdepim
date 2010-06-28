@@ -132,9 +132,7 @@ KPIM.MainView {
           KPIM.Button2 {
             width: parent.width
             buttonText : KDE.i18n( "New Task" )
-            onClicked : {
-              console.log( "Implement me!!!" );
-            }
+            onClicked: { application.newTask(); actionPanel.collapse() }
           }
         }
       ]

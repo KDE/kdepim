@@ -28,10 +28,11 @@
 #include <KAction>
 #include <KActionCollection>
 
-#include <QtCore/qcoreapplication.h>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 #include <QtCore/QTimer>
-#include <QtDBus/qdbusconnection.h>
-#include <QtDBus/qdbusmessage.h>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusMessage>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeError>
@@ -57,7 +58,11 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
     engine()->addImportPath( importPath );
-  const QString qmlPath = KStandardDirs::locate( "appdata", qmlFileName + ".qml" );
+  QString qmlPath = KStandardDirs::locate( "appdata", qmlFileName + ".qml" );
+
+  if ( qmlPath.isEmpty() ) // Try harder
+    qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + qmlFileName + ".qml" );
+
   // call setSource() only once our derived classes have set up everything
   QMetaObject::invokeMethod( this, "setQmlFile", Qt::QueuedConnection, Q_ARG( QString, qmlPath ) );
 
