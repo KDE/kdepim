@@ -39,7 +39,16 @@ KPIM.MainView {
     width: parent.width
     height: parent.height
     visible : false
+
+    QML.Rectangle {
+      anchors.top : noteView.top
+      anchors.bottom : noteView.bottom
+      anchors.right : noteView.left
+      width : noteView.anchors.leftMargin
+      color : "#FAFAFA"
+    }
   }
+
 
   QML.Rectangle {
     id : backToMessageListButton
