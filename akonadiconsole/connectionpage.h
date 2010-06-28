@@ -35,6 +35,8 @@ class ConnectionPage : public QWidget
 
     void showAllConnections( bool );
 
+    QString toHtml() const;
+
   public Q_SLOTS:
     void clear();
 
