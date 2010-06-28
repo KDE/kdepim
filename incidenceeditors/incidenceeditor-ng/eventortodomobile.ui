@@ -251,7 +251,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Show time as:</string>
+      <string>Mark as:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
