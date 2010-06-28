@@ -375,8 +375,6 @@ KDateTime IncidenceDateTime::currentEndDateTime() const
 void IncidenceDateTime::load( KCal::Event::ConstPtr event )
 {
   // First en/disable the necessary ui bits and pieces
-  mUi->mStartLabel->setVisible( true );
-  mUi->mEndLabel->setVisible( true );
   mUi->mStartCheck->setVisible( false );
   mUi->mStartCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
   mUi->mEndCheck->setVisible( false );
@@ -461,9 +459,6 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
 void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
 {
   // First en/disable the necessary ui bits and pieces
-  mUi->mStartLabel->setVisible( false );
-  mUi->mEndLabel->setVisible( false );
-
   mUi->mStartCheck->setVisible( true );
   mUi->mStartCheck->setChecked( todo->hasStartDate() );
   mUi->mStartDateEdit->setEnabled( todo->hasStartDate() );
