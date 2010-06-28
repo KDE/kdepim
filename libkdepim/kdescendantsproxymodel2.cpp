@@ -460,7 +460,7 @@ QModelIndex KDescendantsProxyModel::mapFromSource(const QModelIndex &sourceIndex
         const QModelIndex ancestor = index.parent();
         if (ancestor == sourceParent)
         {
-          if (result == end || (*it < *result && index.row() >= sourceIndex.row()))
+          if (result == end || (*it > *result && index.row() >= sourceIndex.row()))
           {
             result = it;
           }
@@ -498,9 +498,34 @@ int KDescendantsProxyModel::columnCount(const QModelIndex &parent) const
 
 QVariant KDescendantsProxyModel::data(const QModelIndex &index, int role) const
 {
+  Q_D(const KDescendantsProxyModel );
+
   if (!sourceModel())
     return QVariant();
-  return sourceModel()->data(mapToSource(index), role);
+
+  if (!index.isValid())
+    return sourceModel()->data(index, role);
+
+  QModelIndex sourceIndex = mapToSource( index );
+
+  if ((d->m_displayAncestorData) && ( role == Qt::DisplayRole ) )
+  {
+    if (!sourceIndex.isValid())
+    {
+      return QVariant();
+    }
+    QString displayData = sourceIndex.data().toString();
+    sourceIndex = sourceIndex.parent();
+    while (sourceIndex.isValid())
+    {
+      displayData.prepend(d->m_ancestorSeparator);
+      displayData.prepend(sourceIndex.data().toString());
+      sourceIndex = sourceIndex.parent();
+    }
+    return displayData;
+  } else {
+    return sourceIndex.data(role);
+  }
 }
 
 Qt::ItemFlags KDescendantsProxyModel::flags(const QModelIndex &index) const
@@ -524,12 +549,26 @@ void KDescendantsProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelInde
   }
 
   int proxyStart = -1;
-  if (q->sourceModel()->hasChildren(parent) && start > 0)
+
+  const int rowCount = q->sourceModel()->rowCount(parent);
+
+  if (rowCount > start)
   {
-    const QModelIndex aboveStart = q->sourceModel()->index(start - 1, 0, parent);
-    proxyStart = q->mapFromSource(aboveStart).row() + 1;
-  } else {
+    const QModelIndex belowStart = q->sourceModel()->index(start, 0, parent);
+    proxyStart = q->mapFromSource(belowStart).row();
+  } else if (rowCount == 0)
+  {
     proxyStart = q->mapFromSource(parent).row() + 1;
+  } else {
+    Q_ASSERT(rowCount == start);
+    static const int column = 0;
+    QModelIndex idx = q->sourceModel()->index(rowCount - 1, column, parent);
+    while (q->sourceModel()->hasChildren(idx))
+    {
+      idx = q->sourceModel()->index(q->sourceModel()->rowCount(idx) - 1, column, idx);
+    }
+    // The last item in the list is getting a sibling below it.
+    proxyStart = q->mapFromSource(idx).row() + 1;
   }
   const int proxyEnd = proxyStart + (end - start);
 
@@ -792,6 +831,8 @@ void KDescendantsProxyModelPrivate::sourceModelDestroyed()
 
 QMimeData* KDescendantsProxyModel::mimeData( const QModelIndexList & indexes ) const
 {
+  if (!sourceModel())
+    return QAbstractProxyModel::mimeData(indexes);
   Q_ASSERT(sourceModel());
   QModelIndexList sourceIndexes;
   foreach(const QModelIndex& index, indexes)
@@ -801,13 +842,16 @@ QMimeData* KDescendantsProxyModel::mimeData( const QModelIndexList & indexes ) c
 
 QStringList KDescendantsProxyModel::mimeTypes() const
 {
+  if (!sourceModel())
+    return QAbstractProxyModel::mimeTypes();
   Q_ASSERT(sourceModel());
   return sourceModel()->mimeTypes();
 }
 
 Qt::DropActions KDescendantsProxyModel::supportedDropActions() const
 {
-  Q_ASSERT(sourceModel());
+  if (!sourceModel())
+    return QAbstractProxyModel::supportedDropActions();
   return sourceModel()->supportedDropActions();
 }
 

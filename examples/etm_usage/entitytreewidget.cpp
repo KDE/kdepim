@@ -131,6 +131,38 @@ EntityTreeModel* EntityTreeWidget::getETM()
   return new EntityTreeModel( m_changeRecorder, this );
 }
 
+static int num;
+
+void EntityTreeWidget::dumpTree()
+{
+  num = 1;
+  qDebug() << dumpLevel(QModelIndex(), 1);
+}
+
+QString EntityTreeWidget::dumpLevel(const QModelIndex& parent, int level)
+{
+  const int rowCount = m_etm->rowCount(parent);
+  QString lines;
+  for (int row = 0; row < rowCount; ++row)
+  {
+    QString line;
+    line.append("\"");
+    for (int l = 0; l < level; ++l)
+      line.append("- ");
+    line.append(QString::number(num++));
+    line.append("\"");
+    line.append("\n");
+    lines.append(line);
+//     qDebug() << line;
+    static const int column = 0;
+    const QModelIndex idx = m_etm->index(row, column, parent);
+    if (m_etm->hasChildren(idx))
+      lines.append(dumpLevel(idx, level + 1));
+  }
+  return lines;
+}
+
+
 
 
 

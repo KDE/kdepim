@@ -51,10 +51,12 @@ public:
 
 public:
   void init();
+  QString dumpLevel(const QModelIndex &parent, int level);
 
-private slots:
+public slots:
   void mimeTypesChoiceChanged( int index );
   void mimeTypesChanged( const QString &mimetypeList );
+  void dumpTree();
 
 private:
   QTreeView *m_treeView;
