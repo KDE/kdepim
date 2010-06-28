@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include <QtCore/QTimer>
+
 #include "declarativeeditors.h"
 
 #include "ui_eventortodomobile.h"
@@ -43,7 +45,19 @@ DIEGeneral::DIEGeneral( QDeclarativeItem *parent )
   : DeclarativeWidgetBase<MobileIncidenceGeneral,
                           IncidenceView,
                           &IncidenceView::setGeneralEditor>( parent )
-{ }
+{
+  QTimer::singleShot( 0, this, SLOT(hack()) );
+}
+
+void DIEGeneral::hack()
+{
+  // For whatever reason, this is needed to make the widget resize correctly. If
+  // someone finds a nices way to make this actually work....
+  //
+  // Without this hack the widget gets a width that is to large for the app. It
+  // doesn't seem to matter which size you pass here.
+  m_widget->resize( QSize() );
+}
 
 MobileIncidenceMore::MobileIncidenceMore( QWidget *parent )
   : QStackedWidget( parent ), mUi( new Ui::EventOrTodoMore )

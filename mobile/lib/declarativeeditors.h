@@ -65,6 +65,9 @@ class DIEGeneral
   Q_OBJECT
   public:
     explicit DIEGeneral( QDeclarativeItem *parent = 0 );
+
+  private Q_SLOTS:
+    void hack();
 };
 
 class MobileIncidenceMore : public QStackedWidget
