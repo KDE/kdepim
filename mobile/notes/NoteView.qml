@@ -47,7 +47,7 @@ Rectangle {
     anchors.right : parent.right
     height : 30
     radius : 5
-    TextEdit {
+    TextInput {
       id : titleInput
       color : "#000001" // yes, not exactly black, since QML maps black to white on the N900...
       anchors.fill : parent
