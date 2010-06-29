@@ -51,6 +51,10 @@
 
 #include <boost/shared_ptr.hpp>
 
+#ifdef stdin
+# undef stdin // pah..
+#endif
+
 using namespace Kleo;
 using namespace boost;
 
