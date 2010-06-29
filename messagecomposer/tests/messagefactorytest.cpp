@@ -302,7 +302,6 @@ void MessageFactoryTest::testCreateResend()
 
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
                                           "To: %1\n"
-                                          "Reply-To: \n"
                                           "Cc: cc@cc.cc\n"
                                           "Bcc: bcc@bcc.bcc\n"
                                           "Subject: Test Email Subject\n"
