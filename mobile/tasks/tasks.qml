@@ -30,7 +30,6 @@ KPIM.MainView {
   function goBackToListing()
   {
     taskView.visible = false;
-    backToFolderListButton.visible = false;
     collectionView.visible = true;
     itemListPage.visible = true;
     taskView.itemId = -1;
@@ -59,22 +58,30 @@ KPIM.MainView {
       if ( taskView.itemId >= 0 )
         itemList.previousItem();
     }
-  }
 
-  QML.Rectangle {
-    id : backToFolderListButton
-    anchors.right : tasksMobile.right
-    anchors.rightMargin : 70
-    anchors.bottom : tasksMobile.bottom
-    anchors.bottomMargin : 100
-    visible : false
-    QML.Image {
-      source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
-      QML.MouseArea {
-        anchors.fill : parent;
-        onClicked : {
-          goBackToListing();
-        }
+    KPIM.Button {
+      anchors.bottom: backButton.top
+      anchors.right: parent.right
+      anchors.margins: 12
+      width: 70
+      height: 70
+      icon: KDE.locate( "data", "mobileui/edit-button.png" );
+      onClicked: {
+        application.editIncidence( parent.item, parent.activeDate );
+        eventView.visible = false;
+        agendaView.visible = true;
+      }
+    }
+    KPIM.Button {
+      id: backButton
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      anchors.margins: 12
+      width: 70
+      height: 70
+      icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
+      onClicked: {
+        goBackToListing();
       }
     }
   }
@@ -265,7 +272,6 @@ KPIM.MainView {
         onItemSelected: {
           taskView.itemId = itemList.currentItemId;
           taskView.visible = true;
-          backToFolderListButton.visible = true;
           collectionView.visible = false;
           itemListPage.visible = false;
         }
