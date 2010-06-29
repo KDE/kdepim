@@ -183,7 +183,7 @@ void MessageFactoryTest::testCreateForward()
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
   KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
   ident.setFullName( QLatin1String( "another" ) );
-  ident.setEmailAddr( QLatin1String( "another@another.com" ) );
+  ident.setPrimaryEmailAddress( QLatin1String( "another@another.com" ) );
   identMan->commit();
 
   MessageFactory factory( msg, 0 );
@@ -232,7 +232,7 @@ void MessageFactoryTest::testCreateRedirect()
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
   KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
   ident.setFullName( QLatin1String( "another" ) );
-  ident.setEmailAddr( QLatin1String( "another@another.com" ) );
+  ident.setPrimaryEmailAddress( QLatin1String( "another@another.com" ) );
   identMan->commit();
   
   MessageFactory factory( msg, 0 );
@@ -288,7 +288,7 @@ void MessageFactoryTest::testCreateResend()
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
   KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
   ident.setFullName( QLatin1String( "another" ) );
-  ident.setEmailAddr( QLatin1String( "another@another.com" ) );
+  ident.setPrimaryEmailAddress( QLatin1String( "another@another.com" ) );
   identMan->commit();
 
   MessageFactory factory( msg, 0 );

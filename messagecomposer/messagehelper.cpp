@@ -101,17 +101,17 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
   if(ident.fullEmailAddr().isEmpty())
     message->from()->clear();
   else
-    message->from()->addAddress(ident.emailAddr().toUtf8(), ident.fullName());
+    message->from()->addAddress(ident.primaryEmailAddress().toUtf8(), ident.fullName());
 
   if(ident.replyToAddr().isEmpty())
     message->replyTo()->clear();
   else
-    message->replyTo()->addAddress(ident.emailAddr().toUtf8(), ident.fullName());
+    message->replyTo()->addAddress(ident.primaryEmailAddress().toUtf8(), ident.fullName());
 
   if(ident.bcc().isEmpty())
     message->bcc()->clear();
   else
-    message->bcc()->addAddress(ident.emailAddr().toUtf8(), ident.fullName());
+    message->bcc()->addAddress(ident.primaryEmailAddress().toUtf8(), ident.fullName());
 
   if ( ident.organization().isEmpty() )
     message->removeHeader("Organization");

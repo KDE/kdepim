@@ -115,7 +115,7 @@ void IdentityWidget::loadFromIdentity( const Identity &identity )
 {
   mName->setText( identity.fullName() );
   mOrganisation->setText( identity.organization() );
-  mEmail->setText( identity.emailAddr() );
+  mEmail->setText( identity.primaryEmailAddress() );
   mReplyto->setText( identity.replyToAddr() );
   mMailcopiesto->setText( identity.property( "Mail-Copies-To" ).toString() );
 }

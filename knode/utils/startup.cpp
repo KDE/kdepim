@@ -111,7 +111,7 @@ void Startup::convertPre45Identity( KConfigGroup &cg ) const
   // Load the identity from cg
   KPIMIdentities::Identity identity;
   identity.setFullName( cg.readEntry( "Name" ).trimmed() );
-  identity.setEmailAddr( cg.readEntry( "Email" ).trimmed() );
+  identity.setPrimaryEmailAddress(( cg.readEntry( "Email" ).trimmed() );
   identity.setOrganization( cg.readEntry( "Org" ).trimmed() );
   identity.setReplyToAddr( cg.readEntry( "Reply-To" ).trimmed() );
   identity.setProperty( "Mail-Copies-To", cg.readEntry( "Mail-Copies-To" ).trimmed() );
@@ -136,7 +136,7 @@ void Startup::convertPre45Identity( KConfigGroup &cg ) const
   // Save to the new backend
   if ( // Is identity empty ?
          !identity.fullName().isEmpty()
-      || !identity.emailAddr().isEmpty()
+      || !identity.primaryEmailAddress().isEmpty()
       || !identity.organization().isEmpty()
       || !identity.replyToAddr().isEmpty()
       || !identity.property( "Mail-Copies-To" ).toString().isEmpty()
@@ -151,7 +151,7 @@ void Startup::convertPre45Identity( KConfigGroup &cg ) const
       KPIMIdentities::Identity otherId = (*it);
       isDuplicate = (
                       identity.fullName() == otherId.fullName()
-                   && identity.emailAddr() == otherId.emailAddr()
+                   && identity.primaryEmailAddress() == otherId.primaryEmailAddress()
                    && identity.organization() == otherId.organization()
                    && identity.replyToAddr() == otherId.replyToAddr()
                    && identity.property( "Mail-Copies-To" ).toString() == otherId.property( "Mail-Copies-To" ).toString()

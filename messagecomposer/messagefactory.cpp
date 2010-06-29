@@ -443,12 +443,12 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   QString strByWayOf = QString::fromLocal8Bit("%1 (by way of %2 <%3>)")
     .arg( m_origMsg->from()->asUnicodeString() )
     .arg( ident.fullName() )
-    .arg( ident.emailAddr() );
+    .arg( ident.primaryEmailAddress() );
 
   // Resent-From: content
   QString strFrom = QString::fromLocal8Bit("%1 <%2>")
     .arg( ident.fullName() )
-    .arg( ident.emailAddr() );
+    .arg( ident.primaryEmailAddress() );
 
   // format the current date to be used in Resent-Date:
   QString newDate = KDateTime::currentLocalDateTime().toString( KDateTime::RFCDateDay );
