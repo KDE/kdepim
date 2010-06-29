@@ -1406,8 +1406,7 @@ updated.</para>
             <para>
               <action>Opens the standard &kde; toolbar configuration
               dialog,</action> where you can choose which actions to
-              include in &kleopatra;s toolbars.for all menu
-              items.
+              include in &kleopatra;s toolbars.
             </para>
           </listitem>
         </varlistentry>
