@@ -101,10 +101,8 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceWhatWhere *ieGeneral = new IncidenceWhatWhere( mUi );
   mEditor->combine( ieGeneral );
 
-#ifndef KDEPIM_MOBILE_UI
   IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
   mEditor->combine( ieCategories );
-#endif
 
   IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( ieDateTime );
@@ -115,28 +113,20 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   IncidenceDescription *ieDescription = new IncidenceDescription( mUi );
   mEditor->combine( ieDescription );
 
-#ifndef KDEPIM_MOBILE_UI
   IncidenceAlarm *ieAlarm = new IncidenceAlarm( mUi );
   mEditor->combine( ieAlarm );
-#endif
 
-#ifndef KDEPIM_MOBILE_UI
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
-#endif
 
-#ifndef KDEPIM_MOBILE_UI
   IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( ieDateTime, mUi );
   mEditor->combine( ieRecurrence );
-#endif
 
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
-#ifndef KDEPIM_MOBILE_UI
   IncidenceAttendee *ieAttendee= new IncidenceAttendee( mUi );
   mEditor->combine( ieAttendee );
-#endif  
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
