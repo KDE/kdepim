@@ -37,9 +37,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
     Q_OBJECT
 public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceRecurrence( IncidenceDateTime *dateTime = 0, Ui::EventOrTodoMore *ui = 0 );
+    IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
 #else
-    IncidenceRecurrence( IncidenceDateTime *dateTime = 0, Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
 #endif
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
