@@ -46,10 +46,10 @@
 
 using namespace IncidenceEditorsNG;
 
-class EventOrTodoDialogNGPrivate : public Akonadi::ItemEditorUi
+class EventOrTodoDialogPrivate : public Akonadi::ItemEditorUi
 {
-  EventOrTodoDialogNG *q_ptr;
-  Q_DECLARE_PUBLIC( EventOrTodoDialogNG )
+  EventOrTodoDialog *q_ptr;
+  Q_DECLARE_PUBLIC( EventOrTodoDialog )
 
 public:
   Ui::EventOrTodoDesktop *mUi;
@@ -60,8 +60,8 @@ public:
   CombinedIncidenceEditor *mEditor;
 
 public:
-  EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq );
-  ~EventOrTodoDialogNGPrivate();
+  EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
+  ~EventOrTodoDialogPrivate();
 
   /// General methods
   void updateButtonStatus( bool isDirty );
@@ -79,7 +79,7 @@ public:
   virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 };
 
-EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq )
+EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   : q_ptr( qq )
   , mUi( new Ui::EventOrTodoDesktop )
   , mCalSelector( new Akonadi::CollectionComboBox )
@@ -87,7 +87,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   , mItemManager( new Akonadi::EditorItemManager( this ) )
   , mEditor( new CombinedIncidenceEditor )
 {
-  Q_Q( EventOrTodoDialogNG );
+  Q_Q( EventOrTodoDialog );
   mUi->setupUi( q->mainWidget() );
 
   QGridLayout *layout = new QGridLayout( mUi->mCalSelectorPlaceHolder );
@@ -136,28 +136,28 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 //           SLOT(updateAttachmentCount(int)) );
 }
 
-EventOrTodoDialogNGPrivate::~EventOrTodoDialogNGPrivate()
+EventOrTodoDialogPrivate::~EventOrTodoDialogPrivate()
 {
   delete mItemManager;
   delete mEditor;
 }
 
-void EventOrTodoDialogNGPrivate::updateButtonStatus( bool isDirty )
+void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
 {
-  Q_Q( EventOrTodoDialogNG );
+  Q_Q( EventOrTodoDialog );
   q->enableButton( KDialog::Apply, isDirty );
   q->enableButton( KDialog::Ok, isDirty );
 }
 
 
-bool EventOrTodoDialogNGPrivate::containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const
+bool EventOrTodoDialogPrivate::containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const
 {
   return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
 }
 
-void EventOrTodoDialogNGPrivate::handleItemSaveFinish()
+void EventOrTodoDialogPrivate::handleItemSaveFinish()
 {
-  Q_Q( EventOrTodoDialogNG );
+  Q_Q( EventOrTodoDialog );
 
   if ( mCloseOnSave )
     q->accept();
@@ -178,23 +178,23 @@ void EventOrTodoDialogNGPrivate::handleItemSaveFinish()
   }
 }
 
-bool EventOrTodoDialogNGPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
+bool EventOrTodoDialogPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
 {
   return item.hasPayload() && item.hasPayload<KCal::Incidence::Ptr>()
     && ( item.hasPayload<KCal::Event::Ptr>() || item.hasPayload<KCal::Todo::Ptr>() );
 }
 
-bool EventOrTodoDialogNGPrivate::isDirty() const
+bool EventOrTodoDialogPrivate::isDirty() const
 {
   return mEditor->isDirty();
 }
 
-bool EventOrTodoDialogNGPrivate::isValid()
+bool EventOrTodoDialogPrivate::isValid()
 {
   return mEditor->isValid();
 }
 
-void EventOrTodoDialogNGPrivate::load( const Akonadi::Item &item )
+void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 {
   Q_ASSERT( hasSupportedPayload( item ) );
   mEditor->load( item.payload<KCal::Incidence::Ptr>() );
@@ -208,7 +208,7 @@ void EventOrTodoDialogNGPrivate::load( const Akonadi::Item &item )
   }
 }
 
-Akonadi::Item EventOrTodoDialogNGPrivate::save( const Akonadi::Item &item )
+Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 {
   KCal::Event::Ptr event( new KCal::Event );
   // Make sure that we don't loose uid for existing incidence
@@ -222,22 +222,22 @@ Akonadi::Item EventOrTodoDialogNGPrivate::save( const Akonadi::Item &item )
   return result;
 }
 
-Akonadi::Collection EventOrTodoDialogNGPrivate::selectedCollection() const
+Akonadi::Collection EventOrTodoDialogPrivate::selectedCollection() const
 {
   return mCalSelector->currentCollection();
 }
 
-void EventOrTodoDialogNGPrivate::reject( RejectReason /*reason*/, const QString &errorMessage )
+void EventOrTodoDialogPrivate::reject( RejectReason /*reason*/, const QString &errorMessage )
 {
-  Q_Q( EventOrTodoDialogNG );
+  Q_Q( EventOrTodoDialog );
   kDebug() << "Rejecting:" << errorMessage;
   q->deleteLater();
 }
 
 /// EventOrTodoDialog
 
-EventOrTodoDialogNG::EventOrTodoDialogNG()
-  : d_ptr( new EventOrTodoDialogNGPrivate( this ) )
+EventOrTodoDialog::EventOrTodoDialog()
+  : d_ptr( new EventOrTodoDialogPrivate( this ) )
 {
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
   setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
@@ -252,15 +252,15 @@ EventOrTodoDialogNG::EventOrTodoDialogNG()
   showButtonSeparator( false );
 }
 
-EventOrTodoDialogNG::~EventOrTodoDialogNG()
+EventOrTodoDialog::~EventOrTodoDialog()
 {
   delete d_ptr;
 }
 
 
-void EventOrTodoDialogNG::load( const Akonadi::Item &item )
+void EventOrTodoDialog::load( const Akonadi::Item &item )
 {
-  Q_D( EventOrTodoDialogNG );
+  Q_D( EventOrTodoDialog );
   Q_ASSERT( d->hasSupportedPayload( item ) );
 
   if ( item.isValid() ) {
@@ -278,9 +278,9 @@ void EventOrTodoDialogNG::load( const Akonadi::Item &item )
   }
 }
 
-void EventOrTodoDialogNG::slotButtonClicked( int button )
+void EventOrTodoDialog::slotButtonClicked( int button )
 {
-  Q_D( EventOrTodoDialogNG );
+  Q_D( EventOrTodoDialog );
 
   switch( button ) {
   case KDialog::Ok:

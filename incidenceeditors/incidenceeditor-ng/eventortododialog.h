@@ -29,16 +29,16 @@ namespace Akonadi {
 class Item;
 }
 
-class EventOrTodoDialogNGPrivate;
+class EventOrTodoDialogPrivate;
 
 namespace IncidenceEditorsNG {
 
-class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialogNG : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
 {
   Q_OBJECT
 public:
-  EventOrTodoDialogNG();
-  ~EventOrTodoDialogNG();
+  EventOrTodoDialog();
+  ~EventOrTodoDialog();
 
   /**
    * Loads the @param item into the dialog.
@@ -55,9 +55,9 @@ protected Q_SLOTS:
   virtual void slotButtonClicked( int button );
 
 private:
-  EventOrTodoDialogNGPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( EventOrTodoDialogNG )
-  Q_DISABLE_COPY( EventOrTodoDialogNG )
+  EventOrTodoDialogPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE( EventOrTodoDialog )
+  Q_DISABLE_COPY( EventOrTodoDialog )
 
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
   Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
