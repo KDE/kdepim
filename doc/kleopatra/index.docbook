@@ -1011,7 +1011,7 @@ uncommon).</para>
               (<quote>never expires</quote>).
             </para>
             <para>
-              This function is only available if exectly one &openpgp;
+              This function is only available if exactly one &openpgp;
               certificate is selected, and the secret key is available
               for that certificate.
             </para>
