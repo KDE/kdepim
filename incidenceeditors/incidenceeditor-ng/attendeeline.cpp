@@ -24,8 +24,10 @@
 
 #include <KCompletionBox>
 #include <KDialog>
+#include <KIconLoader>
 #include <KLocale>
 
+#include <QDebug>
 #include <QBoxLayout>
 #include <QMenu>
 
@@ -141,12 +143,21 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   , mData( new AttendeeData( QString(), QString() ) )
   , mModified( false )
 {
-   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+  setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
 
   QBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
-
+#ifdef KDEPIM_MOBILE_UI
+  mRoleCombo->addItem( DesktopIcon( "meeting-participant", 48 ),
+                       AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
+  mRoleCombo->addItem( DesktopIcon( "meeting-participant-optional", 48 ),
+                       AttendeeData::roleName( KCal::Attendee::OptParticipant ) );
+  mRoleCombo->addItem( DesktopIcon( "meeting-observer", 48 ),
+                       AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
+  mRoleCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
+                       AttendeeData::roleName( KCal::Attendee::Chair ) );
+#else
   mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
                        AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-participant-optional" ),
@@ -155,6 +166,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
                        AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-chair" ),
                        AttendeeData::roleName( KCal::Attendee::Chair ) );
+#endif
 
   mRoleCombo->setToolTip( i18nc( "@info:tooltip", "Select the attendee participation role" ) );
 
@@ -166,6 +178,22 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
   //TODO: the icons below aren't exactly correct
+#ifdef KDEPIM_MOBILE_UI
+  mStateCombo->addItem( DesktopIcon( "help-about", 48 ),
+                         AttendeeData::statusName( AttendeeData::NeedsAction ) );
+  mStateCombo->addItem( DesktopIcon( "dialog-ok-apply", 48 ),
+                         AttendeeData::statusName( AttendeeData::Accepted ) );
+  mStateCombo->addItem( DesktopIcon( "dialog-cancel", 48 ),
+                         AttendeeData::statusName( AttendeeData::Declined ) );
+  mStateCombo->addItem( DesktopIcon( "dialog-ok", 48 ),
+                         AttendeeData::statusName( AttendeeData::Tentative ) );
+  mStateCombo->addItem( DesktopIcon( "mail-forward", 48 ),
+                         AttendeeData::statusName( AttendeeData::Delegated ) );
+  mStateCombo->addItem( DesktopIcon( "mail-mark-read", 48 ),
+                         AttendeeData::statusName( AttendeeData::Completed ) ),
+  mStateCombo->addItem( DesktopIcon( "help-about", 48 ),
+                         AttendeeData::statusName( AttendeeData::InProcess ) );
+#else
   mStateCombo->addItem( SmallIcon( "help-about" ),
                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
   mStateCombo->addItem( SmallIcon( "dialog-ok-apply" ),
@@ -180,6 +208,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
                          AttendeeData::statusName( AttendeeData::Completed ) ),
   mStateCombo->addItem( SmallIcon( "help-about" ),
                          AttendeeData::statusName( AttendeeData::InProcess ) );
+#endif
 
   mResponseCheck->setText( i18nc( "@option:check", "Request RSVP" ) );
   mResponseCheck->setToolTip(i18nc( "@info:tooltip", "Request a response from the attendee" ) );
