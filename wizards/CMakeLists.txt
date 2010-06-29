@@ -24,7 +24,6 @@ if(KDEPIM_BUILD_EVERYTHING)
 
   set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp
       groupwisewizard.cpp
-      kmailchanges.cpp
   )
 
   kde4_add_kcfg_files(groupwarewizard_SRCS groupwiseconfig.kcfgc)
@@ -53,7 +52,7 @@ if(KDEPIM_BUILD_EVERYTHING)
 
   ########### next target ###############
 
-  set(groupwisewizard_SRCS groupwisewizard.cpp groupwisemain.cpp kmailchanges.cpp)
+  set(groupwisewizard_SRCS groupwisewizard.cpp groupwisemain.cpp)
 
   kde4_add_kcfg_files(groupwisewizard_SRCS groupwiseconfig.kcfgc)
 

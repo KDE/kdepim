@@ -38,9 +38,6 @@ class GroupwiseWizard : public KConfigWizard
     void usrReadConfig();
     void usrWriteConfig();
 
-  protected slots:
-    void slotAboutToShowPage( KPageWidgetItem *, KPageWidgetItem * );
-
   private:
     KLineEdit *mServerEdit;
     KLineEdit *mPathEdit;
@@ -49,12 +46,6 @@ class GroupwiseWizard : public KConfigWizard
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;
     QCheckBox *mSecureCheck;
-
-    QWidget *mEmailPage;
-    QGroupBox *mEmailBox;
-    QWidget *mEmailWidget;
-    KLineEdit *mEmailEdit;
-    KLineEdit *mFullNameEdit;
 };
 
 #endif
