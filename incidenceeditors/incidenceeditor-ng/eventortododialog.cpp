@@ -26,7 +26,6 @@
 #include <KMessageBox>
 
 #include <Akonadi/CollectionComboBox>
-#include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 

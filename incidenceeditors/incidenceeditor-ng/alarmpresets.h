@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef REMINDERPRESETS_H
-#define REMINDERPRESETS_H
+#ifndef ALARMPRESETS_H
+#define ALARMPRESETS_H
 
 class QString;
 class QStringList;
@@ -55,4 +55,4 @@ namespace AlarmPresets {
 
 }
 
-#endif // REMINDERPRESETS_H
+#endif // ALARMPRESETS_H
