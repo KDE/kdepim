@@ -70,30 +70,6 @@ QToolButton:pressed
   color: white;
 }
 
-QToolButton
-{
-  min-width: 48px;
-  padding: 1px;
-}
-
-QMenu
-{
-  background-color: white;
-  margin: 2px; /* some spacing around the menu */
-}
-
-QMenu::item
-{
-  padding: 2px 25px 2px 20px;
-  border: 1px solid transparent; /* reserve space for selection border */
-  color: #000001;
-}
-
-QMenu::item:selected { /* when user selects item using mouse or keyboard */
-  background-color: #654321;
-  color: white;
-}
-
 /* text input frames */
 QDateTimeEdit,
 QLineEdit,
@@ -230,6 +206,33 @@ QSpinBox::up-arrow:disabled,
 QSpinBox::up-arrow:off
 {
   image: url(@STYLE_IMAGE_PATH@/button-plus-disabled.png);
+}
+
+
+/** Tool buttons */
+QToolButton
+{
+  min-width: 48px;
+  padding: 1px;
+  qproperty-iconSize: 48px 48px;
+}
+
+QMenu
+{
+  background-color: white;
+  margin: 2px; /* some spacing around the menu */
+}
+
+QMenu::item
+{
+  padding: 2px 25px 2px 20px;
+  border: 1px solid transparent; /* reserve space for selection border */
+  color: #000001;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+  background-color: #654321;
+  color: white;
 }
 
 
