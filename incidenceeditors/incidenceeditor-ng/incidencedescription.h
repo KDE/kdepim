@@ -24,7 +24,8 @@
 #include "incidenceeditor-ng.h"
 
 namespace Ui {
-class EventOrTodoDesktop;
+  class EventOrTodoMore;
+  class EventOrTodoDesktop;
 }
 
 namespace IncidenceEditorsNG {
@@ -33,11 +34,15 @@ namespace IncidenceEditorsNG {
  * The IncidenceDescriptionEditor keeps track of the following Incidence parts:
  * - description
  */
-class IncidenceDescription : public IncidenceEditor
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDescription( Ui::EventOrTodoDesktop *ui = 0 );
+#ifdef KDEPIM_MOBILE_UI
+    IncidenceDescription( Ui::EventOrTodoMore *ui );
+#else
+    IncidenceDescription( Ui::EventOrTodoDesktop *ui );
+#endif
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
     virtual void save( KCal::Incidence::Ptr incidence );
@@ -51,7 +56,12 @@ class IncidenceDescription : public IncidenceEditor
     void setupToolBar();
 
   private:
+#ifdef KDEPIM_MOBILE_UI
+    Ui::EventOrTodoMore *mUi;
+#else
     Ui::EventOrTodoDesktop *mUi;
+#endif
+
 };
 
 } // IncidenceEditorsNG

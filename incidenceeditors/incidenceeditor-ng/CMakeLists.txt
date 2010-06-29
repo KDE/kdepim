@@ -23,6 +23,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidenceattendee.cpp
   incidencecategories.cpp
   incidencecompletionpriority.cpp
+  incidencedescription.cpp
   incidencegeneral.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
@@ -40,8 +41,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
-
-  incidencedescription.cpp
 
   #incidenceeditorgeneralpage.cpp
   #eventortododialog.cpp
