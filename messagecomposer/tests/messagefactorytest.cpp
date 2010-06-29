@@ -196,6 +196,7 @@ void MessageFactoryTest::testCreateForward()
   datetime += QLatin1String( ", " ) + KGlobal::locale()->formatTime( date.time(), true );
 
   QString fwdMsg = QString::fromLatin1("Content-Type: text/plain; charset=\"us-ascii\"\n"
+                      "From: another <another@another.com>\n"
                       "Subject: Fwd: Test Email Subject\n"
                       "Date: %2\n"
                       "User-Agent: %3\n"
