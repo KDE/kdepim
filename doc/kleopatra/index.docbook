@@ -1849,13 +1849,9 @@ is-at-least-ownertrust=marginal
           <listitem>
             <para>
               Example (tar):
-              <programlisting>
-                pack-command=tar cf -<!--
-                --></programlisting>
+              <programlisting>pack-command=tar cf -</programlisting>
               Example (zip):
-              <programlisting>
-                pack-command=zip -r - %f<!--
-                --></programlisting>
+              <programlisting>pack-command=zip -r - %f</programlisting>
               In this case, filenames are passed on the command line,
               just like you would when using the command
               prompt. &kleopatra; does not use a shell to execute the
@@ -1867,9 +1863,7 @@ is-at-least-ownertrust=marginal
               by the names of the files to archive. Otherwise,
               filenames are appended to the command line. Thus, the
               zip Example above could equivalently be written like this:
-              <programlisting>
-                pack-command=zip -r -<!--
-                --></programlisting>
+              <programlisting>pack-command=zip -r -</programlisting>
             </para>
           </listitem>
         </varlistentry>
@@ -1879,13 +1873,9 @@ is-at-least-ownertrust=marginal
           <listitem>
             <para>
               Example (GNU-tar):
-              <programlisting>
-                pack-command=|gtar cf - -T-<!--
-                --></programlisting>
+              <programlisting>pack-command=|gtar cf - -T-</programlisting>
               Example (ZIP):
-              <programlisting>
-                pack-command=|zip -@ -<!--
-                --></programlisting>
+              <programlisting>pack-command=|zip -@ -</programlisting>
 
               In this case, filenames are passed to the archiver on
               <acronym>stdin</acronym>, one per line. This avoids
@@ -1909,9 +1899,7 @@ is-at-least-ownertrust=marginal
           <listitem>
             <para>
               Example (GNU-tar):
-              <programlisting>
-                pack-command=0|gtar cf - -T- --null<!--
-                --></programlisting>
+              <programlisting>pack-command=0|gtar cf - -T- --null</programlisting>
               This is the same as above, except that NUL bytes are
               used to separate filenames. Since NUL bytes are
               forbidden in filenames, this is the most robust way of
