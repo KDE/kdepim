@@ -61,7 +61,7 @@ if ( WIN32 )
       ${CMAKE_INSTALL_PREFIX}/include
     )
 
-    find_library( _assuan2_library NAMES assuan2 libassuan2
+    find_library( _assuan2_library NAMES assuan2 libassuan2 assuan-0 libassuan-0 #sic!
       PATHS 
         ${CMAKE_LIBRARY_PATH}
         ${CMAKE_INSTALL_PREFIX}/lib
