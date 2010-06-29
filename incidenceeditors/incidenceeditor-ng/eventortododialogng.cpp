@@ -212,8 +212,8 @@ Akonadi::Item EventOrTodoDialogNGPrivate::save( const Akonadi::Item &item )
 {
   KCal::Event::Ptr event( new KCal::Event );
   // Make sure that we don't loose uid for existing incidence
-  if ( mEditor->incidence<KCal::Incidence::Ptr>() )
-    event->setUid( mEditor->incidence<KCal::Incidence::Ptr>()->uid() );
+  if ( mEditor->incidence<KCal::Incidence>() )
+    event->setUid( mEditor->incidence<KCal::Incidence>()->uid() );
   mEditor->save( event );
 
   Akonadi::Item result = item;
