@@ -68,9 +68,9 @@ void AttendeeComboBox::addItem( const QIcon& icon, const QString& text )
   act->setData( index );
 }
 
-void AttendeeComboBox::addItems(const QStringList& texts)
+void AttendeeComboBox::addItems( const QStringList& texts )
 {
-  foreach( QString str, texts )
+  foreach( const QString &str, texts )
     addItem( QIcon(), str );
   if( mCurrentIndex == -1 )
     setCurrentIndex( 0 );
