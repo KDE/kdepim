@@ -22,6 +22,8 @@
   <!ENTITY der "<acronym>DER</acronym>">
   <!ENTITY ssl "<acronym>SSL</acronym>">
   <!ENTITY x509 "<acronym>X.509</acronym>">
+  <!ENTITY crl "<acronym>CRL</acronym>">
+  <!ENTITY ocsp "<acronym>OCSP</acronym>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 
@@ -1225,8 +1227,8 @@ varlistentry id="certificates-download">
             </para>
             <note>
               <para>
-                Refreshing X.509 or OpenPGP certificates implies
-                downloading all certificates and CRLs, to check if any
+                Refreshing &x509; or &openpgp; certificates implies
+                downloading all certificates and &crl;s, to check if any
                 of them have been revoked in the meantime.
               </para>
               <para>
@@ -1247,18 +1249,18 @@ varlistentry id="certificates-download">
           </term>
           <listitem>
             <para>
-              <action>Lets you manually import CRLs from
+              <action>Lets you manually import &crl;s from
               files.</action>
             </para>
             <para>
-              Normally, Certificate Revocation Lists (CRLs) are
+              Normally, Certificate Revocation Lists (&crl;s) are
               handled transparently by the backend, but it can
-              sometimes be useful to import a CRL manually into the
-              local CRL cache.
+              sometimes be useful to import a &crl; manually into the
+              local &crl; cache.
             </para>
             <note>
               <para>
-                For CRL import to work, the &dirmngr; tool must be in
+                For &crl; import to work, the &dirmngr; tool must be in
                 the search <envar>PATH</envar>. If this menu item is
                 disabled, you should contact the system administrator
                 and ask them to install &dirmngr;.
