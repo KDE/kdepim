@@ -121,13 +121,16 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
 
   switch ( mLoadedIncidence->recurrenceType() ) {
   case KCal::Recurrence::rNone:
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceNeverIndex );
     handleRecurrenceTypeChange( sRecurrenceNeverIndex );
     break;
   case KCal::Recurrence::rDaily:
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceDailyIndex );
     handleRecurrenceTypeChange( sRecurrenceDailyIndex );
     setFrequency( f );
     break;
   case KCal::Recurrence::rWeekly:
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceWeeklyIndex );
     handleRecurrenceTypeChange( sRecurrenceWeeklyIndex );
     setDays( r->days() );
     setFrequency( f );
@@ -135,6 +138,7 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
   case KCal::Recurrence::rMonthlyPos: // Fall through
   case KCal::Recurrence::rMonthlyDay:
   {
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceMonthlyIndex );
     handleRecurrenceTypeChange( sRecurrenceMonthlyIndex );
     selectMonthlyItem( r, mLoadedIncidence->recurrenceType() );
     setFrequency( f );
@@ -144,6 +148,7 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
   case KCal::Recurrence::rYearlyPos:   // Fall through
   case KCal::Recurrence::rYearlyDay:
   {
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceYearlyIndex );
     handleRecurrenceTypeChange( sRecurrenceYearlyIndex );
     selectYearlyItem( r, mLoadedIncidence->recurrenceType() );
     setFrequency( f );
@@ -212,14 +217,11 @@ void IncidenceRecurrence::save( KCal::Incidence::Ptr incidence )
       r->addYearlyDay( dayOfYearFromStart() );
   }
 
-  if ( lDuration > 0 ) {
-    r->setDuration( lDuration );
-  } else if ( lDuration == 0 ) {
+  r->setDuration( lDuration );
+  if ( lDuration == 0 )
     r->setEndDate( endDate );
-  }
 
   r->setExDates( mExceptionDates );
-
 }
 
 bool IncidenceRecurrence::isDirty() const
@@ -240,6 +242,7 @@ bool IncidenceRecurrence::isDirty() const
   case KCal::Recurrence::rDaily:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != 1 )
       return true;
+
     break;
   case KCal::Recurrence::rWeekly:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != 2 )
@@ -282,7 +285,8 @@ bool IncidenceRecurrence::isDirty() const
 
     if ( recurrence->endDate() != mUi->mRecurrenceEndDate->date() )
       return true;
-  } else if ( mUi->mEndDurationEdit->value() != recurrence->duration() )
+  } else if ( recurrence->duration() > 0 &&
+              mUi->mEndDurationEdit->value() != recurrence->duration() )
     return true;
 
   // Exceptions
