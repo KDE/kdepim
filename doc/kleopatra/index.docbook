@@ -4,6 +4,7 @@
   <!ENTITY uiserver "UiServer">
   <!ENTITY kwatchgnupg "<application>KWatchGnuPG</application>">
   <!ENTITY gpgsm "<application>GpgSM</application>">
+  <!ENTITY gnupg "<application>GnuPG</application>">
   <!ENTITY gpg "<application>GPG</application>">
   <!ENTITY gpgme "<application>GpgME</application>"> <!--### there's no <library>-->
   <!ENTITY gpgconf "<application>GpgConf</application>">
@@ -24,6 +25,7 @@
   <!ENTITY x509 "<acronym>X.509</acronym>">
   <!ENTITY crl "<acronym>CRL</acronym>">
   <!ENTITY ocsp "<acronym>OCSP</acronym>">
+  <!ENTITY NA "<acronym>N/A</acronym>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 
@@ -1170,7 +1172,7 @@ varlistentry id="certificates-download">
             <para>
               <action>Starts <ulink
               url="help:/kwatchgnupg/index.html">&kwatchgnupg;</ulink></action>,
-              a tool to present the debug output of GnuPG
+              a tool to present the debug output of &gnupg;
               applications. If signing, encryption, or verification
               mysteriously stop working, you might find out why by
               looking at the log.
@@ -2437,6 +2439,111 @@ button.</para>
       <title>Configuring the <guilabel>GnuPG System</guilabel></title>
 
       <para>
+        This part of the dialog is auto-generated from the output of
+        <command>gpgconf <option>--list-components</option></command>
+        and, for each <replaceable>component</replaceable> that the
+        above command returns, the output of <command>gpgconf
+        <option>--list-options</option>
+        <replaceable>component</replaceable></command>.
+      </para>
+      <note>
+        <para>
+          The most useful of these options have been duplicated as
+          separate pages in the &kleopatra; config dialog. See <xref
+          linkend="configuration-directory-services"/> and <xref
+          linkend="configuration-smime-validation"/> for the two
+          dialog pages which contain selected options from this part
+          of the dialog.
+        </para>
+      </note>
+      <para>
+        The exact content of this part of the dialog depends on the
+        version of the &gnupg; backend you have installed and,
+        potentially, the platform you run on. Thus, we will only
+        discuss the general layout of the dialog, including the
+        mapping from &gpgconf; option to &kleopatra; &GUI; control.
+      </para>
+      <para>
+        &gpgconf; returns configuration information for multiple
+        components. Inside each component, individual options are
+        combined into groups.
+      </para>
+      <para>
+        &kleopatra; displays one tab per component reported by
+        &gpgconf;; groups are headed by a horizontal line displaying
+        the group name as returned from &gpgconf;.
+      </para>
+      <para>
+        Each &gpgconf; option has a type. Except for certain
+        well-known options which &kleopatra; backs with specialised
+        controls for a better user experience, the mapping between
+        &gpgconf; types and &kleopatra; controls is as follows:
+      </para>
+      <table id="table-gpgconf-types">
+	<title>Mapping From &gpgconf; Types To &GUI; Controls</title>
+	<tgroup cols="3">
+          <colspec colname="type"/>
+	  <colspec colname="lists" align="center"/>
+          <colspec colname="non-lists" align="center"/>
+	  <thead>
+	    <row>
+	      <entry morerows="1">&gpgconf; type</entry>
+              <entry namest="lists" nameend="non-lists">&kleopatra; control</entry>
+            </row>
+            <row>
+	      <entry>for lists</entry>
+	      <entry>for non-lists</entry>
+	    </row>
+	  </thead>
+	  <!--tfoot/-->
+	  <tbody>
+	    <row>
+	      <entry><literal>none</literal></entry>
+	      <entry>Spinbox (<quote>count</quote>-semantics)</entry>
+	      <entry>Checkbox</entry>
+	    </row>
+            <row>
+              <entry><literal>string</literal></entry>
+              <entry>&NA;</entry>
+              <entry>Lineedit</entry>
+            </row>
+            <row>
+              <entry><literal>int32</literal></entry>
+              <entry morerows="1">Lineedit (unformatted)</entry>
+              <entry morerows="1">Spinbox</entry>
+            </row>
+            <row>
+              <entry><literal>uint32</literal></entry>
+            </row>
+            <row>
+              <entry><literal>pathname</literal></entry>
+              <entry>&NA;</entry>
+              <entry>specialised control</entry>
+            </row>
+            <row>
+              <entry><literal>ldap server</literal></entry>
+              <entry>specialised control</entry>
+              <entry>&NA;</entry>
+            </row>
+            <row>
+              <entry><literal>key fingerprint</literal></entry>
+              <entry morerows="3" namest="lists" nameend="non-lists">&NA;</entry>
+            </row>
+            <row>
+              <entry><literal>pub key</literal></entry>
+            </row>
+            <row>
+              <entry><literal>sec key</literal></entry>
+            </row>
+            <row>
+              <entry><literal>alias list</literal></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para>
+        See the &gpgconf; manual for more information about what you
+        can configure here, and how.
       </para>
 
     </sect1>
