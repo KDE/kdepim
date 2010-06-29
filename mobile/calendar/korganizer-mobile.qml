@@ -85,7 +85,7 @@ KPIM.MainView {
       anchors.margins: 12
       width: 70
       height: 70
-      icon: KDE.iconPath( "edit-undo", width );
+      icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
       onClicked: {
         backToAgendaView();
       }
