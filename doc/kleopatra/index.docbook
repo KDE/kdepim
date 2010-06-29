@@ -5,6 +5,8 @@
   <!ENTITY gpgsm "<application>GpgSM</application>">
   <!ENTITY gpg "<application>GPG</application>">
   <!ENTITY gpgconf "<application>GpgConf</application>">
+  <!ENTITY dirmngr "<application>DirMngr</application>">
+  <!ENTITY scdaemon "<application>SCDaemon</application>">
   <!ENTITY kappname "&kleopatra;">
   <!ENTITY package "kdepim">
   <!ENTITY ldap "<acronym>LDAP</acronym>">
@@ -647,47 +649,61 @@ certificates in each CRL.
 
 <sect1 id="menuview"><title><guimenu>View</guimenu> Menu</title>
 
-<variablelist>
+      <variablelist>
 
-<varlistentry id="view-redisplay">
-<term><menuchoice><shortcut><keycombo action="simul"><keycap>F5</keycap></keycombo>
-</shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Redisplays the selected certificates or refreshes the
-certificate list.</action></para>
-
-<para>If there are selected certificates, the refresh operation is
-restricted to those selected entries.</para>
-
-<para>If a query result (either remote or local) is currently
-displayed, the query is re-issued and the new results are displayed in
-place of the old ones.</para>
-
-<para>If no query has been performed, the whole keybox contents is
-re-fetched and re-displayed.</para>
-
-<para>You can use this if you have changed the contents of
-the keybox by other means than &kleopatra; (&eg; by using &gpgsm;'s
-command line interface).</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="view-redisplay">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul"><keycap>F5</keycap></keycombo></shortcut>
+              <guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Refreshes the certificate list.</action>
+            </para>
+            <para>
+              Using this function is usually not necessary, as
+              &kleopatra; monitors the filesystem for changes and
+              automatically refreshes the certificate list when
+              needed.
+            </para>
+          </listitem>
+        </varlistentry>
 
 
-<varlistentry id="view-stop-operation">
-<term><menuchoice><shortcut><keycombo action="simul">&Esc;</keycombo></shortcut>
-<guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Stops (cancels) all pending operations,</action> &eg; a
-search or a download.</para>
-
-<note><para>Depending on the server used, cancelling a remote search
-can block &kleopatra; for a few seconds while waiting for the backend
-to complete the procedure. This is normal and expected
-behavior.</para></note>
-</listitem>
-</varlistentry>
+        <varlistentry id="view-stop-operation">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Esc;</keycombo></shortcut>
+              <guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Stops (cancels) all pending operations,</action>
+              &eg; a search, keylisting, or a download.
+            </para>
+            <para>
+              This function is only available if at least one
+              operation is active.
+            </para>
+            <note>
+              <para>
+                Due to backend limitations, sometimes operations will
+                hang in such a way that this function won't be able to
+                cancel them, right away, or at all.
+              </para>
+              <para>
+                In such cases, the only way to restore order is to
+                kill &scdaemon;, &dirmngr;, &gpgsm; and &gpg;
+                processes, in that order, via the operating system
+                tools (<command>top</command>, Windows Task-Manager,
+                &etc;), until the operation get unblocked.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
 
 
 <varlistentry id="view-certificate-details">
@@ -696,6 +712,9 @@ behavior.</para></note>
 <listitem>
 <para><action>Shows the details of the currently selected
 certificate.</action></para>
+
+<para>This function is only available if exactly one certificate is
+selected.</para>
 
 <para>This function is also available by double-clicking the
 corresponding item in the list view directly.</para>
@@ -709,12 +728,12 @@ corresponding item in the list view directly.</para>
 <term><menuchoice><guimenu>View</guimenu><guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></term>
 
 <listitem>
-<para><action> Toggles between hierarchical and flat keylist mode.
+<para><action> Toggles between hierarchical and flat certificate list mode.
 </action></para>
 
 <para>In hierarchical mode, certificates are arranged in
-issuer/subject relation, so it is easy to see to which certification
-hierarchy a given certificate belongs, but a given certificate is
+issuer/subject relation, so it is easy to see which certification
+hierarchy a given certificate belongs to, but a given certificate is
 harder to find initially (though you can of course use the
 <link linkend="functions-search">search bar</link>).</para>
 
@@ -722,6 +741,25 @@ harder to find initially (though you can of course use the
 sorted alphabetically. In this mode, a given certificate is easy to
 find, but it is not directly clear which root certificate it belongs
 to.</para>
+
+            <para>
+              This function toggles hierarchical mode per tab, &ie;
+              each tab has its own hierarchy state. This is so that
+              you can have both a flat and a hierarchical listing at
+              hand, each in its own tab.
+            </para>
+
+            <note>
+              <para>
+                Hierarchical display is currently only implemented for
+                &smime; certificates. There is disagreement amongst
+                the developers regarding the correct way to display
+                &openpgp; certificates hierarchically (basically,
+                <quote>parent &equals; signer</quote> or <quote>parent
+                &equals; signee</quote>).
+              </para>
+            </note>
+
 </listitem>
 </varlistentry>
 
@@ -731,10 +769,6 @@ to.</para>
 </keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice></term>
 
 <listitem>
-<para>(This function is only available when <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></link> is on.)</para>
-
 <para><action>Expands all list items in the certificate list
 view,</action> &ie; makes all items visible.</para>
 
@@ -743,6 +777,10 @@ mode.</para>
 
 <para>You can still expand and collapse each individual item by
 itself, of course.</para>
+
+<para>This function is only available when <xref
+linkend="view-hierarchical-key-list"/> is on.</para>
+
 </listitem>
 </varlistentry>
 
@@ -751,15 +789,14 @@ itself, of course.</para>
 </keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice></term>
 
 <listitem>
-<para>(This function is only available when <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></link> is on.)</para>
-
 <para><action>Collapses all list items in the certificate list
 view,</action> &ie; hides all but the top-level items.</para>
 
 <para>You can still expand and collapse each individual item by
 itself, of course.</para>
+
+<para>This function is only available when <xref
+linkend="view-hierarchical-key-list"/> is on.</para>
 </listitem>
 </varlistentry>
 
