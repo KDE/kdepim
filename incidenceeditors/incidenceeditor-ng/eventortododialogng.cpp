@@ -123,7 +123,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 #ifndef KDEPIM_MOBILE_UI
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
-#endif  
+#endif
 
 #ifndef KDEPIM_MOBILE_UI
   IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( ieDateTime, mUi );
@@ -172,6 +172,16 @@ void EventOrTodoDialogNGPrivate::handleItemSaveFinish()
   if ( mCloseOnSave )
     q->accept();
   else {
+    const Akonadi::Item item = mItemManager->item();
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload() );
+    Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
+    // Now the item is succesfully saved, reload it in the editor in order to
+    // reset the dirty status of the editor.
+    mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+
+    // Set the buttons to a reasonable state as well (ok and apply should be
+    // disabled at this point).
     q->enableButtonOk( mEditor->isDirty() );
     q->enableButtonCancel( true );
     q->enableButtonApply( mEditor->isDirty() );
