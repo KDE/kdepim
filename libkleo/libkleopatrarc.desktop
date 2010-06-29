@@ -32,7 +32,7 @@ Name[uk]=TAR (сумісні з PGP®)
 Name[x-test]=xxTAR (PGP®-compatible)xx
 Name[zh_CN]=TAR(PGP® 兼容)
 Name[zh_TW]=TAR (PGP®-相容)
-pack-command=tar cf -
+pack-command=0|tar cf - -T- --null
 
 [Archive Definition #1]
 extensions=zip
@@ -105,7 +105,7 @@ Name[uk]=TAR (зі стисканням bzip2)
 Name[x-test]=xxTAR (with bzip2 compression)xx
 Name[zh_CN]=TAR(bzip2 压缩)
 Name[zh_TW]=TAR (加上 bzip2)
-pack-command=tar cfj -
+pack-command=0|tar cfj - -T- --null
 
 [Checksum Definition #1]
 file-patterns=sha1sum.txt
@@ -130,7 +130,7 @@ Name[uk]=sha1sum
 Name[x-test]=xxsha1sumxx
 Name[zh_CN]=sha1sum
 Name[zh_TW]=sha1sum
-create-command=sha1sum -- %f
+create-command=0|xargs -0 sha1sum --
 verify-command=sha1sum -c --
 
 [Checksum Definition #2]
@@ -156,7 +156,7 @@ Name[uk]=md5sum
 Name[x-test]=xxmd5sumxx
 Name[zh_CN]=md5sum
 Name[zh_TW]=md5sum
-create-command=md5sum -- %f
+create-command=0|xargs -0 md5sum --
 verify-command=md5sum -c --
 
 [Key Filter #0]
