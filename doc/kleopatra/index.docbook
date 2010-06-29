@@ -152,23 +152,19 @@ the vendor of a product using certificates, but can be done by the
 user via &gpgsm;'s command line interface.</para>
 
 <para>To see which of the certificates are root certificates, you
-switch to the hierarchical keylist mode with <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></link>.</para>
+switch to the hierarchical keylist mode with <xref
+linkend="view-hierarchical-key-list"/>.</para>
 
 <para>You can see the details of any certificate by double-clicking it
-or using <link linkend="view-certificate-details"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Certificate Details</guimenuitem></menuchoice></link>. This opens a
+or using <xref linkend="view-certificate-details"/>. This opens a
 dialog that shows the most common properties of the certificate, its
 certificate chain (&ie; the chain of issuers up to the root-&ca;), and
 a dump of all information the backend is able to extract from the
 certificate.</para>
 
 <para>If you change the keybox without using &kleopatra; (&eg; using
-&gpgsm;'s command line interface), you can refresh the view with <link
-linkend="view-redisplay"><menuchoice><shortcut><keycombo action="simul">
-<keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu>
-<guimenuitem>Redisplay</guimenuitem></menuchoice></link>.</para>
+&gpgsm;'s command line interface), you can refresh the view with <xref
+linkend="view-redisplay"/>.</para>
 
 <!-- no longer in kde 4
 para>Since validating a key may take some time (&eg; CRLs might need
@@ -217,9 +213,8 @@ not found in 4.2
 <link linkend="configuration-directory-services"><guilabel>Directory
 Services</guilabel></link> page of &kleopatra;'s configure dialog.</para>
 
-<para>If you received the certificate as a file, try <link
-linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>. &gpgsm; needs to understand the
+<para>If you received the certificate as a file, try <xref
+linkend="file-import-certificates"/>. &gpgsm; needs to understand the
 format of the certificate file; please refer to &gpgsm;'s manual for a
 list of supported file formats.</para>
 
@@ -230,17 +225,15 @@ the &ca;. You can do this on the command line with <link
 linkend="commandline-option-import-certificate"><userinput><command>kleopatra
 <option>--import-certificate</option>
 <filename>filename</filename></command></userinput></link> or from
-within &kleopatra; with <link
-linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>,
+within &kleopatra; with <xref
+linkend="file-import-certificates"/>,
 just as you would to for <quote>normal</quote> certificates.</para>
 
 </sect1>
 
 <sect1 id="functions-newkey"><title>Creating New Key Pairs</title>
 
-<para>The menu item <link linkend="file-new-key-pair"><menuchoice>
-<guimenu>File</guimenu><guimenuitem>New Certificate...</guimenuitem></menuchoice></link> starts the
+<para>The menu item <xref linkend="file-new-key-pair"/> starts the
 <guilabel>Certificate Creation Wizard</guilabel> which will guide you through a
 number of steps to create a certificate request.</para> 
 <para>Whenever you are done with a step in
@@ -317,15 +310,10 @@ has some less often used functions that help you manage your local
 keybox.</para>
 
 <para>These functions include deleting certificates from the local
-keybox with <link linkend="certificates-delete"><menuchoice><shortcut>
-<keycombo action="simul"><keycap>Del</keycap></keycombo></shortcut>
-<guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice></link>, as well 
-as manual handling of CRLs (<link linkend="certificates-refresh-crls">
-<menuchoice><guimenu>Tools</guimenu><guimenuitem>Refresh Certificates</guimenuitem> <!--???-->
-</menuchoice></link>, <link linkend="crls-clear-crl-cache"><menuchoice><guimenu>Tools</guimenu>
-<guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></link>, <link
-linkend="crls-dump-crl-cache"><menuchoice><guimenu>Tools</guimenu>
-<guimenuitem>Dump CRL Cache</guimenuitem></menuchoice></link>).</para>
+keybox with <xref linkend="certificates-delete"/>, as well 
+as manual handling of CRLs (<xref linkend="certificates-refresh-crls"/>,
+<xref linkend="crls-clear-crl-cache"/>, <xref linkend="crls-dump-crl-cache"/>).
+</para>
 
 </sect1>
 
@@ -709,9 +697,8 @@ keybox. However, since certificates are typically attached to signed
 emails, verifying an email might result in the key just removed to pop
 back into the local keybox. So it is probably best to avoid using this
 function as much as possible. When you are lost, use the <link
-linkend="functions-search">search bar</link> or the <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Key List</guimenuitem></menuchoice></link> function to regain control over
+linkend="functions-search">search bar</link> or the <xref
+linkend="view-hierarchical-key-list"/> function to regain control over
 the lot of certificates.</para>
 </listitem>
 </varlistentry>
@@ -768,8 +755,7 @@ certificates to check.</para>
 <para><action>Clears the &gpgsm; CRL cache.</action></para>
 
 <para>You probably never need this. You can force a refresh of the CRL
-cache by selecting all certificates and using <link linkend="certificates-refresh-crls"><menuchoice>
-<guimenu>Tools</guimenu><guimenuitem>Refresh Certificates</guimenuitem></menuchoice></link> instead.</para>
+cache by selecting all certificates and using <xref linkend="certificates-refresh-crls"/> instead.</para>
 </listitem>
 </varlistentry>
 
@@ -913,9 +899,8 @@ by issuing the command <userinput><command>kleopatra
 <para><action>Specifies a file or &URL; from which to import
 certificates (or secret keys) from.</action></para>
 
-<para>This is the command line equivalent of <link
-linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>.</para>
+<para>This is the command line equivalent of <xref
+linkend="file-import-certificates"/>.</para>
 </listitem>
 </varlistentry>
 
@@ -967,9 +952,8 @@ linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
 
 <chapter id="configuration"><title>Configuring &kleopatra;</title>
 
-<para>&kleopatra;'s configure dialog can be accessed via <link
-linkend="settings-configure-kleopatra"><menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice></link>.</para>
+<para>&kleopatra;'s configure dialog can be accessed via <xref
+linkend="settings-configure-kleopatra"/>.</para>
 
 <para>Each of its pages is described in the sections below.</para>
 
@@ -978,9 +962,8 @@ linkend="settings-configure-kleopatra"><menuchoice><guimenu>Settings</guimenu>
 <para>On this page, you can configure which LDAP servers to use for
 certificate searches. You can also configure their order, as well as
 some selected LDAP-related settings from the dynamic backend
-configuration dialog, available via <link
-linkend="settings-configure-gpgme-backend"><menuchoice><guimenu>Tools</guimenu>
-<guimenuitem>Configure GnuPG Backend...</guimenuitem></menuchoice></link>.</para>
+configuration dialog, available via <xref
+linkend="settings-configure-gpgme-backend"/>.</para>
 
 <para>To add a new server, click on the <guilabel>New</guilabel> button. 
 Then you can set
