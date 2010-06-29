@@ -308,13 +308,17 @@ static bool start_command( QProcess * p, const char * functionName,
 
 bool ChecksumDefinition::startCreateCommand( QProcess * p, const QStringList & files ) const {
     return start_command( p, Q_FUNC_INFO,
-                          doGetCreateCommand(), doGetCreateArguments( files ),
+                          doGetCreateCommand(),
+                          m_createMethod == CommandLine ? doGetCreateArguments( files ) :
+                          /* else */                      doGetCreateArguments( QStringList() ),
                           files, m_createMethod );
 }
 
 bool ChecksumDefinition::startVerifyCommand( QProcess * p, const QStringList & files ) const {
     return start_command( p, Q_FUNC_INFO,
-                          doGetVerifyCommand(), doGetVerifyArguments( files ),
+                          doGetVerifyCommand(),
+                          m_verifyMethod == CommandLine ? doGetVerifyArguments( files ) :
+                          /* else */                      doGetVerifyArguments( QStringList() ),
                           files, m_verifyMethod );
 }
 
