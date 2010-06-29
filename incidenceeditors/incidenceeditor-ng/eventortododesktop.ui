@@ -1489,7 +1489,7 @@
     </widget>
    </item>
    <item row="5" column="1" colspan="2">
-    <widget class="KSeparator" name="kseparator"/>
+    <widget class="KSeparator" name="mTaskSeparator"/>
    </item>
   </layout>
  </widget>

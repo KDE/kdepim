@@ -68,6 +68,9 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
 
   d->mUi->mCompletionPriorityWidget->hide();
   d->mUi->mTaskLabel->hide();
+#ifndef KDEPIM_MOBILE_UI
+  d->mUi->mTaskSeparator->hide();
+#endif
 
   connect( d->mUi->mCompletionCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( comboValueChanged() ) );
   connect( d->mUi->mPriorityCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( comboValueChanged() ) );
@@ -91,6 +94,9 @@ void IncidenceCompletionPriority::load( KCal::Incidence::ConstPtr incidence )
 
   d->mUi->mCompletionPriorityWidget->show();
   d->mUi->mTaskLabel->show();
+#ifndef KDEPIM_MOBILE_UI
+  d->mUi->mTaskSeparator->show();
+#endif
 
   d->mOrigPercentCompleted = todo->percentComplete();
   d->mUi->mCompletionCombo->blockSignals( true );
