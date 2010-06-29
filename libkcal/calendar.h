@@ -756,6 +756,30 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual Journal *journal( const QString &uid ) = 0;
 
+    /**
+      Emits the beginBatchAdding() signal.
+
+      This should be called before adding a batch of incidences with
+      addIncidence( Incidence *), addTodo( Todo *), addEvent( Event *)
+      or addJournal( Journal *). Some Calendars are connected to this
+      signal, e.g: CalendarResources uses it to know a series of
+      incidenceAdds are related so the user isn't prompted multiple
+      times which resource to save the incidence to
+
+      @since 4.4
+    */
+    void beginBatchAdding();
+
+    /**
+      Emits the endBatchAdding() signal.
+
+      Used with beginBatchAdding(). Should be called after
+      adding all incidences.
+
+      @since 4.4
+    */
+    void endBatchAdding();
+
 // Relations Specific Methods //
 
     /**
@@ -879,6 +903,18 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Signal that the Calendar has been loaded into memory.
      */
     void calendarLoaded();
+
+    /**
+      @see beginBatchAdding()
+      @since 4.4
+     */
+    void batchAddingBegins();
+
+    /**
+      @see endBatchAdding()
+      @since 4.4
+     */
+    void batchAddingEnds();
 
   protected:
     /**

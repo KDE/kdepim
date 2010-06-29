@@ -122,6 +122,16 @@ CalFilter *Calendar::filter()
   return mFilter;
 }
 
+void Calendar::beginBatchAdding()
+{
+  emit batchAddingBegins();
+}
+
+void Calendar::endBatchAdding()
+{
+  emit batchAddingEnds();
+}
+
 QStringList Calendar::categories()
 {
   Incidence::List rawInc( rawIncidences() );
