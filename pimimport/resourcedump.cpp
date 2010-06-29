@@ -5,6 +5,8 @@
 #include <akonadi/agenttype.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
+#include <kconfig.h>
+#include <kconfiggroup.h>
 
 ResourceDump::ResourceDump( QString path, QObject *parent ) :
     AbstractDump( path, parent ), m_instance()
@@ -42,15 +44,11 @@ void ResourceDump::dump()
     }
   }
 
-  QFile resTypeFile( QString( "%1/%2" ).arg( path() ).arg( "resourcetype" ) );
-  if ( !resTypeFile.open(QIODevice::WriteOnly) ) {
-    kError() << "ResourceDump::dump(): unable to open file for writing: " << resTypeFile.fileName();
-    return;
-  }
-  QTextStream resTypeStream( &resTypeFile );
-  resTypeStream << m_instance.type().identifier();
-  resTypeStream.flush();
-  resTypeFile.close();
+  // write resourece type to info file
+  KConfig config( QString( "%1/%2" ).arg( path() ).arg( "resourceinfo" ), KConfig::SimpleConfig );
+  KConfigGroup cfgGroup( &config, "General" );
+  cfgGroup.writeEntry( "type", m_instance.type().identifier() );
+  config.sync();
 
   emit finished();
 }
