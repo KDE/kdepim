@@ -5,6 +5,8 @@
 
 #include <akonadi/agentinstance.h>
 
+class KJob;
+
 class ResourceDump : public AbstractDump
 {
   Q_OBJECT
@@ -19,7 +21,13 @@ public slots:
   void dump();
   void restore();
 
+private slots:
+  void resourceCreated( KJob *job );
+
 private:
+  void restoreResource();
+
+  QString m_name;
   Akonadi::AgentInstance m_instance;
 };
 

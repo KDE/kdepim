@@ -10,7 +10,7 @@
 using namespace Akonadi;
 
 AkonadiDump::AkonadiDump( QString path, QObject *parent ) :
-    AbstractDump( path, parent )
+    AbstractDump( path, parent ), m_remainingResources( 0 )
 {
 }
 
@@ -25,6 +25,15 @@ void AkonadiDump::dump()
 
 void AkonadiDump::restore()
 {
+  initializeResources( action_restore );
+  if ( m_resources.size() == 0 ) {
+    emit finished();
+    return;
+  }
+  else {
+    foreach ( AbstractDump *dump, m_resources )
+      dump->restore();
+  }
 }
 
 void AkonadiDump::initializeResources( AbstractDump::Action action )
@@ -42,4 +51,20 @@ void AkonadiDump::initializeResources( AbstractDump::Action action )
       m_resources.append( res );
     }
   }
+  else if ( action == AbstractDump::action_restore ) {
+    QDir dir( path() );
+    foreach ( QString resource, dir.entryList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {
+      ResourceDump *res = new ResourceDump( QString("%1/%2").arg( dir.absolutePath() ).arg( resource ),
+                                            this );
+      connect( res, SIGNAL( finished() ), SLOT( resourceRestored() ) );
+      m_resources.append( res );
+    }
+
+  }
+}
+
+void AkonadiDump::resourceRestored()
+{
+  if ( --m_remainingResources == 0)
+    emit finished();
 }
