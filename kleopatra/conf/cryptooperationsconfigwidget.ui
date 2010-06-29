@@ -53,9 +53,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="checksumOperationsTab">
+     <widget class="QWidget" name="fileOperationsTab">
       <attribute name="title">
-       <string>Checksum Operations</string>
+       <string>File Operations</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
        <item row="0" column="0">
