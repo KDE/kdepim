@@ -313,6 +313,7 @@ specify the filename or email address to send the certificate request to.
 </sect1>
 
 
+<!-- hopelessly outdated
 <sect1 id="functions-keybox-management"><title>Keybox Management</title>
 
 <para>In addition to <link linkend="functions-view">list and
@@ -329,6 +330,7 @@ as manual handling of CRLs (<xref linkend="certificates-refresh-crls"/>,
 </para>
 
 </sect1>
+-->
 
 </chapter>
 
