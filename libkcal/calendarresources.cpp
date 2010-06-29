@@ -55,6 +55,18 @@
 
 using namespace KCal;
 
+
+class CalendarResources::Private {
+  public:
+
+  Private() : mLastUsedResource( 0 ), mAddingInProgress( false )
+  {
+  }
+
+  ResourceCalendar *mLastUsedResource;
+  bool mAddingInProgress;
+};
+
 bool CalendarResources::DestinationPolicy::hasCalendarResources(  )
 {
   CalendarResourceManager::ActiveIterator it;
@@ -102,7 +114,7 @@ ResourceCalendar
 
 CalendarResources::CalendarResources( const QString &timeZoneId,
                                       const QString &family )
-  : Calendar( timeZoneId )
+  : Calendar( timeZoneId ), d( new Private() )
 {
   init( family );
 }
@@ -119,6 +131,9 @@ void CalendarResources::init( const QString &family )
   mDestinationPolicy = mStandardPolicy;
   mException = 0;
   mPendingDeleteFromResourceMap = false;
+
+  connect( this, SIGNAL(batchAddingBegins()), this, SLOT(beginAddingIncidences()) );
+  connect( this, SIGNAL(batchAddingEnds()), this, SLOT(endAddingIncidences()) );
 }
 
 CalendarResources::~CalendarResources()
@@ -308,7 +323,12 @@ bool CalendarResources::addIncidence( Incidence *incidence )
 
   clearException();
 
-  ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
+  ResourceCalendar *resource = d->mLastUsedResource;
+
+  if ( !d->mAddingInProgress || d->mLastUsedResource == 0 ) {
+    resource = mDestinationPolicy->destination( incidence );
+    d->mLastUsedResource = resource;
+  }
 
   if ( resource ) {
     mResourceMap[ incidence ] = resource;
@@ -866,6 +886,17 @@ bool CalendarResources::endChange( Incidence *incidence,
   }
 
   return true;
+}
+
+void CalendarResources::beginAddingIncidences()
+{
+  d->mAddingInProgress = true;
+}
+
+void CalendarResources::endAddingIncidences()
+{
+  d->mAddingInProgress = false;
+  d->mLastUsedResource = 0;
 }
 
 int CalendarResources::incrementChangeCount( ResourceCalendar *r )

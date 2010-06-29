@@ -776,7 +776,22 @@ class LIBKCAL_EXPORT CalendarResources :
     void slotLoadError( ResourceCalendar *resource, const QString &err );
     void slotSaveError( ResourceCalendar *resource, const QString &err );
 
+    /**
+      All addIncidence( Incidence * ), addTodo( Todo * ) addEvent( Event * )
+      and addJournal( Journal * ) calls made between beginAddingIncidences()
+      and endAddingIncidences() will only ask the user to choose a resource once.
+      @since 4.4
+    */
+    void beginAddingIncidences();
+
+    /**
+      @see beginAddingIncidences()
+      @since 4.4
+    */
+    void endAddingIncidences();
+
   private:
+
     /**
        Initialize the Resource object with starting values.
     */
