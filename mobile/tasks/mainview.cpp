@@ -68,7 +68,7 @@ void MainView::setPercentComplete(int row, int percentComplete)
 void MainView::editIncidence( const Akonadi::Item &item )
 {
   IncidenceView *editor = new IncidenceView;
-  editor->load( item );
+  editor->load( item, QDate() );
   editor->show();
 }
 
