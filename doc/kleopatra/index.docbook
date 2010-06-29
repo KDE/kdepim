@@ -13,10 +13,14 @@
   <!ENTITY kappname "&kleopatra;">
   <!ENTITY package "kdepim">
   <!ENTITY ldap "<acronym>LDAP</acronym>">
+  <!ENTITY ldaps "<acronym>LDAPS</acronym>">
+  <!ENTITY http "<acronym>HTTP</acronym>">
   <!ENTITY smime "<acronym>S/MIME</acronym>">
   <!ENTITY openpgp "<acronym>OpenPGP</acronym>">
   <!ENTITY ascii "<acronym>ASCII</acronym>">
   <!ENTITY der "<acronym>DER</acronym>">
+  <!ENTITY ssl "<acronym>SSL</acronym>">
+  <!ENTITY x509 "<acronym>X.509</acronym>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 
@@ -1533,54 +1537,235 @@ linkend="file-import-certificates"/>.</para>
 
 </chapter>
 
-<chapter id="configuration"><title>Configuring &kleopatra;</title>
+  <chapter id="configuration">
+    <title>Configuring &kleopatra;</title>
 
-<para>&kleopatra;'s configure dialog can be accessed via <xref
-linkend="settings-configure-kleopatra"/>.</para>
+    <para>
+      &kleopatra;'s configure dialog can be accessed via
+      <xref linkend="settings-configure-kleopatra"/>.
+<!-- ### xref
+      or <xref linkend="systray-configure-kleopatra"/> or
+      via the UI-Server (see <ref linkend="uiserver-start-confdialog"/>).
+-->
+    </para>
+    <para>
+      Each of its pages is described in the sections below.
+    </para>
 
-<para>Each of its pages is described in the sections below.</para>
+    <sect1 id="configuration-directory-services">
+      <title>
+        Configuring <guilabel>Directory Services</guilabel>
+      </title>
 
-<sect1 id="configuration-directory-services"><title>Configuring <guilabel>Directory Services</guilabel></title>
-
-<para>On this page, you can configure which &ldap; servers to use for
-certificate searches. You can also configure their order, as well as
-some selected &ldap;-related settings from the dynamic backend
-configuration dialog, available as <guilabel>GnuPG System</guilabel>
-in <xref linkend="settings-configure-kleopatra"/></para>
-
-<para>To add a new server, click on the <guilabel>New</guilabel> button. 
-Then you can set
-the <guilabel>Server Name</guilabel>, the <guilabel>Server Port</guilabel>
-(preset to the default &ldap; port), the <guilabel>Base &dn;</guilabel>
-(sometimes referred to as the search root or search base), and the
-usual <guilabel>User Name</guilabel> and
-<guilabel>Password</guilabel>, both of which are only needed if the
-server requires authentication.</para>
-
-<para>To remove a server from the search list, select it in the list,
-then press the <guilabel>Delete</guilabel> button.</para>
-
+      <para>
+        On this page, you can configure which &ldap; servers to use
+        for &smime; certificate searches, and which key servers to use
+        for &openpgp; certificate searches.
+      </para>
+      <note>
+        <para>
+          This is simply a more user-friendly version of the same
+          settings you also find in <xref
+          linkend="configuration-gnupg-system"/>. Everything you can
+          configure here, you can configure there, too.
+        </para>
+      </note>
+      <note>
+        <title>A Note On Proxy Settings</title>
+        <para>
+          Proxy settings can be configured for &http; and &ldap; in
+          <xref linkend="configuration-smime-validation"/>, but only
+          for &gpgsm;. For &gpg;, due to the complexity of keyserver
+          options in &gpg; and lack of proper support for them in
+          &gpgconf;, you currently need to modify the config file
+          <filename>gpg.conf</filename> directly. Please refer to the
+          &gpg; manual for details. &kleopatra; will preserve such
+          settings, but does not yet allow to modify them in the &GUI;.
+        </para>
+      </note>
+      <para>
+        The <guilabel>Directory services</guilabel> table shows which
+        servers are currently configured. Double-click on a cell in
+        the table to change parameters of existing server entries.
+      </para>
+      <para>
+        The meaning of the columns in the table is as follows:
+      </para>
+      <variablelist>
+        <varlistentry id="configuration-directory-services-scheme">
+          <term><guilabel>Scheme</guilabel></term> <!-- linebreak here'd show up in xref text :/ -->
+          <listitem>
+            <para>
+              Determines the network protocol which is used to access
+              the server. Often-used schemes include
+              <guilabel>ldap</guilabel> (and its &ssl;-secured sibling
+              <guilabel>ldaps</guilabel>) for &ldap; servers (common
+              protocol for &smime;; the only one supported by
+              &gpgsm;), and <guilabel>hkp</guilabel>, the Horowitz
+              Keyserver Protocol, nowadays usually &http; Keyserver
+              Protocol, a &http;-based protocol that virtually all
+              public &openpgp; keyservers support.
+            </para>
+            <para>
+              Please refer to the &gpg; and &gpgsm; manuals for a list
+              of supported schemes.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-server-name">
+          <term><guilabel>Server Name</guilabel></term>
+          <listitem>
+            <para>
+              The domain name of the server, &eg; <systemitem
+              class="systemname">keys.gnupg.net</systemitem>.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-server-port">
+          <term><guilabel>Server Port</guilabel></term>
+          <listitem>
+            <para>
+              The network port the server is listening on.
+            </para>
+            <para>
+              This changes automatically to the default port when you
+              change the <xref
+              linkend="configuration-directory-services-scheme"/>,
+              unless it was set to some non-standard port to begin
+              with. If you changed the default port and cannot get it
+              back, try setting <xref
+              linkend="configuration-directory-services-scheme"/> to
+              <userinput>http</userinput> and <xref
+              linkend="configuration-directory-services-server-port"/>
+              to <userinput>80</userinput> (the default for &http;),
+              then take it from there.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-base-dn">
+          <term><guilabel>Base DN</guilabel></term>
+          <listitem>
+            <para>
+              The Base-&dn; (only for &ldap; and &ldaps;), &ie; the
+              root of the &ldap; hierarchy to start from. This is
+              often also called <quote>search root</quote> or
+              <quote>search base</quote>.
+            </para>
+            <para>
+              It usually looks like <userinput>c=de,o=Foo</userinput>,
+              given as part of the &ldap; &URL;.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-user-name">
+          <term><guilabel>User Name</guilabel></term>
+          <listitem>
+            <para>
+              The user name, if any, to use for logging into the
+              server.
+            </para>
+            <para>
+              This column is only shown if the option <guilabel>Show
+              user and password information</guilabel> (below the
+              table) is checked.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-password">
+          <term><guilabel>Password</guilabel></term>
+          <listitem>
+            <para>
+              The password, if any, to use for logging into the
+              server.
+            </para>
+            <para>
+              This column is only shown if the option <guilabel>Show
+              user and password information</guilabel> (below the
+              table) is checked.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-x509">
+          <term><guilabel>X.509</guilabel></term>
+          <listitem>
+            <para>
+              Check this column if this entry should be used for
+              &x509; (&smime;) certificate searches.
+            </para>
+            <para>
+              Only &ldap; (and &ldaps;) servers are supported for
+              &smime;.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-openpgp">
+          <term><guilabel>OpenPGP</guilabel></term>
+          <listitem>
+            <para>
+              Check this column if this entry should be used for
+              &openpgp; certificate searches.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        You can configure as many &smime; (&x509;) servers as you
+        want, but only one &openpgp; server is allowed at any
+        time. The &GUI; will enforce this.
+      </para>
+      <para>
+        To add a new server, click on the <guibutton>New</guibutton>
+        button. This duplicates the selected entry, if any, or else
+        inserts a default &openpgp; server.  Then you can set the
+        <xref linkend="configuration-directory-services-server-name"/>, the
+        <xref linkend="configuration-directory-services-server-port"/>, the
+        <xref linkend="configuration-directory-services-base-dn"/>, and the
+        usual <xref linkend="configuration-directory-services-password"/> and
+        <xref linkend="configuration-directory-services-user-name"/>,
+        both of which are only needed if the server requires
+        authentication.
+      </para>
+      <para>
+        To directly insert an entry for &x509; certificates, use
+        <menuchoice><guimenu>New</guimenu><!--
+        --><guimenuitem>X.509</guimenuitem></menuchoice>; use
+        <menuchoice><guimenu>New</guimenu><!--
+        --><guimenuitem>OpenPGP</guimenuitem></menuchoice> for
+        &openpgp;.
+      </para>
+      <para>
+        To remove a server from the search list, select it in the
+        list, then press the <guibutton>Delete</guibutton> button.
+      </para>
 <!-- not in 4.2
 <para>To change the relative search order of servers, select one of
 them and move it up or down with the arrow buttons right next to the
 list.</para>
 -->
-<para>To set the &ldap; timeout, &ie; the maximum time the backend will
-wait for a server to respond, simply use the corresponding input field
-labeled <guilabel>LDAP timeout (minutes:seconds)</guilabel>.</para>
-
-<para>If one of your servers has a large database, so that even
-reasonable searches like <userinput>Smith</userinput> hit the
-<guilabel>maximum number of items returned by query</guilabel>, you
-might want to increase this limit. You can find out easily if you hit
-the limit during a search, since a dialog box will pop up in that
-case, telling you that the results have been truncated.</para>
-
-<note><para>Some servers may impose their own limits on the number of
-items returned from a query. In this case, increasing the limit here
-will not result in more returned items.</para></note>
-
-</sect1>
+      <para>
+        To set the &ldap; timeout, &ie; the maximum time the backend
+        will wait for a server to respond, simply use the
+        corresponding input field labeled <guilabel>LDAP timeout
+        (minutes:seconds)</guilabel>.
+      </para>
+      <para>
+        If one of your servers has a large database, so that even
+        reasonable searches like <userinput>Smith</userinput> hit the
+        <guilabel>maximum number of items returned by
+        query</guilabel>, you might want to increase this limit. You
+        can find out easily if you hit the limit during a search,
+        since a dialog box will pop up in that case, telling you that
+        the results have been truncated.
+      </para>
+      <note>
+        <para>
+          Some servers may impose their own limits on the number of
+          items returned from a query. In this case, increasing the
+          limit here will not result in more returned
+          items.
+        </para>
+      </note>
+    </sect1>
 
 <sect1 id="configuration-appearance"><title>Configuring visual <guilabel>Appearance</guilabel></title>
 
