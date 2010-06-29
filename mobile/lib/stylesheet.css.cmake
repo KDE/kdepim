@@ -64,7 +64,7 @@ QPushButton:pressed,
 QRadioButton:on,
 QSpinBox::down-button:pressed,
 QSpinBox::up-button:pressed,
-QToolButton
+QToolButton:pressed
 {
   border-image: url(@STYLE_IMAGE_PATH@/button-border-active.png) 14 14 14 14 repeat stretch;
   color: white;
