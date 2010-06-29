@@ -70,19 +70,39 @@ Rectangle {
     anchors.right : parent.right
     anchors.bottom : parent.bottom
     radius : 5
-    TextEdit {
-      id : contentEdit
-      color : "#000001" // yes, not exactly black, since QML maps black to white on the N900...
+    Flickable {
+      id: flick
+
       anchors.fill : parent
       anchors.topMargin : 8
       anchors.bottomMargin : 8
       anchors.leftMargin : 10
       anchors.rightMargin : 10
 
-      /*
-      onClicked : {
-        application.saveCurrentNoteTitle(titleInput.text);
-      } */
+      contentWidth: edit.paintedWidth
+      contentHeight: edit.paintedHeight
+      clip: true
+
+      function ensureVisible(r)
+      {
+          if (contentX >= r.x)
+              contentX = r.x;
+          else if (contentX+width <= r.x+r.width)
+              contentX = r.x+r.width-width;
+          if (contentY >= r.y)
+              contentY = r.y;
+          else if (contentY+height <= r.y+r.height)
+              contentY = r.y+r.height-height;
+      }
+
+      TextEdit {
+        id : contentEdit
+        color : "#000001" // yes, not exactly black, since QML maps black to white on the N900...
+        anchors.fill : parent
+
+        wrapMode: TextEdit.Wrap
+        onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+      }
     }
   }
 }
