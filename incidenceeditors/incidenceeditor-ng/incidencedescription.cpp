@@ -99,11 +99,11 @@ bool IncidenceDescription::isDirty() const
 
 void IncidenceDescription::enableRichTextDescription( bool enable )
 {
-  QString rt( i18nc( "@info:label", "Enable rich text" ) );
+  QString rt( i18nc( "@action Enable or disable richt text editting", "Enable rich text" ) );
   QString placeholder( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
   
   if ( enable ) {
-    rt = i18nc( "@info:label", "Disable rich text" );
+    rt = i18nc( "@action Enable or disable richt text editting", "Disable rich text" );
     placeholder = QString( "<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>" );
     mUi->mDescriptionEdit->enableRichTextMode();
   } else {

@@ -170,7 +170,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
 
   mRoleCombo->setToolTip( i18nc( "@info:tooltip", "Select the attendee participation role" ) );
 
-  mEdit->setToolTip( i18n( "Enter the name or email address of the attendee." ) );
+  mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
   
 

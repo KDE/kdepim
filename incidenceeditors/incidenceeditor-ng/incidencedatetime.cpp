@@ -143,7 +143,7 @@ QDate IncidenceDateTime::startDate() const
 
 void IncidenceDateTime::setTimeZonesVisibility( bool visible )
 {
-  static const QString tz( i18nc( "@info:label", "Time zones" ) );
+  static const QString tz( i18nc( "@action show or hide the time zone widgets", "Time zones" ) );
 
 #ifndef KDEPIM_MOBILE_UI
   QString placeholder( "<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>" );

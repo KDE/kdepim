@@ -249,9 +249,9 @@ QString IncidenceAlarm::stringForAlarm( KCal::Alarm *alarm )
     repeatStr = i18nc( "The alarm is configured to repeat after snooze","(Repeats)");
 
   if ( useoffset > 0 )
-    return i18n( "%1 %2 %3 after the event started %4", action, QString::number( useoffset ), offsetUnit, repeatStr );
+    return i18n( "%1 %2 %3 after the event started %4", action, useoffset, offsetUnit, repeatStr );
   else if ( useoffset < 0 )
-    return i18n( "%1 %2 %3 before the event starts %4", action, QString::number( qAbs( useoffset ) ), offsetUnit, repeatStr );
+    return i18n( "%1 %2 %3 before the event starts %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
 
   // useoffset == 0
   return i18n( "%1 when the event starts", action );
