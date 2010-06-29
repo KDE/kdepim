@@ -41,7 +41,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
 
-  attachmenteditdialog.cpp
   incidencedescription.cpp
 
   #incidenceeditorgeneralpage.cpp
@@ -88,6 +87,8 @@ if (KDEPIM_MOBILE_UI)
     ../editoralarms_base.ui
     eventortodomobile.ui
     eventortodomoremobile.ui
+    attachmenteditdialog.ui
+    alarmdialog.ui
   )
 
   kde4_add_library(incidenceeditorsngmobile SHARED ${incidenceeditors_ng_mobile_LIB_SRCS})
