@@ -1553,9 +1553,7 @@ linkend="file-import-certificates"/>.</para>
     </para>
 
     <sect1 id="configuration-directory-services">
-      <title>
-        Configuring <guilabel>Directory Services</guilabel>
-      </title>
+      <title>Configuring <guilabel>Directory Services</guilabel></title>
 
       <para>
         On this page, you can configure which &ldap; servers to use
@@ -1899,9 +1897,7 @@ button.</para>
 </sect1>
 
     <sect1 id="configuration-smime-validation">
-      <title>
-        Configuring aspects of <guilabel>S/MIME Validation</guilabel>
-      </title>
+      <title>Configuring aspects of <guilabel>S/MIME Validation</guilabel></title>
 
       <para>
       </para>
@@ -1909,9 +1905,7 @@ button.</para>
     </sect1>
 
     <sect1 id="configuration-gnupg-system">
-      <title>
-        Configuring the <guilabel>GnuPG System</guilabel>
-      </title>
+      <title>Configuring the <guilabel>GnuPG System</guilabel></title>
 
       <para>
       </para>
@@ -1989,9 +1983,7 @@ C=DE
 
       <sect2 id="admin-certificate-request-wizard-keys">
 
-        <title>
-          Restricting the Types of Keys a User is Allowed to Create
-        </title>
+        <title>Restricting the Types of Keys a User is Allowed to Create</title>
 
         <para>
           &kleopatra; also allows to restrict which type of
@@ -2002,9 +1994,7 @@ C=DE
 
         <sect3 id="admin-certificate-request-wizard-keys-type">
 
-          <title>
-            Public Key Algorithms
-          </title>
+          <title>Public Key Algorithms</title>
 
           <para>
             To restrict the public key algorithm to use, add the
@@ -2034,9 +2024,7 @@ C=DE
 
         <sect3 id="admin-certificate-request-wizard-keys-size">
 
-          <title>
-            Public Key Size
-          </title>
+          <title>Public Key Size</title>
 
           <para>
             To restrict the available keys sizes for a public
@@ -2106,9 +2094,7 @@ C=DE
 
     <sect1 id="admin-key-filters">
 
-      <title>
-	Creating and Editing Key Categories
-      </title>
+      <title>Creating and Editing Key Categories</title>
 
       <para>
 	&kleopatra; allows the user to configure the <link
@@ -2478,9 +2464,7 @@ C=DE
       </para>
 
       <example>
-	<title>
-	  Examples of key filters
-	</title>
+	<title>Examples of key filters</title>
 	<para>
 	  To check for all expired, but non-revoked root certificates,
 	  you would use a key filter defined as follows:
@@ -2514,9 +2498,7 @@ is-at-least-ownertrust=marginal
 
     <sect1 id="admin-archive-definitions">
 
-      <title>
-        Configuring Archivers for Use with Sign/Encrypt Files
-      </title>
+      <title>Configuring Archivers for Use with Sign/Encrypt Files</title>
 
       <para>
         &kleopatra; allows the administrator (and power-user) to
@@ -2685,9 +2667,7 @@ is-at-least-ownertrust=marginal
 
     <sect1 id="admin-checksum-definitions">
 
-      <title>
-        Configuring Checksum Programs for Use with Create/Verify Checksums
-      </title>
+      <title>Configuring Checksum Programs for Use with Create/Verify Checksums</title>
 
       <para>
         &kleopatra; allows the administrator (and power-user) to
