@@ -334,10 +334,10 @@ KPIM.MainView {
     SlideoutPanel {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
+      handlePosition : 225
       handleHeight: 150
-      handlePosition : 300
-      anchors.fill : parent
       contentWidth: 240
+      anchors.fill : parent
       content: [
           KPIM.Button {
             id: newButton
