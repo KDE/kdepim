@@ -47,6 +47,61 @@
 using namespace Message;
 using namespace MessageComposer;
 
+
+namespace {
+    template <typename String>
+    String very_simplistic_diff( const String & a, const String & b ) {
+        const QList<String> al = a.split( '\n' );
+        const QList<String> bl = b.split( '\n' );
+        String result;
+        int ai = 0, bi = 0;
+        while ( ai < al.size() && bi < bl.size() )
+            if ( al[ai] == bl[bi] ) {
+                //qDebug( "found   equal line a@%d x b@%d", ai, bi );
+                result += "  " + al[ai] + '\n';
+                ++ai;
+                ++bi;
+            } else {
+                //qDebug( "found unequal line a@%d x b@%d", ai, bi );
+                const int b_in_a = al.indexOf( bl[bi], ai );
+                const int a_in_b = bl.indexOf( al[ai], bi );
+                //qDebug( "   b_in_a == %d", b_in_a );
+                //qDebug( "   a_in_b == %d", a_in_b );
+                if ( b_in_a == -1 ) {
+                    if ( a_in_b == -1 )
+                        // (at least) one line changed:
+                        result += "- " + al[ai++] + '\n'
+                               +  "+ " + bl[bi++] + '\n';
+                    else
+                        // some lines added:
+                        while ( bi < a_in_b )
+                            result += "+ " + bl[bi++] + '\n';
+                } else {
+                    // some lines removed:
+                    while ( ai < b_in_a )
+                        result += "- " + al[ai++] + '\n';
+                    // some lines added:
+                    while ( bi < a_in_b )
+                        result += "+ " + bl[bi++] + '\n';
+                }
+                //qDebug( "result ( a@%d b@%d ):\n%s\n--end", ai, bi, result.constData() );
+            }
+
+        for ( int i = ai ; i < al.size() ; ++i  )
+            result += "- " + al[i] + '\n';
+        for ( int i = bi ; i < bl.size() ; ++i )
+            result += "+ " + bl[i] + '\n';
+        return result;
+    }
+}
+
+#define QCOMPARE_OR_DIFF( a, b )                                        \
+    if ( a != b )                                                       \
+        qDebug( "diff:\n--begin--\n%s\n--end--", very_simplistic_diff( a, b ).constData() ); \
+    QVERIFY( a == b )
+
+
+
 QTEST_KDEMAIN( MessageFactoryTest, NoGUI )
 
 void MessageFactoryTest::testCreateReply()
@@ -66,7 +121,7 @@ void MessageFactoryTest::testCreateReply()
   datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
   QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: Test Email Subject" ) );
-  QVERIFY( reply.msg->body() == replyStr.toLatin1() );
+  QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
   
 }
 
@@ -91,7 +146,7 @@ void MessageFactoryTest::testCreateReplyHtml()
   QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> encoded?\n" );
   QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: reply to please" ) );
-  QVERIFY( reply.msg->body() == replyStr.toLatin1() );
+  QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
 
 }
 
@@ -115,7 +170,7 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
   QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> quote me please.\n" );
   QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: asking for reply" ) );
-  QVERIFY( reply.msg->body() == replyStr.toLatin1() );
+  QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
 
 }
 
@@ -159,9 +214,8 @@ void MessageFactoryTest::testCreateForward()
 //   kDebug() << "got:" << fw->encodedContent() << "against" << fwdMsg.toLatin1();
   
   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
-  QVERIFY( fw->subject()->asUnicodeString() == QLatin1String( "Fwd: Test Email Subject" ) );
-  QVERIFY( fw->encodedContent() == fwdMsg.toLatin1() );
-
+  QCOMPARE( fw->subject()->asUnicodeString(), QLatin1String( "Fwd: Test Email Subject" ) );
+  QCOMPARE_OR_DIFF( fw->encodedContent(), fwdMsg.toLatin1() );
 }
 
 
@@ -217,8 +271,8 @@ void MessageFactoryTest::testCreateRedirect()
 //   kDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
-  QVERIFY( rdir->subject()->asUnicodeString() == QLatin1String( "Test Email Subject" ) );
-  QVERIFY( rdir->encodedContent() == baseline.toLatin1() );
+  QCOMPARE( rdir->subject()->asUnicodeString(), QLatin1String( "Test Email Subject" ) );
+  QCOMPARE_OR_DIFF( rdir->encodedContent(), baseline.toLatin1() );
 }
 
 void MessageFactoryTest::testCreateResend()
@@ -265,8 +319,8 @@ void MessageFactoryTest::testCreateResend()
 //   kDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
-  QVERIFY( rdir->subject()->asUnicodeString() == QLatin1String( "Test Email Subject" ) );
-  QVERIFY( rdir->encodedContent() == baseline.toLatin1() );
+  QCOMPARE( rdir->subject()->asUnicodeString(), QLatin1String( "Test Email Subject" ) );
+  QCOMPARE_OR_DIFF( rdir->encodedContent(), baseline.toLatin1() );
 }
 
 
@@ -303,9 +357,9 @@ void MessageFactoryTest::testCreateMDN()
                          .arg( msg->to()->asUnicodeString() ).arg( msg->subject()->asUnicodeString() );
 
   kDebug() << "comparing with:" << mdnContent;
-  
-  QVERIFY( MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body() == mdnContent.toLatin1() );
 
+  QCOMPARE_OR_DIFF( MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body(),
+                    mdnContent.toLatin1() );
 }
 
 
