@@ -57,13 +57,19 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     ~EditorItemManager();
 
     /**
+     * Returns the last saved item with payload or an invalid item when save is
+     * not called yet.
+     */
+    Akonadi::Item item() const;
+
+    /**
      * Loads the @param item into the editor. The item passed <em>must</em> be
      * a valid item. When the payload is not set it will be fetched.
      */
     void load( const Akonadi::Item &item );
 
     /**
-     * Saves the new or modified item. This mCollectionethod does nothing when the
+     * Saves the new or modified item. This method does nothing when the
      * ui is not dirty.
      */
     void save();

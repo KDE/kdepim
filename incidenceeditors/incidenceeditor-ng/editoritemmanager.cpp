@@ -187,6 +187,15 @@ EditorItemManager::~EditorItemManager()
   delete d_ptr;
 }
 
+Akonadi::Item EditorItemManager::item() const
+{
+  Q_D( const ItemEditor );
+
+  if ( d->mItem.isValid() && d->mItem.hasPayload() )
+    return d->mItem;
+
+  return Akonadi::Item();
+}
 
 void EditorItemManager::load( const Akonadi::Item &item )
 {
