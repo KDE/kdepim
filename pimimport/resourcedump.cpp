@@ -3,6 +3,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <akonadi/agenttype.h>
+#include <akonadi/agentinstancecreatejob.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kconfig.h>
@@ -11,11 +12,13 @@
 ResourceDump::ResourceDump( QString path, QObject *parent ) :
     AbstractDump( path, parent ), m_instance()
 {
+  m_name = path.split("/").last();
 }
 
 ResourceDump::ResourceDump( QString path, Akonadi::AgentInstance instance, QObject *parent ) :
     AbstractDump( path, parent ), m_instance( instance )
 {
+  m_name = path.split("/").last();
 }
 
 Akonadi::AgentInstance ResourceDump::instance() const
@@ -55,5 +58,44 @@ void ResourceDump::dump()
 
 void ResourceDump::restore()
 {
+  // get resource type from info file
+  KConfig config( QString( "%1/%2" ).arg( path() ).arg( "resourceinfo" ), KConfig::SimpleConfig );
+  KConfigGroup cfgGroup( &config, "General" );
+  QString type = cfgGroup.readEntry( "type", QString() );
 
+  // create resource
+  Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type, this);
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( resourceCreated( KJob* ) ) );
+  job->start();
+}
+
+void ResourceDump::resourceCreated( KJob *job )
+{
+  if ( job->error() ) {
+    kError() << "restoring " << m_name << " failed: " << job->errorText();
+    return;
+  }
+
+  m_instance = static_cast< Akonadi::AgentInstanceCreateJob* >( job )->instance();
+  restoreResource();
+}
+
+void ResourceDump::restoreResource()
+{
+  // copy resource's config file if there is one
+  QFile cfgFile( QString( "%1/%2" ).arg( path() ).arg( "resourcerc" ) );
+  if ( cfgFile.exists() ) {
+    KStandardDirs dirs;
+    QString configDir = dirs.saveLocation( "config" );
+    QString dest = QString( "%1/%2%3" ).arg( configDir ).arg(m_instance.identifier() ).arg( "rc" );
+    bool result = cfgFile.copy( dest );
+    if ( !result )
+      kError() << "ResourceDump::restore(): copying file failed: " << cfgFile.fileName() << " to "
+          << dest;
+    m_instance.reconfigure();
+  }
+
+  kError() << "restored " << m_name;
+
+  emit finished();
 }
