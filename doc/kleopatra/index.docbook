@@ -7,6 +7,7 @@
   <!ENTITY gpgconf "<application>GpgConf</application>">
   <!ENTITY kappname "&kleopatra;">
   <!ENTITY package "kdepim">
+  <!ENTITY ldap "<acronym>LDAP</acronym>">
   <!ENTITY smime "<acronym>S/MIME</acronym>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
@@ -96,8 +97,8 @@
 <chapter id="introduction"> <title>Introduction</title> 
 
 <para>&kleopatra; is the &kde; tool for managing X.509 and OpenPGP certificates in
-the &gpgsm; keybox and for retrieving certificates from
-<acronym>LDAP</acronym> servers.</para>
+the &gpgsm; and &gpg; keyboxes and for retrieving certificates from
+&ldap; and other certificate servers.</para>
 
 <para>&kleopatra; can be started from &kmail;'s <menuchoice><guimenu>Tools</guimenu>
 <guimenuitem>Certificate Manager</guimenuitem></menuchoice>
@@ -187,12 +188,13 @@ selected.</para-->
 signatures in emails, since certificates are embedded in the
 signatures made using them most of the time. However, if you need to
 send a mail to someone you have not yet had contact with, you need to
-fetch the certificate from an LDAP folder (although &gpgsm; can do
+fetch the certificate from an &ldap; folder (although &gpgsm; can do
 this automatically), or from a file. You also need to import your own
 certificate after receiving the &ca; answer to your certification
 request.</para>
 
-<para>To search for a certificate in an LDAP directory, select 
+<para>To search for a certificate in an &ldap; directory, select 
+<!--### xref-->
 <menuchoice><guimenu>File</guimenu><guimenuitem>Lookup Certificates on Server</guimenuitem></menuchoice>
 and enter some text (&eg; the name of the person
 you want the certificate for) into the line edit of the <guilabel>Keyserver 
@@ -209,7 +211,7 @@ button.</para>
 not found in 4.2
 -->
 
-<para>You can configure the list of LDAP servers to search in the
+<para>You can configure the list of &ldap; servers to search in the
 <link linkend="configuration-directory-services"><guilabel>Directory
 Services</guilabel></link> page of &kleopatra;'s configure dialog.</para>
 
@@ -333,7 +335,7 @@ as manual handling of CRLs (<xref linkend="certificates-refresh-crls"/>,
 <para><action>Creates a new key pair (public and private)</action> and
 allows to send the public part to a certification authority
 (&ca;) for signing. The resulting certificate is then
-sent back to you, or stored in an LDAP server for you to download into
+sent back to you, or stored in an &ldap; server for you to download into
 your local keybox, where you can use it to sign and decrypt
 mails.</para>
 
@@ -715,7 +717,7 @@ varlistentry id="certificates-download">
 <term><menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice></term>
 
 <listitem>
-<para><action>Downloads the selected certificate(s) from the LDAP to the local keybox.</action></para>
+<para><action>Downloads the selected certificate(s) from the &ldap; to the local keybox.</action></para>
 </listitem>
 </varlistentry-->
 
@@ -959,16 +961,16 @@ linkend="settings-configure-kleopatra"/>.</para>
 
 <sect1 id="configuration-directory-services"><title>Configuring <guilabel>Directory Services</guilabel></title>
 
-<para>On this page, you can configure which LDAP servers to use for
+<para>On this page, you can configure which &ldap; servers to use for
 certificate searches. You can also configure their order, as well as
-some selected LDAP-related settings from the dynamic backend
+some selected &ldap;-related settings from the dynamic backend
 configuration dialog, available via <xref
 linkend="settings-configure-gpgme-backend"/>.</para>
 
 <para>To add a new server, click on the <guilabel>New</guilabel> button. 
 Then you can set
 the <guilabel>Server Name</guilabel>, the <guilabel>Server Port</guilabel>
-(preset to the default LDAP port), the <guilabel>Base &dn;</guilabel>
+(preset to the default &ldap; port), the <guilabel>Base &dn;</guilabel>
 (sometimes referred to as the search root or search base), and the
 usual <guilabel>User Name</guilabel> and
 <guilabel>Password</guilabel>, both of which are only needed if the
@@ -982,7 +984,7 @@ then press the <guilabel>Delete</guilabel> button.</para>
 them and move it up or down with the arrow buttons right next to the
 list.</para>
 -->
-<para>To set the LDAP timeout, &ie; the maximum time the backend will
+<para>To set the &ldap; timeout, &ie; the maximum time the backend will
 wait for a server to respond, simply use the corresponding input field
 labeled <guilabel>LDAP timeout (minutes:seconds)</guilabel>.</para>
 
