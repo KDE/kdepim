@@ -40,6 +40,8 @@
 
 #include <vector>
 
+class QProcess;
+
 namespace boost {
     template <typename T> class shared_ptr;
 }
@@ -52,6 +54,14 @@ namespace Kleo {
     public:
         virtual ~ChecksumDefinition();
 
+        enum ArgumentPassingMethod {
+            CommandLine,
+            NewlineSeparatedInputFile,
+            NullSeparatedInputFile,
+
+            NumArgumentPassingMethods
+        };
+
         QString id() const { return m_id; }
         QString label() const { return m_label; }
 
@@ -59,16 +69,23 @@ namespace Kleo {
         QString outputFileName() const { return m_outputFileName; }
 
         QString createCommand() const;
-        QStringList createCommandArguments( const QStringList & files ) const;
+        ArgumentPassingMethod createCommandArgumentPassingMethod() const { return m_createMethod; }
 
         QString verifyCommand() const;
-        QStringList verifyCommandArguments( const QStringList & files ) const;
+        ArgumentPassingMethod verifyCommandArgumentPassingMethod() const { return m_verifyMethod; }
+
+        bool startCreateCommand( QProcess * process, const QStringList & files ) const;
+        bool startVerifyCommand( QProcess * process, const QStringList & files ) const;
 
         static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions();
         static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions( QStringList & errors );
 
         static boost::shared_ptr<ChecksumDefinition> getDefaultChecksumDefinition( const std::vector< boost::shared_ptr<ChecksumDefinition> > & available );
         static void setDefaultChecksumDefinition( const boost::shared_ptr<ChecksumDefinition> & checksumDefinition );
+
+    protected:
+        void setCreateCommandArgumentPassingMethod( ArgumentPassingMethod method ) { m_createMethod = method; }
+        void setVerifyCommandArgumentPassingMethod( ArgumentPassingMethod method ) { m_verifyMethod = method; }
 
     private:
         virtual QString doGetCreateCommand() const = 0;
@@ -80,6 +97,7 @@ namespace Kleo {
         const QString m_label;
         const QString m_outputFileName;
         const QStringList m_patterns;
+        ArgumentPassingMethod m_createMethod, m_verifyMethod;
     };
         
 }
