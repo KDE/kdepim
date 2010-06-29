@@ -4,9 +4,12 @@
   <!ENTITY kwatchgnupg "<application>KWatchGnuPG</application>">
   <!ENTITY gpgsm "<application>GpgSM</application>">
   <!ENTITY gpg "<application>GPG</application>">
+  <!ENTITY gpgme "<application>GpgME</application>"> <!--### there's no <library>-->
   <!ENTITY gpgconf "<application>GpgConf</application>">
+  <!ENTITY gpgagent "<application>GpgAgent</application>">
   <!ENTITY dirmngr "<application>DirMngr</application>">
   <!ENTITY scdaemon "<application>SCDaemon</application>">
+  <!ENTITY pinentry "<application>PinEntry</application>">
   <!ENTITY kappname "&kleopatra;">
   <!ENTITY package "kdepim">
   <!ENTITY ldap "<acronym>LDAP</acronym>">
@@ -806,15 +809,143 @@ linkend="view-hierarchical-key-list"/> is on.</para>
 
 <sect1 id="menucertificates"><title><guimenu>Certificates</guimenu> Menu</title>
 
-<variablelist>
-<!-- missing menu item
-<varlistentry id="certificates-certify">
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Certify Certificate...</guimenuitem></menuchoice></term>
-<listitem>
-<para><action>???</action></para>
+      <variablelist>
 
-no longer in kde4
+        <varlistentry id="certificates-change-owner-trust">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Change Owner Trust...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Changes the Owner Trust of the selected
+              &openpgp; certificate.</action>
+<!--
+              See <xref linkend="functions-manage-wot"/> for details.
+-->
+            </para>
+            <para>
+              This function is only available when exactly one
+              &openpgp; certificate is selected.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="certificates-trust-root">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Trust Root Certificate</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Marks this (&smime;) root certificate as trusted.</action>
+            </para>
+            <para>
+              In some ways, this is the equivalent of <xref
+              linkend="certificates-change-owner-trust"/> for &smime;
+              root certificates. You can, however, only choose
+              between&mdash;in &openpgp;
+              terms&mdash;<quote>ultimate</quote> trust and
+              <quote>never trust</quote>.
+            </para>
+            <note>
+              <para>
+                The backend (by way of &gpgagent;) will ask at root
+                certificate import time whether to trust the imported
+                root certificate. However, that function must be
+                explicitly enabled in the backend configuration
+                (<option>allow-mark-trusted</option> in
+                <filename>gpg-agent.conf</filename>, or <xref
+                linkend="settings-configure-gpgme-backend"/>
+                <menuchoice><guilabel>GPG
+                Agent</guilabel><guilabel>Allow clients to make keys
+                as "trusted"</guilabel></menuchoice> or <xref
+                linkend="settings-configure-kleopatra"/>
+                <menuchoice><guilabel>S/MIME
+                Validation</guilabel><guilabel>Allow to mark root
+                certificates as trusted</guilabel></menuchoice>).
+              </para>
+              <para>
+                Enabling that functionality in the backend can lead to
+                popups from &pinentry; at inopportune times (&eg; when
+                verifying signatures), and can thus block unattended
+                email processing. For that reason, and because it is
+                desireable to be able to <emphasis>distrust</emphasis>
+                a trusted root certificate again, &kleopatra; allows
+                manual setting of trust.
+              </para>
+            </note>
+            <warning>
+              <para>
+                Due to lack of backend support for this function,
+                &kleopatra; needs to work directly on the &gpgsm;
+                trust database
+                (<filename>trustlist.txt</filename>). When using this
+                function, make sure no other crypto operations are in
+                progress that could race with &kleopatra; for
+                modifications to that database.
+              </para>
+            </warning>
+            <para>
+              This function is only available when exactly one &smime;
+              root certificate is selected, and that certificate is
+              not yet trusted.
+            </para>
+            <para>
+              Use <xref linkend="certificates-distrust-root"/> to undo
+              this function.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="certificates-distrust-root">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Distrust Root Certificate</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Marks this (&smime;) root certificate as not trusted.</action>
+            </para>
+            <para>
+              This function is only available when exactly one &smime;
+              root certificate is selected, and that certificate is
+              currently trusted.
+            </para>
+            <para>
+              Used to undo <xref
+              linkend="certificates-trust-root"/>. See there for
+              details.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="certificates-certify">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Certify Certificate...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows you to certify another &openpgp;
+              certificate.</action>
+<!-- ### xref
+              See <xref linkend="functions-manage-wot"/> for details.
+-->
+            </para>
+            <para>
+              This function is only available if exactly one &openpgp;
+              certificate is selected.
+            </para>
+          </listitem>
+        </varlistentry>
+
+
+<!--no longer in kde4
 <para>This is similar to <link
 linkend="view-redisplay"><menuchoice><shortcut><keycombo action="simul">
 <keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu>
@@ -862,63 +993,174 @@ uncommon).</para>
 <para>Use this function scarcely.</para></warning>
 </listitem>
 </varlistentry-->
-<!-- missing menu items
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Change Ownertrust...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Expire Date...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Change Expire Date...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows to change the expiry date of your &openpgp; certificate.</action>
+            </para>
+            <para>
+              Use this function to extend the lifetime of your
+              &openpgp; certificates as an alternative to either
+              creating a new one, or using unlimited lifetime
+              (<quote>never expires</quote>).
+            </para>
+            <para>
+              This function is only available if exectly one &openpgp;
+              certificate is selected, and the secret key is available
+              for that certificate.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Change Passphrase...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Change Passphrase...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows to change the passphrase of your secret key.</action>
+            </para>
+            <para>
+              This function is only available if exactly one
+              certificate is selected, and the secret key is available
+              for that certificate. It requires a very recent backend,
+              since we changed the implementation from direct calling
+              of &gpg; and &gpgsm; to a &gpgme;-based one.
+            </para>
+            <note>
+              <para>
+                For security reasons, both the old as well as the new
+                passphrase is asked for by &pinentry;, a separate
+                process. Depending on the platform you are running on
+                and on the quality of the &pinentry; implementation on
+                that platform, it may happen that the &pinentry;
+                window comes up in the background. So, if you select
+                this function and nothing happens, check the operating
+                system's task bar in case a &pinentry; window is open
+                in the background.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Add User-ID...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
--->
-<varlistentry id="certificates-delete">
-<term><menuchoice><shortcut><keycombo action="simul"><keycap>Del</keycap></keycombo></shortcut>
-<guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice></term>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Add User-ID...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows to add a new User-ID to your &openpgp; certificate.</action>
+            </para>
+            <para>
+              Use this to add new identities to an existing
+              certificate as an alternative to creating a new key
+              pair. An &openpgp; user-ID has the following form:
+            </para>
+            <programlisting><replaceable>Real&nbsp;Name</replaceable>&nbsp;<optional>(<replaceable>Comment</replaceable>)</optional>&nbsp;&lt;<replaceable>Email</replaceable>&gt;</programlisting>
+            <para>
+              In the dialog that comes up when you select this
+              function, &kleopatra; will ask you for each of the three
+              parameters (<replaceable>Real&nbsp;Name</replaceable>,
+              <replaceable>Comment</replaceable> and
+              <replaceable>Email</replaceable>) separately, and
+              display the result in a preview.
+            </para>
+            <note>
+              <para>
+                These parameters are subject to the
+                same Administrator restrictions as in new
+                certificates. See <xref linkend="functions-newkey"/>
+                and <xref linkend="admin-certificate-request-wizard"/>
+                for details.
+              </para>
+            </note>
+            <para>
+              This function is only available when exactly one
+              &openpgp; certificate is selected, and the secret key is
+              available for that certificate.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Deletes selected certificate(s)</action> from the local keyring.</para>
+        <varlistentry id="certificates-delete">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul"><keycap>Del</keycap></keycombo></shortcut>
+              <guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Deletes the selected certificates</action> from
+              the local keyring.
+            </para>
+            <para>
+              Use this function to remove unused keys from your local
+              keybox. However, since certificates are typically
+              attached to signed emails, verifying an email might
+              result in the key just removed to pop back into the
+              local keybox. So it is probably best to avoid using this
+              function as much as possible. When you are lost, use the
+              <link linkend="functions-search">search bar</link> or
+              the <xref linkend="view-hierarchical-key-list"/>
+              function to regain control over the lot of
+              certificates.
+            </para>
+            <para>
+              Due to the hierarchical nature of &smime; certificates,
+              if you delete an &smime; issuer certificate (&ca; certificate),
+              all subjects are deleted, too.<footnote><para>This is the same as a
+              filesystem: When you delete a folder, you delete all
+              files and folders in it, too.</para></footnote>
+            </para>
+            <para>
+              Naturally, this function is only available if you
+              selected at least one certificate.
+            </para>
+            <warning>
+              <para>
+                There is one exception to the above: When you delete
+                one of your own certificates, you delete the secret
+                key along with it. This implies that you will not be
+                able to read past communication entrypted to you using
+                this certificate, unless you have a backup somewhere.
+              </para>
+              <para>
+                &kleopatra; will warn you when you attempt to delete a
+                secret key.
+              </para>
+            </warning>
+          </listitem>
+        </varlistentry>
 
-<para>Use this function to remove unused keys from your local
-keybox. However, since certificates are typically attached to signed
-emails, verifying an email might result in the key just removed to pop
-back into the local keybox. So it is probably best to avoid using this
-function as much as possible. When you are lost, use the <link
-linkend="functions-search">search bar</link> or the <xref
-linkend="view-hierarchical-key-list"/> function to regain control over
-the lot of certificates.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice><guimenu>Certificates</guimenu><guimenuitem>Dump Certificate</guimenuitem></menuchoice></term>
-<listitem>
-<para>Shows the detailed contents of the &gpgsm; CRL cache.</para>
-</listitem>
-</varlistentry>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Dump Certificate</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Shows all information that &gpgsm; has about the
+              selected (&smime;) certificate.</action>
+            </para>
+            <para>
+              See the discussion about
+              <option>--dump-key&nbsp;<replaceable>key</replaceable></option>
+              in the &gpgsm; manual for details about the output.
+            </para>
+          </listitem>
+        </varlistentry>
 
 <!--not in 4.2
 varlistentry id="certificates-download">
