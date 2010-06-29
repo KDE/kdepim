@@ -2093,7 +2093,340 @@ button.</para>
       <title>Configuring aspects of <guilabel>S/MIME Validation</guilabel></title>
 
       <para>
+        On this page, you can configure certain aspects of the
+        validation of &smime; certificates.
       </para>
+      <note>
+        <para>
+          For the most part, this is simply a more user-friendly
+          version of the same settings you also find in
+          <xref linkend="configuration-gnupg-system"/>. Everything you
+          can configure here, you can configure there, too, with the
+          exception of
+          <xref linkend="configuration-smime-validation-refresh-interval"/>,
+          which is &kleopatra;-specific.
+        </para>
+      </note>
+      <para>
+        The meaning of the options is as follows:
+      </para>
+
+      <sect2 id="configuration-smime-validation-interval-checking">
+        <title>Configuring interval certificate checking</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-refresh-interval">
+            <term><guilabel>Check certificate validity every
+                <replaceable>N</replaceable> hours</guilabel></term>
+            <listitem>
+              <para>
+                This option enables interval checking of certificate
+                validity. You can also choose the checking interval (in
+                hours). The effect of interval checking is the same as
+                <xref linkend="view-redisplay"/>; there is no provision
+                for interval scheduling of <xref
+                  linkend="certificates-refresh-openpgp"/> or <xref
+                  linkend="certificates-refresh-x509"/>.
+              </para> 
+              <note>
+                <para>
+                  Validation is perfomed implicitly whenever significant
+                  files in <filename>~/.gnupg</filename> change. This
+                  option, just like <xref linkend="certificates-refresh-openpgp"/>
+                  and <xref linkend="certificates-refresh-x509"/>, therefore only
+                  affects external factors of certificate validity.
+                </para>
+              </note>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-method">
+        <title>Configuring validation method</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-use-crls">
+            <term><guilabel>Validate certificates using CRLs</guilabel></term>
+            <listitem>
+              <para>
+                If this option is selected, &smime; certificates are
+                validated using Certificate Revocation Lists (&crl;s).
+              </para>
+              <para>
+                See <xref linkend="configuration-smime-validation-use-ocsp"/>
+                for alternative method of certificate validity checking.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-use-ocsp">
+            <term><guilabel>Validate certificates online (OCSP)</guilabel></term>
+            <listitem>
+              <para>
+                If this option is selected, &smime; certificates are
+                validated online using the Online Certificates Status
+                Protocol (&ocsp;).
+              </para>
+              <warning>
+                <para>
+                  When choosing this method, a request is sent to the
+                  server of the &ca; more or less each time you send or
+                  receive a cryptographic message, thus theoretically
+                  allowing the certificate issuing agency to track whom
+                  you exchange (&eg;) mails with.
+                </para>
+              </warning>
+              <para>
+                To use this method, you need to enter the &URL; of the
+                &ocsp; responder into <xref linkend="configuration-smime-validation-ocsp-url"/>.
+              </para>
+              <para>
+                See <xref linkend="configuration-smime-validation-use-ocsp"/>
+                for a more traditional method of certificate validity
+                checking that does not leak information about whom you
+                exchange messages with.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ocsp-url">
+            <term><guilabel>OCSP responder URL</guilabel></term>
+            <listitem>
+              <para>
+                Enter here the address of the server for online
+                validation of certificates (&ocsp; responder). The &URL;
+                usually starts with <literal>http://</literal>.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ocsp-signature">
+            <term><guilabel>OCSP responder signature</guilabel></term>
+            <listitem>
+              <para>
+                Choose here the certificate with which the &ocsp; server
+                signs its replies.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ocsp-ignore-service-url">
+            <term><guilabel>Ignore service URL of certificates</guilabel></term>
+            <listitem>
+              <para>
+                Each &smime; certificate usually contains the &URL; of
+                its issuer's &ocsp; responder (<xref
+                  linkend="certificates-dump-certificate"/> will reveal
+                whether a given certificate contains it).
+              </para>
+              <para>
+                Checking this option makes &gpgsm; ignore those &URL;s
+                and only use the one configured above.
+              </para>
+              <para>
+                Use this to &eg; enforce use of a company-wide &ocsp;
+                proxy.
+              </para>
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-options">
+        <title>Configuring validation options</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-dont-check-cert-policy">
+            <term><guilabel>Do not check certificate policies</guilabel></term>
+            <listitem>
+              <para>
+                By default, &gpgsm; uses the file
+                <filename>~/.gnupg/policies.txt</filename> to check if a
+                certificate policy is allowed. If this option is
+                selected, policies are not checked.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-never-consult-crl">
+            <term><guilabel>Never consult a CRL</guilabel></term>
+            <listitem>
+              <para>
+                If this option is checked, Certificate Revocation Lists
+                are never used to validate &smime; certificates.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-allow-mark-trusted">
+            <term><guilabel>Allow to mark root certificates as trusted</guilabel></term>
+            <listitem>
+            <para>
+                If this option is checked while a root &ca; certificate is
+                being imported, you will be asked to confirm its
+                fingerprint and to state whether or not you consider this
+                root certificate to be trusted.
+              </para>
+              <para>
+                A root certificate needs to be trusted before the
+                certificates it certified become trusted, but lightly
+                allowing trusted root certificates into your certificate
+                store will undermine the security of the system.
+              </para>
+              <note>
+                <para>
+                  Enabling this functionality in the backend can lead to
+                  popups from &pinentry; at inopportune times (&eg; when
+                  verifying signatures), and can thus block unattended
+                  email processing. For that reason, and because it is
+                  desireable to be able to <emphasis>distrust</emphasis>
+                  a trusted root certificate again, &kleopatra; allows
+                  manual setting of trust using
+                  <xref linkend="certificates-trust-root"/> and
+                  <xref linkend="certificates-distrust-root"/>.
+                </para>
+                <para>
+                  This setting here does not influence the &kleopatra;
+                  function.
+                </para>
+              </note>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-fetch-missing-issuers">
+            <term><guilabel>Fetch missing issuer certificates</guilabel></term>
+            <listitem>
+              <para>
+                If this option is checked, missing issuer certificates
+                are fetched when necessary (this applies to both
+                validation methods, &crl;s and &ocsp;).
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-http-options">
+        <title>Configuring &http; request options</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-disable-http">
+            <term><guilabel>Do not perform any HTTP requests</guilabel></term>
+            <listitem>
+              <para>
+                Entirely disables the use of &http; for &smime;.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ignore-http-dp">
+            <term><guilabel>Ignore HTTP CRL distribution point of certificates</guilabel></term>
+            <listitem>
+              <para>
+                When looking for the location of a &crl;, the
+                to-be-tested certificate usually contains what are
+                known as <quote>&crl; Distribution Point</quote>
+                (<acronym>DP</acronym>) entries, which are &URL;s
+                describing the way to access the &crl;. The first-found
+                <acronym>DP</acronym> entry is used.
+              </para>
+              <para>
+                With this option, all entries using the &http; scheme
+                are ignored when looking for a suitable
+                <acronym>DP</acronym>.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-honor-http-proxy">
+            <term><guilabel>Use system HTTP proxy</guilabel></term>
+            <listitem>
+              <para>
+                If this option is selected, the value of the &http;
+                proxy shown on the right (which comes from the
+                environment variable <envar>http_proxy</envar>) will
+                be used for any &http; request.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-custom-http-proxy">
+            <term><guilabel>Use this proxy for HTTP requests</guilabel></term>
+            <listitem>
+              <para>
+                If no system proxy is set, or you need to use a
+                different proxy for &gpgsm;, you can enter its
+                location here.
+              </para>
+              <para>
+                It will be used for all HTTP requests relating to
+                S/MIME.
+              </para>
+              <para>
+                The syntax is
+                <userinput><replaceable>host</replaceable><literal>:</literal><replaceable>port</replaceable></userinput>,
+                &eg; <userinput>myproxy.nowhere.com:3128</userinput>.
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-ldap-options">
+        <title>Configuring &ldap; request options</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-disable-ldap">
+            <term><guilabel>Do not perform any LDAP requests</guilabel></term>
+            <listitem>
+              <para>
+                Entirely disables the use of &ldap; for &smime;.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ignore-ldap-dp">
+            <term><guilabel>Ignore LDAP CRL distribution point of certificates</guilabel></term>
+            <listitem>
+              <para>
+                When looking for the location of a &crl;, the
+                to-be-tested certificate usually contains what are
+                known as "&crl; Distribution Point"
+                (<acronym>DP</acronym>) entries, which are &URL;s
+                describing the way to access the &crl;. The first
+                found <acronym>DP</acronym> entry is used.
+              </para>
+              <para>
+                With this option, all entries using the &ldap; scheme
+                are ignored when looking for a suitable
+                <acronym>DP</acronym>.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-custom-ldap-proxy">
+            <term><guilabel>Primary host for LDAP requests</guilabel></term>
+            <listitem>
+              <para>
+                Entering an &ldap; server here will make all &ldap;
+                requests go to that server first. More precisely, this
+                setting overrides any specified
+                <replaceable>host</replaceable> and
+                <replaceable>port</replaceable> part in an &ldap;
+                &URL; and will also be used if
+                <replaceable>host</replaceable> and
+                <replaceable>port</replaceable> have been omitted from
+                the &URL;.
+              </para>
+              <para>
+                Other &ldap; servers will be used only if the
+                connection to the <quote>proxy</quote> failed. The
+                syntax is
+                <userinput><replaceable>host</replaceable></userinput>
+                or
+                <userinput><replaceable>host</replaceable><literal>:</literal><replaceable>port</replaceable></userinput>. If
+                <replaceable>port</replaceable> is omitted, port 389
+                (standard &ldap; port) is used.
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
 
     </sect1>
 
