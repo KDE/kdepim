@@ -1116,6 +1116,19 @@ uncommon).</para>
               function to regain control over the lot of
               certificates.
             </para>
+            <warning>
+              <para>
+                There is one exception to the above: When you delete
+                one of your own certificates, you delete the secret
+                key along with it. This implies that you will not be
+                able to read past communication encrypted to you using
+                this certificate, unless you have a backup somewhere.
+              </para>
+              <para>
+                &kleopatra; will warn you when you attempt to delete a
+                secret key.
+              </para>
+            </warning>
             <para>
               Due to the hierarchical nature of &smime; certificates,
               if you delete an &smime; issuer certificate (&ca; certificate),
@@ -1127,19 +1140,6 @@ uncommon).</para>
               Naturally, this function is only available if you
               selected at least one certificate.
             </para>
-            <warning>
-              <para>
-                There is one exception to the above: When you delete
-                one of your own certificates, you delete the secret
-                key along with it. This implies that you will not be
-                able to read past communication entrypted to you using
-                this certificate, unless you have a backup somewhere.
-              </para>
-              <para>
-                &kleopatra; will warn you when you attempt to delete a
-                secret key.
-              </para>
-            </warning>
           </listitem>
         </varlistentry>
 
