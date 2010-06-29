@@ -209,7 +209,7 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
             ;
 
     const QString fname = FileDialog::getSaveFileNameEx( parentWidgetOrView(),
-                                                         i18n( "Export Public Certificates" ), 
+                                                         i18n( "Export Certificates" ), 
                                                          "imp",
                                                          proposedFileName,
                                                          protocol == GpgME::OpenPGP
