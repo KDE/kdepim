@@ -44,7 +44,8 @@ QDateTimeEdit::up-button,
 QRadioButton,
 QPushButton,
 QSpinBox::down-button,
-QSpinBox::up-button
+QSpinBox::up-button,
+QToolButton
 {
   border-image: url(@STYLE_IMAGE_PATH@/button-border.png) 14 14 14 14 repeat stretch;
   border-top: 10px;
@@ -62,9 +63,34 @@ QDateTimeEdit::up-button:pressed,
 QPushButton:pressed,
 QRadioButton:on,
 QSpinBox::down-button:pressed,
-QSpinBox::up-button:pressed
+QSpinBox::up-button:pressed,
+QToolButton
 {
   border-image: url(@STYLE_IMAGE_PATH@/button-border-active.png) 14 14 14 14 repeat stretch;
+  color: white;
+}
+
+QToolButton
+{
+  min-width: 48px;
+  padding: 1px;
+}
+
+QMenu
+{
+  background-color: white;
+  margin: 2px; /* some spacing around the menu */
+}
+
+QMenu::item
+{
+  padding: 2px 25px 2px 20px;
+  border: 1px solid transparent; /* reserve space for selection border */
+  color: #000001;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+  background-color: #654321;
   color: white;
 }
 
