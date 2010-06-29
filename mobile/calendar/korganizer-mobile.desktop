@@ -15,3 +15,8 @@ Exec=korganizer-mobile.sh
 
 Icon=korganizer-mobile
 Type=Application
+MimeType=text/calendar;
+X-KDE-ServiceTypes=DBUS/Organizer
+X-KDE-StartupNotify=true
+X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.korganizer
