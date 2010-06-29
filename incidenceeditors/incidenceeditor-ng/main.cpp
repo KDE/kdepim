@@ -29,7 +29,6 @@
 
 #include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
-#include "eventortododialogng.h"
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;

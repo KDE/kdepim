@@ -40,10 +40,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
-
-  #incidenceeditorgeneralpage.cpp
-  #eventortododialog.cpp
-  eventortododialogng.cpp
+  eventortododialog.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS

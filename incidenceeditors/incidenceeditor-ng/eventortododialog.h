@@ -18,59 +18,51 @@
     02110-1301, USA.
 */
 
-#ifndef EVENTORTODODIALOG_H
-#define EVENTORTODODIALOG_H
+#ifndef EVENTORTODODIALOGNG_H
+#define EVENTORTODODIALOGNG_H
 
 #include <KDialog>
 
 #include "incidenceeditors-ng_export.h"
 
-class KJob;
-
 namespace Akonadi {
 class Item;
-class CollectionComboBox;
 }
+
+class EventOrTodoDialogNGPrivate;
 
 namespace IncidenceEditorsNG {
 
-class EventOrTodoDialogPrivate;
-
-class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialogNG : public KDialog
 {
-  Q_OBJECT;
-  public:
-    EventOrTodoDialog( QWidget *parent = 0 );
-    ~EventOrTodoDialog();
+  Q_OBJECT
+public:
+  EventOrTodoDialogNG();
+  ~EventOrTodoDialogNG();
 
-    /**
-     * Loads the @param item into the dialog.
-     *
-     * To create a new Incidence pass an invalid item with either an
-     * KCal::Event:Ptr or a KCal::Todo:Ptr set as payload.
-     *
-     * When the item has is valid it will fetch the payload when this is not
-     * set.
-     */
-    void load( const Akonadi::Item &item );
+  /**
+   * Loads the @param item into the dialog.
+   *
+   * To create a new Incidence pass an invalid item with either an
+   * KCal::Event:Ptr or a KCal::Todo:Ptr set as payload.
+   *
+   * When the item has is valid it will fetch the payload when this is not
+   * set.
+   */
+  void load( const Akonadi::Item &item );
 
-  protected Q_SLOTS:
-    /** Override default behiavor of KDialog. */
-    void slotButtonClicked( int buttonCode );
+protected Q_SLOTS:
+  virtual void slotButtonClicked( int button );
 
-  private:
-    EventOrTodoDialogPrivate *d_ptr;
-    Q_DECLARE_PRIVATE( EventOrTodoDialog );
-    Q_DISABLE_COPY( EventOrTodoDialog );
+private:
+  EventOrTodoDialogNGPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE( EventOrTodoDialogNG )
+  Q_DISABLE_COPY( EventOrTodoDialogNG )
 
-    Q_PRIVATE_SLOT(d_ptr, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ))
-    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult(KJob*))
-    Q_PRIVATE_SLOT(d_ptr, void modifyFinished(KJob*))
-    Q_PRIVATE_SLOT(d_ptr, void save())
-    Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int))
-    Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
+  Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
 };
 
 }
 
-#endif // EVENTORTODODIALOG_H
+#endif // EVENTORTODODIALOGNG_H

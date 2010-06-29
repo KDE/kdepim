@@ -20,348 +20,298 @@
 
 #include "eventortododialog.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QMessageBox>
-#include <QtGui/QTabWidget>
-
-#include <KLocale>
-#include <KPushButton>
-
+#include <KCal/Incidence>
 #include <KCal/Event>
 #include <KCal/Todo>
+#include <KMessageBox>
 
 #include <Akonadi/CollectionComboBox>
+#include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/Monitor>
-#include <Akonadi/Session>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
-#include "incidenceeditorgeneralpage.h"
-#include "incidenceattachmenteditor.h"
+#include "combinedincidenceeditor.h"
+#include "editoritemmanager.h"
+#include "incidencealarm.h"
+#include "incidenceattachment.h"
+#include "incidencecategories.h"
+#include "incidencecompletionpriority.h"
+#include "incidencedatetime.h"
+#include "incidencedescription.h"
+#include "incidencegeneral.h"
+#include "incidencerecurrence.h"
+#include "incidencesecrecy.h"
+#include "incidenceattendee.h"
+#include "ui_eventortododesktop.h"
 
-using namespace Akonadi;
 using namespace IncidenceEditorsNG;
 
-/// Class EventOrTodoDialogPrivate
-
-namespace IncidenceEditorsNG {
-
-class EventOrTodoDialogPrivate
+class EventOrTodoDialogNGPrivate : public Akonadi::ItemEditorUi
 {
-  EventOrTodoDialog *q;
+  EventOrTodoDialogNG *q_ptr;
+  Q_DECLARE_PUBLIC( EventOrTodoDialogNG )
+
 public:
-
-  Akonadi::Item mItem;
-  Akonadi::Monitor *mMonitor;
-
-  bool mAcceptOnSuccessFullSave;
-
+  Ui::EventOrTodoDesktop *mUi;
   Akonadi::CollectionComboBox *mCalSelector;
-  IncidenceAttachmentEditor *mAttachtmentPage;
-  IncidenceEditorGeneralPage *mGeneralPage;
-  QTabWidget *mTabWidget;
+  bool mCloseOnSave;
+
+  Akonadi::EditorItemManager *mItemManager;
+  CombinedIncidenceEditor *mEditor;
 
 public:
-  EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
+  EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq );
+  ~EventOrTodoDialogNGPrivate();
 
-  void itemFetchResult( KJob *job );
-  void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
-  void modifyFinished( KJob *job );
-  void save();
-  void setupMonitor();
-  void slotButtonClicked( KDialog::ButtonCode button );
-  void updateAttachmentCount( int newCount );
+  /// General methods
   void updateButtonStatus( bool isDirty );
+
+  /// ItemEditorUi methods
+  virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
+  void handleItemSaveFinish();
+  virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
+  virtual bool isDirty() const;
+  virtual bool isValid();
+  virtual void load( const Akonadi::Item &item );
+  virtual Akonadi::Item save( const Akonadi::Item &item );
+  virtual Akonadi::Collection selectedCollection() const;
+  void slotButtonClicked( int button );
+  virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 };
 
+EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq )
+  : q_ptr( qq )
+  , mUi( new Ui::EventOrTodoDesktop )
+  , mCalSelector( new Akonadi::CollectionComboBox )
+  , mCloseOnSave( false )
+  , mItemManager( new Akonadi::EditorItemManager( this ) )
+  , mEditor( new CombinedIncidenceEditor )
+{
+  Q_Q( EventOrTodoDialogNG );
+  mUi->setupUi( q->mainWidget() );
+
+  QGridLayout *layout = new QGridLayout( mUi->mCalSelectorPlaceHolder );
+  layout->setSpacing( 0 );
+  layout->addWidget( mCalSelector );
+
+  mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+
+  // Now instantiate the logic of the dialog. These editors update the ui, validate
+  // fields and load/store incidences in the ui.
+  IncidenceWhatWhere *ieGeneral = new IncidenceWhatWhere( mUi );
+  mEditor->combine( ieGeneral );
+
+  IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
+  mEditor->combine( ieCategories );
+
+  IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
+  mEditor->combine( ieDateTime );
+
+  IncidenceCompletionPriority *ieCompletionPriority = new IncidenceCompletionPriority( mUi );
+  mEditor->combine( ieCompletionPriority );
+
+  IncidenceDescription *ieDescription = new IncidenceDescription( mUi );
+  mEditor->combine( ieDescription );
+
+  IncidenceAlarm *ieAlarm = new IncidenceAlarm( mUi );
+  mEditor->combine( ieAlarm );
+
+  IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
+  mEditor->combine( ieAttachments );
+
+  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( ieDateTime, mUi );
+  mEditor->combine( ieRecurrence );
+
+  IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
+  mEditor->combine( ieSecrecy );
+
+  IncidenceAttendee *ieAttendee= new IncidenceAttendee( mUi );
+  mEditor->combine( ieAttendee );
+
+  q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
+              SLOT(updateButtonStatus(bool)) );
+  q->connect( mItemManager, SIGNAL(itemSaveFinished()),
+              SLOT(handleItemSaveFinish()));
+//  connect( d->mAttachtmentPage, SIGNAL(attachmentCountChanged(int)),
+//           SLOT(updateAttachmentCount(int)) );
 }
 
-EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
-  : q( qq )
-  , mMonitor( 0 )
-  , mAcceptOnSuccessFullSave( false )
-  , mCalSelector( new Akonadi::CollectionComboBox( q->mainWidget() ) )
-  , mAttachtmentPage( new IncidenceAttachmentEditor( q->mainWidget() ) )
-  , mGeneralPage( new IncidenceEditorGeneralPage( q->mainWidget() ) )
-  , mTabWidget( new QTabWidget( q->mainWidget() ) )
+EventOrTodoDialogNGPrivate::~EventOrTodoDialogNGPrivate()
 {
-  mGeneralPage->combine( mAttachtmentPage );
+  delete mItemManager;
+  delete mEditor;
 }
 
-void EventOrTodoDialogPrivate::setupMonitor()
+void EventOrTodoDialogNGPrivate::updateButtonStatus( bool isDirty )
 {
-  delete mMonitor;
-  mMonitor = new Akonadi::Monitor;
-  mMonitor->ignoreSession( Akonadi::Session::defaultSession() );
-  mMonitor->itemFetchScope().fetchFullPayload();
-  if ( mItem.isValid() )
-    mMonitor->setItemMonitored( mItem );
-
-  q->connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-              SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-}
-
-
-void EventOrTodoDialogPrivate::itemChanged( const Akonadi::Item &item,
-                                            const QSet<QByteArray> &partIdentifiers )
-{
-  if ( partIdentifiers.contains( QByteArray( "PLD:RFC822" ) ) ) {
-    QPointer<QMessageBox> dlg = new QMessageBox( q ); //krazy:exclude=qclasses
-    dlg->setIcon( QMessageBox::Question );
-    dlg->setInformativeText( i18n( "The incidence has been changed by someone else.\nWhat should be done?" ) );
-    dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
-    dlg->addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
-
-    if ( dlg->exec() == QMessageBox::AcceptRole ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
-      job->fetchScope().fetchFullPayload();
-      job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-
-      Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
-      mItem = item;
-
-      q->enableButton( KDialog::Ok, false );
-      q->enableButton( KDialog::Apply, false );
-      q->load( mItem );
-    } else {
-      mItem.setRevision( item.revision() );
-      save();
-    }
-
-    delete dlg;
-  }
-
-  // Overwrite or not we need to update the revision and the remote id to be able
-  // to store item later on.
-  mItem.setRevision( item.revision() );
-}
-
-void EventOrTodoDialogPrivate::itemFetchResult( KJob *job )
-{
-  Q_ASSERT( job );
-
-  if ( job->error() ) {
-    kDebug() << "ItemFetch failed" << job->errorString();
-    q->reject();
-    return;
-  }
-
-  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-  if ( fetchJob->items().isEmpty() ) {
-    kDebug() << "No items returned by fetch job";
-    q->reject();
-    return;
-  }
-
-  Item item = fetchJob->items().first();
-  if ( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() ) {
-    mItem = item;
-    q->load( item );
-
-    //TODO read-only ATM till we support moving of existing incidences from
-    // one collection to another.
-    mCalSelector->setEnabled( false );
-    mCalSelector->setDefaultCollection( item.parentCollection() );
-    q->show();
-  } else {
-    kDebug() << "Item as invalid payload type";
-    q->reject();
-  }
-}
-
-void EventOrTodoDialogPrivate::modifyFinished( KJob *job )
-{
-  Q_ASSERT( job );
-
-  if ( job->error() ) {
-    kDebug() << "Item modify or create failed:" << job->errorString();
-    return;
-  }
-
-  if ( mAcceptOnSuccessFullSave )
-    q->accept();
-  else if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) ) {
-    mItem = modifyJob->item();
-    mGeneralPage->load( mItem.payload<KCal::Incidence::Ptr>() );
-  } else {
-    ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
-    Q_ASSERT(createJob);
-    mItem = createJob->item();
-    mGeneralPage->load( mItem.payload<KCal::Incidence::Ptr>() );
-  }
-
-  setupMonitor();
-}
-
-
-void EventOrTodoDialogPrivate::save()
-{
-  mGeneralPage->save( mItem.payload<KCal::Incidence::Ptr>() );
-
-  if ( mItem.isValid() ) { // A valid item needs to be modified.
-    ItemModifyJob *modifyJob = new ItemModifyJob( mItem );
-    q->connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
-  } else { // An invalid item needs to be created.
-    if ( mItem.hasPayload<KCal::Event::Ptr>() )
-      mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
-    else
-      mItem.setMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
-
-    ItemCreateJob *createJob =
-      new ItemCreateJob( mItem, mCalSelector->currentCollection() );
-    q->connect( createJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
-
-    //TODO read-only ATM till we support moving of existing incidences from
-    // one collection to another.
-    mCalSelector->setEnabled( false );
-  }
-}
-
-void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
-{
+  Q_Q( EventOrTodoDialogNG );
   q->enableButton( KDialog::Apply, isDirty );
   q->enableButton( KDialog::Ok, isDirty );
 }
 
-void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
+
+bool EventOrTodoDialogNGPrivate::containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const
 {
-  mTabWidget->setTabText( 2,
-    i18nc( "@title:tab event or todo attachments", "A&ttachments (%1)",
-           newCount ) );
+  return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
 }
 
-/// Class EventOrTodoDialog
-
-EventOrTodoDialog::EventOrTodoDialog( QWidget *parent )
-  : KDialog( parent )
-  , d_ptr( new EventOrTodoDialogPrivate( this ) )
+void EventOrTodoDialogNGPrivate::handleItemSaveFinish()
 {
-  Q_D( EventOrTodoDialog );
-  
-  // Calendar selector
-  d->mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  //mCalSelector->setDefaultCollection( KCalPrefs::instance()->defaultCollection() );
+  Q_Q( EventOrTodoDialogNG );
 
-  QLabel *callabel = new QLabel( i18n( "Calendar:" ), mainWidget() );
-  callabel->setBuddy( d->mCalSelector );
+  if ( mCloseOnSave )
+    q->accept();
+  else {
+    const Akonadi::Item item = mItemManager->item();
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload() );
+    Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
+    // Now the item is succesfully saved, reload it in the editor in order to
+    // reset the dirty status of the editor.
+    mEditor->load( item.payload<KCal::Incidence::Ptr>() );
 
-  QHBoxLayout *callayout = new QHBoxLayout;
-  callayout->setSpacing( KDialog::spacingHint() );
-  callayout->addWidget( callabel );
-  callayout->addWidget( d->mCalSelector, 1 );
+    // Set the buttons to a reasonable state as well (ok and apply should be
+    // disabled at this point).
+    q->enableButtonOk( mEditor->isDirty() );
+    q->enableButtonCancel( true );
+    q->enableButtonApply( mEditor->isDirty() );
+  }
+}
 
-  // Tab widget and pages
-  d->mTabWidget->addTab( d->mGeneralPage,
-                      i18nc( "@title:tab general event or todo settings", "&General" ) );
-  d->mTabWidget->addTab( new QWidget(),
-                      i18nc( "@title:tab event or todo attendees", "&Attendees" ) );
-  d->mTabWidget->addTab( d->mAttachtmentPage,
-                      i18nc( "@title:tab event or todo attachments", "A&ttachments (%1)",
-                             d->mAttachtmentPage->attachmentCount() ) );
+bool EventOrTodoDialogNGPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
+{
+  return item.hasPayload() && item.hasPayload<KCal::Incidence::Ptr>()
+    && ( item.hasPayload<KCal::Event::Ptr>() || item.hasPayload<KCal::Todo::Ptr>() );
+}
 
-  // Overall layout of the complete dialog
-  QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
-  layout->setMargin( 0 );
-  layout->setSpacing( 0 );
-  layout->addLayout( callayout );
-  layout->addWidget( d->mTabWidget );
+bool EventOrTodoDialogNGPrivate::isDirty() const
+{
+  return mEditor->isDirty();
+}
 
-  mainWidget()->setLayout( layout );
+bool EventOrTodoDialogNGPrivate::isValid()
+{
+  return mEditor->isValid();
+}
+
+void EventOrTodoDialogNGPrivate::load( const Akonadi::Item &item )
+{
+  Q_ASSERT( hasSupportedPayload( item ) );
+  mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+
+  if ( item.hasPayload<KCal::Event::Ptr>() ) {
+    mCalSelector->setMimeTypeFilter(
+      QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  } else {
+    mCalSelector->setMimeTypeFilter(
+      QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  }
+}
+
+Akonadi::Item EventOrTodoDialogNGPrivate::save( const Akonadi::Item &item )
+{
+  KCal::Event::Ptr event( new KCal::Event );
+  // Make sure that we don't loose uid for existing incidence
+  if ( mEditor->incidence<KCal::Incidence>() )
+    event->setUid( mEditor->incidence<KCal::Incidence>()->uid() );
+  mEditor->save( event );
+
+  Akonadi::Item result = item;
+  result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  result.setPayload<KCal::Event::Ptr>( event );
+  return result;
+}
+
+Akonadi::Collection EventOrTodoDialogNGPrivate::selectedCollection() const
+{
+  return mCalSelector->currentCollection();
+}
+
+void EventOrTodoDialogNGPrivate::reject( RejectReason /*reason*/, const QString &errorMessage )
+{
+  Q_Q( EventOrTodoDialogNG );
+  kDebug() << "Rejecting:" << errorMessage;
+  q->deleteLater();
+}
+
+/// EventOrTodoDialog
+
+EventOrTodoDialogNG::EventOrTodoDialogNG()
+  : d_ptr( new EventOrTodoDialogNGPrivate( this ) )
+{
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
   setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
-  setButtonToolTip( KDialog::Apply,
-                    i18nc( "@info:tooltip", "Save current changes" ) );
-  setButtonToolTip( KDialog::Ok,
-                    i18nc( "@action:button", "Save changes and close dialog" ) );
-  setButtonToolTip( KDialog::Cancel,
-                    i18nc( "@action:button", "Discard changes and close dialog" ) );
+  setButtonToolTip( KDialog::Apply, i18nc( "@info:tooltip", "Save current changes" ) );
+  setButtonToolTip( KDialog::Ok, i18nc( "@action:button", "Save changes and close dialog" ) );
+  setButtonToolTip( KDialog::Cancel, i18nc( "@action:button", "Discard changes and close dialog" ) );
   setDefaultButton( Ok );
   enableButton( Ok, false );
   enableButton( Apply, false );
+
   setModal( false );
   showButtonSeparator( false );
-
-  connect( d->mGeneralPage, SIGNAL(dirtyStatusChanged(bool)),
-           SLOT(updateButtonStatus(bool)) );
-  connect( d->mAttachtmentPage, SIGNAL(attachmentCountChanged(int)),
-           SLOT(updateAttachmentCount(int)) );
 }
 
-EventOrTodoDialog::~EventOrTodoDialog()
+EventOrTodoDialogNG::~EventOrTodoDialogNG()
 {
   delete d_ptr;
 }
 
-void EventOrTodoDialog::load( const Akonadi::Item &item )
+
+void EventOrTodoDialogNG::load( const Akonadi::Item &item )
 {
-  Q_D( EventOrTodoDialog );
+  Q_D( EventOrTodoDialogNG );
+  Q_ASSERT( d->hasSupportedPayload( item ) );
 
-  d->mItem = item;
-  d->setupMonitor();
-
-  if ( !item.isValid() ) {
-    // We're creating a new item
-    Q_ASSERT( item.hasPayload() );
-    Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
-    Q_ASSERT( item.hasPayload<KCal::Event::Ptr>() || item.payload<KCal::Todo::Ptr>() );
-
-    KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
-    setCaption( i18nc( "@title:window",
-                     "New %1", QString( incidence->type() ) ) );
-    d->mGeneralPage->load( incidence );
-    show();
-  } else if ( item.hasPayload() ) {
-
-    if ( item.hasPayload<KCal::Event::Ptr>() ) {
-      d->mCalSelector->setMimeTypeFilter(
-        QStringList() << IncidenceMimeTypeVisitor::eventMimeType() );
-    } else {
-      d->mCalSelector->setMimeTypeFilter(
-        QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
-    }
-
-    KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
-    setCaption( i18nc( "@title:window",
-                     "Edit %1: %2", QString( incidence->type() ), incidence->summary() ) );
-    d->mGeneralPage->load( incidence );
+  if ( item.isValid() ) {
+    d->mItemManager->load( item );
   } else {
-    ItemFetchJob *job = new ItemFetchJob( item, this );
-    job->fetchScope().fetchFullPayload();
-    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-
-    connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
-    return;
+    d->mEditor->load( item.payload<KCal::Incidence::Ptr>() );
   }
 
-  if ( item.hasPayload<KCal::Event::Ptr>() )
+  if ( item.hasPayload<KCal::Event::Ptr>() ) {
     d->mCalSelector->setMimeTypeFilter(
-      QStringList() << IncidenceMimeTypeVisitor::eventMimeType() );
-  else
+      QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  } else {
     d->mCalSelector->setMimeTypeFilter(
-      QStringList() << IncidenceMimeTypeVisitor::todoMimeType() );
+      QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  }
 }
 
-void EventOrTodoDialog::slotButtonClicked( int button )
+void EventOrTodoDialogNG::slotButtonClicked( int button )
 {
-  Q_D( EventOrTodoDialog );
+  Q_D( EventOrTodoDialogNG );
 
-  switch ( button ) {
-  case KDialog::Apply:
-    d->save();
-    break;
+  switch( button ) {
   case KDialog::Ok:
-    d->mAcceptOnSuccessFullSave = true;
-    d->save();
+  {
+    enableButtonOk( false );
+    enableButtonCancel( false );
+    enableButtonApply( false );
+    d->mCloseOnSave = true;
+    d->mItemManager->save();
+    KDialog::accept();
+    break;
+  }
+  case KDialog::Apply:
+  {
+    d->mCloseOnSave = false;
+    d->mItemManager->save();
+    break;
+  }
+  case KDialog::Cancel:
+    if ( d->mEditor->isDirty() &&
+         KMessageBox::questionYesNo( this, i18nc( "@info", "Do you really want to cancel?" ),
+                 i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
+      KDialog::reject(); // Discard current changes
+    } else if ( !d->mEditor->isDirty() )
+      KDialog::reject(); // No pending changes, just close the dialog.
+    // else { // the user wasn't finished editting after all }
     break;
   default:
-    KDialog::slotButtonClicked( button );
+    Q_ASSERT( false ); // Shouldn't happen
+    break;
   }
 }
 
-
-#include "moc_eventortododialog.cpp"
+#include "eventortododialog.moc"
