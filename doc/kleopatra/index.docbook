@@ -9,6 +9,9 @@
   <!ENTITY package "kdepim">
   <!ENTITY ldap "<acronym>LDAP</acronym>">
   <!ENTITY smime "<acronym>S/MIME</acronym>">
+  <!ENTITY openpgp "<acronym>OpenPGP</acronym>">
+  <!ENTITY ascii "<acronym>ASCII</acronym>">
+  <!ENTITY der "<acronym>DER</acronym>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 
@@ -346,94 +349,259 @@ mails.</para>
 generation</quote>, since all keys are created locally. &kleopatra;
 (and &gpgsm;) do not support <quote>centralized key generation</quote>
 directly, but you can import the public/secret key bundle that you
-receive from the &ca; in PKCS#12 format via <menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice>.</para>
+receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certificates"/>.</para>
 </listitem>
 </varlistentry>
-<!-- missing menu item
-<varlistentry>
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>I</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Lookup Certificates on Server</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+
+        <varlistentry id="file-lookup-certificates">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>I</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Lookup Certificates on Server...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Searches for, and imports, certificates from
+              certificate servers into the local keybox.</action> See
+              <xref linkend="functions-search"/> for details.
+            </para>
+            <para>
+              You need to have key servers configured for this to
+              work. See
+              <xref linkend="configuration-directory-services"/> for
+              more details.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-import-certificates">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;<keycap>I</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Import Certificates...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Imports certificates and/or secret keys from
+              files into the local keybox.</action> See
+              <xref linkend="functions-search"/> for details.
+            </para>
+            <para>
+              The format of the certificate file must be supported by
+              &gpgsm;/&gpg;. Please refer to the &gpgsm; and &gpg;
+              manuals for a list of supported formats.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-export-certificates">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Export Certificates...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Exports the selected certificates to a
+              file.</action>
+            </para>
+            <para>
+              The filename extension you choose for the export file
+              name determines the format of the export file:
+            </para>
+            <itemizedlist>
+              <listitem>
+                <para>
+                  For OpenPGP certificates,
+                  <filename class="extension">gpg</filename> and
+                  <filename class="extension">pgp</filename> will result
+                  in a binary file, whereas
+                  <filename class="extension">asc</filename> will result
+                  in an &ascii;-armored file.
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  For &smime; certificates,
+                  <filename class="extension">der</filename> will result
+                  in a binary, &der;-encoded file, whereas
+                  <filename class="extension">pem</filename> will result
+                  in an &ascii;-armored file.
+                </para>
+              </listitem>
+            </itemizedlist>
+            <para>
+              Unless multiple certificates are selected, &kleopatra;
+              will propose
+              <filename><replaceable>fingerprint</replaceable>.{asc,pem}</filename>
+              as the export file name.
+            </para>
+            <para>
+              This function is only available when one or more
+              certificates have been selected.
+            </para>
+            <note>
+              <para>
+                This function exports only the public keys, even if
+                the secret key is available. Use
+                <xref linkend="file-export-secret-key"/> to export
+                both public and secret keys into a file, but note that
+                this is almost always a bad idea.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-export-secret-key">
+          <term>
+            <menuchoice>
+              <guimenu>File</guimenu><guimenuitem>Export Secret Key...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Exports both the public and the secret key to a
+              file.</action>
+            </para>
+            <para>
+              In the dialog that opens, you can choose an
+              <guilabel>Output file</guilabel> name, and whether to
+              create a binary or an &ascii;-armored export file
+              (<guilabel>ASCII armor</guilabel>). When exporting
+              &smime; secret keys, you can also choose the
+              <guilabel>Passphrase charset</guilabel>. See the
+              discussion of the
+              <option>--p12-charset&nbsp;<replaceable>charset</replaceable></option>
+              option in the &gpgsm; manual for more details.
+            </para>
+            <para>
+              This function is only available when exactly one
+              certificate has been selected, and the secret key for
+              that certificate is available.
+            </para>
+            <warning>
+              <para>
+                It should rarely be necessary to use this function,
+                and if it is, it should be carefully planned. Planning
+                the migration of a secret key involves choice of
+                transport media and secure deletion of the key data on
+                the old machine, as well as on the transport medium,
+                among other things.
+              </para>
+            </warning>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>E</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Export Certificates to Server...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Publish the selected certificates on a
+              keyserver</action> (&openpgp; only).
+            </para>
+            <para>
+              The certificate is sent to the certificate server
+              configured for &openpgp;
+              (cf.&nbsp;<xref linkend="configuration-directory-services"/>),
+              if that is set, otherwise to
+              <systemitem class="systemname">keys.gnupg.net</systemitem>.
+            </para>
+            <para>
+              This function is only available if at least one
+              &openpgp; (and no &smime;) certificates have been
+              selected.
+            </para>
+            <note>
+              <!-- also appears in message box in -->
+              <!-- commands/exportopenpgpcertificatestoserver.cpp -->
+              <para>
+                When OpenPGP certificates have been exported to a
+                public directory server, it is nearly impossible to
+                remove them again. Before exporting your certificate
+                to a public directory server, make sure that you have
+                created a revocation certificate so you can revoke the
+                certificate if needed later.
+              </para>
+            </note>
+            <note>
+              <para>
+                Most public &openpgp; certificate servers synchronize
+                certificates amongst each other, so there is little
+                point in sending to more than one.
+              </para>
+              <para>
+                It can happen that a search on a certificate server
+                turns up no results even though you just have sent
+                your certificate there. This is because most public
+                keyserver addresses use <acronym>DNS</acronym>
+                round-robin to balance the load over multiple
+                machines. These machines synchronize with each other,
+                but usually only every 24 hours or so.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>File</guimenu><guimenuitem>Decrypt/Verify Files...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Decrypts files and/or verifies
+              signatures</action> over files.
+            </para>
+<!--
+            <para>
+              See <xref linkend="function-decrypt-verify-files"/> for details.
+            </para>
 -->
-<varlistentry id="file-import-certificates">
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>I</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Import Certificates...</guimenuitem></menuchoice></term>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Imports certificates and/or secret keys from files into
-the local keybox.</action></para>
-
-<para>The format of the certificate file must be supported by
-&gpgsm;. Please refer to the &gpgsm; manual for a list of supported
-formats.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry id="file-export-certificates">
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Export Certificates...</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Exports the selected certificates</action> into a file.</para>
-
-<note><para>This exports only the public keys, even if the
-secret key is available. Use <menuchoice><guimenu>File</guimenu><guimenuitem>Export 
-Secret Key...</guimenuitem></menuchoice> to export both
-public and secret keys into a file, but note that this is almost
-always a bad idea.</para></note>
-</listitem>
-</varlistentry>
-
-
-<varlistentry id="file-export-secret-key">
-<term><menuchoice><guimenu>File</guimenu><guimenuitem>Export Secret Key...</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Exports both the public and the secret key to a
-(PKCS#12) file.</action></para>
-
-<warning><para>It should rarely be necessary to use this function, and
-if it is, it should be carefully planned. Planning the migration of a
-secret key involves choice of transport media and secure deletion of
-the key data on the old machine, as well as the transport medium,
-among other things.</para></warning>
-</listitem>
-</varlistentry>
-<!--missing menu items
-<varlistentry>
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>E</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Export Certificates to Server...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu><guimenuitem>Decrypt/Verify Files...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu><guimenuitem>Sign/Encrypt Files...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Close...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>File</guimenu><guimenuitem>Sign/Encrypt Files...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Signs and/or encrypts files.</action>
+            </para>
+<!--
+            <para>
+              See <xref linkend="function-sign-encrypt-files"/> for details.
+            </para>
 -->
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Close</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Closes &kleopatra;'s main window.</action> You
+              can restore it from the system tray icon at any time.
+            </para>
+          </listitem>
+        </varlistentry>
+
 <!--not in 4.2
 <varlistentry id="file-import-crls">
 <term><menuchoice><guimenu>File</guimenu><guimenuitem>Import CRLs...</guimenuitem></menuchoice></term>
