@@ -73,8 +73,8 @@
 
 <legalnotice>&GPLNotice;</legalnotice>
 
-<date>2009-02-19</date>
-<releaseinfo>2.0.5</releaseinfo>
+<date>2010-04-27</date>
+<releaseinfo>2.0.14</releaseinfo>
 
 <abstract>
 <para>
@@ -87,9 +87,12 @@
 <keyword>KDE</keyword>
 <keyword>Kapp</keyword>
 <keyword>X509</keyword>
+<keyword>OpenPGP</keyword>
+<keyword>PGP</keyword>
 <keyword>LDAP</keyword>
 <keyword>gpg</keyword>
 <keyword>gpgsm</keyword>
+<keyword>certificate</keyword>
 </keywordset>
 
 </bookinfo>
