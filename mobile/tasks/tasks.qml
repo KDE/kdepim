@@ -67,7 +67,7 @@ KPIM.MainView {
       height: 70
       icon: KDE.locate( "data", "mobileui/edit-button.png" );
       onClicked: {
-        application.editIncidence( parent.item, parent.activeDate );
+        application.editIncidence( parent.item );
         eventView.visible = false;
         agendaView.visible = true;
       }

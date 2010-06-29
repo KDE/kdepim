@@ -33,6 +33,7 @@ public:
 public slots:
     void newTask();
     void setPercentComplete(int row, int percentComplete);
+    void editIncidence( const Akonadi::Item &item );
 };
 
 #endif // MAINVIEW_H

@@ -64,3 +64,11 @@ void MainView::setPercentComplete(int row, int percentComplete)
   const QModelIndex idx = itemModel()->index(row, 0);
   itemModel()->setData(idx, percentComplete, TaskListProxy::PercentComplete);
 }
+
+void MainView::editIncidence( const Akonadi::Item &item )
+{
+  IncidenceView *editor = new IncidenceView;
+  editor->load( item );
+  editor->show();
+}
+
