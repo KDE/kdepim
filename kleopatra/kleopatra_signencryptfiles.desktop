@@ -45,7 +45,7 @@ Name[zh_TW]=Kleopatra 簽署/加密檔案
 Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfilescms;
 
 [Desktop Action kleoencryptsignfiles]
-Name=Encrypt & Sign File
+Name=Sign & Encrypt File
 Name[ar]=تشفير و توقيع الملف
 Name[ca]=Signatura i xifrat de fitxer
 Name[ca@valencia]=Signatura i xifrat de fitxer
