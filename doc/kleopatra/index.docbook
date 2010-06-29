@@ -325,7 +325,7 @@ keybox.</para>
 
 <para>These functions include deleting certificates from the local
 keybox with <xref linkend="certificates-delete"/>, as well 
-as manual handling of CRLs (<xref linkend="certificates-refresh-crls"/>,
+as manual handling of CRLs (<xref linkend="certificates-refresh-x509"/>,
 <xref linkend="crls-clear-crl-cache"/>, <xref linkend="crls-dump-crl-cache"/>).
 </para>
 
@@ -608,34 +608,6 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
             </para>
           </listitem>
         </varlistentry>
-
-<!--not in 4.2
-<varlistentry id="file-import-crls">
-<term><menuchoice><guimenu>File</guimenu><guimenuitem>Import CRLs...</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Lets you manually import CRLs from
-files.</action></para>
-
-<para>Normally, Certificate Revocation Lists (CRLs) are handled
-transparently by the backend, but it can sometimes be useful to
-import a CRL manually into the local CRL cache.</para>
-
-<note><para>For CRL import to work, the
-<application>dirmngr</application> tool must be in the search
-<envar>PATH</envar>. If this menu item is disabled, you should
-contact the system administrator and ask them to install
-<application>dirmngr</application>.</para></note>
-
-<para>You can view the contents of the local CRL cache from the menu
-item <menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache</guimenuitem>
-</menuchoice>. This will display a dialog with
-information about the CRLs in the cache and the fingerprints of the
-certificates in each CRL.
-</para>
-</listitem>
-</varlistentry>
--->
 
 <varlistentry id="file-quit">
 <term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></shortcut>
@@ -1178,27 +1150,119 @@ varlistentry id="certificates-download">
 
 <variablelist>
 
-<varlistentry id="tools-gnupg-log-viewer">
-<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem></menuchoice></term>
+        <varlistentry id="tools-gnupg-log-viewer">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Starts <ulink
+              url="help:/kwatchgnupg/index.html">&kwatchgnupg;</ulink></action>,
+              a tool to present the debug output of GnuPG
+              applications. If signing, encryption, or verification
+              mysteriously stop working, you might find out why by
+              looking at the log.
+            </para>
+            <para>
+              This function is not available on Windows, since the
+              underlying mechanisms are not implemented in the backend
+              on that platform.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Starts <ulink url="help:/kwatchgnupg/index.html">&kwatchgnupg;</ulink></action>, a tool to present the debug output of GnuPG application. If signing, encryption, or verification mysteriously stop working, you might find out why by looking at the log.</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="certificates-refresh-openpgp">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>Refresh OpenPGP Certificates</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Refreshes all &openpgp; certificates</action> by executing
 
-<varlistentry id="certificates-refresh-crls">
-<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Refresh X.509 or OpenPGP Certificates</guimenuitem></menuchoice></term>
+              <programlisting><command>gpg&nbsp;<option>--refresh-keys</option></command></programlisting>
 
-<listitem>
-<para>Refreshing X.509 or OpenPGP certificates implies downloading all certificates
-and CRLs, to check if any of them have been revoked in the meantime.</para>
-<para>This can put a severe strain on your own as well as other
-people's network connections, and can take up to an hour or more to
-complete, depending on your network connection, and the number of
-certificates to check.</para>
-</listitem>
-</varlistentry>
+              After successful completion of the command, your local
+              keystore will reflect the latest changes with respect to
+              validity of &openpgp; certificates.
+            </para>
+            <para>
+              See note under <xref
+              linkend="certificates-refresh-x509"/> for some caveats.
+            </para>
+          </listitem>
+        </varlistentry>
 
+        <varlistentry id="certificates-refresh-x509">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>Refresh X.509 Certificates</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Refreshes all &smime; certificates</action> by executing
+
+              <programlisting><!--
+                --><command>gpgsm&nbsp;<!--
+                  --><option>-k</option>&nbsp;<!--
+                  --><option>--with-validation</option>&nbsp;<!--
+                  --><option>--force-crl-refresh</option>&nbsp;<!--
+                  --><option>--enable-crl-checks</option><!--
+                  --></command></programlisting>
+
+              After successful completion of the command, your local
+              keystore will reflect the latest changes with respect to
+              validity of &smime; certificates.
+            </para>
+            <note>
+              <para>
+                Refreshing X.509 or OpenPGP certificates implies
+                downloading all certificates and CRLs, to check if any
+                of them have been revoked in the meantime.
+              </para>
+              <para>
+                This can put a severe strain on your own as well as
+                other people's network connections, and can take up to
+                an hour or more to complete, depending on your network
+                connection, and the number of certificates to check.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-import-crls">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>Import CRL From File...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Lets you manually import CRLs from
+              files.</action>
+            </para>
+            <para>
+              Normally, Certificate Revocation Lists (CRLs) are
+              handled transparently by the backend, but it can
+              sometimes be useful to import a CRL manually into the
+              local CRL cache.
+            </para>
+            <note>
+              <para>
+                For CRL import to work, the &dirmngr; tool must be in
+                the search <envar>PATH</envar>. If this menu item is
+                disabled, you should contact the system administrator
+                and ask them to install &dirmngr;.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+<!-- no longer provided
 <varlistentry id="crls-clear-crl-cache">
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></term>
 
@@ -1206,7 +1270,7 @@ certificates to check.</para>
 <para><action>Clears the &gpgsm; CRL cache.</action></para>
 
 <para>You probably never need this. You can force a refresh of the CRL
-cache by selecting all certificates and using <xref linkend="certificates-refresh-crls"/> instead.</para>
+cache by selecting all certificates and using <xref linkend="certificates-refresh-x509"/> instead.</para>
 </listitem>
 </varlistentry>
 
@@ -1231,7 +1295,7 @@ cache.</action></para>
 updated.</para>
 </listitem>
 </varlistentry>
-
+-->
 
 </variablelist>
 
