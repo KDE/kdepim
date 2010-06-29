@@ -31,7 +31,6 @@
 
 #include "completionordereditor.h"
 #include "completionordereditor_p.h"
-#include "kdescendantsproxymodel_p.h"
 #include "ldap/ldapclient.h"
 
 #include <akonadi/changerecorder.h>
@@ -49,6 +48,8 @@
 #include <KDE/KLocale>
 #include <KDE/KPushButton>
 #include <KDE/KVBox>
+
+#include <kdescendantsproxymodel.h>
 
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QToolButton>
