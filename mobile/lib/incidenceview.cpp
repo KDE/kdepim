@@ -42,6 +42,8 @@
 #include <incidenceeditors/incidenceeditor-ng/incidencedescription.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencerecurrence.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencesecrecy.h>
+
 
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
@@ -135,6 +137,10 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
 
   Q_ASSERT( mEditorDateTime != 0 );
   editor = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, editorWidget->mUi );
+  editor->load( incidencePtr );
+  mEditor->combine( editor );
+
+  editor = new IncidenceEditorsNG::IncidenceSecrecy( editorWidget->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 

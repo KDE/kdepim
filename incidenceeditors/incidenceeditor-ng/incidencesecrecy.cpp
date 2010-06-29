@@ -20,15 +20,22 @@
 
 #include "incidencesecrecy.h"
 
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_eventortodomoremobile.h"
+#else
 #include "ui_eventortododesktop.h"
+#endif
 
 using namespace IncidenceEditorsNG;
 
+#ifdef KDEPIM_MOBILE_UI
+IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoMore *ui )
+#else
 IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoDesktop *ui )
+#endif
   : mUi( ui )
 {
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
-
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
 }
@@ -49,10 +56,6 @@ void IncidenceSecrecy::load( KCal::Incidence::ConstPtr incidence )
 void IncidenceSecrecy::save( KCal::Incidence::Ptr incidence )
 {
   Q_ASSERT( incidence );
-  incidence->setSummary( mUi->mSummaryEdit->text() );
-  incidence->setLocation( mUi->mLocationEdit->text() );
-
-#ifndef KDEPIM_MOBILE_UI
   switch( mUi->mSecrecyCombo->currentIndex() ) {
   case 1:
     incidence->setSecrecy( KCal::Incidence::SecrecyPrivate );
@@ -63,10 +66,6 @@ void IncidenceSecrecy::save( KCal::Incidence::Ptr incidence )
   default:
     incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
   }
-#else
-  // ###FIXME
-  incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
-#endif
 }
 
 bool IncidenceSecrecy::isDirty() const
