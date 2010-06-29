@@ -126,19 +126,19 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
     virtual ~ItemEditorUi();
 
     /**
-     * Returns wether or not the identifier set contains payload identifiers that
+     * Returns whether or not the identifier set contains payload identifiers that
      * are displayed/editable in the Gui.
      */
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const = 0;
 
     /**
-     * Returns wether or not @param item has a payload type that is supported by
+     * Returns whether or not @param item has a payload type that is supported by
      * the gui.
      */
     virtual bool hasSupportedPayload( const Akonadi::Item &item ) const = 0;
 
     /**
-     * Returns wether or not the values in the ui differ from the original (i.e.
+     * Returns whether or not the values in the ui differ from the original (i.e.
      * either an empty or a loaded item). This method <em>only</em> involves
      * payload fields. I.e. if only the collection in which the item should be
      * stored has changed, this method should return false.
@@ -146,7 +146,7 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
     virtual bool isDirty() const = 0;
 
     /**
-     * Returns wether or not the values in the ui are valid. This method can also
+     * Returns whether or not the values in the ui are valid. This method can also
      * be used to update the ui if necessary. The default implementation returns
      * true, so if the ui doesn't need validation there is no need to reimplement
      * this method.

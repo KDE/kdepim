@@ -306,7 +306,7 @@ bool IncidenceDateTime::isDirty( KCal::Todo::ConstPtr todo ) const
     return true;
   
   if ( mUi->mStartCheck->isChecked() ) {
-    // Use mActiveStartTime. This is the KDateTime::Spec selected on load comming from
+    // Use mActiveStartTime. This is the KDateTime::Spec selected on load coming from
     // the combobox. We use this one as it can slightly differ (e.g. missing
     // country code in the incidence time spec) from the incidence.
     if ( currentStartDateTime() != mInitialStartDT )
@@ -524,7 +524,7 @@ void IncidenceDateTime::save( KCal::Event::Ptr event )
     event->setDtEnd( currentEndDateTime() );
   }
 
-  // Free == Event::Transparant
+  // Free == Event::Transparent
   // Busy == Event::Opaque
   event->setTransparency( mUi->mFreeBusyCheck->isChecked() ? Event::Opaque : Event::Transparent );
 }

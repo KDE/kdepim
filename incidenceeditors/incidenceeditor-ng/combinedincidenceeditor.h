@@ -45,7 +45,7 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
     void combine( IncidenceEditor *other );
     
     /**
-     * Returns wether or not the current values in the editor differ from the
+     * Returns whether or not the current values in the editor differ from the
      * initial values or if one of the combined editors is dirty.
      */
     virtual bool isDirty() const;

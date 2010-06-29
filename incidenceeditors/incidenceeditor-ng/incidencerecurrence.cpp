@@ -315,7 +315,7 @@ void IncidenceRecurrence::addException()
 void IncidenceRecurrence::fillCombos()
 {
   // First fill the weekly combo, but only when it is not empy because it is not
-  // dependend on the start day of the event
+  // depending on the start day of the event
   const KCalendarSystem *calSys = KGlobal::locale()->calendar();
   const int weekStart = KGlobal::locale()->weekStartDay();
   if (mUi->mWeekDayCombo->count() == 0 ) {
@@ -386,7 +386,7 @@ void IncidenceRecurrence::fillCombos()
 void IncidenceRecurrence::handleEndAfterOccurrencesChange( int currentValue )
 {
   mUi->mRecurrenceOccurrencesLabel->setText(
-      i18ncp( "Recurrence ends after n occurences", "occurence", "occurences", currentValue ) );
+      i18ncp( "Recurrence ends after n occurrences", "occurrence", "occurrences", currentValue ) );
 }
 
 void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )

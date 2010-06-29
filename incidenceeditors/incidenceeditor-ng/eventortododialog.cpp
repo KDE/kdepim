@@ -165,7 +165,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish()
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload() );
     Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
-    // Now the item is succesfully saved, reload it in the editor in order to
+    // Now the item is succesfull saved, reload it in the editor in order to
     // reset the dirty status of the editor.
     mEditor->load( item.payload<KCal::Incidence::Ptr>() );
 

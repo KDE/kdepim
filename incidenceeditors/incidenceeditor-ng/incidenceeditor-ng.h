@@ -55,7 +55,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     virtual void save( KCal::Incidence::Ptr incidence ) = 0;
 
     /**
-     * Returns wether or not the current values in the editor differ from the
+     * Returns whether or not the current values in the editor differ from the
      * initial values.
      */
     virtual bool isDirty() const = 0;
@@ -76,7 +76,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 
   signals:
     /**
-     * Signals wether the dirty status of this editor has changed. The new dirty
+     * Signals whether the dirty status of this editor has changed. The new dirty
      * status is passed as argument.
      */
     void dirtyStatusChanged( bool isDirty );

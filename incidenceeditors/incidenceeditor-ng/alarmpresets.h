@@ -33,7 +33,7 @@ namespace IncidenceEditorsNG {
 namespace AlarmPresets {
 
   /**
-   * Returns the availble presets.
+   * Returns the available presets.
    */
   QStringList availablePresets();
 
