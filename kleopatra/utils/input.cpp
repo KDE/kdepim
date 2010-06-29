@@ -91,7 +91,7 @@ namespace {
 
     class ProcessStdOutInput : public InputImplBase {
     public:
-        explicit ProcessStdOutInput( const QString & cmd, const QStringList & args, const QDir & wd );
+        explicit ProcessStdOutInput( const QString & cmd, const QStringList & args, const QDir & wd, const QByteArray & stdin=QByteArray() );
 
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_proc; }
         /* reimp */ unsigned int classification() const { return 0U; } // plain text
@@ -219,20 +219,52 @@ shared_ptr<Input> Input::createFromProcessStdOut( const QString & command, const
     return shared_ptr<Input>( new ProcessStdOutInput( command, args, wd ) );
 }
 
-ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList & args, const QDir & wd )
+shared_ptr<Input> Input::createFromProcessStdOut( const QString & command, const QByteArray & stdin ) {
+    return shared_ptr<Input>( new ProcessStdOutInput( command, QStringList(), QDir::current(), stdin ) );
+}
+
+shared_ptr<Input> Input::createFromProcessStdOut( const QString & command, const QStringList & args, const QByteArray & stdin ) {
+    return shared_ptr<Input>( new ProcessStdOutInput( command, args, QDir::current(), stdin ) );
+}
+
+shared_ptr<Input> Input::createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & wd, const QByteArray & stdin ) {
+    return shared_ptr<Input>( new ProcessStdOutInput( command, args, wd, stdin ) );
+}
+
+namespace {
+    struct Outputter {
+        const QByteArray & data;
+        explicit Outputter( const QByteArray & data ) : data( data ) {}
+    };
+    static QDebug operator<<( QDebug s, const Outputter & o ) {
+        if ( const quint64 size = o.data.size() )
+            s << " << (" << size << "bytes)";
+    }
+}
+
+ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList & args, const QDir & wd, const QByteArray & stdin )
     : InputImplBase(),
       m_command( cmd ),
       m_arguments( args ),
       m_proc( new QProcess )
 {
+    const QIODevice::OpenMode openMode =
+        stdin.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite ;
     qDebug() << "ProcessStdOutInput:" << "\n"
         "cd" << wd.absolutePath() << "\n" <<
-        cmd << args;
+        cmd << args << Outputter( stdin );
     m_proc->setWorkingDirectory( wd.absolutePath() );
-    m_proc->start( cmd, args, QIODevice::ReadOnly );
+    m_proc->start( cmd, args, openMode );
     if ( !m_proc->waitForStarted() )
         throw Exception( gpg_error( GPG_ERR_EIO ),
                          i18n( "Could not start %1 process: %2", cmd, m_proc->errorString() ) );
+
+    if ( !stdin.isEmpty() ) {
+        if ( m_proc->write( stdin ) != stdin.size() )
+            throw Exception( gpg_error( GPG_ERR_EIO ),
+                             i18n( "Failed to write input to %1 process: %2", cmd, m_proc->errorString() ) );
+        m_proc->closeWriteChannel();
+    }
 }
 
 QString ProcessStdOutInput::label() const {
