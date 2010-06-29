@@ -11,7 +11,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   alarmpresets.cpp
   alarmdialog.cpp
   editoritemmanager.cpp # TODO: Move to akonadi libs when finished
-  recurrencepresets.cpp
 
   # Shared incidence editors code
   incidenceeditor.cpp
