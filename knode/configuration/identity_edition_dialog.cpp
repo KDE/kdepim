@@ -158,7 +158,7 @@ void IdentityEditionDialog::saveIntoIdentity( uint uoid ) const
 
   identity.setFullName( mNameEdit->text().trimmed() );
   identity.setOrganization( mOrganisationEdit->text().trimmed() );
-  identity.setPrimaryEmailAddress(( mEmailEdit->text().trimmed() );
+  identity.setPrimaryEmailAddress( mEmailEdit->text().trimmed() );
   identity.setReplyToAddr( mReplytoEdit->text().trimmed() );
   identity.setProperty( "Mail-Copies-To", mMailcopiestoEdit->text().trimmed() );
   identity.setSignature( mSignatureConfigurator->signature() );

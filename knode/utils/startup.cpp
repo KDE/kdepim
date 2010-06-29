@@ -111,7 +111,7 @@ void Startup::convertPre45Identity( KConfigGroup &cg ) const
   // Load the identity from cg
   KPIMIdentities::Identity identity;
   identity.setFullName( cg.readEntry( "Name" ).trimmed() );
-  identity.setPrimaryEmailAddress(( cg.readEntry( "Email" ).trimmed() );
+  identity.setPrimaryEmailAddress( cg.readEntry( "Email" ).trimmed() );
   identity.setOrganization( cg.readEntry( "Org" ).trimmed() );
   identity.setReplyToAddr( cg.readEntry( "Reply-To" ).trimmed() );
   identity.setProperty( "Mail-Copies-To", cg.readEntry( "Mail-Copies-To" ).trimmed() );
