@@ -51,11 +51,15 @@ public:
    */
   void load( const Akonadi::Item &item );
 
+protected Q_SLOTS:
+  virtual void slotButtonClicked( int button );
+
 private:
   EventOrTodoDialogNGPrivate * const d_ptr;
   Q_DECLARE_PRIVATE( EventOrTodoDialogNG )
   Q_DISABLE_COPY( EventOrTodoDialogNG )
 
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
   Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
 };
 

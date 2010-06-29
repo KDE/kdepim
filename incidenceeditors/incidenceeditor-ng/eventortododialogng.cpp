@@ -23,6 +23,7 @@
 #include <KCal/Incidence>
 #include <KCal/Event>
 #include <KCal/Todo>
+#include <KMessageBox>
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/CollectionComboBox>
@@ -53,6 +54,7 @@ class EventOrTodoDialogNGPrivate : public Akonadi::ItemEditorUi
 public:
   Ui::EventOrTodoDesktop *mUi;
   Akonadi::CollectionComboBox *mCalSelector;
+  bool mCloseOnSave;
 
   Akonadi::EditorItemManager *mItemManager;
   CombinedIncidenceEditor *mEditor;
@@ -66,12 +68,14 @@ public:
 
   /// ItemEditorUi methods
   virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
+  void handleItemSaveFinish();
   virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
   virtual bool isDirty() const;
   virtual bool isValid();
   virtual void load( const Akonadi::Item &item );
   virtual Akonadi::Item save( const Akonadi::Item &item );
   virtual Akonadi::Collection selectedCollection() const;
+  void slotButtonClicked( int button );
   virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 };
 
@@ -79,6 +83,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
   : q_ptr( qq )
   , mUi( new Ui::EventOrTodoDesktop )
   , mCalSelector( new Akonadi::CollectionComboBox )
+  , mCloseOnSave( false )
   , mItemManager( new Akonadi::EditorItemManager( this ) )
   , mEditor( new CombinedIncidenceEditor )
 {
@@ -99,7 +104,7 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 #ifndef KDEPIM_MOBILE_UI
   IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
   mEditor->combine( ieCategories );
-#endif  
+#endif
 
   IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
   mEditor->combine( ieDateTime );
@@ -134,7 +139,9 @@ EventOrTodoDialogNGPrivate::EventOrTodoDialogNGPrivate( EventOrTodoDialogNG *qq 
 #endif  
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
-             SLOT(updateButtonStatus(bool)) );
+              SLOT(updateButtonStatus(bool)) );
+  q->connect( mItemManager, SIGNAL(itemSaveFinished()),
+              SLOT(handleItemSaveFinish()));
 //  connect( d->mAttachtmentPage, SIGNAL(attachmentCountChanged(int)),
 //           SLOT(updateAttachmentCount(int)) );
 }
@@ -156,6 +163,19 @@ void EventOrTodoDialogNGPrivate::updateButtonStatus( bool isDirty )
 bool EventOrTodoDialogNGPrivate::containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const
 {
   return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
+}
+
+void EventOrTodoDialogNGPrivate::handleItemSaveFinish()
+{
+  Q_Q( EventOrTodoDialogNG );
+
+  if ( mCloseOnSave )
+    q->accept();
+  else {
+    q->enableButtonOk( mEditor->isDirty() );
+    q->enableButtonCancel( true );
+    q->enableButtonApply( mEditor->isDirty() );
+  }
 }
 
 bool EventOrTodoDialogNGPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
@@ -190,9 +210,10 @@ void EventOrTodoDialogNGPrivate::load( const Akonadi::Item &item )
 
 Akonadi::Item EventOrTodoDialogNGPrivate::save( const Akonadi::Item &item )
 {
-  // TODO: Add support for todos
   KCal::Event::Ptr event( new KCal::Event );
-  event->setUid( mEditor->incidence<KCal::Incidence>()->uid() );
+  // Make sure that we don't loose uid for existing incidence
+  if ( mEditor->incidence<KCal::Incidence>() )
+    event->setUid( mEditor->incidence<KCal::Incidence>()->uid() );
   mEditor->save( event );
 
   Akonadi::Item result = item;
@@ -236,6 +257,7 @@ EventOrTodoDialogNG::~EventOrTodoDialogNG()
   delete d_ptr;
 }
 
+
 void EventOrTodoDialogNG::load( const Akonadi::Item &item )
 {
   Q_D( EventOrTodoDialogNG );
@@ -253,6 +275,42 @@ void EventOrTodoDialogNG::load( const Akonadi::Item &item )
   } else {
     d->mCalSelector->setMimeTypeFilter(
       QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  }
+}
+
+void EventOrTodoDialogNG::slotButtonClicked( int button )
+{
+  Q_D( EventOrTodoDialogNG );
+
+  switch( button ) {
+  case KDialog::Ok:
+  {
+    enableButtonOk( false );
+    enableButtonCancel( false );
+    enableButtonApply( false );
+    d->mCloseOnSave = true;
+    d->mItemManager->save();
+    KDialog::accept();
+    break;
+  }
+  case KDialog::Apply:
+  {
+    d->mCloseOnSave = false;
+    d->mItemManager->save();
+    break;
+  }
+  case KDialog::Cancel:
+    if ( d->mEditor->isDirty() &&
+         KMessageBox::questionYesNo( this, i18nc( "@info", "Do you really want to cancel?" ),
+                 i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
+      KDialog::reject(); // Discard current changes
+    } else if ( !d->mEditor->isDirty() )
+      KDialog::reject(); // No pending changes, just close the dialog.
+    // else { // the user wasn't finished editting after all }
+    break;
+  default:
+    Q_ASSERT( false ); // Shouldn't happen
+    break;
   }
 }
 
