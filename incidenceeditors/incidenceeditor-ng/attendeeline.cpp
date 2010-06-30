@@ -177,36 +177,36 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mStateCombo->setToolTip( i18nc( "@info:tooltip", "Select the attendee participation status" ) );
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
-  //TODO: the icons below aren't exactly correct
+
 #ifdef KDEPIM_MOBILE_UI
-  mStateCombo->addItem( DesktopIcon( "help-about", 48 ),
+  mStateCombo->addItem( DesktopIcon( "task-attention", 48 ),
                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
-  mStateCombo->addItem( DesktopIcon( "dialog-ok-apply", 48 ),
+  mStateCombo->addItem( DesktopIcon( "task-accepted", 48 ),
                          AttendeeData::statusName( AttendeeData::Accepted ) );
-  mStateCombo->addItem( DesktopIcon( "dialog-cancel", 48 ),
+  mStateCombo->addItem( DesktopIcon( "task-reject", 48 ),
                          AttendeeData::statusName( AttendeeData::Declined ) );
-  mStateCombo->addItem( DesktopIcon( "dialog-ok", 48 ),
+  mStateCombo->addItem( DesktopIcon( "task-attempt", 48 ),
                          AttendeeData::statusName( AttendeeData::Tentative ) );
-  mStateCombo->addItem( DesktopIcon( "mail-forward", 48 ),
+  mStateCombo->addItem( DesktopIcon( "task-delegate", 48 ),
                          AttendeeData::statusName( AttendeeData::Delegated ) );
-  mStateCombo->addItem( DesktopIcon( "mail-mark-read", 48 ),
+  mStateCombo->addItem( DesktopIcon( "task-complete", 48 ),
                          AttendeeData::statusName( AttendeeData::Completed ) ),
-  mStateCombo->addItem( DesktopIcon( "help-about", 48 ),
+  mStateCombo->addItem( DesktopIcon( "task-ongoing", 48 ),
                          AttendeeData::statusName( AttendeeData::InProcess ) );
 #else
-  mStateCombo->addItem( SmallIcon( "help-about" ),
+  mStateCombo->addItem( SmallIcon( "task-attention" ),
                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
-  mStateCombo->addItem( SmallIcon( "dialog-ok-apply" ),
+  mStateCombo->addItem( SmallIcon( "task-accepted" ),
                          AttendeeData::statusName( AttendeeData::Accepted ) );
-  mStateCombo->addItem( SmallIcon( "dialog-cancel" ),
+  mStateCombo->addItem( SmallIcon( "task-reject" ),
                          AttendeeData::statusName( AttendeeData::Declined ) );
-  mStateCombo->addItem( SmallIcon( "dialog-ok" ),
+  mStateCombo->addItem( SmallIcon( "task-attempt" ),
                          AttendeeData::statusName( AttendeeData::Tentative ) );
-  mStateCombo->addItem( SmallIcon( "mail-forward" ),
+  mStateCombo->addItem( SmallIcon( "task-delegate" ),
                          AttendeeData::statusName( AttendeeData::Delegated ) );
-  mStateCombo->addItem( SmallIcon( "mail-mark-read" ),
+  mStateCombo->addItem( SmallIcon( "task-complete" ),
                          AttendeeData::statusName( AttendeeData::Completed ) ),
-  mStateCombo->addItem( SmallIcon( "help-about" ),
+  mStateCombo->addItem( SmallIcon( "task-ongoing" ),
                          AttendeeData::statusName( AttendeeData::InProcess ) );
 #endif
 
