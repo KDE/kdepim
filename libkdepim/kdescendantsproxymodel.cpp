@@ -155,6 +155,7 @@ class KDescendantsProxyModelPrivate
   void sourceLayoutAboutToBeChanged();
   void sourceLayoutChanged();
   void sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+  void sourceModelDestroyed();
 
   QPersistentModelIndex m_rootDescendIndex;
   // Hmm, if I make this QHash<QPersistentModelIndex, int> instead then moves are
@@ -200,6 +201,14 @@ KDescendantsProxyModel::~KDescendantsProxyModel()
   Q_D(KDescendantsProxyModel);
   d->m_descendantsCount.clear();
   delete d_ptr;
+}
+
+QVariant KDescendantsProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (!sourceModel() || columnCount() <= section)
+    return QVariant();
+
+  return QAbstractProxyModel::headerData(section, orientation, role);
 }
 
 QModelIndex KDescendantsProxyModelPrivate::findSourceIndexForRow( int row, QModelIndex idx ) const
@@ -492,6 +501,7 @@ void KDescendantsProxyModelPrivate::sourceRowsAboutToBeMoved(const QModelIndex &
   int d = descendedRow(destParent);
 
   bool allowMove = q->beginMoveRows(QModelIndex(), c+1+start, c+1+end, QModelIndex(), d+1+destRow);
+  Q_UNUSED(allowMove);
   Q_ASSERT(allowMove);
 }
 
@@ -746,6 +756,8 @@ QModelIndex KDescendantsProxyModel::parent(const QModelIndex& proxyIndex) const
 
 int KDescendantsProxyModel::columnCount(const QModelIndex &index) const
 {
+  Q_UNUSED( index );
+
   if (!sourceModel())
     return 0;
 
@@ -908,6 +920,11 @@ Qt::DropActions KDescendantsProxyModel::supportedDropActions() const
 {
   Q_ASSERT(sourceModel());
   return sourceModel()->supportedDropActions();
+}
+
+void KDescendantsProxyModelPrivate::sourceModelDestroyed()
+{
+
 }
 
 #include "moc_kdescendantsproxymodel_p.cpp"
