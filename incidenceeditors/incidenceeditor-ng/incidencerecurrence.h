@@ -23,6 +23,8 @@
 
 #include "incidenceeditor-ng.h"
 
+#include <KLocale>
+
 namespace Ui {
 class EventOrTodoDesktop;
 class EventOrTodoMore;
@@ -57,6 +59,7 @@ private Q_SLOTS:
     void updateRemoveExceptionButton();
 
 private:
+    KLocalizedString subsOrdinal (const KLocalizedString &text, int number) const;
     /**
      * Return the day in the month/year on which the event recurs, starting at the
      * beginning/end. Both return a positive number.
@@ -72,6 +75,8 @@ private:
     short monthWeekFromStart() const;
     short monthWeekFromEnd() const;
 
+    /** DO NOT USE THIS METHOD DIRECTLY
+        use subsOrdinal() instead for i18n * */
     QString numberToString( int number ) const;
     void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
     void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );

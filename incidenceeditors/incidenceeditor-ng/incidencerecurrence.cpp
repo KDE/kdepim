@@ -100,6 +100,26 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
            SLOT(checkDirtyStatus()) );
 }
 
+// this method must be at the top of this file in order to ensure
+// that its message to translators appears before any usages of this method.
+KLocalizedString IncidenceRecurrence::subsOrdinal ( const KLocalizedString &text, int number ) const
+{
+    QString q = i18nc( "In several of the messages below, "
+                      "an ordinal number is substituted into the message. "
+                      "Translate this as \"0\" if English ordinal suffixes "
+                      "should be added (1st, 22nd, 123rd); "
+                      "translate this as \"1\" if just the number itself "
+                      "should be substituted (1, 22, 123).",
+                      "0" );
+    if ( q == "0" ) {
+        QString ordinal;
+        ordinal = numberToString( number );
+        return text.subs( ordinal );
+    } else {
+        return text.subs( number );
+    }
+}
+
 void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
 {
   Q_ASSERT( incidence );
@@ -338,19 +358,21 @@ void IncidenceRecurrence::fillCombos()
   const int currentMonthlyIndex = mUi->mMonthlyCombo->currentIndex();
   mUi->mMonthlyCombo->clear();
   const QDate startDate = mDateTime->startDate();
-  QString item = "the " + numberToString( dayOfMonthFromStart() );
+  QString item = subsOrdinal( ki18nc( "example: the 30th", "the %1" ), dayOfMonthFromStart() ).toString();
   mUi->mMonthlyCombo->addItem( item );
 
-  item = "the " + numberToString( dayOfMonthFromEnd() ) + " last day";
+  item = subsOrdinal( ki18nc( "example: the 4th to last day", "the %1 to last day" ), dayOfMonthFromEnd() ).toString();
   mUi->mMonthlyCombo->addItem( item );
 
-  item = "the " + numberToString( monthWeekFromStart() ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+  item = subsOrdinal( ki18nc( "example: the 5th Wednesday", "the %1 %2" ), monthWeekFromStart()
+                    ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   mUi->mMonthlyCombo->addItem( item );
 
   if ( monthWeekFromEnd() == 1 )
-    item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+    item = ki18nc( "example: the last Wednesday", "the last %1" ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   else
-    item = "the " + numberToString( monthWeekFromEnd() ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+    item = subsOrdinal( ki18nc( "example: the 5th to last Wednesday", "the %1 to last %2" ), monthWeekFromEnd()
+                      ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
   mUi->mMonthlyCombo->addItem( item );
   mUi->mMonthlyCombo->setCurrentIndex( currentMonthlyIndex == -1 ? 0 : currentMonthlyIndex );
 
@@ -363,22 +385,33 @@ void IncidenceRecurrence::fillCombos()
   const int currentYearlyIndex = mUi->mYearlyCombo->currentIndex();
   mUi->mYearlyCombo->clear();
   const QString longMonthName = calSys->monthName( startDate );
-  item = "the " + numberToString( startDate.day() ) + " of " + longMonthName;
+  item = subsOrdinal( ki18nc( "example: the 5th of June", "the %1 of %2" ), startDate.day() ).subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
-  item = "the " + numberToString( startDate.daysInMonth() - startDate.day() ) + " last day of " + longMonthName;
+  item = subsOrdinal( ki18nc( "example: the 3rd to last day of June", "the %1 to last day of %2"),
+                      startDate.daysInMonth() - startDate.day()
+                    ).subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
-  item = "the " + numberToString( monthWeekFromStart() ) + ' ' + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
+  item = subsOrdinal( ki18nc( "example: the 4th Wednesday of June", "the %1 %2 of %3" ),
+                      monthWeekFromStart()
+                    ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+                     .subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
   if ( monthWeekFromEnd() == 1 )
-    item = "the last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
+    item = ki18nc( "example: the last Wednesday of June", "the last %1 of %2" )
+                 .subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+                 .subs( longMonthName ).toString();
   else
-    item = "the " + numberToString( monthWeekFromEnd() ) + " last " + calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + " of " + longMonthName;
+    item = subsOrdinal( ki18nc( "example: the 4th to last Wednesday of June", "the %1 to last %2 of %3 " ),
+                        monthWeekFromEnd()
+                      ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+                       .subs( longMonthName ).toString();
   mUi->mYearlyCombo->addItem( item );
 
-  item = "the " + numberToString( startDate.dayOfYear() ) + " day of the year";
+  item = subsOrdinal( ki18nc( "example: the 15th day of the year", "the %1 day of the year" ),
+                      startDate.dayOfYear() ).toString();
   mUi->mYearlyCombo->addItem( item );
   mUi->mYearlyCombo->setCurrentIndex( currentYearlyIndex == -1 ? 0 : currentYearlyIndex );
 }
@@ -406,23 +439,35 @@ void IncidenceRecurrence::handleFrequencyChange()
 void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
 {
   toggleRecurrenceWidgets( currentIndex > 0 );
-  QString text;
+  QString labelFreq;
+  QString freqKey;
+  int frequency = mUi->mFrequencyEdit->value();
   switch ( currentIndex ) {
   case 2:
-    text = i18ncp( "Event recurs every n week(s)", "week", "weeks", mUi->mFrequencyEdit->value() );
+    labelFreq = i18ncp( "repeat every N >weeks<", "week", "weeks", frequency );
+    freqKey = 'w';
     break;
   case 3:
-    text = i18ncp( "Event recurs every n month(s)", "month", "months", mUi->mFrequencyEdit->value() );
+    labelFreq = i18ncp( "repeat every N >months<", "month", "months", frequency );
+    freqKey = 'm';
     break;
   case 4:
-    text = i18ncp( "Event recurs every n year(s)", "year", "years", mUi->mFrequencyEdit->value() );
+    labelFreq = i18ncp( "repeat every N >years<", "year", "years", frequency );
+    freqKey = 'y';
     break;
   default:
-    text = i18ncp( "Event recurs every n day(s)", "day", "days", mUi->mFrequencyEdit->value() );
-    break;
+    labelFreq = i18ncp( "repeat every N >days<", "day", "days", frequency );
+    freqKey = 'd';
   }
 
-  mUi->mRecurrenceRuleLabel->setText( text );
+  QString labelEvery;
+  labelEvery = ki18ncp( "repeat >every< N years/months/...; "
+                        "dynamic context 'type': 'd' days, 'w' weeks, "
+                        "'m' months, 'y' years",
+                        "every", "every" )
+                        .subs(frequency).inContext("type", freqKey).toString();
+  mUi->mFrequencyLabel->setText( labelEvery );
+  mUi->mRecurrenceRuleLabel->setText( labelFreq );
 }
 
 void IncidenceRecurrence::removeExceptions()
