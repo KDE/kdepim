@@ -28,6 +28,8 @@
 #include "messagecomposer/composer.h"
 #include "messagecomposer/messagefactory.h"
 #include "messagecomposer/globalpart.h"
+#include "messagecomposer/messagecomposersettings.h"
+
 #include "messagecomposer/infopart.h"
 #include <messagecomposer/messageinfo.h>
 #include "messagecomposer/textpart.h"
@@ -124,6 +126,10 @@ void MessageFactoryTest::testCreateForward()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
+  ident.setFullName( QLatin1String( "another" ) );
+  ident.setEmailAddr( QLatin1String( "another@another.com" ) );
+  identMan->commit();
 
   MessageFactory factory( msg, 0 );
   factory.setIdentityManager( identMan );
@@ -134,7 +140,8 @@ void MessageFactoryTest::testCreateForward()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( ", " ) + KGlobal::locale()->formatTime( date.time(), true );
 
-  QString fwdMsg = QString::fromLatin1("Content-Type: text/plain\n"
+  QString fwdMsg = QString::fromLatin1("Content-Type: text/plain; charset=\"us-ascii\"\n"
+                      "From: another <another@another.com>\n"
                       "Subject: Fwd: Test Email Subject\n"
                       "Date: %2\n"
                       "User-Agent: %3\n"
@@ -261,8 +268,8 @@ void MessageFactoryTest::testCreateResend()
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
   baseline = baseline.arg( msg->to()->asUnicodeString() ).arg( datetime );
 
-//   kDebug() << baseline.toLatin1();
-//   kDebug() << "instead:" << rdir->encodedContent();
+  kDebug() << baseline.toLatin1();
+  kDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QVERIFY( rdir->subject()->asUnicodeString() == QLatin1String( "Test Email Subject" ) );
@@ -324,6 +331,8 @@ KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
   
   KMime::Message::Ptr message = KMime::Message::Ptr( composer->resultMessages().first() );
   delete composer;
+
+  MessageComposerSettings::self()->setPreferredCharsets( QStringList() << QLatin1String( "us-ascii" ) << QLatin1String( "iso-8859-1" ) << QLatin1String( "utf-8" ) );
 
   return message;
 }

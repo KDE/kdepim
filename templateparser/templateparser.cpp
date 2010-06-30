@@ -48,7 +48,7 @@
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <kshell.h>
-
+#include <kcharsets.h>
 #include <QString>
 #include <QDateTime>
 #include <QRegExp>
@@ -61,6 +61,29 @@
 namespace TemplateParser {
 
 static const int PipeTimeout = 15 * 1000;
+
+QByteArray selectCharset( const QStringList &charsets, const QString &text )
+{
+  foreach( const QString &name, charsets ) {
+    // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
+    // the former knows us-ascii is latin1.
+    QTextCodec *codec = KGlobal::charsets()->codecForName( name );
+    if( !codec ) {
+      kWarning() << "Could not get text codec for charset" << name;
+      continue;
+    }
+    if( codec->canEncode( text ) ) {
+      // Special check for us-ascii (needed because us-ascii is not exactly latin1).
+      if( name == "us-ascii" && !KMime::isUsAscii( text ) ) {
+        continue;
+      }
+      kDebug() << "Chosen charset" << name;
+      return name.toLatin1();
+    }
+  }
+  kDebug() << "No appropriate charset found.";
+  return "utf-8";
+}
 
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
   mMode( amode ), mFolder( 0 ), mIdentity( 0 ),
@@ -90,6 +113,12 @@ void TemplateParser::setIdentityManager( KPIMIdentities::IdentityManager* ident)
 {
   m_identityManager = ident;
 }
+
+void TemplateParser::setCharsets( const QStringList& charsets )
+{
+  m_charsets = charsets;
+}
+
 
 TemplateParser::~TemplateParser()
 {
@@ -990,7 +1019,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
   if ( ac.attachments().empty() || mMode != Forward ) {
     mMsg->contentType()->clear(); // to get rid of old boundary
     mMsg->contentType()->setMimeType( "text/plain" );
-    mMsg->contentType()->setCharset( "utf-8" );
+    mMsg->contentType()->setCharset( selectCharset( m_charsets, body ) );
     mMsg->setBody( body.toUtf8() );
     mMsg->assemble();
   }

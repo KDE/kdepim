@@ -253,6 +253,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
   if ( m_quote ) {
     TemplateParser::TemplateParser parser( msg, (replyAll ? TemplateParser::TemplateParser::ReplyAll : TemplateParser::TemplateParser::Reply ) );
     parser.setIdentityManager( m_identityManager );
+    parser.setCharsets( MessageComposerSettings::self()->preferredCharsets() );
     if ( MessageComposer::MessageComposerSettings::quoteSelectionOnly() ) {
       parser.setSelection( m_selection );
     }
@@ -337,6 +338,7 @@ KMime::Message::Ptr MessageFactory::createForward()
 
   TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::Forward );
   parser.setIdentityManager( m_identityManager );
+  parser.setCharsets( MessageComposerSettings::self()->preferredCharsets() );
   if ( !m_template.isEmpty() )
     parser.process( m_template, m_origMsg );
   else
