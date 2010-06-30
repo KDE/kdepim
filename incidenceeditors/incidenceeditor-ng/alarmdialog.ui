@@ -267,7 +267,10 @@
        <item row="0" column="0">
         <widget class="QLabel" name="mSoundFileLabel">
          <property name="text">
-          <string>&amp;file:</string>
+          <string>Audio File:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
           <cstring>mSoundFile</cstring>
@@ -393,12 +396,15 @@ default email configured in Kmail (Settings menu/Configure Kmail/Identities).</s
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="mEmailTextLabel">
          <property name="text">
-          <string>Message:</string>
+          <string>&amp;Message:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="buddy">
+          <cstring>mEmailText</cstring>
          </property>
         </widget>
        </item>
