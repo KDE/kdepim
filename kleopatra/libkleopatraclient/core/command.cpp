@@ -188,12 +188,12 @@ void Command::cancel() {
 void Command::setOptionValue( const char * name, const QVariant & value, bool critical ) {
     if ( !name || !*name )
         return;
-    const QMutexLocker locker( &d->mutex );
     const Private::Option opt = {
         value,
         true,
         critical
     };
+    const QMutexLocker locker( &d->mutex );
     d->inputs.options[name] = opt;
 }
 
