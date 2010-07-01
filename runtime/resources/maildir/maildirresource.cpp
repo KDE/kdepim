@@ -40,6 +40,7 @@
 #include "libmaildir/maildir.h"
 
 #include <kmime/kmime_message.h>
+#include <akonadi/cachepolicy.h>
 
 using namespace Akonadi;
 using KPIM::Maildir;
@@ -66,8 +67,7 @@ MaildirResource::MaildirResource( const QString &id )
   new SettingsAdaptor( Settings::self() );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
                               Settings::self(), QDBusConnection::ExportAdaptors );
-  connect( this, SIGNAL(reloadConfiguration()), SLOT(ensureSaneConfiguration()) );
-  connect( this, SIGNAL(reloadConfiguration()), SLOT(ensureDirExists()) );
+  connect( this, SIGNAL(reloadConfiguration()), SLOT(configurationChanged()) );
 
   // We need to enable this here, otherwise we neither get the remote ID of the
   // parent collection when a collection changes, nor the full item when an item
@@ -112,8 +112,17 @@ QString MaildirResource::itemMimeType()
   return KMime::Message::mimeType();
 }
 
+void MaildirResource::configurationChanged()
+{
+  Settings::self()->writeConfig();
+  ensureSaneConfiguration();
+  ensureDirExists();
+}
+
+
 void MaildirResource::aboutToQuit()
 {
+  clearCache();
   // The settings may not have been saved if e.g. they have been modified via
   // DBus instead of the config dialog.
   Settings::self()->writeConfig();
@@ -271,6 +280,11 @@ void MaildirResource::retrieveCollections()
     collectionsRetrieved( Collection::List() );
     return;
   }
+  CachePolicy cachePolicy;
+  cachePolicy.setInheritFromParent( false );
+  cachePolicy.setLocalParts( QStringList() << MessagePart::Header );
+  cachePolicy.setSyncOnDemand( true );
+  cachePolicy.setCacheTimeout( 1 );
 
   Collection root;
   root.setParentCollection( Collection::root() );
@@ -278,6 +292,7 @@ void MaildirResource::retrieveCollections()
   root.setName( name() );
   root.setRights( Collection::CanChangeItem | Collection::CanCreateItem | Collection::CanDeleteItem
                 | Collection::CanCreateCollection );
+  root.setCachePolicy( cachePolicy );
   QStringList mimeTypes;
   mimeTypes << Collection::mimeType();
   if ( !Settings::self()->topLevelIsContainer() )
@@ -346,7 +361,7 @@ void MaildirResource::collectionAdded(const Collection & collection, const Colle
 }
 
 void MaildirResource::collectionChanged(const Collection & collection)
-{    
+{
   if ( !ensureSaneConfiguration() ) {
     emit error( i18n("Unusable configuration.") );
     changeProcessed();

@@ -134,11 +134,20 @@ void OutboxQueue::Private::addIfComplete( const Item &item )
     return;
   }
 
-  if( !item.hasAttribute<AddressAttribute>() ||
-      !item.hasAttribute<DispatchModeAttribute>() ||
-      !item.hasAttribute<SentBehaviourAttribute>() ||
-      !item.hasAttribute<TransportAttribute>() ) {
-    kWarning() << "Item" << item.id() << "does not have all required attributes.";
+  if( !item.hasAttribute<AddressAttribute>() ) {
+    kWarning() << "Item" << item.id() << "does not have the required attribute Address.";
+    return;
+  }
+  if( !item.hasAttribute<DispatchModeAttribute>() ) {
+    kWarning() << "Item" << item.id() << "does not have the required attribute DispatchMode.";
+    return;
+  }
+  if( !item.hasAttribute<SentBehaviourAttribute>() ) {
+    kWarning() << "Item" << item.id() << "does not have the required attribute SentBehaviour.";
+    return;
+  }
+  if( !item.hasAttribute<TransportAttribute>() ) {
+    kWarning() << "Item" << item.id() << "does not have the required attribute Transport.";
     return;
   }
 
@@ -290,6 +299,14 @@ void OutboxQueue::Private::localFoldersChanged()
     rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
     connect( rjob, SIGNAL(result(KJob*)), q, SLOT(localFoldersRequestResult(KJob*)) );
     kDebug() << "Requesting outbox folder.";
+    rjob->start();
+  }
+
+  // make sure we have a place to dump the sent mails as well
+  if ( !SpecialMailCollections::self()->hasDefaultCollection( SpecialMailCollections::SentMail ) ) {
+    SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( q );
+    rjob->requestDefaultCollection( SpecialMailCollections::SentMail );
+    kDebug() << "Requesting sent-mail folder";
     rjob->start();
   }
 }
