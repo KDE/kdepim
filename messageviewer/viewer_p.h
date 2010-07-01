@@ -518,7 +518,7 @@ public slots:
   void slotPrintMsg();
 
   void slotSetEncoding();
-  void slotSetTheme();
+  void slotSetTheme(QAction *themeAction);
   void injectAttachments();
   void slotSettingsChanged();
   void slotMimeTreeContextMenuRequested( const QPoint& pos );

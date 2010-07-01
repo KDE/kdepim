@@ -1507,8 +1507,8 @@ void ViewerPrivate::createActions()
   mSelectThemeAction  = new KSelectAction(i18n("&Themes"), this);
   mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
   ac->addAction("view_themes", mSelectThemeAction );
-  connect(mSelectThemeAction,SIGNAL( triggered(int)),
-          SLOT( slotSetTheme() ));
+  connect(mSelectThemeAction,SIGNAL( triggered(QAction*)),
+          SLOT( slotSetTheme(QAction*) ));
 
   foreach(const QString &dirName, themeDirs) {
     KAction* themeAction = new KAction(this);
@@ -1517,10 +1517,9 @@ void ViewerPrivate::createActions()
     KDesktopFile* themeDesktop = new KDesktopFile( themesPath + dirName + "/theme-" + dirName +  ".desktop" );
     
     themeAction->setText( themeDesktop->readName() );
+    themeAction->setData(dirName);
     mSelectThemeAction->addAction(themeAction);
-    connect(themeAction,SIGNAL( triggered(int)),
-          SLOT( slotSetTheme() ));
-  }  
+  }
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -2161,9 +2160,11 @@ void ViewerPrivate::slotSetEncoding()
   update( Viewer::Force );
 }
 
-void ViewerPrivate::slotSetTheme()
+void ViewerPrivate::slotSetTheme(QAction *themeAction)
 {
-  mThemeName = mSelectThemeAction->currentText();
+  mThemeName = themeAction->data().toString();
+  QString userVisibleThemeName = themeAction->text();
+  kDebug() << "The user visible name of the theme is " << userVisibleThemeName << ". And the dirName is " << mThemeName;
   update( Viewer::Force );
 
   if( !mExternalWindow )
