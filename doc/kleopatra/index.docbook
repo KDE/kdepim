@@ -855,7 +855,7 @@ linkend="view-hierarchical-key-list"/> is on.</para>
                 popups from &pinentry; at inopportune times (&eg; when
                 verifying signatures), and can thus block unattended
                 email processing. For that reason, and because it is
-                desireable to be able to <emphasis>distrust</emphasis>
+                desirable to be able to <emphasis>distrust</emphasis>
                 a trusted root certificate again, &kleopatra; allows
                 manual setting of trust.
               </para>
@@ -2082,7 +2082,7 @@ button.</para>
         </para>
         <note>
           <para>
-            The administrator and power user can completly define
+            The administrator and power user can completely define
             which checksum programs to make available to &kleopatra;
             through so-called <quote>Checksum Definitions</quote> in
             the config file. See <xref linkend="admin-checksum-definitions"/>
@@ -2135,7 +2135,7 @@ button.</para>
               </para> 
               <note>
                 <para>
-                  Validation is perfomed implicitly whenever significant
+                  Validation is performed implicitly whenever significant
                   files in <filename>~/.gnupg</filename> change. This
                   option, just like <xref linkend="certificates-refresh-openpgp"/>
                   and <xref linkend="certificates-refresh-x509"/>, therefore only
@@ -2282,7 +2282,7 @@ button.</para>
                   popups from &pinentry; at inopportune times (&eg; when
                   verifying signatures), and can thus block unattended
                   email processing. For that reason, and because it is
-                  desireable to be able to <emphasis>distrust</emphasis>
+                  desirable to be able to <emphasis>distrust</emphasis>
                   a trusted root certificate again, &kleopatra; allows
                   manual setting of trust using
                   <xref linkend="certificates-trust-root"/> and
@@ -3249,7 +3249,7 @@ is-at-least-ownertrust=marginal
               prompt. &kleopatra; does not use a shell to execute the
               command. Therefore, this is a safe way of passing
               filenames, but it might run into command line length
-              restrictons on some platforms.
+              restrictions on some platforms.
 
               A literal <literal>%f</literal>, if present, is replaced
               by the names of the files to archive. Otherwise,
