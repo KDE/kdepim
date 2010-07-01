@@ -7,7 +7,6 @@ configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-m
 configure_file(grantlee_paths.h.cmake ${PROJECT_BINARY_DIR}/grantlee_paths.h)
 
 add_subdirectory(tests)
-add_subdirectory(pics)
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
 
