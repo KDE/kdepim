@@ -2,7 +2,7 @@
     headertheme.h
 
     This file is part of KMail, the KDE mail client.
-    Copyright (c) 2010 
+    Copyright (c) 2010 Ronny Yabar Aizcorbe
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -60,6 +60,9 @@ public:
 
   HeaderTheme();
   virtual ~HeaderTheme();
+
+
+    static HeaderTheme * create();
   //
   // HeaderTheme interface:
   //

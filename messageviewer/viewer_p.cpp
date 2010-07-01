@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
-  Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Copyright (C) 2009 KlarÃ¤lvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
@@ -53,6 +53,7 @@
 #include <KStandardGuiItem>
 #include <KTemporaryFile>
 #include <KToggleAction>
+#include <KDesktopFile>
 
 #include <KIO/NetAccess>
 #include <KABC/Addressee>
@@ -198,6 +199,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mExternalWindow  = ( aParent == mainWindow );
   mSplitterSizes << 180 << 100;
   mPrinting = false;
+  mThemeName = "fancy";
 
   createWidgets();
   createActions();
@@ -911,7 +913,7 @@ void ViewerPrivate::collectionFetchResult( KJob* job )
 {
   if ( job->error() )
     return;
-  
+
   Akonadi::Collection col;
   Q_FOREACH(Akonadi::Collection c, static_cast<Akonadi::CollectionFetchJob*>( job )->collections() ) {
     if ( c == mMessageItem.parentCollection() ) {
@@ -1032,8 +1034,8 @@ void ViewerPrivate::parseContent( KMime::Content *content )
 
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
-    if( decryptMessage() // only proceed if the message has actually been decrypted          
-        && !otp.hasPendingAsyncJobs() // only proceed if no pending async jobs are running:         
+    if( decryptMessage() // only proceed if the message has actually been decrypted
+        && !otp.hasPendingAsyncJobs() // only proceed if no pending async jobs are running:
         && (    (KMMsgFullyEncrypted == encryptionState)     // only proceed if this message is (at least partially) encrypted
             || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
       createDecryptedMessage();
@@ -1487,23 +1489,38 @@ void ViewerPrivate::createActions()
   KToggleAction *raction = 0;
   QActionGroup *group = new QActionGroup( this );
 
-  // Set themes submenu
+  QString themesPath ( KStandardDirs::locate("data","messageviewer/themes/") );
+
+  QDir dirsPath( themesPath );
+  dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks );
+  dirsPath.setSorting( QDir::Name );
+  themeDirNames = dirsPath.entryList();
+  
+  QSet<QString> themeDirs;
+
+  foreach(const QString &dirname, themeDirNames) {
+    QDir dir(dirname);
+    themeDirs.insert(dir.dirName());
+  }
+  
+  // Set themes menu
   mSelectThemeAction  = new KSelectAction(i18n("&Themes"), this);
   mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
   ac->addAction("view_themes", mSelectThemeAction );
   connect(mSelectThemeAction,SIGNAL( triggered(int)),
           SLOT( slotSetTheme() ));
-  QStringList themes;
-  //themes << "Brief" << "Plain" << "Fancy" << "Enterprise";
 
-  // strange behaviour - Working on it
-  m_dirs = KGlobal::dirs()->findDirs("data", "messageviewer/themes/");
-  for( QStringList::Iterator dir = m_dirs.begin(); dir != m_dirs.end(); ++dir ) {
-    themes.append( *dir );
-  } 
-       
-  mSelectThemeAction->setItems( themes );
-  mSelectThemeAction->setCurrentItem( 0 );
+  foreach(const QString &dirName, themeDirs) {
+    KAction* themeAction = new KAction(this);
+
+    //Should write a method instead, just for testing.
+    KDesktopFile* themeDesktop = new KDesktopFile( themesPath + dirName + "/theme-" + dirName +  ".desktop" );
+    
+    themeAction->setText( themeDesktop->readName() );
+    mSelectThemeAction->addAction(themeAction);
+    connect(themeAction,SIGNAL( triggered(int)),
+          SLOT( slotSetTheme() ));
+  }  
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -2232,10 +2249,10 @@ void ViewerPrivate::slotSetEncoding()
 }
 
 void ViewerPrivate::slotSetTheme()
-{  
-  mThemeName = mSelectThemeAction->currentText();
+{
+  mThemeName = NodeHelper::encodingForName( mSelectThemeAction->currentText() );
   update( Viewer::Force );
-  
+
   if( !mExternalWindow )
     writeConfig();
 }

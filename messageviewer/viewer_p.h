@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
-  Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Copyright (C) 2009 KlarÃ¤lvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
@@ -557,7 +557,7 @@ public slots:
   void slotCopySelectedText();
 
   void viewerSelectionChanged();
-  
+
   /** Select message body. */
   void selectAll();
 
@@ -649,7 +649,7 @@ public:
   bool mShowFullCcAddressList;
   Akonadi::Monitor mMonitor;
   QString mAppName;
-  QStringList m_dirs;
+  QStringList themeDirNames;
 
 };
 
