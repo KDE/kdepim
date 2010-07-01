@@ -18,7 +18,7 @@
   </Menu>
   <Menu noMerge="1" name="view">
    <text>&amp;View</text>
-   <Action name="view_headers"/>
+   <Action name="view_themes"/>
    <Action name="view_attachments"/>
    <Separator/>
    <Action name="view_source"/>
