@@ -107,7 +107,8 @@ void SelectCertificateCommand::setSelectedCertificates( const QStringList & cert
 }
 
 QStringList SelectCertificateCommand::selectedCertificates() const {
-    return QString::fromLatin1( receivedData() ).split( QLatin1Char( '\n' ), QString::SkipEmptyParts );
+    const QByteArray data = receivedData();
+    return QString::fromLatin1( data.data(), data.size() ).split( QLatin1Char( '\n' ), QString::SkipEmptyParts );
 }
 
 void SelectCertificateCommand::setSelectedCertificate( const QString & cert ) {
