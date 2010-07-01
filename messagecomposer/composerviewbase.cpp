@@ -1097,7 +1097,7 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
                                KRichTextWidget::SupportAlignment |
                                KRichTextWidget::SupportRuleLine |
                                KRichTextWidget::SupportHyperlinks |
-                               KRichTextWidget::SupportAlignment );
+                               KRichTextWidget::SupportDirection );
   m_editor->enableImageActions();
 
   m_editor->document()->setModified( false );
