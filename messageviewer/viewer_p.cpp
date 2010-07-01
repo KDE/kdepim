@@ -2079,93 +2079,6 @@ void ViewerPrivate::slotMimePartSelected( const QModelIndex &index )
   }
 }
 
-
-void ViewerPrivate::slotCycleHeaderStyles() {
-  const HeaderStrategy * strategy = headerStrategy();
-  const HeaderStyle * style = headerStyle();
-
-  const char * actionName = 0;
-  if ( style == HeaderStyle::enterprise() ) {
-    slotFancyHeaders();
-    actionName = "view_headers_fancy";
-  }
-  if ( style == HeaderStyle::fancy() ) {
-    slotBriefHeaders();
-    actionName = "view_headers_brief";
-  } else if ( style == HeaderStyle::brief() ) {
-    slotStandardHeaders();
-    actionName = "view_headers_standard";
-  } else if ( style == HeaderStyle::plain() ) {
-    if ( strategy == HeaderStrategy::standard() ) {
-      slotLongHeaders();
-      actionName = "view_headers_long";
-    } else if ( strategy == HeaderStrategy::rich() ) {
-      slotAllHeaders();
-      actionName = "view_headers_all";
-    } else if ( strategy == HeaderStrategy::all() ) {
-      slotEnterpriseHeaders();
-      actionName = "view_headers_enterprise";
-    }
-  }
-
-  if ( actionName )
-    static_cast<KToggleAction*>( mActionCollection->action( actionName ) )->setChecked( true );
-}
-
-
-void ViewerPrivate::slotBriefHeaders()
-{
-  setHeaderStyleAndStrategy( HeaderStyle::brief(),
-                             HeaderStrategy::brief() );
-  if( !mExternalWindow )
-    writeConfig();
-}
-
-
-void ViewerPrivate::slotFancyHeaders()
-{
-  setHeaderStyleAndStrategy( HeaderStyle::fancy(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
-}
-
-
-void ViewerPrivate::slotEnterpriseHeaders()
-{
-  setHeaderStyleAndStrategy( HeaderStyle::enterprise(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
-}
-
-
-void ViewerPrivate::slotStandardHeaders()
-{
-  setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::standard());
-  writeConfig();
-}
-
-
-void ViewerPrivate::slotLongHeaders()
-{
-  setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::rich() );
-  if( !mExternalWindow )
-    writeConfig();
-}
-
-
-
-void ViewerPrivate::slotAllHeaders() {
-  setHeaderStyleAndStrategy( HeaderStyle::plain(),
-                             HeaderStrategy::all() );
-  if( !mExternalWindow )
-    writeConfig();
-}
-
-
 void ViewerPrivate::slotCycleAttachmentStrategy()
 {
   setAttachmentStrategy( attachmentStrategy()->next() );
@@ -2250,7 +2163,7 @@ void ViewerPrivate::slotSetEncoding()
 
 void ViewerPrivate::slotSetTheme()
 {
-  mThemeName = NodeHelper::encodingForName( mSelectThemeAction->currentText() );
+  mThemeName = mSelectThemeAction->currentText();
   update( Viewer::Force );
 
   if( !mExternalWindow )
