@@ -46,6 +46,8 @@ Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfiles
 
 [Desktop Action kleoencryptsignfiles]
 Name=Sign & Encrypt File
+Name[pt]=Assinar & Cifrar o Ficheiro
+Name[uk]=Підписування і шифрування файла
 Name[x-test]=xxSign & Encrypt Filexx
 Icon=kleopatra
 Exec=kleopatra --encrypt-sign %F
