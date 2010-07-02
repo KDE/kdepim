@@ -15,7 +15,7 @@ ResourceDump::ResourceDump( const QDir &path, QObject *parent ) :
   m_name = path.dirName();
 }
 
-ResourceDump::ResourceDump( const QDir &path, Akonadi::AgentInstance instance, QObject *parent ) :
+ResourceDump::ResourceDump( const QDir &path, const Akonadi::AgentInstance &instance, QObject *parent ) :
     AbstractDump( path, parent ), m_instance( instance )
 {
   m_name = path.dirName();

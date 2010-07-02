@@ -40,7 +40,7 @@ void AkonadiDump::initializeResources( AbstractDump::Action action )
 {
   if ( action == AbstractDump::action_dump ) {
     AgentManager *mgr = AgentManager::self();
-    foreach ( AgentInstance instance, mgr->instances() ) {
+    foreach ( const AgentInstance &instance, mgr->instances() ) {
       // setup directory for resource
       QString resPath = QString( "%1/%2" ).arg( path().absolutePath() ).arg( instance.identifier() );
       QDir resDir;
@@ -53,7 +53,7 @@ void AkonadiDump::initializeResources( AbstractDump::Action action )
   }
   else if ( action == AbstractDump::action_restore ) {
     QDir dir( path() );
-    foreach ( QString resource, dir.entryList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {
+    foreach ( const QString &resource, dir.entryList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {
       ResourceDump *res = new ResourceDump( QString("%1/%2").arg( dir.absolutePath() ).arg( resource ),
                                             this );
       connect( res, SIGNAL( finished() ), SLOT( resourceRestored() ) );
