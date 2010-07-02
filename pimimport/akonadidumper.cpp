@@ -41,6 +41,10 @@ void AkonadiDump::initializeResources( AbstractDump::Action action )
   if ( action == AbstractDump::action_dump ) {
     AgentManager *mgr = AgentManager::self();
     foreach ( const AgentInstance &instance, mgr->instances() ) {
+      // check if instance is a resource
+      if ( !instance.type().capabilities().contains( "Resource" ) )
+        continue;
+
       // setup directory for resource
       QString resPath = QString( "%1/%2" ).arg( path().absolutePath() ).arg( instance.identifier() );
       QDir resDir;
