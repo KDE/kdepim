@@ -123,12 +123,12 @@ you have to select a blog from the Blogs page before asking for the list of cate
     }
 
     Backend *b = new Backend( mCurrentBlogId );
-    b->getCategoryListFromServer();
     connect( b, SIGNAL( sigCategoryListFetched( int ) ), this, SLOT( sltLoadCategoryListFromDB( int ) ) );
     connect( b, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
-    statusbar->showMessage( i18n( "Requesting list of categories..." ) );
-    this->setCursor( Qt::BusyCursor );
     emit sigBusy( true );
+    statusbar->showMessage( i18n( "Requesting list of categories..." ) );
+    b->getCategoryListFromServer();
+//     this->setCursor( Qt::BusyCursor );
 }
 
 void Toolbox::sltUpdateEntries(int count)
