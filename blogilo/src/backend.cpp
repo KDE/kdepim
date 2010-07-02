@@ -98,8 +98,7 @@ void Backend::getCategoryListFromServer()
     } else {
         char err[] = "Blog API doesn't support getting Category list.";
         kDebug() << err;
-        QString tmp = i18n( err );
-        error( KBlog::Blog::NotSupported, tmp );
+        error( KBlog::Blog::NotSupported, i18n( err ) );
     }
 }
 

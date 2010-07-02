@@ -33,7 +33,7 @@ Constants.
  @author Golnaz Nilieh <g382nilieh@gmail.com>
  */
 
-static const char VERSION[] = "1.0.1";
+static const char VERSION[] = "1.0.2";
 static const char APPNAME[] = "Blogilo";
 #define DATA_DIR KStandardDirs::locateLocal("data", "blogilo/")
 #define CONF_DB QString(DATA_DIR)+QString("/blogilo.db")
