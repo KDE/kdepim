@@ -2,7 +2,7 @@
 #define ABSTRACTDUMP_H
 
 #include <QtCore/QObject>
-#include <QtCore/QString>
+#include <QtCore/QDir>
 
 /**
  Abstract base class for all dumps.
@@ -12,13 +12,13 @@ class AbstractDump : public QObject
   Q_OBJECT
 
   public:
-    AbstractDump( QString path, QObject *parent = 0 );
+    AbstractDump( const QDir &path, QObject *parent = 0 );
     virtual ~AbstractDump();
 
     /**
       Path to the dump.
       */
-    QString path() const;
+    QDir path() const;
 
     /** Enum specifying whether we are dumping or restoring. */
     enum Action {
@@ -38,7 +38,7 @@ class AbstractDump : public QObject
     void finished();
 
   private:
-    QString m_path; // path to the dump
+    QDir m_path; // path to the dump
 };
 
 #endif // ABSTRACTDUMP_H
