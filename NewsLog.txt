@@ -5,7 +5,6 @@ Problems addressed
 
 * Fix crash when composing a message, when compiled with GCC >= 4.4
 * When adding many incidences, don't ask which calendar to put it in, for each incidence
-* Notify the user when merging a calendar file is not possible because there are no calendars
 
 
 Friday, June 25th 2010
