@@ -13,7 +13,7 @@ class ResourceDump : public AbstractDump
 
 public:
   ResourceDump( const QDir &path, QObject *parent = 0 );
-  ResourceDump( const QDir &path, Akonadi::AgentInstance instance, QObject *parent = 0 );
+  ResourceDump( const QDir &path, const Akonadi::AgentInstance &instance, QObject *parent = 0 );
 
   Akonadi::AgentInstance instance() const;
 
