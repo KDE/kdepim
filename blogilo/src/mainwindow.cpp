@@ -41,7 +41,7 @@
 #include "ui_editorsettingsbase.h"
 
 #include <ktabwidget.h>
-#include <ksystemtrayicon.h>
+#include <KStatusNotifierItem>
 #include <kstatusbar.h>
 #include <KToggleAction>
 #include <kactioncollection.h>
@@ -50,16 +50,16 @@
 #include <kmessagebox.h>
 #include <KDE/KLocale>
 #include <QDir>
-#include <QMenu>
 #include <QDockWidget>
 #include <QProgressBar>
 #include <KSelectAction>
 #include <kimagefilepreview.h>
 #include "uploadmediadialog.h"
 #include <QTimer>
+#include <KToolInvocation>
+#include <KMenu>
 
 #define TIMEOUT 5000
-#include <KToolInvocation>
 
 MainWindow::MainWindow()
     : KXmlGuiWindow(), mCurrentBlogId(__currentBlogId)
@@ -380,11 +380,12 @@ void MainWindow::setupSystemTray()
 {
     if( Settings::enableSysTrayIcon()) {
         if ( !systemTray ) {
-            systemTray = new KSystemTrayIcon( this );
-            systemTray->setIcon(this->windowIcon());
-            systemTray->setToolTip( i18n("Blogilo") );
+            systemTray = new KStatusNotifierItem( this );
+            systemTray->setIconByName("blogilo");
+            systemTray->setToolTip( "blogilo", i18n("Blogilo"), i18n("A KDE Blogging Client") );
             systemTray->contextMenu()->addAction( actionCollection()->action("new_post") );
-            systemTray->show();
+            systemTray->setCategory(KStatusNotifierItem::ApplicationStatus);
+            systemTray->setStatus(KStatusNotifierItem::Active);
         }
     } else if( systemTray ) {
         systemTray->deleteLater();
