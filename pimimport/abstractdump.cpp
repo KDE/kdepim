@@ -3,12 +3,10 @@
 #include <QtCore/QDir>
 #include <kdebug.h>
 
-AbstractDump::AbstractDump( QString path, QObject *parent ) :
-    QObject(parent)
+AbstractDump::AbstractDump( const QDir &path, QObject *parent ) :
+    QObject( parent ), m_path( path )
 {
-  QDir dir(path);
-  m_path = dir.absolutePath();
-  if ( !dir.exists() )
+  if ( !m_path.exists() )
     kError() << "AbstractDump::AbstractDump(): path does not exist: " << m_path;
 }
 
@@ -16,7 +14,7 @@ AbstractDump::~AbstractDump()
 {
 }
 
-QString AbstractDump::path() const
+QDir AbstractDump::path() const
 {
   return m_path;
 }

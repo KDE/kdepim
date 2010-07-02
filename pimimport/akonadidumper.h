@@ -10,7 +10,7 @@ class AkonadiDump : public AbstractDump
   Q_OBJECT
 
 public:
-  explicit AkonadiDump( QString path, QObject *parent = 0 );
+  explicit AkonadiDump( const QDir &path, QObject *parent = 0 );
 
 public slots:
   virtual void dump();

@@ -12,8 +12,8 @@ class ResourceDump : public AbstractDump
   Q_OBJECT
 
 public:
-  ResourceDump( QString path, QObject *parent = 0 );
-  ResourceDump( QString path, Akonadi::AgentInstance instance, QObject *parent = 0 );
+  ResourceDump( const QDir &path, QObject *parent = 0 );
+  ResourceDump( const QDir &path, Akonadi::AgentInstance instance, QObject *parent = 0 );
 
   Akonadi::AgentInstance instance() const;
 

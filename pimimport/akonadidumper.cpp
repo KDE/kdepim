@@ -9,7 +9,7 @@
 
 using namespace Akonadi;
 
-AkonadiDump::AkonadiDump( QString path, QObject *parent ) :
+AkonadiDump::AkonadiDump( const QDir &path, QObject *parent ) :
     AbstractDump( path, parent ), m_remainingResources( 0 )
 {
 }
@@ -42,7 +42,7 @@ void AkonadiDump::initializeResources( AbstractDump::Action action )
     AgentManager *mgr = AgentManager::self();
     foreach ( AgentInstance instance, mgr->instances() ) {
       // setup directory for resource
-      QString resPath = QString( "%1/%2" ).arg( path() ).arg( instance.identifier() );
+      QString resPath = QString( "%1/%2" ).arg( path().absolutePath() ).arg( instance.identifier() );
       QDir resDir;
       resDir.mkpath( resPath );
       resDir.setPath( resPath );

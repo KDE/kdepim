@@ -9,16 +9,16 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 
-ResourceDump::ResourceDump( QString path, QObject *parent ) :
+ResourceDump::ResourceDump( const QDir &path, QObject *parent ) :
     AbstractDump( path, parent ), m_instance()
 {
-  m_name = path.split("/").last();
+  m_name = path.dirName();
 }
 
-ResourceDump::ResourceDump( QString path, Akonadi::AgentInstance instance, QObject *parent ) :
+ResourceDump::ResourceDump( const QDir &path, Akonadi::AgentInstance instance, QObject *parent ) :
     AbstractDump( path, parent ), m_instance( instance )
 {
-  m_name = path.split("/").last();
+  m_name = path.dirName();
 }
 
 Akonadi::AgentInstance ResourceDump::instance() const
@@ -39,7 +39,7 @@ void ResourceDump::dump()
   QString configPath = stdDirs.findResource( "config", QString( "%1rc" ).arg( m_instance.identifier() ) );
   if ( !configPath.isEmpty() ) {
     QFile file( configPath );
-    QString configDest = QString( "%1/%2" ).arg( path() ).arg( "resourcerc" );
+    QString configDest = QString( "%1/%2" ).arg( path().absolutePath() ).arg( "resourcerc" );
     if ( !file.copy( configDest ) ) {
       kError() << "ResourceDump::dump(): unable to copy file " << file.fileName()
           << " to " << configDest;
@@ -48,7 +48,8 @@ void ResourceDump::dump()
   }
 
   // write resourece type to info file
-  KConfig config( QString( "%1/%2" ).arg( path() ).arg( "resourceinfo" ), KConfig::SimpleConfig );
+  KConfig config( QString( "%1/%2" ).arg( path().absolutePath() ).arg( "resourceinfo" ),
+                  KConfig::SimpleConfig );
   KConfigGroup cfgGroup( &config, "General" );
   cfgGroup.writeEntry( "type", m_instance.type().identifier() );
   config.sync();
@@ -59,7 +60,8 @@ void ResourceDump::dump()
 void ResourceDump::restore()
 {
   // get resource type from info file
-  KConfig config( QString( "%1/%2" ).arg( path() ).arg( "resourceinfo" ), KConfig::SimpleConfig );
+  KConfig config( QString( "%1/%2" ).arg( path().absolutePath() ).arg( "resourceinfo" ),
+                  KConfig::SimpleConfig );
   KConfigGroup cfgGroup( &config, "General" );
   QString type = cfgGroup.readEntry( "type", QString() );
 
@@ -83,7 +85,7 @@ void ResourceDump::resourceCreated( KJob *job )
 void ResourceDump::restoreResource()
 {
   // copy resource's config file if there is one
-  QFile cfgFile( QString( "%1/%2" ).arg( path() ).arg( "resourcerc" ) );
+  QFile cfgFile( QString( "%1/%2" ).arg( path().absolutePath() ).arg( "resourcerc" ) );
   if ( cfgFile.exists() ) {
     KStandardDirs dirs;
     QString configDir = dirs.saveLocation( "config" );
