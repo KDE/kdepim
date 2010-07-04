@@ -42,6 +42,7 @@
 #include <messagecomposer/textpart.h>
 
 #include <messageviewer/nodehelper.h>
+#include <messagecore/tests/util.h>
 
 #include <messagecore/nodehelper.h>
 
@@ -50,7 +51,7 @@ QTEST_KDEMAIN( SignEncryptTest, GUI )
 
 void SignEncryptTest::testContent() {
 
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );
@@ -108,7 +109,7 @@ void SignEncryptTest::testContent() {
 
 void SignEncryptTest::testHeaders()
 {
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );

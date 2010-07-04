@@ -40,6 +40,7 @@ using namespace Message;
 #include <messagecore/nodehelper.h>
 
 #include <messageviewer/objecttreeparser.h>
+#include <messagecore/tests/util.h>
 #include <messageviewer/nodehelper.h>
 
 
@@ -239,7 +240,7 @@ void ComposerTest::testBCCEncrypt()
   fillComposerData( composer );
   composer->infoPart()->setBcc( QStringList( QString::fromLatin1( "bcc@bcc.org" ) ) );
 
-  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys();
+  std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
 
   QStringList primRecipients;
   primRecipients << QString::fromLocal8Bit( "you@you.you" );
@@ -411,7 +412,7 @@ void ComposerTest::fillComposerData( Composer* composer )
 
 void ComposerTest::fillComposerCryptoData( Composer* composer )
 {
-  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys();
+  std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
 
   kDebug() << "got num of keys:" << keys.size();
   
@@ -432,7 +433,7 @@ bool ComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
   fillComposerData( composer );
   composer->infoPart()->setFrom( QString::fromLatin1( "test@example.com" ) );
 
-  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys( true );
+  std::vector<GpgME::Key> keys = MessageCore::Test::getKeys( true );
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "you@you.you" );
   QList<QPair<QStringList, std::vector<GpgME::Key> > > data;

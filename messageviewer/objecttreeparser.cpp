@@ -208,7 +208,7 @@ void ObjectTreeParser::createAndParseTempNode(  KMime::Content* parentNode, cons
     newNode->contentDescription()->from7BitString( cntDesc );
   }
   mNodeHelper->attachExtraContent( parentNode, newNode );
-  mNodeHelper->linkAsPermanentDecrypted( newNode, parentNode );
+
   ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
   otp.parseObjectTreeInternal( newNode );
   mRawReplyString += otp.rawReplyString();

@@ -24,7 +24,7 @@ target_link_libraries(htmlquotecolorertest
 
 ########### objecttreeparsertest ###############
 
-set(objecttreeparsertest_SRCS objecttreeparsertest.cpp)
+set(objecttreeparsertest_SRCS objecttreeparsertest.cpp ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp )
 add_definitions(-DKMAIL_UNITTESTS=YES)
 kde4_add_unit_test(objecttreeparsertest TESTNAME messageviewer-objecttreeparsertest ${objecttreeparsertest_SRCS})
 target_link_libraries(objecttreeparsertest

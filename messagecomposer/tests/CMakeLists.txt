@@ -6,6 +6,7 @@ include_directories (
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_BINARY_DIR}/messagecomposer
     ${CMAKE_SOURCE_DIR}/messagecomposer
+    ${CMAKE_SOURCE_DIR}/messagecore/tests
 )
 
 # Convenience macro to add messagecomposer unit tests.
@@ -18,7 +19,7 @@ endmacro( add_messagecomposer_test )
 
 
 macro( add_messagecomposer_cryptotest _source )
-  set( _test cryptofunctions.cpp ${_source} )
+  set( _test cryptofunctions.cpp  ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME messagecomposer-${_name} ${_test} )
   target_link_libraries( 
