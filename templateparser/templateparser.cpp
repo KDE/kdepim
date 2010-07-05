@@ -1019,8 +1019,17 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
   if ( ac.attachments().empty() || mMode != Forward ) {
     mMsg->contentType()->clear(); // to get rid of old boundary
     mMsg->contentType()->setMimeType( "text/plain" );
-    mMsg->contentType()->setCharset( selectCharset( m_charsets, body ) );
-    mMsg->setBody( body.toUtf8() );
+    QByteArray charset = selectCharset( m_charsets, body );
+    QByteArray encodedBody;
+    QTextCodec* codec = KGlobal::charsets()->codecForName( charset );
+    if( codec ) {
+      encodedBody = codec->fromUnicode( body );
+    } else {
+      encodedBody = body.toUtf8();
+      charset = "utf-8";
+    }
+    mMsg->contentType()->setCharset( charset );
+    mMsg->setBody( encodedBody );
     mMsg->assemble();
   }
 
