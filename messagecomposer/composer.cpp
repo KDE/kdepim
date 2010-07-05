@@ -492,27 +492,27 @@ QList<KMime::Message::Ptr> Composer::resultMessages() const
   return results;
 }
 
-GlobalPart *Composer::globalPart()
+GlobalPart *Composer::globalPart() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->globalPart;
 }
 
-InfoPart* Composer::infoPart()
+InfoPart* Composer::infoPart() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->infoPart;
 }
 
-TextPart *Composer::textPart()
+TextPart *Composer::textPart() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->textPart;
 }
 
-AttachmentPart::List Composer::attachmentParts()
+AttachmentPart::List Composer::attachmentParts() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->attachmentParts;
 }
 

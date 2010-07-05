@@ -58,10 +58,10 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
 
     QList<KMime::Message::Ptr> resultMessages() const;
 
-    GlobalPart *globalPart();
-    InfoPart *infoPart();
-    TextPart *textPart();
-    KPIM::AttachmentPart::List attachmentParts();
+    GlobalPart *globalPart() const;
+    InfoPart *infoPart() const;
+    TextPart *textPart() const;
+    KPIM::AttachmentPart::List attachmentParts() const;
     void addAttachmentPart( KPIM::AttachmentPart::Ptr part );
     void addAttachmentParts( const KPIM::AttachmentPart::List &parts );
     void removeAttachmentPart( KPIM::AttachmentPart::Ptr part );
