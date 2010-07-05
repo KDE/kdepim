@@ -179,7 +179,8 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
 
 // static
 void MessageBox::auditLog( QWidget * parent, const QString & log, const QString & caption ) {
-    AuditLogViewer * const alv = new AuditLogViewer( log, parent, Qt::WDestructiveClose );
+    AuditLogViewer * const alv = new AuditLogViewer( log, parent );
+    alv->setAttribute( Qt::WA_DeleteOnClose );
     alv->setObjectName( "alv" );
     alv->setCaption( caption );
     alv->show();
