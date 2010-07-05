@@ -26,6 +26,7 @@
 
 #include <akonadi/control.h>
 
+#include <KFileDialog>
 #include <KLocale>
 
 #include <QtGui/QPushButton>
@@ -89,14 +90,17 @@ DebugWidget::DebugWidget( QWidget *parent )
   QPushButton *clearAllButton = new QPushButton( "Clear All Tabs", this );
   QPushButton *clearCurrentButton = new QPushButton( "Clear Current Tab", this );
   QPushButton *clearGeneralButton = new QPushButton( "Clear Information View", this );
+  QPushButton *saveRichtextButton = new QPushButton( "Save as RichText...", this );
 
   buttonLayout->addWidget( clearAllButton );
   buttonLayout->addWidget( clearCurrentButton );
   buttonLayout->addWidget( clearGeneralButton );
+  buttonLayout->addWidget( saveRichtextButton );
 
   connect( clearAllButton, SIGNAL( clicked() ), this, SLOT( clearAllTabs() ) );
   connect( clearCurrentButton, SIGNAL( clicked() ), this, SLOT( clearCurrentTab() ) );
   connect( clearGeneralButton, SIGNAL( clicked() ), mGeneralView, SLOT( clear() ) );
+  connect( saveRichtextButton, SIGNAL( clicked() ), this, SLOT( saveRichText() ) );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
@@ -181,6 +185,24 @@ void DebugWidget::errorEmitted( const QString &componentName, const QString &msg
 void DebugWidget::enableDebugger(bool enable)
 {
   mDebugInterface->setTracer( enable ? QLatin1String( "dbus" ) : QLatin1String( "null" ) );
+}
+
+void DebugWidget::saveRichText()
+{
+  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->currentWidget() );
+  if ( !page )
+    return;
+
+  const QString fileName = KFileDialog::getSaveFileName();
+  if ( fileName.isEmpty() )
+    return;
+
+  QFile file( fileName );
+  if ( !file.open( QIODevice::WriteOnly ) )
+    return;
+
+  file.write( page->toHtml().toUtf8() );
+  file.close();
 }
 
 #include "debugwidget.moc"

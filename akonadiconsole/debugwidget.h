@@ -50,6 +50,7 @@ class DebugWidget : public QWidget
     void tabCloseRequested( int index );
     void clearAllTabs();
     void clearCurrentTab();
+    void saveRichText();
 
   private:
     QTextEdit *mGeneralView;
