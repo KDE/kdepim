@@ -52,6 +52,7 @@ class Message::ComposerPrivate : public JobBasePrivate
       , sign( false )
       , encrypt( false )
       , noCrypto( false )
+      , autoSaving( false )
       , globalPart( 0 )
       , infoPart( 0 )
       , textPart( 0 )
