@@ -251,9 +251,9 @@ QString HeaderTheme::setTheming( const QString &themeName, KMime::Message *messa
 
     if ( !vCardName().isEmpty() )
       data.insert( QLatin1String( "vCardName" ) , vCardName() );
-      
-    //if ( showHeader( "organization" ) && message->headerByType("Organization"))
-      data.insert( QLatin1String( "organization" ) , strToHtml(message->headerByType("Organization")->asUnicodeString()) );
+
+    if ( KMime::Headers::Base *org = message->headerByType("Organization") )
+      data.insert( QLatin1String( "organization" ) , strToHtml(org->asUnicodeString()) );
   //}
 
   // to line
