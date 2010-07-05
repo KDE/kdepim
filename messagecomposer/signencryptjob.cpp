@@ -184,6 +184,8 @@ void SignEncryptJob::process()
   }
 
   kDebug() << "signing and encrypting content:" << content;
+
+  // FIXME: Make this async
   const std::pair<GpgME::SigningResult,GpgME::EncryptionResult> res = job->exec( d->signers, d->encKeys,
                                         content,
                                         false,
