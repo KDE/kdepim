@@ -396,6 +396,18 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
      */
     virtual QString subresourceType( const QString &resource );
 
+    /**
+     * Called when we starting adding a batch of incidences.
+     * So we don't show the same warnings for each incidence.
+     */
+    virtual void beginAddingIncidences();
+
+    /**
+     * Called when we finish adding a batch of incidences.
+     * @see beginAddingIncidences()
+     */
+    virtual void endAddingIncidences();
+
   public slots:
     /**
       (De-)activate a subresource.

@@ -328,6 +328,10 @@ bool CalendarResources::addIncidence( Incidence *incidence )
   if ( !d->mAddingInProgress || d->mLastUsedResource == 0 ) {
     resource = mDestinationPolicy->destination( incidence );
     d->mLastUsedResource = resource;
+
+    if ( resource ) {
+      d->mLastUsedResource->beginAddingIncidences();
+    }
   }
 
   if ( resource ) {
@@ -337,7 +341,6 @@ bool CalendarResources::addIncidence( Incidence *incidence )
          resource->addIncidence( incidence ) ) {
       incidence->registerObserver( this );
       notifyIncidenceAdded( incidence );
-
 
       mResourceMap[ incidence ] = resource;
       setModified( true );
@@ -896,6 +899,11 @@ void CalendarResources::beginAddingIncidences()
 void CalendarResources::endAddingIncidences()
 {
   d->mAddingInProgress = false;
+
+  if ( d->mLastUsedResource ) {
+    d->mLastUsedResource->endAddingIncidences();
+  }
+
   d->mLastUsedResource = 0;
 }
 

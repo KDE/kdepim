@@ -238,4 +238,12 @@ bool ResourceCalendar::subresourceWritable( const QString &resource ) const
   }
 }
 
+void ResourceCalendar::beginAddingIncidences()
+{
+}
+
+void ResourceCalendar::endAddingIncidences()
+{
+}
+
 #include "resourcecalendar.moc"
