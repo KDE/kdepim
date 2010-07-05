@@ -459,9 +459,9 @@ void KeyListController::Private::slotActionTriggered() {
 int KeyListController::Private::toolTipOptions() const
 {
     using namespace Kleo::Formatting;
-    static const int validityFlags = Validity;
-    static const int ownerFlags = Subject|Issuer|UserIDs|SerialNumber;
-    static const int detailsFlags = StorageLocation|ExpiryDates|CertificateType|CertificateUsage|Fingerprint|OwnerTrust;
+    static const int validityFlags = Validity|Issuer|ExpiryDates|CertificateUsage;
+    static const int ownerFlags = Subject|UserIDs|OwnerTrust;
+    static const int detailsFlags = StorageLocation|CertificateType|SerialNumber|Fingerprint;
 
     const TooltipPreferences prefs;
     

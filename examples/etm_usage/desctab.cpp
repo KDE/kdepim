@@ -28,7 +28,7 @@
 #include "entitytreewidget.h"
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/entityrightsfiltermodel.h>
+#include <akonadi_next/entityrightsfiltermodel.h>
 #include <libkdepim/kdescendantsproxymodel_p.h>
 
 #include <akonadi_next/modeltest.h>

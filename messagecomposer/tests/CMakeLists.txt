@@ -5,6 +5,7 @@ include_directories (
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_BINARY_DIR}/messagecomposer
+    ${CMAKE_SOURCE_DIR}/messagecomposer
 )
 
 # Convenience macro to add messagecomposer unit tests.

@@ -253,6 +253,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
   if ( m_quote ) {
     TemplateParser::TemplateParser parser( msg, (replyAll ? TemplateParser::TemplateParser::ReplyAll : TemplateParser::TemplateParser::Reply ) );
     parser.setIdentityManager( m_identityManager );
+    parser.setCharsets( MessageComposerSettings::self()->preferredCharsets() );
     if ( MessageComposer::MessageComposerSettings::quoteSelectionOnly() ) {
       parser.setSelection( m_selection );
     }
@@ -337,6 +338,7 @@ KMime::Message::Ptr MessageFactory::createForward()
 
   TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::Forward );
   parser.setIdentityManager( m_identityManager );
+  parser.setCharsets( MessageComposerSettings::self()->preferredCharsets() );
   if ( !m_template.isEmpty() )
     parser.process( m_template, m_origMsg );
   else
@@ -441,12 +443,12 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   QString strByWayOf = QString::fromLocal8Bit("%1 (by way of %2 <%3>)")
     .arg( m_origMsg->from()->asUnicodeString() )
     .arg( ident.fullName() )
-    .arg( ident.emailAddr() );
+    .arg( ident.primaryEmailAddress() );
 
   // Resent-From: content
   QString strFrom = QString::fromLocal8Bit("%1 <%2>")
     .arg( ident.fullName() )
-    .arg( ident.emailAddr() );
+    .arg( ident.primaryEmailAddress() );
 
   // format the current date to be used in Resent-Date:
   QString newDate = KDateTime::currentLocalDateTime().toString( KDateTime::RFCDateDay );

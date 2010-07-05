@@ -350,7 +350,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   // we first figure out if we need to create multiple messages with different crypto formats
   // if so, we create a composer per format
   // if we aren't signing or encrypting, this just returns a single empty message
-  if( m_neverEncrypt && mSaveIn == MessageSender::SaveInNone ) {
+  if( m_neverEncrypt && mSaveIn != MessageSender::SaveInNone ) {
     Message::Composer* composer = new Message::Composer;
     composer->setNoCrypto( true );
     m_composers.append( composer );

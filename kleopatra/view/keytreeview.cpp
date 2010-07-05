@@ -251,6 +251,14 @@ std::vector<Key> KeyTreeView::selectedKeys() const {
 void KeyTreeView::setHierarchicalView( bool on ) {
     if ( on == m_isHierarchical )
         return;
+    if ( on && !hierarchicalModel() ) {
+        qWarning( "%s: hierarchical view requested, but no hierarchical model set", Q_FUNC_INFO );
+        return;
+    }
+    if ( !on && !flatModel() ) {
+        qWarning( "%s: flat view requested, but no flat model set", Q_FUNC_INFO );
+        return;
+    }
     const std::vector<Key> selectedKeys = m_proxy->keys( m_view->selectionModel()->selectedRows() );
     const Key currentKey = m_proxy->key( m_view->currentIndex() );
 

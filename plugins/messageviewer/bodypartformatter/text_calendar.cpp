@@ -430,7 +430,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         }
 
         // select default identity by default
-        const QString defaultAddr = im->defaultIdentity().emailAddr();
+        const QString defaultAddr = im->defaultIdentity().primaryEmailAddress();
         const int defaultIndex = qMax( 0, possibleAddrs.indexOf( defaultAddr ) );
 
         receiver = KInputDialog::getItem(

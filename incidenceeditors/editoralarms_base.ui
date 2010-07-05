@@ -599,7 +599,7 @@ default email configured in Kmail (Settings menu/Configure Kmail/Identities).</s
         <string>Click this button if you want to create a new reminder using the settings specified below. You can continue to change the settings as needed.</string>
        </property>
        <property name="text">
-        <string>&amp;Add</string>
+        <string comment="Add a new alarm to the alarm list">&amp;Add</string>
        </property>
       </widget>
      </item>

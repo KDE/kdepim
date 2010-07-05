@@ -4,7 +4,9 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_subdirectory(tests)
 
-include_directories( ${Boost_INCLUDE_DIR} )
+include_directories( ${Boost_INCLUDE_DIR} 
+                     ${SOPRANO_INCLUDE_DIR}
+                   )
 
 ########### next target ###############
 

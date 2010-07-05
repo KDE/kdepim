@@ -803,7 +803,7 @@ KNLocalArticle::Ptr KNArticleFactory::newArticle( KNCollection::Ptr col, const Q
 
   //From
   KMime::Headers::From *from=art->from();
-  if ( KPIMUtils::isValidSimpleAddress( id.emailAddr() ) ) {
+  if ( KPIMUtils::isValidSimpleAddress( id.primaryEmailAddress() ) ) {
     from->fromUnicodeString( id.fullEmailAddr(), Locale::defaultCharset() );
   } else {
     KMessageBox::sorry( knGlobals.topWidget,

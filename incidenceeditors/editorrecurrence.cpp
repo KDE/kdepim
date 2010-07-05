@@ -605,7 +605,8 @@ ExceptionsWidget::ExceptionsWidget( QWidget *parent ) : QWidget( parent )
   boxLayout->addWidget( mExceptionDateEdit, 0, 0 );
 
   QPushButton *addExceptionButton =
-    new QPushButton( i18nc( "@action:button", "&Add" ), groupBox );
+    new QPushButton( i18nc( "@action:button Add a new recurrence to the recurrence list", "&Add" ),
+                     groupBox );
   addExceptionButton->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Add this date as an exception "

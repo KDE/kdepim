@@ -472,11 +472,11 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     Q_ASSERT( sourceObject() );
 
     ContactPhotoMemento *photoMemento =
-        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
+        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->findPermanentParentBodyPartMemento( message, "contactphoto" ) );
     if ( !photoMemento ) {
       const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
       photoMemento = new ContactPhotoMemento( email );
-      nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
+      nodeHelper()->setBodyPartMementoForPermanentParent( message, "contactphoto", photoMemento );
       QObject::connect( photoMemento, SIGNAL( update( Viewer::UpdateMode ) ),
                         sourceObject(), SLOT( update( Viewer::UpdateMode ) ) );
     }

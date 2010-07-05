@@ -430,6 +430,7 @@ bool ComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
 
   Composer *composer = new Composer;
   fillComposerData( composer );
+  composer->infoPart()->setFrom( QString::fromLatin1( "test@example.com" ) );
 
   std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys( true );
   QStringList recipients;
@@ -463,8 +464,7 @@ bool ComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
     Q_ASSERT( ComposerTestUtil::verifySignatureAndEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), f ) );
   }
     
-
-  Q_ASSERT( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  Q_ASSERT( message->from()->asUnicodeString() == QString::fromLocal8Bit( "test@example.com" ) );
   Q_ASSERT( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
 
   return true;

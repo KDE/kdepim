@@ -863,5 +863,50 @@ KMime::Message* NodeHelper::messageWithExtraContent( KMime::Content* topLevelNod
   return m;
 }
 
+void NodeHelper::linkAsPermanentDecrypted( KMime::Content* newNode, KMime::Content* origPermanent )
+{
+  mPermanentDecryptedNodeLinks[ newNode ] =  origPermanent;
+}
+
+KMime::Content* NodeHelper::hasPermanentDecrypted( KMime::Content* node ) const
+{
+  if( mPermanentDecryptedNodeLinks.contains( node ) ) {
+    return mPermanentDecryptedNodeLinks[ node ];
+  }
+
+  return 0;
+}
+
+Interface::BodyPartMemento* NodeHelper::findPermanentParentBodyPartMemento( KMime::Content* node, const QByteArray& mementoType ) const
+{
+  // easy case, the node itself has the memento that we want
+  if( bodyPartMemento( node, mementoType ) )
+    return bodyPartMemento( node, mementoType );
+  // not found, but it might still be in the permanent node related to one of the node or parents.
+  KMime::Content* parent = node;
+  while( parent ) {
+    if( mPermanentDecryptedNodeLinks.contains( parent ) ) {
+      return bodyPartMemento( mPermanentDecryptedNodeLinks[ parent ], mementoType );
+    }
+    parent = parent->parent();
+  }
+  return 0;
+}
+
+void NodeHelper::setBodyPartMementoForPermanentParent( KMime::Content* node, const QByteArray& mementoType, Interface::BodyPartMemento* memento )
+{
+  // check to see if we have a related permanent node saved. if we do, it means we're dealing with a temp node
+  //  and saving to that would be lost on the next update of the OTP
+  KMime::Content* parent = node;
+  while( parent ) {
+    if( mPermanentDecryptedNodeLinks.contains( parent ) ) {
+      setBodyPartMemento( mPermanentDecryptedNodeLinks[ parent ], mementoType, memento );
+      return;
+    }
+    parent = parent->parent();
+  }
+  // none found, so act normally and save this to the node itself
+  setBodyPartMemento( node, mementoType, memento );
+}
 
 }
