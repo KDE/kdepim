@@ -78,8 +78,13 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     void setAutoSave( bool isAutoSave );
     bool autoSave() const;
 
+    bool finished() const;
+
   public Q_SLOTS:
     virtual void start();
+
+  protected Q_SLOTS:
+    virtual void slotResult( KJob *job );
 
   private:
     Q_DECLARE_PRIVATE( Composer )

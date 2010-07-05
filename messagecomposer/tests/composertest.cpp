@@ -88,6 +88,23 @@ void ComposerTest::testAttachments()
   }
 }
 
+void ComposerTest::testAutoSave()
+{
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  AttachmentPart::Ptr attachment = AttachmentPart::Ptr( new AttachmentPart );
+  attachment->setData( "abc" );
+  attachment->setMimeType( "x-some/x-type" );
+  composer->addAttachmentPart( attachment );
+
+  // This tests if autosave in crash mode works without invoking an event loop, since using an
+  // event loop in the crash handler would be a pretty bad idea
+  composer->setAutoSave( true );
+  composer->start();
+  QVERIFY( composer->finished() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
+}
+
 void ComposerTest::testSignOpenPGPMime()
 {
   Composer *composer = new Composer;
