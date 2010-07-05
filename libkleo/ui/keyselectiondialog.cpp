@@ -363,10 +363,12 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mTopLayout->setSpacing( spacingHint() );
 
   if ( !text.isEmpty() ) {
+#ifndef KDEPIM_MOBILE_UI
     QLabel* textLabel = new QLabel( text, page );
     textLabel->setWordWrap( true );
     connect( textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager(QString)) );
     mTopLayout->addWidget( textLabel );
+#endif
   }
 
   QHBoxLayout * hlay = new QHBoxLayout();
@@ -386,6 +388,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
+#ifdef KDEPIM_MOBILE_UI
+  lbSearchFor->hide();
+  le->hide();
+#endif
 
   mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page );
   mKeyListView->setObjectName( "mKeyListView" );
@@ -399,12 +405,14 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mTopLayout->addWidget( mKeyListView, 10 );
 
   if ( rememberChoice ) {
+#ifndef KDEPIM_MOBILE_UI
     mRememberCB = new QCheckBox( i18n("&Remember choice"), page );
     mTopLayout->addWidget( mRememberCB );
     mRememberCB->setWhatsThis(
 		     i18n("<qt><p>If you check this box your choice will "
 			  "be stored and you will not be asked again."
 			  "</p></qt>") );
+#endif
   }
 
   connect( mCheckSelectionTimer, SIGNAL(timeout()),
