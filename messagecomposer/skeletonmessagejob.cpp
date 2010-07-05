@@ -213,7 +213,8 @@ KMime::Message *SkeletonMessageJob::message() const
 
 void SkeletonMessageJob::start()
 {
-  QTimer::singleShot( 0, this, SLOT(doStart()) );
+  Q_D( SkeletonMessageJob );
+  d->doStart();
 }
 
 #include "skeletonmessagejob.moc"

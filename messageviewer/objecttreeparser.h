@@ -227,6 +227,22 @@ the current node. Now it finds that memento, since it was created in the first r
 memento's job has finished, and if so, the result can be written out (either the decrypted data or
 the verified signature).
 
+When dealing with encrypted nodes, new nodes are created with the decrypted data. It is important to
+note that the original MIME tree is never modified, and remains the same as the original one. The method
+createAndParseTempNode is called with the newly decrypted data, and it generates a new temporary node to
+store the decrypted data. When these nodes are created, it is important to keep track of them as otherwise
+some mementos that are added to the newly created temporary nodes will be constantly regenerated. As the
+regeneration triggers a viewer update when complete, it results in an infinite refresh loop. The function
+NodeHelper::linkAsPermanentDecrypted will create a link between the newly created node and the original parent.
+Conversely, the function NodeHelper::attachExtraContent will create a link in the other direction, from the parent
+node to the newly created temporary node.
+
+When generating some mementos for nodes that may be temporary nodes (for example, contact photo mementos), the
+function NodeHelper::setBodyPartMementoForPermanentParent is used. This will save the given body part memento for
+the closest found permanent parent node, rather than the transient node itself. Then when checking for the existence
+of a certain memento in a node, NodeHelper::findPermanentParentBodyPartMemento will check to see if any parent of the
+given temporary node is a permanent (encrypted) node that has been used to generate the asked-for node.
+
 To conclude: For async operations, parseObjectTree() is called twice: The first call starts the
 crypto operation and creates the BodyPartMemento, the second calls sees that the BodyPartMemento is
 there and can use its result for writing out the HTML.

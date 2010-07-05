@@ -52,6 +52,7 @@ class Message::ComposerPrivate : public JobBasePrivate
       , sign( false )
       , encrypt( false )
       , noCrypto( false )
+      , autoSaving( false )
       , globalPart( 0 )
       , infoPart( 0 )
       , textPart( 0 )
@@ -309,8 +310,6 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
 
 void ComposerPrivate::contentJobFinished( KJob *job )
 {
-  Q_Q( Composer );
-  
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
   }
@@ -359,9 +358,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     headers = skeletonMessage;
     resultContent = contentJob->content();
   }
-  // manually remove the subjob so we can check if we have any left later
-  q->removeSubjob( job );
-  
+
   if( lateAttachmentParts.isEmpty() ) {
     composeFinalStep( headers, resultContent );
   } else {
@@ -434,9 +431,8 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
   multiJob->start();
 }
 
-void ComposerPrivate::attachmentsFinished( KJob* job ) {
-  Q_Q( Composer );
-
+void ComposerPrivate::attachmentsFinished( KJob* job )
+{
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
   }
@@ -448,15 +444,12 @@ void ComposerPrivate::attachmentsFinished( KJob* job ) {
   KMime::Content* content = contentJob->content();
   KMime::Content* headers = contentJob->extraContent();
 
-  q->removeSubjob( job );
   composeFinalStep( headers, content );
   
 }
 
 void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content* content )
 {
-  Q_Q( Composer );
-
   content->assemble();
 
   QByteArray allData = headers->head() + content->encodedContent();
@@ -464,12 +457,6 @@ void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content*
   resultMessage->setContent( allData );
   resultMessage->parse(); // Not strictly necessary.
   resultMessages.append( resultMessage );
-
-  kDebug() << "still have subjobs:" << q->hasSubjobs() << "num:" << q->subjobs().size();
-  if( !q->hasSubjobs() ) {
-    finished = true;
-    q->emitResult();
-  }
 }
 
 Composer::Composer( QObject *parent )
@@ -492,27 +479,27 @@ QList<KMime::Message::Ptr> Composer::resultMessages() const
   return results;
 }
 
-GlobalPart *Composer::globalPart()
+GlobalPart *Composer::globalPart() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->globalPart;
 }
 
-InfoPart* Composer::infoPart()
+InfoPart* Composer::infoPart() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->infoPart;
 }
 
-TextPart *Composer::textPart()
+TextPart *Composer::textPart() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->textPart;
 }
 
-AttachmentPart::List Composer::attachmentParts()
+AttachmentPart::List Composer::attachmentParts() const
 {
-  Q_D( Composer );
+  Q_D( const Composer );
   return d->attachmentParts;
 }
 
@@ -580,6 +567,13 @@ void Composer::setNoCrypto(bool noCrypto)
   d->noCrypto = noCrypto;
 }
 
+bool Composer::finished() const
+{
+  Q_D( const Composer );
+
+  return d->autoSaving;
+}
+
 bool Composer::autoSave() const
 {
   Q_D( const Composer );
@@ -594,10 +588,21 @@ void Composer::setAutoSave(bool isAutoSave)
   d->autoSaving = isAutoSave;
 }
 
-    
 void Composer::start()
 {
-  QTimer::singleShot( 0, this, SLOT(doStart()) );
+  Q_D( Composer );
+  d->doStart();
+}
+
+void Composer::slotResult( KJob *job )
+{
+  Q_D( Composer );
+  JobBase::slotResult( job );
+
+  if ( !hasSubjobs() ) {
+    d->finished = true;
+    emitResult();
+  }
 }
 
 #include "composer.moc"

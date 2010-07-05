@@ -26,6 +26,7 @@
 #include <akonadi/item.h>
 
 #include "qtest_kde.h"
+#include <messagecore/tests/util.h>
 
 using namespace MessageViewer;
 
@@ -55,24 +56,6 @@ class TestCSSHelper : public MessageViewer::CSSHelper {
     QString quoteFontTag( int ) const { return QString::fromAscii( "<" ); }
 };
 
-// We can't use EmptySource, since that doesn't provide a HTML writer. Therefore, derive
-// from EmptySource so we can provide our own HTML writer.
-class TestObjectTreeSource : public MessageViewer::EmptySource
-{
-  public:
-    TestObjectTreeSource( MessageViewer::HtmlWriter *writer,
-                          MessageViewer::CSSHelper *cssHelper )
-      : mWriter( writer ), mCSSHelper( cssHelper )
-    {
-    }
-
-    virtual MessageViewer::HtmlWriter * htmlWriter() { return mWriter; }
-    virtual MessageViewer::CSSHelper * cssHelper() { return mCSSHelper; }
-
-  private:
-    MessageViewer::HtmlWriter *mWriter;
-    MessageViewer::CSSHelper *mCSSHelper;
-};
 
 QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
 
@@ -133,7 +116,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
   NodeHelper nodeHelper;
-  TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( msg.get() );
 
@@ -167,7 +150,7 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
   NodeHelper nodeHelper;
-  TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( msg.get() );
 

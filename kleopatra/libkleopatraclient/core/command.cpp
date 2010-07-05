@@ -48,6 +48,7 @@
 
 #include <algorithm>
 #include <string>
+#include <sstream>
 
 using namespace KLEOPATRACLIENT_NAMESPACE;
 using namespace boost;
@@ -94,11 +95,11 @@ static std::string hexencode( const char * in ) {
 }
 #endif
 
-static QByteArray hexencode( const QByteArray & in ) {
+// changed from returning QByteArray to returning std::string
+static std::string hexencode( const QByteArray & in ) {
     if ( in.isNull() )
-        return QByteArray();
-    const std::string result = hexencode( std::string( in.constData() ) );
-    return QByteArray( result.data(), result.size() );
+        return std::string();
+    return hexencode( std::string( in.data(), in.size() ) );
 }
 // end copied from kleopatra/utils/hex.cpp
 
@@ -188,12 +189,12 @@ void Command::cancel() {
 void Command::setOptionValue( const char * name, const QVariant & value, bool critical ) {
     if ( !name || !*name )
         return;
-    const QMutexLocker locker( &d->mutex );
     const Private::Option opt = {
         value,
         true,
         critical
     };
+    const QMutexLocker locker( &d->mutex );
     d->inputs.options[name] = opt;
 }
 
@@ -259,6 +260,67 @@ QStringList Command::filePaths() const {
     return d->inputs.filePaths;
 }
 
+
+void Command::setRecipients( const QStringList & recipients, bool informative ) {
+    const QMutexLocker locker( &d->mutex );
+    d->inputs.recipients = recipients;
+    d->inputs.areRecipientsInformative = informative;
+}
+
+QStringList Command::recipients() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.recipients;
+}
+
+bool Command::areRecipientsInformative() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.areRecipientsInformative;
+}
+
+
+void Command::setSenders( const QStringList & senders, bool informative ) {
+    const QMutexLocker locker( &d->mutex );
+    d->inputs.senders = senders;
+    d->inputs.areSendersInformative = informative;
+}
+
+QStringList Command::senders() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.senders;
+}
+
+bool Command::areSendersInformative() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.areSendersInformative;
+}
+
+
+void Command::setInquireData( const char * what, const QByteArray & data ) {
+    const QMutexLocker locker( &d->mutex );
+    d->inputs.inquireData[what] = data;
+}
+
+void Command::unsetInquireData( const char * what ) {
+    const QMutexLocker locker( &d->mutex );
+    d->inputs.inquireData.erase( what );
+}
+
+QByteArray Command::inquireData( const char * what ) const {
+    const QMutexLocker locker( &d->mutex );
+    const std::map<std::string,QByteArray>::const_iterator it = d->inputs.inquireData.find( what );
+    if ( it == d->inputs.inquireData.end() )
+        return QByteArray();
+    else
+        return it->second;
+}
+
+bool Command::isInquireDataSet( const char * what ) const {
+    const QMutexLocker locker( &d->mutex );
+    const std::map<std::string,QByteArray>::const_iterator it = d->inputs.inquireData.find( what );
+    return it != d->inputs.inquireData.end();
+}
+
+
 QByteArray Command::receivedData() const {
     const QMutexLocker locker( &d->mutex );
     return d->outputs.data;
@@ -300,30 +362,19 @@ namespace {
     };
 }
 
-#ifndef HAVE_ASSUAN2
-static assuan_error_t
-#else
-static gpg_error_t
+#ifdef HAVE_ASSUAN2
+// compatibility typedef - remove when we require assuan v2...
+typedef gpg_error_t assuan_error_t;
 #endif
+
+static assuan_error_t
 my_assuan_transact( const AssuanClientContext & ctx,
                     const char *command,
-#ifndef HAVE_ASSUAN2
                     assuan_error_t (*data_cb)( void *, const void *, size_t )=0,
-#else
-                    gpg_error_t (*data_cb)( void *, const void *, size_t )=0,
-#endif
                     void * data_cb_arg=0,
-#ifndef HAVE_ASSUAN2
                     assuan_error_t (*inquire_cb)( void *, const char * )=0,
-#else
-                    gpg_error_t (*inquire_cb)( void *, const char * )=0,
-#endif
                     void * inquire_cb_arg=0,
-#ifndef HAVE_ASSUAN2
                     assuan_error_t (*status_cb)( void *, const char * )=0,
-#else
-                    gpg_error_t (*status_cb)( void *, const char * )=0,
-#endif
                     void * status_cb_arg=0)
 {
     return assuan_transact( ctx.get(), command, data_cb, data_cb_arg, inquire_cb, inquire_cb_arg, status_cb, status_cb_arg );
@@ -365,43 +416,71 @@ static QString start_uiserver() {
     return Command::tr("start_uiserver: not yet implemented");
 }
 
-#ifndef HAVE_ASSUAN2
 static assuan_error_t getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
-#else
-static gpg_error_t getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
-#endif
     qint64 & pid = *static_cast<qint64*>( opaque );
     pid = QByteArray( static_cast<const char*>( buffer ), length ).toLongLong();
     return 0;
 }
 
-#ifndef HAVE_ASSUAN2
 static assuan_error_t command_data_cb( void * opaque, const void * buffer, size_t length ) {
-#else
-static gpg_error_t command_data_cb( void * opaque, const void * buffer, size_t length ) {
-#endif
     QByteArray & ba = *static_cast<QByteArray*>( opaque );
     ba.append( QByteArray( static_cast<const char*>(buffer), length ) );
     return 0;
 }
 
-#ifndef HAVE_ASSUAN2
-static assuan_error_t send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
-#else
-static gpg_error_t send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
-#endif
-    if ( value.isValid() )
-        return my_assuan_transact( ctx, QString().sprintf( "OPTION %s=%s", name, value.toString().toUtf8().constData() ).toUtf8().constData() );
-    else
-        return my_assuan_transact( ctx, QString().sprintf( "OPTION %s", name ).toUtf8().constData() );
+namespace {
+    struct inquire_data {
+        const std::map<std::string,QByteArray> * map;
+        const AssuanClientContext * ctx;
+    };
 }
 
-#ifndef HAVE_ASSUAN2
+static assuan_error_t command_inquire_cb( void * opaque, const char * what ) {
+    if ( !opaque )
+        return 0;
+    const inquire_data & id = *static_cast<const inquire_data*>( opaque );
+    const std::map<std::string,QByteArray>::const_iterator it = id.map->find( what );
+    if ( it != id.map->end() ) {
+        const QByteArray & v = it->second;
+        assuan_send_data( id.ctx->get(), v.data(), v.size() );
+    }
+    return 0;
+}
+
+static inline std::ostream & operator<<( std::ostream & s, const QByteArray & ba ) {
+    return s << std::string( ba.data(), ba.size() );
+}
+
+static assuan_error_t send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
+    std::stringstream ss;
+    ss << "OPTION " << name;
+    if ( value.isValid() )
+        ss << '=' << value.toString().toUtf8();
+    return my_assuan_transact( ctx, ss.str().c_str() );
+}
+
 static assuan_error_t send_file( const AssuanClientContext & ctx, const QString & file ) {
-#else
-static gpg_error_t send_file( const AssuanClientContext & ctx, const QString & file ) {
-#endif
-    return my_assuan_transact( ctx, QString().sprintf( "FILE %s", hexencode( QFile::encodeName( file ) ).constData() ).toUtf8().constData() );
+    std::stringstream ss;
+    ss << "FILE " << hexencode( QFile::encodeName( file ) );
+    return my_assuan_transact( ctx, ss.str().c_str() );
+}
+
+static assuan_error_t send_recipient( const AssuanClientContext & ctx, const QString & recipient, bool info ) {
+    std::stringstream ss;
+    ss << "RECIPIENT ";
+    if ( info )
+        ss << "--info ";
+    ss << "--" << hexencode( recipient.toUtf8() );
+    return my_assuan_transact( ctx, ss.str().c_str() );
+}
+
+static assuan_error_t send_sender( const AssuanClientContext & ctx, const QString & sender, bool info ) {
+    std::stringstream ss;
+    ss << "SENDER ";
+    if ( info )
+        ss << "--info ";
+    ss << "--" << hexencode( sender.toUtf8() );
+    return my_assuan_transact( ctx, ss.str().c_str() );
 }
 
 void Command::Private::run() {
@@ -417,26 +496,17 @@ void Command::Private::run() {
 
     out.canceled = false;
 
-#ifndef HAVE_ASSUAN2
-    assuan_error_t err = 0;
-#else
     if ( out.serverLocation.isEmpty() )
         out.serverLocation = default_socket_name();
-#endif
 
 #ifndef HAVE_ASSUAN2
     assuan_context_t naked_ctx = 0;
 #endif
     AssuanClientContext ctx;
-#ifdef HAVE_ASSUAN2
-    gpg_error_t err = 0;
-#endif
+    assuan_error_t err = 0;
 
-#ifndef HAVE_ASSUAN2
-    if ( out.serverLocation.isEmpty() )
-        out.serverLocation = default_socket_name();
+    inquire_data id = { &in.inquireData, &ctx };
 
-#endif
     const QString socketName = out.serverLocation;
     if ( socketName.isEmpty() ) {
         out.errorString = tr("Invalid socket name!");
@@ -490,8 +560,8 @@ void Command::Private::run() {
 #ifndef HAVE_ASSUAN2
     ctx.reset( naked_ctx );
     naked_ctx = 0;
-
 #endif
+
     out.serverPid = -1;
     err = my_assuan_transact( ctx, "GETINFO pid", &getinfo_pid_cb, &out.serverPid );
     if ( err || out.serverPid <= 0 ) {
@@ -538,11 +608,25 @@ void Command::Private::run() {
             goto leave;
         }
 
+    Q_FOREACH( const QString & sender, in.senders )
+        if ( ( err = send_sender( ctx, sender, in.areSendersInformative ) ) ) {
+            out.errorString = tr("Failed to send sender %1: %2")
+                .arg( sender, to_error_string( err ) );
+            goto leave;
+        }
+
+    Q_FOREACH( const QString & recipient, in.recipients )
+        if ( ( err = send_recipient( ctx, recipient, in.areRecipientsInformative ) ) ) {
+            out.errorString = tr("Failed to send recipient %1: %2")
+                .arg( recipient, to_error_string( err ) );
+            goto leave;
+        }
+
 #if 0
     setup I/O;
 #endif
 
-    err = my_assuan_transact( ctx, in.command.constData(), &command_data_cb, &out.data );
+    err = my_assuan_transact( ctx, in.command.constData(), &command_data_cb, &out.data, &command_inquire_cb, &id );
     if ( err ) {
         if ( gpg_err_code( err ) == GPG_ERR_CANCELED )
             out.canceled = true;

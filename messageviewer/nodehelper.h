@@ -139,25 +139,6 @@ public:
     void setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded );
 
     /**
-     * Links the permanent encrypted node with a temporary decrypted one, indexing on
-     *  the newly created node.
-     */
-    void linkAsPermanentDecrypted( KMime::Content* newNode, KMime::Content* origPermanent );
-    KMime::Content* hasPermanentDecrypted( KMime::Content* node ) const;
-
-    /**
-     * Try to find a parent node that is a permanent node which has been decrypted,
-     *  and check that node for a body part memento.
-     */
-    MessageViewer::Interface::BodyPartMemento* findPermanentParentBodyPartMemento( KMime::Content* node, const QByteArray& mementoType ) const;
-
-    /**
-     * Assign a body part memento of the specified type to the first parent that is a permanent
-     *  decrypted node, if one exists. If not, the memento is added to the node itself as normal.
-     */
-    void setBodyPartMementoForPermanentParent( KMime::Content* node, const QByteArray& mementoType, MessageViewer::Interface::BodyPartMemento* memento );
-    
-    /**
      * Writes the given message part to a temporary file and returns the
      * name of this file or QString() if writing failed.
      */
@@ -279,7 +260,6 @@ private:
     QStringList mTempDirs;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
     QMap<KMime::Message::Content*, QList<KMime::Content*> > mExtraContents;
-    QMap< KMime::Content*, KMime::Content* > mPermanentDecryptedNodeLinks;
 };
 
 }

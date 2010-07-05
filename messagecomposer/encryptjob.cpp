@@ -177,6 +177,8 @@ void EncryptJob::process()
   } else {
     content = d->content->encodedContent();
   }
+
+  // FIXME: Make async!
   const GpgME::EncryptionResult res = seJob->exec( d->keys,
                                                    content,
                                                    false,

@@ -36,13 +36,15 @@
 #include <messagecomposer/signjob.h>
 #include <messagecomposer/transparentjob.h>
 
+#include <messagecore/tests/util.h>
+
 #include <stdlib.h>
 
 QTEST_KDEMAIN( SignJobTest, GUI )
 
 void SignJobTest::testContentDirect() {
 
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );
@@ -65,7 +67,7 @@ void SignJobTest::testContentDirect() {
 
 void SignJobTest::testContentChained()
 {
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
   QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
   KMime::Content* content = new KMime::Content;
@@ -90,7 +92,7 @@ void SignJobTest::testContentChained()
 
 void SignJobTest::testHeaders()
 {
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );

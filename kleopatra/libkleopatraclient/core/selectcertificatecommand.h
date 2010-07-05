@@ -60,9 +60,6 @@ namespace KLEOPATRACLIENT_NAMESPACE {
         void setSelectedCertificate( const QString & cert );
         QString selectedCertificate() const;
 
-        // Outputs
-
-        QString certificateDetails() const;
     };
 
 }

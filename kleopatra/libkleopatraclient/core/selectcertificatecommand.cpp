@@ -103,11 +103,18 @@ bool SelectCertificateCommand::onlySecretKeysAllowed() const {
 }
 
 void SelectCertificateCommand::setSelectedCertificates( const QStringList & certs ) {
-    qDebug( "SelectCertificateCommand::setSelectedCertificates: not yet implemented!" );
+    QByteArray data;
+    Q_FOREACH( const QString & s, certs )
+        if ( s.isEmpty() )
+            qWarning( "SelectCertificateCommand::setSelectedCertificates: empty certificate!" );
+        else
+            data += s.toUtf8() += '\n';
+    setInquireData( "SELECTED_CERTIFICATES", data );
 }
 
 QStringList SelectCertificateCommand::selectedCertificates() const {
-    return QString::fromLatin1( receivedData() ).split( QLatin1Char( '\n' ), QString::SkipEmptyParts );
+    const QByteArray data = receivedData();
+    return QString::fromLatin1( data.data(), data.size() ).split( QLatin1Char( '\n' ), QString::SkipEmptyParts );
 }
 
 void SelectCertificateCommand::setSelectedCertificate( const QString & cert ) {
