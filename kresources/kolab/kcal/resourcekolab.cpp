@@ -573,7 +573,16 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
           }
         text += "<br>";
       }
-      subResource = findWritableResource( type, *map, text );
+
+      // Lets not warn the user 100 times that there's no writable resource
+      // and not ask 100 times which resource to use
+      if ( !mAddingInProgress || !mLastUsedResources.contains( type ) ) {
+        subResource = findWritableResource( type, *map, text );
+        mLastUsedResources[type] = subResource;
+      } else {
+        subResource = mLastUsedResources[type];
+      }
+
       if ( subResource.isEmpty() ) {
         switch( mErrorCode ) {
         case NoWritableFound:
@@ -1138,7 +1147,6 @@ KABC::Lock* ResourceKolab::lock()
   return new KABC::LockNull( true );
 }
 
-
 Kolab::ResourceMap* ResourceKolab::subResourceMap( const QString& contentsType )
 {
   if ( contentsType == kmailCalendarContentsType ) {
@@ -1249,6 +1257,17 @@ void ResourceKolab::writeConfig()
   writeResourceConfig( config, mEventSubResources );
   writeResourceConfig( config, mTodoSubResources );
   writeResourceConfig( config, mJournalSubResources );
+}
+
+void ResourceKolab::beginAddingIncidences()
+{
+  mAddingInProgress = true;
+}
+
+void ResourceKolab::endAddingIncidences()
+{
+  mAddingInProgress = false;
+  mLastUsedResources.clear();
 }
 
 #include "resourcekolab.moc"

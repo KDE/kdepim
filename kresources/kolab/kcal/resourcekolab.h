@@ -146,11 +146,16 @@ public:
 
   KABC::Lock* lock();
 
+  void beginAddingIncidences();
+
+  void endAddingIncidences();
+
 signals:
   void useGlobalMode();
 protected slots:
   void slotEmitResourceChanged();
   void writeConfig();
+
 protected:
   /**
    * Return list of alarms which are relevant for the current user. These
@@ -238,6 +243,8 @@ private:
    */
   QMap< QPair<QString, QString>, QString > mOriginalUID2fakeUID;
 
+  bool mAddingInProgress;
+  QMap<Kolab::ResourceType,QString> mLastUsedResources;
 };
 
 struct TemporarySilencer {
