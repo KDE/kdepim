@@ -71,7 +71,7 @@ public:
   void setMessagePath( const QString &path ) { mMessagePath = path; }
   QString messagePath() const { return mMessagePath; }
 
-  const HeaderStrategy* headerStrategy() const { return mStrategy; }
+  void setHeaderTheme( const HeaderTheme *theme ) { mTheme = theme; }
 
   void setVCardName( const QString &vCardName ) { mVCardName = vCardName; }
   QString vCardName() const { return mVCardName; }
@@ -104,7 +104,7 @@ public:
 private:
 
   QString mMessagePath;
-  const HeaderStrategy *mStrategy;
+  const HeaderTheme *mTheme;
   QString mVCardName;
   bool mPrinting;
   bool mTopLevel;

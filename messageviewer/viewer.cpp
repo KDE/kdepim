@@ -369,23 +369,16 @@ KAction *Viewer::selectAllAction()
   return d->mSelectAllAction;
 }
 
-const HeaderStrategy * Viewer::headerStrategy() const
+HeaderTheme * Viewer::headerTheme() const
 {
   Q_D( const Viewer );
-  return d->headerStrategy();
+  return d->headerTheme();
 }
 
-HeaderStyle * Viewer::headerStyle() const
-{
-  Q_D( const Viewer );
-  return d->headerStyle();
-}
-
-void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                        const HeaderStrategy * strategy )
+void Viewer::setHeaderTheme( HeaderTheme * theme )
 {
   Q_D( Viewer );
-  d->setHeaderStyleAndStrategy( style, strategy );
+  d->setHeaderTheme( theme );
 }
 
 KAction *Viewer::copyURLAction()

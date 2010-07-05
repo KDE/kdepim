@@ -570,10 +570,11 @@ QString HeaderTheme::drawSpamMeter( SpamError spamError, double percent, double 
           QString::number( meterHeight ), titleText ) + confidenceString;
 }
 
-/*HeaderTheme * HeaderTheme::create() {
+HeaderTheme * HeaderTheme::create() {
+  HeaderTheme * theme;
   theme = new HeaderTheme();
   return theme;
-}*/
+}
 
 QString HeaderTheme::imgToDataUrl( const QImage &image )
 {

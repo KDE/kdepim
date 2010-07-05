@@ -68,8 +68,6 @@ namespace MessageViewer {
   class CSSHelper;
   class AttachmentStrategy;
   class ObjectTreeParser;
-  class HeaderStrategy;
-  class HeaderStyle;
   class HeaderTheme;
   class NodeHelper;
   class FindBar;
@@ -300,24 +298,16 @@ public:
   /** Write settings to app's config file. Calls sync() if withSync is true. */
   void writeConfig( bool withSync=true );
 
-   /** Get the message header style. */
-  HeaderStyle * headerStyle() const {
-    return mHeaderStyle;
-  }
-
+  /** Get the message header theme. */
   HeaderTheme * headerTheme() const {
     return mHeaderTheme;
   }
 
-  /** Set the header style and strategy. We only want them to be set
-      together. */
-  void setHeaderStyleAndStrategy( HeaderStyle * style,
-                                  const HeaderStrategy * strategy );
-
-  /** Get the message header strategy. */
-  const HeaderStrategy * headerStrategy() const {
-    return mHeaderStrategy;
+  QString themeName() const {
+    return mThemeName;    
   }
+
+  void setHeaderTheme( HeaderTheme * theme );
 
   /** Get/set the message attachment strategy. */
   const AttachmentStrategy * attachmentStrategy() const {
@@ -376,8 +366,7 @@ public:
 
   void showContextMenu( KMime::Content* content, const QPoint& point);
 
-  KToggleAction * actionForHeaderStyle( const HeaderStyle *,
-                                       const HeaderStrategy * );
+  KToggleAction * actionForHeaderTheme();
   KToggleAction * actionForAttachmentStrategy( const AttachmentStrategy * );
   /** Read override codec from configuration */
   void readGlobalOverrideCodec();
@@ -584,8 +573,6 @@ public:
   FindBar *mFindBar;
 
   const AttachmentStrategy * mAttachmentStrategy;
-  const HeaderStrategy * mHeaderStrategy;
-  HeaderStyle * mHeaderStyle;
   HeaderTheme * mHeaderTheme;
   static const int delay;
   QTimer mUpdateReaderWinTimer;

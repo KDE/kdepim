@@ -111,8 +111,8 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="MessagePaneHeight" type="Int">
       <default>180</default>
     </entry>
-    <entry name="headerStyle" type="String" key="header-style">
-      <label>What style of headers should be displayed</label>
+    <entry name="headerTheme" type="String" key="header-theme">
+      <label>What header theme should be displayed</label>
       <default>fancy</default>
     </entry>
     <entry name="headerSetDisplayed" type="String" key="header-set-displayed">

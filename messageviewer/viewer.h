@@ -66,8 +66,7 @@ namespace MessageViewer {
   class AttachmentStrategy;
   class ViewerPrivate;
   class CSSHelper;
-  class HeaderStrategy;
-  class HeaderStyle;
+  class HeaderTheme;
 
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 
@@ -249,12 +248,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *copyAction();
   KAction *urlOpenAction();
 
-  const HeaderStrategy * headerStrategy() const;
+  HeaderTheme * headerTheme() const;
 
-  HeaderStyle * headerStyle() const;
-
-  void setHeaderStyleAndStrategy( HeaderStyle * style,
-                                  const HeaderStrategy * strategy );
+  void setHeaderTheme( HeaderTheme * theme );
   void writeConfig( bool withSync=true );
 
   KUrl urlClicked() const;

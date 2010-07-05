@@ -108,9 +108,7 @@
 #include "csshelper.h"
 #include "editorwatcher.h"
 #include "globalsettings.h"
-#include "headerstyle.h"
 #include "headertheme.h"
-#include "headerstrategy.h"
 #include "htmlstatusbar.h"
 #include "webkitparthtmlwriter.h"
 #include <kparts/browserextension.h>
@@ -151,8 +149,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mNodeHelper( new NodeHelper ),
     mFindBar( 0 ),
     mAttachmentStrategy( 0 ),
-    mHeaderStrategy( 0 ),
-    mHeaderStyle( 0 ),
     mHeaderTheme( 0 ),
     mUpdateReaderWinTimer( 0 ),
     mResizeTimer( 0 ),
@@ -1049,22 +1045,22 @@ void ViewerPrivate::parseContent( KMime::Content *content )
 QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCardNode,
                                        bool topLevel )
 {
-  if ( !headerStyle() )
-    kFatal() << "trying to writeMsgHeader() without a header style set!";
+  if ( !headerTheme() )
+    kFatal() << "trying to writeMsgHeader() without a header theme set!";
   QString href;
   if ( vCardNode )
     href = mNodeHelper->asHREF( vCardNode, "body" );
 
-  headerStyle()->setHeaderStrategy( headerStrategy() );
-  headerStyle()->setVCardName( href );
-  headerStyle()->setPrinting( mPrinting );
-  headerStyle()->setTopLevel( topLevel );
-  headerStyle()->setAllowAsync( true );
-  headerStyle()->setSourceObject( this );
-  headerStyle()->setNodeHelper( mNodeHelper );
-  headerStyle()->setMessagePath( mMessagePath );
+  headerTheme()->setHeaderTheme( headerTheme() );
+  headerTheme()->setVCardName( href );
+  headerTheme()->setPrinting( mPrinting );
+  headerTheme()->setTopLevel( topLevel );
+  headerTheme()->setAllowAsync( true );
+  headerTheme()->setSourceObject( this );
+  headerTheme()->setNodeHelper( mNodeHelper );
+  headerTheme()->setMessagePath( mMessagePath );
 
-  return headerStyle()->setTheming( mThemeName, aMsg );
+  return headerTheme()->setTheming( mThemeName, aMsg );
 }
 
 void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
@@ -1192,7 +1188,7 @@ void ViewerPrivate::readConfig()
   mHtmlMail = GlobalSettings::self()->htmlMail();
   mHtmlLoadExternal = GlobalSettings::self()->htmlLoadExternal();
 
-  KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
+  KToggleAction *raction = actionForHeaderTheme();
   if ( raction )
     raction->setChecked( true );
 
@@ -1215,8 +1211,7 @@ void ViewerPrivate::readConfig()
 
   // Note that this call triggers an update, see this call has to be at the
   // bottom when all settings are already est.
-  setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
-                             HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
+  setHeaderTheme( HeaderTheme::create());
 
   if ( mMessage )
     update();
@@ -1227,10 +1222,8 @@ void ViewerPrivate::readConfig()
 void ViewerPrivate::writeConfig( bool sync )
 {
   GlobalSettings::self()->setUseFixedFont( mUseFixedFont );
-  if ( headerStyle() )
-    GlobalSettings::self()->setHeaderStyle( headerStyle()->name() );
-  if ( headerStrategy() )
-    GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
+  //if ( headerTheme() )
+    //GlobalSettings::self()->setHeaderTheme( headerTheme() );
   if ( attachmentStrategy() )
     GlobalSettings::self()->setAttachmentStrategy( attachmentStrategy()->name() );
 
@@ -1240,13 +1233,10 @@ void ViewerPrivate::writeConfig( bool sync )
 }
 
 
-void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                               const HeaderStrategy * strategy ) {
-  mHeaderStyle = style ? style : HeaderStyle::fancy();
-  mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
+void ViewerPrivate::setHeaderTheme( HeaderTheme * theme ) {
+  mHeaderTheme = theme ? theme : HeaderTheme::create();
   update( Viewer::Force );
 }
-
 
 void ViewerPrivate::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
   mAttachmentStrategy = strategy ? strategy : AttachmentStrategy::smart();
@@ -1515,7 +1505,8 @@ void ViewerPrivate::createActions()
 
     //Should write a method instead, just for testing.
     KDesktopFile* themeDesktop = new KDesktopFile( themesPath + dirName + "/theme-" + dirName +  ".desktop" );
-    
+    themeAction->setData(dirName);
+    themeAction->data().toString();
     themeAction->setText( themeDesktop->readName() );
     themeAction->setData(dirName);
     mSelectThemeAction->addAction(themeAction);
@@ -1710,24 +1701,11 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
 }
 
 
-KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, const HeaderStrategy * strategy ) {
+KToggleAction *ViewerPrivate::actionForHeaderTheme() {
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
-  if ( style == HeaderStyle::enterprise() )
-    actionName = "view_headers_enterprise";
-  if ( style == HeaderStyle::fancy() )
-    actionName = "view_headers_fancy";
-  else if ( style == HeaderStyle::brief() )
-    actionName = "view_headers_brief";
-  else if ( style == HeaderStyle::plain() ) {
-    if ( strategy == HeaderStrategy::standard() )
-      actionName = "view_headers_standard";
-    else if ( strategy == HeaderStrategy::rich() )
-      actionName = "view_headers_long";
-    else if ( strategy == HeaderStrategy::all() )
-      actionName = "view_headers_all";
-  }
+  actionName = "view_themes";
   if ( actionName )
     return static_cast<KToggleAction*>(mActionCollection->action(actionName));
   else
@@ -1800,10 +1778,10 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       }
 
       QString margin;
-      if ( node != mMessage.get() || headerStyle() != HeaderStyle::enterprise() )
+      if ( node != mMessage.get() || mThemeName != "enterprise" )
         margin = "padding:2px; margin:2px; ";
       QString align = "left";
-      if ( headerStyle() == HeaderStyle::enterprise() )
+      if ( mThemeName == "enterprise" )
         align = "right";
       if ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
@@ -1841,11 +1819,11 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
       html += "<img style=\"vertical-align:middle;\" src=\"" + icon + "\"/>&nbsp;";
-      if ( headerStyle() == HeaderStyle::enterprise() ) {
+      if ( mThemeName == "enterprise" ) {
         QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
         QFontMetrics fm( bodyFont );
         html += fm.elidedText( label, Qt::ElideRight, 180 );
-      } else if ( headerStyle() == HeaderStyle::fancy() ) {
+      } else if ( mThemeName == "fancy" ) {
         QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
         QFontMetrics fm( bodyFont );
         html += fm.elidedText( label, Qt::ElideRight, 1000 );
@@ -2162,6 +2140,7 @@ void ViewerPrivate::slotSetEncoding()
 
 void ViewerPrivate::slotSetTheme(QAction *themeAction)
 {
+  setHeaderTheme( HeaderTheme::create());
   mThemeName = themeAction->data().toString();
   QString userVisibleThemeName = themeAction->text();
   kDebug() << "The user visible name of the theme is " << userVisibleThemeName << ". And the dirName is " << mThemeName;
@@ -2202,7 +2181,7 @@ void ViewerPrivate::injectAttachments()
     return;
 
   QString link("");
-  if ( headerStyle() == HeaderStyle::fancy() ) {
+  if ( mThemeName == "fancy" ) {
     link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
     html.prepend( QString::fromLatin1("<div style=\"float:left;\">%1&nbsp;</div>" ).arg(i18n("Attachments:")) );

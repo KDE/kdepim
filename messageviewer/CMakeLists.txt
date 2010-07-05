@@ -19,9 +19,7 @@ viewer_p.cpp
 viewer.cpp
 webkitparthtmlwriter.cpp
 htmlstatusbar.cpp
-headerstyle.cpp
 headertheme.cpp
-headerstrategy.cpp
 attachmentstrategy.cpp
 csshelper.cpp
 util.cpp
