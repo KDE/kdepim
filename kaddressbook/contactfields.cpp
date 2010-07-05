@@ -67,6 +67,12 @@ QString ContactFields::label( Field field )
     case Organization: return KABC::Addressee::organizationLabel(); break;
     case Note: return KABC::Addressee::noteLabel(); break;
     case Homepage: return KABC::Addressee::urlLabel(); break;
+    case BlogFeed: return i18n( "Blog Feed" ); break;
+    case Profession: return i18n( "Profession" ); break;
+    case Office: return i18n( "Office" ); break;
+    case Manager: return i18n( "Manager" ); break;
+    case Assistant: return i18n( "Assistant" ); break;
+    case Spouse: return i18n( "Spouse" ); break;
   }
 
   return QString();
@@ -117,7 +123,13 @@ ContactFields::Fields ContactFields::allFields()
          << Role
          << Organization
          << Note
-         << Homepage;
+         << Homepage
+         << BlogFeed
+         << Profession
+         << Office
+         << Manager
+         << Assistant
+         << Spouse;
 
   return fields;
 }
@@ -341,6 +353,24 @@ void ContactFields::setValue( Field field, const QString &value, KABC::Addressee
         contact.insertAddress( address );
       }
       break;
+    case BlogFeed:
+      contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ), value );
+      break;
+    case Profession:
+      contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ), value );
+      break;
+    case Office:
+      contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ), value );
+      break;
+    case Manager:
+      contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ), value );
+      break;
+    case Assistant:
+      contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ), value );
+      break;
+    case Spouse:
+      contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ), value );
+      break;
   }
 }
 
@@ -359,7 +389,7 @@ QString ContactFields::value( Field field, const KABC::Addressee &contact )
       {
         const QDateTime birthday = contact.birthday();
         if ( birthday.isValid() )
-          return birthday.toString( Qt::ISODate );
+          return birthday.date().toString( Qt::ISODate );
         else
           return QString();
       }
@@ -495,6 +525,12 @@ QString ContactFields::value( Field field, const KABC::Addressee &contact )
     case Organization: return contact.organization(); break;
     case Note: return contact.note(); break;
     case Homepage: return contact.url().url(); break;
+    case BlogFeed: return contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
+    case Profession: return contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) );
+    case Office: return contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ) );
+    case Manager: return contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ) );
+    case Assistant: return contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ) );
+    case Spouse: return contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ) );
   }
 
   return QString();

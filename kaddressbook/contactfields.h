@@ -79,7 +79,14 @@ class ContactFields
       Role,
       Organization,
       Note,
-      Homepage
+      Homepage,
+
+      BlogFeed,
+      Profession,
+      Office,
+      Manager,
+      Assistant,
+      Spouse
     };
 
     /**

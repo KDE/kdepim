@@ -37,6 +37,8 @@
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"
 #include <messageviewer/nodehelper.h>
+#include <messagecore/tests/util.h>
+
 #include <messageviewer/objecttreeparser.h>
 
 #include "qtest_messagecomposer.h"
@@ -46,6 +48,7 @@
 #include <kpimidentities/identity.h>
 #include <qtest_kde.h>
 #include <QDateTime>
+#include <KCharsets>
 using namespace Message;
 using namespace MessageComposer;
 
@@ -104,7 +107,7 @@ namespace {
 
 
 
-QTEST_KDEMAIN( MessageFactoryTest, NoGUI )
+QTEST_KDEMAIN( MessageFactoryTest, GUI )
 
 void MessageFactoryTest::testCreateReply()
 {
@@ -157,14 +160,14 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
   KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("plain_utf16.mbox") );
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
 
-  kDebug() << "plain base64 msg message:" << msg->encodedContent();
+//   kDebug() << "plain base64 msg message:" << msg->encodedContent();
 
   MessageFactory factory( msg, 0 );
   factory.setIdentityManager( identMan );
 
   MessageFactory::MessageReply reply =  factory.createReply();
   QVERIFY( reply.replyAll = true );
-  kDebug() << "html reply" << reply.msg->encodedContent();
+//   kDebug() << "html reply" << reply.msg->encodedContent();
 
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
@@ -173,6 +176,35 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
   QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: asking for reply" ) );
   QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
+
+}
+
+void MessageFactoryTest::testCreateReplyKeepCharsetEncoding()
+{
+  KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("plain_iso8859-1.mbox") );
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+
+//   kDebug() << "plain base64 msg message:" << msg->encodedContent();
+
+  MessageFactory factory( msg, 0 );
+  factory.setIdentityManager( identMan );
+
+  MessageFactory::MessageReply reply =  factory.createReply();
+  QVERIFY( reply.replyAll = true );
+  kDebug() << "reply" << reply.msg->encodedContent();
+
+  QString replyStr = KGlobal::charsets()->codecForName( QLatin1String( "iso-8859-1" ) )->toUnicode(
+  QByteArray::fromBase64( "8/Xq6Obn3PL1++np6g" ) );
+  QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
+  QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: asking for reply" ) );
+  
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
+  otp.parseObjectTree( reply.msg.get() );
+  QVERIFY( otp.textualContent().contains( replyStr ) );
 
 }
 

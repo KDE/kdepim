@@ -10,6 +10,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 add_subdirectory(icons)
 add_subdirectory(printing)
+add_subdirectory(tests)
 if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif(QGPGME_FOUND)
