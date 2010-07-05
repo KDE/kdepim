@@ -83,7 +83,7 @@ void ETMStateSaver::selectCollections(const Akonadi::Collection::List& list)
 {
   QStringList colStrings;
   foreach(const Collection &col, list)
-    colStrings << QString("c%1").arg( col.id() );
+    colStrings << QString::fromLatin1( "c%1" ).arg( col.id() );
   restoreSelection(colStrings);
 }
 
@@ -91,7 +91,7 @@ void ETMStateSaver::selectCollections(const QList< Collection::Id >& list)
 {
   QStringList colStrings;
   foreach(const Collection::Id &colId, list)
-    colStrings << QString("c%1").arg( colId );
+    colStrings << QString::fromLatin1( "c%1" ).arg( colId );
   restoreSelection(colStrings);
 }
 
@@ -99,7 +99,7 @@ void ETMStateSaver::selectItems(const Akonadi::Item::List& list)
 {
   QStringList itemStrings;
   foreach(const Item &item, list)
-    itemStrings << QString("i%1").arg( item.id() );
+    itemStrings << QString::fromLatin1( "i%1" ).arg( item.id() );
   restoreSelection(itemStrings);
 }
 
@@ -107,6 +107,6 @@ void ETMStateSaver::selectItems(const QList< Item::Id >& list)
 {
   QStringList itemStrings;
   foreach(const Item::Id &itemId, list)
-    itemStrings << QString("i%1").arg( itemId );
+    itemStrings << QString::fromLatin1( "i%1" ).arg( itemId );
   restoreSelection(itemStrings);
 }
