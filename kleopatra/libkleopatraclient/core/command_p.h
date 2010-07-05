@@ -68,6 +68,7 @@ private:
         Inputs() : parentWId( 0 ) {}
         std::map<std::string,Option> options;
         QStringList filePaths;
+        std::map<std::string,QByteArray> inquireData;
         WId parentWId;
         QByteArray command;
     } inputs;

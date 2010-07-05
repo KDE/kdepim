@@ -74,6 +74,11 @@ namespace KLEOPATRACLIENT_NAMESPACE {
         void setFilePaths( const QStringList & filePaths );
         QStringList filePaths() const;
 
+        void setInquireData( const char * what, const QByteArray & data );
+        void unsetInquireData( const char * what );
+        QByteArray inquireData( const char * what ) const;
+        bool isInquireDataSet( const char * what ) const;
+
         QByteArray receivedData() const;
 
         void setCommand( const char * command );
