@@ -139,9 +139,9 @@ void ComposerView::setMessageInternal(const KMime::Message::Ptr& msg)
 
   m_subject = msg->subject()->asUnicodeString();
 
-  m_recipientsEditor->setRecipientString( msg->to()->mailboxes(), Recipient::To );
-  m_recipientsEditor->setRecipientString( msg->cc()->mailboxes(), Recipient::Cc );
-  m_recipientsEditor->setRecipientString( msg->bcc()->mailboxes(), Recipient::Bcc );
+  m_recipientsEditor->setRecipientString( msg->to()->mailboxes(), MessageComposer::Recipient::To );
+  m_recipientsEditor->setRecipientString( msg->cc()->mailboxes(), MessageComposer::Recipient::Cc );
+  m_recipientsEditor->setRecipientString( msg->bcc()->mailboxes(), MessageComposer::Recipient::Bcc );
 
   // First, we copy the message and then parse it to the object tree parser.
   // The otp gets the message text out of it, in textualContent(), and also decrypts
@@ -171,9 +171,9 @@ void ComposerView::expandAddresses()
   // TODO share this with kmcomposewin.cpp
   MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
   job->setFrom( "volker@kdab.com" ); // TODO: retrieve from identity
-  job->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
-  job->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
-  job->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
+  job->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
+  job->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
+  job->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
   connect( job, SIGNAL(result(KJob*)), SLOT(addressExpansionResult(KJob*)) );
   job->start();
 }

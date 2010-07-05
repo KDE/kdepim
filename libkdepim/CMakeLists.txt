@@ -41,6 +41,9 @@ set(kdepim_LIB_SRCS
    kmailcompletion.cpp
    uistatesaver.cpp
    pimmessagebox.cpp
+   multiplyingline.cpp
+   multiplyinglineeditor.cpp
+   multiplyinglineview_p.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBRARY)

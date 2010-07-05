@@ -49,10 +49,12 @@ set( messagecomposer_src
      inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
-     recipient.cpp
      distributionlistdialog.cpp
      recipientspicker.cpp
+     recipient.cpp
+     recipientline.cpp
      recipientseditor.cpp
+     recipientseditorsidewidget.cpp
      kwindowpositioner.cpp
 
      aliasesexpandjob.cpp

@@ -26,33 +26,38 @@
 #define MESSAGECOMPOSER_RECIPIENT_H
 
 #include "messagecomposer_export.h"
-#include <QString>
 
-// namespace MessageComposer {
+#include <libkdepim/multiplyingline.h>
+
+#include <QString>
+#include <QSharedPointer>
+namespace MessageComposer {
 
 /** Represents a mail recipient. */
-class MESSAGECOMPOSER_EXPORT Recipient
+class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
 {
   public:
-    typedef QList<Recipient> List;
+    typedef QSharedPointer<Recipient> Ptr;
+    typedef QList<Recipient::Ptr> List;
 
     enum Type { To, Cc, Bcc, Undefined };
 
     Recipient( const QString &email = QString(), Type type = To ); //krazy:exclude=explicit
 
-    void setType( Type );
+    void setType( Type type );
     Type type() const;
 
-    void setEmail( const QString & );
+    void setEmail( const QString & email );
     QString email() const;
 
-    bool isEmpty() const;
+    virtual bool isEmpty() const;
+    virtual void clear();
 
-    static int typeToId( Type );
-    static Type idToType( int );
+    static int typeToId( Type type);
+    static Type idToType( int id );
 
     QString typeLabel() const;
-    static QString typeLabel( Type );
+    static QString typeLabel( Type type );
     static QStringList allTypeLabels();
 
   private:
@@ -60,6 +65,6 @@ class MESSAGECOMPOSER_EXPORT Recipient
     Type mType;
 };
 
-// }
+}
 
 #endif
