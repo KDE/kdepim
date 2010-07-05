@@ -1,0 +1,59 @@
+  <div class="headerbox" dir="{{ dir }}">
+
+{% if strippedTitle %}
+    <div class="headertitle" dir="{{ directionOfstrippedTitle }}">
+      <a href="{{ article.link }}">{{ strippedTitle|safe }}</a>
+      <br><h1>Planet Qt</h1>
+    </div>
+{% endif %}
+
+{% if date %}
+    <span class="header" dir="{{ directionOfDate }}">Date </span>
+    <span class="headertext"> {{ date }} </span>
+{% endif %}
+
+{% if author %}
+    <br/>
+    <span class="header" dir="{{ directionOfAuthor }}">Author </span>
+    <span class="headertext"> {{ author }} </span>
+{% endif %}
+
+{% if enc %}
+    <br/>
+    <span class="header" dir="{{ directionOfEnclosure }}">Enclosure </span>
+    <span class="headertext"> {{ enc|safe }} </span>
+{% endif %}
+
+  </div>
+
+{% if imageName %}
+  <a href="{{ imageUrl }}"><img class="headimage" src="{{ imageName }}.png"></a>
+{% endif %}
+
+{% if content %}
+  <div dir="{{ directionOfContent }}">
+    <span class="content">
+      {{ content|safe }}
+    </span>
+  </div>
+{% endif %}
+
+  <div class="body">
+
+{% if article.comments %}
+    <a class="contentlink" href="{{ article.commentsLink }}">
+      Comments ({{ article.comments }})
+    </a>
+{% endif %}
+
+{% if enc %}
+    <p><em>Enclosure:</em> {{ enc|safe }} </p>
+{% endif %}
+
+{% if article.linkComplete %}
+    <p>
+    <a class="contentlink" href="{{ article.linkComplete }}">Complete Story</a>
+    </p>
+{% endif %}
+
+  </div>
