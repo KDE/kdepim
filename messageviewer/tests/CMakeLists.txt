@@ -29,6 +29,8 @@ add_definitions(-DKMAIL_UNITTESTS=YES)
 kde4_add_unit_test(objecttreeparsertest TESTNAME messageviewer-objecttreeparsertest ${objecttreeparsertest_SRCS})
 target_link_libraries(objecttreeparsertest
   messageviewer
+  kleo
+  ${QGPGME_LIBRARIES}
   ${QT_QTTEST_LIBRARY}
   ${QT_QTCORE_LIBRARY}
   ${QT_QT3SUPPORT_LIBRARY}
@@ -47,5 +49,7 @@ target_link_libraries(viewertest_gui
   ${QT_QTGUI_LIBRARY}
   ${QT_QTWEBKIT_LIBRARY}
   ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
   messageviewer
 )
