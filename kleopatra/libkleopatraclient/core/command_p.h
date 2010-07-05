@@ -65,12 +65,15 @@ private:
         bool isCritical : 1;
     };
     struct Inputs {
-        Inputs() : parentWId( 0 ) {}
+        Inputs() : parentWId( 0 ), areRecipientsInformative( false ), areSendersInformative( false ) {}
         std::map<std::string,Option> options;
         QStringList filePaths;
+        QStringList recipients, senders;
         std::map<std::string,QByteArray> inquireData;
         WId parentWId;
         QByteArray command;
+        bool areRecipientsInformative : 1;
+        bool areSendersInformative    : 1;
     } inputs;
     struct Outputs {
         Outputs() : canceled( false ), serverPid( 0 ) {}

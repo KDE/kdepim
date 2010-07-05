@@ -261,6 +261,40 @@ QStringList Command::filePaths() const {
 }
 
 
+void Command::setRecipients( const QStringList & recipients, bool informative ) {
+    const QMutexLocker locker( &d->mutex );
+    d->inputs.recipients = recipients;
+    d->inputs.areRecipientsInformative = informative;
+}
+
+QStringList Command::recipients() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.recipients;
+}
+
+bool Command::areRecipientsInformative() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.areRecipientsInformative;
+}
+
+
+void Command::setSenders( const QStringList & senders, bool informative ) {
+    const QMutexLocker locker( &d->mutex );
+    d->inputs.senders = senders;
+    d->inputs.areSendersInformative = informative;
+}
+
+QStringList Command::senders() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.senders;
+}
+
+bool Command::areSendersInformative() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.areSendersInformative;
+}
+
+
 void Command::setInquireData( const char * what, const QByteArray & data ) {
     const QMutexLocker locker( &d->mutex );
     d->inputs.inquireData[what] = data;
@@ -431,6 +465,23 @@ static assuan_error_t send_file( const AssuanClientContext & ctx, const QString 
     return my_assuan_transact( ctx, ss.str().c_str() );
 }
 
+static assuan_error_t send_recipient( const AssuanClientContext & ctx, const QString & recipient, bool info ) {
+    std::stringstream ss;
+    ss << "RECIPIENT ";
+    if ( info )
+        ss << "--info ";
+    ss << "--" << hexencode( recipient.toUtf8() );
+    return my_assuan_transact( ctx, ss.str().c_str() );
+}
+
+static assuan_error_t send_sender( const AssuanClientContext & ctx, const QString & sender, bool info ) {
+    std::stringstream ss;
+    ss << "SENDER ";
+    if ( info )
+        ss << "--info ";
+    ss << "--" << hexencode( sender.toUtf8() );
+    return my_assuan_transact( ctx, ss.str().c_str() );
+}
 
 void Command::Private::run() {
 
@@ -554,6 +605,20 @@ void Command::Private::run() {
         if ( ( err = send_file( ctx, filePath ) ) ) {
             out.errorString = tr("Failed to send file path %1: %2")
                 .arg( filePath, to_error_string( err ) );
+            goto leave;
+        }
+
+    Q_FOREACH( const QString & sender, in.senders )
+        if ( ( err = send_sender( ctx, sender, in.areSendersInformative ) ) ) {
+            out.errorString = tr("Failed to send sender %1: %2")
+                .arg( sender, to_error_string( err ) );
+            goto leave;
+        }
+
+    Q_FOREACH( const QString & recipient, in.recipients )
+        if ( ( err = send_recipient( ctx, recipient, in.areRecipientsInformative ) ) ) {
+            out.errorString = tr("Failed to send recipient %1: %2")
+                .arg( recipient, to_error_string( err ) );
             goto leave;
         }
 
