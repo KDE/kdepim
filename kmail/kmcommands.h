@@ -7,8 +7,7 @@
 #include <kmime/kmime_message.h>
 #include "messageviewer/viewer.h"
 #include "messageviewer/editorwatcher.h"
-#include "messageviewer/headerstrategy.h"
-#include "messageviewer/headerstyle.h"
+#include "messageviewer/headertheme.h"
 using MessageViewer::EditorWatcher;
 #include <messagecore/messagestatus.h>
 #include <messagelist/core/view.h>
@@ -487,8 +486,7 @@ class KMAIL_EXPORT KMPrintCommand : public KMCommand
 
 public:
   KMPrintCommand( QWidget *parent, const Akonadi::Item &msg,
-                  MessageViewer::HeaderStyle *headerStyle = 0,
-                  const MessageViewer::HeaderStrategy *headerStrategy = 0,
+                  MessageViewer::HeaderTheme *headerTheme = 0,
                   bool htmlOverride = false,
                   bool htmlLoadExtOverride = false,
                   bool useFixedFont = false,
@@ -500,8 +498,7 @@ public:
 private:
   virtual Result execute();
 
-  MessageViewer::HeaderStyle *mHeaderStyle;
-  const MessageViewer::HeaderStrategy *mHeaderStrategy;
+  MessageViewer::HeaderTheme *mHeaderTheme;
   const MessageViewer::AttachmentStrategy *mAttachmentStrategy;
   bool mHtmlOverride;
   bool mHtmlLoadExtOverride;

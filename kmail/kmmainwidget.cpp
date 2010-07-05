@@ -66,8 +66,7 @@
 #include "messageviewer/globalsettings.h"
 #include "messageviewer/viewer.h"
 #include "messageviewer/attachmentstrategy.h"
-#include "messageviewer/headerstrategy.h"
-#include "messageviewer/headerstyle.h"
+#include "messageviewer/headertheme.h"
 #include "messageviewer/kcursorsaver.h"
 
 

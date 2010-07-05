@@ -488,8 +488,7 @@ void MessageActions::slotPrintMsg()
   const Akonadi::Item message = mMessageView ? mMessageView->message() : mCurrentItem;
   KMPrintCommand *command =
     new KMPrintCommand( mParent, message,
-                        mMessageView ? mMessageView->headerStyle() : 0,
-                        mMessageView ? mMessageView->headerStrategy() : 0,
+                        mMessageView ? mMessageView->headerTheme() : 0,
                         htmlOverride, htmlLoadExtOverride,
                         useFixedFont, overrideEncoding );
 

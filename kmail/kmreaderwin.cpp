@@ -34,8 +34,7 @@
 #include "mdnadvicedialog.h"
 #include <QByteArray>
 #include <QVBoxLayout>
-#include "messageviewer/headerstrategy.h"
-#include "messageviewer/headerstyle.h"
+#include "messageviewer/headertheme.h"
 #include "messageviewer/mailwebview.h"
 #include "messageviewer/globalsettings.h"
 
@@ -231,9 +230,8 @@ void KMReaderWin::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
   mViewer->setAttachmentStrategy( strategy );
 }
 
-void KMReaderWin::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                             const HeaderStrategy * strategy ) {
-  mViewer->setHeaderStyleAndStrategy( style, strategy );
+void KMReaderWin::setHeaderTheme( HeaderTheme * theme ) {
+  mViewer->setHeaderTheme( theme );
 }
 //-----------------------------------------------------------------------------
 void KMReaderWin::setOverrideEncoding( const QString & encoding )
@@ -584,14 +582,9 @@ KAction *KMReaderWin::selectAllAction()
   return mViewer->selectAllAction();
 }
 
-const HeaderStrategy * KMReaderWin::headerStrategy() const
+HeaderTheme * KMReaderWin::headerTheme() const
 {
-  return mViewer->headerStrategy();
-}
-
-HeaderStyle * KMReaderWin::headerStyle() const
-{
-  return mViewer->headerStyle();
+  return mViewer->headerTheme();
 }
 
 KAction *KMReaderWin::copyURLAction()

@@ -1437,12 +1437,11 @@ KMCommand::Result KMCustomForwardCommand::execute()
 
 
 KMPrintCommand::KMPrintCommand( QWidget *parent, const Akonadi::Item &msg,
-                                MessageViewer::HeaderStyle *headerStyle,
-                                const MessageViewer::HeaderStrategy *headerStrategy,
+                                MessageViewer::HeaderTheme *headerTheme,
                                 bool htmlOverride, bool htmlLoadExtOverride,
                                 bool useFixedFont, const QString & encoding )
   : KMCommand( parent, msg ),
-    mHeaderStyle( headerStyle ), mHeaderStrategy( headerStrategy ),
+    mHeaderTheme( headerTheme ), 
     mAttachmentStrategy( 0 ),
     mHtmlOverride( htmlOverride ),
     mHtmlLoadExtOverride( htmlLoadExtOverride ),
@@ -1474,8 +1473,8 @@ KMCommand::Result KMPrintCommand::execute()
   KMReaderWin *printerWin = new KMReaderWin( kmkernel->mainWin(), 0, 0 );
   printerWin->setPrinting( true );
   printerWin->readConfig();
-  if ( mHeaderStyle != 0 && mHeaderStrategy != 0 )
-    printerWin->setHeaderStyleAndStrategy( mHeaderStyle, mHeaderStrategy );
+  if ( mHeaderTheme != 0  )
+    printerWin->setHeaderTheme( mHeaderTheme );
   printerWin->setHtmlOverride( mHtmlOverride );
   printerWin->setHtmlLoadExtOverride( mHtmlLoadExtOverride );
   printerWin->setUseFixedFont( mUseFixedFont );

@@ -39,8 +39,7 @@ class KToggleAction;
 class KToggleAction;
 class KUrl;
 namespace MessageViewer {
-  class HeaderStrategy;
-  class HeaderStyle;
+  class HeaderTheme;
   class Viewer;
   class CSSHelper;
   class AttachmentStrategy;
@@ -70,14 +69,10 @@ public:
   /** Read settings from app's config file. */
   void readConfig();
 
-  MessageViewer::HeaderStyle * headerStyle() const;
+  MessageViewer::HeaderTheme * headerTheme() const;
 
-  /** Set the header style and strategy. We only want them to be set
-      together. */
-  void setHeaderStyleAndStrategy( MessageViewer::HeaderStyle * style,
-                                  const MessageViewer::HeaderStrategy * strategy );
-  /** Getthe message header strategy. */
-  const MessageViewer::HeaderStrategy * headerStrategy() const;
+  /** Set the headertheme */
+  void setHeaderTheme( MessageViewer::HeaderTheme * theme );
 
   /** Get/set the message attachment strategy. */
   const MessageViewer::AttachmentStrategy * attachmentStrategy() const;
