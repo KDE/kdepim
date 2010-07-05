@@ -1467,7 +1467,6 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
 
   const MessageViewer::KCursorSaver idle( MessageViewer::KBusyPtr::idle() );
 
-#ifdef QT_QT3SUPPORT_FOUND
   Kleo::KeyApprovalDialog dlg( items, senderKeys );
 
   if ( dlg.exec() == QDialog::Rejected )
@@ -1495,7 +1494,6 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
       saveContactPreference( items[i].address, pref );
     }
   }
-#endif
 
   // show a warning if the user didn't select an encryption key for
   // herself:
@@ -1595,7 +1593,6 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   const bool opgp = containsOpenPGP( mCryptoMessageFormats );
   const bool x509 = containsSMIME( mCryptoMessageFormats );
 
-#ifdef QT_QT3SUPPORT_FOUND
   Kleo::KeySelectionDialog dlg( i18n("Encryption Key Selection"),
 				msg, selectedKeys,
                                 Kleo::KeySelectionDialog::ValidEncryptionKeys
@@ -1612,9 +1609,6 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   if ( !keys.empty() && dlg.rememberSelection() )
     setKeysForAddress( person, dlg.pgpKeyFingerprints(), dlg.smimeFingerprints() );
   return keys;
-#else
-  return std::vector<GpgME::Key>();
-#endif
 }
 
 

@@ -8,9 +8,6 @@ include_directories(
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
-if ( QT_QT3SUPPORT_FOUND )
-  add_definitions( -DQT_QT3SUPPORT_FOUND )
-endif ()
 
 add_subdirectory( tests )
 
