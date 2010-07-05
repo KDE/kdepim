@@ -147,6 +147,11 @@ Akonadi::Item IncidenceViewer::incidence() const
   return ItemMonitor::item();
 }
 
+QDate IncidenceViewer::activeDate() const
+{
+  return d->mDate;
+}
+
 QAbstractItemModel* IncidenceViewer::attachmentModel() const
 {
   if ( !d->mAttachmentModel )
