@@ -236,6 +236,7 @@ set(libkdgantt1_SRCS
   add_subdirectory(libksieve)
   #add_subdirectory(libstickynotes)
   add_subdirectory(kdgantt1)
+  add_subdirectory(kdgantt2)
   add_subdirectory(icons)
   add_subdirectory(messagecore)
   add_subdirectory(messagelist)
