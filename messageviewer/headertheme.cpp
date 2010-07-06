@@ -120,7 +120,7 @@ HeaderTheme::~HeaderTheme() {
 
 QString HeaderTheme::setTheming( const QString &themeName, KMime::Message *message ) const {
   
-  Grantlee::Template t = mEngine->loadByName( themeName + ".html" );
+  Grantlee::Template t = mEngine->loadByName( themeName + "/default.html" );
   QVariantHash data;
 
   // Just for testing. Here should go the theme selected by the user
