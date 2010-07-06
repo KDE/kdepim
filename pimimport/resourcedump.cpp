@@ -4,21 +4,33 @@
 #include <QtCore/QTextStream>
 #include <akonadi/agenttype.h>
 #include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
-#include <kconfig.h>
 #include <kconfiggroup.h>
 
+using namespace Akonadi;
+
 ResourceDump::ResourceDump( const QDir &path, QObject *parent ) :
-    AbstractDump( path, parent ), m_instance()
+    AbstractDump( path, parent ), m_instance(), m_remainingJobs( 0 )
 {
   m_name = path.dirName();
+  m_config = KSharedConfig::openConfig( QString( "%1/%2" ).arg( path.absolutePath() ).arg( "resourceinfo" ),
+                                        KSharedConfig::SimpleConfig);
 }
 
 ResourceDump::ResourceDump( const QDir &path, const Akonadi::AgentInstance &instance, QObject *parent ) :
-    AbstractDump( path, parent ), m_instance( instance )
+    AbstractDump( path, parent ), m_instance( instance ), m_remainingJobs( 0 )
 {
   m_name = path.dirName();
+  m_config = KSharedConfig::openConfig( QString( "%1/%2" ).arg( path.absolutePath() ).arg( "resourceinfo" ),
+                                        KSharedConfig::SimpleConfig);
+}
+
+ResourceDump::~ResourceDump()
+{
+  m_config->sync();
 }
 
 Akonadi::AgentInstance ResourceDump::instance() const
@@ -48,21 +60,23 @@ void ResourceDump::dump()
   }
 
   // write resourece type to info file
-  KConfig config( QString( "%1/%2" ).arg( path().absolutePath() ).arg( "resourceinfo" ),
-                  KConfig::SimpleConfig );
-  KConfigGroup cfgGroup( &config, "General" );
+  KConfigGroup cfgGroup( m_config, "General" );
   cfgGroup.writeEntry( "type", m_instance.type().identifier() );
-  config.sync();
 
-  emit finished();
+  // create config group for root collection
+  KConfigGroup *collectionsConfig = new KConfigGroup( m_config, "Collection" );
+  m_configGroups.insert( Akonadi::Collection::root().id(),
+                         QSharedPointer< KConfigGroup >( collectionsConfig ) );
+
+  // recursively dump all collections
+  m_remainingJobs = 1;
+  dumpSubCollections( Akonadi::Collection::root() );
 }
 
 void ResourceDump::restore()
 {
   // get resource type from info file
-  KConfig config( QString( "%1/%2" ).arg( path().absolutePath() ).arg( "resourceinfo" ),
-                  KConfig::SimpleConfig );
-  KConfigGroup cfgGroup( &config, "General" );
+  KConfigGroup cfgGroup( m_config, "General" );
   QString type = cfgGroup.readEntry( "type", QString() );
 
   // create resource
@@ -80,6 +94,37 @@ void ResourceDump::resourceCreated( KJob *job )
 
   m_instance = static_cast< Akonadi::AgentInstanceCreateJob* >( job )->instance();
   restoreResource();
+}
+
+void ResourceDump::dumpSubCollectionsResult( KJob *job )
+{
+  if ( job->error() )
+    kError() << "ResourceDump::fetchResult(): " << job->errorString();
+
+  const Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>( job );
+
+  foreach ( const Akonadi::Collection &collection, fetchJob->collections() ) {
+    ++m_remainingJobs;
+
+    // Create config group for the collection
+    Collection parentCollection = collection.parentCollection();
+    if ( !m_configGroups.contains( parentCollection.id() ) )
+      kError() << "ResourceDump::fetchResult(): no config for collection " << parentCollection;
+    const KConfigGroup *parentConfig = m_configGroups[ parentCollection.id() ].data();
+    KConfigGroup *collectionConfig = new KConfigGroup( parentConfig, QString::number( collection.id() ) );
+    collectionConfig->writeEntry( "id", collection.id() );
+    collectionConfig->writeEntry( "parent", parentCollection.id() );
+    collectionConfig->writeEntry( "name", collection.name() );
+    collectionConfig->writeEntry( "contentMimeTypes", collection.contentMimeTypes() );
+    m_configGroups.insert( collection.id(), QSharedPointer< KConfigGroup >( collectionConfig ) );
+
+    // Find all sub-collections
+    dumpSubCollections( collection );
+  }
+
+  // decrease remaining jobs count and check exit condition
+  if ( --m_remainingJobs == 0 )
+    emit finished();
 }
 
 void ResourceDump::restoreResource()
@@ -100,4 +145,13 @@ void ResourceDump::restoreResource()
   kError() << "restored " << m_name;
 
   emit finished();
+}
+
+void ResourceDump::dumpSubCollections( const Akonadi::Collection &base )
+{
+  Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(
+      base, Akonadi::CollectionFetchJob::FirstLevel, this );
+  connect( fetchJob, SIGNAL( result( KJob* ) ), this, SLOT( dumpSubCollectionsResult( KJob* ) ) );
+  fetchJob->fetchScope().setResource( m_instance.identifier() );
+  fetchJob->start();
 }
