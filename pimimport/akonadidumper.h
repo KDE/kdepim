@@ -17,10 +17,9 @@ public slots:
   virtual void restore();
 
 private slots:
-  void resourceRestored();
+  void resourceFinished();
 
 private:
-  void initializeResources( AbstractDump::Action action );
   QList<AbstractDump*> m_resources;
   int m_remainingResources;
 };

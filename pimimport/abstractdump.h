@@ -20,13 +20,6 @@ class AbstractDump : public QObject
       */
     QDir path() const;
 
-    /** Enum specifying whether we are dumping or restoring. */
-    enum Action {
-      action_dump,
-      action_restore
-    };
-    Q_ENUMS ( Action )
-
   public slots:
     /** Performes dump to disk. */
     virtual void dump() = 0;
