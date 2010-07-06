@@ -570,6 +570,7 @@ signals:
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
+  void itemRemoved();
 
 public:
   NodeHelper* mNodeHelper;

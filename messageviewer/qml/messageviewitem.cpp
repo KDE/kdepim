@@ -53,6 +53,7 @@ MessageViewItem::MessageViewItem( QDeclarativeItem* parent )
   m_attachmentProxy->setSourceModel( flatProxy );
 
   connect( m_viewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)), SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
+  connect( m_viewer, SIGNAL(itemRemoved()), SIGNAL(mailRemoved()) );
 }
 
 MessageViewItem::~MessageViewItem()
