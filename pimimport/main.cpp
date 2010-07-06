@@ -39,10 +39,12 @@ int main( int argc, char *argv[] )
   AkonadiDump dumper( args->arg( 0 ) );
 
   if ( args->isSet( "dump" ) ) {
-    QTimer::singleShot( 100, &dumper, SLOT( dump() ) );
+    QTimer::singleShot( 0, &dumper, SLOT( dump() ) );
+//    QObject::connect( timer, SIGNAL( timeout() ), &dumper, SLOT( dump() ) );
   }
   else if ( args->isSet( "restore" ) ) {
-    QTimer::singleShot( 100, &dumper, SLOT( restore() ) );
+    QTimer::singleShot( 0, &dumper, SLOT( restore() ) );
+//    QObject::connect( timer, SIGNAL( timeout() ), &dumper, SLOT( restore() ) );
   }
   else {
     KCmdLineArgs::usageError( i18n( "You have to specify either --dump or --restore") );
