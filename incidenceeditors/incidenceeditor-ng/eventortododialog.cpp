@@ -45,6 +45,8 @@
 
 using namespace IncidenceEditorsNG;
 
+namespace IncidenceEditorsNG {
+
 class EventOrTodoDialogPrivate : public Akonadi::ItemEditorUi
 {
   EventOrTodoDialog *q_ptr;
@@ -77,6 +79,8 @@ public:
   void slotButtonClicked( int button );
   virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 };
+
+}
 
 EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   : q_ptr( qq )

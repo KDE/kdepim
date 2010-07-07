@@ -29,9 +29,9 @@ namespace Akonadi {
 class Item;
 }
 
-class EventOrTodoDialogPrivate;
-
 namespace IncidenceEditorsNG {
+
+class EventOrTodoDialogPrivate;
 
 class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
 {
