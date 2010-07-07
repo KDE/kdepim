@@ -36,6 +36,7 @@
 #include "recursiveitemlistwidget.h"
 #include "entityfindingwidget.h"
 #include "collectionmonitoredwidget.h"
+#include "checkable2.h"
 
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 
   Akonadi::Control::start();
 
+  tabWidget->addTab(new Checkable2(tabWidget), "Checkable2");
   tabWidget->addTab(new DescTabWidget(tabWidget), "Desc");
   tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
   tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");

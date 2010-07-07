@@ -42,6 +42,7 @@ set(etm_usage_SRCS
     entitytreemodelfactory.cpp
     recursiveitemlistwidget.cpp
     collectionmonitoredwidget.cpp
+    checkable2.cpp
 )
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )
