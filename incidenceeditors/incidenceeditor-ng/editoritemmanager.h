@@ -106,8 +106,8 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
 
   private:
     ItemEditorPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( ItemEditor );
-    Q_DISABLE_COPY( EditorItemManager );
+    Q_DECLARE_PRIVATE( ItemEditor )
+    Q_DISABLE_COPY( EditorItemManager )
 
     Q_PRIVATE_SLOT(d_ptr, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
     Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob* ) )
