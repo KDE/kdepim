@@ -65,6 +65,7 @@ public:
   ~EventOrTodoDialogPrivate();
 
   /// General methods
+  void handleAlarmCountChange( int newCount );
   void handleRecurrenceChange( bool );
   void updateAttachmentCount( int newCount );
   void updateButtonStatus( bool isDirty );
@@ -137,6 +138,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager, SIGNAL(itemSaveFinished()),
               SLOT(handleItemSaveFinish()));
+  q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
+              SLOT(handleAlarmCountChange(int)) );
   q->connect( ieRecurrence, SIGNAL(recurrenceChanged(bool)),
               SLOT(handleRecurrenceChange(bool)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
@@ -147,6 +150,15 @@ EventOrTodoDialogPrivate::~EventOrTodoDialogPrivate()
 {
   delete mItemManager;
   delete mEditor;
+}
+
+void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
+{
+  if ( newCount > 0 ) {
+    mUi->mTabWidget->setTabIcon( 2, SmallIcon( "appointment-reminder" ) );
+  } else {
+    mUi->mTabWidget->setTabIcon( 2, QIcon() );
+  }
 }
 
 void EventOrTodoDialogPrivate::handleRecurrenceChange( bool recurs )

@@ -44,6 +44,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
+  Q_SIGNALS:
+    void alarmCountChanged( int newCount );
+
   private Q_SLOTS:
     void editCurrentAlarm();
     void newAlarm();

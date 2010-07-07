@@ -167,6 +167,7 @@ void IncidenceAlarm::newAlarm()
     updateAlarmList();
   }
 
+  emit alarmCountChanged( mEnabledAlarms.count() );
 #endif
 }
 
@@ -176,6 +177,7 @@ void IncidenceAlarm::newAlarmFromPreset()
   updateAlarmList();
 
   checkDirtyStatus();
+  emit alarmCountChanged( mEnabledAlarms.count() );
 }
 
 void IncidenceAlarm::removeCurrentAlarm()
@@ -187,6 +189,7 @@ void IncidenceAlarm::removeCurrentAlarm()
 
   updateButtons();
   checkDirtyStatus();
+  emit alarmCountChanged( mEnabledAlarms.count() );
 }
 
 void IncidenceAlarm::updateAlarmList()

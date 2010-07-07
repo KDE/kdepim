@@ -59,6 +59,7 @@ private:
   Q_DECLARE_PRIVATE( EventOrTodoDialog )
   Q_DISABLE_COPY( EventOrTodoDialog )
 
+  Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int));
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
   Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(bool))
   Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int newCount))
