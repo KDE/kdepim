@@ -400,7 +400,7 @@
     </widget>
    </item>
    <item row="13" column="1" colspan="2">
-    <widget class="QTabWidget" name="tabWidget_2">
+    <widget class="QTabWidget" name="mTabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -1239,7 +1239,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_8">
+     <widget class="QWidget" name="mAttachmentTab">
       <attribute name="title">
        <string>Attachments</string>
       </attribute>

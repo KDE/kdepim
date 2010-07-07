@@ -60,6 +60,7 @@ private:
   Q_DISABLE_COPY( EventOrTodoDialog )
 
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
+  Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int newCount))
   Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
 };
 

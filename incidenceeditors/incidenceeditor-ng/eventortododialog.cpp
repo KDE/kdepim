@@ -65,6 +65,7 @@ public:
   ~EventOrTodoDialogPrivate();
 
   /// General methods
+  void updateAttachmentCount( int newCount );
   void updateButtonStatus( bool isDirty );
 
   /// ItemEditorUi methods
@@ -135,14 +136,23 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager, SIGNAL(itemSaveFinished()),
               SLOT(handleItemSaveFinish()));
-//  connect( d->mAttachtmentPage, SIGNAL(attachmentCountChanged(int)),
-//           SLOT(updateAttachmentCount(int)) );
+  q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
+              SLOT(updateAttachmentCount(int)) );
 }
 
 EventOrTodoDialogPrivate::~EventOrTodoDialogPrivate()
 {
   delete mItemManager;
   delete mEditor;
+}
+
+void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
+{
+  if ( newCount > 0 ) {
+    mUi->mTabWidget->setTabText( 4, i18n( "Attac&htments (%1)", newCount ) );
+  } else {
+    mUi->mTabWidget->setTabText( 4, i18n( "Attac&htments" ) );
+  }
 }
 
 void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
