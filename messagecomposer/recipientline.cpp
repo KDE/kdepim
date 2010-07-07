@@ -124,6 +124,7 @@ void RecipientLineNG::analyzeLine( const QString &text )
   if ( int( r.count() ) != mRecipientsCount ) {
     mRecipientsCount = r.count();
   }
+  mModified = true;
   emit countChanged();
 }
 
@@ -160,6 +161,7 @@ void RecipientLineNG::dataFromFields()
     return;
   mData->setEmail(  mEdit->text() );
   mData->setType( Recipient::idToType( mCombo->currentIndex() ) );
+  mModified = false;
 }
 
 void RecipientLineNG::fieldsFromData()
