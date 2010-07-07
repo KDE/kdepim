@@ -6,6 +6,9 @@ Problems addressed
 * Fix crash when composing a message, when compiled with GCC >= 4.4
 * When adding many incidences, don't ask which calendar to put it in, for each incidence
 
+kk2:
+* kolab/issue4442: Some broken mails double themself in a sync.(rt#6183)
+
 
 Friday, June 25th 2010
 
