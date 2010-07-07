@@ -249,51 +249,6 @@
       <property name="sizeAdjustPolicy">
        <enum>QComboBox::AdjustToContents</enum>
       </property>
-      <item>
-       <property name="text">
-        <string>5 minutes before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>10 minutes before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>15 minutes before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>30 minutes before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>45 minutes before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>1 day before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2 days before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>5 days before</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>1 week before</string>
-       </property>
-      </item>
      </widget>
     </item>
     <item row="0" column="2">
