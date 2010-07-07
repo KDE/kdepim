@@ -791,20 +791,21 @@ QList< KMime::Content* > NodeHelper::extraContents( KMime::Content *topLevelnode
  if ( mExtraContents.contains( topLevelnode ) ) {
     return mExtraContents[topLevelnode];
  } else {
-   Q_FOREACH( KMime::Content* c, topLevelnode->contents() ) {
-     QList< KMime::Content* > result = extraContents( c );
-     if ( !result.isEmpty() )
-       return result;
-   }
-   return QList< KMime::Content* >();
+  return QList< KMime::Content* >();
  }
 }
+
+bool NodeHelper::isPermanentwWithExtraContent( KMime::Content* node )
+{
+  return mExtraContents.contains( node ) && mExtraContents[ node ].size() > 0;
+}
+
 
 void NodeHelper::mergeExtraNodes( KMime::Content *node )
 {
   if ( !node )
     return;
-  
+
   QList<KMime::Content* > extraNodes = extraContents( node );
   Q_FOREACH( KMime::Content* extra, extraNodes ) {
     if( node->bodyIsMessage() ) {

@@ -1462,80 +1462,97 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   }
 
   PartMetaData messagePart;
-  QByteArray decryptedData;
-  bool signatureFound;
-  std::vector<GpgME::Signature> signatures;
-  bool passphraseError;
-  bool actuallyEncrypted = true;
-  bool decryptionStarted;
+  // if we already have a decrypted node for this encrypted node, don't do the decryption again
+  if( mNodeHelper->isPermanentwWithExtraContent( data ) && mNodeHelper->extraContents( data ).size() == 1 )
+  {
+//     if( NodeHelper::nodeProcessed( data ) )
+    ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
+    KMime::Content* newNode = mNodeHelper->extraContents( data )[ 0 ];
+    otp.parseObjectTreeInternal( newNode );
+    mRawReplyString += otp.rawReplyString();
+    mTextualContent += otp.textualContent();
+    if ( !otp.textualContentCharset().isEmpty() )
+      mTextualContentCharset = otp.textualContentCharset();
 
-  bool bOkDecrypt = okDecryptMIME( *data,
-                                    decryptedData,
-                                    signatureFound,
-                                    signatures,
-                                    true,
-                                    passphraseError,
-                                    actuallyEncrypted,
-                                    decryptionStarted,
-                                    messagePart );
-  kDebug() << "decrypted, signed?:" << signatureFound;
-
-  if ( decryptionStarted ) {
-    writeDecryptionInProgressBlock();
-    return true;
-  }
-
-  mNodeHelper->setNodeProcessed( data, false ); // Set the data node to done to prevent it from being processed
-
-  // paint the frame
-  if ( htmlWriter() ) {
-    messagePart.isDecryptable = bOkDecrypt;
-    messagePart.isEncrypted = true;
-    messagePart.isSigned = false;
-    htmlWriter()->queue( writeSigstatHeader( messagePart,
-                                              cryptoProtocol(),
-                                              NodeHelper::fromAsString( node ) ) );
-  }
-
-  if ( bOkDecrypt ) {
-    // Note: Multipart/Encrypted might also be signed
-    //       without encapsulating a nicely formatted
-    //       ~~~~~~~                 Multipart/Signed part.
-    //                               (see RFC 3156 --> 6.2)
-    // In this case we paint a _2nd_ frame inside the
-    // encryption frame, but we do _not_ show a respective
-    // encapsulated MIME part in the Mime Tree Viewer
-    // since we do want to show the _true_ structure of the
-    // message there - not the structure that the sender's
-    // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
-    //
-    if ( signatureFound ) {
-      writeOpaqueOrMultipartSignedData( 0,
-                                        *node,
-                                        NodeHelper::fromAsString( node ),
-                                        false,
-                                        &decryptedData,
-                                        signatures,
-                                        false );
-      mNodeHelper->setSignatureState( node, KMMsgFullySigned);
-      kDebug() << "setting FULLY SIGNED to:" << node;
-    } else {
-      decryptedData = KMime::CRLFtoLF( decryptedData ); //KMime works with LF only inside insertAndParseNewChildNode
-      
-      createAndParseTempNode( node, decryptedData.constData(),"encrypted data" );
-    }
+    messagePart = mNodeHelper->partMetaData( node );
   } else {
-    mRawReplyString += decryptedData;
-    if ( htmlWriter() ) {
-      // print the error message that was returned in decryptedData
-      // (utf8-encoded)
-      htmlWriter()->queue( QString::fromUtf8( decryptedData.data() ) );
-    }
-  }
+    QByteArray decryptedData;
+    bool signatureFound;
+    std::vector<GpgME::Signature> signatures;
+    bool passphraseError;
+    bool actuallyEncrypted = true;
+    bool decryptionStarted;
 
+    bool bOkDecrypt = okDecryptMIME( *data,
+                                      decryptedData,
+                                      signatureFound,
+                                      signatures,
+                                      true,
+                                      passphraseError,
+                                      actuallyEncrypted,
+                                      decryptionStarted,
+                                      messagePart );
+    kDebug() << "decrypted, signed?:" << signatureFound;
+
+    if ( decryptionStarted ) {
+      writeDecryptionInProgressBlock();
+      return true;
+    }
+
+    mNodeHelper->setNodeProcessed( data, false ); // Set the data node to done to prevent it from being processed
+
+    // paint the frame
+    if ( htmlWriter() ) {
+      messagePart.isDecryptable = bOkDecrypt;
+      messagePart.isEncrypted = true;
+      messagePart.isSigned = false;
+      htmlWriter()->queue( writeSigstatHeader( messagePart,
+                                                cryptoProtocol(),
+                                                NodeHelper::fromAsString( node ) ) );
+    }
+
+    if ( bOkDecrypt ) {
+      // Note: Multipart/Encrypted might also be signed
+      //       without encapsulating a nicely formatted
+      //       ~~~~~~~                 Multipart/Signed part.
+      //                               (see RFC 3156 --> 6.2)
+      // In this case we paint a _2nd_ frame inside the
+      // encryption frame, but we do _not_ show a respective
+      // encapsulated MIME part in the Mime Tree Viewer
+      // since we do want to show the _true_ structure of the
+      // message there - not the structure that the sender's
+      // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
+      //
+      if ( signatureFound ) {
+        writeOpaqueOrMultipartSignedData( 0,
+                                          *node,
+                                          NodeHelper::fromAsString( node ),
+                                          false,
+                                          &decryptedData,
+                                          signatures,
+                                          false );
+        mNodeHelper->setSignatureState( node, KMMsgFullySigned);
+        kDebug() << "setting FULLY SIGNED to:" << node;
+      } else {
+        decryptedData = KMime::CRLFtoLF( decryptedData ); //KMime works with LF only inside insertAndParseNewChildNode
+
+        createAndParseTempNode( node, decryptedData.constData(),"encrypted data" );
+      }
+    } else {
+      mRawReplyString += decryptedData;
+      if ( htmlWriter() ) {
+        // print the error message that was returned in decryptedData
+        // (utf8-encoded)
+        htmlWriter()->queue( QString::fromUtf8( decryptedData.data() ) );
+      }
+    }
+
+
+    mNodeHelper->setPartMetaData( node, messagePart );
+  }
+  
   if ( htmlWriter() )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
-  mNodeHelper->setPartMetaData( node, messagePart );
   return true;
 }
 
