@@ -65,6 +65,7 @@ public:
   ~EventOrTodoDialogPrivate();
 
   /// General methods
+  void handleRecurrenceChange( bool );
   void updateAttachmentCount( int newCount );
   void updateButtonStatus( bool isDirty );
 
@@ -136,6 +137,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager, SIGNAL(itemSaveFinished()),
               SLOT(handleItemSaveFinish()));
+  q->connect( ieRecurrence, SIGNAL(recurrenceChanged(bool)),
+              SLOT(handleRecurrenceChange(bool)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
 }
@@ -144,6 +147,15 @@ EventOrTodoDialogPrivate::~EventOrTodoDialogPrivate()
 {
   delete mItemManager;
   delete mEditor;
+}
+
+void EventOrTodoDialogPrivate::handleRecurrenceChange( bool recurs )
+{
+  if ( recurs ) {
+    mUi->mTabWidget->setTabIcon( 3, SmallIcon( "appointment-recurring" ) );
+  } else {
+    mUi->mTabWidget->setTabIcon( 3, QIcon() );
+  }
 }
 
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )

@@ -48,6 +48,9 @@ public:
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
+Q_SIGNALS:
+    void recurrenceChanged( bool recurs );
+
 private Q_SLOTS:
     void addException();
     void fillCombos();

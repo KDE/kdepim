@@ -468,6 +468,8 @@ void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
                         .subs(frequency).inContext("type", freqKey).toString();
   mUi->mFrequencyLabel->setText( labelEvery );
   mUi->mRecurrenceRuleLabel->setText( labelFreq );
+
+  emit recurrenceChanged( currentIndex > 0 );
 }
 
 void IncidenceRecurrence::removeExceptions()
