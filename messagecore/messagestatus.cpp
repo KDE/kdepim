@@ -584,27 +584,28 @@ void MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
   // * KMMsgStatusHasAttach
 
   foreach ( const QByteArray &flag, flags ) {
-    if ( flag.toUpper() == QByteArray( "\\DELETED" ) ) {
+    const QByteArray &upperedFlag = flag.toUpper();
+    if ( upperedFlag == "\\DELETED" ) {
       setDeleted();
-    } else if ( flag.toUpper() == QByteArray( "\\SEEN" ) ) {
+    } else if ( upperedFlag == "\\SEEN" ) {
       setRead();
-    } else if ( flag.toUpper() == QByteArray( "\\ANSWERED" ) ) {
+    } else if ( upperedFlag == "\\ANSWERED" ) {
       setReplied();
-    } else if ( flag.toUpper() == QByteArray( "\\FLAGGED" ) ) {
+    } else if ( upperedFlag == "\\FLAGGED" ) {
       setImportant();
 
     // non standard flags
-    } else if ( flag.toUpper() == QByteArray( "$FORWARDED" ) ) {
+    } else if ( upperedFlag == "$FORWARDED" ) {
       setForwarded();
-    } else if ( flag.toUpper() == QByteArray( "$TODO" ) ) {
+    } else if ( upperedFlag == "$TODO" ) {
       setToAct();
-    } else if ( flag.toUpper() == QByteArray( "$WATCHED" ) ) {
+    } else if ( upperedFlag == "$WATCHED" ) {
       setWatched();
-    } else if ( flag.toUpper() == QByteArray( "$IGNORED" ) ) {
+    } else if ( upperedFlag == "$IGNORED" ) {
       setIgnored();
-    } else if ( flag.toUpper() == QByteArray( "$JUNK" ) ) {
+    } else if ( upperedFlag == "$JUNK" ) {
       setSpam();
-    } else if ( flag.toUpper() == QByteArray( "$NOTJUNK" ) ) {
+    } else if ( upperedFlag == "$NOTJUNK" ) {
       setHam();
     } else {
       kWarning() << "Unknown flag:" << flag;
