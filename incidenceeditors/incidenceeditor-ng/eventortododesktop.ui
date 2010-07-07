@@ -404,7 +404,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_4">
+     <widget class="QWidget" name="mGeneralTab">
       <attribute name="title">
        <string>General</string>
       </attribute>
@@ -515,7 +515,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="mAttendeeWidget">
+     <widget class="QWidget" name="mAttendeeTab">
       <attribute name="title">
        <string>Attendees</string>
       </attribute>
@@ -646,7 +646,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_6">
+     <widget class="QWidget" name="mAlarmTab">
       <attribute name="title">
        <string>Reminder</string>
       </attribute>
@@ -750,7 +750,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_5">
+     <widget class="QWidget" name="mRecurrenceTab">
       <attribute name="title">
        <string>Recurrence</string>
       </attribute>
