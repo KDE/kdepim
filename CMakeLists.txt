@@ -255,8 +255,7 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(messagecomposer)
     macro_optional_add_subdirectory(kmail)
     if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
-# temporarily disabled, until the komo branch merge is complete
-#      macro_optional_add_subdirectory(mobile)
+      macro_optional_add_subdirectory(mobile)
     endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
 
     if(KDEPIM_BUILD_EXAMPLES)
