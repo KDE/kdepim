@@ -39,6 +39,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QDir>
+#include <QProcess>
 
 #include <assuan.h>
 #include <gpg-error.h>
@@ -412,8 +413,15 @@ static QString default_socket_name() {
     return name;
 }
 
+static QString uiserver_executable() {
+    return QLatin1String( "kleopatra" );
+}
+
 static QString start_uiserver() {
-    return Command::tr("start_uiserver: not yet implemented");
+    if ( !QProcess::startDetached( uiserver_executable(), QStringList() << QLatin1String( "--daemon" ) ) )
+        return Command::tr( "Failed to start uiserver %1" ).arg( uiserver_executable() );
+    else
+        return QString();
 }
 
 static assuan_error_t getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
