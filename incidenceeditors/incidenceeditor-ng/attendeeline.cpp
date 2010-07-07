@@ -86,6 +86,7 @@ void AttendeeComboBox::setCurrentIndex( int index )
   Q_ASSERT( index < mList.size() );
   mCurrentIndex = index;
   setIcon( mList.at( index ).second );
+  setToolTip( mList.at( index ).first );
 }
 
 void AttendeeComboBox::slotActionTriggered()
@@ -168,13 +169,9 @@ AttendeeLine::AttendeeLine(QWidget* parent)
                        AttendeeData::roleName( KCal::Attendee::Chair ) );
 #endif
 
-  mRoleCombo->setToolTip( i18nc( "@info:tooltip", "Select the attendee participation role" ) );
-
   mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
   
-
-  mStateCombo->setToolTip( i18nc( "@info:tooltip", "Select the attendee participation status" ) );
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
 
