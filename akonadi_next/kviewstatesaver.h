@@ -27,8 +27,7 @@
 
 #include "akonadi_next_export.h"
 
-class QTreeView;
-class QListView;
+class QAbstractItemView;
 class QItemSelectionModel;
 class QAbstractItemModel;
 class QAbstractScrollArea;
@@ -185,24 +184,14 @@ public:
   ~KViewStateSaver();
 
   /**
-    The QTreeView whose state is persisted.
-  */
-  QTreeView* treeView() const;
+   * The view whose state is persisted.
+   */
+  QAbstractItemView* view() const;
 
   /**
-    Sets the QTreeView whose state is persisted.
-  */
-  void setTreeView( QTreeView *treeView );
-
-  /**
-    The QListView whose state is persisted.
-  */
-  QListView* listView() const;
-
-  /**
-    Sets the QListView whose state is persisted.
-  */
-  void setListView( QListView *listView );
+   * Sets the view whose state is persisted.
+   */
+  void setView(QAbstractItemView *view);
 
   /**
     The QItemSelectionModel whose state is persisted.
@@ -213,16 +202,6 @@ public:
     Sets the QItemSelectionModel whose state is persisted.
   */
   void setSelectionModel( QItemSelectionModel *selectionModel );
-
-  /**
-    The QAbstractScrollArea whose state is persisted.
-  */
-  QAbstractScrollArea* scrollArea() const;
-
-  /**
-    Sets the QAbstractScrollArea whose state is persisted.
-  */
-  void setScrollArea( QAbstractScrollArea *scrollArea );
 
   /**
     Saves the state to the @p configGroup
@@ -254,17 +233,6 @@ public:
    */
   QPair<int, int> scrollState() const;
 
-protected:
-  /**
-    Reimplement to return an index in the @p model described by the unique key @p key
-  */
-  virtual QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const = 0;
-
-  /**
-    Reimplement to return a unique string for the @p index.
-  */
-  virtual QString indexToConfigString(const QModelIndex &index) const = 0;
-
   /**
    * Select the indexes described by @p indexStrings
    */
@@ -285,6 +253,17 @@ protected:
    * and @p horizontalScroll
    */
   void restoreScrollState( int verticalScoll, int horizontalScroll );
+
+protected:
+  /**
+    Reimplement to return an index in the @p model described by the unique key @p key
+  */
+  virtual QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const = 0;
+
+  /**
+    Reimplement to return a unique string for the @p index.
+  */
+  virtual QString indexToConfigString(const QModelIndex &index) const = 0;
 
 private:
   //@cond PRIVATE
