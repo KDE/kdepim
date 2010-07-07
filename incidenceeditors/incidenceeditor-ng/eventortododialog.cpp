@@ -68,6 +68,7 @@ public:
   void handleAlarmCountChange( int newCount );
   void handleRecurrenceChange( bool );
   void updateAttachmentCount( int newCount );
+  void updateAttendeeCount( int newCount );
   void updateButtonStatus( bool isDirty );
 
   /// ItemEditorUi methods
@@ -144,6 +145,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleRecurrenceChange(bool)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
+  q->connect( ieAttendee, SIGNAL(attendeeCountChanged(int)),
+              SLOT(updateAttendeeCount(int)) );
 }
 
 EventOrTodoDialogPrivate::~EventOrTodoDialogPrivate()
@@ -178,6 +181,16 @@ void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
     mUi->mTabWidget->setTabText( 4, i18n( "Attac&htments" ) );
   }
 }
+
+void EventOrTodoDialogPrivate::updateAttendeeCount( int newCount )
+{
+  if ( newCount > 0 ) {
+    mUi->mTabWidget->setTabText( 1, i18n( "&Attendees (%1)", newCount ) );
+  } else {
+    mUi->mTabWidget->setTabText( 1, i18n( "&Attendees" ) );
+  }
+}
+
 
 void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
 {

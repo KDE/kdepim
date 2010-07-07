@@ -62,6 +62,8 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
+  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), this, SIGNAL( attendeeCountChanged( int ) ) );
+
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
   fillOrganizerCombo();

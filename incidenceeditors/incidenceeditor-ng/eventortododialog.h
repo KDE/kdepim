@@ -63,6 +63,7 @@ private:
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
   Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(bool))
   Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int newCount))
+  Q_PRIVATE_SLOT(d_ptr, void updateAttendeeCount(int newCount))
   Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
 };
 

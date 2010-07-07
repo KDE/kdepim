@@ -54,6 +54,8 @@ public:
     virtual void save( KCal::Incidence::Ptr incidence );
     virtual bool isDirty() const;
     virtual bool isValid();
+signals:
+    void attendeeCountChanged( int );
 
 private slots:
     void slotSelectAddresses();

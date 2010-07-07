@@ -50,14 +50,18 @@ void AttendeeEditor::slotLineDeleted( int /*pos*/ )
 void AttendeeEditor::slotCalculateTotal()
 {
   int empty = 0;
+  int count = 0;
 
   foreach( KPIM::MultiplyingLine *line, lines() ) {
     AttendeeLine* att = qobject_cast< AttendeeLine* >( line );
-    if( att &&  att->isEmpty() ) {
-        ++empty;
+    if( att ) {
+      if( att->isEmpty() )
+          ++empty;
+      else
+        ++count;
     }
   }
-
+  emit( countChanged( count ) );
   // We always want at least one empty line
   if ( empty == 0 )
     addData();
