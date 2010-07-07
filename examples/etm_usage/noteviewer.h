@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #ifndef NOTEVIEWER_H
 #define NOTEVIEWER_H
 

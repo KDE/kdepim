@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #include "mixedtreemodel.h"
 
 #include <KMime/Message>

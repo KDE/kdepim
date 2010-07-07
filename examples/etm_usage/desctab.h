@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #ifndef DESCTAB_H
 #define DESCTAB_H
 

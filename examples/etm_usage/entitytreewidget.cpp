@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+// READ THE README FILE
+
 #include "entitytreewidget.h"
 
 #include <QTreeView>

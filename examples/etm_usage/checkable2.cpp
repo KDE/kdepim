@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #include "checkable2.h"
 
 #include <QSplitter>

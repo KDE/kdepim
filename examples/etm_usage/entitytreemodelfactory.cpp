@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #include "entitytreemodelfactory.h"
 
 #include <akonadi/collectionfetchjob.h>

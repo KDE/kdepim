@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #ifndef TAB7WIDGET_H
 #define TAB7WIDGET_H
 

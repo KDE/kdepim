@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #include "tab2widget.h"
 
 #include <QHBoxLayout>

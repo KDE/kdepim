@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #include "mainwindow.h"
 
 #include <akonadi/control.h>

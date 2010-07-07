@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #include "desctab.h"
 
 #include <QHBoxLayout>
@@ -44,7 +46,7 @@ DescTabWidget::DescTabWidget(QWidget* parent, Qt::WindowFlags f)
 
 
   m_etw->init();
-  
+
   m_descView = new QTreeView(splitter);
 
   QTimer::singleShot( 5000, this, SLOT(connectProxy()));

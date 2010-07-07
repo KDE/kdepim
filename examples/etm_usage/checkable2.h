@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #ifndef CHECKABLE2_H
 #define CHECKABLE2_H
 
