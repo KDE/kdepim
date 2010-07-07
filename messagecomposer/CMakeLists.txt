@@ -20,6 +20,7 @@ set( messagecomposer_src
      attachmentmodel.cpp
      attachmentfrompublickeyjob.cpp
 
+     akonadisender.cpp
      messagehelper.cpp
      messagefactory.cpp
      messageinfo.cpp
