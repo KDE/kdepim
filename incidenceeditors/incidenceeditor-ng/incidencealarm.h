@@ -52,6 +52,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
     void newAlarm();
     void newAlarmFromPreset();
     void removeCurrentAlarm();
+    void toggleCurrentAlarm();
     void updateAlarmList();
     void updateButtons();
 
@@ -65,7 +66,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 #endif
 
-    KCal::Alarm::List mDisabledAlarms;
     KCal::Alarm::List mEnabledAlarms;
 };
 

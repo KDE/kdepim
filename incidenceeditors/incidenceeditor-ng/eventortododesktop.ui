@@ -707,14 +707,14 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="4">
+       <item row="4" column="4">
         <widget class="QPushButton" name="mAlarmRemoveButton">
          <property name="text">
           <string>Remove</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="4">
+       <item row="5" column="4">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -734,10 +734,17 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0" rowspan="4" colspan="4">
+       <item row="1" column="0" rowspan="6" colspan="4">
         <widget class="QListWidget" name="mAlarmList">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="QPushButton" name="mAlarmToggleButton">
+         <property name="text">
+          <string>Disable</string>
          </property>
         </widget>
        </item>
