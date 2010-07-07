@@ -73,6 +73,8 @@ namespace KDGantt {
 	enum Scale { ScaleAuto, 
                      ScaleHour,
                      ScaleDay,
+                     ScaleWeek,
+                     ScaleMonth,
                      ScaleUserDefined
 	};
 	

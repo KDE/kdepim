@@ -652,6 +652,12 @@ void DateTimeGrid::paintGrid( QPainter* painter,
     case ScaleHour:
         d->paintVerticalHourLines( painter, sceneRect, exposedRect, widget );
         break;
+    case ScaleWeek:
+        d->paintVerticalUserDefinedLines( painter, sceneRect, exposedRect, &d->week_lower, widget );
+        break;
+    case ScaleMonth:
+        d->paintVerticalUserDefinedLines( painter, sceneRect, exposedRect, &d->month_lower, widget );
+        break;
     case ScaleAuto: {
         const qreal tabw = QApplication::fontMetrics().width( QLatin1String( "XXXXX" ) );
         const qreal dayw = dayWidth();
@@ -753,6 +759,36 @@ void DateTimeGrid::paintHeader( QPainter* painter,  const QRectF& headerRect, co
     case ScaleDay:
         paintDayScaleHeader( painter, headerRect, exposedRect, offset, widget );
         break;
+    case ScaleWeek:
+        {
+            DateTimeScaleFormatter *lower = &d->week_lower;
+            DateTimeScaleFormatter *upper = &d->week_upper;
+            const qreal lowerHeight = d->tabHeight( lower->text( startDateTime() ) );
+            const qreal upperHeight = d->tabHeight( upper->text( startDateTime() ) );
+            const qreal upperRatio = upperHeight/( lowerHeight+upperHeight );
+
+            const QRectF upperHeaderRect( headerRect.x(), headerRect.top(), headerRect.width()-1, headerRect.height() * upperRatio );
+            const QRectF lowerHeaderRect( headerRect.x(), upperHeaderRect.bottom()+1, headerRect.width()-1,  headerRect.height()-upperHeaderRect.height()-1 );
+
+            paintUserDefinedHeader( painter, lowerHeaderRect, exposedRect, offset, lower, widget );
+            paintUserDefinedHeader( painter, upperHeaderRect, exposedRect, offset, upper, widget );
+            break;
+        }
+    case ScaleMonth:
+        {
+            DateTimeScaleFormatter *lower = &d->month_lower;
+            DateTimeScaleFormatter *upper = &d->month_upper;
+            const qreal lowerHeight = d->tabHeight( lower->text( startDateTime() ) );
+            const qreal upperHeight = d->tabHeight( upper->text( startDateTime() ) );
+            const qreal upperRatio = upperHeight/( lowerHeight+upperHeight );
+
+            const QRectF upperHeaderRect( headerRect.x(), headerRect.top(), headerRect.width()-1, headerRect.height() * upperRatio );
+            const QRectF lowerHeaderRect( headerRect.x(), upperHeaderRect.bottom()+1, headerRect.width()-1,  headerRect.height()-upperHeaderRect.height()-1 );
+
+            paintUserDefinedHeader( painter, lowerHeaderRect, exposedRect, offset, lower, widget );
+            paintUserDefinedHeader( painter, upperHeaderRect, exposedRect, offset, upper, widget );
+            break;
+        }
     case ScaleAuto:
         {
             DateTimeScaleFormatter *lower, *upper;
