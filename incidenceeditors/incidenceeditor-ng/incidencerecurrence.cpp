@@ -469,6 +469,10 @@ void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
   mUi->mFrequencyLabel->setText( labelEvery );
   mUi->mRecurrenceRuleLabel->setText( labelFreq );
 
+#ifndef KDEPIM_MOBILE_UI
+  mUi->mOnLabel->setVisible( currentIndex > 1 );
+#endif
+
   emit recurrenceChanged( currentIndex > 0 );
 }
 
@@ -756,6 +760,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
 {
 #ifndef KDEPIM_MOBILE_UI
   mUi->mRecurrenceEndLabel->setVisible( enable );
+  mUi->mOnLabel->setVisible( enable && mUi->mRepeatStack->currentIndex() > 0 );
 #endif
 
   mUi->mFrequencyLabel->setVisible( enable );
