@@ -293,7 +293,8 @@ void IncidenceDateTime::enableTimeEdits()
   }
 
 #ifndef KDEPIM_MOBILE_UI
-  setTimeZonesVisibility( !wholeDayChecked && mUi->mTimeZoneLabel->text().startsWith( "<<" ) );
+  setTimeZonesVisibility( !wholeDayChecked &&
+                          mUi->mTimeZoneLabel->text().startsWith( QLatin1String( "<<" ) ) );
 #endif
 }
 

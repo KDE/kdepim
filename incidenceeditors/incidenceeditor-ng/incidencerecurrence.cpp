@@ -566,7 +566,7 @@ QString IncidenceRecurrence::numberToString( int number ) const
 {
   QString result = QString::number( number );
   if ( result.endsWith( '1' ) ) {
-    if ( result.endsWith( "11" ) ) {
+    if ( result.endsWith( QLatin1String( "11" ) ) ) {
       return "th";
     } else {
       return result + "st";
