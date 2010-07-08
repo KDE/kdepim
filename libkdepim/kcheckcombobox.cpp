@@ -231,6 +231,28 @@ void KCheckComboBox::setSqueezeText( bool squeeze )
   }
 }
 
+bool KCheckComboBox::itemEnabled( int index )
+{
+  Q_ASSERT( index >= 0 && index <= count() );
+
+  QStandardItemModel *itemModel = qobject_cast<QStandardItemModel *>( model() );
+  Q_ASSERT( itemModel );
+
+  QStandardItem *item = itemModel->item( index, 0 );
+  return item->isEnabled();
+}
+
+void KCheckComboBox::setItemEnabled( int index, bool enabled )
+{
+  Q_ASSERT( index >= 0 && index <= count() );
+
+  QStandardItemModel *itemModel = qobject_cast<QStandardItemModel *>( model() );
+  Q_ASSERT( itemModel );
+
+  QStandardItem *item = itemModel->item( index, 0 );
+  item->setEnabled( enabled );
+}
+
 QString KCheckComboBox::separator() const
 {
   return d->mSeparator;

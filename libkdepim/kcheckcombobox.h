@@ -95,6 +95,18 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     void setSqueezeText( bool squeeze );
 
     /**
+     * Return whether or not the item at @param index is enabled, i.e. if the
+     * user can (un)check the item.
+     */
+    bool itemEnabled( int index );
+
+    /**
+     * Set the item at @param index to @param enabled, i.e. if the
+     * user can (un)check the item.
+     */
+    void setItemEnabled( int index, bool enabled = true );
+
+    /**
      * Returns the check state of item at given index.
      *
      * @param index The index for which to return the check state.

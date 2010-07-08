@@ -83,7 +83,7 @@ private:
     QString numberToString( int number ) const;
     void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
     void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
-    void setDays( const QBitArray &days );
+    void setDays( const QBitArray &days, int incidenceDay );
     void setDefaults();
     void setDuration( int duration );
     void setExceptionDates( const KCal::DateList &dates );

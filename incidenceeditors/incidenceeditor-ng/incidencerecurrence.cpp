@@ -152,7 +152,7 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
   case KCal::Recurrence::rWeekly:
     mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceWeeklyIndex );
     handleRecurrenceTypeChange( sRecurrenceWeeklyIndex );
-    setDays( r->days() );
+    setDays( r->days(), mDateTime->startDate().dayOfWeek() );
     setFrequency( f );
     break;
   case KCal::Recurrence::rMonthlyPos: // Fall through
@@ -686,7 +686,7 @@ void IncidenceRecurrence::selectYearlyItem( KCal::Recurrence *recurrence, ushort
 
 }
 
-void IncidenceRecurrence::setDays( const QBitArray &days )
+void IncidenceRecurrence::setDays( const QBitArray &days, int incidenceDay )
 {
   Q_ASSERT( mUi->mWeekDayCombo->count() == 7 ); // The combobox must be filled.
 
@@ -700,9 +700,11 @@ void IncidenceRecurrence::setDays( const QBitArray &days )
       const int index = ( i + weekStart + 6 ) % 7;
       checkedDays << mUi->mWeekDayCombo->itemText( index );
     }
+    mUi->mWeekDayCombo->setItemEnabled( incidenceDay, true );
   }
 
   mUi->mWeekDayCombo->setCheckedItems( checkedDays );
+  mUi->mWeekDayCombo->setItemEnabled( incidenceDay, false );
 }
 
 void IncidenceRecurrence::setDefaults()
@@ -715,8 +717,9 @@ void IncidenceRecurrence::setDefaults()
 
   QBitArray days( 7 );
   days.fill( 0 );
-  days.setBit( ( mDateTime->startDate().dayOfWeek() + 6 ) % 7 );
-  setDays( days );
+  const int day = ( mDateTime->startDate().dayOfWeek() + 6 ) % 7;
+  days.setBit( day );
+  setDays( days, day );
 
   mUi->mMonthlyCombo->setCurrentIndex( 0 ); // Recur on the nth of the month
   mUi->mYearlyCombo->setCurrentIndex( 0 );  // Recur on the nth of the month
