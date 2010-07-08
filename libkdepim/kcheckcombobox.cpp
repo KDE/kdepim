@@ -43,6 +43,7 @@ class KCheckComboBox::Private
   public:
     Private( KCheckComboBox *qq )
       : q( qq )
+      , mLineEditIsReceiver( false )
       , mSeparator( QLatin1String( "," ) )
       , mSqueezeText( false )
       , mIgnoreHide( false )
@@ -56,6 +57,7 @@ class KCheckComboBox::Private
     void toggleCheckState( const QModelIndex &index );
 
   public:
+    bool mLineEditIsReceiver;
     QString mSeparator;
     QString mDefaultText;
     bool mSqueezeText;
@@ -125,7 +127,8 @@ void KCheckComboBox::Private::toggleCheckState( const QModelIndex &index )
 void KCheckComboBox::Private::toggleCheckState( int pos )
 {
   Q_UNUSED( pos );
-  toggleCheckState( q->view()->currentIndex() );
+  if ( !mLineEditIsReceiver )
+    toggleCheckState( q->view()->currentIndex() );
 }
 
 /// Class KCheckComboBox
@@ -330,9 +333,11 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
       d->mIgnoreHide = true;
 
       if ( receiver == lineEdit() ) {
+        d->mLineEditIsReceiver = true;
         showPopup();
         return true;
-      }
+      } else
+        d->mLineEditIsReceiver = false;
 
       break;
     default:
