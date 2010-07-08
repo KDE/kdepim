@@ -30,6 +30,7 @@
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include "combinedincidenceeditor.h"
+#include "editorconfig.h"
 #include "editoritemmanager.h"
 #include "incidencealarm.h"
 #include "incidenceattachment.h"
@@ -41,6 +42,7 @@
 #include "incidencerecurrence.h"
 #include "incidencesecrecy.h"
 #include "incidenceattendee.h"
+#include "templatemanagementdialog.h"
 #include "ui_eventortododesktop.h"
 
 using namespace IncidenceEditorsNG;
@@ -67,6 +69,7 @@ public:
   /// General methods
   void handleAlarmCountChange( int newCount );
   void handleRecurrenceChange( bool );
+  void manageTemplates();
   void updateAttachmentCount( int newCount );
   void updateAttendeeCount( int newCount );
   void updateButtonStatus( bool isDirty );
@@ -171,6 +174,23 @@ void EventOrTodoDialogPrivate::handleRecurrenceChange( bool recurs )
   } else {
     mUi->mTabWidget->setTabIcon( 3, QIcon() );
   }
+}
+
+void EventOrTodoDialogPrivate::manageTemplates()
+{
+  Q_Q( EventOrTodoDialog );
+
+  QStringList &templates = IncidenceEditors::EditorConfig::instance()->templates( mEditor->type() );
+  QPointer<IncidenceEditors::TemplateManagementDialog> dialog(
+      new IncidenceEditors::TemplateManagementDialog( q, templates, mEditor->type() ) );
+//  q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
+//              this, SLOT( slotLoadTemplate( const QString& ) ) );
+//  q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
+//              this, SLOT( slotTemplatesChanged( const QStringList& ) ) );
+//  q->connect( dialog, SIGNAL( saveTemplate( const QString& ) ),
+//              this, SLOT( slotSaveTemplate( const QString& ) ) );
+  dialog->exec();
+  delete dialog;
 }
 
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
@@ -289,7 +309,7 @@ void EventOrTodoDialogPrivate::reject( RejectReason /*reason*/, const QString &e
 EventOrTodoDialog::EventOrTodoDialog()
   : d_ptr( new EventOrTodoDialogPrivate( this ) )
 {
-  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
+  setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
   setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
   setButtonToolTip( KDialog::Apply, i18nc( "@info:tooltip", "Save current changes" ) );
   setButtonToolTip( KDialog::Ok, i18nc( "@action:button", "Save changes and close dialog" ) );
@@ -297,6 +317,19 @@ EventOrTodoDialog::EventOrTodoDialog()
   setDefaultButton( Ok );
   enableButton( Ok, false );
   enableButton( Apply, false );
+
+  setButtonText( Default, i18nc( "@action:button", "Manage &Templates..." ) );
+  setButtonToolTip( Default,
+                    i18nc( "@info:tooltip",
+                           "Apply or create templates for this item" ) );
+  setButtonWhatsThis( Default,
+                      i18nc( "@info:whatsthis",
+                             "Push this button to run a tool that helps "
+                             "you manage a set of templates. Templates "
+                             "can make creating new items easier and faster "
+                             "by putting your favorite default values into "
+                             "the editor automatically." ) );
+
 
   setModal( false );
   showButtonSeparator( false );
@@ -357,6 +390,9 @@ void EventOrTodoDialog::slotButtonClicked( int button )
     } else if ( !d->mEditor->isDirty() )
       KDialog::reject(); // No pending changes, just close the dialog.
     // else { // the user wasn't finished editting after all }
+    break;
+  case KDialog::Default:
+    d->manageTemplates();
     break;
   default:
     Q_ASSERT( false ); // Shouldn't happen

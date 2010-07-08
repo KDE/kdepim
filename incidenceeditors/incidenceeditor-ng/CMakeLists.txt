@@ -34,6 +34,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   ../categoryselectdialog.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
+  ../templatemanagementdialog.cpp
 )
 
 ### Build the desktop version
