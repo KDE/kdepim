@@ -37,6 +37,8 @@
 #include <akonadi/contact/emailaddressselectiondialog.h>
 #include <kabc/addressee.h>
 
+#include <KCal/Event>
+
 #include <KComboBox>
 #include <KDebug>
 #include <KMessageBox>
@@ -103,6 +105,11 @@ void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr inci
     if( a )
       mAttendeeEditor->addAttendee( *a );
   }
+
+  if ( IncidenceEditor::incidence<KCal::Event::ConstPtr>( ) )
+    mAttendeeEditor->setActions( AttendeeLine::EventActions );
+  else
+    mAttendeeEditor->setActions( AttendeeLine::TodoActions );
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence )

@@ -48,6 +48,8 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
 
     void addAttendee( const KCal::Attendee &attendee );
 
+    void setActions( AttendeeLine::AttendeeActions actions );
+
   signals:
     void countChanged( int );
 

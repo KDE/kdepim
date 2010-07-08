@@ -85,6 +85,10 @@ void AttendeeEditor::addAttendee(const KCal::Attendee& attendee)
   addData( AttendeeData::Ptr( new AttendeeData( attendee ) ) );
 }
 
-
-
-
+void AttendeeEditor::setActions( AttendeeLine::AttendeeActions actions )
+{
+  foreach( KPIM::MultiplyingLine *line, lines() ) {
+    AttendeeLine* att = qobject_cast< AttendeeLine* >( line );
+    att->setActions( actions );
+  }
+}

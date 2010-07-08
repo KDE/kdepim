@@ -81,6 +81,13 @@ int AttendeeComboBox::currentIndex() const
   return mCurrentIndex;
 }
 
+void AttendeeComboBox::clear()
+{
+  mCurrentIndex = -1;
+  mMenu->clear();
+  mList.clear();
+}
+
 void AttendeeComboBox::setCurrentIndex( int index )
 {
   Q_ASSERT( index < mList.size() );
@@ -175,37 +182,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
 
-#ifdef KDEPIM_MOBILE_UI
-  mStateCombo->addItem( DesktopIcon( "task-attention", 48 ),
-                         AttendeeData::statusName( AttendeeData::NeedsAction ) );
-  mStateCombo->addItem( DesktopIcon( "task-accepted", 48 ),
-                         AttendeeData::statusName( AttendeeData::Accepted ) );
-  mStateCombo->addItem( DesktopIcon( "task-reject", 48 ),
-                         AttendeeData::statusName( AttendeeData::Declined ) );
-  mStateCombo->addItem( DesktopIcon( "task-attempt", 48 ),
-                         AttendeeData::statusName( AttendeeData::Tentative ) );
-  mStateCombo->addItem( DesktopIcon( "task-delegate", 48 ),
-                         AttendeeData::statusName( AttendeeData::Delegated ) );
-  mStateCombo->addItem( DesktopIcon( "task-complete", 48 ),
-                         AttendeeData::statusName( AttendeeData::Completed ) ),
-  mStateCombo->addItem( DesktopIcon( "task-ongoing", 48 ),
-                         AttendeeData::statusName( AttendeeData::InProcess ) );
-#else
-  mStateCombo->addItem( SmallIcon( "task-attention" ),
-                         AttendeeData::statusName( AttendeeData::NeedsAction ) );
-  mStateCombo->addItem( SmallIcon( "task-accepted" ),
-                         AttendeeData::statusName( AttendeeData::Accepted ) );
-  mStateCombo->addItem( SmallIcon( "task-reject" ),
-                         AttendeeData::statusName( AttendeeData::Declined ) );
-  mStateCombo->addItem( SmallIcon( "task-attempt" ),
-                         AttendeeData::statusName( AttendeeData::Tentative ) );
-  mStateCombo->addItem( SmallIcon( "task-delegate" ),
-                         AttendeeData::statusName( AttendeeData::Delegated ) );
-  mStateCombo->addItem( SmallIcon( "task-complete" ),
-                         AttendeeData::statusName( AttendeeData::Completed ) ),
-  mStateCombo->addItem( SmallIcon( "task-ongoing" ),
-                         AttendeeData::statusName( AttendeeData::InProcess ) );
-#endif
+  setActions( EventActions );
 
   mResponseCheck->setText( i18nc( "@option:check", "Request RSVP" ) );
   mResponseCheck->setToolTip(i18nc( "@info:tooltip", "Request a response from the attendee" ) );
@@ -344,6 +321,68 @@ int AttendeeLine::setColumnWidth( int w )
   mRoleCombo->updateGeometry();
   parentWidget()->updateGeometry();
   return w;
+}
+
+void AttendeeLine::setActions( AttendeeActions actions )
+{
+  mStateCombo->clear();
+  if ( actions == EventActions ) {
+#ifdef KDEPIM_MOBILE_UI
+    mStateCombo->addItem( DesktopIcon( "task-attention", 48 ),
+                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+    mStateCombo->addItem( DesktopIcon( "task-accepted", 48 ),
+                          AttendeeData::statusName( AttendeeData::Accepted ) );
+    mStateCombo->addItem( DesktopIcon( "task-reject", 48 ),
+                          AttendeeData::statusName( AttendeeData::Declined ) );
+    mStateCombo->addItem( DesktopIcon( "task-attempt", 48 ),
+                          AttendeeData::statusName( AttendeeData::Tentative ) );
+    mStateCombo->addItem( DesktopIcon( "task-delegate", 48 ),
+                          AttendeeData::statusName( AttendeeData::Delegated ) );
+#else
+    mStateCombo->addItem( SmallIcon( "task-attention" ),
+                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+    mStateCombo->addItem( SmallIcon( "task-accepted" ),
+                          AttendeeData::statusName( AttendeeData::Accepted ) );
+    mStateCombo->addItem( SmallIcon( "task-reject" ),
+                          AttendeeData::statusName( AttendeeData::Declined ) );
+    mStateCombo->addItem( SmallIcon( "task-attempt" ),
+                          AttendeeData::statusName( AttendeeData::Tentative ) );
+    mStateCombo->addItem( SmallIcon( "task-delegate" ),
+                          AttendeeData::statusName( AttendeeData::Delegated ) );
+#endif
+  } else {
+#ifdef KDEPIM_MOBILE_UI
+    mStateCombo->addItem( DesktopIcon( "task-attention", 48 ),
+                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+    mStateCombo->addItem( DesktopIcon( "task-accepted", 48 ),
+                          AttendeeData::statusName( AttendeeData::Accepted ) );
+    mStateCombo->addItem( DesktopIcon( "task-reject", 48 ),
+                          AttendeeData::statusName( AttendeeData::Declined ) );
+    mStateCombo->addItem( DesktopIcon( "task-attempt", 48 ),
+                          AttendeeData::statusName( AttendeeData::Tentative ) );
+    mStateCombo->addItem( DesktopIcon( "task-delegate", 48 ),
+                          AttendeeData::statusName( AttendeeData::Delegated ) );
+    mStateCombo->addItem( DesktopIcon( "task-complete", 48 ),
+                          AttendeeData::statusName( AttendeeData::Completed ) ),
+    mStateCombo->addItem( DesktopIcon( "task-ongoing", 48 ),
+                          AttendeeData::statusName( AttendeeData::InProcess ) );
+#else
+    mStateCombo->addItem( SmallIcon( "task-attention" ),
+                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+    mStateCombo->addItem( SmallIcon( "task-accepted" ),
+                          AttendeeData::statusName( AttendeeData::Accepted ) );
+    mStateCombo->addItem( SmallIcon( "task-reject" ),
+                          AttendeeData::statusName( AttendeeData::Declined ) );
+    mStateCombo->addItem( SmallIcon( "task-attempt" ),
+                          AttendeeData::statusName( AttendeeData::Tentative ) );
+    mStateCombo->addItem( SmallIcon( "task-delegate" ),
+                          AttendeeData::statusName( AttendeeData::Delegated ) );
+    mStateCombo->addItem( SmallIcon( "task-complete" ),
+                          AttendeeData::statusName( AttendeeData::Completed ) ),
+    mStateCombo->addItem( SmallIcon( "task-ongoing" ),
+                          AttendeeData::statusName( AttendeeData::InProcess ) );
+#endif
+  }
 }
 
 void AttendeeLine::setCompletionMode( KGlobalSettings::Completion mode )

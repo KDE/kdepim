@@ -55,6 +55,8 @@ class AttendeeComboBox : public QToolButton
     void leftPressed();
 
   public slots:
+    /** Clears the combobox, removing all items. */
+    void clear();
     void setCurrentIndex( int index );
 
   protected:
@@ -102,6 +104,11 @@ class AttendeeLine : public KPIM::MultiplyingLine
 {
     Q_OBJECT
   public:
+    enum AttendeeActions {
+      EventActions,
+      TodoActions
+    };
+
     AttendeeLine( QWidget* parent );
     virtual ~AttendeeLine(){}
 
@@ -124,6 +131,8 @@ class AttendeeLine : public KPIM::MultiplyingLine
     virtual void setCompletionMode( KGlobalSettings::Completion );
 
     virtual int setColumnWidth( int w );
+
+    void setActions( AttendeeActions actions );
 
   signals:
     void changed();
