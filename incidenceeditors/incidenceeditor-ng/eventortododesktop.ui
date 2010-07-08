@@ -874,7 +874,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="never_page"/>
          <widget class="QWidget" name="daily_page">
@@ -898,7 +898,7 @@
               </sizepolicy>
              </property>
              <property name="sizeAdjustPolicy">
-              <enum>QComboBox::AdjustToContents</enum>
+              <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
              </property>
             </widget>
            </item>

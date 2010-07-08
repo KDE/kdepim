@@ -62,6 +62,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
            SLOT(fillCombos()) );
+  connect( mDateTime, SIGNAL(startDateChanged(QDate)),
+           SLOT(updateWeekDays(QDate)) );
   connect( mDateTime, SIGNAL(startDateChanged(QDate)), mUi->mExceptionDateEdit,
            SLOT(setDate(QDate)) );
   connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
@@ -129,6 +131,7 @@ void IncidenceRecurrence::load( KCal::Incidence::ConstPtr incidence )
   // So don't depend on CombinedIncidenceEditor or whatever external factor to
   // load the date/time before loading the recurrence
   mDateTime->load( incidence );
+  mCurrentDate = mDateTime->startDate();
   fillCombos();
   setDefaults();
 
@@ -494,6 +497,19 @@ void IncidenceRecurrence::updateRemoveExceptionButton()
   mUi->mExceptionRemoveButton->setEnabled( mUi->mExceptionList->selectedItems().count() > 0 );
 }
 
+void IncidenceRecurrence::updateWeekDays( const QDate &newStartDate )
+{
+  const int oldStartDayIndex = weekdayIndex( mCurrentDate );
+  const int newStartDayIndex = weekdayIndex( newStartDate );
+
+  mUi->mWeekDayCombo->setItemCheckState( oldStartDayIndex, Qt::Unchecked );
+  mUi->mWeekDayCombo->setItemEnabled( oldStartDayIndex, true );
+  mUi->mWeekDayCombo->setItemCheckState( newStartDayIndex, Qt::Checked );
+  mUi->mWeekDayCombo->setItemEnabled( newStartDayIndex, false );
+
+  mCurrentDate = newStartDate;
+}
+
 short IncidenceRecurrence::dayOfMonthFromStart() const
 {
   return mDateTime->startDate().day();
@@ -704,7 +720,7 @@ void IncidenceRecurrence::setDays( const QBitArray &days, int incidenceDay )
   }
 
   mUi->mWeekDayCombo->setCheckedItems( checkedDays );
-  mUi->mWeekDayCombo->setItemEnabled( incidenceDay, false );
+  mUi->mWeekDayCombo->setItemEnabled( ( incidenceDay + weekStart + 6 ) % 7, false );
 }
 
 void IncidenceRecurrence::setDefaults()
@@ -717,7 +733,7 @@ void IncidenceRecurrence::setDefaults()
 
   QBitArray days( 7 );
   days.fill( 0 );
-  const int day = ( mDateTime->startDate().dayOfWeek() + 6 ) % 7;
+  const int day = weekdayIndex( mDateTime->startDate() );
   days.setBit( day );
   setDays( days, day );
 
@@ -790,6 +806,13 @@ QBitArray IncidenceRecurrence::weekday() const
   // QDate::dayOfWeek() -> returns [1 - 7], 1 == monday
   days.setBit(mDateTime->startDate().dayOfWeek() - 1, true );
   return days;
+}
+
+int IncidenceRecurrence::weekdayIndex( const QDate &date ) const
+{
+  Q_ASSERT( date.isValid() );
+  const int weekStart = KGlobal::locale()->weekStartDay() - 1; // Values 1 - 7, we need 0 - 6
+  return ( date.dayOfWeek() + weekStart + 6 ) % 7;
 }
 
 int IncidenceRecurrence::weekdayCountForMonth( const QDate &date ) const

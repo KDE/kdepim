@@ -60,6 +60,7 @@ private Q_SLOTS:
     void handleRecurrenceTypeChange( int currentIndex );
     void removeExceptions();
     void updateRemoveExceptionButton();
+    void updateWeekDays( const QDate &newStartDate );
 
 private:
     KLocalizedString subsOrdinal (const KLocalizedString &text, int number) const;
@@ -91,6 +92,8 @@ private:
     void toggleRecurrenceWidgets( bool enable );
     /** Returns an array with the weekday on which the event occurs set to 1 */
     QBitArray weekday() const;
+    /** Returns the index in the weekday combo for the day of @param date. */
+    int weekdayIndex( const QDate &date ) const;
 
     /**
      * Return how many times the weekday represented by @param date occurs in
@@ -104,6 +107,7 @@ private:
 #else
     Ui::EventOrTodoDesktop *mUi;
 #endif
+    QDate mCurrentDate;
     IncidenceDateTime *mDateTime;
     KCal::DateList mExceptionDates;
 };
