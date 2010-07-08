@@ -2,15 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Mail
-Name[ca]=KMail mòbil
-Name[en_GB]=KMail Mobile
-Name[es]=KMail móvil
-Name[km]=KMail Mobile
-Name[pt]=KMail Móvel
-Name[pt_BR]=KMail Móvel
-Name[sv]=Kmail för mobil
-Name[uk]=Мобільний KMail
-Name[x-test]=xxKMail Mobilexx
+Name[x-test]=xxKDE Mailxx
 Exec=kmail-mobile.sh
 
 Icon=kmail-mobile
