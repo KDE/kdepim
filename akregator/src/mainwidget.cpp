@@ -538,6 +538,23 @@ void Akregator::MainWidget::slotCombinedView()
     Settings::setViewMode( m_viewMode );
 }
 
+void Akregator::MainWidget::slotSetTheme( QAction *themeAction )
+{
+  mThemeName = themeAction->data().toString();
+
+  switch (Settings::viewMode())
+  {
+      case CombinedView:
+          slotCombinedView();
+          break;
+      case WidescreenView:
+          slotWidescreenView();
+          break;
+      default:
+          slotNormalView();
+  }
+}
+
 void Akregator::MainWidget::slotMoveCurrentNodeUp()
 {
     TreeNode* current = m_selectionController->selectedSubscription();

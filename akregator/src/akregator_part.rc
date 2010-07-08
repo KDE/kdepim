@@ -23,6 +23,8 @@
       <Action name="widescreen_view"/>
       <Action name="combined_view"/>
       <Separator/>
+      <Action name="view_themes"/>
+      <Separator/>
       <Action name="inc_font_sizes"/>
       <Action name="dec_font_sizes"/>
     </Menu>

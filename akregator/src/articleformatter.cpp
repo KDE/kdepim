@@ -27,6 +27,7 @@
 #include "article.h"
 #include "feed.h"
 #include "folder.h"
+#include "mainwidget.h"
 #include "treenode.h"
 #include "treenodevisitor.h"
 #include "utils.h"
@@ -34,6 +35,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <KDebug>
 
 #include <QApplication>
 #include <QPaintDevice>
@@ -92,6 +94,9 @@ ArticleFormatter::ArticleFormatter( QPaintDevice* device ) : d( new Private( dev
     loader->setTemplateDirs( QStringList() << KStandardDirs::locate("data","akregator/themes/") );
 
     mEngine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH );
+    // should use dynamic data, m_mainWidget->themeName(), doesn't work
+    mThemeName = "planet-kde"; 
+    // KDebug << mThemeName;
 }
 
 ArticleFormatter::~ArticleFormatter()
@@ -110,9 +115,9 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
     return ( pointSize * d->device->logicalDpiY() + 36 ) / 72 ;
 }
 
-QString ArticleFormatter::setTheming( const QString &viewName , const Article& article, IconOption icon) const {
+QString ArticleFormatter::setTheming( const QString &themeName, const Article& article, IconOption icon) const {
 
-    Grantlee::Template t = mEngine->loadByName( viewName + ".html" );
+    Grantlee::Template t = mEngine->loadByName( themeName + "/default.html" );
     QVariantHash data;
 
     QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr";
@@ -276,7 +281,7 @@ class DefaultNormalViewFormatter::SummaryVisitor : public TreeNodeVisitor
 
 QString DefaultNormalViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    return setTheming( "default" , article, icon );
+    return setTheming( mThemeName, article, icon );
 }
 
 QString DefaultNormalViewFormatter::getCss() const
@@ -378,7 +383,7 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 
 QString DefaultCombinedViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    return setTheming( "combined" , article, icon );
+    return setTheming( mThemeName, article, icon );
 }
 
 QString DefaultCombinedViewFormatter::getCss() const

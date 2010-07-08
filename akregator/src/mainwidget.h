@@ -114,6 +114,11 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         ViewMode viewMode() const { return m_viewMode; }
 
+        QString mThemeName;
+        
+        QString themeName() {
+          return mThemeName;          
+        }
 
     signals:
         /** emitted when the unread count of "All Feeds" was changed */
@@ -196,6 +201,9 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
         void slotCombinedView();
         /** toggles the visibility of the filter bar */
         void slotToggleShowQuickFilter();
+
+        /** selected theme has changed */
+        void slotSetTheme( QAction *themeAction );
 
         /** selects the previous unread article in the article list */
         void slotPrevUnreadArticle();

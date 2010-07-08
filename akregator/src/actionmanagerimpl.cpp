@@ -44,6 +44,9 @@
 #include <ktoolbarpopupaction.h>
 #include <kaction.h>
 #include <KToggleAction>
+#include <KSelectAction>
+#include <KDesktopFile>
+#include <KStandardDirs>
 #include <kactioncollection.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -247,6 +250,39 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     action->setText(i18n("C&ombined View"));
     connect(action, SIGNAL(triggered(bool)), d->mainWidget, SLOT(slotCombinedView()));
     action->setShortcuts(KShortcut( "Ctrl+Shift+3" ));
+
+    // themes menu
+    QString themesPath ( KStandardDirs::locate("data","akregator/themes/") );
+
+    QDir dirsPath( themesPath );
+    dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks );
+    dirsPath.setSorting( QDir::Name );
+    QStringList themeDirNames = dirsPath.entryList();
+
+    QSet<QString> themeDirs;
+
+    foreach(const QString &dirname, themeDirNames) {
+      QDir dir(dirname);
+      themeDirs.insert(dir.dirName());
+    }
+
+    // Set themes menu
+    mSelectThemeAction  = new KSelectAction(i18n("&Themes"), this);
+    mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
+    coll->addAction("view_themes", mSelectThemeAction );
+    connect(mSelectThemeAction,SIGNAL( triggered(QAction*)), d->mainWidget,
+          SLOT( slotSetTheme(QAction*) ));
+
+    foreach(const QString &dirName, themeDirs) {
+      KAction* themeAction = new KAction(this);
+      //Should write a method instead, just for testing.
+      KDesktopFile* themeDesktop = new KDesktopFile( themesPath + dirName + "/theme-" + dirName +  ".desktop" );
+      themeAction->setData(dirName);
+      themeAction->data().toString();
+      themeAction->setText( themeDesktop->readName() );
+      themeAction->setData(dirName);
+      mSelectThemeAction->addAction(themeAction);
+    }
 
     // toolbar / feed menu
     action = coll->addAction("feed_fetch");

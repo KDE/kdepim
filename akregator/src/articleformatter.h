@@ -38,6 +38,7 @@ namespace Grantlee
 namespace Akregator {
 
 class Article;
+class MainWidget;
 class TreeNode;
 
 class ArticleFormatter
@@ -60,14 +61,17 @@ class ArticleFormatter
         virtual QString formatSummary(TreeNode* node) const = 0;
         
         virtual QString getCss() const = 0;
+
+        QString mThemeName;
+
+        // method to set up the theme
+        QString setTheming( const QString &themeName , const Article& article, IconOption icon) const;
+        MainWidget* m_mainWidget;
       
     protected:        
         int pointsToPixel(int pointSize) const;
-        Grantlee::Engine *mEngine;
+        Grantlee::Engine *mEngine;        
 
-        // method to set up the theme in the default and combined views
-        QString setTheming( const QString &viewName , const Article& article, IconOption icon) const;       
-               
     private:
         class Private;
         Private* const d;
@@ -93,6 +97,7 @@ class DefaultNormalViewFormatter : public ArticleFormatter
         KUrl m_imageDir;
         class SummaryVisitor;
         SummaryVisitor* m_summaryVisitor;
+        
 };
 
 class DefaultCombinedViewFormatter : public ArticleFormatter

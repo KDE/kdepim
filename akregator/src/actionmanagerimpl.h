@@ -28,6 +28,7 @@
 #include "actionmanager.h"
 
 class KAction;
+class KSelectAction;
 class KActionCollection;
 
 class QWidget;
@@ -67,6 +68,8 @@ class ActionManagerImpl : public ActionManager
         void initFrameManager(FrameManager* frameManager);
 
         void setArticleActionsEnabled( bool enabled );
+
+        KSelectAction *mSelectThemeAction;
 
     public slots:
 
