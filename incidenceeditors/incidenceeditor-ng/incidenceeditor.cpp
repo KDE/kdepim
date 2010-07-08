@@ -20,6 +20,9 @@
 
 #include "incidenceeditor-ng.h"
 
+#include <KCal/Event>
+#include <KCal/Todo>
+
 using namespace IncidenceEditorsNG;
 
 IncidenceEditor::IncidenceEditor( QObject *parent )
@@ -42,6 +45,19 @@ void IncidenceEditor::checkDirtyStatus()
 bool IncidenceEditor::isValid()
 {
   return true;
+}
+
+QString IncidenceEditor::type()
+{
+  if ( mLoadedIncidence == 0 )
+    return QString();
+
+  if ( incidence<KCal::Event::Ptr>() )
+    return "Event";
+  else {
+    Q_ASSERT( incidence<KCal::Todo::Ptr>()  );
+    return "Todo";
+  }
 }
 
 #include "moc_incidenceeditor-ng.cpp"

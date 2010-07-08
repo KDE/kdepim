@@ -67,6 +67,11 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      */
     virtual bool isValid();
 
+    /**
+     * Returns a string representation of the Inicdince that is currently loaded.
+     */
+    QString type();
+
     /** Convenience method to get a pointer for a specific const Incidence Type. */
     template <typename IncidenceT>
     boost::shared_ptr<const IncidenceT> incidence() const
