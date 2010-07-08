@@ -108,6 +108,31 @@ static const char gpg4win_description[] = I18N_NOOP( "Gpg4win is an installer pa
                                                      "and S/MIME. Gpg4win and the software included with Gpg4win "
                                                      "are Free Software.");
 
+
+static const char gpg4win_credits_description[]	= I18N_NOOP( "This Free Software product was developed mostly as part of "
+                                                     "commercial contracts by the following companies:"
+                                                     "<ul><li><a href='http://intevation.net'>Intevation GmbH</a> "
+                                                     "(Projekt coordination, QA, Compendium)</li>"
+                                                     "<li><a href='http://www.g10code.com'>g10 Code GmbH</a> "
+                                                     "(Crypto Funktionality, GpgOL, GpgEX, GPA)</li> "
+                                                     "<li><a href='http://www.kdab.com'>KDAB</a> (Kleopatra)</li></ul>"
+                                                     "The following persons have contributed (as of 20100706):");
+
+static const char gpg4win_credits_persons[] 	= I18N_NOOP( "Till Adam<br>"
+                                                     "Marcus Brinkmann<br>"
+                                                     "Brigitte Hamilton<br>"
+                                                     "Bernhard Herzog<br>"
+                                                     "Werner Koch<br>"
+                                                     "Colin Leroy<br>"
+                                                     "Marc Mutz<br>"
+                                                     "Marcel Newmann<br>"
+                                                     "Frank Osterfeld<br>"
+                                                     "Bernhard Reiter<br>"
+                                                     "Florian v. Samson<br>"
+                                                     "Emanuel Schütze<br>"
+                                                     "Dr. Jan-Oliver Wagner");
+
+
 static const char gpg4win_version_guessed[] = "2.0.1";
 
 static QString gpg4win_version() {
@@ -144,10 +169,7 @@ AboutGpg4WinData::AboutGpg4WinData()
                   gpg4win_version().toLatin1(), ki18n(gpg4win_description),
                   License_GPL, KLocalizedString(), KLocalizedString(), "http://www.gpg4win.de" )
 {
-    addAuthor( ki18n("Intevation GmbH (Project Management)"), KLocalizedString(), 0, "http://www.intevation.de" );
-    addAuthor( ki18n("g\xC2\xB9\xC2\xBA" "code GmbH (Crypto Functionality, GpgOL, GpgEX, GPA)"), KLocalizedString(), 0, "http://www.g10code.de" );
-    addAuthor( ki18n("KDAB (Kleopatra)"), KLocalizedString(), 0, "http://www.kdab.com" );
-    setCustomAuthorText( ki18n("Gpg4win is being developed by the following companies:"),
-                         ki18n("Gpg4win is being developed by the following companies:") );
+    setCustomAuthorText( ki18n(gpg4win_credits_description), ki18n(gpg4win_credits_description) );
+    addAuthor( ki18n(gpg4win_credits_persons), KLocalizedString(), 0 , 0 );
     setProgramLogo( UserIcon_nocached2( "gpg4win" ) );
 }
