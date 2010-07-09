@@ -34,13 +34,13 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   ../categoryselectdialog.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
-  ../templatemanagementdialog.cpp
 )
 
 ### Build the desktop version
 
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
+  ../templatemanagementdialog.cpp
   eventortododialog.cpp
 )
 
