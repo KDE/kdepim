@@ -77,6 +77,7 @@ public:
   void handleRecurrenceChange( bool );
   void loadTemplate( const QString &templateName );
   void manageTemplates();
+  void saveTemplate( const QString &templateName );
   void storeTemplatesInConfig( const QStringList &newTemplates );
   void updateAttachmentCount( int newCount );
   void updateAttendeeCount( int newCount );
@@ -213,6 +214,7 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
   mEditor->load( KCal::Incidence::Ptr( incidences.first()->clone() ) );
 }
 
+
 void EventOrTodoDialogPrivate::manageTemplates()
 {
   Q_Q( EventOrTodoDialog );
@@ -224,10 +226,27 @@ void EventOrTodoDialogPrivate::manageTemplates()
               SLOT( loadTemplate( const QString& ) ) );
   q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
               SLOT( storeTemplatesInConfig( const QStringList& ) ) );
-//  q->connect( dialog, SIGNAL( saveTemplate( const QString& ) ),
-//              this, SLOT( slotSaveTemplate( const QString& ) ) );
+  q->connect( dialog, SIGNAL( saveTemplate( const QString& ) ),
+              SLOT( saveTemplate( const QString& ) ) );
   dialog->exec();
   delete dialog;
+}
+
+void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
+{
+  Q_ASSERT( ! templateName.isEmpty() );
+
+  KCal::Incidence::Ptr incidence( new KCal::Event );
+  mEditor->save( incidence );
+
+  QString fileName = "templates/" + incidence->type();
+  fileName.append( '/' + templateName );
+  fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
+
+  KCal::CalendarLocal cal( KSystemTimeZones::local() );
+  cal.addIncidence( incidence->clone() );
+  KCal::ICalFormat format;
+  format.save( &cal, fileName );
 }
 
 void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templateNames )

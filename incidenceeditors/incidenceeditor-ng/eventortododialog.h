@@ -64,6 +64,7 @@ private:
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
   Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(bool))
   Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
+  Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))
   Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int))
   Q_PRIVATE_SLOT(d_ptr, void updateAttendeeCount(int))
