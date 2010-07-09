@@ -44,6 +44,7 @@ using KPIM::ProgressManager;
 
 #include <KLocale>
 #include <KIconLoader>
+#include <KDebug>
 
 #include <QEvent>
 #include <QFrame>
@@ -60,7 +61,7 @@ using namespace KPIM;
 //-----------------------------------------------------------------------------
 StatusbarProgressWidget::StatusbarProgressWidget( ProgressDialog* progressDialog, QWidget* parent, bool button )
   : QFrame( parent ), mCurrentItem( 0 ), mProgressDialog( progressDialog ),
-    mDelayTimer( 0 ), mBusyTimer( 0 )
+    mDelayTimer( 0 ), mBusyTimer( 0 ), mCleanTimer( 0 )
 {
   m_bShowButton = button;
   int w = fontMetrics().width( " 999.9 kB/s 00:00:01 " ) + 8;
@@ -114,8 +115,14 @@ StatusbarProgressWidget::StatusbarProgressWidget( ProgressDialog* progressDialog
             this, SLOT( slotProgressDialogVisible( bool ) ) );
 
   mDelayTimer = new QTimer( this );
+  mDelayTimer->setSingleShot( true );
   connect ( mDelayTimer, SIGNAL( timeout() ),
             this, SLOT( slotShowItemDelayed() ) );
+
+  mCleanTimer = new QTimer( this );
+  mCleanTimer->setSingleShot( true );
+  connect ( mCleanTimer, SIGNAL(timeout()),
+            this, SLOT(slotClean()) );
 }
 
 // There are three cases: no progressitem, one progressitem (connect to it directly),
@@ -129,7 +136,6 @@ void StatusbarProgressWidget::updateBusyMode()
   if ( mCurrentItem ) { // Exactly one item
     delete mBusyTimer;
     mBusyTimer = 0;
-    mDelayTimer->setSingleShot( true );
     mDelayTimer->start( 1000 );
   }
   else { // N items
@@ -137,7 +143,6 @@ void StatusbarProgressWidget::updateBusyMode()
       mBusyTimer = new QTimer( this );
       connect( mBusyTimer, SIGNAL( timeout() ),
                this, SLOT( slotBusyIndicator() ) );
-      mDelayTimer->setSingleShot( true );
       mDelayTimer->start( 1000 );
     }
   }
@@ -157,7 +162,7 @@ void StatusbarProgressWidget::slotProgressItemCompleted( ProgressItem *item )
   connectSingleItem(); // if going back to 1 item
   if ( ProgressManager::instance()->isEmpty() ) { // No item
     // Done. In 5s the progress-widget will close, then we can clean up the statusbar
-    QTimer::singleShot( 5000, this, SLOT( slotClean() ) );
+    mCleanTimer->start( 5000 );
   } else if ( mCurrentItem ) { // Exactly one item
     delete mBusyTimer;
     mBusyTimer = 0;
