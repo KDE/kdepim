@@ -23,6 +23,8 @@
 #include <KCal/Alarm>
 #include <KPIMUtils/Email>
 
+#include "editorconfig.h"
+
 #include "ui_alarmdialog.h"
 
 using namespace IncidenceEditorsNG;
@@ -33,6 +35,14 @@ AlarmDialog::AlarmDialog()
 {
   setWindowTitle( i18n( "Create a new alarm" ) );
   mUi->setupUi( mainWidget() );
+
+  const int defaultReminderTime = IncidenceEditors::EditorConfig::instance()->reminderTime();
+  mUi->mAlarmOffset->setValue( defaultReminderTime );
+
+  int defaultReminderUnits = IncidenceEditors::EditorConfig::instance()->reminderTimeUnits();
+  if ( defaultReminderUnits < 0 || defaultReminderUnits > 2 )
+    defaultReminderUnits = 0; // minutes
+  mUi->mOffsetUnit->setCurrentIndex( defaultReminderUnits );
 }
 
 void AlarmDialog::load( Alarm *alarm )
