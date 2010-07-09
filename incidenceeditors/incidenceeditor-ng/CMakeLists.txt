@@ -45,6 +45,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
+  ../template_management_dialog_base.ui
   eventortododesktop.ui
   alarmdialog.ui
   attachmenteditdialog.ui
@@ -79,8 +80,8 @@ if (KDEPIM_MOBILE_UI)
 
   kde4_add_ui_files(incidenceeditors_ng_mobile_LIB_SRCS
     ../categoryselectdialog_base.ui
-    eventortododesktop.ui
     ../editoralarms_base.ui
+    eventortododesktop.ui
     eventortodomobile.ui
     eventortodomoremobile.ui
     attachmenteditdialog.ui
