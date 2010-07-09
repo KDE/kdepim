@@ -93,6 +93,7 @@ void IncidenceCompletionPriority::load( KCal::Incidence::ConstPtr incidence )
   // only for Todos
   KCal::Todo::ConstPtr todo = IncidenceCompletionPriority::incidence<KCal::Todo>();
   if ( todo == 0 ) {
+    d->mDirty = false;
     return;
   }
 
