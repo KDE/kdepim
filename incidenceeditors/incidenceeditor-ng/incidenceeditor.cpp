@@ -52,10 +52,10 @@ QString IncidenceEditor::type()
   if ( mLoadedIncidence == 0 )
     return QString();
 
-  if ( incidence<KCal::Event::Ptr>() )
+  if ( incidence<KCal::Event>() )
     return "Event";
   else {
-    Q_ASSERT( incidence<KCal::Todo::Ptr>()  );
+    Q_ASSERT( incidence<KCal::Todo>()  );
     return "Todo";
   }
 }
