@@ -25,6 +25,7 @@
 #include <KCal/Incidence>
 #include <KCal/Event>
 #include <KCal/Todo>
+#include <KConfigSkeleton>
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KSystemTimeZones>
@@ -76,6 +77,7 @@ public:
   void handleRecurrenceChange( bool );
   void loadTemplate( const QString &templateName );
   void manageTemplates();
+  void storeTemplatesInConfig( const QStringList &newTemplates );
   void updateAttachmentCount( int newCount );
   void updateAttendeeCount( int newCount );
   void updateButtonStatus( bool isDirty );
@@ -220,13 +222,22 @@ void EventOrTodoDialogPrivate::manageTemplates()
       new IncidenceEditors::TemplateManagementDialog( q, templates, mEditor->type() ) );
   q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
               SLOT( loadTemplate( const QString& ) ) );
-//  q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
-//              this, SLOT( slotTemplatesChanged( const QStringList& ) ) );
+  q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
+              SLOT( storeTemplatesInConfig( const QStringList& ) ) );
 //  q->connect( dialog, SIGNAL( saveTemplate( const QString& ) ),
 //              this, SLOT( slotSaveTemplate( const QString& ) ) );
   dialog->exec();
   delete dialog;
 }
+
+void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templateNames )
+{
+  // I find this somewhat broken. templates() returns a reference, maybe it should
+  // be changed by adding a setTemplates method.
+  IncidenceEditors::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
+  IncidenceEditors::EditorConfig::instance()->config()->writeConfig();
+}
+
 
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
