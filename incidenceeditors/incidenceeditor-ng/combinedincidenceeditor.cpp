@@ -77,6 +77,7 @@ void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
 
 void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
 {
+  mLoadedIncidence = incidence;
   foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
     // load() may fire dirtyStatusChanged(), reset mDirtyEditorCount to make sure
     // we don't end up with an invalid dirty count.
