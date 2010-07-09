@@ -67,6 +67,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 #endif
 
     KCal::Alarm::List mAlarms;
+    int mEnabledAlarmCount;
 };
 
 }

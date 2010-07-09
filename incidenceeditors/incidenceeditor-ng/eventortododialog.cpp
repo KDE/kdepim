@@ -175,11 +175,14 @@ EventOrTodoDialogPrivate::~EventOrTodoDialogPrivate()
 
 void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
 {
+  QString tabText;
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabIcon( 2, SmallIcon( "appointment-reminder" ) );
+    tabText = i18n( "Reminder (%1)", newCount );
   } else {
-    mUi->mTabWidget->setTabIcon( 2, QIcon() );
+    tabText = i18n( "Reminder" );
   }
+
+  mUi->mTabWidget->setTabText( 2, tabText );
 }
 
 void EventOrTodoDialogPrivate::handleRecurrenceChange( int type )

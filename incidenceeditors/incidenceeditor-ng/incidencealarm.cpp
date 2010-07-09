@@ -37,6 +37,7 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoMore *ui )
 IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
 #endif
   : mUi( ui )
+  , mEnabledAlarmCount( 0 )
 {
   mUi->mAlarmPresetCombo->insertItems( 0, AlarmPresets::availablePresets() );
   mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
@@ -151,7 +152,6 @@ void IncidenceAlarm::newAlarm()
     updateAlarmList();
   }
 
-  emit alarmCountChanged( mAlarms.count() );
 #endif
 }
 
@@ -161,7 +161,6 @@ void IncidenceAlarm::newAlarmFromPreset()
   updateAlarmList();
 
   checkDirtyStatus();
-  emit alarmCountChanged( mAlarms.count() );
 }
 
 void IncidenceAlarm::removeCurrentAlarm()
@@ -173,7 +172,6 @@ void IncidenceAlarm::removeCurrentAlarm()
 
   updateButtons();
   checkDirtyStatus();
-  emit alarmCountChanged( mAlarms.count() );
 }
 
 void IncidenceAlarm::toggleCurrentAlarm()
@@ -190,12 +188,20 @@ void IncidenceAlarm::toggleCurrentAlarm()
 
 void IncidenceAlarm::updateAlarmList()
 {
+  int prevEnabledAlarmCount = mEnabledAlarmCount;
+  mEnabledAlarmCount = 0;
+
   const QModelIndex currentIndex = mUi->mAlarmList->currentIndex();
   mUi->mAlarmList->clear();
-  foreach ( KCal::Alarm *alarm, mAlarms )
+  foreach ( KCal::Alarm *alarm, mAlarms ) {
     mUi->mAlarmList->addItem( stringForAlarm( alarm ) );
+    if ( alarm->enabled() )
+      ++mEnabledAlarmCount;
+  }
 
   mUi->mAlarmList->setCurrentIndex( currentIndex );
+  if ( prevEnabledAlarmCount != mEnabledAlarmCount )
+    emit alarmCountChanged( mEnabledAlarmCount );
 }
 
 void IncidenceAlarm::updateButtons()
