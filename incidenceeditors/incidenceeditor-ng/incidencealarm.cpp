@@ -42,7 +42,7 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
   mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
   updateButtons();
 
-  mEnabledAlarms.setAutoDelete( true );
+  mAlarms.setAutoDelete( true );
 
   connect( mUi->mAlarmAddPresetButton, SIGNAL(clicked()),
            SLOT(newAlarmFromPreset()) );
@@ -63,7 +63,7 @@ void IncidenceAlarm::load( KCal::Incidence::ConstPtr incidence )
   mLoadedIncidence = incidence;
 
   foreach ( KCal::Alarm *alarm, incidence->alarms() )
-    mEnabledAlarms.append( new KCal::Alarm( *alarm ) );
+    mAlarms.append( new KCal::Alarm( *alarm ) );
 
   mWasDirty = false;
 }
@@ -72,7 +72,7 @@ void IncidenceAlarm::save( KCal::Incidence::Ptr incidence )
 {
   incidence->clearAlarms();
   KCal::Alarm::List::ConstIterator it;
-  for ( it = mEnabledAlarms.constBegin(); it != mEnabledAlarms.constEnd(); ++it ) {
+  for ( it = mAlarms.constBegin(); it != mAlarms.constEnd(); ++it ) {
     KCal::Alarm *al = new KCal::Alarm( *(*it) );
     al->setParent( incidence.get() );
     // We need to make sure that both lists are the same in the end for isDirty.
@@ -83,16 +83,16 @@ void IncidenceAlarm::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceAlarm::isDirty() const
 {
-  if ( !mLoadedIncidence->isAlarmEnabled() && mEnabledAlarms.count() > 0 )
+  if ( !mLoadedIncidence->isAlarmEnabled() && mAlarms.count() > 0 )
     return true;
 
-  if ( mLoadedIncidence->isAlarmEnabled() && mEnabledAlarms.count() == 0 )
+  if ( mLoadedIncidence->isAlarmEnabled() && mAlarms.count() == 0 )
     return true;
 
   if ( mLoadedIncidence->isAlarmEnabled() ) {
     const KCal::Alarm::List initialAlarms = mLoadedIncidence->alarms();
 
-    if ( initialAlarms.count() != mEnabledAlarms.count() )
+    if ( initialAlarms.count() != mAlarms.count() )
       return true; // The number of alarms has changed
 
     // Note: Not the most efficient algorithm but I'm assuming that we're only
@@ -100,10 +100,10 @@ bool IncidenceAlarm::isDirty() const
     //       if all currently enabled alarms are also in the incidence. The
     //       disabled alarms are not changed by our code at all, so we assume that
     //       they're still there.
-    foreach ( const KCal::Alarm *enabledAlarm, mEnabledAlarms ) {
+    foreach ( const KCal::Alarm *alarm, mAlarms ) {
       bool found = false;
-      foreach ( const KCal::Alarm *alarm, initialAlarms ) {
-        if ( *enabledAlarm == *alarm ) {
+      foreach ( const KCal::Alarm *initialAlarm, initialAlarms ) {
+        if ( *alarm == *initialAlarm ) {
           found  = true;
           break;
         }
@@ -124,7 +124,7 @@ void IncidenceAlarm::editCurrentAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
 
-  KCal::Alarm *currentAlarm = mEnabledAlarms.at( mUi->mAlarmList->currentRow() );
+  KCal::Alarm *currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
   QScopedPointer<AlarmDialog> dialog( new AlarmDialog );
   dialog->load( currentAlarm );
@@ -147,21 +147,21 @@ void IncidenceAlarm::newAlarm()
     KCal::Alarm *newAlarm = new KCal::Alarm( 0 );
     dialog->save( newAlarm );
     newAlarm->setEnabled( true );
-    mEnabledAlarms.append( newAlarm );
+    mAlarms.append( newAlarm );
     updateAlarmList();
   }
 
-  emit alarmCountChanged( mEnabledAlarms.count() );
+  emit alarmCountChanged( mAlarms.count() );
 #endif
 }
 
 void IncidenceAlarm::newAlarmFromPreset()
 {
-  mEnabledAlarms.append( AlarmPresets::preset( mUi->mAlarmPresetCombo->currentText() ) );
+  mAlarms.append( AlarmPresets::preset( mUi->mAlarmPresetCombo->currentText() ) );
   updateAlarmList();
 
   checkDirtyStatus();
-  emit alarmCountChanged( mEnabledAlarms.count() );
+  emit alarmCountChanged( mAlarms.count() );
 }
 
 void IncidenceAlarm::removeCurrentAlarm()
@@ -169,18 +169,18 @@ void IncidenceAlarm::removeCurrentAlarm()
   Q_ASSERT( mUi->mAlarmList->selectedItems().size() == 1 );
   const int curAlarmIndex = mUi->mAlarmList->currentRow();
   delete mUi->mAlarmList->takeItem( curAlarmIndex );
-  mEnabledAlarms.removeAt( curAlarmIndex );
+  mAlarms.removeAt( curAlarmIndex );
 
   updateButtons();
   checkDirtyStatus();
-  emit alarmCountChanged( mEnabledAlarms.count() );
+  emit alarmCountChanged( mAlarms.count() );
 }
 
 void IncidenceAlarm::toggleCurrentAlarm()
 {
   Q_ASSERT( mUi->mAlarmList->selectedItems().size() == 1 );
   const int curAlarmIndex = mUi->mAlarmList->currentRow();
-  KCal::Alarm *alarm = mEnabledAlarms.at( curAlarmIndex );
+  KCal::Alarm *alarm = mAlarms.at( curAlarmIndex );
   alarm->setEnabled( !alarm->enabled() );
 
   updateButtons();
@@ -192,7 +192,7 @@ void IncidenceAlarm::updateAlarmList()
 {
   const QModelIndex currentIndex = mUi->mAlarmList->currentIndex();
   mUi->mAlarmList->clear();
-  foreach ( KCal::Alarm *alarm, mEnabledAlarms )
+  foreach ( KCal::Alarm *alarm, mAlarms )
     mUi->mAlarmList->addItem( stringForAlarm( alarm ) );
 
   mUi->mAlarmList->setCurrentIndex( currentIndex );
@@ -204,7 +204,7 @@ void IncidenceAlarm::updateButtons()
     mUi->mAlarmConfigureButton->setEnabled( true );
     mUi->mAlarmRemoveButton->setEnabled( true );
     mUi->mAlarmToggleButton->setEnabled( true );
-    if ( mEnabledAlarms.at( mUi->mAlarmList->currentIndex().row() )->enabled() ) {
+    if ( mAlarms.at( mUi->mAlarmList->currentIndex().row() )->enabled() ) {
       mUi->mAlarmToggleButton->setText( i18nc( "Disable currently selected alarm", "Disable" ) );
     } else {
       mUi->mAlarmToggleButton->setText( i18nc( "Enable currently selected alarm", "Enable" ) );

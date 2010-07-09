@@ -66,7 +66,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 #endif
 
-    KCal::Alarm::List mEnabledAlarms;
+    KCal::Alarm::List mAlarms;
 };
 
 }
