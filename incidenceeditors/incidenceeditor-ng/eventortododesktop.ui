@@ -1314,83 +1314,39 @@
     <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_8">
       <item>
-       <widget class="QComboBox" name="mCompletionCombo">
-        <item>
-         <property name="text">
-          <string>0 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>10 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>20 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>30 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>40 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>50 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>60 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>70 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>80 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>90 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>100 %</string>
-         </property>
-        </item>
+       <widget class="QSlider" name="mCompletionSlider">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="tracking">
+         <bool>true</bool>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="mCompletedLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>completed</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_13">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>329</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item>
        <widget class="QLabel" name="label_9">

@@ -255,66 +255,20 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QComboBox" name="mCompletionCombo">
-        <item>
-         <property name="text">
-          <string>0 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>10 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>20 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>30 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>40 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>50 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>60 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>70 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>80 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>90 %</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>100 %</string>
-         </property>
-        </item>
+       <widget class="QSlider" name="mCompletionSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="mCompletedLabel">
         <property name="text">
          <string>completed</string>
         </property>
@@ -325,9 +279,12 @@
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
+        </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>20</width>
           <height>20</height>
          </size>
         </property>

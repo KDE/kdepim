@@ -44,7 +44,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceE
     class Private;
     Private *const d;
 
-  Q_PRIVATE_SLOT( d, void comboValueChanged() )
+  Q_PRIVATE_SLOT( d, void sliderValueChanged(int) )
 };
 
 }

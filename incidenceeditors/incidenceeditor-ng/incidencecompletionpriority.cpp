@@ -46,14 +46,17 @@ class IncidenceCompletionPriority::Private
     int mOrigPercentCompleted;
 
   public: // slots
-    void comboValueChanged();
+    void sliderValueChanged( int );
 };
 
-void IncidenceCompletionPriority::Private::comboValueChanged()
+void IncidenceCompletionPriority::Private::sliderValueChanged( int value )
 {
-  if ( q->sender() == mUi->mCompletionCombo ) {
+  if ( q->sender() == mUi->mCompletionSlider ) {
     mOrigPercentCompleted = -1;
   }
+
+  mUi->mCompletedLabel->setText( i18n( "%1% completed", value ) );
+
   mDirty = true;
   q->checkDirtyStatus();
 }
@@ -66,13 +69,14 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
  
   d->mUi = ui;
 
+  d->sliderValueChanged( d->mUi->mCompletionSlider->value() );
   d->mUi->mCompletionPriorityWidget->hide();
   d->mUi->mTaskLabel->hide();
 #ifndef KDEPIM_MOBILE_UI
   d->mUi->mTaskSeparator->hide();
 #endif
 
-  connect( d->mUi->mCompletionCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( comboValueChanged() ) );
+  connect( d->mUi->mCompletionSlider, SIGNAL( valueChanged( int ) ), SLOT( sliderValueChanged( int ) ) );
   connect( d->mUi->mPriorityCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( comboValueChanged() ) );
 }
 
@@ -99,9 +103,10 @@ void IncidenceCompletionPriority::load( KCal::Incidence::ConstPtr incidence )
 #endif
 
   d->mOrigPercentCompleted = todo->percentComplete();
-  d->mUi->mCompletionCombo->blockSignals( true );
-  d->mUi->mCompletionCombo->setCurrentIndex( todo->percentComplete() / 10 );
-  d->mUi->mCompletionCombo->blockSignals( false );
+  d->mUi->mCompletionSlider->blockSignals( true );
+  d->mUi->mCompletionSlider->setValue( todo->percentComplete() );
+  d->sliderValueChanged( d->mUi->mCompletionSlider->value() );
+  d->mUi->mCompletionSlider->blockSignals( false );
   
   d->mUi->mPriorityCombo->blockSignals( true );
   d->mUi->mPriorityCombo->setCurrentIndex( todo->priority() );
@@ -125,7 +130,7 @@ void IncidenceCompletionPriority::save( KCal::Incidence::Ptr incidence )
   if ( d->mOrigPercentCompleted != -1 ) {
     todo->setPercentComplete( d->mOrigPercentCompleted );
   } else {
-    todo->setPercentComplete( d->mUi->mCompletionCombo->currentIndex() * 10 );
+    todo->setPercentComplete( d->mUi->mCompletionSlider->value() );
   }
   todo->setPriority( d->mUi->mPriorityCombo->currentIndex() );
 
