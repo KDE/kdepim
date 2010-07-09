@@ -9,7 +9,7 @@
   Copyright 2004 David Faure <faure@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License, version 2 
+  under the terms of the GNU General Public License, version 2
   or above, as published by the Free Software Foundation.
 
   KMail is distributed in the hope that it will be useful, but
@@ -102,6 +102,7 @@ private:
   ProgressDialog* mProgressDialog;
   QTimer *mDelayTimer;
   QTimer *mBusyTimer;
+  QTimer *mCleanTimer;
 };
 
 } // namespace
