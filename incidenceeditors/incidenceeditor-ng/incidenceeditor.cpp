@@ -52,12 +52,7 @@ QString IncidenceEditor::type()
   if ( mLoadedIncidence == 0 )
     return QString();
 
-  if ( incidence<KCal::Event>() )
-    return "Event";
-  else {
-    Q_ASSERT( incidence<KCal::Todo>()  );
-    return "Todo";
-  }
+  return mLoadedIncidence->type();
 }
 
 #include "moc_incidenceeditor-ng.cpp"
