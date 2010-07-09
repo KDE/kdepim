@@ -20,9 +20,6 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <KCal/Event>
-#include <KCal/Todo>
-
 using namespace IncidenceEditorsNG;
 
 IncidenceEditor::IncidenceEditor( QObject *parent )
