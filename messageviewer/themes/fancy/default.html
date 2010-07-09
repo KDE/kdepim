@@ -1,49 +1,12 @@
-<style>
-
-.fancy_header, a {
-    color: #304D69 ! important;
-}
-
-a:hover {
-    text-decoration: underline ! important;
-}
-
-.fancy_header, .table.outer {
-    background-color: #3384b3 ! important;
-}
-
-.fancy_header {
-    padding: 4px ! important;
-    border: solid #000000 1px ! important;
-}
-
-.fancy.header, .table.outer {
-    border-bottom: solid #000 1px ! important;
-    border-left: solid #000 1px ! important;
-    border-right: solid #000 1px ! important;
-}
-
-.senderpic {
-    font-size:0.8em ! important;
-    border:1px solid black ! important;
-    background-color:#3384b3 ! important;
-}
-
-.spamheader {
-    display:none ! important;
-}
-
-</style>
-
-<div style="color: #000 ! important; background-color: #418AD7 ! important;padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;" dir="{{ dir }}">
+<div style="color: #000 ! important; background-image:url('{% media_finder "fancy/images/background_oxygen.png" %}'); padding: 0px ! important;border: solid #000000 1px ! important;border-bottom: solid #000 1px ! important;border-left: solid #000 1px ! important;border-right: solid #000 1px ! important;" dir="{{ dir }}">
 
 {% if subject %}
     <div dir="{{ subjectDir }}" style="color:#fff; padding: 4px ! important;"> {{ subject|safe }} </div>
 {% else %}
-    No Subject 
+    No Subject
 {% endif %}
 
-<table width="100%" style="background-color: #E7DFDF ! important;border-top: solid #000 1px ! important;">
+<table width="100%" style="background-image:url('{% media_finder "fancy/images/background_data.png" %}');border-top: solid #000 1px ! important;">
     <tr>
     <td width="100%">
 
@@ -100,7 +63,7 @@ a:hover {
     </td>
 
 {% if photoURL %}
-    <td align="center">    
+    <td align="center">
     <div style="font-size:0.8em ! important;border:1px solid black ! important;background-color:#3384b3 ! important;">
       <img src="{{ photoURL }}" width="{{ photoWidth }}" height="{{ photoHeight }}">
     </div>
@@ -110,7 +73,7 @@ a:hover {
     </tr>
 
 {% if spamHTML %}
-  <table width="100%" style="background-color: #CECECE ! important; border-top: solid #000 1px ! important;" >
+  <table width="100%" style="background-image:url('{% media_finder "fancy/images/background_spam.png" %}'); border-top: solid #000 1px ! important;" >
   <tr>
     <td dir="{{ subjectDir }}">
       <span style="padding-top: 1px ! important;font-size: 10px;"><b>Spam Status</b></span>&nbsp;
