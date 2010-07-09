@@ -1,0 +1,112 @@
+<style type="text/css">
+div.top {
+    height:28px;
+    background-image:url('{% media_finder "qt/images/top.png" %}');
+    background-repeat: repeat-x;
+    margin:2em 0 0 0;
+}
+
+img.corner_left {
+    float:left;
+}
+img.corner_right {
+    float:right;
+    margin-right:3px;
+}
+
+div.side_left {
+    background-image:url('{% media_finder "qt/images/side_left.png" %}');
+    background-repeat:repeat-y;
+    background-color: #48A81D;
+}
+
+img.logo {
+    margin:2% 0 0 0;
+   
+}
+
+div.side_right {
+    padding:0 5% 0 5%;
+    background-image:url('{% media_finder "qt/images/side_right.png" %}');
+    background-position:right;
+    background-repeat:repeat-y;
+    margin:0 3px 0 7%;
+}
+
+h1 {
+    margin:0;
+    border-bottom:1px dashed #996;
+}
+
+p.date {
+    padding-right:8px;
+    text-align:right;
+    margin:-.1em 0 0 0;
+}       
+</style>
+
+<div id="top" class="top">
+<img src="{% media_finder "qt/images/top_left.png" %}" class="corner_left" />
+<img src="{% media_finder "qt/images/qt_logo.png" %}"  width:50px; class="logo">
+<img src="{% media_finder "qt/images/top_right.png" %}" class="corner_right" />
+</div>
+<div id="side_left" class="side_left">
+
+<div id="side_right" class="side_right">
+
+{% if subject %}
+    <div dir="{{ subjectDir }}" class="subject"> <h1>{{ subject|safe }}</h1></div>
+{% else %}
+    No Subject
+{% endif %}
+
+<p class="date">Date: {{ date|safe }} </p>
+
+</div>
+</div>
+
+    <table width="99%" style="margin-left:3px;background-image:url('background_data.png');border-bottom: solid #176700 2px ! important;border-left: solid #176700 2px ! important;border-right: solid #176700 2px ! important;border-top: solid #000 2px ! important;">
+
+    <tr>
+    <th align="left" style="font-size: 10px;color:#2C6413;">From: </th>
+    <td style="font-size: 10px;">{{ from|safe }}
+
+    {% if resentFrom %}
+      &nbsp; Resent-From: {{ resentFrom|safe }}
+    {% endif %}
+
+    {% if vCardName %}
+      &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
+    {% endif %}
+
+    {% if organization %}
+      &nbsp;&nbsp;("{{ organization|safe }}")
+    {% endif %}
+
+    </td>
+    </tr>
+
+    <tr>
+    <th align="left" style="font-size: 10px;color:#2C6413;">To: </th>
+    <td style="font-size: 10px;">{{ to|safe }}</td>
+    </tr>
+
+{% if cc %}
+    <tr>
+    <th align="left" style="font-size: 10px;color:#2C6413;">CC: </th>
+    <td style="font-size: 10px;">{{ cc|safe }}</td>
+    </tr>
+{% endif %}
+
+{% if bcc %}
+    <tr>
+    <th align="left" style="font-size: 10px;color:#2C6413;">BCC: </th>
+    <td style="font-size: 10px;">{{ bcc|safe }}</td>
+    </tr>
+{% endif %}
+
+    <tr>
+    <td colspan="2"><div id="attachmentInjectionPoint"></div></td>
+    </tr>
+
+    </table>
