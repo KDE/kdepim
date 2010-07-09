@@ -38,6 +38,8 @@ class INCIDENCEEDITORS_EXPORT KOrganizerEditorConfig : public IncidenceEditors::
     virtual bool showTimeZoneSelectorInIncidenceEditor() const;
     virtual QDateTime defaultDuration() const;
     virtual QDateTime startTime() const;
+    virtual bool defaultAudioFileReminders() const;
+    virtual KUrl audioFilePath() const;
     virtual int reminderTime() const;
     virtual int reminderTimeUnits() const;
     virtual bool defaultTodoReminders() const;

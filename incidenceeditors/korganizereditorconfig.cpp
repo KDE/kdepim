@@ -74,6 +74,16 @@ QDateTime KOrganizerEditorConfig::startTime() const
   return KCalPrefs::instance()->startTime();
 }
 
+bool KOrganizerEditorConfig::defaultAudioFileReminders() const
+{
+  return KCalPrefs::instance()->defaultAudioFileReminders();
+}
+
+KUrl KOrganizerEditorConfig::audioFilePath() const
+{
+  return KCalPrefs::instance()->audioFilePath();
+}
+
 int KOrganizerEditorConfig::reminderTime() const
 {
   return KCalPrefs::instance()->reminderTime();

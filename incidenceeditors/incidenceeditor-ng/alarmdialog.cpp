@@ -42,7 +42,11 @@ AlarmDialog::AlarmDialog()
   int defaultReminderUnits = IncidenceEditors::EditorConfig::instance()->reminderTimeUnits();
   if ( defaultReminderUnits < 0 || defaultReminderUnits > 2 )
     defaultReminderUnits = 0; // minutes
+
   mUi->mOffsetUnit->setCurrentIndex( defaultReminderUnits );
+
+  if ( IncidenceEditors::EditorConfig::instance()->defaultAudioFileReminders() )
+    mUi->mSoundFile->setUrl( IncidenceEditors::EditorConfig::instance()->audioFilePath() );
 }
 
 void AlarmDialog::load( Alarm *alarm )
@@ -129,6 +133,10 @@ void AlarmDialog::load( Alarm *alarm )
   }
 
   mUi->mTypeStack->setCurrentIndex( id );
+  if ( alarm->audioFile().isEmpty() &&
+       IncidenceEditors::EditorConfig::instance()->defaultAudioFileReminders() ) {
+    mUi->mSoundFile->setUrl( IncidenceEditors::EditorConfig::instance()->audioFilePath() );
+  }
 }
 
 void AlarmDialog::save( Alarm *alarm ) const
