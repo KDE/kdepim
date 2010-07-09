@@ -289,9 +289,9 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 4, i18n( "Attac&htments (%1)", newCount ) );
+    mUi->mTabWidget->setTabText( 4, i18n( "Attac&hments (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 4, i18n( "Attac&htments" ) );
+    mUi->mTabWidget->setTabText( 4, i18n( "Attac&hments" ) );
   }
 }
 
