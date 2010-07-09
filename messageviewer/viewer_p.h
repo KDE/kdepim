@@ -463,6 +463,7 @@ private slots:
   void itemFetchResult( KJob *job );
 
   void slotItemChanged( const Akonadi::Item& item, const QSet<QByteArray>& partIdentifiers );
+  void slotItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& );
 
   void itemModifiedResult( KJob* job );
 

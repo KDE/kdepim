@@ -224,6 +224,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
            this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
   connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
            this, SLOT( slotClear() ) );
+  connect( &mMonitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           this, SLOT( slotItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -2917,6 +2919,14 @@ void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByte
   }
   if( parts.contains( "PLD:RFC822" ) )
     setMessageItem( item, Viewer::Force );
+}
+
+void ViewerPrivate::slotItemMoved( const Akonadi::Item &item, const Akonadi::Collection&,
+                                   const Akonadi::Collection& )
+{
+  // clear the view after the current item has been moved somewhere else (e.g. to trash)
+  if ( item.id() == messageItem().id() )
+    slotClear();
 }
 
 void ViewerPrivate::slotClear()
