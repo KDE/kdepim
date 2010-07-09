@@ -1972,6 +1972,12 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
 
+  if ( url.protocol() == "mailto" ) {
+    mCopyURLAction->setText( i18n( "Copy Email Address" ) );
+  } else {
+    mCopyURLAction->setText( i18n( "Copy Link Address" ) );
+  }
+
   emit popupMenu( mMessageItem, aUrl, aPos );
 }
 
