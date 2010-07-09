@@ -74,7 +74,7 @@ public:
 
   /// General methods
   void handleAlarmCountChange( int newCount );
-  void handleRecurrenceChange( bool );
+  void handleRecurrenceChange( int type );
   void loadTemplate( const QString &templateName );
   void manageTemplates();
   void saveTemplate( const QString &templateName );
@@ -92,7 +92,13 @@ public:
   virtual void load( const Akonadi::Item &item );
   virtual Akonadi::Item save( const Akonadi::Item &item );
   virtual Akonadi::Collection selectedCollection() const;
-  void slotButtonClicked( int button );
+  void slotButtonClicked( int button );    enum RecurrenceType {
+    None = 0,
+    Daily,
+    Weekly,
+    Monthly,
+    Yearly
+  };
   virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 };
 
@@ -153,8 +159,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleItemSaveFinish()));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
-  q->connect( ieRecurrence, SIGNAL(recurrenceChanged(bool)),
-              SLOT(handleRecurrenceChange(bool)) );
+  q->connect( ieRecurrence, SIGNAL(recurrenceChanged(int)),
+              SLOT(handleRecurrenceChange(int)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
   q->connect( ieAttendee, SIGNAL(attendeeCountChanged(int)),
@@ -176,13 +182,32 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
   }
 }
 
-void EventOrTodoDialogPrivate::handleRecurrenceChange( bool recurs )
+void EventOrTodoDialogPrivate::handleRecurrenceChange( int type )
 {
-  if ( recurs ) {
-    mUi->mTabWidget->setTabIcon( 3, SmallIcon( "appointment-recurring" ) );
-  } else {
-    mUi->mTabWidget->setTabIcon( 3, QIcon() );
+  QString tabText = i18n( "Rec&urrence" );
+
+  // Keep this numbers in sync with the items in mUi->mRecurrenceTypeCombo. I
+  // tried adding an enum to IncidenceRecurrence but for whatever reason I could
+  // Qt not play nice with namespaced enums in signal/slot connections.
+  // Anyways, I don't expect these values to change.
+  switch ( type ) {
+  case 0: // None
+    break;
+  case 1: // Daily
+    tabText += i18nc( "Daily recurring event, capital first letter only", " (D)" );
+    break;
+  case 2: // Weekly
+    tabText += i18nc( "Weekly recurring event, capital first letter only", " (W)" );
+    break;
+  case 3: // Monthly
+    tabText += i18nc( "Monthly recurring event, capital first letter only", " (M)" );
+    break;
+  case 4: // Yearly
+    tabText += i18nc( "Yearly recurring event, capital first letter only", " (Y)" );
+    break;
   }
+
+  mUi->mTabWidget->setTabText( 3, tabText );
 }
 
 void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )

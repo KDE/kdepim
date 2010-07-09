@@ -49,7 +49,7 @@ public:
     virtual bool isDirty() const;
 
 Q_SIGNALS:
-    void recurrenceChanged( bool recurs );
+    void recurrenceChanged( int type );
 
 private Q_SLOTS:
     void addException();

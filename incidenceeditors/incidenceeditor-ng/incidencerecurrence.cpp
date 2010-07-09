@@ -476,7 +476,7 @@ void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
   mUi->mOnLabel->setVisible( currentIndex > 1 );
 #endif
 
-  emit recurrenceChanged( currentIndex > 0 );
+  emit recurrenceChanged( currentIndex );
 }
 
 void IncidenceRecurrence::removeExceptions()

@@ -62,7 +62,7 @@ private:
   Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int))
 
   Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
-  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(bool))
+  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(int))
   Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))
