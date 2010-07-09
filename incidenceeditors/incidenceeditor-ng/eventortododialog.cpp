@@ -20,10 +20,14 @@
 
 #include "eventortododialog.h"
 
+#include <KCal/CalendarLocal>
+#include <KCal/ICalFormat>
 #include <KCal/Incidence>
 #include <KCal/Event>
 #include <KCal/Todo>
 #include <KMessageBox>
+#include <KStandardDirs>
+#include <KSystemTimeZones>
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
@@ -61,6 +65,7 @@ public:
 
   Akonadi::EditorItemManager *mItemManager;
   CombinedIncidenceEditor *mEditor;
+  IncidenceDateTime *mIeDateTime;
 
 public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
@@ -69,6 +74,7 @@ public:
   /// General methods
   void handleAlarmCountChange( int newCount );
   void handleRecurrenceChange( bool );
+  void loadTemplate( const QString &templateName );
   void manageTemplates();
   void updateAttachmentCount( int newCount );
   void updateAttendeeCount( int newCount );
@@ -114,8 +120,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceCategories *ieCategories = new IncidenceCategories( mUi );
   mEditor->combine( ieCategories );
 
-  IncidenceDateTime *ieDateTime = new IncidenceDateTime( mUi );
-  mEditor->combine( ieDateTime );
+  mIeDateTime = new IncidenceDateTime( mUi );
+  mEditor->combine( mIeDateTime );
 
   IncidenceCompletionPriority *ieCompletionPriority = new IncidenceCompletionPriority( mUi );
   mEditor->combine( ieCompletionPriority );
@@ -129,7 +135,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
 
-  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( ieDateTime, mUi );
+  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( mIeDateTime, mUi );
   mEditor->combine( ieRecurrence );
 
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
@@ -176,6 +182,35 @@ void EventOrTodoDialogPrivate::handleRecurrenceChange( bool recurs )
   }
 }
 
+void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
+{
+  Q_Q( EventOrTodoDialog );
+
+  KCal::CalendarLocal cal( KSystemTimeZones::local() );
+  QString fileName = KStandardDirs::locateLocal( "data",
+                       "korganizer/templates/" + mEditor->type() + '/' + templateName );
+
+  if ( fileName.isEmpty() ) {
+    KMessageBox::error( q, i18nc( "@info", "Unable to find template '%1'.", fileName ) );
+    return;
+  }
+
+  KCal::ICalFormat format;
+  if ( !format.load( &cal, fileName ) ) {
+    KMessageBox::error( q, i18nc( "@info", "Error loading template file '%1'.", fileName ) );
+    return;
+  }
+
+  KCal::Incidence::List incidences = cal.incidences();
+  if ( incidences.isEmpty() ) {
+    KMessageBox::error( q, i18nc( "@info", "Template does not contain a valid incidence." ) );
+    return;
+  }
+
+  mIeDateTime->setActiveDate( QDate() );
+  mEditor->load( KCal::Incidence::Ptr( incidences.first()->clone() ) );
+}
+
 void EventOrTodoDialogPrivate::manageTemplates()
 {
   Q_Q( EventOrTodoDialog );
@@ -183,8 +218,8 @@ void EventOrTodoDialogPrivate::manageTemplates()
   QStringList &templates = IncidenceEditors::EditorConfig::instance()->templates( mEditor->type() );
   QPointer<IncidenceEditors::TemplateManagementDialog> dialog(
       new IncidenceEditors::TemplateManagementDialog( q, templates, mEditor->type() ) );
-//  q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
-//              this, SLOT( slotLoadTemplate( const QString& ) ) );
+  q->connect( dialog, SIGNAL( loadTemplate( const QString& ) ),
+              SLOT( loadTemplate( const QString& ) ) );
 //  q->connect( dialog, SIGNAL( templatesChanged( const QStringList& ) ),
 //              this, SLOT( slotTemplatesChanged( const QStringList& ) ) );
 //  q->connect( dialog, SIGNAL( saveTemplate( const QString& ) ),
