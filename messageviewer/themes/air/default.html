@@ -1,53 +1,66 @@
 <style type="text/css">
 
 .main {
- width:100%;
- margin:0px auto;
- min-width:20em;
- max-width:800px;
- color:#fff;
+  width:100%;
+  margin:0px;
+  color:#fff;
 }
 
 .main .hd .c,
 .main .ft .c {
- height:11px;
+  height:11px;
 }
 
 .main .bd {
- margin-right:6px;
+  margin-right:6px;
 }
 
 .main .bd .c {
- margin-right:-6px;
+  margin-right:-6px;
 }
 
 .main .bd .c .s {
- margin:0px 5px 0px 4px;
- background:url('{% media_finder "air/images/background_data.png" %}') repeat-x 0px 0px;
- padding:0.1em;
-}
-
-.footer {
-  background:url('{% media_finder "air/images/background_footer.png" %}') repeat-x 0px 0px;
-  padding:0.4em;
+  margin:0px 7px 0px 0px;
+  background:url('{% media_finder "air/images/background_data.png" %}') repeat-x 0px 0px;
+  border-top: solid #086996 1px ! important;
+  border-left: solid #086996 1px ! important;
+  width:100%;
+  height:70px;
 }
 
 .main h1 {
  /* subject */
- font-size:1.5em;
- margin:0px;
- /*padding:1px 0 2px 5px;*/
- margin-top:-0.6em;
+  font-size:1.5em;
+  padding:0px 0 2px 5px;
+  margin:0px 0 5px 5px;
 }
 
 p {
- font-family:verdana,tahoma,arial,"sans serif";
+  font-family:verdana,tahoma,arial,"sans serif";
 }
 
 .main p {
- margin:0.5em 0px 0px 0px;
- padding:1px 0 0 5px;
- font:0.95em/1.5em arial,tahoma,"sans serif";
+  margin:5px 0px 0px 2px;
+  padding:2px 0 0 5px;
+  font:0.95em/1.5em arial,tahoma,"sans serif";
+}
+
+.main table.header {
+  width: 100%;
+  background-image:url('{% media_finder "air/images/background_main.png" %}');
+  border-top: solid #086996 1px ! important;
+  border-bottom: solid #086996 1px ! important;
+  border-left: solid #086996 1px ! important;
+  border-right: solid #086996 2px ! important;
+}
+
+.main th.header, td.data {
+  font-size: 10px;
+}
+
+.main th.header {
+  text-align:left;
+  color:#000;
 }
 
 </style>
@@ -69,20 +82,16 @@ p {
     {% else %}
         No Subject
     {% endif %}
-
-   <div class="footer">
-
-   </div>
   </div>
   </div>
 
  </div>
 
- <table width="99%" style="margin-left:3px;background-image:url('{% media_finder "air/images/background_main.png" %}'); border-bottom: solid #D5D5D5 2px ! important;border-left: solid #D5D5D5 2px ! important;border-right: solid #D5D5D5 2px ! important;border-top: solid #000 2px ! important;">
+ <table class="header">
 
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">From: </th>
-    <td style="font-size: 10px;">{{ from|safe }}
+    <th class="header">From: </th>
+    <td class="data">{{ from|safe }}
 
     {% if resentFrom %}
       &nbsp; Resent-From: {{ resentFrom|safe }}
@@ -100,21 +109,21 @@ p {
     </tr>
 
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">To: </th>
-    <td style="font-size: 10px;">{{ to|safe }}</td>
+    <th class="header">To: </th>
+    <td class="data">{{ to|safe }}</td>
     </tr>
 
 {% if cc %}
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">CC: </th>
-    <td style="font-size: 10px;">{{ cc|safe }}</td>
+    <th class="header">CC: </th>
+    <td class="data">{{ cc|safe }}</td>
     </tr>
 {% endif %}
 
 {% if bcc %}
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">BCC: </th>
-    <td style="font-size: 10px;">{{ bcc|safe }}</td>
+    <th class="header">BCC: </th>
+    <td class="data">{{ bcc|safe }}</td>
     </tr>
 {% endif %}
 
