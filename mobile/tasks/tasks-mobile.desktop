@@ -5,6 +5,7 @@ Name=KDE Tasks
 Name[pt]=Tarefas do KDE
 Name[pt_BR]=Tarefas do KDE
 Name[sv]=KDE:s uppgifter
+Name[uk]=Завдання KDE
 Name[x-test]=xxKDE Tasksxx
 Name[zh_TW]=KDE 工作簿
 Exec=tasks-mobile.sh
