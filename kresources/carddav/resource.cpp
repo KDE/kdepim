@@ -267,7 +267,9 @@ void ResourceCardDav::ensureReadOnlyFlagHonored() {
 
     //enableChangeNotification();
 
-    addressBook()->emitAddressBookChanged();
+    if (addressBook() != NULL) {
+        addressBook()->emitAddressBookChanged();
+    }
 }
 
 void ResourceCardDav::setReadOnly(bool v) {
