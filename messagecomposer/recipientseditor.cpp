@@ -264,7 +264,6 @@ void RecipientsEditor::slotCalculateTotal()
   }
 
   // We always want at least one empty line
-  kDebug() << "empty: " << empty;
   if ( empty == 0 ) addData();
 
   // update the side widget

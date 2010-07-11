@@ -119,7 +119,6 @@ void RecipientLineNG::slotTypeModified()
 
 void RecipientLineNG::analyzeLine( const QString &text )
 {
-  kDebug() << "hi";
   QStringList r = KPIMUtils::splitAddressList( text );
   if ( int( r.count() ) != mRecipientsCount ) {
     mRecipientsCount = r.count();
@@ -148,12 +147,6 @@ MultiplyingLineData::Ptr RecipientLineNG::data() const
     const_cast<RecipientLineNG*>(this)->dataFromFields();
   return mData;
 }
-
-// void RecipientLineNG::setRecipient( const QString &email )
-// {
-//   mData->clear();
-//   mData->setEmail( email );
-// }
 
 void RecipientLineNG::dataFromFields()
 {
