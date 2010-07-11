@@ -53,6 +53,7 @@ class AttendeeComboBox : public QToolButton
   signals:
     void rightPressed();
     void leftPressed();
+    void itemChanged();
 
   public slots:
     /** Clears the combobox, removing all items. */
@@ -140,6 +141,7 @@ class AttendeeLine : public KPIM::MultiplyingLine
   private slots:
     void slotTextChanged( const QString & );
     void slotEditingFinished();
+    void slotComboChanged();
   private:
     void dataFromFields();
     void fieldsFromData();

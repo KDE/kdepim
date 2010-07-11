@@ -91,9 +91,12 @@ void AttendeeComboBox::clear()
 void AttendeeComboBox::setCurrentIndex( int index )
 {
   Q_ASSERT( index < mList.size() );
+  const int old = mCurrentIndex;
   mCurrentIndex = index;
   setIcon( mList.at( index ).second );
   setToolTip( mList.at( index ).first );
+  if( old != index )
+    emit itemChanged();
 }
 
 void AttendeeComboBox::slotActionTriggered()
@@ -219,6 +222,10 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   
   connect( mEdit, SIGNAL( editingFinished() ), SLOT( slotEditingFinished() ) );
   connect( mEdit, SIGNAL( clearButtonClicked() ), SLOT( slotPropagateDeletion() ) );
+
+  connect( mRoleCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
+  connect( mStateCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
+  connect( mResponseCheck, SIGNAL( stateChanged( int ) ), this, SLOT( slotComboChanged() ) );
 
 }
 
@@ -417,6 +424,12 @@ void AttendeeLine::slotTextChanged( const QString& /*str*/ )
   mModified = true;
   emit changed();
 }
+
+void AttendeeLine::slotComboChanged()
+{
+    mModified = true;
+}
+
 
 #include "attendeeline.moc"
 
