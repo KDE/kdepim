@@ -47,6 +47,7 @@ class IncidenceCompletionPriority::Private
 
   public: // slots
     void sliderValueChanged( int );
+    void slotSetDirty();
 };
 
 void IncidenceCompletionPriority::Private::sliderValueChanged( int value )
@@ -57,9 +58,15 @@ void IncidenceCompletionPriority::Private::sliderValueChanged( int value )
 
   mUi->mCompletedLabel->setText( i18n( "%1% completed", value ) );
 
-  mDirty = true;
-  q->checkDirtyStatus();
+  slotSetDirty();
 }
+
+void IncidenceCompletionPriority::Private::slotSetDirty()
+{
+    mDirty = true;
+    q->checkDirtyStatus();
+}
+
 
 IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor()
@@ -77,7 +84,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
 #endif
 
   connect( d->mUi->mCompletionSlider, SIGNAL( valueChanged( int ) ), SLOT( sliderValueChanged( int ) ) );
-  connect( d->mUi->mPriorityCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( comboValueChanged() ) );
+  connect( d->mUi->mPriorityCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( slotSetDirty() ) );
 }
 
 IncidenceCompletionPriority::~IncidenceCompletionPriority()
