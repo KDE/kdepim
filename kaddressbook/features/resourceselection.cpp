@@ -22,6 +22,7 @@
 */
 
 #include <qlayout.h>
+#include <qpopupmenu.h>
 #include <qpushbutton.h>
 #include <qtimer.h>
 #include <qlabel.h>
@@ -148,11 +149,74 @@ ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent, const ch
   connect( mListView, SIGNAL( clicked( QListViewItem* ) ),
            SLOT( currentChanged( QListViewItem* ) ) );
 
+  connect( mListView, SIGNAL( contextMenuRequested ( QListViewItem *,
+                                                     const QPoint &, int ) ),
+           SLOT( contextMenuRequested( QListViewItem *, const QPoint &,
+                                       int ) ) );
+
   QTimer::singleShot( 0, this, SLOT( updateView() ) );
 }
 
 ResourceSelection::~ResourceSelection()
 {
+}
+
+void ResourceSelection::contextMenuRequested ( QListViewItem *i,
+                                          const QPoint &pos, int )
+{
+  ResourceItem *item = static_cast<ResourceItem *>( i );
+
+  QPopupMenu *menu = new QPopupMenu( this );
+  connect( menu, SIGNAL( aboutToHide() ), menu, SLOT( deleteLater() ) );
+  if ( item ) {
+    int reloadId = menu->insertItem( i18n("Re&load"), this,
+                                     SLOT( reloadResource() ) );
+    menu->setItemEnabled( reloadId, item->resource()->isActive() );
+    int saveId = menu->insertItem( i18n("&Save"), this,
+                                   SLOT( saveResource() ) );
+    menu->setItemEnabled( saveId, item->resource()->isActive() );
+    menu->insertSeparator();
+
+//     menu->insertItem( i18n("Show &Info"), this, SLOT( showInfo() ) );
+
+    menu->insertItem( i18n("&Edit..."), this, SLOT( edit() ) );
+    menu->insertItem( i18n("&Remove"), this, SLOT( remove() ) );
+
+    menu->insertSeparator();
+ }
+  menu->insertItem( i18n("&Add..."), this, SLOT( add() ) );
+
+  menu->popup( pos );
+}
+
+void ResourceSelection::reloadResource()
+{
+  ResourceItem *item = selectedItem();
+  if ( !item ) return;
+
+  KABC::Resource *r = item->resource();
+  r->load();
+}
+
+void ResourceSelection::saveResource()
+{
+  ResourceItem *item = selectedItem();
+  if ( !item ) return;
+
+  KABC::Resource *r = item->resource();
+  KABC::Ticket *ticket = core()->addressBook()->requestSaveTicket( r );
+  if ( ticket ) {
+      r->save( ticket );
+  }
+}
+
+void ResourceSelection::showInfo()
+{
+  ResourceItem *item = selectedItem();
+  if ( !item ) return;
+
+//   QString txt = "<qt>" + item->resource()->infoText() + "</qt>";
+//   KMessageBox::information( this, txt );
 }
 
 QString ResourceSelection::title() const

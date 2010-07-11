@@ -66,6 +66,13 @@ class ResourceSelection : public KAB::ExtensionWidget
                                const QString& /*type*/,
                                const QString& subResource );
 
+    void contextMenuRequested ( QListViewItem *i, const QPoint &pos, int );
+
+    void showInfo();
+
+    void reloadResource();
+    void saveResource();
+
   private:
     void initGUI();
 
