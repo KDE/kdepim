@@ -195,7 +195,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mExternalWindow  = ( aParent == mainWindow );
   mSplitterSizes << 180 << 100;
   mPrinting = false;
-  mThemeName = "fancy";
+  mThemeName = GlobalSettings::self()->headerTheme();
 
   createWidgets();
   createActions();
@@ -1222,8 +1222,8 @@ void ViewerPrivate::readConfig()
 void ViewerPrivate::writeConfig( bool sync )
 {
   GlobalSettings::self()->setUseFixedFont( mUseFixedFont );
-  //if ( headerTheme() )
-    //GlobalSettings::self()->setHeaderTheme( headerTheme() );
+  if ( headerTheme() )
+    GlobalSettings::self()->setHeaderTheme( mThemeName );
   if ( attachmentStrategy() )
     GlobalSettings::self()->setAttachmentStrategy( attachmentStrategy()->name() );
 
