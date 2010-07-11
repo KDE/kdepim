@@ -149,12 +149,6 @@ bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
   return mAttendeeEditor->isModified();
 }
 
-bool IncidenceEditorsNG::IncidenceAttendee::isValid()
-{
-  //TODO: implement isValid
-  return true;
-}
-
 void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
 {
   mUi->mOrganizerCombo->clear();
