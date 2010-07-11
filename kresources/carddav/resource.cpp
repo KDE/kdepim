@@ -69,9 +69,9 @@ const int ResourceCardDav::DEFAULT_SAVE_INTERVAL     = 10;
 
 ResourceCardDav::ResourceCardDav( const KConfig *config ) :
     ResourceCached(config)
-    , mLock(true)
     , readLockout(false)
     , mAllWritesComplete(false)
+    , mLock(true)
     , mPrefs(NULL)
     , mLoader(NULL)
     , mWriter(NULL)
@@ -146,6 +146,7 @@ bool ResourceCardDav::load() {
 
     log(QString("doLoad(%1)").arg(syncCache));
 
+    // FIXME KABC
     //clearCache();
 
     log("loading from cache");
@@ -493,6 +494,8 @@ bool ResourceCardDav::parseData(const QString& data) {
             log("ensuring read only flag honored");
             ensureReadOnlyFlagHonored();
         }
+        log("cleaning up cache");
+        cleanUpCache( addressees );
         log("saving to cache");
         saveCache();
     }
