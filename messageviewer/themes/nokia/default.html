@@ -1,79 +1,87 @@
 <style type="text/css">
 
 body {
- font:normal 76% georgia,helvetica,verdana,tahoma,arial,"sans serif";
- background:#999 url('{% media_finder "nokia/images/background.png" %}');
+  font:normal 76% georgia,helvetica,verdana,tahoma,arial,"sans serif";
+  background:#999 url('{% media_finder "nokia/images/background.png" %}');
 }
 
 .main {
- width:100%;
- margin:0px auto;
- min-width:20em;
- max-width:800px;
- color:#fff;
+  width:100%;
+  margin:0px auto;
+  min-width:20em;
+  max-width:800px;
+  color:#fff;
 }
 
 .main .hd .c,
 .main .ft .c {
- font-size:1px;
- height:11px;
-}
-
-.main .ft .c {
- height:14px;
+  height:11px;
 }
 
 .main .hd {
- background:transparent url('{% media_finder "nokia/images/top_left.png" %}') no-repeat 0px 0px;
- margin-right:14px;
+  background:transparent url('{% media_finder "nokia/images/top_left.png" %}') no-repeat 0px 0px;
+  margin-right:14px;
 }
 
 .main .hd .c {
- background:transparent url('{% media_finder "nokia/images/top_right.png" %}') no-repeat right 0px;
- margin-right:-14px;
+  background:transparent url('{% media_finder "nokia/images/top_right.png" %}') no-repeat right 0px;
+  margin-right:-14px;
 }
 
 .main .bd {
- background:transparent url('{% media_finder "nokia/images/middle_left.png" %}') repeat-y 0px 0px;
- margin-right:6px;
+  background:transparent url('{% media_finder "nokia/images/middle_left.png" %}') repeat-y 0px 0px;
+  margin-right:6px;
 }
 
-.main .bd .c {
- background:transparent url('{% media_finder "nokia/images/middle_right.png" %}') repeat-y right 0px;
- margin-right:-6px;
+.main .c {
+  background:transparent url('{% media_finder "nokia/images/middle_right.png" %}') repeat-y right 0px;
+  margin-right:-6px;
 }
 
-.main .bd .c .s {
- margin:0px 8px 0px 4px;
- background:#000 url('{% media_finder "nokia/images/background_data.png" %}') repeat-x 0px 0px;
- padding:1em;
+.main .s {
+  margin:0px 8px 0px 4px;
+  background:#000 url('{% media_finder "nokia/images/background_data.png" %}') repeat-x 0px 0px;
+  padding:1em;
 }
 
 .main .ft {
- background:transparent url('{% media_finder "nokia/images/bottom_left.png" %}') no-repeat 0px 0px;
- margin-right:14px;
+  background:transparent url('{% media_finder "nokia/images/bottom_left.png" %}') no-repeat 0px 0px;
+  margin-right:14px;
 }
 
 .main .ft .c {
- background:transparent url('{% media_finder "nokia/images/bottom_right.png" %}') no-repeat right 0px;
- margin-right:-14px;
+  background:transparent url('{% media_finder "nokia/images/bottom_right.png" %}') no-repeat right 0px;
+  margin-right:-14px;
 }
 
 .main h1 {
- /* subject */
- font-size:1.2em;
- margin-top:3px;
- padding:0px;
- margin-top:-0.6em;
-}
-
-p {
- font-family:verdana,tahoma,arial,"sans serif";
+  font-size:1.2em;
+  margin-top:3px;
+  padding:0px;
+  margin-top:-0.6em;
 }
 
 .main p {
- margin:2px 0px 2px 0px;
- font:0.95em/1.5em arial,tahoma,"sans serif";
+  margin:2px 0px 2px 0px;
+  font:0.95em/1.5em arial,tahoma,"sans serif";
+}
+
+.main table.header {
+  width:100%;
+  background-color:#FFFFFF;
+  border-top: solid #D5D5D5 2px ! important;
+  border-bottom: solid #D5D5D5 2px ! important;
+  border-left: solid #D5D5D5 2px ! important;
+  border-right: solid #D5D5D5 2px ! important;
+}
+
+.main th.header, td.data {
+  font-size: 10px;
+}
+
+.main th.header {
+  text-align:left;
+  color:#000;
 }
 
 </style>
@@ -89,6 +97,7 @@ p {
   <div class="c">
    <div class="s">
    <img src="{% media_finder "nokia/images/nokia_logo.png" %}" align="right" hspace="5">
+
    <p>Date: {{ date|safe }} </p><br />
 
     {% if subject %}
@@ -97,11 +106,11 @@ p {
         No Subject
     {% endif %}
 
-    <table width="100%" style="background-color:#FFFFFF; border-top: solid #D5D5D5 2px ! important;border-bottom: solid #D5D5D5 2px ! important;border-left: solid #D5D5D5 2px ! important;border-right: solid #D5D5D5 2px ! important;border-top: solid #000 2px ! important;">
+    <table class="header">
 
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">From: </th>
-    <td style="font-size: 10px;">{{ from|safe }}
+    <th class="header">From: </th>
+    <td class="data">{{ from|safe }}
 
     {% if resentFrom %}
       &nbsp; Resent-From: {{ resentFrom|safe }}
@@ -119,21 +128,21 @@ p {
     </tr>
 
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">To: </th>
-    <td style="font-size: 10px;">{{ to|safe }}</td>
+    <th class="header">To: </th>
+    <td class="data">{{ to|safe }}</td>
     </tr>
 
 {% if cc %}
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">CC: </th>
-    <td style="font-size: 10px;">{{ cc|safe }}</td>
+    <th class="header">CC: </th>
+    <td class="data">{{ cc|safe }}</td>
     </tr>
 {% endif %}
 
 {% if bcc %}
     <tr>
-    <th align="left" style="font-size: 10px;color:#000;">BCC: </th>
-    <td style="font-size: 10px;">{{ bcc|safe }}</td>
+    <th class="header">BCC: </th>
+    <td class="data">{{ bcc|safe }}</td>
     </tr>
 {% endif %}
 
