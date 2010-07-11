@@ -168,8 +168,8 @@ void RecipientLineNG::fieldsFromData()
 {
   if( !mData )
     return;
-  mEdit->setText( mData->email() );
   mCombo->setCurrentIndex( Recipient::typeToId( mData->type() ) );
+  mEdit->setText( mData->email() );
 }
 
 void RecipientLineNG::activate()
