@@ -12,6 +12,9 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   alarmdialog.cpp
   editoritemmanager.cpp # TODO: Move to akonadi libs when finished
 
+  freebusyurldialog.cpp
+  editorfreebusy.cpp
+
   # Shared incidence editors code
   incidenceeditor.cpp
   combinedincidenceeditor.cpp
@@ -62,6 +65,7 @@ target_link_libraries(incidenceeditorsng
   kdepim               # For KPIM::K{Date|Time}Edit
   kdepimdbusinterfaces # For UriHandler
   akonadi-kcal_next    # For KCalPrefs
+  kdgantt2             # For FreeBusy Editor
 )
 
 set_target_properties(incidenceeditorsng
