@@ -414,6 +414,7 @@ void AttendeeLine::slotTextChanged( const QString& /*str*/ )
   //TODO: some verifying, auto completion and stuff
   //      to assist the user in selecting a valid contact
   //   KPIMUtils::isValidAddress( str );
+  mModified = true;
   emit changed();
 }
 
