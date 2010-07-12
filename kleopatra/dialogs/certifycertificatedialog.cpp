@@ -101,7 +101,7 @@ void SecretKeysModel::setSecretKeys( const std::vector<Key> & keys ) {
     for ( unsigned int i = 0; i < m_secretKeys.size(); ++i ) {
         const Key key = m_secretKeys[i];
         QStandardItem * const item = new QStandardItem;
-        item->setText( Formatting::prettyNameAndEMail( key ) );
+        item->setText( Formatting::formatForComboBox( key ) );
         item->setData( i, IndexRole );
         item->setEditable( false );
         appendRow( item );
