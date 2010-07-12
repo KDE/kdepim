@@ -129,10 +129,15 @@ KPIM.MainView {
     }
   }
 
+  // ### Make it a general processing screen?
   Rectangle {
       id: busyView
       visible: window.busy;
       z: 99
+
+      KPIM.Spinner {
+          anchors.centerIn: parent
+      }
 
       color: "grey"
       opacity: 0.5
