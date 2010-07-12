@@ -230,7 +230,13 @@ void EntityOrderProxyModelPrivate::saveOrder( const QModelIndex &parent )
 
 QString EntityOrderProxyModel::parentConfigString( const QModelIndex& index ) const
 {
-  return QString::number( index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>().id() );
+  const Collection col = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+
+  Q_ASSERT( col.isValid() );
+  if ( !col.isValid() )
+    return QString();
+
+  return QString::number( col.id() );
 }
 
 QString EntityOrderProxyModel::configString( const QModelIndex& index ) const
