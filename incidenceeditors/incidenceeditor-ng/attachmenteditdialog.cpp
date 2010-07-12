@@ -90,11 +90,13 @@ void AttachmentEditDialog::accept()
 
 void AttachmentEditDialog::slotApply()
 {
+  KUrl url = mUi->mURLRequester->url();
+
   if ( mUi->mLabelEdit->text().isEmpty() ) {
-    if ( mUi->mURLRequester->url().isLocalFile() ) {
-      mItem->setLabel( mUi->mURLRequester->url().fileName() );
+    if ( url.isLocalFile() ) {
+      mItem->setLabel( url.fileName() );
     } else {
-      mItem->setLabel( mUi->mURLRequester->url().url() );
+      mItem->setLabel( url.url() );
     }
   } else {
     mItem->setLabel( mUi->mLabelEdit->text() );
@@ -103,10 +105,28 @@ void AttachmentEditDialog::slotApply()
     mItem->setLabel( i18nc( "@label", "New attachment" ) );
   }
   mItem->setMimeType( mMimeType->name() );
+
+  QString correctedUrl = url.url();
+  if ( url.isRelative() ) {
+    // If the user used KURLRequester's KURLCompletion
+    // (used the line edit instead of the file dialog)
+    // the returned url is not absolute and is always relative
+    // to the home directory (not pwd), so we must prepend home
+
+    correctedUrl = QDir::home().filePath( url.toLocalFile() );
+    url = KUrl( correctedUrl );
+    if ( url.isValid() ) {
+      urlChanged( url );
+      mItem->setLabel( url.fileName() );
+      mItem->setUri( correctedUrl );
+      mItem->setMimeType( mMimeType->name() );
+    }
+  }
+
   if ( mUi->mStackedWidget->currentIndex() == 0 ) {
     if ( mUi->mInlineCheck->isChecked() ) {
       QString tmpFile;
-      if ( KIO::NetAccess::download( mUi->mURLRequester->url(), tmpFile, this ) ) {
+      if ( KIO::NetAccess::download( correctedUrl, tmpFile, this ) ) {
         QFile f( tmpFile );
         if ( !f.open( QIODevice::ReadOnly ) ) {
           return;
@@ -117,7 +137,7 @@ void AttachmentEditDialog::slotApply()
       }
       KIO::NetAccess::removeTempFile( tmpFile );
     } else {
-      mItem->setUri( mUi->mURLRequester->url().url() );
+      mItem->setUri( correctedUrl );
     }
   }
 }
