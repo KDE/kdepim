@@ -70,6 +70,7 @@ private:
     Ui::EventOrTodoDesktop *mUi;
 #endif    
     AttendeeEditor *mAttendeeEditor;
+    KCal::Incidence::ConstPtr mOrigIncidence;
 };
 
 }

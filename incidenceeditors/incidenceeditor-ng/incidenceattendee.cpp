@@ -79,6 +79,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
 
 void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
 {
+  mOrigIncidence = incidence;
   const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
 
   if ( itsMe || incidence->organizer().isEmpty() ) {
@@ -148,7 +149,21 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
 
 bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
 {
-  // return mAttendeeEditor->isModified();
+  //TODO check free busy ?
+  if( !mOrigIncidence  )
+    return false;
+  KCal::Attendee::List origList = mOrigIncidence->attendees();
+  AttendeeData::List newList = mAttendeeEditor->attendees();
+
+  if( origList.size() != newList.size() )
+    return true;
+  
+  foreach( const AttendeeData::Ptr a, newList ) {
+    KCal::Attendee *attendee = a.data();
+    Q_ASSERT( attendee );
+    if( !origList.contains( attendee ) )
+      return true;
+  }
   return false;
 }
 
