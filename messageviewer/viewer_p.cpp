@@ -1485,14 +1485,16 @@ void ViewerPrivate::createActions()
   dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
   dirsPath.setSorting( QDir::Name );
   themeDirNames = dirsPath.entryList();
-  
-  QSet<QString> themeDirs;
+
+  QSet<QString> themesSet;
 
   foreach(const QString &dirname, themeDirNames) {
     QDir dir(dirname);
-    themeDirs.insert(dir.dirName());
+    themesSet.insert(dir.dirName());
   }
-  
+  QStringList themeDirs = themesSet.toList();
+  themeDirs.sort();
+
   // Set themes menu
   mSelectThemeAction  = new KSelectAction(i18n("&Themes"), this);
   mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
@@ -1504,7 +1506,11 @@ void ViewerPrivate::createActions()
     KAction* themeAction = new KAction(this);
 
     //Should write a method instead, just for testing.
-    KDesktopFile* themeDesktop = new KDesktopFile( themesPath + dirName + "/theme-" + dirName +  ".desktop" );
+    QFile desktopFile(themesPath + dirName + "/theme-" + dirName +  ".desktop");
+    if ( !desktopFile.exists() )
+      continue;
+
+    KDesktopFile* themeDesktop = new KDesktopFile( desktopFile.fileName() );
     themeAction->setData(dirName);
     themeAction->data().toString();
     themeAction->setText( themeDesktop->readName() );
