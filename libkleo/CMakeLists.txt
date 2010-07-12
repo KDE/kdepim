@@ -176,4 +176,8 @@ install ( FILES
 	ui/directoryserviceswidget.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui COMPONENT Devel)
 
+if ( WIN32 )
+install ( FILES libkleopatrarc-win32.desktop DESTINATION ${CONFIG_INSTALL_DIR} RENAME libkleopatrarc )
+else ( WIN32 )
 install ( FILES libkleopatrarc.desktop DESTINATION ${CONFIG_INSTALL_DIR} RENAME libkleopatrarc )
+endif ( WIN32 )
