@@ -168,6 +168,8 @@ AttendeeLine::AttendeeLine(QWidget* parent)
                        AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
   mRoleCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
                        AttendeeData::roleName( KCal::Attendee::Chair ) );
+
+  mResponseCheck->setIcon( DesktopIcon( "mail-meeting-request-reply", 48 ) );
 #else
   mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
                        AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
@@ -177,6 +179,8 @@ AttendeeLine::AttendeeLine(QWidget* parent)
                        AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-chair" ),
                        AttendeeData::roleName( KCal::Attendee::Chair ) );
+
+  mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
 #endif
 
   mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
@@ -187,7 +191,6 @@ AttendeeLine::AttendeeLine(QWidget* parent)
 
   setActions( EventActions );
 
-  mResponseCheck->setText( i18nc( "@option:check", "Request RSVP" ) );
   mResponseCheck->setToolTip(i18nc( "@info:tooltip", "Request a response from the attendee" ) );
   mResponseCheck->setWhatsThis( i18nc( "@info:whatsthis",
            "Edits whether to send an email to the "
