@@ -77,6 +77,9 @@ namespace Kleo {
         bool startCreateCommand( QProcess * process, const QStringList & files ) const;
         bool startVerifyCommand( QProcess * process, const QStringList & files ) const;
 
+        static QString installPath();
+        static void setInstallPath( const QString & ip );
+
         static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions();
         static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions( QStringList & errors );
 
