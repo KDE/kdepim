@@ -102,6 +102,7 @@ if (KDEPIM_MOBILE_UI)
     kdepim            # For KPIM::K{Date|Time}Edit
     akonadi-kcal_next # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
+    kdgantt2
   )
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES
