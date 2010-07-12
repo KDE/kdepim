@@ -42,6 +42,8 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
 #endif
   : mUi( ui )
 {
+  setObjectName( "IncidenceCategories" );
+
 #ifdef KDEPIM_MOBILE_UI
   connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
            SLOT(selectCategories()) );

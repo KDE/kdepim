@@ -20,6 +20,8 @@
 
 #include "combinedincidenceeditor.h"
 
+#include <QtCore/QDebug>
+
 using namespace IncidenceEditorsNG;
 
 /// public methods
@@ -84,7 +86,10 @@ void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
     editor->blockSignals( true );
     editor->load( incidence );
     editor->blockSignals( false );
-    Q_ASSERT( !editor->isDirty() );
+    if ( editor->isDirty() ) {
+      qDebug() << editor->objectName();
+      Q_ASSERT( !editor->isDirty() );
+    }
   }
 
   mWasDirty = false;

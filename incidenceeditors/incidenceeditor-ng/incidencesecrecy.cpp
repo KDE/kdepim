@@ -35,6 +35,7 @@ IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoDesktop *ui )
 #endif
   : mUi( ui )
 {
+  setObjectName( "IncidenceSecrecy" );
   mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));

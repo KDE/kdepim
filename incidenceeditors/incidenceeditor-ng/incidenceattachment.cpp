@@ -61,6 +61,7 @@ IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
 {
   setupActions();
   setupAttachmentIconView();
+  setObjectName( "IncidenceAttachment" );
   
   connect( mUi->mAddButton, SIGNAL(clicked()), SLOT(addAttachment()) );
   connect( mUi->mRemoveButton, SIGNAL(clicked()), SLOT(removeSelectedAttachments()) );

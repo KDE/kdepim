@@ -50,6 +50,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   : mUi( ui )
   , mDateTime( dateTime )
 {
+  setObjectName( "IncidenceRecurrence" );
   // Set some sane defaults
   mUi->mRecurrenceTypeCombo->setCurrentIndex( 0 );
   mUi->mRecurrenceEndCombo->setCurrentIndex( 0 );

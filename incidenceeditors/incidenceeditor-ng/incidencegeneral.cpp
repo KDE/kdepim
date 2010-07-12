@@ -34,6 +34,7 @@ IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
+  setObjectName( "IncidenceWhatWhere" );
   connect( mUi->mSummaryEdit, SIGNAL(textChanged(QString)),
            SLOT(checkDirtyStatus()));
   connect( mUi->mLocationEdit, SIGNAL(textChanged(QString)),

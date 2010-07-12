@@ -57,6 +57,8 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   : mUi( ui )
   , mAttendeeEditor( new AttendeeEditor )
 {
+  setObjectName( "IncidenceAttendee" );
+
   QGridLayout *layout = new QGridLayout( mUi->mAttendeWidgetPlaceHolder );
   layout->setSpacing( 0 );
   layout->addWidget( mAttendeeEditor );

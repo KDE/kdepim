@@ -73,6 +73,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
   , d( new Private( this ) )
 {
   Q_ASSERT( ui != 0 );
+  setObjectName( "IncidenceCompletionPriority" );
  
   d->mUi = ui;
 

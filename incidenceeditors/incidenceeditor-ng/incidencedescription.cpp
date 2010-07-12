@@ -41,6 +41,7 @@ IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mUi( ui )
 {
+  setObjectName( "IncidenceDescription" );
   mUi->mDescriptionEdit->setRichTextSupport( KRichTextWidget::SupportBold |
                                              KRichTextWidget::SupportBold |
                                              KRichTextWidget::SupportItalic |
