@@ -34,111 +34,213 @@ namespace IncidenceEditorsNG {
 namespace AlarmPresets {
 
 // Don't use a map, because order matters
-static QStringList sPresetNames;
-static QList<Ptr>  sPresets = QList<Ptr>();
+static QStringList sBeforeStartPresetNames;
+static QList<Ptr>  sBeforeStartPresets = QList<Ptr>();
 
-void initPresets()
+static QStringList sBeforeEndPresetNames;
+static QList<Ptr>  sBeforeEndPresets = QList<Ptr>();
+
+void initPresets( AlarmPresets::When when )
 {
   Ptr alarm( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -5 * 60 ); // 5 minutes before
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "5 minutes before" ) );
-  sPresets.append( alarm );
+  switch ( when ) {
+  case AlarmPresets::BeforeStart:
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -5 * 60 ); // 5 minutes before
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "5 minutes before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -10 * 60 ); // 10 minutes before
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "10 minutes before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -10 * 60 ); // 10 minutes before
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "10 minutes before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -15 * 60 ); // 15 minutes before
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "15 minutes before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -15 * 60 ); // 15 minutes before
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "15 minutes before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -30 * 60 ); // 30 minutes before
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "30 minutes before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -30 * 60 ); // 30 minutes before
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "30 minutes before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -45 * 60 ); // 45 minutes before
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "45 minutes before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -45 * 60 ); // 45 minutes before
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "45 minutes before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -60 * 60 );
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "1 hour before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "1 hour before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -2 * 60 * 60 );
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "2 hours before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -2 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "2 hours before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -24 * 60 * 60 );
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "1 day before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -24 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "1 day before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -2 * 24 * 60 * 60 );
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "2 days before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -2 * 24 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "2 days before start" ) );
+    sBeforeStartPresets.append( alarm );
 
-  alarm = Ptr( new Alarm( 0 ) );
-  alarm->setType( Alarm::Display );
-  alarm->setStartOffset( -5 * 24 * 60 * 60 );
-  alarm->setEnabled( true );
-  sPresetNames.append( i18nc( "@item:inlistbox", "5 days before" ) );
-  sPresets.append( alarm );
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setStartOffset( -5 * 24 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeStartPresetNames.append( i18nc( "@item:inlistbox", "5 days before start" ) );
+    sBeforeStartPresets.append( alarm );
+    break;
+  case AlarmPresets::BeforeEnd:
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -5 * 60 ); // 5 minutes before
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "5 minutes before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -10 * 60 ); // 10 minutes before
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "10 minutes before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -15 * 60 ); // 15 minutes before
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "15 minutes before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -30 * 60 ); // 30 minutes before
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "30 minutes before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -45 * 60 ); // 45 minutes before
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "45 minutes before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "1 hour before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -2 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "2 hours before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -24 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "1 day before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -2 * 24 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "2 days before due" ) );
+    sBeforeEndPresets.append( alarm );
+
+    alarm = Ptr( new Alarm( 0 ) );
+    alarm->setType( Alarm::Display );
+    alarm->setEndOffset( -5 * 24 * 60 * 60 );
+    alarm->setEnabled( true );
+    sBeforeEndPresetNames.append( i18nc( "@item:inlistbox", "5 days before due" ) );
+    sBeforeEndPresets.append( alarm );
+    break;
+  }
 }
 
-QStringList availablePresets()
+QStringList availablePresets( AlarmPresets::When when )
 {
-  if ( sPresetNames.isEmpty() )
-    initPresets();
-
-  return sPresetNames;
+  switch ( when ) {
+  case AlarmPresets::BeforeStart:
+    if ( sBeforeStartPresetNames.isEmpty() )
+      initPresets( when );
+    return sBeforeStartPresetNames;
+  case AlarmPresets::BeforeEnd:
+    if ( sBeforeEndPresetNames.isEmpty() )
+      initPresets( when );
+    return sBeforeEndPresetNames;
+  }
 }
 
 
-Alarm *preset( const QString &name )
+Alarm *preset( When when, const QString &name )
 {
-  if ( sPresetNames.isEmpty() )
-    initPresets();
+  switch ( when ) {
+  case AlarmPresets::BeforeStart:
+    {
+      if ( sBeforeStartPresetNames.isEmpty() )
+        initPresets( when );
+      Q_ASSERT( sBeforeStartPresetNames.count( name ) == 1 ); // The name should exists and only once
 
-  Q_ASSERT( sPresetNames.count( name ) == 1 ); // The name should exists and only once
+      Alarm *alarm = new Alarm( *sBeforeStartPresets.at( sBeforeStartPresetNames.indexOf( name ) ) );
+      return alarm;
+    }
+  case AlarmPresets::BeforeEnd:
+    {
+      if ( sBeforeEndPresetNames.isEmpty() )
+        initPresets( when );
+      Q_ASSERT( sBeforeEndPresetNames.count( name ) == 1 ); // The name should exists and only once
 
-  Alarm *alarm = new Alarm( *sPresets.at( sPresetNames.indexOf( name ) ) );
-  return alarm;
+      Alarm *alarm = new Alarm( *sBeforeEndPresets.at( sBeforeEndPresetNames.indexOf( name ) ) );
+      return alarm;
+    }
+  };
 }
 
-int presetIndex( const KCal::Alarm &alarm )
+int presetIndex( When when, const KCal::Alarm &alarm )
 {
-  if ( sPresetNames.isEmpty() )
-    initPresets();
+  switch ( when ) {
+  case AlarmPresets::BeforeStart:
+    if ( sBeforeStartPresetNames.isEmpty() )
+      initPresets( when );
+  case AlarmPresets::BeforeEnd:
+    if ( sBeforeEndPresetNames.isEmpty() )
+      initPresets( when );
+  }
 
-  const QStringList presets = availablePresets();
+  const QStringList presets = availablePresets( when );
 
   for ( int i = 0; i < presets.size(); ++i  ) {
-    QScopedPointer<Alarm> presetAlarm( preset( presets.at( i ) ) );
+    QScopedPointer<Alarm> presetAlarm( preset( when, presets.at( i ) ) );
     if ( *presetAlarm == alarm )
       return i;
   }

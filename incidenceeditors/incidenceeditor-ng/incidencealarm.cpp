@@ -70,6 +70,14 @@ void IncidenceAlarm::load( KCal::Incidence::ConstPtr incidence )
     mAlarms.append( new KCal::Alarm( *alarm ) );
 
   mIsTodo = IncidenceEditor::incidence<KCal::Todo>( incidence );
+  if ( mIsTodo ) {
+    mUi->mAlarmPresetCombo->clear();
+    mUi->mAlarmPresetCombo->addItems( AlarmPresets::availablePresets( AlarmPresets::BeforeEnd ) );
+  } else {
+    mUi->mAlarmPresetCombo->clear();
+    mUi->mAlarmPresetCombo->addItems( AlarmPresets::availablePresets( AlarmPresets::BeforeStart ) );
+  }
+  mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
 
   mWasDirty = false;
 }
@@ -169,7 +177,11 @@ void IncidenceAlarm::newAlarm()
 
 void IncidenceAlarm::newAlarmFromPreset()
 {
-  mAlarms.append( AlarmPresets::preset( mUi->mAlarmPresetCombo->currentText() ) );
+  if ( mIsTodo )
+    mAlarms.append( AlarmPresets::preset( AlarmPresets::BeforeEnd, mUi->mAlarmPresetCombo->currentText() ) );
+  else
+    mAlarms.append( AlarmPresets::preset( AlarmPresets::BeforeStart, mUi->mAlarmPresetCombo->currentText() ) );
+
   updateAlarmList();
 
   checkDirtyStatus();

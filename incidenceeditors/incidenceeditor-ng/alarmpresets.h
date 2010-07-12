@@ -32,10 +32,15 @@ namespace IncidenceEditorsNG {
 
 namespace AlarmPresets {
 
+  enum When {
+    BeforeStart,
+    BeforeEnd
+  };
+
   /**
    * Returns the available presets.
    */
-  QStringList availablePresets();
+  QStringList availablePresets( When when = BeforeStart );
 
   /**
    * Returns a recurrence preset for given name. The name <em>must</em> be one
@@ -43,13 +48,13 @@ namespace AlarmPresets {
    *
    * Note: The caller takes ownership over the pointer.
    */
-  KCal::Alarm *preset( const QString &name );
+  KCal::Alarm *preset( When when, const QString &name );
 
   /**
    * Returns the index of the preset in availablePresets for the given recurrence,
    * or -1 if no preset is equal to the given recurrence.
    */
-  int presetIndex( const KCal::Alarm &alarm );
+  int presetIndex( When when, const KCal::Alarm &alarm );
 
 }
 
