@@ -65,6 +65,8 @@ namespace Kleo {
 }
 #endif
 
+#include <kleo/checksumdefinition.h>
+
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <kiconloader.h>
@@ -203,6 +205,8 @@ int main( int argc, char** argv )
   }
 
   SplashScreen splash;
+
+  Kleo::ChecksumDefinition::setInstallPath( Kleo::gpg4winInstallPath() );
 
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
