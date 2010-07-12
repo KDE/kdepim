@@ -614,7 +614,7 @@ bool EditorFreeBusy::updateEnabled() const
 #else
  kDebug() << "Disabled code, port to KDGantt2";
 #endif
-
+return false; //TODO-NGPORT temp value, make compile
 }
 
 void EditorFreeBusy::slotIntervalColorRectangleMoved( const QDateTime &start,
