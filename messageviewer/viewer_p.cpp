@@ -1483,7 +1483,6 @@ void ViewerPrivate::createActions()
 
   QDir dirsPath( themesPath );
   dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
-  dirsPath.setSorting( QDir::Name );
   themeDirNames = dirsPath.entryList();
 
   QSet<QString> themesSet;
