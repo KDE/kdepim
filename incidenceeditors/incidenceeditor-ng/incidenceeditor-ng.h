@@ -103,6 +103,12 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
       return  boost::dynamic_pointer_cast<IncidenceT>( inc );
     }
 
+    template <typename IncidenceT>
+    boost::shared_ptr<const IncidenceT> incidence( KCal::Incidence::ConstPtr inc )
+    {
+      return  boost::dynamic_pointer_cast<const IncidenceT>( inc );
+    }
+
   protected:
     KCal::Incidence::ConstPtr mLoadedIncidence;
     bool mWasDirty;
