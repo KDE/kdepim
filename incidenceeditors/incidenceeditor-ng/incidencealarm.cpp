@@ -170,6 +170,7 @@ void IncidenceAlarm::removeCurrentAlarm()
   delete mUi->mAlarmList->takeItem( curAlarmIndex );
   mAlarms.removeAt( curAlarmIndex );
 
+  updateAlarmList();
   updateButtons();
   checkDirtyStatus();
 }
