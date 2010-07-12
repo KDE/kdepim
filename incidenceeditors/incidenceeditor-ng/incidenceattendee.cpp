@@ -148,7 +148,8 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
 
 bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
 {
-  return mAttendeeEditor->isModified();
+  // return mAttendeeEditor->isModified();
+  return false;
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
