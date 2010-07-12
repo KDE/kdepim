@@ -1111,7 +1111,7 @@ void AddresseeLineEdit::akonadiHandlePending()
     const int sourceIndex =
       s_akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
     if ( sourceIndex >= 0 ) {
-      kDebug() << "identified collection: " << s_completionSources[sourceIndex];
+      kDebug() << "identified collection: " << (*s_completionSources)[sourceIndex];
       addItem( item, 1, sourceIndex );
 
       // remove from the pending
