@@ -1180,7 +1180,7 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
 //  kDebug() << "Disabled code, port to KDGantt2";
 // #endif
 // 
-//   return 0;
+   return 0; //TODO-NGPORT
 // }
 
 bool EditorFreeBusy::eventFilter( QObject *watched, QEvent *event )
