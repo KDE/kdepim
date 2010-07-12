@@ -36,7 +36,6 @@ class EventOrTodoDesktop;
 
 namespace IncidenceEditorsNG {
 
-class IncidenceRecurrenceDialog;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {

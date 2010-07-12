@@ -23,9 +23,6 @@
 
 #include "incidenceeditor-ng.h"
 
-class KComboBox;
-class QGridLayout;
-class QLabel;
 
 namespace Ui {
 class EventOrTodoDesktop;
