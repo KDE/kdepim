@@ -344,10 +344,10 @@ void IncidenceAttachment::editSelectedAttachments()
         return;
 
 #ifdef KDEPIM_MOBILE_UI
-      QScopedPointer<AttachmentEditDialog> dialog(
+      QPointer<AttachmentEditDialog> dialog(
           new AttachmentEditDialog( attitem, 0, false ) );
 #else
-      QScopedPointer<AttachmentEditDialog> dialog(
+      QPointer<AttachmentEditDialog> dialog(
           new AttachmentEditDialog( attitem, mAttachmentView, false ) );
 #endif
       dialog->setModal( false );
