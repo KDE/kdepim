@@ -1,20 +1,116 @@
-  <div class="headerbox" dir="{{ dir }}">
+<style type="text/css">
+
+@media screen, print {
+  body {
+    color: #000 ! important;
+    background:#FFF ! important;
+    font-family: "sans serif"  ! important;
+    font-size: 12px ! important;  
+  }
+
+  a {
+    color: #497ADF ! important;
+    text-decoration: none ! important; 
+  }
+
+  .headerbox {
+    margin-bottom: 10px;
+  }
+
+  .headertitle a:link, a:visited, a:hover a:active { 
+    text-decoration: none ! important;
+  }
+
+  .headertitle a:link { 
+    color: #305971 ! important;
+    font-size: 15px;
+    font-weight: bold;
+    padding:6px 0px 2px 0;
+    margin:4px 0 10px 0px;   
+  }
+            
+  .headertitle a:visited { 
+    color: #305971 ! important;
+  }
+
+  .headertitle a:hover{ 
+    color: #305971 ! important;
+  }
+
+  .headertitle a:active { 
+    color: #305971 ! important;
+  }            
+
+  .header {  
+    margin-right: 5px;
+    text-decoration: none ! important;
+  }
+
+  .headertext {
+    text-decoration: none ! important;
+    color: #305971 ! important;
+    font-size: 12px;
+    font-weight: bold;
+    padding:2px;
+  }
+
+  .headimage {
+    float: right;
+    margin-left: 5px;
+  }
+
+  body { 
+    clear: none; 
+  }
+
+  .content {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .content > P:first-child {
+    margin-top: 1px; 
+  }
+
+  .content > DIV:first-child {
+    margin-top: 1px; 
+  }
+
+  .content > BR:first-child {
+    display: none; 
+  }
+
+  .contentlink {
+    display: block; 
+  }
+}
+
+@media screen { 
+  body { 
+    overflow: auto; 
+  } 
+}
+ 
+</style>  
+
+<div class="headerbox" dir="{{ dir }}">
+  <img src="{% media_finder "planet-kde/images/bg_header.png" %}" width="99%">
+  <h1>Testing Planet KDE </h1>
+</div>
+
+{% if date %}
+    <span class="headertext"> {{ date }} </span>
+{% endif %}
+
 
 {% if strippedTitle %}
     <div class="headertitle" dir="{{ directionOfstrippedTitle }}">
       <a href="{{ article.link }}">{{ strippedTitle|safe }}</a>
-      <br><h1>Planet KDE</h1>
     </div>
-{% endif %}
-
-{% if date %}
-    <span class="header" dir="{{ directionOfDate }}">Date </span>
-    <span class="headertext"> {{ date }} </span>
 {% endif %}
 
 {% if author %}
     <br/>
-    <span class="header" dir="{{ directionOfAuthor }}">Author </span>
     <span class="headertext"> {{ author }} </span>
 {% endif %}
 
@@ -55,5 +151,3 @@
     <a class="contentlink" href="{{ article.linkComplete }}">Complete Story</a>
     </p>
 {% endif %}
-
-  </div>
