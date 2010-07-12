@@ -138,7 +138,7 @@ static inline void paint_left_aligned_elided_text( const QString &text, Theme::C
   QFontMetrics fontMetrics( font );
   int w = right - left;
   QString elidedText = fontMetrics.elidedText( text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w );
-  QRect rct( left, top, w, fontMetrics.height() );
+  QRect rct( left, top, w, fontMetrics.height() + 3 );
   QRect outRct;
   if ( ci->softenByBlending() )
   {
