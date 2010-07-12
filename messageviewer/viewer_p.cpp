@@ -1482,7 +1482,7 @@ void ViewerPrivate::createActions()
   QString themesPath ( KStandardDirs::locate("data","messageviewer/themes/") );
 
   QDir dirsPath( themesPath );
-  dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks );
+  dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
   dirsPath.setSorting( QDir::Name );
   themeDirNames = dirsPath.entryList();
   
