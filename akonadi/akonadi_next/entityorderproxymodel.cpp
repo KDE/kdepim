@@ -164,7 +164,18 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
     }
   }
 
-  QStringList existingList = d->m_orderConfig.readEntry( QString::number( parentCol.id() ), QStringList() );
+  QStringList existingList;
+  if ( d->m_orderConfig.hasKey( QString::number( parentCol.id() ) ) ) {
+    existingList = d->m_orderConfig.readEntry( QString::number( parentCol.id() ), QStringList() );
+  } else {
+    const QModelIndex sourceIndex = mapToSource( parent );
+    const int rowCount = sourceModel()->rowCount( sourceIndex );
+    for (int row = 0; row < rowCount; ++row) {
+      static const int column = 0;
+      const QModelIndex idx = sourceModel()->index( row, column, sourceIndex );
+      existingList.append( configString( idx ) );
+    }
+  }
 
   for ( int i = 0; i < droppedList.size(); ++i )
   {
