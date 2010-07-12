@@ -139,7 +139,7 @@ private:
 
             for ( unsigned int i = 0 ; i < numCharsets ; ++i )
                 charsetCB->addItem( QString::fromLatin1( charsets[i] ) );
-            charsetCB->setCurrentIndex( -1 );
+            charsetCB->setCurrentIndex( 0 );
                            
         }
     } ui;
