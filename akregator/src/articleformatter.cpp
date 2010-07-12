@@ -202,6 +202,10 @@ QString ArticleFormatter::setTheming( const QString &themeName, const Article& a
     c.setRelativeMediaPath("images/");
     QString viewStr = t->render( &c );
 
+    data.insert( QLatin1String( "font-family" ) , Settings::standardFont() );
+    data.insert( QLatin1String( "font-size" ) , QString::number(pointsToPixel(Settings::mediumFontSize()))+"px" );
+
+
     return viewStr;
 }  
   
@@ -284,87 +288,6 @@ QString DefaultNormalViewFormatter::formatArticle(const Article& article, IconOp
     return setTheming( mThemeName, article, icon );
 }
 
-QString DefaultNormalViewFormatter::getCss() const
-{
-    const QPalette & pal = QApplication::palette();
-
-    // from kmail::headerstyle.cpp
-    QString css = QString (
-            "<style type=\"text/css\">\n"
-            "@media screen, print {"
-            "body {\n"
-            "  font-family: \"%1\" ! important;\n"
-            "  font-size: %2 ! important;\n"
-            "  color: %3 ! important;\n"
-            "  background: %4 ! important;\n"
-            "}\n\n")
-            .arg( Settings::standardFont(),
-                  QString::number(pointsToPixel(Settings::mediumFontSize()))+"px",
-                  pal.color( QPalette::Text ).name(),
-                  pal.color( QPalette::Base ).name() );
-    css += (
-            "a {\n"
-            + QString("  color: %1 ! important;\n")
-            + QString(!Settings::underlineLinks() ? " text-decoration: none ! important;\n" : "")
-            +       "}\n\n"
-            +".headerbox {\n"
-            +"  background: %2 ! important;\n"
-            +"  color: %3 ! important;\n"
-            +"  border:1px solid #000;\n"
-            +"  margin-bottom: 10pt;\n"
-            +        "}\n\n")
-            .arg( pal.color( QPalette::Link ).name(),
-                  pal.color( QPalette::Background ).name(),
-                  pal.color( QPalette::Text ).name() );
-    css += QString(".headertitle a:link { color: %1 ! important;\n text-decoration: none ! important;\n }\n"
-            ".headertitle a:visited { color: %1 ! important;\n text-decoration: none ! important;\n }\n"
-            ".headertitle a:hover{ color: %1 ! important;\n text-decoration: none ! important;\n }\n"
-            ".headertitle a:active { color: %1 ! important;\n  text-decoration: none ! important;\n }\n" )
-            .arg( pal.color( QPalette::HighlightedText ).name() );
-    css += QString(
-            ".headertitle {\n"
-            "  background: %1 ! important;\n"
-            "  padding:2px;\n"
-            "  color: %2 ! important;\n"
-            "  font-weight: bold;\n"
-            "  text-decoration: none ! important;\n"
-            "}\n\n"
-            ".header {\n"
-            "  font-weight: bold;\n"
-            "  padding:2px;\n"
-            "  margin-right: 5px;\n"
-            "  text-decoration: none ! important;\n"
-            "}\n\n"
-            ".headertext a {\n"
-            "  text-decoration: none ! important;\n"
-            "}\n\n"
-            ".headimage {\n"
-            "  float: right;\n"
-            "  margin-left: 5px;\n"
-            "}\n\n").arg(
-                    pal.color( QPalette::Highlight ).name(),
-                    pal.color( QPalette::HighlightedText ).name() );
-
-    css += QString(
-            "body { clear: none; }\n\n"
-            ".content {\n"
-            "  display: block;\n"
-            "  margin-bottom: 6px;\n"
-            "}\n\n"
-    // these rules make sure that there is no leading space between the header and the first of the text
-            ".content > P:first-child {\n margin-top: 1px; }\n"
-            ".content > DIV:first-child {\n margin-top: 1px; }\n"
-    // Do we really need that? See bug #144420
-//            ".content > BR:first-child {\n display: none;  }\n"
-    //".contentlink {\n display: block; }\n"
-            "}\n\n" // @media screen, print
-    // Why did we need that, bug #108187?
-    //"@media screen { body { overflow: auto; } }\n"
-            "\n\n");
-
-    return css;
-}
-
 DefaultCombinedViewFormatter::DefaultCombinedViewFormatter(const KUrl& imageDir, QPaintDevice* device ) : ArticleFormatter( device ), m_imageDir(imageDir)
 {
 }
@@ -384,86 +307,6 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 QString DefaultCombinedViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
     return setTheming( mThemeName, article, icon );
-}
-
-QString DefaultCombinedViewFormatter::getCss() const
-{
-    const QPalette &pal = QApplication::palette();
-
-    // from kmail::headerstyle.cpp
-    QString css = QString (
-            "<style type=\"text/css\">\n"
-            "@media screen, print {"
-            "body {\n"
-            "  font-family: \"%1\" ! important;\n"
-            "  font-size: %2 ! important;\n"
-            "  color: %3 ! important;\n"
-            "  background: %4 ! important;\n"
-            "}\n\n").arg(Settings::standardFont(),
-                         QString::number(pointsToPixel(Settings::mediumFontSize()))+"px",
-                         pal.color( QPalette::Text ).name(),
-                         pal.color( QPalette::Base ).name() );
-    css += (
-            "a {\n"
-            + QString("  color: %1 ! important;\n")
-            + QString(!Settings::underlineLinks() ? " text-decoration: none ! important;\n" : "")
-            +       "}\n\n"
-            +".headerbox {\n"
-            +"  background: %2 ! important;\n"
-            +"  color: %3 ! important;\n"
-            +"  border:1px solid #000;\n"
-            +"  margin-bottom: 10pt;\n"
-//    +"  width: 99%;\n"
-            +        "}\n\n")
-            .arg( pal.color( QPalette::Link ).name(),
-                  pal.color( QPalette::Background ).name(),
-                  pal.color( QPalette::Text ).name() );
-
-    css += QString(".headertitle a:link { color: %1  ! important; text-decoration: none ! important;\n }\n"
-            ".headertitle a:visited { color: %1 ! important; text-decoration: none ! important;\n }\n"
-            ".headertitle a:hover{ color: %1 ! important; text-decoration: none ! important;\n }\n"
-            ".headertitle a:active { color: %1 ! important; text-decoration: none ! important;\n }\n")
-            .arg( pal.color( QPalette::HighlightedText ).name() );
-    css += QString(
-            ".headertitle {\n"
-            "  background: %1 ! important;\n"
-            "  padding:2px;\n"
-            "  color: %2 ! important;\n"
-            "  font-weight: bold;\n"
-            "  text-decoration: none ! important;\n"
-            "}\n\n"
-            ".header {\n"
-            "  font-weight: bold;\n"
-            "  padding:2px;\n"
-            "  margin-right: 5px;\n"
-            "  text-decoration: none ! important;\n"
-            "}\n\n"
-            ".headertext {\n"
-            "  text-decoration: none ! important;\n"
-            "}\n\n"
-            ".headimage {\n"
-            "  float: right;\n"
-            "  margin-left: 5px;\n"
-            "}\n\n").arg( pal.color( QPalette::Highlight ).name(),
-                          pal.color( QPalette::HighlightedText ).name() );
-
-    css += QString(
-            "body { clear: none; }\n\n"
-            ".content {\n"
-            "  display: block;\n"
-            "  margin-bottom: 6px;\n"
-            "}\n\n"
-    // these rules make sure that there is no leading space between the header and the first of the text
-            ".content > P:first-child {\n margin-top: 1px; }\n"
-            ".content > DIV:first-child {\n margin-top: 1px; }\n"
-            ".content > BR:first-child {\n display: none;  }\n"
-    //".contentlink {\n display: block; }\n"
-            "}\n\n" // @media screen, print
-    // Why did we need that, bug #108187?
-    //"@media screen { body { overflow: auto; } }\n"
-            "\n\n");
-
-    return css;
 }
 
 QString DefaultNormalViewFormatter::formatSummary(TreeNode* node) const

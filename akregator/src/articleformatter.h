@@ -58,9 +58,7 @@ class ArticleFormatter
          
         virtual QString formatArticle(const Article& article, IconOption icon) const = 0;
         
-        virtual QString formatSummary(TreeNode* node) const = 0;
-        
-        virtual QString getCss() const = 0;
+        virtual QString formatSummary(TreeNode* node) const = 0;       
 
         QString mThemeName;
 
@@ -87,9 +85,7 @@ class DefaultNormalViewFormatter : public ArticleFormatter
         
         QString formatArticle(const Article& article, IconOption option) const;
         
-        QString formatSummary(TreeNode* node) const;
-        
-        QString getCss() const;
+        QString formatSummary(TreeNode* node) const;        
         
     private:
         DefaultNormalViewFormatter();
@@ -109,9 +105,7 @@ class DefaultCombinedViewFormatter : public ArticleFormatter
         
         QString formatArticle(const Article& article, IconOption option) const;
         
-        QString formatSummary(TreeNode* node) const;
-        
-        QString getCss() const;
+        QString formatSummary(TreeNode* node) const;        
         
     private:
         DefaultCombinedViewFormatter();

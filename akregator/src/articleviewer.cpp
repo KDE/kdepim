@@ -139,8 +139,6 @@ ArticleViewer::ArticleViewer(QWidget *parent)
     action->setText(i18n("&Save Link As..."));
     connect(action, SIGNAL(triggered(bool) ), SLOT(slotSaveLinkAs()));
 
-    updateCss();
-
     connect(this, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
 
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotPaletteOrFontChanged()) );
@@ -417,12 +415,7 @@ void ArticleViewer::beginWriting()
 {
     QString head = QString("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n <html><head><title>.</title>");
 
-    if (m_viewMode == CombinedView)
-        head += m_combinedModeCSS;
-    else
-        head += m_normalModeCSS;
-
-    head += "</style></head><body>";
+    head += "</head><body>";
     m_part->view()->setContentsPos(0,0);
 
     //pass link to the KHTMLPart to make relative links work
@@ -645,7 +638,6 @@ void ArticleViewer::keyPressEvent(QKeyEvent* e)
 
 void ArticleViewer::slotPaletteOrFontChanged()
 {
-    updateCss();
     reload();
 }
 
@@ -734,12 +726,6 @@ bool ArticleViewerPart::urlSelected(const QString &url, int button, int state, c
     }
     else
         return KHTMLPart::urlSelected(url,button,state,_target,args,browserArgs);
-}
-
-void ArticleViewer::updateCss()
-{
-    m_normalModeCSS =  m_normalViewFormatter->getCss();
-    m_combinedModeCSS = m_combinedViewFormatter->getCss();
 }
 
 void ArticleViewer::setNormalViewFormatter( const shared_ptr<ArticleFormatter>& formatter )
