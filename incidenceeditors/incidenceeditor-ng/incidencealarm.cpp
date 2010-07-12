@@ -148,6 +148,13 @@ void IncidenceAlarm::newAlarm()
 #ifndef KDEPIM_MOBILE_UI
 
   QScopedPointer<AlarmDialog> dialog( new AlarmDialog );
+  dialog->setIsTodoReminder( mIsTodo );
+  dialog->setOffset( 15 );
+  dialog->setUnit( AlarmDialog::Minutes );
+  if ( mIsTodo )
+    dialog->setWhen( AlarmDialog::BeforeEnd );
+  else
+    dialog->setWhen( AlarmDialog::BeforeStart );
 
   if ( dialog->exec() == KDialog::Accepted ) {
     KCal::Alarm *newAlarm = new KCal::Alarm( 0 );

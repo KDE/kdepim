@@ -192,3 +192,38 @@ void AlarmDialog::save( Alarm *alarm ) const
   }
 }
 
+void AlarmDialog::setIsTodoReminder( bool isTodo )
+{
+  if ( isTodo ) {
+    mUi->mBeforeAfter->clear();
+    mUi->mBeforeAfter->addItems( QStringList()
+                                 << i18n( "Before the task starts" )
+                                 << i18n( "After the task starts" )
+                                 << i18n( "Before the task is due" )
+                                 << i18n( "After the task is due" ) );
+  } else {
+    mUi->mBeforeAfter->clear();
+    mUi->mBeforeAfter->addItems( QStringList()
+                                 << i18n( "Before the event starts" )
+                                 << i18n( "After the event starts" )
+                                 << i18n( "Before the event ends" )
+                                 << i18n( "After the event ends" ) );
+  }
+}
+
+void AlarmDialog::setOffset( int offset )
+{
+  Q_ASSERT( offset > 0 );
+  mUi->mAlarmOffset->setValue( offset );
+}
+
+void AlarmDialog::setUnit( Unit unit )
+{
+  mUi->mOffsetUnit->setCurrentIndex( unit );
+}
+
+void AlarmDialog::setWhen( When when )
+{
+  mUi->mBeforeAfter->setCurrentIndex( when );
+}
+

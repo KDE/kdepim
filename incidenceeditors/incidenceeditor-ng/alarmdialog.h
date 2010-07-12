@@ -36,10 +36,28 @@ namespace IncidenceEditorsNG {
 class AlarmDialog : public KDialog
 {
   public:
+    enum Unit {
+      Minutes,
+      Hours,
+      Days
+    };
+
+    enum When {
+      BeforeStart = 0,
+      AfterStart,
+      BeforeEnd,
+      AfterEnd
+    };
+
+  public:
     AlarmDialog();
 
     void load( KCal::Alarm *alarm );
     void save( KCal::Alarm *alarm ) const;
+    void setIsTodoReminder( bool isTodo );
+    void setOffset( int offset );
+    void setUnit( Unit unit );
+    void setWhen( When when );
 
   private:
     Ui::AlarmDialog *mUi;
