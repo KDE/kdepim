@@ -342,6 +342,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
 void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
                                          int row, const KPIM::MessageStatus &status )
 {
+  Q_UNUSED( mi );
   Item item = itemForRow( row );
   item.setFlags( status.getStatusFlags() );
   new ItemModifyJob( item, this );
