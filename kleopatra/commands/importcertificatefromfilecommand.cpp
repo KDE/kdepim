@@ -68,8 +68,6 @@ public:
     ~Private();
 
     bool ensureHaveFile();
-    GpgME::Protocol checkProtocol( const QByteArray& data, const QString& filename ) const;
-    void importResult( const ImportResult & result );
 
 private:
     QStringList files;
