@@ -463,7 +463,10 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
 
   // These fields where not enabled in the old code either:
   mUi->mFreeBusyCheck->setVisible( false );
-  mUi->mWholeDayCheck->setChecked( todo->allDay() );
+  // kolab tasks that "float" have a due time of 00:00, so make sure to check
+  // that also when deciding if the time associated box should be checked
+  // when reading in the Todo.
+  mUi->mWholeDayCheck->setChecked( todo->allDay() || todo->dtDue().time() == QTime( 0, 0 ) );
 
   // Connect to the right logic
   connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
