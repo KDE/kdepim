@@ -25,6 +25,21 @@
 
 #include "incidenceattendee.h"
 
+#include <QtCore/QWeakPointer>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QTreeView>
+
+#include <akonadi/contact/emailaddressselectiondialog.h>
+
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <KABC/Address>
+#include <KCal/Event>
+#include <KComboBox>
+#include <KDebug>
+#include <KMessageBox>
+#include <KPIMUtils/Email>
+
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
@@ -33,21 +48,6 @@
 
 #include "attendeeeditor.h"
 #include "../editorconfig.h"
-
-#include <akonadi/contact/emailaddressselectiondialog.h>
-#include <kabc/addressee.h>
-
-#include <KCal/Event>
-
-#include <KComboBox>
-#include <KDebug>
-#include <KMessageBox>
-#include <KPIMUtils/Email>
-
-#include <QGridLayout>
-#include <QLabel>
-#include <QTreeView>
-#include <QWeakPointer>
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
@@ -180,6 +180,16 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
   mUi->mOrganizerCombo->addItems( uniqueList );
 }
 
+void IncidenceEditorsNG::IncidenceAttendee::expandResult( KJob *job )
+{
+  Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+  Q_ASSERT( expandJob );
+
+  const KABC::Addressee::List groupMembers = expandJob->contacts();
+  foreach ( const KABC::Addressee &member, groupMembers )
+    insertAttendeeFromAddressee( member );
+}
+
 void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
 {
   QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
@@ -191,14 +201,21 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
     if ( dialogPtr ) {
       const Akonadi::EmailAddressSelection::List list = dialogPtr->selectedAddresses();
       foreach ( const Akonadi::EmailAddressSelection &selection, list ) {
-        KABC::Addressee contact;
-        contact.setName( selection.name() );
-        contact.insertEmail( selection.email() );
 
-        if ( selection.item().hasPayload<KABC::Addressee>() )
-          contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
+        if ( selection.item().hasPayload<KABC::ContactGroup>() ) {
+          Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( selection.item().payload<KABC::ContactGroup>(), this );
+          connect( job, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+          job->start();
+        } else {
+          KABC::Addressee contact;
+          contact.setName( selection.name() );
+          contact.insertEmail( selection.email() );
 
-        insertAttendeeFromAddressee( contact );
+          if ( selection.item().hasPayload<KABC::Addressee>() )
+            contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
+
+          insertAttendeeFromAddressee( contact );
+        }
       }
     } else {
       kDebug() << "dialog was already deleted";

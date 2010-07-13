@@ -23,6 +23,7 @@
 
 #include "incidenceeditor-ng.h"
 
+class KJob;
 
 namespace Ui {
 class EventOrTodoDesktop;
@@ -54,7 +55,9 @@ signals:
     void attendeeCountChanged( int );
 
 private slots:
+    void expandResult( KJob *job );
     void slotSelectAddresses();
+
 private:
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
