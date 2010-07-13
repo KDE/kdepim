@@ -201,6 +201,7 @@ void KeyTreeView::setFlatModel( AbstractKeyListModel * model ) {
         return;
     m_flatModel = model;
     if ( !m_isHierarchical )
+        // TODO: this fails when called after setHierarchicalView( false )...
         find_last_proxy( m_proxy )->setSourceModel( model );
 }
 
