@@ -2,6 +2,8 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
+
 set(incidenceeditors_ng_shared_LIB_SRCS
   attachmenteditdialog.cpp
   attachmenticonview.cpp
