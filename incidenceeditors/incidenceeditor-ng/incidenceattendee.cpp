@@ -47,7 +47,6 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QTreeView>
-#include <QScopedPointer>
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
@@ -182,10 +181,12 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
 
 void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
 {
-  QScopedPointer<Akonadi::EmailAddressSelectionDialog> dia ( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
-  dia->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
-  if ( dia->exec() == QDialog::Accepted ) {
-    foreach ( const Akonadi::EmailAddressSelection &selection, dia->selectedAddresses() ) {
+  Akonadi::EmailAddressSelectionDialog *dialog = new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor );
+  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  dialog->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+
+  if ( dialog->exec() == QDialog::Accepted ) {
+    foreach ( const Akonadi::EmailAddressSelection &selection, dialog->selectedAddresses() ) {
       KABC::Addressee contact;
       contact.setName( selection.name() );
       contact.insertEmail( selection.email() );
@@ -196,6 +197,8 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
       insertAttendeeFromAddressee( contact );
     }
   }
+
+  delete dialog;
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
