@@ -49,6 +49,8 @@
 #include <QListWidgetItem>
 #include <QVBoxLayout>
 #include <QWizardPage>
+#include <QCheckBox>
+#include <QLabel>
 
 #include <QTextDocument> // Qt::escape
 
@@ -128,12 +130,19 @@ SelectUserIDsPage::SelectUserIDsPage( QWidget * parent ) : QWizardPage( parent )
     layout->addWidget( label );
     m_listView = new QListView;
     m_listView->setModel( &m_userIDModel );
+    layout->addWidget( m_listView, 1 );
+    m_label = new QLabel;
+    layout->addWidget( m_label );
+    m_checkbox = new QCheckBox;
+    m_checkbox->setChecked( false );
+    m_checkbox->setText( i18n("I have verified the fingerprint") );
+    layout->addWidget( m_checkbox );
+    connect( m_checkbox, SIGNAL(toggled(bool)), this, SIGNAL(completeChanged()) );
     connect( &m_userIDModel, SIGNAL(itemChanged(QStandardItem*)), this, SIGNAL(completeChanged()) );
-    layout->addWidget( m_listView );
 }
 
 bool SelectUserIDsPage::isComplete() const {
-    return !selectedUserIDs().empty();
+    return m_checkbox->isChecked() && !selectedUserIDs().empty();
 }
 
 void SelectUserIDsPage::setSelectedUserIDs( const std::vector<unsigned int> & uids ) {
@@ -145,6 +154,9 @@ std::vector<unsigned int> SelectUserIDsPage::selectedUserIDs() const {
 }
 
 void SelectUserIDsPage::setCertificateToCertify( const Key & key ) {
+    m_label->setText( i18n( "Certificate: %1\nFingerprint: %2",
+                            Formatting::prettyNameAndEMail( key ),
+                            key.primaryFingerprint() ) );
     m_userIDModel.setCertificateToCertify( key );
 
 }
