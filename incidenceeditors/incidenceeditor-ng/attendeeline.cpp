@@ -415,6 +415,7 @@ void AttendeeLine::slotEditingFinished()
     emit deleteLine( this );
   } else {
     mEdit->setCursorPosition( 0 );
+    emit editingFinished( this );
   }
 }
 

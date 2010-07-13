@@ -137,6 +137,7 @@ class AttendeeLine : public KPIM::MultiplyingLine
 
   signals:
     void changed();
+    void editingFinished( KPIM::MultiplyingLine * );
 
   private slots:
     void slotTextChanged( const QString & );

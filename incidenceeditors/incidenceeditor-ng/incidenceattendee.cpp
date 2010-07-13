@@ -70,8 +70,10 @@ IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
-  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), SIGNAL( attendeeCountChanged( int ) ) );
-  connect( mAttendeeEditor, SIGNAL( returnPressed( KPIM::MultiplyingLine* ) ), SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
+  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ),
+           SIGNAL( attendeeCountChanged( int ) ) );
+  connect( mAttendeeEditor, SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ),
+           SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
 
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
@@ -189,6 +191,13 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
   AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
   if ( !data )
+    return;
+
+
+  // For some reason, when pressing enter (in stead of tab) the editingFinished()
+  // signal is emitted twice. Check if there is already a job running to prevent
+  // that we end up with the group members twice.
+  if ( mMightBeGroupLines.key( QWeakPointer<KPIM::MultiplyingLine>( line ) ) != 0 )
     return;
 
   Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();

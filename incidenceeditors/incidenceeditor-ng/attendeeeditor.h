@@ -52,7 +52,7 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
 
   signals:
     void countChanged( int );
-    void returnPressed( KPIM::MultiplyingLine* );
+    void editingFinished( KPIM::MultiplyingLine* );
 
   protected slots:
     void slotLineAdded( KPIM::MultiplyingLine* );
