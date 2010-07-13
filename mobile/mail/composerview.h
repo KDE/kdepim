@@ -79,11 +79,12 @@ class ComposerView : public KDeclarativeFullScreenView
   signals:
     void changed();
     void busyChanged();
-    void failed( const QString &errorMessage );
 
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
     void addAttachment();
+    void success();
+    void failed( const QString &errorMessage );
 
     void signEmail( bool sign ) { m_sign = sign; }
     void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }

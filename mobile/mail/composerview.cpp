@@ -52,6 +52,7 @@
 #include <KMessageBox>
 #include <KCMultiDialog>
 #include <KFileDialog>
+#include <KNotification>
 
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
@@ -109,10 +110,11 @@ ComposerView::ComposerView(QWidget* parent) :
            this, SLOT( disableHtml( Message::ComposerViewBase::Confirmation ) ) );
 
   connect( m_composerBase, SIGNAL( enableHtml() ),
-           this, SLOT( enableHtml() ) );
-  connect( m_composerBase, SIGNAL( failed( QString) ), this, SLOT( slotSendFailed( QString ) ) ); */
+  this, SLOT( enableHtml() ) ); */
+
   connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( slotSendSuccessful() ) );
-  connect( m_composerBase, SIGNAL( failed(const QString&) ), this, SIGNAL( failed(const QString&) ) );
+  connect( m_composerBase, SIGNAL( failed(const QString&) ), this, SLOT( failed(const QString&) ) );
+  connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( success() ) );
 
   Message::AttachmentModel* attachmentModel = new Message::AttachmentModel(this);
   engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( attachmentModel ) ) );
@@ -251,6 +253,24 @@ void ComposerView::addAttachment()
   KUrl url = KFileDialog::getOpenUrl();
   if (!url.isEmpty())
     m_composerBase->addAttachment( url, QString() );
+}
+
+void ComposerView::success()
+{
+    KNotification *notify = new KNotification("emailsent");
+    notify->setComponentData(KComponentData("kmail-mobile"));
+    notify->setText(i18nc("Notification when the email was sent",
+                          "<b>E-mail successfully sent</b>"));
+    notify->sendEvent();
+}
+
+void ComposerView::failed( const QString &errorMessage )
+{
+    KNotification *notify = new KNotification("sendfailed");
+    notify->setComponentData(KComponentData("kmail-mobile"));
+    notify->setText(i18nc("Notification when there was an error while trying to send an email",
+                          "<b>Error while trying to send email</b><br> %1", errorMessage));
+    notify->sendEvent();
 }
 
 #include "composerview.moc"

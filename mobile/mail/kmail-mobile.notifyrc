@@ -1,0 +1,14 @@
+[Global]
+IconName=mail-mobile
+Comment=KDE e-mail client
+Name=KDE Mail
+
+[Event/emailsent]
+Name=E-mail successfully sent
+Comment=Your e-mail was sent with success!
+Action=Popup
+
+[Event/sendfailed]
+Name=Error while sending email
+Comment=There was an error while trying to send the e-mail
+Action=Popup
