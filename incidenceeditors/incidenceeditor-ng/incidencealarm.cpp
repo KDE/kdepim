@@ -140,8 +140,7 @@ void IncidenceAlarm::editCurrentAlarm()
 
   KCal::Alarm *currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
-  AlarmDialog *dialog = new AlarmDialog;
-  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
   dialog->load( currentAlarm );
 
   if ( dialog->exec() == KDialog::Accepted ) {
@@ -149,7 +148,6 @@ void IncidenceAlarm::editCurrentAlarm()
     updateAlarmList();
   }
 
-  delete dialog;
 #endif
 }
 
@@ -157,8 +155,7 @@ void IncidenceAlarm::newAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
 
-  AlarmDialog *dialog = new AlarmDialog;
-  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
   dialog->setIsTodoReminder( mIsTodo );
   dialog->setOffset( 15 );
   dialog->setUnit( AlarmDialog::Minutes );

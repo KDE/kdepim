@@ -151,11 +151,10 @@ void IncidenceAttachment::addAttachment()
   AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachmentView );
 
 #ifdef KDEPIM_MOBILE_UI
-  AttachmentEditDialog *dialog = new AttachmentEditDialog( item, 0 );
+  QWeakPointer<AttachmentEditDialog> dialog( new AttachmentEditDialog( item, 0 ) );
 #else
-  AttachmentEditDialog *dialog = new AttachmentEditDialog( item, mAttachmentView );
+  QWeakPointer<AttachmentEditDialog> dialog( new AttachmentEditDialog( item, mAttachmentView ) );
 #endif
-  dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->setCaption( i18nc( "@title", "Add Attachment" ) );
   if ( dialog->exec() == KDialog::Rejected )
     delete item;

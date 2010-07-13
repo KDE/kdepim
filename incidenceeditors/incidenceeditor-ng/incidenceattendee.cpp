@@ -181,8 +181,7 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
 
 void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
 {
-  Akonadi::EmailAddressSelectionDialog *dialog = new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor );
-  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
   dialog->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
 
   if ( dialog->exec() == QDialog::Accepted ) {
@@ -197,8 +196,6 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
       insertAttendeeFromAddressee( contact );
     }
   }
-
-  delete dialog;
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
