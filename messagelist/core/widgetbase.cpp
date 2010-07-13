@@ -193,49 +193,51 @@ void Widget::populateStatusFilterCombo()
 {
   d->mStatusFilterCombo->clear();
 
-  d->mStatusFilterCombo->addItem( i18n( "Any Status" ) );
-  d->mStatusFilterCombo->setItemIcon( 0, SmallIcon("system-run") );
-  d->mStatusFilterCombo->setItemData( 0, QVariant( static_cast< int >( 0 ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("system-run"), i18n( "Any Status" ), 0 );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Unread" ) );
-  d->mStatusFilterCombo->setItemIcon( 2, SmallIcon("mail-unread") );
-  d->mStatusFilterCombo->setItemData( 2, QVariant( static_cast< int >( KPIM::MessageStatus::statusUnread().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-unread"),
+                                  i18nc( "@action:inmenu Status of a message", "Unread" ),
+                                  KPIM::MessageStatus::statusUnread().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Replied" ) );
-  d->mStatusFilterCombo->setItemIcon( 3, SmallIcon("mail-replied") );
-  d->mStatusFilterCombo->setItemData( 3, QVariant( static_cast< int >( KPIM::MessageStatus::statusReplied().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-replied"),
+                                  i18nc( "@action:inmenu Status of a message", "Replied" ),
+                                  KPIM::MessageStatus::statusReplied().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Forwarded" ) );
-  d->mStatusFilterCombo->setItemIcon( 4, SmallIcon("mail-forwarded") );
-  d->mStatusFilterCombo->setItemData( 4, QVariant( static_cast< int >( KPIM::MessageStatus::statusForwarded().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-forwarded"),
+                                  i18nc( "@action:inmenu Status of a message", "Forwarded" ),
+                                  KPIM::MessageStatus::statusForwarded().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Important") );
-  d->mStatusFilterCombo->setItemIcon( 5, SmallIcon("emblem-important") );
-  d->mStatusFilterCombo->setItemData( 5, QVariant( static_cast< int >( KPIM::MessageStatus::statusImportant().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("emblem-important"),
+                                  i18nc( "@action:inmenu Status of a message", "Important"),
+                                  KPIM::MessageStatus::statusForwarded().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Action Item" ) );
-  d->mStatusFilterCombo->setItemIcon( 6, SmallIcon("mail-task") );
-  d->mStatusFilterCombo->setItemData( 6, QVariant( static_cast< int >( KPIM::MessageStatus::statusToAct().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-task"),
+                                  i18nc( "@action:inmenu Status of a message", "Action Item" ),
+                                  KPIM::MessageStatus::statusToAct().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Watched" ) );
-  d->mStatusFilterCombo->setItemIcon( 7, SmallIcon("mail-thread-watch") );
-  d->mStatusFilterCombo->setItemData( 7, QVariant( static_cast< int >( KPIM::MessageStatus::statusWatched().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-watch"),
+                                  i18nc( "@action:inmenu Status of a message", "Watched" ),
+                                  KPIM::MessageStatus::statusWatched().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Ignored" ) );
-  d->mStatusFilterCombo->setItemIcon( 8, SmallIcon("mail-thread-ignored") );
-  d->mStatusFilterCombo->setItemData( 8, QVariant( static_cast< int >( KPIM::MessageStatus::statusIgnored().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-ignored"),
+                                  i18nc( "@action:inmenu Status of a message", "Ignored" ),
+                                  KPIM::MessageStatus::statusIgnored().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Has Attachment" ) );
-  d->mStatusFilterCombo->setItemIcon( 9, SmallIcon("mail-attachment") );
-  d->mStatusFilterCombo->setItemData( 9, QVariant( static_cast< int >( KPIM::MessageStatus::statusHasAttachment().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-attachment"),
+                                  i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
+                                  KPIM::MessageStatus::statusHasAttachment().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Spam" ) );
-  d->mStatusFilterCombo->setItemIcon( 10, SmallIcon("mail-mark-junk") );
-  d->mStatusFilterCombo->setItemData( 10, QVariant( static_cast< int >( KPIM::MessageStatus::statusSpam().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-invitation"),
+                                  i18nc( "@action:inmenu Status of a message", "Has Invitation" ),
+                                  KPIM::MessageStatus::statusHasInvitation().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Ham" ) );
-  d->mStatusFilterCombo->setItemIcon( 11, SmallIcon("mail-mark-notjunk") );
-  d->mStatusFilterCombo->setItemData( 11, QVariant( static_cast< int >( KPIM::MessageStatus::statusHam().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-junk"),
+                                  i18nc( "@action:inmenu Status of a message", "Spam" ),
+                                  KPIM::MessageStatus::statusSpam().toQInt32() );
+
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-notjunk"),
+                                  i18nc( "@action:inmenu Status of a message", "Ham" ),
+                                  KPIM::MessageStatus::statusHam().toQInt32() );
 
   d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
   fillMessageTagCombo( d->mStatusFilterCombo );
