@@ -20,8 +20,6 @@
 
 #include "incidencealarm.h"
 
-#include <QtCore/QDebug>
-
 #include <KCal/Todo>
 
 #include "alarmdialog.h"
@@ -290,8 +288,6 @@ QString IncidenceAlarm::stringForAlarm( KCal::Alarm *alarm )
   QString repeatStr;
   if ( alarm->repeatCount() > 0 )
     repeatStr = i18nc( "The alarm is configured to repeat after snooze","(Repeats)");
-
-  qDebug() << alarm->enabled() << useoffset;
 
   if ( alarm->enabled() ) {
     if ( useoffset > 0 && alarm->hasStartOffset() ) {
