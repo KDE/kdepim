@@ -51,7 +51,7 @@ class ComposerView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
   Q_PROPERTY( QString subject READ subject WRITE setSubject NOTIFY changed )
-  Q_PROPERTY( bool busy READ busy WRITE setBusy NOTIFY busyChanged)
+  Q_PROPERTY( bool busy READ busy WRITE setBusy NOTIFY busyChanged )
 
   public:
     explicit ComposerView(QWidget* parent = 0);
@@ -79,6 +79,7 @@ class ComposerView : public KDeclarativeFullScreenView
   signals:
     void changed();
     void busyChanged();
+    void failed( const QString &errorMessage );
 
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );

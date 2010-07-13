@@ -87,6 +87,7 @@ ComposerView::ComposerView(QWidget* parent) :
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
 
 
+  // ### TODO: make this happens later to show the composer as fast as possible
   m_composerBase = new Message::ComposerViewBase( this );
   m_composerBase->setIdentityManager( Global::identityManager() );
 
@@ -111,14 +112,14 @@ ComposerView::ComposerView(QWidget* parent) :
            this, SLOT( enableHtml() ) );
   connect( m_composerBase, SIGNAL( failed( QString) ), this, SLOT( slotSendFailed( QString ) ) ); */
   connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( slotSendSuccessful() ) );
+  connect( m_composerBase, SIGNAL( failed(const QString&) ), this, SIGNAL( failed(const QString&) ) );
 
-  
   Message::AttachmentModel* attachmentModel = new Message::AttachmentModel(this);
   engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( attachmentModel ) ) );
   Message::AttachmentControllerBase* attachmentController = new Message::AttachmentControllerBase(attachmentModel, this, actionCollection());
   m_composerBase->setAttachmentModel( attachmentModel );
   m_composerBase->setAttachmentController( attachmentController );
-    
+
   action = actionCollection()->addAction("sign_email");
   action->setText( i18n( "Sign" ) );
   action->setIcon( KIcon( "document-sign" ) );
