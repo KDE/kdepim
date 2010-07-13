@@ -46,7 +46,8 @@ enum MsgStatus {
     KMMsgStatusToAct =             0x00001000,
     KMMsgStatusSpam =              0x00002000,
     KMMsgStatusHam =               0x00004000,
-    KMMsgStatusHasAttach =         0x00008000
+    KMMsgStatusHasAttach =         0x00008000,
+    KMMsgStatusHasInvitation =     0x00010000
 };
 
 MessageStatus::MessageStatus()
@@ -128,6 +129,9 @@ void MessageStatus::set( const MessageStatus &other )
   if ( other.hasAttachment() ) {
     setHasAttachment();
   }
+  if ( other.hasInvitation() ) {
+    setHasInvitation();
+  }
 }
 
 void MessageStatus::toggle( const MessageStatus &other )
@@ -168,6 +172,9 @@ void MessageStatus::toggle( const MessageStatus &other )
   }
   if ( other.hasAttachment() ) {
     setHasAttachment( !( mStatus & KMMsgStatusHasAttach ) );
+  }
+  if ( other.hasInvitation() ) {
+    setHasInvitation( !( mStatus & KMMsgStatusHasInvitation ) );
   }
 }
 
@@ -244,6 +251,11 @@ bool MessageStatus::isHam() const
 bool MessageStatus::hasAttachment() const
 {
   return ( mStatus & KMMsgStatusHasAttach );
+}
+
+bool MessageStatus::hasInvitation() const
+{
+  return ( mStatus & KMMsgStatusHasInvitation );
 }
 
 void MessageStatus::setUnread()
@@ -374,6 +386,15 @@ void MessageStatus::setHasAttachment( bool withAttachment )
     mStatus |= KMMsgStatusHasAttach;
   } else {
     mStatus &= ~KMMsgStatusHasAttach;
+  }
+}
+
+void MessageStatus::setHasInvitation( bool withInvitation )
+{
+  if ( withInvitation ) {
+    mStatus |= KMMsgStatusHasInvitation;
+  } else {
+    mStatus &= ~KMMsgStatusHasInvitation;
   }
 }
 
@@ -708,5 +729,12 @@ MessageStatus MessageStatus::statusHasAttachment()
 {
   MessageStatus st;
   st.setHasAttachment();
+  return st;
+}
+
+MessageStatus MessageStatus::statusHasInvitation()
+{
+  MessageStatus st;
+  st.setHasInvitation();
   return st;
 }

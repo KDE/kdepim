@@ -42,6 +42,11 @@ namespace KPIM {
   be unset at the same time.
 
   The stati Unread/Read are mutually exclusive.
+
+  FIXME: Many of those flags got broken during the Akonadi port.
+  Right now, the attachment, invitation and crypto state is _not_ stored on the Akonadi server.
+  This needs to be fixed. When changing a status, one needs an ItemModifyJob, otherwise the change
+  will not be written back!
 */
 class MESSAGECORE_EXPORT MessageStatus
 {
@@ -168,6 +173,8 @@ class MESSAGECORE_EXPORT MessageStatus
     */
     bool hasAttachment() const;
 
+    bool hasInvitation() const;
+
     /* ----- setters ----------------------------------------------------- */
 
     /** Set the status to unread. */
@@ -235,6 +242,8 @@ class MESSAGECORE_EXPORT MessageStatus
         @param withAttechment Set (true) or unset (false) this status flag.
     */
     void setHasAttachment( bool withAttachment = true );
+
+    void setHasInvitation( bool withInvitation = true );
 
     /* ----- state representation  --------------------------------------- */
 
@@ -366,6 +375,8 @@ class MESSAGECORE_EXPORT MessageStatus
         @return A reference to a status instance initialized as Attachment.
     */
     static MessageStatus statusHasAttachment();
+
+    static MessageStatus statusHasInvitation();
 
   private:
     qint32 mStatus;
