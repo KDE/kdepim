@@ -34,6 +34,8 @@
 
 #include "gnupg-helper.h"
 
+#include "utils/hex.h"
+
 #include <gpgme++/engineinfo.h>
 
 #include <KStandardDirs>
@@ -41,6 +43,8 @@
 #include <QDir>
 #include <QFile>
 #include <QString>
+#include <QProcess>
+#include <QByteArray>
 
 #include <gpg-error.h>
 
@@ -94,4 +98,28 @@ QStringList Kleo::gnupgFileBlacklist() {
         << "*.tmp"
         << "reader_*.status"
         ;
+}
+
+QString Kleo::gpg4winInstallPath() {
+    return gpgConfListDir( "bindir" );
+}
+
+QString Kleo::gpgConfListDir( const char * which ) {
+    const QString gpgConfPath = Kleo::gpgConfPath();
+    if ( gpgConfPath.isEmpty() )
+        return QString();
+    QProcess gpgConf;
+    qDebug( "gpgConfListDir: starting %s --list-dirs", qPrintable( gpgConfPath ) );
+    gpgConf.start( gpgConfPath, QStringList() << QLatin1String( "--list-dirs" ) );
+    if ( !gpgConf.waitForFinished() ) {
+        qDebug( "gpgConfListDir(): failed to execute gpgconf: %s", qPrintable( gpgConf.errorString() ) );
+        qDebug( "output was:\n%s", gpgConf.readAllStandardError().constData() );
+        return QString();
+    }
+    const QList<QByteArray> lines = gpgConf.readAllStandardOutput().split( '\n' );
+    Q_FOREACH( const QByteArray & line, lines )
+        if ( line.startsWith( which ) && line[qstrlen(which)] == ':' )
+            return QFile::decodeName( hexdecode( line.mid( qstrlen(which) + 1 ) ) );
+    qDebug( "gpgConfListDir(): didn't find '%s' entry in output:\n%s", which, gpgConf.readAllStandardError().constData() );
+    return QString();
 }
