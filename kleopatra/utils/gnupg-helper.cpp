@@ -119,7 +119,7 @@ QString Kleo::gpgConfListDir( const char * which ) {
     const QList<QByteArray> lines = gpgConf.readAllStandardOutput().split( '\n' );
     Q_FOREACH( const QByteArray & line, lines )
         if ( line.startsWith( which ) && line[qstrlen(which)] == ':' )
-            return QFile::decodeName( hexdecode( line.mid( qstrlen(which) + 1 ) ) );
+            return QDir::fromNativeSeparators( QFile::decodeName( hexdecode( line.mid( qstrlen(which) + 1 ) ) ) );
     qDebug( "gpgConfListDir(): didn't find '%s' entry in output:\n%s", which, gpgConf.readAllStandardError().constData() );
     return QString();
 }
