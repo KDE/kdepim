@@ -134,12 +134,12 @@ void ImportCertificateFromFileCommand::doStart()
     Q_FOREACH( const QString & fn, d->files ) {
         QFile in( fn );
         if ( !in.open( QIODevice::ReadOnly ) ) {
-            d->error( i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
+            d->error( i18n( "Could not open file %1 for reading: %2", in.fileName(), in.errorString() ), i18n( "Certificate Import Failed" ) );
             continue;
         }
         const GpgME::Protocol protocol = findProtocol( fn );
         if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
-            d->error( i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
+            d->error( i18n( "Could not determine certificate type of %1.", in.fileName() ), i18n( "Certificate Import Failed" ) );
             continue;
         }
         d->startImport( protocol, in.readAll(), fn );
