@@ -151,14 +151,14 @@ public:
   QString mReferencesIdMD5;         ///< set only if we're doing threading
   QString mStrippedSubjectMD5;      ///< set only if we're doing threading
   QUrl mNepomukResourceUri;         ///< The URI under which this item can be found in Nepomuk
-  bool mSubjectIsPrefixed;          ///< set only if we're doing subject based threading
   EncryptionState mEncryptionState;
   SignatureState mSignatureState;
   unsigned long mUniqueId;          ///< The unique id of this message (serial number of KMMsgBase at the moment of writing)
-  bool mAboutToBeRemoved;           ///< Set to true when this item is going to be deleted and shouldn't be selectable
 
-  bool mAnnotationStateChecked;     ///< The state of the annotation below has been checked
-  bool mHasAnnotation;              ///< Cached value for hasAnnotation()
+  bool mAboutToBeRemoved : 1;       ///< Set to true when this item is going to be deleted and shouldn't be selectable
+  bool mSubjectIsPrefixed : 1;      ///< set only if we're doing subject based threading
+  bool mAnnotationStateChecked : 1; ///< The state of the annotation below has been checked
+  bool mHasAnnotation : 1;          ///< Cached value for hasAnnotation()
 
   static QColor mColorNewMessage;
   static QColor mColorUnreadMessage;
