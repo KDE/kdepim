@@ -297,7 +297,6 @@ void Message::ComposerViewBase::readyForSending()
   job->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotEmailAddressResolved( KJob* ) ) );
   job->start();
-  
 }
 
 void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
@@ -306,7 +305,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     QString msg = i18n( "Expanding email addresses in message failed.\n %1\n", job->errorString() );
     KMessageBox::sorry( m_parentWidget, msg,
                         i18n( "Sending Message Failed" ) );
-//     setEnabled( true );
+    //     setEnabled( true );
     // TODO add string after string freeze!
     emit failed( msg );
     return;
@@ -359,7 +358,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
   if( m_composers.isEmpty() ) {
     // TODO i18n after string freeze!
-    emit failed( QLatin1String( "" ) );
+    emit failed( i18n( "It was not possible to create a message composer." ) );
     return;
   }
 
