@@ -30,25 +30,28 @@
 #include "core/model.h"
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
+#include "core/settings.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"
 
-#include <QGridLayout>
-#include <QVariant>
-#include <QToolButton>
 #include <QActionGroup>
-#include <QTimer>
+#include <QBoxLayout>
+#include <QGridLayout>
 #include <QHeaderView>
+#include <QTimer>
+#include <QToolButton>
+#include <QVariant>
 
-#include <KMenu>
-#include <KConfig>
-#include <KDebug>
-#include <KIconLoader>
-#include <KLineEdit>
-#include <KIcon>
-#include <KLocale>
-#include <KComboBox>
+#include <KDE/KAction>
+#include <KDE/KComboBox>
+#include <KDE/KConfig>
+#include <KDE/KDebug>
+#include <KDE/KIcon>
+#include <KDE/KIconLoader>
+#include <KDE/KLineEdit>
+#include <KDE/KLocale>
+#include <KDE/KMenu>
 
 #include <messagecore/messagestatus.h>
 
@@ -60,6 +63,7 @@ public:
   Private( Widget *owner )
     : q( owner ), mView( 0 ), mSearchEdit( 0 ),
       mSearchTimer( 0 ), mStatusFilterCombo( 0 ),
+      mOpenFullSearchButton( 0 ),
       mStorageModel( 0 ), mAggregation( 0 ),
       mTheme( 0 ), mFilter( 0 ),
       mStorageUsesPrivateTheme( false ),
@@ -96,9 +100,10 @@ public:
   View *mView;
   QString mLastAggregationId;
   QString mLastThemeId;
-  KLineEdit * mSearchEdit;
-  QTimer * mSearchTimer;
-  KComboBox * mStatusFilterCombo;
+  KLineEdit *mSearchEdit;
+  QTimer *mSearchTimer;
+  KComboBox *mStatusFilterCombo;
+  QToolButton *mOpenFullSearchButton;
 
   StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
                                          ///  is owned by MessageList::Widget.
@@ -133,6 +138,7 @@ Widget::Widget( QWidget *pParent )
   d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
   d->mSearchEdit->setObjectName( "quicksearch" );
   d->mSearchEdit->setClearButtonShown( true );
+  d->mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
   connect( d->mSearchEdit, SIGNAL( textEdited( const QString & ) ),
            SLOT( searchEditTextEdited( const QString & ) ) );
@@ -144,16 +150,18 @@ Widget::Widget( QWidget *pParent )
 
   // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
   d->mStatusFilterCombo = new KComboBox( this ) ;
+  d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
   g->addWidget( d->mStatusFilterCombo, 0, 1 );
 
   // The "Open Full Search" button
-  QToolButton * tb = new QToolButton( this );
-  tb->setIcon( KIcon( "edit-find-mail" ) );
-  tb->setText( i18n( "Open Full Search" ) );
-  tb->setToolTip( tb->text() );
-  g->addWidget( tb, 0, 2 );
+  d->mOpenFullSearchButton = new QToolButton( this );
+  d->mOpenFullSearchButton->setIcon( KIcon( "edit-find-mail" ) );
+  d->mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
+  d->mOpenFullSearchButton->setToolTip( d->mOpenFullSearchButton->text() );
+  d->mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
+  g->addWidget( d->mOpenFullSearchButton, 0, 2 );
 
-  connect( tb, SIGNAL( clicked() ),
+  connect( d->mOpenFullSearchButton, SIGNAL( clicked() ),
            this, SIGNAL( fullSearchRequest() ) );
 
 
@@ -187,6 +195,35 @@ Widget::~Widget()
   delete d->mStorageModel;
 
   delete d;
+}
+
+void Widget::changeQuicksearchVisibility()
+{
+  KLineEdit * const lineEdit = d->mSearchEdit;
+  QWidget * const comboBox = d->mStatusFilterCombo;
+  QWidget * const fullSearchButton = d->mOpenFullSearchButton;
+  if ( lineEdit ) {
+    const bool visible = lineEdit->isVisible() &&
+                         comboBox->isVisible() &&
+                         fullSearchButton->isVisible();
+    if ( visible ) {
+      //if we hide it we do not want to apply the filter,
+      //otherwise someone is maybe stuck with x new emails
+      //and cannot read it because of filter
+      lineEdit->clear();
+
+      //we focus the message list if we hide the searchbar
+      d->mView->setFocus( Qt::OtherFocusReason );
+    }
+    else {
+      // on show: we focus the lineedit for fast filtering
+      lineEdit->setFocus( Qt::OtherFocusReason );
+    }
+    lineEdit->setVisible( !visible );
+    comboBox->setVisible( !visible );
+    fullSearchButton->setVisible( !visible );
+    Settings::self()->setShowQuickSearch( !visible );
+  }
 }
 
 void Widget::populateStatusFilterCombo()

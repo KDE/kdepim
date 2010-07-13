@@ -15,6 +15,9 @@
       <label>Hide tab bar when only one tab is open</label>
       <whatsthis>With this option enabled the tab bar will be displayed only when there are two or more tabs. With this option disabled the tab bar will be always shown. When the tab bar is hidden you can always open a folder in a new tab by middle-clicking it.</whatsthis>
     </entry>
+    <entry name="ShowQuickSearch" type="Bool">
+      <default>true</default>
+    </entry>
   </group>
 
   <group name="MessageListView::Colors">

@@ -28,6 +28,7 @@
 #include "storagemodel.h"
 #include "core/messageitem.h"
 #include "core/view.h"
+#include <core/settings.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QAction>
@@ -36,14 +37,16 @@
 #include <QtGui/QDragMoveEvent>
 #include <QtGui/QDropEvent>
 
+#include <KDE/KActionCollection>
+#include <KDE/KComboBox>
 #include <KDE/KDebug>
 #include <KDE/KIcon>
 #include <KDE/KIconLoader>
 #include <KDE/KLocale>
 #include <KDE/KMenu>
+#include <KDE/KToggleAction>
 #include <KDE/KXMLGUIClient>
 #include <KDE/KXMLGUIFactory>
-#include <KDE/KComboBox>
 
 #include <Nepomuk/Tag>
 
@@ -89,6 +92,15 @@ Widget::~Widget()
 void Widget::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
+
+  if ( d->mXmlGuiClient ) {
+    KToggleAction * const showHideQuicksearch = new KToggleAction( i18n( "Show Quick Search Bar" ), this );
+    showHideQuicksearch->setShortcut( Qt::CTRL + Qt::Key_H );
+    showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
+
+    d->mXmlGuiClient->actionCollection()->addAction( "show_quick_search", showHideQuicksearch );
+    connect( showHideQuicksearch, SIGNAL( triggered( bool ) ), this, SLOT( changeQuicksearchVisibility() ) );
+  }
 }
 
 bool Widget::canAcceptDrag( const QDropEvent * e )

@@ -131,6 +131,11 @@ public slots:
    */
   void populateStatusFilterCombo();
 
+  /**
+   * Shows or hides the quicksearch field, the filter combobox and the toolbutton for advanced search.
+   */
+  void changeQuicksearchVisibility();
+
 protected:
   /**
    * Called when the "Message Status/Tag" filter menu is opened by the user.
