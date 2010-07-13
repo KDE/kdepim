@@ -3,31 +3,31 @@ extensions=tar
 id=tar
 Name=TAR (PGP®-compatible)
 Name[de]=TAR (PGP®-kompatibel)
-pack-command=0|tar cf - -T- --null
+pack-command=0|%I/tar cf - -T- --null
 
 [Checksum Definition #0]
 file-patterns=sha1sum.txt
 output-file=sha1sum.txt
 id=sha1sum
 Name=sha1sum
-create-command=0|sha1sum -0 -
-verify-command=sha1sum -c
+create-command=0|%I/sha1sum -0 -
+verify-command=%I/sha1sum -c
 
 [Checksum Definition #1]
 file-patterns=sha256sum.txt
 output-file=sha256sum.txt
 id=sha256sum
 Name=sha256sum
-create-command=0|sha256sum -0 -
-verify-command=sha256sum -c
+create-command=0|%I/sha256sum -0 -
+verify-command=%I/sha256sum -c
 
 [Checksum Definition #2]
 file-patterns=md5sum.txt
 output-file=md5sum.txt
 id=md5sum
 Name=md5sum
-create-command=0|md5sum -0 -
-verify-command=md5sum -c
+create-command=0|%I/md5sum -0 -
+verify-command=%I/md5sum -c
 
 [Key Filter #0]
 was-validated=false
