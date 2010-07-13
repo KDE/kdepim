@@ -5,35 +5,29 @@ Name=TAR (PGP®-compatible)
 Name[de]=TAR (PGP®-kompatibel)
 pack-command=0|tar cf - -T- --null
 
-[Archive Definition #1]
-extensions=zip
-id=zip
-Name=ZIP
-Name[de]=ZIP
-pack-command=zip  -r - %f
-
-[Archive Definition #3]
-extensions=tar.bz2,tbz2
-id=bzip2
-Name=TAR (with bzip2 compression)
-Name[de]=TAR (mit bzip2-Kompression)
-pack-command=0|tar cfj - -T- --null
-
-[Checksum Definition #1]
+[Checksum Definition #0]
 file-patterns=sha1sum.txt
 output-file=sha1sum.txt
 id=sha1sum
 Name=sha1sum
-create-command=0|xargs -0 sha1sum --
-verify-command=sha1sum -c --
+create-command=0|sha1sum -0 -
+verify-command=sha1sum -c
+
+[Checksum Definition #1]
+file-patterns=sha256sum.txt
+output-file=sha256sum.txt
+id=sha256sum
+Name=sha256sum
+create-command=0|sha256sum -0 -
+verify-command=sha256sum -c
 
 [Checksum Definition #2]
 file-patterns=md5sum.txt
 output-file=md5sum.txt
 id=md5sum
 Name=md5sum
-create-command=0|xargs -0 md5sum --
-verify-command=md5sum -c --
+create-command=0|md5sum -0 -
+verify-command=md5sum -c
 
 [Key Filter #0]
 was-validated=false
