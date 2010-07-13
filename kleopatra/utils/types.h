@@ -79,6 +79,7 @@ namespace Kleo {
 
     protected:
         void bringToForeground( QWidget * wid );
+        void applyWindowID( QWidget * wid );
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
