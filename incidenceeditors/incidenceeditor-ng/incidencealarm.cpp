@@ -170,6 +170,7 @@ void IncidenceAlarm::newAlarm()
     newAlarm->setEnabled( true );
     mAlarms.append( newAlarm );
     updateAlarmList();
+    checkDirtyStatus();
   }
 
 #endif
