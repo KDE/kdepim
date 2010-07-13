@@ -20,6 +20,7 @@
 
 #include <messagecore/stringutil.h>
 #include <messagecore/globalsettings.h>
+#include <messagecore/nodehelper.h>
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
@@ -302,6 +303,11 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
 
   KPIM::MessageStatus stat;
   stat.setStatusFromFlags( item.flags() );
+
+  // FIXME: Attachment and invitation state should be stored on the server as well!
+  if ( MessageCore::NodeHelper::isInvitation( mail.get() ) ) {
+    stat.setHasInvitation( true );
+  }
 
   mi->setStatus( stat );
 

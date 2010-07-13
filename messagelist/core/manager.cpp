@@ -83,6 +83,7 @@ Manager::Manager()
   mPixmapMessageNotEncrypted = new QPixmap( SmallIcon( "text-plain" ) );
   mPixmapMessageAttachment = new QPixmap( SmallIcon( "mail-attachment" ) );
   mPixmapMessageAnnotation = new QPixmap( SmallIcon( "view-pim-notes" ) );
+  mPixmapMessageInvitation = new QPixmap( SmallIcon( "mail-invitation" ) );
   //mPixmapShowMore = new QPixmap( SmallIcon( "list-add.png" ) );
   //mPixmapShowLess = new QPixmap( SmallIcon( "list-remove.png" ) );
   if ( KApplication::isRightToLeft() )
@@ -131,6 +132,7 @@ Manager::~Manager()
   delete mPixmapMessageNotEncrypted;
   delete mPixmapMessageAttachment;
   delete mPixmapMessageAnnotation;
+  delete mPixmapMessageInvitation;
   delete mPixmapShowMore;
   delete mPixmapShowLess;
   delete mPixmapVerticalLine;
@@ -715,6 +717,9 @@ void Manager::createDefaultThemes()
         i = new Theme::ContentItem( Theme::ContentItem::AnnotationIcon );
         i->setHideWhenDisabled( true );
       r->addLeftItem( i );
+        i = new Theme::ContentItem( Theme::ContentItem::InvitationIcon );
+        i->setHideWhenDisabled( true );
+      r->addLeftItem( i );
         i = new Theme::ContentItem( Theme::ContentItem::SignatureStateIcon );
         i->setHideWhenDisabled( true );
       r->addLeftItem( i );
@@ -782,6 +787,9 @@ void Manager::createDefaultThemes()
         i->setHideWhenDisabled( true );
       r->addRightItem( i );
         i = new Theme::ContentItem( Theme::ContentItem::AnnotationIcon );
+        i->setHideWhenDisabled( true );
+      r->addRightItem( i );
+        i = new Theme::ContentItem( Theme::ContentItem::InvitationIcon );
         i->setHideWhenDisabled( true );
       r->addRightItem( i );
         i = new Theme::ContentItem( Theme::ContentItem::EncryptionStateIcon );

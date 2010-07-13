@@ -226,6 +226,7 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   stat.setSent( false );
   stat.setSpam( true );
   stat.setWatched( true );
+  stat.setHasInvitation();
   //stat.setHasAttachment( false );
 
   mSampleMessageItem->setStatus( stat );
@@ -1401,6 +1402,10 @@ ThemeEditor::ThemeEditor( QWidget *parent )
   cil->setToolTip( Theme::ContentItem::description( cil->type() ) );
   gblayout->addWidget( cil, 1, 5 );
 
+  cil = new ThemeContentItemSourceLabel( gb, Theme::ContentItem::InvitationIcon );
+  cil->setPixmap( *( Manager::instance()->pixmapMessageInvitation() ) );
+  cil->setToolTip( Theme::ContentItem::description( cil->type() ) );
+  gblayout->addWidget( cil, 2, 5 );
 
 
 
