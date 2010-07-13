@@ -227,7 +227,7 @@ void ImportCertificatesCommand::Private::setImportResultProxyModel( const std::v
         tv->expandAll();
 }
 
-const int sum( const std::vector<ImportResult> & res, int (ImportResult::*fun)() const ) {
+int sum( const std::vector<ImportResult> & res, int (ImportResult::*fun)() const ) {
     return kdtools::accumulate_transform( res.begin(), res.end(), mem_fn( fun ), 0 );
 }
 
