@@ -34,6 +34,8 @@
 #include <qwidgetstack.h>
 #include <qregexp.h>
 #include <qvbox.h>
+#include <qtooltip.h>
+#include <qwhatsthis.h>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
@@ -415,6 +417,10 @@ void KABCore::setContactSelected( const QString &uid )
 #endif
     mActionPaste->setEnabled( !list.isEmpty() );
   }
+#ifdef KDEPIM_NEW_DISTRLISTS
+  mAddDistListButton->setEnabled( writable );
+  mRemoveDistListButton->setEnabled( someSelected && writable );
+#endif
 }
 
 void KABCore::sendMail()
@@ -494,10 +500,20 @@ void KABCore::deleteContacts( const QStringList &uids )
       ++it;
     }
 
-    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?",
-                                                 "Do you really want to delete these %n contacts?", uids.count() ),
-                                                 names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+    if ( KMessageBox::warningContinueCancelList(
+           mWidget,
+           i18n( "<qt>"
+                 "Do you really want to delete this contact from your addressbook?<br>"
+                 "<b>Note:</b>The contact will be also removed from all distribution lists."
+                 "</qt>",
+                 "<qt>"
+                 "Do you really want to delete these %n contacts from your addressbook?<br>"
+                 "<b>Note:</b>The contacts will be also removed from all distribution lists."
+                 "</qt>",
+                 uids.count() ),
+           names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel ) {
       return;
+    }
 
     DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
     mCommandHistory->addCommand( command );
@@ -1188,19 +1204,30 @@ void KABCore::initGUI()
   buttonLayout->setSpacing( KDialog::spacingHint() );
   buttonLayout->addStretch( 1 );
 
-  KPushButton *addDistListButton = new KPushButton( mDistListButtonWidget );
-  addDistListButton->setText( i18n( "Add" ) );
-  connect( addDistListButton, SIGNAL( clicked() ),
+  mAddDistListButton = new KPushButton( mDistListButtonWidget );
+  mAddDistListButton->setEnabled( false );
+  mAddDistListButton->setText( i18n( "Add" ) );
+  QToolTip::add( mAddDistListButton, i18n( "Add contacts to the distribution list" ) );
+  QWhatsThis::add( mAddDistListButton,
+                   i18n( "Click this button if you want to add more contacts to "
+                         "the current distribution list. You will be shown a dialog that allows "
+                         "to enter a list of existing contacts to this distribution list." ) );
+  connect( mAddDistListButton, SIGNAL( clicked() ),
            this, SLOT( editSelectedDistributionList() ) );
-  buttonLayout->addWidget( addDistListButton );
+  buttonLayout->addWidget( mAddDistListButton );
   mDistListButtonWidget->setShown( false );
   viewLayout->addWidget( mDistListButtonWidget );
 
-  KPushButton *removeDistListButton = new KPushButton( mDistListButtonWidget );
-  removeDistListButton->setText( i18n( "Remove" ) );
-  connect( removeDistListButton, SIGNAL( clicked() ),
+  mRemoveDistListButton = new KPushButton( mDistListButtonWidget );
+  mRemoveDistListButton->setEnabled( false );
+  mRemoveDistListButton->setText( i18n( "Remove" ) );
+  QToolTip::add( mRemoveDistListButton, i18n( "Remove contacts from the distribution list" ) );
+  QWhatsThis::add( mRemoveDistListButton,
+                   i18n( "Click this button if you want to remove the selected contacts from "
+                         "the current distribution list." ) );
+  connect( mRemoveDistListButton, SIGNAL( clicked() ),
            this, SLOT( removeSelectedContactsFromDistList() ) );
-  buttonLayout->addWidget( removeDistListButton );
+  buttonLayout->addWidget( mRemoveDistListButton );
 #endif
 
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
@@ -1548,6 +1575,33 @@ void KABCore::removeSelectedContactsFromDistList()
   const QStringList uids = selectedUIDs();
   if ( uids.isEmpty() )
       return;
+
+  QStringList names;
+  QStringList::ConstIterator it = uids.begin();
+  const QStringList::ConstIterator endIt( uids.end() );
+  while ( it != endIt ) {
+    KABC::Addressee addr = mAddressBook->findByUid( *it );
+    names.append( addr.realName().isEmpty() ? addr.preferredEmail() : addr.realName() );
+    ++it;
+  }
+
+  if ( KMessageBox::warningContinueCancelList(
+         mWidget,
+         i18n( "<qt>"
+               "Do you really want to remove this contact from the %1 distribution list?<br>"
+               "<b>Note:</b>The contact will be not be removed from your addressbook nor from "
+               "any other distribution list."
+               "</qt>",
+               "<qt>"
+               "Do you really want to remove these %n contacts from the %1 distribution list?<br>"
+               "<b>Note:</b>The contacts will be not be removed from your addressbook nor from "
+               "any other distribution list."
+               "</qt>",
+               uids.count() ).arg( mSelectedDistributionList ),
+         names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel ) {
+    return;
+  }
+
   for ( QStringList::ConstIterator uidIt = uids.begin(); uidIt != uids.end(); ++uidIt ) {
     typedef KPIM::DistributionList::Entry::List EntryList;
     const EntryList entries = dist.entries( addressBook() );
@@ -1636,15 +1690,21 @@ void KABCore::setSelectedDistributionList( const QString &name )
 {
   mSelectedDistributionList = name;
   mSearchManager->setSelectedDistributionList( name );
-  mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
+  mViewHeaderLabel->setText( name.isNull() ?
+                             i18n( "Contacts" ) :
+                             i18n( "Distribution List: %1" ).arg( name ) );
   mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
   if ( !name.isNull() ) {
     mDetailsStack->raiseWidget( mDistListEntryView );
+    if ( selectedUIDs().isEmpty() ) {
+      mViewManager->setFirstSelected( true );
+    }
     const QStringList selectedUids = selectedUIDs();
     showDistributionListEntry( selectedUids.isEmpty() ? QString() : selectedUids.first() );
+  } else {
+    mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ?
+                                mExtensionManager->activeDetailsWidget() : mDetailsWidget );
   }
-  else
-    mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ? mExtensionManager->activeDetailsWidget() : mDetailsWidget );
 }
 
 QStringList KABCore::distributionListNames() const

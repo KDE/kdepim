@@ -50,6 +50,7 @@ class KAboutData;
 class KAction;
 class KActionCollection;
 class KConfig;
+class KPushButton;
 class KStatusBar;
 class KToggleAction;
 class KXMLGUIClient;
@@ -440,6 +441,8 @@ class KDE_EXPORT KABCore : public KAB::Core
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     QString mSelectedDistributionList;
+    KPushButton *mAddDistListButton;
+    KPushButton *mRemoveDistListButton;
     QWidget *mDistListButtonWidget;
 #endif
 
