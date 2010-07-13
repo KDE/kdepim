@@ -110,4 +110,8 @@ endif(WIN32)
 set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleo ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+if ( WIN32 )
+install ( FILES libkleopatrarc-win32.desktop DESTINATION ${CONFIG_INSTALL_DIR} RENAME libkleopatrarc )
+else ( WIN32 )
 install ( FILES libkleopatrarc.desktop DESTINATION ${CONFIG_INSTALL_DIR} RENAME libkleopatrarc )
+endif ( WIN32 )
