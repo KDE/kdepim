@@ -155,8 +155,8 @@ void IncidenceAttachment::addAttachment()
 #else
   QWeakPointer<AttachmentEditDialog> dialog( new AttachmentEditDialog( item, mAttachmentView ) );
 #endif
-  dialog->setCaption( i18nc( "@title", "Add Attachment" ) );
-  if ( dialog->exec() == KDialog::Rejected )
+  dialog.data()->setCaption( i18nc( "@title", "Add Attachment" ) );
+  if ( dialog.data()->exec() == KDialog::Rejected )
     delete item;
   else
     emit attachmentCountChanged( mAttachmentView->count() );

@@ -47,6 +47,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QTreeView>
+#include <QWeakPointer>
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
@@ -182,18 +183,25 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
 void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
 {
   QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
-  dialog->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+  dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
 
-  if ( dialog->exec() == QDialog::Accepted ) {
-    foreach ( const Akonadi::EmailAddressSelection &selection, dialog->selectedAddresses() ) {
-      KABC::Addressee contact;
-      contact.setName( selection.name() );
-      contact.insertEmail( selection.email() );
+  if ( dialog.data()->exec() == QDialog::Accepted ) {
 
-      if ( selection.item().hasPayload<KABC::Addressee>() )
-        contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
+    Akonadi::EmailAddressSelectionDialog *dialogPtr = dialog.data();
+    if ( dialogPtr ) {
+      const Akonadi::EmailAddressSelection::List list = dialogPtr->selectedAddresses();
+      foreach ( const Akonadi::EmailAddressSelection &selection, list ) {
+        KABC::Addressee contact;
+        contact.setName( selection.name() );
+        contact.insertEmail( selection.email() );
 
-      insertAttendeeFromAddressee( contact );
+        if ( selection.item().hasPayload<KABC::Addressee>() )
+          contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
+
+        insertAttendeeFromAddressee( contact );
+      }
+    } else {
+      kDebug() << "dialog was already deleted";
     }
   }
 }

@@ -21,6 +21,7 @@
 #include "incidencealarm.h"
 
 #include <KCal/Todo>
+#include <KDebug>
 
 #include "alarmdialog.h"
 #include "alarmpresets.h"
@@ -141,11 +142,17 @@ void IncidenceAlarm::editCurrentAlarm()
   KCal::Alarm *currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
   QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
-  dialog->load( currentAlarm );
+  dialog.data()->load( currentAlarm );
 
-  if ( dialog->exec() == KDialog::Accepted ) {
-    dialog->save( currentAlarm );
-    updateAlarmList();
+  if ( dialog.data()->exec() == KDialog::Accepted ) {
+    AlarmDialog *dialogPtr = dialog.data();
+
+    if ( dialogPtr ) {
+      dialogPtr->save( currentAlarm );
+      updateAlarmList();
+    } else {
+      kDebug() << "dialog was already deleted";
+    }
   }
 
 #endif
@@ -156,21 +163,26 @@ void IncidenceAlarm::newAlarm()
 #ifndef KDEPIM_MOBILE_UI
 
   QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
-  dialog->setIsTodoReminder( mIsTodo );
-  dialog->setOffset( 15 );
-  dialog->setUnit( AlarmDialog::Minutes );
+  dialog.data()->setIsTodoReminder( mIsTodo );
+  dialog.data()->setOffset( 15 );
+  dialog.data()->setUnit( AlarmDialog::Minutes );
   if ( mIsTodo )
-    dialog->setWhen( AlarmDialog::BeforeEnd );
+    dialog.data()->setWhen( AlarmDialog::BeforeEnd );
   else
-    dialog->setWhen( AlarmDialog::BeforeStart );
+    dialog.data()->setWhen( AlarmDialog::BeforeStart );
 
-  if ( dialog->exec() == KDialog::Accepted ) {
-    KCal::Alarm *newAlarm = new KCal::Alarm( 0 );
-    dialog->save( newAlarm );
-    newAlarm->setEnabled( true );
-    mAlarms.append( newAlarm );
-    updateAlarmList();
-    checkDirtyStatus();
+  if ( dialog.data()->exec() == KDialog::Accepted ) {
+    AlarmDialog *dialogPtr = dialog.data();
+    if ( dialogPtr ) {
+      KCal::Alarm *newAlarm = new KCal::Alarm( 0 );
+      dialogPtr->save( newAlarm );
+      newAlarm->setEnabled( true );
+      mAlarms.append( newAlarm );
+      updateAlarmList();
+      checkDirtyStatus();
+    } else {
+      kDebug() << "dialog already deleted";
+    }
   }
 
 #endif
