@@ -48,6 +48,8 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QByteArray>
+#include <QMutex>
+#include <QCoreApplication>
 
 #include <boost/shared_ptr.hpp>
 
@@ -58,6 +60,24 @@
 using namespace Kleo;
 using namespace boost;
 
+static QMutex installPathMutex;
+Q_GLOBAL_STATIC( QString, _installPath )
+QString ChecksumDefinition::installPath() {
+    const QMutexLocker locker( &installPathMutex );
+    QString * const ip = _installPath();
+    if ( ip->isEmpty() )
+        if ( QCoreApplication::instance() )
+            *ip = QCoreApplication::applicationDirPath();
+        else
+            qWarning( "checksumdefinition.cpp: installPath() called before QCoreApplication was constructed" );
+    return *ip;
+}
+void ChecksumDefinition::setInstallPath( const QString & ip ) {
+    const QMutexLocker locker( &installPathMutex );
+    *_installPath() =ip;
+}
+    
+
 // Checksum Definition #N groups
 static const QLatin1String ID_ENTRY( "id" );
 static const QLatin1String NAME_ENTRY( "Name" );
@@ -66,6 +86,7 @@ static const QLatin1String VERIFY_COMMAND_ENTRY( "verify-command" );
 static const QLatin1String FILE_PATTERNS_ENTRY( "file-patterns" );
 static const QLatin1String OUTPUT_FILE_ENTRY( "output-file" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
+static const QLatin1String INSTALLPATH_PLACEHOLDER( "%I" );
 static const QLatin1String NULL_SEPARATED_STDIN_INDICATOR( "0|" );
 static const QLatin1Char   NEWLINE_SEPARATED_STDIN_INDICATOR( '|' );
 
@@ -89,6 +110,76 @@ namespace {
         const QString & checksumDefinitionId() const { return m_id; }
     };
 
+}
+
+static void parse_command( QString cmdline, const QString & id, const QString & whichCommand,
+                           QString * command, QStringList * prefix, QStringList * suffix, ChecksumDefinition::ArgumentPassingMethod * method )
+{
+    assert( prefix );
+    assert( suffix );
+    assert( method );
+
+    KShell::Errors errors;
+    QStringList l;
+
+    if ( cmdline.startsWith( NULL_SEPARATED_STDIN_INDICATOR ) ) {
+        *method = ChecksumDefinition::NullSeparatedInputFile;
+        cmdline.remove( 0, 2 );
+    } else if ( cmdline.startsWith( NEWLINE_SEPARATED_STDIN_INDICATOR ) ) {
+        *method = ChecksumDefinition::NewlineSeparatedInputFile;
+        cmdline.remove( 0, 1 );
+    }
+    if ( *method != ChecksumDefinition::CommandLine && cmdline.contains( FILE_PLACEHOLDER ) )
+        throw ChecksumDefinitionError( id, i18n("Cannot use both %f and | in '%1'", whichCommand) );
+    cmdline.replace( FILE_PLACEHOLDER,        QLatin1String("__files_go_here__")  )
+           .replace( INSTALLPATH_PLACEHOLDER, QLatin1String("__path_goes_here__") );
+    l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
+    l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
+    if ( l.contains( QLatin1String("__path_goes_here__") ) )
+        l = l.replaceInStrings( QLatin1String("__path_goes_here__"), ChecksumDefinition::installPath() );
+    if ( errors == KShell::BadQuoting )
+        throw ChecksumDefinitionError( id, i18n("Quoting error in '%1' entry", whichCommand) );
+    if ( errors == KShell::FoundMeta )
+        throw ChecksumDefinitionError( id, i18n("'%1' too complex (would need shell)", whichCommand) );
+    qDebug() << "ChecksumDefinition[" << id << ']' << l;
+    if ( l.empty() )
+        throw ChecksumDefinitionError( id, i18n("'%1' entry is empty/missing", whichCommand) );
+    const QFileInfo fi1( l.front() );
+    if ( fi1.isAbsolute() )
+        if ( !fi1.exists() )
+            throw ChecksumDefinitionError( id, i18n("'%1' not found in filesystem", whichCommand) );
+        else
+            *command = l.front();
+    else
+        *command = KStandardDirs::findExe( fi1.fileName() );
+    if ( command->isEmpty() )
+        throw ChecksumDefinitionError( id, i18n("'%1' empty or not found", whichCommand) );
+    const int idx1 = l.indexOf( FILE_PLACEHOLDER );
+    if ( idx1 < 0 ) {
+        // none -> append
+        *prefix = l.mid( 1 );
+    } else {
+        *prefix = l.mid( 1, idx1-1 );
+        *suffix = l.mid( idx1+1 );
+    }
+    switch ( *method ) {
+    case ChecksumDefinition::CommandLine:
+        qDebug() << "ChecksumDefinition[" << id << ']' << *command << *prefix << FILE_PLACEHOLDER << *suffix;
+        break;
+    case ChecksumDefinition::NewlineSeparatedInputFile:
+        qDebug() << "ChecksumDefinition[" << id << ']' << "find | " << *command << *prefix;
+        break;
+    case ChecksumDefinition::NullSeparatedInputFile:
+        qDebug() << "ChecksumDefinition[" << id << ']' << "find -print0 | " << *command << *prefix;
+        break;
+    case ChecksumDefinition::NumArgumentPassingMethods:
+        assert( !"Should not happen" );
+        break;
+    }
+}
+
+namespace {
+
     class KConfigBasedChecksumDefinition : public ChecksumDefinition {
     public:
         explicit KConfigBasedChecksumDefinition( const KConfigGroup & group )
@@ -103,117 +194,17 @@ namespace {
                 throw ChecksumDefinitionError( id(), i18n("'output-file' entry is empty/missing") );
             if ( patterns().empty() )
                 throw ChecksumDefinitionError( id(), i18n("'file-patterns' entry is empty/missing") );
-            KShell::Errors errors;
-            QString cmdline;
-            QStringList l;
 
             // create-command
-            cmdline = group.readEntry( CREATE_COMMAND_ENTRY );
-            if ( cmdline.startsWith( NULL_SEPARATED_STDIN_INDICATOR ) ) {
-                setCreateCommandArgumentPassingMethod( NullSeparatedInputFile );
-                cmdline.remove( 0, 2 );
-            } else if ( cmdline.startsWith( NEWLINE_SEPARATED_STDIN_INDICATOR ) ) {
-                setCreateCommandArgumentPassingMethod( NewlineSeparatedInputFile );
-                cmdline.remove( 0, 1 );
-            }
-            if ( createCommandArgumentPassingMethod() != CommandLine && cmdline.contains( FILE_PLACEHOLDER ) )
-                throw ChecksumDefinitionError( id(), i18n("Cannot use both %f and | in create-command") );
-            cmdline.replace( FILE_PLACEHOLDER, QLatin1String("__files_go_here__") );
-            l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
-            l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
-            if ( errors == KShell::BadQuoting )
-                throw ChecksumDefinitionError( id(), i18n("Quoting error in 'create-command' entry") );
-            if ( errors == KShell::FoundMeta )
-                throw ChecksumDefinitionError( id(), i18n("'create-command' too complex (would need shell)") );
-            qDebug() << "ChecksumDefinition[" << id() << ']' << l;
-            if ( l.empty() )
-                throw ChecksumDefinitionError( id(), i18n("'create-command' entry is empty/missing") );
-            const QFileInfo fi1( l.front() );
-            if ( fi1.isAbsolute() )
-                if ( !fi1.exists() )
-                    throw ChecksumDefinitionError( id(), i18n("'create-command' not found in filesystem") );
-                else
-                    m_createCommand = l.front();
-            else
-                m_createCommand = KStandardDirs::findExe( fi1.fileName() );
-            if ( m_createCommand.isEmpty() )
-                throw ChecksumDefinitionError( id(), i18n("'create-command' empty or not found") );
-            const int idx1 = l.indexOf( FILE_PLACEHOLDER );
-            if ( idx1 < 0 ) {
-                // none -> append
-                m_createPrefixArguments = l.mid( 1 );
-            } else {
-                m_createPrefixArguments = l.mid( 1, idx1-1 );
-                m_createPostfixArguments = l.mid( idx1+1 );
-            }
-            switch ( createCommandArgumentPassingMethod() ) {
-            case CommandLine:
-                qDebug() << "ChecksumDefinition[" << id() << ']' << m_createCommand << m_createPrefixArguments << FILE_PLACEHOLDER << m_createPostfixArguments;
-                break;
-            case NewlineSeparatedInputFile:
-                qDebug() << "ChecksumDefinition[" << id() << ']' << "find | " << m_createCommand << m_createPrefixArguments;
-                break;
-            case NullSeparatedInputFile:
-                qDebug() << "ChecksumDefinition[" << id() << ']' << "find -print0 | " << m_createCommand << m_createPrefixArguments;
-                break;
-            case NumArgumentPassingMethods:
-                assert( !"Should not happen" );
-                break;
-            }
+            ArgumentPassingMethod method;
+            parse_command( group.readEntry( CREATE_COMMAND_ENTRY ), id(), CREATE_COMMAND_ENTRY,
+                           &m_createCommand, &m_createPrefixArguments, &m_createPostfixArguments, &method );
+            setCreateCommandArgumentPassingMethod( method );
 
             // verify-command
-            cmdline = group.readEntry( VERIFY_COMMAND_ENTRY );
-            if ( cmdline.startsWith( NULL_SEPARATED_STDIN_INDICATOR ) ) {
-                setVerifyCommandArgumentPassingMethod( NullSeparatedInputFile );
-                cmdline.remove( 0, 2 );
-            } else if ( cmdline.startsWith( NEWLINE_SEPARATED_STDIN_INDICATOR ) ) {
-                setVerifyCommandArgumentPassingMethod( NewlineSeparatedInputFile );
-                cmdline.remove( 0, 1 );
-            }
-            if ( verifyCommandArgumentPassingMethod() != CommandLine && cmdline.contains( FILE_PLACEHOLDER ) )
-                throw ChecksumDefinitionError( id(), i18n("Cannot use both %f and | in verify-command") );
-            cmdline.replace( FILE_PLACEHOLDER, QLatin1String("__files_go_here__") );
-            l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
-            l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
-            if ( errors == KShell::BadQuoting )
-                throw ChecksumDefinitionError( id(), i18n("Quoting error in 'verify-command' entry") );
-            if ( errors == KShell::FoundMeta )
-                throw ChecksumDefinitionError( id(), i18n("'verify-command' too complex (would need shell)") );
-            qDebug() << "ChecksumDefinition[" << id() << ']' << l;
-            if ( l.empty() )
-                throw ChecksumDefinitionError( id(), i18n("'verify-command' entry is empty/missing") );
-            const QFileInfo fi2( l.front() );
-            if ( fi2.isAbsolute() )
-                if ( !fi2.exists() )
-                    throw ChecksumDefinitionError( id(), i18n("'verify-command' not found in filesystem") );
-                else
-                    m_verifyCommand = l.front();
-            else
-                m_verifyCommand = KStandardDirs::findExe( fi2.fileName() );
-            if ( m_verifyCommand.isEmpty() )
-                throw ChecksumDefinitionError( id(), i18n("'verify-command' empty or not found") );
-            const int idx2 = l.indexOf( FILE_PLACEHOLDER );
-            if ( idx2 < 0 ) {
-                // none -> append
-                m_verifyPrefixArguments = l.mid( 1 );
-            } else {
-                m_verifyPrefixArguments = l.mid( 1, idx2-1 );
-                m_verifyPostfixArguments = l.mid( idx2+1 );
-            }
-            switch ( verifyCommandArgumentPassingMethod() ) {
-            case CommandLine:
-                qDebug() << "ChecksumDefinition[" << id() << ']' << m_verifyCommand << m_verifyPrefixArguments << FILE_PLACEHOLDER << m_verifyPostfixArguments;
-                break;
-            case NewlineSeparatedInputFile:
-                qDebug() << "ChecksumDefinition[" << id() << ']' << "find | " << m_verifyCommand << m_verifyPrefixArguments;
-                break;
-            case NullSeparatedInputFile:
-                qDebug() << "ChecksumDefinition[" << id() << ']' << "find -print0 | " << m_verifyCommand << m_verifyPrefixArguments;
-                break;
-            case NumArgumentPassingMethods:
-                assert( !"Should not happen" );
-                break;
-            }
+            parse_command( group.readEntry( VERIFY_COMMAND_ENTRY ), id(), VERIFY_COMMAND_ENTRY,
+                           &m_verifyCommand, &m_verifyPrefixArguments, &m_verifyPostfixArguments, &method );
+            setVerifyCommandArgumentPassingMethod( method );
         }
 
     private:
