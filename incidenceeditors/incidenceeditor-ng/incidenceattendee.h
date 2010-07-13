@@ -61,6 +61,7 @@ signals:
 private slots:
     void checkIfExpansionIsNeeded( KPIM::MultiplyingLine* );
     void expandResult( KJob *job );
+    void groupSearchResult( KJob *job );
     void slotSelectAddresses();
 
 private:
@@ -79,6 +80,8 @@ private:
 #endif    
     AttendeeEditor *mAttendeeEditor;
     KCal::Incidence::ConstPtr mOrigIncidence;
+
+    QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
 };
 
 }

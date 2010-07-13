@@ -33,6 +33,7 @@
 #include <akonadi/contact/emailaddressselectiondialog.h>
 
 #include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactGroupSearchJob>
 #include <KABC/Address>
 #include <KCal/Event>
 #include <KComboBox>
@@ -186,10 +187,15 @@ void IncidenceAttendee::fillOrganizerCombo()
 
 void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
-//  /
-//    line->data();
-//  kDebug() << "TEST!!!!:" << groupOrEmail;
+  AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
+  if ( !data )
+    return;
 
+  Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
+  job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->email() );
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( groupSearchResult( KJob* ) ) );
+
+  mMightBeGroupLines.insert( job, QWeakPointer<KPIM::MultiplyingLine>( line ) );
 }
 
 void IncidenceAttendee::expandResult( KJob *job )
@@ -200,6 +206,27 @@ void IncidenceAttendee::expandResult( KJob *job )
   const KABC::Addressee::List groupMembers = expandJob->contacts();
   foreach ( const KABC::Addressee &member, groupMembers )
     insertAttendeeFromAddressee( member );
+}
+
+void IncidenceAttendee::groupSearchResult( KJob *job )
+{
+  Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+  Q_ASSERT( searchJob );
+
+  const KABC::ContactGroup::List contactGroups = searchJob->contactGroups();
+  if ( contactGroups.isEmpty() )
+    return; // Nothing todo, probably a normal email address was entered
+
+  // TODO: Give the user the possibility to choose a group when there is more than one?!
+  KABC::ContactGroup group = contactGroups.first();
+
+  KPIM::MultiplyingLine *line = mMightBeGroupLines.take( job ).data();
+  if ( line )
+    line->slotPropagateDeletion();
+
+  Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
+  connect( expandJob, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+  expandJob->start();
 }
 
 void IncidenceAttendee::slotSelectAddresses()
