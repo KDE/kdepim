@@ -50,10 +50,12 @@
 #include "attendeeline.h"
 #include "../editorconfig.h"
 
+using namespace IncidenceEditorsNG;
+
 #ifdef KDEPIM_MOBILE_UI
-IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
+IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
 #else
-IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
+IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
 #endif
   : mUi( ui )
   , mAttendeeEditor( new AttendeeEditor )
@@ -79,7 +81,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
 {
   mOrigIncidence = incidence;
   const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
@@ -117,7 +119,7 @@ void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr inci
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence )
+void IncidenceAttendee::save( KCal::Incidence::Ptr incidence )
 {
   incidence->clearAttendees();
 
@@ -149,7 +151,7 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
   incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
 }
 
-bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
+bool IncidenceAttendee::isDirty() const
 {
   //TODO check free busy ?
   if( !mOrigIncidence  )
@@ -169,7 +171,7 @@ bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
   return false;
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
+void IncidenceAttendee::fillOrganizerCombo()
 {
   mUi->mOrganizerCombo->clear();
   const QStringList lst = IncidenceEditors::EditorConfig::instance()->fullEmails();
@@ -182,7 +184,7 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
   mUi->mOrganizerCombo->addItems( uniqueList );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
+void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
 //  /
 //    line->data();
@@ -190,7 +192,7 @@ void IncidenceEditorsNG::IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::Mult
 
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::expandResult( KJob *job )
+void IncidenceAttendee::expandResult( KJob *job )
 {
   Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
   Q_ASSERT( expandJob );
@@ -200,7 +202,7 @@ void IncidenceEditorsNG::IncidenceAttendee::expandResult( KJob *job )
     insertAttendeeFromAddressee( member );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
+void IncidenceAttendee::slotSelectAddresses()
 {
   QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
   dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
@@ -233,7 +235,7 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
   }
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
+void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
 {
   const bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( a.preferredEmail() );
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&
