@@ -21,6 +21,7 @@
 #include "nodehelper.h"
 
 #include <kmime/kmime_content.h>
+#include <KMime/Message>
 
 KMime::Content *MessageCore::NodeHelper::nextSibling( const KMime::Content* node )
 {
@@ -97,4 +98,15 @@ bool MessageCore::NodeHelper::isHeuristicalAttachment( KMime::Content *node )
     return true;
   return false;
 }
+
+bool MessageCore::NodeHelper::isInvitation( KMime::Message* message )
+{
+  if ( message && message->contentType( false ) ) {
+    const KMime::Headers::ContentType* const contentType = message->contentType();
+    if ( contentType->mimeType().toLower() == "text/calendar" )
+      return true;
+  }
+  return false;
+}
+
 

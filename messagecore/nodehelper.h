@@ -25,6 +25,7 @@
 
 namespace KMime {
   class Content;
+  class Message;
 }
 
 /**
@@ -45,6 +46,8 @@ namespace NodeHelper {
   // functions like contentDisposition() yet
   MESSAGECORE_EXPORT bool isAttachment( KMime::Content* node );
   MESSAGECORE_EXPORT bool isHeuristicalAttachment( KMime::Content* node );
+
+  MESSAGECORE_EXPORT bool isInvitation( KMime::Message* message );
 
 
 }
