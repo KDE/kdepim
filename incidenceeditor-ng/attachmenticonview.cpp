@@ -4,7 +4,8 @@
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
-  Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,7 +40,7 @@
 #include <KDE/KTemporaryFile>
 #include <KDE/KUrl>
 
-#include <KCal/Attachment>
+#include <kcalcore/Attachment>
 
 using namespace IncidenceEditorsNG;
 
@@ -175,6 +176,7 @@ AttachmentIconView::AttachmentIconView( QWidget *parent )
   setSelectionRectVisible( false );
   setIconSize( QSize( KIconLoader::SizeLarge, KIconLoader::SizeLarge ) );
   setFlow( LeftToRight );
+  setWrapping( true );
   setDragDropMode( DragDrop );
   setDragEnabled( true );
   setEditTriggers( EditKeyPressed );

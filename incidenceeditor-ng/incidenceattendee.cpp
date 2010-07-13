@@ -37,7 +37,7 @@
 #include <akonadi/contact/emailaddressselectiondialog.h>
 #include <kabc/addressee.h>
 
-#include <KCal/Event>
+#include <kcalcore/Event>
 
 #include <KComboBox>
 #include <KDebug>
@@ -103,13 +103,13 @@ void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr inci
     mUi->mOrganizerLabel->setText( incidence->organizer().fullName() );
   }
 
-  KCal::Attendee::List al = incidence->attendees();
-  foreach( const KCal::Attendee* a, al ) {
+  KCalCore::Attendee::List al = incidence->attendees();
+  foreach( const KCalCore::Attendee* a, al ) {
     if( a )
       mAttendeeEditor->addAttendee( *a );
   }
 
-  if ( IncidenceEditor::incidence<KCal::Event::ConstPtr>( ) )
+  if ( IncidenceEditor::incidence<KCalCore::Event::ConstPtr>( ) )
     mAttendeeEditor->setActions( AttendeeLine::EventActions );
   else
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
@@ -122,12 +122,12 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
   AttendeeData::List attendees = mAttendeeEditor->attendees();
 
   foreach( AttendeeData::Ptr attPtr, attendees ) {
-    KCal::Attendee *attendee = attPtr.data();
+    KCalCore::Attendee *attendee = attPtr.data();
     Q_ASSERT( attendee );
     // we create a new attendee object because the original
     // is guarded by qsharedpointer, and the Incidence
     // takes control of the attendee.
-    attendee = new KCal::Attendee( *attendee );
+    attendee = new KCalCore::Attendee( *attendee );
 
     bool skip = false;
     if ( KPIMUtils::isValidAddress( attendee->email() ) ) {
@@ -204,15 +204,15 @@ void IncidenceEditorsNG::IncidenceAttendee::insertAttendeeFromAddressee( const K
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&
                          KPIMUtils::compareEmail( a.preferredEmail(),
                                                   mUi->mOrganizerCombo->currentText(), false );
-  KCal::Attendee::PartStat partStat = KCal::Attendee::NeedsAction;
+  KCalCore::Attendee::PartStat partStat = KCalCore::Attendee::NeedsAction;
   bool rsvp = true;
 
   if ( myself && sameAsOrganizer ) {
-    partStat = KCal::Attendee::Accepted;
+    partStat = KCalCore::Attendee::Accepted;
     rsvp = false;
   }
-  KCal::Attendee newAt( a.realName(), a.preferredEmail(), rsvp,
-                                  partStat, KCal::Attendee::ReqParticipant, a.uid() );;
+  KCalCore::Attendee newAt( a.realName(), a.preferredEmail(), rsvp,
+                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() );;
   mAttendeeEditor->addAttendee( newAt );
 }
 

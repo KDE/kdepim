@@ -20,7 +20,7 @@
 
 #include "alarmdialog.h"
 
-#include <KCal/Alarm>
+#include <kcalcore/Alarm>
 #include <KPIMUtils/Email>
 
 #include "editorconfig.h"

@@ -22,7 +22,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <KCal/Alarm>
+#include <kcalcore/Alarm>
 #include <KLocale>
 
 using namespace KCal;

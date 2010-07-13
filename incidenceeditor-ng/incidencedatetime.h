@@ -23,8 +23,8 @@
 
 #include "combinedincidenceeditor.h"
 
-#include <KCal/Event>
-#include <KCal/Todo>
+#include <kcalcore/Event>
+#include <kcalcore/Todo>
 
 namespace KCal {
 class ICalTimeZones;
@@ -71,20 +71,20 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
     void enableTimeEdits();
-    bool isDirty( KCal::Todo::ConstPtr todo ) const;
+    bool isDirty( KCalCore::Todo::ConstPtr todo ) const;
 
   private slots: /// Event specific
-    bool isDirty( KCal::Event::ConstPtr event ) const;
+    bool isDirty( KCalCore::Event::ConstPtr event ) const;
 
   private:
     /// Created from the values in the widgets
     KDateTime currentStartDateTime() const; 
     KDateTime currentEndDateTime() const;
 
-    void load( KCal::Event::ConstPtr event );
-    void load( KCal::Todo::ConstPtr todo );
-    void save( KCal::Event::Ptr event );
-    void save( KCal::Todo::Ptr todo );
+    void load( KCalCore::Event::ConstPtr event );
+    void load( KCalCore::Todo::ConstPtr todo );
+    void save( KCalCore::Event::Ptr event );
+    void save( KCalCore::Todo::Ptr todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
 

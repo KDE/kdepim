@@ -25,7 +25,7 @@
 
 #include <QtGui/QWidget>
 
-#include <KCal/Incidence>
+#include <kcalcore/<KCal
 
 #include "incidenceeditors-ng_export.h"
 
