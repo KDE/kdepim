@@ -29,7 +29,7 @@ using namespace IncidenceEditorsNG;
 AttendeeEditor::AttendeeEditor( QWidget* parent )
   : MultiplyingLineEditor( new AttendeeLineFactory( parent ), parent )
 {
-  connect( this, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ), SLOT( slotLineAdded( KPIM::MultiplyingLine* ) ) );
+  connect( this, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ), SIGNAL( slotLineAdded( KPIM::MultiplyingLine* ) ) );
   connect( this, SIGNAL( lineDeleted( int ) ), SLOT( slotLineDeleted( int ) ) );
 
   addData();
@@ -42,22 +42,11 @@ void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine* line )
     return;
 
   connect( att, SIGNAL( changed() ), SLOT( slotCalculateTotal() ) );
-  connect( att, SIGNAL( returnPressed( KPIM::MultiplyingLine* ) ), SLOT( slotAddressEntered( KPIM::MultiplyingLine* ) ) );
+  connect( att, SIGNAL( returnPressed( KPIM::MultiplyingLine* ) ), SLOT( returnPressed( KPIM::MultiplyingLine* ) ) );
 }
 
 void AttendeeEditor::slotLineDeleted( int /*pos*/ )
 {
-}
-
-void AttendeeEditor::slotAddressEntered( KPIM::MultiplyingLine *line )
-{
-  AttendeeLine* att = qobject_cast<AttendeeLine*>( line );
-  if( !att )
-    return;
-
-  AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( att->data() );
-  // The email will either be a valid email or the name of a distlist.
-  emit valueEntered( data->email() );
 }
 
 void AttendeeEditor::slotCalculateTotal()

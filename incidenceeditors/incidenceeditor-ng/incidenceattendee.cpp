@@ -47,6 +47,7 @@
 #endif
 
 #include "attendeeeditor.h"
+#include "attendeeline.h"
 #include "../editorconfig.h"
 
 #ifdef KDEPIM_MOBILE_UI
@@ -67,7 +68,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
   connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), SIGNAL( attendeeCountChanged( int ) ) );
-  connect( mAttendeeEditor, SIGNAL( valueEntered( QString ) ), SLOT( checkIfExpansionIsNeeded( QString ) ) );
+  connect( mAttendeeEditor, SIGNAL( returnPressed( KPIM::MultiplyingLine* ) ), SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
 
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
@@ -181,9 +182,11 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
   mUi->mOrganizerCombo->addItems( uniqueList );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::checkIfExpansionIsNeeded( const QString &groupOrEmail )
+void IncidenceEditorsNG::IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
-  kDebug() << "TEST!!!!:" << groupOrEmail;
+//  /
+//    line->data();
+//  kDebug() << "TEST!!!!:" << groupOrEmail;
 
 }
 

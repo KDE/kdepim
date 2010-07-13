@@ -34,6 +34,10 @@ namespace KABC {
   class Addressee;
 }
 
+namespace KPIM {
+class MultiplyingLine;
+}
+
 namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
@@ -55,7 +59,7 @@ signals:
     void attendeeCountChanged( int );
 
 private slots:
-    void checkIfExpansionIsNeeded( const QString &groupOrEmail );
+    void checkIfExpansionIsNeeded( KPIM::MultiplyingLine* );
     void expandResult( KJob *job );
     void slotSelectAddresses();
 
