@@ -46,6 +46,12 @@
 #include <kdebug.h>
 #include <KSaveFile>
 
+#include <QLayout>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QListWidget>
+
 #include <QPointer>
 #include <QFileInfo>
 #include <QThread>
@@ -65,6 +71,60 @@
 using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
+
+namespace {
+
+    class ResultDialog : public QDialog {
+        Q_OBJECT
+    public:
+        ResultDialog( const QStringList & created, const QStringList & errors, QWidget * parent=0, Qt::WindowFlags f=0 )
+            : QDialog( parent, f ),
+              createdLB( created.empty()
+                         ? i18nc("@info","No checksum files have been created.")
+                         : i18nc("@info","These checksum files have been successfull created:"), this ),
+              createdLW( this ),
+              errorsLB( errors.empty()
+                        ? i18nc("@info","There were no errors.")
+                        : i18nc("@info","The following errors were encountered:"), this ),
+              errorsLW( this ),
+              buttonBox( QDialogButtonBox::Ok, Qt::Horizontal, this ),
+              vlay( this )
+        {
+            KDAB_SET_OBJECT_NAME( createdLB );
+            KDAB_SET_OBJECT_NAME( createdLW );
+            KDAB_SET_OBJECT_NAME( errorsLB );
+            KDAB_SET_OBJECT_NAME( errorsLW );
+            KDAB_SET_OBJECT_NAME( buttonBox );
+            KDAB_SET_OBJECT_NAME( vlay );
+
+            createdLW.addItems( created );
+            errorsLW.addItems( errors );
+
+            vlay.addWidget( &createdLB );
+            vlay.addWidget( &createdLW, 1 );
+            vlay.addWidget( &errorsLB );
+            vlay.addWidget( &errorsLW, 1 );
+            vlay.addWidget( &buttonBox );
+
+            if ( created.empty() )
+                createdLW.hide();
+            if ( errors.empty() )
+                errorsLW.hide();
+
+            connect( &buttonBox, SIGNAL(accepted()), this, SLOT(accept()) );
+            connect( &buttonBox, SIGNAL(rejected()), this, SLOT(reject()) );
+        }
+
+    private:
+        QLabel createdLB;
+        QListWidget createdLW;
+        QLabel errorsLB;
+        QListWidget errorsLW;
+        QDialogButtonBox buttonBox;
+        QVBoxLayout vlay;
+    };
+
+}
 
 #ifdef Q_OS_UNIX
 static const bool HAVE_UNIX = true;
@@ -129,6 +189,8 @@ private:
             progressDialog->setValue( progressDialog->maximum() );
             progressDialog->close();
         }
+        ResultDialog * const dlg = new ResultDialog( created, errors );
+        q->bringToForeground( dlg );
         if ( !errors.empty() )
             q->setLastError( gpg_error( GPG_ERR_GENERAL ),
                              errors.join( "\n" ) );
