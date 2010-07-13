@@ -1,6 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.4.7 --- 2 June 2010 ===
+=== Version 2.4.8 --- 13 July 2010 ===
+- Fix crash when a reminder alarm is being redisplayed.
+
+=== Version 2.4.7 (KDE 4.4.5) --- 2 June 2010 ===
 - Fix inability to defer non-recurring alarms.
 - Fix crash when selecting calendar type in calendar selector, if text widths
   and selector width are "exactly wrong".
