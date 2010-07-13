@@ -303,13 +303,12 @@ void Message::ComposerViewBase::readyForSending()
 void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 {
   if ( job->error() ) {
-    KMessageBox::sorry( m_parentWidget, i18n( "Expanding email addresses in message failed.\n"
-                                    "%1\n",
-                                    job->errorString() ),
-                                    i18n( "Sending Message Failed" ) );
+    QString msg = i18n( "Expanding email addresses in message failed.\n %1\n", job->errorString() );
+    KMessageBox::sorry( m_parentWidget, msg,
+                        i18n( "Sending Message Failed" ) );
 //     setEnabled( true );
     // TODO add string after string freeze!
-    emit failed( QLatin1String( "" ) );
+    emit failed( msg );
     return;
   }
 
@@ -363,7 +362,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     emit failed( QLatin1String( "" ) );
     return;
   }
-  
+
   // Compose each message and prepare it for queueing, sending, or storing
   foreach( Message::Composer* composer, m_composers ) {
     fillGlobalPart( composer->globalPart() );
@@ -457,7 +456,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
     /// TODO handle failure
     kDebug() << "failed to resolve keys! oh noes";
-    // add when i18n freeze is over emit failed( QLatin1String( "Failed to resolve keys. Please report a bug." );
+    emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
     return composers;
   }
   kDebug() << "done resolving keys:";
@@ -597,7 +596,7 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     // The job warned the user about something, and the user chose to return
     // to the message.  Nothing to do.
     kDebug() << "UserCancelledError.";
-    emit failed( QLatin1String( "" ) /* TODO string after freeze */ );
+    emit failed( i18n( "Job cancelled by the user" ) );
   } else {
     kDebug() << "other Error.";
     QString msg;
@@ -607,7 +606,7 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
       msg = i18n( "Error composing message:\n\n%1", job->errorString() );
     }
     KMessageBox::sorry( m_parentWidget, msg, i18n( "Composer" ) );
-    emit failed( QLatin1String( "" ) /* TODO string after freeze */ );
+    emit failed( msg );
   }
 
   m_composers.removeAll( composer );
@@ -663,17 +662,16 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
     // There is not much we can do now, since all the MessageQueueJobs have been
     // started.  So just wait for them to finish.
     // TODO show a message box or something
-    KMessageBox::sorry( m_parentWidget,
-                        QString( QLatin1String( "<qt><p>%1</p><br />%2</qt>" ) ).arg( i18n("There was an error trying to queue the "
-                                                                            "message for sending. The error was:" ) )
-                                                               .arg( job->errorString() ),
-                       i18n("Error Queueing Message") );
+    QString msg = i18n( "<qt><p>There was an error trying to queue the message for sending:</p><br/>%1</qt>", job->errorString() );
+    KMessageBox::sorry( m_parentWidget, msg,
+                        i18n("Error Queueing Message") );
+
     if( m_pendingQueueJobs == 0 )
-      emit failed( QLatin1String( "" ) );
+        emit failed( msg );
   }
 
   if( m_pendingQueueJobs == 0 ) {
-    emit sentSuccessfully();
+      emit sentSuccessfully();
   }
 }
 
@@ -881,7 +879,7 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
   if ( !target.isValid() ) {
     // TODO: Show an error message to the user
     kWarning() << "No default collection for" << saveIn;
-    emit failed( QLatin1String( "" ) /* TODO error string after freeze" */ );
+    emit failed( i18n( "No default collection for %1", saveIn ) );
 //     setEnabled( true );
     return;
   }
@@ -908,7 +906,7 @@ void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
   if( job->error() ) {
     // TODO: Show an error message to the user
     kWarning() << "Failed to save a message:" << job->errorString();
-    emit failed( QLatin1String( "" ) /* TODO error string after freeze" */ );
+    emit failed( i18n( "Failed to save the message: %1", job->errorString() ) );
     return;
   }
 
