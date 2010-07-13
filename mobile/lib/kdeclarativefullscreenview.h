@@ -49,7 +49,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     KActionCollection* actionCollection() const;
 
   private slots:
-    void setQmlFile( const QString &source ) { setSource( source ); }
+    void setQmlFile( const QString &source );
     void slotStatusChanged ( QDeclarativeView::Status );
 
   private:

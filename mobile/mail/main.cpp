@@ -23,14 +23,23 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
+#include <QDateTime>
+
 #include "mainview.h"
 
 int main( int argc, char **argv )
 {
+  kWarning() << "Starting main function" << QDateTime::currentDateTime();
+
   const QByteArray& ba = QByteArray( "kmail-mobile" );
   const KLocalizedString name = ki18n( "KMail Mobile" );
   KAboutData aboutData( ba, ba, name, ba, name );
+
   KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineOptions options;
+  options.add("timeit", ki18n("start timers for various parts of the application startup"));
+  KCmdLineArgs::addCmdLineOptions(options);
+
   KDeclarativeApplication app;
 
   MainView view;

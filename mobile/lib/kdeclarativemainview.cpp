@@ -55,6 +55,7 @@
 #include <KActionCollection>
 #include <akonadi/standardactionmanager.h>
 #include <KAction>
+#include <KCmdLineArgs>
 #include <QInputDialog>
 
 #include "kresettingproxymodel.h"
@@ -65,7 +66,20 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   : KDeclarativeFullScreenView( appName, parent )
   , d( new KDeclarativeMainViewPrivate )
 {
+
+  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+
+  QTime t;
+  if ( debugTiming ) {
+    t.start();
+    kWarning() << "Start KDeclarativeMainView ctor" << &t << " - " << QDateTime::currentDateTime();
+  }
+
   KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
+
+  if ( debugTiming ) {
+    kWarning() << "Catalog inserted" << t.elapsed() << &t;
+  }
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #ifdef Q_WS_MAEMO_5
@@ -79,8 +93,16 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
+  if ( debugTiming ) {
+    kWarning() << "ETM created" << t.elapsed() << &t;
+  }
+
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory(this);
   d->mBnf->setModel(d->mEtm, this);
+
+  if ( debugTiming ) {
+    kWarning() << "BreadcrumbNavigation factory created" << t.elapsed() << &t;
+  }
 
   d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
   d->mItemFilter->setSourceModel( d->mBnf->unfilteredChildItemModel() );
@@ -90,6 +112,10 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   if ( listProxy ) {
     listProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
     listProxy->setSourceModel( d->mItemFilter );
+  }
+
+  if ( debugTiming ) {
+    kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
   }
 
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
@@ -106,6 +132,11 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   if ( listProxy )
     engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
+
+
+  if ( debugTiming ) {
+    kWarning() << "Core QML context done" << t.elapsed() << &t;
+  }
 
   Akonadi::EntityMimeTypeFilterModel *allFoldersModel = new Akonadi::EntityMimeTypeFilterModel( this );
   allFoldersModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
@@ -130,6 +161,11 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   engine()->rootContext()->setContextProperty( "allFoldersModel", QVariant::fromValue( static_cast<QObject*>( allFoldersModel ) ) );
 
   d->mItemSelectionModel = new QItemSelectionModel( listProxy ? static_cast<QAbstractItemModel *>( listProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
+
+
+  if ( debugTiming ) {
+    kWarning() << "Favorites QML context done" << t.elapsed() << &t;
+  }
 
   Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
@@ -195,9 +231,23 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   connect( d->mBnf->selectedItemModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
   connect( d->mBnf->selectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
 
+
+  if ( debugTiming ) {
+    kWarning() << "Restoring state" << t.elapsed() << &t;
+  }
+
   d->restoreState();
 
+  if ( debugTiming ) {
+    kWarning() << "restore state done" << t.elapsed() << &t;
+  }
+
   connect( d->mBnf->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(numSelectedAccountsChanged()));
+
+  if ( debugTiming ) {
+    t.start();
+    kWarning() << "Finished KDeclarativeMainView ctor: " << t.elapsed() << " - " << &t;
+  }
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()

@@ -35,6 +35,7 @@
 
 #include <KActionCollection>
 #include <KAction>
+#include <KCmdLineArgs>
 #include <Akonadi/ItemModifyJob>
 #include <Akonadi/ItemFetchScope>
 #include "mailactionmanager.h"
@@ -42,6 +43,14 @@
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
+  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+
+  QTime t;
+  if ( debugTiming ) {
+    t.start();
+    kWarning() << "Start MainView ctor" << &t << " - " << QDateTime::currentDateTime();
+  }
+
   addMimeType( KMime::Message::mimeType() );
   itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   setWindowTitle( i18n( "KMail Mobile" ) );
@@ -53,6 +62,10 @@ MainView::MainView(QWidget* parent) :
   connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
+
+  if ( debugTiming ) {
+    kWarning() << "Finished MainView ctor: " << t.elapsed() << " - "<< &t;
+  }
 }
 
 void MainView::startComposer()
