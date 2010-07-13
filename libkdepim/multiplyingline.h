@@ -174,15 +174,15 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
     /**
       Emitted when the return/enter key is pressed
     */
-    void returnPressed( MultiplyingLine * );
+    void returnPressed( KPIM::MultiplyingLine * );
     /**
       Emitted when the down key is pressed
     */
-    void downPressed( MultiplyingLine * );
+    void downPressed( KPIM::MultiplyingLine * );
     /**
       Emitted when the up key is pressed
     */
-    void upPressed( MultiplyingLine * );
+    void upPressed( KPIM::MultiplyingLine * );
     /**
       Emitted when the right key is pressed
     */
@@ -190,7 +190,7 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
     /**
       Should be emitted when the line should be deleted
       */
-    void deleteLine( MultiplyingLine * );
+    void deleteLine( KPIM::MultiplyingLine * );
     /**
       Emitted when the completion mode changes
     */

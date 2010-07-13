@@ -55,6 +55,7 @@ signals:
     void attendeeCountChanged( int );
 
 private slots:
+    void checkIfExpansionIsNeeded( const QString &groupOrEmail );
     void expandResult( KJob *job );
     void slotSelectAddresses();
 

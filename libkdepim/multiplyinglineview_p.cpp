@@ -73,15 +73,15 @@ MultiplyingLine* MultiplyingLineView::addLine()
   mTopLayout->addWidget( line );
   line->setCompletionMode( mCompletionMode );
   line->show();
-  connect( line, SIGNAL( returnPressed( MultiplyingLine * ) ),
-    SLOT( slotReturnPressed( MultiplyingLine * ) ) );
-  connect( line, SIGNAL( upPressed( MultiplyingLine * ) ),
-    SLOT( slotUpPressed( MultiplyingLine * ) ) );
-  connect( line, SIGNAL( downPressed( MultiplyingLine * ) ),
-    SLOT( slotDownPressed( MultiplyingLine * ) ) );
+  connect( line, SIGNAL( returnPressed( KPIM::MultiplyingLine * ) ),
+    SLOT( slotReturnPressed( KPIM::MultiplyingLine * ) ) );
+  connect( line, SIGNAL( upPressed( KPIM::MultiplyingLine * ) ),
+    SLOT( slotUpPressed( KPIM::MultiplyingLine * ) ) );
+  connect( line, SIGNAL( downPressed( KPIM::MultiplyingLine * ) ),
+    SLOT( slotDownPressed( KPIM::MultiplyingLine * ) ) );
   connect( line, SIGNAL( rightPressed() ), SIGNAL( focusRight() ) );
-  connect( line, SIGNAL( deleteLine( MultiplyingLine * ) ),
-    SLOT( slotDecideLineDeletion( MultiplyingLine * ) ) );
+  connect( line, SIGNAL( deleteLine( KPIM::MultiplyingLine * ) ),
+    SLOT( slotDecideLineDeletion( KPIM::MultiplyingLine * ) ) );
   connect( line, SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ),
     SLOT( setCompletionMode( KGlobalSettings::Completion ) ) );
 

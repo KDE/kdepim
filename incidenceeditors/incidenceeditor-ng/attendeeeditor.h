@@ -52,8 +52,10 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
 
   signals:
     void countChanged( int );
+    void valueEntered( const QString & );
 
   protected slots:
+    void slotAddressEntered( KPIM::MultiplyingLine* );
     void slotLineAdded( KPIM::MultiplyingLine* );
     void slotLineDeleted( int pos );
     void slotCalculateTotal();

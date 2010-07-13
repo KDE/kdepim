@@ -101,10 +101,10 @@ class MultiplyingLineView : public QScrollArea
     void resizeView();
 
   protected slots:
-    void slotReturnPressed( MultiplyingLine * );
-    void slotDownPressed( MultiplyingLine * );
-    void slotUpPressed( MultiplyingLine * );
-    void slotDecideLineDeletion(  MultiplyingLine * );
+    void slotReturnPressed( KPIM::MultiplyingLine * );
+    void slotDownPressed( KPIM::MultiplyingLine * );
+    void slotUpPressed( KPIM::MultiplyingLine * );
+    void slotDecideLineDeletion( KPIM::MultiplyingLine * );
     void slotDeleteLine();
     void moveCompletionPopup();
     void moveScrollBarToEnd();

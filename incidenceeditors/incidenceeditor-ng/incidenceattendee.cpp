@@ -66,7 +66,8 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
-  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), this, SIGNAL( attendeeCountChanged( int ) ) );
+  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), SIGNAL( attendeeCountChanged( int ) ) );
+  connect( mAttendeeEditor, SIGNAL( valueEntered( QString ) ), SLOT( checkIfExpansionIsNeeded( QString ) ) );
 
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
@@ -178,6 +179,12 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
     }
   }
   mUi->mOrganizerCombo->addItems( uniqueList );
+}
+
+void IncidenceEditorsNG::IncidenceAttendee::checkIfExpansionIsNeeded( const QString &groupOrEmail )
+{
+  kDebug() << "TEST!!!!:" << groupOrEmail;
+
 }
 
 void IncidenceEditorsNG::IncidenceAttendee::expandResult( KJob *job )

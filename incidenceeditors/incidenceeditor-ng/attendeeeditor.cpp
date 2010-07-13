@@ -40,11 +40,24 @@ void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine* line )
   AttendeeLine* att = qobject_cast<AttendeeLine*>( line );
   if( !att )
     return;
+
   connect( att, SIGNAL( changed() ), SLOT( slotCalculateTotal() ) );
+  connect( att, SIGNAL( returnPressed( KPIM::MultiplyingLine* ) ), SLOT( slotAddressEntered( KPIM::MultiplyingLine* ) ) );
 }
 
 void AttendeeEditor::slotLineDeleted( int /*pos*/ )
 {
+}
+
+void AttendeeEditor::slotAddressEntered( KPIM::MultiplyingLine *line )
+{
+  AttendeeLine* att = qobject_cast<AttendeeLine*>( line );
+  if( !att )
+    return;
+
+  AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( att->data() );
+  // The email will either be a valid email or the name of a distlist.
+  emit valueEntered( data->email() );
 }
 
 void AttendeeEditor::slotCalculateTotal()
