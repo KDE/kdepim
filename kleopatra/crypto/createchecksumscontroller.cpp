@@ -152,7 +152,7 @@ private:
     const std::vector< shared_ptr<ChecksumDefinition> > checksumDefinitions;
     shared_ptr<ChecksumDefinition> checksumDefinition;
     QStringList files;
-    QStringList errors;
+    QStringList errors, created;
     bool allowAddition;
     volatile bool canceled;
 };
@@ -165,6 +165,7 @@ CreateChecksumsController::Private::Private( CreateChecksumsController * qq )
       checksumDefinition( ChecksumDefinition::getDefaultChecksumDefinition( checksumDefinitions ) ),
       files(),
       errors(),
+      created(),
       allowAddition( false ),
       canceled( false )
 {
@@ -230,6 +231,7 @@ void CreateChecksumsController::start() {
 
         d->canceled = false;
         d->errors.clear();
+        d->created.clear();
     }
 
     d->start();
@@ -499,6 +501,7 @@ void CreateChecksumsController::Private::run() {
     locker.unlock();
 
     QStringList errors;
+    QStringList created;
 
     if ( !checksumDefinition ) {
         errors.push_back( i18n("No checksum programs defined.") );
@@ -550,6 +553,8 @@ void CreateChecksumsController::Private::run() {
                 const QString error = process( dir, &fatal );
                 if ( !error.isEmpty() )
                     errors.push_back( error );
+                else
+                    created.push_back( dir.dir.absoluteFilePath( dir.sumFile ) );
                 done += dir.totalSize;
                 if ( fatal || canceled )
                     break;
@@ -562,6 +567,7 @@ void CreateChecksumsController::Private::run() {
     locker.relock();
 
     this->errors = errors;
+    this->created = created;
 
     // mutex unlocked by QMutexLocker
 
