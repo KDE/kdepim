@@ -302,9 +302,9 @@ void Message::ComposerViewBase::readyForSending()
 void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 {
   if ( job->error() ) {
-    QString msg = i18n( "Expanding email addresses in message failed.\n %1\n", job->errorString() );
-    KMessageBox::sorry( m_parentWidget, msg,
-                        i18n( "Sending Message Failed" ) );
+    QString msg = i18n( "Expanding email addresses in message failed: %1", job->errorString() );
+    // KMessageBox::sorry( m_parentWidget, msg,
+    //                     i18n( "Sending Message Failed" ) );
     //     setEnabled( true );
     // TODO add string after string freeze!
     emit failed( msg );
@@ -600,11 +600,11 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     kDebug() << "other Error.";
     QString msg;
     if( composer->error() == Message::Composer::BugError ) {
-      msg = i18n( "Error composing message:\n\n%1\n\nPlease report this bug.", job->errorString() );
+      msg = i18n( "Could not compose message: %1<br>Please report this bug.", job->errorString() );
     } else {
-      msg = i18n( "Error composing message:\n\n%1", job->errorString() );
+      msg = i18n( "Could not compose message: %1", job->errorString() );
     }
-    KMessageBox::sorry( m_parentWidget, msg, i18n( "Composer" ) );
+    // KMessageBox::sorry( m_parentWidget, msg, i18n( "Composer" ) );
     emit failed( msg );
   }
 
@@ -661,9 +661,10 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
     // There is not much we can do now, since all the MessageQueueJobs have been
     // started.  So just wait for them to finish.
     // TODO show a message box or something
-    QString msg = i18n( "<qt><p>There was an error trying to queue the message for sending:</p><br/>%1</qt>", job->errorString() );
-    KMessageBox::sorry( m_parentWidget, msg,
-                        i18n("Error Queueing Message") );
+    QString msg = i18n( "There were problems trying to queue the message for sending: %1",
+                        job->errorString() );
+    // KMessageBox::sorry( m_parentWidget, msg,
+    //                     i18n("Error Queueing Message") );
 
     if( m_pendingQueueJobs == 0 )
         emit failed( msg );
