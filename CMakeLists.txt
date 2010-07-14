@@ -53,6 +53,11 @@ configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version
 
 ############### search packages used by KDE ###############
 
+# It is needed otherwise it finds the kde4-config of the target platform
+if(WINCE)
+FIND_PROGRAM(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
+endif(WINCE)
+
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
