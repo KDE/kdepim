@@ -282,8 +282,7 @@ bool ConflictResolver::findFreeSlot( KDateTime &dtFrom, KDateTime &dtTo )
 void ConflictResolver::calculateConflicts()
 {
     int count = tryDate( mDtStart, mDtEnd );
-    if( count > 0 )
-      emit conflictsDetected( count );
+    emit conflictsDetected( count );
     kDebug() << "calculate conflicts" << count;
 }
 
