@@ -77,7 +77,7 @@ class EditorFreeBusy : public QDialog
   public slots:
     void slotInsertFreeBusy( KCal::FreeBusy *fb, const QString &email );
 
-    void setDateTimes( const QDateTime &, const QDateTime & );
+    void setDateTimes( const KDateTime &, const KDateTime  & );
 
     void editFreeBusyUrl( const QModelIndex& index );
 

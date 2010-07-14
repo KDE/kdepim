@@ -622,9 +622,10 @@ void EditorFreeBusy::slotIntervalColorRectangleMoved( const QDateTime &start,
   emit dateTimesChanged( start, end );
 }
 
-void EditorFreeBusy::setDateTimes( const QDateTime &start, const QDateTime &end )
+void EditorFreeBusy::setDateTimes( const KDateTime &start, const KDateTime &end )
 {
-  slotUpdateGanttView( start, end );
+  kDebug() << "start: " << start.dateTime();
+  slotUpdateGanttView( start.dateTime(), end.dateTime() );
 }
 
 void EditorFreeBusy::slotScaleChanged( int newScale )

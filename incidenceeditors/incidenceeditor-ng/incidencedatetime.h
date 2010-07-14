@@ -59,6 +59,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 
   signals:
     void startDateChanged( const QDate &newDate );
+    void dateTimesChanged( const KDateTime &startDateTime, const KDateTime  &endDateTime );
 
   private slots: /// General
     void setTimeZonesVisibility( bool visible );

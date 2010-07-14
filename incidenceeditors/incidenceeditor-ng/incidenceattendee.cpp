@@ -29,6 +29,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
+#include "incidencedatetime.h"
 #include "editorfreebusy.h"
 
 #include <akonadi/contact/emailaddressselectiondialog.h>
@@ -41,6 +42,7 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KPIMUtils/Email>
+#include <KDateTime>
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
@@ -55,12 +57,13 @@
 using namespace IncidenceEditorsNG;
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
+IncidenceAttendee::IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoMore* ui )
 #else
-IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
+IncidenceAttendee::IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop* ui )
 #endif
   : mUi( ui )
   , mAttendeeEditor( new AttendeeEditor )
+  , mDateTime( dateTime )
 {
   setObjectName( "IncidenceAttendee" );
 
@@ -87,6 +90,10 @@ IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflict()) );
   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
+
+  connect( mDateTime, SIGNAL( dateTimesChanged( const KDateTime&, const KDateTime& ) ), mFreeBusyDialog, SLOT( setDateTimes( const KDateTime&, const KDateTime& ) ) );
+  
+  // set the default organizer 
   mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
 }
 

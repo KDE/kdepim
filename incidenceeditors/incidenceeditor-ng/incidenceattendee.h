@@ -42,15 +42,16 @@ namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
 class EditorFreeBusy;
+class IncidenceDateTime;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
   Q_OBJECT
 public:
 #ifdef KDEPIM_MOBILE_UI  
-    IncidenceAttendee( Ui::EventOrTodoMore *ui = 0 );
+    IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
 #else
-    IncidenceAttendee( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
@@ -83,6 +84,7 @@ private:
     KCal::Incidence::ConstPtr mOrigIncidence;
     EditorFreeBusy *mFreeBusyDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
+    IncidenceDateTime *mDateTime;
 };
 
 }
