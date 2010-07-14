@@ -302,9 +302,8 @@ void Message::ComposerViewBase::readyForSending()
 void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 {
   if ( job->error() ) {
-    QString msg = i18n( "Expanding email addresses in message failed: %1", job->errorString() );
     //     setEnabled( true );
-    // TODO add string after string freeze!
+    QString msg = i18n( "Expanding email addresses in message failed: %1", job->errorString() );
     emit failed( msg );
     return;
   }
@@ -872,7 +871,6 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
   }
 
   if ( !target.isValid() ) {
-    // TODO: Show an error message to the user
     kWarning() << "No default collection for" << saveIn;
     emit failed( i18n( "No default collection for %1", saveIn ) );
 //     setEnabled( true );
@@ -899,7 +897,6 @@ void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
   Q_ASSERT( m_pendingQueueJobs >= 0 );
 
   if( job->error() ) {
-    // TODO: Show an error message to the user
     kWarning() << "Failed to save a message:" << job->errorString();
     emit failed( i18n( "Failed to save the message: %1", job->errorString() ) );
     return;
