@@ -32,6 +32,7 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QAbstractItemModel>
+#include <QDialog>
 
 class QTreeWidget;
 class QLabel;
@@ -49,7 +50,8 @@ namespace KCal {
 
 class KDateTime;
 
-class EditorFreeBusy : public QWidget
+namespace IncidenceEditorsNG {
+class EditorFreeBusy : public QDialog
 {
   Q_OBJECT
   public:
@@ -59,8 +61,8 @@ class EditorFreeBusy : public QWidget
     void setUpdateEnabled( bool enabled );
     bool updateEnabled() const;
 
-    void insertAttendee( KCal::Attendee *, bool readFBList = true );
-    void removeAttendee( KCal::Attendee * );
+    void insertAttendee( AttendeeData::Ptr , bool readFBList = true );
+    void removeAttendee( AttendeeData::Ptr  );
     void clearAttendees();
 
 
@@ -99,7 +101,7 @@ class EditorFreeBusy : public QWidget
 
   protected:
     void timerEvent( QTimerEvent * );
-    KCal::Attendee *currentAttendee() const;
+    AttendeeData::Ptr currentAttendee() const;
     /* reimpl */
 //     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();
@@ -141,4 +143,5 @@ class EditorFreeBusy : public QWidget
     QList<FreeBusyItem*> mFreeBusyItems; //TODO: holds all the items. if a tree like structure is needed, instead of the list, add it as a data of mLeftView items
 };
 
+}
 #endif

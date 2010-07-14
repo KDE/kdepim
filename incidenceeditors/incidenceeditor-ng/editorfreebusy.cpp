@@ -29,6 +29,8 @@
 #include "../editorconfig.h"
 #include "freebusyurldialog.h"
 
+#include "attendeedata.h"
+
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
 
@@ -62,8 +64,7 @@
 #include <QHeaderView>
 #include <QScrollBar>
 
-using namespace KCal;
-using namespace IncidenceEditors;
+using namespace IncidenceEditorsNG;
 
 class RowController : public KDGantt::AbstractRowController {
 private:
@@ -132,7 +133,7 @@ public:
 class FreeBusyItem 
 {
   public:
-    FreeBusyItem( Attendee *attendee, QStandardItemModel *model, 
+    FreeBusyItem( AttendeeData::Ptr attendee, QStandardItemModel *model,
                   EditorFreeBusy *parentWidget, QTreeWidget *listWidget ) :
       mAttendee( attendee ), mModel( model ), mTimerID( 0 ),
       mIsDownloading( false ), mParentWidget( parentWidget ), mListWidget( listWidget )
@@ -157,14 +158,14 @@ class FreeBusyItem
 
     void updateItem();
 
-    Attendee *attendee() const { return mAttendee; }
+    AttendeeData::Ptr attendee() const { return mAttendee; }
     void setFreeBusy( KCal::FreeBusy *fb ) { mFreeBusy = fb; }
     KCal::FreeBusy *freeBusy() const
     {
       return mFreeBusy;
     }
 
-    void setFreeBusyPeriods( FreeBusy *fb );
+    void setFreeBusyPeriods( KCal::FreeBusy *fb );
 
     // TODO this can most likely be removed alltogether. not virtual in base class and not called here
     QString key( int column, bool ) const
@@ -205,7 +206,7 @@ class FreeBusyItem
     bool isDownloading() const { return mIsDownloading; }
 
   private:
-    Attendee *mAttendee;
+    AttendeeData::Ptr mAttendee;
     KCal::FreeBusy *mFreeBusy;
 
     // TODO see setSortKey
@@ -236,20 +237,20 @@ void FreeBusyItem::updateItem()
   }
     
   switch ( mAttendee->status() ) {
-    case Attendee::Accepted:
+    case AttendeeData::Accepted:
       item->setIcon( 0, SmallIcon( "dialog-ok-apply" ) );
       break;
-    case Attendee::Declined:
+    case AttendeeData::Declined:
       item->setIcon( 0, SmallIcon( "dialog-cancel" ) );
       break;
-    case Attendee::NeedsAction:
-    case Attendee::InProcess:
+    case AttendeeData::NeedsAction:
+    case AttendeeData::InProcess:
       item->setIcon( 0, SmallIcon( "help-about" ) );
       break;
-    case Attendee::Tentative:
+    case AttendeeData::Tentative:
       item->setIcon( 0, SmallIcon( "dialog-ok" ) );
       break;
-    case Attendee::Delegated:
+    case AttendeeData::Delegated:
       item->setIcon( 0, SmallIcon( "mail-forward" ) );
       break;
     default:
@@ -258,7 +259,7 @@ void FreeBusyItem::updateItem()
 }
 
 // Set the free/busy periods for this attendee
-void FreeBusyItem::setFreeBusyPeriods( FreeBusy *fb )
+void FreeBusyItem::setFreeBusyPeriods( KCal::FreeBusy *fb )
 {
   if ( fb ) {
     KDateTime::Spec timeSpec = KSystemTimeZones::local();
@@ -268,7 +269,7 @@ void FreeBusyItem::setFreeBusyPeriods( FreeBusy *fb )
     QList<KCal::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
     for ( QList<KCal::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
           it != busyPeriods.end(); ++it ) {
-      FreeBusyPeriod per = *it;
+      KCal::FreeBusyPeriod per = *it;
 
       QStandardItem* newItem = new QStandardItem;
       newItem->setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
@@ -339,7 +340,7 @@ void FreeBusyItem::setFreeBusyPeriods( FreeBusy *fb )
 ////
 
 EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
-  : QWidget( parent ),
+  : QDialog( parent ),
     mGanttGrid( 0 ),
     mScaleCombo( 0 )
 {
@@ -558,7 +559,7 @@ EditorFreeBusy::~EditorFreeBusy()
 {
 }
 
-void EditorFreeBusy::removeAttendee( Attendee *attendee )
+void EditorFreeBusy::removeAttendee( AttendeeData::Ptr attendee )
 {
   FreeBusyItem *anItem = 0;
   for (uint i = 0; i < mFreeBusyItems.count(); i++ ) {
@@ -576,7 +577,7 @@ void EditorFreeBusy::removeAttendee( Attendee *attendee )
   }
 }
 
-void EditorFreeBusy::insertAttendee( Attendee *attendee, bool readFBList )
+void EditorFreeBusy::insertAttendee( AttendeeData::Ptr attendee, bool readFBList )
 {
   FreeBusyItem *item = new FreeBusyItem( attendee, static_cast<QStandardItemModel*>( mGanttView->model() ), this , mLeftView );
   mFreeBusyItems.append( item );
@@ -882,20 +883,20 @@ void EditorFreeBusy::updateStatusSummary()
   Q_FOREACH ( FreeBusyItem * aItem, mFreeBusyItems ) {
     ++total;
     switch( aItem->attendee()->status() ) {
-    case Attendee::Accepted:
+    case AttendeeData::Accepted:
       ++accepted;
       break;
-    case Attendee::Tentative:
+    case AttendeeData::Tentative:
       ++tentative;
       break;
-    case Attendee::Declined:
+    case AttendeeData::Declined:
       ++declined;
       break;
-    case Attendee::NeedsAction:
-    case Attendee::Delegated:
-    case Attendee::Completed:
-    case Attendee::InProcess:
-    case Attendee::None:
+    case AttendeeData::NeedsAction:
+    case AttendeeData::Delegated:
+    case AttendeeData::Completed:
+    case AttendeeData::InProcess:
+    case AttendeeData::None:
       /* just to shut up the compiler */
       break;
     }
@@ -956,7 +957,7 @@ void EditorFreeBusy::editFreeBusyUrl( const QModelIndex & index )
 
 FreeBusyItem *item = mFreeBusyItems[ index.row() ];
 
-  Attendee *attendee = item->attendee();
+  AttendeeData::Ptr attendee = item->attendee();
   QPointer<FreeBusyUrlDialog> dialog = new FreeBusyUrlDialog( attendee, this );
   dialog->exec();
   delete dialog;
@@ -972,11 +973,11 @@ FreeBusyItem* EditorFreeBusy::selectedItem() const
   return mFreeBusyItems[index];
 }
 
-KCal::Attendee *EditorFreeBusy::currentAttendee() const
+AttendeeData::Ptr EditorFreeBusy::currentAttendee() const
 {
   FreeBusyItem *aItem = selectedItem();
   if ( !aItem ) {
-    return 0;
+    return AttendeeData::Ptr();
   }
   return aItem->attendee();
 }
@@ -1009,9 +1010,9 @@ void EditorFreeBusy::removeAttendee()
   }
     
 
-  Attendee *delA = new Attendee( item->attendee()->name(), item->attendee()->email(),
+  AttendeeData::Ptr delA ( new AttendeeData( item->attendee()->name(), item->attendee()->email(),
                                  item->attendee()->RSVP(), item->attendee()->status(),
-                                 item->attendee()->role(), item->attendee()->uid() );
+                                 item->attendee()->role(), item->attendee()->uid() ) );
   // TODO-NGPORT mDelAttendees.append( delA );
   delete item;
 
@@ -1029,9 +1030,9 @@ void EditorFreeBusy::clearSelection() const
   mGanttView->repaint();
 }
 
-void EditorFreeBusy::changeStatusForMe( KCal::Attendee::PartStat status )
+void EditorFreeBusy::changeStatusForMe( AttendeeData::PartStat status )
 {
-  const QStringList myEmails = EditorConfig::instance()->allEmails();
+  const QStringList myEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
   Q_FOREACH ( FreeBusyItem *item, mFreeBusyItems ) {
     for ( QStringList::ConstIterator it2( myEmails.begin() ), end( myEmails.end() );
           it2 != end; ++it2 ) {
@@ -1058,41 +1059,41 @@ void EditorFreeBusy::showAttendeeStatusMenu()
 
   QAction *needsaction =
     menu->addAction( SmallIcon( "help-about" ),
-                     Attendee::statusName( Attendee::NeedsAction ) );
+                     AttendeeData::statusName( AttendeeData::NeedsAction ) );
   QAction *accepted =
     menu->addAction( SmallIcon( "dialog-ok-apply" ),
-                     Attendee::statusName( Attendee::Accepted ) );
+                     AttendeeData::statusName( AttendeeData::Accepted ) );
   QAction *declined =
     menu->addAction( SmallIcon( "dialog-cancel" ),
-                     Attendee::statusName( Attendee::Declined ) );
+                     AttendeeData::statusName( AttendeeData::Declined ) );
   QAction *tentative =
     menu->addAction( SmallIcon( "dialog-ok" ),
-                     Attendee::statusName( Attendee::Tentative ) );
+                     AttendeeData::statusName( AttendeeData::Tentative ) );
   QAction *delegated =
     menu->addAction( SmallIcon( "mail-forward" ),
-                     Attendee::statusName( Attendee::Delegated ) );
+                     AttendeeData::statusName( AttendeeData::Delegated ) );
   QAction *completed =
     menu->addAction( SmallIcon( "mail-mark-read" ),
-                     Attendee::statusName( Attendee::Completed ) );
+                     AttendeeData::statusName( AttendeeData::Completed ) );
   QAction *inprocess =
     menu->addAction( SmallIcon( "help-about" ),
-                     Attendee::statusName( Attendee::InProcess ) );
+                     AttendeeData::statusName( AttendeeData::InProcess ) );
   QAction *ret = menu->exec( QCursor::pos() );
   delete menu;
   if ( ret == needsaction ) {
-    currentAttendee()->setStatus( Attendee::NeedsAction );
+    currentAttendee()->setStatus( AttendeeData::NeedsAction );
   } else if ( ret == accepted ) {
-    currentAttendee()->setStatus( Attendee::Accepted );
+    currentAttendee()->setStatus( AttendeeData::Accepted );
   } else if ( ret == declined ) {
-    currentAttendee()->setStatus( Attendee::Declined );
+    currentAttendee()->setStatus( AttendeeData::Declined );
   } else if ( ret == tentative ) {
-    currentAttendee()->setStatus( Attendee::Tentative );
+    currentAttendee()->setStatus( AttendeeData::Tentative );
   } else if ( ret == delegated ) {
-    currentAttendee()->setStatus( Attendee::Delegated );
+    currentAttendee()->setStatus( AttendeeData::Delegated );
   } else if ( ret == completed ) {
-    currentAttendee()->setStatus( Attendee::Completed );
+    currentAttendee()->setStatus( AttendeeData::Completed );
   } else if ( ret == inprocess ) {
-    currentAttendee()->setStatus( Attendee::InProcess );
+    currentAttendee()->setStatus( AttendeeData::InProcess );
   } else {
     return;
   }
@@ -1122,11 +1123,11 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
     return;
   }
 
-  Attendee *currentOrganizerAttendee = 0;
-  Attendee *newOrganizerAttendee = 0;
+  AttendeeData::Ptr currentOrganizerAttendee;
+  AttendeeData::Ptr newOrganizerAttendee;
 
   Q_FOREACH( FreeBusyItem* item, mFreeBusyItems ) {
-    Attendee *attendee = item->attendee();
+    AttendeeData::Ptr attendee = item->attendee();
     if( attendee->fullName() == mCurrentOrganizer ) {
       currentOrganizerAttendee = attendee;
     }
@@ -1156,7 +1157,7 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
     }
 
     if ( !newOrganizerAttendee ) {
-      Attendee *a = new Attendee( name, email, true );
+      AttendeeData::Ptr a( new AttendeeData( name, email, true ) );
       insertAttendee( a, false );
      // TODO-NGPORT mNewAttendees.append( a );
       // TODO-NGPORT updateAttendee();
@@ -1171,7 +1172,7 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
 // #if 0
 // //TODO: finish porting. the upper class deals with Q3ListViewItem, and it should deal with something else. Here FreeBusyItem.
 //   Q_FOREACH ( FreeBusyItem *item, mFreeBusyItems ) {
-//     Attendee *attendee = item->attendee();
+//     AttendeeData::Ptr attendee = item->attendee();
 //     Q_ASSERT( attendee );
 //     if ( isExampleAttendee( attendee ) ) {
 //         return item;
