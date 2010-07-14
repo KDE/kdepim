@@ -107,6 +107,7 @@ if (KDEPIM_MOBILE_UI)
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDEPIMLIBS_KCAL_LIBS}
+    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
     kdepim            # For KPIM::K{Date|Time}Edit
     akonadi-kcal_next # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
