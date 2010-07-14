@@ -74,6 +74,11 @@ public:
     void clearAttendees();
 
     /**
+     * Returns whether the resolver contains the attendee
+     */
+    bool containsAttendee( AttendeeData::Ptr attendee );
+
+    /**
      * Queues a reload of free/busy data.
      * All current attendees will have their free/busy data
      * redownloaded from Akonadi.

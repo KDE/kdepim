@@ -79,6 +79,7 @@ void ConflictResolver::setupManager()
 
 void ConflictResolver::insertAttendee( AttendeeData::Ptr attendee )
 {
+    kDebug() << "inserted attendee" << attendee->email();
     FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
     mFreeBusyItems.append( item );
     if( mManagerConnected )
@@ -105,6 +106,18 @@ void ConflictResolver::clearAttendees()
 {
     qDeleteAll( mFreeBusyItems );
     mFreeBusyItems.clear();
+}
+
+bool ConflictResolver::containsAttendee( AttendeeData::Ptr attendee )
+{
+    FreeBusyItem *anItem = 0;
+    for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {
+        anItem = mFreeBusyItems[i];
+        if ( anItem->attendee() == attendee ) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void ConflictResolver::updateFreeBusyData( FreeBusyItem* item )
@@ -269,5 +282,6 @@ void ConflictResolver::calculateConflicts()
     int count = tryDate( mDtStart, mDtEnd );
     if( count > 0 )
       emit conflictsDetected( count );
+    kDebug() << "calculate conflicts" << count;
 }
 
