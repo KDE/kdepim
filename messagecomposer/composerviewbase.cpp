@@ -303,8 +303,6 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 {
   if ( job->error() ) {
     QString msg = i18n( "Expanding email addresses in message failed: %1", job->errorString() );
-    // KMessageBox::sorry( m_parentWidget, msg,
-    //                     i18n( "Sending Message Failed" ) );
     //     setEnabled( true );
     // TODO add string after string freeze!
     emit failed( msg );
@@ -604,7 +602,6 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     } else {
       msg = i18n( "Could not compose message: %1", job->errorString() );
     }
-    // KMessageBox::sorry( m_parentWidget, msg, i18n( "Composer" ) );
     emit failed( msg );
   }
 
@@ -663,8 +660,6 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
     // TODO show a message box or something
     QString msg = i18n( "There were problems trying to queue the message for sending: %1",
                         job->errorString() );
-    // KMessageBox::sorry( m_parentWidget, msg,
-    //                     i18n("Error Queueing Message") );
 
     if( m_pendingQueueJobs == 0 )
         emit failed( msg );
