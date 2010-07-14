@@ -102,6 +102,7 @@ void ConflictResolver::removeAttendee( const KCal::Attendee &attendee )
             break;
         }
     }
+    calculateConflicts();
 }
 
 void ConflictResolver::clearAttendees()

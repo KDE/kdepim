@@ -449,7 +449,7 @@ void AttendeeLine::slotComboChanged()
 
 void AttendeeLine::aboutToBeDeleted()
 {
-  if( mData )
+  if( !mData )
     return;
   KCal::Attendee oldAttendee( mData->attendee() );
   emit changed( oldAttendee, KCal::Attendee( "", "" ) );
