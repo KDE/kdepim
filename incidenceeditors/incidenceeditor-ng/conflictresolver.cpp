@@ -39,14 +39,22 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QO
     // the FreeBusyManager may not be initialized at this point. Queue up
     // a connection attempt.
     Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m )
+    if ( !m ) {
         QTimer::singleShot( 0, this, SLOT( setupManager() ) );
-    else
+        mManagerConnected = true;
+    } else {
+        mManagerConnected = false;
         setupManager();
+    }
+
+    connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
+    mReloadTimer.setSingleShot( true );
 }
 
 void ConflictResolver::setupManager()
 {
+    if ( mManagerConnected )
+        return;
     static int attempt_count = 1;
     if ( attempt_count > 5 ) { // 5 chosen as an arbitrary limit
         kWarning() << "Free Busy Editor cannot connect to Akonadi's FreeBusyManager. Number of connection attempts exceeded";
@@ -62,6 +70,10 @@ void ConflictResolver::setupManager()
         connect( m, SIGNAL( freeBusyRetrieved( KCal::FreeBusy *, const QString & ) ),
                  SLOT( slotInsertFreeBusy( KCal::FreeBusy *, const QString & ) ) );
         kDebug() << "FreeBusyManager connection succeeded";
+        mManagerConnected = true;
+        // trigger a reload in case any attendees were inserted before
+        // the connection was made
+        triggerReload();
     }
 }
 
@@ -69,7 +81,8 @@ void ConflictResolver::insertAttendee( AttendeeData::Ptr attendee )
 {
     FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
     mFreeBusyItems.append( item );
-    updateFreeBusyData( item );
+    if( mManagerConnected )
+        updateFreeBusyData( item );
 }
 
 void ConflictResolver::removeAttendee( AttendeeData::Ptr attendee )
@@ -107,8 +120,8 @@ void ConflictResolver::updateFreeBusyData( FreeBusyItem* item )
     }
 
     // This item does not have a download running, and no timer is set
-    // Do the download in five seconds
-    item->setUpdateTimerID( startTimer( 5000 ) );
+    // Do the download in one second
+    item->setUpdateTimerID( startTimer( 1000 ) );
 }
 
 void ConflictResolver::timerEvent( QTimerEvent* event )
@@ -216,35 +229,35 @@ bool ConflictResolver::tryDate( FreeBusyItem* attendee, KDateTime& tryFrom, KDat
 }
 bool ConflictResolver::findFreeSlot( KDateTime &dtFrom, KDateTime &dtTo )
 {
-  if ( tryDate( dtFrom, dtTo ) ) {
-    // Current time is acceptable
-    return true;
-  }
-
-  KDateTime tryFrom = dtFrom;
-  KDateTime tryTo = dtTo;
-
-  // Make sure that we never suggest a date in the past, even if the
-  // user originally scheduled the meeting to be in the past.
-  KDateTime now = KDateTime::currentUtcDateTime();
-  if ( tryFrom < now ) {
-    // The slot to look for is at least partially in the past.
-    int secs = tryFrom.secsTo( tryTo );
-    tryFrom = now;
-    tryTo = tryFrom.addSecs( secs );
-  }
-
-  bool found = false;
-  while ( !found ) {
-    found = tryDate( tryFrom, tryTo );
-    // PENDING(kalle) Make the interval configurable
-    if ( !found && dtFrom.daysTo( tryFrom ) > 365 ) {
-      break; // don't look more than one year in the future
+    if ( tryDate( dtFrom, dtTo ) ) {
+        // Current time is acceptable
+        return true;
     }
-  }
 
-  dtFrom = tryFrom;
-  dtTo = tryTo;
+    KDateTime tryFrom = dtFrom;
+    KDateTime tryTo = dtTo;
 
-  return found;
+    // Make sure that we never suggest a date in the past, even if the
+    // user originally scheduled the meeting to be in the past.
+    KDateTime now = KDateTime::currentUtcDateTime();
+    if ( tryFrom < now ) {
+        // The slot to look for is at least partially in the past.
+        int secs = tryFrom.secsTo( tryTo );
+        tryFrom = now;
+        tryTo = tryFrom.addSecs( secs );
+    }
+
+    bool found = false;
+    while ( !found ) {
+        found = tryDate( tryFrom, tryTo );
+        // PENDING(kalle) Make the interval configurable
+        if ( !found && dtFrom.daysTo( tryFrom ) > 365 ) {
+            break; // don't look more than one year in the future
+        }
+    }
+
+    dtFrom = tryFrom;
+    dtTo = tryTo;
+
+    return found;
 }

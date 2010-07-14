@@ -146,6 +146,7 @@ private:
 
     KDateTime mDtStart, mDtEnd;
     QTimer mReloadTimer;
+    bool mManagerConnected;
     bool mForceDownload;
     QList<FreeBusyItem*> mFreeBusyItems;
     QWidget *mParentWidget;
