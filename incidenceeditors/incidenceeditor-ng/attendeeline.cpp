@@ -268,6 +268,7 @@ void AttendeeLine::dataFromFields()
   mData->setStatus( AttendeeData::PartStat( mStateCombo->currentIndex() ) );
   mData->setRSVP( mResponseCheck->isChecked() );
   mData->setUid( mUid );
+  clearModified();
 }
 
 void AttendeeLine::fieldsFromData()
@@ -417,16 +418,13 @@ void AttendeeLine::slotEditingFinished()
     mEdit->setCursorPosition( 0 );
     emit editingFinished( this );
   }
+  emit changed();
+  dataFromFields();
 }
 
 void AttendeeLine::slotTextChanged( const QString& /*str*/ )
 {
-  
-  //TODO: some verifying, auto completion and stuff
-  //      to assist the user in selecting a valid contact
-  //   KPIMUtils::isValidAddress( str );
-  mModified = true;
-  emit changed();
+    mModified = true;
 }
 
 void AttendeeLine::slotComboChanged()
