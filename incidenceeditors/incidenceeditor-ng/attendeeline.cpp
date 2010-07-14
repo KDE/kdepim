@@ -182,7 +182,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
 
   mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
 #endif
-
+  mResponseCheck->setChecked( true );
   mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
   
