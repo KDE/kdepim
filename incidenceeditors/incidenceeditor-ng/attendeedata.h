@@ -42,6 +42,11 @@ class AttendeeData : public KPIM::MultiplyingLineData, public KCal::Attendee
 
     virtual void clear();
     virtual bool isEmpty() const;
+
+    /**
+     * Return a copy of the attendee data
+     * */
+    KCal::Attendee attendee() const;
 };
 }
 

@@ -36,3 +36,9 @@ bool AttendeeData::isEmpty() const
 {
   return name().isEmpty() && email().isEmpty();
 }
+
+KCal::Attendee AttendeeData::attendee() const
+{
+    return KCal::Attendee( *this );
+}
+
