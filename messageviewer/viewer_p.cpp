@@ -2251,6 +2251,8 @@ void ViewerPrivate::slotPrintMsg()
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   if ( !mMessage ) return;
 
+// wince does not support printing
+#ifndef _WIN32_WCE
   QPrinter printer;
 
   QPointer<QPrintDialog> dlg = new QPrintDialog( &printer, mViewer );
@@ -2259,6 +2261,7 @@ void ViewerPrivate::slotPrintMsg()
   }
 
   delete dlg;
+#endif
 }
 
 

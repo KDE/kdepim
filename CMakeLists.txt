@@ -10,6 +10,11 @@ option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 
+# cmake would not find kde for xcompile if that is not set 
+if(WINCE)
+    set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
+endif(WINCE)
+
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
 if(KDEPIM_ENTERPRISE_BUILD)
   set(KDEPIM_ONLY_KLEO FALSE)
@@ -147,7 +152,12 @@ else(KDEPIM_ONLY_KLEO)
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
-  find_program(XSLTPROC_EXECUTABLE xsltproc)
+  find_package(LibXslt)
+  #if(NOT WINCE)
+  #find_program(XSLTPROC_EXECUTABLE xsltproc)
+  #else(NOT WINCE)
+  #find_program(XSLTPROC_EXECUTABLE xsltproc PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
+  #endif(NOT WINCE)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
 
 ############### Desktop vs. Mobile options ##############
