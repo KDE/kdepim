@@ -42,6 +42,7 @@ void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine* line )
     return;
 
   connect( att, SIGNAL( changed() ), SLOT( slotCalculateTotal() ) );
+  connect( att, SIGNAL( changed( const KCal::Attendee &, const KCal::Attendee & ) ), SIGNAL( changed( const KCal::Attendee &, const KCal::Attendee & ) ) );
   connect( att, SIGNAL( editingFinished( KPIM::MultiplyingLine * ) ), SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ) );
 }
 

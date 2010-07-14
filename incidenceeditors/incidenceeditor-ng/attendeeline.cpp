@@ -26,6 +26,7 @@
 #include <KDialog>
 #include <KIconLoader>
 #include <KLocale>
+#include <KDebug>
 
 #include <QDebug>
 #include <QBoxLayout>
@@ -223,7 +224,8 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   connect( mResponseCheck, SIGNAL( leftPressed() ), mStateCombo, SLOT( setFocus() ) );
   connect( mResponseCheck, SIGNAL( rightPressed() ), SIGNAL( rightPressed() ) );
   
-  connect( mEdit, SIGNAL( editingFinished() ), SLOT( slotEditingFinished() ) );
+  connect( mEdit, SIGNAL( editingFinished() ), SLOT( slotHandleChange() ) );
+  connect( mEdit, SIGNAL( textCompleted() ), SLOT( slotHandleChange() ) );
   connect( mEdit, SIGNAL( clearButtonClicked() ), SLOT( slotPropagateDeletion() ) );
 
   connect( mRoleCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
@@ -263,12 +265,20 @@ void AttendeeLine::dataFromFields()
 {
   if( !mData )
     return;
+
+  KCal::Attendee oldAttendee( mData->attendee() );
+
   mData->setEmail(  mEdit->text() );
   mData->setRole( AttendeeData::Role( mRoleCombo->currentIndex() ) );
   mData->setStatus( AttendeeData::PartStat( mStateCombo->currentIndex() ) );
   mData->setRSVP( mResponseCheck->isChecked() );
   mData->setUid( mUid );
   clearModified();
+
+  if( !mData->email().isEmpty() && !( oldAttendee == mData->attendee() ) ) {
+    kDebug() << oldAttendee.email() << mData->email();
+    emit changed( oldAttendee, mData->attendee() );
+  }
 }
 
 void AttendeeLine::fieldsFromData()
@@ -410,7 +420,7 @@ void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr& data )
   fieldsFromData();
 }
 
-void AttendeeLine::slotEditingFinished()
+void AttendeeLine::slotHandleChange()
 {
   if ( mEdit->text().isEmpty() ) {
     emit deleteLine( this );
@@ -418,18 +428,19 @@ void AttendeeLine::slotEditingFinished()
     mEdit->setCursorPosition( 0 );
     emit editingFinished( this );
   }
-  emit changed();
   dataFromFields();
 }
 
 void AttendeeLine::slotTextChanged( const QString& /*str*/ )
 {
     mModified = true;
+    emit changed();
 }
 
 void AttendeeLine::slotComboChanged()
 {
     mModified = true;
+    emit changed();
 }
 
 

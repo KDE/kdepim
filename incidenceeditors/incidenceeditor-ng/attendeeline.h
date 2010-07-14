@@ -137,11 +137,12 @@ class AttendeeLine : public KPIM::MultiplyingLine
 
   signals:
     void changed();
+    void changed( const KCal::Attendee &oldAttendee, const KCal::Attendee &newAttendee );
     void editingFinished( KPIM::MultiplyingLine * );
 
   private slots:
     void slotTextChanged( const QString & );
-    void slotEditingFinished();
+    void slotHandleChange();
     void slotComboChanged();
   private:
     void dataFromFields();
