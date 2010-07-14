@@ -294,11 +294,10 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 
 void IncidenceAttendee::slotAttendeeChanged( const KCal::Attendee& oldAttendee, const KCal::Attendee& newAttendee )
 {
-   if( newAttendee.email().isEmpty() )
-      return;
+   // if newAttendee's email is empty, we are probably removing an attendee
    if( mConflictResolver->containsAttendee( oldAttendee ) )
       mConflictResolver->removeAttendee( oldAttendee );
-   if( !mConflictResolver->containsAttendee( newAttendee ) )
+   if( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee.email().isEmpty() )
       mConflictResolver->insertAttendee( newAttendee );
 }
 
