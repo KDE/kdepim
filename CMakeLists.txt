@@ -153,11 +153,6 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   find_package(LibXslt)
-  #if(NOT WINCE)
-  #find_program(XSLTPROC_EXECUTABLE xsltproc)
-  #else(NOT WINCE)
-  #find_program(XSLTPROC_EXECUTABLE xsltproc PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
-  #endif(NOT WINCE)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
 
 ############### Desktop vs. Mobile options ##############
