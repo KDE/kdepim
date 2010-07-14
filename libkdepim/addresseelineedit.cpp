@@ -644,6 +644,7 @@ void AddresseeLineEdit::Private::slotPopupCompletion( const QString &completion 
   q->setText( m_previousAddresses + completion.trimmed() );
   q->cursorAtEnd();
   updateSearchString();
+  q->emitTextCompleted();
 }
 
 void AddresseeLineEdit::Private::slotReturnPressed( const QString & )
@@ -1379,5 +1380,11 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
 
   return KLineEdit::eventFilter( object, event );
 }
+
+void AddresseeLineEdit::emitTextCompleted()
+{
+    emit textCompleted();
+}
+
 
 #include "addresseelineedit.moc"
