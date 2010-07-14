@@ -28,6 +28,8 @@ class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
   Q_OBJECT
   public:
     KDeclarativeApplication();
+
+    static void initCmdLine();
 };
 
 #endif

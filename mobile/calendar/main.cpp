@@ -38,9 +38,10 @@ int main( int argc, char **argv )
   //       To make this really configurable do something like KOrganizerEditorConfig
   //       in incidinceeditors/groupwareintegration.cpp
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-  
+
   KAboutData aboutData( ba, ba, name, ba, name );
   KCmdLineArgs::init( argc, argv, &aboutData );
+  KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
   MainView view;

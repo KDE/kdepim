@@ -41,6 +41,7 @@ int main( int argc, char **argv )
 
   KAboutData aboutData( ba, ba, name, ba, name );
   KCmdLineArgs::init( argc, argv, &aboutData );
+  KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
   MainView view;

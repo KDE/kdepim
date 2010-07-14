@@ -37,10 +37,7 @@ int main( int argc, char **argv )
   KAboutData aboutData( ba, ba, name, ba, name );
 
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineOptions options;
-  options.add("timeit", ki18n("start timers for various parts of the application startup"));
-  KCmdLineArgs::addCmdLineOptions(options);
-
+  KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
   MainView view;
 

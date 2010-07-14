@@ -21,6 +21,7 @@
 
 #include <kglobalsettings.h>
 #include <QFont>
+#include <KCmdLineArgs>
 
 KDeclarativeApplication::KDeclarativeApplication()
 {
@@ -68,6 +69,13 @@ KDeclarativeApplication::KDeclarativeApplication()
 
   // FIXME: actually makes things worse with the Maemo5 style which completely ignores our palette apparently
 //  setPalette( pal );
+}
+
+void KDeclarativeApplication::initCmdLine()
+{
+  KCmdLineOptions options;
+  options.add("timeit", ki18n("start timers for various parts of the application startup"));
+  KCmdLineArgs::addCmdLineOptions(options);
 }
 
 #include "kdeclarativeapplication.moc"
