@@ -14,22 +14,20 @@ div.header {
   </div>
 {% endif %}
 
-({{ from|safe }},
+({{ from_NameOnly|safe }},
 
 {% if vCardName %}
   &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
 {% endif %}
 
-{% if cc %}
-  CC:  {{ cc|safe }}&nbsp;
+{% if cc_NameOnly %}
+  CC:  {{ cc_NameOnly|safe }}&nbsp;
 {% endif %}
 
-{% if bcc %}
-  BCC:  {{ bcc|safe }}&nbsp;
+{% if bcc_NameOnly %}
+  BCC:  {{ bcc_NameOnly|safe }}&nbsp;
 {% endif %}
 
-{% if date %}
-  {{ date|safe }}
-{% endif %})
+  {{ date_short|safe }})
 
 </div>

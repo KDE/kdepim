@@ -75,7 +75,7 @@ p {
  <div class="bd">
   <div class="c">
    <div class="s">
-   <p>Date: {{ date|safe }} </p><br />
+   <p>Date: {{ date_long|safe }} </p><br />
 
     {% if subject %}
         <div dir="{{ subjectDir }}" > <h1>{{ subject|safe }}</h1></div>
@@ -91,7 +91,7 @@ p {
 
     <tr>
     <th class="header">From: </th>
-    <td class="data">{{ from|safe }}
+    <td class="data">{{ from_FullAddress|safe }}
 
     {% if resentFrom %}
       &nbsp; Resent-From: {{ resentFrom|safe }}
@@ -110,20 +110,20 @@ p {
 
     <tr>
     <th class="header">To: </th>
-    <td class="data">{{ to|safe }}</td>
+    <td class="data">{{ to_FullAddress_ShowLink|safe }}</td>
     </tr>
 
-{% if cc %}
+{% if cc_FullAddress_ShowLink %}
     <tr>
     <th class="header">CC: </th>
-    <td class="data">{{ cc|safe }}</td>
+    <td class="data">{{ cc_FullAddress_ShowLink|safe }}</td>
     </tr>
 {% endif %}
 
-{% if bcc %}
+{% if bcc_FullAddress %}
     <tr>
     <th class="header">BCC: </th>
-    <td class="data">{{ bcc|safe }}</td>
+    <td class="data">{{ bcc_FullAddress|safe }}</td>
     </tr>
 {% endif %}
 

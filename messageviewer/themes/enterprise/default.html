@@ -1,4 +1,4 @@
-<style>
+<style type="text/css">
 
 .date {
     margin-left: 10px;
@@ -38,7 +38,7 @@
 
 .top_left {
     min-width: 6px;
-    background-image:url('{% media_finder "enterprise/images/enterprise_top_left.png" %}');;
+    background-image:url('{% media_finder "enterprise/images/enterprise_top_left.png" %}');
 }
 
 .top_right {
@@ -170,7 +170,7 @@ a.black {
 
   <div style="margin-left: 10px; top: 0px;">
     <span font-size: 10px; font-weight: bold;>
-      {{ date|safe }}
+      {{ date_long|safe }}
     </span>
   </div>
 
@@ -202,7 +202,7 @@ a.black {
      <tr>
      <td style="font-size: 10px; padding-left: 5px; padding-right: 24px; text-align: right;padding-top: 0px; padding-bottom: 0px; border-width: 0px;">From:</td>
      <td style="padding-top: 0px; padding-bottom: 0px; border-width: 0px;">
-     {{ from|safe }}
+     {{ from_NameOnly|safe }}
 
      {% if vCardName %}
        &nbsp;&nbsp;<a href="{{ vCardName|safe }}">[vCard]</a>
@@ -213,20 +213,20 @@ a.black {
 
      <tr>
      <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> To: </td>
-     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ to|safe }}</td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ to_FullAddress|safe }}</td>
      </tr>
 
-    {% if cc %}
+    {% if cc_FullAddress %}
      <tr>
      <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> CC: </td>
-     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ cc|safe }}</td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ cc_FullAddress|safe }}</td>
      </tr>
      {% endif %}
 
-     {% if bcc %}
+     {% if bcc_FullAddress %}
      <tr>
      <td style="font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px;padding-top: 0px; padding-bottom: 0px; border-width: 0px;"> BCC: </td>
-     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ bcc|safe }}</td>
+     <td style="font-size: 10px; padding-top: 0px; padding-bottom: 0px; border-width: 0px;">{{ bcc_FullAddress|safe }}</td>
      </tr>
      {% endif %}
 
@@ -256,4 +256,3 @@ a.black {
 {% else %}
   <div style="padding: 6px;">
 {% endif %}
-

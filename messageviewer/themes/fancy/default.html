@@ -14,7 +14,7 @@
 
     <tr>
     <th align="left" style="font-size: 10px;">From: </th>
-    <td style="font-size: 10px;">{{ from|safe }}
+    <td style="font-size: 10px;">{{ from_FullAddress|safe }}
 
     {% if resentFrom %}
       &nbsp; Resent-From: {{ resentFrom|safe }}
@@ -33,26 +33,26 @@
 
     <tr>
     <th align="left" style="font-size: 10px;">To: </th>
-    <td style="font-size: 10px;">{{ to|safe }}</td>
+    <td style="font-size: 10px;">{{ to_FullAddress_ShowLink|safe }}</td>
     </tr>
 
-{% if cc %}
+{% if cc_FullAddress_ShowLink %}
     <tr>
     <th align="left" style="font-size: 10px;">CC: </th>
-    <td style="font-size: 10px;">{{ cc|safe }}</td>
+    <td style="font-size: 10px;">{{ cc_FullAddress_ShowLink|safe }}</td>
     </tr>
 {% endif %}
 
-{% if bcc %}
+{% if bcc_FullAddress %}
     <tr>
     <th align="left" style="font-size: 10px;">BCC: </th>
-    <td style="font-size: 10px;">{{ bcc|safe }}</td>
+    <td style="font-size: 10px;">{{ bcc_FullAddress|safe }}</td>
     </tr>
 {% endif %}
 
     <tr>
     <th align="left" style="font-size: 10px;">Date: </th>
-    <td dir="{{ dateDir }}" style="font-size: 10px;">{{ date|safe }}</td>
+    <td dir="{{ dateDir }}" style="font-size: 10px;">{{ date_long|safe }}</td>
     </tr>
 
     <tr>
