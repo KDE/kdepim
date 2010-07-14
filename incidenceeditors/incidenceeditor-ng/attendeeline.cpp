@@ -268,14 +268,18 @@ void AttendeeLine::dataFromFields()
 
   KCal::Attendee oldAttendee( mData->attendee() );
 
-  mData->setEmail(  mEdit->text() );
+  QString email, name;
+  KPIMUtils::extractEmailAddressAndName( mEdit->text(), email, name );
+
+  mData->setName( name );
+  mData->setEmail(  email );
   mData->setRole( AttendeeData::Role( mRoleCombo->currentIndex() ) );
   mData->setStatus( AttendeeData::PartStat( mStateCombo->currentIndex() ) );
   mData->setRSVP( mResponseCheck->isChecked() );
   mData->setUid( mUid );
   clearModified();
 
-  if( !( oldAttendee == mData->attendee() ) ) {
+  if( !( oldAttendee == mData->attendee() ) && !email.isEmpty() /*if email is empty, we dont want to update anything*/ ) {
     kDebug() << oldAttendee.email() << mData->email();
     emit changed( oldAttendee, mData->attendee() );
   }
