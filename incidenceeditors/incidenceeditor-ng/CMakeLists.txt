@@ -35,6 +35,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencerecurrence.cpp
   incidencesecrecy.cpp
 
+  groupwareintegration.cpp
+
   ../autochecktreewidget.cpp
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp

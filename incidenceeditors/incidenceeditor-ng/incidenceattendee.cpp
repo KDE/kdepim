@@ -29,6 +29,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
+#include "editorfreebusy.h"
 
 #include <akonadi/contact/emailaddressselectiondialog.h>
 
@@ -80,6 +81,8 @@ IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
   fillOrganizerCombo();
   mUi->mSolveButton->setDisabled( true );
   mUi->mOrganizerLabel->setVisible( false );
+
+  mFreeBusyDialog = new EditorFreeBusy();
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
 }

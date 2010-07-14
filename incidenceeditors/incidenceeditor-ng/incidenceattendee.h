@@ -41,6 +41,7 @@ class MultiplyingLine;
 namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
+class EditorFreeBusy;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
@@ -80,7 +81,7 @@ private:
 #endif    
     AttendeeEditor *mAttendeeEditor;
     KCal::Incidence::ConstPtr mOrigIncidence;
-
+    EditorFreeBusy *mFreeBusyDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
 };
 

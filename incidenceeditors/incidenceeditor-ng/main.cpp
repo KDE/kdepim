@@ -29,6 +29,7 @@
 
 #include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
+#include "groupwareintegration.h"
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
@@ -88,6 +89,11 @@ int main( int argc, char **argv )
   }
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
+
+  if ( !GroupwareIntegration::isActive() ) {
+      GroupwareIntegration::activate();
+  }
+
 
   EventOrTodoDialog dialog;
   dialog.resize( QSize( 600, 500 ).expandedTo( dialog.minimumSizeHint() ) );
