@@ -66,8 +66,8 @@ private slots:
     void groupSearchResult( KJob *job );
     void slotSelectAddresses();
     void slotSolveConflictPressed();
-    void slotAttendeeCountChanged( int );
     void slotUpdateConflictLabel( int );
+    void slotAttendeeChanged( const KCal::Attendee &oldAttendee, const KCal::Attendee &newAttendee );
 private:
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees

@@ -92,8 +92,9 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
 //   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
 
   connect( mDateTime, SIGNAL( dateTimesChanged( const KDateTime&, const KDateTime& ) ), mConflictResolver , SLOT( setDateTimes( const KDateTime&, const KDateTime& ) ) );
-  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), this, SLOT( slotAttendeeCountChanged( int ) ) );
   connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
+
+  connect( mAttendeeEditor, SIGNAL( changed( KCal::Attendee, KCal::Attendee ) ), this, SLOT( slotAttendeeChanged( KCal::Attendee,KCal::Attendee ) ) );
   
   // set the default organizer 
 //   mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
@@ -291,22 +292,19 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
   
 }
 
-void IncidenceAttendee::slotAttendeeCountChanged( int count )
+void IncidenceAttendee::slotAttendeeChanged( const KCal::Attendee& oldAttendee, const KCal::Attendee& newAttendee )
 {
-  kDebug() << "count changed " << count;
-  AttendeeData::List attendees = mAttendeeEditor->attendees();
-  foreach( AttendeeData::Ptr attPtr, attendees ) {
-    kDebug() << "checking" << attPtr->email();
-    if( !mConflictResolver->containsAttendee( attPtr->attendee() ) )
-      mConflictResolver->insertAttendee( attPtr->attendee() );
-    else
-      kDebug() << "already there";
-  }
+   if( newAttendee.email().isEmpty() )
+      return;
+   if( mConflictResolver->containsAttendee( oldAttendee ) )
+      mConflictResolver->removeAttendee( oldAttendee );
+   if( !mConflictResolver->containsAttendee( newAttendee ) )
+      mConflictResolver->insertAttendee( newAttendee );
 }
+
 
 void IncidenceAttendee::slotUpdateConflictLabel( int count )
 {
-  kDebug() << "conflicts changed " << count;
     QString label( i18np( "%1 scheduling conflict", "%1 scheduling conflicts", count ) );
     mUi->mConflictsLabel->setText( label );
     if( count > 0 )
