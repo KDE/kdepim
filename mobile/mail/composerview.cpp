@@ -257,20 +257,20 @@ void ComposerView::addAttachment()
 
 void ComposerView::success()
 {
-    KNotification *notify = new KNotification("emailsent");
-    notify->setComponentData(KComponentData("kmail-mobile"));
-    notify->setText(i18nc("Notification when the email was sent",
-                          "<b>E-mail successfully sent</b>"));
-    notify->sendEvent();
+  KNotification *notify = new KNotification("emailsent");
+  notify->setComponentData(KComponentData("kmail-mobile"));
+  notify->setText(i18nc("Notification when the email was sent",
+                        "<b>E-mail successfully sent</b>"));
+  notify->sendEvent();
 }
 
 void ComposerView::failed( const QString &errorMessage )
 {
-    KNotification *notify = new KNotification("sendfailed");
-    notify->setComponentData(KComponentData("kmail-mobile"));
-    notify->setText(i18nc("Notification when there was an error while trying to send an email",
-                          "<b>Error while trying to send email</b><br> %1", errorMessage));
-    notify->sendEvent();
+  KNotification *notify = new KNotification("sendfailed");
+  notify->setComponentData(KComponentData("kmail-mobile"));
+  notify->setText(i18nc("Notification when there was an error while trying to send an email",
+                        "<b>Error while trying to send email</b><br> %1", errorMessage));
+  notify->sendEvent();
 }
 
 #include "composerview.moc"
