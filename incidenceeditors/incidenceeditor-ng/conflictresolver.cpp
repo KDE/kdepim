@@ -146,6 +146,7 @@ void ConflictResolver::slotInsertFreeBusy( KCal::FreeBusy* fb, const QString& em
             item->setFreeBusy( fb );
         }
     }
+    calculateConflicts();
 }
 
 void ConflictResolver::setDateTimes( const KDateTime& start, const KDateTime& end )
@@ -187,14 +188,15 @@ void ConflictResolver::manualReload()
     reload();
 }
 
-bool ConflictResolver::tryDate( KDateTime& tryFrom, KDateTime& tryTo )
+int ConflictResolver::tryDate( KDateTime& tryFrom, KDateTime& tryTo )
 {
+    int conflicts_count = 0;
     Q_FOREACH( FreeBusyItem * currentItem, mFreeBusyItems ) {
         if ( !tryDate( currentItem, tryFrom, tryTo ) ) {
-            return false;
+            ++conflicts_count;
         }
     }
-    return true;
+    return conflicts_count;
 }
 
 bool ConflictResolver::tryDate( FreeBusyItem* attendee, KDateTime& tryFrom, KDateTime& tryTo )
@@ -261,3 +263,11 @@ bool ConflictResolver::findFreeSlot( KDateTime &dtFrom, KDateTime &dtTo )
 
     return found;
 }
+
+void ConflictResolver::calculateConflicts()
+{
+    int count = tryDate( mDtStart, mDtEnd );
+    if( count > 0 )
+      emit conflictsDetected( count );
+}
+

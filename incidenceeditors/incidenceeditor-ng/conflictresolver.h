@@ -91,6 +91,12 @@ signals:
      **/
     void dateTimesChanged( const KDateTime & newStart, const KDateTime & newEnd );
 
+    /**
+     * Emitted when there are conflicts
+     * @param number the number of conflicts
+     */
+    void conflictsDetected( int number );
+
 public slots:
     /**
      * Set the incidence's start and end datetimes
@@ -122,13 +128,12 @@ private:
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) is free
-      for all participants. If yes, return true. If at least one
-      participant is found for which this slot is occupied, this method
-      returns false, and (tryFrom, tryTo) contain the next free slot for
+      for all participants. If yes, return true. The return value is the
+      number of conflicts that were detected, and (tryFrom, tryTo) contain the next free slot for
       that participant. In other words, the returned slot does not have to
       be free for everybody else.
     */
-    bool tryDate( KDateTime &tryFrom, KDateTime &tryTo );
+    int tryDate( KDateTime &tryFrom, KDateTime &tryTo );
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) is available
@@ -139,6 +144,7 @@ private:
     */
     bool tryDate( FreeBusyItem *attendee, KDateTime &tryFrom, KDateTime &tryTo );
 
+    void calculateConflicts();
     /**
      * Reload FB items
      * */
