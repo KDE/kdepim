@@ -6,7 +6,7 @@ Problems addressed
 * kolab/issue4445: Importing a events into an existing resource and no resource activated, 1000x error messages
 * kolab/issue4437: Wrong update mail (other attendees are removed) after double accepting of an event
 * kolab/issue4406: Change write to read rights of a shared calendar folder, can lead to a focus problem (rt#6167)
-* kolab/issue4343: Wish: global audio file for all reminder (rt#6133)
+* kolab/issue4343 (improved): Wish: global audio file for all reminder (rt#6133)
 
 
 Friday, July 1st 2010
