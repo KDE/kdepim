@@ -525,12 +525,8 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mGanttView, SIGNAL(intervalColorRectangleMoved(const QDateTime &,const QDateTime &)),
            this, SLOT(slotIntervalColorRectangleMoved(const QDateTime &,const QDateTime &)) );
 
-  connect( mLeftView, SIGNAL(itemSelectionChanged()),
-          this, SLOT(updateAttendeeInput()) );
   connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(showAttendeeStatusMenu()) );
-  connect( mGanttView, SIGNAL(lvMouseButtonClicked(int, KDGanttViewItem*, const QPoint&, int)),
-           this, SLOT(listViewClicked(int, KDGanttViewItem*)) );
 
   Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
   connect( m, SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)),
@@ -588,7 +584,6 @@ void EditorFreeBusy::insertAttendee( AttendeeData::Ptr attendee, bool readFBList
     mLeftView->topLevelItem( mLeftView->topLevelItemCount() - 1 )->setSelected( true );
   }
   updateStatusSummary();
-  // TODO-NGPORT emit updateAttendeeSummary( mLeftView->topLevelItemCount() );
 }
 
 void EditorFreeBusy::clearAttendees()
@@ -1020,8 +1015,6 @@ void EditorFreeBusy::removeAttendee()
   if( nextSelectedItem ) {
       mLeftView->topLevelItem( mFreeBusyItems.indexOf( nextSelectedItem ) )->setSelected( true );
   }
-  // TODO-NGPORT updateAttendeeInput();
-  // TODO-NGPORT emit updateAttendeeSummary( mFreeBusyItems.count() );
 }
 
 void EditorFreeBusy::clearSelection() const
@@ -1099,15 +1092,7 @@ void EditorFreeBusy::showAttendeeStatusMenu()
   }
 
   updateCurrentItem();
-  // TODO-NGPORT updateAttendeeInput();
 }
-
-// void EditorFreeBusy::listViewClicked( int button, KDGanttViewItem *item )
-// {
-//   if ( button == Qt::LeftButton && item == 0 ) {
-//     addNewAttendee();
-//   }
-// }
 
 void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
 {

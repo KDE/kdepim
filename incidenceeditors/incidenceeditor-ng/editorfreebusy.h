@@ -97,7 +97,6 @@ class EditorFreeBusy : public QDialog
     void slotIntervalColorRectangleMoved( const QDateTime &start, const QDateTime &end );
 
     void removeAttendee();
-//     void listViewClicked( int button, KDGanttViewItem *item );
 
   protected:
     void timerEvent( QTimerEvent * );
