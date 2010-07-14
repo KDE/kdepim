@@ -35,7 +35,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencerecurrence.cpp
   incidencesecrecy.cpp
 
-  groupwareintegration.cpp
   freebusyitem.cpp
   conflictresolver.cpp
 
@@ -53,6 +52,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
   ../templatemanagementdialog.cpp
   eventortododialog.cpp
+  groupwareintegration.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
