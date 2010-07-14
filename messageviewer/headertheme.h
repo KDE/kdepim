@@ -51,7 +51,6 @@ namespace Grantlee
 
 namespace MessageViewer {
 
-class HeaderStrategy;
 class NodeHelper;
 
 class MESSAGEVIEWER_EXPORT HeaderTheme {
