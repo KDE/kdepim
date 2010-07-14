@@ -168,6 +168,7 @@ void ConflictResolver::setDateTimes( const KDateTime& start, const KDateTime& en
 {
     mDtStart = start;
     mDtEnd = end;
+    calculateConflicts();
 }
 
 void ConflictResolver::autoReload()
