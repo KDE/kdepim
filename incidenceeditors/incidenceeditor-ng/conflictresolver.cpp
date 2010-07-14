@@ -29,6 +29,9 @@
 #include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
 
 #include <KCal/FreeBusy>
+#include <KDebug>
+
+
 using namespace IncidenceEditorsNG;
 
 ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QObject( parent ), mParentWidget( parentWidget )
@@ -38,12 +41,11 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QO
     // Groupware initializes the FreeBusyManager via a singleshot timer, so
     // the FreeBusyManager may not be initialized at this point. Queue up
     // a connection attempt.
+    mManagerConnected = false;
     Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
     if ( !m ) {
         QTimer::singleShot( 0, this, SLOT( setupManager() ) );
-        mManagerConnected = true;
     } else {
-        mManagerConnected = false;
         setupManager();
     }
 
