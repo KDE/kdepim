@@ -81,6 +81,8 @@ class EditorFreeBusy : public QDialog
 
     void editFreeBusyUrl( const QModelIndex& index );
 
+    void slotOrganizerChanged( const QString &newOrganizer );
+
   protected slots:
     void slotUpdateGanttView( const QDateTime &, const QDateTime & );
     void slotScaleChanged( int );
@@ -109,7 +111,6 @@ class EditorFreeBusy : public QDialog
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
   private slots:
-    void slotOrganizerChanged( const QString &newOrganizer );
     void splitterMoved();
 
   private:

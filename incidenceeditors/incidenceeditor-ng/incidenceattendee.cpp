@@ -86,6 +86,8 @@ IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflict()) );
+  connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
+  mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
 }
 
 void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
