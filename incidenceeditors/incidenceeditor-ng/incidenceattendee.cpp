@@ -30,7 +30,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
 #include "incidencedatetime.h"
-#include "editorfreebusy.h"
+#include "conflictresolver.h"
 
 #include <akonadi/contact/emailaddressselectiondialog.h>
 
@@ -57,9 +57,9 @@
 using namespace IncidenceEditorsNG;
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceAttendee::IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoMore* ui )
+IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore* ui )
 #else
-IncidenceAttendee::IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop* ui )
+IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop* ui )
 #endif
   : mUi( ui )
   , mAttendeeEditor( new AttendeeEditor )
@@ -85,16 +85,18 @@ IncidenceAttendee::IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTo
   mUi->mSolveButton->setDisabled( false );
   mUi->mOrganizerLabel->setVisible( false );
 
-  mFreeBusyDialog = new EditorFreeBusy();
+  mConflictResolver = new ConflictResolver( parent, parent );
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflict()) );
-  connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
+//   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
 
-  connect( mDateTime, SIGNAL( dateTimesChanged( const KDateTime&, const KDateTime& ) ), mFreeBusyDialog, SLOT( setDateTimes( const KDateTime&, const KDateTime& ) ) );
+  connect( mDateTime, SIGNAL( dateTimesChanged( const KDateTime&, const KDateTime& ) ), mConflictResolver , SLOT( setDateTimes( const KDateTime&, const KDateTime& ) ) );
+  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), this, SLOT( slotAttendeeCountChanged( int ) ) );
+  connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
   
   // set the default organizer 
-  mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
+//   mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
 }
 
 void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
@@ -284,14 +286,30 @@ void IncidenceAttendee::slotSelectAddresses()
   }
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflict()
+void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 {
-  //TODO-NGPORT update the freebusy object in the background, and change conflict label upon conflict.
+  
+}
+
+void IncidenceAttendee::slotAttendeeCountChanged( int count )
+{
+  kDebug() << "count changed " << count;
   AttendeeData::List attendees = mAttendeeEditor->attendees();
-  foreach( AttendeeData::Ptr attPtr, attendees ) {  
-    mFreeBusyDialog->insertAttendee( attPtr );
+  foreach( AttendeeData::Ptr attPtr, attendees ) {
+    kDebug() << "checking" << attPtr->email();
+    if( !mConflictResolver->containsAttendee( attPtr ) )
+      mConflictResolver->insertAttendee( attPtr );
+    else
+      kDebug() << "already there";
   }
-  mFreeBusyDialog->exec();
+}
+
+void IncidenceAttendee::slotUpdateConflictLabel( int count )
+{
+    QString label( i18np( "%1 scheduling conflict", "%1 scheduling conflicts", count ) );
+    mUi->mCategoryLabel->setText( label );
+    if( count > 0 )
+      mUi->mSolveButton->setEnabled( true );
 }
 
 

@@ -41,7 +41,7 @@ class MultiplyingLine;
 namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
-class EditorFreeBusy;
+class ConflictResolver;
 class IncidenceDateTime;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
@@ -49,9 +49,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
   Q_OBJECT
 public:
 #ifdef KDEPIM_MOBILE_UI  
-    IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
 #else
-    IncidenceAttendee( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
     virtual void load( KCal::Incidence::ConstPtr incidence );
@@ -65,7 +65,9 @@ private slots:
     void expandResult( KJob *job );
     void groupSearchResult( KJob *job );
     void slotSelectAddresses();
-    void slotSolveConflict();
+    void slotSolveConflictPressed();
+    void slotAttendeeCountChanged( int );
+    void slotUpdateConflictLabel( int );
 private:
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
@@ -82,7 +84,7 @@ private:
 #endif    
     AttendeeEditor *mAttendeeEditor;
     KCal::Incidence::ConstPtr mOrigIncidence;
-    EditorFreeBusy *mFreeBusyDialog;
+    ConflictResolver *mConflictResolver;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
     IncidenceDateTime *mDateTime;
 };

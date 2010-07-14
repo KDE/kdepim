@@ -150,7 +150,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
-  IncidenceAttendee *ieAttendee= new IncidenceAttendee( mIeDateTime, mUi );
+  IncidenceAttendee *ieAttendee= new IncidenceAttendee( qq, mIeDateTime, mUi );
   mEditor->combine( ieAttendee );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
