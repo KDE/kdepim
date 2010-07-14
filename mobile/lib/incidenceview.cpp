@@ -127,7 +127,7 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAttendee( editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceAttendee( 0, mEditorDateTime, editorWidget->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
