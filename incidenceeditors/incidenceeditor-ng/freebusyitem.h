@@ -36,6 +36,9 @@ namespace IncidenceEditorsNG {
 class FreeBusyItem
 {
   public:
+    /**
+    * @param parentWidget is passed to Akonadi when fetching free/busy data.
+    */
     FreeBusyItem( const KCal::Attendee &attendee , QWidget *parentWidget );
     ~FreeBusyItem() {}
 

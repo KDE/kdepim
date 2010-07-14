@@ -55,6 +55,9 @@ class ConflictResolver : public QObject
 {
     Q_OBJECT
 public:
+   /**
+    * @param parentWidget is passed to Akonadi when fetching free/busy data.
+    */
     ConflictResolver( QWidget *parentWidget, QObject* parent = 0 );
 
     /**
