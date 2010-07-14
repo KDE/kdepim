@@ -167,29 +167,6 @@ class FreeBusyItem
 
     void setFreeBusyPeriods( KCal::FreeBusy *fb );
 
-    // TODO this can most likely be removed alltogether. not virtual in base class and not called here
-    QString key( int column, bool ) const
-    {
-#if 0
-      QMap<int,QString>::ConstIterator it = mKeyMap.find( column );
-      if ( it == mKeyMap.end() ) {
-        return listViewText( column );
-      } else {
-        return *it;
-      }
-#else
-      kDebug() << "Disabled code, port to KDGantt2";
-      return QString();
-#endif
-      
-    }
-
-    // TODO this can most likely be removed alltogether. not virtual in base class and not called here
-    void setSortKey( int column, const QString &key )
-    {
-      mKeyMap.insert( column, key );
-    }
-
     QString email() const { return mAttendee->email(); }
     void setUpdateTimerID( int id ) { mTimerID = id; }
     int updateTimerID() const { return mTimerID; }
@@ -208,9 +185,6 @@ class FreeBusyItem
   private:
     AttendeeData::Ptr mAttendee;
     KCal::FreeBusy *mFreeBusy;
-
-    // TODO see setSortKey
-    QMap<int,QString> mKeyMap;
 
     // This is used for the update timer
     int mTimerID;
@@ -304,32 +278,8 @@ void FreeBusyItem::setFreeBusyPeriods( KCal::FreeBusy *fb )
     mModel->removeRow( index );
     mModel->insertRow( index, newItems );
     setFreeBusy( fb );
-#if 0
-    setShowNoInformation( false );
-    setShowNoInformationBeforeAndAfter( true );
-#else
- kDebug() << "Disabled code, port to KDGantt2";
-#endif
   } else {
-    // No free/busy information
-    //debug only start
-    //   int ii ;
-    //       QDateTime cur = QDateTime::currentDateTime();
-    //       for( ii = 0; ii < 10 ;++ii ) {
-    //           KDGanttViewTaskItem* newSubItem = new KDGanttViewTaskItem( this );
-    //           cur = cur.addSecs( 7200 );
-    //           newSubItem->setStartTime( cur );
-    //           cur = cur.addSecs( 7200 );
-    //           newSubItem->setEndTime( cur );
-    //           newSubItem->setColors( Qt::red, Qt::red, Qt::red );
-    //       }
-    //debug only end
     setFreeBusy( 0 );
-#if 0
-    setShowNoInformation( true );
-#else
- kDebug() << "Disabled code, port to KDGantt2";
-#endif
   }
 
   // We are no longer downloading
@@ -346,8 +296,6 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( spacing );
-
-  // TODO-NGPORT initOrganizerWidgets( this, topLayout );
 
   // Label for status summary information
   // Uses the tooltip palette to highlight it
@@ -475,16 +423,6 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   
   topLayout->addWidget( splitter );
   topLayout->setStretchFactor( splitter, 100 );
-#if 0  
-  // Remove the predefined "Task Name" column
-  mGanttView->removeColumn( 0 );
-  mGanttView->addColumn( i18nc( "@title:column attendee name", "Attendee" ) );
-  mGanttView->setHeaderVisible( true );
-  mGanttView->setScale( KDGanttView::Hour );
-  mGanttView->setShowHeaderPopupMenu( false, false, false, false, false, false );
-  #else
- kDebug() << "Disabled code, port to KDGantt2";
-#endif
 
   // Initially, show 15 days back and forth
   // set start to even hours, i.e. to 12:AM 0 Min 0 Sec
@@ -493,22 +431,6 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   QDateTime horizonEnd = QDateTime::currentDateTime().addDays( 15 );
   mGanttGrid->setStartDateTime( horizonStart );
   
-#if 0
-  mGanttView->setHorizonEnd( horizonEnd );
-  mGanttView->setCalendarMode( true );
-  //mGanttView->setDisplaySubitemsAsGroup( true );
-  mGanttView->setShowLegendButton( false );
-  // Initially, center to current date
-  mGanttView->centerTimelineAfterShow( QDateTime::currentDateTime() );
-  if ( KGlobal::locale()->use12Clock() ) {
-    mGanttView->setHourFormat( KDGanttView::Hour_12 );
-  } else {
-    mGanttView->setHourFormat( KDGanttView::Hour_24_FourDigit );
-  }
-#else
- kDebug() << "Disabled code, port to KDGantt2";
-#endif
-
 #if 0
   // mEventRectangle is the colored rectangle representing the event being modified
   mEventRectangle = new KDIntervalColorRectangle( mGanttView );
@@ -540,14 +462,6 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
 
   connect( &mReloadTimer, SIGNAL(timeout()), SLOT(autoReload()) );
   mReloadTimer.setSingleShot( true );
-
-  // TODO-NGPORT initEditWidgets( this, topLayout );
- // TODO-NGPORT  connect( mRemoveButton, SIGNAL(clicked()),
- // TODO-NGPORT           SLOT(removeAttendee()) );
-
-  // TODO-NGPORT slotOrganizerChanged( mOrganizerCombo->currentText() );
-  // TODO-NGPORT connect( mOrganizerCombo, SIGNAL(activated(const QString &)),
-  // TODO-NGPORT          this, SLOT(slotOrganizerChanged(const QString &)) );
 
 #if 0
   //suppress the buggy consequences of clicks on the time header widget
