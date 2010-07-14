@@ -528,9 +528,15 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(showAttendeeStatusMenu()) );
 
+  Q_ASSERT( Akonadi::Groupware::instance() );
+  // Groupware initializes the FreeBusyManager via a singleshot timer, so
+  // the FreeBusyManager may not be initialized at this point. Queue up
+  // a connection attempt.
   Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-  connect( m, SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)),
-           SLOT(slotInsertFreeBusy(KCal::FreeBusy *,const QString &)) );
+  if( !m )
+      QTimer::singleShot( 0, this, SLOT( setupManager() ) );
+  else
+      setupManager();
 
   connect( &mReloadTimer, SIGNAL(timeout()), SLOT(autoReload()) );
   mReloadTimer.setSingleShot( true );
@@ -553,6 +559,26 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
 
 EditorFreeBusy::~EditorFreeBusy()
 {
+}
+
+void EditorFreeBusy::setupManager()
+{
+  static int attempt_count = 1;
+  if( attempt_count > 5 ) { // 5 chosen as an arbitrary limit
+    kWarning() << "Free Busy Editor cannot connect to Akonadi's FreeBusyManager. Number of connection attempts exceeded";
+    return;
+  } else
+    kDebug() << "Setting up freebusy manager. attempt: " << attempt_count;
+  Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
+  if( !m ) {
+      ++attempt_count;
+      QTimer::singleShot( 1000, this, SLOT(setupManager()) ); // min 1 second timer
+      kDebug() << "FreeBusyManager not ready yet, will try again.";
+  } else {
+      connect( m, SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)),
+           SLOT(slotInsertFreeBusy(KCal::FreeBusy *,const QString &)) );
+      kDebug() << "FreeBusyManager connection succeeded";
+  }
 }
 
 void EditorFreeBusy::removeAttendee( AttendeeData::Ptr attendee )
