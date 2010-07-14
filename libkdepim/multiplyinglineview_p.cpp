@@ -160,6 +160,7 @@ void MultiplyingLineView::slotDeleteLine()
     return;
 
   MultiplyingLine *line = mCurDelLine;
+  line->aboutToBeDeleted();
   int pos = mLines.indexOf( line );
 
   if ( mCurDelLine->isActive() ) {

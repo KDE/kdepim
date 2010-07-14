@@ -170,6 +170,14 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
       */
     virtual void moveCompletionPopup() = 0;
 
+    /**
+     * Re implement this method if you need to do something
+     * before a line is deleted.
+     *
+     * Default implementation does nothing.
+     */
+    virtual void aboutToBeDeleted();
+
   signals:
     /**
       Emitted when the return/enter key is pressed
