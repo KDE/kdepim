@@ -1144,7 +1144,7 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
 
     if ( !newOrganizerAttendee ) {
       AttendeeData::Ptr a( new AttendeeData( name, email, true ) );
-      insertAttendee( a, false );
+      insertAttendee( a, true );
      // TODO-NGPORT mNewAttendees.append( a );
       // TODO-NGPORT updateAttendee();
     }
