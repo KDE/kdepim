@@ -77,16 +77,16 @@ void ConflictResolver::setupManager()
     }
 }
 
-void ConflictResolver::insertAttendee( AttendeeData::Ptr attendee )
+void ConflictResolver::insertAttendee( const KCal::Attendee &attendee )
 {
-    kDebug() << "inserted attendee" << attendee->email();
+//     kDebug() << "inserted attendee" << attendee->email();
     FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
     mFreeBusyItems.append( item );
     if( mManagerConnected )
         updateFreeBusyData( item );
 }
 
-void ConflictResolver::removeAttendee( AttendeeData::Ptr attendee )
+void ConflictResolver::removeAttendee( const KCal::Attendee &attendee )
 {
     FreeBusyItem *anItem = 0;
     for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {
@@ -108,7 +108,7 @@ void ConflictResolver::clearAttendees()
     mFreeBusyItems.clear();
 }
 
-bool ConflictResolver::containsAttendee( AttendeeData::Ptr attendee )
+bool ConflictResolver::containsAttendee( const KCal::Attendee &attendee )
 {
     FreeBusyItem *anItem = 0;
     for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {

@@ -35,6 +35,7 @@
 namespace KCal
 {
 class FreeBusy;
+class Attendee;
 }
 
 namespace IncidenceEditorsNG
@@ -61,13 +62,13 @@ public:
      * The attendees free busy info will be fetched
      * and integrated into the resolver.
      */
-    void insertAttendee( AttendeeData::Ptr );
+    void insertAttendee( const KCal::Attendee &attendee );
     /**
      * Removes an attendee
      * The attendee will no longer be considered when
      * resolving conflicts
      * */
-    void removeAttendee( AttendeeData::Ptr );
+    void removeAttendee( const KCal::Attendee &attendee );
     /**
      * Clear all attendees
      **/
@@ -76,7 +77,7 @@ public:
     /**
      * Returns whether the resolver contains the attendee
      */
-    bool containsAttendee( AttendeeData::Ptr attendee );
+    bool containsAttendee( const KCal::Attendee &attendee );
 
     /**
      * Queues a reload of free/busy data.

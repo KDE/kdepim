@@ -297,8 +297,8 @@ void IncidenceAttendee::slotAttendeeCountChanged( int count )
   AttendeeData::List attendees = mAttendeeEditor->attendees();
   foreach( AttendeeData::Ptr attPtr, attendees ) {
     kDebug() << "checking" << attPtr->email();
-    if( !mConflictResolver->containsAttendee( attPtr ) )
-      mConflictResolver->insertAttendee( attPtr );
+    if( !mConflictResolver->containsAttendee( attPtr->attendee() ) )
+      mConflictResolver->insertAttendee( attPtr->attendee() );
     else
       kDebug() << "already there";
   }

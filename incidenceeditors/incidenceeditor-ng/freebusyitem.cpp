@@ -30,16 +30,16 @@
 
 using namespace IncidenceEditorsNG;
 
-FreeBusyItem::FreeBusyItem( AttendeeData::Ptr attendee, QWidget *parentWidget ) :
+FreeBusyItem::FreeBusyItem( const KCal::Attendee &attendee , QWidget *parentWidget ) :
         mAttendee( attendee ), mTimerID( 0 ),
         mIsDownloading( false ), mParentWidget( parentWidget )
 {
-    Q_ASSERT( attendee );
+//     Q_ASSERT( attendee );
     setFreeBusy( 0 );
 
 }
 
-AttendeeData::Ptr FreeBusyItem::attendee() const
+KCal::Attendee FreeBusyItem::attendee() const
 {
     return mAttendee;
 }
@@ -58,7 +58,7 @@ KCal::FreeBusy* FreeBusyItem::freeBusy() const
 
 QString FreeBusyItem::email() const
 {
-    return mAttendee->email();
+    return mAttendee.email();
 }
 
 void FreeBusyItem::setUpdateTimerID(int id)
@@ -75,7 +75,7 @@ void FreeBusyItem::startDownload(bool forceDownload)
 {
     mIsDownloading = true;
     Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
+    if ( !m->retrieveFreeBusy( attendee().email(), forceDownload,
                                mParentWidget ) ) {
         mIsDownloading = false;
     }

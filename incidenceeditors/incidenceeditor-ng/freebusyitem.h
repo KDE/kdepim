@@ -36,10 +36,10 @@ namespace IncidenceEditorsNG {
 class FreeBusyItem
 {
   public:
-    FreeBusyItem( AttendeeData::Ptr attendee, QWidget *parentWidget );
+    FreeBusyItem( const KCal::Attendee &attendee , QWidget *parentWidget );
     ~FreeBusyItem() {}
 
-    AttendeeData::Ptr attendee() const;
+    KCal::Attendee attendee() const;
     void setFreeBusy( KCal::FreeBusy *fb );
     KCal::FreeBusy *freeBusy() const;
 
@@ -52,7 +52,7 @@ class FreeBusyItem
     bool isDownloading() const;
 
   private:
-    AttendeeData::Ptr mAttendee;
+    KCal::Attendee mAttendee;
     KCal::FreeBusy *mFreeBusy;
 
     // This is used for the update timer
