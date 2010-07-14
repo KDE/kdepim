@@ -1,14 +1,25 @@
 [Global]
 IconName=mail-mobile
 Comment=KDE e-mail client
+Comment[x-test]=xxKDE e-mail clientxx
 Name=KDE Mail
+Name[pt]=Correio do KDE
+Name[pt_BR]=E-mail do KDE
+Name[sv]=KDE:s e-postprogram
+Name[uk]=Пошта KDE
+Name[x-test]=xxKDE Mailxx
+Name[zh_TW]=KDE 郵件軟體
 
 [Event/emailsent]
 Name=E-mail successfully sent
+Name[x-test]=xxE-mail successfully sentxx
 Comment=Your e-mail was sent with success!
+Comment[x-test]=xxYour e-mail was sent with success!xx
 Action=Popup
 
 [Event/sendfailed]
 Name=Error while sending email
+Name[x-test]=xxError while sending emailxx
 Comment=There was an error while trying to send the e-mail
+Comment[x-test]=xxThere was an error while trying to send the e-mailxx
 Action=Popup

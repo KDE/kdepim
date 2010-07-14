@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Calendar
+Name[nds]=KDE-Kalenner
 Name[pt]=Calendário do KDE
 Name[pt_BR]=Calendário do KDE
 Name[sv]=KDE:s kalender
