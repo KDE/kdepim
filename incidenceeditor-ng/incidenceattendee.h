@@ -23,6 +23,7 @@
 
 #include "incidenceeditor-ng.h"
 
+class KJob;
 
 namespace Ui {
 class EventOrTodoDesktop;
@@ -31,6 +32,10 @@ class EventOrTodoMore;
 
 namespace KABC {
   class Addressee;
+}
+
+namespace KPIM {
+class MultiplyingLine;
 }
 
 namespace IncidenceEditorsNG {
@@ -54,7 +59,11 @@ signals:
     void attendeeCountChanged( int );
 
 private slots:
+    void checkIfExpansionIsNeeded( KPIM::MultiplyingLine* );
+    void expandResult( KJob *job );
+    void groupSearchResult( KJob *job );
     void slotSelectAddresses();
+
 private:
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
@@ -71,6 +80,8 @@ private:
 #endif    
     AttendeeEditor *mAttendeeEditor;
     KCal::Incidence::ConstPtr mOrigIncidence;
+
+    QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
 };
 
 }

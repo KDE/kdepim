@@ -25,6 +25,22 @@
 
 #include "incidenceattendee.h"
 
+#include <QtCore/QWeakPointer>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QTreeView>
+
+#include <akonadi/contact/emailaddressselectiondialog.h>
+
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactGroupSearchJob>
+#include <KABC/Address>
+#include <KCal/Event>
+#include <KComboBox>
+#include <KDebug>
+#include <KMessageBox>
+#include <KPIMUtils/Email>
+
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
@@ -32,27 +48,15 @@
 #endif
 
 #include "attendeeeditor.h"
+#include "attendeeline.h"
 #include "../editorconfig.h"
 
-#include <akonadi/contact/emailaddressselectiondialog.h>
-#include <kabc/addressee.h>
-
-#include <KCal/Event>
-
-#include <KComboBox>
-#include <KDebug>
-#include <KMessageBox>
-#include <KPIMUtils/Email>
-
-#include <QGridLayout>
-#include <QLabel>
-#include <QTreeView>
-#include <QScopedPointer>
+using namespace IncidenceEditorsNG;
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
+IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
 #else
-IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
+IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
 #endif
   : mUi( ui )
   , mAttendeeEditor( new AttendeeEditor )
@@ -66,7 +70,10 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
-  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ), this, SIGNAL( attendeeCountChanged( int ) ) );
+  connect( mAttendeeEditor, SIGNAL( countChanged( int ) ),
+           SIGNAL( attendeeCountChanged( int ) ) );
+  connect( mAttendeeEditor, SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ),
+           SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
 
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
@@ -77,7 +84,7 @@ IncidenceEditorsNG::IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
 {
   mOrigIncidence = incidence;
   const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
@@ -115,7 +122,7 @@ void IncidenceEditorsNG::IncidenceAttendee::load( KCal::Incidence::ConstPtr inci
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence )
+void IncidenceAttendee::save( KCal::Incidence::Ptr incidence )
 {
   incidence->clearAttendees();
 
@@ -147,7 +154,7 @@ void IncidenceEditorsNG::IncidenceAttendee::save( KCal::Incidence::Ptr incidence
   incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
 }
 
-bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
+bool IncidenceAttendee::isDirty() const
 {
   //TODO check free busy ?
   if( !mOrigIncidence  )
@@ -167,7 +174,7 @@ bool IncidenceEditorsNG::IncidenceAttendee::isDirty() const
   return false;
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
+void IncidenceAttendee::fillOrganizerCombo()
 {
   mUi->mOrganizerCombo->clear();
   const QStringList lst = IncidenceEditors::EditorConfig::instance()->fullEmails();
@@ -180,25 +187,91 @@ void IncidenceEditorsNG::IncidenceAttendee::fillOrganizerCombo()
   mUi->mOrganizerCombo->addItems( uniqueList );
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::slotSelectAddresses()
+void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
-  QScopedPointer<Akonadi::EmailAddressSelectionDialog> dia ( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
-  dia->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
-  if ( dia->exec() == QDialog::Accepted ) {
-    foreach ( const Akonadi::EmailAddressSelection &selection, dia->selectedAddresses() ) {
-      KABC::Addressee contact;
-      contact.setName( selection.name() );
-      contact.insertEmail( selection.email() );
+  AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
+  if ( !data )
+    return;
 
-      if ( selection.item().hasPayload<KABC::Addressee>() )
-        contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
 
-      insertAttendeeFromAddressee( contact );
+  // For some reason, when pressing enter (in stead of tab) the editingFinished()
+  // signal is emitted twice. Check if there is already a job running to prevent
+  // that we end up with the group members twice.
+  if ( mMightBeGroupLines.key( QWeakPointer<KPIM::MultiplyingLine>( line ) ) != 0 )
+    return;
+
+  Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
+  job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->email() );
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( groupSearchResult( KJob* ) ) );
+
+  mMightBeGroupLines.insert( job, QWeakPointer<KPIM::MultiplyingLine>( line ) );
+}
+
+void IncidenceAttendee::expandResult( KJob *job )
+{
+  Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+  Q_ASSERT( expandJob );
+
+  const KABC::Addressee::List groupMembers = expandJob->contacts();
+  foreach ( const KABC::Addressee &member, groupMembers )
+    insertAttendeeFromAddressee( member );
+}
+
+void IncidenceAttendee::groupSearchResult( KJob *job )
+{
+  Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+  Q_ASSERT( searchJob );
+
+  const KABC::ContactGroup::List contactGroups = searchJob->contactGroups();
+  if ( contactGroups.isEmpty() )
+    return; // Nothing todo, probably a normal email address was entered
+
+  // TODO: Give the user the possibility to choose a group when there is more than one?!
+  KABC::ContactGroup group = contactGroups.first();
+
+  KPIM::MultiplyingLine *line = mMightBeGroupLines.take( job ).data();
+  if ( line )
+    line->slotPropagateDeletion();
+
+  Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
+  connect( expandJob, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+  expandJob->start();
+}
+
+void IncidenceAttendee::slotSelectAddresses()
+{
+  QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog( new Akonadi::EmailAddressSelectionDialog( mAttendeeEditor ) );
+  dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+
+  if ( dialog.data()->exec() == QDialog::Accepted ) {
+
+    Akonadi::EmailAddressSelectionDialog *dialogPtr = dialog.data();
+    if ( dialogPtr ) {
+      const Akonadi::EmailAddressSelection::List list = dialogPtr->selectedAddresses();
+      foreach ( const Akonadi::EmailAddressSelection &selection, list ) {
+
+        if ( selection.item().hasPayload<KABC::ContactGroup>() ) {
+          Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( selection.item().payload<KABC::ContactGroup>(), this );
+          connect( job, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+          job->start();
+        } else {
+          KABC::Addressee contact;
+          contact.setName( selection.name() );
+          contact.insertEmail( selection.email() );
+
+          if ( selection.item().hasPayload<KABC::Addressee>() )
+            contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
+
+          insertAttendeeFromAddressee( contact );
+        }
+      }
+    } else {
+      kDebug() << "dialog was already deleted";
     }
   }
 }
 
-void IncidenceEditorsNG::IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
+void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
 {
   const bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( a.preferredEmail() );
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&

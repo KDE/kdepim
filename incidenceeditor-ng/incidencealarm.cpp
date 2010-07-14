@@ -21,6 +21,7 @@
 #include "incidencealarm.h"
 
 #include <KCal/Todo>
+#include <KDebug>
 
 #include "alarmdialog.h"
 #include "alarmpresets.h"
@@ -140,12 +141,18 @@ void IncidenceAlarm::editCurrentAlarm()
 
   KCal::Alarm *currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
-  QScopedPointer<AlarmDialog> dialog( new AlarmDialog );
-  dialog->load( currentAlarm );
+  QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
+  dialog.data()->load( currentAlarm );
 
-  if ( dialog->exec() == KDialog::Accepted ) {
-    dialog->save( currentAlarm );
-    updateAlarmList();
+  if ( dialog.data()->exec() == KDialog::Accepted ) {
+    AlarmDialog *dialogPtr = dialog.data();
+
+    if ( dialogPtr ) {
+      dialogPtr->save( currentAlarm );
+      updateAlarmList();
+    } else {
+      kDebug() << "dialog was already deleted";
+    }
   }
 
 #endif
@@ -155,21 +162,27 @@ void IncidenceAlarm::newAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
 
-  QScopedPointer<AlarmDialog> dialog( new AlarmDialog );
-  dialog->setIsTodoReminder( mIsTodo );
-  dialog->setOffset( 15 );
-  dialog->setUnit( AlarmDialog::Minutes );
+  QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
+  dialog.data()->setIsTodoReminder( mIsTodo );
+  dialog.data()->setOffset( 15 );
+  dialog.data()->setUnit( AlarmDialog::Minutes );
   if ( mIsTodo )
-    dialog->setWhen( AlarmDialog::BeforeEnd );
+    dialog.data()->setWhen( AlarmDialog::BeforeEnd );
   else
-    dialog->setWhen( AlarmDialog::BeforeStart );
+    dialog.data()->setWhen( AlarmDialog::BeforeStart );
 
-  if ( dialog->exec() == KDialog::Accepted ) {
-    KCal::Alarm *newAlarm = new KCal::Alarm( 0 );
-    dialog->save( newAlarm );
-    newAlarm->setEnabled( true );
-    mAlarms.append( newAlarm );
-    updateAlarmList();
+  if ( dialog.data()->exec() == KDialog::Accepted ) {
+    AlarmDialog *dialogPtr = dialog.data();
+    if ( dialogPtr ) {
+      KCal::Alarm *newAlarm = new KCal::Alarm( 0 );
+      dialogPtr->save( newAlarm );
+      newAlarm->setEnabled( true );
+      mAlarms.append( newAlarm );
+      updateAlarmList();
+      checkDirtyStatus();
+    } else {
+      kDebug() << "dialog already deleted";
+    }
   }
 
 #endif
@@ -272,9 +285,10 @@ QString IncidenceAlarm::stringForAlarm( KCal::Alarm *alarm )
   }
 
   QString offsetUnit = i18nc( "The alarm is set to X minutes before/after the event", "minutes" );
-  const int offset = alarm->startOffset().asSeconds() / 60; // make minutes
-  int useoffset = offset;
+  const int offset = alarm->hasStartOffset() ? alarm->startOffset().asSeconds() / 60 :
+                     alarm->endOffset().asSeconds() / 60; // make minutes
 
+  int useoffset = offset;
   if ( offset % ( 24 * 60 ) == 0 && offset > 0 ) { // divides evenly into days?
     useoffset =  offset / 60 / 24;
     offsetUnit = i18nc( "The alarm is set to X days before/after the event", "days" );
@@ -288,17 +302,29 @@ QString IncidenceAlarm::stringForAlarm( KCal::Alarm *alarm )
     repeatStr = i18nc( "The alarm is configured to repeat after snooze","(Repeats)");
 
   if ( alarm->enabled() ) {
-    if ( useoffset > 0 ) {
+    if ( useoffset > 0 && alarm->hasStartOffset() ) {
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 after the task started %4", action, useoffset, offsetUnit, repeatStr );
       } else {
         return i18n( "%1 %2 %3 after the event started %4", action, useoffset, offsetUnit, repeatStr );
       }
-    } else if ( useoffset < 0 ) {
+    } else if ( useoffset < 0 && alarm->hasStartOffset() ) {
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 before the task starts %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
       } else {
         return i18n( "%1 %2 %3 before the event starts %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
+      }
+    } else if ( useoffset > 0 && alarm->hasEndOffset() ) {
+      if ( mIsTodo ) {
+        return i18n( "%1 %2 %3 after the task is due %4", action, useoffset, offsetUnit, repeatStr );
+      } else {
+        return i18n( "%1 %2 %3 after the event ended %4", action, useoffset, offsetUnit, repeatStr );
+      }
+    } else if ( useoffset < 0 && alarm->hasEndOffset() ) {
+      if ( mIsTodo ) {
+        return i18n( "%1 %2 %3 before the task is due %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
+      } else {
+        return i18n( "%1 %2 %3 before the event ended %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
     }
   } else {
@@ -315,20 +341,40 @@ QString IncidenceAlarm::stringForAlarm( KCal::Alarm *alarm )
       } else {
         return i18n( "%1 %2 %3 before the event starts %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
+    } else if ( useoffset > 0 && alarm->hasEndOffset() ) {
+      if ( mIsTodo ) {
+        return i18n( "%1 %2 %3 after the task is due %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
+      } else {
+        return i18n( "%1 %2 %3 after the event ended %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
+      }
+    } else if ( useoffset < 0 && alarm->hasEndOffset() ) {
+      if ( mIsTodo ) {
+        return i18n( "%1 %2 %3 before the task is due %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
+      } else {
+        return i18n( "%1 %2 %3 before the event ended %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
+      }
     }
   }
 
   // useoffset == 0
   if ( alarm->enabled() )
-    if ( mIsTodo ) {
+    if ( mIsTodo && alarm->hasStartOffset() ) {
       return i18n( "%1 when the task starts", action );
-    } else {
+    } else if ( alarm->hasStartOffset() ) {
       return i18n( "%1 when the event starts", action );
+    } else if ( mIsTodo && alarm->hasEndOffset() ) {
+      return i18n( "%1 when the task is due", action );
+    } else {
+      return i18n( "%1 when the event ends", action );
     }
   else
-    if ( mIsTodo ) {
+    if ( mIsTodo && alarm->hasStartOffset() ) {
       return i18n( "%1 when the task starts (Disabled)", action );
-    } else {
+    } else if ( alarm->hasStartOffset() ) {
       return i18n( "%1 when the event starts (Disabled)", action );
+    } else if ( mIsTodo && alarm->hasEndOffset() ) {
+      return i18n( "%1 when the task is due (Disabled)", action );
+    } else {
+      return i18n( "%1 when the event ends (Disabled)", action );
     }
 }

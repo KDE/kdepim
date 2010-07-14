@@ -177,7 +177,8 @@ class FreeBusyItem
         return *it;
       }
 #else
- kDebug() << "Disabled code, port to KDGantt2";
+      kDebug() << "Disabled code, port to KDGantt2";
+      return QString();
 #endif
       
     }

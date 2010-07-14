@@ -198,6 +198,8 @@ QStringList availablePresets( AlarmPresets::When when )
     if ( sBeforeEndPresetNames.isEmpty() )
       initPresets( when );
     return sBeforeEndPresetNames;
+  default:
+    return QStringList();
   }
 }
 
@@ -223,6 +225,8 @@ Alarm *preset( When when, const QString &name )
       Alarm *alarm = new Alarm( *sBeforeEndPresets.at( sBeforeEndPresetNames.indexOf( name ) ) );
       return alarm;
     }
+  default:
+    return 0;
   };
 }
 

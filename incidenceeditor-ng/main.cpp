@@ -89,11 +89,10 @@ int main( int argc, char **argv )
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
-//  EventOrTodoDialog *dialog = new EventOrTodoDialog;
-  QScopedPointer<EventOrTodoDialog> dialog( new EventOrTodoDialog );
-  dialog->resize( QSize( 600, 500 ).expandedTo( dialog->minimumSizeHint() ) );
-  dialog->load( item );
-  dialog->show();
+  EventOrTodoDialog dialog;
+  dialog.resize( QSize( 600, 500 ).expandedTo( dialog.minimumSizeHint() ) );
+  dialog.load( item );
+  dialog.show();
 
   return app.exec();
 }

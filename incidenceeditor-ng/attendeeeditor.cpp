@@ -40,7 +40,9 @@ void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine* line )
   AttendeeLine* att = qobject_cast<AttendeeLine*>( line );
   if( !att )
     return;
+
   connect( att, SIGNAL( changed() ), SLOT( slotCalculateTotal() ) );
+  connect( att, SIGNAL( editingFinished( KPIM::MultiplyingLine * ) ), SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ) );
 }
 
 void AttendeeEditor::slotLineDeleted( int /*pos*/ )
