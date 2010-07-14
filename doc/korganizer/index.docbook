@@ -1694,7 +1694,7 @@ and <guibutton>Cancel</guibutton>.</para>
 <sect2 id="entering-data-events-attendees">
 <title><guilabel>Attendees</guilabel> Tab</title>
 
-<para>Chose in this tab the people you want to invite to your event.</para>
+<para>Choose in this tab the people you want to invite to your event.</para>
 
 <screenshot id="screenshot-event-attendees">
 <screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Attendees tab</screeninfo>
