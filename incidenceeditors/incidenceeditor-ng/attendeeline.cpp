@@ -275,7 +275,7 @@ void AttendeeLine::dataFromFields()
   mData->setUid( mUid );
   clearModified();
 
-  if( !mData->email().isEmpty() && !( oldAttendee == mData->attendee() ) ) {
+  if( !( oldAttendee == mData->attendee() ) ) {
     kDebug() << oldAttendee.email() << mData->email();
     emit changed( oldAttendee, mData->attendee() );
   }
@@ -442,6 +442,15 @@ void AttendeeLine::slotComboChanged()
     mModified = true;
     emit changed();
 }
+
+void AttendeeLine::aboutToBeDeleted()
+{
+  if( mData )
+    return;
+  KCal::Attendee oldAttendee( mData->attendee() );
+  emit changed( oldAttendee, KCal::Attendee( "", "" ) );
+}
+
 
 
 #include "attendeeline.moc"

@@ -133,6 +133,8 @@ class AttendeeLine : public KPIM::MultiplyingLine
 
     virtual int setColumnWidth( int w );
 
+    virtual void aboutToBeDeleted();
+
     void setActions( AttendeeActions actions );
 
   signals:
