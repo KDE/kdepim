@@ -79,12 +79,13 @@ IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
   fillOrganizerCombo();
-  mUi->mSolveButton->setDisabled( true );
+  mUi->mSolveButton->setDisabled( false );
   mUi->mOrganizerLabel->setVisible( false );
 
   mFreeBusyDialog = new EditorFreeBusy();
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
+  connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflict()) );
 }
 
 void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
@@ -273,6 +274,17 @@ void IncidenceAttendee::slotSelectAddresses()
     }
   }
 }
+
+void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflict()
+{
+  //TODO-NGPORT update the freebusy object in the background, and change conflict label upon conflict.
+  AttendeeData::List attendees = mAttendeeEditor->attendees();
+  foreach( AttendeeData::Ptr attPtr, attendees ) {  
+    mFreeBusyDialog->insertAttendee( attPtr );
+  }
+  mFreeBusyDialog->exec();
+}
+
 
 void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
 {

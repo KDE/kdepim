@@ -64,7 +64,7 @@ private slots:
     void expandResult( KJob *job );
     void groupSearchResult( KJob *job );
     void slotSelectAddresses();
-
+    void slotSolveConflict();
 private:
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
