@@ -136,6 +136,8 @@ public:
   /// Returns the list of tags. This is calculated on demand and cached in mTagList
   QList<Tag*> getTagList() const;
 
+  bool tagListInitialized() const;
+
   /// Returns the tag with the highest priority, or 0 if there are no tags
   const Tag* bestTag() const;
 
@@ -275,6 +277,11 @@ QList<MessageItem::Tag*> MessageItem::Private::getTagList() const
     fillTagList();
 
   return *mTagList;
+}
+
+bool MessageItem::Private::tagListInitialized() const
+{
+  return mTagList != 0;
 }
 
 MessageItem::MessageItem()
@@ -420,9 +427,14 @@ QColor MessageItem::backgroundColor() const
 
 QFont MessageItem::font() const
 {
-  const Tag *bestTag = d->bestTag();
-  if ( bestTag != 0 && bestTag->font() != QFont() ) {
-    return bestTag->font();
+  // for preformance reasons we don't want font retrieval to trigger
+  // full tags loading, as the font is used for geometry calculation
+  // and thus this method called for each item
+  if ( d->tagListInitialized() ) {
+    const Tag *bestTag = d->bestTag();
+    if ( bestTag != 0 && bestTag->font() != QFont() ) {
+      return bestTag->font();
+    }
   }
 
   QFont font;
