@@ -12,6 +12,9 @@ set(CTEST_CUSTOM_WARNING_EXCEPTION
   "mk4storage"
   "'Resource' is deprecated"
   "too big, try a different debug format"
+  "qlist.h.*increases required alignment of target type"
+  "qmap.h.*increases required alignment of target type"
+  "qhash.h.*increases required alignment of target type"
   )
 
 # Errors that will be ignored
