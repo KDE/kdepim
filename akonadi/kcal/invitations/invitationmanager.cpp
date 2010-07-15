@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-#include "invitationsender.h"
+#include "invitationmanager.h"
 
 #include <boost/shared_ptr.hpp>
 
