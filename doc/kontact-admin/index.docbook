@@ -140,7 +140,7 @@ still be able to work with this.</para>
 <para>Details: When mailing an iCal invitation this option makes the
 message body from the attachment data and sets the Content-Type header
 to 'text/calendar; method=something; charset="utf-8"'.</para>
-<para>Auto-sending is also turned-on so there is no human intevention
+<para>Auto-sending is also turned-on so there is no human intervention
 required for composing.</para>
 <note><para>Encryption and self-signing are disabled.</para></note>
 </listitem>
