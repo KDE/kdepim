@@ -25,8 +25,7 @@
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsScene>
-
-class QGraphicsProxyWidget;
+#include <QGraphicsSceneResizeEvent>
 
 
 template <typename WidgetT, typename ViewT, void (ViewT::*registerFunc)( WidgetT* )>
@@ -45,7 +44,8 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
     DeclarativeWidgetBase( WidgetT *widget, QDeclarativeItem *parent ) :
       QDeclarativeItem( parent ),
       m_widget( widget ),
-      m_proxy( new QGraphicsProxyWidget( this ) )
+      m_proxy( new QGraphicsProxyWidget( this ) ),
+      inside(false)
     {
       init();
     }
@@ -55,7 +55,8 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
     void geometryChanged( const QRectF &newGeometry, const QRectF &oldGeometry )
     {
       QDeclarativeItem::geometryChanged ( newGeometry, oldGeometry );
-      m_proxy->resize( newGeometry.size() );
+      if (!inside)
+        m_proxy->resize( newGeometry.size() );
     }
 
   protected:
@@ -71,15 +72,30 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
       return QDeclarativeItem::itemChange ( change, value );
     }
 
+    bool eventFilter( QObject *obj, QEvent *event)
+    {
+        QGraphicsProxyWidget *proxy = qobject_cast<QGraphicsProxyWidget *>(obj);
+        if ((proxy == m_proxy) && (event->type() == QEvent::GraphicsSceneResize)) {
+            inside = true;
+            setWidth(proxy->size().width());
+            setHeight(proxy->size().height());
+            inside = false;
+        }
+        return QDeclarativeItem::eventFilter(obj, event);
+    }
+
   protected:
     WidgetT* m_widget;
     QGraphicsProxyWidget *m_proxy;
+    bool inside;
 
   private:
     void init()
     {
       Q_ASSERT( m_widget );
       Q_ASSERT( m_proxy );
+
+      m_proxy->installEventFilter(this);
 
       QPalette pal = m_widget->palette();
       pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );

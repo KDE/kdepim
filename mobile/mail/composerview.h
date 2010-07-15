@@ -21,7 +21,6 @@
 #define COMPOSERVIEW_H
 
 #include "kdeclarativefullscreenview.h"
-
 #include <messagecomposer/messagesender.h>
 #include <messagecomposer/composerviewbase.h>
 #include <KActionCollection>
@@ -57,7 +56,7 @@ class ComposerView : public KDeclarativeFullScreenView
     explicit ComposerView(QWidget* parent = 0);
 
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_composerBase->setIdentityCombo( combo ); }
-    void setEditor( Message::KMeditor* editor ) { m_composerBase->setEditor( editor ); }
+    void setEditor( Message::KMeditor* editor );
     void setRecipientsEditor( MessageComposer::RecipientsEditor *editor ) { m_composerBase->setRecipientsEditor( editor ); }
 
     QString subject() const;

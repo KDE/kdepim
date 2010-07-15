@@ -24,10 +24,22 @@ import org.kde.messagecomposer 4.5 as MessageComposer
 
 KPIM.MainView {
 
-  EditorView {
-    enabled: !window.busy
-    id: editorView
+  Flickable {
+    id: flick
     anchors.fill: parent
+    flickableDirection: Flickable.VerticalFlick
+    contentHeight: editorView.contentHeight;
+
+    EditorView {
+      id: editorView
+      enabled: !window.busy
+      anchors.fill: parent
+        Component.onCompleted: {
+            console.log("EditorView:")
+            console.log(height)
+            console.log(width)
+        }
+    }
   }
 
   SlideoutPanelContainer {
@@ -143,5 +155,9 @@ KPIM.MainView {
       opacity: 0.5
       anchors.fill: parent
   }
-
+    Component.onCompleted: {
+        console.log("kmail-composer:")
+        console.log(height)
+   console.log(width)
+    }
 }

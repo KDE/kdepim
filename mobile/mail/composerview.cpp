@@ -18,6 +18,7 @@
 */
 
 #include "composerview.h"
+#include "composerautoresizer.h"
 
 #include "global.h"
 #include "declarativewidgetbase.h"
@@ -271,6 +272,11 @@ void ComposerView::failed( const QString &errorMessage )
   notify->setText(i18nc("Notification when there was an error while trying to send an email",
                         "<b>Error while trying to send email</b><br> %1", errorMessage));
   notify->sendEvent();
+}
+
+void ComposerView::setEditor( Message::KMeditor* editor ) {
+    new ComposerAutoResizer(editor);
+    m_composerBase->setEditor( editor );
 }
 
 #include "composerview.moc"
