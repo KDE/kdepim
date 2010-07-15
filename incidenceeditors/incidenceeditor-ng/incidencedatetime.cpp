@@ -182,7 +182,7 @@ void IncidenceDateTime::updateStartTime( const QTime &newTime )
     mUi->mEndDateEdit->setDate( endDateTime.date() );
   }
 
-  emitDateTimesChanged();
+  emit startTimeChanged( mCurrentStartDateTime.time() );
   checkDirtyStatus();
 }
 
@@ -208,7 +208,6 @@ void IncidenceDateTime::updateStartDate( const QDate &newDate )
 
   if ( dateChanged ) {
     emit startDateChanged( mCurrentStartDateTime.date() );
-    emitDateTimesChanged();
   }
 }
 
@@ -395,9 +394,9 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
-           SLOT(emitDateTimesChanged()) );
+           SIGNAL( endTimeChanged( QTime ) ) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
-           SLOT(emitDateTimesChanged()) );
+           SIGNAL( endDateChanged( QDate ) ) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
@@ -483,8 +482,8 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
   //   connect( mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(emitDateTimesChanged()) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(emitDateTimesChanged()) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL( endDateChanged( QDate ) ) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL( endTimeChanged( QTime ) ) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()));
@@ -597,8 +596,6 @@ void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &e
   }
 
   mCurrentStartDateTime = currentStartDateTime();
-
-  emitDateTimesChanged();
 }
 
 void IncidenceDateTime::setTimes( const KDateTime &start, const KDateTime &end )
@@ -616,11 +613,5 @@ void IncidenceDateTime::setTimes( const KDateTime &start, const KDateTime &end )
 
 //   emitDateTimeStr();
 }
-
-void IncidenceDateTime::emitDateTimesChanged()
-{
-  emit dateTimesChanged( currentStartDateTime(), currentEndDateTime() );
-}
-
 
 #include "moc_incidencedatetime.cpp"

@@ -59,7 +59,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 
   signals:
     void startDateChanged( const QDate &newDate );
-    void dateTimesChanged( const KDateTime &startDateTime, const KDateTime  &endDateTime );
+    void startTimeChanged( const QTime &newTime );
+    void endDateChanged( const QDate &newDate );
+    void endTimeChanged( const QTime &newTime );
 
   private slots: /// General
     void setTimeZonesVisibility( bool visible );
@@ -72,7 +74,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
     void enableTimeEdits();
-    void emitDateTimesChanged();
     bool isDirty( KCal::Todo::ConstPtr todo ) const;
 
   private slots: /// Event specific

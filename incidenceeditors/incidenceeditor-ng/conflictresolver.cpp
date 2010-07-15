@@ -165,10 +165,27 @@ void ConflictResolver::slotInsertFreeBusy( KCal::FreeBusy* fb, const QString& em
     calculateConflicts();
 }
 
-void ConflictResolver::setDateTimes( const KDateTime& start, const KDateTime& end )
+void ConflictResolver::setStartDate(const QDate& newDate)
 {
-    mDtStart = start;
-    mDtEnd = end;
+    mDtStart.setDate( newDate );
+    calculateConflicts();
+}
+
+void ConflictResolver::setStartTime(const QTime& newTime)
+{
+    mDtStart.setTime( newTime );
+    calculateConflicts();
+}
+
+void ConflictResolver::setEndDate(const QDate& newDate)
+{
+    mDtEnd.setDate( newDate );
+    calculateConflicts();
+}
+
+void ConflictResolver::setEndTime(const QTime& newTime)
+{
+    mDtEnd.setTime( newTime );
     calculateConflicts();
 }
 

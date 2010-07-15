@@ -108,9 +108,12 @@ signals:
 
 public slots:
     /**
-     * Set the incidence's start and end datetimes
+     * Set the incidence's start date
      * */
-    void setDateTimes( const KDateTime & start, const KDateTime  & end );
+    void setStartDate( const QDate &newDate );
+    void setStartTime( const QTime &newTime );
+    void setEndDate( const QDate &newDate );
+    void setEndTime( const QTime &newTime );
 
 protected:
     void timerEvent( QTimerEvent * );

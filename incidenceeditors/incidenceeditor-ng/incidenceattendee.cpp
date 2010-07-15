@@ -88,10 +88,14 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   mConflictResolver = new ConflictResolver( parent, parent );
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
-  connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflict()) );
+//   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflict()) );
 //   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
 
-  connect( mDateTime, SIGNAL( dateTimesChanged( const KDateTime&, const KDateTime& ) ), mConflictResolver , SLOT( setDateTimes( const KDateTime&, const KDateTime& ) ) );
+  connect( mDateTime, SIGNAL( startDateChanged( QDate ) ), mConflictResolver , SLOT( setStartDate( QDate ) ) );
+  connect( mDateTime, SIGNAL( endDateChanged( QDate ) ), mConflictResolver , SLOT( setEndDate( QDate ) ) );
+  connect( mDateTime, SIGNAL( startTimeChanged( QTime ) ), mConflictResolver, SLOT( setStartTime( QTime ) ) );
+  connect( mDateTime, SIGNAL( endTimeChanged( QTime ) ), mConflictResolver, SLOT( setEndTime( QTime ) ) );
+
   connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
 
   connect( mAttendeeEditor, SIGNAL( changed( KCal::Attendee, KCal::Attendee ) ), this, SLOT( slotAttendeeChanged( KCal::Attendee,KCal::Attendee ) ) );
