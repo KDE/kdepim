@@ -40,7 +40,7 @@
 #include <KDE/KTemporaryFile>
 #include <KDE/KUrl>
 
-#include <kcalcore/Attachment>
+#include <KCal/Attachment>
 
 using namespace IncidenceEditorsNG;
 

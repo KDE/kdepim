@@ -39,8 +39,8 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 
-#include <kcalcore/<KCal
-#include <kcalcore/FreeBusy>
+#include <KCal/Incidence>
+#include <KCal/FreeBusy>
 #include <KPIMUtils/Email>
 
 #include <KComboBox>
@@ -972,7 +972,7 @@ FreeBusyItem* EditorFreeBusy::selectedItem() const
   return mFreeBusyItems[index];
 }
 
-KCalCore::Attendee *EditorFreeBusy::currentAttendee() const
+KCal::Attendee *EditorFreeBusy::currentAttendee() const
 {
   FreeBusyItem *aItem = selectedItem();
   if ( !aItem ) {
@@ -1029,7 +1029,7 @@ void EditorFreeBusy::clearSelection() const
   mGanttView->repaint();
 }
 
-void EditorFreeBusy::changeStatusForMe( KCalCore::Attendee::PartStat status )
+void EditorFreeBusy::changeStatusForMe( KCal::Attendee::PartStat status )
 {
   const QStringList myEmails = EditorConfig::instance()->allEmails();
   Q_FOREACH ( FreeBusyItem *item, mFreeBusyItems ) {

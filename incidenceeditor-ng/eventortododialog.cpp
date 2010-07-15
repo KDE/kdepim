@@ -20,11 +20,11 @@
 
 #include "eventortododialog.h"
 
-#include <kcalcore/CalendarLocal>
-#include <kcalcore/ICalFormat>
-#include <kcalcore/<KCal
-#include <kcalcore/Event>
-#include <kcalcore/Todo>
+#include <KCal/CalendarLocal>
+#include <KCal/ICalFormat>
+#include <KCal/Incidence>
+#include <KCal/Event>
+#include <KCal/Todo>
 #include <KConfigSkeleton>
 #include <KMessageBox>
 #include <KStandardDirs>
@@ -264,7 +264,7 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
 {
   Q_ASSERT( ! templateName.isEmpty() );
 
-  KCal::Incidence::Ptr incidence( new KCalCore::Event );
+  KCal::Incidence::Ptr incidence( new KCal::Event );
   mEditor->save( incidence );
 
   QString fileName = "templates/" + incidence->type();
@@ -344,7 +344,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish()
 bool EventOrTodoDialogPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
 {
   return item.hasPayload() && item.hasPayload<KCal::Incidence::Ptr>()
-    && ( item.hasPayload<KCalCore::Event::Ptr>() || item.hasPayload<kcalcoreCore::Todo::Ptr>() );
+    && ( item.hasPayload<KCal::Event::Ptr>() || item.hasPayload<KCal::Todo::Ptr>() );
 }
 
 bool EventOrTodoDialogPrivate::isDirty() const
@@ -362,7 +362,7 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   Q_ASSERT( hasSupportedPayload( item ) );
   mEditor->load( item.payload<KCal::Incidence::Ptr>() );
 
-  if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
+  if ( item.hasPayload<KCal::Event::Ptr>() ) {
     mCalSelector->setMimeTypeFilter(
       QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
   } else {
@@ -373,15 +373,15 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 
 Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 {
-  KCalCore::Event::Ptr event( new KCalCore::Event );
+  KCal::Event::Ptr event( new KCal::Event );
   // Make sure that we don't loose uid for existing incidence
-  if ( mEditor->incidence<KCal::<KCal() )
-    event->setUid( mEditor->incidence<KCal::<KCal()->uid() );
+  if ( mEditor->incidence<KCal::Incidence>() )
+    event->setUid( mEditor->incidence<KCal::Incidence>()->uid() );
   mEditor->save( event );
 
   Akonadi::Item result = item;
   result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  result.setPayload<KCalCore::Event::Ptr>( event );
+  result.setPayload<KCal::Event::Ptr>( event );
   return result;
 }
 
@@ -445,7 +445,7 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
     d->mEditor->load( item.payload<KCal::Incidence::Ptr>() );
   }
 
-  if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
+  if ( item.hasPayload<KCal::Event::Ptr>() ) {
     d->mCalSelector->setMimeTypeFilter(
       QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
   } else {

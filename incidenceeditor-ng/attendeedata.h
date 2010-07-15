@@ -23,13 +23,13 @@
 
 #include <libkdepim/multiplyingline.h>
 
-#include <kcalcore/Attendee>
+#include <KCal/Attendee>
 
 #include <QSharedPointer>
 
 namespace IncidenceEditorsNG {
   
-class AttendeeData : public KPIM::MultiplyingLineData, public KCalCore::Attendee
+class AttendeeData : public KPIM::MultiplyingLineData, public KCal::Attendee
 {
   public:
     typedef QSharedPointer<AttendeeData> Ptr;
@@ -37,8 +37,8 @@ class AttendeeData : public KPIM::MultiplyingLineData, public KCalCore::Attendee
     AttendeeData( const QString &name, const QString &email,
               bool rsvp = false, Attendee::PartStat status = Attendee::None,
               Attendee::Role role = Attendee::ReqParticipant, const QString &uid = QString() )
-              : KCalCore::Attendee( name, email, rsvp, status, role, uid ) {}
-    AttendeeData( const KCalCore::Attendee &attendee ) : KCalCore::Attendee( attendee ) {}
+              : KCal::Attendee( name, email, rsvp, status, role, uid ) {}
+    AttendeeData( const KCal::Attendee &attendee ) : KCal::Attendee( attendee ) {}
 
     virtual void clear();
     virtual bool isEmpty() const;

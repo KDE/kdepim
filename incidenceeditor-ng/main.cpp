@@ -24,8 +24,8 @@
 #include <KCmdLineArgs>
 
 #include <Akonadi/Item>
-#include <kcalcore/Event>
-#include <kcalcore/Todo>
+#include <KCal/Event>
+#include <KCal/Todo>
 
 #include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
@@ -61,10 +61,10 @@ int main( int argc, char **argv )
   Akonadi::Item item( -1 );
   if ( args->isSet( "new-event" ) ) {
     std::cout << "Creating new event..." << std::endl;
-    item.setPayload<KCalCore::Event::Ptr>( KCalCore::Event::Ptr( new KCalCore::Event ) );
+    item.setPayload<KCal::Event::Ptr>( KCal::Event::Ptr( new KCal::Event ) );
   } else if ( args->isSet( "new-todo" ) ) {
     std::cout << "Creating new todo..." << std::endl;
-    item.setPayload<KCalCore::Todo::Ptr>( KCalCore::Todo::Ptr( new KCalCore::Todo ) );
+    item.setPayload<KCal::Todo::Ptr>( KCal::Todo::Ptr( new KCal::Todo ) );
   } else if ( args->count() == 1 ) {
     qint64 id = -1;
     if ( argc == 2 ) {

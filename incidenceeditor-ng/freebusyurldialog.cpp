@@ -24,8 +24,8 @@
 
 #include "freebusyurldialog.h"
 
-#include <kcalcore/Attendee>
-#include <kcalcore/FreeBusyUrlStore>
+#include <KCal/Attendee>
+#include <KCal/FreeBusyUrlStore>
 
 #include <KDebug>
 #include <KLineEdit>
@@ -38,7 +38,7 @@
 using namespace IncidenceEditors;
 using namespace KCal;
 
-FreeBusyUrlDialog::FreeBusyUrlDialog( KCalCore::Attendee *attendee, QWidget *parent )
+FreeBusyUrlDialog::FreeBusyUrlDialog( KCal::Attendee *attendee, QWidget *parent )
   : KDialog( parent )
 {
   QFrame *topFrame = new QFrame( this );
@@ -65,7 +65,7 @@ void FreeBusyUrlDialog::slotOk()
   accept();
 }
 
-FreeBusyUrlWidget::FreeBusyUrlWidget( KCalCore::Attendee *attendee, QWidget *parent )
+FreeBusyUrlWidget::FreeBusyUrlWidget( KCal::Attendee *attendee, QWidget *parent )
   : QWidget( parent ), mAttendee( attendee )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );

@@ -42,7 +42,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlDialog( KCalCore::Attendee *, QWidget *parent = 0 );
+    explicit FreeBusyUrlDialog( KCal::Attendee *, QWidget *parent = 0 );
 
   public slots:
     void slotOk();
@@ -55,7 +55,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlWidget( KCalCore::Attendee *, QWidget *parent = 0 );
+    explicit FreeBusyUrlWidget( KCal::Attendee *, QWidget *parent = 0 );
     ~FreeBusyUrlWidget();
 
     void loadConfig();
@@ -63,7 +63,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlWidget : public QWidget
 
   private:
     KLineEdit *mUrlEdit;
-    KCalCore::Attendee *mAttendee;
+    KCal::Attendee *mAttendee;
 };
 
 } // namespace IncidenceEditors

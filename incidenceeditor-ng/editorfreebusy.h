@@ -59,8 +59,8 @@ class EditorFreeBusy : public QWidget
     void setUpdateEnabled( bool enabled );
     bool updateEnabled() const;
 
-    void insertAttendee( KCalCore::Attendee *, bool readFBList = true );
-    void removeAttendee( KCalCore::Attendee * );
+    void insertAttendee( KCal::Attendee *, bool readFBList = true );
+    void removeAttendee( KCal::Attendee * );
     void clearAttendees();
 
 
@@ -99,12 +99,12 @@ class EditorFreeBusy : public QWidget
 
   protected:
     void timerEvent( QTimerEvent * );
-    KCalCore::Attendee *currentAttendee() const;
+    KCal::Attendee *currentAttendee() const;
     /* reimpl */
 //     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();
     void clearSelection() const;
-    void changeStatusForMe( KCalCore::Attendee::PartStat status );
+    void changeStatusForMe( KCal::Attendee::PartStat status );
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
   private slots:

@@ -161,24 +161,24 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   topLayout->setMargin( 0 );
 #ifdef KDEPIM_MOBILE_UI
   mRoleCombo->addItem( DesktopIcon( "meeting-participant", 48 ),
-                       AttendeeData::roleName( KCalCore::Attendee::ReqParticipant ) );
+                       AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
   mRoleCombo->addItem( DesktopIcon( "meeting-participant-optional", 48 ),
-                       AttendeeData::roleName( KCalCore::Attendee::OptParticipant ) );
+                       AttendeeData::roleName( KCal::Attendee::OptParticipant ) );
   mRoleCombo->addItem( DesktopIcon( "meeting-observer", 48 ),
-                       AttendeeData::roleName( KCalCore::Attendee::NonParticipant ) );
+                       AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
   mRoleCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
-                       AttendeeData::roleName( KCalCore::Attendee::Chair ) );
+                       AttendeeData::roleName( KCal::Attendee::Chair ) );
 
   mResponseCheck->setIcon( DesktopIcon( "mail-meeting-request-reply", 48 ) );
 #else
   mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
-                       AttendeeData::roleName( KCalCore::Attendee::ReqParticipant ) );
+                       AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-participant-optional" ),
-                       AttendeeData::roleName( KCalCore::Attendee::OptParticipant ) );
+                       AttendeeData::roleName( KCal::Attendee::OptParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-observer" ),
-                       AttendeeData::roleName( KCalCore::Attendee::NonParticipant ) );
+                       AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-chair" ),
-                       AttendeeData::roleName( KCalCore::Attendee::Chair ) );
+                       AttendeeData::roleName( KCal::Attendee::Chair ) );
 
   mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
 #endif

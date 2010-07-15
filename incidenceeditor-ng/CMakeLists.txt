@@ -35,6 +35,9 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencerecurrence.cpp
   incidencesecrecy.cpp
 
+  freebusyitem.cpp
+  conflictresolver.cpp
+
   ../autochecktreewidget.cpp
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
@@ -49,6 +52,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
   ../templatemanagementdialog.cpp
   eventortododialog.cpp
+  groupwareintegration.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
@@ -103,6 +107,7 @@ if (KDEPIM_MOBILE_UI)
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDEPIMLIBS_KCAL_LIBS}
+    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
     kdepim            # For KPIM::K{Date|Time}Edit
     akonadi-kcal_next # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler

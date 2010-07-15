@@ -20,8 +20,8 @@
 
 #include "incidencedatetime.h"
 
-#include <kcalcore/ICalTimeZones>
-#include <kcalutils/incidenceformatter.h>
+#include <KCal/ICalTimeZones>
+#include <KCal/IncidenceFormatter>
 #include <KDebug>
 #include <KSystemTimeZones>
 
@@ -74,9 +74,9 @@ void IncidenceDateTime::load( KCal::Incidence::ConstPtr incidence )
   mLoadedIncidence = incidence;
 
   // We can only handle events or todos.
-  if ( KCalCore::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
+  if ( KCal::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
     load( todo );
-  } else if ( KCalCore::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
+  } else if ( KCal::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
     load( event );
   } else {
     kDebug() << "Not an event or an todo.";
@@ -110,9 +110,9 @@ void IncidenceDateTime::load( KCal::Incidence::ConstPtr incidence )
 
 void IncidenceDateTime::save( KCal::Incidence::Ptr incidence )
 {
-  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>( incidence ) )
+  if ( KCal::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>( incidence ) )
     save( todo );
-  else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>( incidence ) )
+  else if ( KCal::Event::Ptr event = IncidenceDateTime::incidence<Event>( incidence ) )
     save( event );
   else
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::save", "Only implemented for todos and events" );
@@ -120,9 +120,9 @@ void IncidenceDateTime::save( KCal::Incidence::Ptr incidence )
 
 bool IncidenceDateTime::isDirty() const
 {
-  if ( KCalCore::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
+  if ( KCal::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
     return isDirty( todo );
-  } else if ( KCalCore::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
+  } else if ( KCal::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
     return isDirty( event );
   } else {
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::isDirty", "Only implemented for todos and events" );
@@ -299,7 +299,7 @@ void IncidenceDateTime::enableTimeEdits()
 #endif
 }
 
-bool IncidenceDateTime::isDirty( KCalCore::Todo::ConstPtr todo ) const
+bool IncidenceDateTime::isDirty( KCal::Todo::ConstPtr todo ) const
 {
   Q_ASSERT( todo );
 
@@ -328,7 +328,7 @@ bool IncidenceDateTime::isDirty( KCalCore::Todo::ConstPtr todo ) const
 
 /// Event specific methods
 
-bool IncidenceDateTime::isDirty( KCalCore::Event::ConstPtr event ) const
+bool IncidenceDateTime::isDirty( KCal::Event::ConstPtr event ) const
 {
   // When the check box is checked, it has time associated and thus is not an all
   // day event. So the editor is dirty when the event is allDay and the checkbox
@@ -370,7 +370,7 @@ KDateTime IncidenceDateTime::currentEndDateTime() const
     mUi->mTimeZoneComboEnd->selectedTimeSpec() );
 }
 
-void IncidenceDateTime::load( KCalCore::Event::ConstPtr event )
+void IncidenceDateTime::load( KCal::Event::ConstPtr event )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( false );
@@ -446,7 +446,7 @@ void IncidenceDateTime::load( KCalCore::Event::ConstPtr event )
   }
 }
 
-void IncidenceDateTime::load( KCalCore::Todo::ConstPtr todo )
+void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( true );
@@ -511,7 +511,7 @@ void IncidenceDateTime::load( KCalCore::Todo::ConstPtr todo )
   setDateTimes( startDT, endDT );
 }
 
-void IncidenceDateTime::save( KCalCore::Event::Ptr event )
+void IncidenceDateTime::save( KCal::Event::Ptr event )
 {
   if ( mUi->mWholeDayCheck->isChecked() ) { // Timed event
     event->setAllDay( true );
@@ -534,7 +534,7 @@ void IncidenceDateTime::save( KCalCore::Event::Ptr event )
   event->setTransparency( mUi->mFreeBusyCheck->isChecked() ? Event::Opaque : Event::Transparent );
 }
 
-void IncidenceDateTime::save( KCalCore::Todo::Ptr todo )
+void IncidenceDateTime::save( KCal::Todo::Ptr todo )
 {
   if ( mUi->mWholeDayCheck->isChecked() ) { // All day todo
     todo->setAllDay( true );
