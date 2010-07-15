@@ -65,7 +65,12 @@ file-patterns=sha256sum.txt
 output-file=sha256sum.txt
 id=sha256sum
 Name=sha256sum
+Name[pt]=sha256sum
+Name[sv]=SHA256-summa
+Name[uk]=sha256sum
 Name[x-test]=xxsha256sumxx
+Name[zh_CN]=sha256sum
+Name[zh_TW]=sha256sum
 create-command=0|%I/sha256sum -0 -
 verify-command=%I/sha256sum -c
 

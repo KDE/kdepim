@@ -51,6 +51,7 @@ Name[pt_BR]=Assinar e criptografar o arquivo
 Name[sv]=Signera och kryptera fil
 Name[uk]=Підписування і шифрування файла
 Name[x-test]=xxSign & Encrypt Filexx
+Name[zh_CN]=签名并加密文件
 Name[zh_TW]=簽署並加密檔案
 Icon=kleopatra
 Exec=kleopatra --encrypt-sign %F

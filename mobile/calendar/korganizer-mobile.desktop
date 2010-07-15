@@ -8,6 +8,7 @@ Name[pt_BR]=Calendário do KDE
 Name[sv]=KDE:s kalender
 Name[uk]=Календар KDE
 Name[x-test]=xxKDE Calendarxx
+Name[zh_CN]=KDE 日历
 Name[zh_TW]=KDE 行事曆
 Exec=korganizer-mobile.sh
 

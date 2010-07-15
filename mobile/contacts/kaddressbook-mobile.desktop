@@ -7,6 +7,7 @@ Name[pt_BR]=Livro de endereços do KDE
 Name[sv]=KDE:s adressbok
 Name[uk]=Адресна книга KDE
 Name[x-test]=xxKDE Addressbookxx
+Name[zh_CN]=KDE 地址簿
 Name[zh_TW]=KDE 通訊錄
 Exec=kaddressbook-mobile.sh
 
