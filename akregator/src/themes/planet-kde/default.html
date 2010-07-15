@@ -5,52 +5,41 @@
     color: #000 ! important;
     background:#FFF ! important;
     font-family: "sans serif"  ! important;
-    font-size: 12px ! important;  
+    font-size: 12px ! important;
+    clear: none;   
   }
 
-  a {
-    color: #497ADF ! important;
-    text-decoration: none ! important; 
+  .h1 {
+     color:#304151;
   }
 
   .headerbox {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    background-color: #F7FBFF;
+    padding: 2px 0 2px 5px;
   }
 
-  .headertitle a:link, a:visited, a:hover a:active { 
+  a, .headertitle a:link, a:visited, a:hover a:active, .header, .headertext { 
     text-decoration: none ! important;
   }
 
-  .headertitle a:link { 
+  a, .headertitle a:link, .header,.headertext  { 
     color: #305971 ! important;
+    font-weight: bold; 
+  }     
+
+  .headertitle a:link { 
     font-size: 15px;
-    font-weight: bold;
     padding:6px 0px 2px 0;
     margin:4px 0 10px 0px;   
-  }
-            
-  .headertitle a:visited { 
-    color: #305971 ! important;
-  }
-
-  .headertitle a:hover{ 
-    color: #305971 ! important;
-  }
-
-  .headertitle a:active { 
-    color: #305971 ! important;
-  }            
+  }                      
 
   .header {  
     margin-right: 5px;
-    text-decoration: none ! important;
   }
 
   .headertext {
-    text-decoration: none ! important;
-    color: #305971 ! important;
     font-size: 12px;
-    font-weight: bold;
     padding:2px;
   }
 
@@ -59,13 +48,10 @@
     margin-left: 5px;
   }
 
-  body { 
-    clear: none; 
-  }
-
   .content {
     display: block;
     margin-bottom: 6px;
+    text-align: justify;
   }
 
   .content > P:first-child {
@@ -94,14 +80,13 @@
 </style>  
 
 <div class="headerbox" dir="{{ dir }}">
-  <img src="{% media_finder "planet-kde/images/bg_header.png" %}" width="99%">
-  <h1>Testing Planet KDE </h1>
-</div>
+
+ <img src="{% media_finder "planet-kde/images/kde_logo.png" %}" align="right" hspace="5">
+ <h1 class="h1">Planet KDE </h1>
 
 {% if date %}
     <span class="headertext"> {{ date }} </span>
 {% endif %}
-
 
 {% if strippedTitle %}
     <div class="headertitle" dir="{{ directionOfstrippedTitle }}">
@@ -120,8 +105,8 @@
     <span class="headertext"> {{ enc|safe }} </span>
 {% endif %}
 
-  </div>
-
+</div>
+ 
 {% if imageName %}
   <a href="{{ imageUrl }}"><img class="headimage" src="{{ imageName }}.png"></a>
 {% endif %}
@@ -133,8 +118,6 @@
     </span>
   </div>
 {% endif %}
-
-  <div class="body">
 
 {% if article.comments %}
     <a class="contentlink" href="{{ article.commentsLink }}">

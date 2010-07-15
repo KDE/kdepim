@@ -1,20 +1,101 @@
-  <div class="headerbox" dir="{{ dir }}">
+<style type="text/css">
+
+@media screen, print {
+  body {
+    color: #000 ! important;
+    background:#FFF ! important;
+    font-family: "sans serif"  ! important;
+    font-size: 12px ! important;
+    clear: none;   
+  }
+
+  .h1 {
+     color:#FFF;
+  }
+
+  .headerbox {
+    margin-bottom: 12px;
+    background-color: #48A81D;
+    padding: 2px 0 2px 5px;
+  }
+
+  a, .headertitle a:link, a:visited, a:hover a:active, .header, .headertext { 
+    text-decoration: none ! important;
+  }
+
+  a, .headertitle a:link, .header,.headertext  { 
+    color: #F2EEF2 ! important;
+    font-weight: bold; 
+  }     
+
+  .headertitle a:link { 
+    font-size: 15px;
+    padding:6px 0px 2px 0;
+    margin:4px 0 10px 0px;   
+  }                      
+
+  .header {  
+    margin-right: 5px;
+  }
+
+  .headertext {
+    font-size: 12px;
+    padding:2px;
+  }
+
+  .headimage {
+    float: right;
+    margin-left: 5px;
+  }
+
+  .content {
+    display: block;
+    margin-bottom: 6px;
+    text-align: justify;
+  }
+
+  .content > P:first-child {
+    margin-top: 1px; 
+  }
+
+  .content > DIV:first-child {
+    margin-top: 1px; 
+  }
+
+  .content > BR:first-child {
+    display: none; 
+  }
+
+  .contentlink {
+    display: block; 
+  }
+}
+
+@media screen { 
+  body { 
+    overflow: auto; 
+  } 
+}
+ 
+</style>  
+
+<div class="headerbox" dir="{{ dir }}">
+
+ <img src="{% media_finder "planet-qt/images/qt_logo.png" %}" align="right" hspace="5">
+ <h1 class="h1">Planet Qt</h1>
+
+{% if date %}
+    <span class="headertext"> {{ date }} </span>
+{% endif %}
 
 {% if strippedTitle %}
     <div class="headertitle" dir="{{ directionOfstrippedTitle }}">
       <a href="{{ article.link }}">{{ strippedTitle|safe }}</a>
-      <br><h1>Planet Qt</h1>
     </div>
-{% endif %}
-
-{% if date %}
-    <span class="header" dir="{{ directionOfDate }}">Date </span>
-    <span class="headertext"> {{ date }} </span>
 {% endif %}
 
 {% if author %}
     <br/>
-    <span class="header" dir="{{ directionOfAuthor }}">Author </span>
     <span class="headertext"> {{ author }} </span>
 {% endif %}
 
@@ -24,8 +105,8 @@
     <span class="headertext"> {{ enc|safe }} </span>
 {% endif %}
 
-  </div>
-
+</div>
+ 
 {% if imageName %}
   <a href="{{ imageUrl }}"><img class="headimage" src="{{ imageName }}.png"></a>
 {% endif %}
@@ -37,8 +118,6 @@
     </span>
   </div>
 {% endif %}
-
-  <div class="body">
 
 {% if article.comments %}
     <a class="contentlink" href="{{ article.commentsLink }}">
@@ -55,5 +134,3 @@
     <a class="contentlink" href="{{ article.linkComplete }}">Complete Story</a>
     </p>
 {% endif %}
-
-  </div>
