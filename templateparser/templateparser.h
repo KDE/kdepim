@@ -248,6 +248,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 
 };
 
-} // namespace MessageComposer
+} // namespace TemplateParser
 
 #endif // __KMAIL_TEMPLATEPARSER_H__
