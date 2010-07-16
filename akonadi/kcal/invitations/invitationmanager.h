@@ -109,7 +109,7 @@ public:
       @param oldEvent The original event provided in the invitations.
       @param newEvent The new event as edited by the user.
     */
-    void sendCounterProposal( const KCal::Event::Ptr &oldEvent, const KCal::Event::Ptr &newEvent ) const;
+    SendStatus sendCounterProposal( const KCal::Event::Ptr &oldEvent, const KCal::Event::Ptr &newEvent ) const;
 
 Q_SIGNALS:
     /**

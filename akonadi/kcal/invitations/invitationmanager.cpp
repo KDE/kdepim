@@ -386,25 +386,27 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( co
   return NoSendingNeeded;
 }
 
-void InvitationHandler::sendCounterProposal( const Event::Ptr &oldEvent, const Event::Ptr &newEvent ) const
+InvitationHandler::SendStatus InvitationHandler::sendCounterProposal( const Event::Ptr &oldEvent,
+                                                                      const Event::Ptr &newEvent ) const
 {
   if ( !oldEvent || !newEvent || *oldEvent == *newEvent ||
-       !KCalPrefs::instance()->mUseGroupwareCommunication ) {
-    return;
-  }
+       !KCalPrefs::instance()->mUseGroupwareCommunication )
+    return InvitationHandler::NoSendingNeeded;
+
   if ( KCalPrefs::instance()->outlookCompatCounterProposals() ) {
-    Incidence *tmp = oldEvent->clone();
+    Incidence::Ptr tmp( oldEvent->clone() );
     tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );
     tmp->addComment( i18n( "Proposed new meeting time: %1 - %2",
                            IncidenceFormatter::dateToString( newEvent->dtStart() ),
                            IncidenceFormatter::dateToString( newEvent->dtEnd() ) ) );
-    MailScheduler scheduler( d->mCalendar );
-    scheduler.performTransaction( tmp, iTIPReply );
-    delete tmp;
+
+    // TODO: Shouldn't we ask here?
+//    setMethod( iTIPReply ); // FIXE
+    return d->sentInvitation( KMessageBox::Yes, tmp );
   } else {
-    MailScheduler scheduler( d->mCalendar );
-    scheduler.performTransaction( newEvent, iTIPCounter );
+//    setMethod( iTIPCounter ); // FIXE
+    return d->sentInvitation( KMessageBox::Yes, newEvent );
   }
 }
 
