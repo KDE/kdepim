@@ -81,8 +81,11 @@ InvitationHandler::Private::Private( Calendar *cal )
 InvitationHandler::SendStatus InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
                                                                           const Incidence::Ptr &incidence )
 {
-  // The value represented by messageBoxReturnCode is the answer on the question:
-  // Do you want to email the invitation to the attendees?
+  // The value represented by messageBoxReturnCode is the answer on a question
+  // which is a variant of: Do you want to send an email to the attendees?
+  //
+  // Where the email contains an invitation, modification notification or
+  // deletion notification.
 
   if ( messageBoxReturnCode == KMessageBox::Yes ) {
 
@@ -256,11 +259,10 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( co
   return d->sentInvitation( messageBoxReturnCode, incidence );
 }
 
-InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( const Incidence::Ptr &incidence, bool attendeeStatusChanged )
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( const Incidence::Ptr &incidence,
+                                                                               bool attendeeStatusChanged )
 {
   Q_ASSERT( d->mMethodSet );
-
-  int messageBoxReturnCode;
 
   // For a modified incidence, either we are the organizer or someone else.
   if ( d->weAreOrganizerOf( incidence ) ) {
@@ -273,49 +275,58 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( c
                          incidence->summary() );
       }
 
-      messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, i18n( "Group Scheduling Email" ),
-                                                         KGuiItem( i18n( "Send Email" ) ),
-                                                         KGuiItem( i18n( "Do Not Send" ) ) );
+      const int messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, i18n( "Group Scheduling Email" ),
+                                                                   KGuiItem( i18n( "Send Email" ) ),
+                                                                   KGuiItem( i18n( "Do Not Send" ) ) );
+      return d->sentInvitation( messageBoxReturnCode, incidence );
+
     } else
       return NoSendingNeeded;
 
   } else if ( incidence->type() == "Todo" ) {
+
     if ( d->mMethod == iTIPRequest ) // This is an update to be sent to the organizer
-      d->mMethod = iTIPReply;
+      setMethod( iTIPReply );
 
     QString question = i18n( "Do you want to send a status update to the "
                              "organizer of this task?" );
+    const int messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, QString(),
+                                                                 KGuiItem( i18n( "Send Update" ) ),
+                                                                 KGuiItem( i18n( "Do Not Send" ) ) );
+    return d->sentInvitation( messageBoxReturnCode, incidence );
 
-    messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, QString(),
-                                                       KGuiItem( i18n( "Send Update" ) ),
-                                                       KGuiItem( i18n( "Do Not Send" ) ) );
   } else if ( incidence->type() == "Event" ) {
+
     QString question;
     if ( attendeeStatusChanged && d->mMethod == iTIPRequest ) {
+
       question = i18n( "Your status as an attendee of this event changed. "
                        "Do you want to send a status update to the event organizer?" );
       d->mMethod = iTIPReply;
-      messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, QString(),
-                                                         KGuiItem( i18n( "Send Update" ) ),
-                                                         KGuiItem( i18n( "Do Not Send" ) ) );
+      const int messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, QString(),
+                                                                   KGuiItem( i18n( "Send Update" ) ),
+                                                                   KGuiItem( i18n( "Do Not Send" ) ) );
+      return d->sentInvitation( messageBoxReturnCode, incidence );
+
     } else {
+
       question = i18n( "You are not the organizer of this event. Editing it will "
                        "bring your calendar out of sync with the organizer's calendar. "
                        "Do you really want to edit it?" );
-      messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
-//      return rc == KMessageBox::Yes;
+      const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
+      return d->sentInvitation( messageBoxReturnCode, incidence );
+
     }
   }
 
-  return d->sentInvitation( messageBoxReturnCode, incidence );
+  Q_ASSERT( false ); // Shouldn't happen.
+  return NoSendingNeeded;
 }
 
 InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( const Incidence::Ptr &incidence )
 {
   Q_ASSERT( d->mMethodSet );
   Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
-
-  int messageBoxReturnCode;
 
   // For a modified incidence, either we are the organizer or someone else.
   if ( d->weAreOrganizerOf( incidence ) ) {
@@ -332,53 +343,58 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( co
                          incidence->summary() );
       }
 
-      messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, i18n( "Group Scheduling Email" ),
-                                                         KGuiItem( i18n( "Send Email" ) ),
-                                                         KGuiItem( i18n( "Do Not Send" ) ) );
+      int messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, i18n( "Group Scheduling Email" ),
+                                                             KGuiItem( i18n( "Send Email" ) ),
+                                                             KGuiItem( i18n( "Do Not Send" ) ) );
+      return d->sentInvitation( messageBoxReturnCode, incidence );
     } else
       return NoSendingNeeded;
 
   } else if ( incidence->type() == "Todo" ) {
+
     if ( d->mMethod == iTIPRequest ) // This is an update to be sent to the organizer
-      d->mMethod = iTIPReply;
+      setMethod( iTIPReply );
 
-    QString question = i18n( "Do you want to send a status update to the "
-                             "organizer of this task?" );
+    const QString question = i18n( "Do you want to send a status update to the "
+                                   "organizer of this task?" );
+    int messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, QString(),
+                                                           KGuiItem( i18n( "Send Update" ) ),
+                                                           KGuiItem( i18n( "Do Not Send" ) ) );
+    return d->sentInvitation( messageBoxReturnCode, incidence );
 
-    messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question, QString(),
-                                                       KGuiItem( i18n( "Send Update" ) ),
-                                                       KGuiItem( i18n( "Do Not Send" ) ) );
   } else if ( incidence->type() == "Event" ) {
 
     const QStringList myEmails = KCalPrefs::instance()->allEmails();
-    bool askConfirmation = false;
+    bool incidenceAcceptedBefore = false;
     for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
       QString email = *it;
       Attendee *me = incidence->attendeeByMail(email);
       if ( me &&
            ( me->status() == Attendee::Accepted ||
              me->status() == Attendee::Delegated ) ) {
-        askConfirmation = true;
+        incidenceAcceptedBefore = true;
         break;
       }
     }
 
-    if ( !askConfirmation ) {
-//      return true;
+    if ( incidenceAcceptedBefore ) {
+      QString question = i18n( "You had previously accepted an invitation to this event. "
+                               "Do you want to send an updated response to the organizer "
+                               "declining the invitation?" );
+      int messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question,
+                                                             i18n( "Group Scheduling Email" ),
+                                                             KGuiItem( i18n( "Send Update" ) ),
+                                                             KGuiItem( i18n( "Do Not Send" ) ) );
+      return d->sentInvitation( messageBoxReturnCode, incidence );
+    } else {
+      // We did not accept the event before and delete it from our calendar agian,
+      // so there is no need to notify people.
+      return InvitationHandler::NoSendingNeeded;
     }
-
-    QString question = i18n( "You had previously accepted an invitation to this event. "
-                             "Do you want to send an updated response to the organizer "
-                             "declining the invitation?" );
-    messageBoxReturnCode = KMessageBox::questionYesNo( d->mParent, question,
-                                                       i18n( "Group Scheduling Email" ),
-                                                       KGuiItem( i18n( "Send Update" ) ),
-                                                       KGuiItem( i18n( "Do Not Send" ) ) );
-//    setDoNotNotify( rc == KMessageBox::No );
-
   }
 
-  return d->sentInvitation( messageBoxReturnCode, incidence );
+  Q_ASSERT( false ); // Shouldn't happen.
+  return NoSendingNeeded;
 }
 
 void InvitationHandler::sendCounterProposal( const Event::Ptr &oldEvent, const Event::Ptr &newEvent ) const
