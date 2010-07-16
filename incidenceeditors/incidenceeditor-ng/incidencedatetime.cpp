@@ -140,6 +140,22 @@ QDate IncidenceDateTime::startDate() const
   return currentStartDateTime().date();
 }
 
+QDate IncidenceDateTime::endDate() const
+{
+  return currentEndDateTime().date();
+}
+
+QTime IncidenceDateTime::startTime() const
+{
+  return currentStartDateTime().time();
+}
+
+QTime IncidenceDateTime::endTime() const
+{
+  return currentEndDateTime().time();
+}
+
+
 /// private slots for General
 
 void IncidenceDateTime::setTimeZonesVisibility( bool visible )

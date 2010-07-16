@@ -56,6 +56,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void setActiveDate( const QDate &activeDate );
 
     QDate startDate() const; /// Returns the current start date.
+    QTime startTime() const; /// Returns the current start time.
+    QDate endDate() const; /// Returns the current end date.
+    QTime endTime() const; /// Returns the current endtime.
 
   signals:
     void startDateChanged( const QDate &newDate );
