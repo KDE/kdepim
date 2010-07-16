@@ -60,6 +60,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     QDate endDate() const; /// Returns the current end date.
     QTime endTime() const; /// Returns the current endtime.
 
+    /// Created from the values in the widgets
+    KDateTime currentStartDateTime() const;
+    KDateTime currentEndDateTime() const;
+
   signals:
     void startDateChanged( const QDate &newDate );
     void startTimeChanged( const QTime &newTime );
@@ -83,10 +87,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool isDirty( KCal::Event::ConstPtr event ) const;
 
   private:
-    /// Created from the values in the widgets
-    KDateTime currentStartDateTime() const; 
-    KDateTime currentEndDateTime() const;
-
     void load( KCal::Event::ConstPtr event );
     void load( KCal::Todo::ConstPtr todo );
     void save( KCal::Event::Ptr event );
