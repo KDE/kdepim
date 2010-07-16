@@ -680,29 +680,15 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
 void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart )
 {
   qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
-
-  if( m_editor && !infoPart->bcc().isEmpty() ) // have to deal with multiple message contents
-  {
-    // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
-    //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
-    if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
-      KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
-      qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
-      message->removeHeader( "X-KMail-EncBccRecipients" );
-      message->assemble();
-      kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
-    } else {
-      // this shouldn't happen, but guard against it just in case so the mail still gets sent.
-      //  ComposerViewBase should set the intended recipient for mails with secondary recipients.
-      qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
-      qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
-
-      kDebug() << "sending with-bcc encrypted mail to orig recipients:" << qjob->addressAttribute().to() <<  qjob->addressAttribute().cc();
-
-    }
+  // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
+  //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
+  if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
+    KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
+    qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
+    message->removeHeader( "X-KMail-EncBccRecipients" );
+    message->assemble();
+    kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
   } else {
-    // continue as normal
-    kDebug() << "no bccs";
     qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
     qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
     qjob->addressAttribute().setBcc( cleanEmailList( infoPart->bcc() ) );
