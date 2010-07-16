@@ -50,6 +50,7 @@ class MainView : public KDeclarativeMainView
 
   private slots:
     void replyFetchResult( KJob* job );
+    void forwardInlineFetchResult( KJob* job );
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );

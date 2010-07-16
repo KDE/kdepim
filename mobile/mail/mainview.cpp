@@ -98,7 +98,7 @@ void MainView::replyFetchResult(KJob* job)
   Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
   if ( job->error() || fetch->items().isEmpty() )
     return;
-  
+
   const Akonadi::Item item = fetch->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
@@ -113,10 +113,21 @@ void MainView::replyFetchResult(KJob* job)
 
 void MainView::forwardInline(quint64 id)
 {
-  const Akonadi::Item item = itemFromId( id );
+  Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
+  fetch->fetchScope().fetchFullPayload();
+  connect( fetch, SIGNAL(result(KJob*)), SLOT(forwardInlineFetchResult(KJob*)) );
+}
+
+void MainView::forwardInlineFetchResult( KJob* job )
+{
+  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  if ( job->error() || fetch->items().isEmpty() )
+    return;
+
+  const Akonadi::Item item = fetch->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
-  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), id );
+  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
   factory.setIdentityManager( Global::identityManager() );
 
   ComposerView *composer = new ComposerView;
