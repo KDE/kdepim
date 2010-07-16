@@ -64,6 +64,8 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
 #endif
   : mUi( ui )
   , mAttendeeEditor( new AttendeeEditor )
+  , mConflictResolver( 0 )
+  , mSchedulingDialog()
   , mDateTime( dateTime )
 {
   setObjectName( "IncidenceAttendee" );
@@ -87,19 +89,19 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   mUi->mOrganizerLabel->setVisible( false );
 
   mConflictResolver = new ConflictResolver( parent, parent );
-  mConflictResolver->setEarliestStartDate( mDateTime->startDate() );
-  mConflictResolver->setEarliestStartTime( mDateTime->startTime() );
-  mConflictResolver->setLatestEndDate( mDateTime->endDate() );
-  mConflictResolver->setLatestEndTime( mDateTime->endTime() );
+  mConflictResolver->setEarliestDate( mDateTime->startDate() );
+  mConflictResolver->setEarliestTime( mDateTime->startTime() );
+  mConflictResolver->setLatestDate( mDateTime->endDate() );
+  mConflictResolver->setLatestTime( mDateTime->endTime() );
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflictPressed()) );
 //   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
 
-  connect( mDateTime, SIGNAL( startDateChanged( QDate ) ), mConflictResolver , SLOT( setEarliestStartDate( QDate ) ) );
-  connect( mDateTime, SIGNAL( endDateChanged( QDate ) ), mConflictResolver , SLOT( setLatestEndDate( QDate ) ) );
-  connect( mDateTime, SIGNAL( startTimeChanged( QTime ) ), mConflictResolver, SLOT( setEarliestStartTime( QTime ) ) );
-  connect( mDateTime, SIGNAL( endTimeChanged( QTime ) ), mConflictResolver, SLOT( setLatestEndTime( QTime ) ) );
+  connect( mDateTime, SIGNAL( startDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
+  connect( mDateTime, SIGNAL( endDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
+  connect( mDateTime, SIGNAL( startTimeChanged( QTime ) ), this , SLOT( slotEventDurationChanged() ) );
+  connect( mDateTime, SIGNAL( endTimeChanged( QTime ) ), this , SLOT( slotEventDurationChanged() ) );
 
   connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
 
@@ -299,11 +301,13 @@ void IncidenceAttendee::slotSelectAddresses()
 void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 {
 #ifndef KDEPIM_MOBILE_UI
+    if( mSchedulingDialog )
+      delete mSchedulingDialog.data();
 
-    SchedulingDialog* dialog = new SchedulingDialog( mConflictResolver );
-    dialog->exec();
+    mSchedulingDialog = new SchedulingDialog( mConflictResolver );
+    mSchedulingDialog->exec();
 
-    delete dialog;
+    delete mSchedulingDialog.data();
 #endif
 }
 
@@ -344,4 +348,22 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
   mAttendeeEditor->addAttendee( newAt );
 }
 
+void IncidenceAttendee::slotEventDurationChanged()
+{
+  KDateTime start = mDateTime->currentStartDateTime();
+  KDateTime end = mDateTime->currentEndDateTime();
+
+  Q_ASSERT( start < end );
+  
+  int duration = start.secsTo( end );
+  mConflictResolver->setAppointmentDuration( duration );
+#ifndef KDEPIM_MOBILE_UI
+  if( !mSchedulingDialog ) {
+    // when we aren't showing the dialog, the search timeframe
+    // should be the same as the event's.
+    mConflictResolver->setEarliestDateTime( start );
+    mConflictResolver->setLatestDateTime( end );
+  }
+#endif
+}
 
