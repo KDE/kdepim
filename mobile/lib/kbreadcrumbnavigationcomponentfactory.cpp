@@ -68,6 +68,11 @@ KBreadcrumbNavigationComponentFactory::KBreadcrumbNavigationComponentFactory(QOb
 
 }
 
+KBreadcrumbNavigationComponentFactory::~KBreadcrumbNavigationComponentFactory()
+{
+   delete d_ptr;
+}
+
 void KBreadcrumbNavigationComponentFactory::setModel(QAbstractItemModel *model, QObject* parent)
 {
   Q_D(KBreadcrumbNavigationComponentFactory);
