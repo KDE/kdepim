@@ -27,7 +27,7 @@
 
 #include <libkdepim/kdateedit.h>
 
-#include <kcalcore/journal.h>
+#include <kcal/journal.h>
 #include <akonadi/kcal/calendar.h>
 
 #include <akonadi/kcal/utils.h>

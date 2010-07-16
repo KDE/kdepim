@@ -23,12 +23,13 @@
 #ifndef PUBLISHDIALOG_H
 #define PUBLISHDIALOG_H
 
-#include <kcalcore/attendee.h>
-
 #include <kdialog.h>
 #include "ui_publishdialog_base.h"
 
-using namespace KCalCore;
+namespace KCal {
+  class Attendee;
+}
+using namespace KCal;
 
 class PublishDialog_base;
 
@@ -39,7 +40,7 @@ class PublishDialog : public KDialog
     explicit PublishDialog( QWidget *parent=0 );
     ~PublishDialog();
 
-    void addAttendee( const Attendee::Ptr &attendee );
+    void addAttendee( Attendee *attendee );
     QString addresses();
 
   signals:

@@ -24,8 +24,8 @@
 
 #include "alarmdialog.h"
 
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <kcal/event.h>
+#include <kcal/todo.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -35,7 +35,7 @@
 #include <akonadi/item.h>
 #include <QWidget>
 
-using namespace KCalCore;
+using namespace KCal;
 
 template<class T> Akonadi::Item incidenceToItem(T* incidence)
 {
@@ -56,7 +56,7 @@ int main( int argc, char **argv )
   KDateTime now = KDateTime::currentLocalDateTime();
   e1->setDtStart( now );
   e1->setDtEnd( now.addDays( 1 ) );
-  Alarm::Ptr a = e1->newAlarm();
+  Alarm *a = e1->newAlarm();
 //  a->setProcedureAlarm( "/usr/X11R6/bin/xeyes" );
   a->setAudioAlarm( "/data/kde/share/apps/korganizer/sounds/spinout.wav" );
 

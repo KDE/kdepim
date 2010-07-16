@@ -31,7 +31,7 @@
 #include <akonadi/kcal/utils.h>
 #include <akonadi/kcal/incidencechanger.h>
 
-#include <kcalcore/event.h>
+#include <kcal/event.h>
 
 #include <QDate>
 #include <QMap>
@@ -39,7 +39,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-using namespace KCalCore;
+using namespace KCal;
 using namespace Akonadi;
 
 class TimeSpentWidget : public QWidget

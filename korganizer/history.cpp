@@ -30,14 +30,14 @@
 #include <akonadi/kcal/utils.h>
 #include <akonadi/kcal/incidencechanger.h>
 
-#include <kcalcore/incidence.h>
+#include <KCal/Incidence>
 #include <Akonadi/Item>
 
 #include <klocale.h>
 
 #include <QWidget>
 
-using namespace KCalCore;
+using namespace KCal;
 using namespace KOrg;
 using namespace Akonadi;
 
@@ -51,7 +51,7 @@ History::History( Akonadi::Calendar *calendar, QWidget *parent )
   // undo
 
   qRegisterMetaType<Akonadi::Item>( "Akonadi::Item" );
-  qRegisterMetaType<Akonadi::IncidenceChanger::WhatChanged>("Akonadi::IncidenceChanger::WhatChanged");
+  qRegisterMetaType<Akonadi::IncidenceChanger::WhatChanged>("Akonadi::IncidenceChanger::WhatChanged");  
   connect( mChanger, SIGNAL(incidenceAddFinished(Akonadi::Item,bool)),
            this, SLOT(incidenceAddFinished(Akonadi::Item,bool)) );
 
@@ -82,7 +82,7 @@ void History::undo()
     // We only enable it back when the jobs end, in finishUndo
     disableHistory();
   } else {
-   finishUndo( false );
+   finishUndo( false ); 
   }
 }
 
@@ -259,6 +259,17 @@ History::Entry::~Entry()
 {
 }
 
+// could go to KCal, but probably the best is to remove raw pointer usage from KCal
+void History::Entry::removeRelations( const Incidence::Ptr &incidence )
+{
+  const Incidence::List childs = incidence->relations();
+  foreach ( Incidence *child, childs ) {
+    incidence->removeRelation( child );
+  }
+
+  incidence->setRelatedTo( 0 );
+}
+
 void History::Entry::setItemId( Akonadi::Item::Id id )
 {
   mItemId = id;
@@ -280,8 +291,8 @@ History::EntryDelete::EntryDelete( Akonadi::Calendar *calendar,
   //
   // Other problem is that when you clone() a parent incidence it will have pointers to it's
   // children, but all children point to the original father. Should KCal do recursive cloning?
-  mParentUid = mIncidence->relatedTo();
-
+  mParentUid = mIncidence->relatedToUid();
+  removeRelations( mIncidence );
   mItemId = item.id();
 }
 
@@ -292,7 +303,7 @@ History::EntryDelete::~EntryDelete()
 bool History::EntryDelete::undo()
 {
   Incidence::Ptr incidence( mIncidence->clone() );
-  incidence->setRelatedTo( mParentUid );
+  incidence->setRelatedToUid( mParentUid );
   return mChanger->addIncidence( incidence, mCollection, 0 );
 }
 
@@ -308,7 +319,7 @@ bool History::EntryDelete::redo()
 
 QString History::EntryDelete::text()
 {
-  return i18n( "Delete %1", QString::fromLatin1( mIncidence->typeStr() ) );
+  return i18n( "Delete %1", QString::fromLatin1( mIncidence->type() ) );
 }
 
 History::EntryAdd::EntryAdd( Akonadi::Calendar *calendar,
@@ -318,8 +329,8 @@ History::EntryAdd::EntryAdd( Akonadi::Calendar *calendar,
   mCollection( item.parentCollection() )
 {
   // See comments in EntryDelete's constructor
-  mParentUid = mIncidence->relatedTo();
-
+  mParentUid = mIncidence->relatedToUid();
+  removeRelations( mIncidence );
   mItemId = item.id();
 }
 
@@ -340,13 +351,13 @@ bool History::EntryAdd::undo()
 bool History::EntryAdd::redo()
 {
   Incidence::Ptr incidence( mIncidence->clone() );
-  incidence->setRelatedTo( mParentUid );
+  incidence->setRelatedToUid( mParentUid );
   return mChanger->addIncidence( incidence, mCollection, 0 );
 }
 
 QString History::EntryAdd::text()
 {
-  return i18n( "Add %1", QString::fromLatin1( mIncidence->typeStr() ) );
+  return i18n( "Add %1", QString::fromLatin1( mIncidence->type() ) );
 }
 
 History::EntryEdit::EntryEdit( Akonadi::Calendar *calendar,
@@ -358,6 +369,8 @@ History::EntryEdit::EntryEdit( Akonadi::Calendar *calendar,
   mNewIncidence( Akonadi::incidence( newItem )->clone() )
 {
   mItemId = oldItem.id();
+  removeRelations( mOldIncidence );
+  removeRelations( mNewIncidence );
 }
 
 History::EntryEdit::~EntryEdit()
@@ -367,20 +380,20 @@ History::EntryEdit::~EntryEdit()
 bool History::EntryEdit::undo()
 {
   Akonadi::Item item = mCalendar->incidence( mItemId );
-  item.setPayload<KCalCore::Incidence::Ptr>( mOldIncidence );
+  item.setPayload<KCal::Incidence::Ptr>( mOldIncidence );
   return mChanger->changeIncidence( mNewIncidence, item, Akonadi::IncidenceChanger::UNKNOWN_MODIFIED, 0 );
 }
 
 bool History::EntryEdit::redo()
 {
   Akonadi::Item item = mCalendar->incidence( mItemId );
-  item.setPayload<KCalCore::Incidence::Ptr>( mNewIncidence );
+  item.setPayload<KCal::Incidence::Ptr>( mNewIncidence );
   return mChanger->changeIncidence( mOldIncidence, item, Akonadi::IncidenceChanger::UNKNOWN_MODIFIED, 0 );
 }
 
 QString History::EntryEdit::text()
 {
-  return i18n( "Edit %1", QString::fromLatin1( mNewIncidence->typeStr() ) );
+  return i18n( "Edit %1", QString::fromLatin1( mNewIncidence->type() ) );
 }
 
 History::MultiEntry::MultiEntry( Akonadi::Calendar *calendar, const QString &text )

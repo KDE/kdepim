@@ -96,8 +96,6 @@ target_link_libraries(korganizer
     akonadi_next
     akonadi-kcal_next
     incidenceeditors
-    kcalcore
-    kcalutils #KDAB_TODO
 )
 
 install(TARGETS korganizer ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -116,7 +114,7 @@ target_link_libraries(kcm_korganizer
   ${QT_QTUITOOLS_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KHOLIDAYS_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
-  mailtransport korganizerprivate korganizer_core kdepim incidenceeditors akonadi-kcal_next kcalcore kcalutils )
+  mailtransport korganizerprivate korganizer_core kdepim incidenceeditors akonadi-kcal_next)
 
 install(TARGETS kcm_korganizer  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -127,7 +125,7 @@ set(korganizerpart_PART_SRCS korganizer_part.cpp )
 
 kde4_add_plugin(korganizerpart ${korganizerpart_PART_SRCS})
 
-target_link_libraries(korganizerpart ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} korganizer_interfaces akonadi-kcal_next korganizer_core korganizerprivate kcalcore kcalutils)
+target_link_libraries(korganizerpart ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} korganizer_interfaces akonadi-kcal_next korganizer_core korganizerprivate)
 
 install(TARGETS korganizerpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 endif (QT_QT3SUPPORT_FOUND)
@@ -149,7 +147,7 @@ kde4_add_kcfg_files(korganizer_core_LIB_SRCS koprefs_base.kcfgc )
 
 kde4_add_library(korganizer_core SHARED ${korganizer_core_LIB_SRCS})
 
-target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} kdepim incidenceeditors akonadi-kcal_next korganizer_interfaces kcalcore kcalutils)
+target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} kdepim incidenceeditors akonadi-kcal_next korganizer_interfaces)
 
 set_target_properties(korganizer_core PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
@@ -259,8 +257,6 @@ target_link_libraries(korganizerprivate
   akonadi_next
   incidenceeditors
   kdgantt2
-  kcalcore
-  kcalutils
 )
 
 set_target_properties(korganizerprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

@@ -34,13 +34,13 @@
 
 #include <akonadi/kcal/utils.h>
 
-#include <kcalcore/incidence.h>
+#include <KCal/Incidence>
 
 #include <KActionCollection>
 #include <KLocale>
 
 using namespace Akonadi;
-using namespace KCalCore;
+using namespace KCal;
 
 KOEventPopupMenu::KOEventPopupMenu( KOEventView *eventview )
   : QMenu( eventview ), mEventview( eventview )
@@ -122,12 +122,12 @@ void KOEventPopupMenu::showIncidencePopup( const Akonadi::Item &item, const QDat
   for ( it = mEditOnlyItems.begin(); it != mEditOnlyItems.end(); ++it ) {
     (*it)->setEnabled( Akonadi::hasChangeRights( mCurrentIncidence ) );
   }
-  mToggleReminder->setVisible( ( incidence->type() != Incidence::TypeJournal ) );
+  mToggleReminder->setVisible( ( incidence->type() != "Journal" ) );
   for ( it = mRecurrenceItems.begin(); it != mRecurrenceItems.end(); ++it ) {
     (*it)->setVisible( incidence->recurs() );
   }
   for ( it = mTodoOnlyItems.begin(); it != mTodoOnlyItems.end(); ++it ) {
-    (*it)->setVisible( incidence->type() == Incidence::TypeTodo );
+    (*it)->setVisible( incidence->type() == "Todo" );
     (*it)->setEnabled( Akonadi::hasChangeRights( mCurrentIncidence ) );
   }
   popup( QCursor::pos() );
@@ -160,9 +160,9 @@ void KOEventPopupMenu::print(bool preview)
   connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
 
   //Item::List selectedIncidences;
-  Incidence::List selectedIncidences;
-  Q_ASSERT( mCurrentIncidence.hasPayload<KCalCore::Incidence::Ptr>() );
-  selectedIncidences.append( mCurrentIncidence.payload<KCalCore::Incidence::Ptr>() );
+  KCal::ListBase<KCal::Incidence> selectedIncidences;
+  Q_ASSERT( mCurrentIncidence.hasPayload<KCal::Incidence::Ptr>() );
+  selectedIncidences.append( mCurrentIncidence.payload<KCal::Incidence::Ptr>().get() );
 
   printer.print( KOrg::CalPrinterBase::Incidence,
                  mCurrentDate, mCurrentDate, selectedIncidences, preview );

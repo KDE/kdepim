@@ -37,8 +37,7 @@
 
 #include <Akonadi/Item>
 
-#include <kcalcore/visitor.h>
-#include <kcalcore/incidencebase.h>
+#include <KCal/IncidenceBase>
 
 #include <incidenceeditors/eventeditor.h>
 #include <incidenceeditors/journaleditor.h>
@@ -53,20 +52,20 @@
 using namespace Akonadi;
 using namespace KOrg;
 using namespace KPIM;
-using namespace KCalCore;
+using namespace KCal;
 using namespace IncidenceEditors;
 
 // FIXME: Handle KOEventViewerDialogs in dialog manager.
 
-class KODialogManager::DialogManagerVisitor : public Visitor
+class KODialogManager::DialogManagerVisitor : public IncidenceBase::Visitor
 {
   public:
     DialogManagerVisitor() : mDialogManager( 0 ) {}
 
-    bool act( IncidenceBase::Ptr incidence, KODialogManager *manager )
+    bool act( IncidenceBase *incidence, KODialogManager *manager )
     {
       mDialogManager = manager;
-      return incidence->accept( *this, incidence );
+      return incidence->accept( *this );
     }
 
   protected:
@@ -81,24 +80,24 @@ class KODialogManager::EditorDialogVisitor :
     IncidenceEditor *editor() const { return mEditor; }
 
   protected:
-    bool visit( Event::Ptr )
+    bool visit( Event * )
     {
       mEditor = mDialogManager->getEventEditor();
       return mEditor;
     }
-    bool visit( Todo::Ptr )
+    bool visit( Todo * )
     {
       mEditor = mDialogManager->getTodoEditor();
       return mEditor;
     }
-    bool visit( Journal::Ptr )
+    bool visit( Journal * )
     {
       mEditor = mDialogManager->getJournalEditor();
       return mEditor;
     }
-    bool visit( FreeBusy::Ptr ) // to inhibit hidden virtual compile warning
+    bool visit( FreeBusy * ) // to inhibit hidden virtual compile warning
     {
-      return false;
+      return 0;
     }
 
     IncidenceEditor *mEditor;
@@ -217,7 +216,7 @@ IncidenceEditor *KODialogManager::getEditor( const Item &item )
   }
 
   EditorDialogVisitor v;
-  if ( v.act( incidence, this ) ) {
+  if ( v.act( incidence.get(), this ) ) {
     return v.editor();
   } else {
     return 0;
