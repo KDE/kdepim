@@ -175,25 +175,25 @@ void ConflictResolver::slotInsertFreeBusy( KCal::FreeBusy* fb, const QString& em
 
 void ConflictResolver::setEarliestDate(const QDate& newDate)
 {
-    mDtStart.setDate( newDate );
+    mTimeframeConstraint.first.setDate( newDate );
     calculateConflicts();
 }
 
 void ConflictResolver::setEarliestTime(const QTime& newTime)
 {
-    mDtStart.setTime( newTime );
+    mTimeframeConstraint.first.setTime( newTime );
     calculateConflicts();
 }
 
 void ConflictResolver::setLatestDate(const QDate& newDate)
 {
-    mDtEnd.setDate( newDate );
+    mTimeframeConstraint.second.setDate( newDate );
     calculateConflicts();
 }
 
 void ConflictResolver::setLatestTime(const QTime& newTime)
 {
-    mDtEnd.setTime( newTime );
+    mTimeframeConstraint.second.setTime( newTime );
     calculateConflicts();
 }
 
@@ -245,9 +245,11 @@ int ConflictResolver::tryDate( KDateTime& tryFrom, KDateTime& tryTo )
 {
     int conflicts_count = 0;
     Q_FOREACH( FreeBusyItem * currentItem, mFreeBusyItems ) {
-        if ( !tryDate( currentItem, tryFrom, tryTo ) ) {
-            ++conflicts_count;
-        }
+      if( !matchesRoleConstraint( currentItem->attendee() ) )
+        continue;
+      if ( !tryDate( currentItem, tryFrom, tryTo ) ) {
+          ++conflicts_count;
+      }
     }
     return conflicts_count;
 }
@@ -282,8 +284,10 @@ bool ConflictResolver::tryDate( FreeBusyItem* attendee, KDateTime& tryFrom, KDat
     }
     return true;
 }
-bool ConflictResolver::findFreeSlot( KDateTime &dtFrom, KDateTime &dtTo )
+bool ConflictResolver::findFreeSlot( const DateTimeRange &dateTimeRange )
 {
+    KDateTime dtFrom = dateTimeRange.first;
+    KDateTime dtTo = dateTimeRange.second;
     if ( tryDate( dtFrom, dtTo ) ) {
         // Current time is acceptable
         return true;
@@ -317,9 +321,27 @@ bool ConflictResolver::findFreeSlot( KDateTime &dtFrom, KDateTime &dtTo )
     return found;
 }
 
+void ConflictResolver::findAllFreeSlots()
+{
+    //Finding all free slots that match the constraints
+
+    // First, set our timeframe to our earliest and latest values
+    KDateTime tryFrom = mTimeframeConstraint.first; // earliest, we start the search here
+    KDateTime tryTo = tryFrom.addSecs( mAppointmentDuration );
+
+    while ( tryTo < mTimeframeConstraint.second ) {
+        int conflicts = tryDate( tryFrom, tryTo );
+
+        if( conflicts == 0 )  // found a slot that meets the constraints
+          mAvailableSlots << DateTimeRange( tryFrom, tryTo );
+
+        //TODO increment tryFrom and tryTo by some value.. too sleepy atm.
+    }
+}
+
 void ConflictResolver::calculateConflicts()
 {
-    int count = tryDate( mDtStart, mDtEnd );
+    int count = tryDate( mTimeframeConstraint.first, mTimeframeConstraint.second );
     emit conflictsDetected( count );
     kDebug() << "calculate conflicts" << count;
 }
@@ -334,4 +356,12 @@ void ConflictResolver::setMandatoryRoles( const QSet< KCal::Attendee::Role >& ro
     mMandatoryRoles = roles;
 }
 
+void ConflictResolver::setAppointmentDuration( int seconds )
+{
+    mAppointmentDuration = seconds;
+}
 
+bool ConflictResolver::matchesRoleConstraint( const KCal::Attendee& attendee )
+{
+  return mMandatoryRoles.contains( attendee.role() );
+}
