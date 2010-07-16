@@ -42,11 +42,12 @@
 
 using namespace MessageComposer;
 
-MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id )
+MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id, const Akonadi::Collection& col )
   : m_identityManager( 0 )
   , m_origMsg( KMime::Message::Ptr() )
   , m_origId( 0 )
   , m_parentFolderId( 0 )
+  , m_collection( col )
   , m_replyStrategy( MessageComposer::ReplySmart )
   , m_quote( true )
   , m_allowDecryption( true )
@@ -261,11 +262,11 @@ MessageFactory::MessageReply MessageFactory::createReply()
     if ( !m_template.isEmpty() )
       parser.process( m_template, m_origMsg );
     else
-      parser.process( m_origMsg );
+      parser.process( m_origMsg, m_collection );
   }
 
   applyCharset( msg );
-    
+
   link( msg, m_id, KPIM::MessageStatus::statusReplied() );
   if ( m_parentFolderId > 0 ) {
     KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( m_parentFolderId ), "utf-8" );
@@ -342,8 +343,8 @@ KMime::Message::Ptr MessageFactory::createForward()
   if ( !m_template.isEmpty() )
     parser.process( m_template, m_origMsg );
   else
-    parser.process( m_origMsg );
-    
+    parser.process( m_origMsg, m_collection );
+
   applyCharset( msg );
 
   link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
@@ -360,7 +361,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 
   if( msgs.count() == 0 )
     msgs << m_origMsg;
-  
+
   if( msgs.count() >= 2 ) {
     // don't respect X-KMail-Identity headers because they might differ for
     // the selected mails
@@ -396,7 +397,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
     link( fwdMsg, m_origId, KPIM::MessageStatus::statusForwarded() );
     attachments << msgPart;
   }
-  
+
   applyCharset( msg );
 
   link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
@@ -469,10 +470,10 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
 
   header = new KMime::Headers::Generic( "Resent-From", msg.get(), strFrom, "utf-8" );
   msg->setHeader( header );
-  
+
   KMime::Headers::To* headerT = new KMime::Headers::To( msg.get(), toStr, "utf-8" );
   msg->setHeader( headerT );
-  
+
   header = new KMime::Headers::Generic( "Resent-To", msg.get(), toStr, "utf-8" );
   msg->setHeader( header );
 
@@ -485,7 +486,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
     header = new KMime::Headers::Generic( "Resent-Bcc", msg.get(), m_origMsg->bcc()->asUnicodeString(), "utf-8" );
     msg->setHeader( header );
   }
-  
+
   header = new KMime::Headers::Generic( "X-KMail-Redirect-From", msg.get(), strByWayOf, "utf-8" );
   msg->setHeader( header );
   header = new KMime::Headers::Generic( "X-KMail-Recipients", msg.get(), toStr, "utf-8" );
@@ -657,22 +658,22 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
 
   QString mainPartText = i18n("\nThis is a MIME digest forward. The content of the"
                          " message is contained in the attachment(s).\n\n\n");
-  
+
   digest->contentType()->setMimeType( "multipart/digest" );
   digest->contentType()->setBoundary( KMime::multiPartBoundary() );
   digest->contentDescription()->fromUnicodeString( QString::fromLatin1("Digest of %1 messages.").arg( msgs.size() ), "utf8" );
   digest->contentDisposition()->setFilename( QLatin1String( "digest" ) );
   digest->fromUnicodeString( mainPartText );
-  
+
   int id = 0;
- 
+
   foreach( const KMime::Message::Ptr fMsg, msgs ) {
     if( id == 0 && fMsg->hasHeader( "X-KMail-Identity" ) )
       id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
 
     MessageCore::StringUtil::removePrivateHeaderFields( fMsg );
     fMsg->bcc()->clear();
-    
+
     KMime::Content* part = new KMime::Content( digest );
 
     part->contentType()->setMimeType( "message/rfc822" );
@@ -769,7 +770,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients( KMime::Message::Ptr msg )
   // Disposition-Notification-To header.
   kDebug() << "KPIMUtils::splitAddressList(receiptTo):" // krazy:exclude=kdebug
            << KPIMUtils::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
-           
+
   return KPIMUtils::splitAddressList(receiptTo).count() > 1;
 }
 
@@ -779,7 +780,7 @@ bool MessageFactory::MDNReturnPathEmpty( KMime::Message::Ptr msg )
   QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
   if ( receiptTo.trimmed().isEmpty() ) return false;
   receiptTo.remove( QChar::fromLatin1('\n') );
-  
+
   // RFC 2298: MDNs SHOULD NOT be sent automatically if the address in
   // the Disposition-Notification-To header differs from the address
   // in the Return-Path header. [...] Confirmation from the user
@@ -870,7 +871,7 @@ uint MessageFactory::identityUoid( const KMime::Message::Ptr &msg )
 
   if ( id == 0 && m_folderId > 0 ) {
     id = m_folderId;
-  } 
+  }
   return id;
 }
 
