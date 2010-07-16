@@ -28,6 +28,7 @@
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
 
+#include <KCalendarSystem>
 #include <KCal/FreeBusy>
 #include <KDebug>
 
@@ -48,6 +49,10 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QO
     } else {
         setupManager();
     }
+
+    //KCalendarSystem defines monday as 1
+    mWeekdays << 1 /*Monday*/ << 2 /*Tuesday*/ << 3 /*Wednesday*/ << 4 /*Thursday*/ << 5 /*Friday*/;
+    mMandatoryRoles << KCal::Attendee::ReqParticipant << KCal::Attendee::OptParticipant << KCal::Attendee::NonParticipant << KCal::Attendee::Chair;
 
     connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
     mReloadTimer.setSingleShot( true );
@@ -165,25 +170,25 @@ void ConflictResolver::slotInsertFreeBusy( KCal::FreeBusy* fb, const QString& em
     calculateConflicts();
 }
 
-void ConflictResolver::setStartDate(const QDate& newDate)
+void ConflictResolver::setEarliestStartDate(const QDate& newDate)
 {
     mDtStart.setDate( newDate );
     calculateConflicts();
 }
 
-void ConflictResolver::setStartTime(const QTime& newTime)
+void ConflictResolver::setEarliestStartTime(const QTime& newTime)
 {
     mDtStart.setTime( newTime );
     calculateConflicts();
 }
 
-void ConflictResolver::setEndDate(const QDate& newDate)
+void ConflictResolver::setLatestEndDate(const QDate& newDate)
 {
     mDtEnd.setDate( newDate );
     calculateConflicts();
 }
 
-void ConflictResolver::setEndTime(const QTime& newTime)
+void ConflictResolver::setLatestEndTime(const QTime& newTime)
 {
     mDtEnd.setTime( newTime );
     calculateConflicts();
@@ -304,4 +309,15 @@ void ConflictResolver::calculateConflicts()
     emit conflictsDetected( count );
     kDebug() << "calculate conflicts" << count;
 }
+
+void ConflictResolver::setAllowedWeekdays(const QSet< int >& weekdays)
+{
+    mWeekdays = weekdays;
+}
+
+void ConflictResolver::setMandatoryRoles(const QSet< KCal::Attendee::Role >& roles)
+{
+    mMandatoryRoles = roles;
+}
+
 

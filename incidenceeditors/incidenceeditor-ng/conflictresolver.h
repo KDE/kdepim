@@ -23,12 +23,12 @@
 #ifndef CONFLICTRESOLVER_H
 #define CONFLICTRESOLVER_H
 
-#include "attendeedata.h"
-
 #include <KDateTime>
+#include <KCal/Attendee>
 
 #include <QObject>
 #include <QTimer>
+#include <QSet>
 
 
 
@@ -42,6 +42,9 @@ namespace IncidenceEditorsNG
 {
 
 class FreeBusyItem;
+
+typedef QPair<KDateTime, KDateTime> DateTimeRange;
+typedef QVector<DateTimeRange> DateTimeRangeList;
 
 /**
  * Takes a list of attendees and event info (e.g., min time start, max time end)
@@ -93,6 +96,34 @@ public:
      * */
     void cancelReload();
 
+    /**
+     * Constrain the free time slot search to the weekdays
+     * identified by their KCalendarSystem integer representation
+     * (Monday = 1, ..., Sunday = 7)
+     * Default is Monday - Friday
+     * @param weekdays a set of integers representing the allowed weekdays
+     * @see KCalendarSystem
+     */
+    void setAllowedWeekdays( const QSet<int> &weekdays );
+
+    /**
+     * Constrain the free time slot search to the set participant roles.
+     * Mandatory roles are considered the minimum required to attend
+     * the meeting, so only those attendees with the mandatory roles will
+     * be considered  in the search.
+     * Default is all roles are mandatory.
+     * @param roles the set of mandatory participant roles
+     */
+    void setMandatoryRoles( const QSet<KCal::Attendee::Role> &roles );
+
+    /**
+     * Returns a list of date time ranges that conform to the
+     * search constraints.
+     * @see setMandatoryRoles
+     * @see setAllowedWeekdays
+     */
+    DateTimeRangeList availableSlots() const;
+
 signals:
     /**
      * Emitted when the user changes the start and end dateTimes
@@ -108,12 +139,14 @@ signals:
 
 public slots:
     /**
-     * Set the incidence's start date
-     * */
-    void setStartDate( const QDate &newDate );
-    void setStartTime( const QTime &newTime );
-    void setEndDate( const QDate &newDate );
-    void setEndTime( const QTime &newTime );
+     * Set the date time parameters
+     *
+     * These control the timeframe for which conflicts are to be resolved.
+     */
+    void setEarliestStartDate( const QDate &newDate );
+    void setEarliestStartTime( const QTime &newTime );
+    void setLatestEndDate( const QDate &newDate );
+    void setLatestEndTime( const QTime &newTime );
 
 protected:
     void timerEvent( QTimerEvent * );
@@ -168,6 +201,9 @@ private:
     bool mForceDownload;
     QList<FreeBusyItem*> mFreeBusyItems;
     QWidget *mParentWidget;
+
+    QSet<KCal::Attendee::Role> mMandatoryRoles;
+    QSet<int> mWeekdays; //!< the int is the index of the Weekday as specified in KCalendarSystem
 };
 
 }
