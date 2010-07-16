@@ -225,8 +225,7 @@ bool InvitationHandler::receiveInvitation( const QString& receiver,
   return true;
 }
 
-InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( KCal::iTIPMethod method,
-                                                                              const Incidence::Ptr &incidence )
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( const Incidence::Ptr &incidence )
 {
   /// When we created the incidence, we *must* be the organizer.
   Q_ASSERT( d->weAreOrganizerOf( incidence ) );
@@ -251,7 +250,7 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( KC
   }
 
   messageBoxReturnCode = d->askUser( question );
-  return d->sentInvitation( messageBoxReturnCode, incidence, method );
+  return d->sentInvitation( messageBoxReturnCode, incidence, iTIPRequest );
 }
 
 InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( KCal::iTIPMethod method,

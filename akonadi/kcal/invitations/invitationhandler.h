@@ -82,8 +82,7 @@ public:
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    SendStatus sendIncidenceCreatedMessage( KCal::iTIPMethod method,
-                                            const KCal::Incidence::Ptr &incidence );
+    SendStatus sendIncidenceCreatedMessage( const KCal::Incidence::Ptr &incidence );
 
     /**
       Handles sending of invitations for modified incidences.
