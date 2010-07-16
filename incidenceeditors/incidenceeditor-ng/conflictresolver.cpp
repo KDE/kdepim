@@ -91,7 +91,7 @@ void ConflictResolver::insertAttendee( const KCal::Attendee &attendee )
 void ConflictResolver::removeAttendee( const KCal::Attendee &attendee )
 {
     FreeBusyItem *anItem = 0;
-    for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {
+    for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
         anItem = mFreeBusyItems[i];
         if ( anItem->attendee() == attendee ) {
             if ( anItem->updateTimerID() != 0 ) {
