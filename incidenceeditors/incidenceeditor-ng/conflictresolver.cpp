@@ -35,7 +35,7 @@
 
 using namespace IncidenceEditorsNG;
 
-ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QObject( parent ), mParentWidget( parentWidget )
+ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QObject( parent ), mParentWidget( parentWidget ), mWeekdays( 7 )
 {
     Q_ASSERT( parentWidget );
     Q_ASSERT( Akonadi::Groupware::instance() );
@@ -49,9 +49,12 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QO
     } else {
         setupManager();
     }
-
-    //KCalendarSystem defines monday as 1
-    mWeekdays << 1 /*Monday*/ << 2 /*Tuesday*/ << 3 /*Wednesday*/ << 4 /*Thursday*/ << 5 /*Friday*/;
+    // set default values
+    mWeekdays.setBit( 1 ); //Monday
+    mWeekdays.setBit( 2 ); //Tuesday
+    mWeekdays.setBit( 3 ); //Wednesday
+    mWeekdays.setBit( 4 ); //Thursday
+    mWeekdays.setBit( 5 ); //Friday.. surprise!
     mMandatoryRoles << KCal::Attendee::ReqParticipant << KCal::Attendee::OptParticipant << KCal::Attendee::NonParticipant << KCal::Attendee::Chair;
 
     connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
@@ -310,12 +313,12 @@ void ConflictResolver::calculateConflicts()
     kDebug() << "calculate conflicts" << count;
 }
 
-void ConflictResolver::setAllowedWeekdays(const QSet< int >& weekdays)
+void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
 {
     mWeekdays = weekdays;
 }
 
-void ConflictResolver::setMandatoryRoles(const QSet< KCal::Attendee::Role >& roles)
+void ConflictResolver::setMandatoryRoles( const QSet< KCal::Attendee::Role >& roles )
 {
     mMandatoryRoles = roles;
 }

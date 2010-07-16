@@ -29,7 +29,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QSet>
-
+#include <QBitArray>
 
 
 namespace KCal
@@ -99,12 +99,11 @@ public:
     /**
      * Constrain the free time slot search to the weekdays
      * identified by their KCalendarSystem integer representation
-     * (Monday = 1, ..., Sunday = 7)
      * Default is Monday - Friday
-     * @param weekdays a set of integers representing the allowed weekdays
+     * @param weekdays a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
      * @see KCalendarSystem
      */
-    void setAllowedWeekdays( const QSet<int> &weekdays );
+    void setAllowedWeekdays( const QBitArray &weekdays );
 
     /**
      * Constrain the free time slot search to the set participant roles.
@@ -203,7 +202,7 @@ private:
     QWidget *mParentWidget;
 
     QSet<KCal::Attendee::Role> mMandatoryRoles;
-    QSet<int> mWeekdays; //!< the int is the index of the Weekday as specified in KCalendarSystem
+    QBitArray mWeekdays; //!< a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
 };
 
 }
