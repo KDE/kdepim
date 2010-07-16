@@ -307,9 +307,9 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( c
 
     } else {
 
-      question = i18n( "You are not the organizer of this event. Editing it will "
-                       "bring your calendar out of sync with the organizer's calendar. "
-                       "Do you really want to edit it?" );
+      const QString question = i18n( "You are not the organizer of this event. Editing it will "
+                                     "bring your calendar out of sync with the organizer's calendar. "
+                                     "Do you really want to edit it?" );
       const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
       return d->sentInvitation( messageBoxReturnCode, incidence );
 
@@ -359,9 +359,8 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( co
 
     const QStringList myEmails = KCalPrefs::instance()->allEmails();
     bool incidenceAcceptedBefore = false;
-    for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
-      QString email = *it;
-      Attendee *me = incidence->attendeeByMail(email);
+    foreach ( const QString &email, myEmails ) {
+      Attendee *me = incidence->attendeeByMail( email );
       if ( me &&
            ( me->status() == Attendee::Accepted ||
              me->status() == Attendee::Delegated ) ) {
