@@ -53,6 +53,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   ../templatemanagementdialog.cpp
   eventortododialog.cpp
   groupwareintegration.cpp
+  schedulingdialog.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
@@ -60,6 +61,7 @@ kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
   eventortododesktop.ui
   alarmdialog.ui
   attachmenteditdialog.ui
+  schedulingdialog.ui
 )
 
 kde4_add_library(incidenceeditorsng SHARED ${incidenceeditors_ng_desktop_LIB_SRCS})

@@ -29,6 +29,8 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
+#include "incidencedatetime.h"
+#include "conflictresolver.h"
 
 #include <akonadi/contact/emailaddressselectiondialog.h>
 
@@ -40,11 +42,13 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KPIMUtils/Email>
+#include <KDateTime>
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
+#include "schedulingdialog.h"
 #endif
 
 #include "attendeeeditor.h"
@@ -54,12 +58,15 @@
 using namespace IncidenceEditorsNG;
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoMore* ui )
+IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore* ui )
 #else
-IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
+IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop* ui )
 #endif
   : mUi( ui )
   , mAttendeeEditor( new AttendeeEditor )
+  , mConflictResolver( 0 )
+  , mSchedulingDialog()
+  , mDateTime( dateTime )
 {
   setObjectName( "IncidenceAttendee" );
 
@@ -78,10 +85,30 @@ IncidenceAttendee::IncidenceAttendee( Ui::EventOrTodoDesktop* ui )
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
   fillOrganizerCombo();
-  mUi->mSolveButton->setDisabled( true );
+  mUi->mSolveButton->setDisabled( false );
   mUi->mOrganizerLabel->setVisible( false );
 
+  mConflictResolver = new ConflictResolver( parent, parent );
+  mConflictResolver->setEarliestDate( mDateTime->startDate() );
+  mConflictResolver->setEarliestTime( mDateTime->startTime() );
+  mConflictResolver->setLatestDate( mDateTime->endDate() );
+  mConflictResolver->setLatestTime( mDateTime->endTime() );
+
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
+  connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflictPressed()) );
+//   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
+
+  connect( mDateTime, SIGNAL( startDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
+  connect( mDateTime, SIGNAL( endDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
+  connect( mDateTime, SIGNAL( startTimeChanged( QTime ) ), this , SLOT( slotEventDurationChanged() ) );
+  connect( mDateTime, SIGNAL( endTimeChanged( QTime ) ), this , SLOT( slotEventDurationChanged() ) );
+
+  connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
+
+  connect( mAttendeeEditor, SIGNAL( changed( KCal::Attendee, KCal::Attendee ) ), this, SLOT( slotAttendeeChanged( KCal::Attendee,KCal::Attendee ) ) );
+  
+  // set the default organizer 
+//   mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
 }
 
 void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
@@ -271,6 +298,38 @@ void IncidenceAttendee::slotSelectAddresses()
   }
 }
 
+void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
+{
+#ifndef KDEPIM_MOBILE_UI
+    if( mSchedulingDialog )
+      delete mSchedulingDialog.data();
+
+    mSchedulingDialog = new SchedulingDialog( mConflictResolver );
+    mSchedulingDialog->exec();
+
+    delete mSchedulingDialog.data();
+#endif
+}
+
+void IncidenceAttendee::slotAttendeeChanged( const KCal::Attendee& oldAttendee, const KCal::Attendee& newAttendee )
+{
+   // if newAttendee's email is empty, we are probably removing an attendee
+   if( mConflictResolver->containsAttendee( oldAttendee ) )
+      mConflictResolver->removeAttendee( oldAttendee );
+   if( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee.email().isEmpty() )
+      mConflictResolver->insertAttendee( newAttendee );
+}
+
+
+void IncidenceAttendee::slotUpdateConflictLabel( int count )
+{
+    QString label( i18np( "%1 scheduling conflict", "%1 scheduling conflicts", count ) );
+    mUi->mConflictsLabel->setText( label );
+    if( count > 0 )
+      mUi->mSolveButton->setEnabled( true );
+}
+
+
 void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
 {
   const bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( a.preferredEmail() );
@@ -289,4 +348,22 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
   mAttendeeEditor->addAttendee( newAt );
 }
 
+void IncidenceAttendee::slotEventDurationChanged()
+{
+  KDateTime start = mDateTime->currentStartDateTime();
+  KDateTime end = mDateTime->currentEndDateTime();
+
+  Q_ASSERT( start < end );
+  
+  int duration = start.secsTo( end );
+  mConflictResolver->setAppointmentDuration( duration );
+#ifndef KDEPIM_MOBILE_UI
+  if( !mSchedulingDialog ) {
+    // when we aren't showing the dialog, the search timeframe
+    // should be the same as the event's.
+    mConflictResolver->setEarliestDateTime( start );
+    mConflictResolver->setLatestDateTime( end );
+  }
+#endif
+}
 

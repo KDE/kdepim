@@ -140,6 +140,22 @@ QDate IncidenceDateTime::startDate() const
   return currentStartDateTime().date();
 }
 
+QDate IncidenceDateTime::endDate() const
+{
+  return currentEndDateTime().date();
+}
+
+QTime IncidenceDateTime::startTime() const
+{
+  return currentStartDateTime().time();
+}
+
+QTime IncidenceDateTime::endTime() const
+{
+  return currentEndDateTime().time();
+}
+
+
 /// private slots for General
 
 void IncidenceDateTime::setTimeZonesVisibility( bool visible )
@@ -182,7 +198,7 @@ void IncidenceDateTime::updateStartTime( const QTime &newTime )
     mUi->mEndDateEdit->setDate( endDateTime.date() );
   }
 
-//   emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
+  emit startTimeChanged( mCurrentStartDateTime.time() );
   checkDirtyStatus();
 }
 
@@ -202,13 +218,13 @@ void IncidenceDateTime::updateStartDate( const QDate &newDate )
     // that the event/todo has the same duration as before.
     endDateTime.setDate( mCurrentStartDateTime.date().addDays( daysep ) );
     mUi->mEndDateEdit->setDate( endDateTime.date() );
-//     emit dateTimesChanged( mCurrStartDateTime, mCurrEndDateTime );
   }
 
   checkDirtyStatus();
 
-  if ( dateChanged )
+  if ( dateChanged ) {
     emit startDateChanged( mCurrentStartDateTime.date() );
+  }
 }
 
 void IncidenceDateTime::updateStartSpec()
@@ -393,6 +409,10 @@ void IncidenceDateTime::load( KCal::Event::ConstPtr event )
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
+           SIGNAL( endTimeChanged( QTime ) ) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
+           SIGNAL( endDateChanged( QDate ) ) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()) );
 
@@ -478,6 +498,8 @@ void IncidenceDateTime::load( KCal::Todo::ConstPtr todo )
   //   connect( mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
+  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL( endDateChanged( QDate ) ) );
+  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL( endTimeChanged( QTime ) ) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()));

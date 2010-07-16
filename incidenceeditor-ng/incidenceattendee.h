@@ -23,6 +23,8 @@
 
 #include "incidenceeditor-ng.h"
 
+#include <QPointer>
+
 class KJob;
 
 namespace Ui {
@@ -41,6 +43,7 @@ class MultiplyingLine;
 namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
+class SchedulingDialog;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
@@ -64,6 +67,9 @@ private slots:
     void groupSearchResult( KJob *job );
     void slotSelectAddresses();
 
+
+    // wrapper for the conflict resolver
+    void slotEventDurationChanged();
 private:
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
@@ -81,6 +87,7 @@ private:
     AttendeeEditor *mAttendeeEditor;
     KCal::Incidence::ConstPtr mOrigIncidence;
 
+    QPointer<SchedulingDialog> mSchedulingDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
 };
 

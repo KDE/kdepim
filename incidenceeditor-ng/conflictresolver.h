@@ -23,13 +23,14 @@
 #ifndef CONFLICTRESOLVER_H
 #define CONFLICTRESOLVER_H
 
-#include "attendeedata.h"
-
 #include <KDateTime>
+#include <KCal/Attendee>
 
 #include <QObject>
 #include <QTimer>
-
+#include <QSet>
+#include <QBitArray>
+#include <QVector>
 
 
 namespace KCal
@@ -42,6 +43,9 @@ namespace IncidenceEditorsNG
 {
 
 class FreeBusyItem;
+
+typedef QPair<KDateTime, KDateTime> DateTimeRange;
+typedef QVector<DateTimeRange> DateTimeRangeList; // TODO this should probably be a QSet, but that means creating a hash function for KDateTime
 
 /**
  * Takes a list of attendees and event info (e.g., min time start, max time end)
@@ -93,6 +97,33 @@ public:
      * */
     void cancelReload();
 
+    /**
+     * Constrain the free time slot search to the weekdays
+     * identified by their KCalendarSystem integer representation
+     * Default is Monday - Friday
+     * @param weekdays a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
+     * @see KCalendarSystem
+     */
+    void setAllowedWeekdays( const QBitArray &weekdays );
+
+    /**
+     * Constrain the free time slot search to the set participant roles.
+     * Mandatory roles are considered the minimum required to attend
+     * the meeting, so only those attendees with the mandatory roles will
+     * be considered  in the search.
+     * Default is all roles are mandatory.
+     * @param roles the set of mandatory participant roles
+     */
+    void setMandatoryRoles( const QSet<KCal::Attendee::Role> &roles );
+
+    /**
+     * Returns a list of date time ranges that conform to the
+     * search constraints.
+     * @see setMandatoryRoles
+     * @see setAllowedWeekdays
+     */
+    DateTimeRangeList availableSlots() const;
+
 signals:
     /**
      * Emitted when the user changes the start and end dateTimes
@@ -108,9 +139,27 @@ signals:
 
 public slots:
     /**
-     * Set the incidence's start and end datetimes
+     * Set the timeframe constraints
+     *
+     * These control the timeframe for which conflicts are to be resolved.
+     */
+    void setEarliestDate( const QDate &newDate );
+    void setEarliestTime( const QTime &newTime );
+    void setLatestDate( const QDate &newDate );
+    void setLatestTime( const QTime &newTime );
+
+    void setEarliestDateTime( const KDateTime &newDateTime );
+    void setLatestDateTime( const KDateTime &newDateTime );
+
+    /**
+     * Set the minimum size of free slots to locate.
+     *
+     * The resolver will attempt to identify free slots
+     * that contain _at least_ this number of seconds.
+     * 
+     * @param seconds the minimum number of seconds the appointment slot should be
      * */
-    void setDateTimes( const KDateTime & start, const KDateTime  & end );
+    void setAppointmentDuration( int seconds );
 
 protected:
     void timerEvent( QTimerEvent * );
@@ -133,11 +182,13 @@ private:
       Finds a free slot in the future which has at least the same size as
       the initial slot.
     */
-    bool findFreeSlot( KDateTime &dtFrom, KDateTime &dtTo );
+    bool findFreeSlot( const DateTimeRange &dateTimeRange );
+
+    void findAllFreeSlots();
 
     /**
-      Checks whether the slot specified by (tryFrom, tryTo) is free
-      for all participants. If yes, return true. The return value is the
+      Checks whether the slot specified by (tryFrom, tryTo) matches the 
+      search constraints. If yes, return true. The return value is the
       number of conflicts that were detected, and (tryFrom, tryTo) contain the next free slot for
       that participant. In other words, the returned slot does not have to
       be free for everybody else.
@@ -153,18 +204,30 @@ private:
     */
     bool tryDate( FreeBusyItem *attendee, KDateTime &tryFrom, KDateTime &tryTo );
 
+    /**
+     * Checks whether the supplied attendee passes the
+     * current mandatory role constraint.
+     * @return true if the attendee is of one of the mandatory roles, false if not
+     */
+    bool matchesRoleConstraint( const KCal::Attendee &attendee );
+
     void calculateConflicts();
     /**
      * Reload FB items
      * */
     void reload();
 
-    KDateTime mDtStart, mDtEnd;
+    DateTimeRange mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
+    DateTimeRangeList mAvailableSlots;
+    int mAppointmentDuration; //!< the minimum number of seconds the appointment slot should be
     QTimer mReloadTimer;
     bool mManagerConnected;
     bool mForceDownload;
     QList<FreeBusyItem*> mFreeBusyItems;
     QWidget *mParentWidget;
+
+    QSet<KCal::Attendee::Role> mMandatoryRoles;
+    QBitArray mWeekdays; //!< a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
 };
 
 }
