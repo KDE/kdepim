@@ -445,7 +445,7 @@
          <number>0</number>
         </property>
         <item row="0" column="0">
-         <widget class="KPIM::KCheckComboBox" name="mWeekDayCombo">
+         <widget class="KPIM::KWeekdayCheckCombo" name="mWeekDayCombo">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -793,6 +793,11 @@
    <class>KPIM::KCheckComboBox</class>
    <extends>KComboBox</extends>
    <header>libkdepim/kcheckcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KWeekdayCheckCombo</class>
+   <extends>KPIM::KCheckComboBox</extends>
+   <header>libkdepim/kweekdaycheckcombo.h</header>
   </customwidget>
   <customwidget>
    <class>KRichTextEdit</class>

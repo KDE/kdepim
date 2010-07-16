@@ -71,8 +71,6 @@ private:
     short dayOfMonthFromStart() const;
     short dayOfMonthFromEnd() const;
     short dayOfYearFromStart() const; // We don't need from end for year
-    /** Returns the days selected in the day combo */
-    QBitArray days() const;
     int duration() const;
 
     /** Returns the week number (1-5) of the month in which the start date occurs. */
@@ -84,7 +82,6 @@ private:
     QString numberToString( int number ) const;
     void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
     void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
-    void setDays( const QBitArray &days, int incidenceDay );
     void setDefaults();
     void setDuration( int duration );
     void setExceptionDates( const KCal::DateList &dates );
@@ -92,8 +89,6 @@ private:
     void toggleRecurrenceWidgets( bool enable );
     /** Returns an array with the weekday on which the event occurs set to 1 */
     QBitArray weekday() const;
-    /** Returns the index in the weekday combo for the day of @param date. */
-    int weekdayIndex( const QDate &date ) const;
 
     /**
      * Return how many times the weekday represented by @param date occurs in
