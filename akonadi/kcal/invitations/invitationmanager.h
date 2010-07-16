@@ -50,8 +50,9 @@ class Calendar;
   NOTE: Currently only events and todos are support, meaning Incidence::type()
         should either return "Event" or "Todo"
  */
-class InvitationHandler
+class InvitationHandler : public QObject
 {
+    Q_OBJECT
 public:
     InvitationHandler( Akonadi::Calendar *cal );
     ~InvitationHandler();
@@ -62,6 +63,10 @@ public:
       NoSendingNeeded,
       UnsuportedIncidenceTypeIgnored
     };
+
+    bool receiveInvitation( const QString& receiver,
+                            const QString& iCal,
+                            const QString& type );
 
     /**
       Before an invitation is sent the user is asked for confirmation by means of
@@ -104,6 +109,13 @@ public:
       @param newEvent The new event as edited by the user.
     */
     void sendCounterProposal( const KCal::Event::Ptr &oldEvent, const KCal::Event::Ptr &newEvent ) const;
+
+Q_SIGNALS:
+    /**
+      This signal is emitted when an invitation for a counter proposal is sent.
+      @param incidence The incidence for which the counter proposal must be specified.
+     */
+    void editorRequested( const KCal::Incidence::Ptr &incidence );
 
 private:
     class Private;

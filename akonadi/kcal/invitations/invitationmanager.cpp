@@ -28,6 +28,7 @@
 #include <KCal/Incidence>
 #include <KCal/IncidenceFormatter>
 
+#include "../calendaradaptor.h"
 #include "../mailscheduler.h"
 
 using namespace Akonadi;
@@ -40,13 +41,13 @@ namespace Akonadi {
 struct InvitationHandler::Private
 {
 /// Members
-  Akonadi::Calendar *mCalendar;
+  Calendar *mCalendar;
   iTIPMethod mMethod;
   bool mMethodSet;
   QWidget *mParent;
 
 /// Methods
-  Private( Akonadi::Calendar *cal );
+  Private( Calendar *cal );
 
   InvitationHandler::Action sentInvitation( int messageBoxReturnCode,
                                            const Incidence::Ptr &incidence );
@@ -68,7 +69,7 @@ struct InvitationHandler::Private
 
 }
 
-InvitationHandler::Private::Private( Akonadi::Calendar *cal )
+InvitationHandler::Private::Private( Calendar *cal )
   : mCalendar( cal )
   , mMethod( iTIPNoMethod )
   , mMethodSet( false )
@@ -124,13 +125,89 @@ bool InvitationHandler::Private::weNeedToSendMailFor( const Incidence::Ptr &inci
 
 /// InvitationSender
 
-InvitationHandler::InvitationHandler( Akonadi::Calendar *cal )
+InvitationHandler::InvitationHandler( Calendar *cal )
   : d ( new InvitationHandler::Private( cal) )
 { }
 
 InvitationHandler::~InvitationHandler()
 {
   delete d;
+}
+
+bool InvitationHandler::receiveInvitation( const QString& receiver,
+                                           const QString& iCal,
+                                           const QString& type )
+{
+  const QString action = type;
+  ICalFormat mFormat;
+
+  CalendarAdaptor adaptor( d->mCalendar, d->mParent );
+  QScopedPointer<ScheduleMessage> message( mFormat.parseScheduleMessage( &adaptor, iCal ) );
+  if ( !message ) {
+    QString errorMessage = i18n( "Unknown error while parsing iCal invitation" );
+    if ( mFormat.exception() )
+      errorMessage = i18n( "Error message: %1", mFormat.exception()->message() );
+
+    kDebug() << "Error parsing" << errorMessage;
+    KMessageBox::detailedError( d->mParent,
+                                i18n( "Error while processing an invitation or update." ),
+                                errorMessage );
+    return false;
+  }
+
+  iTIPMethod method = static_cast<iTIPMethod>( message->method() );
+  ScheduleMessage::Status status = message->status();
+  Incidence *incidence = dynamic_cast<Incidence*>( message->event() );
+  if( !incidence )
+    return false;
+
+  MailScheduler scheduler( d->mCalendar );
+  if ( action.startsWith( QLatin1String( "accepted" ) ) ||
+       action.startsWith( QLatin1String( "tentative" ) ) ||
+       action.startsWith( QLatin1String( "delegated" ) ) ||
+       action.startsWith( QLatin1String( "counter" ) ) ) {
+    // Find myself and set my status. This can't be done in the scheduler,
+    // since this does not know the choice I made in the KMail bpf
+    const Attendee::List attendees = incidence->attendees();
+    foreach ( Attendee *attendee, attendees ) {
+      if ( attendee->email() == receiver ) {
+        if ( action.startsWith( QLatin1String( "accepted" ) ) ) {
+          attendee->setStatus( Attendee::Accepted );
+        } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
+          attendee->setStatus( Attendee::Tentative );
+        } else if ( KCalPrefs::instance()->outlookCompatCounterProposals() &&
+                    action.startsWith( QLatin1String( "counter" ) ) ) {
+          attendee->setStatus( Attendee::Tentative );
+        } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
+          attendee->setStatus( Attendee::Delegated );
+        }
+        break;
+      }
+    }
+    if ( KCalPrefs::instance()->outlookCompatCounterProposals() ||
+         !action.startsWith( QLatin1String( "counter" ) ) ) {
+      scheduler.acceptTransaction( incidence, method, status, receiver );
+    }
+  } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
+    // Delete the old incidence, if one is present
+    scheduler.acceptTransaction( incidence, iTIPCancel, status, receiver );
+  } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
+    if ( method != iTIPCounter ) {
+      scheduler.acceptTransaction( incidence, method, status, QString() );
+    } else {
+      scheduler.acceptCounterProposal( incidence );
+      // send update to all attendees
+      setMethod( iTIPRequest );
+      sendIncidenceModifiedMessage( Incidence::Ptr( incidence->clone() ), false );
+    }
+  } else {
+    kError() << "Unknown incoming action" << action;
+  }
+
+  if ( action.startsWith( QLatin1String( "counter" ) ) )
+    emit editorRequested( Incidence::Ptr( incidence->clone() ) );
+
+  return true;
 }
 
 void InvitationHandler::setMethod( iTIPMethod method )
@@ -318,3 +395,5 @@ void InvitationHandler::sendCounterProposal( const Event::Ptr &oldEvent, const E
     scheduler.performTransaction( newEvent, iTIPCounter );
   }
 }
+
+#include "invitationmanager.moc"
