@@ -44,8 +44,6 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
 
   setNeedsStrigi( true );
 
-  changeRecorder()->itemFetchScope().fetchFullPayload();
-
   connect( this, SIGNAL( fullyIndexed() ),
            this, SLOT( slotFullyIndexed() ) );
 
@@ -88,13 +86,14 @@ void NepomukEMailFeeder::removeSearch(const Akonadi::Collection& resultCollectio
   Q_UNUSED( resultCollection );
 }
 
-ItemFetchScope NepomukEMailFeeder::fetchScopeForcollection(const Akonadi::Collection& collection)
+ItemFetchScope NepomukEMailFeeder::fetchScopeForCollection(const Akonadi::Collection& collection)
 {
-  ItemFetchScope scope = NepomukFeederAgentBase::fetchScopeForcollection(collection);
+  ItemFetchScope scope = NepomukFeederAgentBase::fetchScopeForCollection(collection);
   switch ( Settings::self()->indexAggressiveness() ) {
     case Settings::LocalAndCached:
     {
       const QStringList localResources = QStringList()
+        << QLatin1String( "akonadi_mixedmaildir_resource" )
         << QLatin1String( "akonadi_maildir_resource" )
         << QLatin1String( "akonadi_mbox_resource" );
       scope.setCacheOnly( !localResources.contains( collection.resource() ) );
@@ -107,6 +106,7 @@ ItemFetchScope NepomukEMailFeeder::fetchScopeForcollection(const Akonadi::Collec
     default:
       scope.setCacheOnly( true );
   }
+  scope.fetchFullPayload( true );
   return scope;
 }
 

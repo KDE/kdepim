@@ -107,7 +107,7 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     virtual void updateCollection( const Akonadi::Collection &collection, const QUrl &graphUri ) = 0;
 
     /** Reimplement to allow more aggressive initial indexing. */
-    virtual Akonadi::ItemFetchScope fetchScopeForcollection( const Akonadi::Collection &collection );
+    virtual Akonadi::ItemFetchScope fetchScopeForCollection( const Akonadi::Collection &collection );
 
     /** Create a graph for the given item with we use to mark all information created by the feeder agent. */
     template <typename T>
@@ -178,6 +178,7 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     void collectionsReceived( const Akonadi::Collection::List &collections );
     void itemHeadersReceived( const Akonadi::Item::List &items );
     void itemsReceived( const Akonadi::Item::List &items );
+    void notificationItemsReceived( const Akonadi::Item::List &items );
     void itemFetchResult( KJob* job );
 
     void selfTest();

@@ -84,6 +84,7 @@ NepomukFeederAgentBase::NepomukFeederAgentBase(const QString& id) :
 
   changeRecorder()->setChangeRecordingEnabled( false );
   changeRecorder()->fetchCollection( true );
+  changeRecorder()->itemFetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
 
   mNepomukStartupTimeout.setInterval( 60 * 1000 );
   mNepomukStartupTimeout.setSingleShot( true );
@@ -112,6 +113,14 @@ void NepomukFeederAgentBase::itemAdded(const Akonadi::Item& item, const Akonadi:
     mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
                              QUrl( QString::number( item.id() ) ), graph );
     updateItem( item, graph );
+  } else {
+    const ItemFetchScope scope = fetchScopeForCollection( collection );
+    if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
+      ItemFetchJob *job = new ItemFetchJob( item );
+      job->setFetchScope( scope );
+      connect( job, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
+               SLOT( notificationItemsReceived( Akonadi::Item::List ) ) );
+    }
   }
 }
 
@@ -127,6 +136,15 @@ void NepomukFeederAgentBase::itemChanged(const Akonadi::Item& item, const QSet< 
     mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
                              QUrl( QString::number( item.id() ) ), graph );
     updateItem( item, graph );
+  } else {
+    const Collection collection = item.parentCollection();
+    const ItemFetchScope scope = fetchScopeForCollection( collection );
+    if ( scope.fullPayload() || !scope.payloadParts().isEmpty() ) {
+      ItemFetchJob *job = new ItemFetchJob( item );
+      job->setFetchScope( scope );
+      connect( job, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
+               SLOT( notificationItemsReceived( Akonadi::Item::List ) ) );
+    }
   }
 }
 
@@ -179,7 +197,10 @@ void NepomukFeederAgentBase::collectionsReceived(const Akonadi::Collection::List
 
     mCollectionQueue.append( collection );
   }
-  processNextCollection();
+
+  if ( mPendingJobs == 0 ) {
+    processNextCollection();
+  }
 }
 
 void NepomukFeederAgentBase::processNextCollection()
@@ -228,7 +249,7 @@ void NepomukFeederAgentBase::itemHeadersReceived(const Akonadi::Item::List& item
 
   if ( !itemsToUpdate.isEmpty() ) {
     ItemFetchJob *itemFetch = new ItemFetchJob( itemsToUpdate, this );
-    itemFetch->setFetchScope( changeRecorder()->itemFetchScope() );
+    itemFetch->setFetchScope( fetchScopeForCollection( mCurrentCollection ) );
     connect( itemFetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsReceived(Akonadi::Item::List)) );
     connect( itemFetch, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
     ++mPendingJobs;
@@ -265,6 +286,21 @@ void NepomukFeederAgentBase::itemsReceived(const Akonadi::Item::List& items)
   emit percent( (mProcessedAmount * 100) / (mTotalAmount * 100) );
 }
 
+void NepomukFeederAgentBase::notificationItemsReceived(const Akonadi::Item::List& items)
+{
+  kDebug() << items.size();
+  foreach ( const Item &item, items ) {
+    if ( !item.hasPayload() ) {
+      continue;
+    }
+    removeEntityFromNepomuk( item );
+
+    const QUrl graph = createGraphForEntity( item );
+    mNrlModel->addStatement( item.url(), Akonadi::ItemSearchJob::akonadiItemIdUri(),
+                             QUrl( QString::number( item.id() ) ), graph );
+    updateItem( item, graph );
+  }
+}
 
 void NepomukFeederAgentBase::tagsFromCategories(NepomukFast::Resource& resource, const QStringList& categories)
 {
@@ -419,7 +455,7 @@ void NepomukFeederAgentBase::indexData(const KUrl& url, const QByteArray& data, 
   idx.index( &sr );
 }
 
-ItemFetchScope NepomukFeederAgentBase::fetchScopeForcollection(const Akonadi::Collection& collection)
+ItemFetchScope NepomukFeederAgentBase::fetchScopeForCollection(const Akonadi::Collection& collection)
 {
   return changeRecorder()->itemFetchScope();
 }
