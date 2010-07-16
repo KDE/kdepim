@@ -361,6 +361,12 @@ namespace MessageViewer {
             fgColor,
             background )
       +
+      QString::fromLatin1( "table {\n"
+                           "  font-family: inherit ! important;\n"
+                           "  font-size: inherit ! important;\n"
+                           "  font-weight: inherit ! important;\n"
+                           "}\n\n" )
+      +
       QString( "a {\n"
                "  color: %1 ! important;\n"
                "  text-decoration: none ! important;\n"
