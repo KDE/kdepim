@@ -42,15 +42,14 @@ struct InvitationHandler::Private
 {
 /// Members
   Calendar *mCalendar;
-  iTIPMethod mMethod;
-  bool mMethodSet;
   QWidget *mParent;
 
 /// Methods
   Private( Calendar *cal );
 
   InvitationHandler::SendStatus sentInvitation( int messageBoxReturnCode,
-                                                const Incidence::Ptr &incidence );
+                                                const Incidence::Ptr &incidence,
+                                                iTIPMethod method );
 
   int askUser( const QString &question,
                const KGuiItem &buttonYes = KGuiItem( i18n( "Send Email" ) ),
@@ -75,8 +74,6 @@ struct InvitationHandler::Private
 
 InvitationHandler::Private::Private( Calendar *cal )
   : mCalendar( cal )
-  , mMethod( iTIPNoMethod )
-  , mMethodSet( false )
   , mParent( 0 )
 {
   Q_ASSERT( mCalendar);
@@ -90,7 +87,8 @@ int InvitationHandler::Private::askUser( const QString &question,
 }
 
 InvitationHandler::SendStatus InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
-                                                                          const Incidence::Ptr &incidence )
+                                                                          const Incidence::Ptr &incidence,
+                                                                          iTIPMethod method )
 {
   // The value represented by messageBoxReturnCode is the answer on a question
   // which is a variant of: Do you want to send an email to the attendees?
@@ -106,7 +104,7 @@ InvitationHandler::SendStatus InvitationHandler::Private::sentInvitation( int me
 
     // Send the mail
     MailScheduler scheduler( mCalendar );
-    if( scheduler.performTransaction( incidence, mMethod ) )
+    if( scheduler.performTransaction( incidence, method ) )
       return InvitationHandler::Success;
 
     const QString question( i18n( "Sending group scheduling email failed." ) );
@@ -215,8 +213,7 @@ bool InvitationHandler::receiveInvitation( const QString& receiver,
     } else {
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
-      setMethod( iTIPRequest );
-      sendIncidenceModifiedMessage( Incidence::Ptr( incidence->clone() ), false );
+      sendIncidenceModifiedMessage( iTIPRequest, Incidence::Ptr( incidence->clone() ), false );
     }
   } else {
     kError() << "Unknown incoming action" << action;
@@ -228,15 +225,9 @@ bool InvitationHandler::receiveInvitation( const QString& receiver,
   return true;
 }
 
-void InvitationHandler::setMethod( iTIPMethod method )
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( KCal::iTIPMethod method,
+                                                                              const Incidence::Ptr &incidence )
 {
-  d->mMethod = method;
-  d->mMethodSet = true;
-}
-
-InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( const Incidence::Ptr &incidence )
-{
-  Q_ASSERT( d->mMethodSet );
   /// When we created the incidence, we *must* be the organizer.
   Q_ASSERT( d->weAreOrganizerOf( incidence ) );
 
@@ -260,14 +251,13 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( co
   }
 
   messageBoxReturnCode = d->askUser( question );
-  return d->sentInvitation( messageBoxReturnCode, incidence );
+  return d->sentInvitation( messageBoxReturnCode, incidence, method );
 }
 
-InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( const Incidence::Ptr &incidence,
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( KCal::iTIPMethod method,
+                                                                               const Incidence::Ptr &incidence,
                                                                                bool attendeeStatusChanged )
 {
-  Q_ASSERT( d->mMethodSet );
-
   // For a modified incidence, either we are the organizer or someone else.
   if ( d->weAreOrganizerOf( incidence ) ) {
 
@@ -280,30 +270,30 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( c
       }
 
       const int messageBoxReturnCode = d->askUser( question, KGuiItem( i18n( "Send Update" ) ) );
-      return d->sentInvitation( messageBoxReturnCode, incidence );
+      return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
     } else
       return NoSendingNeeded;
 
   } else if ( incidence->type() == "Todo" ) {
 
-    if ( d->mMethod == iTIPRequest ) // This is an update to be sent to the organizer
-      setMethod( iTIPReply );
+    if ( method == iTIPRequest ) // This is an update to be sent to the organizer
+      method = iTIPReply;
 
     QString question = i18n( "Do you want to send a status update to the "
                              "organizer of this task?" );
     const int messageBoxReturnCode = d->askUser( question, KGuiItem( i18n( "Send Update" ) ) );
-    return d->sentInvitation( messageBoxReturnCode, incidence );
+    return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
   } else if ( incidence->type() == "Event" ) {
 
-    if ( attendeeStatusChanged && d->mMethod == iTIPRequest ) {
+    if ( attendeeStatusChanged && method == iTIPRequest ) {
 
-      setMethod( iTIPReply );
+      method = iTIPReply;
       const QString question = i18n( "Your status as an attendee of this event changed. "
                                      "Do you want to send a status update to the event organizer?" );
       const int messageBoxReturnCode = d->askUser( question, KGuiItem( i18n( "Send Update" ) ) );
-      return d->sentInvitation( messageBoxReturnCode, incidence );
+      return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
     } else {
 
@@ -311,7 +301,7 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( c
                                      "bring your calendar out of sync with the organizer's calendar. "
                                      "Do you really want to edit it?" );
       const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
-      return d->sentInvitation( messageBoxReturnCode, incidence );
+      return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
     }
   }
@@ -320,9 +310,9 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( c
   return NoSendingNeeded;
 }
 
-InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( const Incidence::Ptr &incidence )
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( KCal::iTIPMethod method,
+                                                                              const Incidence::Ptr &incidence )
 {
-  Q_ASSERT( d->mMethodSet );
   Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
 
   // For a modified incidence, either we are the organizer or someone else.
@@ -341,19 +331,19 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( co
       }
 
       int messageBoxReturnCode = d->askUser( question );
-      return d->sentInvitation( messageBoxReturnCode, incidence );
+      return d->sentInvitation( messageBoxReturnCode, incidence, method );
     } else
       return NoSendingNeeded;
 
   } else if ( incidence->type() == "Todo" ) {
 
-    if ( d->mMethod == iTIPRequest ) // This is an update to be sent to the organizer
-      setMethod( iTIPReply );
+    if ( method == iTIPRequest ) // This is an update to be sent to the organizer
+      method = iTIPReply;
 
     const QString question = i18n( "Do you want to send a status update to the "
                                    "organizer of this task?" );
     int messageBoxReturnCode = d->askUser( question, KGuiItem( i18n( "Send Update" ) ) );
-    return d->sentInvitation( messageBoxReturnCode, incidence );
+    return d->sentInvitation( messageBoxReturnCode, incidence, method );
 
   } else if ( incidence->type() == "Event" ) {
 
@@ -374,7 +364,7 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( co
                                "Do you want to send an updated response to the organizer "
                                "declining the invitation?" );
       int messageBoxReturnCode = d->askUser( question, KGuiItem( i18n( "Send Update" ) ) );
-      return d->sentInvitation( messageBoxReturnCode, incidence );
+      return d->sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
       // We did not accept the event before and delete it from our calendar agian,
       // so there is no need to notify people.
@@ -402,11 +392,9 @@ InvitationHandler::SendStatus InvitationHandler::sendCounterProposal( const Even
                            IncidenceFormatter::dateToString( newEvent->dtEnd() ) ) );
 
     // TODO: Shouldn't we ask here?
-//    setMethod( iTIPReply ); // FIXE
-    return d->sentInvitation( KMessageBox::Yes, tmp );
+    return d->sentInvitation( KMessageBox::Yes, tmp, iTIPReply );
   } else {
-//    setMethod( iTIPCounter ); // FIXE
-    return d->sentInvitation( KMessageBox::Yes, newEvent );
+    return d->sentInvitation( KMessageBox::Yes, newEvent, iTIPCounter );
   }
 }
 

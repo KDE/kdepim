@@ -77,32 +77,29 @@ public:
     void setDialogParent( QWidget *parent );
 
     /**
-      Sets the iTIP method to be used for sending a message. This must be called
-      before calling one of the send methods.
-      @param method The iTIP method used for sending.
-     */
-    void setMethod( KCal::iTIPMethod method );
-
-    /**
       Handles sending of invitations for newly created incidences. This method
       asserts that we (as in any of the identities or mail addresses known to
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    SendStatus sendIncidenceCreatedMessage( const KCal::Incidence::Ptr &incidence );
+    SendStatus sendIncidenceCreatedMessage( KCal::iTIPMethod method,
+                                            const KCal::Incidence::Ptr &incidence );
 
     /**
       Handles sending of invitations for modified incidences.
       @param incidence The modified incidence.
       @param attendeeSatusChanged ????
      */
-    SendStatus sendIncidenceModifiedMessage( const KCal::Incidence::Ptr &incidence, bool attendeeStatusChanged );
+    SendStatus sendIncidenceModifiedMessage( KCal::iTIPMethod method,
+                                             const KCal::Incidence::Ptr &incidence,
+                                             bool attendeeStatusChanged );
 
     /**
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    SendStatus sendIncidenceDeletedMessage( const KCal::Incidence::Ptr &incidence );
+    SendStatus sendIncidenceDeletedMessage( KCal::iTIPMethod method,
+                                            const KCal::Incidence::Ptr &incidence );
 
     /**
       Send counter proposal message.
