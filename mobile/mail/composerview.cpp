@@ -164,10 +164,10 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 
 void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 {
+  m_message = msg;
   if ( status() != QDeclarativeView::Ready )
     return;
-  
-  m_message = msg;
+
   m_subject = msg->subject()->asUnicodeString();
   m_composerBase->setMessage( msg );
   emit changed();
