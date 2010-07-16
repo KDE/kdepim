@@ -86,6 +86,10 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   mUi->mOrganizerLabel->setVisible( false );
 
   mConflictResolver = new ConflictResolver( parent, parent );
+  mConflictResolver->setStartDate( mDateTime->startDate() );
+  mConflictResolver->setStartTime( mDateTime->startTime() );
+  mConflictResolver->setEndDate( mDateTime->endDate() );
+  mConflictResolver->setEndTime( mDateTime->endTime() );
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
 //   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflict()) );
