@@ -258,19 +258,23 @@ void ComposerView::addAttachment()
 
 void ComposerView::success()
 {
+  QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
   KNotification *notify = new KNotification("emailsent");
   notify->setComponentData(KComponentData("kmail-mobile"));
+  notify->setPixmap(pix);
   notify->setText(i18nc("Notification when the email was sent",
-                        "<b>E-mail successfully sent</b>"));
+                        "E-mail successfully sent"));
   notify->sendEvent();
 }
 
 void ComposerView::failed( const QString &errorMessage )
 {
+  QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
   KNotification *notify = new KNotification("sendfailed");
   notify->setComponentData(KComponentData("kmail-mobile"));
+  notify->setPixmap(pix);
   notify->setText(i18nc("Notification when there was an error while trying to send an email",
-                        "<b>Error while trying to send email</b><br> %1", errorMessage));
+                        "Error while trying to send email. %1", errorMessage));
   notify->sendEvent();
 }
 

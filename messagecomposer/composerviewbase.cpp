@@ -597,7 +597,7 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     kDebug() << "other Error.";
     QString msg;
     if( composer->error() == Message::Composer::BugError ) {
-      msg = i18n( "Could not compose message: %1<br>Please report this bug.", job->errorString() );
+      msg = i18n( "Could not compose message: %1 \n Please report this bug.", job->errorString() );
     } else {
       msg = i18n( "Could not compose message: %1", job->errorString() );
     }
