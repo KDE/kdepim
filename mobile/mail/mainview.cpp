@@ -39,6 +39,7 @@
 #include <Akonadi/ItemModifyJob>
 #include <Akonadi/ItemFetchScope>
 #include "mailactionmanager.h"
+#include <Akonadi/ItemFetchJob>
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
@@ -86,12 +87,24 @@ void MainView::replyToAll(quint64 id)
 
 void MainView::reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy)
 {
-  const Akonadi::Item item = itemFromId( id );
+  Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
+  fetch->fetchScope().fetchFullPayload();
+  fetch->setProperty( "replyStrategy", QVariant::fromValue( replyStrategy ) );
+  connect( fetch, SIGNAL(result(KJob*)), SLOT(replyFetchResult(KJob*)) );
+}
+
+void MainView::replyFetchResult(KJob* job)
+{
+  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  if ( job->error() || fetch->items().isEmpty() )
+    return;
+  
+  const Akonadi::Item item = fetch->items().first();
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
-  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), id );
+  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
   factory.setIdentityManager( Global::identityManager() );
-  factory.setReplyStrategy( replyStrategy );
+  factory.setReplyStrategy( fetch->property( "replyStrategy" ).value<MessageComposer::ReplyStrategy>() );
 
   ComposerView *composer = new ComposerView;
   composer->setMessage( factory.createReply().msg );

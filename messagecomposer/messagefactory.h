@@ -274,4 +274,6 @@ private:
 
 }
 
+Q_DECLARE_METATYPE( MessageComposer::ReplyStrategy )
+
 #endif
