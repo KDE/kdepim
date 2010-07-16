@@ -46,7 +46,8 @@ signals:
 
 
 private slots:
-    void slotWeekdaysChanged( const QStringList & checkedItems );
+    void slotWeekdaysChanged();
+    void slotMandatoryRolesChanged();
     void slotStartDateChanged( const QDate & newDate );
 
 private:

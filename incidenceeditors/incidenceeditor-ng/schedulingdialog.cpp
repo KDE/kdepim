@@ -42,7 +42,8 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mR
 
     connect( mStartDate, SIGNAL( dateChanged( QDate ) ), this, SLOT( slotStartDateChanged( QDate ) ) );
 
-    connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged( QStringList ) ) );
+    connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged() ) );
+    connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 }
 
 
@@ -53,6 +54,7 @@ SchedulingDialog::~SchedulingDialog()
 
 void SchedulingDialog::fillCombos()
 {
+// Note: we depend on the following order
 #ifdef KDEPIM_MOBILE_UI
     mRolesCombo->addItem( DesktopIcon( "meeting-participant", 48 ),
                           KCal::Attendee::roleName( KCal::Attendee::ReqParticipant ) );
@@ -95,8 +97,19 @@ void SchedulingDialog::updateWeekDays( const QDate& oldDate )
     mWeekdayCombo->setItemEnabled( newStartDayIndex, false );
 }
 
-void SchedulingDialog::slotWeekdaysChanged( const QStringList& checkedItems )
+void SchedulingDialog::slotWeekdaysChanged()
 {
-
+    // notify the resolver
+    mResolver->setAllowedWeekdays( mWeekdayCombo->days() );
 }
 
+void SchedulingDialog::slotMandatoryRolesChanged()
+{
+    QSet<KCal::Attendee::Role> roles;
+    for( int i = 0; i < mRolesCombo->count(); ++i )
+    {
+      if( mRolesCombo->itemCheckState( i ) == Qt::Checked )
+        roles << KCal::Attendee::Role( i );
+    }
+    mResolver->setMandatoryRoles( roles );
+}
