@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Addressbook
+Name[es]=Libreta de direcciones de KDE
 Name[pt]=Livro de Endereços do KDE
 Name[pt_BR]=Livro de endereços do KDE
 Name[sv]=KDE:s adressbok

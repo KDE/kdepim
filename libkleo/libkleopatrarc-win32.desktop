@@ -66,6 +66,7 @@ output-file=sha256sum.txt
 id=sha256sum
 Name=sha256sum
 Name[pt]=sha256sum
+Name[pt_BR]=sha256sum
 Name[sv]=SHA256-summa
 Name[uk]=sha256sum
 Name[x-test]=xxsha256sumxx
