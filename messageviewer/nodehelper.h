@@ -120,6 +120,13 @@ public:
      */
     KMime::Message *messageWithExtraContent( KMime::Content* topLevelNode );
 
+    /**
+     * Returns true if the given node at least one extra content node,
+     *  implying that the given node is an encrypted node or otherwise a type of
+     *  node that needs extra handling.
+     */
+    bool isPermanentwWithExtraContent( KMime::Content* node );
+    
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
 
