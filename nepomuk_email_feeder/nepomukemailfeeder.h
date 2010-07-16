@@ -45,7 +45,7 @@ class NepomukEMailFeeder : public NepomukFeederAgent<NepomukFast::Mailbox>, publ
     void removeSearch(const Akonadi::Collection& resultCollection);
 
   protected:
-    ItemFetchScope fetchScopeForcollection(const Akonadi::Collection& collection);
+    ItemFetchScope fetchScopeForCollection(const Akonadi::Collection& collection);
 
   private:
     bool needsReIndexing() const;
