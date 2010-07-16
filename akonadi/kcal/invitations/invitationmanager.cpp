@@ -49,8 +49,8 @@ struct InvitationHandler::Private
 /// Methods
   Private( Calendar *cal );
 
-  InvitationHandler::Action sentInvitation( int messageBoxReturnCode,
-                                           const Incidence::Ptr &incidence );
+  InvitationHandler::SendStatus sentInvitation( int messageBoxReturnCode,
+                                                const Incidence::Ptr &incidence );
 
   /**
     We are the organizer. If there is more than one attendee, or if there is
@@ -78,9 +78,12 @@ InvitationHandler::Private::Private( Calendar *cal )
   Q_ASSERT( mCalendar);
 }
 
-InvitationHandler::Action InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
-                                                                    const Incidence::Ptr &incidence )
+InvitationHandler::SendStatus InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
+                                                                          const Incidence::Ptr &incidence )
 {
+  // The value represented by messageBoxReturnCode is the answer on the question:
+  // Do you want to email the invitation to the attendees?
+
   if ( messageBoxReturnCode == KMessageBox::Yes ) {
 
     // We will be sending out a message here. Now make sure there is some summary
@@ -90,19 +93,23 @@ InvitationHandler::Action InvitationHandler::Private::sentInvitation( int messag
     // Send the mail
     MailScheduler scheduler( mCalendar );
     if( scheduler.performTransaction( incidence, mMethod ) )
-      return InvitationsSent;
+      return InvitationHandler::Success;
 
     messageBoxReturnCode = KMessageBox::questionYesNo( mParent,
                                                        i18n( "Sending group scheduling email failed." ),
                                                        i18n( "Group Scheduling Email" ),
                                                        KGuiItem( i18n( "Abort Update" ) ),
                                                        KGuiItem( i18n( "Do Not Send" ) ) );
-//    return messageBoxReturnCode == KMessageBox::No;
+    if ( messageBoxReturnCode == KMessageBox::Yes )
+      return InvitationHandler::FailAbortUpdate;
+    else
+      return InvitationHandler::FailKeepUpdate;
+
   } else if ( messageBoxReturnCode == KMessageBox::No ) {
-    return CanceledByUser;
+    return InvitationHandler::Canceled;
   } else {
     Q_ASSERT( false ); // TODO Figure out if this can happen and if so how (maybe by closing the dialog with x)
-    return CanceledByUser;
+    return InvitationHandler::Canceled;
   }
 }
 
@@ -216,7 +223,7 @@ void InvitationHandler::setMethod( iTIPMethod method )
   d->mMethodSet = true;
 }
 
-InvitationHandler::Action InvitationHandler::sendIncidenceCreatedMessage( const Incidence::Ptr &incidence )
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceCreatedMessage( const Incidence::Ptr &incidence )
 {
   Q_ASSERT( d->mMethodSet );
   /// When we created the incidence, we *must* be the organizer.
@@ -225,7 +232,7 @@ InvitationHandler::Action InvitationHandler::sendIncidenceCreatedMessage( const 
   int messageBoxReturnCode;
 
   if ( !d->weNeedToSendMailFor( incidence ) )
-    return CanceledByUser;
+    return InvitationHandler::NoSendingNeeded;
 
   QString question;
   if ( incidence->type() == "Event" ) {
@@ -249,7 +256,7 @@ InvitationHandler::Action InvitationHandler::sendIncidenceCreatedMessage( const 
   return d->sentInvitation( messageBoxReturnCode, incidence );
 }
 
-InvitationHandler::Action InvitationHandler::sendIncidenceModifiedMessage( const Incidence::Ptr &incidence, bool attendeeStatusChanged )
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( const Incidence::Ptr &incidence, bool attendeeStatusChanged )
 {
   Q_ASSERT( d->mMethodSet );
 
@@ -303,7 +310,7 @@ InvitationHandler::Action InvitationHandler::sendIncidenceModifiedMessage( const
   return d->sentInvitation( messageBoxReturnCode, incidence );
 }
 
-InvitationHandler::Action InvitationHandler::sendIncidenceDeletedMessage( const Incidence::Ptr &incidence )
+InvitationHandler::SendStatus InvitationHandler::sendIncidenceDeletedMessage( const Incidence::Ptr &incidence )
 {
   Q_ASSERT( d->mMethodSet );
   Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );

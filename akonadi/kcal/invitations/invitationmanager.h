@@ -57,11 +57,12 @@ public:
     InvitationHandler( Akonadi::Calendar *cal );
     ~InvitationHandler();
 
-    enum Action {
-      CanceledByUser,
-      InvitationsSent,
-      NoSendingNeeded,
-      UnsuportedIncidenceTypeIgnored
+    enum SendStatus {
+      Canceled,        ///> Sending was canceled by the user, meaning there are local changes of which other attendees are not aware.
+      FailKeepUpdate,  ///> Sending failed, the changes to the incidence must be kept.
+      FailAbortUpdate, ///> Sending failed, the changes to the incidence must be undone.
+      NoSendingNeeded, ///> In some cases it is not needed to send an invitation (e.g. when we are the only attendee)
+      Success          ///> The invitation was sent to all attendees.
     };
 
     bool receiveInvitation( const QString& receiver,
@@ -88,20 +89,20 @@ public:
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    Action sendIncidenceCreatedMessage( const KCal::Incidence::Ptr &incidence );
+    SendStatus sendIncidenceCreatedMessage( const KCal::Incidence::Ptr &incidence );
 
     /**
       Handles sending of invitations for modified incidences.
       @param incidence The modified incidence.
       @param attendeeSatusChanged ????
      */
-    Action sendIncidenceModifiedMessage( const KCal::Incidence::Ptr &incidence, bool attendeeStatusChanged );
+    SendStatus sendIncidenceModifiedMessage( const KCal::Incidence::Ptr &incidence, bool attendeeStatusChanged );
 
     /**
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    Action sendIncidenceDeletedMessage( const KCal::Incidence::Ptr &incidence );
+    SendStatus sendIncidenceDeletedMessage( const KCal::Incidence::Ptr &incidence );
 
     /**
       Send counter proposal message.
