@@ -32,7 +32,7 @@ set( kcalakonadi_LIB_SRC
      freebusymanager.cpp
      dndfactory.cpp
      incidencechanger.cpp
-     invitations/invitationmanager.cpp
+     invitations/invitationhandler.cpp
 )
 
 kde4_add_kcfg_files(kcalakonadi_LIB_SRC kcalprefs_base.kcfgc )

@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-#include "invitationmanager.h"
+#include "invitationhandler.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -398,4 +398,4 @@ InvitationHandler::SendStatus InvitationHandler::sendCounterProposal( const Even
   }
 }
 
-#include "invitationmanager.moc"
+#include "invitationhandler.moc"
