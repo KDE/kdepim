@@ -35,10 +35,10 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mR
     setupUi( this );
     fillCombos();
 
-    connect( mStartDate, SIGNAL( dateChanged( QDate ) ), mResolver, SLOT( setEarliestStartDate( QDate ) ) );
-    connect( mStartTime, SIGNAL( timeChanged( QTime ) ), mResolver, SLOT( setEarliestStartTime( QTime ) ) );
-    connect( mEndDate, SIGNAL( dateChanged( QDate ) ), mResolver, SLOT( setLatestEndDate( QDate ) ) );
-    connect( mEndTime, SIGNAL( timeChanged( QTime ) ), mResolver, SLOT( setLatestEndTime( QTime ) ) );
+    connect( mStartDate, SIGNAL( dateChanged( QDate ) ), mResolver, SLOT( setEarliestDate( QDate ) ) );
+    connect( mStartTime, SIGNAL( timeChanged( QTime ) ), mResolver, SLOT( setEarliestTime( QTime ) ) );
+    connect( mEndDate, SIGNAL( dateChanged( QDate ) ), mResolver, SLOT( setLatestDate( QDate ) ) );
+    connect( mEndTime, SIGNAL( timeChanged( QTime ) ), mResolver, SLOT( setLatestTime( QTime ) ) );
 
     connect( mStartDate, SIGNAL( dateChanged( QDate ) ), this, SLOT( slotStartDateChanged( QDate ) ) );
 

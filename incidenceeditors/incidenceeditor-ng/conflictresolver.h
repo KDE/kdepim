@@ -138,14 +138,18 @@ signals:
 
 public slots:
     /**
-     * Set the date time parameters
+     * Set the timeframe constraints
      *
      * These control the timeframe for which conflicts are to be resolved.
      */
-    void setEarliestStartDate( const QDate &newDate );
-    void setEarliestStartTime( const QTime &newTime );
-    void setLatestEndDate( const QDate &newDate );
-    void setLatestEndTime( const QTime &newTime );
+    void setEarliestDate( const QDate &newDate );
+    void setEarliestTime( const QTime &newTime );
+    void setLatestDate( const QDate &newDate );
+    void setLatestTime( const QTime &newTime );
+
+    void setEarliestDateTime( const KDateTime &newDateTime );
+    void setLatestDateTime( const KDateTime &newDateTime );
+
 
 protected:
     void timerEvent( QTimerEvent * );
