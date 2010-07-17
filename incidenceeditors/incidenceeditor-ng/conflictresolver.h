@@ -26,6 +26,7 @@
 #include "incidenceeditors-ng_export.h"
 #include <KDateTime>
 #include <KCal/Attendee>
+#include <KCal/Period>
 
 #include <QObject>
 #include <QTimer>
@@ -44,9 +45,6 @@ namespace IncidenceEditorsNG
 {
 
 class FreeBusyItem;
-
-typedef QPair<KDateTime, KDateTime> DateTimeRange;
-typedef QVector<DateTimeRange> DateTimeRangeList; // TODO this should probably be a QSet, but that means creating a hash function for KDateTime
 
 /**
  * Takes a list of attendees and event info (e.g., min time start, max time end)
@@ -71,6 +69,8 @@ public:
      * and integrated into the resolver.
      */
     void insertAttendee( const KCal::Attendee &attendee );
+
+    void insertAttendee( FreeBusyItem* freebusy );
     /**
      * Removes an attendee
      * The attendee will no longer be considered when
@@ -123,7 +123,7 @@ public:
      * @see setMandatoryRoles
      * @see setAllowedWeekdays
      */
-    DateTimeRangeList availableSlots() const;
+    KCal::Period::List availableSlots() const;
 
 signals:
     /**
@@ -162,6 +162,10 @@ public slots:
      * */
     void setAppointmentDuration( int seconds );
 
+    void findAllFreeSlots();
+
+    void setResolution( int seconds );
+
 protected:
     void timerEvent( QTimerEvent * );
 
@@ -183,9 +187,7 @@ private:
       Finds a free slot in the future which has at least the same size as
       the initial slot.
     */
-    bool findFreeSlot( const DateTimeRange &dateTimeRange );
-
-    void findAllFreeSlots();
+    bool findFreeSlot( const KCal::Period &dateTimeRange );
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) matches the 
@@ -218,8 +220,8 @@ private:
      * */
     void reload();
 
-    DateTimeRange mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
-    DateTimeRangeList mAvailableSlots;
+    KCal::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
+    KCal::Period::List mAvailableSlots;
     int mAppointmentDuration; //!< the minimum number of seconds the appointment slot should be
     QTimer mReloadTimer;
     bool mManagerConnected;
@@ -229,6 +231,7 @@ private:
 
     QSet<KCal::Attendee::Role> mMandatoryRoles;
     QBitArray mWeekdays; //!< a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
+    int mSlotResolutionSeconds;
 };
 
 }
