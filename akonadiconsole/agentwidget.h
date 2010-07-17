@@ -46,6 +46,7 @@ protected:
     void addAgent();
     void removeAgent();
     void configureAgent();
+    void configureAgentRemote();
     void synchronizeAgent();
     void synchronizeTree();
     void toggleOnline();
@@ -61,7 +62,7 @@ protected:
 
   private:
     Ui::AgentWidget ui;
-    QMenu *mSyncMenu;
+    QMenu *mSyncMenu, *mConfigMenu;
     Akonadi::AgentInstance mCloneSource;
 };
 
