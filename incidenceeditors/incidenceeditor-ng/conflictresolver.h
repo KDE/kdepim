@@ -23,6 +23,7 @@
 #ifndef CONFLICTRESOLVER_H
 #define CONFLICTRESOLVER_H
 
+#include "incidenceeditors-ng_export.h"
 #include <KDateTime>
 #include <KCal/Attendee>
 
@@ -55,7 +56,7 @@ typedef QVector<DateTimeRange> DateTimeRangeList; // TODO this should probably b
  * them to choose a correct time.
  * @author Casey Link
  */
-class ConflictResolver : public QObject
+class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
 {
     Q_OBJECT
 public:
