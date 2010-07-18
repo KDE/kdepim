@@ -37,7 +37,7 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 #include <KABC/Address>
-#include <KCal/Event>
+#include <kcalcore/event.h>
 #include <KComboBox>
 #include <KDebug>
 #include <KMessageBox>
@@ -105,22 +105,22 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
 
   connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
 
-  connect( mAttendeeEditor, SIGNAL( changed( KCal::Attendee, KCal::Attendee ) ), this, SLOT( slotAttendeeChanged( KCal::Attendee,KCal::Attendee ) ) );
-  
-  // set the default organizer 
+  connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee, KCalCore::Attendee ) ), this, SLOT( slotAttendeeChanged( KCalCore::Attendee,KCalCore::Attendee ) ) );
+
+  // set the default organizer
 //   mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
 }
 
-void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceAttendee::load( KCalCore::Incidence::ConstPtr incidence )
 {
   mOrigIncidence = incidence;
-  const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
+  const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer()->email() );
 
-  if ( itsMe || incidence->organizer().isEmpty() ) {
+  if ( itsMe || incidence->organizer()->isEmpty() ) {
     mUi->mOrganizerStack->setCurrentIndex( 0 );
 
     int found = -1;
-    QString fullOrganizer = incidence->organizer().fullName();
+    QString fullOrganizer = incidence->organizer()->fullName();
     for ( int i = 0; i < mUi->mOrganizerCombo->count(); ++i ) {
       if ( mUi->mOrganizerCombo->itemText( i ) == fullOrganizer ) {
         found = i;
@@ -137,31 +137,26 @@ void IncidenceAttendee::load( KCal::Incidence::ConstPtr incidence )
     mUi->mOrganizerLabel->setText( incidence->organizer().fullName() );
   }
 
-  KCal::Attendee::List al = incidence->attendees();
-  foreach( const KCal::Attendee* a, al ) {
+  KCalCore::Attendee::List al = incidence->attendees();
+  foreach( const KCalCore::Attendee::Ptr &a, al ) {
     if( a )
-      mAttendeeEditor->addAttendee( *a );
+      mAttendeeEditor->addAttendee( a );
   }
 
-  if ( IncidenceEditor::incidence<KCal::Event::ConstPtr>( ) )
+  if ( IncidenceEditor::incidence<KCalCore::Event::ConstPtr>( ) )
     mAttendeeEditor->setActions( AttendeeLine::EventActions );
   else
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
 }
 
-void IncidenceAttendee::save( KCal::Incidence::Ptr incidence )
+void IncidenceAttendee::save( KCalCore::Incidence::Ptr incidence )
 {
   incidence->clearAttendees();
 
   AttendeeData::List attendees = mAttendeeEditor->attendees();
 
-  foreach( AttendeeData::Ptr attPtr, attendees ) {
-    KCal::Attendee *attendee = attPtr.data();
+  foreach( AttendeeData::Ptr attendee, attendees ) {
     Q_ASSERT( attendee );
-    // we create a new attendee object because the original
-    // is guarded by qsharedpointer, and the Incidence
-    // takes control of the attendee.
-    attendee = new KCal::Attendee( *attendee );
 
     bool skip = false;
     if ( KPIMUtils::isValidAddress( attendee->email() ) ) {
@@ -186,14 +181,14 @@ bool IncidenceAttendee::isDirty() const
   //TODO check free busy ?
   if( !mOrigIncidence  )
     return false;
-  KCal::Attendee::List origList = mOrigIncidence->attendees();
+  KCalCore::Attendee::List origList = mOrigIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
 
   if( origList.size() != newList.size() )
     return true;
-  
+
   foreach( const AttendeeData::Ptr a, newList ) {
-    KCal::Attendee *attendee = a.data();
+    KCalCore::Attendee::Ptr attendee = a;
     Q_ASSERT( attendee );
     if( !origList.contains( attendee ) )
       return true;
@@ -311,7 +306,7 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 #endif
 }
 
-void IncidenceAttendee::slotAttendeeChanged( const KCal::Attendee& oldAttendee, const KCal::Attendee& newAttendee )
+void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee& oldAttendee, const KCalCore::Attendee& newAttendee )
 {
    // if newAttendee's email is empty, we are probably removing an attendee
    if( mConflictResolver->containsAttendee( oldAttendee ) )
@@ -336,15 +331,15 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&
                          KPIMUtils::compareEmail( a.preferredEmail(),
                                                   mUi->mOrganizerCombo->currentText(), false );
-  KCal::Attendee::PartStat partStat = KCal::Attendee::NeedsAction;
+  KCalCore::Attendee::PartStat partStat = KCalCore::Attendee::NeedsAction;
   bool rsvp = true;
 
   if ( myself && sameAsOrganizer ) {
-    partStat = KCal::Attendee::Accepted;
+    partStat = KCalCore::Attendee::Accepted;
     rsvp = false;
   }
-  KCal::Attendee newAt( a.realName(), a.preferredEmail(), rsvp,
-                                  partStat, KCal::Attendee::ReqParticipant, a.uid() );;
+  KCalCore::Attendee newAt( a.realName(), a.preferredEmail(), rsvp,
+                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() );;
   mAttendeeEditor->addAttendee( newAt );
 }
 
@@ -354,7 +349,7 @@ void IncidenceAttendee::slotEventDurationChanged()
   KDateTime end = mDateTime->currentEndDateTime();
 
   Q_ASSERT( start < end );
-  
+
   int duration = start.secsTo( end );
   mConflictResolver->setAppointmentDuration( duration );
 #ifndef KDEPIM_MOBILE_UI

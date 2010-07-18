@@ -23,8 +23,8 @@
 
 #include "freebusyitem.h"
 
-#include <KCal/FreeBusy>
-#include <KCal/Attendee>
+#include <kcalcore/freebusy.h>
+#include <kcalcore/attendee.h>
 
 #include <QtCore/QObject>
 
@@ -46,7 +46,7 @@ private slots:
 
 private:
     void insertAttendees();
-    void addAttendee( const QString &email, const KCal::FreeBusy &fb, KCal::Attendee::Role role = KCal::Attendee::ReqParticipant ) ;
+    void addAttendee( const QString &email, const KCalCore::FreeBusy &fb, KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant ) ;
     QList<IncidenceEditorsNG::FreeBusyItem*> attendees;
     QWidget *parent;
     IncidenceEditorsNG::ConflictResolver *resolver;

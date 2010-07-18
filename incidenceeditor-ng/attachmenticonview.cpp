@@ -31,6 +31,8 @@
 
 #include "attachmenticonview.h"
 
+#include <kcalcore/attachment.h>
+
 #include <QtCore/QMimeData>
 #include <QtGui/QDrag>
 #include <QtGui/QKeyEvent>
@@ -40,22 +42,20 @@
 #include <KDE/KTemporaryFile>
 #include <KDE/KUrl>
 
-#include <KCal/Attachment>
-
 using namespace IncidenceEditorsNG;
 
-AttachmentIconItem::AttachmentIconItem( KCal::Attachment *att, QListWidget *parent )
+AttachmentIconItem::AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QListWidget *parent )
   : QListWidgetItem( parent )
 {
   if ( att ) {
-    mAttachment = new KCal::Attachment( *att );
+    mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( *att.data() ) );
   } else {
     // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
-    mAttachment = new KCal::Attachment( '\0' ); //use the non-uri constructor
+    mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( '\0' ) ); //use the non-uri constructor
                                                 // as we want inline by default
 #else
-    mAttachment = new KCal::Attachment( QString() );
+    mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( QString() ) );
 #endif
   }
   readAttachment();
@@ -64,10 +64,9 @@ AttachmentIconItem::AttachmentIconItem( KCal::Attachment *att, QListWidget *pare
 
 AttachmentIconItem::~AttachmentIconItem()
 {
-  delete mAttachment;
 }
 
-KCal::Attachment *AttachmentIconItem::attachment() const
+KCalCore::Attachment::Ptr AttachmentIconItem::attachment() const
 {
   return mAttachment;
 }
@@ -183,7 +182,7 @@ AttachmentIconView::AttachmentIconView( QWidget *parent )
   setContextMenuPolicy( Qt::CustomContextMenu );
 }
 
-KUrl AttachmentIconView::tempFileForAttachment( KCal::Attachment *attachment ) const
+KUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const
 {
   if ( mTempFiles.contains( attachment ) ) {
     return mTempFiles.value( attachment );

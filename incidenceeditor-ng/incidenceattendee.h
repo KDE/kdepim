@@ -49,14 +49,14 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
   Q_OBJECT
 public:
-#ifdef KDEPIM_MOBILE_UI  
+#ifdef KDEPIM_MOBILE_UI
     IncidenceAttendee( Ui::EventOrTodoMore *ui = 0 );
 #else
     IncidenceAttendee( Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( KCalCore::Incidence::ConstPtr incidence );
+    virtual void save( KCalCore::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 signals:
     void attendeeCountChanged( int );
@@ -83,9 +83,9 @@ private:
     Ui::EventOrTodoMore *mUi;
 #else
     Ui::EventOrTodoDesktop *mUi;
-#endif    
+#endif
     AttendeeEditor *mAttendeeEditor;
-    KCal::Incidence::ConstPtr mOrigIncidence;
+    KCalCore::Incidence::ConstPtr mOrigIncidence;
 
     QPointer<SchedulingDialog> mSchedulingDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;

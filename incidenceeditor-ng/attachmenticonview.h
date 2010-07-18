@@ -4,7 +4,8 @@
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
-  Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,15 +32,15 @@
 #ifndef ATTACHMENTICONVIEW_H
 #define ATTACHMENTICONVIEW_H
 
-#include <QtGui/QListWidget>
+#include <kcalcore/attachment.h>
 
 #include <KDE/KMimeType>
 
-class KUrl;
+#include <QtGui/QListWidget>
 
-namespace KCal {
-class Attachment;
-}
+
+
+class KUrl;
 
 namespace IncidenceEditorsNG {
 
@@ -47,27 +48,27 @@ class AttachmentIconView : public QListWidget
 {
   friend class EditorAttachments;
   public:
-    AttachmentIconView( QWidget *parent );
+    AttachmentIconView( QWidget *parent = 0 );
 
     QMimeData* mimeData() const;
-    KUrl tempFileForAttachment( KCal::Attachment *attachment ) const;
-    
+    KUrl tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const;
+
   protected:
     QMimeData* mimeData( const QList<QListWidgetItem*> items ) const;
     void startDrag( Qt::DropActions supportedActions );
     void keyPressEvent( QKeyEvent* event );
 
   private:
-    mutable QHash<KCal::Attachment *, KUrl> mTempFiles;
+    mutable QHash<KCalCore::Attachment::Ptr , KUrl> mTempFiles;
 };
 
 class AttachmentIconItem : public QListWidgetItem
 {
   public:
-    AttachmentIconItem( KCal::Attachment *att, QListWidget *parent );
+    AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QListWidget *parent );
     ~AttachmentIconItem();
 
-    KCal::Attachment *attachment() const;
+    KCalCore::Attachment::Ptr attachment() const;
     const QString uri() const;
     void setUri( const QString &uri );
 
@@ -89,7 +90,7 @@ class AttachmentIconItem : public QListWidgetItem
     void readAttachment();
 
   private:
-    KCal::Attachment *mAttachment;
+    KCalCore::Attachment::Ptr mAttachment;
 };
 
 }

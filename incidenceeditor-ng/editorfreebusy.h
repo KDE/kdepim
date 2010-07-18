@@ -29,6 +29,8 @@
 
 #include "attendeeeditor.h"
 
+#include <kcalcore/freebusy.h>
+
 #include <QDateTime>
 #include <QTimer>
 #include <QAbstractItemModel>
@@ -43,10 +45,6 @@ namespace KDGantt {
   class GraphicsView;
 }
 
-namespace KCal {
-  class FreeBusy;
-}
-
 class KDateTime;
 
 class EditorFreeBusy : public QWidget
@@ -59,8 +57,8 @@ class EditorFreeBusy : public QWidget
     void setUpdateEnabled( bool enabled );
     bool updateEnabled() const;
 
-    void insertAttendee( KCal::Attendee *, bool readFBList = true );
-    void removeAttendee( KCal::Attendee * );
+    void insertAttendee( const KCalCore::Attendee::Ptr & , bool readFBList = true );
+    void removeAttendee( const KCalCore::Attendee::Ptr &  );
     void clearAttendees();
 
 
@@ -73,7 +71,7 @@ class EditorFreeBusy : public QWidget
     void dateTimesChanged( const QDateTime &, const QDateTime & );
 
   public slots:
-    void slotInsertFreeBusy( KCal::FreeBusy *fb, const QString &email );
+    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
 
     void setDateTimes( const QDateTime &, const QDateTime & );
 
@@ -99,12 +97,12 @@ class EditorFreeBusy : public QWidget
 
   protected:
     void timerEvent( QTimerEvent * );
-    KCal::Attendee *currentAttendee() const;
+    KCalCore::Attendee::Ptr currentAttendee() const;
     /* reimpl */
 //     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();
     void clearSelection() const;
-    void changeStatusForMe( KCal::Attendee::PartStat status );
+    void changeStatusForMe( KCalCore::Attendee::PartStat status );
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
   private slots:
@@ -121,7 +119,7 @@ class EditorFreeBusy : public QWidget
     void updateStatusSummary();
     void reload();
     FreeBusyItem* selectedItem() const;
-    
+
     KDGantt::GraphicsView *mGanttView;
     QTreeWidget *mLeftView;
     RowController *mRowController;

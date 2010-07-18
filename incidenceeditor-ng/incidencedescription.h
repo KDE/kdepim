@@ -18,46 +18,42 @@
     02110-1301, USA.
 */
 
-#ifndef INCIDENCEALARM_H
-#define INCIDENCEALARM_H
+#ifndef INCIDENCEDESCRIPTIONEDITOR_H
+#define INCIDENCEDESCRIPTIONEDITOR_H
 
 #include "incidenceeditor-ng.h"
 
 namespace Ui {
-class EventOrTodoDesktop;
-class EventOrTodoMore;
+  class EventOrTodoMore;
+  class EventOrTodoDesktop;
 }
 
 namespace IncidenceEditorsNG {
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
+/**
+ * The IncidenceDescriptionEditor keeps track of the following Incidence parts:
+ * - description
+ */
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
 {
   Q_OBJECT
   public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAlarm( Ui::EventOrTodoMore *ui = 0 );
+    IncidenceDescription( Ui::EventOrTodoMore *ui );
 #else
-    IncidenceAlarm( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceDescription( Ui::EventOrTodoDesktop *ui );
 #endif
 
     virtual void load( KCalCore::Incidence::ConstPtr incidence );
     virtual void save( KCalCore::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
-  Q_SIGNALS:
-    void alarmCountChanged( int newCount );
-
-  private Q_SLOTS:
-    void editCurrentAlarm();
-    void newAlarm();
-    void newAlarmFromPreset();
-    void removeCurrentAlarm();
-    void toggleCurrentAlarm();
-    void updateAlarmList();
-    void updateButtons();
+  private slots:
+    void toggleRichTextDescription();
+    void enableRichTextDescription( bool enable );
 
   private:
-    QString stringForAlarm( const KCalCore::Alarm::Ptr &alarm );
+    void setupToolBar();
 
   private:
 #ifdef KDEPIM_MOBILE_UI
@@ -66,11 +62,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 #endif
 
-    KCalCore::Alarm::List mAlarms;
-    int mEnabledAlarmCount;
-    bool mIsTodo;
 };
 
-}
+} // IncidenceEditorsNG
 
-#endif // INCIDENCEALARM_H
+#endif // INCIDENCEDESCRIPTIONEDITOR_H

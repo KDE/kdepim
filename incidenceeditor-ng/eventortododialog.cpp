@@ -20,11 +20,11 @@
 
 #include "eventortododialog.h"
 
-#include <KCal/CalendarLocal>
-#include <KCal/ICalFormat>
-#include <KCal/Incidence>
-#include <KCal/Event>
-#include <KCal/Todo>
+#include <kcalcore/memorycalendar.h>
+#include <kcalcore/icalformat.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
 #include <KConfigSkeleton>
 #include <KMessageBox>
 #include <KStandardDirs>
@@ -220,7 +220,7 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
 {
   Q_Q( EventOrTodoDialog );
 
-  KCal::CalendarLocal cal( KSystemTimeZones::local() );
+  KCalCore::CalendarLocal cal( KSystemTimeZones::local() );
   QString fileName = KStandardDirs::locateLocal( "data",
                        "korganizer/templates/" + mEditor->type() + '/' + templateName );
 
@@ -229,20 +229,20 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
     return;
   }
 
-  KCal::ICalFormat format;
+  KCalCore::ICalFormat format;
   if ( !format.load( &cal, fileName ) ) {
     KMessageBox::error( q, i18nc( "@info", "Error loading template file '%1'.", fileName ) );
     return;
   }
 
-  KCal::Incidence::List incidences = cal.incidences();
+  KCalCore::Incidence::List incidences = cal.incidences();
   if ( incidences.isEmpty() ) {
     KMessageBox::error( q, i18nc( "@info", "Template does not contain a valid incidence." ) );
     return;
   }
 
   mIeDateTime->setActiveDate( QDate() );
-  mEditor->load( KCal::Incidence::Ptr( incidences.first()->clone() ) );
+  mEditor->load( KCalCore::Incidence::Ptr( incidences.first()->clone() ) );
 }
 
 
@@ -267,16 +267,16 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
 {
   Q_ASSERT( ! templateName.isEmpty() );
 
-  KCal::Incidence::Ptr incidence( new KCal::Event );
+  KCalCore::Incidence::Ptr incidence( new KCalCore::Event );
   mEditor->save( incidence );
 
   QString fileName = "templates/" + incidence->type();
   fileName.append( '/' + templateName );
   fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
 
-  KCal::CalendarLocal cal( KSystemTimeZones::local() );
+  KCalCore::CalendarLocal cal( KSystemTimeZones::local() );
   cal.addIncidence( incidence->clone() );
-  KCal::ICalFormat format;
+  KCalCore::ICalFormat format;
   format.save( &cal, fileName );
 }
 
@@ -344,10 +344,10 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish()
     const Akonadi::Item item = mItemManager->item();
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload() );
-    Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
+    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     // Now the item is succesfull saved, reload it in the editor in order to
     // reset the dirty status of the editor.
-    mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+    mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
 
     // Set the buttons to a reasonable state as well (ok and apply should be
     // disabled at this point).
@@ -359,8 +359,8 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish()
 
 bool EventOrTodoDialogPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
 {
-  return item.hasPayload() && item.hasPayload<KCal::Incidence::Ptr>()
-    && ( item.hasPayload<KCal::Event::Ptr>() || item.hasPayload<KCal::Todo::Ptr>() );
+  return item.hasPayload() && item.hasPayload<KCalCore::Incidence::Ptr>()
+    && ( item.hasPayload<KCalCore::Event::Ptr>() || item.hasPayload<KCalCore::Todo::Ptr>() );
 }
 
 bool EventOrTodoDialogPrivate::isDirty() const
@@ -376,9 +376,9 @@ bool EventOrTodoDialogPrivate::isValid()
 void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 {
   Q_ASSERT( hasSupportedPayload( item ) );
-  mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+  mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
 
-  if ( item.hasPayload<KCal::Event::Ptr>() ) {
+  if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
     mCalSelector->setMimeTypeFilter(
       QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
   } else {
@@ -389,15 +389,15 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 
 Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 {
-  KCal::Event::Ptr event( new KCal::Event );
+  KCalCore::Event::Ptr event( new KCalCore::Event );
   // Make sure that we don't loose uid for existing incidence
-  if ( mEditor->incidence<KCal::Incidence>() )
-    event->setUid( mEditor->incidence<KCal::Incidence>()->uid() );
+  if ( mEditor->incidence<KCalCore::Incidence>() )
+    event->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
   mEditor->save( event );
 
   Akonadi::Item result = item;
   result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  result.setPayload<KCal::Event::Ptr>( event );
+  result.setPayload<KCalCore::Event::Ptr>( event );
   return result;
 }
 
@@ -458,10 +458,10 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
   if ( item.isValid() ) {
     d->mItemManager->load( item );
   } else {
-    d->mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+    d->mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
   }
 
-  if ( item.hasPayload<KCal::Event::Ptr>() ) {
+  if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
     d->mCalSelector->setMimeTypeFilter(
       QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
   } else {

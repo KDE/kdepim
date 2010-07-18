@@ -44,8 +44,8 @@ public:
     IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
 #endif
 
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( KCalCore::Incidence::ConstPtr incidence );
+    virtual void save( KCalCore::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
 Q_SIGNALS:
@@ -80,11 +80,11 @@ private:
     /** DO NOT USE THIS METHOD DIRECTLY
         use subsOrdinal() instead for i18n * */
     QString numberToString( int number ) const;
-    void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
-    void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
+    void selectMonthlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType );
+    void selectYearlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType );
     void setDefaults();
     void setDuration( int duration );
-    void setExceptionDates( const KCal::DateList &dates );
+    void setExceptionDates( const KCalCore::DateList &dates );
     void setFrequency( int freq );
     void toggleRecurrenceWidgets( bool enable );
     /** Returns an array with the weekday on which the event occurs set to 1 */
@@ -104,7 +104,7 @@ private:
 #endif
     QDate mCurrentDate;
     IncidenceDateTime *mDateTime;
-    KCal::DateList mExceptionDates;
+    KCalCore::DateList mExceptionDates;
 };
 
 }

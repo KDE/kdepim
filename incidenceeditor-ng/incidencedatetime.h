@@ -23,10 +23,10 @@
 
 #include "combinedincidenceeditor.h"
 
-#include <KCal/Event>
-#include <KCal/Todo>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
 
-namespace KCal {
+namespace KCalCore {
 class ICalTimeZones;
 }
 
@@ -44,8 +44,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     IncidenceDateTime( Ui::EventOrTodoDesktop *ui = 0 );
     ~IncidenceDateTime();
 
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( KCalCore::Incidence::ConstPtr incidence );
+    virtual void save( KCalCore::Incidence::Ptr incidence );
     virtual bool isDirty() const;
 
     /**
@@ -81,21 +81,21 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
     void enableTimeEdits();
-    bool isDirty( KCal::Todo::ConstPtr todo ) const;
+    bool isDirty( KCalCore::Todo::ConstPtr todo ) const;
 
   private slots: /// Event specific
-    bool isDirty( KCal::Event::ConstPtr event ) const;
+    bool isDirty( KCalCore::Event::ConstPtr event ) const;
 
   private:
-    void load( KCal::Event::ConstPtr event );
-    void load( KCal::Todo::ConstPtr todo );
-    void save( KCal::Event::Ptr event );
-    void save( KCal::Todo::Ptr todo );
+    void load( KCalCore::Event::ConstPtr event );
+    void load( KCalCore::Todo::ConstPtr todo );
+    void save( KCalCore::Event::Ptr event );
+    void save( KCalCore::Todo::Ptr todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
 
   private:
-    KCal::ICalTimeZones *mTimeZones;
+    KCalCore::ICalTimeZones *mTimeZones;
     Ui::EventOrTodoDesktop *mUi;
 
     QDate mActiveDate;

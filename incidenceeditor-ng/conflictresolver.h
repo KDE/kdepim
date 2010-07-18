@@ -25,8 +25,8 @@
 
 #include "incidenceeditors-ng_export.h"
 #include <KDateTime>
-#include <KCal/Attendee>
-#include <KCal/Period>
+#include <kcalcore/attendee.h>
+#include <kcalcore/period.h>
 
 #include <QObject>
 #include <QTimer>
@@ -68,7 +68,7 @@ public:
      * The attendees free busy info will be fetched
      * and integrated into the resolver.
      */
-    void insertAttendee( const KCal::Attendee &attendee );
+    void insertAttendee( const KCalCore::Attendee &attendee );
 
     void insertAttendee( FreeBusyItem* freebusy );
     /**
@@ -76,7 +76,7 @@ public:
      * The attendee will no longer be considered when
      * resolving conflicts
      * */
-    void removeAttendee( const KCal::Attendee &attendee );
+    void removeAttendee( const KCalCore::Attendee &attendee );
     /**
      * Clear all attendees
      **/
@@ -85,7 +85,7 @@ public:
     /**
      * Returns whether the resolver contains the attendee
      */
-    bool containsAttendee( const KCal::Attendee &attendee );
+    bool containsAttendee( const KCalCore::Attendee &attendee );
 
     /**
      * Queues a reload of free/busy data.
@@ -115,7 +115,7 @@ public:
      * Default is all roles are mandatory.
      * @param roles the set of mandatory participant roles
      */
-    void setMandatoryRoles( const QSet<KCal::Attendee::Role> &roles );
+    void setMandatoryRoles( const QSet<KCalCore::Attendee::Role> &roles );
 
     /**
      * Returns a list of date time ranges that conform to the
@@ -123,7 +123,7 @@ public:
      * @see setMandatoryRoles
      * @see setAllowedWeekdays
      */
-    KCal::Period::List availableSlots() const;
+    KCalCore::Period::List availableSlots() const;
 
 signals:
     /**
@@ -170,7 +170,7 @@ protected:
     void timerEvent( QTimerEvent * );
 
 private slots:
-    void slotInsertFreeBusy( KCal::FreeBusy *fb, const QString &email );
+    void slotInsertFreeBusy( KCalCore::FreeBusy *fb, const QString &email );
 
     // Force the download of FB information
     void manualReload();
@@ -187,7 +187,7 @@ private:
       Finds a free slot in the future which has at least the same size as
       the initial slot.
     */
-    bool findFreeSlot( const KCal::Period &dateTimeRange );
+    bool findFreeSlot( const KCalCore::Period &dateTimeRange );
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) matches the 
@@ -212,7 +212,7 @@ private:
      * current mandatory role constraint.
      * @return true if the attendee is of one of the mandatory roles, false if not
      */
-    bool matchesRoleConstraint( const KCal::Attendee &attendee );
+    bool matchesRoleConstraint( const KCalCore::Attendee &attendee );
 
     void calculateConflicts();
     /**
@@ -220,8 +220,8 @@ private:
      * */
     void reload();
 
-    KCal::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
-    KCal::Period::List mAvailableSlots;
+    KCalCore::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
+    KCalCore::Period::List mAvailableSlots;
     int mAppointmentDuration; //!< the minimum number of seconds the appointment slot should be
     QTimer mReloadTimer;
     bool mManagerConnected;
@@ -229,7 +229,7 @@ private:
     QList<FreeBusyItem*> mFreeBusyItems;
     QWidget *mParentWidget;
 
-    QSet<KCal::Attendee::Role> mMandatoryRoles;
+    QSet<KCalCore::Attendee::Role> mMandatoryRoles;
     QBitArray mWeekdays; //!< a 7 bit array indicating the allowed days (bit 0 = Monday, value 1 = allowed).
     int mSlotResolutionSeconds;
 };

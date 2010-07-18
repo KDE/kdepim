@@ -26,7 +26,7 @@
 #include <KIconLoader>
 #include <KLocale>
 #include <KDebug>
-#include <KCal/Attendee>
+#include <kcalcore/attendee.h>
 
 using namespace IncidenceEditorsNG;
 
@@ -57,23 +57,23 @@ void SchedulingDialog::fillCombos()
 // Note: we depend on the following order
 #ifdef KDEPIM_MOBILE_UI
     mRolesCombo->addItem( DesktopIcon( "meeting-participant", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::ReqParticipant ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::ReqParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-participant-optional", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::OptParticipant ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::OptParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-observer", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::NonParticipant ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::NonParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::Chair ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::Chair ) );
 
 #else
     mRolesCombo->addItem( SmallIcon( "meeting-participant" ),
-                          KCal::Attendee::roleName( KCal::Attendee::ReqParticipant ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::ReqParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-participant-optional" ),
-                          KCal::Attendee::roleName( KCal::Attendee::OptParticipant ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::OptParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-observer" ),
-                          KCal::Attendee::roleName( KCal::Attendee::NonParticipant ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::NonParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-chair" ),
-                          KCal::Attendee::roleName( KCal::Attendee::Chair ) );
+                          KCalCore::Attendee::roleName( KCalCore::Attendee::Chair ) );
 
 #endif
 }
@@ -105,11 +105,11 @@ void SchedulingDialog::slotWeekdaysChanged()
 
 void SchedulingDialog::slotMandatoryRolesChanged()
 {
-    QSet<KCal::Attendee::Role> roles;
+    QSet<KCalCore::Attendee::Role> roles;
     for( int i = 0; i < mRolesCombo->count(); ++i )
     {
       if( mRolesCombo->itemCheckState( i ) == Qt::Checked )
-        roles << KCal::Attendee::Role( i );
+        roles << KCalCore::Attendee::Role( i );
     }
     mResolver->setMandatoryRoles( roles );
 }

@@ -154,10 +154,8 @@ class AttendeeLine : public KPIM::MultiplyingLine
     QSharedPointer<AttendeeData> mData;
     QString mUid;
     bool mModified;
-    
-
 };
-  
+
 }
 
 

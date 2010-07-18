@@ -21,11 +21,9 @@
 #ifndef ALARMDIALOG_H
 #define ALARMDIALOG_H
 
-#include <KDialog>
+#include <kcalcore/alarm.h>
 
-namespace KCal {
-class Alarm;
-}
+#include <KDialog>
 
 namespace Ui {
 class AlarmDialog;
@@ -52,8 +50,8 @@ class AlarmDialog : public KDialog
   public:
     AlarmDialog();
 
-    void load( KCal::Alarm *alarm );
-    void save( KCal::Alarm *alarm ) const;
+    void load( const KCalCore::Alarm::Ptr &alarm );
+    void save( const KCalCore::Alarm::Ptr &alarm ) const;
     void setIsTodoReminder( bool isTodo );
     void setOffset( int offset );
     void setUnit( Unit unit );

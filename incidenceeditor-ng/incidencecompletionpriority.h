@@ -1,6 +1,6 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+    Author: Kevin Krammer <krake@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,44 +18,36 @@
     02110-1301, USA.
 */
 
-#ifndef ALARMPRESETS_H
-#define ALARMPRESETS_H
+#ifndef INCIDENCECOMPLETIONPRIORITYEDITOR_H
+#define INCIDENCECOMPLETIONPRIORITYEDITOR_H
 
-#include <kcalcore/alarm.h>
+#include "combinedincidenceeditor.h"
 
-class QString;
-class QStringList;
+namespace Ui {
+class EventOrTodoDesktop;
+}
 
 namespace IncidenceEditorsNG {
 
-namespace AlarmPresets {
+class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceEditor
+{
+  Q_OBJECT
+  public:
+    explicit IncidenceCompletionPriority( Ui::EventOrTodoDesktop *ui );
+    ~IncidenceCompletionPriority();
 
-  enum When {
-    BeforeStart,
-    BeforeEnd
-  };
+    void load( KCalCore::Incidence::ConstPtr incidence );
+    void save( KCalCore::Incidence::Ptr incidence );
+    bool isDirty() const;
 
-  /**
-   * Returns the available presets.
-   */
-  QStringList availablePresets( When when = BeforeStart );
+  private:
+    class Private;
+    Private *const d;
 
-  /**
-   * Returns a recurrence preset for given name. The name <em>must</em> be one
-   * of availablePresets().
-   *
-   * Note: The caller takes ownership over the pointer.
-   */
-  KCalCore::Alarm::Ptr preset( When when, const QString &name );
-
-  /**
-   * Returns the index of the preset in availablePresets for the given recurrence,
-   * or -1 if no preset is equal to the given recurrence.
-   */
-  int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm );
+  Q_PRIVATE_SLOT( d, void sliderValueChanged(int) )
+  Q_PRIVATE_SLOT( d, void slotSetDirty() )
+};
 
 }
 
-}
-
-#endif // ALARMPRESETS_H
+#endif

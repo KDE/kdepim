@@ -22,7 +22,7 @@
 
 #include "freebusyitem.h"
 
-#include <KCal/FreeBusy>
+#include <kcalcore/freebusy.h>
 #include <KSystemTimeZones>
 
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
@@ -30,7 +30,7 @@
 
 using namespace IncidenceEditorsNG;
 
-FreeBusyItem::FreeBusyItem( const KCal::Attendee &attendee , QWidget *parentWidget ) :
+FreeBusyItem::FreeBusyItem( const KCalCore::Attendee &attendee , QWidget *parentWidget ) :
         mAttendee( attendee ), mTimerID( 0 ),
         mIsDownloading( false ), mParentWidget( parentWidget )
 {
@@ -39,19 +39,19 @@ FreeBusyItem::FreeBusyItem( const KCal::Attendee &attendee , QWidget *parentWidg
 
 }
 
-KCal::Attendee FreeBusyItem::attendee() const
+KCalCore::Attendee FreeBusyItem::attendee() const
 {
     return mAttendee;
 }
 
 
-void FreeBusyItem::setFreeBusy(KCal::FreeBusy* fb)
+void FreeBusyItem::setFreeBusy(KCalCore::FreeBusy* fb)
 {
     mFreeBusy = fb;
     mIsDownloading = false;
 }
 
-KCal::FreeBusy* FreeBusyItem::freeBusy() const
+KCalCore::FreeBusy* FreeBusyItem::freeBusy() const
 {
     return mFreeBusy;
 }

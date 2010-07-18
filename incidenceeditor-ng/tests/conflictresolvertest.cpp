@@ -24,8 +24,8 @@
 #include "../groupwareintegration.h"
 
 #include <KUrl>
-#include <KCal/Event>
-#include <KCal/Period>
+#include <kcalcore/event.h>
+#include <kcalcore/period.h>
 #include <KCal/Duration>
 #include <qtest_kde.h>
 #include <KDebug>

@@ -20,7 +20,7 @@
 
 #include "alarmdialog.h"
 
-#include <KCal/Alarm>
+#include <kcalcore/alarm.h>
 #include <KPIMUtils/Email>
 
 #include "editorconfig.h"
@@ -28,7 +28,7 @@
 #include "ui_alarmdialog.h"
 
 using namespace IncidenceEditorsNG;
-using namespace KCal;
+using namespace KCalCore;
 
 AlarmDialog::AlarmDialog()
   : mUi( new Ui::AlarmDialog )
@@ -49,7 +49,7 @@ AlarmDialog::AlarmDialog()
     mUi->mSoundFile->setUrl( IncidenceEditors::EditorConfig::instance()->audioFilePath() );
 }
 
-void AlarmDialog::load( Alarm *alarm )
+void AlarmDialog::load( const Alarm::Ptr &alarm )
 {
   setWindowTitle( i18n( "Edit existing alarm" ) );
   if ( !alarm ) {
@@ -113,11 +113,11 @@ void AlarmDialog::load( Alarm *alarm )
   case Alarm::Email:
   {
     mUi->mTypeCombo->setCurrentIndex( 3 );
-    QList<Person> addresses = alarm->mailAddresses();
+    QList<Person::Ptr> addresses = alarm->mailAddresses();
     QStringList add;
-    for ( QList<Person>::ConstIterator it = addresses.constBegin();
+    for ( QList<Person::Ptr>::ConstIterator it = addresses.constBegin();
           it != addresses.constEnd(); ++it ) {
-      add << (*it).fullName();
+      add << (*it)->fullName();
     }
     mUi->mEmailAddress->setText( add.join( ", " ) );
     mUi->mEmailText->setPlainText( alarm->mailText() );
@@ -139,7 +139,7 @@ void AlarmDialog::load( Alarm *alarm )
   }
 }
 
-void AlarmDialog::save( Alarm *alarm ) const
+void AlarmDialog::save( const Alarm::Ptr &alarm ) const
 {
   // Offsets
   int offset = mUi->mAlarmOffset->value() * 60; // minutes
@@ -181,7 +181,7 @@ void AlarmDialog::save( Alarm *alarm ) const
                               mUi->mAppArguments->text() );
   } else if ( mUi->mTypeCombo->currentIndex() == 3 ) { // Email
     QStringList addresses = KPIMUtils::splitAddressList( mUi->mEmailAddress->text() );
-    QList<Person> add;
+    QList<Person::Ptr> add;
     for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it ) {
       add << Person::fromFullName( *it );
     }

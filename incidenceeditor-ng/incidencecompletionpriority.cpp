@@ -26,7 +26,7 @@
 #include "ui_eventortododesktop.h"
 #endif
 
-#include <KCal/Todo>
+#include <kcalcore/todo.h>
 
 using namespace IncidenceEditorsNG;
 
@@ -93,13 +93,13 @@ IncidenceCompletionPriority::~IncidenceCompletionPriority()
   delete d;
 }
 
-void IncidenceCompletionPriority::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceCompletionPriority::load( KCalCore::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
 
   // TODO priority might be valid for other incidence types as well
   // only for Todos
-  KCal::Todo::ConstPtr todo = IncidenceCompletionPriority::incidence<KCal::Todo>();
+  KCalCore::Todo::ConstPtr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
   if ( todo == 0 ) {
     d->mDirty = false;
     return;
@@ -125,11 +125,11 @@ void IncidenceCompletionPriority::load( KCal::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceCompletionPriority::save( KCal::Incidence::Ptr incidence )
+void IncidenceCompletionPriority::save( KCalCore::Incidence::Ptr incidence )
 {
   // TODO priority might be valid for other incidence types as well
   // only for Todos
-  KCal::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCal::Todo>( incidence );
+  KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>( incidence );
   if ( todo == 0 ) {
     return;
   }

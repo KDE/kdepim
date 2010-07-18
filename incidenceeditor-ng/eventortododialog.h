@@ -44,7 +44,7 @@ public:
    * Loads the @param item into the dialog.
    *
    * To create a new Incidence pass an invalid item with either an
-   * KCal::Event:Ptr or a KCal::Todo:Ptr set as payload.
+   * KCalCore::Event:Ptr or a KCalCore::Todo:Ptr set as payload.
    *
    * When the item has is valid it will fetch the payload when this is not
    * set.

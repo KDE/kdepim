@@ -20,7 +20,8 @@
 
 #include "incidencealarm.h"
 
-#include <KCal/Todo>
+#include <kcalcore/todo.h>
+
 #include <KDebug>
 
 #include "alarmdialog.h"
@@ -47,8 +48,6 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
   mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
   updateButtons();
 
-  mAlarms.setAutoDelete( true );
-
   connect( mUi->mAlarmAddPresetButton, SIGNAL(clicked()),
            SLOT(newAlarmFromPreset()) );
   connect( mUi->mAlarmList, SIGNAL(itemSelectionChanged ()),
@@ -63,14 +62,14 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
            SLOT(removeCurrentAlarm()) );
 }
 
-void IncidenceAlarm::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceAlarm::load( KCalCore::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
 
-  foreach ( KCal::Alarm *alarm, incidence->alarms() )
-    mAlarms.append( new KCal::Alarm( *alarm ) );
+  foreach ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() )
+    mAlarms.append( KCalCore::Alarm::Ptr( new KCalCore::Alarm( *alarm.data() ) ) );
 
-  mIsTodo = IncidenceEditor::incidence<KCal::Todo>( incidence );
+  mIsTodo = incidence->type() == KCalCore::Incidence::TypeTodo;
   if ( mIsTodo ) {
     mUi->mAlarmPresetCombo->clear();
     mUi->mAlarmPresetCombo->addItems( AlarmPresets::availablePresets( AlarmPresets::BeforeEnd ) );
@@ -83,13 +82,13 @@ void IncidenceAlarm::load( KCal::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceAlarm::save( KCal::Incidence::Ptr incidence )
+void IncidenceAlarm::save( KCalCore::Incidence::Ptr incidence )
 {
   incidence->clearAlarms();
-  KCal::Alarm::List::ConstIterator it;
+  KCalCore::Alarm::List::ConstIterator it;
   for ( it = mAlarms.constBegin(); it != mAlarms.constEnd(); ++it ) {
-    KCal::Alarm *al = new KCal::Alarm( *(*it) );
-    al->setParent( incidence.get() );
+    KCalCore::Alarm::Ptr al( new KCalCore::Alarm( *(*it) ) );
+    al->setParent( incidence.data() );
     // We need to make sure that both lists are the same in the end for isDirty.
     Q_ASSERT( *al == *(*it) );
     incidence->addAlarm( al );
@@ -105,7 +104,7 @@ bool IncidenceAlarm::isDirty() const
     return true;
 
   if ( mLoadedIncidence->isAlarmEnabled() ) {
-    const KCal::Alarm::List initialAlarms = mLoadedIncidence->alarms();
+    const KCalCore::Alarm::List initialAlarms = mLoadedIncidence->alarms();
 
     if ( initialAlarms.count() != mAlarms.count() )
       return true; // The number of alarms has changed
@@ -115,9 +114,9 @@ bool IncidenceAlarm::isDirty() const
     //       if all currently enabled alarms are also in the incidence. The
     //       disabled alarms are not changed by our code at all, so we assume that
     //       they're still there.
-    foreach ( const KCal::Alarm *alarm, mAlarms ) {
+    foreach ( const KCalCore::Alarm::Ptr &alarm, mAlarms ) {
       bool found = false;
-      foreach ( const KCal::Alarm *initialAlarm, initialAlarms ) {
+      foreach ( const KCalCore::Alarm::Ptr &initialAlarm, initialAlarms ) {
         if ( *alarm == *initialAlarm ) {
           found  = true;
           break;
@@ -139,7 +138,7 @@ void IncidenceAlarm::editCurrentAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
 
-  KCal::Alarm *currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
+  KCalCore::Alarm::Ptr currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
   QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
   dialog.data()->load( currentAlarm );
@@ -174,7 +173,7 @@ void IncidenceAlarm::newAlarm()
   if ( dialog.data()->exec() == KDialog::Accepted ) {
     AlarmDialog *dialogPtr = dialog.data();
     if ( dialogPtr ) {
-      KCal::Alarm *newAlarm = new KCal::Alarm( 0 );
+      KCalCore::Alarm::Ptr newAlarm( new KCalCore::Alarm( 0 ) );
       dialogPtr->save( newAlarm );
       newAlarm->setEnabled( true );
       mAlarms.append( newAlarm );
@@ -216,7 +215,7 @@ void IncidenceAlarm::toggleCurrentAlarm()
 {
   Q_ASSERT( mUi->mAlarmList->selectedItems().size() == 1 );
   const int curAlarmIndex = mUi->mAlarmList->currentRow();
-  KCal::Alarm *alarm = mAlarms.at( curAlarmIndex );
+  KCalCore::Alarm::Ptr alarm = mAlarms.at( curAlarmIndex );
   alarm->setEnabled( !alarm->enabled() );
 
   updateButtons();
@@ -231,7 +230,7 @@ void IncidenceAlarm::updateAlarmList()
 
   const QModelIndex currentIndex = mUi->mAlarmList->currentIndex();
   mUi->mAlarmList->clear();
-  foreach ( KCal::Alarm *alarm, mAlarms ) {
+  foreach ( const KCalCore::Alarm::Ptr &alarm, mAlarms ) {
     mUi->mAlarmList->addItem( stringForAlarm( alarm ) );
     if ( alarm->enabled() )
       ++mEnabledAlarmCount;
@@ -261,22 +260,22 @@ void IncidenceAlarm::updateButtons()
 }
 
 
-QString IncidenceAlarm::stringForAlarm( KCal::Alarm *alarm )
+QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
 {
   Q_ASSERT( alarm );
 
   QString action;
   switch( alarm->type() ) {
-  case KCal::Alarm::Display:
+  case KCalCore::Alarm::Display:
     action = i18n( "Display a dialog" );
     break;
-  case KCal::Alarm::Procedure:
+  case KCalCore::Alarm::Procedure:
     action = i18n( "Execute a script" );
     break;
-  case KCal::Alarm::Email:
+  case KCalCore::Alarm::Email:
     action = i18n( "Send an email" );
     break;
-  case KCal::Alarm::Audio:
+  case KCalCore::Alarm::Audio:
     action = i18n( "Play an audio file" );
     break;
   default:

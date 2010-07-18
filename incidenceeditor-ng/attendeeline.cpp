@@ -22,6 +22,8 @@
 
 #include <KPIMUtils/Email>
 
+#include <kcalutils/stringify.h>
+
 #include <KCompletionBox>
 #include <KDialog>
 #include <KIconLoader>
@@ -31,6 +33,7 @@
 #include <QBoxLayout>
 #include <QMenu>
 
+using namespace KCalUtils;
 using namespace IncidenceEditorsNG;
 using namespace KPIM;
 
@@ -109,7 +112,7 @@ void AttendeeComboBox::keyPressEvent(QKeyEvent* ev)
 {
   if ( ev->key() == Qt::Key_Left ) {
     emit leftPressed();
-  } else if ( ev->key() == Qt::Key_Right ) {  
+  } else if ( ev->key() == Qt::Key_Right ) {
     emit rightPressed();
   } else {
     QToolButton::keyPressEvent( ev );
@@ -161,31 +164,31 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   topLayout->setMargin( 0 );
 #ifdef KDEPIM_MOBILE_UI
   mRoleCombo->addItem( DesktopIcon( "meeting-participant", 48 ),
-                       AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
   mRoleCombo->addItem( DesktopIcon( "meeting-participant-optional", 48 ),
-                       AttendeeData::roleName( KCal::Attendee::OptParticipant ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::OptParticipant ) );
   mRoleCombo->addItem( DesktopIcon( "meeting-observer", 48 ),
-                       AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::NonParticipant ) );
   mRoleCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
-                       AttendeeData::roleName( KCal::Attendee::Chair ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
   mResponseCheck->setIcon( DesktopIcon( "mail-meeting-request-reply", 48 ) );
 #else
   mRoleCombo->addItem( SmallIcon( "meeting-participant" ),
-                       AttendeeData::roleName( KCal::Attendee::ReqParticipant ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-participant-optional" ),
-                       AttendeeData::roleName( KCal::Attendee::OptParticipant ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::OptParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-observer" ),
-                       AttendeeData::roleName( KCal::Attendee::NonParticipant ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::NonParticipant ) );
   mRoleCombo->addItem( SmallIcon( "meeting-chair" ),
-                       AttendeeData::roleName( KCal::Attendee::Chair ) );
+                       Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
   mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
 #endif
 
   mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
-  
+
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
 
@@ -209,7 +212,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
     SLOT( slotTextChanged( const QString & ) ) );
   connect( mEdit, SIGNAL( upPressed() ), SLOT( slotFocusUp() ) );
   connect( mEdit, SIGNAL( downPressed() ), SLOT( slotFocusDown() ) );
-  
+
 
 
   connect( mRoleCombo, SIGNAL( rightPressed() ), mEdit, SLOT( setFocus() ) );
@@ -222,7 +225,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
 
   connect( mResponseCheck, SIGNAL( leftPressed() ), mStateCombo, SLOT( setFocus() ) );
   connect( mResponseCheck, SIGNAL( rightPressed() ), SIGNAL( rightPressed() ) );
-  
+
   connect( mEdit, SIGNAL( editingFinished() ), SLOT( slotEditingFinished() ) );
   connect( mEdit, SIGNAL( clearButtonClicked() ), SLOT( slotPropagateDeletion() ) );
 
@@ -339,58 +342,58 @@ void AttendeeLine::setActions( AttendeeActions actions )
   if ( actions == EventActions ) {
 #ifdef KDEPIM_MOBILE_UI
     mStateCombo->addItem( DesktopIcon( "task-attention", 48 ),
-                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+                          Stringify::attendeeStatus( AttendeeData::NeedsAction ) );
     mStateCombo->addItem( DesktopIcon( "task-accepted", 48 ),
-                          AttendeeData::statusName( AttendeeData::Accepted ) );
+                          Stringify::attendeeStatus( AttendeeData::Accepted ) );
     mStateCombo->addItem( DesktopIcon( "task-reject", 48 ),
-                          AttendeeData::statusName( AttendeeData::Declined ) );
+                          Stringify::attendeeStatus( AttendeeData::Declined ) );
     mStateCombo->addItem( DesktopIcon( "task-attempt", 48 ),
-                          AttendeeData::statusName( AttendeeData::Tentative ) );
+                          Stringify::attendeeStatus( AttendeeData::Tentative ) );
     mStateCombo->addItem( DesktopIcon( "task-delegate", 48 ),
-                          AttendeeData::statusName( AttendeeData::Delegated ) );
+                          Stringify::attendeeStatus( AttendeeData::Delegated ) );
 #else
     mStateCombo->addItem( SmallIcon( "task-attention" ),
-                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+                          Stringify::attendeeStatus( AttendeeData::NeedsAction ) );
     mStateCombo->addItem( SmallIcon( "task-accepted" ),
-                          AttendeeData::statusName( AttendeeData::Accepted ) );
+                          Stringify::attendeeStatus( AttendeeData::Accepted ) );
     mStateCombo->addItem( SmallIcon( "task-reject" ),
-                          AttendeeData::statusName( AttendeeData::Declined ) );
+                          Stringify::attendeeStatus( AttendeeData::Declined ) );
     mStateCombo->addItem( SmallIcon( "task-attempt" ),
-                          AttendeeData::statusName( AttendeeData::Tentative ) );
+                          Stringify::attendeeStatus( AttendeeData::Tentative ) );
     mStateCombo->addItem( SmallIcon( "task-delegate" ),
-                          AttendeeData::statusName( AttendeeData::Delegated ) );
+                          Stringify::attendeeStatus( AttendeeData::Delegated ) );
 #endif
   } else {
 #ifdef KDEPIM_MOBILE_UI
     mStateCombo->addItem( DesktopIcon( "task-attention", 48 ),
-                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+                          Stringify::attendeeStatus( AttendeeData::NeedsAction ) );
     mStateCombo->addItem( DesktopIcon( "task-accepted", 48 ),
-                          AttendeeData::statusName( AttendeeData::Accepted ) );
+                          Stringify::attendeeStatus( AttendeeData::Accepted ) );
     mStateCombo->addItem( DesktopIcon( "task-reject", 48 ),
-                          AttendeeData::statusName( AttendeeData::Declined ) );
+                          Stringify::attendeeStatus( AttendeeData::Declined ) );
     mStateCombo->addItem( DesktopIcon( "task-attempt", 48 ),
-                          AttendeeData::statusName( AttendeeData::Tentative ) );
+                          Stringify::attendeeStatus( AttendeeData::Tentative ) );
     mStateCombo->addItem( DesktopIcon( "task-delegate", 48 ),
-                          AttendeeData::statusName( AttendeeData::Delegated ) );
+                          Stringify::attendeeStatus( AttendeeData::Delegated ) );
     mStateCombo->addItem( DesktopIcon( "task-complete", 48 ),
-                          AttendeeData::statusName( AttendeeData::Completed ) ),
+                          Stringify::attendeeStatus( AttendeeData::Completed ) ),
     mStateCombo->addItem( DesktopIcon( "task-ongoing", 48 ),
-                          AttendeeData::statusName( AttendeeData::InProcess ) );
+                          Stringify::attendeeStatus( AttendeeData::InProcess ) );
 #else
     mStateCombo->addItem( SmallIcon( "task-attention" ),
-                          AttendeeData::statusName( AttendeeData::NeedsAction ) );
+                          Stringify::attendeeStatus( AttendeeData::NeedsAction ) );
     mStateCombo->addItem( SmallIcon( "task-accepted" ),
-                          AttendeeData::statusName( AttendeeData::Accepted ) );
+                          Stringify::attendeeStatus( AttendeeData::Accepted ) );
     mStateCombo->addItem( SmallIcon( "task-reject" ),
-                          AttendeeData::statusName( AttendeeData::Declined ) );
+                          Stringify::attendeeStatus( AttendeeData::Declined ) );
     mStateCombo->addItem( SmallIcon( "task-attempt" ),
-                          AttendeeData::statusName( AttendeeData::Tentative ) );
+                          Stringify::attendeeStatus( AttendeeData::Tentative ) );
     mStateCombo->addItem( SmallIcon( "task-delegate" ),
-                          AttendeeData::statusName( AttendeeData::Delegated ) );
+                          Stringify::attendeeStatus( AttendeeData::Delegated ) );
     mStateCombo->addItem( SmallIcon( "task-complete" ),
-                          AttendeeData::statusName( AttendeeData::Completed ) ),
+                          Stringify::attendeeStatus( AttendeeData::Completed ) ),
     mStateCombo->addItem( SmallIcon( "task-ongoing" ),
-                          AttendeeData::statusName( AttendeeData::InProcess ) );
+                          Stringify::attendeeStatus( AttendeeData::InProcess ) );
 #endif
   }
 }
@@ -421,7 +424,7 @@ void AttendeeLine::slotEditingFinished()
 
 void AttendeeLine::slotTextChanged( const QString& /*str*/ )
 {
-  
+
   //TODO: some verifying, auto completion and stuff
   //      to assist the user in selecting a valid contact
   //   KPIMUtils::isValidAddress( str );

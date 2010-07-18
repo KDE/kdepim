@@ -18,44 +18,46 @@
     02110-1301, USA.
 */
 
-#ifndef ALARMPRESETS_H
-#define ALARMPRESETS_H
+#ifndef INCIDENCECATEGORIES_H
+#define INCIDENCECATEGORIES_H
 
-#include <kcalcore/alarm.h>
+#include "incidenceeditor-ng.h"
 
-class QString;
-class QStringList;
+namespace Ui {
+class EventOrTodoDesktop;
+class EventOrTodoMore;
+}
 
 namespace IncidenceEditorsNG {
 
-namespace AlarmPresets {
+class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
+{
+  Q_OBJECT
 
-  enum When {
-    BeforeStart,
-    BeforeEnd
-  };
+  public:
+#ifdef KDEPIM_MOBILE_UI   
+    IncidenceCategories( Ui::EventOrTodoMore *ui );
+#else
+    IncidenceCategories( Ui::EventOrTodoDesktop *ui );
+#endif
 
-  /**
-   * Returns the available presets.
-   */
-  QStringList availablePresets( When when = BeforeStart );
+    virtual void load(KCalCore::Incidence::ConstPtr incidence);
+    virtual void save(KCalCore::Incidence::Ptr incidence);
+    virtual bool isDirty() const;
 
-  /**
-   * Returns a recurrence preset for given name. The name <em>must</em> be one
-   * of availablePresets().
-   *
-   * Note: The caller takes ownership over the pointer.
-   */
-  KCalCore::Alarm::Ptr preset( When when, const QString &name );
+  private slots:
+    void selectCategories();
+    void setCategories( const QStringList &categories );
 
-  /**
-   * Returns the index of the preset in availablePresets for the given recurrence,
-   * or -1 if no preset is equal to the given recurrence.
-   */
-  int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm );
+  private:
+    QStringList mSelectedCategories;
+#ifdef KDEPIM_MOBILE_UI
+    Ui::EventOrTodoMore *mUi;
+#else
+    Ui::EventOrTodoDesktop *mUi;
+#endif
+};
 
 }
 
-}
-
-#endif // ALARMPRESETS_H
+#endif // INCIDENCECATEGORIES_H

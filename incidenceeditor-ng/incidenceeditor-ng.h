@@ -25,7 +25,7 @@
 
 #include <QtGui/QWidget>
 
-#include <KCal/Incidence>
+#include <kcalcore/incidence.h>
 
 #include "incidenceeditors-ng_export.h"
 
@@ -47,12 +47,12 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      * Load the values of @param incidence into the editor widgets. The passed
      * incidence is kept for comparing with the current values of the editor.
      */
-    virtual void load( KCal::Incidence::ConstPtr incidence ) = 0;
+    virtual void load( KCalCore::Incidence::ConstPtr incidence ) = 0;
 
     /**
      * Store the current values of the editor into @param incidince.
      */
-    virtual void save( KCal::Incidence::Ptr incidence ) = 0;
+    virtual void save( KCalCore::Incidence::Ptr incidence ) = 0;
 
     /**
      * Returns whether or not the current values in the editor differ from the
@@ -98,19 +98,19 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     IncidenceEditor( QObject *parent = 0 );
 
     template <typename IncidenceT>
-    boost::shared_ptr<IncidenceT> incidence( KCal::Incidence::Ptr inc )
+    boost::shared_ptr<IncidenceT> incidence( KCalCore::Incidence::Ptr inc )
     {
       return  boost::dynamic_pointer_cast<IncidenceT>( inc );
     }
 
     template <typename IncidenceT>
-    boost::shared_ptr<const IncidenceT> incidence( KCal::Incidence::ConstPtr inc )
+    boost::shared_ptr<const IncidenceT> incidence( KCalCore::Incidence::ConstPtr inc )
     {
       return  boost::dynamic_pointer_cast<const IncidenceT>( inc );
     }
 
   protected:
-    KCal::Incidence::ConstPtr mLoadedIncidence;
+    KCalCore::Incidence::ConstPtr mLoadedIncidence;
     bool mWasDirty;
 };
 

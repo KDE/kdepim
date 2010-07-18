@@ -83,7 +83,7 @@ AttendeeData::List AttendeeEditor::attendees() const
   return attList;
 }
 
-void AttendeeEditor::addAttendee(const KCal::Attendee& attendee)
+void AttendeeEditor::addAttendee(const KCalCore::Attendee::Ptr& attendee)
 {
   addData( AttendeeData::Ptr( new AttendeeData( attendee ) ) );
 }

@@ -41,12 +41,12 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
     /**
     * @param parentWidget is passed to Akonadi when fetching free/busy data.
     */
-    FreeBusyItem( const KCal::Attendee &attendee , QWidget *parentWidget );
+    FreeBusyItem( const KCalCore::Attendee &attendee , QWidget *parentWidget );
     ~FreeBusyItem() {}
 
-    KCal::Attendee attendee() const;
-    void setFreeBusy( KCal::FreeBusy *fb );
-    KCal::FreeBusy *freeBusy() const;
+    KCalCore::Attendee attendee() const;
+    void setFreeBusy( KCalCore::FreeBusy *fb );
+    KCalCore::FreeBusy *freeBusy() const;
 
     QString email() const;
     void setUpdateTimerID( int id );
@@ -57,8 +57,8 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
     bool isDownloading() const;
 
   private:
-    KCal::Attendee mAttendee;
-    KCal::FreeBusy *mFreeBusy;
+    KCalCore::Attendee mAttendee;
+    KCalCore::FreeBusy *mFreeBusy;
 
     // This is used for the update timer
     int mTimerID;
