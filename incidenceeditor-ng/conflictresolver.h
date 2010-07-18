@@ -24,22 +24,18 @@
 #define CONFLICTRESOLVER_H
 
 #include "incidenceeditors-ng_export.h"
-#include <KDateTime>
+
+#include <kcalcore/freebusy.h>
 #include <kcalcore/attendee.h>
 #include <kcalcore/period.h>
+
+#include <KDateTime>
 
 #include <QObject>
 #include <QTimer>
 #include <QSet>
 #include <QBitArray>
 #include <QVector>
-
-
-namespace KCal
-{
-class FreeBusy;
-class Attendee;
-}
 
 namespace IncidenceEditorsNG
 {
@@ -68,7 +64,7 @@ public:
      * The attendees free busy info will be fetched
      * and integrated into the resolver.
      */
-    void insertAttendee( const KCalCore::Attendee &attendee );
+    void insertAttendee( const KCalCore::Attendee::Ptr &attendee );
 
     void insertAttendee( FreeBusyItem* freebusy );
     /**
@@ -76,7 +72,7 @@ public:
      * The attendee will no longer be considered when
      * resolving conflicts
      * */
-    void removeAttendee( const KCalCore::Attendee &attendee );
+    void removeAttendee( const KCalCore::Attendee::Ptr &attendee );
     /**
      * Clear all attendees
      **/
@@ -85,7 +81,7 @@ public:
     /**
      * Returns whether the resolver contains the attendee
      */
-    bool containsAttendee( const KCalCore::Attendee &attendee );
+    bool containsAttendee( const KCalCore::Attendee::Ptr &attendee );
 
     /**
      * Queues a reload of free/busy data.
@@ -157,7 +153,7 @@ public slots:
      *
      * The resolver will attempt to identify free slots
      * that contain _at least_ this number of seconds.
-     * 
+     *
      * @param seconds the minimum number of seconds the appointment slot should be
      * */
     void setAppointmentDuration( int seconds );
@@ -170,7 +166,7 @@ protected:
     void timerEvent( QTimerEvent * );
 
 private slots:
-    void slotInsertFreeBusy( KCalCore::FreeBusy *fb, const QString &email );
+    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
 
     // Force the download of FB information
     void manualReload();
@@ -190,7 +186,7 @@ private:
     bool findFreeSlot( const KCalCore::Period &dateTimeRange );
 
     /**
-      Checks whether the slot specified by (tryFrom, tryTo) matches the 
+      Checks whether the slot specified by (tryFrom, tryTo) matches the
       search constraints. If yes, return true. The return value is the
       number of conflicts that were detected, and (tryFrom, tryTo) contain the next free slot for
       that participant. In other words, the returned slot does not have to
@@ -212,7 +208,7 @@ private:
      * current mandatory role constraint.
      * @return true if the attendee is of one of the mandatory roles, false if not
      */
-    bool matchesRoleConstraint( const KCalCore::Attendee &attendee );
+    bool matchesRoleConstraint( const KCalCore::Attendee::Ptr &attendee );
 
     void calculateConflicts();
     /**

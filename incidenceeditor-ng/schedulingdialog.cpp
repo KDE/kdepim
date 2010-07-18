@@ -22,6 +22,8 @@
 
 #include "conflictresolver.h"
 
+#include <kcalutils/stringify.h>
+
 #include <KCalendarSystem>
 #include <KIconLoader>
 #include <KLocale>
@@ -57,23 +59,23 @@ void SchedulingDialog::fillCombos()
 // Note: we depend on the following order
 #ifdef KDEPIM_MOBILE_UI
     mRolesCombo->addItem( DesktopIcon( "meeting-participant", 48 ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::ReqParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-participant-optional", 48 ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::OptParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::OptParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-observer", 48 ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::NonParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::NonParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::Chair ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
 #else
     mRolesCombo->addItem( SmallIcon( "meeting-participant" ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::ReqParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-participant-optional" ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::OptParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::OptParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-observer" ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::NonParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::NonParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-chair" ),
-                          KCalCore::Attendee::roleName( KCalCore::Attendee::Chair ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
 #endif
 }

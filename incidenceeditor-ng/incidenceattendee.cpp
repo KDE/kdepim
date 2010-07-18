@@ -134,7 +134,7 @@ void IncidenceAttendee::load( KCalCore::Incidence::ConstPtr incidence )
     }
   } else { // someone else is the organizer
     mUi->mOrganizerStack->setCurrentIndex( 1 );
-    mUi->mOrganizerLabel->setText( incidence->organizer().fullName() );
+    mUi->mOrganizerLabel->setText( incidence->organizer()->fullName() );
   }
 
   KCalCore::Attendee::List al = incidence->attendees();
@@ -143,7 +143,7 @@ void IncidenceAttendee::load( KCalCore::Incidence::ConstPtr incidence )
       mAttendeeEditor->addAttendee( a );
   }
 
-  if ( IncidenceEditor::incidence<KCalCore::Event::ConstPtr>( ) )
+  if ( incidence->type() == KCalCore::Incidence::TypeEvent )
     mAttendeeEditor->setActions( AttendeeLine::EventActions );
   else
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
@@ -306,12 +306,13 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 #endif
 }
 
-void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee& oldAttendee, const KCalCore::Attendee& newAttendee )
+void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr& oldAttendee,
+                                             const KCalCore::Attendee::Ptr& newAttendee )
 {
    // if newAttendee's email is empty, we are probably removing an attendee
    if( mConflictResolver->containsAttendee( oldAttendee ) )
       mConflictResolver->removeAttendee( oldAttendee );
-   if( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee.email().isEmpty() )
+   if( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee->email().isEmpty() )
       mConflictResolver->insertAttendee( newAttendee );
 }
 
@@ -338,8 +339,8 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
     partStat = KCalCore::Attendee::Accepted;
     rsvp = false;
   }
-  KCalCore::Attendee newAt( a.realName(), a.preferredEmail(), rsvp,
-                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() );;
+  KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( a.realName(), a.preferredEmail(), rsvp,
+                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() ) );
   mAttendeeEditor->addAttendee( newAt );
 }
 

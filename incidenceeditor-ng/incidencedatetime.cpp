@@ -21,7 +21,8 @@
 #include "incidencedatetime.h"
 
 #include <kcalcore/icaltimezones.h>
-#include <KCal/IncidenceFormatter>
+#include <kcalutils/incidenceformatter.h>
+
 #include <KDebug>
 #include <KSystemTimeZones>
 
@@ -41,7 +42,8 @@
 #include "../editoralarms.h"
 
 using namespace IncidenceEditorsNG;
-using namespace KCal;
+using namespace KCalCore;
+using namespace KCalUtils;
 
 IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
@@ -322,7 +324,7 @@ bool IncidenceDateTime::isDirty( KCalCore::Todo::ConstPtr todo ) const
   // First check the start time/date of the todo
   if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() )
     return true;
-  
+
   if ( mUi->mStartCheck->isChecked() ) {
     // Use mActiveStartTime. This is the KDateTime::Spec selected on load coming from
     // the combobox. We use this one as it can slightly differ (e.g. missing
@@ -364,7 +366,7 @@ bool IncidenceDateTime::isDirty( KCalCore::Event::ConstPtr event ) const
     if ( currentEndDateTime() != mInitialEndDT )
       return true;
   }
-  
+
   return false;
 }
 
@@ -474,7 +476,7 @@ void IncidenceDateTime::load( KCalCore::Todo::ConstPtr todo )
   mUi->mStartDateEdit->setEnabled( todo->hasStartDate() );
   mUi->mStartTimeEdit->setEnabled( todo->hasStartDate() );
   mUi->mTimeZoneComboStart->setEnabled( todo->hasStartDate() );
-  
+
   mUi->mEndCheck->setVisible( true );
   mUi->mEndCheck->setChecked( todo->hasDueDate() );
   mUi->mEndDateEdit->setEnabled( todo->hasDueDate() );

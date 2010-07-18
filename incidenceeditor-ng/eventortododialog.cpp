@@ -151,7 +151,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
-  IncidenceAttendee *ieAttendee= new IncidenceAttendee( mUi );
+  IncidenceAttendee *ieAttendee= new IncidenceAttendee( qq, mIeDateTime, mUi );
   mEditor->combine( ieAttendee );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
@@ -220,7 +220,7 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
 {
   Q_Q( EventOrTodoDialog );
 
-  KCalCore::CalendarLocal cal( KSystemTimeZones::local() );
+  KCalCore::MemoryCalendar cal( KSystemTimeZones::local() );
   QString fileName = KStandardDirs::locateLocal( "data",
                        "korganizer/templates/" + mEditor->type() + '/' + templateName );
 
@@ -274,8 +274,8 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
   fileName.append( '/' + templateName );
   fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
 
-  KCalCore::CalendarLocal cal( KSystemTimeZones::local() );
-  cal.addIncidence( incidence->clone() );
+  KCalCore::MemoryCalendar cal( KSystemTimeZones::local() );
+  cal.addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
   KCalCore::ICalFormat format;
   format.save( &cal, fileName );
 }

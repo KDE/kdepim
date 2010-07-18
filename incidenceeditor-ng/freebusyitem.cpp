@@ -22,7 +22,6 @@
 
 #include "freebusyitem.h"
 
-#include <kcalcore/freebusy.h>
 #include <KSystemTimeZones>
 
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
@@ -30,35 +29,34 @@
 
 using namespace IncidenceEditorsNG;
 
-FreeBusyItem::FreeBusyItem( const KCalCore::Attendee &attendee , QWidget *parentWidget ) :
+FreeBusyItem::FreeBusyItem( const KCalCore::Attendee::Ptr &attendee , QWidget *parentWidget ) :
         mAttendee( attendee ), mTimerID( 0 ),
         mIsDownloading( false ), mParentWidget( parentWidget )
 {
-//     Q_ASSERT( attendee );
-    setFreeBusy( 0 );
-
+  Q_ASSERT( attendee );
+  setFreeBusy( KCalCore::FreeBusy::Ptr() );
 }
 
-KCalCore::Attendee FreeBusyItem::attendee() const
+KCalCore::Attendee::Ptr FreeBusyItem::attendee() const
 {
-    return mAttendee;
+  return mAttendee;
 }
 
 
-void FreeBusyItem::setFreeBusy(KCalCore::FreeBusy* fb)
+void FreeBusyItem::setFreeBusy( const KCalCore::FreeBusy::Ptr &fb)
 {
-    mFreeBusy = fb;
-    mIsDownloading = false;
+  mFreeBusy = fb;
+  mIsDownloading = false;
 }
 
-KCalCore::FreeBusy* FreeBusyItem::freeBusy() const
+KCalCore::FreeBusy::Ptr FreeBusyItem::freeBusy() const
 {
     return mFreeBusy;
 }
 
 QString FreeBusyItem::email() const
 {
-    return mAttendee.email();
+    return mAttendee->email();
 }
 
 void FreeBusyItem::setUpdateTimerID(int id)
@@ -75,7 +73,7 @@ void FreeBusyItem::startDownload(bool forceDownload)
 {
     mIsDownloading = true;
     Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m->retrieveFreeBusy( attendee().email(), forceDownload,
+    if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
                                mParentWidget ) ) {
         mIsDownloading = false;
     }

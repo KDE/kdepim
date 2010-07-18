@@ -21,8 +21,6 @@
 #ifndef INCIDENCEEDITOR_NG_H
 #define INCIDENCEEDITOR_NG_H
 
-#include <boost/shared_ptr.hpp>
-
 #include <QtGui/QWidget>
 
 #include <kcalcore/incidence.h>
@@ -74,9 +72,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 
     /** Convenience method to get a pointer for a specific const Incidence Type. */
     template <typename IncidenceT>
-    boost::shared_ptr<const IncidenceT> incidence() const
+    QSharedPointer<const IncidenceT> incidence() const
     {
-      return  boost::dynamic_pointer_cast<const IncidenceT>( mLoadedIncidence );
+      return mLoadedIncidence.dynamicCast<const IncidenceT>();
     }
 
   signals:
@@ -92,21 +90,21 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      * dirtyStatusChanged signal if needed.
      */
     void checkDirtyStatus();
-    
+
   protected:
     /** Only subclasses can instantiate IncidenceEditors */
     IncidenceEditor( QObject *parent = 0 );
 
     template <typename IncidenceT>
-    boost::shared_ptr<IncidenceT> incidence( KCalCore::Incidence::Ptr inc )
+    QSharedPointer<IncidenceT> incidence( KCalCore::Incidence::Ptr inc )
     {
-      return  boost::dynamic_pointer_cast<IncidenceT>( inc );
+      return inc.dynamicCast<IncidenceT>();
     }
 
     template <typename IncidenceT>
-    boost::shared_ptr<const IncidenceT> incidence( KCalCore::Incidence::ConstPtr inc )
+    QSharedPointer<const IncidenceT> incidence( KCalCore::Incidence::ConstPtr inc )
     {
-      return  boost::dynamic_pointer_cast<const IncidenceT>( inc );
+      return inc.dynamicCast<const IncidenceT>();
     }
 
   protected:

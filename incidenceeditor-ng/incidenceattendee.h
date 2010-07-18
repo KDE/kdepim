@@ -23,6 +23,8 @@
 
 #include "incidenceeditor-ng.h"
 
+#include <kcalcore/incidence.h>
+
 #include <QPointer>
 
 class KJob;
@@ -43,6 +45,8 @@ class MultiplyingLine;
 namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
+class ConflictResolver;
+class IncidenceDateTime;
 class SchedulingDialog;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
@@ -50,9 +54,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
   Q_OBJECT
 public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAttendee( Ui::EventOrTodoMore *ui = 0 );
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
 #else
-    IncidenceAttendee( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
     virtual void load( KCalCore::Incidence::ConstPtr incidence );
@@ -66,7 +70,9 @@ private slots:
     void expandResult( KJob *job );
     void groupSearchResult( KJob *job );
     void slotSelectAddresses();
-
+    void slotSolveConflictPressed();
+    void slotUpdateConflictLabel( int );
+    void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
@@ -86,9 +92,10 @@ private:
 #endif
     AttendeeEditor *mAttendeeEditor;
     KCalCore::Incidence::ConstPtr mOrigIncidence;
-
+    ConflictResolver *mConflictResolver;
     QPointer<SchedulingDialog> mSchedulingDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
+    IncidenceDateTime *mDateTime;
 };
 
 }

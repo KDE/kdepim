@@ -32,13 +32,16 @@
 #include <kcalcore/freebusy.h>
 #include <KDebug>
 
+#include <QTimerEvent>
 #include <QVector>
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
 using namespace IncidenceEditorsNG;
 
-ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QObject( parent ), mParentWidget( parentWidget ), mWeekdays( 7 ), mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
+ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ):
+  QObject( parent ), mParentWidget( parentWidget ),
+  mWeekdays( 7 ), mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
 {
     Q_ASSERT( Akonadi::Groupware::instance() );
     // Groupware initializes the FreeBusyManager via a singleshot timer, so
@@ -89,7 +92,7 @@ void ConflictResolver::setupManager()
     }
 }
 
-void ConflictResolver::insertAttendee( const KCalCore::Attendee &attendee )
+void ConflictResolver::insertAttendee( const KCalCore::Attendee::Ptr &attendee )
 {
 //     kDebug() << "inserted attendee" << attendee->email();
     FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
@@ -103,7 +106,7 @@ void ConflictResolver::insertAttendee( FreeBusyItem* freebusy )
     mFreeBusyItems.append( freebusy );
 }
 
-void ConflictResolver::removeAttendee( const KCalCore::Attendee &attendee )
+void ConflictResolver::removeAttendee( const KCalCore::Attendee::Ptr &attendee )
 {
     FreeBusyItem *anItem = 0;
     for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
@@ -126,7 +129,7 @@ void ConflictResolver::clearAttendees()
     mFreeBusyItems.clear();
 }
 
-bool ConflictResolver::containsAttendee( const KCalCore::Attendee &attendee )
+bool ConflictResolver::containsAttendee( const KCalCore::Attendee::Ptr &attendee )
 {
     FreeBusyItem *anItem = 0;
     for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {
@@ -167,10 +170,11 @@ void ConflictResolver::timerEvent( QTimerEvent* event )
     }
 }
 
-void ConflictResolver::slotInsertFreeBusy( KCalCore::FreeBusy* fb, const QString& email )
+void ConflictResolver::slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb,
+                                           const QString& email )
 {
     if ( fb ) {
-        fb->sortList();
+      fb->sortList();
     }
     Q_FOREACH( FreeBusyItem *item, mFreeBusyItems ) {
         if ( item->email() == email ) {
@@ -274,9 +278,9 @@ bool ConflictResolver::tryDate( FreeBusyItem* attendee, KDateTime& tryFrom, KDat
     // If we don't have any free/busy information, assume the
     // participant is free. Otherwise a participant without available
     // information would block the whole allocation.
-    KCalCore::FreeBusy *fb = attendee->freeBusy();
+  KCalCore::FreeBusy::Ptr fb = attendee->freeBusy();
     if ( !fb ) {
-        return true;
+      return true;
     }
 
     QList<KCalCore::Period> busyPeriods = fb->busyPeriods();
@@ -492,30 +496,30 @@ void ConflictResolver::calculateConflicts()
 
 void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
 {
-    mWeekdays = weekdays;
+  mWeekdays = weekdays;
 }
 
 void ConflictResolver::setMandatoryRoles( const QSet< KCalCore::Attendee::Role >& roles )
 {
-    mMandatoryRoles = roles;
+  mMandatoryRoles = roles;
 }
 
 void ConflictResolver::setAppointmentDuration( int seconds )
 {
-    mAppointmentDuration = seconds;
+  mAppointmentDuration = seconds;
 }
 
-bool ConflictResolver::matchesRoleConstraint( const KCalCore::Attendee& attendee )
+bool ConflictResolver::matchesRoleConstraint( const KCalCore::Attendee::Ptr &attendee )
 {
-    return mMandatoryRoles.contains( attendee.role() );
+  return mMandatoryRoles.contains( attendee->role() );
 }
 
 KCalCore::Period::List ConflictResolver::availableSlots() const
 {
-    return mAvailableSlots;
+  return mAvailableSlots;
 }
 
 void ConflictResolver::setResolution( int seconds )
 {
-    mSlotResolutionSeconds = seconds;
+  mSlotResolutionSeconds = seconds;
 }

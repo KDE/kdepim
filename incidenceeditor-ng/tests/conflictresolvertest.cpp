@@ -23,12 +23,13 @@
 #include "conflictresolver.h"
 #include "../groupwareintegration.h"
 
-#include <KUrl>
 #include <kcalcore/event.h>
 #include <kcalcore/period.h>
-#include <KCal/Duration>
+#include <kcalcore/duration.h>
 #include <qtest_kde.h>
+
 #include <KDebug>
+#include <KUrl>
 
 #include <QWidget>
 #include <QVector>
@@ -37,7 +38,7 @@
 #include <boost/concept_check.hpp>
 
 using namespace IncidenceEditorsNG;
-using namespace KCal;
+using namespace KCalCore;
 
 void ConflictResolverTest::insertAttendees()
 {
@@ -47,11 +48,11 @@ void ConflictResolverTest::insertAttendees()
 }
 
 
-void ConflictResolverTest::addAttendee( const QString& email, const FreeBusy &fb, Attendee::Role role )
+void ConflictResolverTest::addAttendee( const QString& email, const FreeBusy::Ptr &fb, Attendee::Role role )
 {
     QString name = QString( "attendee %1" ).arg( attendees.count() );
-    FreeBusyItem *item = new FreeBusyItem( Attendee( name, email, false, Attendee::Accepted, role ), 0 );
-    item->setFreeBusy( new FreeBusy( fb ) );
+    FreeBusyItem *item = new FreeBusyItem( Attendee::Ptr( new Attendee( name, email, false, Attendee::Accepted, role ) ), 0 );
+    item->setFreeBusy( FreeBusy::Ptr( new FreeBusy( *fb.data() ) ) );
     attendees << item;
 }
 
@@ -80,7 +81,7 @@ void ConflictResolverTest::cleanup()
 void ConflictResolverTest::simpleTest()
 {
   Period meeting( end.addSecs(-3*60*60), Duration( 2*60*60 ) );
-  addAttendee("albert@einstein.net", FreeBusy( Period::List() << meeting ) );
+  addAttendee("albert@einstein.net", FreeBusy::Ptr( new FreeBusy( Period::List() << meeting ) ) );
 
   insertAttendees();
 
@@ -109,9 +110,9 @@ void ConflictResolverTest::stillPrettySimpleTest()
   Period meeting1( base, Duration( 2*60*60 ) );
   Period meeting2( base.addSecs(60*60), Duration( 2*60*60 ) );
   Period meeting3( end.addSecs(-3*60*60), Duration( 2*60*60 ) );
-  addAttendee("john.f@kennedy.com", FreeBusy( Period::List() << meeting1 << meeting3 ) );
-  addAttendee("elvis@rock.com", FreeBusy( Period::List() << meeting2 << meeting3 ) );
-  addAttendee("albert@einstein.net", FreeBusy( Period::List() << meeting3 ) );
+  addAttendee("john.f@kennedy.com", FreeBusy::Ptr( new FreeBusy( Period::List() << meeting1 << meeting3 ) ) );
+  addAttendee("elvis@rock.com", FreeBusy::Ptr( new FreeBusy( Period::List() << meeting2 << meeting3 ) ) );
+  addAttendee("albert@einstein.net", FreeBusy::Ptr( new FreeBusy( Period::List() << meeting3 ) ) );
 
   insertAttendees();
 
@@ -169,14 +170,14 @@ void ConflictResolverTest::akademy2010()
 
     for ( int i = 1; i < 80; ++i ) {
         // adds 80 people (adds the same 8 peopl 10 times)
-        addAttendee( "akademyattendee1@email.com", FreeBusy( Period::List() << opening << keynote << oviStore << wikimedia << direction ) );
-        addAttendee( "akademyattendee2@email.com", FreeBusy( Period::List() << opening << keynote << commAsService << highlights << pimp ) );
-        addAttendee( "akademyattendee3@email.com", FreeBusy( Period::List() << opening << kdeForums << styles << pimp  << plasma ) );
-        addAttendee( "akademyattendee4@email.com", FreeBusy( Period::List() << opening << keynote << oviStore << pimp << blurr ) );
-        addAttendee( "akademyattendee5@email.com", FreeBusy( Period::List() << keynote << oviStore << highlights << avalanche ) );
-        addAttendee( "akademyattendee6@email.com", FreeBusy( Period::List() << opening << keynote << commAsService << highlights ) );
-        addAttendee( "akademyattendee7@email.com", FreeBusy( Period::List() << opening << kdeForums << styles << avalanche << pimp << plasma ) );
-        addAttendee( "akademyattendee8@email.com", FreeBusy( Period::List() << opening << keynote << oviStore << wikimedia << blurr ) );
+        addAttendee( "akademyattendee1@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << oviStore << wikimedia << direction ) ) );
+        addAttendee( "akademyattendee2@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << commAsService << highlights << pimp ) ) );
+        addAttendee( "akademyattendee3@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << kdeForums << styles << pimp  << plasma ) ) );
+        addAttendee( "akademyattendee4@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << oviStore << pimp << blurr ) ) );
+        addAttendee( "akademyattendee5@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << keynote << oviStore << highlights << avalanche ) ) );
+        addAttendee( "akademyattendee6@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << commAsService << highlights ) ) );
+        addAttendee( "akademyattendee7@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << kdeForums << styles << avalanche << pimp << plasma ) ) );
+        addAttendee( "akademyattendee8@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << oviStore << wikimedia << blurr ) ) );
     }
 
     insertAttendees();

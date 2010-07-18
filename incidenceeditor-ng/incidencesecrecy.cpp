@@ -19,6 +19,7 @@
 */
 
 #include "incidencesecrecy.h"
+#include <kcalutils/stringify.h>
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
@@ -36,7 +37,7 @@ IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoDesktop *ui )
   : mUi( ui )
 {
   setObjectName( "IncidenceSecrecy" );
-  mUi->mSecrecyCombo->addItems( KCalCore::Incidence::secrecyList() );
+  mUi->mSecrecyCombo->addItems( KCalUtils::Stringify::secrecyList() );
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
 }
@@ -45,7 +46,7 @@ void IncidenceSecrecy::load( KCalCore::Incidence::ConstPtr incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
-    Q_ASSERT( mUi->mSecrecyCombo->count() == KCalCore::Incidence::secrecyList().count() );
+    Q_ASSERT( mUi->mSecrecyCombo->count() == KCalUtils::Stringify::secrecyList().count() );
     mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
   } else {
     mUi->mSecrecyCombo->setCurrentIndex( 0 );

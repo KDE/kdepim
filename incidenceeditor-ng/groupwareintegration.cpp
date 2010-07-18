@@ -25,6 +25,9 @@
 
 #include <kcalprefs.h>
 
+#include <kcalcore/visitor.h>
+
+
 #include <akonadi/kcal/calendar.h>  //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/calendarmodel.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
@@ -37,34 +40,34 @@
 
 #include <KSystemTimeZones>
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace IncidenceEditorsNG;
 
-class EditorDialogVisitor : public IncidenceBase::Visitor
+class EditorDialogVisitor : public Visitor
 {
   public:
-    EditorDialogVisitor() : IncidenceBase::Visitor(), mEditor( 0 ) {}
+    EditorDialogVisitor() : Visitor(), mEditor( 0 ) {}
     IncidenceEditor *editor() const { return mEditor; }
 
   protected:
-    bool visit( Event * )
+  bool visit( Event::Ptr  )
     {
       // TODO-NGPORT implement correctly
       return true;
     }
-    bool visit( Todo * )
+    bool visit( Todo::Ptr  )
     {
       // TODO-NGPORT implement correctly
       return true;
     }
-    bool visit( Journal * )
+    bool visit( Journal::Ptr  )
     {
       // TODO-NGPORT implement correctly
       return true;
     }
-    bool visit( FreeBusy * ) // to inhibit hidden virtual compile warning
+    bool visit( FreeBusy::Ptr  ) // to inhibit hidden virtual compile warning
     {
-      return 0;
+      return false;
     }
 
     IncidenceEditor *mEditor;
@@ -105,7 +108,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
       }
 
       EditorDialogVisitor v;
-      if ( !incidence.get()->accept( v ) ) {
+      if ( !incidence->accept( v, incidence ) ) {
         return;
       }
 
