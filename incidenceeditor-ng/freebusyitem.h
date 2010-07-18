@@ -23,6 +23,8 @@
 #ifndef FREEBUSYITEM_H
 #define FREEBUSYITEM_H
 
+#include "incidenceeditors-ng_export.h"
+
 #include "attendeedata.h"
 
 namespace KCal {
@@ -33,7 +35,7 @@ namespace IncidenceEditorsNG {
 /**
  * The FreeBusyItem is the whole line for a given attendee..
  */
-class FreeBusyItem
+class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
 {
   public:
     /**

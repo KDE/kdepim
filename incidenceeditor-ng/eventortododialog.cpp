@@ -86,6 +86,7 @@ public:
   /// ItemEditorUi methods
   virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
   void handleItemSaveFinish();
+  void handleItemSaveFail( const QString &errorMessage );
   virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
   virtual bool isDirty() const;
   virtual bool isValid();
@@ -157,6 +158,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(updateButtonStatus(bool)) );
   q->connect( mItemManager, SIGNAL(itemSaveFinished()),
               SLOT(handleItemSaveFinish()));
+  q->connect( mItemManager, SIGNAL(itemSaveFailed(QString)),
+              SLOT(handleItemSaveFail(QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
   q->connect( ieRecurrence, SIGNAL(recurrenceChanged(int)),
@@ -318,6 +321,19 @@ bool EventOrTodoDialogPrivate::containsPayloadIdentifiers( const QSet<QByteArray
   return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
 }
 
+void EventOrTodoDialogPrivate::handleItemSaveFail( const QString &errorMessage )
+{
+  Q_Q( EventOrTodoDialog );
+
+  const QString message = i18n( "Unable to store the incidence in the calendar. Try again?\n\n Reason: %1", errorMessage );
+  if ( KMessageBox::warningYesNo( q, message ) == KMessageBox::Yes ) {
+    mItemManager->save();
+  } else {
+    updateButtonStatus( mEditor->isDirty() );
+    q->enableButtonCancel( true );
+  }
+}
+
 void EventOrTodoDialogPrivate::handleItemSaveFinish()
 {
   Q_Q( EventOrTodoDialog );
@@ -466,11 +482,14 @@ void EventOrTodoDialog::slotButtonClicked( int button )
     enableButtonApply( false );
     d->mCloseOnSave = true;
     d->mItemManager->save();
-    KDialog::accept();
     break;
   }
   case KDialog::Apply:
   {
+    enableButtonOk( false );
+    enableButtonCancel( false );
+    enableButtonApply( false );
+
     d->mCloseOnSave = false;
     d->mItemManager->save();
     break;
