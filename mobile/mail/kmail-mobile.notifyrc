@@ -1,6 +1,7 @@
 [Global]
 IconName=mail-mobile
 Comment=KDE e-mail client
+Comment[ja]=KDE メールクライアント
 Comment[pt]=Cliente de e-mail do KDE
 Comment[pt_BR]=Cliente de e-mail do KDE
 Comment[sv]=KDE E-postklient
@@ -10,6 +11,7 @@ Comment[zh_CN]=KDE 邮件客户端
 Comment[zh_TW]=KDE 收發信軟體
 Name=KDE Mail
 Name[es]=Correo de KDE
+Name[ja]=KDE Mail
 Name[pt]=Correio do KDE
 Name[pt_BR]=E-mail do KDE
 Name[sv]=KDE:s e-postprogram
