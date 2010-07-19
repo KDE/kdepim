@@ -1,0 +1,143 @@
+  <div align="center">
+    <table cellpadding="3" cellspacing="0">
+      <tr>
+        <td align="right" valign="top" width="30%" rowspan="3">
+          <img src="contact_photo" width="100" vspace="1">
+        </td>
+        <td align="left" width="70%"><font size="+2"><b>{{ contact.name }}</b></font></td>
+      </tr>
+      <tr>
+        <td align="left" width="70%">{{ contact.role }}</td>
+      </tr>
+      <tr>
+        <td align="left" width="70%">{{ contact.organization }}</td>
+      </tr>
+      {% if contact.birthday %}
+        {% with "Birthday" as title %}
+        {% with contact.birthday as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% for phoneNumber in contact.phoneNumbers %}
+        {% with phoneNumber.type as title %}
+        {% with phoneNumber.numberLink|safe as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+
+      {% for email in contact.emails %}
+        {% with "Email" as title %}
+        {% with email as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+
+      {% if contact.website %}
+        {% with "Website" as title %}
+        {% with contact.website|safe as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.blogUrl %}
+        {% with "Blog Feed" as title %}
+        {% with contact.blogUrl|safe as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% for address in contact.addresses %}
+        {% with address.type as title %}
+        {% with address.formattedAddressLink|safe as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+
+      {% if contact.imAddress %}
+        {% with "IM Address" as title %}
+        {% with contact.imAddress as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.profession %}
+        {% with "Profession" as title %}
+        {% with contact.profession as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.department %}
+        {% with "Department" as title %}
+        {% with contact.department as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.office %}
+        {% with "Office" as title %}
+        {% with contact.department as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.manager %}
+        {% with "Manager's Name" as title %}
+        {% with contact.manager as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.assistant %}
+        {% with "Assistant's Name" as title %}
+        {% with contact.assistant as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.spouse %}
+        {% with "Partner's Name" as title %}
+        {% with contact.spouse as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% if contact.anniversary %}
+        {% with "Anniversary" as title %}
+        {% with contact.anniversary as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+
+      {% for customField in contact.customFields %}
+        {% with customField.title as title %}
+        {% with customField.value as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+
+      {% if contact.addressBookName %}
+        {% with "Address Book" as title %}
+        {% with contact.addressBookName as value %}
+        {% include "row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endif %}
+    </table>
+  </div>

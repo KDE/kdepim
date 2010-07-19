@@ -30,6 +30,10 @@
 #include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
 
+#ifdef GRANTLEE_FOUND
+#include "grantleecontactformatter.h"
+#endif
+
 #include <akonadi/akonadi_next/collectionselectionproxymodel.h>
 #include <akonadi/akonadi_next/etmstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
@@ -57,6 +61,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kselectionproxymodel.h>
+#include <kstandarddirs.h>
 #include <ktextbrowser.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
@@ -375,6 +380,13 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
+
+#ifdef GRANTLEE_FOUND
+ Akonadi::GrantleeContactFormatter *formatter =
+       new Akonadi::GrantleeContactFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+
+ mContactDetails->setContactFormatter( formatter );
+#endif
 }
 
 void MainWidget::setupActions( KActionCollection *collection )
