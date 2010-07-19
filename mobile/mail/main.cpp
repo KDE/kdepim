@@ -23,8 +23,10 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#include <QGLWidget>
 #include <QDateTime>
+#ifndef Q_OS_WINCE
+#include <QGLWidget>
+#endif
 
 #include "mainview.h"
 
@@ -41,6 +43,7 @@ int main( int argc, char **argv )
   KDeclarativeApplication app;
   MainView view;
 
+#ifndef Q_OS_WINCE
   // make MainView use OpenGL ES2 backend for better performance
   // right now, the best performance can be achieved with a GLWidget
   // and the use of the raster graphicssystem.
@@ -48,8 +51,9 @@ int main( int argc, char **argv )
   format.setSampleBuffers(false);
   QGLWidget *glWidget = new QGLWidget(format); // make MainView use OpenGL ES2 backend.
   glWidget->setAutoFillBackground(false);
-
   view.setViewport(glWidget);
+#endif
+
   view.show();
 
   return app.exec();
