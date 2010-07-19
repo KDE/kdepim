@@ -38,7 +38,11 @@ static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 1
 
 using namespace IncidenceEditorsNG;
 
-ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QObject( parent ), mParentWidget( parentWidget ), mWeekdays( 7 ), mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
+ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
+  : QObject( parent )
+  , mParentWidget( parentWidget )
+  , mWeekdays( 7 )
+  , mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
 {
     Q_ASSERT( Akonadi::Groupware::instance() );
     // Groupware initializes the FreeBusyManager via a singleshot timer, so
