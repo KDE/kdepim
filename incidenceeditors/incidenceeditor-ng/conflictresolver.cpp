@@ -52,11 +52,11 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ): QO
         setupManager();
     }
     // set default values
-    mWeekdays.setBit( 1 ); //Monday
-    mWeekdays.setBit( 2 ); //Tuesday
-    mWeekdays.setBit( 3 ); //Wednesday
-    mWeekdays.setBit( 4 ); //Thursday
-    mWeekdays.setBit( 5 ); //Friday.. surprise!
+    mWeekdays.setBit( 0 ); //Monday
+    mWeekdays.setBit( 1 ); //Tuesday
+    mWeekdays.setBit( 2 ); //Wednesday
+    mWeekdays.setBit( 3 ); //Thursday
+    mWeekdays.setBit( 4 ); //Friday.. surprise!
     mMandatoryRoles << KCal::Attendee::ReqParticipant << KCal::Attendee::OptParticipant << KCal::Attendee::NonParticipant << KCal::Attendee::Chair;
 
     connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
