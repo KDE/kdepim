@@ -106,8 +106,8 @@ public: /// Functions
   QString ownerFreeBusyAsString();
   void processFailedDownload( const KUrl url, const QString &errorMessage );
   void processFinishedDownload( const KUrl url, const QByteArray &freeBusyData );
+  void processFreeBusyUploadResult( KJob *_job );
   bool processRetrieveQueue();
-  void slotUploadFreeBusyResult( KJob *_job );
   void timerEvent( QTimerEvent * );
 
 };
@@ -210,6 +210,29 @@ void FreeBusyManagerPrivate::processFinishedDownload( const KUrl url, const QByt
   processRetrieveQueue();
 }
 
+void FreeBusyManagerPrivate::processFreeBusyUploadResult( KJob *_job )
+{
+  KIO::FileCopyJob *job = static_cast<KIO::FileCopyJob *>( _job );
+  if ( job->error() ) {
+    KMessageBox::sorry(
+        job->ui()->window(),
+        i18n( "<qt><p>The software could not upload your free/busy list to "
+              "the URL '%1'. There might be a problem with the access "
+              "rights, or you specified an incorrect URL. The system said: "
+              "<em>%2</em>.</p>"
+              "<p>Please check the URL or contact your system administrator."
+              "</p></qt>", job->destUrl().prettyUrl(),
+              job->errorString() ) );
+  }
+  // Delete temp file
+  KUrl src = job->srcUrl();
+  Q_ASSERT( src.isLocalFile() );
+  if ( src.isLocalFile() ) {
+    QFile::remove( src.toLocalFile() );
+  }
+  mUploadingFreeBusy = false;
+}
+
 bool FreeBusyManagerPrivate::processRetrieveQueue()
 {
   Q_Q( FreeBusyManager );
@@ -236,29 +259,6 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
               SLOT(processFinishedDownload(KUrl, QString)) );
 
   return true;
-}
-
-void FreeBusyManagerPrivate::slotUploadFreeBusyResult( KJob *_job )
-{
-  KIO::FileCopyJob *job = static_cast<KIO::FileCopyJob *>( _job );
-  if ( job->error() ) {
-    KMessageBox::sorry(
-        job->ui()->window(),
-        i18n( "<qt><p>The software could not upload your free/busy list to "
-              "the URL '%1'. There might be a problem with the access "
-              "rights, or you specified an incorrect URL. The system said: "
-              "<em>%2</em>.</p>"
-              "<p>Please check the URL or contact your system administrator."
-              "</p></qt>", job->destUrl().prettyUrl(),
-              job->errorString() ) );
-  }
-  // Delete temp file
-  KUrl src = job->srcUrl();
-  Q_ASSERT( src.isLocalFile() );
-  if ( src.isLocalFile() ) {
-    QFile::remove( src.toLocalFile() );
-  }
-  mUploadingFreeBusy = false;
 }
 
 // This is used for delayed Free/Busy list uploading

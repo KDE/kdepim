@@ -122,9 +122,9 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     Q_DECLARE_PRIVATE( FreeBusyManager )
     Q_DISABLE_COPY( FreeBusyManager )
     Q_PRIVATE_SLOT( d_ptr, void checkFreeBusyUrl() )
-    Q_PRIVATE_SLOT( d_ptr, void slotUploadFreeBusyResult( KJob * ) )
     Q_PRIVATE_SLOT( d_ptr, void processFailedDownload( const KUrl url, const QString &errorMessage ) )
     Q_PRIVATE_SLOT( d_ptr, void processFinishedDownload( const KUrl url, const QByteArray &freeBusyData ) )
+    Q_PRIVATE_SLOT( d_ptr, void processFreeBusyUploadResult( KJob * ) )
     Q_PRIVATE_SLOT( d_ptr, bool processRetrieveQueue() )
 };
 
