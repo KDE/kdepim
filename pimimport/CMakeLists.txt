@@ -7,6 +7,7 @@ set( pimimport_SRCS
   abstractdump.cpp
   akonadidumper.cpp
   resourcedump.cpp
+  collectiondumpjob.cpp
 )
 
 kde4_add_executable( pimimport ${pimimport_SRCS})
