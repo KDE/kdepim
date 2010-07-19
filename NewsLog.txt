@@ -3,11 +3,7 @@ Friday, July 16th 2010
 Problems addressed
 ------------------
 
-* kolab/issue4406: Change write to read rights of a shared calendar folder, can lead to a focus problem (rt#6167)
 * kolab/issue4447: Deleting contact from distribution list with DELETE key and Remove button
-* kolab/issue3908: Mail view and print layout problem if description of attachment is to long (rt#5872)
-* kolab/issue4455: calendar activate/deactivate handling broken
-
 
 Friday, July 9th 2010
 
@@ -18,7 +14,7 @@ Problems addressed
 * kolab/issue4437: Wrong update mail (other attendees are removed) after double accepting of an event
 * kolab/issue4406: Change write to read rights of a shared calendar folder, can lead to a focus problem (rt#6167)
 * kolab/issue4343 (improved): Wish: global audio file for all reminder (rt#6133)
-
+* kolab/issue4406: Change write to read rights of a shared calendar folder, can lead to a focus problem (rt#6167)
 
 Friday, July 1st 2010
 
