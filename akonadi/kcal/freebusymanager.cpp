@@ -72,39 +72,65 @@
 using namespace KCal;
 using namespace Akonadi;
 
-/**
- * Class for downloading FreeBusy Lists
- */
+/// FreeBusyManagerPrivate
 
-/// FreeBusyManager
+namespace Akonadi {
 
-FreeBusyManager::FreeBusyManager( QObject *parent ) :
-  QObject( parent ),
-  mCalendar( 0 ), mTimerID( 0 ), mUploadingFreeBusy( false ),
-  mBrokenUrl( false ), mParentWidgetForRetrieval( 0 )
+class FreeBusyManagerPrivate
 {
+  FreeBusyManager * const q_ptr;
+  Q_DECLARE_PUBLIC( FreeBusyManager )
+
+public: /// Members
+  Akonadi::Calendar *mCalendar;
+  KCal::ICalFormat mFormat;
+
+  QStringList mRetrieveQueue;
+
+  // Free/Busy uploading
+  QDateTime mNextUploadTime;
+  int mTimerID;
+  bool mUploadingFreeBusy;
+  bool mBrokenUrl;
+
+  // the parentWidget to use while doing our "recursive" retrieval
+  QPointer<QWidget>  mParentWidgetForRetrieval;
+
+public: /// Functions
+  FreeBusyManagerPrivate( FreeBusyManager *q );
+  QString freeBusyToIcal( KCal::FreeBusy * );
+  KCal::FreeBusy *ownerFreeBusy();
+  QString ownerFreeBusyAsString();
+  bool processRetrieveQueue();
+  void slotUploadFreeBusyResult( KJob *_job );
+  void timerEvent( QTimerEvent * );
+
+};
+
 }
 
-FreeBusyManager::~FreeBusyManager()
+FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
+  : q_ptr( q )
+  , mCalendar( 0 )
+  , mTimerID( 0 )
+  , mUploadingFreeBusy( false )
+  , mBrokenUrl( false )
+  , mParentWidgetForRetrieval( 0 )
+{ }
+
+QString FreeBusyManagerPrivate::freeBusyToIcal( KCal::FreeBusy *freebusy )
 {
+  return mFormat.createScheduleMessage( freebusy, iTIPPublish );
 }
 
-void FreeBusyManager::setCalendar( Akonadi::Calendar *c )
-{
-  mCalendar = c;
-  if ( mCalendar ) {
-    mFormat.setTimeSpec( mCalendar->timeSpec() );
-  }
-}
-
-KCal::FreeBusy *FreeBusyManager::ownerFreeBusy()
+KCal::FreeBusy *FreeBusyManagerPrivate::ownerFreeBusy()
 {
   KDateTime start = KDateTime::currentUtcDateTime();
   KDateTime end = start.addDays( KCalPrefs::instance()->mFreeBusyPublishDays );
 
   Event::List events;
   Akonadi::Item::List items = mCalendar ? mCalendar->rawEvents( start.date(), end.date() ) : Akonadi::Item::List();
-  foreach(const Akonadi::Item &item, items) {
+  foreach( const Akonadi::Item &item, items ) {
     events << item.payload<Event::Ptr>().get();
   }
   FreeBusy *freebusy = new FreeBusy( events, start, end );
@@ -112,42 +138,117 @@ KCal::FreeBusy *FreeBusyManager::ownerFreeBusy()
   return freebusy;
 }
 
-QString FreeBusyManager::ownerFreeBusyAsString()
+QString FreeBusyManagerPrivate::ownerFreeBusyAsString()
 {
-  FreeBusy *freebusy = ownerFreeBusy();
-
-  QString result = freeBusyToIcal( freebusy );
-
-  delete freebusy;
-
-  return result;
+  QScopedPointer<FreeBusy> freebusyPtr( ownerFreeBusy() );
+  return freeBusyToIcal( freebusyPtr.data() );
 }
 
-QString FreeBusyManager::freeBusyToIcal( KCal::FreeBusy *freebusy )
+bool FreeBusyManagerPrivate::processRetrieveQueue()
 {
-  return mFormat.createScheduleMessage( freebusy, iTIPPublish );
+  Q_Q( FreeBusyManager );
+
+  if ( mRetrieveQueue.isEmpty() ) {
+    return true;
+  }
+
+  QString email = mRetrieveQueue.first();
+  mRetrieveQueue.pop_front();
+
+  KUrl sourceURL = q->freeBusyUrl( email );
+
+  kDebug() << "url:" << sourceURL;
+
+  if ( !sourceURL.isValid() ) {
+    kDebug() << "Invalid FB URL";
+    return false;
+  }
+
+  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( email, sourceURL, q,
+                                                      mParentWidgetForRetrieval );
+  job->setObjectName( QLatin1String( "freebusy_download_job" ) );
+  q->connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
+              SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)) );
+  q->connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
+              SLOT(processRetrieveQueue()) );
+
+  return true;
+}
+
+void FreeBusyManagerPrivate::slotUploadFreeBusyResult( KJob *_job )
+{
+  KIO::FileCopyJob *job = static_cast<KIO::FileCopyJob *>( _job );
+  if ( job->error() ) {
+    KMessageBox::sorry(
+        job->ui()->window(),
+        i18n( "<qt><p>The software could not upload your free/busy list to "
+              "the URL '%1'. There might be a problem with the access "
+              "rights, or you specified an incorrect URL. The system said: "
+              "<em>%2</em>.</p>"
+              "<p>Please check the URL or contact your system administrator."
+              "</p></qt>", job->destUrl().prettyUrl(),
+              job->errorString() ) );
+  }
+  // Delete temp file
+  KUrl src = job->srcUrl();
+  Q_ASSERT( src.isLocalFile() );
+  if ( src.isLocalFile() ) {
+    QFile::remove( src.toLocalFile() );
+  }
+  mUploadingFreeBusy = false;
+}
+
+// This is used for delayed Free/Busy list uploading
+void FreeBusyManagerPrivate::timerEvent( QTimerEvent * )
+{
+  Q_Q( FreeBusyManager );
+  q->publishFreeBusy();
+}
+
+/// FreeBusyManager
+
+FreeBusyManager::FreeBusyManager( QObject *parent ) :
+  QObject( parent ),
+  d_ptr( new FreeBusyManagerPrivate( this ) )
+{ }
+
+FreeBusyManager::~FreeBusyManager()
+{
+  delete d_ptr;
+}
+
+void FreeBusyManager::setCalendar( Akonadi::Calendar *c )
+{
+  Q_D( FreeBusyManager );
+
+  d->mCalendar = c;
+  if ( d->mCalendar ) {
+    d->mFormat.setTimeSpec( d->mCalendar->timeSpec() );
+  }
 }
 
 void FreeBusyManager::slotPerhapsUploadFB()
 {
+  Q_D( FreeBusyManager );
+
   // user has automatic uploading disabled, bail out
   if ( !KCalPrefs::instance()->freeBusyPublishAuto() ||
        KCalPrefs::instance()->freeBusyPublishUrl().isEmpty() ) {
      return;
   }
 
-  if( mTimerID != 0 ) {
+  if( d->mTimerID != 0 ) {
     // A timer is already running, so we don't need to do anything
     return;
   }
 
   int now = static_cast<int>( QDateTime::currentDateTime().toTime_t() );
-  int eta = static_cast<int>( mNextUploadTime.toTime_t() ) - now;
+  int eta = static_cast<int>( d->mNextUploadTime.toTime_t() ) - now;
 
-  if ( !mUploadingFreeBusy ) {
+  if ( !d->mUploadingFreeBusy ) {
     // Not currently uploading
-    if ( mNextUploadTime.isNull() ||
-         QDateTime::currentDateTime() > mNextUploadTime ) {
+    if ( d->mNextUploadTime.isNull() ||
+         QDateTime::currentDateTime() > d->mNextUploadTime ) {
       // No uploading have been done in this session, or delay time is over
       publishFreeBusy();
       return;
@@ -168,23 +269,18 @@ void FreeBusyManager::slotPerhapsUploadFB()
   }
 
   // Start the timer
-  mTimerID = startTimer( eta * 1000 );
+  d->mTimerID = startTimer( eta * 1000 );
 
-  if ( mTimerID == 0 ) {
+  if ( d->mTimerID == 0 ) {
     // startTimer failed - better do the upload
     publishFreeBusy();
   }
 }
 
-// This is used for delayed Free/Busy list uploading
-void FreeBusyManager::timerEvent( QTimerEvent * )
-{
-  publishFreeBusy();
-}
-
 void FreeBusyManager::setBrokenUrl( bool isBroken )
 {
-  mBrokenUrl = isBroken;
+  Q_D( FreeBusyManager );
+  d->mBrokenUrl = isBroken;
 }
 
 /*!
@@ -193,8 +289,9 @@ void FreeBusyManager::setBrokenUrl( bool isBroken )
 */
 void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 {
+  Q_D( FreeBusyManager );
   // Already uploading? Skip this one then.
-  if ( mUploadingFreeBusy ) {
+  if ( d->mUploadingFreeBusy ) {
     return;
   }
   KUrl targetURL ( KCalPrefs::instance()->freeBusyPublishUrl() );
@@ -210,7 +307,7 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
     return;
   }
 
-  if ( mBrokenUrl ) {
+  if ( d->mBrokenUrl ) {
      // Url is invalid, don't try again
     return;
   }
@@ -219,27 +316,27 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
       parentWidget,
       i18n( "<qt>The target URL '%1' provided is invalid.</qt>", targetURL.prettyUrl() ),
       i18n( "Invalid URL" ) );
-    mBrokenUrl = true;
+    d->mBrokenUrl = true;
     return;
   }
   targetURL.setUser( KCalPrefs::instance()->mFreeBusyPublishUser );
   targetURL.setPass( KCalPrefs::instance()->mFreeBusyPublishPassword );
 
-  mUploadingFreeBusy = true;
+  d->mUploadingFreeBusy = true;
 
   // If we have a timer running, it should be stopped now
-  if ( mTimerID != 0 ) {
-    killTimer( mTimerID );
-    mTimerID = 0;
+  if ( d->mTimerID != 0 ) {
+    killTimer( d->mTimerID );
+    d->mTimerID = 0;
   }
 
   // Save the time of the next free/busy uploading
-  mNextUploadTime = QDateTime::currentDateTime();
+  d->mNextUploadTime = QDateTime::currentDateTime();
   if ( KCalPrefs::instance()->mFreeBusyPublishDelay > 0 ) {
-    mNextUploadTime = mNextUploadTime.addSecs( KCalPrefs::instance()->mFreeBusyPublishDelay * 60 );
+    d->mNextUploadTime = d->mNextUploadTime.addSecs( KCalPrefs::instance()->mFreeBusyPublishDelay * 60 );
   }
 
-  QString messageText = ownerFreeBusyAsString();
+  QString messageText = d->ownerFreeBusyAsString();
 
   // We need to massage the list a bit so that Outlook understands
   // it.
@@ -301,43 +398,22 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
   }
 }
 
-void FreeBusyManager::slotUploadFreeBusyResult( KJob *_job )
-{
-    KIO::FileCopyJob *job = static_cast<KIO::FileCopyJob *>( _job );
-    if ( job->error() ) {
-        KMessageBox::sorry(
-          job->ui()->window(),
-          i18n( "<qt><p>The software could not upload your free/busy list to "
-                "the URL '%1'. There might be a problem with the access "
-                "rights, or you specified an incorrect URL. The system said: "
-                "<em>%2</em>.</p>"
-                "<p>Please check the URL or contact your system administrator."
-                "</p></qt>", job->destUrl().prettyUrl(),
-                job->errorString() ) );
-    }
-    // Delete temp file
-    KUrl src = job->srcUrl();
-    Q_ASSERT( src.isLocalFile() );
-    if ( src.isLocalFile() ) {
-      QFile::remove( src.toLocalFile() );
-    }
-    mUploadingFreeBusy = false;
-}
-
 bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload,
                                         QWidget *parentWidget )
 {
+  Q_D( FreeBusyManager );
+
   kDebug() << email;
   if ( email.isEmpty() ) {
     return false;
   }
 
-  mParentWidgetForRetrieval = parentWidget;
+  d->mParentWidgetForRetrieval = parentWidget;
 
   if ( KCalPrefs::instance()->thatIsMe( email ) ) {
     // Don't download our own free-busy list from the net
     kDebug() << "freebusy of owner";
-    emit freeBusyRetrieved( ownerFreeBusy(), email );
+    emit freeBusyRetrieved( d->ownerFreeBusy(), email );
     return true;
   }
 
@@ -352,47 +428,19 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
     return false;
   }
 
-  mRetrieveQueue.append( email );
+  d->mRetrieveQueue.append( email );
 
-  if ( mRetrieveQueue.count() > 1 ) {
+  if ( d->mRetrieveQueue.count() > 1 ) {
     return true;
   }
 
-  return processRetrieveQueue();
-}
-
-bool FreeBusyManager::processRetrieveQueue()
-{
-  if ( mRetrieveQueue.isEmpty() ) {
-    return true;
-  }
-
-  QString email = mRetrieveQueue.first();
-  mRetrieveQueue.pop_front();
-
-  KUrl sourceURL = freeBusyUrl( email );
-
-  kDebug() << "url:" << sourceURL;
-
-  if ( !sourceURL.isValid() ) {
-    kDebug() << "Invalid FB URL";
-    return false;
-  }
-
-  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( email, sourceURL, this,
-                                                      mParentWidgetForRetrieval );
-  job->setObjectName( QLatin1String( "freebusy_download_job" ) );
-  connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
-           SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)) );
-  connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
-           SLOT(processRetrieveQueue()) );
-
-  return true;
+  return d->processRetrieveQueue();
 }
 
 void FreeBusyManager::cancelRetrieval()
 {
-  mRetrieveQueue.clear();
+  Q_D( FreeBusyManager );
+  d->mRetrieveQueue.clear();
 }
 
 KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
@@ -476,10 +524,11 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
 
 KCal::FreeBusy *FreeBusyManager::iCalToFreeBusy( const QByteArray &data )
 {
+  Q_D( FreeBusyManager );
   kDebug() << data;
 
   QString freeBusyVCal = QString::fromUtf8( data );
-  KCal::FreeBusy *fb = mFormat.parseFreeBusy( freeBusyVCal );
+  KCal::FreeBusy *fb = d->mFormat.parseFreeBusy( freeBusyVCal );
   if ( !fb ) {
     kDebug() << "Error parsing free/busy";
     kDebug() << freeBusyVCal;
@@ -517,6 +566,7 @@ FreeBusy *FreeBusyManager::loadFreeBusy( const QString &email )
 
 bool FreeBusyManager::saveFreeBusy( FreeBusy *freebusy, const Person &person )
 {
+  Q_D( FreeBusyManager );
   kDebug() << person.fullName();
 
   QString fbd = freeBusyDir();
@@ -543,7 +593,7 @@ bool FreeBusyManager::saveFreeBusy( FreeBusy *freebusy, const Person &person )
   freebusy->clearAttendees();
   freebusy->setOrganizer( person );
 
-  QString messageText = mFormat.createScheduleMessage( freebusy, iTIPPublish );
+  QString messageText = d->mFormat.createScheduleMessage( freebusy, iTIPPublish );
 
   if ( !f.open( QIODevice::ReadWrite ) ) {
     kDebug() << "acceptFreeBusy: Can't open:" << filename << "for writing";

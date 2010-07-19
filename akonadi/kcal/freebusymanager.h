@@ -57,8 +57,9 @@ namespace KCal {
   class FreeBusy;
 }
 namespace Akonadi {
-class FreeBusyManager;
+
 class Calendar;
+class FreeBusyManagerPrivate;
 
 class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::FreeBusyCache
 {
@@ -124,44 +125,12 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     */
     void freeBusyRetrieved( KCal::FreeBusy *, const QString &email );
 
-  protected:
-    void timerEvent( QTimerEvent * );
-
-    /**
-      Return free/busy list of calendar owner as iCalendar string.
-    */
-    QString ownerFreeBusyAsString();
-
-    /**
-      Return free/busy list of calendar owner.
-    */
-    KCal::FreeBusy *ownerFreeBusy();
-
-    /**
-      Convert free/busy object to iCalendar string.
-    */
-    QString freeBusyToIcal( KCal::FreeBusy * );
-
-  protected slots:
-    bool processRetrieveQueue();
-
-  private slots:
-    void slotUploadFreeBusyResult( KJob * );
-
   private:
-    Akonadi::Calendar *mCalendar;
-    KCal::ICalFormat mFormat;
-
-    QStringList mRetrieveQueue;
-
-    // Free/Busy uploading
-    QDateTime mNextUploadTime;
-    int mTimerID;
-    bool mUploadingFreeBusy;
-    bool mBrokenUrl;
-
-    // the parentWidget to use while doing our "recursive" retrieval
-    QPointer<QWidget>  mParentWidgetForRetrieval;
+    FreeBusyManagerPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( FreeBusyManager )
+    Q_DISABLE_COPY( FreeBusyManager )
+    Q_PRIVATE_SLOT( d_ptr, void slotUploadFreeBusyResult( KJob * ) )
+    Q_PRIVATE_SLOT( d_ptr, bool processRetrieveQueue() )
 };
 
 }
