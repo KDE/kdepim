@@ -24,15 +24,16 @@
 #define CONFLICTRESOLVER_H
 
 #include "incidenceeditors-ng_export.h"
-#include <KDateTime>
+
+#include <QtCore/QObject>
+#include <QtCore/QTimer>
+#include <QtCore/QSet>
+#include <QtCore/QBitArray>
+#include <QtCore/QVector>
+
 #include <KCal/Attendee>
 #include <KCal/Period>
-
-#include <QObject>
-#include <QTimer>
-#include <QSet>
-#include <QBitArray>
-#include <QVector>
+#include <KDateTime>
 
 
 namespace KCal

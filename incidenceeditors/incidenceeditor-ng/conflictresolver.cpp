@@ -22,17 +22,17 @@
 
 #include "conflictresolver.h"
 
-#include "attendeedata.h"
-#include "freebusyitem.h"
-
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <QtCore/QVector>
 
 #include <KCalendarSystem>
 #include <KCal/FreeBusy>
 #include <KDebug>
 
-#include <QVector>
+#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <akonadi/kcal/groupware.h>       //krazy:exclude=camelcase since kdepim/akonadi
+
+#include "attendeedata.h"
+#include "freebusyitem.h"
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
