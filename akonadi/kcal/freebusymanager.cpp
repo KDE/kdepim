@@ -349,9 +349,14 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 {
   Q_D( FreeBusyManager );
   // Already uploading? Skip this one then.
-  if ( d->mUploadingFreeBusy ) {
+  if ( d->mUploadingFreeBusy )
     return;
-  }
+
+  // No calendar set yet? Don't upload to prevent losing published information that
+  // might still be valid.
+  if ( !d->mCalendar )
+    return;
+
   KUrl targetURL ( KCalPrefs::instance()->freeBusyPublishUrl() );
   if ( targetURL.isEmpty() )  {
     KMessageBox::sorry(
