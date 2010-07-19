@@ -1,7 +1,7 @@
 /*
     This file is part of KOrganizer.
 
-    Copyright (C) 2010  Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (C) 2010  Bertjan Broeksema <broeksema@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

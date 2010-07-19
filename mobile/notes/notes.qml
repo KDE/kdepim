@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (c) 2010 Stephen Kelly <stephen@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
