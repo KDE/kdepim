@@ -99,6 +99,7 @@ public: /// Members
 
 public: /// Functions
   FreeBusyManagerPrivate( FreeBusyManager *q );
+  void checkFreeBusyUrl();
   QString freeBusyToIcal( KCal::FreeBusy * );
   FreeBusy *iCalToFreeBusy( const QByteArray &freeBusyData );
   FreeBusy *ownerFreeBusy();
@@ -121,6 +122,12 @@ FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
   , mBrokenUrl( false )
   , mParentWidgetForRetrieval( 0 )
 { }
+
+void FreeBusyManagerPrivate::checkFreeBusyUrl()
+{
+  KUrl targetURL( KCalPrefs::instance()->freeBusyPublishUrl() );
+  mBrokenUrl = targetURL.isEmpty() || !targetURL.isValid();
+}
 
 QString FreeBusyManagerPrivate::freeBusyToIcal( KCal::FreeBusy *freebusy )
 {
@@ -266,7 +273,10 @@ void FreeBusyManagerPrivate::timerEvent( QTimerEvent * )
 FreeBusyManager::FreeBusyManager( QObject *parent ) :
   QObject( parent ),
   d_ptr( new FreeBusyManagerPrivate( this ) )
-{ }
+{
+  connect( KCalPrefs::instance(), SIGNAL(configChanged()),
+           SLOT(checkFreeBusyUrl()) );
+}
 
 FreeBusyManager::~FreeBusyManager()
 {
@@ -331,12 +341,6 @@ void FreeBusyManager::slotPerhapsUploadFB()
     // startTimer failed - better do the upload
     publishFreeBusy();
   }
-}
-
-void FreeBusyManager::setBrokenUrl( bool isBroken )
-{
-  Q_D( FreeBusyManager );
-  d->mBrokenUrl = isBroken;
 }
 
 /*!

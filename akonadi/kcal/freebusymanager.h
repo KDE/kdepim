@@ -107,12 +107,6 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     */
     QString freeBusyDir();
 
-    /**
-      Change the broken Url status
-      mBrokenUrl is used to show the 'broken url popup' only once
-    */
-    void setBrokenUrl( bool isBroken );
-
   public slots:
     // When something changed in the calendar, we get this called
     void slotPerhapsUploadFB();
@@ -127,6 +121,7 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     FreeBusyManagerPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( FreeBusyManager )
     Q_DISABLE_COPY( FreeBusyManager )
+    Q_PRIVATE_SLOT( d_ptr, void checkFreeBusyUrl() )
     Q_PRIVATE_SLOT( d_ptr, void slotUploadFreeBusyResult( KJob * ) )
     Q_PRIVATE_SLOT( d_ptr, void processFailedDownload( const KUrl url, const QString &errorMessage ) )
     Q_PRIVATE_SLOT( d_ptr, void processFinishedDownload( const KUrl url, const QByteArray &freeBusyData ) )
