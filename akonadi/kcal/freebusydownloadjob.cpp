@@ -28,15 +28,11 @@
 
 #include <KCal/FreeBusy>
 
-#include "freebusymanager.h"
-
 using namespace Akonadi;
 using namespace KCal;
 
-FreeBusyDownloadJob::FreeBusyDownloadJob( const QString &email, const KUrl &url,
-                                          FreeBusyManager *manager,
-                                          QWidget *parentWidget )
-  : QObject( manager ), mManager( manager ), mEmail( email )
+FreeBusyDownloadJob::FreeBusyDownloadJob( const KUrl &url, QWidget *parentWidget )
+  : mUrl( url )
 {
   KIO::TransferJob *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
 
@@ -48,8 +44,7 @@ FreeBusyDownloadJob::FreeBusyDownloadJob( const QString &email, const KUrl &url,
 }
 
 FreeBusyDownloadJob::~FreeBusyDownloadJob()
-{
-}
+{ }
 
 void FreeBusyDownloadJob::slotData( KIO::Job *, const QByteArray &data )
 {
@@ -58,19 +53,10 @@ void FreeBusyDownloadJob::slotData( KIO::Job *, const QByteArray &data )
 
 void FreeBusyDownloadJob::slotResult( KJob *job )
 {
-  kDebug() << mEmail;
+  if ( job->error() )
+    emit downloadFailed( mUrl, job->errorString() );
 
-  if ( job->error() ) {
-    kDebug() << "job error :-(";
-  }
-
-  FreeBusy *fb = mManager->iCalToFreeBusy( mFreeBusyData );
-  if ( fb ) {
-    Person p = fb->organizer();
-    p.setEmail( mEmail );
-    mManager->saveFreeBusy( fb, p );
-  }
-  emit freeBusyDownloaded( fb, mEmail );
+  emit downloadFinished( mUrl, mFreeBusyData );
   deleteLater();
 }
 

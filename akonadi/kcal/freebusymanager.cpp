@@ -86,6 +86,7 @@ public: /// Members
   KCal::ICalFormat mFormat;
 
   QStringList mRetrieveQueue;
+  QMap<KUrl, QString> mFreeBusyUrlEmailMap;
 
   // Free/Busy uploading
   QDateTime mNextUploadTime;
@@ -99,8 +100,11 @@ public: /// Members
 public: /// Functions
   FreeBusyManagerPrivate( FreeBusyManager *q );
   QString freeBusyToIcal( KCal::FreeBusy * );
-  KCal::FreeBusy *ownerFreeBusy();
+  FreeBusy *iCalToFreeBusy( const QByteArray &freeBusyData );
+  FreeBusy *ownerFreeBusy();
   QString ownerFreeBusyAsString();
+  void processFailedDownload( const KUrl url, const QString &errorMessage );
+  void processFinishedDownload( const KUrl url, const QByteArray &freeBusyData );
   bool processRetrieveQueue();
   void slotUploadFreeBusyResult( KJob *_job );
   void timerEvent( QTimerEvent * );
@@ -121,6 +125,19 @@ FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
 QString FreeBusyManagerPrivate::freeBusyToIcal( KCal::FreeBusy *freebusy )
 {
   return mFormat.createScheduleMessage( freebusy, iTIPPublish );
+}
+
+FreeBusy *FreeBusyManagerPrivate::iCalToFreeBusy( const QByteArray &freeBusyData )
+{
+  const QString freeBusyVCal( QString::fromUtf8( freeBusyData ) );
+  KCal::FreeBusy *fb = mFormat.parseFreeBusy( freeBusyVCal );
+
+  if ( !fb ) {
+    kDebug() << "Error parsing free/busy";
+    kDebug() << freeBusyVCal;
+  }
+
+  return fb;
 }
 
 KCal::FreeBusy *FreeBusyManagerPrivate::ownerFreeBusy()
@@ -144,6 +161,48 @@ QString FreeBusyManagerPrivate::ownerFreeBusyAsString()
   return freeBusyToIcal( freebusyPtr.data() );
 }
 
+void FreeBusyManagerPrivate::processFailedDownload( const KUrl url, const QString &errorMessage )
+{
+  KMessageBox::sorry( mParentWidgetForRetrieval,
+                      i18n( "Failed to download free/busy data from: %1\nReason: %2", url.prettyUrl(), errorMessage ),
+                      i18n( "Free/busy retrieval error") );
+
+  // TODO: Ask for a retry? (i.e. queue  the email again when the user wants it).
+
+  // Make sure we don't fill up the map with unneeded data on failures.
+  mFreeBusyUrlEmailMap.take( url );
+
+  // When downloading failed, start a job for the next one in the queue if
+  // needed.
+  processRetrieveQueue();
+}
+
+void FreeBusyManagerPrivate::processFinishedDownload( const KUrl url, const QByteArray &freeBusyData )
+{
+  Q_Q( FreeBusyManager );
+
+  KCal::FreeBusy *fb = iCalToFreeBusy( freeBusyData );
+
+  Q_ASSERT( mFreeBusyUrlEmailMap.contains( url ) );
+  const QString email = mFreeBusyUrlEmailMap.take( url );
+
+  if ( fb ) {
+    Person p = fb->organizer();
+    p.setEmail( email );
+    q->saveFreeBusy( fb, p );
+
+    emit q->freeBusyRetrieved( fb, email );
+  } else {
+    KMessageBox::sorry( mParentWidgetForRetrieval,
+                        i18n( "Failed to parse free/busy information that was retrieved from: %1", url.prettyUrl() ),
+                        i18n( "Free/busy retrieval error" ) );
+  }
+
+  // When downloading is finished, start a job for the next one in the queue if
+  // needed.
+  processRetrieveQueue();
+}
+
 bool FreeBusyManagerPrivate::processRetrieveQueue()
 {
   Q_Q( FreeBusyManager );
@@ -152,25 +211,22 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
     return true;
   }
 
-  QString email = mRetrieveQueue.first();
-  mRetrieveQueue.pop_front();
+  QString email = mRetrieveQueue.takeFirst();
+  KUrl freeBusyUrlForEmail = q->freeBusyUrl( email );
 
-  KUrl sourceURL = q->freeBusyUrl( email );
-
-  kDebug() << "url:" << sourceURL;
-
-  if ( !sourceURL.isValid() ) {
-    kDebug() << "Invalid FB URL";
+  if ( !freeBusyUrlForEmail.isValid() ) {
+    kDebug() << "Invalid FreeBusy URL" << freeBusyUrlForEmail.prettyUrl() << email;
     return false;
   }
 
-  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( email, sourceURL, q,
-                                                      mParentWidgetForRetrieval );
+  mFreeBusyUrlEmailMap.insert( freeBusyUrlForEmail, email );
+
+  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail, mParentWidgetForRetrieval );
   job->setObjectName( QLatin1String( "freebusy_download_job" ) );
-  q->connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
-              SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)) );
-  q->connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
-              SLOT(processRetrieveQueue()) );
+  q->connect( job, SIGNAL(downloadFailed(KUrl, QString)),
+              SLOT(processFailedDownload(KUrl, QString)) );
+  q->connect( job, SIGNAL(downloadFinished(KUrl,QByteArray)),
+              SLOT(processFinishedDownload(KUrl, QString)) );
 
   return true;
 }
@@ -421,6 +477,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
   KCal::FreeBusy *fb = loadFreeBusy( email );
   if ( fb ) {
     emit freeBusyRetrieved( fb, email );
+    return true;
   }
 
   // Don't download free/busy if the user does not want it.
@@ -522,20 +579,6 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
   return sourceURL;
 }
 
-KCal::FreeBusy *FreeBusyManager::iCalToFreeBusy( const QByteArray &data )
-{
-  Q_D( FreeBusyManager );
-  kDebug() << data;
-
-  QString freeBusyVCal = QString::fromUtf8( data );
-  KCal::FreeBusy *fb = d->mFormat.parseFreeBusy( freeBusyVCal );
-  if ( !fb ) {
-    kDebug() << "Error parsing free/busy";
-    kDebug() << freeBusyVCal;
-  }
-  return fb;
-}
-
 QString FreeBusyManager::freeBusyDir()
 {
   return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
@@ -543,6 +586,8 @@ QString FreeBusyManager::freeBusyDir()
 
 FreeBusy *FreeBusyManager::loadFreeBusy( const QString &email )
 {
+  Q_D( FreeBusyManager );
+
   kDebug() << email;
 
   QString fbd = freeBusyDir();
@@ -561,7 +606,7 @@ FreeBusy *FreeBusyManager::loadFreeBusy( const QString &email )
   QTextStream ts( &f );
   QString str = ts.readAll();
 
-  return iCalToFreeBusy( str.toUtf8() );
+  return d->iCalToFreeBusy( str.toUtf8() );
 }
 
 bool FreeBusyManager::saveFreeBusy( FreeBusy *freebusy, const Person &person )
