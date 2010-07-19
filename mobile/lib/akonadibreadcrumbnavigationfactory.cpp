@@ -28,7 +28,6 @@ using namespace Akonadi;
 BreadcrumbNavigationFactory::BreadcrumbNavigationFactory(QObject* parent)
   : KBreadcrumbNavigationComponentFactory(parent)
 {
-  setBreadcrumbDepth(1);
 }
 
 QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel(QAbstractItemModel* model)
