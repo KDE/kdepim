@@ -29,6 +29,7 @@ set( kcalakonadi_LIB_SRC
      mailclient.cpp
      kcalprefs.cpp
      mailscheduler.cpp
+     freebusydownloadjob.cpp
      freebusymanager.cpp
      dndfactory.cpp
      incidencechanger.cpp
