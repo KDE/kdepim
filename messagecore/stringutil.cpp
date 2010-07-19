@@ -747,20 +747,20 @@ void removePrivateHeaderFields( const KMime::Message::Ptr &msg ) {
 
 QByteArray asSendableString( const KMime::Message::Ptr &msg )
 {
-  KMime::Message message;
-  message.setContent( msg->encodedContent() );
-  removePrivateHeaderFields( KMime::Message::Ptr( &message ) );
-  message.removeHeader("Bcc");
-  return message.encodedContent();
+  KMime::Message::Ptr message( new KMime::Message );
+  message->setContent( msg->encodedContent() );
+  removePrivateHeaderFields( message );
+  message->removeHeader("Bcc");
+  return message->encodedContent();
 }
 
 QByteArray headerAsSendableString( const KMime::Message::Ptr &msg )
 {
-  KMime::Message message;
-  message.setContent( msg->encodedContent() );
-  removePrivateHeaderFields( KMime::Message::Ptr( &message ) );
-  message.removeHeader("Bcc");
-  return message.head();
+  KMime::Message::Ptr message( new KMime::Message );
+  message->setContent( msg->encodedContent() );
+  removePrivateHeaderFields( message );
+  message->removeHeader("Bcc");
+  return message->head();
 }
 
 
