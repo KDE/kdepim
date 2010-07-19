@@ -36,6 +36,7 @@
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
+#include <kpimtextedit/textutils.h>
 
 using namespace KMime;
 using namespace KMime::Types;
@@ -104,58 +105,6 @@ static QString splitLine( QString &line)
   return quotePrefix;
 }
 
-// Changes the given text so that each line of it fits into the given maximal length.
-// At each line, the "indent" string is prepended, which is usually the quote prefix.
-// The text parameter will be empty afterwards.
-// Example:
-//   text = "Hello World, this is a test."
-//   indent = "> "
-//   maxLength = 16
-//   Result: "> Hello World,\n"
-//           "> this is a test."
-static QString flowText( QString &text, const QString& indent, int maxLength )
-{
-  maxLength--;
-  if ( text.isEmpty() ) {
-    return indent + "\n";
-  }
-
-  QString result;
-  while ( !text.isEmpty() )
-  {
-    // Find the next point in the text where we have to do a line break. Start searching
-    // at maxLength position and then walk backwards looking for a space
-    int breakPosition;
-    if ( text.length() > maxLength )
-    {
-      breakPosition = maxLength;
-      while( ( breakPosition >= 0 ) && ( text[breakPosition] != ' ' ) )
-        breakPosition--;
-      if ( breakPosition <= 0 ) {
-        // Couldn't break before maxLength.
-        breakPosition = maxLength;
-      }
-    }
-    else {
-      breakPosition = text.length();
-    }
-
-    QString line = text.left( breakPosition );
-    if ( breakPosition < text.length() )
-      text = text.mid( breakPosition );
-    else
-      text.clear();
-
-    // Strip leading whitespace of new lines, since that looks strange
-    if ( !result.isEmpty() && line.startsWith( ' ' ) )
-      line = line.mid( 1 );
-
-    result += indent + line + '\n';
-  }
-
-  return result;
-}
-
 // Writes all lines/text parts contained in the "textParts" list to the output text, "msg".
 // Quote characters are added in front of each line, and no line is longer than
 // maxLength.
@@ -192,7 +141,7 @@ static bool flushPart( QString &msg, QStringList &textParts,
     // Therefore, we write all of our text so far to the msg.
     if ( line.isEmpty() ) {
       if ( !text.isEmpty() )
-        msg += flowText( text, indent, maxLength );
+        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
       msg += indent + '\n';
     }
 
@@ -207,13 +156,13 @@ static bool flushPart( QString &msg, QStringList &textParts,
       // if false, and therefore we keep adding lines to our text, so they get ran together in the
       // next flowText call, as "text" contains several text parts/lines then.
       if ( ( text.length() < maxLength ) || ( line.length() < ( maxLength - 10 ) ) )
-        msg += flowText( text, indent, maxLength );
+        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
     }
   }
 
   // Write out pending text to the msg
   if ( !text.isEmpty() )
-    msg += flowText( text, indent, maxLength );
+    msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
 
   const bool appendEmptyLine = !textParts.isEmpty();
   textParts.clear();
