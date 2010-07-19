@@ -1,5 +1,6 @@
 /*
  *   Copyright 2010 Ryan Rix <ry@n.rix.si>
+ * 
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -23,6 +24,7 @@
 #include <Plasma/Svg>
 #include <Plasma/Theme>
 #include <Plasma/DataEngine>
+#include <Plasma/ScrollWidget>
 
 #include <QPainter>
 #include <QFontMetrics>
@@ -46,12 +48,23 @@ SpecialDatesApplet::SpecialDatesApplet( QObject* parent, QVariantList args )
     m_svg.setImagePath("widgets/background");
     setBackgroundHints(DefaultBackground);
     
-    m_layout = new QGraphicsLinearLayout(Qt::Vertical, this);
-    setLayout(m_layout);
 }
 
 void SpecialDatesApplet::init()
 {
+    setPreferredSize( 50, 300 );
+    
+    QGraphicsLinearLayout* lay = new QGraphicsLinearLayout(this);
+    
+    m_ItemsScroll= new Plasma::ScrollWidget(this);
+    m_ItemsScroll->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    m_ItemsPage = new QGraphicsWidget(this);
+    m_layout = new QGraphicsLinearLayout(Qt::Vertical, m_ItemsPage);
+    m_ItemsScroll->setWidget(m_ItemsPage);
+    lay->addItem(m_ItemsScroll);
+
+    setLayout(lay);
+
     m_calEngine = dataEngine("calendar");
     m_akoEngine = dataEngine("akonadi");
     connect(m_akoEngine, SIGNAL(sourceAdded(QString)), this, SLOT(addSource(QString)));
@@ -60,6 +73,7 @@ void SpecialDatesApplet::init()
     configChanged();
     
     updateSpecialDates();
+    m_akoEngine->connectSource("ContactCollections", this);
 }
 
 void SpecialDatesApplet::addSource(QString sourceName)
@@ -91,28 +105,34 @@ void SpecialDatesApplet::updateSpecialDates()
     QString query = QString("holidays:%1:%2:%3");
     query = query.arg(m_locale, date.toString("yyyy-MM-dd"), date.addDays(m_numDays).toString("yyyy-MM-dd"));
     
-    //kDebug() << "Query calendar DataSource" << query;
+    kDebug() << "Query calendar DataSource" << query;
     
     // when did this change? rrix 20100613
     Plasma::DataEngine::Data holidayQuery = m_calEngine->query(query);
     QVariantList holidayList = holidayQuery[query].toList();
-    QHash<QString,QVariant> holidays = holidayList.first().toHash();
-    
-    // unpack the hash
-    QListIterator<QVariant> it(holidayList);
-    while( it.hasNext() )
+    if( holidayList.length() > 0 && holidayList.first().isValid() )
     {
-        QHash<QString,QVariant> data = it.next().toHash();
-        QDate date = QDate::fromString( data["date"].toString(), "yyyy-MM-dd" );
-        
-        QString text = data["name"].toString();
-        
-        //kDebug() << date << text;
-        
-        m_specialDates[data["date"].toString()] = new SpecialDateWidget(this,text,"view-calendar-holiday",KUrl(),date);
-    }
+        QHash<QString,QVariant> holidays = holidayList.first().toHash();
     
-    m_akoEngine->connectSource("ContactCollections", this);
+        // unpack the hash
+        QListIterator<QVariant> it(holidayList);
+        while( it.hasNext() )
+        {
+            QHash<QString,QVariant> data = it.next().toHash();
+            QDate date = QDate::fromString( data["date"].toString(), "yyyy-MM-dd" );
+        
+            QString text = data["name"].toString();
+        
+            kDebug() << date << text;
+        
+            m_specialDates[data["date"].toString()] = new SpecialDateWidget(this,text,"view-calendar-holiday",KUrl(),date);
+        }
+    }
+    else
+    {
+        QTimer::singleShot(5000, this, SLOT(updateSpecialDates()));
+        kDebug() << "Setting singleshot";
+    }
 }
 
 
@@ -123,21 +143,26 @@ void SpecialDatesApplet::updateUI()
     
     for( int i = 0; i < m_layout->count(); i++ )
     {
-        m_layout->removeAt(i);
+        m_layout->removeAt(i); //ugh.
     }
     
-    QMapIterator<QString,Plasma::GroupBox*> it(m_specialDates);
+    QMapIterator<QString,Plasma::Frame*> it(m_specialDates);
     while( it.hasNext() )
     {
         it.next();
         //SpecialDate* widget = new SpecialDate(this, it.value() );
         m_layout->addItem(it.value());
     }
+
+    setPreferredSize(-1,-1);
+    m_layout->invalidate();
+
+    emit sizeHintChanged(Qt::PreferredSize);
 }
 
 void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::DataEngine::Data& data)
 {
-    //kDebug() << data;
+    // kDebug() << data;
     if( sourceName == "ContactCollections" )
     {
         // data.key() is the collection name
@@ -181,8 +206,10 @@ void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::Da
             {
                 QString text = "%1's Birthday";
                 text = text.arg( data["Name"].toString() );
-                
-                m_specialDates[birthday2.toString("yyyy-MM-dd")] = new SpecialDateWidget(this,text, "view-calendar-birthday", KUrl(), birthday2);
+                QString uri = "uid:%1";
+                uri = uri.arg( data["Id"].toString() );
+
+                m_specialDates[birthday2.toString("yyyy-MM-dd")] = new SpecialDateWidget(this,text, "view-calendar-birthday", uri, birthday2);
                 
                 m_updateTimer->start(1000);
             }
