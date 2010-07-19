@@ -100,6 +100,8 @@ public: /// Members
 public: /// Functions
   FreeBusyManagerPrivate( FreeBusyManager *q );
   void checkFreeBusyUrl();
+  QString freeBusyDir() const;
+  KUrl freeBusyUrl( const QString &email ) const;
   QString freeBusyToIcal( KCal::FreeBusy * );
   FreeBusy *iCalToFreeBusy( const QByteArray &freeBusyData );
   FreeBusy *ownerFreeBusy();
@@ -126,6 +128,88 @@ void FreeBusyManagerPrivate::checkFreeBusyUrl()
 {
   KUrl targetURL( KCalPrefs::instance()->freeBusyPublishUrl() );
   mBrokenUrl = targetURL.isEmpty() || !targetURL.isValid();
+}
+
+QString FreeBusyManagerPrivate::freeBusyDir() const
+{
+  return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
+}
+
+KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
+{
+  // First check if there is a specific FB url for this email
+  QString configFile = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusyurls" ) );
+  KConfig cfg( configFile );
+  KConfigGroup group = cfg.group(email);
+  QString url = group.readEntry( QLatin1String( "url" ) );
+  if ( !url.isEmpty() ) {
+    return KUrl( url );
+  }
+  // Try with the url configurated by preferred email in kcontactmanager
+  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+  job->setQuery( Akonadi::ContactSearchJob::Email, email );
+  if ( !job->exec() )
+    return KUrl();
+
+  QString pref;
+  const KABC::Addressee::List contacts = job->contacts();
+  foreach ( const KABC::Addressee &contact, contacts ) {
+    pref = contact.preferredEmail();
+    if ( !pref.isEmpty() && pref != email ) {
+      kDebug() << "Preferred email of" << email << "is" << pref;
+      group = cfg.group( pref );
+      url = group.readEntry ( "url" );
+      if ( !url.isEmpty() ) {
+        kDebug() << "Taken url from preferred email:" << url;
+        return KUrl( url );
+      }
+    }
+  }
+  // None found. Check if we do automatic FB retrieving then
+  if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
+    // No, so no FB list here
+    return KUrl();
+  }
+
+  // Sanity check: Don't download if it's not a correct email
+  // address (this also avoids downloading for "(empty email)").
+  int emailpos = email.indexOf( QLatin1Char( '@' ) );
+  if( emailpos == -1 ) {
+     kDebug() << "No '@' found in" << email;
+     return KUrl();
+  }
+
+  // Cut off everything left of the @ sign to get the user name.
+  const QString emailName = email.left( emailpos );
+  const QString emailHost = email.mid( emailpos + 1 );
+
+  // Build the URL
+  KUrl sourceURL;
+  sourceURL = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
+
+  if ( KCalPrefs::instance()->mFreeBusyCheckHostname ) {
+    // Don't try to fetch free/busy data for users not on the specified servers
+    // This tests if the hostnames match, or one is a subset of the other
+    const QString hostDomain = sourceURL.host();
+    if ( hostDomain != emailHost &&
+         !hostDomain.endsWith( QLatin1Char( '.' ) + emailHost ) &&
+         !emailHost.endsWith( QLatin1Char( '.' ) + hostDomain ) ) {
+      // Host names do not match
+      kDebug() << "Host '" << sourceURL.host()
+               << "' doesn't match email '" << email << '\'';
+      return KUrl();
+    }
+  }
+
+  if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
+    sourceURL.addPath( email + QLatin1String( ".ifb" ) );
+  } else {
+    sourceURL.addPath( emailName + QLatin1String( ".ifb" ) );
+  }
+  sourceURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
+  sourceURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
+
+  return sourceURL;
 }
 
 QString FreeBusyManagerPrivate::freeBusyToIcal( KCal::FreeBusy *freebusy )
@@ -241,7 +325,7 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
   }
 
   QString email = mRetrieveQueue.takeFirst();
-  KUrl freeBusyUrlForEmail = q->freeBusyUrl( email );
+  KUrl freeBusyUrlForEmail = freeBusyUrl( email );
 
   if ( !freeBusyUrlForEmail.isValid() ) {
     kDebug() << "Invalid FreeBusy URL" << freeBusyUrlForEmail.prettyUrl() << email;
@@ -507,97 +591,10 @@ void FreeBusyManager::cancelRetrieval()
   d->mRetrieveQueue.clear();
 }
 
-KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
-{
-  kDebug() << email;
-
-  // First check if there is a specific FB url for this email
-  QString configFile = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusyurls" ) );
-  KConfig cfg( configFile );
-  KConfigGroup group = cfg.group(email);
-  QString url = group.readEntry( QLatin1String( "url" ) );
-  if ( !url.isEmpty() ) {
-    return KUrl( url );
-  }
-  // Try with the url configurated by preferred email in kcontactmanager
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  job->setQuery( Akonadi::ContactSearchJob::Email, email );
-  if ( !job->exec() )
-    return KUrl();
-
-  QString pref;
-  const KABC::Addressee::List contacts = job->contacts();
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    pref = contact.preferredEmail();
-    if ( !pref.isEmpty() && pref != email ) {
-      kDebug() << "Preferred email of" << email << "is" << pref;
-      group = cfg.group( pref );
-      url = group.readEntry ( "url" );
-      if ( !url.isEmpty() ) {
-        kDebug() << "Taken url from preferred email:" << url;
-        return KUrl( url );
-      }
-    }
-  }
-  // None found. Check if we do automatic FB retrieving then
-  if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
-    // No, so no FB list here
-    return KUrl();
-  }
-
-  // Sanity check: Don't download if it's not a correct email
-  // address (this also avoids downloading for "(empty email)").
-  int emailpos = email.indexOf( QLatin1Char( '@' ) );
-  if( emailpos == -1 ) {
-     kDebug() << "No '@' found in" << email;
-     return KUrl();
-  }
-
-  // Cut off everything left of the @ sign to get the user name.
-  const QString emailName = email.left( emailpos );
-  const QString emailHost = email.mid( emailpos + 1 );
-
-  // Build the URL
-  KUrl sourceURL;
-  sourceURL = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
-
-  if ( KCalPrefs::instance()->mFreeBusyCheckHostname ) {
-    // Don't try to fetch free/busy data for users not on the specified servers
-    // This tests if the hostnames match, or one is a subset of the other
-    const QString hostDomain = sourceURL.host();
-    if ( hostDomain != emailHost &&
-         !hostDomain.endsWith( QLatin1Char( '.' ) + emailHost ) &&
-         !emailHost.endsWith( QLatin1Char( '.' ) + hostDomain ) ) {
-      // Host names do not match
-      kDebug() << "Host '" << sourceURL.host()
-               << "' doesn't match email '" << email << '\'';
-      return KUrl();
-    }
-  }
-
-  if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
-    sourceURL.addPath( email + QLatin1String( ".ifb" ) );
-  } else {
-    sourceURL.addPath( emailName + QLatin1String( ".ifb" ) );
-  }
-  sourceURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
-  sourceURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
-
-  return sourceURL;
-}
-
-QString FreeBusyManager::freeBusyDir()
-{
-  return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
-}
-
 FreeBusy *FreeBusyManager::loadFreeBusy( const QString &email )
 {
   Q_D( FreeBusyManager );
-
-  kDebug() << email;
-
-  QString fbd = freeBusyDir();
+  const QString fbd = d->freeBusyDir();
 
   QFile f( fbd + QLatin1Char( '/' ) + email + QLatin1String( ".ifb" ) );
   if ( !f.exists() ) {
@@ -621,7 +618,7 @@ bool FreeBusyManager::saveFreeBusy( FreeBusy *freebusy, const Person &person )
   Q_D( FreeBusyManager );
   kDebug() << person.fullName();
 
-  QString fbd = freeBusyDir();
+  QString fbd = d->freeBusyDir();
 
   QDir freeBusyDirectory( fbd );
   if ( !freeBusyDirectory.exists() ) {
