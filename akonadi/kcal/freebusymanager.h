@@ -107,15 +107,15 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     */
     QString freeBusyDir();
 
-  public slots:
-    // When something changed in the calendar, we get this called
-    void slotPerhapsUploadFB();
-
   signals:
     /**
       This signal is emitted to return results of free/busy requests.
     */
     void freeBusyRetrieved( KCal::FreeBusy *, const QString &email );
+
+  protected:
+    /** React on timer events, used for delayed Free/Busy list uploading */
+    virtual void timerEvent( QTimerEvent * );
 
   private:
     FreeBusyManagerPrivate * const d_ptr;
@@ -126,6 +126,7 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     Q_PRIVATE_SLOT( d_ptr, void processFinishedDownload( const KUrl url, const QByteArray &freeBusyData ) )
     Q_PRIVATE_SLOT( d_ptr, void processFreeBusyUploadResult( KJob * ) )
     Q_PRIVATE_SLOT( d_ptr, bool processRetrieveQueue() )
+    Q_PRIVATE_SLOT( d_ptr, void uploadFreeBusy() )
 };
 
 }

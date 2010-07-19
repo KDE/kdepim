@@ -108,8 +108,7 @@ public: /// Functions
   void processFinishedDownload( const KUrl url, const QByteArray &freeBusyData );
   void processFreeBusyUploadResult( KJob *_job );
   bool processRetrieveQueue();
-  void timerEvent( QTimerEvent * );
-
+  void uploadFreeBusy();
 };
 
 }
@@ -261,11 +260,54 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
   return true;
 }
 
-// This is used for delayed Free/Busy list uploading
-void FreeBusyManagerPrivate::timerEvent( QTimerEvent * )
+void FreeBusyManagerPrivate::uploadFreeBusy()
 {
   Q_Q( FreeBusyManager );
-  q->publishFreeBusy();
+
+  // user has automatic uploading disabled, bail out
+  if ( !KCalPrefs::instance()->freeBusyPublishAuto() ||
+       KCalPrefs::instance()->freeBusyPublishUrl().isEmpty() ) {
+     return;
+  }
+
+  if( mTimerID != 0 ) {
+    // A timer is already running, so we don't need to do anything
+    return;
+  }
+
+  int now = static_cast<int>( QDateTime::currentDateTime().toTime_t() );
+  int eta = static_cast<int>( mNextUploadTime.toTime_t() ) - now;
+
+  if ( !mUploadingFreeBusy ) {
+    // Not currently uploading
+    if ( mNextUploadTime.isNull() ||
+         QDateTime::currentDateTime() > mNextUploadTime ) {
+      // No uploading have been done in this session, or delay time is over
+      q->publishFreeBusy();
+      return;
+    }
+
+    // We're in the delay time and no timer is running. Start one
+    if ( eta <= 0 ) {
+      // Sanity check failed - better do the upload
+      q->publishFreeBusy();
+      return;
+    }
+  } else {
+    // We are currently uploading the FB list. Start the timer
+    if ( eta <= 0 ) {
+      kDebug() << "This shouldn't happen! eta <= 0";
+      eta = 10; // whatever
+    }
+  }
+
+  // Start the timer
+  mTimerID = q->startTimer( eta * 1000 );
+
+  if ( mTimerID == 0 ) {
+    // startTimer failed - better do the upload
+    q->publishFreeBusy();
+  }
 }
 
 /// FreeBusyManager
@@ -287,60 +329,16 @@ void FreeBusyManager::setCalendar( Akonadi::Calendar *c )
 {
   Q_D( FreeBusyManager );
 
+  if ( d->mCalendar )
+    disconnect( d->mCalendar, SIGNAL(calendarChanged()) );
+
   d->mCalendar = c;
   if ( d->mCalendar ) {
     d->mFormat.setTimeSpec( d->mCalendar->timeSpec() );
   }
-}
 
-void FreeBusyManager::slotPerhapsUploadFB()
-{
-  Q_D( FreeBusyManager );
-
-  // user has automatic uploading disabled, bail out
-  if ( !KCalPrefs::instance()->freeBusyPublishAuto() ||
-       KCalPrefs::instance()->freeBusyPublishUrl().isEmpty() ) {
-     return;
-  }
-
-  if( d->mTimerID != 0 ) {
-    // A timer is already running, so we don't need to do anything
-    return;
-  }
-
-  int now = static_cast<int>( QDateTime::currentDateTime().toTime_t() );
-  int eta = static_cast<int>( d->mNextUploadTime.toTime_t() ) - now;
-
-  if ( !d->mUploadingFreeBusy ) {
-    // Not currently uploading
-    if ( d->mNextUploadTime.isNull() ||
-         QDateTime::currentDateTime() > d->mNextUploadTime ) {
-      // No uploading have been done in this session, or delay time is over
-      publishFreeBusy();
-      return;
-    }
-
-    // We're in the delay time and no timer is running. Start one
-    if ( eta <= 0 ) {
-      // Sanity check failed - better do the upload
-      publishFreeBusy();
-      return;
-    }
-  } else {
-    // We are currently uploading the FB list. Start the timer
-    if ( eta <= 0 ) {
-      kDebug() << "This shouldn't happen! eta <= 0";
-      eta = 10; // whatever
-    }
-  }
-
-  // Start the timer
-  d->mTimerID = startTimer( eta * 1000 );
-
-  if ( d->mTimerID == 0 ) {
-    // startTimer failed - better do the upload
-    publishFreeBusy();
-  }
+  connect( d->mCalendar, SIGNAL(calendarChanged()),
+           SLOT(uploadFreeBusy()) );
 }
 
 /*!
@@ -653,6 +651,11 @@ bool FreeBusyManager::saveFreeBusy( FreeBusy *freebusy, const Person &person )
   f.close();
 
   return true;
+}
+
+void FreeBusyManager::timerEvent( QTimerEvent * )
+{
+  publishFreeBusy();
 }
 
 #include "freebusymanager.moc"
