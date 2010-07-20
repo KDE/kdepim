@@ -241,6 +241,7 @@ void AttachmentPropertiesDialog::Private::saveToPart()
   part->setInline( ui.autoDisplay->isChecked() );
   part->setSigned( ui.sign->isChecked() );
   part->setEncrypted( ui.encrypt->isChecked() );
+  part->setInline( ui.autoDisplay->isChecked() );
 
   if( ui.mimeType->currentText().startsWith( QLatin1String( "message" ) ) &&
       ui.encoding->itemData( ui.encoding->currentIndex() ) != KMime::Headers::CE7Bit &&
