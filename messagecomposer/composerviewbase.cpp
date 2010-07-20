@@ -922,13 +922,23 @@ void Message::ComposerViewBase::addAttachmentPart ( KMime::Content* partToAttach
     // if it is a digest or a full message, use the encodedContent() of the attachment,
     // which already has the proper headers
     part->setData( partToAttach->encodedContent() );
-    part->setMimeType( partToAttach->contentType()->mimeType() );
-    part->setName( partToAttach->contentDisposition()->parameter( QLatin1String("name") ) );
   } else {
-    part->setName( partToAttach->contentDescription()->asUnicodeString() );
-    part->setFileName( partToAttach->contentDisposition()->filename() );
-    part->setMimeType( partToAttach->contentType()->mimeType() );
     part->setData( partToAttach->decodedContent() );
+  }
+  part->setMimeType( partToAttach->contentType()->mimeType() );
+  if ( partToAttach->contentDescription( false ) ) {
+    part->setDescription( partToAttach->contentDescription()->asUnicodeString() );
+  }
+  if ( partToAttach->contentDisposition( false ) ) {
+    part->setFileName( partToAttach->contentDisposition()->filename() );
+    part->setName( partToAttach->contentType()->parameter( QLatin1String( "name" ) ) );
+    part->setInline( partToAttach->contentDisposition()->disposition() == KMime::Headers::CDinline );
+    if ( part->name().isEmpty() && !part->fileName().isEmpty() ) {
+      part->setName( part->fileName() );
+    }
+    if ( part->fileName().isEmpty() && !part->name().isEmpty() ) {
+      part->setFileName( part->name() );
+    }
   }
   m_attachmentController->addAttachment( part );
 }
