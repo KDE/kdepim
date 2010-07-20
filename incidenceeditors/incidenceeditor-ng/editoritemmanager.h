@@ -100,9 +100,15 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      */
     ItemFetchScope &fetchScope();
 
+    enum SaveAction {
+      Create, /**< A new item was created */
+      Modify, /**< An existing item was modified */
+      None    /**< Nothing happened. */
+    };
+
   Q_SIGNALS:
-    void itemSaveFinished();
-    void itemSaveFailed( const QString &message );
+    void itemSaveFinished( Akonadi::EditorItemManager::SaveAction action );
+    void itemSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message );
 
   private:
     ItemEditorPrivate * const d_ptr;

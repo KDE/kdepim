@@ -198,8 +198,10 @@ ContactEditorView::ContactEditorView( QWidget *parent )
   qmlRegisterType<DeclarativeEditorCrypto>( "org.kde.contacteditors", 4, 5, "ContactEditorCrypto" );
   qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished() ), SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( QString ) ), SLOT( saveFailed( QString ) ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
+           SLOT( saveFinished() ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ),
+           SLOT( saveFailed( QString ) ) );
 }
 
 ContactEditorView::~ContactEditorView()

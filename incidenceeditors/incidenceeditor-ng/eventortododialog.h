@@ -23,6 +23,7 @@
 
 #include <KDialog>
 
+#include "editoritemmanager.h"
 #include "incidenceeditors-ng_export.h"
 
 namespace Akonadi {
@@ -60,8 +61,8 @@ private:
   Q_DISABLE_COPY( EventOrTodoDialog )
 
   Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int))
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish())
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(QString))
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(Akonadi::EditorItemManager::SaveAction))
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString))
   Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(int))
   Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))

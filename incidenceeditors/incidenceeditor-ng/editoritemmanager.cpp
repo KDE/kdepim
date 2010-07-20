@@ -110,18 +110,22 @@ void ItemEditorPrivate::modifyResult( KJob *job )
   Q_Q( EditorItemManager );
 
   if ( job->error() ) {
-    emit q->itemSaveFailed( job->errorString() );
+    if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) )
+      emit q->itemSaveFailed( EditorItemManager::Modify, job->errorString() );
+    else
+      emit q->itemSaveFailed( EditorItemManager::Create, job->errorString() );
+
     return;
   }
 
   if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) ) {
     mItem = modifyJob->item();
-    emit q->itemSaveFinished();
+    emit q->itemSaveFinished( EditorItemManager::Modify );
   } else {
     ItemCreateJob *createJob = qobject_cast<ItemCreateJob*>( job );
     Q_ASSERT(createJob);
     mItem = createJob->item();
-    emit q->itemSaveFinished();
+    emit q->itemSaveFinished( EditorItemManager::Create );
   }
 
   setupMonitor();
@@ -220,14 +224,14 @@ void EditorItemManager::save()
   Q_D( ItemEditor );
 
   if ( !d->mItemUi->isValid() ) {
-    emit itemSaveFailed( i18n( "Editor content is not valid." ) );
+    emit itemSaveFailed( d->mItem.isValid() ? Modify : Create, i18n( "Editor content is not valid." ) );
     return;
   }
 
   if ( !d->mItemUi->isDirty()
     && d->mItemUi->selectedCollection() == d->mItem.parentCollection() ) {
     // Item did not change and was not moved
-    emit itemSaveFinished();
+    emit itemSaveFinished( None );
     return;
   }
 
