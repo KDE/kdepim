@@ -47,7 +47,7 @@ void FreeBusyDownloadJob::start()
 
   job->ui()->setWindow( mParent );
 
-  connect( job, SIGNAL(result(KJob *)), SIGNAL(slotResult(KJob *)) );
+  connect( job, SIGNAL(result(KJob *)), SLOT(slotResult(KJob *)) );
   connect( job, SIGNAL(data(KIO::Job *,const QByteArray &)),
            SLOT(slotData(KIO::Job *,const QByteArray &)) );
 }

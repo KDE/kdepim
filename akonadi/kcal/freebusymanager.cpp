@@ -333,6 +333,7 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
 
   FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail, mParentWidgetForRetrieval );
   q->connect( job, SIGNAL(result(KJob*)), SLOT(processFreeBusyDownloadResult(KJob*)) );
+  job->start();
 
   return true;
 }
