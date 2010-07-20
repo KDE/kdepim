@@ -116,7 +116,7 @@ Q_SIGNALS:
     void editorRequested( const KCal::Incidence::Ptr &incidence );
 
 private:
-    class Private;
+    struct Private;
     Private * const d;
     Q_DISABLE_COPY( InvitationHandler )
 };
