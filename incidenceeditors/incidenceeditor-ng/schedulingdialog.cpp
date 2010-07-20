@@ -80,6 +80,15 @@ void SchedulingDialog::fillCombos()
 #endif
     mRolesCombo->setWhatsThis( i18nc( "@info:whatsthis",
                                   "Edits the role of the attendee." ) );
+
+    QBitArray days( 7 );
+    days.setBit( 0 ); //Monday
+    days.setBit( 1 ); //Tuesday
+    days.setBit( 2 ); //Wednesday
+    days.setBit( 3 ); //Thursday
+    days.setBit( 4 ); //Friday.. surprise!
+
+    mWeekdayCombo->setDays( days );
 }
 
 void SchedulingDialog::slotStartDateChanged( const QDate& newDate )
