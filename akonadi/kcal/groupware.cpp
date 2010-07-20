@@ -89,8 +89,7 @@ Groupware::Groupware( Akonadi::Calendar *cal, GroupwareUiDelegate *delegate )
 void Groupware::initialCheckForChanges()
 {
   if ( !mFreeBusyManager ) {
-    mFreeBusyManager = new FreeBusyManager( this );
-    mFreeBusyManager->setObjectName( QLatin1String( "freebusymanager" ) );
+    mFreeBusyManager = FreeBusyManager::self();
     mFreeBusyManager->setCalendar( mCalendar );
   }
 }

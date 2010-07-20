@@ -394,12 +394,25 @@ void FreeBusyManagerPrivate::uploadFreeBusy()
   }
 }
 
+/// FreeBusyManager::Singleton
+
+namespace Akonadi {
+
+struct FreeBusyManagerStatic
+{
+  FreeBusyManager instance;
+};
+
+}
+
+K_GLOBAL_STATIC( FreeBusyManagerStatic, sManagerInstance );
+
 /// FreeBusyManager
 
-FreeBusyManager::FreeBusyManager( QObject *parent ) :
-  QObject( parent ),
-  d_ptr( new FreeBusyManagerPrivate( this ) )
+FreeBusyManager::FreeBusyManager()
+  : d_ptr( new FreeBusyManagerPrivate( this ) )
 {
+  setObjectName( QLatin1String( "FreeBusyManager" ) );
   connect( KCalPrefs::instance(), SIGNAL(configChanged()),
            SLOT(checkFreeBusyUrl()) );
 }
@@ -408,6 +421,12 @@ FreeBusyManager::~FreeBusyManager()
 {
   delete d_ptr;
 }
+
+FreeBusyManager *FreeBusyManager::self()
+{
+  return &sManagerInstance->instance;
+}
+
 
 void FreeBusyManager::setCalendar( Akonadi::Calendar *c )
 {
