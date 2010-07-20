@@ -25,17 +25,20 @@
 
 #include "incidenceeditors-ng_export.h"
 
+
+#include <QtCore/QObject>
+#include <QtCore/QTimer>
+#include <QtCore/QTimerEvent>
+#include <QtCore/QSet>
+#include <QtCore/QBitArray>
+#include <QtCore/QVector>
+
+#include <KDateTime>
+
 #include <kcalcore/freebusy.h>
 #include <kcalcore/attendee.h>
 #include <kcalcore/period.h>
 
-#include <KDateTime>
-
-#include <QObject>
-#include <QTimer>
-#include <QSet>
-#include <QBitArray>
-#include <QVector>
 
 namespace IncidenceEditorsNG
 {

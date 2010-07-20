@@ -45,7 +45,7 @@ int main( int argc, char **argv )
                     ki18n( "Run the KOrganizer incidenceeditor ng." ),
                     "http://kdepim.kde.org",
                     "kdepim@kde.org" );
-  about.addAuthor( ki18n( "Bertjan Broeksema" ), ki18n( "Author" ), "b.broeksema@home.nl" );
+  about.addAuthor( ki18n( "Bertjan Broeksema" ), ki18n( "Author" ), "broeksema@kde.org" );
   about.setProgramIconName( "korganizer" );
 
   KCmdLineOptions options;

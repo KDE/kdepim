@@ -29,8 +29,6 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
-#include "incidencedatetime.h"
-#include "conflictresolver.h"
 
 #include <akonadi/contact/emailaddressselectiondialog.h>
 
@@ -53,6 +51,8 @@
 
 #include "attendeeeditor.h"
 #include "attendeeline.h"
+#include "conflictresolver.h"
+#include "incidencedatetime.h"
 #include "../editorconfig.h"
 
 using namespace IncidenceEditorsNG;

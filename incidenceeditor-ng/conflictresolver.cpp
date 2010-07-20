@@ -22,26 +22,27 @@
 
 #include "conflictresolver.h"
 
-#include "attendeedata.h"
-#include "freebusyitem.h"
-
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <QtCore/QVector>
 
 #include <KCalendarSystem>
 #include <kcalcore/freebusy.h>
 #include <KDebug>
 
-#include <QTimerEvent>
-#include <QVector>
+#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <akonadi/kcal/groupware.h>       //krazy:exclude=camelcase since kdepim/akonadi
+
+#include "attendeedata.h"
+#include "freebusyitem.h"
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
 using namespace IncidenceEditorsNG;
 
-ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ):
-  QObject( parent ), mParentWidget( parentWidget ),
-  mWeekdays( 7 ), mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
+ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
+  : QObject( parent )
+  , mParentWidget( parentWidget )
+  , mWeekdays( 7 )
+  , mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
 {
     Q_ASSERT( Akonadi::Groupware::instance() );
     // Groupware initializes the FreeBusyManager via a singleshot timer, so
@@ -55,11 +56,11 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent ):
         setupManager();
     }
     // set default values
-    mWeekdays.setBit( 1 ); //Monday
-    mWeekdays.setBit( 2 ); //Tuesday
-    mWeekdays.setBit( 3 ); //Wednesday
-    mWeekdays.setBit( 4 ); //Thursday
-    mWeekdays.setBit( 5 ); //Friday.. surprise!
+    mWeekdays.setBit( 0 ); //Monday
+    mWeekdays.setBit( 1 ); //Tuesday
+    mWeekdays.setBit( 2 ); //Wednesday
+    mWeekdays.setBit( 3 ); //Thursday
+    mWeekdays.setBit( 4 ); //Friday.. surprise!
     mMandatoryRoles << KCalCore::Attendee::ReqParticipant << KCalCore::Attendee::OptParticipant << KCalCore::Attendee::NonParticipant << KCalCore::Attendee::Chair;
 
     connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
