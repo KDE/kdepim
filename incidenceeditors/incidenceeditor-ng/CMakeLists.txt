@@ -53,6 +53,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   ../templatemanagementdialog.cpp
   eventortododialog.cpp
   schedulingdialog.cpp
+  freeperiodmodel.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS

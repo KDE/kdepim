@@ -18,49 +18,44 @@
     02110-1301, USA.
 */
 
-#ifndef SCHEDULINGDIALOG_H
-#define SCHEDULINGDIALOG_H
+#include "freeperiodmodel.h"
 
-#include "ui_schedulingdialog.h"
+using namespace IncidenceEditorsNG;
 
-#include <KDialog>
-#include <QDate>
-
-namespace IncidenceEditorsNG
+FreePeriodModel::FreePeriodModel( QObject* parent ): QAbstractListModel( parent )
 {
-
-class FreePeriodModel;
-class ConflictResolver;
-
-class SchedulingDialog : public KDialog, private Ui_Dialog
-{
-  Q_OBJECT
-public:
-    SchedulingDialog( ConflictResolver * resolver );
-    ~SchedulingDialog();
-
-signals:
-    void startDateChanged( const QDate &newDate );
-    void startTimeChanged( const QTime &newTime );
-    void endDateChanged( const QDate &newDate );
-    void endTimeChanged( const QTime &newTime );
-
-
-private slots:
-    void slotWeekdaysChanged();
-    void slotMandatoryRolesChanged();
-    void slotStartDateChanged( const QDate & newDate );
-
-private:
-    void updateWeekDays( const QDate& oldDate );
-    void fillCombos();
-
-    QDate mStDate;
-
-    ConflictResolver* mResolver;
-    FreePeriodModel* mPeriodModel;
-};
 
 }
 
-#endif // SCHEDULINGDIALOG_H
+QVariant FreePeriodModel::data( const QModelIndex& index, int role ) const
+{
+    if( !index.isValid() )
+      return QVariant();
+
+    if( index.row() > mPeriodList.size() - 1 )
+      return QVariant();
+
+    switch( role ) {
+      case Qt::DisplayRole:
+        return mPeriodList.at( index.row() ).start().toString();
+      default:
+        return QVariant();
+    }
+}
+
+int FreePeriodModel::rowCount( const QModelIndex& parent ) const
+{
+    return mPeriodList.size();
+}
+
+QVariant FreePeriodModel::headerData( int section, Qt::Orientation orientation, int role ) const
+{
+    return QAbstractItemModel::headerData( section, orientation, role );
+}
+
+void FreePeriodModel::slotNewFreePeriods( const KCal::Period::List& freePeriods )
+{
+    mPeriodList = freePeriods;
+}
+
+

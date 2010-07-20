@@ -21,6 +21,7 @@
 #include "schedulingdialog.h"
 
 #include "conflictresolver.h"
+#include "freeperiodmodel.h"
 
 #include <KCalendarSystem>
 #include <KIconLoader>
@@ -30,7 +31,7 @@
 
 using namespace IncidenceEditorsNG;
 
-SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mResolver( resolver )
+SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mResolver( resolver ), mPeriodModel( new FreePeriodModel() )
 {
     setupUi( this );
     fillCombos();
@@ -45,7 +46,9 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mR
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged() ) );
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
-    connect( mResolver, SIGNAL( freeSlotsAvailable() ), SLOT( slotNewFreeSlots() ) );
+    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCal::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCal::Period::List & ) ) );
+
+    mListView->setModel( mPeriodModel );
 }
 
 
@@ -126,10 +129,3 @@ void SchedulingDialog::slotMandatoryRolesChanged()
     }
     mResolver->setMandatoryRoles( roles );
 }
-
-void SchedulingDialog::slotNewFreeSlots()
-{
-    kDebug() << "got free slots";
-    //TODO impl
-}
-

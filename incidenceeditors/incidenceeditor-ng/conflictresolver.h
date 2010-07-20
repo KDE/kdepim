@@ -142,7 +142,7 @@ signals:
     /**
      * Emitted when the resolver locates new free slots.
      */
-    void freeSlotsAvailable();
+    void freeSlotsAvailable( const KCal::Period::List & );
 
 public slots:
     /**
@@ -215,7 +215,6 @@ private:
 
     KCal::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
     KCal::Period::List mAvailableSlots;
-    int mAppointmentDuration; //!< the minimum number of seconds the appointment slot should be
     QTimer mReloadTimer;
     QTimer mCalculateTimer; /*!< A timer is used control the calculation of
                                    conflicts to prevent the process from being
