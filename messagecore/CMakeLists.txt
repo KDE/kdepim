@@ -25,6 +25,7 @@ set(messagecore_LIB_SRCS
    globalsettings.cpp
    messagehelpers.cpp
    taglistmonitor.cpp
+   mdnstateattribute.cpp
 )
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS

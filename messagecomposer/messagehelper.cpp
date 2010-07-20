@@ -20,7 +20,6 @@
 #include "messagehelper.h"
 #include "kdepim-version.h"
 #include "templateparser/templateparser.h"
-#include "messageinfo.h"
 #include "messagecore/mailinglist-magic.h"
 #include "util.h"
 #include "messagecomposersettings.h"

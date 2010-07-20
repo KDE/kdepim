@@ -26,7 +26,6 @@ set( messagecomposer_src
      akonadisender.cpp
      messagehelper.cpp
      messagefactory.cpp
-     messageinfo.cpp
      messagecomposersettings.cpp
      composerviewbase.cpp
 

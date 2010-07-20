@@ -19,7 +19,6 @@
 
 #include "messagefactory.h"
 
-#include "messageinfo.h"
 #include "messagecomposersettings.h"
 #include "util.h"
 
@@ -532,28 +531,6 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
                                                 int mdnQuoteOriginal,
                                                 QList<KMime::MDN::DispositionModifier> m )
 {
-  // RFC 2298: At most one MDN may be issued on behalf of each
-  // particular recipient by their user agent.  That is, once an MDN
-  // has been issued on behalf of a recipient, no further MDNs may be
-  // issued on behalf of that recipient, even if another disposition
-  // is performed on the message.
-//#define MDN_DEBUG 1
-#ifndef MDN_DEBUG
-  if ( MessageInfo::instance()->mdnSentState( m_origMsg.get() ) != KMMsgMDNStateUnknown &&
-       MessageInfo::instance()->mdnSentState( m_origMsg.get() ) != KMMsgMDNNone )
-    return KMime::Message::Ptr();
-#else
-  char st[2]; st[0] = (char)MessageInfo::instance()->mdnSentState( m_origMsg ); st[1] = 0;
-  kDebug() << "mdnSentState() == '" << st <<"'";
-#endif
-
-  // RFC 2298: An MDN MUST NOT be generated in response to an MDN.
-  if ( MessageViewer::ObjectTreeParser::findType( m_origMsg.get(), "message",
-                       "disposition-notification", true, true ) ) {
-    MessageInfo::instance()->setMDNSentState( m_origMsg.get(), KMMsgMDNIgnore );
-    return KMime::Message::Ptr();
-  }
-
   // extract where to send to:
   QString receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
   if( receiptTo.trimmed().isEmpty() ) return KMime::Message::Ptr( new KMime::Message );
@@ -632,20 +609,6 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
 
 
   kDebug() << "final message:" + receipt->encodedContent();
-
-  //
-  // Set "MDN sent" status:
-  //
-  KMMsgMDNSentState state = KMMsgMDNStateUnknown;
-  switch ( d ) {
-  case KMime::MDN::Displayed:   state = KMMsgMDNDisplayed;  break;
-  case KMime::MDN::Deleted:     state = KMMsgMDNDeleted;    break;
-  case KMime::MDN::Dispatched:  state = KMMsgMDNDispatched; break;
-  case KMime::MDN::Processed:   state = KMMsgMDNProcessed;  break;
-  case KMime::MDN::Denied:      state = KMMsgMDNDenied;     break;
-  case KMime::MDN::Failed:      state = KMMsgMDNFailed;     break;
-  };
-  MessageInfo::instance()->setMDNSentState( m_origMsg.get(), state );
 
   receipt->assemble();
   return receipt;
