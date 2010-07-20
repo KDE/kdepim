@@ -65,6 +65,9 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
 
     connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
     mReloadTimer.setSingleShot( true );
+
+    connect( &mCalculateTimer, SIGNAL( timeout() ), SLOT( findAllFreeSlots() ) );
+    mCalculateTimer.setSingleShot( true );
 }
 
 void ConflictResolver::setupManager()
@@ -219,11 +222,13 @@ void ConflictResolver::setLatestTime( const QTime& newTime )
 void ConflictResolver::setEarliestDateTime( const KDateTime& newDateTime )
 {
     mTimeframeConstraint = KCal::Period( newDateTime, mTimeframeConstraint.end() );
+    calculateConflicts();
 }
 
 void ConflictResolver::setLatestDateTime( const KDateTime& newDateTime )
 {
     mTimeframeConstraint = KCal::Period( mTimeframeConstraint.start(), newDateTime );
+    calculateConflicts();
 }
 
 
@@ -366,7 +371,10 @@ void ConflictResolver::findAllFreeSlots()
     //          So, the array would have a length of 672
     int range = begin.secsTo( end );
     range /=  mSlotResolutionSeconds;
-    Q_ASSERT( range > 0 );
+    if ( range <= 0 ) {
+        kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
+        return;
+    }
     // filter out attendees for which we don't have FB data
     // and which don't match the mandatory role contrstaint
     QList<FreeBusyItem* > filteredFBItems;
@@ -377,7 +385,10 @@ void ConflictResolver::findAllFreeSlots()
 
     // now we know the number of attendees we are calculating for
     const int number_attendees = filteredFBItems.size();
-    Q_ASSERT( number_attendees > 0 );
+    if( number_attendees <= 0 ) {
+      kDebug() << "no attendees match search criteria";
+      return;
+    }
     // this is a 2 dimensional array where the rows are attendees
     // and the columns are 0 or 1 denoting freee or busy respectively.
     QVector< QVector<int> > fbTable;
@@ -428,6 +439,7 @@ void ConflictResolver::findAllFreeSlots()
 
     // Finally, iterate through the composite array locating contiguous free timeslots
     int free_count = 0;
+    bool free_found = false;
     for ( int i = 0; i < range; ++i ) {
         // free timeslot encountered, increment counter
         if ( summed[i] == 0 ) {
@@ -456,9 +468,13 @@ void ConflictResolver::findAllFreeSlots()
                 // push the free block onto the list
                 mAvailableSlots << KCal::Period( freeBegin, freeEnd );
                 free_count = 0;
+                if( !free_found )
+                  free_found = true;
             }
         }
     }
+    if( free_found )
+      emit freeSlotsAvailable();
 #if 0
     //DEBUG, dump the arrays. very helpful for debugging
     QTextStream dump( stdout );
@@ -492,7 +508,9 @@ void ConflictResolver::calculateConflicts()
     KDateTime end = mTimeframeConstraint.end();
     int count = tryDate( start, end );
     emit conflictsDetected( count );
-//     kDebug() << "calculate conflicts" << count;
+
+    if( !mCalculateTimer.isActive() )
+      mCalculateTimer.start( 2000 );
 }
 
 void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
@@ -503,11 +521,6 @@ void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
 void ConflictResolver::setMandatoryRoles( const QSet< KCal::Attendee::Role >& roles )
 {
     mMandatoryRoles = roles;
-}
-
-void ConflictResolver::setAppointmentDuration( int seconds )
-{
-    mAppointmentDuration = seconds;
 }
 
 bool ConflictResolver::matchesRoleConstraint( const KCal::Attendee& attendee )

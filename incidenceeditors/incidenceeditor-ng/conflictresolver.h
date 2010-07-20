@@ -139,6 +139,11 @@ signals:
      */
     void conflictsDetected( int number );
 
+    /**
+     * Emitted when the resolver locates new free slots.
+     */
+    void freeSlotsAvailable();
+
 public slots:
     /**
      * Set the timeframe constraints
@@ -152,16 +157,6 @@ public slots:
 
     void setEarliestDateTime( const KDateTime &newDateTime );
     void setLatestDateTime( const KDateTime &newDateTime );
-
-    /**
-     * Set the minimum size of free slots to locate.
-     *
-     * The resolver will attempt to identify free slots
-     * that contain _at least_ this number of seconds.
-     * 
-     * @param seconds the minimum number of seconds the appointment slot should be
-     * */
-    void setAppointmentDuration( int seconds );
 
     void findAllFreeSlots();
 
@@ -225,6 +220,11 @@ private:
     KCal::Period::List mAvailableSlots;
     int mAppointmentDuration; //!< the minimum number of seconds the appointment slot should be
     QTimer mReloadTimer;
+    QTimer mCalculateTimer; /*!< A timer is used control the calculation of
+                                   conflicts to prevent the process from being
+                                   repeated many times after a series of quick
+                                   parameter changes.
+                              */
     bool mManagerConnected;
     bool mForceDownload;
     QList<FreeBusyItem*> mFreeBusyItems;
