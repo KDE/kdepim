@@ -41,9 +41,10 @@ int main(int argc, char *argv[])
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
+  app.setQuitOnLastWindowClosed(true);
 
-  MainWindow *mainWindow = new MainWindow();
-  mainWindow->show();
+  MainWindow mainWindow;
+  mainWindow.show();
 
   return app.exec();
 }
