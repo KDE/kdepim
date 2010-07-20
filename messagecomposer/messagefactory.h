@@ -29,6 +29,7 @@
 #include <Akonadi/Collection>
 
 #include "messagecore/messagestatus.h"
+#include <messagecore/mdnstateattribute.h>
 
 namespace KPIMIdentities {
   class IdentityManager;
@@ -67,7 +68,7 @@ public:
     bool replyAll;   ///< If true, the "reply all" template was used, otherwise the normal reply
                      ///  template
   };
-
+  
   explicit MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id, const Akonadi::Collection&col = Akonadi::Collection() );
   virtual ~MessageFactory();
 
@@ -121,7 +122,7 @@ public:
       @param s See docs for KMime::MDN::SendingMode (in KMail, use MDNAdvideDialog to ask the user for this parameter)
       @param m See docs for KMime::MDN::DispositionModifier
 
-      @return The notification message or 0, if none should be sent.
+      @return The notification message or 0, if none should be sent, as well as the state of the MDN operation.
    **/
   KMime::Message::Ptr createMDN( KMime::MDN::ActionMode a,
                                   KMime::MDN::DispositionType d,

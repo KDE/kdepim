@@ -31,7 +31,6 @@
 #include "messagecomposer/messagecomposersettings.h"
 
 #include "messagecomposer/infopart.h"
-#include <messagecomposer/messageinfo.h>
 #include "messagecomposer/textpart.h"
 
 #include "testhtmlwriter.h"
@@ -371,7 +370,6 @@ void MessageFactoryTest::testCreateMDN()
   
   factory.setIdentityManager( identMan );
 
-  MessageInfo::instance()->setMDNSentState( msg.get(), KMMsgMDNNone );
   KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, KMime::MDN::Displayed, KMime::MDN::SentAutomatically );
 
   QVERIFY( mdn );
