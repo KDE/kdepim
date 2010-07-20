@@ -24,13 +24,15 @@
 
 namespace Plasma {
     class Svg;
-    class GroupBox;
+    class Frame;
+    class ScrollWidget;
 }
 #include <Plasma/DataEngine>
 
 class QPainter;
 class QTimer;
 class QGraphicsLinearLayout;
+class QGraphicsWidget;
 
 class SpecialDatesApplet : public Plasma::Applet
 {
@@ -57,8 +59,11 @@ private:
     Plasma::Svg m_svg;
     Plasma::DataEngine* m_calEngine;
     Plasma::DataEngine* m_akoEngine;
-    QMap<QString,Plasma::GroupBox*> m_specialDates; // date, widget
+    QMap<QString,Plasma::Frame*> m_specialDates; // date, widget
     QTimer* m_updateTimer;
+    QGraphicsWidget* m_graphicsWidget;
+    Plasma::ScrollWidget* m_ItemsScroll;
+    QGraphicsWidget* m_ItemsPage;
     
     int m_numDays; // How many days into the future do we show?
     QString m_locale; // What locale are the holidays we are looking for?

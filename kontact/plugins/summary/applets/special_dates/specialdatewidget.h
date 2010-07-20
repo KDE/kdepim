@@ -20,7 +20,7 @@
 #ifndef SPECIALDATEWIDGET_H
 #define SPECIALDATEWIDGET_H
 
-#include <Plasma/GroupBox>
+#include <Plasma/Frame>
 
 namespace Plasma {
     class IconWidget;
@@ -34,7 +34,7 @@ class QGraphicsLinearLayout;
 #include <QDate>
 #include <KUrl>
 
-class SpecialDateWidget : public Plasma::GroupBox
+class SpecialDateWidget : public Plasma::Frame
 {
 Q_OBJECT
 public:

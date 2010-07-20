@@ -1,9 +1,10 @@
 
+include_directories(${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces)
 include_directories( ${Boost_INCLUDE_DIRS} )
 
 ########### next target ###############
 
-set(kontact_summaryplugin_PART_SRCS summaryview_plugin.cpp )
+set(kontact_summaryplugin_PART_SRCS summaryview_plugin.cpp kontactpluginloader.cpp kontactinterfacesservice.cpp)
 
 if(KMAIL_SUPPORTED)
    qt4_add_dbus_interfaces(kontact_summaryplugin_PART_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml)
@@ -16,7 +17,7 @@ endif(KMAIL_SUPPORTED)
 
 ## Check if the kpart is installed? ##
 
-target_link_libraries(kontact_summaryplugin ${KDE4_KCMUTILS_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} kdepim kontactinterface)
+target_link_libraries(kontact_summaryplugin ${KDE4_KCMUTILS_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDE4_PLASMA_LIBS} kdepim kontactinterface kdepimdbusinterfaces)
 
 set(kcmkontactsummary_SRCS kcmkontactsummary.cpp )
 kde4_add_plugin(kcmkontactsummary ${kcmkontactsummary_SRCS})
@@ -37,3 +38,5 @@ install(FILES kcmkontactsummary.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 install(FILES plasma-default-layoutrc DESTINATION ${DATA_INSTALL_DIR}/kontact)
 install(FILES summary.setdlg DESTINATION ${DATA_INSTALL_DIR}/kontact/ksettingsdialog)
+
+install(FILES org.kontact.interfaces.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)
