@@ -363,9 +363,9 @@ void IncidenceAttendee::slotEventDurationChanged()
   KDateTime end = mDateTime->currentEndDateTime();
 
   Q_ASSERT( start < end );
-  
-  int duration = start.secsTo( end );
-  mConflictResolver->setAppointmentDuration( duration );
+
+  kDebug() << start << end;
+
 #ifndef KDEPIM_MOBILE_UI
   if( !mSchedulingDialog ) {
     // when we aren't showing the dialog, the search timeframe
@@ -429,6 +429,7 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
       KCal::Attendee newAt( name, email, rsvp, status, KCal::Attendee::ReqParticipant );
 
       mAttendeeEditor->addAttendee( newAt );
+      mConflictResolver->insertAttendee( newAt );
     }
   }
   mOrganizer = newOrganizer;
