@@ -297,6 +297,7 @@ void AttendeeLine::fieldsFromData()
   } else {
     mStateCombo->setCurrentIndex( AttendeeData::NeedsAction );
   }
+  mResponseCheck->setChecked( mData->RSVP() );
   mUid = mData->uid();
 }
 
