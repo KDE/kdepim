@@ -302,82 +302,88 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   // Move the uid to be the schedulingID and make a unique UID
   inc->setSchedulingID( inc->uid() );
   inc->setUid( CalFormat::createUniqueId() );
-  // in case this is an update and we didn't find the to-be-updated incidence,
-  // ask whether we should create a new one, or drop the update
-  if ( existingIncidences.count() > 0 || inc->revision() == 0 ||
-       KMessageBox::questionYesNo(
-         0,
-         i18n("The event, task or journal to be updated could not be found. "
-              "Maybe it has already been deleted, or the calendar that "
-              "contains it is disabled. Press 'Store' to create a new "
-              "one or 'Throw away' to discard this update." ),
-         i18n("Discard this update?"), i18n("Store"),
-         i18n("Throw away"), "AcceptCantFindIncidence" ) == KMessageBox::Yes ) {
-    kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
-
-    CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
-    if( stdcal && !stdcal->hasCalendarResources() ) {
-      KMessageBox::sorry(
-        0,
-        i18n( "No calendars found, unable to save the invitation." ) );
-      return false;
-    }
-
-    // FIXME: This is a nasty hack, since we need to set a parent for the
-    //        resource selection dialog. However, we don't have any UI methods
-    //        in the calendar, only in the CalendarResources::DestinationPolicy
-    //        So we need to type-cast it and extract it from the CalendarResources
-    QWidget *tmpparent = 0;
-    if ( stdcal ) {
-      tmpparent = stdcal->dialogParentWidget();
-      stdcal->setDialogParentWidget( 0 );
-    }
-
-  TryAgain:
-    bool success = false;
-    if ( stdcal ) {
-      success = stdcal->addIncidence( inc );
-    } else {
-      success = mCalendar->addIncidence( inc );
-    }
-
-    if ( !success ) {
-      ErrorFormat *e = stdcal ? stdcal->exception() : 0;
-
-      if ( e && e->errorCode() == KCal::ErrorFormat::UserCancel &&
-           KMessageBox::warningYesNo(
-             0,
-             i18n( "You canceled the save operation. Therefore, the appointment will not be "
-                   "stored in your calendar even though you accepted the invitation. "
-                   "Are you certain you want to discard this invitation? " ),
-             i18n( "Discard this invitation?" ),
-             i18n( "Discard" ), i18n( "Go Back to Folder Selection" ) ) == KMessageBox::Yes ) {
-        KMessageBox::information(
-          0,
-          i18n( "The invitation \"%1\" was not saved to your calendar "
-                "but you are still listed as an attendee for that appointment.\n"
-                "If you mistakenly accepted the invitation or do not plan to attend, please notify "
-                "the organizer %2 and ask them to remove you from the attendee list.").
-          arg( inc->summary(),  inc->organizer().fullName() ) );
-        deleteTransaction( incidence );
-        return true;
-      } else {
-        goto TryAgain;
-      }
-
-      // We can have a failure if the user pressed [cancel] in the resource
-      // selectdialog, so check the exception.
-      if ( !e ||
-           ( e && ( e->errorCode() != KCal::ErrorFormat::UserCancel &&
-                    e->errorCode() != KCal::ErrorFormat::NoWritableFound ) ) ) {
-        QString errMessage = i18n( "Unable to save %1 \"%2\"." ).
-                             arg( i18n( inc->type() ) ).
-                             arg( inc->summary() );
-        KMessageBox::sorry( 0, errMessage );
-      }
-      return false;
-    }
+  // notify the user in case this is an update and we didn't find the to-be-updated incidence
+  if ( existingIncidences.count() == 0 && inc->revision() > 0 ) {
+    KMessageBox::information(
+      0,
+      i18n( "<qt>"
+            "You accepted an invitation update, but an earlier version of the "
+            "item could not be found in your calendar.<p>"
+            "This may have occurred because:<ul>"
+            "<li>the organizer did not include you in the original invitation</li>"
+            "<li>you did not accept the original invitation yet</li>"
+            "<li>you deleted the original invitation from your calendar</li>"
+            "<li>you no longer have access to the calendar containing the invitation</li>"
+            "</ul>"
+            "This is not a problem, but we thought you should know.</qt>" ),
+      i18n( "Cannot find invitation to be updated" ), "AcceptCantFindIncidence" );
   }
+  kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID()
+                << " and uid=" << inc->uid() << endl;
+
+  CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
+  if( stdcal && !stdcal->hasCalendarResources() ) {
+    KMessageBox::sorry(
+      0,
+      i18n( "No calendars found, unable to save the invitation." ) );
+    return false;
+  }
+
+  // FIXME: This is a nasty hack, since we need to set a parent for the
+  //        resource selection dialog. However, we don't have any UI methods
+  //        in the calendar, only in the CalendarResources::DestinationPolicy
+  //        So we need to type-cast it and extract it from the CalendarResources
+  QWidget *tmpparent = 0;
+  if ( stdcal ) {
+    tmpparent = stdcal->dialogParentWidget();
+    stdcal->setDialogParentWidget( 0 );
+  }
+
+TryAgain:
+  bool success = false;
+  if ( stdcal ) {
+    success = stdcal->addIncidence( inc );
+  } else {
+    success = mCalendar->addIncidence( inc );
+  }
+
+  if ( !success ) {
+    ErrorFormat *e = stdcal ? stdcal->exception() : 0;
+
+    if ( e && e->errorCode() == KCal::ErrorFormat::UserCancel &&
+         KMessageBox::warningYesNo(
+           0,
+           i18n( "You canceled the save operation. Therefore, the appointment will not be "
+                 "stored in your calendar even though you accepted the invitation. "
+                 "Are you certain you want to discard this invitation? " ),
+           i18n( "Discard this invitation?" ),
+           i18n( "Discard" ), i18n( "Go Back to Folder Selection" ) ) == KMessageBox::Yes ) {
+      KMessageBox::information(
+        0,
+        i18n( "The invitation \"%1\" was not saved to your calendar "
+              "but you are still listed as an attendee for that appointment.\n"
+              "If you mistakenly accepted the invitation or do not plan to attend, please notify "
+              "the organizer %2 and ask them to remove you from the attendee list.").
+        arg( inc->summary(),  inc->organizer().fullName() ) );
+      deleteTransaction( incidence );
+      return true;
+    } else {
+      goto TryAgain;
+    }
+
+    // We can have a failure if the user pressed [cancel] in the resource
+    // selectdialog, so check the exception.
+    if ( !e ||
+         ( e && ( e->errorCode() != KCal::ErrorFormat::UserCancel &&
+                  e->errorCode() != KCal::ErrorFormat::NoWritableFound ) ) ) {
+      QString errMessage = i18n( "Unable to save %1 \"%2\"." ).
+                           arg( i18n( inc->type() ) ).
+                           arg( inc->summary() );
+      KMessageBox::sorry( 0, errMessage );
+    }
+    return false;
+  }
+
   deleteTransaction( incidence );
   return true;
 }
