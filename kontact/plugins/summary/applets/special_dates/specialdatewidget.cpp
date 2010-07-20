@@ -24,6 +24,7 @@
 #include <Plasma/DataEngine>
 #include <Plasma/IconWidget>
 #include <Plasma/Label>
+#include <Plasma/Service>
 
 #include <KIcon>
 #include <KUrl>
@@ -32,12 +33,16 @@
 #include <QDate>
 
 SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QString iconName, KUrl uri, QDate date )
-    : Plasma::GroupBox(parent),
+    : Plasma::Frame(parent),
       m_date(date),
       m_icon(0),
       m_uri(uri),
       m_layout(0)
 {    
+    setMinimumHeight(40);
+    setMinimumWidth(120);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+
     // create icon
     KIcon ic = KIcon(iconName);
     
@@ -73,17 +78,17 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
 
 void SpecialDateWidget::click()
 {
-    // We need to handle the click to open the specified application to the
-    // entry for this event. How though? kontact provides interfaces to all of
-    // the KDEPIM applications in pimlibs/kontactinterfaces. The question is,
-    // how can a plasma applet get access to those engines? A plasma service?
-    // But how would that service have access to the necessary bits? Is that
-    // even possible?
-    // This is an issue that all of the applets will be having. I guess it's
-    // one of the issues with having plasma applets, they run more or less in
-    // silos.
-    
-    //kDebug() << "click :)";
+    // Get the service
+    Plasma::Service* service = Plasma::Service::load( "org.kontact.interfaces" );
+
+    if( service->isOperationEnabled("open") )
+    {
+        kDebug() << "Found our service, let's open the uri!";
+        
+        KConfigGroup op = service->operationDescription("open");
+        op.writeEntry( "uri", uri() );
+        service->startOperationCall(op, this);
+    }
 }
 
 Plasma::IconWidget* SpecialDateWidget::icon()

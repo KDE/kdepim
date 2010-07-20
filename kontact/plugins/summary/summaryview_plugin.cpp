@@ -18,6 +18,10 @@
 */
 
 #include "summaryview_plugin.h"
+#include "kontactinterfacesservice.h"
+#include "kontactpluginloader.h"
+
+Q_DECLARE_METATYPE(KontactPluginLoader*)
 
 #include <plasmakpart.h>
 
@@ -30,6 +34,8 @@
 #include <kparts/componentfactory.h>
 #include <kdialog.h>
 #include <KDebug>
+
+Q_DECLARE_METATYPE( KontactInterfacesService* )
 
 EXPORT_KONTACT_PLUGIN( SummaryPlugin, summary )
 
@@ -51,7 +57,10 @@ SummaryPlugin::~SummaryPlugin()
 
 KParts::ReadOnlyPart *SummaryPlugin::createPart()
 {
-    m_part = loadPart();
+    KontactPluginLoader* loader = new KontactPluginLoader();
+    QVariantList args = QVariantList () << qVariantFromValue( loader );
+
+    m_part = core()->createPart( "plasma-kpart", args );
 
     connect( m_part, SIGNAL(showPart()), this, SLOT(showPart()) );
 
