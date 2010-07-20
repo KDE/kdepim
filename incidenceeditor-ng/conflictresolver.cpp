@@ -341,7 +341,7 @@ void ConflictResolver::findAllFreeSlots()
     int range = begin.secsTo( end );
     range /=  mSlotResolutionSeconds;
     if ( range <= 0 ) {
-        kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
+        kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range << begin << end;
         return;
     }
     // filter out attendees for which we don't have FB data
@@ -443,7 +443,7 @@ void ConflictResolver::findAllFreeSlots()
         }
     }
     if( free_found )
-      emit freeSlotsAvailable();
+      emit freeSlotsAvailable( mAvailableSlots );
 #if 0
     //DEBUG, dump the arrays. very helpful for debugging
     QTextStream dump( stdout );

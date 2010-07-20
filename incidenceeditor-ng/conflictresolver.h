@@ -124,6 +124,12 @@ public:
      */
     KCalCore::Period::List availableSlots() const;
 
+    /**
+      Finds a free slot in the future which has at least the same size as
+      the initial slot.
+    */
+    bool findFreeSlot( const KCal::Period &dateTimeRange );
+
 signals:
     /**
      * Emitted when the user changes the start and end dateTimes
@@ -140,7 +146,7 @@ signals:
     /**
      * Emitted when the resolver locates new free slots.
      */
-    void freeSlotsAvailable();
+    void freeSlotsAvailable( const KCal::Period::List & );
 
 public slots:
     /**
@@ -175,12 +181,6 @@ private:
     void updateFreeBusyData( FreeBusyItem * );
 
     /**
-      Finds a free slot in the future which has at least the same size as
-      the initial slot.
-    */
-    bool findFreeSlot( const KCalCore::Period &dateTimeRange );
-
-    /**
       Checks whether the slot specified by (tryFrom, tryTo) matches the
       search constraints. If yes, return true. The return value is the
       number of conflicts that were detected, and (tryFrom, tryTo) contain the next free slot for
@@ -213,7 +213,6 @@ private:
 
     KCalCore::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
     KCalCore::Period::List mAvailableSlots;
-    int mAppointmentDuration; //!< the minimum number of seconds the appointment slot should be
     QTimer mReloadTimer;
     QTimer mCalculateTimer; /*!< A timer is used control the calculation of
                                    conflicts to prevent the process from being

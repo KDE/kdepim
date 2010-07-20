@@ -18,51 +18,31 @@
     02110-1301, USA.
 */
 
-#ifndef SCHEDULINGDIALOG_H
-#define SCHEDULINGDIALOG_H
+#ifndef FREEPERIODMODEL_H
+#define FREEPERIODMODEL_H
 
-#include "ui_schedulingdialog.h"
+#include <KCal/Period>
 
-#include <KDialog>
-#include <QDate>
+#include <QAbstractListModel>
 
 namespace IncidenceEditorsNG
 {
 
-class FreePeriodModel;
-class ConflictResolver;
-class VisualFreeBusyWidget;
-
-class SchedulingDialog : public KDialog, private Ui_Dialog
+class FreePeriodModel : public QAbstractListModel
 {
-  Q_OBJECT
+Q_OBJECT
 public:
-    SchedulingDialog( ConflictResolver* resolver, QWidget* parent );
-    ~SchedulingDialog();
+    FreePeriodModel(QObject* parent = 0);
 
-signals:
-    void startDateChanged( const QDate &newDate );
-    void startTimeChanged( const QTime &newTime );
-    void endDateChanged( const QDate &newDate );
-    void endTimeChanged( const QTime &newTime );
-
-
-private slots:
-    void slotWeekdaysChanged();
-    void slotMandatoryRolesChanged();
-    void slotStartDateChanged( const QDate & newDate );
-
+    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+    virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+public slots:
+    void slotNewFreePeriods( const KCal::Period::List & freePeriods );
 private:
-    void updateWeekDays( const QDate& oldDate );
-    void fillCombos();
-
-    QDate mStDate;
-
-    ConflictResolver* mResolver;
-    FreePeriodModel* mPeriodModel;
-    VisualFreeBusyWidget* mVisualWidget;
+    KCal::Period::List mPeriodList;
 };
 
 }
 
-#endif // SCHEDULINGDIALOG_H
+#endif // FREEPERIODMODEL_H

@@ -614,6 +614,11 @@ void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &e
   }
 
   mCurrentStartDateTime = currentStartDateTime();
+
+  emit startDateChanged( start.date() );
+  emit startTimeChanged( start.time() );
+  emit endDateChanged( end.date() );
+  emit endTimeChanged( end.time() );
 }
 
 void IncidenceDateTime::setTimes( const KDateTime &start, const KDateTime &end )
