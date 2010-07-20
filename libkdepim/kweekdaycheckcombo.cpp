@@ -73,7 +73,8 @@ QBitArray KWeekdayCheckCombo::days() const
 
 int KWeekdayCheckCombo::weekdayIndex( const QDate &date ) const
 {
-    Q_ASSERT( date.isValid() );
+    if ( !date.isValid() )
+      return -1;
     const int weekStart = KGlobal::locale()->weekStartDay() - 1; // Values 1 - 7, we need 0 - 6
     return ( date.dayOfWeek() + weekStart + 6 ) % 7;
 }
