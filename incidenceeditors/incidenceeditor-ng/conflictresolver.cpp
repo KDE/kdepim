@@ -488,9 +488,10 @@ void ConflictResolver::findAllFreeSlots()
 
 void ConflictResolver::calculateConflicts()
 {
-
-//     int count = tryDate( mTimeframeConstraint.start(), mTimeframeConstraint.end() );
-//     emit conflictsDetected( count );
+    KDateTime start = mTimeframeConstraint.start();
+    KDateTime end = mTimeframeConstraint.end();
+    int count = tryDate( start, end );
+    emit conflictsDetected( count );
 //     kDebug() << "calculate conflicts" << count;
 }
 
