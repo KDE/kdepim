@@ -126,6 +126,12 @@ public:
      */
     KCal::Period::List availableSlots() const;
 
+    /**
+      Finds a free slot in the future which has at least the same size as
+      the initial slot.
+    */
+    bool findFreeSlot( const KCal::Period &dateTimeRange );
+
 signals:
     /**
      * Emitted when the user changes the start and end dateTimes
@@ -175,12 +181,6 @@ private slots:
 
 private:
     void updateFreeBusyData( FreeBusyItem * );
-
-    /**
-      Finds a free slot in the future which has at least the same size as
-      the initial slot.
-    */
-    bool findFreeSlot( const KCal::Period &dateTimeRange );
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) matches the 

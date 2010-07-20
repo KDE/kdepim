@@ -22,6 +22,7 @@
 
 #include "conflictresolver.h"
 #include "freeperiodmodel.h"
+#include "visualfreebusywidget.h"
 
 #include <KCalendarSystem>
 #include <KIconLoader>
@@ -29,9 +30,15 @@
 #include <KDebug>
 #include <KCal/Attendee>
 
+#include <QBoxLayout>
+
 using namespace IncidenceEditorsNG;
 
-SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mResolver( resolver ), mPeriodModel( new FreePeriodModel() )
+SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent  )
+  : KDialog( parent ),
+  mResolver( resolver ),
+  mPeriodModel( new FreePeriodModel( this ) ),
+  mVisualWidget( new VisualFreeBusyWidget( resolver, 8, this ) )
 {
     setupUi( this );
     fillCombos();
@@ -49,6 +56,10 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mR
     connect( mResolver, SIGNAL( freeSlotsAvailable( const KCal::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCal::Period::List & ) ) );
 
     mListView->setModel( mPeriodModel );
+
+    QVBoxLayout* layout = new QVBoxLayout( mGanttTab );
+    layout->addWidget( mVisualWidget );
+    mGanttTab->setLayout( layout );
 }
 
 

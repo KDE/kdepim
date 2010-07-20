@@ -31,12 +31,13 @@ namespace IncidenceEditorsNG
 
 class FreePeriodModel;
 class ConflictResolver;
+class VisualFreeBusyWidget;
 
 class SchedulingDialog : public KDialog, private Ui_Dialog
 {
   Q_OBJECT
 public:
-    SchedulingDialog( ConflictResolver * resolver );
+    SchedulingDialog( ConflictResolver* resolver, QWidget* parent );
     ~SchedulingDialog();
 
 signals:
@@ -59,6 +60,7 @@ private:
 
     ConflictResolver* mResolver;
     FreePeriodModel* mPeriodModel;
+    VisualFreeBusyWidget* mVisualWidget;
 };
 
 }
