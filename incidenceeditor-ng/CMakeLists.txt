@@ -52,7 +52,6 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
   ../templatemanagementdialog.cpp
   eventortododialog.cpp
-  groupwareintegration.cpp
   schedulingdialog.cpp
 )
 

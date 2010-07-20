@@ -36,7 +36,6 @@
 
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
-#include "editoritemmanager.h"
 #include "incidencealarm.h"
 #include "incidenceattachment.h"
 #include "incidencecategories.h"
@@ -85,8 +84,8 @@ public:
 
   /// ItemEditorUi methods
   virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
-  void handleItemSaveFinish();
-  void handleItemSaveFail( const QString &errorMessage );
+  void handleItemSaveFinish( Akonadi::EditorItemManager::SaveAction );
+  void handleItemSaveFail( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage );
   virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
   virtual bool isDirty() const;
   virtual bool isValid();
@@ -156,10 +155,10 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
-  q->connect( mItemManager, SIGNAL(itemSaveFinished()),
-              SLOT(handleItemSaveFinish()));
-  q->connect( mItemManager, SIGNAL(itemSaveFailed(QString)),
-              SLOT(handleItemSaveFail(QString)));
+  q->connect( mItemManager, SIGNAL(itemSaveFinished(Akonadi::EditorItemManager::SaveAction)),
+              SLOT(handleItemSaveFinish(Akonadi::EditorItemManager::SaveAction)));
+  q->connect( mItemManager, SIGNAL(itemSaveFailed(Akonadi::EditorItemManager::SaveAction, QString)),
+              SLOT(handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
   q->connect( ieRecurrence, SIGNAL(recurrenceChanged(int)),
@@ -321,7 +320,7 @@ bool EventOrTodoDialogPrivate::containsPayloadIdentifiers( const QSet<QByteArray
   return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
 }
 
-void EventOrTodoDialogPrivate::handleItemSaveFail( const QString &errorMessage )
+void EventOrTodoDialogPrivate::handleItemSaveFail( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   Q_Q( EventOrTodoDialog );
 
@@ -334,7 +333,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFail( const QString &errorMessage )
   }
 }
 
-void EventOrTodoDialogPrivate::handleItemSaveFinish()
+void EventOrTodoDialogPrivate::handleItemSaveFinish( Akonadi::EditorItemManager::SaveAction )
 {
   Q_Q( EventOrTodoDialog );
 
