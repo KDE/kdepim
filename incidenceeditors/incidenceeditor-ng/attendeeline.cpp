@@ -184,11 +184,19 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
 #endif
   mResponseCheck->setChecked( true );
-  mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
+  mEdit->setToolTip( i18nc( "@info:tooltip",
+                     "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
 
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
+
+  mRoleCombo->setWhatsThis( i18nc( "@info:whatsthis",
+                                   "Edits the role of the attendee." ) );
+
+  mEdit->setWhatsThis( i18nc( "@info:whatsthis",
+                  "The email address or name of the attendee. An invitation "
+                  "can be sent to the user if an email address is provided.") );
 
   setActions( EventActions );
 
