@@ -28,6 +28,7 @@
 #include <KDialog>
 #include <KIconLoader>
 #include <KLocale>
+#include <KDebug>
 
 #include <QDebug>
 #include <QBoxLayout>
@@ -185,6 +186,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
 
   mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
 #endif
+  mResponseCheck->setChecked( true );
 
   mEdit->setToolTip( i18nc( "@info:tooltip",
                      "Enter the name or email address of the attendee." ) );
@@ -234,7 +236,8 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   connect( mResponseCheck, SIGNAL( leftPressed() ), mStateCombo, SLOT( setFocus() ) );
   connect( mResponseCheck, SIGNAL( rightPressed() ), SIGNAL( rightPressed() ) );
 
-  connect( mEdit, SIGNAL( editingFinished() ), SLOT( slotEditingFinished() ) );
+  connect( mEdit, SIGNAL( editingFinished() ), SLOT( slotHandleChange() ) );
+  connect( mEdit, SIGNAL( textCompleted() ), SLOT( slotHandleChange() ) );
   connect( mEdit, SIGNAL( clearButtonClicked() ), SLOT( slotPropagateDeletion() ) );
 
   connect( mRoleCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
@@ -274,11 +277,26 @@ void AttendeeLine::dataFromFields()
 {
   if( !mData )
     return;
-  mData->setEmail(  mEdit->text() );
+
+  KCalCore::Attendee::Ptr oldAttendee( mData->attendee() );
+
+  QString email, name;
+  KPIMUtils::extractEmailAddressAndName( mEdit->text(), email, name );
+
+  mData->setName( name );
+  mData->setEmail(  email );
+
+
   mData->setRole( AttendeeData::Role( mRoleCombo->currentIndex() ) );
   mData->setStatus( AttendeeData::PartStat( mStateCombo->currentIndex() ) );
   mData->setRSVP( mResponseCheck->isChecked() );
   mData->setUid( mUid );
+
+  clearModified();
+  if( !( oldAttendee == mData->attendee() ) && !email.isEmpty() /*if email is empty, we dont want to update anything*/ ) {
+    kDebug() << oldAttendee->email() << mData->email();
+    emit changed( oldAttendee, mData->attendee() );
+  }
 }
 
 void AttendeeLine::fieldsFromData()
@@ -421,7 +439,7 @@ void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr& data )
   fieldsFromData();
 }
 
-void AttendeeLine::slotEditingFinished()
+void AttendeeLine::slotHandleChange()
 {
   if ( mEdit->text().isEmpty() ) {
     emit deleteLine( this );
@@ -429,14 +447,11 @@ void AttendeeLine::slotEditingFinished()
     mEdit->setCursorPosition( 0 );
     emit editingFinished( this );
   }
+  dataFromFields();
 }
 
 void AttendeeLine::slotTextChanged( const QString& /*str*/ )
 {
-
-  //TODO: some verifying, auto completion and stuff
-  //      to assist the user in selecting a valid contact
-  //   KPIMUtils::isValidAddress( str );
   mModified = true;
   emit changed();
 }
@@ -444,6 +459,15 @@ void AttendeeLine::slotTextChanged( const QString& /*str*/ )
 void AttendeeLine::slotComboChanged()
 {
     mModified = true;
+    emit changed();
+}
+
+void AttendeeLine::aboutToBeDeleted()
+{
+  if( !mData )
+    return;
+
+  emit changed( mData->attendee(), KCalCore::Attendee::Ptr( new KCalCore::Attendee( "", "" ) ) );
 }
 
 

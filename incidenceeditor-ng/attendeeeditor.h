@@ -53,6 +53,7 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
 
   signals:
     void countChanged( int );
+    void changed( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
     void editingFinished( KPIM::MultiplyingLine* );
 
   protected slots:

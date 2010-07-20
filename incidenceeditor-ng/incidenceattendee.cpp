@@ -197,7 +197,7 @@ bool IncidenceAttendee::isDirty() const
   foreach( const AttendeeData::Ptr a, newList ) {
       KCalCore::Attendee::Ptr attendee = a->attendee();
     Q_ASSERT( attendee );
-    if( !origList.contains( &attendee ) )
+    if( !origList.contains( attendee ) )
       return true;
   }
   return false;
@@ -306,7 +306,7 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
     if( mSchedulingDialog )
       delete mSchedulingDialog.data();
 
-    mSchedulingDialog = new SchedulingDialog( mConflictResolver, mParentWidget );
+    mSchedulingDialog = new SchedulingDialog( mConflictResolver );
     mSchedulingDialog->exec();
 
     delete mSchedulingDialog.data();
@@ -351,7 +351,7 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
     rsvp = false;
   }
   KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( a.realName(), a.preferredEmail(), rsvp,
-                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() );
+                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() ) );
 
   mAttendeeEditor->addAttendee( newAt );
 }
@@ -423,9 +423,9 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
       bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( email );
 
       bool rsvp = !myself; // if it is the user, dont make him rsvp.
-      KCal::Attendee::PartStat status = myself ? KCal::Attendee::Accepted : KCal::Attendee::NeedsAction;
+      KCalCore::Attendee::PartStat status = myself ? KCalCore::Attendee::Accepted : KCalCore::Attendee::NeedsAction;
 
-      KCal::Attendee newAt( name, email, rsvp, status, KCal::Attendee::ReqParticipant );
+      KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( name, email, rsvp, status, KCalCore::Attendee::ReqParticipant ) );
 
       mAttendeeEditor->addAttendee( newAt );
       mConflictResolver->insertAttendee( newAt );

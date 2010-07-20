@@ -34,6 +34,7 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QAbstractItemModel>
+#include <QDialog>
 
 class QTreeWidget;
 class QLabel;
@@ -47,7 +48,8 @@ namespace KDGantt {
 
 class KDateTime;
 
-class EditorFreeBusy : public QWidget
+namespace IncidenceEditorsNG {
+class EditorFreeBusy : public QDialog
 {
   Q_OBJECT
   public:
@@ -57,8 +59,8 @@ class EditorFreeBusy : public QWidget
     void setUpdateEnabled( bool enabled );
     bool updateEnabled() const;
 
-    void insertAttendee( const KCalCore::Attendee::Ptr & , bool readFBList = true );
-    void removeAttendee( const KCalCore::Attendee::Ptr &  );
+    void insertAttendee( AttendeeData::Ptr , bool readFBList = true );
+    void removeAttendee( AttendeeData::Ptr  );
     void clearAttendees();
 
 
@@ -73,9 +75,11 @@ class EditorFreeBusy : public QWidget
   public slots:
     void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
 
-    void setDateTimes( const QDateTime &, const QDateTime & );
+    void setDateTimes( const KDateTime &, const KDateTime  & );
 
     void editFreeBusyUrl( const QModelIndex& index );
+
+    void slotOrganizerChanged( const QString &newOrganizer );
 
   protected slots:
     void slotUpdateGanttView( const QDateTime &, const QDateTime & );
@@ -93,11 +97,10 @@ class EditorFreeBusy : public QWidget
     void slotIntervalColorRectangleMoved( const QDateTime &start, const QDateTime &end );
 
     void removeAttendee();
-//     void listViewClicked( int button, KDGanttViewItem *item );
 
   protected:
     void timerEvent( QTimerEvent * );
-    KCalCore::Attendee::Ptr currentAttendee() const;
+    AttendeeData::Ptr currentAttendee() const;
     /* reimpl */
 //     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();
@@ -106,7 +109,6 @@ class EditorFreeBusy : public QWidget
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
   private slots:
-    void slotOrganizerChanged( const QString &newOrganizer );
     void splitterMoved();
 
   private:
@@ -139,4 +141,5 @@ class EditorFreeBusy : public QWidget
     QList<FreeBusyItem*> mFreeBusyItems; //TODO: holds all the items. if a tree like structure is needed, instead of the list, add it as a data of mLeftView items
 };
 
+}
 #endif

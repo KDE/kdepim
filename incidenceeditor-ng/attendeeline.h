@@ -133,15 +133,18 @@ class AttendeeLine : public KPIM::MultiplyingLine
 
     virtual int setColumnWidth( int w );
 
+    virtual void aboutToBeDeleted();
+
     void setActions( AttendeeActions actions );
 
   signals:
     void changed();
+    void changed( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
     void editingFinished( KPIM::MultiplyingLine * );
 
   private slots:
     void slotTextChanged( const QString & );
-    void slotEditingFinished();
+    void slotHandleChange();
     void slotComboChanged();
   private:
     void dataFromFields();

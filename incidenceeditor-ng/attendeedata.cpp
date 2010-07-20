@@ -18,48 +18,27 @@
     02110-1301, USA.
 */
 
-#ifndef SCHEDULINGDIALOG_H
-#define SCHEDULINGDIALOG_H
+#include "attendeedata.h"
 
-#include "ui_schedulingdialog.h"
+using namespace IncidenceEditorsNG;
 
-#include <KDialog>
-#include <QDate>
-
-namespace IncidenceEditorsNG
+void AttendeeData::clear()
 {
-
-class ConflictResolver;
-
-class SchedulingDialog : public KDialog, private Ui_Dialog
-{
-  Q_OBJECT
-public:
-    SchedulingDialog( ConflictResolver * resolver );
-    ~SchedulingDialog();
-
-signals:
-    void startDateChanged( const QDate &newDate );
-    void startTimeChanged( const QTime &newTime );
-    void endDateChanged( const QDate &newDate );
-    void endTimeChanged( const QTime &newTime );
-
-
-private slots:
-    void slotWeekdaysChanged();
-    void slotMandatoryRolesChanged();
-    void slotStartDateChanged( const QDate & newDate );
-    void slotNewFreeSlots();
-
-private:
-    void updateWeekDays( const QDate& oldDate );
-    void fillCombos();
-
-    QDate mStDate;
-
-    ConflictResolver* mResolver;
-};
-
+  setName( QString() );
+  setEmail( QString() );
+  setRole( Attendee::ReqParticipant );
+  setStatus( Attendee::None );
+  setRSVP( false );
+  setUid( QString() );
 }
 
-#endif // SCHEDULINGDIALOG_H
+bool AttendeeData::isEmpty() const
+{
+  return name().isEmpty() && email().isEmpty();
+}
+
+KCalCore::Attendee::Ptr AttendeeData::attendee() const
+{
+  return KCalCore::Attendee::Ptr( new KCalCore::Attendee( *this ) );
+}
+

@@ -34,10 +34,10 @@
 #include <QFrame>
 #include <QLabel>
 
-using namespace IncidenceEditors;
+using namespace IncidenceEditorsNG;
 using namespace KCalCore;
 
-FreeBusyUrlDialog::FreeBusyUrlDialog( const KCalCore::Attendee::Ptr &attendee, QWidget *parent )
+FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *parent )
   : KDialog( parent )
 {
   QFrame *topFrame = new QFrame( this );
@@ -64,7 +64,7 @@ void FreeBusyUrlDialog::slotOk()
   accept();
 }
 
-FreeBusyUrlWidget::FreeBusyUrlWidget( const KCalCore::Attendee::Ptr &attendee, QWidget *parent )
+FreeBusyUrlWidget::FreeBusyUrlWidget( AttendeeData::Ptr attendee, QWidget *parent )
   : QWidget( parent ), mAttendee( attendee )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );

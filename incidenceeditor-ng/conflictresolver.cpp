@@ -341,7 +341,7 @@ void ConflictResolver::findAllFreeSlots()
     int range = begin.secsTo( end );
     range /=  mSlotResolutionSeconds;
     if ( range <= 0 ) {
-        kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range << begin << end;
+        kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
         return;
     }
     // filter out attendees for which we don't have FB data

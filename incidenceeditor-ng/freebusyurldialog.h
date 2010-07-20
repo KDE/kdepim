@@ -25,14 +25,13 @@
 #define FREEBUSYURLDIALOG_H
 
 #include "incidenceeditors_export.h"
-
-#include <kcalcore/attendee.h>
-
+#include "attendeedata.h"
 #include <KDialog>
 
 class KLineEdit;
 
-namespace IncidenceEditors
+
+namespace IncidenceEditorsNG
 {
   class FreeBusyUrlWidget;
 
@@ -40,7 +39,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlDialog( const KCalCore::Attendee::Ptr &, QWidget *parent = 0 );
+    explicit FreeBusyUrlDialog(AttendeeData::Ptr, QWidget *parent = 0 );
 
   public slots:
     void slotOk();
@@ -53,7 +52,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlWidget( const KCalCore::Attendee::Ptr &, QWidget *parent = 0 );
+    explicit FreeBusyUrlWidget(AttendeeData::Ptr, QWidget *parent = 0 );
     ~FreeBusyUrlWidget();
 
     void loadConfig();
@@ -61,7 +60,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlWidget : public QWidget
 
   private:
     KLineEdit *mUrlEdit;
-    KCalCore::Attendee::Ptr mAttendee;
+   AttendeeData::Ptr mAttendee;
 };
 
 } // namespace IncidenceEditors

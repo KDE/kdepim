@@ -128,7 +128,7 @@ public:
       Finds a free slot in the future which has at least the same size as
       the initial slot.
     */
-    bool findFreeSlot( const KCal::Period &dateTimeRange );
+    bool findFreeSlot( const KCalCore::Period &dateTimeRange );
 
 signals:
     /**
@@ -146,7 +146,7 @@ signals:
     /**
      * Emitted when the resolver locates new free slots.
      */
-    void freeSlotsAvailable( const KCal::Period::List & );
+    void freeSlotsAvailable( const KCalCore::Period::List & );
 
 public slots:
     /**
@@ -213,6 +213,7 @@ private:
 
     KCalCore::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
     KCalCore::Period::List mAvailableSlots;
+
     QTimer mReloadTimer;
     QTimer mCalculateTimer; /*!< A timer is used control the calculation of
                                    conflicts to prevent the process from being
