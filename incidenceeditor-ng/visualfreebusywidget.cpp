@@ -322,7 +322,7 @@ void VisualFreeBusyWidget::slotPickDate()
     KDateTime::Spec timeSpec = KSystemTimeZones::local();
     KDateTime start = mDtStart;
     KDateTime end = mDtEnd;
-    bool success = mResolver->findFreeSlot( KCal::Period( start, end ) );
+    bool success = mResolver->findFreeSlot( KCalCore::Period( start, end ) );
 
     if ( success ) {
         if ( start == mDtStart && end == mDtEnd ) {
