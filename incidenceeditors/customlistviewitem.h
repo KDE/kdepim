@@ -24,8 +24,6 @@
 #ifndef CUSTOMLISTVIEWITEM_H
 #define CUSTOMLISTVIEWITEM_H
 
-#include "incidenceeditors_export.h"
-
 #include <QMap>
 #include <QString>
 #include <K3ListView>
