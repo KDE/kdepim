@@ -26,7 +26,7 @@
   In addition, as a special exception, the copyright holders give
   permission to link the code of this program with any edition of
   the Qt library by Trolltech AS, Norway (or with modified versions
-  of Qt that use the same license as Qt), and distribute linked
+  of Qt that use the same license as Qt), and distribute liinitialCheckForChangesnked
   combinations including the two.  You must obey the GNU General
   Public License in all respects for all of the code used other than
   Qt.  If you modify this file, you may extend this exception to
@@ -60,14 +60,15 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
-#include <QFile>
-#include <QBuffer>
-#include <QRegExp>
-#include <QDir>
-#include <QTimerEvent>
-#include <QTextStream>
-#include <QByteArray>
-#include <QApplication>
+#include <QtCore/QBuffer>
+#include <QtCore/QByteArray>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QRegExp>
+#include <QtCore/QTextStream>
+#include <QtCore/QTimer>
+#include <QtCore/QTimerEvent>
+#include <QtGui/QApplication>
 
 using namespace KCal;
 using namespace Akonadi;
@@ -442,6 +443,9 @@ void FreeBusyManager::setCalendar( Akonadi::Calendar *c )
 
   connect( d->mCalendar, SIGNAL(calendarChanged()),
            SLOT(uploadFreeBusy()) );
+
+  // Lets see if we need to update our published
+  QTimer::singleShot( 0, this, SLOT(uploadFreeBusy()) );
 }
 
 /*!

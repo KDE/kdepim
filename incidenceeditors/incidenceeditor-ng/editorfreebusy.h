@@ -112,7 +112,6 @@ class EditorFreeBusy : public QDialog
 
   private slots:
     void splitterMoved();
-    void setupManager();
 
   private:
     void updateFreeBusyData( FreeBusyItem * );

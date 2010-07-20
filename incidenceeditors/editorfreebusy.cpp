@@ -112,7 +112,7 @@ class FreeBusyItem : public KDGanttViewTaskItem
 
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
-      Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
+      Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
       if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
                                  mParentWidget ) ) {
         mIsDownloading = false;
@@ -375,7 +375,7 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mGanttView, SIGNAL(lvMouseButtonClicked(int, KDGanttViewItem*, const QPoint&, int)),
            this, SLOT(listViewClicked(int, KDGanttViewItem*)) );
 
-  Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
+  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
   connect( m, SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)),
            SLOT(slotInsertFreeBusy(KCal::FreeBusy *,const QString &)) );
 

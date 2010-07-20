@@ -173,9 +173,6 @@ private slots:
     // Only download FB if the auto-download option is set in config
     void autoReload();
 
-    // connect to akonadi's free busy manager
-    void setupManager();
-
 private:
     void updateFreeBusyData( FreeBusyItem * );
 
@@ -225,7 +222,6 @@ private:
                                    repeated many times after a series of quick
                                    parameter changes.
                               */
-    bool mManagerConnected;
     bool mForceDownload;
     QList<FreeBusyItem*> mFreeBusyItems;
     QWidget *mParentWidget;

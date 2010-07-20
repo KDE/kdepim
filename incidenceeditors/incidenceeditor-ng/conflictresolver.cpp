@@ -29,7 +29,6 @@
 #include <KDebug>
 
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h>       //krazy:exclude=camelcase since kdepim/akonadi
 
 #include "attendeedata.h"
 #include "freebusyitem.h"
@@ -44,17 +43,13 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
   , mWeekdays( 7 )
   , mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
 {
-    Q_ASSERT( Akonadi::Groupware::instance() );
-    // Groupware initializes the FreeBusyManager via a singleshot timer, so
-    // the FreeBusyManager may not be initialized at this point. Queue up
-    // a connection attempt.
-    mManagerConnected = false;
-    Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m ) {
-        QTimer::singleShot( 0, this, SLOT( setupManager() ) );
-    } else {
-        setupManager();
-    }
+    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+    connect( m, SIGNAL( freeBusyRetrieved( KCal::FreeBusy *, const QString & ) ),
+             SLOT( slotInsertFreeBusy( KCal::FreeBusy *, const QString & ) ) );
+    // trigger a reload in case any attendees were inserted before
+    // the connection was made
+    // triggerReload();
+
     // set default values
     mWeekdays.setBit( 0 ); //Monday
     mWeekdays.setBit( 1 ); //Tuesday
@@ -70,39 +65,12 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
     mCalculateTimer.setSingleShot( true );
 }
 
-void ConflictResolver::setupManager()
-{
-    if ( mManagerConnected )
-        return;
-    static int attempt_count = 1;
-    if ( attempt_count > 5 ) { // 5 chosen as an arbitrary limit
-        kWarning() << "Free Busy Editor cannot connect to Akonadi's FreeBusyManager. Number of connection attempts exceeded";
-        return;
-    } else
-        kDebug() << "Setting up freebusy manager. attempt: " << attempt_count;
-    Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m ) {
-        ++attempt_count;
-        QTimer::singleShot( 1000, this, SLOT( setupManager() ) ); // min 1 second timer
-        kDebug() << "FreeBusyManager not ready yet, will try again.";
-    } else {
-        connect( m, SIGNAL( freeBusyRetrieved( KCal::FreeBusy *, const QString & ) ),
-                 SLOT( slotInsertFreeBusy( KCal::FreeBusy *, const QString & ) ) );
-        kDebug() << "FreeBusyManager connection succeeded";
-        mManagerConnected = true;
-        // trigger a reload in case any attendees were inserted before
-        // the connection was made
-        triggerReload();
-    }
-}
-
 void ConflictResolver::insertAttendee( const KCal::Attendee &attendee )
 {
 //     kDebug() << "inserted attendee" << attendee->email();
     FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
     mFreeBusyItems.append( item );
-    if ( mManagerConnected )
-        updateFreeBusyData( item );
+    updateFreeBusyData( item );
 }
 
 void ConflictResolver::insertAttendee( FreeBusyItem* freebusy )
