@@ -635,7 +635,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCNAME";
         i += strlen( "OCCNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
           body.append( str );
         }
 
@@ -643,7 +643,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCFNAME";
         i += strlen( "OCCFNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
           body.append( getFName( str ) );
         }
 
@@ -651,7 +651,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCLNAME";
         i += strlen( "OCCLNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
           body.append( getLName( str ) );
         }
 
@@ -667,7 +667,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTONAME";
         i += strlen( "OTONAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
           body.append( str );
         }
 
@@ -675,7 +675,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTOFNAME";
         i += strlen( "OTOFNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
           body.append( getFName( str ) );
         }
 
@@ -683,7 +683,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTOLNAME";
         i += strlen( "OTOLNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
           body.append( getLName( str ) );
         }
 
@@ -715,7 +715,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMNAME";
         i += strlen( "OFROMNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           body.append( str );
         }
 
@@ -723,7 +723,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMFNAME";
         i += strlen( "OFROMFNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           body.append( getFName( str ) );
         }
 
@@ -731,7 +731,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMLNAME";
         i += strlen( "OFROMLNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           body.append( getLName( str ) );
         }
 
