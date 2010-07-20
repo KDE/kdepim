@@ -88,6 +88,11 @@ void AttendeeEditor::addAttendee(const KCalCore::Attendee::Ptr& attendee)
   addData( AttendeeData::Ptr( new AttendeeData( attendee ) ) );
 }
 
+void AttendeeEditor::removeAttendee(const AttendeeData::Ptr& attendee)
+{
+  removeData( attendee );
+}
+
 void AttendeeEditor::setActions( AttendeeLine::AttendeeActions actions )
 {
   foreach( KPIM::MultiplyingLine *line, lines() ) {

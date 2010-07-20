@@ -29,7 +29,6 @@
 #include <KDebug>
 
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h>       //krazy:exclude=camelcase since kdepim/akonadi
 
 #include "attendeedata.h"
 #include "freebusyitem.h"
@@ -44,17 +43,13 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
   , mWeekdays( 7 )
   , mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
 {
-    Q_ASSERT( Akonadi::Groupware::instance() );
-    // Groupware initializes the FreeBusyManager via a singleshot timer, so
-    // the FreeBusyManager may not be initialized at this point. Queue up
-    // a connection attempt.
-    mManagerConnected = false;
-    Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m ) {
-        QTimer::singleShot( 0, this, SLOT( setupManager() ) );
-    } else {
-        setupManager();
-    }
+    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+    connect( m, SIGNAL( freeBusyRetrieved( KCal::FreeBusy::Ptr , const QString & ) ),
+             SLOT( slotInsertFreeBusy( KCalCore::FreeBusy::Ptr , const QString & ) ) );
+    // trigger a reload in case any attendees were inserted before
+    // the connection was made
+    // triggerReload();
+
     // set default values
     mWeekdays.setBit( 0 ); //Monday
     mWeekdays.setBit( 1 ); //Tuesday
@@ -65,32 +60,9 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
 
     connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
     mReloadTimer.setSingleShot( true );
-}
 
-void ConflictResolver::setupManager()
-{
-    if ( mManagerConnected )
-        return;
-    static int attempt_count = 1;
-    if ( attempt_count > 5 ) { // 5 chosen as an arbitrary limit
-        kWarning() << "Free Busy Editor cannot connect to Akonadi's FreeBusyManager. Number of connection attempts exceeded";
-        return;
-    } else
-        kDebug() << "Setting up freebusy manager. attempt: " << attempt_count;
-    Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m ) {
-        ++attempt_count;
-        QTimer::singleShot( 1000, this, SLOT( setupManager() ) ); // min 1 second timer
-        kDebug() << "FreeBusyManager not ready yet, will try again.";
-    } else {
-        connect( m, SIGNAL( freeBusyRetrieved( KCalCore::FreeBusy *, const QString & ) ),
-                 SLOT( slotInsertFreeBusy( KCalCore::FreeBusy *, const QString & ) ) );
-        kDebug() << "FreeBusyManager connection succeeded";
-        mManagerConnected = true;
-        // trigger a reload in case any attendees were inserted before
-        // the connection was made
-        triggerReload();
-    }
+    connect( &mCalculateTimer, SIGNAL( timeout() ), SLOT( findAllFreeSlots() ) );
+    mCalculateTimer.setSingleShot( true );
 }
 
 void ConflictResolver::insertAttendee( const KCalCore::Attendee::Ptr &attendee )
@@ -98,8 +70,7 @@ void ConflictResolver::insertAttendee( const KCalCore::Attendee::Ptr &attendee )
 //     kDebug() << "inserted attendee" << attendee->email();
     FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
     mFreeBusyItems.append( item );
-    if ( mManagerConnected )
-        updateFreeBusyData( item );
+    updateFreeBusyData( item );
 }
 
 void ConflictResolver::insertAttendee( FreeBusyItem* freebusy )
@@ -220,11 +191,13 @@ void ConflictResolver::setLatestTime( const QTime& newTime )
 void ConflictResolver::setEarliestDateTime( const KDateTime& newDateTime )
 {
     mTimeframeConstraint = KCalCore::Period( newDateTime, mTimeframeConstraint.end() );
+    calculateConflicts();
 }
 
 void ConflictResolver::setLatestDateTime( const KDateTime& newDateTime )
 {
     mTimeframeConstraint = KCalCore::Period( mTimeframeConstraint.start(), newDateTime );
+    calculateConflicts();
 }
 
 
@@ -367,7 +340,10 @@ void ConflictResolver::findAllFreeSlots()
     //          So, the array would have a length of 672
     int range = begin.secsTo( end );
     range /=  mSlotResolutionSeconds;
-    Q_ASSERT( range > 0 );
+    if ( range <= 0 ) {
+        kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
+        return;
+    }
     // filter out attendees for which we don't have FB data
     // and which don't match the mandatory role contrstaint
     QList<FreeBusyItem* > filteredFBItems;
@@ -378,7 +354,10 @@ void ConflictResolver::findAllFreeSlots()
 
     // now we know the number of attendees we are calculating for
     const int number_attendees = filteredFBItems.size();
-    Q_ASSERT( number_attendees > 0 );
+    if( number_attendees <= 0 ) {
+      kDebug() << "no attendees match search criteria";
+      return;
+    }
     // this is a 2 dimensional array where the rows are attendees
     // and the columns are 0 or 1 denoting freee or busy respectively.
     QVector< QVector<int> > fbTable;
@@ -429,6 +408,7 @@ void ConflictResolver::findAllFreeSlots()
 
     // Finally, iterate through the composite array locating contiguous free timeslots
     int free_count = 0;
+    bool free_found = false;
     for ( int i = 0; i < range; ++i ) {
         // free timeslot encountered, increment counter
         if ( summed[i] == 0 ) {
@@ -457,9 +437,13 @@ void ConflictResolver::findAllFreeSlots()
                 // push the free block onto the list
                 mAvailableSlots << KCalCore::Period( freeBegin, freeEnd );
                 free_count = 0;
+                if( !free_found )
+                  free_found = true;
             }
         }
     }
+    if( free_found )
+      emit freeSlotsAvailable();
 #if 0
     //DEBUG, dump the arrays. very helpful for debugging
     QTextStream dump( stdout );
@@ -489,10 +473,13 @@ void ConflictResolver::findAllFreeSlots()
 
 void ConflictResolver::calculateConflicts()
 {
+    KDateTime start = mTimeframeConstraint.start();
+    KDateTime end = mTimeframeConstraint.end();
+    int count = tryDate( start, end );
+    emit conflictsDetected( count );
 
-//     int count = tryDate( mTimeframeConstraint.start(), mTimeframeConstraint.end() );
-//     emit conflictsDetected( count );
-//     kDebug() << "calculate conflicts" << count;
+    if( !mCalculateTimer.isActive() )
+      mCalculateTimer.start( 2000 );
 }
 
 void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
@@ -503,11 +490,6 @@ void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
 void ConflictResolver::setMandatoryRoles( const QSet< KCalCore::Attendee::Role >& roles )
 {
   mMandatoryRoles = roles;
-}
-
-void ConflictResolver::setAppointmentDuration( int seconds )
-{
-  mAppointmentDuration = seconds;
 }
 
 bool ConflictResolver::matchesRoleConstraint( const KCalCore::Attendee::Ptr &attendee )

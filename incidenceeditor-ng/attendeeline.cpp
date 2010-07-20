@@ -186,11 +186,19 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mResponseCheck->setIcon( SmallIcon( "mail-meeting-request-reply" ) );
 #endif
 
-  mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
+  mEdit->setToolTip( i18nc( "@info:tooltip",
+                     "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
 
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
+
+  mRoleCombo->setWhatsThis( i18nc( "@info:whatsthis",
+                                   "Edits the role of the attendee." ) );
+
+  mEdit->setWhatsThis( i18nc( "@info:whatsthis",
+                  "The email address or name of the attendee. An invitation "
+                  "can be sent to the user if an email address is provided.") );
 
   setActions( EventActions );
 
@@ -277,7 +285,7 @@ void AttendeeLine::fieldsFromData()
 {
   if( !mData )
     return;
-  mEdit->setText( mData->email() );
+  mEdit->setText( mData->fullName() );
   mRoleCombo->setCurrentIndex( mData->role() );
   AttendeeData::PartStat partStat = mData->status();
   if ( partStat != AttendeeData::None ) {
@@ -285,6 +293,7 @@ void AttendeeLine::fieldsFromData()
   } else {
     mStateCombo->setCurrentIndex( AttendeeData::NeedsAction );
   }
+  mResponseCheck->setChecked( mData->RSVP() );
   mUid = mData->uid();
 }
 

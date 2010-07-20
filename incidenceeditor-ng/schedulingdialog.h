@@ -49,12 +49,13 @@ private slots:
     void slotWeekdaysChanged();
     void slotMandatoryRolesChanged();
     void slotStartDateChanged( const QDate & newDate );
+    void slotNewFreeSlots();
 
 private:
     void updateWeekDays( const QDate& oldDate );
     void fillCombos();
 
-   QDate mStDate;
+    QDate mStDate;
 
     ConflictResolver* mResolver;
 };

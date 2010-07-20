@@ -30,7 +30,6 @@
 #include "freebusyurldialog.h"
 
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -197,7 +196,7 @@ class FreeBusyItem
 
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
-      Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
+      Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
       if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
                                  mParentWidget ) ) {
         mIsDownloading = false;
@@ -533,9 +532,10 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mGanttView, SIGNAL(lvMouseButtonClicked(int, KDGanttViewItem*, const QPoint&, int)),
            this, SLOT(listViewClicked(int, KDGanttViewItem*)) );
 
-  Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-  connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy *,const QString &)),
-           SLOT(slotInsertFreeBusy(KCalCore::FreeBusy *,const QString &)) );
+  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+  connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr  ,const QString &)),
+           SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr ,const QString &)) );
+
 
   connect( &mReloadTimer, SIGNAL(timeout()), SLOT(autoReload()) );
   mReloadTimer.setSingleShot( true );
@@ -560,7 +560,7 @@ EditorFreeBusy::~EditorFreeBusy()
 {
 }
 
-void EditorFreeBusy::removeAttendee( const Attendee::Ptr &attendee )
+void EditorFreeBusy::removeAttendee( AttendeeData::Ptr attendee )
 {
   FreeBusyItem *anItem = 0;
   for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {

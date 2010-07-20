@@ -63,6 +63,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
 IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop* ui )
 #endif
   : mUi( ui )
+  , mParentWidget( parent )
   , mAttendeeEditor( new AttendeeEditor )
   , mConflictResolver( 0 )
   , mSchedulingDialog()
@@ -85,7 +86,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
   fillOrganizerCombo();
-  mUi->mSolveButton->setDisabled( false );
+  mUi->mSolveButton->setDisabled( true );
   mUi->mOrganizerLabel->setVisible( false );
 
   mConflictResolver = new ConflictResolver( parent, parent );
@@ -96,7 +97,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
 
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflictPressed()) );
-//   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), mFreeBusyDialog, SLOT( slotOrganizerChanged( QString ) ) );
+  connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), this, SLOT( slotOrganizerChanged( QString ) ) );
 
   connect( mDateTime, SIGNAL( startDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
   connect( mDateTime, SIGNAL( endDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
@@ -104,11 +105,9 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   connect( mDateTime, SIGNAL( endTimeChanged( QTime ) ), this , SLOT( slotEventDurationChanged() ) );
 
   connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
+  slotUpdateConflictLabel( 0 ); //initialize label
 
-  connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee, KCalCore::Attendee ) ), this, SLOT( slotAttendeeChanged( KCalCore::Attendee,KCalCore::Attendee ) ) );
-
-  // set the default organizer
-//   mFreeBusyDialog->slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
+  connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee::Ptr, KCalCore::Attendee::Ptr ) ), this, SLOT( slotAttendeeChanged( KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr ) ) );
 }
 
 void IncidenceAttendee::load( KCalCore::Incidence::ConstPtr incidence )
@@ -147,6 +146,9 @@ void IncidenceAttendee::load( KCalCore::Incidence::ConstPtr incidence )
     mAttendeeEditor->setActions( AttendeeLine::EventActions );
   else
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
+
+  // set the default organizer
+  slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
 }
 
 void IncidenceAttendee::save( KCalCore::Incidence::Ptr incidence )
@@ -178,19 +180,24 @@ void IncidenceAttendee::save( KCalCore::Incidence::Ptr incidence )
 
 bool IncidenceAttendee::isDirty() const
 {
-  //TODO check free busy ?
   if( !mOrigIncidence  )
     return false;
+
   KCalCore::Attendee::List origList = mOrigIncidence->attendees();
+
   AttendeeData::List newList = mAttendeeEditor->attendees();
+
+  //HACK temporary workaround  to prevent crash until I speak with bertjan
+  if( origList.size() + 1 == newList.size() )
+    return false;
 
   if( origList.size() != newList.size() )
     return true;
 
   foreach( const AttendeeData::Ptr a, newList ) {
-    KCalCore::Attendee::Ptr attendee = a;
+      KCalCore::Attendee::Ptr attendee = a->attendee();
     Q_ASSERT( attendee );
-    if( !origList.contains( attendee ) )
+    if( !origList.contains( &attendee ) )
       return true;
   }
   return false;
@@ -319,10 +326,14 @@ void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr& oldA
 
 void IncidenceAttendee::slotUpdateConflictLabel( int count )
 {
-    QString label( i18np( "%1 scheduling conflict", "%1 scheduling conflicts", count ) );
-    mUi->mConflictsLabel->setText( label );
-    if( count > 0 )
+    if( count > 0 ) {
       mUi->mSolveButton->setEnabled( true );
+      QString label( i18np( "%1 scheduling conflict", "%1 scheduling conflicts", count ) );
+      mUi->mConflictsLabel->setText( label );
+    } else {
+      QString label( i18n( "No scheduling conflicts" ) );
+      mUi->mConflictsLabel->setText( label );
+    }
 }
 
 
@@ -340,7 +351,8 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
     rsvp = false;
   }
   KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( a.realName(), a.preferredEmail(), rsvp,
-                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() ) );
+                                  partStat, KCalCore::Attendee::ReqParticipant, a.uid() );
+
   mAttendeeEditor->addAttendee( newAt );
 }
 
@@ -351,8 +363,8 @@ void IncidenceAttendee::slotEventDurationChanged()
 
   Q_ASSERT( start < end );
 
-  int duration = start.secsTo( end );
-  mConflictResolver->setAppointmentDuration( duration );
+  kDebug() << start << end;
+
 #ifndef KDEPIM_MOBILE_UI
   if( !mSchedulingDialog ) {
     // when we aren't showing the dialog, the search timeframe
@@ -362,4 +374,64 @@ void IncidenceAttendee::slotEventDurationChanged()
   }
 #endif
 }
+
+void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
+{
+  if ( KPIMUtils::compareEmail( newOrganizer, mOrganizer, false ) )
+    return;
+
+  QString name;
+  QString email;
+  bool success = KPIMUtils::extractEmailAddressAndName( newOrganizer, email, name );
+
+  if ( !success ) {
+    return;
+  }
+
+  AttendeeData::Ptr currentOrganizerAttendee;
+  AttendeeData::Ptr newOrganizerAttendee;
+
+  Q_FOREACH( AttendeeData::Ptr attendee, mAttendeeEditor->attendees() ) {
+    if( attendee->fullName() == mOrganizer ) {
+      currentOrganizerAttendee = attendee;
+    }
+
+    if( attendee->fullName() == newOrganizer ) {
+      newOrganizerAttendee = attendee;
+    }
+  }
+
+  int answer = KMessageBox::No;
+  if ( currentOrganizerAttendee ) {
+    answer = KMessageBox::questionYesNo(
+      mParentWidget,
+      i18nc( "@option",
+             "You are changing the organizer of this event. "
+             "Since the organizer is also attending this event, would you "
+             "like to change the corresponding attendee as well?" ) );
+  } else {
+    answer = KMessageBox::Yes;
+  }
+
+  if ( answer == KMessageBox::Yes ) {
+    if ( currentOrganizerAttendee ) {
+      mConflictResolver->removeAttendee( currentOrganizerAttendee->attendee() );
+      mAttendeeEditor->removeAttendee( currentOrganizerAttendee );
+    }
+
+    if ( !newOrganizerAttendee ) {
+      bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( email );
+
+      bool rsvp = !myself; // if it is the user, dont make him rsvp.
+      KCal::Attendee::PartStat status = myself ? KCal::Attendee::Accepted : KCal::Attendee::NeedsAction;
+
+      KCal::Attendee newAt( name, email, rsvp, status, KCal::Attendee::ReqParticipant );
+
+      mAttendeeEditor->addAttendee( newAt );
+      mConflictResolver->insertAttendee( newAt );
+    }
+  }
+  mOrganizer = newOrganizer;
+}
+
 

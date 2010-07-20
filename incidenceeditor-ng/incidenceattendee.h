@@ -73,6 +73,7 @@ private slots:
     void slotSolveConflictPressed();
     void slotUpdateConflictLabel( int );
     void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
+    void slotOrganizerChanged( const QString & organizer );
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
@@ -90,12 +91,15 @@ private:
 #else
     Ui::EventOrTodoDesktop *mUi;
 #endif
+    QWidget* mParentWidget;
     AttendeeEditor *mAttendeeEditor;
     KCalCore::Incidence::ConstPtr mOrigIncidence;
     ConflictResolver *mConflictResolver;
     QPointer<SchedulingDialog> mSchedulingDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
     IncidenceDateTime *mDateTime;
+
+    QString mOrganizer;
 };
 
 }

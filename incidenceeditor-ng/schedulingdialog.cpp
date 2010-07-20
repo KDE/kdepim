@@ -46,6 +46,8 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mR
 
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged() ) );
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
+
+    connect( mResolver, SIGNAL( freeSlotsAvailable() ), SLOT( slotNewFreeSlots() ) );
 }
 
 
@@ -78,6 +80,8 @@ void SchedulingDialog::fillCombos()
                           KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
 #endif
+    mRolesCombo->setWhatsThis( i18nc( "@info:whatsthis",
+                                  "Edits the role of the attendee." ) );
 }
 
 void SchedulingDialog::slotStartDateChanged( const QDate& newDate )
@@ -115,3 +119,10 @@ void SchedulingDialog::slotMandatoryRolesChanged()
     }
     mResolver->setMandatoryRoles( roles );
 }
+
+void SchedulingDialog::slotNewFreeSlots()
+{
+    kDebug() << "got free slots";
+    //TODO impl
+}
+

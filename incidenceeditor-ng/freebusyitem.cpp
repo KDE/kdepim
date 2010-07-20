@@ -25,7 +25,6 @@
 #include <KSystemTimeZones>
 
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
 
 using namespace IncidenceEditorsNG;
 
@@ -72,9 +71,8 @@ int FreeBusyItem::updateTimerID() const
 void FreeBusyItem::startDownload(bool forceDownload)
 {
     mIsDownloading = true;
-    Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-    if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
-                               mParentWidget ) ) {
+    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+    if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload, mParentWidget ) ) {
         mIsDownloading = false;
     }
 }
