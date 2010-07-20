@@ -186,7 +186,7 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   mResponseCheck->setChecked( true );
   mEdit->setToolTip( i18nc( "@info:tooltip", "Enter the name or email address of the attendee." ) );
   mEdit->setClearButtonShown( true );
-  
+
   mStateCombo->setWhatsThis( i18nc( "@info:whatsthis",
                      "Edits the current attendance status of the attendee." ) );
 
@@ -289,7 +289,7 @@ void AttendeeLine::fieldsFromData()
 {
   if( !mData )
     return;
-  mEdit->setText( mData->email() );
+  mEdit->setText( mData->fullName() );
   mRoleCombo->setCurrentIndex( mData->role() );
   AttendeeData::PartStat partStat = mData->status();
   if ( partStat != AttendeeData::None ) {

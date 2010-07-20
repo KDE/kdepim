@@ -47,6 +47,7 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
     AttendeeData::List attendees() const;
 
     void addAttendee( const KCal::Attendee &attendee );
+    void removeAttendee( const AttendeeData::Ptr& attendee );
 
     void setActions( AttendeeLine::AttendeeActions actions );
 
