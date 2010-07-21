@@ -96,6 +96,7 @@ UnreadMailsInCollectionsWidget::UnreadMailsInCollectionsWidget(QWidget* parent, 
   m_changeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
 
   m_etm = new MailModel(m_changeRecorder, this);
+  m_etm->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
   VIEW(m_etm);
 
@@ -111,7 +112,7 @@ UnreadMailsInCollectionsWidget::UnreadMailsInCollectionsWidget(QWidget* parent, 
   m_checkableProxy->setSelectionModel(m_checkedItemModel);
   m_checkableProxy->setSourceModel(collectionFilter);
 
-  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(m_checkedItemModel, this);
+  Akonadi::SelectionProxyModel *selectionProxy = new Akonadi::SelectionProxyModel(m_checkedItemModel, this);
   selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
   selectionProxy->setSourceModel(m_etm);
 
