@@ -36,8 +36,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceE
     explicit IncidenceCompletionPriority( Ui::EventOrTodoDesktop *ui );
     ~IncidenceCompletionPriority();
 
-    void load( KCalCore::Incidence::ConstPtr incidence );
-    void save( KCalCore::Incidence::Ptr incidence );
+    void load( const KCalCore::Incidence::ConstPtr &incidence );
+    void save( const KCalCore::Incidence::Ptr &incidence );
     bool isDirty() const;
 
   private:

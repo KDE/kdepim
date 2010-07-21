@@ -45,12 +45,12 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      * Load the values of @param incidence into the editor widgets. The passed
      * incidence is kept for comparing with the current values of the editor.
      */
-    virtual void load( KCalCore::Incidence::ConstPtr incidence ) = 0;
+    virtual void load( const KCalCore::Incidence::ConstPtr &incidence ) = 0;
 
     /**
      * Store the current values of the editor into @param incidince.
      */
-    virtual void save( KCalCore::Incidence::Ptr incidence ) = 0;
+    virtual void save( const KCalCore::Incidence::Ptr &incidence ) = 0;
 
     /**
      * Returns whether or not the current values in the editor differ from the

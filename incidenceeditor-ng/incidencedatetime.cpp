@@ -71,7 +71,7 @@ IncidenceDateTime::~IncidenceDateTime()
   delete mTimeZones;
 }
 
-void IncidenceDateTime::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceDateTime::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mLoadedIncidence = incidence;
 
@@ -110,7 +110,7 @@ void IncidenceDateTime::load( KCalCore::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceDateTime::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>( incidence ) )
     save( todo );

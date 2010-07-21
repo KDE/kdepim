@@ -40,8 +40,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
     IncidenceAlarm( Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
-    virtual void load( KCalCore::Incidence::ConstPtr incidence );
-    virtual void save( KCalCore::Incidence::Ptr incidence );
+    virtual void load( const KCalCore::Incidence::ConstPtr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
   Q_SIGNALS:

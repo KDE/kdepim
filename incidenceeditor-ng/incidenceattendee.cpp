@@ -110,7 +110,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee::Ptr, KCalCore::Attendee::Ptr ) ), this, SLOT( slotAttendeeChanged( KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr ) ) );
 }
 
-void IncidenceAttendee::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mOrigIncidence = incidence;
   const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer()->email() );
@@ -151,7 +151,7 @@ void IncidenceAttendee::load( KCalCore::Incidence::ConstPtr incidence )
   slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
 }
 
-void IncidenceAttendee::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
 {
   incidence->clearAttendees();
 

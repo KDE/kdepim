@@ -58,7 +58,7 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
 #endif
 }
 
-void IncidenceCategories::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceCategories::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence )
@@ -69,7 +69,7 @@ void IncidenceCategories::load( KCalCore::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceCategories::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceCategories::save( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
   incidence->setCategories( mSelectedCategories );

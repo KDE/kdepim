@@ -93,7 +93,7 @@ IncidenceCompletionPriority::~IncidenceCompletionPriority()
   delete d;
 }
 
-void IncidenceCompletionPriority::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceCompletionPriority::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mLoadedIncidence = incidence;
 
@@ -125,7 +125,7 @@ void IncidenceCompletionPriority::load( KCalCore::Incidence::ConstPtr incidence 
   mWasDirty = false;
 }
 
-void IncidenceCompletionPriority::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceCompletionPriority::save( const KCalCore::Incidence::Ptr &incidence )
 {
   // TODO priority might be valid for other incidence types as well
   // only for Todos

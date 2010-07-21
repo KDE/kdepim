@@ -62,7 +62,7 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
            SLOT(removeCurrentAlarm()) );
 }
 
-void IncidenceAlarm::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceAlarm::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mLoadedIncidence = incidence;
 
@@ -82,7 +82,7 @@ void IncidenceAlarm::load( KCalCore::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceAlarm::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceAlarm::save( const KCalCore::Incidence::Ptr &incidence )
 {
   incidence->clearAlarms();
   KCalCore::Alarm::List::ConstIterator it;

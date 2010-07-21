@@ -77,7 +77,7 @@ void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
     emit dirtyStatusChanged( false );
 }
 
-void CombinedIncidenceEditor::load( KCalCore::Incidence::ConstPtr incidence )
+void CombinedIncidenceEditor::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mLoadedIncidence = incidence;
   foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
@@ -97,7 +97,7 @@ void CombinedIncidenceEditor::load( KCalCore::Incidence::ConstPtr incidence )
   emit dirtyStatusChanged( false );
 }
 
-void CombinedIncidenceEditor::save( KCalCore::Incidence::Ptr incidence )
+void CombinedIncidenceEditor::save( const KCalCore::Incidence::Ptr &incidence )
 {
   foreach ( IncidenceEditor *editor, mCombinedEditors  )
     editor->save( incidence );

@@ -61,7 +61,7 @@ IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
            this, SLOT(checkDirtyStatus()) );
 }
 
-void IncidenceDescription::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceDescription::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( incidence ) {
@@ -78,7 +78,7 @@ void IncidenceDescription::load( KCalCore::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceDescription::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceDescription::save( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( mUi->mEditToolBarPlaceHolder->isVisible() ) {
     incidence->setDescription( mUi->mDescriptionEdit->toHtml(), true );

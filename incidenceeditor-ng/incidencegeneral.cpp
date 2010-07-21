@@ -41,7 +41,7 @@ IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceWhatWhere::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceWhatWhere::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   kDebug();
   mLoadedIncidence = incidence;
@@ -56,7 +56,7 @@ void IncidenceWhatWhere::load( KCalCore::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceWhatWhere::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceWhatWhere::save( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
   incidence->setSummary( mUi->mSummaryEdit->text() );

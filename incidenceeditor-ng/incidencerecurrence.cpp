@@ -123,7 +123,7 @@ KLocalizedString IncidenceRecurrence::subsOrdinal ( const KLocalizedString &text
     }
 }
 
-void IncidenceRecurrence::load( KCalCore::Incidence::ConstPtr incidence )
+void IncidenceRecurrence::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   Q_ASSERT( incidence );
 
@@ -195,7 +195,7 @@ void IncidenceRecurrence::load( KCalCore::Incidence::ConstPtr incidence )
   setExceptionDates( mLoadedIncidence->recurrence()->exDates() );
 }
 
-void IncidenceRecurrence::save( KCalCore::Incidence::Ptr incidence )
+void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
 {
   // clear out any old settings;
   KCalCore::Recurrence *r = incidence->recurrence();

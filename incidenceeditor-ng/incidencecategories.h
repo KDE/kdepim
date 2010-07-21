@@ -35,14 +35,14 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
   Q_OBJECT
 
   public:
-#ifdef KDEPIM_MOBILE_UI   
+#ifdef KDEPIM_MOBILE_UI
     IncidenceCategories( Ui::EventOrTodoMore *ui );
 #else
     IncidenceCategories( Ui::EventOrTodoDesktop *ui );
 #endif
 
-    virtual void load(KCalCore::Incidence::ConstPtr incidence);
-    virtual void save(KCalCore::Incidence::Ptr incidence);
+    virtual void load( const KCalCore::Incidence::ConstPtr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
   private slots:
