@@ -92,7 +92,7 @@ bool KOrganizerIfaceImpl::addIncidence( const QString &ical )
 
 bool KOrganizerIfaceImpl::canQueryClose()
 {
-  return mActionManager->queryClose();
+  return (!(mActionManager->queryClose()));
 }
 
 void KOrganizerIfaceImpl::loadProfile( const QString& path )

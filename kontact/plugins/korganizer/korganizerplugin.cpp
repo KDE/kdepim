@@ -215,7 +215,7 @@ void KOrganizerPlugin::processDropEvent( QDropEvent *event )
 bool KOrganizerPlugin::queryClose() const {
   KOrganizerIface_stub stub( kapp->dcopClient(), "korganizer", "KOrganizerIface" );
   bool canClose=stub.canQueryClose();
-  return canClose;
+  return (!canClose);
 }
 
 void KOrganizerPlugin::loadProfile( const QString& directory )
