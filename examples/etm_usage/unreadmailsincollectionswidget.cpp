@@ -43,15 +43,12 @@
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <KMime/Message>
 #include <messagecore/messagestatus.h>
-#include <kresources/groupwise/soap/soapStub.h>
-#include <klinkitemselectionmodel.h>
-#include <kselectionproxymodel.h>
 
 #include "itemviewerwidget.h"
-#include <KComponentData>
 
 
 UnreadMailsInCollectionsProxy::UnreadMailsInCollectionsProxy(QObject* parent)
@@ -155,9 +152,6 @@ void UnreadMailsInCollectionsWidget::restoreCheckState()
 {
   ETMStateSaver *restorer = new ETMStateSaver;
   restorer->setSelectionModel(m_checkedItemModel);
-
-  KSharedConfigPtr c = KGlobal::config();
-  kDebug() << c->name();
 
   KConfigGroup cfg( KGlobal::config(), "CheckState" );
   restorer->restoreState(cfg);
