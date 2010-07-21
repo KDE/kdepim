@@ -147,5 +147,4 @@ target_link_libraries(keventeditor
 
 install(TARGETS keventeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-# kdab_todo
-#add_subdirectory( tests )
+add_subdirectory( tests )
