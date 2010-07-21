@@ -93,8 +93,10 @@ void Widget::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 
 bool Widget::canAcceptDrag( const QDropEvent * e )
 {
-  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
+  if ( e->source() == view()->viewport() )
+    return false;
 
+  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
   if ( collections.size()!=1 )
     return false; // no folder here or too many (in case we can't decide where the drop will end)
 
