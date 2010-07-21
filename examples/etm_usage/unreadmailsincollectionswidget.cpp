@@ -51,6 +51,14 @@
 #include "itemviewerwidget.h"
 
 
+#define VIEW(model) \
+  { \
+  Akonadi::EntityTreeView *view = new Akonadi::EntityTreeView; \
+  view->setModel(model); \
+  view->setWindowTitle(#model); \
+  view->show(); \
+  }
+
 UnreadMailsInCollectionsProxy::UnreadMailsInCollectionsProxy(QObject* parent)
   : QSortFilterProxyModel(parent)
 {
@@ -88,6 +96,8 @@ UnreadMailsInCollectionsWidget::UnreadMailsInCollectionsWidget(QWidget* parent, 
   m_changeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
 
   m_etm = new MailModel(m_changeRecorder, this);
+
+  VIEW(m_etm);
 
   Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
 
