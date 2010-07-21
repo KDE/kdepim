@@ -288,6 +288,9 @@ bool CalendarResources::addIncidence( Incidence *incidence,
     if ( (*it) == resource )
       validRes = true;
   }
+
+  kdDebug(5800)<< "CalendarResources: validRes is " << validRes << endl;
+
   ResourceCalendar *oldResource = 0;
   if ( mResourceMap.contains( incidence ) ) {
     oldResource = mResourceMap[incidence];
@@ -295,17 +298,18 @@ bool CalendarResources::addIncidence( Incidence *incidence,
   mResourceMap[incidence] = resource;
   if ( validRes && beginChange( incidence, resource, subresource ) &&
        resource->addIncidence( incidence, subresource ) ) {
-//    mResourceMap[incidence] = resource;
+    // mResourceMap[incidence] = resource;
     incidence->registerObserver( this );
     notifyIncidenceAdded( incidence );
     setModified( true );
     endChange( incidence, resource, subresource );
     return true;
   } else {
-    if ( oldResource )
+    if ( oldResource ) {
       mResourceMap[incidence] = oldResource;
-    else
+    } else {
       mResourceMap.remove( incidence );
+    }
   }
 
   return false;
@@ -319,7 +323,11 @@ bool CalendarResources::addIncidence( Incidence *incidence,
 
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
-  kdDebug(5800) << "CalendarResources::addIncidence" << this << endl;
+  kdDebug(5800) << "CalendarResources::addIncidence "
+                << incidence->summary()
+                << "; addingInProgress = " << d->mAddingInProgress
+                << "; lastUsedResource = " << d->mLastUsedResource
+                << endl;
 
   clearException();
 
@@ -893,11 +901,13 @@ bool CalendarResources::endChange( Incidence *incidence,
 
 void CalendarResources::beginAddingIncidences()
 {
+  kdDebug(5800) << "CalendarResources: beginAddingIncidences() ";
   d->mAddingInProgress = true;
 }
 
 void CalendarResources::endAddingIncidences()
 {
+  kdDebug(5800) << "CalendarResources: endAddingIncidences() ";
   d->mAddingInProgress = false;
 
   if ( d->mLastUsedResource ) {
