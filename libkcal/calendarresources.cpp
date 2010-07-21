@@ -358,7 +358,11 @@ bool CalendarResources::addIncidence( Incidence *incidence )
       if ( resource->exception() ) {
         mException = new ErrorFormat( resource->exception()->errorCode() );
       }
+
+      // the incidence isn't going to be added, do cleanup:
       mResourceMap.remove( incidence );
+      d->mLastUsedResource->endAddingIncidences();
+      d->mLastUsedResource = 0;
     }
   } else {
     mException = new ErrorFormat( ErrorFormat::UserCancel );
