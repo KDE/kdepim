@@ -74,7 +74,7 @@
 #include <QtGui/QStackedWidget>
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
-  : QWidget( parent ), mAllContactsModel( 0 )
+  : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient )
 {
   mXXPortManager = new XXPortManager( this );
 
@@ -208,6 +208,11 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mModelColumnManager->setWidget( mItemView->header() );
   mModelColumnManager->load();
 
+  QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+}
+
+void MainWidget::delayedInit()
+{
   // restore previous state
   {
     const KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
@@ -218,7 +223,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
     KPIM::UiStateSaver::restoreState( mItemView, group );
   }
 
-  guiClient->actionCollection()->action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
+  mXmlGuiClient->actionCollection()->action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
 
   connect( GlobalContactModel::instance()->model(), SIGNAL( modelAboutToBeReset() ), SLOT( saveState() ) );
   connect( GlobalContactModel::instance()->model(), SIGNAL( modelReset() ), SLOT( restoreState() ) );
