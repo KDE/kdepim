@@ -1029,15 +1029,16 @@ void CalendarView::edit_paste()
   bool useEndTime = false;
 
   KOrg::BaseView *curView = mViewManager->currentView();
-  if ( !curView ) {
-    return;
-  }
 
   KOAgendaView *aView = mViewManager->agendaView();
   KOMonthView *mView = mViewManager->monthView();
   if ( curView == mViewManager->multiAgendaView() ) {
     aView = mViewManager->multiAgendaView()->selectedAgendaView();
     curView = aView;
+  }
+
+  if ( !curView ) {
+    return;
   }
 
   if ( curView == aView && aView->selectionStart().isValid() ) {
@@ -1151,12 +1152,15 @@ KOEventEditor *CalendarView::newEventEditor( ResourceCalendar *res, const QStrin
 void CalendarView::newEvent()
 {
   KOrg::BaseView *currentView = mViewManager->currentView();
+
   if ( currentView == mViewManager->multiAgendaView() ) {
     currentView = mViewManager->multiAgendaView()->selectedAgendaView();
   }
 
-  newEvent( currentView->resourceCalendar(),
-            currentView->subResourceCalendar() );
+  if ( currentView ) {
+    newEvent( currentView->resourceCalendar(),
+              currentView->subResourceCalendar() );
+  }
 }
 
 void CalendarView::newEvent( ResourceCalendar *res, const QString &subRes )
@@ -1222,12 +1226,14 @@ void CalendarView::newTodo( ResourceCalendar *res, const QString &subRes,
 void CalendarView::newTodo()
 {
   KOrg::BaseView *currentView = mViewManager->currentView();
+
   if ( currentView == mViewManager->multiAgendaView() ) {
     currentView = mViewManager->multiAgendaView()->selectedAgendaView();
   }
-
-  newTodo( currentView->resourceCalendar(),
-           currentView->subResourceCalendar() );
+  if ( currentView ) {
+    newTodo( currentView->resourceCalendar(),
+             currentView->subResourceCalendar() );
+  }
 }
 
 void CalendarView::newTodo( ResourceCalendar *res, const QString &subRes )
@@ -1262,12 +1268,15 @@ void CalendarView::newTodo( ResourceCalendar *res, const QString &subRes,
 void CalendarView::newJournal()
 {
   KOrg::BaseView *currentView = mViewManager->currentView();
+
   if ( currentView == mViewManager->multiAgendaView() ) {
     currentView = mViewManager->multiAgendaView()->selectedAgendaView();
   }
 
-  newJournal( currentView->resourceCalendar(),
-              currentView->subResourceCalendar() );
+  if ( currentView ) {
+    newJournal( currentView->resourceCalendar(),
+                currentView->subResourceCalendar() );
+  }
 }
 
 void CalendarView::newJournal( ResourceCalendar *res, const QString &subRes )
@@ -1768,7 +1777,9 @@ void CalendarView::print()
   KOrg::BaseView *currentView = mViewManager->currentView();
 
   CalPrinterBase::PrintType printType = CalPrinterBase::Month;
-  if ( currentView ) printType = currentView->printType();
+  if ( currentView ) {
+    printType = currentView->printType();
+  }
 
   DateList tmpDateList = mDateNavigator->selectedDates();
   Incidence::List selectedIncidences;
