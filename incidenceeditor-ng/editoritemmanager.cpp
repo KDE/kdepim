@@ -27,6 +27,7 @@
 
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemDeleteJob>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemModifyJob>
@@ -47,6 +48,7 @@ class ItemEditorPrivate
 
   public:
     Item mItem;
+    Item mPrevItem;
     ItemFetchScope mFetchScope;
     Monitor *mItemMonitor;
     ItemEditorUi *mItemUi;
@@ -191,12 +193,20 @@ EditorItemManager::~EditorItemManager()
   delete d_ptr;
 }
 
-Akonadi::Item EditorItemManager::item() const
+Akonadi::Item EditorItemManager::item( ItemState state ) const
 {
   Q_D( const ItemEditor );
 
-  if ( d->mItem.isValid() && d->mItem.hasPayload() )
-    return d->mItem;
+  switch ( state ) {
+  case EditorItemManager::AfterSave:
+    if ( d->mItem.isValid() && d->mItem.hasPayload() )
+      return d->mItem;
+    break;
+  case EditorItemManager::BeforeSave:
+    if ( d->mPrevItem.isValid() && d->mPrevItem.hasPayload() )
+      return d->mPrevItem;
+    break;
+  }
 
   return Akonadi::Item();
 }
@@ -207,6 +217,7 @@ void EditorItemManager::load( const Akonadi::Item &item )
   Q_D( ItemEditor );
 
   if ( item.hasPayload() ) {
+    d->mPrevItem = item;
     d->mItem = item;
     d->mItemUi->load( item );
     d->setupMonitor();
@@ -221,7 +232,18 @@ void EditorItemManager::load( const Akonadi::Item &item )
 
 void EditorItemManager::revertLastSave()
 {
+  Q_D( ItemEditor );
 
+  if ( d->mPrevItem.hasPayload() ) {
+    // Modify
+  } else {
+    // No payload, so the last call to save created a new item and reverting that
+    // means that we have to delete it.
+    Q_ASSERT( d->mItem.isValid() );
+    ItemDeleteJob *job = new ItemDeleteJob( d->mItem );
+    if ( !job->exec() )
+      kDebug() << "Revert failed, could not delete item." << job->errorText();
+  }
 }
 
 void EditorItemManager::save()

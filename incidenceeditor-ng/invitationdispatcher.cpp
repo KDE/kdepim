@@ -22,9 +22,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <akonadi/kcal/kcalprefs.h>
 #include <kcalcore/icalformat.h>
 #include <KDebug>
+
+#include <akonadi/kcal/kcalprefs.h>
+#include <akonadi/kcal/utils.h>
+#include <Akonadi/Item>
 
 #include <invitations/invitationhandler.h>
 
@@ -78,11 +81,10 @@ void InvitationDispatcherPrivate::sentEventInvitationMessage()
 
 void InvitationDispatcherPrivate::sentEventModifiedMessage()
 {
+  const Incidence::ConstPtr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
+  const Incidence::ConstPtr oldInc = Akonadi::incidence( mManager->item( EditorItemManager::BeforeSave ) );
+
   InvitationHandler::SendStatus status = InvitationHandler::Success;
-
-  Incidence::ConstPtr oldInc; // = mManager->unmodifiedIncidence();
-  Incidence::ConstPtr newInc; // = mManager->modifiedIncidence();
-
   if ( mIsCounterProposal ) {
     status = mInvitationHandler.sendCounterProposal( oldInc, newInc );
   } else {

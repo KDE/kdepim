@@ -56,11 +56,16 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      */
     ~EditorItemManager();
 
+    enum ItemState {
+      AfterSave,  /**< Returns the last saved item */
+      BeforeSave  /**< Returns an item with the original payload before the last save call */
+    };
+
     /**
      * Returns the last saved item with payload or an invalid item when save is
      * not called yet.
      */
-    Akonadi::Item item() const;
+    Akonadi::Item item( ItemState state = AfterSave ) const;
 
     /**
      * Loads the @param item into the editor. The item passed <em>must</em> be
