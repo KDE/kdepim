@@ -20,8 +20,6 @@
 
 #include "invitationdispatcher.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <kcalcore/icalformat.h>
 #include <KDebug>
 
