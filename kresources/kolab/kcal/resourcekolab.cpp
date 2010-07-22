@@ -71,7 +71,7 @@ static const char* incidenceInlineMimeType = "text/calendar";
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
-        "mResourceChangedTimer" )
+        "mResourceChangedTimer" ), mAddingInProgress( false )
 {
   if ( !config ) {
     setResourceName( i18n( "Kolab Server" ) );
