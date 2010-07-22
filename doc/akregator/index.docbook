@@ -371,7 +371,7 @@ start.</para>
 <term><guilabel>Use the browser cache (less network traffic)</guilabel></term>
 <listitem><para>When enabled, the &kde;-wide browser cache settings are used when
 updating feeds. You can configure the &kde;-wide browser cache either in
-&kcontrolcenter; or in &konqueror; configuration dialog.</para>
+in &konqueror;'s configuration dialog.</para>
 <note><para>You should leave this option enabled whenever possible. Disabling
 this option leads to increased network traffic. The traffic caused by
 aggregators not using caching increases the costs for providers and may decrease the number of feeds are offered in future.</para></note>
