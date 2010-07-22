@@ -64,6 +64,7 @@ public:
   bool mCloseOnSave;
 
   Akonadi::EditorItemManager *mItemManager;
+
   CombinedIncidenceEditor *mEditor;
   IncidenceDateTime *mIeDateTime;
 

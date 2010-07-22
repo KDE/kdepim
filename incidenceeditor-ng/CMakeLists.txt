@@ -14,7 +14,10 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   attendeeeditor.cpp
   alarmpresets.cpp
   alarmdialog.cpp
-  editoritemmanager.cpp # TODO: Move to akonadi libs when finished
+
+  # TODO: Move the next two to akonadi libs when finished
+  editoritemmanager.cpp
+  invitationdispatcher.cpp
 
   freebusyurldialog.cpp
   editorfreebusy.cpp

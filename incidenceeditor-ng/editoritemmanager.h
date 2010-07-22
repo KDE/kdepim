@@ -69,6 +69,13 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     void load( const Akonadi::Item &item );
 
     /**
+     * Reverts the changes that where done by the last call to save. So if an
+     * item was created by save(), it will be deleted and if an item was modified,
+     * the previous values are restored.
+     */
+    void revertLastSave();
+
+    /**
      * Saves the new or modified item. This method does nothing when the
      * ui is not dirty.
      */
@@ -109,6 +116,8 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
   Q_SIGNALS:
     void itemSaveFinished( Akonadi::EditorItemManager::SaveAction action );
     void itemSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message );
+    void revertFinished();
+    void revertFailed( const QString &message );
 
   private:
     ItemEditorPrivate * const d_ptr;

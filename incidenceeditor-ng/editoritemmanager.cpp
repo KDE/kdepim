@@ -110,7 +110,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
   Q_Q( EditorItemManager );
 
   if ( job->error() ) {
-    if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) )
+    if ( qobject_cast<ItemModifyJob*>( job ) )
       emit q->itemSaveFailed( EditorItemManager::Modify, job->errorString() );
     else
       emit q->itemSaveFailed( EditorItemManager::Create, job->errorString() );
@@ -217,6 +217,11 @@ void EditorItemManager::load( const Akonadi::Item &item )
     connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
     return;
   }
+}
+
+void EditorItemManager::revertLastSave()
+{
+
 }
 
 void EditorItemManager::save()
