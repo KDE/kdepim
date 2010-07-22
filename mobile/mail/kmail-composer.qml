@@ -34,11 +34,6 @@ KPIM.MainView {
       id: editorView
       enabled: !window.busy
       anchors.fill: parent
-        Component.onCompleted: {
-            console.log("EditorView:")
-            console.log(height)
-            console.log(width)
-        }
     }
   }
 
@@ -155,9 +150,4 @@ KPIM.MainView {
       opacity: 0.5
       anchors.fill: parent
   }
-    Component.onCompleted: {
-        console.log("kmail-composer:")
-        console.log(height)
-   console.log(width)
-    }
 }
