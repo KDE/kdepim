@@ -518,7 +518,17 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
                                   Q_UINT32 sernum )
 {
   Q_ASSERT( incidence );
-  if ( !incidence ) return false;
+  if ( !incidence ) {
+    return false;
+  }
+
+  kdDebug() << "Resourcekolab, adding incidence "
+            << incidence->summary()
+            << "; subresource = " << _subresource
+            << "; sernum = " << sernum
+            << "; mAddingInProgress = " << mAddingInProgress
+            << endl;
+
   QString uid = incidence->uid();
   QString subResource = _subresource;
 
