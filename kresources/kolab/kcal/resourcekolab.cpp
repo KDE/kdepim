@@ -607,13 +607,17 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
     }
 
-    if ( subResource.isEmpty() )
+    if ( subResource.isEmpty() ) {
+      endAddingIncidences(); // cleanup
+      kdDebug(5650) << "ResourceKolab: subResource is empty" << endl;
       return false;
+    }
 
     mNewIncidencesMap.insert( uid, subResource );
 
     if ( !sendKMailUpdate( incidence, subResource, sernum ) ) {
       kdError(5650) << "Communication problem in ResourceKolab::addIncidence()\n";
+      endAddingIncidences(); // cleanup
       return false;
     } else {
       // KMail is doing it's best to add the event now, put a sticker on it,
