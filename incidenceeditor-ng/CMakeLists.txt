@@ -75,12 +75,12 @@ target_link_libraries(incidenceeditorsng
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_KCALUTILS_LIBS}
   kdepim               # For KPIM::K{Date|Time}Edit
   kdepimdbusinterfaces # For UriHandler
   akonadi-kcal_next    # For KCalPrefs
   kdgantt2             # For FreeBusy Editor
-  kcalutils
-  kcalcore
 )
 
 set_target_properties(incidenceeditorsng
@@ -118,8 +118,8 @@ if (KDEPIM_MOBILE_UI)
     akonadi-kcal_next # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
     kdgantt2
-    kcalutils
-    kcalcore
+    ${KDEPIMLIBS_KCALUTILS_LIBS}
+    ${KDEPIMLIBS_KCALCORE_LIBS}
   )
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES
@@ -140,8 +140,8 @@ kde4_add_executable(keventeditor ${testincidenceeditor_SRCS})
 target_link_libraries(keventeditor
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
-  kcalcore
-  kcalutils
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_KCALUTILS_LIBS}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   incidenceeditorsng
   akonadi-kcal_next

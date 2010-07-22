@@ -50,8 +50,8 @@ target_link_libraries(eventviews
                       kdepim
                       akonadi-kcal_next
                       akonadi_next
-                      kcalcore
-                      kcalutils #KDAB_TODO
+                      ${KDEPIMLIBS_KCALCORE_LIBS}
+                      ${KDEPIMLIBS_KCALUTILS_LIBS}
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
