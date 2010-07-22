@@ -337,13 +337,18 @@ bool CalendarResources::addIncidence( Incidence *incidence )
     resource = mDestinationPolicy->destination( incidence );
     d->mLastUsedResource = resource;
 
-    if ( resource ) {
+    if ( resource && d->mAddingInProgress ) {
       d->mLastUsedResource->beginAddingIncidences();
     }
   }
 
   if ( resource ) {
-    mResourceMap[ incidence ] = resource;
+    kdDebug(5800) << "CalendarResources:: resource= "
+                  << resource->resourceName()
+                  << " with id = " << resource->identifier()
+                  << " with type = " << resource->type()
+                  << endl;
+    mResourceMap[incidence] = resource;
 
     if ( beginChange( incidence, resource, QString() ) &&
          resource->addIncidence( incidence ) ) {
