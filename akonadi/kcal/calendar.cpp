@@ -74,6 +74,7 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   // use the unfiltered model to catch collections
   connect( m_treeModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedInTreeModel(QModelIndex,int,int)) );
   connect( m_treeModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemovedInTreeModel(QModelIndex,int,int)) );
+  connect( m_treeModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChangedInTreeModel(QModelIndex,QModelIndex)) );
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -92,6 +93,22 @@ void Calendar::Private::rowsAboutToBeRemovedInTreeModel( const QModelIndex &pare
   collectionsRemoved( collectionsFromModel( m_treeModel, parent, start, end ) );
 }
 
+void Calendar::Private::dataChangedInTreeModel( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+{
+  Q_ASSERT( topLeft.row() <= bottomRight.row() );
+  const int endRow = bottomRight.row();
+  QModelIndex i( topLeft );
+  int row = i.row();
+  while ( row <= endRow ) {
+    const Collection col = collectionFromIndex( i );
+    if ( col.isValid() ) {
+      // Attributes might have changed, store the new collection and discard the old one
+      m_collectionMap.insert( col.id(), col );
+    }
+    ++row;
+    i = i.sibling( row, topLeft.column() );
+  }
+}
 
 void Calendar::Private::rowsInserted( const QModelIndex &parent, int start, int end )
 {
@@ -384,7 +401,6 @@ void Calendar::Private::itemsAdded( const Item::List &items )
 void Calendar::Private::collectionsAdded( const Collection::List &collections )
 {
   kDebug() << "adding collections: " << collections.count();
-
   foreach( const Collection &collection, collections ) {
     m_collectionMap[collection.id()] = collection;
   }
