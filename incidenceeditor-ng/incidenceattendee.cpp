@@ -98,6 +98,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   connect( mUi->mSelectButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSelectAddresses() ) );
   connect( mUi->mSolveButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSolveConflictPressed()) );
   connect( mUi->mOrganizerCombo, SIGNAL( activated( QString) ), this, SLOT( slotOrganizerChanged( QString ) ) );
+  connect( mUi->mOrganizerCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( checkDirtyStatus() ) );
 
   connect( mDateTime, SIGNAL( startDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
   connect( mDateTime, SIGNAL( endDateChanged( QDate ) ), this , SLOT( slotEventDurationChanged() ) );
@@ -136,11 +137,9 @@ void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
     mUi->mOrganizerLabel->setText( incidence->organizer()->fullName() );
   }
 
-  KCalCore::Attendee::List al = incidence->attendees();
-  foreach( const KCalCore::Attendee::Ptr &a, al ) {
-    if( a )
-      mAttendeeEditor->addAttendee( a );
-  }
+  const KCalCore::Attendee::List al = incidence->attendees();
+  foreach( const KCalCore::Attendee::Ptr &a, al )
+    mAttendeeEditor->addAttendee( a );
 
   if ( incidence->type() == KCalCore::Incidence::TypeEvent )
     mAttendeeEditor->setActions( AttendeeLine::EventActions );
@@ -149,6 +148,7 @@ void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
 
   // set the default organizer
   slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
+  mWasDirty = false;
 }
 
 void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
@@ -180,25 +180,49 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceAttendee::isDirty() const
 {
-  if( !mLoadedIncidence  )
-    return false;
 
-  KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
+  // When the organizer of the loaded incidence is empty, we assume a new Incidence
+  // and in that case the current organizer is the default value and we only
+  // consider it dirty when the user selected another organizer.
+  if ( mLoadedIncidence->organizer()->isEmpty()
+       && mUi->mOrganizerCombo->currentIndex() != 0 ) {
+    kDebug() << "Default organizer changed.";
+    return true;
+  }
 
+  KCalCore::Event tmp;
+  tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
+  if ( !mLoadedIncidence->organizer()->isEmpty() && *mLoadedIncidence->organizer() != *tmp.organizer() ) {
+    kDebug() << "Organizer changed.";
+    return true;
+  }
+
+  const KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
 
-  //HACK temporary workaround  to prevent crash until I speak with bertjan
-  if( origList.size() + 1 == newList.size() )
-    return false;
-
-  if( origList.size() != newList.size() )
+  // The lists sizes *must* be the same. When the organizer is attending the
+  // event as well, he should be in the attendees list as well.
+  if ( origList.size() != newList.size() ) {
+    kDebug() << "Number of attendees changed";
     return true;
+  }
 
-  foreach( const AttendeeData::Ptr a, newList ) {
-      KCalCore::Attendee::Ptr attendee = a->attendee();
-    Q_ASSERT( attendee );
-    if( !origList.contains( attendee ) )
+  // Okay, again not the most efficient algorithm, but I'm assuming that in the
+  // bulk of the use cases, the number of attendees is not much higher than 10 or so.
+  foreach ( const KCalCore::Attendee::Ptr &attendee, origList ) {
+    bool found = false;
+    for ( int i = 0; i < newList.size(); ++i ) {
+      if ( *newList.at( i )->attendee() == *attendee ) {
+        newList.removeAt( i );
+        found = true;
+        break;
+      }
+    }
+
+    if ( !found ) {
+      // One of the attendees in the original list was not found in the new list.
       return true;
+    }
   }
 
   return false;
@@ -322,6 +346,8 @@ void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr& oldA
       mConflictResolver->removeAttendee( oldAttendee );
    if( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee->email().isEmpty() )
       mConflictResolver->insertAttendee( newAttendee );
+
+   checkDirtyStatus();
 }
 
 
@@ -410,8 +436,6 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
              "You are changing the organizer of this event. "
              "Since the organizer is also attending this event, would you "
              "like to change the corresponding attendee as well?" ) );
-  } else {
-    answer = KMessageBox::Yes;
   }
 
   if ( answer == KMessageBox::Yes ) {
