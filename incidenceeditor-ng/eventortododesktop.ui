@@ -30,10 +30,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="0" column="3">
     <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
    </item>
-   <item row="1" column="1">
+   <item row="3" column="1">
     <widget class="QLabel" name="label_2">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -67,7 +67,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="3" column="3" colspan="2">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -83,7 +83,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="4" column="1">
     <widget class="QLabel" name="label_4">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -105,7 +105,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2" colspan="2">
+   <item row="4" column="3" colspan="2">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -121,7 +121,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="2" rowspan="2">
+   <item row="8" column="3" rowspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
       <widget class="QCheckBox" name="mWholeDayCheck">
@@ -180,7 +180,7 @@
      </item>
     </layout>
    </item>
-   <item row="9" column="1">
+   <item row="11" column="1">
     <widget class="QLabel" name="mStartLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -202,7 +202,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="2">
+   <item row="11" column="3">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QCheckBox" name="mStartCheck">
@@ -298,7 +298,7 @@
      </item>
     </layout>
    </item>
-   <item row="10" column="1">
+   <item row="12" column="1">
     <widget class="QLabel" name="mEndLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -320,7 +320,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="2">
+   <item row="12" column="3">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QCheckBox" name="mEndCheck">
@@ -389,14 +389,14 @@
      </item>
     </layout>
    </item>
-   <item row="11" column="1" colspan="2">
+   <item row="13" column="1" colspan="3">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="13" column="1" colspan="2">
+   <item row="15" column="1" colspan="3">
     <widget class="QTabWidget" name="mTabWidget">
      <property name="currentIndex">
       <number>0</number>
@@ -1287,7 +1287,7 @@
      </widget>
     </widget>
    </item>
-   <item row="6" column="1" rowspan="2">
+   <item row="8" column="1" rowspan="2">
     <widget class="QLabel" name="label_8">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -1306,16 +1306,19 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
+   <item row="5" column="1" colspan="3">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
+   <item row="6" column="3">
     <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <property name="margin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QSlider" name="mCompletionSlider">
         <property name="maximum">
@@ -1418,7 +1421,7 @@
      </layout>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item row="6" column="0" colspan="2">
     <widget class="QLabel" name="mTaskLabel">
      <property name="text">
       <string>Task:</string>
@@ -1428,8 +1431,57 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="2">
+   <item row="7" column="1" colspan="3">
     <widget class="KSeparator" name="mTaskSeparator"/>
+   </item>
+   <item row="2" column="3">
+    <widget class="QWidget" name="mInvitationBar" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_10">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>You are Invited, what do you want to do?</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="mAcceptInvitationButton">
+        <property name="toolTip">
+         <string>Accept the invitation</string>
+        </property>
+        <property name="whatsThis">
+         <string extracomment="@info:whatsthis">Click this button to accept the invitation.</string>
+        </property>
+        <property name="text">
+         <string>Accept</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="mDeclineInvitationButton">
+        <property name="text">
+         <string>Decline</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_13">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -1448,11 +1500,6 @@
    <class>KPIM::KCheckComboBox</class>
    <extends>KComboBox</extends>
    <header>libkdepim/kcheckcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPIM::KWeekdayCheckCombo</class>
-   <extends>KPIM::KCheckComboBox</extends>
-   <header>libkdepim/kweekdaycheckcombo.h</header>
   </customwidget>
   <customwidget>
    <class>KPIM::KDateEdit</class>
@@ -1488,6 +1535,11 @@
    <class>KRichTextWidget</class>
    <extends>KRichTextEdit</extends>
    <header>krichtextwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KWeekdayCheckCombo</class>
+   <extends>KPIM::KCheckComboBox</extends>
+   <header>libkdepim/kweekdaycheckcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

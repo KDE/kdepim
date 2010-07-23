@@ -30,6 +30,7 @@
 #include <KStandardDirs>
 #include <KSystemTimeZones>
 
+#include <akonadi/kcal/utils.h>
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
@@ -376,7 +377,7 @@ bool EventOrTodoDialogPrivate::isValid()
 void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 {
   Q_ASSERT( hasSupportedPayload( item ) );
-  mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
+  mEditor->load( Akonadi::incidence( item ) );
 
   if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
     mCalSelector->setMimeTypeFilter(
@@ -418,6 +419,8 @@ void EventOrTodoDialogPrivate::reject( RejectReason /*reason*/, const QString &e
 EventOrTodoDialog::EventOrTodoDialog()
   : d_ptr( new EventOrTodoDialogPrivate( this ) )
 {
+  Q_D( EventOrTodoDialog );
+
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
   setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
   setButtonToolTip( KDialog::Apply, i18nc( "@info:tooltip", "Save current changes" ) );
@@ -442,6 +445,16 @@ EventOrTodoDialog::EventOrTodoDialog()
 
   setModal( false );
   showButtonSeparator( false );
+
+  // TODO: Implement these.
+//  connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+//           SIGNAL(acceptInvitation()) );
+  connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+           d->mUi->mInvitationBar, SLOT(hide()) );
+//  connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+//           SIGNAL(declineInvitation()) );
+  connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+           d->mUi->mInvitationBar, SLOT(hide()) );
 }
 
 EventOrTodoDialog::~EventOrTodoDialog()
@@ -460,6 +473,18 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
     Q_ASSERT( d->hasSupportedPayload( item ) );
 
     d->mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
+
+    const KCalCore::Incidence::Ptr incidence = Akonadi::incidence( item );
+    const QStringList allEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
+    KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
+    if ( incidence->attendeeCount() > 1 &&
+         me && ( me->status() == KCalCore::Attendee::NeedsAction ||
+                 me->status() == KCalCore::Attendee::Tentative ||
+                 me->status() == KCalCore::Attendee::InProcess ) ) {
+      d->mUi->mInvitationBar->show();
+    } else {
+      d->mUi->mInvitationBar->hide();
+    }
 
     if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
       d->mCalSelector->setMimeTypeFilter(
