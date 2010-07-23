@@ -1342,6 +1342,13 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
     return result;
 }
 
+void TemplateParser::setWordWrap(bool wrap, int wrapColWidth)
+{
+  mWrap = wrap;
+  mColWrap = wrapColWidth;
+}
+
+
 
 QString TemplateParser::asPlainText( const KMime::Message::Ptr &msg,
                                      bool aStripSignature, bool allowDecryption )

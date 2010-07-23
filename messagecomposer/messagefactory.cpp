@@ -254,6 +254,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     TemplateParser::TemplateParser parser( msg, (replyAll ? TemplateParser::TemplateParser::ReplyAll : TemplateParser::TemplateParser::Reply ) );
     parser.setIdentityManager( m_identityManager );
     parser.setCharsets( MessageComposerSettings::self()->preferredCharsets() );
+    parser.setWordWrap( MessageComposerSettings::wordWrap(), MessageComposerSettings::lineWrapWidth() );
     if ( MessageComposer::MessageComposerSettings::quoteSelectionOnly() ) {
       parser.setSelection( m_selection );
     }
