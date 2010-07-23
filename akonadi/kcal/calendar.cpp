@@ -536,7 +536,7 @@ void Calendar::incidenceUpdated( KCal::IncidenceBase *incidence )
 #endif
 }
 
-Item Calendar::event( const Item::Id &id ) const
+Item Calendar::event( Item::Id id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::event( item ) )
@@ -545,7 +545,7 @@ Item Calendar::event( const Item::Id &id ) const
     return Item();
 }
 
-Item Calendar::todo( const Item::Id &id ) const
+Item Calendar::todo( Item::Id id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::todo( item ) )
@@ -729,7 +729,7 @@ Item::List Calendar::rawEvents( EventSortField sortField, SortDirection sortDire
 }
 
 
-Item Calendar::journal( const Item::Id &id ) const
+Item Calendar::journal( Item::Id id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::journal( item ) ) {
@@ -971,8 +971,7 @@ Item::List Calendar::rawIncidences()
 Item::List Calendar::sortEvents( const Item::List &eventList_,
                                   EventSortField sortField,
                                   SortDirection sortDirection )
-{
-  Item::List eventList = eventList_;
+{ Item::List eventList = eventList_;
   Item::List eventListSorted;
   Item::List tempList, t;
   Item::List alphaList;
@@ -1189,7 +1188,7 @@ KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &item,
   return KCal::Incidence::Ptr( newInc );
 }
 
-Item Calendar::incidence( const Item::Id &uid ) const
+Item Calendar::incidence( Item::Id uid ) const
 {
   Item i = event( uid );
   if ( i.isValid() ) {

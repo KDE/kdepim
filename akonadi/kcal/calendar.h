@@ -294,7 +294,7 @@ public:
     @return a pointer to the KCal::Incidence.
     A null pointer is returned if no such KCal::Incidence exists.
   */
-  Akonadi::Item incidence( const Akonadi::Item::Id &id ) const;
+  Akonadi::Item incidence( Akonadi::Item::Id id ) const;
 
   Akonadi::Collection collection( const Akonadi::Entity::Id &id );
 
@@ -734,17 +734,17 @@ public:
     Akonadi::Item ::List rawEventsForDate( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::Spec(), EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     Akonadi::Item::List rawEventsForDate( const KDateTime &dt );
 
-    Akonadi::Item event( const Akonadi::Item::Id &id ) const;
+    Akonadi::Item event( Akonadi::Item::Id id ) const;
 
     Akonadi::Item::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     Akonadi::Item::List rawTodosForDate( const QDate &date );
 
-    Akonadi::Item todo( const Akonadi::Item::Id &uid ) const;
+    Akonadi::Item todo( Akonadi::Item::Id uid ) const;
 
     Akonadi::Item::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     Akonadi::Item::List rawJournalsForDate( const QDate &date );
 
-    Akonadi::Item journal( const Akonadi::Item::Id &id ) const;
+    Akonadi::Item journal( Akonadi::Item::Id id ) const;
 
     KCal::Alarm::List alarms( const KDateTime &from, const KDateTime &to );
     KCal::Alarm::List alarmsTo( const KDateTime &to );
@@ -755,7 +755,7 @@ public:
 
     Akonadi::Item::Id itemIdForIncidenceUid( const QString &uid ) const;
     Akonadi::Item itemForIncidenceUid( const QString &uid ) const;
- 
+
     using QObject::event;   // prevent warning about hidden virtual method
 
   Q_SIGNALS:
