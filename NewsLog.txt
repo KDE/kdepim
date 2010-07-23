@@ -1,9 +1,24 @@
+Friday, July 23th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4335: D'n'D a mail attachment with the icon is not working (rt#6126)
+* kolab/issue3908: Mail view and print layout problem if description of attachment is to long (#5872)
+* kolab/issue4455: calendar activate/deactivate handling broken
+* kolab/issue4282: Adding a new event from an invitation update mail shows unnecssary message
+                   dialog 'store/throw away' (rt#6094)
+* Fixed a few crashes in KOrganizer and a crash in KMail
+* Improvements in renaming calendar folders
+
+
 Friday, July 16th 2010
 
 Problems addressed
 ------------------
 
 * kolab/issue4447: Deleting contact from distribution list with DELETE key and Remove button
+
 
 Friday, July 9th 2010
 
