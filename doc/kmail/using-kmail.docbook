@@ -522,7 +522,7 @@ events by using the <guilabel>Generate free/busy and activate alarms for</guilab
 choice box.</para>
 
 <para>In case you don't want to receive reminders for folders shared by someone else,
-you can block them locally by activating the <guilabel>Block free/busy and alarms locally</guilabel>
+you can block them locally by activating the <guilabel>Block alarms locally</guilabel>
 checkbox.</para>
 
 </sect3>
