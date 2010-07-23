@@ -296,7 +296,7 @@ public:
   */
   Akonadi::Item incidence( Akonadi::Item::Id id ) const;
 
-  Akonadi::Collection collection( const Akonadi::Entity::Id &id );
+  Akonadi::Collection collection( const Akonadi::Entity::Id &id ) const;
 
   /**
     Returns the KCal::Incidence associated with the given scheduling identifier.
@@ -617,6 +617,19 @@ public:
     @see registerObserver()
    */
   void unregisterObserver( CalendarObserver *observer );
+
+  /**
+     Returns if the parent collection's rights allow deleting this item.
+     Isn't merged with hasChangeRights() for convinience.
+   */
+  bool hasDeleteRights( const Akonadi::Item &item ) const;
+
+  /**
+     Returns if the parent collection's rights allow changing this item.
+     Isn't merged with hasDeleteRights() for convinience.
+   */
+  bool hasChangeRights( const Akonadi::Item &item ) const;
+
 
 Q_SIGNALS:
   /**

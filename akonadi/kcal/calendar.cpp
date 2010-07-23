@@ -1859,11 +1859,29 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
 
 }
 
-Collection Calendar::collection( const Akonadi::Collection::Id &id )
+Collection Calendar::collection( const Akonadi::Collection::Id &id ) const
 {
   if ( d->m_collectionMap.contains( id ) ) {
     return d->m_collectionMap[id];
   } else {
     return Collection();
   }
+}
+
+bool Calendar::hasChangeRights( const Akonadi::Item &item ) const
+{
+  // if the users changes the rights, item.parentCollection()
+  // can still have the old rights, so we use call collection()
+  // which returns the updated one
+  const Collection col = collection( item.parentCollection().id() );
+  return col.rights() & Collection::CanChangeItem;
+}
+
+bool Calendar::hasDeleteRights( const Akonadi::Item &item ) const
+{
+  // if the users changes the rights, item.parentCollection()
+  // can still have the old rights, so we use call collection()
+  // which returns the updated one
+  const Collection col = collection( item.parentCollection().id() );
+  return col.rights() & Collection::CanDeleteItem;
 }

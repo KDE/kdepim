@@ -107,16 +107,6 @@ bool Akonadi::hasJournal( const Item& item )
   return item.hasPayload<Journal::Ptr>();
 }
 
-bool Akonadi::hasChangeRights( const Akonadi::Item &item )
-{
-  return item.parentCollection().rights() & Collection::CanChangeItem;
-}
-
-bool Akonadi::hasDeleteRights( const Akonadi::Item &item )
-{
-  return item.parentCollection().rights() & Collection::CanDeleteItem;
-}
-
 QMimeData* Akonadi::createMimeData( const Item::List &items, const KDateTime::Spec &timeSpec )
 {
   if ( items.isEmpty() )
@@ -217,7 +207,7 @@ bool Akonadi::isValidIncidenceItemUrl( const KUrl &url, const QStringList &suppo
 bool Akonadi::isValidIncidenceItemUrl( const KUrl &url )
 {
   IncidenceMimeTypeVisitor visitor;
-  
+
   return isValidIncidenceItemUrl( url, visitor.allMimeTypes() );
 }
 
@@ -380,5 +370,5 @@ QString Akonadi::subMimeTypeForIncidence( KCal::Incidence *incidence )
 {
   IncidenceMimeTypeVisitor visitor;
   incidence->accept( visitor );
-  return visitor.mimeType();  
+  return visitor.mimeType();
 }
