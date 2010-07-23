@@ -719,11 +719,11 @@ action="simul">&Ctrl;&Shift;<keycap>1</keycap></keycombo></shortcut>
 <guimenu>View</guimenu><guimenuitem>Normal View</guimenuitem></menuchoice>, 
 <menuchoice><shortcut><keycombo
 action="simul">&Ctrl;&Shift;<keycap>2</keycap></keycombo></shortcut>
-<guimenu>View</guimenu><guimenuitem>Widescreen Mode</guimenuitem>
+<guimenu>View</guimenu><guimenuitem>Widescreen View</guimenuitem>
 </menuchoice> and 
 <menuchoice><shortcut><keycombo
 action="simul">&Ctrl;&Shift;<keycap>3</keycap></keycombo></shortcut>
-<guimenu>View</guimenu><guimenuitem>Combined Mode</guimenuitem>
+<guimenu>View</guimenu><guimenuitem>Combined View</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Choose</action> the View Mode for &akregator;</para>
 </listitem>
