@@ -93,7 +93,6 @@ private:
 #endif
     QWidget* mParentWidget;
     AttendeeEditor *mAttendeeEditor;
-    KCalCore::Incidence::ConstPtr mOrigIncidence;
     ConflictResolver *mConflictResolver;
     QPointer<SchedulingDialog> mSchedulingDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;

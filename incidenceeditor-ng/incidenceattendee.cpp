@@ -112,7 +112,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
 
 void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
-  mOrigIncidence = incidence;
+  mLoadedIncidence = incidence;
   const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer()->email() );
 
   if ( itsMe || incidence->organizer()->isEmpty() ) {
@@ -180,10 +180,10 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceAttendee::isDirty() const
 {
-  if( !mOrigIncidence  )
+  if( !mLoadedIncidence  )
     return false;
 
-  KCalCore::Attendee::List origList = mOrigIncidence->attendees();
+  KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
 
   AttendeeData::List newList = mAttendeeEditor->attendees();
 
@@ -200,6 +200,7 @@ bool IncidenceAttendee::isDirty() const
     if( !origList.contains( attendee ) )
       return true;
   }
+
   return false;
 }
 
