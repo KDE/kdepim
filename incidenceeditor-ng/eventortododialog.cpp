@@ -453,20 +453,21 @@ EventOrTodoDialog::~EventOrTodoDialog()
 void EventOrTodoDialog::load( const Akonadi::Item &item )
 {
   Q_D( EventOrTodoDialog );
-  Q_ASSERT( d->hasSupportedPayload( item ) );
 
   if ( item.isValid() ) {
     d->mItemManager->load( item );
   } else {
-    d->mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
-  }
+    Q_ASSERT( d->hasSupportedPayload( item ) );
 
-  if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
-    d->mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  } else {
-    d->mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+    d->mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
+
+    if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
+      d->mCalSelector->setMimeTypeFilter(
+        QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+    } else {
+      d->mCalSelector->setMimeTypeFilter(
+        QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+    }
   }
 }
 
