@@ -2,6 +2,7 @@
 Name=StickyNote
 Name[ca]=StickyNote
 Name[ca@valencia]=StickyNote
+Name[da]=StickyNote
 Name[en_GB]=StickyNote
 Name[es]=StickyNote
 Name[fr]=Notes autocollantes
@@ -20,6 +21,7 @@ Name[zh_TW]=便利貼
 Comment=Connect to your libstickynotes-powered backend.
 Comment[ca]=Connecteu al dorsal potenciat per libstickynotes.
 Comment[ca@valencia]=Connecteu al dorsal potenciat per libstickynotes.
+Comment[da]=Forbind til din backend drevet af libstickynotes.
 Comment[en_GB]=Connect to your libstickynotes-powered backend.
 Comment[es]=Conecte a su motor mejorado con libstickynotes.
 Comment[fr]=Connexion au moteur libstickynotes-powered
