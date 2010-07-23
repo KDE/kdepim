@@ -21,6 +21,7 @@
 #include "mainview.h"
 #include "composerview.h"
 #include "messagelistproxy.h"
+#include "mailactionmanager.h"
 #include "global.h"
 
 #include <KDE/KDebug>
@@ -29,17 +30,19 @@
 
 #include <KMime/Message>
 #include <akonadi/kmime/messageparts.h>
+#include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
-
 #include <messagecore/messagestatus.h>
 
 #include <KActionCollection>
 #include <KAction>
 #include <KCmdLineArgs>
 #include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemFetchScope>
-#include "mailactionmanager.h"
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
+
+#include <QTimer>
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
@@ -63,6 +66,9 @@ MainView::MainView(QWidget* parent) :
   connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
+
+  // lazy load of the default single folders
+  QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
 
   if ( debugTiming ) {
     kWarning() << "Finished MainView ctor: " << t.elapsed() << " - "<< &t;
@@ -216,6 +222,12 @@ void MainView::setListSelectedRow(int row)
   const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+  Akonadi::Collection &collection = item.parentCollection();
+  if (folderIsDrafts(collection)) {
+      kDebug() << "This is a draft and not a regular message. Handle it properly.";
+  }
+
   KPIM::MessageStatus status;
   status.setStatusFromFlags(item.flags());
   if ( status.isUnread() )
@@ -226,5 +238,76 @@ void MainView::setListSelectedRow(int row)
   }
 }
 
+// #############################################################
+// ### Share the code between these marks with KMail Desktop?
+
+void MainView::initDefaultFolders()
+{
+  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
+  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
+  findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
+  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Drafts );
+  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Trash );
+  findCreateDefaultCollection( Akonadi::SpecialMailCollections::Templates );
+}
+
+void MainView::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type )
+{
+  if( Akonadi::SpecialMailCollections::self()->hasDefaultCollection( type ) ) {
+    const Akonadi::Collection col = Akonadi::SpecialMailCollections::self()->defaultCollection( type );
+    if ( !( col.rights() & Akonadi::Collection::AllRights ) )
+      kDebug() << "You do not have read/write permission to your inbox folder";
+  } else {
+    Akonadi::SpecialMailCollectionsRequestJob *job =
+        new Akonadi::SpecialMailCollectionsRequestJob( this );
+
+    connect( job, SIGNAL( result( KJob* ) ),
+             this, SLOT( createDefaultCollectionDone( KJob* ) ) );
+    job->requestDefaultCollection( type );
+  }
+}
+
+void MainView::createDefaultCollectionDone( KJob *job)
+{
+  if ( job->error() ) {
+    kDebug() << "Error creating default collection: " << job->errorText();
+    return;
+  }
+
+  Akonadi::SpecialMailCollectionsRequestJob *requestJob =
+      qobject_cast<Akonadi::SpecialMailCollectionsRequestJob*>( job );
+
+  const Akonadi::Collection col = requestJob->collection();
+  if ( !( col.rights() & Akonadi::Collection::AllRights ) )
+    kDebug() << "You do not have read/write permission to your inbox folder.";
+
+  connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
+           this, SLOT( initDefaultFolders() ) );
+}
+
+bool MainView::folderIsDrafts(const Akonadi::Collection &col)
+{
+  Akonadi::Collection defaultDraft = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts );
+
+  // check if this is the default draft folder
+  if ( col == defaultDraft )
+    return true;
+
+  // check for invalid collection
+  const QString idString = QString::number( col.id() );
+  if ( idString.isEmpty() )
+    return false;
+
+  // search the identities if the folder matches the drafts-folder
+  const KPIMIdentities::IdentityManager *im = Global::identityManager();
+  for( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
+    if ( (*it).drafts() == idString )
+      return true;
+  }
+
+  return false;
+}
+
+// #############################################################
 
 #include "mainview.moc"
