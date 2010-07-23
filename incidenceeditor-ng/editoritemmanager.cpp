@@ -236,14 +236,26 @@ void EditorItemManager::revertLastSave()
 
   if ( d->mPrevItem.hasPayload() ) {
     // Modify
-  } else {
-    // No payload, so the last call to save created a new item and reverting that
-    // means that we have to delete it.
-    Q_ASSERT( d->mItem.isValid() );
+    Q_ASSERT( d->mItem.isValid() ); // Really, if this isn't true, then fix the logic somewhere else
+    Q_ASSERT( d->mItem.id() == d->mPrevItem.id() ); // If this triggers: wtf, managing two different items?
+
+    d->mPrevItem.setRevision( d->mItem.revision() );
+    ItemModifyJob *job = new ItemModifyJob( d->mPrevItem );
+    if ( !job->exec() )
+      kDebug() << "Revert failed, could not delete item." << job->errorText();
+
+  } else if ( d->mItem.isValid() ) {
+
+    // No payload in the previous item and the current item is valid, so the last
+    // call to save created a new item and reverting that means that we have to
+    // delete it.
     ItemDeleteJob *job = new ItemDeleteJob( d->mItem );
     if ( !job->exec() )
       kDebug() << "Revert failed, could not delete item." << job->errorText();
   }
+
+  // else, the previous item had no payload *and* the current item is not valid,
+  // meaning that no item has been saved yet. Nothing to be done.
 }
 
 void EditorItemManager::save()
