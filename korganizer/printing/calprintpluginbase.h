@@ -32,8 +32,8 @@
 
 #include <akonadi/kcal/calendar.h>
 
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <kcal/event.h>
+#include <kcal/todo.h>
 
 #include <kdatetime.h>
 
@@ -44,7 +44,7 @@
 class PrintCellItem;
 class QWidget;
 
-using namespace KCalCore;
+using namespace KCal;
 
 #define PORTRAIT_HEADER_HEIGHT 72   // header height, for portrait orientation
 #define LANDSCAPE_HEADER_HEIGHT 54  // header height, for landscape orientation
@@ -120,7 +120,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     void setUseColors( bool useColors );
 
     /** Helper functions to hide the KOrg::CoreHelper */
-    QColor categoryBgColor( const Incidence::Ptr &incidence );
+    QColor categoryBgColor( Incidence *incidence );
     QTime dayStart();
     bool isWorkingDay( const QDate &dt );
     QString holidayString( const QDate &dt );
@@ -132,7 +132,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param weekday Index of the weekday
     */
     static int weekdayColumn( int weekday );
-    void setCategoryColors( QPainter &p, const Incidence::Ptr &incidence );
+    void setCategoryColors( QPainter &p, Incidence *incidence );
 
     QPrinter::Orientation orientation() const;
 

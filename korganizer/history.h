@@ -24,18 +24,18 @@
 #ifndef KORG_HISTORY_H
 #define KORG_HISTORY_H
 
-#include <kcalcore/incidence.h>
-
 #include <akonadi/kcal/incidencechanger.h>
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
 
-#include <kcalcore/incidence.h>
+#include <KCal/Incidence>
 
 #include <QObject>
 #include <QStack>
 #include <QList>
+
+#include <boost/shared_ptr.hpp>
 
 namespace Akonadi {
   class Calendar;
@@ -104,6 +104,8 @@ class History : public QObject
         void setItemId( Akonadi::Item::Id );
         Akonadi::Item::Id itemId();
 
+        void removeRelations( const KCal::Incidence::Ptr &incidence );
+
       protected:
         Akonadi::Calendar *mCalendar;
         Akonadi::IncidenceChanger *mChanger;
@@ -122,7 +124,7 @@ class History : public QObject
         QString text();
 
       private:
-        KCalCore::Incidence::Ptr mIncidence;
+        KCal::Incidence::Ptr mIncidence;
         Akonadi::Collection mCollection;
         QString mParentUid;
     };
@@ -138,7 +140,7 @@ class History : public QObject
 
         QString text();
       private:
-        KCalCore::Incidence::Ptr mIncidence;
+        KCal::Incidence::Ptr mIncidence;
         Akonadi::Collection mCollection;
         QString mParentUid;
     };
@@ -158,8 +160,8 @@ class History : public QObject
         QString text();
 
       private:
-        KCalCore::Incidence::Ptr mOldIncidence;
-        KCalCore::Incidence::Ptr mNewIncidence;
+        KCal::Incidence::Ptr mOldIncidence;
+        KCal::Incidence::Ptr mNewIncidence;
     };
 
     class MultiEntry : public Entry

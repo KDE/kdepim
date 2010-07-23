@@ -26,7 +26,7 @@
 #ifndef KOEVENTVIEW_H
 #define KOEVENTVIEW_H
 
-#include <kcalcore/todo.h>
+#include <KCal/Todo>
 #include "korganizer/baseview.h"
 
 namespace KCal {
@@ -35,7 +35,7 @@ namespace KCal {
 namespace Akonadi {
   class Item;
 }
-using namespace KCalCore;
+using namespace KCal;
 
 class KOEventPopupMenu;
 class QMenu;

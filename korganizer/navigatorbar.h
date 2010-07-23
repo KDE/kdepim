@@ -24,8 +24,8 @@
 #ifndef NAVIGATORBAR_H
 #define NAVIGATORBAR_H
 
-#include <kcalcore/incidencebase.h>
-using namespace KCalCore;
+#include <KCal/IncidenceBase>
+using namespace KCal;
 
 #include <QDate>
 #include <QWidget>
@@ -42,7 +42,7 @@ class NavigatorBar: public QWidget
     void showButtons( bool left, bool right );
 
   public slots:
-    void selectDates( const KCalCore::DateList & );
+    void selectDates( const KCal::DateList & );
 
   signals:
     void nextMonthClicked();

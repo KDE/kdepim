@@ -30,7 +30,7 @@
 #include "kocore.h"
 #include "korganizerifaceimpl.h"
 
-#include <kcalutils/incidenceformatter.h>
+#include <KCal/IncidenceFormatter>
 
 #include <akonadi/kcal/utils.h>
 
@@ -42,8 +42,6 @@
 #include <KParts/StatusBarExtension>
 
 #include <QVBoxLayout>
-
-using namespace KCalUtils;
 
 static const KAboutData &createAboutData()
 {
@@ -112,7 +110,7 @@ KOrganizerPart::~KOrganizerPart()
 void KOrganizerPart::slotChangeInfo( const Akonadi::Item &item, const QDate &date )
 {
   Q_UNUSED( date );
-  const KCalCore::Incidence::Ptr incidence = Akonadi::incidence( item );
+  const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
   if ( incidence ) {
     emit textChanged( incidence->summary() + " / " +
                       IncidenceFormatter::timeToString( incidence->dtStart() ) );

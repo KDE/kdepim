@@ -22,8 +22,8 @@
 
 #include <kdialog.h>
 
-#include <kcalcore/attendee.h>
-using namespace KCalCore;
+#include <kcal/attendee.h>
+using namespace KCal;
 
 class KComboBox;
 

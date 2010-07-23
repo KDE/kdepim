@@ -28,7 +28,13 @@
 
 #include <KontactInterface/Summary>
 
+#include <KCal/Event>
+
 class KOrganizerPlugin;
+
+namespace KCal {
+  class Event;
+}
 
 namespace Akonadi {
   class Item;
