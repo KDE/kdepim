@@ -108,7 +108,12 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
   slotUpdateConflictLabel( 0 ); //initialize label
 
-  connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee::Ptr, KCalCore::Attendee::Ptr ) ), this, SLOT( slotAttendeeChanged( KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr ) ) );
+//  connect( mAttendeeEditor, SIGNAL( lineAdded(KPIM::MultiplyingLine*) ),
+//           SLOT( checkDirtyStatus() ) );
+  connect( mAttendeeEditor, SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ),
+           SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
+  connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee::Ptr, KCalCore::Attendee::Ptr ) ),
+           SLOT( slotAttendeeChanged( KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr ) ) );
 }
 
 void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
@@ -247,7 +252,6 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
   if ( !data )
     return;
 
-
   // For some reason, when pressing enter (in stead of tab) the editingFinished()
   // signal is emitted twice. Check if there is already a job running to prevent
   // that we end up with the group members twice.
@@ -255,7 +259,7 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
     return;
 
   Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
-  job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->email() );
+  job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->name() );
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( groupSearchResult( KJob* ) ) );
 
   mMightBeGroupLines.insert( job, QWeakPointer<KPIM::MultiplyingLine>( line ) );
@@ -276,14 +280,15 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
   Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
   Q_ASSERT( searchJob );
 
+  Q_ASSERT( mMightBeGroupLines.contains( job ) );
+  KPIM::MultiplyingLine *line = mMightBeGroupLines.take( job ).data();
+
   const KABC::ContactGroup::List contactGroups = searchJob->contactGroups();
   if ( contactGroups.isEmpty() )
     return; // Nothing todo, probably a normal email address was entered
 
   // TODO: Give the user the possibility to choose a group when there is more than one?!
   KABC::ContactGroup group = contactGroups.first();
-
-  KPIM::MultiplyingLine *line = mMightBeGroupLines.take( job ).data();
   if ( line )
     line->slotPropagateDeletion();
 
