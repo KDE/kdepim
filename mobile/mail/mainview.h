@@ -37,6 +37,7 @@ class MainView : public KDeclarativeMainView
 
   public slots:
     void startComposer();
+    void restoreDraft( quint64 id );
     void reply( quint64 id );
     void replyToAll( quint64 id );
     void forwardInline( quint64 id );
@@ -46,6 +47,7 @@ class MainView : public KDeclarativeMainView
     void modifyDone(KJob *job);
     void dataChanged();
 
+    bool isDraft( int row );
     bool folderIsDrafts(const Akonadi::Collection & col);
 
     // HACK until mark-as-read logic is in messageviewer
@@ -54,6 +56,7 @@ class MainView : public KDeclarativeMainView
   private slots:
     void replyFetchResult( KJob *job );
     void forwardInlineFetchResult( KJob *job );
+    void composeFetchResult( KJob *job );
     void initDefaultFolders();
     void createDefaultCollectionDone( KJob *job);
 

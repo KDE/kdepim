@@ -77,7 +77,32 @@ MainView::MainView(QWidget* parent) :
 
 void MainView::startComposer()
 {
+    ComposerView *composer = new ComposerView;
+    composer->show();
+}
+
+void MainView::restoreDraft( quint64 id )
+{
+    Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
+    fetch->fetchScope().fetchFullPayload();
+    connect( fetch, SIGNAL(result(KJob*)), SLOT(composeFetchResult(KJob*)) );
+}
+
+void MainView::composeFetchResult( KJob *job )
+{
+  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  if ( job->error() || fetch->items().isEmpty() )
+    return;
+
+  const Akonadi::Item item = fetch->items().first();
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+
+  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
+  factory.setIdentityManager( Global::identityManager() );
+
   ComposerView *composer = new ComposerView;
+  composer->setMessage( factory.createResend() );
   composer->show();
 }
 
@@ -223,11 +248,6 @@ void MainView::setListSelectedRow(int row)
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-  Akonadi::Collection &collection = item.parentCollection();
-  if (folderIsDrafts(collection)) {
-      kDebug() << "This is a draft and not a regular message. Handle it properly.";
-  }
-
   KPIM::MessageStatus status;
   status.setStatusFromFlags(item.flags());
   if ( status.isUnread() )
@@ -236,6 +256,17 @@ void MainView::setListSelectedRow(int row)
     item.setFlags(status.getStatusFlags());
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
   }
+}
+
+bool MainView::isDraft( int row )
+{
+  static const int column = 0;
+  const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
+  itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+  Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+  Akonadi::Collection &collection = item.parentCollection();
+  return folderIsDrafts(collection);
 }
 
 // #############################################################

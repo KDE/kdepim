@@ -228,12 +228,17 @@ KPIM.MainView {
           // in messageview itself.
           if ( messageView.itemId != headerList.currentItemId )
           {
-            messageView.messagePath = application.pathToItem(headerList.currentItemId);
-            messageView.itemId = headerList.currentItemId;
-            messageView.visible = true;
-            backToMessageListButton.visible = true;
-            collectionView.visible = false;
-            emailListPage.visible = false;
+            if (!application.isDraft(headerList.currentIndex))
+            {
+              messageView.messagePath = application.pathToItem(headerList.currentItemId);
+              messageView.itemId = headerList.currentItemId;
+              messageView.visible = true;
+              backToMessageListButton.visible = true;
+              collectionView.visible = false;
+              emailListPage.visible = false;
+            } else {
+              application.restoreDraft(headerList.currentItemId);
+            }
           }
         }
       }
