@@ -49,6 +49,9 @@ install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
   Action.qml
+  ActionList.qml
+  ActionListItem.qml
+  ActionMenuContainer.qml
   AttachmentList.qml
   Button.qml
   Button2.qml
