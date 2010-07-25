@@ -4,7 +4,8 @@ include_directories(${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces)
 
 set(plasma_applet_special_dates_SRCS 
     specialdatesapplet.cpp
-    specialdatewidget.cpp)
+    specialdatewidget.cpp
+    gradientprogresswidget.cpp)
 
 # Now make sure all files get to the right place
 kde4_add_plugin(plasma_applet_special_dates ${plasma_applet_special_dates_SRCS})
