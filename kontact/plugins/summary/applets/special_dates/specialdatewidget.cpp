@@ -18,6 +18,7 @@
  */
 
 #include "specialdatewidget.h"
+#include "gradientprogresswidget.h"
 
 #include <Plasma/Svg>
 #include <Plasma/Theme>
@@ -25,6 +26,7 @@
 #include <Plasma/IconWidget>
 #include <Plasma/Label>
 #include <Plasma/Service>
+#include <Plasma/Applet>
 
 #include <akonadi/itemfetchjob.h>
 #include <urihandler.h>
@@ -41,43 +43,45 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
       m_icon(0),
       m_uri(uri),
       m_layout(0)
-{    
-    setMinimumHeight(40);
-    setMinimumWidth(120);
+{
+    setMaximumHeight(200);
+    setMinimumWidth(200);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    m_layout = new QGraphicsLinearLayout(Qt::Horizontal, this);
 
     // create icon
     KIcon ic = KIcon(iconName);
-    
     setIcon(new Plasma::IconWidget( ic, "" ));
-    m_layout = new QGraphicsLinearLayout(Qt::Horizontal, this);
-    
+    icon()->setMaximumHeight(180);
+    icon()->setMaximumWidth(180);
+    icon()->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     m_layout->addItem( icon() );
-    
-    // create text    
+
+    // create text
     Plasma::Label* label = new Plasma::Label();
     label->setText(text);
     m_layout->addItem( label );
-    
+
     // create daysTo
     QDate currentDate = QDate::currentDate();
-    
-    int daysTo = currentDate.daysTo(date);
-    
-    Plasma::BusyWidget* dayLabel = new Plasma::BusyWidget();
-    QString dateString = QString("<p style='%2'>%1</p>").arg(daysTo).arg( daysTo > 1 ? "" : "background-color:red;");
-    //dayLabel->setScaledContents(true);
-    dayLabel->setLabel(dateString);
-    m_layout->addItem( dayLabel );
 
-    
+    int daysTo = currentDate.daysTo(date);
+    KConfigGroup config = qobject_cast<Plasma::Applet*>(parent)->config();
+    int numDays = config.readEntry("numDays",7);
+
+    GradientProgressWidget* daysWidget = new GradientProgressWidget(numDays,numDays-daysTo,this);
+    daysWidget->setMaximumHeight(120);
+    daysWidget->setMaximumWidth(120);
+    daysWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    m_layout->addItem( daysWidget );
+
     // Cleanup the layout
     m_layout->setAlignment(icon(),Qt::AlignLeft);
     m_layout->setAlignment(label,Qt::AlignLeft);
-    m_layout->setAlignment(dayLabel,Qt::AlignLeft);
-    
+    m_layout->setAlignment(daysWidget,Qt::AlignRight);
+
     connect(icon(), SIGNAL(clicked()), this, SLOT(click()));
-    
 }
 
 void SpecialDateWidget::click()
