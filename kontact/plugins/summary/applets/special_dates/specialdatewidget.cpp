@@ -26,6 +26,9 @@
 #include <Plasma/Label>
 #include <Plasma/Service>
 
+#include <akonadi/itemfetchjob.h>
+#include <urihandler.h>
+
 #include <KIcon>
 #include <KUrl>
 
@@ -61,11 +64,12 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
     
     int daysTo = currentDate.daysTo(date);
     
-    Plasma::Label* dayLabel = new Plasma::Label();
+    Plasma::BusyWidget* dayLabel = new Plasma::BusyWidget();
     QString dateString = QString("<p style='%2'>%1</p>").arg(daysTo).arg( daysTo > 1 ? "" : "background-color:red;");
-    dayLabel->setScaledContents(true);
-    dayLabel->setText(dateString);
+    //dayLabel->setScaledContents(true);
+    dayLabel->setLabel(dateString);
     m_layout->addItem( dayLabel );
+
     
     // Cleanup the layout
     m_layout->setAlignment(icon(),Qt::AlignLeft);
@@ -78,17 +82,22 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
 
 void SpecialDateWidget::click()
 {
-    // Get the service
-    Plasma::Service* service = Plasma::Service::load( "org.kontact.interfaces" );
+    kDebug() << "Processing" << uri();
 
-    if( service->isOperationEnabled("open") )
-    {
-        kDebug() << "Found our service, let's open the uri!";
-        
-        KConfigGroup op = service->operationDescription("open");
-        op.writeEntry( "uri", uri() );
-        service->startOperationCall(op, this);
+    uint id = uri().url().split(':')[1].toInt();
+    kDebug() << id;
+    Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( Akonadi::Item( id ) );
+    connect( job, SIGNAL( result( KJob* )), this, SLOT( fetchFinished( KJob* )) );
+}
+
+void SpecialDateWidget::fetchFinished( KJob* job )
+{
+    Akonadi::Item item;
+    Akonadi::ItemFetchJob* fetchJob = qobject_cast<Akonadi::ItemFetchJob*>(job);
+    if( fetchJob->items().length() > 0 ) {
+        item = fetchJob->items().first();
     }
+    UriHandler::process( uri().url(), item );
 }
 
 Plasma::IconWidget* SpecialDateWidget::icon()

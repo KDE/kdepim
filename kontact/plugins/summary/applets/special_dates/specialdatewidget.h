@@ -33,6 +33,7 @@ class QIcon;
 class QGraphicsLinearLayout;
 #include <QDate>
 #include <KUrl>
+class KJob;
 
 class SpecialDateWidget : public Plasma::Frame
 {
@@ -53,6 +54,8 @@ public:
     
 private slots:
     void click();
+    void fetchFinished( KJob* job );
+
 
 private:
     QVariant m_data;
