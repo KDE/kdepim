@@ -105,7 +105,7 @@ void SpecialDatesApplet::updateSpecialDates()
     QString query = QString("holidays:%1:%2:%3");
     query = query.arg(m_locale, date.toString("yyyy-MM-dd"), date.addDays(m_numDays).toString("yyyy-MM-dd"));
     
-    kDebug() << "Query calendar DataSource" << query;
+    //kDebug() << "Query calendar DataSource" << query;
     
     // when did this change? rrix 20100613
     Plasma::DataEngine::Data holidayQuery = m_calEngine->query(query);
@@ -130,7 +130,7 @@ void SpecialDatesApplet::updateSpecialDates()
     }
     else
     {
-        QTimer::singleShot(5000, this, SLOT(updateSpecialDates()));
+        QTimer::singleShot(60000, this, SLOT(updateSpecialDates()));
         kDebug() << "Setting singleshot";
     }
 }

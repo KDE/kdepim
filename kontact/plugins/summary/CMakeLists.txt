@@ -4,7 +4,7 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 
 ########### next target ###############
 
-set(kontact_summaryplugin_PART_SRCS summaryview_plugin.cpp kontactpluginloader.cpp kontactinterfacesservice.cpp)
+set(kontact_summaryplugin_PART_SRCS summaryview_plugin.cpp )# kontactpluginloader.cpp kontactinterfacesservice.cpp)
 
 if(KMAIL_SUPPORTED)
    qt4_add_dbus_interfaces(kontact_summaryplugin_PART_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml)
