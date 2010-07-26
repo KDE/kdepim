@@ -1912,7 +1912,6 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
 {
   const Kleo::CryptoBackend::Protocol * chiasmus =
     Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" );
-  Q_ASSERT( chiasmus );
   if ( !chiasmus )
     return false;
 
