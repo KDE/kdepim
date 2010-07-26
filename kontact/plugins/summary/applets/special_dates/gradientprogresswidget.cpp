@@ -44,7 +44,7 @@ void GradientProgressWidget::paint(QPainter* painter, const QStyleOptionGraphics
     // Account for text offset and calculate a center for the text drawing
     QFontMetrics metrics = Plasma::Theme::defaultTheme()->fontMetrics();
     QSize textSize = metrics.size( Qt::TextSingleLine, text );
-    QPointF textCenter = QPointF(center.x() - textSize.width()/2, center.y() + textSize.height()/2 );
+    QPointF textCenter = QPointF(center.x() - textSize.width()/2, center.y() + textSize.height()/3 );
 
     float progress = 1.0*m_current/m_end;
     if( progress < 0.0 ) {
@@ -61,7 +61,8 @@ void GradientProgressWidget::paint(QPainter* painter, const QStyleOptionGraphics
 
     painter->setBrush(brush);
     painter->setPen(Qt::NoPen);
-    painter->drawEllipse(center, size().width()/3, size().height()/3);
+    painter->drawEllipse(center, size().width()/3, size().height()/3); // TODO: Decide which is better
+    //painter->drawPie(QRectF(0,0,size().width(), size().height()), 4320, 16*(360*m_current/m_end));
 
     painter->setPen(Qt::white);
     painter->drawText(textCenter, text);
