@@ -29,13 +29,15 @@
 namespace IncidenceEditorsNG
 {
 
+class FreePeriodModel;
 class ConflictResolver;
+class VisualFreeBusyWidget;
 
 class SchedulingDialog : public KDialog, private Ui_Dialog
 {
   Q_OBJECT
 public:
-    SchedulingDialog( ConflictResolver * resolver );
+    SchedulingDialog( ConflictResolver* resolver, QWidget* parent );
     ~SchedulingDialog();
 
 signals:
@@ -49,7 +51,6 @@ private slots:
     void slotWeekdaysChanged();
     void slotMandatoryRolesChanged();
     void slotStartDateChanged( const QDate & newDate );
-    void slotNewFreeSlots();
 
 private:
     void updateWeekDays( const QDate& oldDate );
@@ -58,6 +59,8 @@ private:
     QDate mStDate;
 
     ConflictResolver* mResolver;
+    FreePeriodModel* mPeriodModel;
+    VisualFreeBusyWidget* mVisualWidget;
 };
 
 }

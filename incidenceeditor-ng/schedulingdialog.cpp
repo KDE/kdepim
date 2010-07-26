@@ -21,18 +21,26 @@
 #include "schedulingdialog.h"
 
 #include "conflictresolver.h"
+#include "freeperiodmodel.h"
+#include "visualfreebusywidget.h"
 
+#include <kcalcore/attendee.h>
 #include <kcalutils/stringify.h>
 
 #include <KCalendarSystem>
 #include <KIconLoader>
 #include <KLocale>
 #include <KDebug>
-#include <kcalcore/attendee.h>
+
+#include <QBoxLayout>
 
 using namespace IncidenceEditorsNG;
 
-SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mResolver( resolver )
+SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent  )
+  : KDialog( parent ),
+  mResolver( resolver ),
+  mPeriodModel( new FreePeriodModel( this ) ),
+  mVisualWidget( new VisualFreeBusyWidget( resolver, 8, this ) )
 {
     setupUi( this );
     fillCombos();
@@ -47,7 +55,13 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver ) : KDialog(), mR
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged() ) );
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
-    connect( mResolver, SIGNAL( freeSlotsAvailable() ), SLOT( slotNewFreeSlots() ) );
+    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCalCore::Period::List & ) ) );
+
+    mListView->setModel( mPeriodModel );
+
+    QVBoxLayout* layout = new QVBoxLayout( mGanttTab );
+    layout->addWidget( mVisualWidget );
+    mGanttTab->setLayout( layout );
 }
 
 
@@ -82,6 +96,15 @@ void SchedulingDialog::fillCombos()
 #endif
     mRolesCombo->setWhatsThis( i18nc( "@info:whatsthis",
                                   "Edits the role of the attendee." ) );
+
+    QBitArray days( 7 );
+    days.setBit( 0 ); //Monday
+    days.setBit( 1 ); //Tuesday
+    days.setBit( 2 ); //Wednesday
+    days.setBit( 3 ); //Thursday
+    days.setBit( 4 ); //Friday.. surprise!
+
+    mWeekdayCombo->setDays( days );
 }
 
 void SchedulingDialog::slotStartDateChanged( const QDate& newDate )
@@ -119,10 +142,3 @@ void SchedulingDialog::slotMandatoryRolesChanged()
     }
     mResolver->setMandatoryRoles( roles );
 }
-
-void SchedulingDialog::slotNewFreeSlots()
-{
-    kDebug() << "got free slots";
-    //TODO impl
-}
-
