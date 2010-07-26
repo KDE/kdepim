@@ -59,6 +59,7 @@ class MainView : public KDeclarativeMainView
     void composeFetchResult( KJob *job );
     void initDefaultFolders();
     void createDefaultCollectionDone( KJob *job);
+    void deleteItemResult( KJob *job );
 
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );

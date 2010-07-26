@@ -25,6 +25,9 @@
 #include "global.h"
 
 #include <KDE/KDebug>
+#include <KActionCollection>
+#include <KAction>
+#include <KCmdLineArgs>
 #include <kselectionproxymodel.h>
 #include <klocalizedstring.h>
 
@@ -33,13 +36,12 @@
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 #include <messagecore/messagestatus.h>
+#include "messagecore/messagehelpers.h"
 
-#include <KActionCollection>
-#include <KAction>
-#include <KCmdLineArgs>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemModifyJob>
+#include <Akonadi/ItemDeleteJob>
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 
 #include <QTimer>
@@ -85,24 +87,38 @@ void MainView::restoreDraft( quint64 id )
 {
     Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
     fetch->fetchScope().fetchFullPayload();
+    fetch->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     connect( fetch, SIGNAL(result(KJob*)), SLOT(composeFetchResult(KJob*)) );
 }
 
 void MainView::composeFetchResult( KJob *job )
 {
   Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
-  if ( job->error() || fetch->items().isEmpty() )
+  if ( job->error() || fetch->items().isEmpty() ) {
+    // ###: emit ERROR
     return;
+  }
 
   const Akonadi::Item item = fetch->items().first();
-  if ( !item.hasPayload<KMime::Message::Ptr>() )
+  if (!item.isValid() && !item.parentCollection().isValid() ) {
+    // ###: emit ERROR
     return;
+  }
 
-  MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
-  factory.setIdentityManager( Global::identityManager() );
+  KMime::Message::Ptr msg = MessageCore::Util::message( item );
+  if ( !msg ) {
+    // ###: emit ERROR
+    return;
+  }
 
+  // delete from the drafts folder
+  // ###: do we need an option for this?)
+  Akonadi::ItemDeleteJob *djob = new Akonadi::ItemDeleteJob( item );
+  connect( djob, SIGNAL( result( KJob* ) ), this, SLOT( deleteItemResult( KJob* ) ) );
+
+  // create the composer and fill it with the retrieved message
   ComposerView *composer = new ComposerView;
-  composer->setMessage( factory.createResend() );
+  composer->setMessage( msg );
   composer->show();
 }
 
@@ -337,6 +353,14 @@ bool MainView::folderIsDrafts(const Akonadi::Collection &col)
   }
 
   return false;
+}
+
+void MainView::deleteItemResult( KJob *job )
+{
+    // ###: Need proper UI for this.
+  if ( job->error() ) {
+      kDebug() << "Error trying to delete item";
+  }
 }
 
 // #############################################################
