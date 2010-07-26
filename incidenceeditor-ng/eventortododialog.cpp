@@ -221,7 +221,7 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
 {
   Q_Q( EventOrTodoDialog );
 
-  KCalCore::MemoryCalendar cal( KSystemTimeZones::local() );
+  KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
   QString fileName = KStandardDirs::locateLocal( "data",
                        "korganizer/templates/" + mEditor->type() + '/' + templateName );
 
@@ -231,12 +231,12 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
   }
 
   KCalCore::ICalFormat format;
-  if ( !format.load( &cal, fileName ) ) {
+  if ( !format.load( cal, fileName ) ) {
     KMessageBox::error( q, i18nc( "@info", "Error loading template file '%1'.", fileName ) );
     return;
   }
 
-  KCalCore::Incidence::List incidences = cal.incidences();
+  KCalCore::Incidence::List incidences = cal->incidences();
   if ( incidences.isEmpty() ) {
     KMessageBox::error( q, i18nc( "@info", "Template does not contain a valid incidence." ) );
     return;
@@ -275,10 +275,10 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
   fileName.append( '/' + templateName );
   fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
 
-  KCalCore::MemoryCalendar cal( KSystemTimeZones::local() );
-  cal.addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
+  KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
+  cal->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
   KCalCore::ICalFormat format;
-  format.save( &cal, fileName );
+  format.save( cal, fileName );
 }
 
 void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templateNames )
