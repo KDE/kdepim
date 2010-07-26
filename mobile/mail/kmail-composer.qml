@@ -63,8 +63,18 @@ KPIM.MainView {
       contentWidth: 240
       content: [
         KPIM.Action {
-          id: signButton
+          id: draftButton
           anchors.top: parent.top;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          action : application.getAction("save_in_drafts");
+          checkable : true
+          onTriggered : actionPanel.collapse();
+        },
+        KPIM.Action {
+          id: signButton
+          anchors.top: draftButton.bottom;
           anchors.horizontalCenter: parent.horizontalCenter;
           width: parent.width - 10
           height: parent.height / 6
