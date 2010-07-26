@@ -3,8 +3,8 @@ Friday, July 23th 2010
 Problems addressed
 ------------------
 
-* kolab/issue4335: D'n'D a mail attachment with the icon is not working (rt#6126)
-* kolab/issue3908: Mail view and print layout problem if description of attachment is to long (#5872)
+* kolab/issue4335 (partly): D'n'D a mail attachment with the icon is not working (rt#6126)
+* kolab/issue3908 (partly): Mail view and print layout problem if description of attachment is to long (#5872)
 * kolab/issue4455: calendar activate/deactivate handling broken
 * kolab/issue4282: Adding a new event from an invitation update mail shows unnecssary message
                    dialog 'store/throw away' (rt#6094)
