@@ -20,6 +20,8 @@
 */
 
 #include "mainview.h"
+#include "calendarinterface.h"
+#include "calendaradaptor.h"
 
 #include <akonadi/entitytreemodel.h>
 #include <Akonadi/ItemFetchScope>
@@ -33,11 +35,25 @@
 
 #include "incidenceview.h"
 
+#include <QGraphicsItem>
+#include <QTimer>
+#include <QDBusConnection>
 
 using namespace Akonadi;
 using namespace KCal;
 
-MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
+MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
+{
+  m_calendar = 0;
+  QTimer::singleShot(0, this, SLOT(delayedInit()));
+}
+
+MainView::~MainView()
+{
+  m_calendar->deleteLater();
+}
+
+void MainView::delayedInit()
 {
   addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
   addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
@@ -45,11 +61,15 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
 
   m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
-}
+  
+  QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
+  CalendarInterface* calendarIface = new CalendarInterface();
+  new CalendarAdaptor(calendarIface);
+  QDBusConnection::sessionBus().registerObject("/Calendar", calendarIface);
 
-MainView::~MainView()
-{
-  m_calendar->deleteLater();
+  //connect Qt signals to QML slots
+  connect(calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));
+  connect(calendarIface, SIGNAL(showEventViewSignal()), rootObject(), SLOT(showEventView()));
 }
 
 void MainView::showRegularCalendar()

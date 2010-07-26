@@ -9,10 +9,12 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-set(korganizer_mobile_SRCS
+set(korganizer_mobile_SRCS calendarinterface.cpp
   mainview.cpp
   main.cpp
 )
+
+qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 target_link_libraries(korganizer-mobile

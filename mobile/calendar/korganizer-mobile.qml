@@ -31,6 +31,19 @@ KPIM.MainView {
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
+  function showDate(date)
+  {
+    console.log("QML showDate called");
+    agenda.showRange( date, 0 /* "Day" */ );
+  }
+
+  function showEventView()
+  {
+    console.log("QML showEventView called");
+    mainWorkView.visible = false
+    agendaView.visible = true
+  }
+
   function backToAgendaView()
   {
     eventView.visible = false;

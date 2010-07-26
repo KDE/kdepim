@@ -21,7 +21,7 @@
 #define KDECLARATIVEAPPLICATION_H
 
 #include "mobileui_export.h"
-#include <kapplication.h>
+#include <kuniqueapplication.h>
 
 class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
 {
