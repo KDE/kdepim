@@ -155,7 +155,7 @@ QModelIndex FreeBusyItemModel::index( int row, int column, const QModelIndex& pa
 //       KCalCore::FreeBusy::Ptr fb = item->freeBusy();
 //       if( !fb )
 //           return QModelIndex();
-// 
+//
 //       QList<KCalCore::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
 //       if( row < busyPeriods.size() )
 //           return createIndex( row, column, new ItemPrivateData( parent.row() ) );
@@ -266,7 +266,7 @@ void FreeBusyItemModel::removeAttendee( const KCalCore::Attendee::Ptr& attendee 
 bool FreeBusyItemModel::containsAttendee(const KCalCore::Attendee::Ptr& attendee)
 {
     FreeBusyItem::Ptr anItem;
-    for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {
+    for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
         anItem = mFreeBusyItems[i];
         if ( anItem->attendee() == attendee ) {
             return true;
