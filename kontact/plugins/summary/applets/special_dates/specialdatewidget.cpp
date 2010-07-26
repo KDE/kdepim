@@ -68,7 +68,7 @@ SpecialDateWidget::SpecialDateWidget(QGraphicsWidget* parent, QString text, QStr
 
     int daysTo = currentDate.daysTo(date);
     KConfigGroup config = qobject_cast<Plasma::Applet*>(parent)->config();
-    int numDays = config.readEntry("numDays",7);
+    int numDays = config.readEntry("numDays",31);
 
     GradientProgressWidget* daysWidget = new GradientProgressWidget(numDays,numDays-daysTo,this);
     daysWidget->setMaximumHeight(120);

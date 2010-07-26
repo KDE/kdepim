@@ -93,6 +93,7 @@ void SpecialDatesApplet::paintInterface(QPainter* p,
 
 void SpecialDatesApplet::configChanged()
 {
+    // TODO: Configuration interface
     m_numDays = config().readEntry("numDays",m_numDays);
     m_locale = config().readEntry("locale", "us_en-us"); // TODO default to system locale?
 }
