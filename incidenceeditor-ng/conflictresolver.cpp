@@ -44,7 +44,7 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
   , mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
 {
     Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-    connect( m, SIGNAL( freeBusyRetrieved( KCal::FreeBusy::Ptr , const QString & ) ),
+    connect( m, SIGNAL( freeBusyRetrieved( KCalCore::FreeBusy::Ptr , const QString & ) ),
              SLOT( slotInsertFreeBusy( KCalCore::FreeBusy::Ptr , const QString & ) ) );
     // trigger a reload in case any attendees were inserted before
     // the connection was made
