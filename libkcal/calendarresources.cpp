@@ -59,12 +59,12 @@ using namespace KCal;
 class CalendarResources::Private {
   public:
 
-  Private() : mLastUsedResource( 0 ), mAddingInProgress( false )
+  Private() : mLastUsedResource( 0 ), mBatchAddingInProgress( false )
   {
   }
 
   ResourceCalendar *mLastUsedResource;
-  bool mAddingInProgress;
+  bool mBatchAddingInProgress;
 };
 
 bool CalendarResources::DestinationPolicy::hasCalendarResources(  )
@@ -325,7 +325,7 @@ bool CalendarResources::addIncidence( Incidence *incidence )
 {
   kdDebug(5800) << "CalendarResources::addIncidence "
                 << incidence->summary()
-                << "; addingInProgress = " << d->mAddingInProgress
+                << "; addingInProgress = " << d->mBatchAddingInProgress
                 << "; lastUsedResource = " << d->mLastUsedResource
                 << endl;
 
@@ -333,11 +333,11 @@ bool CalendarResources::addIncidence( Incidence *incidence )
 
   ResourceCalendar *resource = d->mLastUsedResource;
 
-  if ( !d->mAddingInProgress || d->mLastUsedResource == 0 ) {
+  if ( !d->mBatchAddingInProgress || d->mLastUsedResource == 0 ) {
     resource = mDestinationPolicy->destination( incidence );
     d->mLastUsedResource = resource;
 
-    if ( resource && d->mAddingInProgress ) {
+    if ( resource && d->mBatchAddingInProgress ) {
       d->mLastUsedResource->beginAddingIncidences();
     }
   }
@@ -911,13 +911,13 @@ bool CalendarResources::endChange( Incidence *incidence,
 void CalendarResources::beginAddingIncidences()
 {
   kdDebug(5800) << "CalendarResources: beginAddingIncidences() ";
-  d->mAddingInProgress = true;
+  d->mBatchAddingInProgress = true;
 }
 
 void CalendarResources::endAddingIncidences()
 {
   kdDebug(5800) << "CalendarResources: endAddingIncidences() ";
-  d->mAddingInProgress = false;
+  d->mBatchAddingInProgress = false;
 
   if ( d->mLastUsedResource ) {
     d->mLastUsedResource->endAddingIncidences();

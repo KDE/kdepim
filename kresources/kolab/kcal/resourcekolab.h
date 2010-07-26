@@ -243,7 +243,7 @@ private:
    */
   QMap< QPair<QString, QString>, QString > mOriginalUID2fakeUID;
 
-  bool mAddingInProgress;
+  bool mBatchAddingInProgress;
   QMap<Kolab::ResourceType,QString> mLastUsedResources;
 };
 

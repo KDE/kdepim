@@ -71,7 +71,7 @@ static const char* incidenceInlineMimeType = "text/calendar";
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
-        "mResourceChangedTimer" ), mAddingInProgress( false )
+        "mResourceChangedTimer" ), mBatchAddingInProgress( false )
 {
   if ( !config ) {
     setResourceName( i18n( "Kolab Server" ) );
@@ -526,7 +526,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
             << incidence->summary()
             << "; subresource = " << _subresource
             << "; sernum = " << sernum
-            << "; mAddingInProgress = " << mAddingInProgress
+            << "; mBatchAddingInProgress = " << mBatchAddingInProgress
             << endl;
 
   QString uid = incidence->uid();
@@ -586,7 +586,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
 
       // Lets not warn the user 100 times that there's no writable resource
       // and not ask 100 times which resource to use
-      if ( !mAddingInProgress || !mLastUsedResources.contains( type ) ) {
+      if ( !mBatchAddingInProgress || !mLastUsedResources.contains( type ) ) {
         subResource = findWritableResource( type, *map, text );
         mLastUsedResources[type] = subResource;
       } else {
@@ -1275,12 +1275,12 @@ void ResourceKolab::writeConfig()
 
 void ResourceKolab::beginAddingIncidences()
 {
-  mAddingInProgress = true;
+  mBatchAddingInProgress = true;
 }
 
 void ResourceKolab::endAddingIncidences()
 {
-  mAddingInProgress = false;
+  mBatchAddingInProgress = false;
   mLastUsedResources.clear();
 }
 
