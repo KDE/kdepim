@@ -46,6 +46,7 @@ namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
 class ConflictResolver;
+class FreeBusyItemModel;
 class IncidenceDateTime;
 class SchedulingDialog;
 

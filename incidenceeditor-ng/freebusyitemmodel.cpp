@@ -26,6 +26,7 @@
 
 #include <KLocale>
 #include <KGlobal>
+#include <KDebug>
 
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
 
@@ -59,7 +60,7 @@ FreeBusyItemModel::FreeBusyItemModel( QObject* parent ): QAbstractItemModel( par
 
     Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
     connect( m, SIGNAL( freeBusyRetrieved( KCalCore::FreeBusy::Ptr , const QString & ) ),
-              SLOT( slotInsertFreeBusy( KCalCore::FreeBusy::Ptr , const QString & ) ) );
+                 SLOT( slotInsertFreeBusy( KCalCore::FreeBusy::Ptr , const QString & ) ) );
 
     connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
       mReloadTimer.setSingleShot( true );
@@ -175,6 +176,14 @@ QModelIndex FreeBusyItemModel::parent( const QModelIndex& child ) const
 
     return createIndex( parentData->row(), 0, parentData );
 }
+
+QVariant FreeBusyItemModel::headerData( int section, Qt::Orientation orientation, int role ) const
+{
+    if( role == Qt::DisplayRole && orientation == Qt::Horizontal && section == 0 )
+        return i18n( "Attendee" );
+    return QVariant();
+}
+
 
 void FreeBusyItemModel::addItem(const IncidenceEditorsNG::FreeBusyItem::Ptr& freebusy)
 {

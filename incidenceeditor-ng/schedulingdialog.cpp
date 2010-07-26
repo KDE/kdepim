@@ -21,6 +21,7 @@
 #include "schedulingdialog.h"
 
 #include "conflictresolver.h"
+#include "visualfreebusywidget.h"
 #include "freeperiodmodel.h"
 #include "visualfreebusywidget.h"
 
@@ -39,11 +40,16 @@ using namespace IncidenceEditorsNG;
 SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent  )
   : KDialog( parent ),
   mResolver( resolver ),
-  mPeriodModel( new FreePeriodModel( this ) ),
-  mVisualWidget( new VisualFreeBusyWidget( resolver, 8, this ) )
+  mPeriodModel( new FreePeriodModel( this ) )
 {
     setupUi( this );
     fillCombos();
+
+    mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8, this );
+    QVBoxLayout *ganttlayout = new QVBoxLayout( mGanttTab );
+
+    mGanttTab->setLayout( ganttlayout );
+    ganttlayout->addWidget( mVisualWidget );
 
     connect( mStartDate, SIGNAL( dateChanged( QDate ) ), mResolver, SLOT( setEarliestDate( QDate ) ) );
     connect( mStartTime, SIGNAL( timeChanged( QTime ) ), mResolver, SLOT( setEarliestTime( QTime ) ) );
@@ -55,15 +61,8 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent 
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged() ) );
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
-    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCalCore::Period::List & ) ) );
-
-    mListView->setModel( mPeriodModel );
-
-    QVBoxLayout* layout = new QVBoxLayout( mGanttTab );
-    layout->addWidget( mVisualWidget );
-    mGanttTab->setLayout( layout );
+    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), SLOT( slotNewFreeSlots( const KCalCore::Period::List & ) ) );
 }
-
 
 SchedulingDialog::~SchedulingDialog()
 {
@@ -142,3 +141,10 @@ void SchedulingDialog::slotMandatoryRolesChanged()
     }
     mResolver->setMandatoryRoles( roles );
 }
+
+void SchedulingDialog::slotNewFreeSlots( const KCalCore::Period::List & freeslots)
+{
+    kDebug() << "got free slots";
+    //TODO impl
+}
+

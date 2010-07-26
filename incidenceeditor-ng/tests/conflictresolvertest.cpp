@@ -41,7 +41,7 @@ using namespace KCalCore;
 
 void ConflictResolverTest::insertAttendees()
 {
-    foreach( FreeBusyItem *item, attendees ) {
+    foreach( FreeBusyItem::Ptr item, attendees ) {
         resolver->insertAttendee( item );
     }
 }
@@ -50,7 +50,7 @@ void ConflictResolverTest::insertAttendees()
 void ConflictResolverTest::addAttendee( const QString& email, const FreeBusy::Ptr &fb, Attendee::Role role )
 {
     QString name = QString( "attendee %1" ).arg( attendees.count() );
-    FreeBusyItem *item = new FreeBusyItem( Attendee::Ptr( new Attendee( name, email, false, Attendee::Accepted, role ) ), 0 );
+    FreeBusyItem::Ptr item( new FreeBusyItem( Attendee::Ptr( new Attendee( name, email, false, Attendee::Accepted, role ) ), 0 ) );
     item->setFreeBusy( FreeBusy::Ptr( new FreeBusy( *fb.data() ) ) );
     attendees << item;
 }

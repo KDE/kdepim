@@ -53,6 +53,7 @@ public:
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex index(int row, int column = 0, const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex& child) const;
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     void addItem( const FreeBusyItem::Ptr &freebusy );
 

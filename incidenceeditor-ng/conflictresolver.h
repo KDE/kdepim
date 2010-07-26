@@ -25,10 +25,10 @@
 
 #include "incidenceeditors-ng_export.h"
 
+#include "freebusyitem.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtCore/QTimerEvent>
 #include <QtCore/QSet>
 #include <QtCore/QBitArray>
 #include <QtCore/QVector>
@@ -44,7 +44,7 @@ namespace IncidenceEditorsNG
 {
 
 class FreeBusyItem;
-
+class FreeBusyItemModel;
 /**
  * Takes a list of attendees and event info (e.g., min time start, max time end)
  * fetches their freebusy information, then identifies conflicts and periods of non-conflict.
@@ -69,7 +69,7 @@ public:
      */
     void insertAttendee( const KCalCore::Attendee::Ptr &attendee );
 
-    void insertAttendee( FreeBusyItem* freebusy );
+    void insertAttendee( const FreeBusyItem::Ptr &freebusy );
     /**
      * Removes an attendee
      * The attendee will no longer be considered when
@@ -85,17 +85,6 @@ public:
      * Returns whether the resolver contains the attendee
      */
     bool containsAttendee( const KCalCore::Attendee::Ptr &attendee );
-
-    /**
-     * Queues a reload of free/busy data.
-     * All current attendees will have their free/busy data
-     * redownloaded from Akonadi.
-     */
-    void triggerReload();
-    /**
-     * cancel reloading
-     * */
-    void cancelReload();
 
     /**
      * Constrain the free time slot search to the weekdays
@@ -129,6 +118,10 @@ public:
       the initial slot.
     */
     bool findFreeSlot( const KCalCore::Period &dateTimeRange );
+
+    QList<FreeBusyItem::Ptr> freeBusyItems() const;
+
+    FreeBusyItemModel* model() const;
 
 signals:
     /**
@@ -166,20 +159,7 @@ public slots:
 
     void setResolution( int seconds );
 
-protected:
-    void timerEvent( QTimerEvent * );
-
-private slots:
-    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
-
-    // Force the download of FB information
-    void manualReload();
-    // Only download FB if the auto-download option is set in config
-    void autoReload();
-
 private:
-    void updateFreeBusyData( FreeBusyItem * );
-
     /**
       Checks whether the slot specified by (tryFrom, tryTo) matches the
       search constraints. If yes, return true. The return value is the
@@ -191,12 +171,12 @@ private:
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) is available
-      for the participant specified with attendee. If yes, return true. If
+      for the participant with specified fb. If yes, return true. If
       not, return false and change (tryFrom, tryTo) to contain the next
       possible slot for this participant (not necessarily a slot that is
       available for all participants).
     */
-    bool tryDate( FreeBusyItem *attendee, KDateTime &tryFrom, KDateTime &tryTo );
+    bool tryDate( const KCalCore::FreeBusy::Ptr &fb, KDateTime& tryFrom, KDateTime& tryTo );
 
     /**
      * Checks whether the supplied attendee passes the
@@ -206,22 +186,17 @@ private:
     bool matchesRoleConstraint( const KCalCore::Attendee::Ptr &attendee );
 
     void calculateConflicts();
-    /**
-     * Reload FB items
-     * */
-    void reload();
 
     KCalCore::Period mTimeframeConstraint; //!< the datetime range for outside of which free slots won't be searched.
     KCalCore::Period::List mAvailableSlots;
 
-    QTimer mReloadTimer;
     QTimer mCalculateTimer; /*!< A timer is used control the calculation of
                                    conflicts to prevent the process from being
                                    repeated many times after a series of quick
                                    parameter changes.
                               */
     bool mForceDownload;
-    QList<FreeBusyItem*> mFreeBusyItems;
+    FreeBusyItemModel *mFBModel;
     QWidget *mParentWidget;
 
     QSet<KCalCore::Attendee::Role> mMandatoryRoles;

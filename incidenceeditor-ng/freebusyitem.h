@@ -56,6 +56,9 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
     void startDownload( bool forceDownload );
     void setIsDownloading( bool d );
     bool isDownloading() const;
+signals:
+    void attendeeChanged( const KCalCore::Attendee::Ptr &attendee );
+    void freebusyChanged( const KCalCore::FreeBusy::Ptr fb );
 
   private:
     KCalCore::Attendee::Ptr mAttendee;

@@ -47,7 +47,7 @@ private slots:
 private:
     void insertAttendees();
     void addAttendee( const QString &email, const KCalCore::FreeBusy::Ptr &fb, KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant ) ;
-    QList<IncidenceEditorsNG::FreeBusyItem*> attendees;
+    QList<IncidenceEditorsNG::FreeBusyItem::Ptr> attendees;
     QWidget *parent;
     IncidenceEditorsNG::ConflictResolver *resolver;
     KDateTime base, end;

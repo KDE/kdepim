@@ -53,6 +53,7 @@
 #include "attendeeline.h"
 #include "conflictresolver.h"
 #include "incidencedatetime.h"
+#include "freebusyitemmodel.h"
 #include "../editorconfig.h"
 
 using namespace IncidenceEditorsNG;
@@ -86,7 +87,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
   fillOrganizerCombo();
-  mUi->mSolveButton->setDisabled( true );
+  mUi->mSolveButton->setDisabled( false );
   mUi->mOrganizerLabel->setVisible( false );
 
   mConflictResolver = new ConflictResolver( parent, parent );

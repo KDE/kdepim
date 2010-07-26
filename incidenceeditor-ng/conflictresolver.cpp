@@ -31,7 +31,7 @@
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
 
 #include "attendeedata.h"
-#include "freebusyitem.h"
+#include "freebusyitemmodel.h"
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
@@ -39,13 +39,12 @@ using namespace IncidenceEditorsNG;
 
 ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
   : QObject( parent )
+  , mFBModel( new FreeBusyItemModel( this ) )
   , mParentWidget( parentWidget )
   , mWeekdays( 7 )
   , mSlotResolutionSeconds( DEFAULT_RESOLUTION_SECONDS )
 {
-    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-    connect( m, SIGNAL( freeBusyRetrieved( KCalCore::FreeBusy::Ptr , const QString & ) ),
-             SLOT( slotInsertFreeBusy( KCalCore::FreeBusy::Ptr , const QString & ) ) );
+
     // trigger a reload in case any attendees were inserted before
     // the connection was made
     // triggerReload();
@@ -58,102 +57,36 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
     mWeekdays.setBit( 4 ); //Friday.. surprise!
     mMandatoryRoles << KCalCore::Attendee::ReqParticipant << KCalCore::Attendee::OptParticipant << KCalCore::Attendee::NonParticipant << KCalCore::Attendee::Chair;
 
-    connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( autoReload() ) );
-    mReloadTimer.setSingleShot( true );
-
     connect( &mCalculateTimer, SIGNAL( timeout() ), SLOT( findAllFreeSlots() ) );
     mCalculateTimer.setSingleShot( true );
 }
 
 void ConflictResolver::insertAttendee( const KCalCore::Attendee::Ptr &attendee )
 {
-//     kDebug() << "inserted attendee" << attendee->email();
-    FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
-    mFreeBusyItems.append( item );
-    updateFreeBusyData( item );
+    if( !mFBModel->containsAttendee( attendee ) )
+        mFBModel->addItem( FreeBusyItem::Ptr( new FreeBusyItem( attendee, mParentWidget ) ) );
 }
 
-void ConflictResolver::insertAttendee( FreeBusyItem* freebusy )
+void ConflictResolver::insertAttendee( const FreeBusyItem::Ptr &freebusy )
 {
-    mFreeBusyItems.append( freebusy );
+    if( !mFBModel->containsAttendee( freebusy->attendee() ) )
+        mFBModel->addItem( freebusy );
 }
 
 void ConflictResolver::removeAttendee( const KCalCore::Attendee::Ptr &attendee )
 {
-    FreeBusyItem *anItem = 0;
-    for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
-        anItem = mFreeBusyItems[i];
-        if ( anItem->attendee() == attendee ) {
-            if ( anItem->updateTimerID() != 0 ) {
-                killTimer( anItem->updateTimerID() );
-            }
-            delete anItem;
-            mFreeBusyItems.removeAt( i );
-            break;
-        }
-    }
+    mFBModel->removeAttendee( attendee );
     calculateConflicts();
 }
 
 void ConflictResolver::clearAttendees()
 {
-    qDeleteAll( mFreeBusyItems );
-    mFreeBusyItems.clear();
+    mFBModel->clear();
 }
 
 bool ConflictResolver::containsAttendee( const KCalCore::Attendee::Ptr &attendee )
 {
-    FreeBusyItem *anItem = 0;
-    for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {
-        anItem = mFreeBusyItems[i];
-        if ( anItem->attendee() == attendee ) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void ConflictResolver::updateFreeBusyData( FreeBusyItem* item )
-{
-    if ( item->isDownloading() ) {
-        // This item is already in the process of fetching the FB list
-        return;
-    }
-
-    if ( item->updateTimerID() != 0 ) {
-        // An update timer is already running. Reset it
-        killTimer( item->updateTimerID() );
-    }
-
-    // This item does not have a download running, and no timer is set
-    // Do the download in one second
-    item->setUpdateTimerID( startTimer( 1000 ) );
-}
-
-void ConflictResolver::timerEvent( QTimerEvent* event )
-{
-    killTimer( event->timerId() );
-    Q_FOREACH( FreeBusyItem * item, mFreeBusyItems ) {
-        if ( item->updateTimerID() == event->timerId() ) {
-            item->setUpdateTimerID( 0 );
-            item->startDownload( mForceDownload );
-            return;
-        }
-    }
-}
-
-void ConflictResolver::slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb,
-                                           const QString& email )
-{
-    if ( fb ) {
-      fb->sortList();
-    }
-    Q_FOREACH( FreeBusyItem *item, mFreeBusyItems ) {
-        if ( item->email() == email ) {
-            item->setFreeBusy( fb );
-        }
-    }
-    calculateConflicts();
+    return mFBModel->containsAttendee( attendee );
 }
 
 void ConflictResolver::setEarliestDate( const QDate& newDate )
@@ -200,59 +133,27 @@ void ConflictResolver::setLatestDateTime( const KDateTime& newDateTime )
     calculateConflicts();
 }
 
-
-void ConflictResolver::autoReload()
-{
-    mForceDownload = false;
-    reload();
-}
-
-void ConflictResolver::reload()
-{
-    Q_FOREACH( FreeBusyItem * item, mFreeBusyItems ) {
-        if ( mForceDownload ) {
-            item->startDownload( mForceDownload );
-        } else {
-            updateFreeBusyData( item );
-        }
-    }
-}
-
-void ConflictResolver::triggerReload()
-{
-    mReloadTimer.start( 1000 );
-}
-
-void ConflictResolver::cancelReload()
-{
-    mReloadTimer.stop();
-}
-
-void ConflictResolver::manualReload()
-{
-    mForceDownload = true;
-    reload();
-}
-
 int ConflictResolver::tryDate( KDateTime& tryFrom, KDateTime& tryTo )
 {
     int conflicts_count = 0;
-    Q_FOREACH( FreeBusyItem * currentItem, mFreeBusyItems ) {
-        if ( !matchesRoleConstraint( currentItem->attendee() ) )
+    for( int i = 0; i < mFBModel->rowCount(); ++i ) {
+        QModelIndex index = mFBModel->index( i );
+        KCalCore::Attendee::Ptr attendee = mFBModel->data( index, FreeBusyItemModel::AttendeeRole ).value<KCalCore::Attendee::Ptr>();
+        if ( !matchesRoleConstraint( attendee ) )
             continue;
-        if ( !tryDate( currentItem, tryFrom, tryTo ) ) {
+        KCalCore::FreeBusy::Ptr freebusy = mFBModel->data( index, FreeBusyItemModel::AttendeeRole ).value<KCalCore::FreeBusy::Ptr>();
+        if ( !tryDate( freebusy, tryFrom, tryTo ) ) {
             ++conflicts_count;
         }
     }
     return conflicts_count;
 }
 
-bool ConflictResolver::tryDate( FreeBusyItem* attendee, KDateTime& tryFrom, KDateTime& tryTo )
+bool ConflictResolver::tryDate( const KCalCore::FreeBusy::Ptr &fb, KDateTime& tryFrom, KDateTime& tryTo )
 {
     // If we don't have any free/busy information, assume the
     // participant is free. Otherwise a participant without available
     // information would block the whole allocation.
-  KCalCore::FreeBusy::Ptr fb = attendee->freeBusy();
     if ( !fb ) {
       return true;
     }
@@ -270,7 +171,7 @@ bool ConflictResolver::tryDate( FreeBusyItem* attendee, KDateTime& tryFrom, KDat
             tryFrom = ( *it ).end();
             tryTo = tryFrom.addSecs( secsDuration );
             // try again with the new try period
-            tryDate( attendee, tryFrom, tryTo );
+            tryDate( fb, tryFrom, tryTo );
             // we had to change the date at least once
             return false;
         }
@@ -316,6 +217,7 @@ bool ConflictResolver::findFreeSlot( const KCalCore::Period &dateTimeRange )
 
 void ConflictResolver::findAllFreeSlots()
 {
+    kDebug() << "find all free slots";
     // Uses an O(p*n) (n number of attendees, p timeframe range / timeslot resolution ) algorithm to
     // locate all free blocks in a given timeframe that match the search constraints.
     // Does so by:
@@ -328,6 +230,8 @@ void ConflictResolver::findAllFreeSlots()
     // define these locally for readability
     const KDateTime begin = mTimeframeConstraint.start();
     const KDateTime end =  mTimeframeConstraint.end();
+
+    kDebug() << "from " << begin << " to " << end;
 
     // calculate the time resolution
     // each timeslot in the arrays represents a unit of time
@@ -346,10 +250,14 @@ void ConflictResolver::findAllFreeSlots()
     }
     // filter out attendees for which we don't have FB data
     // and which don't match the mandatory role contrstaint
-    QList<FreeBusyItem* > filteredFBItems;
-    foreach( FreeBusyItem * currentItem, mFreeBusyItems ) {
-        if ( currentItem->freeBusy() && matchesRoleConstraint( currentItem->attendee() ) )
-            filteredFBItems << currentItem;
+    QList<KCalCore::FreeBusy::Ptr> filteredFBItems;
+    for( int i = 0; i < mFBModel->rowCount(); ++i ) {
+        QModelIndex index = mFBModel->index( i );
+        KCalCore::Attendee::Ptr attendee = mFBModel->data( index, FreeBusyItemModel::AttendeeRole ).value<KCalCore::Attendee::Ptr>();
+        if ( !matchesRoleConstraint( attendee ) )
+            continue;
+        KCalCore::FreeBusy::Ptr freebusy = mFBModel->data( index, FreeBusyItemModel::AttendeeRole ).value<KCalCore::FreeBusy::Ptr>();
+        filteredFBItems << freebusy;
     }
 
     // now we know the number of attendees we are calculating for
@@ -358,6 +266,7 @@ void ConflictResolver::findAllFreeSlots()
       kDebug() << "no attendees match search criteria";
       return;
     }
+    kDebug() << "num attendees: " << number_attendees;
     // this is a 2 dimensional array where the rows are attendees
     // and the columns are 0 or 1 denoting freee or busy respectively.
     QVector< QVector<int> > fbTable;
@@ -374,9 +283,9 @@ void ConflictResolver::findAllFreeSlots()
     //    etareti
     //    append the allocated array to <fbTable>
     // etareti
-    foreach( FreeBusyItem * currentItem, filteredFBItems ) {
-        Q_ASSERT( currentItem ); // sanity check
-        QList<KCalCore::Period> busyPeriods = currentItem->freeBusy()->busyPeriods();
+    foreach( KCalCore::FreeBusy::Ptr currentFB, filteredFBItems ) {
+        Q_ASSERT( currentFB ); // sanity check
+        QList<KCalCore::Period> busyPeriods = currentFB->busyPeriods();
         QVector<int> fbArray( range );
         fbArray.fill( 0 ); // initialize to zero
         for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
@@ -506,3 +415,9 @@ void ConflictResolver::setResolution( int seconds )
 {
   mSlotResolutionSeconds = seconds;
 }
+
+FreeBusyItemModel* ConflictResolver::model() const
+{
+  return mFBModel;
+}
+
