@@ -1075,7 +1075,8 @@ void KMKernel::findCreateDefaultCollection( Akonadi::SpecialMailCollections::Typ
 void KMKernel::createDefaultCollectionDone( KJob * job)
 {
   if ( job->error() ) {
-    emergencyExit( job->errorText() );
+    kWarning() << job->errorText();
+    //emergencyExit( job->errorText() );
     return;
   }
 
