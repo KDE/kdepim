@@ -25,6 +25,8 @@
 
 #include "incidenceeditors-ng_export.h"
 
+#include <QSharedPointer>
+
 #include <kcalcore/freebusy.h>
 
 #include "attendeedata.h"
@@ -36,6 +38,7 @@ namespace IncidenceEditorsNG {
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
 {
   public:
+    typedef QSharedPointer<FreeBusyItem> Ptr;
     /**
     * @param parentWidget is passed to Akonadi when fetching free/busy data.
     */
