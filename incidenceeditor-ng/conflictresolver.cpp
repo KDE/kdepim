@@ -257,7 +257,8 @@ void ConflictResolver::findAllFreeSlots()
         if ( !matchesRoleConstraint( attendee ) )
             continue;
         KCalCore::FreeBusy::Ptr freebusy = mFBModel->data( index, FreeBusyItemModel::AttendeeRole ).value<KCalCore::FreeBusy::Ptr>();
-        filteredFBItems << freebusy;
+        if( freebusy )
+            filteredFBItems << freebusy;
     }
 
     // now we know the number of attendees we are calculating for
