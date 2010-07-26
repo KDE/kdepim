@@ -187,6 +187,7 @@ QVariant FreeBusyItemModel::headerData( int section, Qt::Orientation orientation
 
 void FreeBusyItemModel::addItem(const IncidenceEditorsNG::FreeBusyItem::Ptr& freebusy)
 {
+    kDebug() << freebusy->attendee()->fullName();
     int row = mFreeBusyItems.size();
     beginInsertRows( QModelIndex(), row, row );
     mFreeBusyItems.append( freebusy );

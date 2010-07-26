@@ -207,6 +207,20 @@ bool IncidenceAttendee::isDirty() const
   const KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
 
+  // TODO Since we always add the organizer as a default attendee
+  // if the local attendee list only has the organizer in it
+  // then report back non dirty
+  // this is is an ugly hack until IE-NG supports default data
+  if( newList.size() == 1 ) {
+
+    QString name;
+    QString email;
+    bool success = KPIMUtils::extractEmailAddressAndName( mUi->mOrganizerCombo->currentText(), email, name );
+    AttendeeData::Ptr att = newList.front();
+    if( att->name() == name &&  att->email() == email )
+      return false;
+  }
+  
   // The lists sizes *must* be the same. When the organizer is attending the
   // event as well, he should be in the attendees list as well.
   if ( origList.size() != newList.size() ) {
@@ -443,7 +457,8 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
              "You are changing the organizer of this event. "
              "Since the organizer is also attending this event, would you "
              "like to change the corresponding attendee as well?" ) );
-  }
+  } else
+    answer = KMessageBox::Yes;
 
   if ( answer == KMessageBox::Yes ) {
     if ( currentOrganizerAttendee ) {
