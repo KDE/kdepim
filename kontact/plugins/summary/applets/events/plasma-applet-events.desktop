@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Events
+Comment=Lists upcoming events and todo entries
+Type=Service
+ServiceTypes=Plasma/Applet
+ 
+X-KDE-Library=plasma_applet_events
+X-KDE-PluginInfo-Author=Ryan Rix
+X-KDE-PluginInfo-Email=ry@n.rix.si
+X-KDE-PluginInfo-Name=org.kde.events
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Category=Personal Information Management
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
