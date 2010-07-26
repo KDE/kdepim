@@ -142,6 +142,7 @@ void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
     mUi->mOrganizerLabel->setText( incidence->organizer()->fullName() );
   }
 
+  mAttendeeEditor->clear();
   const KCalCore::Attendee::List al = incidence->attendees();
   foreach( const KCalCore::Attendee::Ptr &a, al )
     mAttendeeEditor->addAttendee( a );
