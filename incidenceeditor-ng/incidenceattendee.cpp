@@ -462,7 +462,6 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
 
   if ( answer == KMessageBox::Yes ) {
     if ( currentOrganizerAttendee ) {
-      mConflictResolver->removeAttendee( currentOrganizerAttendee->attendee() );
       mAttendeeEditor->removeAttendee( currentOrganizerAttendee );
     }
 
@@ -475,7 +474,6 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
       KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( name, email, rsvp, status, KCalCore::Attendee::ReqParticipant ) );
 
       mAttendeeEditor->addAttendee( newAt );
-      mConflictResolver->insertAttendee( newAt );
     }
   }
   mOrganizer = newOrganizer;
