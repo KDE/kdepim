@@ -59,7 +59,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
 
 	// Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
         // The former approach was overengineered and only worked around problems in the design
-        // For now, we have to live without the warm and fuzzy feeling a refactoring might give. 
+        // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
         // Patches appreciated. (danimo)
 
         addFilter(new FilterKMailArchive);
@@ -84,6 +84,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
         mCollectionRequestor->setAccessRightsFilter(
           Akonadi::Collection::CanCreateCollection |
           Akonadi::Collection::CanCreateItem );
+        mCollectionRequestor->changeCollectionDialogOptions( Akonadi::CollectionDialog::AllowToCreateNewChildCollection );
 }
 
 KSelFilterPage::~KSelFilterPage() {
