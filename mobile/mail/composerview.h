@@ -87,6 +87,10 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void signEmail( bool sign ) { m_sign = sign; }
     void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }
+    void saveDraft();
+
+ protected:
+    void closeEvent ( QCloseEvent * event );
 
   private:
     Message::ComposerViewBase* m_composerBase;

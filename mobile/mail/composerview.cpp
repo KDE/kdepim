@@ -134,6 +134,11 @@ ComposerView::ComposerView(QWidget* parent) :
   action->setIcon( KIcon( "mail-encrypt" ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(encryptEmail(bool)));
+
+  action = actionCollection()->addAction("save_in_drafts");
+  action->setText( i18n( "Save as Draft" ) );
+  action->setIcon( KIcon( "document-save" ) );
+  connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -186,7 +191,7 @@ void ComposerView::send( MessageSender::SaveIn saveIn )
   m_composerBase->setSubject( m_subject );
 
   m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
-  
+
   /* Default till UI exists
   m_composerBase->setCharsets( );
   m_composerBase->setUrgent( );
@@ -281,6 +286,53 @@ void ComposerView::failed( const QString &errorMessage )
 void ComposerView::setEditor( Message::KMeditor* editor ) {
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
+}
+
+void ComposerView::closeEvent( QCloseEvent * event )
+{
+  //  Q_UNUSED( event );
+
+  const QString saveButton = i18n("&Save as Draft");
+  const QString saveText = i18n("Save this message in the Drafts folder. ");
+
+  //### Replace this KMessageBox
+  const int rc = KMessageBox::warningYesNoCancel( this,
+                                                  i18n("Do you want to save the message for later or discard it?"),
+                                                  i18n("Close Composer"),
+                                                  KGuiItem(saveButton, "document-save", QString(), saveText),
+                                                  KStandardGuiItem::discard(),
+                                                  KStandardGuiItem::cancel() );
+
+  if ( rc == KMessageBox::Yes ) {
+    saveDraft();
+  } else if (rc == KMessageBox::Cancel ) {
+    event->ignore();
+    return;
+  }
+
+  // remove autosaves if the message was either saved as draft or discarded
+  m_composerBase->cleanupAutoSave();
+}
+
+void ComposerView::saveDraft()
+{
+  if ( !m_composerBase->editor()->checkExternalEditorFinished() )
+    return;
+
+  const MessageSender::SendMethod method = MessageSender::SendLater;
+  const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
+
+  //### TODO: encrypt settings
+  //### TODO: disable html
+  //### TODO: charsets
+
+  const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
+  m_composerBase->setFrom( identity.fullEmailAddr() );
+  m_composerBase->setReplyTo( identity.replyToAddr() );
+  m_composerBase->setSubject( m_subject );
+  m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
+
+  m_composerBase->send( method, saveIn );
 }
 
 #include "composerview.moc"
