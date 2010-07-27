@@ -62,7 +62,7 @@ void EventsApplet::configChanged()
         getCollectionFromKorg();
     }
 
-    foreach( QString Id, m_collectionIds ) {
+    foreach( const QString Id, m_collectionIds ) {
         Akonadi::Collection collection = Akonadi::Collection( Id.toInt() );
         collections << collection;
         kDebug() << Id << "created collection for Id";
