@@ -24,11 +24,6 @@ set( akonadi_next_SRCS
   notecreatorandselector.cpp
   entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
-  kbreadcrumbselectionmodel.cpp
-  krecursivefilterproxymodel.cpp
-  kmodelindexproxymapper.cpp
-  kviewstatesaver.cpp
-  kproxyitemselectionmodel.cpp
   etmstatesaver.cpp
   collectionchildorderattribute.cpp
   collectionselectionproxymodel.cpp

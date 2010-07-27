@@ -46,12 +46,6 @@ set(kdepim_LIB_SRCS
    multiplyinglineview_p.cpp
 )
 
-if (NOT WINCE)
-  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
-    kdescendantsproxymodel.cpp
-  )
-endif (NOT WINCE)
-
 if (KDEPIMLIBS_KRESOURCES_LIBRARY)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
     kresourceprefs.cpp

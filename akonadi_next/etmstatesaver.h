@@ -22,14 +22,14 @@
 #ifndef ETMSTATESAVER_H
 #define ETMSTATESAVER_H
 
-#include "kviewstatesaver.h"
+#include <kviewstatesaver.h>
 
 #include "akonadi/collection.h"
 #include "akonadi/item.h"
 
 #include "akonadi_next_export.h"
 
-class AKONADI_NEXT_EXPORT ETMStateSaver : public Future::KViewStateSaver
+class AKONADI_NEXT_EXPORT ETMStateSaver : public KViewStateSaver
 {
   Q_OBJECT
 public:

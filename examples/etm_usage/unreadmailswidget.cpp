@@ -40,7 +40,7 @@
 using namespace Akonadi;
 
 UnreadMailsTree::UnreadMailsTree(QObject* parent)
-  : Future::KRecursiveFilterProxyModel(parent)
+  : KRecursiveFilterProxyModel(parent)
 {
 
 }

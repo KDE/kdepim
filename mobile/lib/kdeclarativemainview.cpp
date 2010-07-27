@@ -45,8 +45,8 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/agentmanager.h>
 
-#include <akonadi_next/kbreadcrumbselectionmodel.h>
-#include <akonadi_next/kproxyitemselectionmodel.h>
+#include <kbreadcrumbselectionmodel.h>
+#include <klinkitemselectionmodel.h>
 #include <akonadi_next/etmstatesaver.h>
 #include <akonadi_next/checkableitemproxymodel.h>
 
@@ -147,7 +147,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   // Need to proxy the selection because the favSelection operates on collectionFilter, but the
   // KSelectionProxyModel *favCollectionList and favSelectedChildren below operates on mEtm.
-  Future::KProxyItemSelectionModel *selectionProxy = new Future::KProxyItemSelectionModel( d->mEtm, d->mFavSelection, this );
+  KLinkItemSelectionModel *selectionProxy = new KLinkItemSelectionModel( d->mEtm, d->mFavSelection, this );
 
   // Show the list of currently selected items.
   KSelectionProxyModel *favSelectedChildren = new KSelectionProxyModel(selectionProxy, this);
@@ -187,7 +187,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   // Make it possible to uncheck currently selected items in the list
   CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel( this );
   currentSelectionCheckableProxyModel->setSourceModel( favCollectionList );
-  Future::KProxyItemSelectionModel *proxySelector = new Future::KProxyItemSelectionModel( favCollectionList, d->mFavSelection );
+  KLinkItemSelectionModel *proxySelector = new KLinkItemSelectionModel( favCollectionList, d->mFavSelection );
   currentSelectionCheckableProxyModel->setSelectionModel( proxySelector );
 
   QListView *currentlyCheckedView = new QListView;
