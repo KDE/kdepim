@@ -63,7 +63,7 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
   setMainWidget( page );
   setModal( modal );
 
-  if ( item->attachment()->isUri() || !item->attachment()->data() ) {
+  if ( item->attachment()->isUri() || item->attachment()->data().isEmpty() ) {
     mUi->mStackedWidget->setCurrentIndex( 0 );
     mUi->mURLRequester->setUrl( item->uri() );
     urlChanged( item->uri() );
