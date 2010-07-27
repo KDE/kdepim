@@ -68,8 +68,8 @@ class BrowserWidget: public QWidget
     void dumpToXmlResult( KJob *job );
     void clear();
 
-    void slotBrowserModelAboutToBeReset();
-    void slotBrowserModelReset();
+    void saveState();
+    void restoreState();
 
   private:
     AkonadiBrowserModel *mBrowserModel;
