@@ -37,7 +37,6 @@ public:
 
 public slots:
     void configChanged();
-    void collectionsReceived(  const Akonadi::Collection::List& collections );
     void collectionFetchResult( KJob* job );
 
 protected:
