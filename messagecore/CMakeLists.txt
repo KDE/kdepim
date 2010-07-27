@@ -38,7 +38,7 @@ kde4_add_ui_files(messagecore_LIB_SRCS
   attachmentpropertiesdialog.ui
 )
 
-kde4_add_library(messagecore SHARED ${messagecore_LIB_SRCS})
+kde4_add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
 
 target_link_libraries(messagecore
   ${KDEPIMLIBS_KMIME_LIBS}

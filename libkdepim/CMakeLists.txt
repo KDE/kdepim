@@ -16,7 +16,6 @@ set(kdepim_LIB_SRCS
    addemailaddressjob.cpp
    addcontactjob.cpp
    openemailaddressjob.cpp
-   kdescendantsproxymodel.cpp
    ktimeedit.cpp
    kprefsdialog.cpp
    kdateedit.cpp
@@ -47,13 +46,19 @@ set(kdepim_LIB_SRCS
    multiplyinglineview_p.cpp
 )
 
+if (NOT WINCE)
+  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
+    kdescendantsproxymodel.cpp
+  )
+endif (NOT WINCE)
+
 if (KDEPIMLIBS_KRESOURCES_LIBRARY)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
     kresourceprefs.cpp
   )
 endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
 
-kde4_add_library(kdepim SHARED ${kdepim_LIB_SRCS})
+kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 
 target_link_libraries(kdepim
   ${KDEPIMLIBS_KRESOURCES_LIBS}

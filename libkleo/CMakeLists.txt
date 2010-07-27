@@ -101,7 +101,7 @@ if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} )
 endif ( NOT KDEPIM_ONLY_KLEO)
 
-kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
+kde4_add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})
 if(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
 else(WIN32)

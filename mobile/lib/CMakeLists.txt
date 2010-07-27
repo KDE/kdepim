@@ -26,7 +26,7 @@ kde4_add_ui_files(mobileui_SRCS
   ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomoremobile.ui
 )
 
-kde4_add_library(kdepimmobileui SHARED ${mobileui_SRCS})
+kde4_add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
 set_target_properties(kdepimmobileui PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 target_link_libraries(kdepimmobileui

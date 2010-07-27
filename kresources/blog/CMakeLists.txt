@@ -3,7 +3,7 @@
 
 set(kcal_resourceblog_LIB_SRCS resourceblog.cpp resourceblogconfig.cpp )
 
-kde4_add_library(kcal_resourceblog SHARED ${kcal_resourceblog_LIB_SRCS})
+kde4_add_library(kcal_resourceblog ${LIBRARY_TYPE} ${kcal_resourceblog_LIB_SRCS})
 
 target_link_libraries(kcal_resourceblog ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KBLOG_LIBS} kdepim)
 

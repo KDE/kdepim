@@ -105,7 +105,7 @@ kde4_add_ui_files(knodecommon_LIB_SRCS
 
 kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
-kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
+kde4_add_library(knodecommon ${LIBRARY_TYPE} ${knodecommon_LIB_SRCS})
 
 target_link_libraries(knodecommon
   ${KDE4_KMIME_LIBRARY} ${KDE4_KCMUTILS_LIBS} ${KDE4_KIO_LIBS}

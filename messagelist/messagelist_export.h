@@ -23,7 +23,10 @@
 #include <kdemacros.h>
 
 #ifndef MESSAGELIST_EXPORT
-# if defined(MAKE_MESSAGELIST_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define MESSAGELIST_EXPORT
+# elif defined(MAKE_MESSAGELIST_LIB)
    /* We are building this library */
 #  define MESSAGELIST_EXPORT KDE_EXPORT
 # else

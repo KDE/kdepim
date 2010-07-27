@@ -26,7 +26,10 @@
 #ifdef Q_WS_WIN
 
 #ifndef KLEO_EXPORT
-# ifdef MAKE_KLEO_LIB
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KLEO_EXPORT
+# elif defined(MAKE_KLEO_LIB)
 #  define KLEO_EXPORT KDE_EXPORT
 # else
 #  define KLEO_EXPORT KDE_IMPORT

@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KADDRESSBOOK_EXPORT
-# if defined(MAKE_KADDRESSBOOKPRIVATE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KADDRESSBOOK_EXPORT
+# elif defined(MAKE_KADDRESSBOOKPRIVATE_LIB)
    /* We are building this library */
 #  define KADDRESSBOOK_EXPORT KDE_EXPORT
 # else

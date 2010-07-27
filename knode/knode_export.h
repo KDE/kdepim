@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KNODE_EXPORT
-# if defined(MAKE_KNODECOMMON_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KNODE_EXPORT
+# elif defined(MAKE_KNODECOMMON_LIB)
    /* We are building this library */
 #  define KNODE_EXPORT KDE_EXPORT
 # else
@@ -34,7 +37,10 @@
 #endif
 
 #ifndef KCM_KNODE_EXPORT
-# if defined(MAKE_KCM_KNODE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCM_KNODE_EXPORT
+# elif defined(MAKE_KCM_KNODE_LIB)
    /* We are building this library */
 #  define KCM_KNODE_EXPORT KDE_EXPORT
 # else

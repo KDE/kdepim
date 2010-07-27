@@ -61,7 +61,7 @@ kde4_add_ui_files( incidenceeditors_LIB_SRCS
    template_management_dialog_base.ui
 )
 
-kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
+kde4_add_library(incidenceeditors ${LIBRARY_TYPE} ${incidenceeditors_LIB_SRCS})
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 

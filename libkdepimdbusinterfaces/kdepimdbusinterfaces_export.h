@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KDEPIMDBUSINTERFACES_EXPORT
-# if defined(MAKE_KDEPIMDBUSINTERFACES_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KDEPIMDBUSINTERFACES_EXPORT
+# elif defined(MAKE_KDEPIMDBUSINTERFACES_LIB)
    /* We are building this library */
 #  define KDEPIMDBUSINTERFACES_EXPORT KDE_EXPORT
 # else

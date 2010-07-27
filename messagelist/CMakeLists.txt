@@ -90,7 +90,7 @@ kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
     core/settings.kcfgc
 )
 
-kde4_add_library(messagelist SHARED ${libmessagelist_SRCS})
+kde4_add_library(messagelist ${LIBRARY_TYPE} ${libmessagelist_SRCS})
 target_link_libraries(messagelist
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}

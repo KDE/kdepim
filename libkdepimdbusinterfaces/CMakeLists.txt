@@ -17,7 +17,7 @@ qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korga
 qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.kmail.xml)
 qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/knode/org.kde.knode.xml)
 
-kde4_add_library(kdepimdbusinterfaces SHARED ${kdepimdbusinterfaces_LIB_SRCS})
+kde4_add_library(kdepimdbusinterfaces ${LIBRARY_TYPE} ${kdepimdbusinterfaces_LIB_SRCS})
 
 add_dependencies(kdepimdbusinterfaces kmail_xml)
 

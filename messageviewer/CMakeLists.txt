@@ -64,7 +64,7 @@ kde4_add_ui_files(libmessageviewer_SRCS
   invitationsettings.ui
 )
 
-kde4_add_library(messageviewer SHARED ${libmessageviewer_SRCS})
+kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
 
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KMIME_LIBS}

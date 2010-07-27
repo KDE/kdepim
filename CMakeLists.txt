@@ -178,6 +178,13 @@ if (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
   add_definitions( -DKDEPIM_NO_KRESOURCES )
 endif (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
 
+if(WINCE)
+  set(LIBRARY_TYPE STATIC)
+  add_definitions(-DKDEPIM_STATIC_LIBS)
+else(WINCE)
+  set(LIBRARY_TYPE SHARED)
+endif(WINCE)
+
 
 ############### Macros ###############
 

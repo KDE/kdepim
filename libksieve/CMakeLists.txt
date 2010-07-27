@@ -20,7 +20,7 @@ set(ksieve_LIB_SRCS
     ${libksieve_parser_SRCS})
 
 
-kde4_add_library(ksieve SHARED ${ksieve_LIB_SRCS})
+kde4_add_library(ksieve ${LIBRARY_TYPE} ${ksieve_LIB_SRCS})
 
 target_link_libraries(ksieve ${KDE4_KDECORE_LIBS})
 

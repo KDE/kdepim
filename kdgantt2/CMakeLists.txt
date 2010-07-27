@@ -49,7 +49,7 @@ endforeach(it)
 
 qt4_generate_moc(kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
 macro_add_file_dependencies(kdganttgraphicsview.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-kde4_add_library(kdgantt2 SHARED ${libkdgantt2_SRCS})
+kde4_add_library(kdgantt2 ${LIBRARY_TYPE} ${libkdgantt2_SRCS})
 target_link_libraries(kdgantt2  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
 
 set_target_properties( kdgantt2 PROPERTIES VERSION 0.1.0 SOVERSION 0)

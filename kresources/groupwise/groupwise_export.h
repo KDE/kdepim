@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KCAL_GROUPWISE_EXPORT
-# if defined(MAKE_KCALGROUPWISE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCAL_GROUPWISE_EXPORT
+# elif defined(MAKE_KCALGROUPWISE_LIB)
    /* We are building this library */ 
 #  define KCAL_GROUPWISE_EXPORT KDE_EXPORT
 # else
@@ -34,7 +37,10 @@
 #endif
 
 #ifndef KABC_GROUPWISE_EXPORT
-# if defined(MAKE_KABCGROUPWISE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KABC_GROUPWISE_EXPORT
+# elif defined(MAKE_KABCGROUPWISE_LIB)
    /* We are building this library */
 #  define KABC_GROUPWISE_EXPORT KDE_EXPORT
 # else
@@ -44,7 +50,10 @@
 #endif
 
 #ifndef GWSOAP_EXPORT
-# if defined(MAKE_GWSOAP_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define GWSOAP_EXPORT
+# elif defined(MAKE_GWSOAP_LIB)
    /* We are building this library */
 #  define GWSOAP_EXPORT KDE_EXPORT
 # else

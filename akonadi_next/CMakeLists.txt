@@ -47,7 +47,7 @@ set( akonadi_next_SRCS
   recursivecollectionfilterproxymodel.cpp
 )
 
-kde4_add_library(akonadi_next SHARED ${akonadi_next_SRCS} )
+kde4_add_library(akonadi_next ${LIBRARY_TYPE} ${akonadi_next_SRCS} )
 
 target_link_libraries(akonadi_next
                       ${AKONADI_COMMON_LIBRARIES}

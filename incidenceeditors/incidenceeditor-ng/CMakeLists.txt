@@ -65,7 +65,7 @@ kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
   schedulingdialog.ui
 )
 
-kde4_add_library(incidenceeditorsng SHARED ${incidenceeditors_ng_desktop_LIB_SRCS})
+kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
 
 target_link_libraries(incidenceeditorsng
   ${QT_QTCORE_LIBRARY}
@@ -103,7 +103,7 @@ if (KDEPIM_MOBILE_UI)
     alarmdialog.ui
   )
 
-  kde4_add_library(incidenceeditorsngmobile SHARED ${incidenceeditors_ng_mobile_LIB_SRCS})
+  kde4_add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsngmobile
     ${QT_QTCORE_LIBRARY}

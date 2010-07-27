@@ -14,7 +14,7 @@ else ( WIN32 )
   set( _kleopatraclientcore_extra_SRCS )
 endif ( WIN32 )
 
-kde4_add_library( kleopatraclientcore SHARED
+kde4_add_library( kleopatraclientcore ${LIBRARY_TYPE}
   ${_kleopatraclientcore_extra_SRCS}
   initialization.cpp
   command.cpp

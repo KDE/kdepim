@@ -27,13 +27,16 @@
 #include <kdemacros.h>
 
 #ifndef KCAL_RESOURCEBLOG_EXPORT
-#if defined(MAKE_KCAL_RESOURCEBLOG_LIB)
-	/* We are building this library */
-#define KCAL_RESOURCEBLOG_EXPORT KDE_EXPORT
-#else
-	/* We are using this library */
-#define KCAL_RESOURCEBLOG_EXPORT KDE_IMPORT
-#endif
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCAL_RESOURCEBLOG_EXPORT
+# elif defined(MAKE_KCAL_RESOURCEBLOG_LIB)
+   /* We are building this library */
+#  define KCAL_RESOURCEBLOG_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KCAL_RESOURCEBLOG_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #ifndef KCAL_RESOURCEBLOG_EXPORT_DEPRECATED
