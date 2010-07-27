@@ -176,9 +176,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     void clearTimeSpanSelection();
 
-    /** Notifies agenda that there are pending changes */
-    void setUpdateNeeded();
-
     // Used by the timelabelszone
     void updateTimeBarWidth();
     /** Create labels for the selected dates. */

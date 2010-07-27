@@ -149,8 +149,7 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
         mAllowAgendaUpdate( true ),
         mUpdateItem( 0 ),
         mCollectionId( -1 ),
-        mIsSideBySide( isSideBySide ),
-        mPendingChanges( true )
+        mIsSideBySide( isSideBySide )
     {
     }
 
@@ -197,7 +196,6 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
     Akonadi::Collection::Id mCollectionId;
 
     bool mIsSideBySide;
-    bool mPendingChanges;
 
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
@@ -209,8 +207,8 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
 void AgendaView::Private::calendarIncidenceAdded( const Item &incidence )
 {
   Q_UNUSED( incidence );
-  if ( !mPendingChanges ) {
-    mPendingChanges = true;
+  if ( !q->updateNeeded() ) {
+    q->setUpdateNeeded( true );
     QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
   }
 }
@@ -218,8 +216,8 @@ void AgendaView::Private::calendarIncidenceAdded( const Item &incidence )
 void AgendaView::Private::calendarIncidenceChanged( const Item &incidence )
 {
   Q_UNUSED( incidence );
-  if ( !mPendingChanges ) {
-    mPendingChanges = true;
+  if ( !q->updateNeeded() ) {
+    q->setUpdateNeeded( true );
     QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
   }
 }
@@ -227,8 +225,8 @@ void AgendaView::Private::calendarIncidenceChanged( const Item &incidence )
 void AgendaView::Private::calendarIncidenceDeleted( const Item &incidence )
 {
   Q_UNUSED( incidence );
-  if ( !mPendingChanges ) {
-    mPendingChanges = true;
+  if ( !q->updateNeeded() ) {
+    q->setUpdateNeeded( true );
     QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
   }
 }
@@ -1135,7 +1133,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
   if ( !result ) {
-    d->mPendingChanges = true;
+    setUpdateNeeded( true );
     QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
     return;
   }
@@ -1183,7 +1181,7 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
   if ( !d->mSelectedDates.isEmpty() &&
        d->mSelectedDates.first() == start &&
        d->mSelectedDates.last() == end &&
-       !d->mPendingChanges ) {
+       !updateNeeded() ) {
     return;
   }
 
@@ -1440,7 +1438,7 @@ void AgendaView::fillAgenda( const QDate & )
 
 void AgendaView::fillAgenda()
 {
-  d->mPendingChanges = false;
+  setUpdateNeeded( false );
 
   /* Remember the item Ids of the selected items. In case one of the
    * items was deleted and re-added, we want to reselect it. */
@@ -1895,11 +1893,6 @@ bool AgendaView::filterByCollectionSelection( const Item &incidence )
   } else {
     return d->mCollectionId == incidence.storageCollectionId();
   }
-}
-
-void AgendaView::setUpdateNeeded()
-{
-  d->mPendingChanges = true;
 }
 
 #include "agendaview.moc"

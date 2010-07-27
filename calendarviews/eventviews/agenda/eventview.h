@@ -231,6 +231,13 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     Akonadi::CollectionSelection* collectionSelection() const;
 
+    /**
+       Notifies the view that there are pending changes so a redraw is needed.
+
+       @param needed if the update is needed or not.
+    */
+    virtual void setUpdateNeeded( bool needed );
+
   public Q_SLOTS:
 
     /**
@@ -449,6 +456,11 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     bool isWorkDay( const QDate &date ) const;
     QStringList holidayNames( const QDate &date ) const;
+
+    /**
+       Returns if there are pending changes and a redraw is needed.
+    */
+    bool updateNeeded() const;
 
   private:
     /*
