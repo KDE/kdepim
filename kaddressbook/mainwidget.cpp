@@ -34,7 +34,7 @@
 #endif
 
 #include <akonadi/akonadi_next/collectionselectionproxymodel.h>
-#include <akonadi/akonadi_next/etmviewstatesaver.h>
+#include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/contact/contactdefaultactions.h>
@@ -259,7 +259,7 @@ void MainWidget::restoreState()
 {
   // collection view
   {
-    ETMViewStateSaver *saver = new ETMViewStateSaver;
+    Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
     saver->setView( mCollectionView );
 
     const KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
@@ -268,7 +268,7 @@ void MainWidget::restoreState()
 
   // collection view
   {
-    ETMViewStateSaver *saver = new ETMViewStateSaver;
+    Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
     saver->setSelectionModel( mCollectionSelectionModel );
 
     const KConfigGroup group( Settings::self()->config(), "CollectionViewCheckState" );
@@ -277,7 +277,7 @@ void MainWidget::restoreState()
 
   // item view
   {
-    ETMViewStateSaver *saver = new ETMViewStateSaver;
+    Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
     saver->setView( mItemView );
     saver->setSelectionModel( mItemView->selectionModel() );
 
@@ -290,7 +290,7 @@ void MainWidget::saveState()
 {
   // collection view
   {
-    ETMViewStateSaver saver;
+    Akonadi::ETMViewStateSaver saver;
     saver.setView( mCollectionView );
 
     KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
@@ -300,7 +300,7 @@ void MainWidget::saveState()
 
   // collection view
   {
-    ETMViewStateSaver saver;
+    Akonadi::ETMViewStateSaver saver;
     saver.setSelectionModel( mCollectionSelectionModel );
 
     KConfigGroup group( Settings::self()->config(), "CollectionViewCheckState" );
@@ -310,7 +310,7 @@ void MainWidget::saveState()
 
   // item view
   {
-    ETMViewStateSaver saver;
+    Akonadi::ETMViewStateSaver saver;
     saver.setView( mItemView );
     saver.setSelectionModel( mItemView->selectionModel() );
 

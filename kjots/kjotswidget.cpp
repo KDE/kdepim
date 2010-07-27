@@ -47,6 +47,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitytreeview.h>
+#include <akonadi/etmviewstatesaver.h>
 #include <akonadi/item.h>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
@@ -55,7 +56,6 @@
 #include <akonadi/session.h>
 
 #include "akonadi_next/entityorderproxymodel.h"
-#include "akonadi_next/etmviewstatesaver.h"
 #include "akonadi_next/note.h"
 #include "akonadi_next/notecreatorandselector.h"
 

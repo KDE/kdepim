@@ -40,6 +40,7 @@
 #include <kselectionproxymodel.h>
 
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/etmviewstatesaver.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/itemmodifyjob.h>
@@ -47,7 +48,6 @@
 
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
-#include <akonadi_next/etmviewstatesaver.h>
 #include <akonadi_next/checkableitemproxymodel.h>
 
 #include "listproxy.h"

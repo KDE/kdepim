@@ -35,9 +35,9 @@
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
+#include <akonadi/etmviewstatesaver.h>
 
 #include <akonadi_next/checkableitemproxymodel.h>
-#include <akonadi_next/etmviewstatesaver.h>
 #include <akonadi_next/mailmodel.h>
 
 #include <Akonadi/ChangeRecorder>
