@@ -379,6 +379,7 @@ void IncidenceAttendee::slotUpdateConflictLabel( int count )
       QString label( i18np( "%1 scheduling conflict", "%1 scheduling conflicts", count ) );
       mUi->mConflictsLabel->setText( label );
     } else {
+      mUi->mSolveButton->setEnabled( false );
       QString label( i18n( "No scheduling conflicts" ) );
       mUi->mConflictsLabel->setText( label );
     }
