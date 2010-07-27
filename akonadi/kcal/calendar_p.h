@@ -164,7 +164,6 @@ public Q_SLOTS:
   void rowsAboutToBeRemoved( const QModelIndex& index, int start, int end );
   void rowsInsertedInTreeModel( const QModelIndex& index, int start, int end );
   void rowsAboutToBeRemovedInTreeModel( const QModelIndex& index, int start, int end );
-  void dataChangedInTreeModel( const QModelIndex& topLeft, const QModelIndex& bottomRight );
 
   void layoutChanged();
   void modelReset();
