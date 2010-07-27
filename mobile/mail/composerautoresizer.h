@@ -56,6 +56,7 @@
  private:
      QTextEdit *composer;
      QFrame *edit;
+     int minimumHeight;
  };
 
  #endif

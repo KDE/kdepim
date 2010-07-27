@@ -25,6 +25,7 @@
 #endif
 
 #include <QDebug>
+#include <KDebug>
 
 ComposerAutoResizer::ComposerAutoResizer(QWidget *parent)
     : QObject(parent),
@@ -35,6 +36,9 @@ ComposerAutoResizer::ComposerAutoResizer(QWidget *parent)
     // detect when the text changes
     connect(parent, SIGNAL(textChanged()), this, SLOT(textEditChanged()));
     connect(parent, SIGNAL(cursorPositionChanged()), this, SLOT(textEditChanged()));
+
+    // get the original minimum size of the widget
+    minimumHeight = edit->size().height();
 }
 
 void ComposerAutoResizer::textEditChanged()
@@ -44,7 +48,8 @@ void ComposerAutoResizer::textEditChanged()
     const QRect fr = edit->frameRect();
     const QRect cr = edit->contentsRect();
 
-    edit->setMinimumHeight(qMax(60, s.height() + (fr.height() - cr.height() - 1)));
+    edit->setMinimumHeight(qMax(minimumHeight, s.height() + (fr.height() - cr.height() - 1)));
+    edit->setMaximumHeight(qMax(minimumHeight, s.height() + (fr.height() - cr.height() - 1)));
 
 #ifdef Q_WS_MAEMO_5
     QRect cursor = composer->cursorRect();
