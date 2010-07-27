@@ -307,20 +307,22 @@ void FreeBusyItemModel::timerEvent( QTimerEvent* event )
 void FreeBusyItemModel::slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb,
                                            const QString& email )
 {
-    if ( fb ) {
-      fb->sortList();
+  if ( !fb )
+    return;
+
+  if( fb->fullBusyPeriods().isEmpty() )
+    return;
+
+  fb->sortList();
+
+  Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {
+    if ( item->email() == email ) {
+      item->setFreeBusy( fb );
+      const int row = mFreeBusyItems.indexOf( item );
+      const QModelIndex parent = index( row, 0 );
+      setFreeBusyPeriods( parent, fb->fullBusyPeriods() );
     }
-    Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {
-        if ( item->email() == email ) {
-            int row = mFreeBusyItems.indexOf( item );
-            QModelIndex parent = index( row, 0 );
-            if( fb && fb->fullBusyPeriods().size() > 0 ) {
-                QModelIndex parent = index( row, 0 );
-                item->setFreeBusy( fb );
-                setFreeBusyPeriods( parent, fb->fullBusyPeriods() );
-            }
-        }
-    }
+  }
 }
 
 void FreeBusyItemModel::autoReload()
