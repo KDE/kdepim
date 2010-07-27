@@ -58,8 +58,7 @@ public:
 signals:
     void dateTimesChanged( const KDateTime &, const KDateTime & );
     void manualReload();
-public slots:
-    void newFreeBusy( const FreeBusyItem::Ptr & item );
+
 protected slots:
     void slotUpdateGanttView( const KDateTime &, const KDateTime & );
     void slotScaleChanged( int );
