@@ -268,7 +268,7 @@ bool FreeBusyItemModel::containsAttendee(const KCalCore::Attendee::Ptr& attendee
     FreeBusyItem::Ptr anItem;
     for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
         anItem = mFreeBusyItems[i];
-        if ( anItem->attendee() == attendee ) {
+        if ( *anItem->attendee() == *attendee ) {
             return true;
         }
     }
