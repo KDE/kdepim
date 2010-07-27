@@ -21,6 +21,8 @@
 #ifndef FREEPERIODMODEL_H
 #define FREEPERIODMODEL_H
 
+#include "incidenceeditors-ng_export.h"
+
 #include <kcalcore/period.h>
 
 #include <QAbstractListModel>
@@ -28,19 +30,32 @@
 namespace IncidenceEditorsNG
 {
 
-class FreePeriodModel : public QAbstractListModel
+class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractListModel
 {
 Q_OBJECT
 public:
-    FreePeriodModel(QObject* parent = 0);
+    enum Roles {
+      PeriodRole = Qt::UserRole
+    };
+    FreePeriodModel( QObject* parent = 0 );
+    virtual ~FreePeriodModel();
 
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+
 public slots:
     void slotNewFreePeriods( const KCalCore::Period::List & freePeriods );
+
 private:
+   /** Splits period blocks in the provided list, so that each period occurs on one day */
+    KCalCore::Period::List splitPeriodsByDay( const KCalCore::Period::List & freePeriods );
+
+    QString stringify( int index ) const;
+    QString tooltipify( int index ) const;
+
     KCalCore::Period::List mPeriodList;
+    friend class FreePeriodModelTest;
 };
 
 }

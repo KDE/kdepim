@@ -40,6 +40,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   freebusyitem.cpp
   freebusyitemmodel.cpp
+  freeperiodmodel.cpp
   conflictresolver.cpp
 
   ../autochecktreewidget.cpp
@@ -57,7 +58,6 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   ../templatemanagementdialog.cpp
   eventortododialog.cpp
   schedulingdialog.cpp
-  freeperiodmodel.cpp
   visualfreebusywidget.cpp
 )
 
