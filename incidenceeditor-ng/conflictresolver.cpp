@@ -141,7 +141,7 @@ int ConflictResolver::tryDate( KDateTime& tryFrom, KDateTime& tryTo )
         KCalCore::Attendee::Ptr attendee = mFBModel->data( index, FreeBusyItemModel::AttendeeRole ).value<KCalCore::Attendee::Ptr>();
         if ( !matchesRoleConstraint( attendee ) )
             continue;
-        KCalCore::FreeBusy::Ptr freebusy = mFBModel->data( index, FreeBusyItemModel::AttendeeRole ).value<KCalCore::FreeBusy::Ptr>();
+        KCalCore::FreeBusy::Ptr freebusy = mFBModel->data( index, FreeBusyItemModel::FreeBusyRole ).value<KCalCore::FreeBusy::Ptr>();
         if ( !tryDate( freebusy, tryFrom, tryTo ) ) {
             ++conflicts_count;
         }
