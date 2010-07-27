@@ -46,7 +46,7 @@ void ComposerAutoResizer::textEditChanged()
 
     edit->setMinimumHeight(qMax(60, s.height() + (fr.height() - cr.height() - 1)));
 
-#ifdef Q_MODULE_MAEMO5
+#ifdef Q_WS_MAEMO_5
     QRect cursor = composer->cursorRect();
 
     // make sure the cursor is visible so the user doesn't loose track of the kb focus
