@@ -24,7 +24,7 @@ set( akonadi_next_SRCS
   notecreatorandselector.cpp
   entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
-  etmstatesaver.cpp
+  etmviewstatesaver.cpp
   collectionchildorderattribute.cpp
   collectionselectionproxymodel.cpp
   modeltest.cpp

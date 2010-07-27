@@ -37,7 +37,7 @@
 #include <akonadi/entitytreeview.h>
 
 #include <akonadi_next/checkableitemproxymodel.h>
-#include <akonadi_next/etmstatesaver.h>
+#include <akonadi_next/etmviewstatesaver.h>
 #include <akonadi_next/mailmodel.h>
 
 #include <Akonadi/ChangeRecorder>
@@ -151,7 +151,7 @@ UnreadMailsInCollectionsWidget::~UnreadMailsInCollectionsWidget()
 void UnreadMailsInCollectionsWidget::saveCheckState()
 {
 
-  ETMStateSaver saver;
+  ETMViewStateSaver saver;
   saver.setSelectionModel(m_checkedItemModel);
 
   KConfigGroup cfg( KGlobal::config(), "CheckState" );
@@ -161,7 +161,7 @@ void UnreadMailsInCollectionsWidget::saveCheckState()
 
 void UnreadMailsInCollectionsWidget::restoreCheckState()
 {
-  ETMStateSaver *restorer = new ETMStateSaver;
+  ETMViewStateSaver *restorer = new ETMViewStateSaver;
   restorer->setSelectionModel(m_checkedItemModel);
 
   KConfigGroup cfg( KGlobal::config(), "CheckState" );

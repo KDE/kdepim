@@ -47,7 +47,7 @@
 
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
-#include <akonadi_next/etmstatesaver.h>
+#include <akonadi_next/etmviewstatesaver.h>
 #include <akonadi_next/checkableitemproxymodel.h>
 
 #include "listproxy.h"
@@ -360,7 +360,7 @@ void KDeclarativeMainView::saveFavorite()
   if (!ok || name.isEmpty())
     return;
 
-  ETMStateSaver saver;
+  ETMViewStateSaver saver;
   saver.setSelectionModel( d->mBnf->selectionModel() );
 
   KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
@@ -371,7 +371,7 @@ void KDeclarativeMainView::saveFavorite()
 
 void KDeclarativeMainView::loadFavorite(const QString& name)
 {
-  ETMStateSaver *saver = new ETMStateSaver;
+  ETMViewStateSaver *saver = new ETMViewStateSaver;
   saver->setSelectionModel( d->mBnf->selectionModel() );
   KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
   if ( !cfg.isValid() )
@@ -430,7 +430,7 @@ void KDeclarativeMainView::configureCurrentAccount()
 
 void KDeclarativeMainView::persistCurrentSelection(const QString& key)
 {
-  ETMStateSaver saver;
+  ETMViewStateSaver saver;
   saver.setSelectionModel(d->mBnf->selectionModel());
   QStringList selection = saver.selectionKeys();
   if (selection.isEmpty())
@@ -450,7 +450,7 @@ void KDeclarativeMainView::restorePersistedSelection(const QString& key)
     return;
 
   QStringList selection = d->mPersistedSelections.take(key);
-  ETMStateSaver *restorer = new ETMStateSaver;
+  ETMViewStateSaver *restorer = new ETMViewStateSaver;
 
   QItemSelectionModel *selectionModel = d->mBnf->selectionModel();
   selectionModel->clearSelection();

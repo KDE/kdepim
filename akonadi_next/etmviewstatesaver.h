@@ -29,11 +29,11 @@
 
 #include "akonadi_next_export.h"
 
-class AKONADI_NEXT_EXPORT ETMStateSaver : public KViewStateSaver
+class AKONADI_NEXT_EXPORT ETMViewStateSaver : public KViewStateSaver
 {
   Q_OBJECT
 public:
-  ETMStateSaver(QObject *parent = 0);
+  ETMViewStateSaver(QObject *parent = 0);
 
   void selectCollections( const Akonadi::Collection::List &list );
   void selectCollections( const QList<Akonadi::Collection::Id> &list );

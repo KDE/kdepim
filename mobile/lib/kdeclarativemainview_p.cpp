@@ -22,7 +22,7 @@
 #include <KDE/KGlobal>
 #include <KDE/KSharedConfig>
 
-#include <akonadi_next/etmstatesaver.h>
+#include <akonadi_next/etmviewstatesaver.h>
 
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   : mChangeRecorder( 0 )
@@ -31,7 +31,7 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
 
 void KDeclarativeMainViewPrivate::restoreState()
 {
-  ETMStateSaver *saver = new ETMStateSaver;
+  ETMViewStateSaver *saver = new ETMViewStateSaver;
   saver->setSelectionModel( mBnf->selectionModel() );
   KConfigGroup cfg( KGlobal::config(), "SelectionState" );
   saver->restoreState( cfg );
@@ -39,7 +39,7 @@ void KDeclarativeMainViewPrivate::restoreState()
 
 void KDeclarativeMainViewPrivate::saveState()
 {
-  ETMStateSaver saver;
+  ETMViewStateSaver saver;
   saver.setSelectionModel( mBnf->selectionModel() );
 
   KConfigGroup cfg( KGlobal::config(), "SelectionState" );

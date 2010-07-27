@@ -55,7 +55,7 @@
 #include <akonadi/session.h>
 
 #include "akonadi_next/entityorderproxymodel.h"
-#include "akonadi_next/etmstatesaver.h"
+#include "akonadi_next/etmviewstatesaver.h"
 #include "akonadi_next/note.h"
 #include "akonadi_next/notecreatorandselector.h"
 
@@ -407,7 +407,7 @@ KJotsWidget::~KJotsWidget()
 
 void KJotsWidget::restoreState()
 {
-  ETMStateSaver *saver = new ETMStateSaver;
+  ETMViewStateSaver *saver = new ETMViewStateSaver;
   saver->setView( treeview );
   KConfigGroup cfg( KGlobal::config(), "TreeState" );
   saver->restoreState( cfg );
@@ -415,7 +415,7 @@ void KJotsWidget::restoreState()
 
 void KJotsWidget::saveState()
 {
-  ETMStateSaver saver;
+  ETMViewStateSaver saver;
   saver.setView( treeview );
   KConfigGroup cfg( KGlobal::config(), "TreeState" );
   saver.saveState( cfg );

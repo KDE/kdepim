@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "etmstatesaver.h"
+#include "etmviewstatesaver.h"
 
 #include <QtCore/QModelIndex>
 #include <QtGui/QItemSelection>
@@ -29,12 +29,12 @@
 
 using namespace Akonadi;
 
-ETMStateSaver::ETMStateSaver(QObject* parent)
+ETMViewStateSaver::ETMViewStateSaver(QObject* parent)
   : KViewStateSaver(parent)
 {
 }
 
-QModelIndex ETMStateSaver::indexFromConfigString(const QAbstractItemModel *model, const QString& key) const
+QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *model, const QString& key) const
 {
   if ( key.startsWith( QLatin1Char( 'x' ) ) )
     return QModelIndex();
@@ -66,7 +66,7 @@ QModelIndex ETMStateSaver::indexFromConfigString(const QAbstractItemModel *model
   return QModelIndex();
 }
 
-QString ETMStateSaver::indexToConfigString(const QModelIndex& index) const
+QString ETMViewStateSaver::indexToConfigString(const QModelIndex& index) const
 {
   if ( !index.isValid() )
     return QLatin1String( "x-1" );
@@ -79,7 +79,7 @@ QString ETMStateSaver::indexToConfigString(const QModelIndex& index) const
   return QString();
 }
 
-void ETMStateSaver::selectCollections(const Akonadi::Collection::List& list)
+void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List& list)
 {
   QStringList colStrings;
   foreach(const Collection &col, list)
@@ -87,7 +87,7 @@ void ETMStateSaver::selectCollections(const Akonadi::Collection::List& list)
   restoreSelection(colStrings);
 }
 
-void ETMStateSaver::selectCollections(const QList< Collection::Id >& list)
+void ETMViewStateSaver::selectCollections(const QList< Collection::Id >& list)
 {
   QStringList colStrings;
   foreach(const Collection::Id &colId, list)
@@ -95,7 +95,7 @@ void ETMStateSaver::selectCollections(const QList< Collection::Id >& list)
   restoreSelection(colStrings);
 }
 
-void ETMStateSaver::selectItems(const Akonadi::Item::List& list)
+void ETMViewStateSaver::selectItems(const Akonadi::Item::List& list)
 {
   QStringList itemStrings;
   foreach(const Item &item, list)
@@ -103,7 +103,7 @@ void ETMStateSaver::selectItems(const Akonadi::Item::List& list)
   restoreSelection(itemStrings);
 }
 
-void ETMStateSaver::selectItems(const QList< Item::Id >& list)
+void ETMViewStateSaver::selectItems(const QList< Item::Id >& list)
 {
   QStringList itemStrings;
   foreach(const Item::Id &itemId, list)
