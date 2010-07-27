@@ -22,6 +22,7 @@
 
 #include <KDE/KDebug>
 #include <QString>
+#include <akonadi/kmime/messageflags.h>
 
 using namespace KPIM;
 
@@ -571,14 +572,14 @@ QSet<QByteArray> MessageStatus::getStatusFlags() const
   // * KMMsgStatusHasAttach
 
   if ( mStatus & KMMsgStatusDeleted ) {
-    flags+= "\\DELETED";
+    flags+= QByteArray( Akonadi::MessageFlags::Deleted ) + " ";
   } else {
     if ( mStatus &  KMMsgStatusRead )
-      flags+= "\\SEEN ";
+      flags+= QByteArray( Akonadi::MessageFlags::Seen ) + " ";
     if ( mStatus & KMMsgStatusReplied )
-      flags+= "\\ANSWERED ";
+      flags+= QByteArray( Akonadi::MessageFlags::Answered ) + " ";
     if ( mStatus & KMMsgStatusFlag )
-      flags+= "\\FLAGGED ";
+      flags+= QByteArray( Akonadi::MessageFlags::Flagged ) + " ";
     // non standard flags
     if ( mStatus & KMMsgStatusForwarded )
       flags+= "$FORWARDED ";
@@ -606,13 +607,13 @@ void MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
 
   foreach ( const QByteArray &flag, flags ) {
     const QByteArray &upperedFlag = flag.toUpper();
-    if ( upperedFlag == "\\DELETED" ) {
+    if ( upperedFlag == Akonadi::MessageFlags::Deleted ) {
       setDeleted();
-    } else if ( upperedFlag == "\\SEEN" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Seen ) {
       setRead();
-    } else if ( upperedFlag == "\\ANSWERED" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Answered ) {
       setReplied();
-    } else if ( upperedFlag == "\\FLAGGED" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Flagged ) {
       setImportant();
 
     // non standard flags
