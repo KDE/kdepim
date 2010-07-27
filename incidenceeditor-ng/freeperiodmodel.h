@@ -21,7 +21,7 @@
 #ifndef FREEPERIODMODEL_H
 #define FREEPERIODMODEL_H
 
-#include <KCal/Period>
+#include <kcalcore/period.h>
 
 #include <QAbstractListModel>
 
@@ -38,9 +38,9 @@ public:
     virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 public slots:
-    void slotNewFreePeriods( const KCal::Period::List & freePeriods );
+    void slotNewFreePeriods( const KCalCore::Period::List & freePeriods );
 private:
-    KCal::Period::List mPeriodList;
+    KCalCore::Period::List mPeriodList;
 };
 
 }
