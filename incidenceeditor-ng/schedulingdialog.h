@@ -52,7 +52,6 @@ private slots:
     void slotWeekdaysChanged();
     void slotMandatoryRolesChanged();
     void slotStartDateChanged( const QDate & newDate );
-    void slotNewFreeSlots( const KCalCore::Period::List & );
 
 private:
     void updateWeekDays( const QDate& oldDate );

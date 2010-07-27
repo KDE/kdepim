@@ -61,7 +61,7 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent 
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged() ) );
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
-    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), SLOT( slotNewFreeSlots( const KCalCore::Period::List & ) ) );
+    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCalCore::Period::List & ) ) );
 }
 
 SchedulingDialog::~SchedulingDialog()
@@ -141,10 +141,3 @@ void SchedulingDialog::slotMandatoryRolesChanged()
     }
     mResolver->setMandatoryRoles( roles );
 }
-
-void SchedulingDialog::slotNewFreeSlots( const KCalCore::Period::List & freeslots)
-{
-    kDebug() << "got free slots";
-    //TODO impl
-}
-
