@@ -17,27 +17,27 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef AKONADI_KCAL_NEXT_EXPORT_H
-#define AKONADI_KCAL_NEXT_EXPORT_H
+#ifndef EVENTVIEWS_EXPORT_H
+#define EVENTVIEWS_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef AKONADI_KCAL_NEXT_EXPORT
+#ifndef EVENTVIEWS_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define AKONADI_KCAL_NEXT_EXPORT
-# elif defined(MAKE_AKONADI_KCAL_NEXT_LIB)
+#  define EVENTVIEWS_EXPORT
+# elif defined(MAKE_EVENTVIEWS_LIB)
    /* We are building this library */ 
-#  define AKONADI_KCAL_NEXT_EXPORT KDE_EXPORT
+#  define EVENTVIEWS_EXPORT KDE_EXPORT
 # else
    /* We are using this library */ 
-#  define AKONADI_KCAL_NEXT_EXPORT KDE_IMPORT
+#  define EVENTVIEWS_EXPORT KDE_IMPORT
 # endif
 #endif
 
-# ifndef AKONADI_KCAL_NEXT_EXPORT_DEPRECATED
-#  define AKONADI_KCAL_NEXT_EXPORT_DEPRECATED KDE_DEPRECATED AKONADI_KCAL_NEXT_EXPORT
+# ifndef EVENTVIEWS_EXPORT_DEPRECATED
+#  define EVENTVIEWS_EXPORT_DEPRECATED KDE_DEPRECATED EVENTVIEWS_EXPORT
 # endif
 
 #endif

@@ -29,7 +29,7 @@ kde4_add_ui_files(eventviews_LIB_SRCS
     recurrenceactionsscopewidget.ui
 )
 
-kde4_add_library(eventviews SHARED ${eventviews_LIB_SRCS})
+kde4_add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 

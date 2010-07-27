@@ -1,5 +1,4 @@
 /*  This file is part of the KDE project
-    Copyright (C) 2007 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,27 +16,27 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef AKONADI_KCAL_NEXT_EXPORT_H
-#define AKONADI_KCAL_NEXT_EXPORT_H
+#ifndef INCIDENCEEDITORS_NG_EXPORT_H
+#define INCIDENCEEDITORS_NG_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef AKONADI_KCAL_NEXT_EXPORT
+#ifndef INCIDENCEEDITORS_NG_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define AKONADI_KCAL_NEXT_EXPORT
-# elif defined(MAKE_AKONADI_KCAL_NEXT_LIB)
+#  define INCIDENCEEDITORS_NG_EXPORT
+# elif defined(MAKE_INCIDENCEEDITORSNG_LIB) || defined(MAKE_INCIDENCEEDITORSNGMOBILE_LIB)
    /* We are building this library */ 
-#  define AKONADI_KCAL_NEXT_EXPORT KDE_EXPORT
+#  define INCIDENCEEDITORS_NG_EXPORT KDE_EXPORT
 # else
    /* We are using this library */ 
-#  define AKONADI_KCAL_NEXT_EXPORT KDE_IMPORT
+#  define INCIDENCEEDITORS_NG_EXPORT KDE_IMPORT
 # endif
 #endif
 
-# ifndef AKONADI_KCAL_NEXT_EXPORT_DEPRECATED
-#  define AKONADI_KCAL_NEXT_EXPORT_DEPRECATED KDE_DEPRECATED AKONADI_KCAL_NEXT_EXPORT
+# ifndef INCIDENCEEDITORS_NG_EXPORT_DEPRECATED
+#  define INCIDENCEEDITORS_NG_EXPORT_DEPRECATED KDE_DEPRECATED INCIDENCEEDITORS_NG_EXPORT
 # endif
 
 #endif
