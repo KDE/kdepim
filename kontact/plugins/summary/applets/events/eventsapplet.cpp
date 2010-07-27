@@ -65,14 +65,12 @@ void EventsApplet::configChanged()
     foreach( QString Id, m_collectionIds ) {
         Akonadi::Collection collection = Akonadi::Collection( Id.toInt() );
         collections << collection;
+        kDebug() << Id << "created collection for Id";
     }
 
     Akonadi::CollectionFetchJob* job = new Akonadi::CollectionFetchJob( collections, this );
-    connect( job, SIGNAL( collectionsReceived(  const Akonadi::Collection::List& ) ),
-             this, SLOT(  collectionsReceived(  const Akonadi::Collection::List& ) ) );
     connect( job, SIGNAL( result(  KJob* ) ), this, SLOT(  collectionFetchResult(  KJob* ) ) );
 
-    m_collectionJobsInProgress++;
     setBusy( m_collectionJobsInProgress );
 }
 
@@ -86,6 +84,7 @@ void EventsApplet::getCollectionFromKorg()
 
         QString collections = cg.readEntry( "Role_CheckState" );
 
+
         // TODO: Any better way to parse this??
         QStringList splitCollections = collections.split( "," );
         for ( int i = 0; i < splitCollections.length(); i += 2 ) {
@@ -96,28 +95,19 @@ void EventsApplet::getCollectionFromKorg()
             if ( splitCollections[ i+1 ] == "2" ) {
                 QString nonParsed = splitCollections[ i ];
                 QString collectionId = nonParsed.right( nonParsed.length()-1 );
-                kDebug() << collectionId << "is enabled";
                 m_collectionIds << collectionId;
             }
         }
     }
 }
 
-void EventsApplet::collectionsReceived(  const Akonadi::Collection::List& collections )
-{
-    kDebug()<< "collections received";
-    m_collections << collections;
-}
-
 void EventsApplet::collectionFetchResult( KJob* job )
 {
-    m_collectionJobsInProgress--;
     setBusy( m_collectionJobsInProgress );
 
-    kDebug() << job;
+    Akonadi::CollectionFetchJob* fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
 
-    if ( m_collectionJobsInProgress == 0 ) {
-        //events();
-        kDebug() << m_collections;
-    }
+    m_collections << fetchJob->collections();
+
+    kDebug() << m_collections;
 }
