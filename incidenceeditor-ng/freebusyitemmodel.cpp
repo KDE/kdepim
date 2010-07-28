@@ -205,6 +205,9 @@ void FreeBusyItemModel::addItem(const IncidenceEditorsNG::FreeBusyItem::Ptr& fre
 void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex& parent, const KCalCore::FreeBusyPeriod::List& list)
 {
     ItemPrivateData* parentData = static_cast<ItemPrivateData*>( parent.internalPointer() );
+    QModelIndex first = index( 0, 0,  parent );
+    QModelIndex last = index( parentData->childCount() - 1,  0, parent );
+
     if( parentData->childCount() > 0 ) {
         beginRemoveRows( parent, 0, parentData->childCount() - 1 );
         for( int i = parentData->childCount() - 1; i >= 0; --i )
@@ -219,6 +222,7 @@ void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex& parent, const KCal
       parentData->appendChild( childData );
     }
     endInsertRows();
+    emit dataChanged( first, last );
 }
 
 

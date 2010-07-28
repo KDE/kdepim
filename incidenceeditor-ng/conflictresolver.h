@@ -155,6 +155,8 @@ public slots:
     void setEarliestDateTime( const KDateTime &newDateTime );
     void setLatestDateTime( const KDateTime &newDateTime );
 
+    void freebusyDataChanged();
+
     void findAllFreeSlots();
 
     void setResolution( int seconds );

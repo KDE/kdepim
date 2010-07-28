@@ -57,6 +57,8 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
     mWeekdays.setBit( 4 ); //Friday.. surprise!
     mMandatoryRoles << KCalCore::Attendee::ReqParticipant << KCalCore::Attendee::OptParticipant << KCalCore::Attendee::NonParticipant << KCalCore::Attendee::Chair;
 
+    connect( mFBModel, SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SLOT( freebusyDataChanged() ) );
+
     connect( &mCalculateTimer, SIGNAL( timeout() ), SLOT( findAllFreeSlots() ) );
     mCalculateTimer.setSingleShot( true );
 }
@@ -130,6 +132,11 @@ void ConflictResolver::setEarliestDateTime( const KDateTime& newDateTime )
 void ConflictResolver::setLatestDateTime( const KDateTime& newDateTime )
 {
     mTimeframeConstraint = KCalCore::Period( mTimeframeConstraint.start(), newDateTime );
+    calculateConflicts();
+}
+
+void ConflictResolver::freebusyDataChanged()
+{
     calculateConflicts();
 }
 
