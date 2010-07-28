@@ -69,7 +69,8 @@ class ComposerView : public KDeclarativeFullScreenView
 
   public slots:
     /// Send clicked in the user interface
-    void send( MessageSender::SaveIn saveIn = MessageSender::SaveInNone );
+    void send( MessageSender::SendMethod method = MessageSender::SendDefault,
+               MessageSender::SaveIn saveIn = MessageSender::SaveInNone );
     QObject* getAction( const QString &name ) const;
     void configureIdentity();
     void configureTransport();

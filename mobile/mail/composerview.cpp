@@ -178,13 +178,15 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg)
   emit changed();
 }
 
-void ComposerView::send( MessageSender::SaveIn saveIn )
+void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
 {
   kDebug();
+
+  if ( !m_composerBase->editor()->checkExternalEditorFinished() )
+    return;
+
   setBusy(true);
 
-  // TODO no send later support in UI atm, so hard code
-  MessageSender::SendMethod method = MessageSender::SendDefault;
   const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
   m_composerBase->setFrom( identity.fullEmailAddr() );
   m_composerBase->setReplyTo( identity.replyToAddr() );
@@ -199,7 +201,6 @@ void ComposerView::send( MessageSender::SaveIn saveIn )
 
   m_composerBase->send( method, saveIn );
 }
-
 
 QString ComposerView::subject() const
 {
@@ -243,7 +244,10 @@ void ComposerView::configureIdentity()
 
 }
 
-void ComposerView::slotSendSuccessful() {
+void ComposerView::slotSendSuccessful()
+{
+  // Removed successfully sent messages from autosave
+  m_composerBase->cleanupAutoSave();
   deleteLater();
 }
 
@@ -290,12 +294,9 @@ void ComposerView::setEditor( Message::KMeditor* editor ) {
 
 void ComposerView::closeEvent( QCloseEvent * event )
 {
-  //  Q_UNUSED( event );
-
   const QString saveButton = i18n("&Save as Draft");
   const QString saveText = i18n("Save this message in the Drafts folder. ");
 
-  //### Replace this KMessageBox
   const int rc = KMessageBox::warningYesNoCancel( this,
                                                   i18n("Do you want to save the message for later or discard it?"),
                                                   i18n("Close Composer"),
@@ -316,23 +317,9 @@ void ComposerView::closeEvent( QCloseEvent * event )
 
 void ComposerView::saveDraft()
 {
-  if ( !m_composerBase->editor()->checkExternalEditorFinished() )
-    return;
-
   const MessageSender::SendMethod method = MessageSender::SendLater;
   const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
-
-  //### TODO: encrypt settings
-  //### TODO: disable html
-  //### TODO: charsets
-
-  const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
-  m_composerBase->setFrom( identity.fullEmailAddr() );
-  m_composerBase->setReplyTo( identity.replyToAddr() );
-  m_composerBase->setSubject( m_subject );
-  m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
-
-  m_composerBase->send( method, saveIn );
+  send ( method, saveIn );
 }
 
 #include "composerview.moc"
