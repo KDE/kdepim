@@ -551,14 +551,14 @@ QSet<QByteArray> MessageStatus::getStatusFlags() const
   // * KMMsgStatusHasAttach
 
   if ( mStatus & KMMsgStatusDeleted ) {
-    flags+= QByteArray( Akonadi::MessageFlags::Deleted ) + " ";
+    flags+= Akonadi::MessageFlags::Deleted;
   } else {
     if ( mStatus &  KMMsgStatusRead )
-      flags+= QByteArray( Akonadi::MessageFlags::Seen ) + " ";
+      flags+= Akonadi::MessageFlags::Seen;
     if ( mStatus & KMMsgStatusReplied )
-      flags+= QByteArray( Akonadi::MessageFlags::Answered ) + " ";
+      flags+= Akonadi::MessageFlags::Answered;
     if ( mStatus & KMMsgStatusFlag )
-      flags+= QByteArray( Akonadi::MessageFlags::Flagged ) + " ";
+      flags+= Akonadi::MessageFlags::Flagged;
     // non standard flags
     if ( mStatus & KMMsgStatusForwarded )
       flags+= "$FORWARDED ";
