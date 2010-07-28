@@ -994,6 +994,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
   icalproperty_transp transparency;
 
   bool dtEndProcessed = false;
+  bool uidProcessed = false;
 
   while ( p ) {
     icalproperty_kind kind = icalproperty_isa( p );
@@ -1032,6 +1033,8 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
           event->setTransparency( Event::Opaque );
         }
         break;
+      case ICAL_UID_PROPERTY:
+        uidProcessed = true;
 
       default:
         //  kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
@@ -1510,32 +1513,39 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
 {
   icalproperty *p = icalcomponent_get_first_property(parent,ICAL_ANY_PROPERTY);
 
-  while (p) {
-    icalproperty_kind kind = icalproperty_isa(p);
+  bool uidProcessed = false;
+
+  while ( p ) {
+    icalproperty_kind kind = icalproperty_isa( p );
     switch (kind) {
 
       case ICAL_UID_PROPERTY:  // unique id
-        incidenceBase->setUid(QString::fromUtf8(icalproperty_get_uid(p)));
+        uidProcessed = true;
+        incidenceBase->setUid( QString::fromUtf8(icalproperty_get_uid( p ) ) );
         break;
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
-        incidenceBase->setOrganizer( readOrganizer(p));
+        incidenceBase->setOrganizer( readOrganizer( p ) );
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
-        incidenceBase->addAttendee(readAttendee(p));
+        incidenceBase->addAttendee( readAttendee( p ) );
         break;
 
       case ICAL_COMMENT_PROPERTY:
         incidenceBase->addComment(
-            QString::fromUtf8(icalproperty_get_comment(p)));
+            QString::fromUtf8( icalproperty_get_comment( p ) ) );
         break;
 
       default:
         break;
     }
 
-    p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
+    p = icalcomponent_get_next_property( parent, ICAL_ANY_PROPERTY );
+  }
+
+  if ( !uidProcessed ) {
+    kdWarning() << "The incidence didn't have any UID!" << endl;
   }
 
   // kpilot stuff
