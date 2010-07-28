@@ -21,12 +21,16 @@
 #include "freeperiodmodel.h"
 
 #include <kcalcore/duration.h>
+#include <kcalcore/period.h>
 
 #include <KSystemTimeZones>
 #include <KCalendarSystem>
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KDebug>
+
+#include <QHash>
+#include <QSet>
 
 using namespace IncidenceEditorsNG;
 
@@ -74,6 +78,7 @@ QVariant FreePeriodModel::headerData( int section, Qt::Orientation orientation, 
 void FreePeriodModel::slotNewFreePeriods( const KCalCore::Period::List& freePeriods )
 {
     mPeriodList = splitPeriodsByDay( freePeriods );
+    qSort( mPeriodList );
     reset();
 }
 
@@ -98,7 +103,10 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay( const KCalCore::Perio
         }
         splitList << period;
     }
-    return splitList;
+
+    // Perform some jiggery pokery to remove duplicates
+    QSet<KCalCore::Period>set = splitList.toSet();
+    return QList<KCalCore::Period>::fromSet( set );
 }
 
 
