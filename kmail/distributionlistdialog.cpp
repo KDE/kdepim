@@ -102,6 +102,7 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
   setDefaultButton( User1 );
   setModal( false );
   setButtonText( User1, i18nc("@action:button","Save List") );
+  enableButton( User1, false );
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
   topLayout->setSpacing( spacingHint() );
@@ -129,6 +130,8 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
   topLayout->addWidget( mRecipientsList );
   connect( this, SIGNAL( user1Clicked() ),
            this, SLOT( slotUser1() ) );
+  connect( mTitleEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( slotTitleChanged( const QString& ) ) );
 }
 
 void DistributionListDialog::setRecipients( const Recipient::List &recipients )
@@ -177,6 +180,11 @@ void DistributionListDialog::setRecipients( const Recipient::List &recipients )
       }
     }
   }
+}
+
+void DistributionListDialog::slotTitleChanged( const QString& text )
+{
+  enableButton( KDialog::User1, !text.isEmpty() );
 }
 
 void DistributionListDialog::slotUser1()
