@@ -65,8 +65,8 @@ Rectangle {
           children[i].actionItemSpacing = actionItemSpacing
         if (children[i].actionItemHeight != undefined)
           children[i].actionItemHeight = actionItemHeight
-        children[i].triggered.disconnect( this, triggered )
-        children[i].triggered.connect( this, triggered )
+        children[i].triggered.disconnect( myColumn, triggered )
+        children[i].triggered.connect( myColumn, triggered )
         // children[i].width = parent.actionItemWidth
       }
     }
