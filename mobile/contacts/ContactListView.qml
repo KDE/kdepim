@@ -30,7 +30,7 @@ KPIM.ItemListView {
           anchors.left: parent.left
           anchors.top: parent.top
           anchors.margins: 4
-          pixmap: model.picture
+//          pixmap: model.picture
           scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
           transformOrigin: "TopLeft"
         },
