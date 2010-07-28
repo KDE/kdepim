@@ -22,6 +22,7 @@
 
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
+#include "kdescendantsproxymodel_p.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "quicksearchwidget.h"
@@ -56,7 +57,6 @@
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kapplication.h>
-#include <kdescendantsproxymodel.h>
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>

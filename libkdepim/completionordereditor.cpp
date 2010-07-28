@@ -31,6 +31,7 @@
 
 #include "completionordereditor.h"
 #include "completionordereditor_p.h"
+#include "kdescendantsproxymodel_p.h"
 #include "ldap/ldapclient.h"
 
 #include <akonadi/changerecorder.h>
@@ -42,7 +43,6 @@
 #include <kabc/contactgroup.h>
 #include <kldap/ldapserver.h>
 
-#include <kdescendantsproxymodel.h>
 #include <KDE/KConfigGroup>
 #include <KDE/KHBox>
 #include <KDE/KIcon>
