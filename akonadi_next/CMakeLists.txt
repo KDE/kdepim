@@ -30,6 +30,7 @@ set( akonadi_next_SRCS
   quotacolorproxymodel.cpp
   checkableitemproxymodel.cpp
   incidenceattachmentmodel.cpp
+  kviewstatemaintainer.cpp
   # TODO Move this to akonadi-kabc
   contactsmodel.cpp
   # TODO Move this to akonadi-mail?
