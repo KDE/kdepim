@@ -45,7 +45,7 @@
 #include "incidencecompletionpriority.h"
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
-#include "incidencegeneral.h"
+#include "incidencewhatwhere.h"
 #include "incidencerecurrence.h"
 #include "incidencesecrecy.h"
 #include "incidenceattendee.h"

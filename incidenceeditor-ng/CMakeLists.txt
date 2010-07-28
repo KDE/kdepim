@@ -33,7 +33,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencecategories.cpp
   incidencecompletionpriority.cpp
   incidencedescription.cpp
-  incidencegeneral.cpp
+  incidencewhatwhere.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
   incidencesecrecy.cpp

@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-#include "incidencegeneral.h"
+#include "incidencewhatwhere.h"
 
 #include <KDebug>
 
@@ -84,4 +84,4 @@ bool IncidenceWhatWhere::isValid()
   return true;
 }
 
-#include "moc_incidencegeneral.cpp"
+#include "moc_incidencewhatwhere.cpp"
