@@ -74,7 +74,27 @@ bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Cons
 
 void InvitationDispatcherPrivate::sentEventInvitationMessage()
 {
-  kDebug() << "TODO: IMPLEMENT";
+  const Incidence::ConstPtr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
+  const InvitationHandler::SendStatus status =
+      mInvitationHandler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, newInc );
+
+  switch ( status ) {
+  case InvitationHandler::FailAbortUpdate:
+    // Okay, at this point we have a new event which is already stored
+    // in our calendar, and we need to undo the save.
+    mManager->revertLastSave();
+    break;
+  default: // Canceled, FailKeepUpdate, NoSendingNeeded, Success
+    // Canceled       : The user explicitly said that he doesn't want to sent
+    //                  a message to the organizer or attendees, keep the
+    //                  updated event.
+    // FailKeepUpdate : Sending failed, but the user said that he wants to keep
+    //                  the updated event.
+    // NoSendingNeeded: Everything fine, no need to do anything.
+    // Succes         : Everything fine, no need to do anything.
+    //
+    break;
+  }
 }
 
 void InvitationDispatcherPrivate::sentEventModifiedMessage()

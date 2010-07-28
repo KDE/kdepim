@@ -30,6 +30,8 @@
 #include <KStandardDirs>
 #include <KSystemTimeZones>
 
+#include <akonadi/kcal/kcalprefs.h>
+
 #include <akonadi/kcal/utils.h>
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
@@ -47,6 +49,7 @@
 #include "incidencerecurrence.h"
 #include "incidencesecrecy.h"
 #include "incidenceattendee.h"
+#include "invitationdispatcher.h"
 #include "templatemanagementdialog.h"
 #include "ui_eventortododesktop.h"
 
@@ -65,6 +68,7 @@ public:
   bool mCloseOnSave;
 
   Akonadi::EditorItemManager *mItemManager;
+  Akonadi::InvitationDispatcher *mInvitationDispatcher;
 
   CombinedIncidenceEditor *mEditor;
   IncidenceDateTime *mIeDateTime;
@@ -94,7 +98,9 @@ public:
   virtual void load( const Akonadi::Item &item );
   virtual Akonadi::Item save( const Akonadi::Item &item );
   virtual Akonadi::Collection selectedCollection() const;
-  void slotButtonClicked( int button );    enum RecurrenceType {
+  void slotButtonClicked( int button );
+
+  enum RecurrenceType {
     None = 0,
     Daily,
     Weekly,
@@ -112,6 +118,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   , mCalSelector( new Akonadi::CollectionComboBox )
   , mCloseOnSave( false )
   , mItemManager( new Akonadi::EditorItemManager( this ) )
+  , mInvitationDispatcher( 0 )
   , mEditor( new CombinedIncidenceEditor )
 {
   Q_Q( EventOrTodoDialog );
@@ -122,6 +129,11 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   layout->addWidget( mCalSelector );
 
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+
+  if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
+    mInvitationDispatcher = new Akonadi::InvitationDispatcher( 0, q );
+    mInvitationDispatcher->setItemManager( mItemManager );
+  }
 
   // Now instantiate the logic of the dialog. These editors update the ui, validate
   // fields and load/store incidences in the ui.
