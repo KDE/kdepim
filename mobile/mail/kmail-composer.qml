@@ -46,7 +46,7 @@ KPIM.MainView {
       id: folderPanel
       titleText: KDE.i18n( "Recipients" )
       handleHeight: 150
-      handlePosition: 30
+      handlePosition: 40
       content: [
         MessageComposer.RecipientsEditor {
           id: recipientsEditor
@@ -60,6 +60,7 @@ KPIM.MainView {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
+      handlePosition: 110
       contentWidth: 240
       content: [
         KPIM.Action {
@@ -122,6 +123,8 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: attachmentPanel
+      handleHeight: 100
+      handlePosition: 180
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       contentWidth: attachmentView.requestedWidth
       content: [

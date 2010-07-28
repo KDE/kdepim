@@ -269,7 +269,7 @@ KPIM.MainView {
       anchors.fill: parent
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
-      handlePosition : 225
+      handlePosition : 125
       handleHeight: 150
       contentWidth: 240
       content: [

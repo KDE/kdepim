@@ -320,7 +320,7 @@ KPIM.MainView {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
-      handlePosition: 225
+      handlePosition: 125
       contentWidth: 240
       content: [
           KPIM.Action {

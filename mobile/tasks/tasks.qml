@@ -303,7 +303,7 @@ KPIM.MainView {
     SlideoutPanel {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
-      handlePosition : 225
+      handlePosition : 125
       handleHeight: 150
       contentWidth: 240
       anchors.fill : parent
@@ -366,6 +366,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       anchors.fill: parent
+      handlePosition : 150
       id: attachmentPanel
       visible: taskView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
