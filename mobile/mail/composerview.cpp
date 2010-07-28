@@ -308,11 +308,10 @@ void ComposerView::closeEvent( QCloseEvent * event )
     saveDraft();
   } else if (rc == KMessageBox::Cancel ) {
     event->ignore();
-    return;
+  } else {
+    // remove autosaves if the message was discarded
+    m_composerBase->cleanupAutoSave();
   }
-
-  // remove autosaves if the message was either saved as draft or discarded
-  m_composerBase->cleanupAutoSave();
 }
 
 void ComposerView::saveDraft()
