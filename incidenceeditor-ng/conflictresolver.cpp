@@ -242,8 +242,7 @@ void ConflictResolver::findAllFreeSlots()
     // Example: 1 week timeframe, with resolution of 15 minutes
     //          1 week = 10080 minutes / 15 = 672 15 min timeslots
     //          So, the array would have a length of 672
-    int range = begin.secsTo( end );
-    range /=  mSlotResolutionSeconds;
+    const int range = begin.secsTo( end ) / mSlotResolutionSeconds;
     if ( range <= 0 ) {
         kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
         return;
