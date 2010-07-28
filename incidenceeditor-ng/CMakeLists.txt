@@ -49,6 +49,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   ../categoryselectdialog.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
+  ../ktimezonecombobox.cpp
 )
 
 ### Build the desktop version

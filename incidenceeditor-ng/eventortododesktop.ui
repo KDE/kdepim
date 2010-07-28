@@ -1489,7 +1489,7 @@
   <customwidget>
    <class>KPIM::KTimeZoneComboBox</class>
    <extends>KComboBox</extends>
-   <header>libkdepim/ktimezonecombobox.h</header>
+   <header>ktimezonecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KPIM::KTimeEdit</class>
