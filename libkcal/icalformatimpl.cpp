@@ -985,9 +985,9 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
 
   readIncidence( vevent, tz, event);
 
-  icalproperty *p = icalcomponent_get_first_property(vevent,ICAL_ANY_PROPERTY);
+  icalproperty *p = icalcomponent_get_first_property( vevent, ICAL_ANY_PROPERTY );
 
-//  int intvalue;
+  // int intvalue;
   icaltimetype icaltime;
 
   QStringList categories;
@@ -995,48 +995,51 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
 
   bool dtEndProcessed = false;
 
-  while (p) {
-    icalproperty_kind kind = icalproperty_isa(p);
-    switch (kind) {
+  while ( p ) {
+    icalproperty_kind kind = icalproperty_isa( p );
+    switch ( kind ) {
 
       case ICAL_DTEND_PROPERTY:  // start date and time
-        icaltime = icalproperty_get_dtend(p);
-        if (icaltime.is_date) {
+        icaltime = icalproperty_get_dtend( p );
+        if ( icaltime.is_date ) {
           // End date is non-inclusive
           QDate endDate = readICalDate( icaltime ).addDays( -1 );
-          if ( mCompat ) mCompat->fixFloatingEnd( endDate );
+          if ( mCompat ) {
+            mCompat->fixFloatingEnd( endDate );
+          }
+
           if ( endDate < event->dtStart().date() ) {
             endDate = event->dtStart().date();
           }
           event->setDtEnd( QDateTime( endDate, QTime( 0, 0, 0 ) ) );
         } else {
-          event->setDtEnd(readICalDateTime(icaltime, tz));
+          event->setDtEnd( readICalDateTime( icaltime, tz ) );
           event->setFloats( false );
         }
         dtEndProcessed = true;
         break;
 
       case ICAL_RELATEDTO_PROPERTY:  // related event (parent)
-        event->setRelatedToUid(QString::fromUtf8(icalproperty_get_relatedto(p)));
-        mEventsRelate.append(event);
+        event->setRelatedToUid( QString::fromUtf8( icalproperty_get_relatedto( p ) ) );
+        mEventsRelate.append( event );
         break;
 
-
       case ICAL_TRANSP_PROPERTY:  // Transparency
-        transparency = icalproperty_get_transp(p);
-        if( transparency == ICAL_TRANSP_TRANSPARENT )
+        transparency = icalproperty_get_transp( p );
+        if ( transparency == ICAL_TRANSP_TRANSPARENT ) {
           event->setTransparency( Event::Transparent );
-        else
+        } else {
           event->setTransparency( Event::Opaque );
+        }
         break;
 
       default:
-//        kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
-//                  << endl;
+        //  kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
+        //                << endl;
         break;
     }
 
-    p = icalcomponent_get_next_property(vevent,ICAL_ANY_PROPERTY);
+    p = icalcomponent_get_next_property( vevent, ICAL_ANY_PROPERTY );
   }
 
   // according to rfc2445 the dtend shouldn't be written when it equals
@@ -1045,13 +1048,15 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
     event->setDtEnd( event->dtStart() );
   }
 
-  QString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
-  if (!msade.isEmpty()) {
-    bool floats = (msade == QString::fromLatin1("TRUE"));
+  const QString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
+  if ( !msade.isEmpty() ) {
+    const bool floats = ( msade == QString::fromLatin1("TRUE") );
     event->setFloats(floats);
   }
 
-  if ( mCompat ) mCompat->fixEmptySummary( event );
+  if ( mCompat ) {
+    mCompat->fixEmptySummary( event );
+  }
 
   return event;
 }
