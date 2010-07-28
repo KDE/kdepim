@@ -128,6 +128,8 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
     } else if ( cmdline.startsWith( NEWLINE_SEPARATED_STDIN_INDICATOR ) ) {
         *method = ChecksumDefinition::NewlineSeparatedInputFile;
         cmdline.remove( 0, 1 );
+    } else {
+        *method = ChecksumDefinition::CommandLine;
     }
     if ( *method != ChecksumDefinition::CommandLine && cmdline.contains( FILE_PLACEHOLDER ) )
         throw ChecksumDefinitionError( id, i18n("Cannot use both %f and | in '%1'", whichCommand) );
