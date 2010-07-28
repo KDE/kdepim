@@ -67,6 +67,7 @@ file-patterns=sha256sum.txt
 output-file=sha256sum.txt
 id=sha256sum
 Name=sha256sum
+Name[es]=suma sha256
 Name[ja]=sha256sum
 Name[nds]=SHA256-Pröövsumm
 Name[pt]=sha256sum
