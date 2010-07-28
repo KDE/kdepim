@@ -58,13 +58,13 @@ void ConflictResolverTest::addAttendee( const QString& email, const FreeBusy::Pt
 void ConflictResolverTest::initTestCase()
 {
     parent = new QWidget;
-    base = KDateTime::currentLocalDateTime().addDays( 1 );
-    end = base.addSecs( 10 * 60 * 60 );
     init();
 }
 
 void ConflictResolverTest::init()
 {
+    base = KDateTime::currentLocalDateTime().addDays( 1 );
+    end = base.addSecs( 10 * 60 * 60 );
     resolver = new ConflictResolver( parent, parent );
 }
 
@@ -72,6 +72,7 @@ void ConflictResolverTest::cleanup()
 {
     delete resolver;
     resolver = 0;
+    attendees.clear();
 }
 
 void ConflictResolverTest::simpleTest()
@@ -164,7 +165,7 @@ void ConflictResolverTest::akademy2010()
     Period blurr( _time( 15, 15 ), _time( 16, 00 ) );
     Period plasma( _time( 15, 15 ), _time( 16, 00 ) );
 
-    for ( int i = 1; i < 80; ++i ) {
+//     for ( int i = 1; i < 80; ++i ) {
         // adds 80 people (adds the same 8 peopl 10 times)
         addAttendee( "akademyattendee1@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << oviStore << wikimedia << direction ) ) );
         addAttendee( "akademyattendee2@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << commAsService << highlights << pimp ) ) );
@@ -174,7 +175,7 @@ void ConflictResolverTest::akademy2010()
         addAttendee( "akademyattendee6@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << commAsService << highlights ) ) );
         addAttendee( "akademyattendee7@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << kdeForums << styles << avalanche << pimp << plasma ) ) );
         addAttendee( "akademyattendee8@email.com", FreeBusy::Ptr( new FreeBusy( Period::List() << opening << keynote << oviStore << wikimedia << blurr ) ) );
-    }
+//     }
 
     insertAttendees();
 
@@ -191,6 +192,79 @@ void ConflictResolverTest::akademy2010()
     QCOMPARE( resolver->availableSlots().at( 1 ).duration(), Duration( 1*60*60 + 25*60 ) );
     QVERIFY( resolver->availableSlots().at( 2 ).start() > plasma.end() );
 }
+
+void ConflictResolverTest::testPeriodIsLargerThenTimeframe()
+{
+  base.setDate( QDate( 2010, 7, 29 ) );
+  base.setTime( QTime( 7, 30 ) );
+
+  end.setDate( QDate( 2010, 7, 29 ) );
+  end.setTime( QTime( 8, 30 ) );
+
+  Period testEvent( _time( 5, 45 ), _time( 8, 45 ) );
+
+  addAttendee( "kdabtest1@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() << testEvent ) ) );
+  addAttendee( "kdabtest2@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() ) ) );
+
+  insertAttendees();
+  resolver->setEarliestDateTime( base );
+  resolver->setLatestDateTime( end );
+  resolver->findAllFreeSlots();
+
+  QCOMPARE( resolver->availableSlots().size(), 0 );
+}
+
+void ConflictResolverTest::testPeriodBeginsBeforeTimeframeBegins()
+{
+  base.setDate( QDate( 2010, 7, 29 ) );
+  base.setTime( QTime( 7, 30 ) );
+
+  end.setDate( QDate( 2010, 7, 29 ) );
+  end.setTime( QTime( 9, 30 ) );
+
+  Period testEvent( _time( 5, 45 ), _time( 8, 45 ) );
+
+  addAttendee( "kdabtest1@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() << testEvent ) ) );
+  addAttendee( "kdabtest2@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() ) ) );
+
+  insertAttendees();
+  resolver->setEarliestDateTime( base );
+  resolver->setLatestDateTime( end );
+  resolver->findAllFreeSlots();
+
+  QCOMPARE( resolver->availableSlots().size(), 1 );
+  Period freeslot = resolver->availableSlots().at( 0 );
+  QCOMPARE( freeslot.start(), _time( 9, 00 ) );
+  QCOMPARE( freeslot.end(), end );
+}
+
+void ConflictResolverTest::testPeriodEndsAfterTimeframeEnds()
+{
+  base.setDate( QDate( 2010, 7, 29 ) );
+  base.setTime( QTime( 7, 30 ) );
+
+  end.setDate( QDate( 2010, 7, 29 ) );
+  end.setTime( QTime( 9, 30 ) );
+
+  Period testEvent( _time( 8, 00 ), _time( 9, 45 ) );
+
+  addAttendee( "kdabtest1@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() << testEvent ) ) );
+  addAttendee( "kdabtest2@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() ) ) );
+
+  insertAttendees();
+  resolver->setEarliestDateTime( base );
+  resolver->setLatestDateTime( end );
+  resolver->findAllFreeSlots();
+
+  QCOMPARE( resolver->availableSlots().size(), 1 );
+  Period freeslot = resolver->availableSlots().at( 0 );
+  QCOMPARE( freeslot.duration(), Duration( 30*60 ) );
+  QCOMPARE( freeslot.start(), base );
+  QCOMPARE( freeslot.end(), _time( 8,00 ) );
+}
+
+
+
 
 QTEST_KDEMAIN( ConflictResolverTest, GUI );
 

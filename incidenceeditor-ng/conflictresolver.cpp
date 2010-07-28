@@ -291,8 +291,28 @@ void ConflictResolver::findAllFreeSlots()
         for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
                 it != busyPeriods.end(); ++it ) {
             if ( it->end() >= begin && it->start() <= end ) {
-                const int start_index = begin.secsTo( it->start() )  / mSlotResolutionSeconds;
-                const int duration = it->start().secsTo( it->end() ) / mSlotResolutionSeconds;
+                int start_index;
+                int duration;
+                // case1: the period is completely in our timeframe
+                if( it->end() <= end && it->start() >= begin ) {
+                  start_index = begin.secsTo( it->start() ) / mSlotResolutionSeconds;
+                  duration = it->start().secsTo( it->end() ) / mSlotResolutionSeconds;
+                // case2: the period begins before our timeframe begins
+                } else if( it->start() <= begin && it->end() <= end ) {
+                  start_index = 0;
+                  duration = begin.secsTo( it->end() ) / mSlotResolutionSeconds;
+                // case3: the period ends after our timeframe ends
+                } else if( it->end() >= end && it->start() >= begin ) {
+                  start_index = begin.secsTo( it->start() ) / mSlotResolutionSeconds;
+                  duration = range - start_index - 1;
+                // case4: case2+case3: our timeframe is inside the period
+                } else if( it->start() <= begin  && it->end() >= end ) {
+                  start_index = 0;
+                  duration = range - 1;
+                } else {
+                  kFatal() << "impossible condition reached" << it->start() << it->end();
+                }
+//                 kDebug() << start_index << "+" << duration << "=" << start_index + duration << "<=" << range;
                 Q_ASSERT(( start_index + duration ) <= range ); // sanity check
                 for ( int i = start_index; i <= start_index + duration; ++i )
                     fbArray[i] = 1;

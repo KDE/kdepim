@@ -43,6 +43,9 @@ private slots:
     void simpleTest();
     void stillPrettySimpleTest();
     void akademy2010();
+    void testPeriodBeginsBeforeTimeframeBegins();
+    void testPeriodEndsAfterTimeframeEnds();
+    void testPeriodIsLargerThenTimeframe();
 
 private:
     void insertAttendees();
