@@ -29,6 +29,7 @@
 
 #include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
+#include "incidencedefaults.h"
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
@@ -61,10 +62,14 @@ int main( int argc, char **argv )
   Akonadi::Item item( -1 );
   if ( args->isSet( "new-event" ) ) {
     std::cout << "Creating new event..." << std::endl;
-    item.setPayload<KCalCore::Event::Ptr>( KCalCore::Event::Ptr( new KCalCore::Event ) );
+    KCalCore::Event::Ptr event( new KCalCore::Event );
+    IncidenceDefaults::defaults( event );
+    item.setPayload<KCalCore::Event::Ptr>( event );
   } else if ( args->isSet( "new-todo" ) ) {
     std::cout << "Creating new todo..." << std::endl;
-    item.setPayload<KCalCore::Todo::Ptr>( KCalCore::Todo::Ptr( new KCalCore::Todo ) );
+    KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+    IncidenceDefaults::defaults( todo );
+    item.setPayload<KCalCore::Todo::Ptr>( todo );
   } else if ( args->count() == 1 ) {
     qint64 id = -1;
     if ( argc == 2 ) {

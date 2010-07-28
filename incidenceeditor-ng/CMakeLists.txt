@@ -43,6 +43,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   freeperiodmodel.cpp
   conflictresolver.cpp
 
+  incidencedefaults.cpp
+
   ../autochecktreewidget.cpp
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
