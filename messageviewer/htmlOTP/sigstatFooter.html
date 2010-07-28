@@ -1,0 +1,29 @@
+{% if signed %}
+      </td>
+      </tr>
+      <tr class="signClass">
+        <td dir="{{ dir }}">
+         {{ signed }} 
+        </td>
+      </tr></table>
+{% endif %}
+
+{% if encrypted %}
+      </td>
+      </tr>
+      <tr class="encrH">
+      <td dir="{{ dir }}">
+      {{ encrypted }}   
+      </td>
+      </tr></table>
+{% endif %}
+
+{% if encapsulatedRfc822Message %}
+      </td>
+      </tr>
+      <tr class="rfc822H">
+      <td dir="{{ dir }}">
+      {{ encapsulatedRfc822Message }} 
+      </td>
+      </tr></table>
+{% endif %}

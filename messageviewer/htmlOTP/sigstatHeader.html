@@ -1,0 +1,41 @@
+  {% if encapsulatedRfc822Message %}
+      <table cellspacing="1" cellpadding="1" class="rfc822">
+      <tr class="rfc822H">
+      <td dir="{{ dir }}">
+      
+      {% if node %}
+          <a href="{{ node }}">
+           Encapsulated message
+          </a>
+      {% else %}
+          Encapsulated message
+      {% endif %}
+      </td>
+      </tr>
+      <tr class="rfc822B"><td>
+  {% endif %}
+
+  {% if encrypted %}
+      <table cellspacing="1" cellpadding="1" class="encr">
+      <tr class="encrH">
+      <td dir="{{ dir }}">
+      
+      {{ encrypted }} 
+
+      {% if block.errorText %}
+         <br />Reason: {{ block.errorText }} 
+      {% endif %}
+      </td>
+      </tr>
+      <tr class="encrB"><td>
+  {% endif %}
+
+  {% if signInProgress %}
+      <table cellspacing="1" cellpadding="1" class="signInProgress">
+      <tr class="signInProgressH">
+      <td dir="{{ dir }}">        
+        {{ signInProgress }}
+      </td>
+      </tr>
+      <tr class="signInProgressB"><td>
+  {% endif %}

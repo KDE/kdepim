@@ -9,6 +9,7 @@ configure_file(grantlee_paths.h.cmake ${PROJECT_BINARY_DIR}/grantlee_paths.h)
 add_subdirectory(tests)
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
+install(DIRECTORY htmlOTP DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
 
 if(KDEPIM_MOBILE_UI)
   add_subdirectory(qml)

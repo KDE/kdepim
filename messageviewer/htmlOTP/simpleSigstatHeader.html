@@ -1,0 +1,20 @@
+<table cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td>
+
+{% if sign %}
+  {{ sign }}
+
+  {% if addr %}
+    Signed by <a href="mailto:{{ addr }}">{{ name }}</a>
+  {% endif %}
+
+{% endif %}
+</td>
+
+<td align="right">
+<a href="{{ showSignatureDetails }}">Show Details</a>
+</td>
+
+</tr>
+</table>

@@ -54,6 +54,11 @@ namespace GpgME {
   class Error;
 }
 
+namespace Grantlee
+{
+    class Engine;
+}
+
 
 namespace MessageViewer {
 
@@ -126,7 +131,7 @@ KMime::Content.
 
 The ObjectTreeParser basically has two modes: Generating the HTML code for the Viewer, or only
 extracting the textualContent() for situations where only the message text is needed, for example
-when inline forwarding a message. The mode depends on the ObjectTreeSourceIf passed to the
+when inline forwarding a message. The mode depfends on the ObjectTreeSourceIf passed to the
 constructor: If ObjectTreeSourceIf::htmlWriter() is not 0, then the HTML code generation mode is
 used.
 
@@ -413,6 +418,7 @@ private:
       not href. Obfuscated external references are ignored on purpose.
   */
   static bool containsExternalReferences( const QString & str );
+  
 
 public:// (during refactoring)
 
@@ -451,6 +457,11 @@ public:// (during refactoring)
                               const QString & fromAddress,
                               KMime::Content *node = 0);
   QString writeSigstatFooter( PartMetaData & part );
+  
+  QString writeSimpleSigstatHeader( const PartMetaData &block );
+  
+  QString endVerboseSigstatHeader( const PartMetaData & pmd );
+
 
   // The attachment mark is a div that is placed around the attchment. It is used for drawing
   // a yellow border around the attachment when scrolling to it. When scrolling to it, the border
@@ -527,6 +538,8 @@ private:
   QString mCollapseIcon;
   QString mExpandIcon;
   bool mDeleteNodeHelper;
+
+  Grantlee::Engine *mEngine;
 
 };
 

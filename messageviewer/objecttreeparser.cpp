@@ -105,6 +105,12 @@
 #include <QPainter>
 #include <QPointer>
 
+// Grantlee
+#include <grantlee/template.h>
+#include <grantlee/context.h>
+#include <grantlee/engine.h>
+#include "grantlee_paths.h"
+
 // other includes
 #include <sstream>
 #include <sys/stat.h>
@@ -164,6 +170,14 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
     mNodeHelper = nodeHelper;
     mDeleteNodeHelper = false;
   }
+
+  mEngine = new Grantlee::Engine();
+
+  Grantlee::FileSystemTemplateLoader::Ptr loader(new Grantlee::FileSystemTemplateLoader());
+
+  mEngine->addTemplateLoader( loader );
+  loader->setTemplateDirs( QStringList() << KStandardDirs::locate("data","messageviewer/htmlOTP/") );
+  mEngine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH );
 }
 
 ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
@@ -756,15 +770,14 @@ void ObjectTreeParser::writeDeferredDecryptionBlock()
 {
   const QString iconName = KIconLoader::global()->iconPath( "document-decrypt",
                                                             KIconLoader::Small );
-  const QString decryptedData = "<div style=\"font-size:large; text-align:center;"
-        "padding-top:20pt;\">"
-        + i18n("This message is encrypted.")
-        + "</div>"
-        "<div style=\"text-align:center; padding-bottom:20pt;\">"
-        "<a href=\"kmail:decryptMessage\">"
-        "<img src=\"" + iconName.toUtf8() + "\"/>"
-        + i18n("Decrypt Message")
-        + "</a></div>";
+  Grantlee::Template t = mEngine->loadByName( "decryptedData.html" );
+  QVariantHash data;
+  
+  data.insert( QLatin1String( "iconName" ) , iconName.toUtf8() );
+  
+  Grantlee::Context c( data );
+  const QString decryptedData = t->render( &c );	
+	
   PartMetaData messagePart;
   messagePart.isDecryptable = true;
   messagePart.isEncrypted = true;
@@ -1214,6 +1227,9 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
                         && !showOnlyOneMimePart()
                         && !label.isEmpty();
   if ( bDrawFrame ) {
+    Grantlee::Template t = mEngine->loadByName( "textPlainSubtype.html" );
+    QVariantHash data;
+    
     label = StringUtil::quoteHtmlChars( label, true );
 
     const QString comment =
@@ -1221,18 +1237,18 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
 
     const QString fileName;
     mNodeHelper->writeNodeToTempFile( curNode );
+          
     const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+    data.insert( QLatin1String( "dir" ) , dir );
 
-    QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-                "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
     if ( !fileName.isEmpty() )
-      htmlStr += "<a href=\"" + mNodeHelper->asHREF( curNode, "body" ) + "\">"
-                  + label + "</a>";
-    else
-      htmlStr += label;
+      data.insert( QLatin1String( "fileName" ) , mNodeHelper->asHREF( curNode, "body" ) );
+
     if ( !comment.isEmpty() )
-      htmlStr += "<br>" + comment;
-    htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
+      data.insert( QLatin1String( "comment" ) , comment );
+    
+    Grantlee::Context c( data );
+    QString htmlStr = t->render( &c );   
 
     htmlWriter()->queue( htmlStr );
   }
@@ -2024,21 +2040,24 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
   }
 
   if ( !showOnlyOneMimePart() ) {
+    Grantlee::Template t = mEngine->loadByName( "applicationMsTnefSubtype.html" );
+    QVariantHash data;
+    
     QString label = NodeHelper::fileName( node );
     label = StringUtil::quoteHtmlChars( label, true );
     const QString comment = StringUtil::quoteHtmlChars( node->contentDescription()->asUnicodeString(), true );
     const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+    data.insert( QLatin1String( "dir" ) , dir );
 
-    QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-                "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
     if ( !fileName.isEmpty() )
-    htmlStr += "<a href=\"" + mNodeHelper->asHREF( node, "body" ) + "\">"
-                + label + "</a>";
-    else
-      htmlStr += label;
+      data.insert( QLatin1String( "fileName" ) , mNodeHelper->asHREF( node, "body" ) );
+
     if ( !comment.isEmpty() )
-      htmlStr += "<br>" + comment;
-    htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
+      data.insert( QLatin1String( "comment" ) , comment );
+    
+    Grantlee::Context c( data );
+    QString htmlStr = t->render( &c );       
+    
     htmlWriter()->queue( htmlStr );
   }
 
@@ -2306,37 +2325,40 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
   return result;
 }
 
-
-static QString writeSimpleSigstatHeader( const PartMetaData &block )
+QString ObjectTreeParser::writeSimpleSigstatHeader( const PartMetaData &block )
 {
-QString html;
-html += "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td>";
 
-if ( block.signClass == "signErr" ) {
-  html += i18n( "Invalid signature." );
-} else if ( block.signClass == "signOkKeyBad" || block.signClass == "signWarn" ) {
-  html += i18n( "Not enough information to check signature validity." );
-} else if ( block.signClass == "signOkKeyOk" ) {
-  QString addr;
-  if ( !block.signerMailAddresses.isEmpty() )
-    addr = block.signerMailAddresses.first();
-  QString name = addr;
-  if ( name.isEmpty() )
-    name = block.signer;
-  if ( addr.isEmpty() ) {
-    html += i18n( "Signature is valid." );
+  Grantlee::Template t = mEngine->loadByName( "simpleSigstatHeader.html" );
+  QVariantHash data;
+
+  if ( block.signClass == "signErr" ) {
+    data.insert( QLatin1String( "sign" ) , "Invalid signature." );
+  } else if ( block.signClass == "signOkKeyBad" || block.signClass == "signWarn" ) {
+    data.insert( QLatin1String( "sign" ) , "Not enough information to check signature validity." );
+  } else if ( block.signClass == "signOkKeyOk" ) {
+
+    QString addr;
+    if ( !block.signerMailAddresses.isEmpty() )
+      addr = block.signerMailAddresses.first();
+  
+    QString name = addr;
+    if ( name.isEmpty() )
+      name = block.signer;
+    if ( addr.isEmpty() ) {
+      data.insert( QLatin1String( "sign" ) , "Signature is valid." );
+    } else {
+      data.insert( QLatin1String( "addr" ) , addr );
+      data.insert( QLatin1String( "name" ) , name  );
+    }
   } else {
-    html += i18n( "Signed by <a href=\"mailto:%1\">%2</a>.", addr, name );
+    data.insert( QLatin1String( "sign" ) , "Unknown signature state." );
   }
-} else {
-  // should not happen
-  html += i18n( "Unknown signature state" );
-}
-html += "</td><td align=\"right\">";
-html += "<a href=\"kmail:showSignatureDetails\">";
-html += i18n( "Show Details" );
-html += "</a></td></tr></table>";
-return html;
+  
+  data.insert( QLatin1String( "showSignatureDetails" ) , "kmail:showSignatureDetails" );
+
+  Grantlee::Context c( data );
+  QString html = t->render( &c );
+  return html;
 }
 
 static QString beginVerboseSigstatHeader()
@@ -2372,17 +2394,18 @@ if ( !auditLog.isEmpty() ) {
 return QString();
 }
 
-static QString endVerboseSigstatHeader( const PartMetaData & pmd )
+QString ObjectTreeParser::endVerboseSigstatHeader( const PartMetaData & pmd )
 {
-QString html;
-html += "</td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\">";
-html += "<a href=\"kmail:hideSignatureDetails\">";
-html += i18n( "Hide Details" );
-html += "</a></td></tr>";
-html += "<tr><td align=\"right\" valign=\"bottom\" nowrap=\"nowrap\">";
-html += makeShowAuditLogLink( pmd.auditLogError, pmd.auditLog );
-html += "</td></tr></table>";
-return html;
+  Grantlee::Template t = mEngine->loadByName( "endVerboseSigstatHeader.html" );
+  QVariantHash data; 
+  
+  data.insert( QLatin1String( "hideSignatureDetails" ) , "kmail:hideSignatureDetails" );
+  data.insert( QLatin1String( "makeShowAuditLogLink" ) , makeShowAuditLogLink( pmd.auditLogError, pmd.auditLog ) );
+  
+  Grantlee::Context c( data );
+  QString html = t->render( &c );
+  return html;
+
 }
 
 QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
@@ -2390,51 +2413,50 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                             const QString & fromAddress,
                                             KMime::Content *node )
 {
+  Grantlee::Template t = mEngine->loadByName( "sigstatHeader.html" );
+  QVariantHash data;
+  
   const bool isSMIME = cryptProto && ( cryptProto == Kleo::CryptoBackendFactory::instance()->smime() );
   QString signer = block.signer;
-
+  
   QString htmlStr, simpleHtmlStr;
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   QString cellPadding("cellpadding=\"1\"");
 
+  data.insert( QLatin1String( "dir" ) , dir );
+
+
   if( block.isEncapsulatedRfc822Message )
   {
-      htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"rfc822\">"
-          "<tr class=\"rfc822H\"><td dir=\"" + dir + "\">";
+      data.insert( QLatin1String( "encapsulatedRfc822Message" ) , "." );
       if( node ) {
-          htmlStr += "<a href=\"" + mNodeHelper->asHREF( node, "body" ) + "\">"
-                    + i18n("Encapsulated message") + "</a>";
-      } else {
-          htmlStr += i18n("Encapsulated message");
+          data.insert( QLatin1String( "node" ) , mNodeHelper->asHREF( node, "body" ) );
       }
-      htmlStr += "</td></tr><tr class=\"rfc822B\"><td>";
   }
 
   if( block.isEncrypted ) {
-      htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"encr\">"
-          "<tr class=\"encrH\"><td dir=\"" + dir + "\">";
       if ( block.inProgress ) {
-          htmlStr += i18n("Please wait while the message is being decrypted...");
+          data.insert( QLatin1String( "encrypted" ) , "Please wait while the message is being decrypted..." );
       } else if( block.isDecryptable ) {
-          htmlStr += i18n("Encrypted message");
+          data.insert( QLatin1String( "encrypted" ) , "Encrypted message" );
       } else {
-          htmlStr += i18n("Encrypted message (decryption not possible)");
+          data.insert( QLatin1String( "encrypted" ) , "Encrypted message (decryption not possible)" );
+          
           if( !block.errorText.isEmpty() ) {
-              htmlStr += "<br />" + i18n("Reason: %1", block.errorText );
+              data.insert( QLatin1String( "block.errorText" ) , block.errorText );
           }
       }
-      htmlStr += "</td></tr><tr class=\"encrB\"><td>";
   }
 
   if ( block.isSigned && block.inProgress ) {
       block.signClass = "signInProgress";
-      htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"signInProgress\">"
-      "<tr class=\"signInProgressH\"><td dir=\"" + dir + "\">";
-      htmlStr += i18n("Please wait while the signature is being verified...");
-      htmlStr += "</td></tr><tr class=\"signInProgressB\"><td>";
+      data.insert( QLatin1String( "signInProgress" ) , "Please wait while the signature is being verified..." );     
   }
 
+  Grantlee::Context c( data );
+  htmlStr = t->render( &c );  
   simpleHtmlStr = htmlStr;
+
 
   if( block.isSigned && !block.inProgress ) {
       QStringList& blockAddrs( block.signerMailAddresses );
@@ -2781,33 +2803,32 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
 
 QString ObjectTreeParser::writeSigstatFooter( PartMetaData& block )
 {
+  Grantlee::Template t = mEngine->loadByName( "sigstatFooter.html" );
+  QVariantHash data;
+  
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  data.insert( QLatin1String( "dir" ) , dir );
 
-  QString htmlStr;
 
   if (block.isSigned) {
-      htmlStr += "</td></tr><tr class=\"" + block.signClass + "H\">";
-      htmlStr += "<td dir=\"" + dir + "\">" +
-          i18n( "End of signed message" ) +
-          "</td></tr></table>";
+      data.insert( QLatin1String( "signClass" ) , ( block.signClass + "H" ) );
+      data.insert( QLatin1String( "signed" ) , "End of signed message" );
   }
 
   if (block.isEncrypted) {
-      htmlStr += "</td></tr><tr class=\"encrH\"><td dir=\"" + dir + "\">" +
-              i18n( "End of encrypted message" ) +
-          "</td></tr></table>";
+      data.insert( QLatin1String( "encrypted" ) , "End of encrypted message" );
   }
 
   if( block.isEncapsulatedRfc822Message )
   {
-      htmlStr += "</td></tr><tr class=\"rfc822H\"><td dir=\"" + dir + "\">" +
-          i18n( "End of encapsulated message" ) +
-          "</td></tr></table>";
+      data.insert( QLatin1String( "encapsulatedRfc822Message" ) , "End of encapsulated message" );  
   }
+  
+  Grantlee::Context c( data );
+  QString htmlStr = t->render( &c );
 
   return htmlStr;
-}
-
+}                                           
 
 //-----------------------------------------------------------------------------
 
