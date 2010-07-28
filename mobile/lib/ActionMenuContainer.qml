@@ -46,7 +46,7 @@ Rectangle {
       _topLevel.triggered(triggeredName)
 
       for ( var i = 0; i < children.length; ++i ) {
-        if (children[i].name != triggeredName)
+        if (children[i].name != triggeredName && children[i].showChildren != undefined)
           children[i].showChildren = false;
       }
 
