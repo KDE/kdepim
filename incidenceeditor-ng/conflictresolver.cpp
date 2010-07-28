@@ -345,6 +345,7 @@ void ConflictResolver::findAllFreeSlots()
     // Finally, iterate through the composite array locating contiguous free timeslots
     int free_count = 0;
     bool free_found = false;
+    mAvailableSlots.clear();
     for ( int i = 0; i < range; ++i ) {
         // free timeslot encountered, increment counter
         if ( summed[i] == 0 ) {
