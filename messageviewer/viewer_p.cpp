@@ -2166,7 +2166,7 @@ void ViewerPrivate::injectAttachments()
   if( injectionPoint.isNull() )
     return;
 
-  QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
+  QString imgpath( KStandardDirs::locate("data","messageviewer/themes/") );
   QString urlHandle;
   QString imgSrc;
   if( !mShowAttachmentQuicklist ) {
@@ -2753,7 +2753,7 @@ void ViewerPrivate::toggleFullAddressList( const QString &field )
     return;
   }
 
-  QString imgpath( KStandardDirs::locate( "data","libmessageviewer/pics/" ) );
+  QString imgpath( KStandardDirs::locate( "data","messageviewer/themes/" ) );
   QString urlHandle;
   QString imgSrc;
   QString altText;
