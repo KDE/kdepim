@@ -25,6 +25,7 @@
 #include <KSystemTimeZones>
 #include <KCalendarSystem>
 #include <KGlobal>
+#include <KLocalizedString>
 #include <KDebug>
 
 using namespace IncidenceEditorsNG;
@@ -112,12 +113,12 @@ QString FreePeriodModel::stringify( int index ) const
     const QString longMonthName = calSys->monthName( startDate );
     const QString dayofWeek = calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
     // TODO i18n, ping chusslove
-    return i18nc( "A time period duration. KLocale is used to format the components. example: Monday, 12 June, 8:00am to 9:30am",
-                  "%1, %2 %3, %4 to %5").arg( dayofWeek )
-                                        .arg( startDate.day() )
-                                        .arg( longMonthName )
-                                        .arg( startTime )
-                                        .arg( endTime );
+    return ki18nc( "A time period duration. KLocale is used to format the components. example: Monday, 12 June, 8:00am to 9:30am",
+                  "%1, %2 %3, %4 to %5").subs( dayofWeek )
+                                        .subs( startDate.day() )
+                                        .subs( longMonthName )
+                                        .subs( startTime )
+                                        .subs( endTime ).toString();
 }
 
 QString FreePeriodModel::tooltipify( int index ) const
