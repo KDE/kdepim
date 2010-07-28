@@ -37,7 +37,7 @@
 
 using namespace IncidenceEditorsNG;
 
-SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent  )
+SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startTime , ConflictResolver* resolver, QWidget* parent  )
   : KDialog( parent ),
   mResolver( resolver ),
   mPeriodModel( new FreePeriodModel( this ) )
@@ -62,11 +62,22 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent 
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
     connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCalCore::Period::List & ) ) );
+
+    mListView->setModel( mPeriodModel );
+
+    mStartDate->setDate( startDate );
+    mEndDate->setDate( mStartDate->date().addDays( 7 ) );
+    mStartTime->setTime( startTime );
+    mEndTime->setTime( startTime );
+
+    mResolver->setEarliestDate( mStartDate->date() );
+    mResolver->setEarliestTime( mStartTime->time() );
+    mResolver->setLatestDate( mEndDate->date() );
+    mResolver->setLatestTime( mEndTime->time() );
 }
 
 SchedulingDialog::~SchedulingDialog()
 {
-
 }
 
 void SchedulingDialog::fillCombos()
