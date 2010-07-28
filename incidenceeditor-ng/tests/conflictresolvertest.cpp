@@ -234,7 +234,7 @@ void ConflictResolverTest::testPeriodBeginsBeforeTimeframeBegins()
 
   QCOMPARE( resolver->availableSlots().size(), 1 );
   Period freeslot = resolver->availableSlots().at( 0 );
-  QCOMPARE( freeslot.start(), _time( 9, 00 ) );
+  QCOMPARE( freeslot.start(), _time( 8, 45 ) );
   QCOMPARE( freeslot.end(), end );
 }
 
@@ -263,7 +263,26 @@ void ConflictResolverTest::testPeriodEndsAfterTimeframeEnds()
   QCOMPARE( freeslot.end(), _time( 8,00 ) );
 }
 
+void ConflictResolverTest::testPeriodEndsAtSametimeAsTimeframe()
+{
+  base.setDate( QDate( 2010, 7, 29 ) );
+  base.setTime( QTime( 7, 45 ) );
 
+  end.setDate( QDate( 2010, 7, 29 ) );
+  end.setTime( QTime( 8, 45 ) );
+
+  Period testEvent( _time( 5, 45 ), _time( 8, 45 ) );
+
+  addAttendee( "kdabtest1@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() << testEvent ) ) );
+  addAttendee( "kdabtest2@demo.kolab.org", FreeBusy::Ptr( new FreeBusy( Period::List() ) ) );
+
+  insertAttendees();
+  resolver->setEarliestDateTime( base );
+  resolver->setLatestDateTime( end );
+  resolver->findAllFreeSlots();
+
+  QCOMPARE( resolver->availableSlots().size(), 0 );
+}
 
 
 QTEST_KDEMAIN( ConflictResolverTest, GUI );

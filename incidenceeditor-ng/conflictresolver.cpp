@@ -300,7 +300,7 @@ void ConflictResolver::findAllFreeSlots()
                 // case2: the period begins before our timeframe begins
                 } else if( it->start() <= begin && it->end() <= end ) {
                   start_index = 0;
-                  duration = begin.secsTo( it->end() ) / mSlotResolutionSeconds;
+                  duration = ( begin.secsTo( it->end() ) / mSlotResolutionSeconds ) - 1;
                 // case3: the period ends after our timeframe ends
                 } else if( it->end() >= end && it->start() >= begin ) {
                   start_index = begin.secsTo( it->start() ) / mSlotResolutionSeconds;

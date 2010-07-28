@@ -46,6 +46,7 @@ private slots:
     void testPeriodBeginsBeforeTimeframeBegins();
     void testPeriodEndsAfterTimeframeEnds();
     void testPeriodIsLargerThenTimeframe();
+    void testPeriodEndsAtSametimeAsTimeframe();
 
 private:
     void insertAttendees();
