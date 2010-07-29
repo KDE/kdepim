@@ -107,6 +107,11 @@ void SchedulingDialog::fillCombos()
     mRolesCombo->setWhatsThis( i18nc( "@info:whatsthis",
                                   "Edits the role of the attendee." ) );
 
+    mRolesCombo->setItemCheckState( 0, Qt::Checked );
+    mRolesCombo->setItemCheckState( 1, Qt::Checked );
+    mRolesCombo->setItemCheckState( 2, Qt::Checked );
+    mRolesCombo->setItemCheckState( 3, Qt::Checked );
+
     QBitArray days( 7 );
     days.setBit( 0 ); //Monday
     days.setBit( 1 ); //Tuesday
@@ -115,6 +120,7 @@ void SchedulingDialog::fillCombos()
     days.setBit( 4 ); //Friday.. surprise!
 
     mWeekdayCombo->setDays( days );
+    mResolver->setAllowedWeekdays( days );
 }
 
 void SchedulingDialog::slotStartDateChanged( const QDate& newDate )
