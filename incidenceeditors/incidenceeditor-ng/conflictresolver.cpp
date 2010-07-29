@@ -31,7 +31,6 @@
 #include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
 
 #include "attendeedata.h"
-#include "freebusyitem.h"
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
@@ -68,27 +67,28 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
 void ConflictResolver::insertAttendee( const KCal::Attendee &attendee )
 {
 //     kDebug() << "inserted attendee" << attendee->email();
-    FreeBusyItem *item = new FreeBusyItem( attendee, mParentWidget );
+    FreeBusyItem::Ptr item ( new FreeBusyItem( attendee, mParentWidget ) );
     mFreeBusyItems.append( item );
     updateFreeBusyData( item );
+    emit newFreeBusyItem( item );
 }
 
-void ConflictResolver::insertAttendee( FreeBusyItem* freebusy )
+void ConflictResolver::insertAttendee( const FreeBusyItem::Ptr &freebusy )
 {
     mFreeBusyItems.append( freebusy );
 }
 
 void ConflictResolver::removeAttendee( const KCal::Attendee &attendee )
 {
-    FreeBusyItem *anItem = 0;
+    FreeBusyItem::Ptr anItem;
     for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
         anItem = mFreeBusyItems[i];
         if ( anItem->attendee() == attendee ) {
             if ( anItem->updateTimerID() != 0 ) {
                 killTimer( anItem->updateTimerID() );
             }
-            delete anItem;
             mFreeBusyItems.removeAt( i );
+            emit removedFreeBusyItem( anItem );
             break;
         }
     }
@@ -97,13 +97,12 @@ void ConflictResolver::removeAttendee( const KCal::Attendee &attendee )
 
 void ConflictResolver::clearAttendees()
 {
-    qDeleteAll( mFreeBusyItems );
     mFreeBusyItems.clear();
 }
 
 bool ConflictResolver::containsAttendee( const KCal::Attendee &attendee )
 {
-    FreeBusyItem *anItem = 0;
+    FreeBusyItem::Ptr anItem;
     for ( uint i = 0; i < mFreeBusyItems.count(); i++ ) {
         anItem = mFreeBusyItems[i];
         if ( anItem->attendee() == attendee ) {
@@ -113,7 +112,7 @@ bool ConflictResolver::containsAttendee( const KCal::Attendee &attendee )
     return false;
 }
 
-void ConflictResolver::updateFreeBusyData( FreeBusyItem* item )
+void ConflictResolver::updateFreeBusyData( const FreeBusyItem::Ptr &item )
 {
     if ( item->isDownloading() ) {
         // This item is already in the process of fetching the FB list
@@ -133,7 +132,7 @@ void ConflictResolver::updateFreeBusyData( FreeBusyItem* item )
 void ConflictResolver::timerEvent( QTimerEvent* event )
 {
     killTimer( event->timerId() );
-    Q_FOREACH( FreeBusyItem * item, mFreeBusyItems ) {
+    Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {
         if ( item->updateTimerID() == event->timerId() ) {
             item->setUpdateTimerID( 0 );
             item->startDownload( mForceDownload );
@@ -144,10 +143,11 @@ void ConflictResolver::timerEvent( QTimerEvent* event )
 
 void ConflictResolver::slotInsertFreeBusy( KCal::FreeBusy* fb, const QString& email )
 {
+    kDebug() << "got fb for " << email;
     if ( fb ) {
         fb->sortList();
     }
-    Q_FOREACH( FreeBusyItem *item, mFreeBusyItems ) {
+    Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {
         if ( item->email() == email ) {
             item->setFreeBusy( fb );
         }
@@ -208,7 +208,7 @@ void ConflictResolver::autoReload()
 
 void ConflictResolver::reload()
 {
-    Q_FOREACH( FreeBusyItem * item, mFreeBusyItems ) {
+    Q_FOREACH( FreeBusyItem::Ptr item, mFreeBusyItems ) {
         if ( mForceDownload ) {
             item->startDownload( mForceDownload );
         } else {
@@ -236,7 +236,7 @@ void ConflictResolver::manualReload()
 int ConflictResolver::tryDate( KDateTime& tryFrom, KDateTime& tryTo )
 {
     int conflicts_count = 0;
-    Q_FOREACH( FreeBusyItem * currentItem, mFreeBusyItems ) {
+    Q_FOREACH( FreeBusyItem::Ptr currentItem, mFreeBusyItems ) {
         if ( !matchesRoleConstraint( currentItem->attendee() ) )
             continue;
         if ( !tryDate( currentItem, tryFrom, tryTo ) ) {
@@ -246,7 +246,7 @@ int ConflictResolver::tryDate( KDateTime& tryFrom, KDateTime& tryTo )
     return conflicts_count;
 }
 
-bool ConflictResolver::tryDate( FreeBusyItem* attendee, KDateTime& tryFrom, KDateTime& tryTo )
+bool ConflictResolver::tryDate( FreeBusyItem::Ptr attendee, KDateTime& tryFrom, KDateTime& tryTo )
 {
     // If we don't have any free/busy information, assume the
     // participant is free. Otherwise a participant without available
@@ -315,6 +315,7 @@ bool ConflictResolver::findFreeSlot( const KCal::Period &dateTimeRange )
 
 void ConflictResolver::findAllFreeSlots()
 {
+    kDebug() << "find all free slots";
     // Uses an O(p*n) (n number of attendees, p timeframe range / timeslot resolution ) algorithm to
     // locate all free blocks in a given timeframe that match the search constraints.
     // Does so by:
@@ -327,6 +328,8 @@ void ConflictResolver::findAllFreeSlots()
     // define these locally for readability
     const KDateTime begin = mTimeframeConstraint.start();
     const KDateTime end =  mTimeframeConstraint.end();
+
+    kDebug() << "from " << begin << " to " << end;
 
     // calculate the time resolution
     // each timeslot in the arrays represents a unit of time
@@ -343,10 +346,11 @@ void ConflictResolver::findAllFreeSlots()
         kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end ) << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range << begin << end;
         return;
     }
+    kDebug() << "with range " << range << " and resolution " << mSlotResolutionSeconds;
     // filter out attendees for which we don't have FB data
     // and which don't match the mandatory role contrstaint
-    QList<FreeBusyItem* > filteredFBItems;
-    foreach( FreeBusyItem * currentItem, mFreeBusyItems ) {
+    QList<FreeBusyItem::Ptr> filteredFBItems;
+    foreach( FreeBusyItem::Ptr currentItem, mFreeBusyItems ) {
         if ( currentItem->freeBusy() && matchesRoleConstraint( currentItem->attendee() ) )
             filteredFBItems << currentItem;
     }
@@ -357,6 +361,7 @@ void ConflictResolver::findAllFreeSlots()
       kDebug() << "no attendees match search criteria";
       return;
     }
+    kDebug() << "num attendees: " << number_attendees;
     // this is a 2 dimensional array where the rows are attendees
     // and the columns are 0 or 1 denoting freee or busy respectively.
     QVector< QVector<int> > fbTable;
@@ -373,7 +378,7 @@ void ConflictResolver::findAllFreeSlots()
     //    etareti
     //    append the allocated array to <fbTable>
     // etareti
-    foreach( FreeBusyItem * currentItem, filteredFBItems ) {
+    foreach( FreeBusyItem::Ptr currentItem, filteredFBItems ) {
         Q_ASSERT( currentItem ); // sanity check
         QList<KCal::Period> busyPeriods = currentItem->freeBusy()->busyPeriods();
         QVector<int> fbArray( range );
@@ -504,4 +509,9 @@ KCal::Period::List ConflictResolver::availableSlots() const
 void ConflictResolver::setResolution( int seconds )
 {
     mSlotResolutionSeconds = seconds;
+}
+
+QList< FreeBusyItem::Ptr > IncidenceEditorsNG::ConflictResolver::freeBusyItems() const
+{
+    return mFreeBusyItems;
 }

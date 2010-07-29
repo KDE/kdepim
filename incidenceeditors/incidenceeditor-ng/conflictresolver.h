@@ -25,6 +25,8 @@
 
 #include "incidenceeditors-ng_export.h"
 
+#include "freebusyitem.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QSet>
@@ -71,7 +73,7 @@ public:
      */
     void insertAttendee( const KCal::Attendee &attendee );
 
-    void insertAttendee( FreeBusyItem* freebusy );
+    void insertAttendee( const FreeBusyItem::Ptr &freebusy );
     /**
      * Removes an attendee
      * The attendee will no longer be considered when
@@ -132,6 +134,8 @@ public:
     */
     bool findFreeSlot( const KCal::Period &dateTimeRange );
 
+    QList<FreeBusyItem::Ptr> freeBusyItems() const;
+
 signals:
     /**
      * Emitted when the user changes the start and end dateTimes
@@ -149,6 +153,9 @@ signals:
      * Emitted when the resolver locates new free slots.
      */
     void freeSlotsAvailable( const KCal::Period::List & );
+
+    void newFreeBusyItem( FreeBusyItem::Ptr item );
+    void removedFreeBusyItem( FreeBusyItem::Ptr item );
 
 public slots:
     /**
@@ -180,7 +187,7 @@ private slots:
     void autoReload();
 
 private:
-    void updateFreeBusyData( FreeBusyItem * );
+    void updateFreeBusyData( const FreeBusyItem::Ptr & item );
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) matches the 
@@ -198,7 +205,7 @@ private:
       possible slot for this participant (not necessarily a slot that is
       available for all participants).
     */
-    bool tryDate( FreeBusyItem *attendee, KDateTime &tryFrom, KDateTime &tryTo );
+    bool tryDate( FreeBusyItem::Ptr attendee, KDateTime &tryFrom, KDateTime &tryTo );
 
     /**
      * Checks whether the supplied attendee passes the
@@ -222,7 +229,7 @@ private:
                                    parameter changes.
                               */
     bool mForceDownload;
-    QList<FreeBusyItem*> mFreeBusyItems;
+    QList<FreeBusyItem::Ptr> mFreeBusyItems;
     QWidget *mParentWidget;
 
     QSet<KCal::Attendee::Role> mMandatoryRoles;

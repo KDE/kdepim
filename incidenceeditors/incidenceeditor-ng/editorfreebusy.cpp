@@ -208,7 +208,7 @@ void FreeBusyItem::updateItem()
     item = mListWidget->topLevelItem( index );
     item->setText( 0, text );
   }
-    
+
   switch ( mAttendee->status() ) {
     case AttendeeData::Accepted:
       item->setIcon( 0, SmallIcon( "dialog-ok-apply" ) );

@@ -36,6 +36,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencesecrecy.cpp
 
   freebusyitem.cpp
+  freebusyitemmodel.cpp
   conflictresolver.cpp
 
   ../autochecktreewidget.cpp

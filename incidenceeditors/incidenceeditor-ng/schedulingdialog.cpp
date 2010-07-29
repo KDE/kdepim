@@ -54,6 +54,7 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent 
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
     connect( mResolver, SIGNAL( freeSlotsAvailable( const KCal::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCal::Period::List & ) ) );
+    connect( mResolver, SIGNAL( newFreeBusyItem( KCal::FreeBusy* ) ), mVisualWidget, SLOT( newFreeBusy( KCal::FreeBusy* ) ) );
 
     mListView->setModel( mPeriodModel );
 

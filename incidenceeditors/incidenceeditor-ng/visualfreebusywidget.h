@@ -24,12 +24,18 @@
 #include <KDateTime>
 
 #include <QWidget>
+#include "conflictresolver.h"
+
+namespace KCal {
+  class FreeBusy;
+}
 
 class QTreeWidget;
 class QLabel;
 class KComboBox;
 class FreeBusyItem;
 class RowController;
+class QStandardItemModel;
 
 namespace KDGantt {
   class DateTimeGrid;
@@ -50,6 +56,8 @@ public:
 signals:
     void dateTimesChanged( const KDateTime &, const KDateTime & );
 
+public slots:
+    void newFreeBusy( const FreeBusyItem::Ptr & item );
 protected slots:
     void slotUpdateGanttView( const KDateTime &, const KDateTime & );
     void slotScaleChanged( int );
@@ -68,6 +76,7 @@ private:
     RowController *mRowController;
     KDGantt::DateTimeGrid *mGanttGrid;
     KComboBox *mScaleCombo;
+    QStandardItemModel *mModel;
 
     KDateTime mDtStart, mDtEnd;
 
