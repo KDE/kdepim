@@ -155,7 +155,7 @@ std::vector<unsigned int> SelectUserIDsPage::selectedUserIDs() const {
 
 void SelectUserIDsPage::setCertificateToCertify( const Key & key ) {
     m_label->setText( i18n( "Certificate: %1\nFingerprint: %2",
-                            Formatting::prettyNameAndEMail( key ),
+                            Formatting::formatForComboBox( key ),
                             key.primaryFingerprint() ) );
     m_userIDModel.setCertificateToCertify( key );
 
