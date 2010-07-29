@@ -354,7 +354,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
       textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
       mTopLayout->addWidget( textLabel );
     } else {
-      QLabel *textLabel = new QLabel( text, page );
+      KActiveLabel *textLabel = new KActiveLabel( text, page );
       textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
       mTopLayout->addWidget( textLabel );
     }
