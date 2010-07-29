@@ -16,6 +16,7 @@ set(messagecore_LIB_SRCS
    attachmentfrommimecontentjob.cpp
    attachmentcollector.cpp
    attachmentpropertiesdialog.cpp
+   messagestatus.cpp
    annotationdialog.cpp
    stringutil.cpp
    nodehelper.cpp

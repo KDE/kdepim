@@ -32,7 +32,7 @@ class KMenu;
 
 class QTimer;
 
-namespace Akonadi
+namespace KPIM
 {
   class MessageStatus;
 }
@@ -340,9 +340,9 @@ public:
   void focusQuickSearch();
 
   /**
-   * Returns the Akonadi::MessageStatus in the current quicksearch field.
+   * Returns the KPIM::MessageStatus in the current quicksearch field.
    */
-  Akonadi::MessageStatus currentFilterStatus() const;
+  KPIM::MessageStatus currentFilterStatus() const;
 
   /**
    * Returns the search term in the current quicksearch field.
@@ -541,7 +541,7 @@ protected:
    * It first applies the change to the cached state in MessageItem and
    * then requests our parent widget to act on the storage.
    */
-  void changeMessageStatus( MessageItem * it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset );
+  void changeMessageStatus( MessageItem * it, const KPIM::MessageStatus &set, const KPIM::MessageStatus &unset );
 
   /**
    * Starts a short-delay timer connected to saveThemeColumnState().

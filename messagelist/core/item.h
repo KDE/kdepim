@@ -29,7 +29,7 @@
 
 #include <kmime/kmime_headers.h>
 
-#include <akonadi/kmime/messagestatus.h>
+#include <messagecore/messagestatus.h>
 
 #include <messagelist/core/model.h>
 #include <messagelist/messagelist_export.h>
@@ -254,12 +254,12 @@ public:
   /**
    * Returns the status associated to this Item.
    */
-  const Akonadi::MessageStatus & status() const;
+  const KPIM::MessageStatus & status() const;
 
   /**
    * Sets the status associated to this Item.
    */
-  void setStatus( const Akonadi::MessageStatus &status );
+  void setStatus( const KPIM::MessageStatus &status );
 
   /**
    * Returns a string describing the status e.g: "Read, Forwarded, Important"
@@ -376,7 +376,7 @@ public:
    * It sets up several items at once (so even if not inlined it's still a single call).
    */
   void setSubjectAndStatus( const QString &subject,
-                            const Akonadi::MessageStatus &status );
+                            const KPIM::MessageStatus &status );
 
   /**
    * Appends an Item to this item's child list.

@@ -50,7 +50,7 @@
 #include <KLocale>
 #include <KComboBox>
 
-#include <akonadi/kmime/messagestatus.h>
+#include <messagecore/messagestatus.h>
 
 using namespace MessageList::Core;
 
@@ -197,43 +197,43 @@ void Widget::populateStatusFilterCombo()
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-unread"),
                                   i18nc( "@action:inmenu Status of a message", "Unread" ),
-                                  Akonadi::MessageStatus::statusUnread().toQInt32() );
+                                  KPIM::MessageStatus::statusUnread().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-replied"),
                                   i18nc( "@action:inmenu Status of a message", "Replied" ),
-                                  Akonadi::MessageStatus::statusReplied().toQInt32() );
+                                  KPIM::MessageStatus::statusReplied().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-forwarded"),
                                   i18nc( "@action:inmenu Status of a message", "Forwarded" ),
-                                  Akonadi::MessageStatus::statusForwarded().toQInt32() );
+                                  KPIM::MessageStatus::statusForwarded().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("emblem-important"),
                                   i18nc( "@action:inmenu Status of a message", "Important"),
-                                  Akonadi::MessageStatus::statusForwarded().toQInt32() );
+                                  KPIM::MessageStatus::statusForwarded().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-task"),
                                   i18nc( "@action:inmenu Status of a message", "Action Item" ),
-                                  Akonadi::MessageStatus::statusToAct().toQInt32() );
+                                  KPIM::MessageStatus::statusToAct().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-watch"),
                                   i18nc( "@action:inmenu Status of a message", "Watched" ),
-                                  Akonadi::MessageStatus::statusWatched().toQInt32() );
+                                  KPIM::MessageStatus::statusWatched().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-ignored"),
                                   i18nc( "@action:inmenu Status of a message", "Ignored" ),
-                                  Akonadi::MessageStatus::statusIgnored().toQInt32() );
+                                  KPIM::MessageStatus::statusIgnored().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-attachment"),
                                   i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
-                                  Akonadi::MessageStatus::statusHasAttachment().toQInt32() );
+                                  KPIM::MessageStatus::statusHasAttachment().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-junk"),
                                   i18nc( "@action:inmenu Status of a message", "Spam" ),
-                                  Akonadi::MessageStatus::statusSpam().toQInt32() );
+                                  KPIM::MessageStatus::statusSpam().toQInt32() );
 
   d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-notjunk"),
                                   i18nc( "@action:inmenu Status of a message", "Ham" ),
-                                  Akonadi::MessageStatus::statusHam().toQInt32() );
+                                  KPIM::MessageStatus::statusHam().toQInt32() );
 
   d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
   fillMessageTagCombo( d->mStatusFilterCombo );
@@ -249,12 +249,12 @@ MessageItem *Widget::currentMessageItem() const
   return view()->currentMessageItem();
 }
 
-Akonadi::MessageStatus Widget::currentFilterStatus() const
+KPIM::MessageStatus Widget::currentFilterStatus() const
 {
   if ( !d->mFilter )
-    return Akonadi::MessageStatus();
+    return KPIM::MessageStatus();
 
-  Akonadi::MessageStatus ret;
+  KPIM::MessageStatus ret;
   ret.fromQInt32( d->mFilter->statusMask() );
   return ret;
 }
@@ -1104,7 +1104,7 @@ void Widget::viewJobBatchTerminated()
 {
 }
 
-void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear )
+void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear )
 {
   Q_UNUSED( msg );
   Q_UNUSED( set );

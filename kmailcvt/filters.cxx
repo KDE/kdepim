@@ -19,6 +19,7 @@
 #include "kmailcvt.h"
 
 // KDEPIM Includes
+#include <messagecore/messagestatus.h>
 #include <KPIMUtils/KFileIO>
 
 // Akonadi Includes
@@ -29,7 +30,6 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/CollectionCreateJob>
 #include <akonadi/kmime/messageparts.h>
-#include <akonadi/kmime/messagestatus.h>
 
 // KDE Includes
 #include <KUrl>
@@ -157,7 +157,7 @@ bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &col
                                 const KMime::Message::Ptr message )
 {
   Akonadi::Item item;
-  Akonadi::MessageStatus status;
+  KPIM::MessageStatus status;
 
   item.setMimeType( "message/rfc822" );
 
@@ -165,7 +165,7 @@ bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &col
   if( statusHeaders ) {
     if( !statusHeaders->isEmpty() ) {
       status.setStatusFromStr( statusHeaders->asUnicodeString() );
-      item.setFlags( status.statusFlags() );
+      item.setFlags( status.getStatusFlags() );
     }
   }
   item.setPayload<KMime::Message::Ptr>( message );

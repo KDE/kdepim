@@ -28,7 +28,7 @@
 #include <nmo.h>
 #include <mailboxdataobject.h>
 
-#include <akonadi/kmime/messagestatus.h>
+#include <messagecore/messagestatus.h>
 #include <messageviewer/objecttreeparser.h>
 #include <messageviewer/nodehelper.h>
 #include <messageviewer/partmetadata.h>
@@ -223,7 +223,7 @@ QList< NepomukFast::Contact > MessageAnalyzer::extractContactsFromMailboxes(cons
 
 void MessageAnalyzer::processFlags(const Akonadi::Item::Flags& flags)
 {
-  Akonadi::MessageStatus status;
+  KPIM::MessageStatus status;
   status.setStatusFromFlags( flags );
 
   m_email.setIsReads( QList<bool>() << status.isRead() );

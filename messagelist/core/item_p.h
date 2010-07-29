@@ -245,7 +245,7 @@ public:
   QString mFormattedSize;                     ///< The size above formatted as string, this is done only on request
   QString mFormattedDate;                     ///< The formatted date of the message, formatting takes time so it is done only on request
   QString mFormattedMaxDate;                  ///< The maximum date above formatted (lazily)
-  Akonadi::MessageStatus mStatus;                ///< The status of the message (may be extended to groups in the future)
+  KPIM::MessageStatus mStatus;                ///< The status of the message (may be extended to groups in the future)
 };
 
 /**
