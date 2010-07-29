@@ -939,16 +939,20 @@ void Message::ComposerViewBase::addAttachmentPart ( KMime::Content* partToAttach
   if ( partToAttach->contentDescription( false ) ) {
     part->setDescription( partToAttach->contentDescription()->asUnicodeString() );
   }
+  if ( partToAttach->contentType( false ) ) {
+    if ( partToAttach->contentType()->hasParameter( QLatin1String( "name" ) ) ) {
+      part->setName( partToAttach->contentType()->parameter( QLatin1String( "name" ) ) );
+    }
+  }
   if ( partToAttach->contentDisposition( false ) ) {
     part->setFileName( partToAttach->contentDisposition()->filename() );
-    part->setName( partToAttach->contentType()->parameter( QLatin1String( "name" ) ) );
     part->setInline( partToAttach->contentDisposition()->disposition() == KMime::Headers::CDinline );
-    if ( part->name().isEmpty() && !part->fileName().isEmpty() ) {
-      part->setName( part->fileName() );
-    }
-    if ( part->fileName().isEmpty() && !part->name().isEmpty() ) {
-      part->setFileName( part->name() );
-    }
+  }
+  if ( part->name().isEmpty() && !part->fileName().isEmpty() ) {
+    part->setName( part->fileName() );
+  }
+  if ( part->fileName().isEmpty() && !part->name().isEmpty() ) {
+    part->setFileName( part->name() );
   }
   m_attachmentController->addAttachment( part );
 }
