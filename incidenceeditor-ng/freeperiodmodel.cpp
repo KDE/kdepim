@@ -100,10 +100,12 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay( const KCalCore::Perio
             kDebug() << firstPeriod.start() << firstPeriod.end();
             kDebug() << secondPeriod.start() << secondPeriod.end();
             kDebug() << midnight << midnight.addMSecs( 1 );
-            splitList << firstPeriod;
+            if( firstPeriod.duration().asSeconds() >= 5*60 /*5 minutes*/ )
+                splitList << firstPeriod;
             period = secondPeriod;
         }
-        splitList << period;
+        if( period.duration().asSeconds() >= 5*60 /*5 minutes*/ )
+            splitList << period;
     }
 
     // Perform some jiggery pokery to remove duplicates
