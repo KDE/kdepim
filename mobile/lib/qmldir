@@ -12,3 +12,4 @@ WindowBar 4.5 WindowBar.qml
 StartCanvas 4.5 StartCanvas.qml
 Spinner 4.5 Spinner.qml
 ActionMenuContainer 4.5 ActionMenuContainer.qml
+FakeAction 4.5 FakeAction.qml
