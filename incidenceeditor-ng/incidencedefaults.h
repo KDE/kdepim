@@ -34,6 +34,17 @@ public:
   ~IncidenceDefaults();
 
   /**
+    Sets the list of identities to be used for the user. The items in the list
+    are expected to be of the form: "name [name] <email>".
+
+    If the list is empty, it is assumed that no valid identities are configured.
+
+    @param fullEmails The list of name email pairs that the user has configured
+           as identities.
+   */
+  void setFullEmails( const QStringList &fullEmails );
+
+  /**
     This is used to do a smarter guess about which identity to use for the
     organizer. If the groupware server is not set, the first avaialble identity
     will be used.

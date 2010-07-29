@@ -23,6 +23,8 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 
+#include <akonadi/kcal/kcalprefs.h>
+
 #include <Akonadi/Item>
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
@@ -62,7 +64,16 @@ int main( int argc, char **argv )
   Akonadi::Item item( -1 );
 
   IncidenceDefaults defaults;
-  // TODO: Add logic to find out groupware domain if needed.
+  // Set the full emails manually here, to avoid that we get dependencies on
+  // KCalPrefs all over the place.
+  defaults.setFullEmails( KCalPrefs::instance()->fullEmails() );
+  // NOTE: At some point this should be generalized. That is, we now use the
+  //       freebusy url as a hack, but this assumes that the user has only one
+  //       groupware account. Which doesn't have to be the case necessarily.
+  //       This method should somehow depend on the calendar selected to which
+  //       the incidence is added.
+  if ( KCalPrefs::instance()->useGroupwareCommunication() )
+    defaults.setGroupWareDomain( KUrl( KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
 
   if ( args->isSet( "new-event" ) ) {
     std::cout << "Creating new event..." << std::endl;

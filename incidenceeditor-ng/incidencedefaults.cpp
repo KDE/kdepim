@@ -25,19 +25,20 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
-
-#include <akonadi/kcal/kcalprefs.h>
+#include <KLocalizedString>
+#include <KPIMUtils/Email>
 
 using namespace KCalCore;
 
 struct IncidenceDefaultsPrivate
 {
   /// Members
-  QString mGroupWareDomain;
+  QStringList mEmails;
+  QString     mGroupWareDomain;
 
   /// Methods
   Person::Ptr organizerAsPerson() const;
-  Attendee::Ptr organizerAsAttendee() const;
+  Attendee::Ptr organizerAsAttendee( const Person::ConstPtr &organizer ) const;
 
   void todoDefaults( const Todo::Ptr &todo ) const;
   void eventDefaults( const Event::Ptr &event ) const;
@@ -45,20 +46,63 @@ struct IncidenceDefaultsPrivate
 
 Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
 {
+  const QString invalidEmail = "invalid@email.address";
+
   Person::Ptr organizer( new Person );
-  organizer->setName( "NOT IMPLEMENTED" );
-  organizer->setEmail( "not@implement.com" );
+  organizer->setName( i18n( "no (valid) identities found" ) );
+  organizer->setEmail( invalidEmail );
+
+  if ( mEmails.isEmpty() ) {
+    // Don't bother any longer, either someone forget to call setFullEmails, or
+    // the user has no identities configured.
+    return organizer;
+  }
+
+  if ( !mGroupWareDomain.isEmpty() ) {
+    // Check if we have an identity with an email that ends with the groupware
+    // domain.
+    foreach( const QString &fullEmail, mEmails ) {
+      QString name;
+      QString email;
+      bool success = KPIMUtils::extractEmailAddressAndName( fullEmail, email, name );
+      if ( success && email.endsWith( mGroupWareDomain ) ) {
+        organizer->setName( name );
+        organizer->setEmail( email );
+        break;
+      }
+    }
+  }
+
+  if ( organizer->email() == invalidEmail ) {
+    // Either, no groupware was used, or we didn't find a groupware email address.
+    // Now try to
+    foreach( const QString &fullEmail, mEmails ) {
+      QString name;
+      QString email;
+      const bool success = KPIMUtils::extractEmailAddressAndName( fullEmail, email, name );
+      if ( success ) {
+        organizer->setName( name );
+        organizer->setEmail( email );
+        break;
+      }
+    }
+  }
+
   return organizer;
 }
 
-Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee() const
+Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee( const Person::ConstPtr &organizer ) const
 {
-  Attendee::Ptr organizer( new Attendee( "NOT IMPLEMENTED", "not@implement.com" ) );
+  Attendee::Ptr organizerAsAttendee( new Attendee( "", "" ) );
+  // Really, the appropriate values (even the fall back values) should come from
+  // organizer. (See organizerAsPerson for more details).
+  organizerAsAttendee->setName( organizer->name() );
+  organizerAsAttendee->setEmail( organizer->email() );
   // NOTE: Don't set the status to None, this value is not supported by the attendee
   //       editor atm.
-  organizer->setStatus( Attendee::Accepted );
-  organizer->setRole( Attendee::ReqParticipant );
-  return organizer;
+  organizerAsAttendee->setStatus( Attendee::Accepted );
+  organizerAsAttendee->setRole( Attendee::ReqParticipant );
+  return organizerAsAttendee;
 }
 
 void IncidenceDefaultsPrivate::eventDefaults( const Event::Ptr &event ) const
@@ -85,6 +129,18 @@ IncidenceDefaults::~IncidenceDefaults()
   delete d_ptr;
 }
 
+void IncidenceDefaults::setFullEmails( const QStringList &fullEmails )
+{
+  Q_D( IncidenceDefaults );
+  d->mEmails = fullEmails;
+}
+
+void IncidenceDefaults::setGroupWareDomain( const QString &domain )
+{
+  Q_D( IncidenceDefaults );
+  d->mGroupWareDomain = domain;
+}
+
 void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
 {
   Q_D( const IncidenceDefaults );
@@ -107,8 +163,9 @@ void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
   incidence->clearRecurrence();
   incidence->clearTempFiles();
 
-  incidence->setOrganizer( d->organizerAsPerson() );
-  incidence->addAttendee( d->organizerAsAttendee() );
+  const Person::Ptr organizerAsPerson = d->organizerAsPerson();
+  incidence->setOrganizer( organizerAsPerson );
+  incidence->addAttendee( d->organizerAsAttendee( organizerAsPerson ) );
 
   switch ( incidence->type() ) {
   case Incidence::TypeEvent:
