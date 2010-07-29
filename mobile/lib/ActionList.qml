@@ -29,6 +29,8 @@ QML.Item {
   //property alias listElementContent : _listElementContent.data
   default property alias listContent : _listContent.content
 
+  property string category
+
   property alias name : nameItem.buttonText
   property alias columnHeight : _listContent.height
   property alias totalWidth : _listContent.width

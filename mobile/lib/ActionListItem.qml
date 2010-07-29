@@ -28,6 +28,8 @@ QML.Item {
   width : parent.width
   property string name
 
+  property string category
+
   signal triggered(string triggeredName)
 
   KPIM.Action {
