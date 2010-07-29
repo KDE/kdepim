@@ -27,6 +27,8 @@
 #include <KDialog>
 #include <QDate>
 
+class Ui_Dialog;
+
 namespace IncidenceEditorsNG
 {
 

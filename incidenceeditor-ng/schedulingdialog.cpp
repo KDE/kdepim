@@ -42,7 +42,9 @@ SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startT
   mResolver( resolver ),
   mPeriodModel( new FreePeriodModel( this ) )
 {
-    setupUi( this );
+    QWidget *w = new QWidget( this );
+    setupUi( w );
+    setMainWidget( w );
     fillCombos();
 
     mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8, this );
