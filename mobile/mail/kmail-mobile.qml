@@ -392,8 +392,8 @@ KPIM.MainView {
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1 && messageView.visible
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight : 70
-//       handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handlePosition: actionPanel.handleHeight + actionPanel.handlePosition
+      handleHeight: parent.height - actionPanel.handlePosition - actionPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: attachmentView.requestedWidth
       content: [
         KPIM.AttachmentList {
