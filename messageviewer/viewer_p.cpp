@@ -1832,9 +1832,9 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
   } else {
     QString label, icon;
     icon = mNodeHelper->iconName( node, KIconLoader::Small );
-    label = node->contentDescription()->asUnicodeString();
+    label = NodeHelper::fileName( node );
     if( label.isEmpty() ) {
-      label = NodeHelper::fileName( node );
+      label = node->contentDescription()->asUnicodeString();
     }
 
     bool typeBlacklisted = node->contentType()->mediaType().toLower() == "multipart";
