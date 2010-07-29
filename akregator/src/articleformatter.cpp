@@ -93,11 +93,13 @@ ArticleFormatter::ArticleFormatter( QPaintDevice* device ) : d( new Private( dev
     loader->setTemplateDirs( QStringList() << KStandardDirs::locate("data","akregator/themes/") );
 
     mEngine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH );
-    mThemeName = "planet-kde";
+    mThemeName = Settings::self()->theme();
 }
 
 ArticleFormatter::~ArticleFormatter()
 {
+    Settings::self()->setTheme( mThemeName );
+    
     delete d;
     delete mEngine;
 }
