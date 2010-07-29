@@ -79,6 +79,8 @@ private slots:
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
 private:
+    /** Returns if I was the organizer of the loaded event */
+    bool iAmOrganizer() const;
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
      * from the addressbook and expanding distribution lists.

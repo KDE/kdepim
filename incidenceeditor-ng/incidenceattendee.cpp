@@ -120,13 +120,12 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
 void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
 {
   mLoadedIncidence = incidence;
-  const bool itsMe = IncidenceEditors::EditorConfig::instance()->thatIsMe( incidence->organizer()->email() );
 
-  if ( itsMe || incidence->organizer()->isEmpty() ) {
+  if ( iAmOrganizer() || incidence->organizer()->isEmpty() ) {
     mUi->mOrganizerStack->setCurrentIndex( 0 );
 
     int found = -1;
-    QString fullOrganizer = incidence->organizer()->fullName();
+    const QString fullOrganizer = incidence->organizer()->fullName();
     for ( int i = 0; i < mUi->mOrganizerCombo->count(); ++i ) {
       if ( mUi->mOrganizerCombo->itemText( i ) == fullOrganizer ) {
         found = i;
@@ -144,17 +143,17 @@ void IncidenceAttendee::load( const KCalCore::Incidence::ConstPtr &incidence )
   }
 
   mAttendeeEditor->clear();
-  const KCalCore::Attendee::List al = incidence->attendees();
-  foreach( const KCalCore::Attendee::Ptr &a, al )
-    mAttendeeEditor->addAttendee( a );
-
+  // NOTE: Do this *before* adding the attendees, otherwise the status of the
+  //       attendee in the line will be 0 after when returning from load()
   if ( incidence->type() == KCalCore::Incidence::TypeEvent )
     mAttendeeEditor->setActions( AttendeeLine::EventActions );
   else
     mAttendeeEditor->setActions( AttendeeLine::TodoActions );
 
-  // set the default organizer
-  slotOrganizerChanged( mUi->mOrganizerCombo->currentText() );
+  const KCalCore::Attendee::List attendees = incidence->attendees();
+  foreach( const KCalCore::Attendee::Ptr &a, attendees )
+    mAttendeeEditor->addAttendee( a );
+
   mWasDirty = false;
 }
 
@@ -187,46 +186,23 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceAttendee::isDirty() const
 {
+  if ( iAmOrganizer() ) {
+    KCalCore::Event tmp;
+    tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
 
-  // When the organizer of the loaded incidence is empty, we assume a new Incidence
-  // and in that case the current organizer is the default value and we only
-  // consider it dirty when the user selected another organizer.
-  if ( mLoadedIncidence->organizer()->isEmpty()
-       && mUi->mOrganizerCombo->currentIndex() != 0 ) {
-    kDebug() << "Default organizer changed.";
-    return true;
-  }
-
-  KCalCore::Event tmp;
-  tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
-  if ( !mLoadedIncidence->organizer()->isEmpty() && *mLoadedIncidence->organizer() != *tmp.organizer() ) {
-    kDebug() << "Organizer changed.";
-    return true;
+    if ( *mLoadedIncidence->organizer() != *tmp.organizer() ) {
+      kDebug() << "Organizer changed.";
+      return true;
+    }
   }
 
   const KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
-
-  // TODO Since we always add the organizer as a default attendee
-  // if the local attendee list only has the organizer in it
-  // then report back non dirty
-  // this is is an ugly hack until IE-NG supports default data
-  if( newList.size() == 1 ) {
-
-    QString name;
-    QString email;
-    bool success = KPIMUtils::extractEmailAddressAndName( mUi->mOrganizerCombo->currentText(), email, name );
-    AttendeeData::Ptr att = newList.front();
-    if( att->name() == name &&  att->email() == email )
-      return false;
-  }
   
   // The lists sizes *must* be the same. When the organizer is attending the
   // event as well, he should be in the attendees list as well.
-  if ( origList.size() != newList.size() ) {
-    kDebug() << "Number of attendees changed";
+  if ( origList.size() != newList.size() )
     return true;
-  }
 
   // Okay, again not the most efficient algorithm, but I'm assuming that in the
   // bulk of the use cases, the number of attendees is not much higher than 10 or so.
@@ -385,17 +361,25 @@ void IncidenceAttendee::slotUpdateConflictLabel( int count )
     }
 }
 
+bool IncidenceAttendee::iAmOrganizer() const
+{
+  if ( mLoadedIncidence ) {
+    const IncidenceEditors::EditorConfig *config = IncidenceEditors::EditorConfig::instance();
+    return config->thatIsMe( mLoadedIncidence->organizer()->email() );
+  }
+
+  return true;
+}
 
 void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee& a )
 {
-  const bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( a.preferredEmail() );
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&
                          KPIMUtils::compareEmail( a.preferredEmail(),
                                                   mUi->mOrganizerCombo->currentText(), false );
   KCalCore::Attendee::PartStat partStat = KCalCore::Attendee::NeedsAction;
   bool rsvp = true;
 
-  if ( myself && sameAsOrganizer ) {
+  if ( iAmOrganizer() && sameAsOrganizer ) {
     partStat = KCalCore::Attendee::Accepted;
     rsvp = false;
   }
@@ -468,10 +452,9 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
     }
 
     if ( !newOrganizerAttendee ) {
-      bool myself = IncidenceEditors::EditorConfig::instance()->thatIsMe( email );
-
-      bool rsvp = !myself; // if it is the user, dont make him rsvp.
-      KCalCore::Attendee::PartStat status = myself ? KCalCore::Attendee::Accepted : KCalCore::Attendee::NeedsAction;
+      bool rsvp = !iAmOrganizer(); // if it is the user, dont make him rsvp.
+      KCalCore::Attendee::PartStat status = iAmOrganizer() ? KCalCore::Attendee::Accepted
+                                                           : KCalCore::Attendee::NeedsAction;
 
       KCalCore::Attendee::Ptr newAt( new KCalCore::Attendee( name, email, rsvp, status, KCalCore::Attendee::ReqParticipant ) );
 

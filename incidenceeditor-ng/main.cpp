@@ -60,15 +60,19 @@ int main( int argc, char **argv )
 
   KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
   Akonadi::Item item( -1 );
+
+  IncidenceDefaults defaults;
+  // TODO: Add logic to find out groupware domain if needed.
+
   if ( args->isSet( "new-event" ) ) {
     std::cout << "Creating new event..." << std::endl;
     KCalCore::Event::Ptr event( new KCalCore::Event );
-    IncidenceDefaults::defaults( event );
+    defaults.setDefaults( event );
     item.setPayload<KCalCore::Event::Ptr>( event );
   } else if ( args->isSet( "new-todo" ) ) {
     std::cout << "Creating new todo..." << std::endl;
     KCalCore::Todo::Ptr todo( new KCalCore::Todo );
-    IncidenceDefaults::defaults( todo );
+    defaults.setDefaults( todo );
     item.setPayload<KCalCore::Todo::Ptr>( todo );
   } else if ( args->count() == 1 ) {
     qint64 id = -1;

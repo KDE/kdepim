@@ -25,13 +25,57 @@
 
 #include "incidenceeditors-ng_export.h"
 
-namespace IncidenceDefaults
+class IncidenceDefaultsPrivate;
+
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
 {
+public:
+  IncidenceDefaults();
+  ~IncidenceDefaults();
+
   /**
-    Sets the default values for @param incidence.
+    This is used to do a smarter guess about which identity to use for the
+    organizer. If the groupware server is not set, the first avaialble identity
+    will be used.
+
+    @param domain The gropuware server domain name without any protocol prefixes
+                  (e.g. demo.kolab.org).
    */
-  INCIDENCEEDITORS_NG_EXPORT void  defaults( const KCalCore::Incidence::Ptr &incidence );
-}
+  void setGroupWareDomain( const QString &domain );
+
+  /**
+    Set the start date/time to use for passed incidences. This defaults to the
+    current start date/time. The main purpose of this method is supporting
+    defaults for new incidences that where created with a given time slot.
+
+    @param startDT The start date time to set on the incidence.
+   */
+  void setStartDateTime( const KDateTime &startDT );
+
+  /**
+    Set the end date/time to use for passed incidences. This defaults to the
+    current start date/time. The main purpose of this method is supporting
+    defaults for new incidences that where created with a given time slot.
+
+    @param endDT The start date time to set on the incidence.
+   */
+  void setEndDateTime( const KDateTime &endDT );
+
+  /**
+    Sets the default values for @param incidence. This method is merely meant for
+    <em>new</em> icidences. However, it will clear out all fields and set them
+    to default values.
+
+    @param incidence The incidence that will get default values for all of its
+           field.
+   */
+  void setDefaults( const KCalCore::Incidence::Ptr &incidence ) const;
+
+private:
+  IncidenceDefaultsPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE( IncidenceDefaults )
+  Q_DISABLE_COPY( IncidenceDefaults )
+};
 
 
 #endif // INCIDENCEDEFAULTS_H
