@@ -49,6 +49,9 @@
     <entry key="ColorNewArticles" type="Color">
         <default>#FF0000</default>
     </entry>
+    <entry name="Theme" type="String" key="theme">
+      <default>planet-kde</default>
+    </entry>
  </group>
  <group name="HTML Settings" >
   <entry key="Fonts" type="StringList" />
