@@ -345,7 +345,7 @@ as manual handling of CRLs (<xref linkend="certificates-refresh-x509"/>,
 
 <chapter id="menu"><title>Menu Reference</title>
 
-<sect1 id="menufile"><title><guimenu>File</guimenu> Menu</title>
+<sect1 id="menufile"><title>File Menu</title>
 
 <variablelist>
 
@@ -474,7 +474,7 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
         <varlistentry id="file-export-secret-key">
           <term>
             <menuchoice>
-              <guimenu>File</guimenu><guimenuitem>Export Secret Key...</guimenuitem>
+              <guimenu>File</guimenu><guimenuitem>Export Secret Certificate...</guimenuitem>
             </menuchoice>
           </term>
           <listitem>
@@ -633,7 +633,7 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
 
 
 
-<sect1 id="menuview"><title><guimenu>View</guimenu> Menu</title>
+<sect1 id="menuview"><title>View Menu</title>
 
       <variablelist>
 
@@ -790,7 +790,7 @@ linkend="view-hierarchical-key-list"/> is on.</para>
 
 </sect1>
 
-<sect1 id="menucertificates"><title><guimenu>Certificates</guimenu> Menu</title>
+<sect1 id="menucertificates"><title>Certificates Menu</title>
 
       <variablelist>
 
@@ -1158,7 +1158,7 @@ varlistentry id="certificates-download">
 
 </sect1>
 
-<sect1 id="menutools"><title><guimenu>Tools</guimenu> Menu</title>
+<sect1 id="menutools"><title>Tools Menu</title>
 
 <variablelist>
 
@@ -1274,7 +1274,10 @@ varlistentry id="certificates-download">
           </listitem>
         </varlistentry>
 
-<!-- no longer provided
+<!-- no longer provided 
+that is wrong
+"Clear CRL Cache"+"Dump CRL Cache" are still in the gui of 4.5 + trunk
+-->
 <varlistentry id="crls-clear-crl-cache">
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></term>
 
@@ -1294,7 +1297,7 @@ cache by selecting all certificates and using <xref linkend="certificates-refres
 cache.</action></para>
 </listitem>
 </varlistentry>
-
+<!-- no longer provided
 <varlistentry id="settings-configure-gpgme-backend">
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Configure GnuPG Backend...</guimenuitem></menuchoice></term>
 
@@ -1313,7 +1316,7 @@ updated.</para>
 
 </sect1>
 
-<sect1 id="menusettings"><title><guimenu>Settings</guimenu> Menu</title>
+<sect1 id="menusettings"><title>Settings Menu</title>
 
       <variablelist>
 
@@ -1439,14 +1442,14 @@ updated.</para>
 
     </sect1> <!-- Settings Menu -->
 
-<sect1 id="menuwindow"><title><guimenu>Window</guimenu> Menu</title>
+<sect1 id="menuwindow"><title>Window Menu</title>
 <para>The <guimenu>Window</guimenu> menu allows you to manage the tabs.
 Using the items in this menu you can rename a tab, add a new tab, duplicate the current tab, close the current tab, and move the current tab to the left or right.</para>
 
 <para>By clicking with the &RMB; click on a tab you open a context menu, where you can also select the same actions.</para>
 </sect1>
 
-<sect1 id="menuhelp"><title><guimenu>Help</guimenu> Menu</title>
+<sect1 id="menuhelp"><title>Help Menu</title>
 
 <para>The <guimenu>Help</guimenu> menu contains the standard &kde;
 help menu.</para>
@@ -1511,11 +1514,11 @@ linkend="file-import-certificates"/>.</para>
 <para>Sign file(s)</para>
 </listitem>
 </varlistentry>
-
+<!-- comment for 4.5-->
 <varlistentry>
 <term><option>-E</option> <option>--encrypt-sign</option></term>
 <listitem>
-<para>Encrypt and/or sign file(s)</para>
+<para>Encrypt and/or sign file(s). Same as <option>--sign-encrypt</option>, do not use</para>
 </listitem>
 </varlistentry>
 
@@ -1560,7 +1563,7 @@ linkend="file-import-certificates"/>.</para>
     </para>
 
     <sect1 id="configuration-directory-services">
-      <title>Configuring <guilabel>Directory Services</guilabel></title>
+      <title>Configuring Directory Services</title>
 
       <para>
         On this page, you can configure which &ldap; servers to use
@@ -1773,7 +1776,7 @@ list.</para>
     </sect1>
 
     <sect1 id="configuration-appearance">
-      <title>Configuring <guilabel>Appearance</guilabel></title>
+      <title>Configuring Appearance</title>
 
       <sect2 id="configuration-appearance-tooltips">
           <title>Configuring <guilabel>Tooltips</guilabel></title>
@@ -2042,7 +2045,7 @@ button.</para>
     </sect1>
 
     <sect1 id="configuration-crypto-operations">
-      <title>Configuring <guilabel>Crypto Operations</guilabel></title>
+      <title>Configuring Crypto Operations</title>
 
       <sect2 id="configuration-crypto-operations-email">
         <title>Configuring <guilabel>EMail Operations</guilabel></title>
@@ -2095,7 +2098,7 @@ button.</para>
     </sect1>
 
     <sect1 id="configuration-smime-validation">
-      <title>Configuring aspects of <guilabel>S/MIME Validation</guilabel></title>
+      <title>Configuring aspects of S/MIME Validation</title>
 
       <para>
         On this page, you can configure certain aspects of the
@@ -2436,7 +2439,7 @@ button.</para>
     </sect1>
 
     <sect1 id="configuration-gnupg-system">
-      <title>Configuring the <guilabel>GnuPG System</guilabel></title>
+      <title>Configuring the GnuPG System</title>
 
       <para>
         This part of the dialog is auto-generated from the output of
