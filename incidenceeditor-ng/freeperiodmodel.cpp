@@ -117,9 +117,6 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay( const KCalCore::Perio
             const KDateTime midnight( period.start().date(), QTime( 23, 59, 59, 999 ), period.start().timeSpec() );
             KCalCore::Period firstPeriod( period.start(), midnight );
             KCalCore::Period secondPeriod( midnight.addMSecs( 1 ), period.end() );
-            kDebug() << firstPeriod.start() << firstPeriod.end();
-            kDebug() << secondPeriod.start() << secondPeriod.end();
-            kDebug() << midnight << midnight.addMSecs( 1 );
             if( firstPeriod.duration().asSeconds() >= 5*60 /*5 minutes*/ )
                 splitList << firstPeriod;
             period = secondPeriod;
