@@ -21,7 +21,7 @@
 
 #include "mailactionmanager.h"
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include <KLocale>
 #include <KIcon>

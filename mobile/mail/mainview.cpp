@@ -35,7 +35,7 @@
 #include <akonadi/kmime/messageparts.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 #include "messagecore/messagehelpers.h"
 
 #include <Akonadi/ItemFetchScope>
@@ -200,7 +200,7 @@ void MainView::markImportant(bool checked)
       status.setImportant();
   else
       status.setImportant(false);
-  item.setFlags(status.getStatusFlags());
+  item.setFlags(status.statusFlags());
 
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
   connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
@@ -224,7 +224,7 @@ void MainView::markMailTask(bool checked)
       status.setToAct();
   else
       status.setToAct(false);
-  item.setFlags(status.getStatusFlags());
+  item.setFlags(status.statusFlags());
 
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
   connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
@@ -269,7 +269,7 @@ void MainView::setListSelectedRow(int row)
   if ( status.isUnread() )
   {
     status.setRead();
-    item.setFlags(status.getStatusFlags());
+    item.setFlags(status.statusFlags());
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
   }
 }
