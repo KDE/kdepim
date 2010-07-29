@@ -38,7 +38,6 @@ namespace IncidenceEditorsNG {
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
 {
   public:
-    typedef INCIDENCEEDITORS_NG_EXPORT QSharedPointer<FreeBusyItem> Ptr;
     /**
     * @param parentWidget is passed to Akonadi when fetching free/busy data.
     */
@@ -56,10 +55,6 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
     void startDownload( bool forceDownload );
     void setIsDownloading( bool d );
     bool isDownloading() const;
-
-signals:
-    void attendeeChanged( const KCal::Attendee & attendee );
-    void freebusyChanged( const KCal::FreeBusy *fb );
 
   private:
     KCal::Attendee mAttendee;

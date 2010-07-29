@@ -21,7 +21,6 @@
 #include "visualfreebusywidget.h"
 
 #include "conflictresolver.h"
-#include "freebusyitem.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -32,7 +31,6 @@
 #include <KLocale>
 #include <KMenu>
 #include <KCal/Attendee>
-#include <KCal/FreeBusy>
 #include <KMessageBox>
 #include <KDebug>
 
@@ -208,12 +206,12 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( ConflictResolver* resolver, int spac
                "Double-clicking on an attendee's entry in the "
                "list will allow you to enter the location of "
                "their Free/Busy Information." ) );
-    mModel = new QStandardItemModel( this );
+    QStandardItemModel *model = new QStandardItemModel( this );
 
     mRowController = new RowController;
     mRowController->setRowHeight( fontMetrics().height() ); //TODO: detect
 
-    mRowController->setModel( mModel );
+    mRowController->setModel( model );
     mGanttView->setRowController( mRowController );
 
     mGanttGrid = new KDGantt::DateTimeGrid;
@@ -221,7 +219,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( ConflictResolver* resolver, int spac
     mGanttGrid->setDayWidth( 800 );
     mGanttGrid->setRowSeparators( true );
     mGanttView->setGrid( mGanttGrid );
-    mGanttView->setModel( mModel );
+    mGanttView->setModel( model );
     mGanttView->viewport()->setFixedWidth( 800 * 30 );
 
     splitter->addWidget( mLeftView );
@@ -246,10 +244,6 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( ConflictResolver* resolver, int spac
 
     connect( mLeftView, SIGNAL( customContextMenuRequested( QPoint ) ),
              this, SLOT( showAttendeeStatusMenu() ) );
-
-    foreach( FreeBusyItem::Ptr item, mResolver->freeBusyItems() ) {
-        newFreeBusy( item );
-    }
 
 }
 
@@ -390,53 +384,5 @@ void VisualFreeBusyWidget::splitterMoved()
 {
     mLeftView->setColumnWidth( 0, mLeftView->width() );
 }
-
-void VisualFreeBusyWidget::newFreeBusy( const FreeBusyItem::Ptr & item )
-{
-  KCal::FreeBusy* fb = item->freeBusy();
-  if ( fb ) {
-    kDebug() << "fb " << fb;
-    KDateTime::Spec timeSpec = KSystemTimeZones::local();
-
-      QList<QStandardItem *> newItems;
-      // Evaluate free/busy information
-      QList<KCal::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
-      for ( QList<KCal::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
-            it != busyPeriods.end(); ++it ) {
-        KCal::FreeBusyPeriod per = *it;
-
-        QStandardItem* newItem = new QStandardItem;
-        newItem->setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
-        newItem->setData( per.start().toTimeSpec( timeSpec ).dateTime(), KDGantt::StartTimeRole );
-        newItem->setData( per.end().toTimeSpec( timeSpec ).dateTime(), KDGantt::EndTimeRole );
-        newItem->setData( Qt::red, Qt::BackgroundRole ); //TODO: doesn't work, probably we need a delegate
-
-        QString toolTip = "<qt>";
-        toolTip += "<b>" + i18nc( "@info:tooltip", "Free/Busy Period" ) + "</b>";
-        toolTip += "<hr>";
-        if ( !per.summary().isEmpty() ) {
-          toolTip += "<i>" + i18nc( "@info:tooltip", "Summary:" ) + "</i>" + "&nbsp;";
-          toolTip += per.summary();
-          toolTip += "<br>";
-        }
-        if ( !per.location().isEmpty() ) {
-          toolTip += "<i>" + i18nc( "@info:tooltip", "Location:" ) + "</i>" + "&nbsp;";
-          toolTip += per.location();
-          toolTip += "<br>";
-        }
-        toolTip += "<i>" + i18nc( "@info:tooltip period start time", "Start:" ) + "</i>" + "&nbsp;";
-        toolTip += KGlobal::locale()->formatDateTime( per.start().toTimeSpec( timeSpec ).dateTime() );
-        toolTip += "<br>";
-        toolTip += "<i>" + i18nc( "@info:tooltip period end time", "End:" ) + "</i>" + "&nbsp;";
-        toolTip += KGlobal::locale()->formatDateTime( per.end().toTimeSpec( timeSpec ).dateTime() );
-        toolTip += "<br>";
-        toolTip += "</qt>";
-        newItem->setData( toolTip, Qt::ToolTipRole );
-        newItems.append( newItem );
-      }
-      mModel->appendRow( newItems );
-  }
-}
-
 
 #include "visualfreebusywidget.moc"
