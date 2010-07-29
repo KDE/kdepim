@@ -4,7 +4,9 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_subdirectory(tests)
 
-include_directories( ${Boost_INCLUDE_DIR} )
+include_directories( ${Boost_INCLUDE_DIR} 
+                     ${SOPRANO_INCLUDE_DIR}
+                   )
 
 ########### next target ###############
 
@@ -16,7 +18,6 @@ set(messagecore_LIB_SRCS
    attachmentfrommimecontentjob.cpp
    attachmentcollector.cpp
    attachmentpropertiesdialog.cpp
-   messagestatus.cpp
    annotationdialog.cpp
    stringutil.cpp
    nodehelper.cpp
@@ -25,6 +26,7 @@ set(messagecore_LIB_SRCS
    globalsettings.cpp
    messagehelpers.cpp
    taglistmonitor.cpp
+   mdnstateattribute.cpp
 )
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
@@ -35,17 +37,19 @@ kde4_add_ui_files(messagecore_LIB_SRCS
   attachmentpropertiesdialog.ui
 )
 
-kde4_add_library(messagecore SHARED ${messagecore_LIB_SRCS})
+kde4_add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
 
 target_link_libraries(messagecore
-  ${KDEPIMLIBS_KMIME_LIBS} 
+  ${KDEPIMLIBS_KMIME_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
   ${NEPOMUK_LIBRARIES}
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
 )
 

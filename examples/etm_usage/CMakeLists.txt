@@ -29,6 +29,7 @@ set(etm_usage_SRCS
     mixedtreemodel.cpp
     itemviewerwidget.cpp
     noteviewer.cpp
+    desctab.cpp
     tab1widget.cpp
     tab2widget.cpp
     tab2_5widget.cpp
@@ -38,14 +39,16 @@ set(etm_usage_SRCS
     tab6widget.cpp
     tab7widget.cpp
     unreadmailswidget.cpp
+    unreadmailsincollectionswidget.cpp
     entitytreemodelfactory.cpp
     recursiveitemlistwidget.cpp
     collectionmonitoredwidget.cpp
+    checkable2.cpp
 )
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )
 
-target_link_libraries(etm_usage messageviewer messagelist kdepim kpgp kleo akonadi-kde
+target_link_libraries(etm_usage messageviewer messagelist kdepim kpgp kleo akonadi-kde messagecore
                       akonadi-kmime akonadi_next ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}
                       ${KDEPIMLIBS_KTNEF_LIBRARY} ${QGPGME_LIBRARIES}
                       ${KDEPIMLIBS_AKONADI_LIBS}

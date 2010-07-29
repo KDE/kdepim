@@ -48,11 +48,11 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-10-17</date>
-<releaseinfo>0.05.00</releaseinfo>
+<date>2010-07-15</date>
+<releaseinfo>4.5.beta1 (&kde; 4.5)</releaseinfo>
 
-<abstract><para>This handbook describes how to use &kjots; 0.5, a small
-program which is handy for keeping miscellaneous
+<abstract><para>This handbook describes how to use &kjots;, a small
+program which is handy for keeping and organizing miscellaneous
 notes.</para></abstract>
 
 <keywordset>
@@ -64,14 +64,6 @@ notes.</para></abstract>
 </keywordset>
 
 </bookinfo>
-
-<chapter id="introduction">
-<title>Introduction</title>
-
-<para>&kjots; is a small program that helps you to write down some short
-notes and organizes them for you.</para>
-
-</chapter>
 
 <chapter id="using-kjots">
 <title>Using &kjots;</title>
@@ -91,8 +83,8 @@ is sensible to do so.</para>
 <para>To create a new book, use <keycombo action="simul">&Ctrl;&Shift;
 <keycap>N</keycap></keycombo> or the menu entry
 <menuchoice><guimenu>File</guimenu><guimenuitem>New
-Book</guimenuitem></menuchoice>, and you will be prompted to enter a
-name for the new book.</para>
+Book</guimenuitem></menuchoice>, and you will get a new book named
+<guilabel>New Book</guilabel> with an empty page named <guilabel>New Page</guilabel>.</para>
 
 <para>The name of the new book should now appear in the left part of 
 the window. If you want the book to be in your
@@ -111,11 +103,11 @@ This is not an error, &kjots; saves your books and pages automatically,
 so you will never lose that small note you write when you are on the phone 
 and need to write down something in a hurry.</para>
 
-<para>You can also export an entire book as a text file or as a html file, 
-using <menuchoice><guimenu>File</guimenu> <guimenuitem>Export book...
-</guimenuitem></menuchoice>.  You will be then prompted to enter a
-location for the file to be saved.  The format of an example saved book
-is shown below:</para>
+<para>You can also export an entire book as a text, html file or as a book file, 
+using the items in <menuchoice><guimenu>File</guimenu> <guisubmenu>Export
+</guisubmenu></menuchoice>.  You will be then prompted to enter a
+location for the file to be saved.  The text format of an example saved book
+in text format is shown below:</para>
 
 <screen>############
 # First page
@@ -169,307 +161,16 @@ is: <keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para>
 and then press <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>, 
 the selected text will instantly become the title of the page.</para>
 
+<para>Writing or editing your notes you can use the actions from <guimenu>Format</guimenu>
+menu or from the toolbar to format your text.
+</para>
+
+<!-- not possible in kde4 ???
 <tip><para>If you want fast access to a particular page, you 
 can assign a keyboard shortcut to that page. Go to <menuchoice>
 <guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...
-</guimenuitem></menuchoice>.</para></tip>
+</guimenuitem></menuchoice>.</para></tip> -->
 </sect1>
-</chapter>
-
-<chapter id="commands">
-<title>Command Reference</title>
-
-<sect1 id="menu-file">
-<title>The <guimenu>File</guimenu> Menu</title>
-<variablelist>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
-</shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>New Page...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Creates</action> a new Page.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;&Shift;<keycap>N</keycap></keycombo>
-</shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>New Book...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Creates</action> a new Book.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Export Page</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Saves</action> the current page to a text file 
-or a html file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Export Book</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Saves</action> the current book to a text file 
-or a html file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Delete Page</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Deletes</action> the current page.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Delete Book</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Deletes</action> the current book.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
-</shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Print</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Prints</action> the current book or page.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>
-</shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Quit</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Quits</action> &kjots;.</para></listitem>
-</varlistentry>
-</variablelist>
-</sect1>
-
-<sect1 id="menu-edit">
-<title>The <guimenu>Edit</guimenu> Menu</title>
-<variablelist>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Cut</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Cuts</action> the currently selected
-text in the main text box and places it on the clipboard.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Copy</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Copies</action> the currently selected
-text in the main text box and places it on the clipboard.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Paste</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Pastes</action> text from the clipboard
-to the main text box.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Paste as Page Title</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Renames</action> the page to the text on the 
-clipboard.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Find...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Searches</action> for text in the main
-text box. Note that this only searches the current page.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo><keycap>F3</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Find Next</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Searches</action> for the next occurrence
-of the search text (specified with Find).</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Replace...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Replaces</action> one bit of text with another,
-only on the current page.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Rename...</guimenuitem>
-</menuchoice></term>
-<listitem><para>Gives the possibility to <action>rename</action> the 
-current page.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>I</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Insert Date</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Inserts</action> the date and time in the 
-current page.</para></listitem>
-</varlistentry>
-</variablelist>
-</sect1>
-
-<sect1 id="menu-bookmarks">
-<title>The <guimenu>Bookmarks</guimenu> Menu</title>
-<variablelist>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>B</keycap></keycombo>
-</shortcut>
-<guimenu>Bookmarks</guimenu>
-<guimenuitem>Add bookmark</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Adds</action> the current page to the list of
-bookmarks. See <link linkend="kjots-books">Using Books</link>.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Bookmarks</guimenu>
-<guimenuitem>Edit bookmarks</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Edits</action> the bookmarks. Here you can 
-search bookmarks, make comments, organize them in different folders and 
-much more.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Bookmarks</guimenu>
-<guimenuitem>New Bookmark Folder</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Makes</action> a new folder where you can store 
-your bookmarks.</para></listitem>
-</varlistentry>
-
-</variablelist>
-</sect1>
-
-<sect1 id="menu-settings">
-<title>The <guimenu>Settings</guimenu> Menu</title>
-<variablelist>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Hide/Show Toolbar</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Toggles</action> display of the toolbar below the 
-menu bar.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Shortcuts...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Choose</action> shortcut keys for various
-menu items.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Toolbars...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Choose</action> which items are present in the 
-toolbar.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure KJots...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Configure</action> options for &kjots;, including
-the font to use and the settings for autosaving.
-</para></listitem>
-</varlistentry>
-
-</variablelist>
-</sect1>
-
-<sect1 id="menu-help">
-<title>The <guimenu>Help</guimenu> Menu</title>
-
-&help.menu.documentation;
-
-</sect1>
-
 </chapter>
 
 <chapter id="credits">
@@ -512,26 +213,10 @@ Some parts taken from documentation copyright 1998 Christoph Neerfeld
 
 </sect1>
 
-<sect1 id="requirements">
-<title>Requirements</title>
-
-<para>In order to successfully use &kjots;, you need &kde; 2.x. There are
-no other requirements.</para>
-
-</sect1>
-
 <sect1 id="compilation">
 <title>Compilation and Installation</title>
 
 &install.compile.documentation;
-
-</sect1>
-
-<sect1 id="configuration">
-<title>Configuration</title>
-
-<para>&kjots; is a nice small program, and you don't have to do anything
-before running it.</para>
 
 </sect1>
 

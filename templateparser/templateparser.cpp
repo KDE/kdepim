@@ -48,7 +48,7 @@
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <kshell.h>
-
+#include <kcharsets.h>
 #include <QString>
 #include <QDateTime>
 #include <QRegExp>
@@ -57,10 +57,35 @@
 #include <QDir>
 #include <QWebElement>
 #include <QTextCodec>
+#include <QWebFrame>
+#include <QtWebKit/QWebPage>
 
 namespace TemplateParser {
 
 static const int PipeTimeout = 15 * 1000;
+
+QByteArray selectCharset( const QStringList &charsets, const QString &text )
+{
+  foreach( const QString &name, charsets ) {
+    // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
+    // the former knows us-ascii is latin1.
+    QTextCodec *codec = KGlobal::charsets()->codecForName( name );
+    if( !codec ) {
+      kWarning() << "Could not get text codec for charset" << name;
+      continue;
+    }
+    if( codec->canEncode( text ) ) {
+      // Special check for us-ascii (needed because us-ascii is not exactly latin1).
+      if( name == "us-ascii" && !KMime::isUsAscii( text ) ) {
+        continue;
+      }
+      kDebug() << "Chosen charset" << name;
+      return name.toLatin1();
+    }
+  }
+  kDebug() << "No appropriate charset found.";
+  return "utf-8";
+}
 
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
   mMode( amode ), mFolder( 0 ), mIdentity( 0 ),
@@ -90,6 +115,12 @@ void TemplateParser::setIdentityManager( KPIMIdentities::IdentityManager* ident)
 {
   m_identityManager = ident;
 }
+
+void TemplateParser::setCharsets( const QStringList& charsets )
+{
+  m_charsets = charsets;
+}
+
 
 TemplateParser::~TemplateParser()
 {
@@ -606,7 +637,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCNAME";
         i += strlen( "OCCNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
           body.append( str );
         }
 
@@ -614,7 +645,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCFNAME";
         i += strlen( "OCCFNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
           body.append( getFName( str ) );
         }
 
@@ -622,7 +653,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OCCLNAME";
         i += strlen( "OCCLNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString() );
           body.append( getLName( str ) );
         }
 
@@ -638,7 +669,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTONAME";
         i += strlen( "OTONAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
           body.append( str );
         }
 
@@ -646,7 +677,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTOFNAME";
         i += strlen( "OTOFNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
           body.append( getFName( str ) );
         }
 
@@ -654,7 +685,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OTOLNAME";
         i += strlen( "OTOLNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString() );
           body.append( getLName( str ) );
         }
 
@@ -686,7 +717,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMNAME";
         i += strlen( "OFROMNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           body.append( str );
         }
 
@@ -694,7 +725,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMFNAME";
         i += strlen( "OFROMFNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           body.append( getFName( str ) );
         }
 
@@ -702,7 +733,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: OFROMLNAME";
         i += strlen( "OFROMLNAME" );
         if ( mOrigMsg ) {
-          QString str = MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString() );
+          QString str = MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
           body.append( getLName( str ) );
         }
 
@@ -990,7 +1021,17 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
   if ( ac.attachments().empty() || mMode != Forward ) {
     mMsg->contentType()->clear(); // to get rid of old boundary
     mMsg->contentType()->setMimeType( "text/plain" );
-    mMsg->setBody( body.toUtf8() );
+    QByteArray charset = selectCharset( m_charsets, body );
+    QByteArray encodedBody;
+    QTextCodec* codec = KGlobal::charsets()->codecForName( charset );
+    if( codec ) {
+      encodedBody = codec->fromUnicode( body );
+    } else {
+      encodedBody = body.toUtf8();
+      charset = "utf-8";
+    }
+    mMsg->contentType()->setCharset( charset );
+    mMsg->setBody( encodedBody );
     mMsg->assemble();
   }
 
@@ -1291,9 +1332,9 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
 
   // html -> plaintext conversion, if necessary:
   if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
-    QWebElement doc = QWebElement();
-    doc.prependInside( result );
-    result = doc.toPlainText();
+    QWebPage doc;
+    doc.mainFrame()->setHtml( result );
+    result = doc.mainFrame()->toPlainText();
   }
 
   // strip the signature (footer):
@@ -1302,6 +1343,13 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
   else
     return result;
 }
+
+void TemplateParser::setWordWrap(bool wrap, int wrapColWidth)
+{
+  mWrap = wrap;
+  mColWrap = wrapColWidth;
+}
+
 
 
 QString TemplateParser::asPlainText( const KMime::Message::Ptr &msg,

@@ -21,7 +21,7 @@ set(kpgp_LIB_SRCS
    kpgpbase6.cpp )
 
 
-kde4_add_library(kpgp SHARED ${kpgp_LIB_SRCS})
+kde4_add_library(kpgp ${LIBRARY_TYPE} ${kpgp_LIB_SRCS})
 
 target_link_libraries(kpgp ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBRARY} ${KDE4_KDEUI_LIBRARY})
 

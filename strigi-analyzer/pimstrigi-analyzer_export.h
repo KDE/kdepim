@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef PIMSTRIGI_ANALYZER_EXPORT
-# if defined(MAKE_PIMSTRIGIANALYZER_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define PIMSTRIGI_ANALYZER_EXPORT
+# elif defined(MAKE_PIMSTRIGIANALYZER_LIB)
    /* We are building this library */
 #  define PIMSTRIGI_ANALYZER_EXPORT KDE_EXPORT
 # else

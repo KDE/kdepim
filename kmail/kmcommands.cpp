@@ -298,6 +298,7 @@ void KMCommand::transferSelectedMsgs()
   }
 
   // TODO once the message list is based on ETM and we get the more advanced caching we need to make that check a bit more clever
+#include <mdnstateattribute.h>
   if ( !mFetchScope.isEmpty() ) {
 #if 0 //TODO port to akonadi
     if ( thisMsg->parent() && !thisMsg->isComplete() &&
@@ -312,6 +313,7 @@ void KMCommand::transferSelectedMsgs()
     complete = false;
     KMCommand::mCountJobs++;
     Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mMsgList, this );
+    mFetchScope.fetchAttribute< Akonadi::MDNStateAttribute >();
     fetch->setFetchScope( mFetchScope );
     connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMsgTransfered(Akonadi::Item::List)) );
     connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished()) );
@@ -444,7 +446,7 @@ KMCommand::Result KMMailtoReplyCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
@@ -477,7 +479,7 @@ KMCommand::Result KMMailtoForwardCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   KMime::Message::Ptr fmsg = factory.createForward();
@@ -497,7 +499,7 @@ KMAddBookmarksCommand::KMAddBookmarksCommand( const KUrl &url, QWidget *parent )
 
 KMCommand::Result KMAddBookmarksCommand::execute()
 {
-  QString filename = KStandardDirs::locateLocal( "data", QString::fromLatin1("konqueror/bookmarks.xml") );
+  const QString filename = KStandardDirs::locateLocal( "data", QString::fromLatin1("konqueror/bookmarks.xml") );
   KBookmarkManager *bookManager = KBookmarkManager::managerForFile( filename, "konqueror" );
   KBookmarkGroup group = bookManager->root();
   group.addBookmark( mUrl.path(), KUrl( mUrl ) );
@@ -623,9 +625,6 @@ KMCommand::Result KMUseTemplateCommand::execute()
   KMail::Composer *win = KMail::makeComposer();
   win->setMsg( newMsg, false, true );
   win->show();
-#if 0
-  newMsg->setComplete( msg->isComplete() );
-#endif
   return OK;
 }
 
@@ -968,7 +967,7 @@ KMCommand::Result KMReplyToCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setReplyStrategy( MessageComposer::ReplySmart );
@@ -998,7 +997,7 @@ KMCommand::Result KMNoQuoteReplyToCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
@@ -1028,7 +1027,7 @@ KMCommand::Result KMReplyListCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
@@ -1061,7 +1060,7 @@ KMCommand::Result KMReplyToAllCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
@@ -1093,7 +1092,7 @@ KMCommand::Result KMReplyAuthorCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
@@ -1165,7 +1164,7 @@ KMCommand::Result KMForwardCommand::execute()
         if ( !msg )
           return Failed;
         MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-        MessageFactory factory( msg, it->id() );
+        MessageFactory factory( msg, it->id(), it->parentCollection() );
         factory.setIdentityManager( KMKernel::self()->identityManager() );
         factory.setFolderIdentity( KMail::Util::folderIdentity( *it ) );
         KMime::Message::Ptr fwdMsg = factory.createForward();
@@ -1193,7 +1192,7 @@ KMCommand::Result KMForwardCommand::execute()
   if ( !msg )
     return Failed;
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   KMime::Message::Ptr fwdMsg = factory.createForward();
@@ -1272,14 +1271,17 @@ KMCommand::Result KMRedirectCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg,  item.id() );
+  MessageFactory factory( msg,  item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   KMime::Message::Ptr newMsg = factory.createRedirect( dlg->to() );
   if ( !newMsg )
     return Failed;
 
-  KMFilterAction::sendMDN( msg, KMime::MDN::Dispatched );
+  MessageStatus status;
+  status.setStatusFromFlags( item.flags() );
+  if( status.isUnread() )
+  KMFilterAction::sendMDN( item, KMime::MDN::Dispatched );
 
   const MessageSender::SendMethod method = dlg->sendImmediate()
     ? MessageSender::SendImmediate
@@ -1308,7 +1310,7 @@ KMCommand::Result KMCustomReplyToCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
@@ -1343,7 +1345,7 @@ KMCommand::Result KMCustomReplyAllToCommand::execute()
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg )
     return Failed;
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   factory.setMailingListAddresses( KMail::Util::mailingListsFromMessage( item ) );
@@ -1383,7 +1385,6 @@ KMCustomForwardCommand::KMCustomForwardCommand( QWidget *parent,
 KMCommand::Result KMCustomForwardCommand::execute()
 {
   QList<Akonadi::Item> msgList = retrievedMsgs();
-
   if (msgList.count() >= 2) { // Multiple forward
      QList<Akonadi::Item>::const_iterator it;
       for ( it = msgList.constBegin(); it != msgList.constEnd(); ++it ) {
@@ -1392,7 +1393,7 @@ KMCommand::Result KMCustomForwardCommand::execute()
         if ( !msg )
           return Failed;
         MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-        MessageFactory factory( msg, it->id() );
+        MessageFactory factory( msg, it->id(), it->parentCollection() );
         factory.setIdentityManager( KMKernel::self()->identityManager() );
         factory.setFolderIdentity( KMail::Util::folderIdentity( *it ) );
         factory.setTemplate( mTemplate );
@@ -1414,7 +1415,7 @@ KMCommand::Result KMCustomForwardCommand::execute()
     if ( !msg )
       return Failed;
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    MessageFactory factory( msg, item.id() );
+    MessageFactory factory( msg, item.id(), item.parentCollection() );
     factory.setIdentityManager( KMKernel::self()->identityManager() );
     factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
     factory.setTemplate( mTemplate );
@@ -1526,10 +1527,16 @@ KMCommand::Result KMSetStatusCommand::execute()
       }
     }
 
-    Akonadi::Item item( it );
+    // HACK here we create a new item with an empty payload---
+    //  just the Id, revision, and new flags, because otherwise
+    //  non-symmetric assemble/parser in KMime might make the payload
+    //  different than the original mail, and cause extra copies to be
+    //  created on the server.
+    Akonadi::Item item( it.id() );
+    item.setRevision( it.revision() );
     // Set a custom flag
     MessageStatus itemStatus;
-    itemStatus.setStatusFromFlags( item.flags() );
+    itemStatus.setStatusFromFlags( it.flags() );
 
 //     MessageStatus oldStatus = itemStatus;
     if ( mToggle ) {
@@ -1538,7 +1545,7 @@ KMCommand::Result KMSetStatusCommand::execute()
       itemStatus.set( mStatus );
     }
     /*if ( itemStatus != oldStatus )*/ {
-      item.setFlags( itemStatus.getStatusFlags() );
+      item.setFlags( itemStatus.statusFlags() );
       // Store back modified item
       Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
       ++messageStatusChanged;
@@ -1910,7 +1917,7 @@ KMCommand::Result KMResendMessageCommand::execute()
   if ( !msg )
     return Failed;
 
-  MessageFactory factory( msg, item.id() );
+  MessageFactory factory( msg, item.id(), item.parentCollection() );
   factory.setIdentityManager( KMKernel::self()->identityManager() );
   factory.setFolderIdentity( KMail::Util::folderIdentity( item ) );
   KMime::Message::Ptr newMsg = factory.createResend();
@@ -2012,7 +2019,7 @@ KMCommand::Result CreateTodoCommand::execute()
     return Failed;
 
   KMail::KorgHelper::ensureRunning();
-  QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
+  const QString txt = i18n("From: %1\nTo: %2\nSubject: %3", msg->from()->asUnicodeString(),
                      msg->to()->asUnicodeString(), msg->subject()->asUnicodeString() );
   KTemporaryFile tf;
   tf.setAutoRemove( true );
@@ -2020,8 +2027,9 @@ KMCommand::Result CreateTodoCommand::execute()
     kWarning() << "CreateTodoCommand: Unable to open temp file.";
     return Failed;
   }
-  QString uri = "kmail:" + QString::number( item.id() ) + '/' + MessageHelper::msgId(msg);
+  const QString uri = "kmail:" + QString::number( item.id() ) + '/' + MessageHelper::msgId(msg);
   tf.write( msg->encodedContent() );
+  tf.flush();
   OrgKdeKorganizerCalendarInterface *iface =
       new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
                                              QDBusConnection::sessionBus(), this );

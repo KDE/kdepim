@@ -135,7 +135,7 @@ KMFilter::ReturnCode KMFilter::execActions( const Akonadi::Item &item, bool& sto
     switch ( result ) {
     case KMFilterAction::CriticalError:
       if ( FilterLog::instance()->isLogging() ) {
-        QString logText = QString( "<font color=#FF0000>%1</font>" )
+        const QString logText = QString( "<font color=#FF0000>%1</font>" )
           .arg( i18n( "A critical error occurred. Processing stops here." ) );
         FilterLog::instance()->add( logText, FilterLog::appliedAction );
       }
@@ -143,7 +143,7 @@ KMFilter::ReturnCode KMFilter::execActions( const Akonadi::Item &item, bool& sto
       return CriticalError;
     case KMFilterAction::ErrorButGoOn:
       if ( FilterLog::instance()->isLogging() ) {
-        QString logText = QString( "<font color=#FF0000>%1</font>" )
+        const QString logText = QString( "<font color=#FF0000>%1</font>" )
           .arg( i18n( "A problem was found while applying this action." ) );
         FilterLog::instance()->add( logText, FilterLog::appliedAction );
       }
@@ -213,7 +213,7 @@ bool KMFilter::applyOnAccount( const QString& id ) const
   if ( applicability() == ButImap ) {
     Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( id );
     if ( instance.isValid() ) {
-      return ( instance.type().identifier()== IMAP_RESOURCE_IDENTIFIER );
+      return ( instance.type().identifier() != IMAP_RESOURCE_IDENTIFIER );
     } else {
       return false;
     }
@@ -446,7 +446,7 @@ const QString KMFilter::asString() const
     if ( bApplyOnInbound && mApplicability == All ) {
       result += "This filter applies to all accounts.\n";
     } else if ( bApplyOnInbound && mApplicability == ButImap ) {
-      result += "This filter applies to all but online IMAP accounts.\n";
+      result += "This filter applies to all but IMAP accounts.\n";
     } else if ( bApplyOnInbound ) {
       QStringList::ConstIterator it2;
       result += "This filter applies to the following accounts:";

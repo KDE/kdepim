@@ -18,8 +18,9 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include "kalarm.h"
+#include "birthdaydlg.moc"
 
+#include "kalarm.h"
 #include "alarmcalendar.h"
 #include "birthdaymodel.h"
 #include "checkbox.h"
@@ -33,7 +34,23 @@
 #include "shellprocess.h"
 #include "soundpicker.h"
 #include "specialactions.h"
-#include "birthdaydlg.moc"
+
+#include <akonadi/control.h>
+#include <akonadi/entitymimetypefiltermodel.h>
+
+#include <klocale.h>
+#include <kglobal.h>
+#include <kconfiggroup.h>
+#include <kmessagebox.h>
+#include <kstandardaction.h>
+#include <kactioncollection.h>
+#if KDE_IS_VERSION(4,5,60)
+#include <kdescendantsproxymodel.h>
+#else
+#include <libkdepim/kdescendantsproxymodel_p.h>
+#endif
+#include <khbox.h>
+#include <kdebug.h>
 
 #include <QAction>
 #include <QGroupBox>
@@ -42,18 +59,6 @@
 #include <QHeaderView>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-
-#include <akonadi/control.h>
-#include <klocale.h>
-#include <kglobal.h>
-#include <kconfiggroup.h>
-#include <kmessagebox.h>
-#include <kstandardaction.h>
-#include <kactioncollection.h>
-#include <khbox.h>
-#include <kdebug.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include "kdescendantsproxymodel_p.h"
 
 using namespace KCal;
 

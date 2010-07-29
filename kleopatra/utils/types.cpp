@@ -65,12 +65,12 @@ private:
     QVector<QWidget*> idApplied;
 };
 
-void ExecutionContextUser::Private::applyWindowID( QWidget * wid ) {
-    if ( idApplied.contains( wid ) )
+void ExecutionContextUser::applyWindowID( QWidget * wid ) {
+    if ( d->idApplied.contains( wid ) )
         return;
-    if ( const shared_ptr<const ExecutionContext> ctx = executionContext.lock() ) {
+    if ( const shared_ptr<const ExecutionContext> ctx = d->executionContext.lock() ) {
         ctx->applyWindowID( wid );
-        idApplied.append( wid );
+        d->idApplied.append( wid );
     }
 }
 
@@ -99,7 +99,7 @@ shared_ptr<const ExecutionContext> ExecutionContextUser::executionContext() cons
 }
 
 void ExecutionContextUser::bringToForeground( QWidget * wid ) {
-    d->applyWindowID( wid );
+    applyWindowID( wid );
     if ( wid->isVisible() )
         wid->raise();
     else

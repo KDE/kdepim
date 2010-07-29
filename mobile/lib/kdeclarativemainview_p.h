@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -46,10 +46,9 @@ public: /// members
   Akonadi::EntityMimeTypeFilterModel *mItemFilter;
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
-  QAbstractItemModel                 *mFavSelectedChildItems;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
   QItemSelectionModel                *mItemSelectionModel;
-  KActionCollection                  *mActionCollection;
+  QHash<QString, QStringList>        mPersistedSelections;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

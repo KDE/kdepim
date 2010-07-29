@@ -20,6 +20,7 @@
 */
 
 #include "agentwidget.h"
+#include "agentconfigdialog.h"
 
 #include <akonadi/agenttypedialog.h>
 #include <akonadi/agentinstancewidget.h>
@@ -63,7 +64,12 @@ AgentWidget::AgentWidget( QWidget *parent )
   ui.removeButton->setGuiItem( KStandardGuiItem::remove() );
   connect( ui.removeButton, SIGNAL( clicked() ), this, SLOT( removeAgent() ) );
 
+  mConfigMenu = new QMenu( i18n("Configure"), this );
+  mConfigMenu->addAction( i18n("Configure Natively..."), this, SLOT(configureAgent()) );
+  mConfigMenu->addAction( i18n("Configure Remotely..."), this, SLOT(configureAgentRemote()) );
+  mConfigMenu->setIcon( KStandardGuiItem::configure().icon() );
   ui.configButton->setGuiItem( KStandardGuiItem::configure() );
+  ui.configButton->setMenu( mConfigMenu );
   connect( ui.configButton, SIGNAL( clicked() ), this, SLOT( configureAgent() ) );
 
   mSyncMenu = new QMenu( i18n("Synchronize"), this );
@@ -134,6 +140,16 @@ void AgentWidget::configureAgent()
   AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.configure( this );
+}
+
+void AgentWidget::configureAgentRemote()
+{
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  if ( agent.isValid() ) {
+    AgentConfigDialog dlg( this );
+    dlg.setAgentInstance( agent );
+    dlg.exec();
+  }
 }
 
 void AgentWidget::synchronizeAgent()
@@ -283,7 +299,7 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
   menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
   menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
-  menu.addAction( KIcon("configure"), i18n("Configure..."), this, SLOT(configureAgent()) );
+  menu.addMenu( mConfigMenu );
   menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
   menu.exec( mapToGlobal( pos ) );
 }

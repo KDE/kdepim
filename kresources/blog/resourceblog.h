@@ -1,7 +1,7 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2007-2008 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007-2008 Mike McQuaid <mike@mikemcquaid.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public

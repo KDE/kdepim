@@ -40,7 +40,7 @@ using KPIM::BroadcastStatus;
 #include "foldercollection.h"
 using namespace KMail;
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include <Akonadi/ItemFetchJob>
 #include <akonadi/kmime/messageparts.h>
@@ -128,7 +128,7 @@ void ExpireJob::itemFetchResult( KJob *job )
     if ( !item.hasPayload<KMime::Message::Ptr>() )
       continue;
     const KMime::Message::Ptr mb = item.payload<KMime::Message::Ptr>();
-    KPIM::MessageStatus status;
+    Akonadi::MessageStatus status;
     status.setStatusFromFlags( item.flags() );
     if ( ( status.isImportant() || status.isToAct() || status.isWatched() )
       && GlobalSettings::self()->excludeImportantMailFromExpiry() )
@@ -210,44 +210,45 @@ void ExpireJob::slotMessagesMoved( KMCommand *command )
   kDebug() << command << command->result();
   QString msg;
   QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( mSrcFolder ) );
-  switch ( command->result() ) {
-  case KMCommand::OK:
-    if ( fd->expireAction() == FolderCollection::ExpireDelete ) {
-      msg = i18np( "Removed 1 old message from folder %2.",
-                  "Removed %1 old messages from folder %2.",
-                  mRemovedMsgs.count(),
-              mSrcFolder.name() );
+  if ( fd ) {
+    switch ( command->result() ) {
+    case KMCommand::OK:
+      if ( fd->expireAction() == FolderCollection::ExpireDelete ) {
+        msg = i18np( "Removed 1 old message from folder %2.",
+                     "Removed %1 old messages from folder %2.",
+                     mRemovedMsgs.count(),
+                     mSrcFolder.name() );
+      }
+      else {
+        msg = i18np( "Moved 1 old message from folder %2 to folder %3.",
+                     "Moved %1 old messages from folder %2 to folder %3.",
+                     mRemovedMsgs.count(), mSrcFolder.name(), mMoveToFolder.name() );
+      }
+      break;
+    case KMCommand::Failed:
+      if ( fd->expireAction() == FolderCollection::ExpireDelete ) {
+        msg = i18n( "Removing old messages from folder %1 failed.",
+                    mSrcFolder.name() );
+      }
+      else {
+        msg = i18n( "Moving old messages from folder %1 to folder %2 failed.",
+                    mSrcFolder.name(), mMoveToFolder.name() );
+      }
+      break;
+    case KMCommand::Canceled:
+      if ( fd->expireAction() == FolderCollection::ExpireDelete ) {
+        msg = i18n( "Removing old messages from folder %1 was canceled.",
+                    mSrcFolder.name() );
+      }
+      else {
+        msg = i18n( "Moving old messages from folder %1 to folder %2 was "
+                    "canceled.",
+                    mSrcFolder.name(), mMoveToFolder.name() );
+      }
+    default: ;
     }
-    else {
-      msg = i18np( "Moved 1 old message from folder %2 to folder %3.",
-                   "Moved %1 old messages from folder %2 to folder %3.",
-                   mRemovedMsgs.count(), mSrcFolder.name(), mMoveToFolder.name() );
-    }
-    break;
-  case KMCommand::Failed:
-    if ( fd->expireAction() == FolderCollection::ExpireDelete ) {
-      msg = i18n( "Removing old messages from folder %1 failed.",
-              mSrcFolder.name() );
-    }
-    else {
-      msg = i18n( "Moving old messages from folder %1 to folder %2 failed.",
-                  mSrcFolder.name(), mMoveToFolder.name() );
-    }
-    break;
-  case KMCommand::Canceled:
-    if ( fd->expireAction() == FolderCollection::ExpireDelete ) {
-      msg = i18n( "Removing old messages from folder %1 was canceled.",
-              mSrcFolder.name() );
-    }
-    else {
-      msg = i18n( "Moving old messages from folder %1 to folder %2 was "
-                  "canceled.",
-                  mSrcFolder.name(), mMoveToFolder.name() );
-    }
-  default: ;
+    BroadcastStatus::instance()->setStatusMsg( msg );
   }
-  BroadcastStatus::instance()->setStatusMsg( msg );
-
   deleteLater();
 }
 

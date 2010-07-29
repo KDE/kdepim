@@ -44,7 +44,7 @@
 #include <QTextCodec>
 
 KMComposerEditor::KMComposerEditor( KMComposeWin *win,QWidget *parent)
- : Message::KMeditor(parent),m_composerWin(win)
+ : Message::KMeditor(parent, "kmail2rc" ),m_composerWin(win)
 {
 }
 
@@ -174,7 +174,7 @@ void KMComposerEditor::insertFromMimeData( const QMimeData *source )
       if ( !url.isLocalFile() ) {
         allLocalURLs = false;
       }
-      Akonadi::Item item = Akonadi::Item::fromUrl( url );
+      const Akonadi::Item item = Akonadi::Item::fromUrl( url );
       if ( item.isValid() ) {
         items << item;
       }
@@ -223,12 +223,16 @@ void KMComposerEditor::slotFetchJob( KJob * job )
   Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
   if ( !fjob )
     return;
-  Akonadi::Item::List items = fjob->items();
+  const Akonadi::Item::List items = fjob->items();
+
+  if ( items.isEmpty() )
+    return;
 
   uint identity = 0;
   if ( items.at( 0 ).isValid() && items.at( 0 ).parentCollection().isValid() ) {
     QSharedPointer<FolderCollection> fd( FolderCollection::forCollection( items.at( 0 ).parentCollection() ) );
-    identity = fd->identity();
+    if ( fd )
+      identity = fd->identity();
   }
   KMCommand *command = new KMForwardAttachedCommand( m_composerWin, items,identity, m_composerWin );
   command->start();

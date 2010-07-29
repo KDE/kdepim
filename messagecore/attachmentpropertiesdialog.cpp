@@ -229,18 +229,26 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
   ui.sign->setChecked( part->isSigned() );
 }
 
+static QString removeNewlines( const QString &input )
+{
+  QString ret( input );
+  ret.replace( '\n', ' ' );
+  return ret;
+}
+
 void AttachmentPropertiesDialog::Private::saveToPart()
 {
   Q_ASSERT( part );
   Q_ASSERT( !readOnly );
 
   part->setMimeType( ui.mimeType->currentText().toLatin1() );
-  part->setName( ui.name->text() );
+  part->setName( removeNewlines( ui.name->text() ) );
   // TODO what about fileName? Extra field??
-  part->setDescription( ui.description->text() );
+  part->setDescription( removeNewlines( ui.description->text() ) );
   part->setInline( ui.autoDisplay->isChecked() );
   part->setSigned( ui.sign->isChecked() );
   part->setEncrypted( ui.encrypt->isChecked() );
+  part->setInline( ui.autoDisplay->isChecked() );
 
   if( ui.mimeType->currentText().startsWith( QLatin1String( "message" ) ) &&
       ui.encoding->itemData( ui.encoding->currentIndex() ) != KMime::Headers::CE7Bit &&

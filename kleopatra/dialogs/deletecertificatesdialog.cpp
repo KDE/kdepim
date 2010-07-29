@@ -130,13 +130,13 @@ private:
 
             connect( &unselectedLB, SIGNAL(linkActivated(QString)), qq, SLOT(slotWhatsThisRequested()) );
 
+            selectedKTV.setFlatModel( AbstractKeyListModel::createFlatKeyListModel( &selectedKTV ) );
+            unselectedKTV.setFlatModel( AbstractKeyListModel::createFlatKeyListModel( &unselectedKTV ) );
+
             selectedKTV.setHierarchicalView( false );
             selectedKTV.view()->setSelectionMode( QAbstractItemView::NoSelection );
             unselectedKTV.setHierarchicalView( false );
             unselectedKTV.view()->setSelectionMode( QAbstractItemView::NoSelection );
-
-            selectedKTV.setFlatModel( AbstractKeyListModel::createFlatKeyListModel( &selectedKTV ) );
-            unselectedKTV.setFlatModel( AbstractKeyListModel::createFlatKeyListModel( &unselectedKTV ) );
 
             connect( &buttonBox, SIGNAL(accepted()), qq, SLOT(accept()) );
             connect( &buttonBox, SIGNAL(rejected()), qq, SLOT(reject()) );

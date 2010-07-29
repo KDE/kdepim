@@ -101,6 +101,7 @@ private:
   QPixmap * mPixmapMessageNotEncrypted;
   QPixmap * mPixmapMessageAttachment;
   QPixmap * mPixmapMessageAnnotation;
+  QPixmap * mPixmapMessageInvitation;
   QPixmap * mPixmapShowMore;
   QPixmap * mPixmapShowLess;
   QPixmap * mPixmapVerticalLine;
@@ -169,6 +170,8 @@ public:
     { return mPixmapMessageAttachment; };
   const QPixmap * pixmapMessageAnnotation() const
     { return mPixmapMessageAnnotation; };
+  const QPixmap * pixmapMessageInvitation() const
+    { return mPixmapMessageInvitation; };
   const QPixmap * pixmapShowMore() const
     { return mPixmapShowMore; };
   const QPixmap * pixmapShowLess() const

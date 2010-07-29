@@ -212,17 +212,20 @@ private slots:
   void slotShowMailCheckMenu( const QString &, const QPoint & );
   void slotIncludeInCheckChanged( bool checked );
   void slotOfflineOnShutdownChanged( bool checked );
+  void slotCheckOnStatupChanged( bool checked );
 
 private:
   virtual void doLoadFromGlobalSettings();
   virtual void doLoadOther();
 
   struct RetrievalOptions {
-    RetrievalOptions( bool manualCheck, bool offline )
+    RetrievalOptions( bool manualCheck, bool offline, bool checkOnStartup )
     : IncludeInManualChecks( manualCheck )
-    , OfflineOnShutdown( offline ) {}
+    , OfflineOnShutdown( offline )
+    ,CheckOnStartup( checkOnStartup ) {}
     bool IncludeInManualChecks;
     bool OfflineOnShutdown;
+    bool CheckOnStartup;
   };
 
   QHash<QString, QSharedPointer<RetrievalOptions> > mRetrievalHash;
@@ -755,9 +758,10 @@ public:
 
   void save();
 
-private slots:
+private Q_SLOTS:
   void slotReenableAllWarningsClicked();
   void slotConfigureGnupg();
+  void slotConfigureChiasmus();
 
 private:
   //virtual void doLoadFromGlobalSettings();

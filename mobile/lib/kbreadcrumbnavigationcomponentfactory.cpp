@@ -25,9 +25,9 @@
 #include <QDeclarativeContext>
 
 #include "kselectionproxymodel.h"
-#include "akonadi_next/kbreadcrumbselectionmodel.h"
-#include "akonadi_next/kproxyitemselectionmodel.h"
-#include "akonadi_next/kmodelindexproxymapper.h"
+#include <kbreadcrumbselectionmodel.h>
+#include <klinkitemselectionmodel.h>
+#include <kmodelindexproxymapper.h>
 
 #include "breadcrumbnavigation.h"
 
@@ -59,13 +59,18 @@ class KBreadcrumbNavigationComponentFactoryPrivate
   QAbstractItemModel *m_unfilteredChildItemsModel;
   QAbstractItemModel *m_childItemsModel;
   int m_breadcrumbDepth;
-  Future::KModelIndexProxyMapper *m_modelIndexProxyMapper;
+  KModelIndexProxyMapper *m_modelIndexProxyMapper;
 };
 
 KBreadcrumbNavigationComponentFactory::KBreadcrumbNavigationComponentFactory(QObject* parent)
   : QObject(parent), d_ptr(new KBreadcrumbNavigationComponentFactoryPrivate(this))
 {
 
+}
+
+KBreadcrumbNavigationComponentFactory::~KBreadcrumbNavigationComponentFactory()
+{
+   delete d_ptr;
 }
 
 void KBreadcrumbNavigationComponentFactory::setModel(QAbstractItemModel *model, QObject* parent)
@@ -79,10 +84,10 @@ void KBreadcrumbNavigationComponentFactory::setModel(QAbstractItemModel *model, 
   currentCollectionSelectionModel->setSourceModel( model );
   d->m_selectedItemModel = currentCollectionSelectionModel;
 
-  Future::KBreadcrumbSelectionModel *breadcrumbCollectionSelection
-      = new Future::KBreadcrumbSelectionModel( d->m_selectionModel, Future::KBreadcrumbSelectionModel::Forward, parent );
-  breadcrumbCollectionSelection->setIncludeActualSelection(false);
-  breadcrumbCollectionSelection->setSelectionDepth( d->m_breadcrumbDepth );
+  KBreadcrumbSelectionModel *breadcrumbCollectionSelection
+      = new KBreadcrumbSelectionModel( d->m_selectionModel, KBreadcrumbSelectionModel::MakeBreadcrumbSelectionInOther, parent );
+  breadcrumbCollectionSelection->setActualSelectionIncluded(false);
+  breadcrumbCollectionSelection->setBreadcrumbLength( d->m_breadcrumbDepth );
 
   KBreadcrumbNavigationProxyModel *breadcrumbNavigationModel
       = new KBreadcrumbNavigationProxyModel( breadcrumbCollectionSelection, parent );
@@ -90,8 +95,8 @@ void KBreadcrumbNavigationComponentFactory::setModel(QAbstractItemModel *model, 
   breadcrumbNavigationModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
   d->m_breadcrumbModel = getBreadcrumbNavigationModel(breadcrumbNavigationModel);
 
-  Future::KProxyItemSelectionModel *proxyBreadcrumbCollectionSelection
-      = new Future::KProxyItemSelectionModel( d->m_breadcrumbModel, d->m_selectionModel, parent );
+  KLinkItemSelectionModel *proxyBreadcrumbCollectionSelection
+      = new KLinkItemSelectionModel( d->m_breadcrumbModel, d->m_selectionModel, parent );
 
   d->m_breadcrumbSelectionModel = new KForwardingItemSelectionModel( d->m_breadcrumbModel,
                                                                      proxyBreadcrumbCollectionSelection,
@@ -108,9 +113,9 @@ void KBreadcrumbNavigationComponentFactory::setModel(QAbstractItemModel *model, 
 
   d->m_childItemsModel = getChildItemsModel(d->m_unfilteredChildItemsModel);
 
-  d->m_childItemsSelectionModel = new Future::KProxyItemSelectionModel( d->m_childItemsModel, d->m_selectionModel, parent );
+  d->m_childItemsSelectionModel = new KLinkItemSelectionModel( d->m_childItemsModel, d->m_selectionModel, parent );
 
-  d->m_modelIndexProxyMapper = new Future::KModelIndexProxyMapper(model, d->m_childItemsModel, this);
+  d->m_modelIndexProxyMapper = new KModelIndexProxyMapper(model, d->m_childItemsModel, this);
 
 }
 

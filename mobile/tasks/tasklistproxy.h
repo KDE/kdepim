@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,28 +21,26 @@
 
 #include "listproxy.h"
 
+#include <akonadi/entitytreemodel.h>
+
 class TaskListProxy : public ListProxy
 {
 public:
   enum Role {
-    Summary,
+    // TODO: Find a better way to make this configurable. Possibly templates.
+    Summary = Akonadi::EntityTreeModel::UserRole,
     Description,
     PercentComplete
   };
 
 public:
-  explicit TaskListProxy( int customRoleBaseline, QObject* parent = 0 );
+  explicit TaskListProxy( QObject* parent = 0 );
 
   virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+  virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 
   virtual void setSourceModel( QAbstractItemModel* sourceModel );
 
-private:
-  int absoluteCustomRole( int role ) const { return role + mCustomRoleBaseline; }
-  int relativeCustomRole( int role ) const { return role - mCustomRoleBaseline; }
-
-private:
-  int mCustomRoleBaseline;
 };
 
 #endif // TASKLISTPROXY_H

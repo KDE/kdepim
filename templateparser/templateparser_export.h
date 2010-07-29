@@ -26,7 +26,10 @@
 #include <kdemacros.h>
 
 #ifndef TEMPLATEPARSER_EXPORT
-# if defined(MAKE_TEMPLATEPARSER_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define TEMPLATEPARSER_EXPORT
+# elif defined(MAKE_TEMPLATEPARSER_LIB)
    /* We are building this library */
 #  define TEMPLATEPARSER_EXPORT KDE_EXPORT
 # else

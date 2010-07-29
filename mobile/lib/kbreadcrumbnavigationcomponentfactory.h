@@ -36,6 +36,7 @@ class KBreadcrumbNavigationComponentFactory : public QObject
   Q_OBJECT
 public:
   KBreadcrumbNavigationComponentFactory(QObject* parent = 0);
+  ~KBreadcrumbNavigationComponentFactory();
 
   void setModel(QAbstractItemModel *model, QObject* parent = 0);
 

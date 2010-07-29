@@ -12,10 +12,10 @@ include_directories(
 
 set(kmail_mobile_srcs
   global.cpp
+  composerautoresizer.cpp
   composerview.cpp
-  declarativeeditor.cpp
   declarativeidentitycombobox.cpp
-  declarativerecipientseditor.cpp
+  mailactionmanager.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
@@ -25,6 +25,7 @@ kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 
 target_link_libraries(kmail-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
+    ${QT_QTOPENGL_LIBRARY}
     ${KDE4_KCMUTILS_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
     ${KDEPIMLIBS_KMIME_LIBRARY}
@@ -39,12 +40,16 @@ target_link_libraries(kmail-mobile
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES kmail-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   HeaderView.qml
+  important-email.png
+  action-item-email.png
   EditorView.qml
   kmail-composer.qml
   kmail-mobile.qml
+  kmail-mobile.notifyrc
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 

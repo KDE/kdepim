@@ -238,8 +238,14 @@ KDateEdit::KDateEdit( QWidget *parent )
   connect( this, SIGNAL( textChanged( const QString& ) ),
            SLOT( slotTextChanged( const QString& ) ) );
 
+#ifndef KDEPIM_MOBILE_UI
   d->mPopup = new KDatePickerPopup( KDatePickerPopup::DatePicker | KDatePickerPopup::Words,
                                     QDate::currentDate(), this );
+#else
+  d->mPopup = new KDatePickerPopup( KDatePickerPopup::DatePicker | KDatePickerPopup::Words,
+                                    QDate::currentDate(), 0 );
+#endif
+
   d->mPopup->hide();
   d->mPopup->installEventFilter( this );
 

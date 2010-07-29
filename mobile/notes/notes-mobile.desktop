@@ -1,17 +1,18 @@
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Name=KDE Notes Mobile
-Name[ca]=Notes del KDE mòbil
-Name[en_GB]=KDE Notes Mobile
-Name[es]=Notas de KDE móvil
-Name[km]=KDE Notes Mobile
-Name[pt]=Notas do KDE Móveis
-Name[pt_BR]=Notas do KDE Móveis
-Name[sv]=KDE:s anteckningar för mobil
-Name[uk]=Мобільні нотатки KDE
-Name[x-test]=xxKDE Notes Mobilexx
-Exec=notes-mobile
+Name=KDE Notes
+Name[es]=Notas de KDE
+Name[ja]=KDE Notes
+Name[nds]=KDE-Notizen
+Name[pt]=Notas do KDE
+Name[pt_BR]=Notas do KDE
+Name[sv]=KDE:s anteckningar
+Name[uk]=Нотатки KDE
+Name[x-test]=xxKDE Notesxx
+Name[zh_CN]=KDE 便笺
+Name[zh_TW]=KDE 便條紙
+Exec=notes-mobile.sh
 
-Icon=view-pim-notes
+Icon=notes-mobile
 Type=Application

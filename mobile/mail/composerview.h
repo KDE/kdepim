@@ -21,7 +21,8 @@
 #define COMPOSERVIEW_H
 
 #include "kdeclarativefullscreenview.h"
-
+#include <messagecomposer/messagesender.h>
+#include <messagecomposer/composerviewbase.h>
 #include <KActionCollection>
 #include <KMime/Message>
 
@@ -39,7 +40,8 @@ namespace Message
   class AttachmentControllerBase;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
   class RecipientsEditor;
 }
 
@@ -48,51 +50,57 @@ class ComposerView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
   Q_PROPERTY( QString subject READ subject WRITE setSubject NOTIFY changed )
+  Q_PROPERTY( bool busy READ busy WRITE setBusy NOTIFY busyChanged )
 
   public:
     explicit ComposerView(QWidget* parent = 0);
 
-    void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_identityCombo = combo; }
-    void setEditor( Message::KMeditor* editor ) { m_editor = editor; }
-    void setRecipientsEditor( MessageComposer::RecipientsEditor *editor ) { m_recipientsEditor = editor; }
+    void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_composerBase->setIdentityCombo( combo ); }
+    void setEditor( Message::KMeditor* editor );
+    void setRecipientsEditor( MessageComposer::RecipientsEditor *editor ) { m_composerBase->setRecipientsEditor( editor ); }
 
     QString subject() const;
     void setSubject( const QString &subject );
 
-    KActionCollection* actionCollection() const;
-
     void setMessage( const KMime::Message::Ptr &msg );
+
+    bool busy() const;
+    void setBusy(bool busy);
 
   public slots:
     /// Send clicked in the user interface
-    void send();
+    void send( MessageSender::SendMethod method = MessageSender::SendDefault,
+               MessageSender::SaveIn saveIn = MessageSender::SaveInNone );
     QObject* getAction( const QString &name ) const;
     void configureIdentity();
     void configureTransport();
+    void slotSendSuccessful();
 
   signals:
     void changed();
-
-  private:
-    void setMessageInternal( const KMime::Message::Ptr &msg );
-    void expandAddresses();
+    void busyChanged();
 
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
-    void addressExpansionResult( KJob *job );
-    void composerResult( KJob* job );
-    void sendResult( KJob* job );
     void addAttachment();
+    void success();
+    void failed( const QString &errorMessage );
+
+    void signEmail( bool sign ) { m_sign = sign; }
+    void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }
+    void saveDraft();
+
+ protected:
+    void closeEvent ( QCloseEvent * event );
 
   private:
-    KPIMIdentities::IdentityCombo *m_identityCombo;
-    Message::KMeditor *m_editor;
-    MessageComposer::RecipientsEditor *m_recipientsEditor;
-    Message::AttachmentModel *m_attachmentModel;
-    Message::AttachmentControllerBase *m_attachmentController;
+    Message::ComposerViewBase* m_composerBase;
     QString m_subject;
-    KActionCollection *mActionCollection;
     KMime::Message::Ptr m_message;
+    int m_jobCount;
+    bool m_sign;
+    bool m_encrypt;
+    bool m_busy;
 };
 
 #endif

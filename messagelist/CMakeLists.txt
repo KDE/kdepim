@@ -5,6 +5,8 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading" FALSE)
 configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messagelist.h)
 
+add_subdirectory(pics)
+
 include_directories(
     ${Boost_INCLUDE_DIRS}
     ${SOPRANO_INCLUDE_DIR}
@@ -88,7 +90,7 @@ kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
     core/settings.kcfgc
 )
 
-kde4_add_library(messagelist SHARED ${libmessagelist_SRCS})
+kde4_add_library(messagelist ${LIBRARY_TYPE} ${libmessagelist_SRCS})
 target_link_libraries(messagelist
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}

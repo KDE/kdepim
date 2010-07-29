@@ -40,10 +40,6 @@ namespace Akonadi {
   class Item;
 }
 
-namespace IncidenceEditorsNG {
-class IncidenceEditorGeneralPage;
-}
-
 namespace IncidenceEditors
 {
 
@@ -131,7 +127,6 @@ class INCIDENCEEDITORS_EXPORT TodoEditor : public IncidenceEditor
     KCal::Todo::Ptr mRelatedTodo;
 
     EditorGeneralTodo *mGeneral;
-    IncidenceEditorsNG::IncidenceEditorGeneralPage *mNewGeneral;
     EditorRecurrenceDialog *mRecurrenceDialog;
     EditorRecurrence *mRecurrence;
 };

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,11 +24,11 @@
 
 class QAbstractItemModel;
 
-class KActionCollection;
 
 namespace Akonadi {
 class EntityTreeModel;
 class Item;
+class ItemFetchScope;
 }
 
 class ListProxy;
@@ -40,7 +40,9 @@ class KDeclarativeMainViewPrivate;
  */
 class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 {
-  Q_OBJECT;
+  Q_OBJECT
+  Q_PROPERTY(int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged)
+  Q_PROPERTY(bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged)
 
 protected:
   /**
@@ -57,28 +59,38 @@ protected:
   /** Returns the filtered and QML-adapted item model. */
   QAbstractItemModel* itemModel() const;
 
+  /**
+   * Returns whether the currently selected item is being loaded.
+   * Note that results appear asynchronously in chunks while loading the contents
+   * of a collection. That means that the number of items can be greater then zero
+   * while isLoadingSelected returns true.
+   */
+  bool isLoadingSelected();
+
 public:
   virtual ~KDeclarativeMainView();
 
   /**
-    * By default the view fetches the full payloads for the list. Use this method
-    * to fetch only a specific part.
+    * Item fetch scope to specify how much data should be loaded for the list view.
+    * By default nothing is loaded.
     */
-  void setListPayloadPart( const QByteArray &payloadPart );
+  Akonadi::ItemFetchScope& itemFetchScope();
 
   /** Mime type of the items handled by this application. */
   void addMimeType( const QString &mimeType );
 
   QStringList mimeTypes() const;
 
-  KActionCollection* actionCollection() const;
+  int numSelectedAccounts();
 
 public slots:
   void setSelectedAccount( int row );
   void setSelectedChildCollectionRow( int row );
   void setSelectedBreadcrumbCollectionRow( int row );
+  int selectedCollectionRow();
 
-  void setListSelectedRow( int row );
+  // FIXME: make non-virtual again once mark-as-read logic is in messageviewer
+  virtual void setListSelectedRow( int row );
 
   /** Returns wheter or not the child collection at row @param row has children. */
   bool childCollectionHasChildren( int row );
@@ -87,16 +99,27 @@ public slots:
 
   void launchAccountWizard();
 
-  void saveFavorite( const QString &name );
+  void saveFavorite();
   void loadFavorite( const QString &name );
 
-  QObject* getAction( const QString &name ) const;
+  void configureCurrentAccount();
+
+  void persistCurrentSelection(const QString &key);
+  void clearPersistedSelection(const QString &key);
+  void restorePersistedSelection(const QString &key);
+
+signals:
+  void numSelectedAccountsChanged();
+  void selectedItemChanged( int row, qlonglong itemId );
+  void isLoadingSelectedChanged();
 
 protected:
   QItemSelectionModel* regularSelectionModel() const;
   QItemSelectionModel* favoriteSelectionModel() const;
   QAbstractItemModel *regularSelectedItems() const;
   QAbstractItemModel *favoriteSelectedItems() const;
+  QItemSelectionModel* itemSelectionModel() const;
+  QAbstractItemModel* selectedItemsModel() const;
 
   Akonadi::Item itemFromId( quint64 id ) const;
 

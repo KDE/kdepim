@@ -22,10 +22,9 @@
 #include <kpimidentities/identitymanager.h>
 
 DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
-  DeclarativeComposerWidgetBase< KPIMIdentities::IdentityCombo, &ComposerView::setIdentityCombo> ( parent )
+  DeclarativeWidgetBase< KPIMIdentities::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
+    ( new KPIMIdentities::IdentityCombo( Global::identityManager(), 0 ), parent )
 {
-  m_widget = new KPIMIdentities::IdentityCombo( Global::identityManager(), 0 );
-  m_proxy->setWidget( m_widget );
 }
 
 #include "declarativeidentitycombobox.moc"

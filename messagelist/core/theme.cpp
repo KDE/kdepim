@@ -44,15 +44,17 @@ using namespace MessageList::Core;
 //  0x1016  08.03.2009      Added support for sorting by New/Unread status
 //  0x1017  16.08.2009      Added support for column icon
 //  0x1018  17.01.2010      Added support for annotation icon
+//  0x1019  13.07.2010      Added support for invitation icon
 //
-static const int gThemeCurrentVersion = 0x1018; // increase if you add new fields or change the meaning of some
+static const int gThemeCurrentVersion = 0x1019; // increase if you add new fields or change the meaning of some
 // you don't need to change the values below, but you might want to add new ones
 static const int gThemeMinimumSupportedVersion = 0x1013;
 static const int gThemeMinimumVersionWithColumnRuntimeData = 0x1014;
 static const int gThemeMinimumVersionWithIconSizeField = 0x1015;
-static const int gThemeMinimumVersionWithSortingByNewUnreadStatusAllowed = 0x1016;
+static const int gThemeMinimumVersionWithSortingByUnreadStatusAllowed = 0x1016;
 static const int gThemeMinimumVersionWithColumnIcon = 0x1017;
 static const int gThemeMinimumVersionWithAnnotationIcon = 0x1018;
+static const int gThemeMinimumVersionWithInvitationIcon = 0x1019;
 
 // the default icon size
 static const int gThemeDefaultIconSize = 16;
@@ -94,7 +96,7 @@ QString Theme::ContentItem::description( Type type )
       return i18nc( "Description of Type Size", "Size" );
     break;
     case ReadStateIcon:
-      return i18n( "New/Unread/Read Icon" );
+      return i18n( "Unread/Read Icon" );
     break;
     case AttachmentStateIcon:
       return i18n( "Attachment Icon" );
@@ -143,6 +145,8 @@ QString Theme::ContentItem::description( Type type )
     break;
     case AnnotationIcon:
       return i18n( "Note Icon" );
+    case InvitationIcon:
+      return i18n( "Invitation Icon" );
     default:
       return i18nc( "Description for an Unknown Type", "Unknown" );
     break;
@@ -204,6 +208,7 @@ bool Theme::ContentItem::load( QDataStream &stream, int /*themeVersion*/ )
     case CombinedReadRepliedStateIcon:
     case TagList:
     case AnnotationIcon:
+    case InvitationIcon:
       // ok
     break;
     default:
@@ -353,6 +358,16 @@ bool Theme::Row::load( QDataStream &stream, int themeVersion )
       annotationItem->setHideWhenDisabled( true );
       addLeftItem( annotationItem );
     }
+
+    // Same as above, for the invitation icon
+    if ( ci->type() == ContentItem::AttachmentStateIcon &&
+         themeVersion < gThemeMinimumVersionWithInvitationIcon &&
+         val > 1 ) {
+      kDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
+      ContentItem *invitationItem = new ContentItem( ContentItem::InvitationIcon ) ;
+      invitationItem->setHideWhenDisabled( true );
+      addLeftItem( invitationItem );
+    }
   }
 
   // right item count
@@ -379,6 +394,14 @@ bool Theme::Row::load( QDataStream &stream, int themeVersion )
       ContentItem *annotationItem = new ContentItem( ContentItem::AnnotationIcon ) ;
       annotationItem->setHideWhenDisabled( true );
       addRightItem( annotationItem );
+    }
+    if ( ci->type() == ContentItem::AttachmentStateIcon &&
+         themeVersion < gThemeMinimumVersionWithInvitationIcon &&
+         val > 1 ) {
+      kDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
+      ContentItem *invitationItem = new ContentItem( ContentItem::InvitationIcon ) ;
+      invitationItem->setHideWhenDisabled( true );
+      addRightItem( invitationItem );
     }
   }
 
@@ -574,15 +597,15 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
     return false;
   }
 
-  if ( themeVersion < gThemeMinimumVersionWithSortingByNewUnreadStatusAllowed )
+  if ( themeVersion < gThemeMinimumVersionWithSortingByUnreadStatusAllowed )
   {
-    // The default "Classic" theme "New/Unread" column had sorting disabled here.
+    // The default "Classic" theme "Unread" column had sorting disabled here.
     // We want to be nice to the existing users and automatically set
     // the new sorting method for this column (so they don't have to make the
     // complex steps to set it by themselves).
     // This piece of code isn't strictly required: it's just a niceness :)
-    if ( ( mMessageSorting == SortOrder::NoMessageSorting ) && ( mLabel == i18n( "New/Unread" ) ) )
-      mMessageSorting = SortOrder::SortMessagesByNewUnreadStatus;
+    if ( ( mMessageSorting == SortOrder::NoMessageSorting ) && ( mLabel == i18n( "Unread" ) ) )
+      mMessageSorting = SortOrder::SortMessagesByUnreadStatus;
   }
 
   // group header row count

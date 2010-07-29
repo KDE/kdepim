@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KPGP_EXPORT
-# if defined(MAKE_KPGP_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KPGP_EXPORT
+# elif defined(MAKE_KPGP_LIB)
    /* We are building this library */ 
 #  define KPGP_EXPORT KDE_EXPORT
 # else

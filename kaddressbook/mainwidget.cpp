@@ -30,8 +30,13 @@
 #include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
 
+#ifdef GRANTLEE_FOUND
+#include "grantleecontactformatter.h"
+#include "grantleecontactgroupformatter.h"
+#endif
+
 #include <akonadi/akonadi_next/collectionselectionproxymodel.h>
-#include <akonadi/akonadi_next/etmstatesaver.h>
+#include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/contact/contactdefaultactions.h>
@@ -57,6 +62,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kselectionproxymodel.h>
+#include <kstandarddirs.h>
 #include <ktextbrowser.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
@@ -254,8 +260,8 @@ void MainWidget::restoreState()
 {
   // collection view
   {
-    ETMStateSaver *saver = new ETMStateSaver;
-    saver->setTreeView( mCollectionView );
+    Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
+    saver->setView( mCollectionView );
 
     const KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
     saver->restoreState( group );
@@ -263,7 +269,7 @@ void MainWidget::restoreState()
 
   // collection view
   {
-    ETMStateSaver *saver = new ETMStateSaver;
+    Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
     saver->setSelectionModel( mCollectionSelectionModel );
 
     const KConfigGroup group( Settings::self()->config(), "CollectionViewCheckState" );
@@ -272,8 +278,8 @@ void MainWidget::restoreState()
 
   // item view
   {
-    ETMStateSaver *saver = new ETMStateSaver;
-    saver->setTreeView( mItemView );
+    Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
+    saver->setView( mItemView );
     saver->setSelectionModel( mItemView->selectionModel() );
 
     const KConfigGroup group( Settings::self()->config(), "ItemViewState" );
@@ -285,8 +291,8 @@ void MainWidget::saveState()
 {
   // collection view
   {
-    ETMStateSaver saver;
-    saver.setTreeView( mCollectionView );
+    Akonadi::ETMViewStateSaver saver;
+    saver.setView( mCollectionView );
 
     KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
     saver.saveState( group );
@@ -295,7 +301,7 @@ void MainWidget::saveState()
 
   // collection view
   {
-    ETMStateSaver saver;
+    Akonadi::ETMViewStateSaver saver;
     saver.setSelectionModel( mCollectionSelectionModel );
 
     KConfigGroup group( Settings::self()->config(), "CollectionViewCheckState" );
@@ -305,8 +311,8 @@ void MainWidget::saveState()
 
   // item view
   {
-    ETMStateSaver saver;
-    saver.setTreeView( mItemView );
+    Akonadi::ETMViewStateSaver saver;
+    saver.setView( mItemView );
     saver.setSelectionModel( mItemView->selectionModel() );
 
     KConfigGroup group( Settings::self()->config(), "ItemViewState" );
@@ -375,6 +381,18 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
+
+#ifdef GRANTLEE_FOUND
+ Akonadi::GrantleeContactFormatter *formatter =
+       new Akonadi::GrantleeContactFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+
+ mContactDetails->setContactFormatter( formatter );
+
+ Akonadi::GrantleeContactGroupFormatter *groupFormatter =
+       new Akonadi::GrantleeContactGroupFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+
+ mContactGroupDetails->setContactGroupFormatter( groupFormatter );
+#endif
 }
 
 void MainWidget::setupActions( KActionCollection *collection )

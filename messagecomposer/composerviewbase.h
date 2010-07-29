@@ -288,7 +288,7 @@ private:
   AttachmentControllerBase* m_attachmentController;
   AttachmentModel* m_attachmentModel;
   SignatureController* m_signatureController;
-  MessageComposer::RecipientsEditor* m_recipientsEditor;
+  MessageComposer::RecipientsEditor * m_recipientsEditor;
   KPIMIdentities::IdentityCombo *m_identityCombo;
   KPIMIdentities::IdentityManager* m_identMan;
   Message::KMeditor* m_editor;

@@ -46,6 +46,12 @@
 #include <kdebug.h>
 #include <KSaveFile>
 
+#include <QLayout>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QListWidget>
+
 #include <QPointer>
 #include <QFileInfo>
 #include <QThread>
@@ -65,6 +71,60 @@
 using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
+
+namespace {
+
+    class ResultDialog : public QDialog {
+        Q_OBJECT
+    public:
+        ResultDialog( const QStringList & created, const QStringList & errors, QWidget * parent=0, Qt::WindowFlags f=0 )
+            : QDialog( parent, f ),
+              createdLB( created.empty()
+                         ? i18nc("@info","No checksum files have been created.")
+                         : i18nc("@info","These checksum files have been successfull created:"), this ),
+              createdLW( this ),
+              errorsLB( errors.empty()
+                        ? i18nc("@info","There were no errors.")
+                        : i18nc("@info","The following errors were encountered:"), this ),
+              errorsLW( this ),
+              buttonBox( QDialogButtonBox::Ok, Qt::Horizontal, this ),
+              vlay( this )
+        {
+            KDAB_SET_OBJECT_NAME( createdLB );
+            KDAB_SET_OBJECT_NAME( createdLW );
+            KDAB_SET_OBJECT_NAME( errorsLB );
+            KDAB_SET_OBJECT_NAME( errorsLW );
+            KDAB_SET_OBJECT_NAME( buttonBox );
+            KDAB_SET_OBJECT_NAME( vlay );
+
+            createdLW.addItems( created );
+            errorsLW.addItems( errors );
+
+            vlay.addWidget( &createdLB );
+            vlay.addWidget( &createdLW, 1 );
+            vlay.addWidget( &errorsLB );
+            vlay.addWidget( &errorsLW, 1 );
+            vlay.addWidget( &buttonBox );
+
+            if ( created.empty() )
+                createdLW.hide();
+            if ( errors.empty() )
+                errorsLW.hide();
+
+            connect( &buttonBox, SIGNAL(accepted()), this, SLOT(accept()) );
+            connect( &buttonBox, SIGNAL(rejected()), this, SLOT(reject()) );
+        }
+
+    private:
+        QLabel createdLB;
+        QListWidget createdLW;
+        QLabel errorsLB;
+        QListWidget errorsLW;
+        QDialogButtonBox buttonBox;
+        QVBoxLayout vlay;
+    };
+
+}
 
 #ifdef Q_OS_UNIX
 static const bool HAVE_UNIX = true;
@@ -129,6 +189,8 @@ private:
             progressDialog->setValue( progressDialog->maximum() );
             progressDialog->close();
         }
+        ResultDialog * const dlg = new ResultDialog( created, errors );
+        q->bringToForeground( dlg );
         if ( !errors.empty() )
             q->setLastError( gpg_error( GPG_ERR_GENERAL ),
                              errors.join( "\n" ) );
@@ -152,7 +214,7 @@ private:
     const std::vector< shared_ptr<ChecksumDefinition> > checksumDefinitions;
     shared_ptr<ChecksumDefinition> checksumDefinition;
     QStringList files;
-    QStringList errors;
+    QStringList errors, created;
     bool allowAddition;
     volatile bool canceled;
 };
@@ -165,6 +227,7 @@ CreateChecksumsController::Private::Private( CreateChecksumsController * qq )
       checksumDefinition( ChecksumDefinition::getDefaultChecksumDefinition( checksumDefinitions ) ),
       files(),
       errors(),
+      created(),
       allowAddition( false ),
       canceled( false )
 {
@@ -222,6 +285,7 @@ void CreateChecksumsController::start() {
         const QMutexLocker locker( &d->mutex );
 
         d->progressDialog = new QProgressDialog( i18n("Initializing..."), i18n("Cancel"), 0, 0 );
+        applyWindowID( d->progressDialog );
         d->progressDialog->setAttribute( Qt::WA_DeleteOnClose );
         d->progressDialog->setMinimumDuration( 1000 );
         d->progressDialog->setWindowTitle( i18nc("@title:window","Create Checksum Progress") );
@@ -229,6 +293,7 @@ void CreateChecksumsController::start() {
 
         d->canceled = false;
         d->errors.clear();
+        d->created.clear();
     }
 
     d->start();
@@ -270,21 +335,44 @@ namespace {
     };
 }
 
+static QString decode( const QString & encoded ) {
+    QString decoded;
+    decoded.reserve( encoded.size() );
+    bool shift = false;
+    Q_FOREACH( const QChar ch, encoded )
+        if ( shift ) {
+            switch ( ch.toLatin1() ) {
+            case '\\': decoded += QLatin1Char( '\\' ); break;
+            case 'n':  decoded += QLatin1Char( '\n' ); break;
+            default:
+                qDebug() << Q_FUNC_INFO << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
+                decoded += ch;
+                break;
+            }
+            shift = false;
+        } else {
+            if ( ch == QLatin1Char( '\\' ) )
+                shift = true;
+            else
+                decoded += ch;
+        }
+    return decoded;
+}
+
 static std::vector<File> parse_sum_file( const QString & fileName ) {
     std::vector<File> files;
     QFile f( fileName );
     if ( f.open( QIODevice::ReadOnly ) ) {
         QTextStream s( &f );
-        QRegExp rx( "([a-f0-9A-F]+) ([ *])([^ *].*)[\n\r]*" );
+        QRegExp rx( "(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*" );
         while ( !s.atEnd() ) {
             const QString line = s.readLine();
             if ( rx.exactMatch( line ) ) {
-                assert( !rx.cap(3).endsWith( QLatin1Char('\n') ) );
-                assert( !rx.cap(3).endsWith( QLatin1Char('\r') ) );
+                assert( !rx.cap(4).endsWith( QLatin1Char('\n') ) );
                 const File file = {
-                    rx.cap( 3 ),
-                    rx.cap( 1 ).toLatin1(),
-                    rx.cap( 2 ) == QLatin1String("*"),
+                    rx.cap( 1 ) == QLatin1String("\\") ? decode( rx.cap( 4 ) ) : rx.cap( 4 ),
+                    rx.cap( 2 ).toLatin1(),
+                    rx.cap( 3 ) == QLatin1String("*"),
                 };
                 files.push_back( file );
             }
@@ -435,9 +523,7 @@ static QString process( const Dir & dir, bool * fatal ) {
     p.setWorkingDirectory( dir.dir.absolutePath() );
     p.setStandardOutputFile( dir.dir.absoluteFilePath( file.QFile::fileName() /*!sic*/ ) );
     const QString program = dir.checksumDefinition->createCommand();
-    const QStringList arguments = dir.checksumDefinition->createCommandArguments( dir.inputFiles );
-    qDebug( "[%p] Starting %s %s", &p, qPrintable( program ), qPrintable( arguments.join(" ") ) );
-    p.start( program, arguments );
+    dir.checksumDefinition->startCreateCommand( &p, dir.inputFiles );
     p.waitForFinished();
     qDebug( "[%p] Exit code %d.", &p, p.exitCode() );
 
@@ -477,6 +563,7 @@ void CreateChecksumsController::Private::run() {
     locker.unlock();
 
     QStringList errors;
+    QStringList created;
 
     if ( !checksumDefinition ) {
         errors.push_back( i18n("No checksum programs defined.") );
@@ -528,6 +615,8 @@ void CreateChecksumsController::Private::run() {
                 const QString error = process( dir, &fatal );
                 if ( !error.isEmpty() )
                     errors.push_back( error );
+                else
+                    created.push_back( dir.dir.absoluteFilePath( dir.sumFile ) );
                 done += dir.totalSize;
                 if ( fatal || canceled )
                     break;
@@ -540,6 +629,7 @@ void CreateChecksumsController::Private::run() {
     locker.relock();
 
     this->errors = errors;
+    this->created = created;
 
     // mutex unlocked by QMutexLocker
 

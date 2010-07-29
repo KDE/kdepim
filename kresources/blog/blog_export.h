@@ -2,7 +2,7 @@
   This file is part of the blog resource.
 
   Copyright (C) 2007 David Faure <faure@kde.org>
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Mike McQuaid <mike@mikemcquaid.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -27,13 +27,16 @@
 #include <kdemacros.h>
 
 #ifndef KCAL_RESOURCEBLOG_EXPORT
-#if defined(MAKE_KCAL_RESOURCEBLOG_LIB)
-	/* We are building this library */
-#define KCAL_RESOURCEBLOG_EXPORT KDE_EXPORT
-#else
-	/* We are using this library */
-#define KCAL_RESOURCEBLOG_EXPORT KDE_IMPORT
-#endif
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCAL_RESOURCEBLOG_EXPORT
+# elif defined(MAKE_KCAL_RESOURCEBLOG_LIB)
+   /* We are building this library */
+#  define KCAL_RESOURCEBLOG_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KCAL_RESOURCEBLOG_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #ifndef KCAL_RESOURCEBLOG_EXPORT_DEPRECATED

@@ -132,26 +132,26 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
 
   m_msg = msg;
 
-  m_recipientsEditor->setRecipientString( m_msg->to()->mailboxes(), Recipient::To );
-  m_recipientsEditor->setRecipientString( m_msg->cc()->mailboxes(), Recipient::Cc );
-  m_recipientsEditor->setRecipientString( m_msg->bcc()->mailboxes(), Recipient::Bcc );
+  m_recipientsEditor->setRecipientString( m_msg->to()->mailboxes(), MessageComposer::Recipient::To );
+  m_recipientsEditor->setRecipientString( m_msg->cc()->mailboxes(), MessageComposer::Recipient::Cc );
+  m_recipientsEditor->setRecipientString( m_msg->bcc()->mailboxes(), MessageComposer::Recipient::Bcc );
   m_recipientsEditor->setFocusBottom();
 
   // If we are loading from a draft, load unexpanded aliases as well
   if( m_msg->hasHeader( "X-KMail-UnExpanded-To" ) ) {
       QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-To" )->asUnicodeString().split( QLatin1String( "," ) );
       foreach( QString addr, spl )
-        m_recipientsEditor->addRecipient( addr, Recipient::To );
+        m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::To );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-CC" ) ) {
       QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-CC" )->asUnicodeString().split( QLatin1String( "," ) );
       foreach( QString addr, spl )
-        m_recipientsEditor->addRecipient( addr, Recipient::Cc );
+        m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Cc );
   }
   if( m_msg->hasHeader( "X-KMail-UnExpanded-BCC" ) ) {
       QStringList spl = m_msg->headerByType( "X-KMail-UnExpanded-BCC" )->asUnicodeString().split( QLatin1String( "," ) );
       foreach( QString addr, spl )
-        m_recipientsEditor->addRecipient( addr, Recipient::Bcc );
+        m_recipientsEditor->addRecipient( addr, MessageComposer::Recipient::Bcc );
   }
 
   // First, we copy the message and then parse it to the object tree parser.
@@ -292,24 +292,19 @@ void Message::ComposerViewBase::readyForSending()
   // first, expand all addresses
   MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
   job->setFrom( from() );
-  job->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
-  job->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
-  job->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
+  job->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
+  job->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
+  job->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotEmailAddressResolved( KJob* ) ) );
   job->start();
-  
 }
 
 void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 {
   if ( job->error() ) {
-    KMessageBox::sorry( m_parentWidget, i18n( "Expanding email addresses in message failed.\n"
-                                    "%1\n",
-                                    job->errorString() ),
-                                    i18n( "Sending Message Failed" ) );
-//     setEnabled( true );
-    // TODO add string after string freeze!
-    emit failed( QLatin1String( "" ) );
+    //     setEnabled( true );
+    QString msg = i18n( "Expanding email addresses in message failed: %1", job->errorString() );
+    emit failed( msg );
     return;
   }
 
@@ -321,12 +316,12 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     mExpandedBcc = resolveJob->expandedBcc();
  } else { // saved to draft, so keep the old values, not very nice.
     mExpandedFrom = from();
-    foreach( const Recipient &r, m_recipientsEditor->recipients() ) {
-      switch( r.type() ) {
-        case Recipient::To: mExpandedTo << r.email(); break;
-        case Recipient::Cc: mExpandedCc << r.email(); break;
-        case Recipient::Bcc: mExpandedBcc << r.email(); break;
-        case Recipient::Undefined: Q_ASSERT( !"Unknown recpient type!" ); break;
+    foreach( const MessageComposer::Recipient::Ptr &r, m_recipientsEditor->recipients() ) {
+      switch( r->type() ) {
+        case MessageComposer::Recipient::To: mExpandedTo << r->email(); break;
+        case MessageComposer::Recipient::Cc: mExpandedCc << r->email(); break;
+        case MessageComposer::Recipient::Bcc: mExpandedBcc << r->email(); break;
+        case MessageComposer::Recipient::Undefined: Q_ASSERT( !"Unknown recpient type!" ); break;
       }
     }
     QStringList unExpandedTo, unExpandedCc, unExpandedBcc;
@@ -350,7 +345,7 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
   // we first figure out if we need to create multiple messages with different crypto formats
   // if so, we create a composer per format
   // if we aren't signing or encrypting, this just returns a single empty message
-  if( m_neverEncrypt && mSaveIn == MessageSender::SaveInNone ) {
+  if( m_neverEncrypt && mSaveIn != MessageSender::SaveInNone ) {
     Message::Composer* composer = new Message::Composer;
     composer->setNoCrypto( true );
     m_composers.append( composer );
@@ -360,10 +355,10 @@ void Message::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
   if( m_composers.isEmpty() ) {
     // TODO i18n after string freeze!
-    emit failed( QLatin1String( "" ) );
+    emit failed( i18n( "It was not possible to create a message composer." ) );
     return;
   }
-  
+
   // Compose each message and prepare it for queueing, sending, or storing
   foreach( Message::Composer* composer, m_composers ) {
     fillGlobalPart( composer->globalPart() );
@@ -457,7 +452,7 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
   if ( keyResolver->resolveAllKeys( signSomething, encryptSomething ) != Kpgp::Ok ) {
     /// TODO handle failure
     kDebug() << "failed to resolve keys! oh noes";
-    // add when i18n freeze is over emit failed( QLatin1String( "Failed to resolve keys. Please report a bug." );
+    emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
     return composers;
   }
   kDebug() << "done resolving keys:";
@@ -500,7 +495,8 @@ QList< Message::Composer* > Message::ComposerViewBase::generateCryptoMessages ()
     Kleo::CryptoMessageFormat concreteSignFormat = Kleo::AutoFormat;
 
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-
+      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
+        continue;
       if ( !(concreteCryptoMessageFormats[i] & m_cryptoMessageFormat) )
         continue;
 
@@ -548,9 +544,9 @@ void Message::ComposerViewBase::fillInfoPart ( Message::InfoPart* infoPart, Mess
     infoPart->setBcc( mExpandedBcc );
   } else {
     infoPart->setFrom( from() );
-    infoPart->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
-    infoPart->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
-    infoPart->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
+    infoPart->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
+    infoPart->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
+    infoPart->setBcc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Bcc ) );
   }
   infoPart->setSubject( subject() );
   infoPart->setUserAgent( QLatin1String( "KMail" ) );
@@ -596,17 +592,16 @@ void Message::ComposerViewBase::slotSendComposeResult( KJob* job )
     // The job warned the user about something, and the user chose to return
     // to the message.  Nothing to do.
     kDebug() << "UserCancelledError.";
-    emit failed( QLatin1String( "" ) /* TODO string after freeze */ );
+    emit failed( i18n( "Job cancelled by the user" ) );
   } else {
     kDebug() << "other Error.";
     QString msg;
     if( composer->error() == Message::Composer::BugError ) {
-      msg = i18n( "Error composing message:\n\n%1\n\nPlease report this bug.", job->errorString() );
+      msg = i18n( "Could not compose message: %1 \n Please report this bug.", job->errorString() );
     } else {
-      msg = i18n( "Error composing message:\n\n%1", job->errorString() );
+      msg = i18n( "Could not compose message: %1", job->errorString() );
     }
-    KMessageBox::sorry( m_parentWidget, msg, i18n( "Composer" ) );
-    emit failed( QLatin1String( "" ) /* TODO string after freeze */ );
+    emit failed( msg );
   }
 
   m_composers.removeAll( composer );
@@ -662,46 +657,30 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
     // There is not much we can do now, since all the MessageQueueJobs have been
     // started.  So just wait for them to finish.
     // TODO show a message box or something
-    KMessageBox::sorry( m_parentWidget,
-                        QString( QLatin1String( "<qt><p>%1</p><br />%2</qt>" ) ).arg( i18n("There was an error trying to queue the "
-                                                                            "message for sending. The error was:" ) )
-                                                               .arg( job->errorString() ),
-                       i18n("Error Queueing Message") );
+    QString msg = i18n( "There were problems trying to queue the message for sending: %1",
+                        job->errorString() );
+
     if( m_pendingQueueJobs == 0 )
-      emit failed( QLatin1String( "" ) );
+        emit failed( msg );
   }
 
   if( m_pendingQueueJobs == 0 ) {
-    emit sentSuccessfully();
+      emit sentSuccessfully();
   }
 }
 
 void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart )
 {
   qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
-
-  if( m_editor && !infoPart->bcc().isEmpty() ) // have to deal with multiple message contents
-  {
-    // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
-    //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
-    if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
-      KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
-      qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
-      message->removeHeader( "X-KMail-EncBccRecipients" );
-      message->assemble();
-      kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
-    } else {
-      // this shouldn't happen, but guard against it just in case so the mail still gets sent.
-      //  ComposerViewBase should set the intended recipient for mails with secondary recipients.
-      qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
-      qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
-
-      kDebug() << "sending with-bcc encrypted mail to orig recipients:" << qjob->addressAttribute().to() <<  qjob->addressAttribute().cc();
-
-    }
+  // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
+  //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
+  if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
+    KMime::Headers::Base* realTo = message->headerByType( "X-KMail-EncBccRecipients" );
+    qjob->addressAttribute().setTo( cleanEmailList( realTo->asUnicodeString().split( QLatin1String( "%" ) ) ) );
+    message->removeHeader( "X-KMail-EncBccRecipients" );
+    message->assemble();
+    kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
   } else {
-    // continue as normal
-    kDebug() << "no bccs";
     qjob->addressAttribute().setTo( cleanEmailList( infoPart->to() ) );
     qjob->addressAttribute().setCc( cleanEmailList( infoPart->cc() ) );
     qjob->addressAttribute().setBcc( cleanEmailList( infoPart->bcc() ) );
@@ -784,6 +763,7 @@ void Message::ComposerViewBase::autoSaveMessage()
   }
 
   Message::Composer * const composer = createSimpleComposer();
+  composer->setAutoSave( true );
   m_composers.append( composer );
   connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotAutoSaveComposeResult(KJob*)) );
   composer->start();
@@ -877,9 +857,8 @@ void Message::ComposerViewBase::saveMessage( KMime::Message::Ptr message, Messag
   }
 
   if ( !target.isValid() ) {
-    // TODO: Show an error message to the user
     kWarning() << "No default collection for" << saveIn;
-    emit failed( QLatin1String( "" ) /* TODO error string after freeze" */ );
+    emit failed( i18n( "No default collection for %1", saveIn ) );
 //     setEnabled( true );
     return;
   }
@@ -904,9 +883,8 @@ void Message::ComposerViewBase::slotCreateItemResult( KJob *job )
   Q_ASSERT( m_pendingQueueJobs >= 0 );
 
   if( job->error() ) {
-    // TODO: Show an error message to the user
     kWarning() << "Failed to save a message:" << job->errorString();
-    emit failed( QLatin1String( "" ) /* TODO error string after freeze" */ );
+    emit failed( i18n( "Failed to save the message: %1", job->errorString() ) );
     return;
   }
 
@@ -944,13 +922,23 @@ void Message::ComposerViewBase::addAttachmentPart ( KMime::Content* partToAttach
     // if it is a digest or a full message, use the encodedContent() of the attachment,
     // which already has the proper headers
     part->setData( partToAttach->encodedContent() );
-    part->setMimeType( partToAttach->contentType()->mimeType() );
-    part->setName( partToAttach->contentDisposition()->parameter( QLatin1String("name") ) );
   } else {
-    part->setName( partToAttach->contentDescription()->asUnicodeString() );
-    part->setFileName( partToAttach->contentDisposition()->filename() );
-    part->setMimeType( partToAttach->contentType()->mimeType() );
     part->setData( partToAttach->decodedContent() );
+  }
+  part->setMimeType( partToAttach->contentType()->mimeType() );
+  if ( partToAttach->contentDescription( false ) ) {
+    part->setDescription( partToAttach->contentDescription()->asUnicodeString() );
+  }
+  if ( partToAttach->contentDisposition( false ) ) {
+    part->setFileName( partToAttach->contentDisposition()->filename() );
+    part->setName( partToAttach->contentType()->parameter( QLatin1String( "name" ) ) );
+    part->setInline( partToAttach->contentDisposition()->disposition() == KMime::Headers::CDinline );
+    if ( part->name().isEmpty() && !part->fileName().isEmpty() ) {
+      part->setName( part->fileName() );
+    }
+    if ( part->fileName().isEmpty() && !part->name().isEmpty() ) {
+      part->setFileName( part->name() );
+    }
   }
   m_attachmentController->addAttachment( part );
 }
@@ -977,19 +965,19 @@ static QString cleanedUpHeaderString( const QString &s )
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::to() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( Recipient::To ) );
+  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::To ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::cc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( Recipient::Cc ) );
+  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Cc ) );
 }
 
 //-----------------------------------------------------------------------------
 QString Message::ComposerViewBase::bcc() const
 {
-  return cleanedUpHeaderString( m_recipientsEditor->recipientString( Recipient::Bcc ) );
+  return cleanedUpHeaderString( m_recipientsEditor->recipientString( MessageComposer::Recipient::Bcc ) );
 }
 
 QString Message::ComposerViewBase::from() const
@@ -1065,8 +1053,8 @@ KPIMIdentities::IdentityCombo* Message::ComposerViewBase::identityCombo()
 void Message::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent )
 {
   if ( oldIdent.bcc() != ident.bcc() ) {
-    m_recipientsEditor->removeRecipient( oldIdent.bcc(), Recipient::Bcc );
-    m_recipientsEditor->addRecipient( ident.bcc(), Recipient::Bcc );
+    m_recipientsEditor->removeRecipient( oldIdent.bcc(), MessageComposer::Recipient::Bcc );
+    m_recipientsEditor->addRecipient( ident.bcc(), MessageComposer::Recipient::Bcc );
     m_recipientsEditor->setFocusBottom();
   }
 

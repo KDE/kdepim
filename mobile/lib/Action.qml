@@ -27,7 +27,13 @@ Rectangle {
   id : _topContext
   property variant action
   property int hardcoded_height : 70
-  property bool hidden : !action.enabled
+  property bool hidable : true
+  property bool hidden : hidable && !action.enabled
+  property bool checkable : false
+  property alias showText : buttonText.visible
+  property alias image : image.source
+  property alias imageWidth : image.width
+  property alias imageHeight : image.height
 
   signal triggered()
 
@@ -43,11 +49,14 @@ Rectangle {
     value : { action.text.replace("&", ""); }
   }
 
-  height : action.enabled ? hardcoded_height : 0
-  visible : action.enabled
+  height : (!hidable || action.enabled) ? hardcoded_height : 0
+  visible : (!hidable || action.enabled)
   Connections {
     target : action
     onChanged : {
+      border.width = action.checked ? 2 : 0
+      if (!hidable)
+        return;
       parent.height = action.enabled ? hardcoded_height : 0;
       _topContext.visible = action.enabled
     }
@@ -71,10 +80,16 @@ Rectangle {
   MouseArea {
     anchors.fill : parent
     onPressed : {
-      border.color = "lightblue";
       border.width = 2
     }
-    onReleased : border.width = 0
-    onClicked : { action.trigger(); triggered(); }
+    onReleased : {
+      border.width = 0
+    }
+    onClicked : {
+      triggered(); action.trigger();
+    }
   }
+
+  border.color : "lightblue"
+  border.width : action.checked ? 2 : 0
 }

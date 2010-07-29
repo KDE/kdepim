@@ -166,6 +166,7 @@ class KDEPIM_EXPORT KDescendantsProxyModel : public QAbstractProxyModel
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
     QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     virtual QMimeData* mimeData( const QModelIndexList & indexes ) const;
     virtual QStringList mimeTypes() const;
@@ -200,6 +201,10 @@ private:
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutAboutToBeChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceDataChanged(const QModelIndex &, const QModelIndex &))
+  Q_PRIVATE_SLOT(d_func(), void sourceModelDestroyed())
+
+  Q_PRIVATE_SLOT(d_func(), void processPendingParents())
+
 
   // Make these private, they shouldn't be called by applications
 //   virtual bool insertRows(int , int, const QModelIndex & = QModelIndex());

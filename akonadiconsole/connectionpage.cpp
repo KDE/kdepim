@@ -76,6 +76,11 @@ void ConnectionPage::showAllConnections( bool show )
   mShowAllConnections = show;
 }
 
+QString ConnectionPage::toHtml() const
+{
+  return mDataView->toHtml();
+}
+
 void ConnectionPage::clear()
 {
   mDataView->clear();

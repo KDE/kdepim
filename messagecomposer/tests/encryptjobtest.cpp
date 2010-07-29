@@ -42,6 +42,7 @@
 #include <messageviewer/objecttreeparser.h>
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/nodehelper.h>
+#include <messagecore/tests/util.h>
 
 #include <stdlib.h>
 #include <KCharsets>
@@ -68,7 +69,7 @@ void EncryptJobTest::testContentDirect() {
 
   mainTextJob->exec();
 
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
   Message::EncryptJob* eJob = new Message::EncryptJob( composer );
 
@@ -106,7 +107,7 @@ void EncryptJobTest::testContentChained()
 
   mainTextJob->exec();  
   
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
   kDebug() << "done getting keys";
   Message::EncryptJob* eJob = new Message::EncryptJob( composer );
 
@@ -126,7 +127,7 @@ void EncryptJobTest::testContentChained()
 
 void EncryptJobTest::testHeaders()
 {
-   std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::EncryptJob* eJob = new Message::EncryptJob( composer );

@@ -1,20 +1,21 @@
 /*
-    Copyright (C) 2010  Bertjan Broeksema b.broeksema@home.nl
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
 */
 
 #ifndef INCIDENCEEDITOR_NG_H
@@ -26,6 +27,8 @@
 
 #include <KCal/Incidence>
 
+#include "incidenceeditors-ng_export.h"
+
 namespace IncidenceEditorsNG {
 
 /**
@@ -34,7 +37,7 @@ namespace IncidenceEditorsNG {
  * approach to this complexity. An IncidenceEditor is an editor for a specific
  * part(s) of an Incidence.
  */
-class IncidenceEditor : public QWidget
+class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 {
   Q_OBJECT
   public:
@@ -52,7 +55,7 @@ class IncidenceEditor : public QWidget
     virtual void save( KCal::Incidence::Ptr incidence ) = 0;
 
     /**
-     * Returns wether or not the current values in the editor differ from the
+     * Returns whether or not the current values in the editor differ from the
      * initial values.
      */
     virtual bool isDirty() const = 0;
@@ -64,9 +67,21 @@ class IncidenceEditor : public QWidget
      */
     virtual bool isValid();
 
+    /**
+     * Returns a string representation of the Inicdince that is currently loaded.
+     */
+    QString type();
+
+    /** Convenience method to get a pointer for a specific const Incidence Type. */
+    template <typename IncidenceT>
+    boost::shared_ptr<const IncidenceT> incidence() const
+    {
+      return  boost::dynamic_pointer_cast<const IncidenceT>( mLoadedIncidence );
+    }
+
   signals:
     /**
-     * Signals wether the dirty status of this editor has changed. The new dirty
+     * Signals whether the dirty status of this editor has changed. The new dirty
      * status is passed as argument.
      */
     void dirtyStatusChanged( bool isDirty );
@@ -80,13 +95,18 @@ class IncidenceEditor : public QWidget
     
   protected:
     /** Only subclasses can instantiate IncidenceEditors */
-    IncidenceEditor( QWidget *parent = 0 );
+    IncidenceEditor( QObject *parent = 0 );
 
-    /** Convenience method to get a pointer for a specific const Incidence Type. */
     template <typename IncidenceT>
-    boost::shared_ptr<const IncidenceT> incidence() const
+    boost::shared_ptr<IncidenceT> incidence( KCal::Incidence::Ptr inc )
     {
-      return  boost::dynamic_pointer_cast<const IncidenceT>( mLoadedIncidence );
+      return  boost::dynamic_pointer_cast<IncidenceT>( inc );
+    }
+
+    template <typename IncidenceT>
+    boost::shared_ptr<const IncidenceT> incidence( KCal::Incidence::ConstPtr inc )
+    {
+      return  boost::dynamic_pointer_cast<const IncidenceT>( inc );
     }
 
   protected:

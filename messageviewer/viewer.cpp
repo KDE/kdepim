@@ -60,6 +60,8 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
   connect( d_ptr, SIGNAL( showMessage(KMime::Message::Ptr, const QString& )), this, SIGNAL( showMessage(KMime::Message::Ptr, const QString&)) );
   connect( d_ptr, SIGNAL( showStatusBarMessage( const QString & ) ),
            this, SIGNAL( showStatusBarMessage( const QString & ) ) );
+  connect( d_ptr, SIGNAL( itemRemoved() ),
+           this, SIGNAL( itemRemoved() ) );
 
   setMessage( KMime::Message::Ptr(), Delayed );
 }

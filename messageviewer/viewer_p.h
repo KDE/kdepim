@@ -32,12 +32,12 @@
 
 #include <kmime/kmime_message.h>
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include <kio/job.h>
 
-using KPIM::MessageStatus;
+using Akonadi::MessageStatus;
 namespace GpgME { class Error; }
 namespace KIO { class Job; }
 
@@ -426,7 +426,7 @@ public:
   bool showRawToltecMail() const { return mShowRawToltecMail; }
   void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
 
-  void scrollToAttachment( const KMime::Content *node );
+  void scrollToAttachment( KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
 
   void attachmentView( KMime::Content *atmNode );
@@ -457,6 +457,7 @@ private slots:
   void itemFetchResult( KJob *job );
 
   void slotItemChanged( const Akonadi::Item& item, const QSet<QByteArray>& partIdentifiers );
+  void slotItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& );
 
   void itemModifiedResult( KJob* job );
 
@@ -496,6 +497,7 @@ public slots:
   void slotSmartAttachments();
   void slotInlineAttachments();
   void slotHideAttachments();
+  void slotHeaderOnlyAttachments();
 
   /** Some attachment operations. */
   void slotDelayedResize();
@@ -557,6 +559,7 @@ signals:
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
+  void itemRemoved();
 
 public:
   NodeHelper* mNodeHelper;
@@ -597,6 +600,7 @@ public:
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
       *mViewSourceAction, *mSaveMessageAction;
+  KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KSelectAction *mSelectThemeAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;

@@ -20,31 +20,61 @@
 #ifndef MESSAGEVIEWER_MESSAGEVIEWITEM_H
 #define MESSAGEVIEWER_MESSAGEVIEWITEM_H
 
+#include <QtCore/QAbstractItemModel>
+
+#include <akonadi/kcal/incidenceviewer.h>
 #include <mobile/lib/declarativeakonadiitem.h>
-#include <QAbstractItemModel>
 
 namespace Akonadi {
-class IncidenceViewer;
+
+class Item;
 
 namespace KCal {
+
+/**
+ * @short A wrapper class to make the 'removed' signal available.
+ */
+class ExtendedIncidenceViewer : public IncidenceViewer
+{
+  Q_OBJECT
+
+  public:
+    ExtendedIncidenceViewer( QWidget *parent = 0 );
+
+  Q_SIGNALS:
+    void incidenceRemoved();
+
+  private:
+    virtual void itemRemoved();
+};
 
 class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
   Q_PROPERTY( QObject* attachmentModel READ attachmentModel NOTIFY attachmentModelChanged )
+  Q_PROPERTY( QDate activeDate WRITE setActiveDate READ activeDate )
   public:
     explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
 
-    qint64 itemId() const;
-    void setItemId(qint64 id);
+    virtual Akonadi::Item item() const;
+    virtual qint64 itemId() const;
+    virtual void setItemId(qint64 id);
+
+    /**
+     * Sets the active date for the incidence. The active date is used for
+     * incideces that have recurrence.
+     */
+    QDate activeDate() const;
+    void setActiveDate( const QDate &date );
 
     QObject *attachmentModel() const;
 
-  signals:
+  Q_SIGNALS:
     void attachmentModelChanged();
+    void incidenceRemoved();
 
   private:
-    IncidenceViewer *m_viewer;
+    ExtendedIncidenceViewer *m_viewer;
 };
 
 }

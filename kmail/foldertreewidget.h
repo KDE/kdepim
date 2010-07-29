@@ -51,12 +51,13 @@ public:
     None = 0,
     ShowUnreadCount = 1,
     UseLineEditForFiltering = 2,
-    UseDistinctSelectionModel = 4
+    UseDistinctSelectionModel = 4,
+    ShowCollectionStatisticAnimation = 8
   };
   Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
 
   FolderTreeWidget( QWidget *parent = 0, KXMLGUIClient *xmlGuiClient = 0,
-                    TreeViewOptions option = ShowUnreadCount,
+                    TreeViewOptions option = (TreeViewOptions) (ShowUnreadCount|ShowCollectionStatisticAnimation),
                     ReadableCollectionProxyModel::ReadableCollectionOptions optReadableProxy = ReadableCollectionProxyModel::None );
   ~FolderTreeWidget();
 
@@ -95,19 +96,20 @@ public:
 
   Akonadi::Collection::List selectedCollections() const;
 
-  FolderTreeView *folderTreeView();
+  FolderTreeView *folderTreeView() const;
 
-  Akonadi::StatisticsProxyModel * statisticsProxyModel();
+  Akonadi::StatisticsProxyModel * statisticsProxyModel() const;
 
-  ReadableCollectionProxyModel *readableCollectionProxyModel();
+  ReadableCollectionProxyModel *readableCollectionProxyModel() const;
 
-  EntityCollectionOrderProxyModel *entityOrderProxy();
+  EntityCollectionOrderProxyModel *entityOrderProxy() const;
 
   void quotaWarningParameters( const QColor &color, qreal threshold );
   void readQuotaConfig();
 
-  KLineEdit *filterFolderLineEdit();
+  KLineEdit *filterFolderLineEdit() const;
   void applyFilter( const QString& );
+  void clearFilter();
 
   void disableContextMenuAndExtraColumn();
 
@@ -121,8 +123,10 @@ protected slots:
   void slotManualSortingChanged( bool );
 
 private:
+  virtual bool eventFilter( QObject*o, QEvent *e );
   class FolderTreeWidgetPrivate;
   FolderTreeWidgetPrivate * const d;
+
 };
 
 #endif

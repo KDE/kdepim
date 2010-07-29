@@ -59,9 +59,7 @@ void Item::childItemStats( ChildItemStats &stats ) const
   stats.mTotalChildCount += d->mChildItems->count();
   for( QList< Item * >::Iterator it = d->mChildItems->begin(); it != d->mChildItems->end(); ++it )
   {
-    if ( ( *it )->status().isNew() )
-      stats.mNewChildCount++;
-    else if ( ( *it )->status().isUnread() )
+    if ( ( *it )->status().isUnread() )
       stats.mUnreadChildCount++;
     if ( ( *it )->d->mChildItems )
       ( *it )->childItemStats( stats );
@@ -226,9 +224,7 @@ static inline void append_string( QString &buffer, const QString &append )
 QString Item::statusDescription() const
 {
   QString ret;
-  if( status().isNew() )
-    append_string( ret, i18nc( "Status of an item", "New" ) );
-  else if( status().isUnread() )
+  if( status().isUnread() )
     append_string( ret, i18nc( "Status of an item", "Unread" ) );
   else
     append_string( ret, i18nc( "Status of an item", "Read" ) );
@@ -423,12 +419,12 @@ void Item::setParent( Item *pParent )
   d->mParent = pParent;
 }
 
-const KPIM::MessageStatus &Item::status() const
+const Akonadi::MessageStatus &Item::status() const
 {
   return d->mStatus;
 }
 
-void Item::setStatus( const KPIM::MessageStatus &status )
+void Item::setStatus( const Akonadi::MessageStatus &status )
 {
   d->mStatus = status;
 }
@@ -520,7 +516,7 @@ void MessageList::Core::Item::initialSetup( time_t date, size_t size,
 }
 
 void MessageList::Core::Item::setSubjectAndStatus(const QString &subject,
-                                                  const KPIM::MessageStatus &status)
+                                                  const Akonadi::MessageStatus &status)
 {
   d->mSubject = subject;
   d->mStatus = status;

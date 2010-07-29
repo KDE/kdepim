@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,10 +18,9 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
-import org.kde 4.5
+import Qt 4.7 as QML
 
-Item {
+QML.Item {
   property alias model: itemListView.model
   property alias currentIndex: itemListView.currentIndex
   property int currentItemId: -1
@@ -48,13 +47,11 @@ Item {
     }
   }
 
-  ListView {
+  QML.ListView {
     id: itemListView
     anchors.fill: parent
     highlightFollowsCurrentItem: true
-    highlightRangeMode: "StrictlyEnforceRange"
-    preferredHighlightBegin: height/2 - currentItem.height/2
-    preferredHighlightEnd: height/2 + currentItem.height/2
+    highlightRangeMode: "ApplyRange"
     focus: true
     clip: true
   }

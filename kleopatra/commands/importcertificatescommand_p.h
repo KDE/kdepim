@@ -63,6 +63,7 @@ public:
     void startImport( GpgME::Protocol proto, const QByteArray & data, const QString & id=QString() );
     void startImport( GpgME::Protocol proto, const std::vector<GpgME::Key> & keys, const QString & id=QString() );
     void importResult( const GpgME::ImportResult & );
+    void importResult( const GpgME::ImportResult &, const QString & );
 
     void showError( QWidget * parent, const GpgME::Error & error, const QString & id=QString() );
     void showError( const GpgME::Error & error, const QString & id=QString() );
@@ -74,7 +75,6 @@ public:
 
 private:
     void tryToFinish();
-    void importResult( const GpgME::ImportResult &, const QString & );
 
 private:
     bool waitForMoreJobs;

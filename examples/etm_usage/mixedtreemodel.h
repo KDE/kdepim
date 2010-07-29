@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #ifndef MIXEDTREEMODEL_H
 #define MIXEDTREEMODEL_H
 

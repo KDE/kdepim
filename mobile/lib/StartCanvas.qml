@@ -28,6 +28,7 @@ Item {
   property alias startText: startText.text
   property alias contextActions: contextContainer.children
   property alias favoritesModel : favsView.model
+  property alias showAccountsList : accountsList.visible
 
   signal accountSelected( int row )
   signal favoriteSelected( string favName )
@@ -50,7 +51,7 @@ Item {
       width : ListView.view.width
       onIndexSelected : {
         console.log("favorite clicked: " + model.display );
-        favoriteSelected(model.display); 
+        favoriteSelected(model.display);
       }
     }
   }
@@ -61,7 +62,7 @@ Item {
     spacing: 10
 
     Column {
-      width: parent.width / 3
+      width: accountsList.visible ? (parent.width) : 0
       height: parent.height
       spacing: 5
 
@@ -69,7 +70,6 @@ Item {
         width: parent.width
         id: startText
         font {
-          bold: true
           pointSize: 14
         }
       }
@@ -85,7 +85,7 @@ Item {
     }
 
     Column {
-      width: parent.width / 3 * 2
+      width: parent.width
       height: parent.height
       spacing: 5
 
@@ -95,24 +95,10 @@ Item {
         width: parent.width
       }
 
-      Rectangle {
-        color: "gray"
-        width: parent.width
-        height: 2
-      }
-
-      Text {
-        id: favoritesText
-        width: parent.width
-        height: 14
-        text: KDE.i18n( "Favorites:" )
-        font.bold: true
-      }
-
       ListView {
         id : favsView
         width: parent.width
-        height: parent.height - contextContainer.height - favoritesText.height - 2 - 4 * 5
+        height: parent.height - contextContainer.height - 2 - 4 * 5
         delegate : favDelegate
         clip: true
       }

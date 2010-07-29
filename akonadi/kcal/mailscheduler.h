@@ -27,11 +27,10 @@
 #include "akonadi-kcal_next_export.h"
 
 #include <QMap>
+#include <KCal/Incidence>
 #include <KCal/Scheduler>
 
 namespace KCal {
-  class IncidenceBase;
-  class Incidence;
   class ICalFormat;
   class ScheduleMessage;
 }
@@ -50,6 +49,8 @@ namespace Akonadi {
       virtual ~MailScheduler();
 
       bool publish ( KCal::IncidenceBase *incidence, const QString &recipients );
+
+      bool performTransaction( const KCal::Incidence::Ptr &incidence, KCal::iTIPMethod method );
 
       bool performTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method );
       bool performTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method, const QString &recipients );

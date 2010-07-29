@@ -3,7 +3,7 @@
 
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Mike McQuaid <mike@mikemcquaid.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -303,7 +303,7 @@ void JournalView::readJournal( const Item &j )
     mBrowser->insertPlainText( description );
   }
 
-  mEditButton->setEnabled( Akonadi::hasChangeRights( j ) );
-  mDeleteButton->setEnabled( Akonadi::hasDeleteRights( j ) );
+  mEditButton->setEnabled( mCalendar->hasChangeRights( j ) );
+  mDeleteButton->setEnabled( mCalendar->hasDeleteRights( j ) );
 
 }

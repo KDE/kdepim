@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -22,7 +22,7 @@
 #include <KDE/KGlobal>
 #include <KDE/KSharedConfig>
 
-#include <akonadi_next/etmstatesaver.h>
+#include <akonadi/etmviewstatesaver.h>
 
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   : mChangeRecorder( 0 )
@@ -31,7 +31,7 @@ KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
 
 void KDeclarativeMainViewPrivate::restoreState()
 {
-  ETMStateSaver *saver = new ETMStateSaver;
+  Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
   saver->setSelectionModel( mBnf->selectionModel() );
   KConfigGroup cfg( KGlobal::config(), "SelectionState" );
   saver->restoreState( cfg );
@@ -39,7 +39,7 @@ void KDeclarativeMainViewPrivate::restoreState()
 
 void KDeclarativeMainViewPrivate::saveState()
 {
-  ETMStateSaver saver;
+  Akonadi::ETMViewStateSaver saver;
   saver.setSelectionModel( mBnf->selectionModel() );
 
   KConfigGroup cfg( KGlobal::config(), "SelectionState" );

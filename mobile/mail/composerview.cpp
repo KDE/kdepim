@@ -18,15 +18,17 @@
 */
 
 #include "composerview.h"
+#include "composerautoresizer.h"
 
-#include "declarativeeditor.h"
+#include "global.h"
+#include "declarativewidgetbase.h"
 #include "declarativeidentitycombobox.h"
-#include "declarativerecipientseditor.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identitymanager.h>
 #include <mailtransport/messagequeuejob.h>
+#include <mailtransport/transportcombobox.h>
 #include <mailtransport/transportmanager.h>
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/objecttreeparser.h>
@@ -38,6 +40,11 @@
 #include <messagecomposer/textpart.h>
 #include <messagecomposer/emailaddressresolvejob.h>
 #include <messagecomposer/attachmentcontrollerbase.h>
+#include <messagecomposer/attachmentmodel.h>
+#include <messagecomposer/keyresolver.h>
+#include <messagecomposer/kleo_util.h>
+#include <messagecomposer/recipientseditor.h>
+#include <akonadi/collectioncombobox.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>
@@ -45,20 +52,26 @@
 #include <KAction>
 #include <KMessageBox>
 #include <KCMultiDialog>
+#include <KFileDialog>
+#include <KNotification>
 
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
-#include <KFileDialog>
-#include <messagecomposer/attachmentmodel.h>
+
+typedef DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor> DeclarativeEditor;
+typedef DeclarativeWidgetBase<MessageComposer::RecipientsEditor, ComposerView, &ComposerView::setRecipientsEditor> DeclarativeRecipientsEditor;
 
 QML_DECLARE_TYPE( DeclarativeEditor )
 QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
+QML_DECLARE_TYPE( DeclarativeRecipientsEditor )
 
 ComposerView::ComposerView(QWidget* parent) :
   KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent ),
-  m_identityCombo( 0 ),
-  m_editor( 0 ),
-  m_attachmentController( 0 )
+  m_composerBase( 0 ),
+  m_jobCount( 0 ),
+  m_sign( false ),
+  m_encrypt( false ),
+  m_busy(false)
 {
   setSubject( QString() );
 
@@ -67,8 +80,7 @@ ComposerView::ComposerView(QWidget* parent) :
   qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
 
   // TODO: Really make this application-global;
-  mActionCollection = new KActionCollection( this );
-  KAction *action = mActionCollection->addAction( "add_attachment" );
+  KAction *action = actionCollection()->addAction( "add_attachment" );
   action->setText( i18n( "Add Attachment" ) );
   action->setIcon( KIcon( "list-add" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(addAttachment()));
@@ -76,10 +88,57 @@ ComposerView::ComposerView(QWidget* parent) :
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
 
-  m_attachmentModel = new Message::AttachmentModel(this);
-  engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( m_attachmentModel ) ) );
-  m_attachmentController = new Message::AttachmentControllerBase(m_attachmentModel, this, mActionCollection);
 
+  // ### TODO: make this happens later to show the composer as fast as possible
+  m_composerBase = new Message::ComposerViewBase( this );
+  m_composerBase->setIdentityManager( Global::identityManager() );
+
+  // Temporarily only in c++, use from QML when ready.
+  MailTransport::TransportComboBox* transportCombo = new  MailTransport::TransportComboBox( this );
+  transportCombo->hide();
+  m_composerBase->setTransportCombo( transportCombo );
+
+  /*
+  Akonadi::CollectionComboBox* fcc = new Akonadi::CollectionComboBox( this );
+  fcc->setMimeTypeFilter( QStringList()<< "message/rfc822" );
+  fcc->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  fcc->setToolTip( i18n( "Select the sent-mail folder where a copy of this message will be saved" ) );
+  fcc->hide();
+  m_composerBase->setFccCombo( fcc );
+  */
+  /*
+  connect( m_composerBase, SIGNAL( disableHtml( Message::ComposerViewBase::Confirmation ) ),
+           this, SLOT( disableHtml( Message::ComposerViewBase::Confirmation ) ) );
+
+  connect( m_composerBase, SIGNAL( enableHtml() ),
+  this, SLOT( enableHtml() ) ); */
+
+  connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( slotSendSuccessful() ) );
+  connect( m_composerBase, SIGNAL( failed(const QString&) ), this, SLOT( failed(const QString&) ) );
+  connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( success() ) );
+
+  Message::AttachmentModel* attachmentModel = new Message::AttachmentModel(this);
+  engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( attachmentModel ) ) );
+  Message::AttachmentControllerBase* attachmentController = new Message::AttachmentControllerBase(attachmentModel, this, actionCollection());
+  m_composerBase->setAttachmentModel( attachmentModel );
+  m_composerBase->setAttachmentController( attachmentController );
+
+  action = actionCollection()->addAction("sign_email");
+  action->setText( i18n( "Sign" ) );
+  action->setIcon( KIcon( "document-sign" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(signEmail(bool)));
+
+  action = actionCollection()->addAction("encrypt_email");
+  action->setText( i18n( "Encrypt" ) );
+  action->setIcon( KIcon( "mail-encrypt" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(encryptEmail(bool)));
+
+  action = actionCollection()->addAction("save_in_drafts");
+  action->setText( i18n( "Save as Draft" ) );
+  action->setIcon( KIcon( "document-save" ) );
+  connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -87,145 +146,60 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   if ( status != QDeclarativeView::Ready )
     return;
 
-  Q_ASSERT( m_identityCombo );
-  Q_ASSERT( m_editor );
-  Q_ASSERT( m_recipientsEditor );
+  Q_ASSERT( m_composerBase );
+  Q_ASSERT( m_composerBase->editor() );
+  Q_ASSERT( m_composerBase->identityCombo()  );
+  Q_ASSERT( m_composerBase->recipientsEditor()  );
+  Q_ASSERT( m_composerBase->transportComboBox()  );
 
-  kDebug() << m_identityCombo;
-  kDebug() << m_editor;
+//   kDebug() << m_identityCombo;
+//   kDebug() << m_editor;
 
   Message::SignatureController *signatureController = new Message::SignatureController( this );
-  signatureController->setEditor( m_editor );
-  signatureController->setIdentityCombo( m_identityCombo );
+  signatureController->setEditor( m_composerBase->editor() );
+  signatureController->setIdentityCombo( m_composerBase->identityCombo() );
   signatureController->applyCurrentSignature();
+  m_composerBase->setSignatureController( signatureController );
+
+  m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
 
   if ( m_message )
-    setMessageInternal( m_message );
+    setMessage( m_message );
 }
 
 void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 {
   m_message = msg;
-  foreach(KPIM::AttachmentPart::Ptr attachment, m_attachmentModel->attachments())
-    m_attachmentModel->removeAttachment(attachment);
-
-  foreach(KMime::Content *attachment, msg->attachments())
-  {
-    KPIM::AttachmentPart::Ptr part( new KPIM::AttachmentPart );
-    if( attachment->contentType()->mimeType() == "multipart/digest" ||
-        attachment->contentType()->mimeType() == "message/rfc822" ) {
-      // if it is a digest or a full message, use the encodedContent() of the attachment,
-      // which already has the proper headers
-      part->setData( attachment->encodedContent() );
-      part->setMimeType( attachment->contentType()->mimeType() );
-      part->setName( attachment->contentDisposition()->parameter( QLatin1String("name") ) );
-    } else {
-      part->setName( attachment->contentDescription()->asUnicodeString() );
-      part->setFileName( attachment->contentDisposition()->filename() );
-      part->setMimeType( attachment->contentType()->mimeType() );
-      part->setData( attachment->decodedContent() );
-    }
-    m_attachmentController->addAttachment( part );
-    m_attachmentModel->addAttachment(part);
-  }
-
-  if ( status() == QDeclarativeView::Ready )
-    setMessageInternal( msg );
-}
-
-void ComposerView::setMessageInternal(const KMime::Message::Ptr& msg)
-{
-  // ### duplication with KMComposeWin
+  if ( status() != QDeclarativeView::Ready )
+    return;
 
   m_subject = msg->subject()->asUnicodeString();
-
-  m_recipientsEditor->setRecipientString( msg->to()->mailboxes(), Recipient::To );
-  m_recipientsEditor->setRecipientString( msg->cc()->mailboxes(), Recipient::Cc );
-  m_recipientsEditor->setRecipientString( msg->bcc()->mailboxes(), Recipient::Bcc );
-
-  // First, we copy the message and then parse it to the object tree parser.
-  // The otp gets the message text out of it, in textualContent(), and also decrypts
-  // the message if necessary.
-  KMime::Content *msgContent = new KMime::Content;
-  msgContent->setContent( msg->encodedContent() );
-  msgContent->parse();
-  MessageViewer::EmptySource emptySource;
-  MessageViewer::ObjectTreeParser otp( &emptySource );//All default are ok
-  otp.parseObjectTree( msgContent );
-
-  // Set the editor text and charset
-  m_editor->setText( otp.textualContent() );
-
+  m_composerBase->setMessage( msg );
   emit changed();
 }
 
-
-void ComposerView::send()
+void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
 {
   kDebug();
-  expandAddresses();
-}
 
-void ComposerView::expandAddresses()
-{
-  // TODO share this with kmcomposewin.cpp
-  MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
-  job->setFrom( "volker@kdab.com" ); // TODO: retrieve from identity
-  job->setTo( m_recipientsEditor->recipientStringList( Recipient::To ) );
-  job->setCc( m_recipientsEditor->recipientStringList( Recipient::Cc ) );
-  job->setBcc( m_recipientsEditor->recipientStringList( Recipient::Bcc ) );
-  connect( job, SIGNAL(result(KJob*)), SLOT(addressExpansionResult(KJob*)) );
-  job->start();
-}
-
-void ComposerView::addressExpansionResult(KJob* job)
-{
-  if ( job->error() ) {
-    kDebug() << job->error() << job->errorText();
+  if ( !m_composerBase->editor()->checkExternalEditorFinished() )
     return;
-  }
 
-  const MessageComposer::EmailAddressResolveJob *resolveJob = qobject_cast<MessageComposer::EmailAddressResolveJob*>( job );
+  setBusy(true);
 
-  // ### temporary, more code can be shared with kmail here
-  Message::Composer* composer = new Message::Composer( this );
-  composer->globalPart()->setCharsets( QList<QByteArray>() << "utf-8" );
-  composer->globalPart()->setParentWidgetForGui( this );
-  composer->infoPart()->setSubject( subject() );
-  composer->infoPart()->setTo( resolveJob->expandedTo() );
-  composer->infoPart()->setCc( resolveJob->expandedCc() );
-  composer->infoPart()->setBcc( resolveJob->expandedBcc() );
-  composer->infoPart()->setFrom( resolveJob->expandedFrom() );
-  composer->infoPart()->setUserAgent( "KMail Mobile" );
-  m_editor->fillComposerTextPart( composer->textPart() );
-  composer->addAttachmentParts( m_attachmentModel->attachments() );
-  connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
-  composer->start();
-}
+  const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
+  m_composerBase->setFrom( identity.fullEmailAddr() );
+  m_composerBase->setReplyTo( identity.replyToAddr() );
+  m_composerBase->setSubject( m_subject );
 
-void ComposerView::composerResult ( KJob* job )
-{
-  kDebug() << job->error() << job->errorText();
-  if ( !job->error() ) {
-    Message::Composer *composer = qobject_cast<Message::Composer*>( job );
-    Q_ASSERT( composer );
-    const Message::InfoPart *infoPart = composer->infoPart();
-    MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
-    qjob->transportAttribute().setTransportId( MailTransport::TransportManager::self()->defaultTransportId() );
-    qjob->setMessage( composer->resultMessages().first() );
-    qjob->addressAttribute().setTo( infoPart->to() );
-    qjob->addressAttribute().setCc( infoPart->cc() );
-    qjob->addressAttribute().setBcc( infoPart->bcc() );
-    connect( qjob, SIGNAL(result(KJob*)), SLOT(sendResult(KJob*)) );
-    qjob->start();
-  }
-}
+  m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
 
-void ComposerView::sendResult ( KJob* job )
-{
-  kDebug() << job->error() << job->errorText();
-  if ( !job->error() )
-    deleteLater();
+  /* Default till UI exists
+  m_composerBase->setCharsets( );
+  m_composerBase->setUrgent( );
+  m_composerBase->setMDNRequested( ); */
+
+  m_composerBase->send( method, saveIn );
 }
 
 QString ComposerView::subject() const
@@ -242,15 +216,24 @@ void ComposerView::setSubject ( const QString& subject )
     setWindowTitle( i18n( "New mail" ) );
 }
 
-KActionCollection* ComposerView::actionCollection() const
+bool ComposerView::busy() const
 {
-  return mActionCollection;
+    return m_busy;
+}
+
+void ComposerView::setBusy(bool busy)
+{
+    if (m_busy == busy)
+        return;
+
+    m_busy = busy;
+    emit busyChanged();
 }
 
 QObject* ComposerView::getAction( const QString &name ) const
 {
-  kDebug() << mActionCollection << mActionCollection->action( name );
-  return mActionCollection->action( name );
+  kDebug() << actionCollection() << actionCollection()->action( name );
+  return actionCollection()->action( name );
 }
 
 void ComposerView::configureIdentity()
@@ -259,6 +242,13 @@ void ComposerView::configureIdentity()
   dlg.addModule( "kcm_kpimidentities" );
   dlg.exec();
 
+}
+
+void ComposerView::slotSendSuccessful()
+{
+  // Removed successfully sent messages from autosave
+  m_composerBase->cleanupAutoSave();
+  deleteLater();
 }
 
 void ComposerView::configureTransport()
@@ -272,7 +262,63 @@ void ComposerView::addAttachment()
 {
   KUrl url = KFileDialog::getOpenUrl();
   if (!url.isEmpty())
-    m_attachmentController->addAttachment(url);
+    m_composerBase->addAttachment( url, QString() );
+}
+
+void ComposerView::success()
+{
+  QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+  KNotification *notify = new KNotification("emailsent");
+  notify->setComponentData(KComponentData("kmail-mobile"));
+  notify->setPixmap(pix);
+  notify->setText(i18nc("Notification when the email was sent",
+                        "E-mail successfully sent"));
+  notify->sendEvent();
+}
+
+void ComposerView::failed( const QString &errorMessage )
+{
+  QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+  KNotification *notify = new KNotification("sendfailed");
+  notify->setComponentData(KComponentData("kmail-mobile"));
+  notify->setPixmap(pix);
+  notify->setText(i18nc("Notification when there was an error while trying to send an email",
+                        "Error while trying to send email. %1", errorMessage));
+  notify->sendEvent();
+}
+
+void ComposerView::setEditor( Message::KMeditor* editor ) {
+    new ComposerAutoResizer(editor);
+    m_composerBase->setEditor( editor );
+}
+
+void ComposerView::closeEvent( QCloseEvent * event )
+{
+  const QString saveButton = i18n("&Save as Draft");
+  const QString saveText = i18n("Save this message in the Drafts folder. ");
+
+  const int rc = KMessageBox::warningYesNoCancel( this,
+                                                  i18n("Do you want to save the message for later or discard it?"),
+                                                  i18n("Close Composer"),
+                                                  KGuiItem(saveButton, "document-save", QString(), saveText),
+                                                  KStandardGuiItem::discard(),
+                                                  KStandardGuiItem::cancel() );
+
+  if ( rc == KMessageBox::Yes ) {
+    saveDraft();
+  } else if (rc == KMessageBox::Cancel ) {
+    event->ignore();
+  } else {
+    // remove autosaves if the message was discarded
+    m_composerBase->cleanupAutoSave();
+  }
+}
+
+void ComposerView::saveDraft()
+{
+  const MessageSender::SendMethod method = MessageSender::SendLater;
+  const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
+  send ( method, saveIn );
 }
 
 #include "composerview.moc"

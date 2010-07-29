@@ -19,19 +19,31 @@
 
 #include "agendaviewitem.h"
 
+#include <KGlobal>
+#include <KGlobalSettings>
+
 #include <akonadi/kcal/calendar.h>
 #include <calendarviews/agenda/agendaview.h>
 
 using namespace EventViews;
 
-AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent) :
-  DeclarativeAkonadiItem( parent )
+AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
+  : DeclarativeAkonadiItem( parent )
+  , m_view( new AgendaView( 0 ) )
 {
-  m_view = new AgendaView( 0 );
-  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item,QDate)), SIGNAL(itemSelected()) );
+  // start with the oxygen palette (which is not necessarily the default on all platforms)
+  QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
+  m_view->setPalette( pal );
+  
+  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
+           SIGNAL(itemSelected()) );
+  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
+           SIGNAL(itemSelected(Akonadi::Item, QDate)) );
   connect( this, SIGNAL(nextItemRequest()), SLOT(gotoNext()) );
   connect( this, SIGNAL(previousItemRequest()), SLOT(gotoPrevious()) );
+
   setWidget( m_view );
+  showRange( QDate::currentDate(), Week );
 }
 
 AgendaViewItem::~AgendaViewItem()
@@ -102,21 +114,29 @@ qint64 AgendaViewItem::selectedItemId() const
   return m_view->selectedIncidences().first().id();
 }
 
+void AgendaViewItem::clearSelection()
+{
+  m_view->clearSelection();
+}
+
 void AgendaViewItem::gotoNext()
 {
   const QDate start = endDate().addDays( 1 );
   const QDate end = start.addDays( startDate().daysTo( endDate() ) );
-  kDebug() << start << end;
+  m_view->blockSignals( true );
   m_view->showDates( start, end );
+  m_view->clearSelection();
+  m_view->blockSignals( false );
 }
 
 void AgendaViewItem::gotoPrevious()
 {
   const QDate end = startDate().addDays( - 1 );
   const QDate start = end.addDays( - startDate().daysTo( endDate() ) );
-  kDebug() << start << end;
+  m_view->blockSignals( true );
   m_view->showDates( start, end );
-
+  m_view->clearSelection();
+  m_view->blockSignals( false );
 }
 
 #include "agendaviewitem.moc"

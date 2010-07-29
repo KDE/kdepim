@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef EVENTVIEWS_EXPORT
-# if defined(MAKE_EVENTVIEWS_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define EVENTVIEWS_EXPORT
+# elif defined(MAKE_EVENTVIEWS_LIB)
    /* We are building this library */ 
 #  define EVENTVIEWS_EXPORT KDE_EXPORT
 # else

@@ -18,17 +18,51 @@
 */
 
 #include "mainview.h"
+#include "contacteditorview.h"
+#include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+#include <Akonadi/ItemFetchScope>
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
 {
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
+  itemFetchScope().fetchFullPayload();
+}
+
+void MainView::newContact()
+{
+  ContactEditorView *editor = new ContactEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  editor->show();
+}
+
+void MainView::editContact( const Akonadi::Item &item )
+{
+  ContactEditorView *editor = new ContactEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  editor->loadContact( item );
+  editor->show();
+}
+
+void MainView::newContactGroup()
+{
+  ContactGroupEditorView *editor = new ContactGroupEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  editor->show();
+}
+
+void MainView::editContactGroup( const Akonadi::Item &item )
+{
+  ContactGroupEditorView *editor = new ContactGroupEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  editor->loadContactGroup( item );
+  editor->show();
 }
 
 #include "mainview.moc"

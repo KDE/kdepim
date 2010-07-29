@@ -21,6 +21,8 @@
 #ifndef COLLECTION_ATTRIBUTE_H
 #define COLLECTION_ATTRIBUTE_H
 
+#include "kalarm_cal_export.h"
+
 #include "kacalendar.h"
 
 #include <akonadi/attribute.h>
@@ -80,10 +82,11 @@ class KALARM_CAL_EXPORT CollectionAttribute : public Akonadi::Attribute
         /** Set the compatibility status for the entity. */
         void setCompatibility(KAlarm::Calendar::Compat c)  { mCompatibility = c; }
 
-        virtual QByteArray type() const    { return "KAlarm collection"; }
+        virtual QByteArray type() const    { return name(); }
         virtual CollectionAttribute* clone() const;
         virtual QByteArray serialized() const;
         virtual void deserialize(const QByteArray& data);
+        static QByteArray name()    { return "KAlarmCollection"; }
 
     private:
         CollectionAttribute(const CollectionAttribute&);

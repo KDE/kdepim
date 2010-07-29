@@ -83,6 +83,8 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * Reimplemented for setting the @p font for line edit and completion box.
      */
     void setFont( const QFont &font );
+  Q_SIGNALS:
+    void textCompleted();
 
   public Q_SLOTS:
     /**
@@ -167,6 +169,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
 
   private:
     virtual bool eventFilter( QObject *, QEvent * );
+    void emitTextCompleted();
 
     //@cond PRIVATE
     class Private;

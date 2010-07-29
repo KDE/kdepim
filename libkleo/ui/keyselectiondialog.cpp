@@ -85,6 +85,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <QtGui/qscrollbar.h>
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
@@ -179,19 +180,19 @@ namespace {
 
     QString text( const GpgME::Key & key, int col ) const;
     QString toolTip( const GpgME::Key & key, int col ) const;
-    const QPixmap * pixmap( const GpgME::Key & key, int col ) const;
+    KIcon icon( const GpgME::Key & key, int col ) const;
 
   private:
-    const QPixmap mKeyGoodPix, mKeyBadPix, mKeyUnknownPix, mKeyValidPix;
+    const KIcon mKeyGoodPix, mKeyBadPix, mKeyUnknownPix, mKeyValidPix;
     const unsigned int mKeyUsage;
   };
 
   ColumnStrategy::ColumnStrategy( unsigned int keyUsage )
     : Kleo::KeyListView::ColumnStrategy(),
-      mKeyGoodPix( UserIcon( "key_ok" ) ),
-      mKeyBadPix( UserIcon( "key_bad" ) ),
-      mKeyUnknownPix( UserIcon( "key_unknown" ) ),
-      mKeyValidPix( UserIcon( "key" ) ),
+      mKeyGoodPix( "key_ok" ),
+      mKeyBadPix( "key_bad" ),
+      mKeyUnknownPix( "key_unknown" ),
+      mKeyValidPix( "key" ),
       mKeyUsage( keyUsage )
   {
     kWarning( keyUsage == 0, 5150 )
@@ -212,7 +213,7 @@ namespace {
       int maxWidth = 0;
       for ( unsigned int i = 0 ; i < 16 ; ++i )
 	maxWidth = qMax( fm.width( QChar( hexchars[i] ) ), maxWidth );
-      return 8 * maxWidth + 2 * mKeyGoodPix.width();
+      return 8 * maxWidth + 2 * KIconLoader::SizeSmall;
     }
     return Kleo::KeyListView::ColumnStrategy::width( col, fm );
   }
@@ -267,30 +268,30 @@ namespace {
 	      issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
   }
 
-  const QPixmap * ColumnStrategy::pixmap( const GpgME::Key & key, int col ) const {
+  KIcon ColumnStrategy::icon( const GpgME::Key & key, int col ) const {
     if ( col != 0 )
-      return 0;
+      return KIcon();
     // this key did not undergo a validating keylisting yet:
     if ( !( key.keyListMode() & GpgME::Validate ) )
-      return &mKeyUnknownPix;
+      return mKeyUnknownPix;
 
     if ( !checkKeyUsage( key, mKeyUsage ) )
-      return &mKeyBadPix;
+      return mKeyBadPix;
 
     if ( key.protocol() == GpgME::CMS )
-      return &mKeyGoodPix;
+      return mKeyGoodPix;
 
     switch ( key.userID(0).validity() ) {
     default:
     case GpgME::UserID::Unknown:
     case GpgME::UserID::Undefined:
-      return &mKeyUnknownPix;
+      return mKeyUnknownPix;
     case GpgME::UserID::Never:
-      return &mKeyValidPix;
+      return mKeyValidPix;
     case GpgME::UserID::Marginal:
     case GpgME::UserID::Full:
     case GpgME::UserID::Ultimate:
-      return &mKeyGoodPix;
+      return mKeyGoodPix;
     }
   }
 
@@ -362,10 +363,16 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mTopLayout->setSpacing( spacingHint() );
 
   if ( !text.isEmpty() ) {
+#ifndef KDEPIM_MOBILE_UI
     QLabel* textLabel = new QLabel( text, page );
     textLabel->setWordWrap( true );
+
+    // Setting the size policy is necessary as a workaround for https://issues.kolab.org/issue4429
+    // and http://bugreports.qt.nokia.com/browse/QTBUG-8740
+    textLabel->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     connect( textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager(QString)) );
     mTopLayout->addWidget( textLabel );
+#endif
   }
 
   QHBoxLayout * hlay = new QHBoxLayout();
@@ -385,25 +392,31 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
+#ifdef KDEPIM_MOBILE_UI
+  lbSearchFor->hide();
+  le->hide();
+#endif
 
   mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page );
   mKeyListView->setObjectName( "mKeyListView" );
-  mKeyListView->setResizeMode( Q3ListView::LastColumn );
+  mKeyListView->header()->stretchLastSection();
   mKeyListView->setRootIsDecorated( true );
-  mKeyListView->setShowSortIndicator( true );
-  mKeyListView->setSorting( 1, true ); // sort by User ID
-  mKeyListView->setShowToolTips( true );
+  mKeyListView->setSortingEnabled( true );
+  mKeyListView->header()->setSortIndicatorShown( true );
+  mKeyListView->header()->setSortIndicator( 1, Qt::AscendingOrder ); // sort by User ID
   if ( extendedSelection )
-    mKeyListView->setSelectionMode( Q3ListView::Extended );
+    mKeyListView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mTopLayout->addWidget( mKeyListView, 10 );
 
   if ( rememberChoice ) {
+#ifndef KDEPIM_MOBILE_UI
     mRememberCB = new QCheckBox( i18n("&Remember choice"), page );
     mTopLayout->addWidget( mRememberCB );
     mRememberCB->setWhatsThis(
 		     i18n("<qt><p>If you check this box your choice will "
 			  "be stored and you will not be asked again."
 			  "</p></qt>") );
+#endif
   }
 
   connect( mCheckSelectionTimer, SIGNAL(timeout()),
@@ -411,7 +424,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   connectSignals();
 
   connect( mKeyListView,
-	   SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
+	   SIGNAL(doubleClicked(Kleo::KeyListViewItem*,int)),
 	   SLOT(slotTryOk()) );
   connect( mKeyListView,
 	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,const QPoint&)),
@@ -448,7 +461,7 @@ Kleo::KeySelectionDialog::~KeySelectionDialog() {
 
 void Kleo::KeySelectionDialog::connectSignals() {
   if ( mKeyListView->isMultiSelection() )
-    connect( mKeyListView, SIGNAL(selectionChanged()),
+    connect( mKeyListView, SIGNAL(itemSelectionChanged()),
              SLOT(slotSelectionChanged()) );
   else
     connect( mKeyListView, SIGNAL(selectionChanged(Kleo::KeyListViewItem*)),
@@ -457,7 +470,7 @@ void Kleo::KeySelectionDialog::connectSignals() {
 
 void Kleo::KeySelectionDialog::disconnectSignals() {
   if ( mKeyListView->isMultiSelection() )
-    disconnect( mKeyListView, SIGNAL(selectionChanged()),
+    disconnect( mKeyListView, SIGNAL(itemSelectionChanged()),
 		this, SLOT(slotSelectionChanged()) );
   else
     disconnect( mKeyListView, SIGNAL(selectionChanged(Kleo::KeyListViewItem*)),
@@ -505,7 +518,7 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   mKeyListView->clear();
   mListJobCount = 0;
   mTruncated = 0;
-  mSavedOffsetY = mKeyListView->contentsY();
+  mSavedOffsetY = mKeyListView->verticalScrollBar()->value();
 
   disconnectSignals();
   mKeyListView->setEnabled( false );
@@ -634,7 +647,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
   slotSelectionChanged();
 
   // restore the saved position of the contents
-  mKeyListView->setContentsPos( 0, mSavedOffsetY ); mSavedOffsetY = 0;
+  mKeyListView->verticalScrollBar()->setValue( mSavedOffsetY ); mSavedOffsetY = 0;
 }
 
 void Kleo::KeySelectionDialog::slotSelectionChanged() {
@@ -690,7 +703,7 @@ void Kleo::KeySelectionDialog::startValidatingKeyListing() {
 
   mListJobCount = 0;
   mTruncated = 0;
-  mSavedOffsetY = mKeyListView->contentsY();
+  mSavedOffsetY = mKeyListView->verticalScrollBar()->value();
 
   disconnectSignals();
   mKeyListView->setEnabled( false );
@@ -798,7 +811,7 @@ void Kleo::KeySelectionDialog::filterByKeyID( const QString & keyID ) {
     showAllItems();
   else
     for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-      item->setVisible( item->text( 0 ).toUpper().startsWith( keyID ) );
+      item->setHidden( !item->text( 0 ).toUpper().startsWith( keyID ) );
 }
 
 static bool anyUIDMatches( const Kleo::KeyListViewItem * item, QRegExp & rx ) {
@@ -819,7 +832,7 @@ void Kleo::KeySelectionDialog::filterByKeyIDOrUID( const QString & str ) {
   QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( item->text( 0 ).toUpper().startsWith( str ) || anyUIDMatches( item, rx ) );
+    item->setHidden( !item->text( 0 ).toUpper().startsWith( str ) && !anyUIDMatches( item, rx ) );
 
 }
 
@@ -830,13 +843,13 @@ void Kleo::KeySelectionDialog::filterByUID( const QString & str ) {
   QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( anyUIDMatches( item, rx ) );
+    item->setHidden( !anyUIDMatches( item, rx ) );
 }
 
 
 void Kleo::KeySelectionDialog::showAllItems() {
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( true );
+    item->setHidden( false );
 }
 
 #include "keyselectiondialog.moc"

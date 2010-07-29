@@ -23,7 +23,10 @@
 #include <kdemacros.h>
 
 #ifndef MESSAGECORE_EXPORT
-# if defined(MAKE_MESSAGECORE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define MESSAGECORE_EXPORT
+# elif defined(MAKE_MESSAGECORE_LIB)
    /* We are building this library */
 #  define MESSAGECORE_EXPORT KDE_EXPORT
 # else

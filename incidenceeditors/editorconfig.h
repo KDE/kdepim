@@ -29,6 +29,8 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QStringList>
 
+#include <KUrl>
+
 class KConfigSkeleton;
 
 namespace IncidenceEditors
@@ -74,6 +76,8 @@ class INCIDENCEEDITORS_EXPORT EditorConfig
     virtual QDateTime startTime() const
     { return QDateTime( QDate( 1752, 1, 1 ), QTime( 10, 0 ) ); }
 
+    virtual bool defaultAudioFileReminders() const { return false; }
+    virtual KUrl audioFilePath() const { return KUrl(); }
     virtual int reminderTime() const { return 15; }
     virtual int reminderTimeUnits() const { return 0; }
     virtual bool defaultTodoReminders() const { return false; }

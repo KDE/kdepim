@@ -19,6 +19,8 @@
     02110-1301, USA.
 */
 
+// READ THE README FILE
+
 #include "entityfindingwidget.h"
 
 #include <akonadi/entitytreemodel.h>

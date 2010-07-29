@@ -23,7 +23,10 @@
 #include <kdemacros.h>
 
 #ifndef MESSAGECOMPOSER_EXPORT
-# if defined(MAKE_MESSAGECOMPOSER_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define MESSAGECOMPOSER_EXPORT
+# elif defined(MAKE_MESSAGECOMPOSER_LIB)
    /* We are building this library */
 #  define MESSAGECOMPOSER_EXPORT KDE_EXPORT
 # else

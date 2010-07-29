@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef INCIDENCEEDITORS_EXPORT
-# if defined(MAKE_INCIDENCEEDITORS_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define INCIDENCEEDITORS_EXPORT
+# elif defined(MAKE_INCIDENCEEDITORS_LIB) || defined(MAKE_INCIDENCEEDITORSNG_LIB) || defined(MAKE_INCIDENCEEDITORSNGMOBILE_LIB)
    /* We are building this library */ 
 #  define INCIDENCEEDITORS_EXPORT KDE_EXPORT
 # else

@@ -62,6 +62,7 @@ class MessageViewItem : public DeclarativeAkonadiItem
   signals:
     /** Emitted for urls not handled by MessageViewer::Viewer. */
     void urlClicked( const Akonadi::Item &item, const KUrl &url );
+    void mailRemoved();
 
   private:
     Viewer *m_viewer;

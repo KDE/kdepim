@@ -28,8 +28,6 @@
 */
 
 #include "actionmanager.h"
-#include <kcalprefs.h>
-#include <kmimetypetrader.h>
 #include "calendaradaptor.h"
 #include "calendarview.h"
 #include "eventarchiver.h"
@@ -50,6 +48,7 @@
 
 #include <KMime/KMimeMessage>
 
+#include <kcalprefs.h>
 #include <akonadi/akonadi_next/collectionselectionproxymodel.h>
 #include <akonadi/akonadi_next/entitymodelstatesaver.h>
 #include <akonadi/kcal/calendar.h>
@@ -74,6 +73,7 @@
 #include <Akonadi/AgentManager>
 #include <Akonadi/AgentInstanceCreateJob>
 
+#include <kmimetypetrader.h>
 #include <kio/job.h>
 #include <KAction>
 #include <KActionCollection>
@@ -227,11 +227,23 @@ void ActionManager::init()
   mCalendarView->checkClipboard();
 }
 
+void ActionManager::slotCollectionChanged( const Akonadi::Collection &collection,
+                                           const QSet<QByteArray> &changedAttributes )
+{
+  Q_UNUSED( collection );
+
+  if ( changedAttributes.contains( "AccessRights" ) ) {
+    mCalendarView->viewManager()->setUpdateNeeded();
+    mCalendarView->updateView();
+  }
+}
 
 void ActionManager::createCalendarAkonadi()
 {
   Session *session = new Session( "KOrganizerETM", this );
   ChangeRecorder *monitor = new ChangeRecorder( this );
+  connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>) ),
+           this, SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>) ) );
 
   ItemFetchScope scope;
   scope.fetchFullPayload( true );
@@ -1151,10 +1163,9 @@ void ActionManager::exportHTML()
   // seem to load the config theirselves
   settings.readConfig();
 
-  QDate qd1;
-  qd1 = QDate::currentDate();
-  QDate qd2;
-  qd2 = QDate::currentDate();
+  const QDate qd1 = QDate::currentDate();
+  QDate qd2 = qd1;
+
   if ( settings.monthView() ) {
     qd2.addMonths( 1 );
   } else {
@@ -1367,7 +1378,6 @@ void ActionManager::updateConfig()
     mCollectionView->updateView();
   }
 #endif
-  Akonadi::Groupware::instance()->freeBusyManager()->setBrokenUrl( false );
 }
 
 void ActionManager::configureDateTime()
@@ -1662,7 +1672,7 @@ void ActionManager::processIncidenceSelection( const Akonadi::Item &item, const 
 
   enableIncidenceActions( true );
 
-  if ( !Akonadi::hasDeleteRights( item ) ) {
+  if ( !mCalendarView->calendar()->hasDeleteRights( item ) ) {
     mCutAction->setEnabled( false );
     mDeleteAction->setEnabled( false );
   }

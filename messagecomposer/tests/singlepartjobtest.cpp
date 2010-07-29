@@ -144,7 +144,6 @@ void SinglepartJobTest::testContentTransferEncoding()
     QByteArray data( "[ăîşţâ]" ); // utf-8
     cjob->setData( data );
     QVERIFY( cjob->exec() );
-    QVERIFY( cjob->exec() );
     Content *result = cjob->content();
     result->assemble();
     kDebug() << result->encodedContent();

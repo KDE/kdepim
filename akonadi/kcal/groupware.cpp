@@ -35,7 +35,6 @@
 */
 
 #include "groupware.h"
-#include "freebusymanager.h"
 #include "kcalprefs.h"
 #include "mailscheduler.h"
 #include "calendar.h"
@@ -54,8 +53,6 @@
 
 using namespace KCal;
 using namespace Akonadi;
-
-FreeBusyManager *Groupware::mFreeBusyManager = 0;
 
 Groupware *Groupware::mInstance = 0;
 
@@ -82,24 +79,6 @@ Groupware::Groupware( Akonadi::Calendar *cal, GroupwareUiDelegate *delegate )
   : QObject( 0 ), mCalendar( cal ), mDelegate( delegate ), mDoNotNotify( false )
 {
   setObjectName( QLatin1String( "kmgroupware_instance" ) );
-  // Now set the ball rolling
-  QTimer::singleShot( 0, this, SLOT(initialCheckForChanges()) );
-}
-
-void Groupware::initialCheckForChanges()
-{
-  if ( !mFreeBusyManager ) {
-    mFreeBusyManager = new FreeBusyManager( this );
-    mFreeBusyManager->setObjectName( QLatin1String( "freebusymanager" ) );
-    mFreeBusyManager->setCalendar( mCalendar );
-    connect( mCalendar, SIGNAL(calendarChanged()),
-             mFreeBusyManager, SLOT(slotPerhapsUploadFB()) );
-  }
-}
-
-FreeBusyManager *Groupware::freeBusyManager()
-{
-  return mFreeBusyManager;
 }
 
 bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,

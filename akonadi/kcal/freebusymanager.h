@@ -57,91 +57,84 @@ namespace KCal {
   class FreeBusy;
 }
 namespace Akonadi {
-class FreeBusyManager;
+
 class Calendar;
-
-/**
- * Class for downloading FreeBusy Lists
- */
-class AKONADI_KCAL_NEXT_EXPORT FreeBusyDownloadJob : public QObject
-{
-  Q_OBJECT
-  public:
-    FreeBusyDownloadJob( const QString &email, const KUrl &url,
-                         FreeBusyManager *manager, QWidget *parentWidget = 0 );
-
-    virtual ~FreeBusyDownloadJob();
-
-  protected slots:
-    void slotResult( KJob * );
-    void slotData( KIO::Job *, const QByteArray &data );
-
-  signals:
-    void freeBusyDownloaded( KCal::FreeBusy *, const QString & );
-
-  private:
-    FreeBusyManager *mManager;
-    QString mEmail;
-
-    QByteArray mFreeBusyData;
-};
+class FreeBusyManagerPrivate;
+class FreeBusyManagerStatic;
 
 class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::FreeBusyCache
 {
   Q_OBJECT
   public:
-    FreeBusyManager( QObject *parent );
+    /**
+     * Returns the FreeBusyManager
+     */
+    static FreeBusyManager *self();
 
     void setCalendar( Akonadi::Calendar * );
 
-    /// KOrganizer publishes the free/busy list
+    /**
+      Publishes the owners freebusy information from the current calendar
+      starting from the current date/time to current date/time + freeBusyPublishDays.
+      If an upload is already in progress nothing happens.
+
+      @see KCalPrefBase::freeBusyPublishUrl()
+      @see KCalPrefBase::freeBusyPublishDays();
+     */
     void publishFreeBusy( QWidget *parentWidget = 0 );
 
     /**
-      KOrganizer downloads somebody else's free/busy list
-      The call is asynchronous, and upon download, the
-      receivers slot specified by member will be called.
-      The slot should be of type "member(const QString&, KCal::FreeBusy*)"
-        @param email Address of the person for which the F/B list should be
-                     retrieved.
-        @return true if a download is initiated, and false otherwise
+      Retrieve the freebusy information of somebody else, i.e. it will not try
+      to download our own freebusy information. This method makes use of a local
+      cache, if the information for a given email is already downloaded it will
+      return the information from the cache.
+
+      The call is asynchronous, a download is started in the background (if
+      needed) and freeBusyRetrieved will be emitted when the download is finished.
+
+      @see KCalPrefs::thatIsMe( const QString &email );
+
+      @param email Address of the person for which the F/B list should be
+             retrieved.
+      @param forceDownload Set to true to trigger a download even when automatic
+             retrieval of freebusy information is disabled in the configuration.
+      @return true if a download is initiated, and false otherwise
     */
     bool retrieveFreeBusy( const QString &email, bool forceDownload,
                            QWidget *parentWidget = 0 );
 
+    /**
+      Clears the retrieval queue, i.e. all retrieval request that are not started
+      yet will not start at all. The freebusy retrieval that currently is
+      downloading (if one) will not be canceled.
+
+      @see retrieveFreeBusy
+     */
     void cancelRetrieval();
 
-    KCal::FreeBusy *iCalToFreeBusy( const QByteArray &data );
 
     /**
-      Load freebusy information belonging to email.
+      Load freebusy information belonging to an email. The information is loaded
+      from a local file. If the file does not exists or doesn't contain valid
+      information 0 is returned. In that case the information should be retrieved
+      again by calling retrieveFreeBusy.
+
+      Implements KCal::FreeBusyCache::loadFreeBusy
+
+      @param email is a QString containing a email string in the
+      "FirstName LastName <emailaddress>" format.
     */
-    KCal::FreeBusy *loadFreeBusy( const QString &email );
-    /**
-      Store freebusy information belonging to email.
-    */
-    bool saveFreeBusy( KCal::FreeBusy *freebusy, const KCal::Person &person );
-//    bool saveFreeBusy( KCal::FreeBusy *, const QString &email );
+    virtual KCal::FreeBusy *loadFreeBusy( const QString &email );
 
     /**
-      Return URL of freeBusy information for given email address.
-    */
-    KUrl freeBusyUrl( const QString &email ) const;
+      Save freebusy information belonging to an email.
 
-    /**
-      Return directory used for stroing free/busy information.
-    */
-    QString freeBusyDir();
+      Implements KCal::FreeBusyCache::saveFreeBusy
 
-    /**
-      Change the broken Url status
-      mBrokenUrl is used to show the 'broken url popup' only once
+      @param freebusy is a pointer to a valid FreeBusy instance.
+      @param person is a valid Person instance.
     */
-    void setBrokenUrl( bool isBroken );
-
-  public slots:
-    // When something changed in the calendar, we get this called
-    void slotPerhapsUploadFB();
+    virtual bool saveFreeBusy( KCal::FreeBusy *freebusy, const KCal::Person &person );
 
   signals:
     /**
@@ -150,43 +143,28 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     void freeBusyRetrieved( KCal::FreeBusy *, const QString &email );
 
   protected:
-    void timerEvent( QTimerEvent * );
-
-    /**
-      Return free/busy list of calendar owner as iCalendar string.
-    */
-    QString ownerFreeBusyAsString();
-
-    /**
-      Return free/busy list of calendar owner.
-    */
-    KCal::FreeBusy *ownerFreeBusy();
-
-    /**
-      Convert free/busy object to iCalendar string.
-    */
-    QString freeBusyToIcal( KCal::FreeBusy * );
-
-  protected slots:
-    bool processRetrieveQueue();
-
-  private slots:
-    void slotUploadFreeBusyResult( KJob * );
+    /** React on timer events, used for delayed freebusy list uploading */
+    virtual void timerEvent( QTimerEvent * );
 
   private:
-    Akonadi::Calendar *mCalendar;
-    KCal::ICalFormat mFormat;
+    /**
+      Creates a new FreeBusyManager, private because FreeBusyManager is a
+      Singleton
+     */
+    FreeBusyManager();
+    virtual ~FreeBusyManager();
 
-    QStringList mRetrieveQueue;
+  private:
+    friend class FreeBusyManagerStatic;
 
-    // Free/Busy uploading
-    QDateTime mNextUploadTime;
-    int mTimerID;
-    bool mUploadingFreeBusy;
-    bool mBrokenUrl;
-
-    // the parentWidget to use while doing our "recursive" retrieval
-    QPointer<QWidget>  mParentWidgetForRetrieval;
+    FreeBusyManagerPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( FreeBusyManager )
+    Q_DISABLE_COPY( FreeBusyManager )
+    Q_PRIVATE_SLOT( d_ptr, void checkFreeBusyUrl() )
+    Q_PRIVATE_SLOT( d_ptr, void processFreeBusyDownloadResult( KJob * ) )
+    Q_PRIVATE_SLOT( d_ptr, void processFreeBusyUploadResult( KJob * ) )
+    Q_PRIVATE_SLOT( d_ptr, bool processRetrieveQueue() )
+    Q_PRIVATE_SLOT( d_ptr, void uploadFreeBusy() )
 };
 
 }

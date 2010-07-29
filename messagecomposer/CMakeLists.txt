@@ -1,10 +1,13 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+include_directories(
+    ${Boost_INCLUDE_DIR}
+    ${SOPRANO_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/libkleo
+)
+
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
-if ( QT_QT3SUPPORT_FOUND )
-  add_definitions( -DQT_QT3SUPPORT_FOUND )
-endif ()
 
 add_subdirectory( tests )
 
@@ -20,7 +23,6 @@ set( messagecomposer_src
      akonadisender.cpp
      messagehelper.cpp
      messagefactory.cpp
-     messageinfo.cpp
      messagecomposersettings.cpp
      composerviewbase.cpp
 
@@ -46,10 +48,12 @@ set( messagecomposer_src
      inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
-     recipient.cpp
      distributionlistdialog.cpp
      recipientspicker.cpp
+     recipient.cpp
+     recipientline.cpp
      recipientseditor.cpp
+     recipientseditorsidewidget.cpp
      kwindowpositioner.cpp
 
      aliasesexpandjob.cpp
@@ -72,13 +76,7 @@ kde4_add_kcfg_files(messagecomposer_src
   messagecomposersettings_base.kcfgc 
 )
 
-
-include_directories(
-    ${Boost_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}/libkleo
-)
-
-kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
+kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} )
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

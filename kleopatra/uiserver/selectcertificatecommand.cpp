@@ -36,6 +36,10 @@
 
 #include <dialogs/certificateselectiondialog.h>
 
+#include <models/keycache.h>
+
+#include <utils/stl_util.h>
+
 #include <kleo/exception.h>
 
 #include <gpgme++/key.h>
@@ -55,6 +59,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
+using namespace GpgME;
 using namespace boost;
 
 static const char option_prefix[] = "prefix";
@@ -73,6 +78,7 @@ public:
 private:
     void slotDialogAccepted();
     void slotDialogRejected();
+    void slotSelectedCertificates( int, const QByteArray & );
 
 private:
     void ensureDialogCreated() {
@@ -125,9 +131,28 @@ int SelectCertificateCommand::doStart() {
 
     d->dialog->setOptions( opts );
 
+    if ( const int err = inquire( "SELECTED_CERTIFICATES",
+                                  this, SLOT(slotSelectedCertificates(int,QByteArray)) ) )
+        return err;
+
     d->ensureDialogShown();
 
     return 0;
+}
+
+void SelectCertificateCommand::Private::slotSelectedCertificates( int err, const QByteArray & data ) {
+    qDebug( "SelectCertificateCommand::Private::slotSelectedCertificates( %d, %s )", err, data.constData() );
+    if ( err )
+        return;
+    const std::vector<std::string> fprs = kdtools::transform< std::vector<std::string> >( data.split( '\n' ), mem_fn( &QByteArray::constData ) );
+    const std::vector<Key> keys = KeyCache::instance()->findByKeyIDOrFingerprint( fprs );
+    Q_FOREACH( const Key & key, keys )
+        qDebug( "SelectCertificateCommand::Private::slotSelectedCertificates: found key %s",
+                key.userID(0).id() );
+    if ( dialog )
+        dialog->selectCertificates( keys );
+    else
+        qWarning( "SelectCertificateCommand: dialog == NULL in slotSelectedCertificates" );
 }
 
 void SelectCertificateCommand::doCanceled() {
@@ -138,7 +163,7 @@ void SelectCertificateCommand::doCanceled() {
 void SelectCertificateCommand::Private::slotDialogAccepted() {
     try {
         QByteArray data;
-        Q_FOREACH( const GpgME::Key & key, dialog->selectedCertificates() ) {
+        Q_FOREACH( const Key & key, dialog->selectedCertificates() ) {
             data += key.primaryFingerprint();
             data += '\n';
         }

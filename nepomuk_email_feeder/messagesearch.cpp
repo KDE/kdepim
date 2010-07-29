@@ -103,3 +103,4 @@ void MessageSearch::deref()
 }
 
 #include "messagesearch.moc"
+

@@ -5,6 +5,8 @@ include_directories (
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_BINARY_DIR}/messagecomposer
+    ${CMAKE_SOURCE_DIR}/messagecomposer
+    ${CMAKE_SOURCE_DIR}/messagecore/tests
 )
 
 # Convenience macro to add messagecomposer unit tests.
@@ -12,12 +14,14 @@ macro( add_messagecomposer_test _source )
   set( _test ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME messagecomposer-${_name} ${_test} )
-  target_link_libraries( ${_name} ${KDE4_KMIME_LIBRARY} messagecomposer messageviewer messagecore ${KDEPIMLIBS_KPIMTEXTEDIT_LIBRARY} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS})
+  target_link_libraries( ${_name} ${KDE4_KMIME_LIBRARY} messagecomposer messageviewer messagecore ${KDEPIMLIBS_KPIMTEXTEDIT_LIBRARY} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
+)
 endmacro( add_messagecomposer_test )
 
 
 macro( add_messagecomposer_cryptotest _source )
-  set( _test cryptofunctions.cpp ${_source} )
+  set( _test cryptofunctions.cpp  ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME messagecomposer-${_name} ${_test} )
   target_link_libraries( 
@@ -33,7 +37,6 @@ macro( add_messagecomposer_cryptotest _source )
       ${QT_QTGUI_LIBRARY}
       ${QT_QTCORE_LIBRARY}
       ${KDE4_KDEUI_LIBS}
-      ${QT_QT3SUPPORT_LIBRARY}
       ${QGPGME_LIBRARIES}
       )
 endmacro( add_messagecomposer_cryptotest )
@@ -76,7 +79,7 @@ set(testkmeditorwin_SRCS testkmeditorwin.cpp )
 
 kde4_add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
 
-target_link_libraries(testkmeditorwin messagecomposer ${KDE4_KDEUI_LIBS} )
+target_link_libraries(testkmeditorwin messagecomposer ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} )
 
 
 ########### recipientseditor test ###############

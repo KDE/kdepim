@@ -62,6 +62,12 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     explicit KMeditor( QWidget *parent = 0 );
 
+    /**
+     * Constructs a KMeditor object.
+     */
+    explicit KMeditor( QWidget *parent, const QString& configFile );
+
+
     virtual ~KMeditor();
 
     virtual int quoteLength( const QString& line ) const;

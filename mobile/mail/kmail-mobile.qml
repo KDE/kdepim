@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,18 +18,27 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 import org.kde 4.5
-import org.kde.akonadi 4.5
-import org.kde.messageviewer 4.5
+import org.kde.akonadi 4.5 as Akonadi
+import org.kde.messageviewer 4.5 as MessageViewer
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.MainView {
   id: kmailMobile
 
-  SystemPalette { id: palette; colorGroup: "Active" }
+  function backToListing()
+  {
+    messageView.visible = false;
+    backToMessageListButton.visible = false;
+    collectionView.visible = true;
+    emailListPage.visible = true;
+    messageView.itemId = -1;
+  }
 
-  MessageView {
+  QML.SystemPalette { id: palette; colorGroup: "Active" }
+
+  MessageViewer.MessageView {
     id: messageView
     z: 0
     anchors.left: parent.left
@@ -37,7 +46,7 @@ KPIM.MainView {
     height: parent.height
     itemId: -1
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
-
+    visible : false
     onNextItemRequest: {
       // Only go to the next message when currently a valid item is set.
       if ( messageView.itemId >= 0 )
@@ -51,162 +60,216 @@ KPIM.MainView {
     }
   }
 
+  QML.Rectangle {
+    id : backToMessageListButton
+    anchors.right : kmailMobile.right
+    anchors.rightMargin : 70
+    anchors.bottom : kmailMobile.bottom
+    anchors.bottomMargin : 100
+    visible : false
+    QML.Image {
+      source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
+      QML.MouseArea {
+        anchors.fill : parent;
+        onClicked : {
+          backToListing();
+        }
+      }
+    }
+  }
+
+  QML.Item {
+    id : mainWorkView
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+
+    Akonadi.AkonadiBreadcrumbNavigationView {
+      id : collectionView
+      anchors.top: parent.top
+      width: 1/3 * parent.width
+      showUnread : true
+      anchors.bottom : selectButton.top
+      //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
+      anchors.left: parent.left
+
+        multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 emails",
+                                         collectionView.numSelected,
+                                         application.numSelectedAccounts,
+                                         headerList.count)
+      breadcrumbItemsModel : breadcrumbCollectionsModel
+      selectedItemModel : selectedCollectionModel
+      childItemsModel : childCollectionsModel
+    }
+    KPIM.Button2 {
+      id : selectButton
+      anchors.left: collectionView.left
+      anchors.right: collectionView.right
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : { (collectionView.numSelected == 1) ? -selectButton.height : 0 }
+      buttonText : (collectionView.numSelected <= 1) ? KDE.i18n("Select") : KDE.i18n("Change Selection")
+      opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
+      onClicked : {
+        application.persistCurrentSelection("preFavSelection");
+        favoriteSelector.visible = true;
+        mainWorkView.visible = false;
+      }
+    }
+
+    KPIM.StartCanvas {
+      id : startPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      anchors.leftMargin : 10
+      anchors.rightMargin : 10
+
+      opacity : collectionView.hasSelection ? 0 : 1
+      showAccountsList : false
+      favoritesModel : favoritesList
+
+      contextActions : [
+        QML.Column {
+          anchors.fill: parent
+          height : 70
+          KPIM.Button2 {
+            width: parent.width
+            buttonText : KDE.i18n( "Write new Email" )
+            onClicked : {
+              application.startComposer();
+            }
+          }
+        }
+      ]
+    }
+
+    QML.Rectangle {
+      id : accountPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : (collectionView.hasSelection && !collectionView.hasBreadcrumbs) && (headerList.count == 0) ? 1 : 0
+
+
+      KPIM.Button2 {
+        id : newEmailButton
+        anchors.top : parent.top
+        anchors.topMargin : 30
+        anchors.left : parent.left
+        anchors.right : parent.right
+        anchors.leftMargin : 10
+        anchors.rightMargin : 10
+        buttonText : KDE.i18n( "Write new Email" )
+        onClicked : {
+          application.startComposer();
+        }
+      }
+      KPIM.Button2 {
+        anchors.bottom : parent.bottom
+        anchors.bottomMargin : 10
+        anchors.right : parent.right
+        anchors.rightMargin : 35
+        width : 230
+        buttonText : KDE.i18n( "Configure Account" )
+        onClicked : {
+          application.configureCurrentAccount();
+        }
+      }
+    }
+
+    QML.Rectangle {
+      id : emptyFolderPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : { (!application.isLoadingSelected && collectionView.hasSelection && headerList.count == 0 ) ? 1 : 0 }
+      // TODO: content
+      QML.Text {
+        text : KDE.i18n("No messages in this folder");
+        height : 20;
+        font.italic : true
+        horizontalAlignment : QML.Text.AlignHCenter
+        anchors.verticalCenter : parent.verticalCenter;
+        anchors.horizontalCenter : parent.horizontalCenter
+      }
+    }
+
+     KPIM.Spinner {
+      id : loadingFolderPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      opacity : application.isLoadingSelected ? 1 : 0
+    }
+
+    QML.Rectangle {
+      id : emailListPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : headerList.count > 0 ? 1 : 0
+
+      HeaderView {
+        id: headerList
+        model: itemModel
+        anchors.fill : parent
+        onItemSelected: {
+          // Prevent reloading of the message, perhaps this should be done
+          // in messageview itself.
+          if ( messageView.itemId != headerList.currentItemId )
+          {
+            if (!application.isDraft(headerList.currentIndex))
+            {
+              messageView.messagePath = application.pathToItem(headerList.currentItemId);
+              messageView.itemId = headerList.currentItemId;
+              messageView.visible = true;
+              backToMessageListButton.visible = true;
+              collectionView.visible = false;
+              emailListPage.visible = false;
+            } else {
+              application.restoreDraft(headerList.currentItemId);
+            }
+          }
+        }
+      }
+    }
+  }
+  Akonadi.FavoriteSelector {
+    id : favoriteSelector
+    anchors.fill : parent
+    visible : false
+    styleSheet: window.styleSheet
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.clearPersistedSelection("preFavSelection");
+    }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.restorePersistedSelection("preFavSelection");
+    }
+  }
 
   SlideoutPanelContainer {
     anchors.fill: parent
-
+    visible : !favoriteSelector.visible
     SlideoutPanel {
-      anchors.fill: parent
-      id: startPanel
-      titleIcon: KDE.iconPath( "kmail-mobile", 48 )
-      handlePosition: 30
-      handleHeight: 78
-      content: [
-        KPIM.StartCanvas {
-          id : startPage
-          anchors.fill : parent
-          anchors.leftMargin : 50
-          startText: KDE.i18n( "Mail start page" )
-          favoritesModel : favoritesList
 
-          contextActions: [
-            Column {
-              anchors.fill: parent
-              height: 480 / 6 * 3
-              KPIM.Button {
-                width: parent.width
-                height: 480 / 6
-                buttonText : KDE.i18n( "Write new Email" )
-                font.bold: true
-                onClicked : {
-                  startPanel.collapse();
-                  application.startComposer();
-                }
-              }
-              KPIM.Button {
-                width: parent.width
-                height: 480 / 6
-                buttonText : KDE.i18n( "Add Account" )
-                font.bold: true
-                onClicked : { application.launchAccountWizard(); }
-              }
-              KPIM.Button {
-                height : 480 / 6
-                width : parent.width
-                buttonText : KDE.i18n( "Add Favorite" )
-                font.bold:  true
-                onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
-              }
-            }
-          ]
-        },
-        FavoriteSelector {
-          id : favoriteSelector
-          anchors.fill : parent
-          visible : false
-          onCanceled: {
-            favoriteSelector.visible = false;
-            startPage.visible = true;
-          }
-          onFinished : {
-            favoriteSelector.visible = false;
-            startPage.visible = true;
-            application.saveFavorite( favoriteSelector.favoriteName );
-          }
-        }
-      ]
-    }
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: folderPanel
-      titleText: KDE.i18n( "Folders" )
-      handleHeight: 150
-      content: [
-        Item {
-          anchors.fill: parent
-
-          AkonadiBreadcrumbNavigationView {
-            id : collectionView
-            width: 1/3 * folderPanel.contentWidth
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.rightMargin: 4
-            breadcrumbItemsModel : breadcrumbCollectionsModel
-            selectedItemModel : selectedCollectionModel
-            childItemsModel : childCollectionsModel
-          }
-
-          HeaderView {
-            id: headerList
-            opacity : { headerList.count > 0 ? 1 : 0; }
-            model: itemModel
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.left: collectionView.right
-            onItemSelected: {
-              // Prevent reloading of the message, perhaps this should be done
-              // in messageview itself.
-              if ( messageView.itemId != headerList.currentItemId )
-              {
-                messageView.messagePath = application.pathToItem(headerList.currentItemId);
-                messageView.itemId = headerList.currentItemId;
-              }
-              folderPanel.collapse()
-            }
-          }
-          Rectangle {
-            id : headerActionOverlay
-            color: "#00000000" // Set a transparant color.
-            opacity : { headerList.count > 0 ? 0 : 1; }
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.left: collectionView.right
-            KPIM.Button {
-              id : newEmailButton
-              anchors.top : parent.top
-              anchors.left : parent.left
-              anchors.right : parent.right
-              height : 30
-              buttonText : KDE.i18n( "Write new E-Mail" )
-              onClicked : {
-                folderPanel.collapse();
-                application.startComposer();
-              }
-            }
-            KPIM.Button {
-              id : searchEmailButton
-              anchors.top : newEmailButton.bottom
-              anchors.left : parent.left
-              anchors.right : parent.right
-              height : 30
-              buttonText : KDE.i18n( "Search for E-Mail" )
-              onClicked : {
-                console.log("Search email");
-              }
-            }
-            KPIM.Button {
-              anchors.top : searchEmailButton.bottom
-              anchors.left : parent.left
-              anchors.right : parent.right
-              height : 30
-              buttonText : KDE.i18n( "Configure Account" )
-              onClicked : {
-                console.log("Configure");
-              }
-            }
-          }
-        }
-      ]
-    }
-
-    SlideoutPanel {
       anchors.fill: parent
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -246,39 +309,78 @@ KPIM.MainView {
               application.forwardInline( messageView.itemId );
             }
           },
+          KPIM.Action {
+            id: syncButton
+            anchors.top: forwardButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            hardcoded_height: parent.height / 6
+            action : application.getAction("akonadi_collection_sync")
+            onTriggered : actionPanel.collapse();
+          },
           KPIM.Action{
             id : deleteButton
-            anchors.top: forwardButton.bottom;
+            anchors.top: syncButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             hardcoded_height: parent.height / 6
             action : application.getAction("akonadi_item_delete")
             onTriggered : actionPanel.collapse();
           },
-          KPIM.Button {
-            id: previousButton
+          KPIM.Action{
+            id : importantButton
             anchors.top: deleteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Previous" )
-            onClicked: {
-              if ( messageView.itemId >= 0 )
-                headerList.previousItem();
-
+            hardcoded_height: parent.height / 6
+            action : application.getAction("mark_message_important")
+            checkable : true
+            onTriggered : actionPanel.collapse();
+          },
+          KPIM.Action{
+            id : markAsActionButton
+            anchors.top: importantButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            hardcoded_height: parent.height / 6
+            action : application.getAction("mark_message_action_item")
+            checkable : true
+            onTriggered : actionPanel.collapse();
+          },
+          KPIM.Button {
+            id : saveFavoriteButton
+            anchors.top: markAsActionButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            buttonText: KDE.i18n( "Save Favorite" )
+            width: parent.width - 10
+            height: collectionView.hasSelection ? parent.height / 6 : 0
+            visible : collectionView.hasSelection
+            onClicked : {
+              application.saveFavorite();
               actionPanel.collapse();
             }
           },
           KPIM.Button {
-            anchors.top: previousButton.bottom;
+            id : writeNewEmailButton
+            anchors.top: saveFavoriteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: KDE.i18n( "Next" )
-            onClicked: {
-              if ( messageView.itemId >= 0 )
-                headerList.nextItem();
-
+            buttonText : KDE.i18n( "Write new Email" )
+            onClicked : {
+              application.startComposer();
+              actionPanel.collapse();
+            }
+          },
+          KPIM.Button {
+            visible : !collectionView.hasSelection
+            anchors.top: writeNewEmailButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText : KDE.i18n( "New Account" )
+            onClicked : {
+              application.launchAccountWizard();
               actionPanel.collapse();
             }
           }
@@ -288,9 +390,10 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: attachmentPanel
-      visible: messageView.attachmentModel.attachmentCount >= 1
+      visible: messageView.attachmentModel.attachmentCount >= 1 && messageView.visible
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handlePosition: actionPanel.handleHeight + actionPanel.handlePosition
+      handleHeight: parent.height - actionPanel.handlePosition - actionPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: attachmentView.requestedWidth
       content: [
         KPIM.AttachmentList {
@@ -302,24 +405,34 @@ KPIM.MainView {
     }
   }
 
-  Connections {
+  QML.Connections {
     target: startPage
     onAccountSelected : {
       application.setSelectedAccount(row);
       startPanel.collapse();
       folderPanel.expand();
     }
-
+  }
+  QML.Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
+    }
   }
 
-  Connections {
+  QML.Connections {
     target: collectionView
     onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
   }
 
-  Connections {
+  QML.Connections {
     target: collectionView
     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
+  }
+
+  QML.Connections {
+    target: messageView
+    onMailRemoved : { backToListing(); }
   }
 
 }

@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -40,6 +40,7 @@ class ContactListProxy : public ListProxy
 
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     void setSourceModel(QAbstractItemModel* sourceModel);
+    bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 
   public slots:
     QString typeForIndex( int row ) const;

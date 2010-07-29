@@ -37,11 +37,13 @@
 class QCheckBox;
 class QString;
 class TemplatesConfiguration;
+class SimpleStringListEditor;
 
 class KComboBox;
 class KJob;
 class KLineEdit;
 class KPushButton;
+class KTabWidget;
 
 namespace Kleo {
   class EncryptionKeyRequester;
@@ -76,7 +78,7 @@ namespace KMail {
     void updateIdentity( KPIMIdentities::Identity & ident );
 
   protected slots:
-    void slotAboutToShow( QWidget * w );
+    void slotAboutToShow( int );
 
     /*! \reimp */
     virtual void slotButtonClicked( int button );
@@ -96,6 +98,7 @@ namespace KMail {
     KLineEdit                    *mNameEdit;
     KLineEdit                    *mOrganizationEdit;
     KLineEdit                    *mEmailEdit;
+    SimpleStringListEditor       *mAliasEdit;
     // "cryptography" tab:
     QWidget                      *mCryptographyTab;
     Kleo::SigningKeyRequester    *mPGPSigningKeyRequester;
@@ -120,6 +123,7 @@ namespace KMail {
     KPIMIdentities::SignatureConfigurator *mSignatureConfigurator;
     // "X-Face" tab:
     KMail::XFaceConfigurator *mXFaceConfigurator;
+    KTabWidget *mTabWidget;
   };
 
 } // namespace KMail

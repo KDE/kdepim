@@ -16,7 +16,7 @@ kde4_add_ui_files(kcal_groupwise_LIB_SRCS groupwisesettingswidgetbase.ui)
 
 kde4_add_kcfg_files(kcal_groupwise_LIB_SRCS kcal_groupwiseprefsbase.kcfgc)
 
-kde4_add_library (kcalgroupwise SHARED ${kcal_groupwise_LIB_SRCS})
+kde4_add_library (kcalgroupwise ${LIBRARY_TYPE} ${kcal_groupwise_LIB_SRCS})
 
 target_link_libraries(kcalgroupwise  ${KDE4_KDECORE_LIBS} gwsoap ${KDEPIMLIBS_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} kdepim)
 
@@ -42,7 +42,7 @@ set(kabc_groupwise_LIB_SRCS kabc_resourcegroupwise.cpp kabc_resourcegroupwisecon
 
 kde4_add_kcfg_files(kabc_groupwise_LIB_SRCS kabc_groupwiseprefs.kcfgc)
 
-kde4_add_library(kabcgroupwise SHARED ${kabc_groupwise_LIB_SRCS})
+kde4_add_library(kabcgroupwise ${LIBRARY_TYPE} ${kabc_groupwise_LIB_SRCS})
 
 target_link_libraries(kabcgroupwise ${KDE4_KDECORE_LIBS} gwsoap ${KDEPIMLIBS_KCAL_LIBS} kdepim ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
 

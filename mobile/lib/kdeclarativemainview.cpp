@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -40,12 +40,14 @@
 #include <kselectionproxymodel.h>
 
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/etmviewstatesaver.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/selectionproxymodel.h>
+#include <akonadi/itemmodifyjob.h>
+#include <akonadi/agentmanager.h>
 
-#include <akonadi_next/kbreadcrumbselectionmodel.h>
-#include <akonadi_next/kproxyitemselectionmodel.h>
-#include <akonadi_next/etmstatesaver.h>
+#include <kbreadcrumbselectionmodel.h>
+#include <klinkitemselectionmodel.h>
 #include <akonadi_next/checkableitemproxymodel.h>
 
 #include "listproxy.h"
@@ -53,6 +55,10 @@
 #include <KActionCollection>
 #include <akonadi/standardactionmanager.h>
 #include <KAction>
+#include <KCmdLineArgs>
+#include <QInputDialog>
+
+#include "kresettingproxymodel.h"
 
 using namespace Akonadi;
 
@@ -60,7 +66,20 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   : KDeclarativeFullScreenView( appName, parent )
   , d( new KDeclarativeMainViewPrivate )
 {
+
+  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+
+  QTime t;
+  if ( debugTiming ) {
+    t.start();
+    kWarning() << "Start KDeclarativeMainView ctor" << &t << " - " << QDateTime::currentDateTime();
+  }
+
   KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
+
+  if ( debugTiming ) {
+    kWarning() << "Catalog inserted" << t.elapsed() << &t;
+  }
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #ifdef Q_WS_MAEMO_5
@@ -68,14 +87,22 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 #endif
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
+  d->mChangeRecorder->fetchCollection( true );
   d->mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
-  d->mChangeRecorder->itemFetchScope().fetchFullPayload(); // By default fetch the full payload
 
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
+  if ( debugTiming ) {
+    kWarning() << "ETM created" << t.elapsed() << &t;
+  }
+
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory(this);
   d->mBnf->setModel(d->mEtm, this);
+
+  if ( debugTiming ) {
+    kWarning() << "BreadcrumbNavigation factory created" << t.elapsed() << &t;
+  }
 
   d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
   d->mItemFilter->setSourceModel( d->mBnf->unfilteredChildItemModel() );
@@ -87,69 +114,81 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
     listProxy->setSourceModel( d->mItemFilter );
   }
 
+  if ( debugTiming ) {
+    kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
+  }
+
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
   engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
   engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectedItemModel() ) ) );
-  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->breadcrumbItemModel() ) ) );
+
+  // Temporary workaround for QML model bugs.
+  KResettingProxyModel *resettingModel = new KResettingProxyModel( this );
+  resettingModel->setSourceModel( d->mBnf->breadcrumbItemModel() );
+
+  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( resettingModel ) ) );
   engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->childItemModel() ) ) );
+  engine()->rootContext()->setContextProperty( "folderSelectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectionModel() ) ) );
   if ( listProxy )
     engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
-  Akonadi::EntityMimeTypeFilterModel *favCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
-  favCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  favCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  favCollectionFilter->setSourceModel( d->mEtm );
 
-  d->mFavSelection = new QItemSelectionModel( favCollectionFilter, this );
+  if ( debugTiming ) {
+    kWarning() << "Core QML context done" << t.elapsed() << &t;
+  }
+
+  Akonadi::EntityMimeTypeFilterModel *allFoldersModel = new Akonadi::EntityMimeTypeFilterModel( this );
+  allFoldersModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  allFoldersModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  allFoldersModel->setSourceModel( d->mEtm );
+
+  d->mFavSelection = new QItemSelectionModel( d->mBnf->unfilteredChildItemModel(), this );
 
   // Need to proxy the selection because the favSelection operates on collectionFilter, but the
   // KSelectionProxyModel *favCollectionList and favSelectedChildren below operates on mEtm.
-  Future::KProxyItemSelectionModel *selectionProxy = new Future::KProxyItemSelectionModel( d->mEtm, d->mFavSelection, this );
-
-  // Show the list of currently selected items.
-  Akonadi::SelectionProxyModel *favCollectionList = new Akonadi::SelectionProxyModel( selectionProxy, this );
-  favCollectionList->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  favCollectionList->setSourceModel( d->mEtm );
+  KLinkItemSelectionModel *selectionProxy = new KLinkItemSelectionModel( d->mEtm, d->mFavSelection, this );
 
   // Show the list of currently selected items.
   KSelectionProxyModel *favSelectedChildren = new KSelectionProxyModel(selectionProxy, this);
   favSelectedChildren->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   favSelectedChildren->setSourceModel( d->mEtm );
 
-  Akonadi::EntityMimeTypeFilterModel *favItemFilter = new Akonadi::EntityMimeTypeFilterModel( this );
-  favItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-  favItemFilter->setSourceModel( favSelectedChildren );
-
-  d->mFavSelectedChildItems = favItemFilter;
-
-  // Make it possible to uncheck currently selected items in the list
-  CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel( this );
-  currentSelectionCheckableProxyModel->setSourceModel( favCollectionList );
-  Future::KProxyItemSelectionModel *proxySelector = new Future::KProxyItemSelectionModel( favCollectionList, d->mFavSelection );
-  currentSelectionCheckableProxyModel->setSelectionModel( proxySelector );
-
-  // Make it possible to check/uncheck items in the column view.
-  CheckableItemProxyModel *favoriteSelectionModel = new CheckableItemProxyModel( this );
-  favoriteSelectionModel->setSelectionModel( d->mFavSelection );
-  favoriteSelectionModel->setSourceModel( favCollectionFilter );
-
+  // A list of available favorites
   QAbstractItemModel *favsList = d->getFavoritesListModel();
+
+  engine()->rootContext()->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
+  engine()->rootContext()->setContextProperty( "allFoldersModel", QVariant::fromValue( static_cast<QObject*>( allFoldersModel ) ) );
 
   d->mItemSelectionModel = new QItemSelectionModel( listProxy ? static_cast<QAbstractItemModel *>( listProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
-  // TODO: Get this from a KXMLGUIClient?
-  d->mActionCollection = new KActionCollection( this );
 
-  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( d->mActionCollection, this );
+  if ( debugTiming ) {
+    kWarning() << "Favorites QML context done" << t.elapsed() << &t;
+  }
+
+  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
+  standardActionManager->setCollectionSelectionModel( regularSelectionModel() );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
+  standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
 
 #if 0
   QTreeView *etmView = new QTreeView;
   etmView->setModel( d->mEtm );
   etmView->show();
   etmView->setWindowTitle( "ETM" );
+
+  // Show the list of currently selected items.
+  Akonadi::SelectionProxyModel *favCollectionList = new Akonadi::SelectionProxyModel( selectionProxy, this );
+  favCollectionList->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  favCollectionList->setSourceModel( d->mEtm );
+
+  // Make it possible to uncheck currently selected items in the list
+  CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel( this );
+  currentSelectionCheckableProxyModel->setSourceModel( favCollectionList );
+  KLinkItemSelectionModel *proxySelector = new KLinkItemSelectionModel( favCollectionList, d->mFavSelection );
+  currentSelectionCheckableProxyModel->setSelectionModel( proxySelector );
 
   QListView *currentlyCheckedView = new QListView;
   currentlyCheckedView->setModel( currentSelectionCheckableProxyModel );
@@ -160,6 +199,12 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   columnView->setModel( favoriteSelectionModel );
   columnView->show();
   columnView->setWindowTitle( "All collections. Checkable" );
+
+  Akonadi::EntityMimeTypeFilterModel *favItemFilter = new Akonadi::EntityMimeTypeFilterModel( this );
+  favItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+  favItemFilter->setSourceModel( favSelectedChildren );
+
+  d->mFavSelectedChildItems = favItemFilter;
 
   QListView *childItemsView = new QListView;
   childItemsView->setModel( favItemFilter );
@@ -178,15 +223,31 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   itemListView->setWindowTitle( "ItemList view" );
 #endif
 
-  engine()->rootContext()->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
-  engine()->rootContext()->setContextProperty( "selectedFavoriteItems", QVariant::fromValue( static_cast<QObject*>( favItemFilter ) ) );
-  engine()->rootContext()->setContextProperty( "favoriteSelectionModel", QVariant::fromValue( static_cast<QObject*>( favoriteSelectionModel ) ) );
-
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
   connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
 
+  connect( d->mBnf->selectedItemModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SIGNAL(isLoadingSelectedChanged()));
+  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
+  connect( d->mBnf->selectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SIGNAL(isLoadingSelectedChanged()));
+
+
+  if ( debugTiming ) {
+    kWarning() << "Restoring state" << t.elapsed() << &t;
+  }
+
   d->restoreState();
+
+  if ( debugTiming ) {
+    kWarning() << "restore state done" << t.elapsed() << &t;
+  }
+
+  connect( d->mBnf->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(numSelectedAccountsChanged()));
+
+  if ( debugTiming ) {
+    t.start();
+    kWarning() << "Finished KDeclarativeMainView ctor: " << t.elapsed() << " - " << &t;
+  }
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()
@@ -217,9 +278,9 @@ bool KDeclarativeMainView::childCollectionHasChildren( int row )
   return d->mBnf->childCollectionHasChildren( row );
 }
 
-void KDeclarativeMainView::setListPayloadPart( const QByteArray &payloadPart )
+ItemFetchScope& KDeclarativeMainView::itemFetchScope()
 {
-  d->mChangeRecorder->itemFetchScope().fetchPayloadPart( payloadPart );
+  return d->mChangeRecorder->itemFetchScope();
 }
 
 void KDeclarativeMainView::addMimeType( const QString &mimeType )
@@ -245,7 +306,7 @@ void KDeclarativeMainView::setSelectedBreadcrumbCollectionRow( int row )
 void KDeclarativeMainView::setListSelectedRow( int row )
 {
   static const int column = 0;
-  QModelIndex idx =d->mItemSelectionModel->model()->index( row, column );
+  const QModelIndex idx = d->mItemSelectionModel->model()->index( row, column );
   d->mItemSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
 }
 
@@ -257,6 +318,14 @@ void KDeclarativeMainView::setSelectedAccount( int row )
     return;
   }
   d->mBnf->selectChild( row );
+}
+
+int KDeclarativeMainView::selectedCollectionRow()
+{
+  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
+  if (list.size() != 1)
+    return -1;
+  return list.first().row();
 }
 
 Akonadi::EntityTreeModel* KDeclarativeMainView::entityTreeModel() const
@@ -272,9 +341,7 @@ QAbstractItemModel* KDeclarativeMainView::itemModel() const
 void KDeclarativeMainView::launchAccountWizard()
 {
   QStringList args;
-
-  foreach ( const QString &mimetype, d->mChangeRecorder->mimeTypesMonitored() )
-   args << QLatin1String( "--type" ) << mimetype;
+  args << QLatin1String( "--type" ) << d->mChangeRecorder->mimeTypesMonitored().join( "," );
 
   int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), args );
   if ( !pid )
@@ -284,10 +351,17 @@ void KDeclarativeMainView::launchAccountWizard()
   }
 }
 
-void KDeclarativeMainView::saveFavorite(const QString& name)
+void KDeclarativeMainView::saveFavorite()
 {
-  ETMStateSaver saver;
-  saver.setSelectionModel( d->mFavSelection );
+  bool ok;
+  QString name = QInputDialog::getText(this, i18n("Select name for favorite"),
+                                      i18n("Favorite name"), QLineEdit::Normal, QString(), &ok);
+
+  if (!ok || name.isEmpty())
+    return;
+
+  ETMViewStateSaver saver;
+  saver.setSelectionModel( d->mBnf->selectionModel() );
 
   KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
   saver.saveState( cfg );
@@ -297,8 +371,8 @@ void KDeclarativeMainView::saveFavorite(const QString& name)
 
 void KDeclarativeMainView::loadFavorite(const QString& name)
 {
-  ETMStateSaver *saver = new ETMStateSaver;
-  saver->setSelectionModel( d->mFavSelection );
+  ETMViewStateSaver *saver = new ETMViewStateSaver;
+  saver->setSelectionModel( d->mBnf->selectionModel() );
   KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
   if ( !cfg.isValid() )
   {
@@ -323,21 +397,6 @@ QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
   return d->mItemFilter;
 }
 
-QAbstractItemModel* KDeclarativeMainView::favoriteSelectedItems() const
-{
-  return d->mFavSelectedChildItems;
-}
-
-KActionCollection* KDeclarativeMainView::actionCollection() const
-{
-  return d->mActionCollection;
-}
-
-QObject* KDeclarativeMainView::getAction( const QString &name ) const
-{
-  return d->mActionCollection->action( name );
-}
-
 Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
 {
   const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );
@@ -345,3 +404,93 @@ Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
     return Akonadi::Item();
   return list.first().data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 }
+
+QItemSelectionModel* KDeclarativeMainView::itemSelectionModel() const
+{
+  return d->mItemSelectionModel;
+}
+
+void KDeclarativeMainView::configureCurrentAccount()
+{
+  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
+  if (list.size() != 1)
+    return;
+
+  const Collection col = list.first().data(EntityTreeModel::CollectionRole).value<Collection>();
+  if (!col.isValid())
+    return;
+
+  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+  AgentInstance agent = manager->instance(col.resource());
+  if (!agent.isValid())
+    return;
+
+  agent.configure();
+}
+
+void KDeclarativeMainView::persistCurrentSelection(const QString& key)
+{
+  ETMViewStateSaver saver;
+  saver.setSelectionModel(d->mBnf->selectionModel());
+  QStringList selection = saver.selectionKeys();
+  if (selection.isEmpty())
+    return;
+
+  d->mPersistedSelections.insert(key, selection);
+}
+
+void KDeclarativeMainView::clearPersistedSelection(const QString& key)
+{
+  d->mPersistedSelections.remove(key);
+}
+
+void KDeclarativeMainView::restorePersistedSelection(const QString& key)
+{
+  if (!d->mPersistedSelections.contains(key))
+    return;
+
+  QStringList selection = d->mPersistedSelections.take(key);
+  ETMViewStateSaver *restorer = new ETMViewStateSaver;
+
+  QItemSelectionModel *selectionModel = d->mBnf->selectionModel();
+  selectionModel->clearSelection();
+
+  restorer->setSelectionModel(selectionModel);
+  restorer->restoreSelection(selection);
+}
+
+int KDeclarativeMainView::numSelectedAccounts()
+{
+  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
+  if (list.isEmpty())
+    return 0;
+
+  QSet<QString> resources;
+
+  foreach (const QModelIndex &index, list)
+  {
+    const Collection col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if (!col.isValid())
+      continue;
+    resources.insert(col.resource());
+  }
+  return resources.size();
+}
+
+QAbstractItemModel* KDeclarativeMainView::selectedItemsModel() const
+{
+  return d->mBnf->selectedItemModel();
+}
+
+bool KDeclarativeMainView::isLoadingSelected()
+{
+  const QModelIndex idx = d->mBnf->selectedItemModel()->index(0, 0);
+  if (!idx.isValid())
+    return false;
+
+  const QVariant fetchStateData = idx.data(EntityTreeModel::FetchStateRole);
+  Q_ASSERT(fetchStateData.isValid());
+  const EntityTreeModel::FetchState fetchState = static_cast<EntityTreeModel::FetchState>(fetchStateData.toInt());
+  return fetchState == EntityTreeModel::FetchingState;
+}
+

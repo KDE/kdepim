@@ -3,6 +3,8 @@
 
 #include <QtDeclarative/QDeclarativeItem>
 
+#include <Akonadi/Item>
+
 #include "mobileui_export.h"
 
 class DeclarativeAkonadiItemPrivate;
@@ -10,10 +12,17 @@ class DeclarativeAkonadiItemPrivate;
 class MOBILEUI_EXPORT DeclarativeAkonadiItem : public QDeclarativeItem
 {
   Q_OBJECT
+  Q_PROPERTY( Akonadi::Item item READ item )
   Q_PROPERTY( int itemId READ itemId WRITE setItemId )
   Q_PROPERTY( double swipeLength READ swipeLength WRITE setSwipeLength )
 
 public:
+  /**
+   * Returns the current Akonadi::Item. The default implementation returns an
+   * item without payload.
+   */
+  virtual Akonadi::Item item() const;
+
   /**
    * Set/get the Akonadi::Item::Id. We use quint64 here so we can deal with
    * the id in QML files too.

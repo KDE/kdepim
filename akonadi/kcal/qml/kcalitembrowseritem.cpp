@@ -19,16 +19,33 @@
 
 #include "kcalitembrowseritem.h"
 
-#include <akonadi/kcal/incidenceviewer.h>
 #include <akonadi/item.h>
 
 using namespace Akonadi;
 using namespace Akonadi::KCal;
 
+ExtendedIncidenceViewer::ExtendedIncidenceViewer( QWidget *parent )
+  : IncidenceViewer( parent )
+{
+}
+
+void ExtendedIncidenceViewer::itemRemoved()
+{
+  emit incidenceRemoved();
+}
+
+
 KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : DeclarativeAkonadiItem(parent)
 {
-  m_viewer = new IncidenceViewer( 0 );
+  m_viewer = new ExtendedIncidenceViewer( 0 );
+  connect( m_viewer, SIGNAL( incidenceRemoved() ), SIGNAL( incidenceRemoved() ) );
+
   setWidget( m_viewer );
+}
+
+Akonadi::Item KCalItemBrowserItem::item() const
+{
+  return m_viewer->item();
 }
 
 qint64 KCalItemBrowserItem::itemId() const
@@ -40,6 +57,16 @@ void KCalItemBrowserItem::setItemId(qint64 id)
 {
   m_viewer->setItem( Akonadi::Item( id ) );
   emit attachmentModelChanged();
+}
+
+QDate KCalItemBrowserItem::activeDate() const
+{
+  return m_viewer->activeDate();
+}
+
+void KCalItemBrowserItem::setActiveDate( const QDate &date )
+{
+  m_viewer->setIncidence( m_viewer->item(), date );
 }
 
 QObject* KCalItemBrowserItem::attachmentModel() const

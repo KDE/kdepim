@@ -26,7 +26,7 @@ set(gwsoap_SRCS
    stdsoap2.cpp
    )
 
-kde4_add_library(gwsoap SHARED ${gwsoap_SRCS})
+kde4_add_library(gwsoap ${LIBRARY_TYPE} ${gwsoap_SRCS})
 
 target_link_libraries(gwsoap ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${QT_QTCORE_LIBRARY})
 

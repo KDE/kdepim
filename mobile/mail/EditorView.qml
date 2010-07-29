@@ -24,6 +24,7 @@ import org.kde.kpimidentities 4.5 as KPIMIdentities
 import org.kde.messagecomposer 4.5 as MessageComposer
 
 Item {
+  property int contentHeight: subject.height + messageContent.height + bottomContainer.height + 20;
   anchors.topMargin: 12
   anchors.leftMargin: 48
   anchors.rightMargin: 2
@@ -32,7 +33,7 @@ Item {
     id: subjectLabel
     text: KDE.i18n( "Subject:" );
     anchors.leftMargin: 48
-    anchors.top: parent.top
+    anchors.verticalCenter: subject.verticalCenter
     anchors.left: parent.left
   }
 
@@ -43,12 +44,14 @@ Item {
       top: parent.top
       right: parent.right
     }
-    height: subjectInput.height
-    border { color: "black"; width: 1 }
+    height: subjectInput.height + 8 // padding
+    border { color: "grey"; width: 2; }
+    radius: 8
 
     TextInput {
       id: subjectInput
       anchors.fill: parent
+      anchors.margins: 4
       text: window.subject
     }
   }
@@ -57,46 +60,56 @@ Item {
 
   MessageComposer.Editor {
     id: messageContent
+    height: 344;
     anchors {
       top: subject.bottom
       left: parent.left
       right: parent.right
-      bottom: sendButton.top
       topMargin: 2
     }
   }
 
-  Text {
-    id: identityLabel
+  Item {
+    id: bottomContainer;
+    height: 80
     anchors {
-      left: parent.left
-      bottom: parent.bottom
-      top: messageContent.bottom
+        left: parent.left
+        right: parent.right
+        top: messageContent.bottom
     }
-    text: KDE.i18n( "Identity:" );
-    verticalAlignment: "AlignVCenter"
+
+    Text {
+      id: identityLabel
+      anchors {
+        left: parent.left
+        bottom: parent.bottom
+          top: parent.top
+      }
+      text: KDE.i18n( "Identity:" );
+      verticalAlignment: "AlignVCenter"
+    }
+
+    KPIMIdentities.IdentityComboBox {
+      id: identityCombo
+      anchors {
+        left: identityLabel.right
+        top: parent.top
+        bottom: parent.bottom
+        right: sendButton.left
+      }
+    }
+
+    KPIM.Button {
+      id: sendButton
+      anchors {
+        top: parent.top
+        bottom: parent.bottom
+        right: parent.right
+      }
+      buttonText: KDE.i18n( "Send" )
+      width: parent.parent.width / 4
+      onClicked: window.send()
+    }
   }
 
-  KPIMIdentities.IdentityComboBox {
-    id: identityCombo
-    anchors {
-      left: identityLabel.right
-      bottom: parent.bottom
-      top: messageContent.bottom
-      right: sendButton.left
-    }
-    height: parent.height / 6
-  }
-
-  KPIM.Button {
-    id: sendButton
-    anchors {
-      bottom: parent.bottom
-      right: parent.right
-    }
-    buttonText: KDE.i18n( "Send" )
-    height: parent.height / 6
-    width: parent.width / 4
-    onClicked: window.send()
-  }
 }

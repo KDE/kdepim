@@ -21,13 +21,15 @@
 #define KDECLARATIVEAPPLICATION_H
 
 #include "mobileui_export.h"
-#include <kapplication.h>
+#include <kuniqueapplication.h>
 
 class MOBILEUI_EXPORT KDeclarativeApplication : public KApplication
 {
   Q_OBJECT
   public:
     KDeclarativeApplication();
+
+    static void initCmdLine();
 };
 
 #endif

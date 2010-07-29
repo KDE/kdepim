@@ -214,7 +214,7 @@ namespace {
     QString format_keytype( const Key & key ) {
 	const Subkey subkey = key.subkey( 0 );
 	if ( key.hasSecret() )
-	    return i18n( "%1-bit %2 (secret certificate available)", subkey.length(), subkey.publicKeyAlgorithmAsString() );
+	    return i18n( "%1-bit %2 (secret key available)", subkey.length(), subkey.publicKeyAlgorithmAsString() );
 	else
 	    return i18n( "%1-bit %2", subkey.length(), subkey.publicKeyAlgorithmAsString() );
     }

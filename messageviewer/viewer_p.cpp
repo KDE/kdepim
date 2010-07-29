@@ -165,6 +165,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mScrollDownAction( 0 ),
     mScrollUpMoreAction( 0 ),
     mScrollDownMoreAction( 0 ),
+    mHeaderOnlyAttachmentsAction( 0 ),
     mSelectEncodingAction( 0 ),
     mSelectThemeAction( 0 ),
     mToggleFixFontAction( 0 ),
@@ -225,6 +226,10 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
            this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
   connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
            this, SLOT( slotClear() ) );
+  connect( &mMonitor, SIGNAL( itemRemoved( Akonadi::Item ) ),
+           this, SIGNAL( itemRemoved() ) );
+  connect( &mMonitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           this, SLOT( slotItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -1235,6 +1240,20 @@ void ViewerPrivate::writeConfig( bool sync )
 
 void ViewerPrivate::setHeaderTheme( HeaderTheme * theme ) {
   mHeaderTheme = theme ? theme : HeaderTheme::create();
+  if ( mHeaderOnlyAttachmentsAction ) {
+#if 0 //TODO: PORT ME!
+    mHeaderOnlyAttachmentsAction->setEnabled( mHeaderStyle->hasAttachmentQuickList() );
+    if ( !mHeaderStyle->hasAttachmentQuickList() &&
+         mAttachmentStrategy->requiresAttachmentListInHeader() ) {
+      // Style changed to something without an attachment quick list, need to change attachment
+      // strategy
+      setAttachmentStrategy( AttachmentStrategy::smart() );
+      actionForAttachmentStrategy( mAttachmentStrategy )->setChecked( true );
+    }
+#else
+    kWarning() << "Port to the new header themes!";
+#endif
+  }
   update( Viewer::Force );
 }
 
@@ -1553,6 +1572,14 @@ void ViewerPrivate::createActions()
   group->addAction( raction );
   attachmentMenu->addAction( raction );
 
+  mHeaderOnlyAttachmentsAction = new KToggleAction( i18nc( "View->attachments->", "In Header Only" ), this );
+  ac->addAction( "view_attachments_headeronly", mHeaderOnlyAttachmentsAction );
+  connect( mHeaderOnlyAttachmentsAction, SIGNAL( triggered( bool ) ),
+           SLOT( slotHeaderOnlyAttachments() ) );
+  mHeaderOnlyAttachmentsAction->setHelpText( i18n( "Show Attachments only in the header of the mail" ) );
+  group->addAction( mHeaderOnlyAttachmentsAction );
+  attachmentMenu->addAction( mHeaderOnlyAttachmentsAction );
+
   // Set Encoding submenu
   mSelectEncodingAction  = new KSelectAction(KIcon("character-set"), i18n("&Set Encoding"), this);
   mSelectEncodingAction->setToolBarMode( KSelectAction::MenuMode );
@@ -1729,6 +1756,8 @@ KToggleAction *ViewerPrivate::actionForAttachmentStrategy( const AttachmentStrat
     actionName = "view_attachments_inline";
   else if ( as == AttachmentStrategy::hidden() )
     actionName = "view_attachments_hide";
+  else if ( as == AttachmentStrategy::headerOnly() )
+    actionName = "view_attachments_headeronly";
 
   if ( actionName )
     return static_cast<KToggleAction*>(mActionCollection->action(actionName));
@@ -1797,43 +1826,25 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
         html += "</div>";
     }
   } else {
-    QString label, icon;
-    icon = mNodeHelper->iconName( node, KIconLoader::Small );
-    label = node->contentDescription()->asUnicodeString();
-    if( label.isEmpty() ) {
-      label = NodeHelper::fileName( node );
-    }
-
-    bool typeBlacklisted = node->contentType()->mediaType().toLower() == "multipart";
-    if ( !typeBlacklisted ) {
-      typeBlacklisted = StringUtil::isCryptoPart( node->contentType()->mediaType(),
-                                                  node->contentType()->subType(),
-                                                  node->contentDisposition()->filename() );
-    }
-    typeBlacklisted = typeBlacklisted || node == mMessage.get();
-    const bool firstTextChildOfEncapsulatedMsg =
-        node->contentType()->mediaType().toLower() == "text" &&
-        node->contentType()->subType().toLower() == "plain" &&
-        node->parent() && node->parent()->contentType()->mediaType().toLower() == "message";
-    typeBlacklisted = typeBlacklisted || firstTextChildOfEncapsulatedMsg;
-    if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
+    NodeHelper::AttachmentDisplayInfo info = NodeHelper::attachmentDisplayInfo( node );
+    if ( info.displayInHeader ) {
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
       mNodeHelper->writeNodeToTempFile( node );
       QString href = mNodeHelper->asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
-      html += "<img style=\"vertical-align:middle;\" src=\"" + icon + "\"/>&nbsp;";
+      html += "<img style=\"vertical-align:middle;\" src=\"" + info.icon + "\"/>&nbsp;";
       if ( mThemeName == "enterprise" ) {
         QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
         QFontMetrics fm( bodyFont );
-        html += fm.elidedText( label, Qt::ElideRight, 180 );
+        html += fm.elidedText( info.label, Qt::ElideRight, 180 );
       } else if ( mThemeName == "fancy" ) {
         QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
         QFontMetrics fm( bodyFont );
-        html += fm.elidedText( label, Qt::ElideRight, 1000 );
+        html += fm.elidedText( info.label, Qt::ElideRight, 1000 );
       } else {
-        html += label;
+        html += info.label;
       }
       html += "</a></span></div> ";
     }
@@ -1938,6 +1949,12 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
 
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
+
+  if ( url.protocol() == "mailto" ) {
+    mCopyURLAction->setText( i18n( "Copy Email Address" ) );
+  } else {
+    mCopyURLAction->setText( i18n( "Copy Link Address" ) );
+  }
 
   emit popupMenu( mMessageItem, aUrl, aPos );
 }
@@ -2093,6 +2110,10 @@ void ViewerPrivate::slotHideAttachments()
   setAttachmentStrategy( AttachmentStrategy::hidden() );
 }
 
+void ViewerPrivate::slotHeaderOnlyAttachments()
+{
+  setAttachmentStrategy( AttachmentStrategy::headerOnly() );
+}
 
 void ViewerPrivate::attachmentView( KMime::Content *atmNode )
 {
@@ -2123,6 +2144,8 @@ void ViewerPrivate::slotPrintMsg()
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   if ( !mMessage ) return;
 
+// wince does not support printing
+#ifndef _WIN32_WCE
   QPrinter printer;
 
   QPointer<QPrintDialog> dlg = new QPrintDialog( &printer, mViewer );
@@ -2131,6 +2154,7 @@ void ViewerPrivate::slotPrintMsg()
   }
 
   delete dlg;
+#endif
 }
 
 
@@ -2540,7 +2564,7 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
   mShowAttachmentQuicklist = showAttachmentQuicklist;
 }
 
-void ViewerPrivate::scrollToAttachment( const KMime::Content *node )
+void ViewerPrivate::scrollToAttachment( KMime::Content *node )
 {
   QWebElement doc = mViewer->page()->mainFrame()->documentElement();
 
@@ -2562,6 +2586,11 @@ void ViewerPrivate::scrollToAttachment( const KMime::Content *node )
     QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( i + 1 ) );
     if ( !attachmentDiv.isNull() )
       attachmentDiv.removeAttribute( "style" );
+  }
+
+  // Don't mark hidden nodes, that would just produce a strange yellow line
+  if ( mNodeHelper->isNodeDisplayedHidden( node ) ) {
+    return;
   }
 
   // Now, color the div of the attachment in yellow, so that the user sees what happened.
@@ -2803,13 +2832,22 @@ void ViewerPrivate::itemFetchResult( KJob* job )
   }
 }
 
-void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray> & )
+void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray> & parts )
 {
   if ( item.id() != messageItem().id() ) {
     kDebug() << "Update for an already forgotten item. Weird.";
     return;
   }
-  setMessageItem( item );
+  if( parts.contains( "PLD:RFC822" ) )
+    setMessageItem( item, Viewer::Force );
+}
+
+void ViewerPrivate::slotItemMoved( const Akonadi::Item &item, const Akonadi::Collection&,
+                                   const Akonadi::Collection& )
+{
+  // clear the view after the current item has been moved somewhere else (e.g. to trash)
+  if ( item.id() == messageItem().id() )
+    slotClear();
 }
 
 void ViewerPrivate::slotClear()

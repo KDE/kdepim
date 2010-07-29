@@ -24,7 +24,7 @@
 
 #include "kdeclarativemainview.h"
 
-#include <akonadi/entity.h>
+#include <akonadi/collection.h>
 
 class MainView : public KDeclarativeMainView
 {
@@ -36,6 +36,15 @@ class MainView : public KDeclarativeMainView
     QString noteTitle( int row );
     QString noteContent( int row );
 
+    void saveNote(const QString &title, const QString &content);
+    void saveCurrentNoteTitle(const QString &title);
+    void saveCurrentNoteContent(const QString &content);
+
+    void startComposer();
+    void onSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
+private:
+    Akonadi::Collection suitableContainerCollection(const QModelIndex &parent = QModelIndex());
 };
 
 #endif // MAINVIEW_H

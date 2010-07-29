@@ -2,7 +2,7 @@
   This file is part of libkdepim.
 
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
-  Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -93,6 +93,18 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
      * @param squeeze The new squeeze status
      */
     void setSqueezeText( bool squeeze );
+
+    /**
+     * Return whether or not the item at @param index is enabled, i.e. if the
+     * user can (un)check the item.
+     */
+    bool itemEnabled( int index );
+
+    /**
+     * Set the item at @param index to @param enabled, i.e. if the
+     * user can (un)check the item.
+     */
+    void setItemEnabled( int index, bool enabled = true );
 
     /**
      * Returns the check state of item at given index.

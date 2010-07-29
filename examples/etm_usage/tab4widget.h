@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #ifndef TAB4WIDGET_H
 #define TAB4WIDGET_H
 

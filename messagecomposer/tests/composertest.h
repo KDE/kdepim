@@ -32,6 +32,7 @@ class ComposerTest : public QObject
   Q_OBJECT
   private Q_SLOTS:
     void testAttachments();
+    void testAutoSave();
 
     // crypto tests
     // openpgp

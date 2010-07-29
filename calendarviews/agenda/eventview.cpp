@@ -70,7 +70,8 @@ class EventView::Private
         mTypeAhead( false ),
         mTypeAheadReceiver( 0 ),
         mPrefs( new Prefs() ),
-        mChanger( 0 )
+        mChanger( 0 ),
+        mPendingChanges( true )
     {
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
@@ -120,6 +121,7 @@ class EventView::Private
     PrefsPtr mPrefs;
 
     IncidenceChanger *mChanger;
+    bool mPendingChanges;
 };
 
 CollectionSelection* EventView::Private::sGlobalCollectionSelection = 0;
@@ -660,6 +662,16 @@ QByteArray EventView::identifier() const
 void EventView::setIdentifier( const QByteArray &identifier )
 {
   d->identifier = identifier;
+}
+
+void EventView::setUpdateNeeded( bool needed )
+{
+  d->mPendingChanges = needed;
+}
+
+bool EventView::updateNeeded() const
+{
+  return d->mPendingChanges;
 }
 
 #include "eventview.moc"

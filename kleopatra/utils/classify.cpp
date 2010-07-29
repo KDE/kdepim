@@ -159,20 +159,23 @@ unsigned int Kleo::classify( const QString & filename ) {
     const _classification * const it = qBinaryFind( begin( classifications ), end( classifications ),
                                                     fi.suffix().toLatin1().constData(),
                                                     ByExtension<std::less>() );
-    if ( it == end( classifications ) )
-        return defaultClassification;
-    if ( !( it->classification & ExamineContentHint ) )
-        return it->classification;
+    if ( it != end( classifications ) )
+        if ( !( it->classification & ExamineContentHint ) )
+            return it->classification;
+
+    const unsigned int bestGuess =
+        it == end( classifications ) ? defaultClassification
+        /* else */                   : it->classification ;
 
     QFile file( filename );
     if ( !file.open( QIODevice::ReadOnly|QIODevice::Text ) )
-        return it->classification;
+        return bestGuess;
 
     const unsigned int contentClassification = classifyContent( file.read( 4096 ) );
     if ( contentClassification != defaultClassification )
         return contentClassification;
     else
-        return it->classification;
+        return bestGuess;
 }
 
 unsigned int Kleo::classifyContent( const QByteArray & data ) {

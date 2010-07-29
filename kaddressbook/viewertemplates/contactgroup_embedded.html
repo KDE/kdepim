@@ -1,0 +1,34 @@
+  <div align="center">
+    <table cellpadding="3" cellspacing="0" width="100%">
+      <tr>
+        <td align="right" valign="top" width="30%">
+          <img src="group_photo" width="100" vspace="1">
+        </td>
+        <td align="left" width="70%">
+          <font size="+2">
+            <b>{{ contactGroup.name }}</b>
+          </font>
+        </td>
+      </tr>
+    </table>
+
+    <table width="100%">
+      {% for member in contactGroup.members %}
+        {% with member.name as title %}
+        {% with member.emailLink|safe as value %}
+        {% include "contactgroup_memberrow.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+      <tr>
+        <td colspan="2">&nbsp;</td>
+      </tr>
+      {% for field in contactGroup.additionalFields %}
+        {% with field.title as title %}
+        {% with field.value as value %}
+        {% include "contactgroup_additionalfieldrow.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+    </table>
+  </div>

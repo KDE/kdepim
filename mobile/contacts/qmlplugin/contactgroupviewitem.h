@@ -22,11 +22,28 @@
 
 #include "declarativeakonadiitem.h"
 
+#include <akonadi/contact/contactgroupviewer.h>
+
 namespace Akonadi {
 
-class ContactGroupViewer;
-
 namespace Contact {
+
+/**
+ * @short A wrapper class to make the 'removed' signal available.
+ */
+class ExtendedContactGroupViewer : public ContactGroupViewer
+{
+  Q_OBJECT
+
+  public:
+    ExtendedContactGroupViewer( QWidget *parent = 0 );
+
+  Q_SIGNALS:
+    void contactGroupRemoved();
+
+  private:
+    virtual void itemRemoved();
+};
 
 class ContactGroupViewItem : public DeclarativeAkonadiItem
 {
@@ -38,8 +55,11 @@ class ContactGroupViewItem : public DeclarativeAkonadiItem
     qint64 itemId() const;
     void setItemId( qint64 id );
 
+  Q_SIGNALS:
+    void contactGroupRemoved();
+
   private:
-    ContactGroupViewer *m_viewer;
+    ExtendedContactGroupViewer *m_viewer;
 };
 
 }

@@ -201,6 +201,7 @@ void KeyTreeView::setFlatModel( AbstractKeyListModel * model ) {
         return;
     m_flatModel = model;
     if ( !m_isHierarchical )
+        // TODO: this fails when called after setHierarchicalView( false )...
         find_last_proxy( m_proxy )->setSourceModel( model );
 }
 
@@ -251,6 +252,14 @@ std::vector<Key> KeyTreeView::selectedKeys() const {
 void KeyTreeView::setHierarchicalView( bool on ) {
     if ( on == m_isHierarchical )
         return;
+    if ( on && !hierarchicalModel() ) {
+        qWarning( "%s: hierarchical view requested, but no hierarchical model set", Q_FUNC_INFO );
+        return;
+    }
+    if ( !on && !flatModel() ) {
+        qWarning( "%s: flat view requested, but no flat model set", Q_FUNC_INFO );
+        return;
+    }
     const std::vector<Key> selectedKeys = m_proxy->keys( m_view->selectionModel()->selectedRows() );
     const Key currentKey = m_proxy->key( m_view->currentIndex() );
 

@@ -24,12 +24,21 @@ import org.kde.messagecomposer 4.5 as MessageComposer
 
 KPIM.MainView {
 
-  EditorView {
-    id: editorView
+  Flickable {
+    id: flick
     anchors.fill: parent
+    flickableDirection: Flickable.VerticalFlick
+    contentHeight: editorView.contentHeight;
+
+    EditorView {
+      id: editorView
+      enabled: !window.busy
+      anchors.fill: parent
+    }
   }
 
   SlideoutPanelContainer {
+    enabled: !window.busy
     anchors.fill: parent
 
     SlideoutPanel {
@@ -37,7 +46,7 @@ KPIM.MainView {
       id: folderPanel
       titleText: KDE.i18n( "Recipients" )
       handleHeight: 150
-      handlePosition: 30
+      handlePosition: 40
       content: [
         MessageComposer.RecipientsEditor {
           id: recipientsEditor
@@ -51,11 +60,42 @@ KPIM.MainView {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
+      handlePosition: 110
       contentWidth: 240
       content: [
+        KPIM.Action {
+          id: draftButton
+          anchors.top: parent.top;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          action : application.getAction("save_in_drafts");
+          checkable : true
+          onTriggered : actionPanel.collapse();
+        },
+        KPIM.Action {
+          id: signButton
+          anchors.top: draftButton.bottom;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          action : application.getAction("sign_email");
+          checkable : true
+          onTriggered : actionPanel.collapse();
+        },
+        KPIM.Action {
+          id: encryptButton
+          anchors.top: signButton.bottom;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
+          height: parent.height / 6
+          action : application.getAction("encrypt_email");
+          checkable : true
+          onTriggered : actionPanel.collapse();
+        },
         KPIM.Button {
           id: configureIdentityButton
-          anchors.top: parent.top;
+          anchors.top: encryptButton.bottom
           anchors.horizontalCenter: parent.horizontalCenter;
           width: parent.width - 10
           height: parent.height / 6
@@ -83,6 +123,8 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: attachmentPanel
+      handleHeight: 100
+      handlePosition: 180
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       contentWidth: attachmentView.requestedWidth
       content: [
@@ -107,4 +149,18 @@ KPIM.MainView {
     }
   }
 
+  // ### Make it a general processing screen?
+  Rectangle {
+      id: busyView
+      visible: window.busy;
+      z: 99
+
+      KPIM.Spinner {
+          anchors.centerIn: parent
+      }
+
+      color: "grey"
+      opacity: 0.5
+      anchors.fill: parent
+  }
 }

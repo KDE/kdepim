@@ -12,6 +12,7 @@ using KPIM::BroadcastStatus;
 #include "kmfiltermgr.h"
 #include "kmfilteraction.h"
 #include "undostack.h"
+#include <kpimutils/email.h>
 #include <kpimutils/kfileio.h>
 #include "kmversion.h"
 #include "kmreaderwin.h"
@@ -119,78 +120,8 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   mIdentityManager(0), mConfigureDialog(0), mMailService(0)
 {
   Akonadi::AttributeFactory::registerAttribute<Akonadi::SearchDescriptionAttribute>();
-
-  // Akonadi migration
-  // check if there is something to migrate at all
-  bool needMigration = true;
-  KConfig oldKMailConfig( "kmailrc", KConfig::NoGlobals );
-  if ( oldKMailConfig.groupList().isEmpty() ||
-       ( oldKMailConfig.groupList().count() == 1 &&
-         oldKMailConfig.groupList().first() == "$Version" ) ) {
-    const QFileInfo oldDataDirFileInfo( KStandardDirs::locateLocal( "data", "kmail" ) );
-    if ( !oldDataDirFileInfo.exists() || !oldDataDirFileInfo.isDir() ) {
-      // neither config or data, the migrator cannot do anything useful anyways
-      needMigration = false;
-    }
-  }
-
-  if ( needMigration ) {
-    KConfig config( "kmail-migratorrc" );
-    KConfigGroup migrationCfg( &config, "Migration" );
-    const bool enabled = migrationCfg.readEntry( "Enabled", false );
-    const int currentVersion = migrationCfg.readEntry( "Version", 0 );
-    const int targetVersion = migrationCfg.readEntry( "TargetVersion", 1 );
-    if ( enabled && currentVersion < targetVersion ) {
-      kDebug() << "Performing Akonadi migration. Good luck!";
-      KProcess proc;
-      QStringList args = QStringList() << "--interactive-on-change";
-      const QString path = KStandardDirs::findExe( QLatin1String("kmail-migrator" ) );
-      proc.setProgram( path, args );
-      proc.start();
-      bool result = proc.waitForStarted();
-      if ( result ) {
-        result = proc.waitForFinished( -1 );
-      }
-      if ( result && proc.exitCode() == 0 ) {
-        kDebug() << "Akonadi migration has been successful";
-        migrationCfg.writeEntry( "Version", targetVersion );
-        migrationCfg.sync();
-      } else {
-        // exit code 1 means it is already running, so we are probably called by a migrator instance
-        kError() << "Akonadi migration failed!";
-        kError() << "command was: " << proc.program();
-        kError() << "exit code: " << proc.exitCode();
-        kError() << "stdout: " << proc.readAllStandardOutput();
-        kError() << "stderr: " << proc.readAllStandardError();
-        exit( 42 );
-      }
-    }
-  }
-#ifdef __GNUC__
-#warning Remove before the 4.5 release
-#endif
-  if ( KMessageBox::questionYesNo(
-        0,
-        i18n( "You are attempting to start an <b>unstable development version</b> of KMail.<br />"
-              "KMail 2 is currently being ported to Akonadi and is under heavy development. "
-              "Do not use this version for real mails, you will <b>lose data</b>. If you use this "
-              "version now, your mails will not be correctly migrated, and you will not be able to "
-              "migrate them afterwards.<br />"
-              "Because of the current development, there are many bugs and regressions as well as "
-              "missing features. <b>Essentially KMail 2 does not work at the moment, do not try to use it.</b><br />"
-              "Please do not report any bugs for this version yet.<br /><br />"
-              "If you want to use KMail for real mails, please use the version from the KDE SC 4.4 branch instead." ),
-        i18n( "Unstable Development version of KMail" ),
-        KGuiItem( i18n( "Lose Data" ) ),
-        KStandardGuiItem::cancel(),
-        "UseAtYourOwnRiskWarning",
-        KMessageBox::Dangerous )
-      == KMessageBox::No ) {
-    kWarning() << "Exiting after development version warning.";
-    exit(42);
-  }
-
-  kDebug();
+  migrateFromKMail1();
+  kDebug() << "Starting up...";
 
   setObjectName( name );
   mySelf = this;
@@ -253,6 +184,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   Akonadi::Session *session = new Akonadi::Session( "KMail Kernel ETM", this );
   monitor()->setSession( session );
   mEntityTreeModel = new Akonadi::EntityTreeModel( monitor(), this );
+  mEntityTreeModel->setIncludeUnsubscribed( false );
   mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
   mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
@@ -270,10 +202,13 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
            SLOT(transportRenamed(int,QString,QString)) );
 
   QDBusConnection::sessionBus().connect(QString(), QLatin1String( "/MailDispatcherAgent" ), "org.freedesktop.Akonadi.MailDispatcherAgent", "itemDispatchStarted",this, SLOT(itemDispatchStarted()) );
-  connect( Akonadi::AgentManager::self(), SIGNAL( instanceProgressChanged( Akonadi::AgentInstance ) ), this, SLOT( instanceProgressChanged( Akonadi::AgentInstance ) ) ) ;
+  connect( Akonadi::AgentManager::self(), SIGNAL( instanceStatusChanged( Akonadi::AgentInstance ) ),
+           this, SLOT( instanceStatusChanged( Akonadi::AgentInstance ) ) );
 
-  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCompleted( KPIM::ProgressItem * ) ), this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
-  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ), this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
+  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCompleted( KPIM::ProgressItem * ) ),
+           this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
+  connect( KPIM::ProgressManager::instance(), SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+           this, SLOT( slotProgressItemCompletedOrCanceled( KPIM::ProgressItem* ) ) );
 }
 
 KMKernel::~KMKernel ()
@@ -285,6 +220,61 @@ KMKernel::~KMKernel ()
   slotSyncConfig();
   mySelf = 0;
   kDebug();
+}
+
+void KMKernel::migrateFromKMail1()
+{
+  // Akonadi migration
+  // check if there is something to migrate at all
+  bool needMigration = true;
+  KConfig oldKMailConfig( "kmailrc", KConfig::NoGlobals );
+  if ( oldKMailConfig.hasGroup("General") ||
+       ( oldKMailConfig.groupList().count() == 1 &&
+         oldKMailConfig.groupList().first() == "$Version" ) ) {
+    const QFileInfo oldDataDirFileInfo( KStandardDirs::locateLocal( "data", "kmail" ) );
+    if ( !oldDataDirFileInfo.exists() || !oldDataDirFileInfo.isDir() ) {
+      // neither config or data, the migrator cannot do anything useful anyways
+      needMigration = false;
+    }
+  } else {
+    needMigration = false;
+  }
+
+  KConfig config( "kmail-migratorrc" );
+  KConfigGroup migrationCfg( &config, "Migration" );
+  if ( needMigration ) {
+    const bool enabled = migrationCfg.readEntry( "Enabled", false );
+    const int currentVersion = migrationCfg.readEntry( "Version", 0 );
+    const int targetVersion = migrationCfg.readEntry( "TargetVersion", 1 );
+    if ( enabled && currentVersion < targetVersion ) {
+      kDebug() << "Performing Akonadi migration. Good luck!";
+      KProcess proc;
+      QStringList args = QStringList() << "--interactive-on-change";
+      const QString path = KStandardDirs::findExe( QLatin1String("kmail-migrator" ) );
+      proc.setProgram( path, args );
+      proc.start();
+      bool result = proc.waitForStarted();
+      if ( result ) {
+        result = proc.waitForFinished( -1 );
+      }
+      if ( result && proc.exitCode() == 0 ) {
+        kDebug() << "Akonadi migration has been successful";
+        migrationCfg.writeEntry( "Version", targetVersion );
+        migrationCfg.sync();
+      } else {
+        // exit code 1 means it is already running, so we are probably called by a migrator instance
+        kError() << "Akonadi migration failed!";
+        kError() << "command was: " << proc.program();
+        kError() << "exit code: " << proc.exitCode();
+        kError() << "stdout: " << proc.readAllStandardOutput();
+        kError() << "stderr: " << proc.readAllStandardError();
+        exit( 42 );
+      }
+    }
+  } else {
+    migrationCfg.writeEntry( "Enabled", false );
+    migrationCfg.sync();
+  }
 }
 
 Akonadi::ChangeRecorder * KMKernel::monitor() const
@@ -466,6 +456,12 @@ void KMKernel::checkMail () //might create a new reader but won't show!!
     if ( group.readEntry( "IncludeInManualChecks", true ) ) {
       if ( !type.isOnline() )
         type.setIsOnline( true );
+      if ( mResoucesBeingChecked.isEmpty() ) {
+        kDebug() << "Starting manual mail check";
+        emit startCheckMail();
+      }
+
+      mResoucesBeingChecked.append( type.identifier() );
       type.synchronize();
     }
   }
@@ -547,14 +543,25 @@ int KMKernel::openComposer( const QString &to, const QString &cc,
   KMime::Message::Ptr msg( new KMime::Message );
   MessageHelper::initHeader( msg, identityManager() );
   msg->contentType()->setCharset("utf-8");
-  // tentatively decode to, cc and bcc because invokeMailer calls us with
-  // RFC 2047 encoded addresses in order to protect non-ASCII email addresses
-  if (!to.isEmpty())
-    msg->to()->fromUnicodeString( KMime::decodeRFC2047String( to.toLocal8Bit() ), "utf-8" );
-  if (!cc.isEmpty())
-    msg->cc()->fromUnicodeString( KMime::decodeRFC2047String( cc.toLocal8Bit() ), "utf-8" );
-  if (!bcc.isEmpty())
-    msg->bcc()->fromUnicodeString( KMime::decodeRFC2047String( bcc.toLocal8Bit() ), "utf-8"  );
+
+  QByteArray displayName;
+  QByteArray addressSpec;
+  QByteArray comment;
+  if (!to.isEmpty()) {
+    KPIMUtils::splitAddress( to.toUtf8(), displayName, addressSpec, comment );
+    KMime::removeQuots( displayName );
+    msg->to()->addAddress( addressSpec, QString::fromUtf8( displayName ) );
+  }
+  if (!cc.isEmpty()) {
+    KPIMUtils::splitAddress( cc.toUtf8(), displayName, addressSpec, comment );
+    KMime::removeQuots( displayName );
+    msg->cc()->addAddress( addressSpec, QString::fromUtf8( displayName ) );
+  }
+  if (!bcc.isEmpty()) {
+    KPIMUtils::splitAddress( bcc.toUtf8(), displayName, addressSpec, comment );
+    KMime::removeQuots( displayName );
+    msg->bcc()->addAddress( addressSpec, QString::fromUtf8( displayName ) );
+  }
   if (!subject.isEmpty()) msg->subject()->fromUnicodeString(subject, "utf-8" );
 
   KUrl messageUrl = KUrl( messageFile );
@@ -1086,7 +1093,7 @@ void KMKernel::createDefaultCollectionDone( KJob * job)
     emergencyExit( i18n("You do not have read/write permission to your inbox folder.") );
 
   connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
-           this, SLOT( slotDefaultCollectionsChanged () ) );
+           this, SLOT( slotDefaultCollectionsChanged () ), Qt::UniqueConnection  );
 }
 
 void KMKernel::slotDefaultCollectionsChanged()
@@ -1174,7 +1181,7 @@ void KMKernel::init()
 
 void KMKernel::readConfig()
 {
-  mWrapCol = GlobalSettings::self()->lineWrapWidth();
+  mWrapCol = MessageComposer::MessageComposerSettings::self()->lineWrapWidth();
   if ((mWrapCol == 0) || (mWrapCol > 78))
     mWrapCol = 78;
   if (mWrapCol < 30)
@@ -1278,12 +1285,11 @@ void KMKernel::dumpDeadLetters()
   foreach ( KMainWindow* window, KMainWindow::memberList() ) {
     if ( KMail::Composer * win = ::qobject_cast<KMail::Composer*>( window ) ) {
       win->autoSaveMessage();
-      // saving the message has to be finished right here, we are called from a dtor,
-      // therefore we have no chance to finish this later
-      // yes, this is ugly and potentially dangerous, but the alternative is losing
-      // currently composed messages...
-      while ( win->isComposing() )
+
+      while ( win->isComposing() ) {
+        kWarning() << "Danger, using an event loop, this should no longer be happening!";
         qApp->processEvents();
+      }
     }
   }
 }
@@ -1412,9 +1418,14 @@ void KMKernel::emergencyExit( const QString& reason )
   }
 
   kWarning() << mesg;
-  KMessageBox::error( 0, mesg );
 
-  ::exit(1);
+  // Show error box for the first error that caused emergencyExit.
+  static bool s_showingErrorBox = false;
+  if ( !s_showingErrorBox ) {
+      s_showingErrorBox = true;
+      KMessageBox::error( 0, mesg );
+      ::exit(1);
+  }
 }
 
 /**
@@ -1432,7 +1443,7 @@ bool KMKernel::folderIsDrafts(const Akonadi::Collection & col)
   if ( col ==  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts ) )
     return true;
 
-  QString idString = QString::number( col.id() );
+  const QString idString = QString::number( col.id() );
   if ( idString.isEmpty() ) return false;
 
   // search the identities if the folder matches the drafts-folder
@@ -1447,7 +1458,7 @@ bool KMKernel::folderIsTemplates(const Akonadi::Collection &col)
   if ( col ==  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates ) )
     return true;
 
-  QString idString = QString::number( col.id() );
+  const QString idString = QString::number( col.id() );
   if ( idString.isEmpty() ) return false;
 
   // search the identities if the folder matches the templates-folder
@@ -1481,7 +1492,8 @@ bool KMKernel::folderIsTrash( const Akonadi::Collection & col )
     return true;
   const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach ( const Akonadi::AgentInstance& type, lst ) {
-    //TODO verify it.
+    if ( type.status() == Akonadi::AgentInstance::Broken )
+      continue;
     if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
       OrgKdeAkonadiImapSettingsInterface *iface = KMail::Util::createImapSettingsInterface( type.identifier() );
       if ( iface->isValid() ) {
@@ -1501,7 +1513,7 @@ bool KMKernel::folderIsSentMailFolder( const Akonadi::Collection &col )
   if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail ) )
     return true;
 
-  QString idString = QString::number( col.id() );
+  const QString idString = QString::number( col.id() );
   if ( idString.isEmpty() ) return false;
 
   // search the identities if the folder matches the sent-folder
@@ -1819,31 +1831,38 @@ void KMKernel::itemDispatchStarted()
       true );
 }
 
-void KMKernel::instanceProgressChanged( Akonadi::AgentInstance agent )
+void KMKernel::instanceStatusChanged( Akonadi::AgentInstance instance )
 {
-  // we're only interested in rfc822 resources
-  if ( !agent.type().mimeTypes().contains( KMime::Message::mimeType() ) )
-    return;
-  KPIM::ProgressItem *progress =  KPIM::ProgressManager::createProgressItem( 0,
-      agent,
-      agent.identifier(),
-      agent.name(),
-      agent.statusMessage(),
-      true );
-  if( progress->progress() == 0) {
-    if ( mListProgressItem.isEmpty() )
-      emit startCheckMail();
+  if ( KMail::Util::agentInstances().contains( instance ) ) {
+    if ( instance.status() == Akonadi::AgentInstance::Running ) {
 
-    if ( !mListProgressItem.contains( progress ) )
-      mListProgressItem.append( progress );
+      if ( mResoucesBeingChecked.isEmpty() ) {
+        kDebug() << "A Resource started to syncronize, starting a mail check.";
+        emit startCheckMail();
+      }
+
+      if ( !mResoucesBeingChecked.contains( instance.identifier() ) ) {
+        mResoucesBeingChecked.append( instance.identifier() );
+      }
+
+      // Creating a progress item twice is ok, it will simply return the already existing
+      // item
+      KPIM::ProgressItem *progress =  KPIM::ProgressManager::createProgressItem( 0, instance,
+                                        instance.identifier(), instance.name(), instance.statusMessage(),
+                                        true );
+      progress->setProperty( "AgentIdentifier", instance.identifier() );
+    }
   }
 }
 
-void KMKernel::slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item)
+void KMKernel::slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item )
 {
-  if ( mListProgressItem.contains( item ) ) {
-    mListProgressItem.removeAll( item );
-    if ( mListProgressItem.isEmpty() ) {
+  const QString identifier = item->property( "AgentIdentifier" ).toString();
+  const Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance( identifier );
+  if ( agent.isValid() ) {
+    mResoucesBeingChecked.removeAll( identifier );
+    if ( mResoucesBeingChecked.isEmpty() ) {
+      kDebug() << "Last resource finished syncing, mail check done";
       emit endCheckMail();
     }
   }
@@ -1912,7 +1931,7 @@ bool KMKernel::isMainFolderCollection( const Akonadi::Collection &col )
   return col == inboxCollectionFolder();
 }
 
-bool KMKernel::isImapFolder( const Akonadi::Collection &col )
+bool KMKernel::isImapFolder( const Akonadi::Collection &col ) const
 {
   const Akonadi::AgentInstance agentInstance = Akonadi::AgentManager::self()->instance( col.resource() );
   return (agentInstance.type().identifier() == IMAP_RESOURCE_IDENTIFIER);
@@ -1923,7 +1942,7 @@ void KMKernel::stopAgentInstance()
 {
   const QString resourceGroupPattern( "Resource %1" );
 
-  Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
+  const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach( Akonadi::AgentInstance type, lst ) {
     KConfigGroup group( KMKernel::config(), resourceGroupPattern.arg( type.identifier() ) );
     if ( group.readEntry( "OfflineOnShutdown", false ) )

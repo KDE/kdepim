@@ -9,12 +9,12 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-set(korganizer_mobile_SRCS
-  declarativeeditors.cpp
-  incidenceview.cpp
+set(korganizer_mobile_SRCS calendarinterface.cpp
   mainview.cpp
   main.cpp
 )
+
+qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 target_link_libraries(korganizer-mobile
@@ -24,16 +24,16 @@ target_link_libraries(korganizer-mobile
   ${KDEPIMLIBS_KCAL_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
+  kdepimmobileui
   akonadi-kcal_next
   incidenceeditors
-  kdepimmobileui
 )
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES korganizer-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES korganizer-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
-  MobileIncidenceEditor.qml
-  incidence-editor.qml
   korganizer-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )
+kde4_install_icons( ${ICON_INSTALL_DIR} )

@@ -19,6 +19,8 @@
     02110-1301, USA.
 */
 
+// READ THE README FILE
+
 #include "unreadmailswidget.h"
 
 #include <QTreeView>
@@ -38,7 +40,7 @@
 using namespace Akonadi;
 
 UnreadMailsTree::UnreadMailsTree(QObject* parent)
-  : Future::KRecursiveFilterProxyModel(parent)
+  : KRecursiveFilterProxyModel(parent)
 {
 
 }

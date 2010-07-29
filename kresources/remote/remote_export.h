@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KCAL_RESOURCEREMOTE_EXPORT
-# if defined(MAKE_KCAL_RESOURCEREMOTE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCAL_RESOURCEREMOTE_EXPORT
+# elif defined(MAKE_KCAL_RESOURCEREMOTE_LIB)
    /* We are building this library */ 
 #  define KCAL_RESOURCEREMOTE_EXPORT KDE_EXPORT
 # else

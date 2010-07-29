@@ -60,7 +60,7 @@ SET(STICKYNOTES_HDRS	include/StickyNotes/AbstractNoteItem
 			${CMAKE_CURRENT_BINARY_DIR}/include/StickyNotes/config-stickynotes.h)
 
 
-kde4_add_library(stickynotes SHARED  ${STICKYNOTES_SRCS})
+kde4_add_library(stickynotes ${LIBRARY_TYPE}  ${STICKYNOTES_SRCS})
 
 target_link_libraries(stickynotes ${KDE4_KDEUI_LIBS} )
 

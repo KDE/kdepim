@@ -311,7 +311,7 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
     return true;
   }
 
-  if ( !( aitem.parentCollection().rights() & Collection::CanDeleteItem ) ) {
+  if ( !( d->mCalendar->hasDeleteRights( aitem ) ) ) {
     kWarning() << "insufficient rights to delete incidence";
     return false;
   }
@@ -512,7 +512,7 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
     return false;
   }
 
-  if ( !( newItem.parentCollection().rights() & Collection::CanChangeItem ) ) {
+  if ( !d->mCalendar->hasChangeRights( newItem ) ) {
     kWarning() << "insufficient rights to change incidence";
     return false;
   }
@@ -520,7 +520,7 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
   if ( !isNotDeleted( newItem.id() ) ) {
     kDebug() << "Skipping change, the item got deleted";
     return false;
-  }  
+  }
 
   Private::Change *change = new Private::Change();
   change->action = action;

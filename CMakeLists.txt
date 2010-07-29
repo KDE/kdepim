@@ -10,6 +10,11 @@ option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 
+# cmake would not find kde for xcompile if that is not set 
+if(WINCE)
+    set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
+endif(WINCE)
+
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
 if(KDEPIM_ENTERPRISE_BUILD)
   set(KDEPIM_ONLY_KLEO FALSE)
@@ -48,12 +53,17 @@ configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version
 
 ############### search packages used by KDE ###############
 
+# It is needed otherwise it finds the kde4-config of the target platform
+if(WINCE)
+FIND_PROGRAM(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
+endif(WINCE)
+
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.4.61 REQUIRED)
+find_package(KdepimLibs 4.5.60 REQUIRED)
 
 ### remove the following when requiring kdelibs 4.5 ###
 if ( NOT KDE4_KCMUTILS_LIBS )
@@ -147,7 +157,7 @@ else(KDEPIM_ONLY_KLEO)
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
-  find_program(XSLTPROC_EXECUTABLE xsltproc)
+  find_package(LibXslt)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required to generate the D-Bus interfaces.")
 
 ############### Desktop vs. Mobile options ##############
@@ -167,6 +177,13 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUD
 if (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
   add_definitions( -DKDEPIM_NO_KRESOURCES )
 endif (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
+
+if(WINCE)
+  set(LIBRARY_TYPE STATIC)
+  add_definitions(-DKDEPIM_STATIC_LIBS)
+else(WINCE)
+  set(LIBRARY_TYPE SHARED)
+endif(WINCE)
 
 
 ############### Macros ###############
@@ -236,6 +253,7 @@ set(libkdgantt1_SRCS
   add_subdirectory(libksieve)
   #add_subdirectory(libstickynotes)
   add_subdirectory(kdgantt1)
+  add_subdirectory(kdgantt2)
   add_subdirectory(icons)
   add_subdirectory(messagecore)
   add_subdirectory(messagelist)

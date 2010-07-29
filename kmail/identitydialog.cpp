@@ -34,6 +34,7 @@
 // other KMail headers:
 #include "xfaceconfigurator.h"
 #include "folderrequester.h"
+#include "simplestringlisteditor.h"
 using KMail::FolderRequester;
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
 #include "kmkernel.h"
@@ -112,12 +113,12 @@ namespace KMail {
     QVBoxLayout * vlay = new QVBoxLayout( page );
     vlay->setSpacing( spacingHint() );
     vlay->setMargin( 0 );
-    KTabWidget *tabWidget = new KTabWidget( page );
-    tabWidget->setObjectName( "config-identity-tab" );
-    vlay->addWidget( tabWidget );
+    mTabWidget = new KTabWidget( page );
+    mTabWidget->setObjectName( "config-identity-tab" );
+    vlay->addWidget( mTabWidget );
 
-    tab = new QWidget( tabWidget );
-    tabWidget->addTab( tab, i18nc("@title:tab General identity settings.","General") );
+    tab = new QWidget( mTabWidget );
+    mTabWidget->addTab( tab, i18nc("@title:tab General identity settings.","General") );
     glay = new QGridLayout( tab );
     glay->setSpacing( spacingHint() );
     glay->setMargin( marginHint() );
@@ -164,24 +165,46 @@ namespace KMail {
     glay->addWidget( label, row, 0 );
     msg = i18n("<qt><h3>Email address</h3>"
                "<p>This field should have your full email address.</p>"
+               "<p>This address is the primary one, used for all outgoing mail. "
+               "If you have more than one address, either create a new identity, "
+               "or add additional alias addresses in the field below.</p>"
                "<p>If you leave this blank, or get it wrong, people "
                "will have trouble replying to you.</p></qt>");
     label->setWhatsThis( msg );
     mEmailEdit->setWhatsThis( msg );
 
+    // "Email Aliases" stsring text edit and label:
+    ++row;
+    mAliasEdit = new SimpleStringListEditor( tab );
+    glay->addWidget( mAliasEdit, row, 1 );
+    label = new QLabel( i18n("Email a&liases:"), tab );
+    label->setBuddy( mAliasEdit );
+    glay->addWidget( label, row, 0, Qt::AlignTop );
+    msg = i18n("<qt><h3>Email aliases</h3>"
+               "<p>This field contains alias addresses that should also "
+               "be considered as belonging to this identity (as opposed "
+               "to representing a different identity).</p>"
+               "<p>Example:</p>"
+               "<table>"
+               "<tr><th>Primary address:</th><td>first.last@example.org</td></tr>"
+               "<tr><th>Aliases:</th><td>first@example.org<br>last@example.org</td></tr>"
+               "</table>"
+               "<p>Type one alias address per line.</p></qt>");
+    label->setToolTip( msg );
+    mAliasEdit->setWhatsThis( msg );
+
     //
     // Tab Widget: Cryptography
     //
     row = -1;
-    mCryptographyTab = tab = new QWidget( tabWidget );
-    tabWidget->addTab( tab, i18n("Cryptography") );
+    mCryptographyTab = tab = new QWidget( mTabWidget );
+    mTabWidget->addTab( tab, i18n("Cryptography") );
     glay = new QGridLayout( tab );
     glay->setSpacing( spacingHint() );
     glay->setMargin( marginHint() );
     glay->setColumnStretch( 1, 1 );
 
     // "OpenPGP Signature Key" requester and label:
-#ifndef KCM_KPIMIDENTITIES_STANDALONE
     ++row;
     mPGPSigningKeyRequester = new Kleo::SigningKeyRequester( false, Kleo::SigningKeyRequester::OpenPGP, tab );
     mPGPSigningKeyRequester->dialogButton()->setText( i18n("Chang&e...") );
@@ -285,7 +308,6 @@ namespace KMail {
 
     label->setEnabled( smimeProtocol );
     mSMIMEEncryptionKeyRequester->setEnabled( smimeProtocol );
-#endif
 
     // "Preferred Crypto Message Format" combobox and label:
     ++row;
@@ -311,8 +333,8 @@ namespace KMail {
     // Tab Widget: Advanced
     //
     row = -1;
-    tab = new QWidget( tabWidget );
-    tabWidget->addTab( tab, i18nc("@title:tab Advanced identity settings.","Advanced") );
+    tab = new QWidget( mTabWidget );
+    mTabWidget->addTab( tab, i18nc("@title:tab Advanced identity settings.","Advanced") );
     glay = new QGridLayout( tab );
     glay->setSpacing( spacingHint() );
     glay->setMargin( marginHint() );
@@ -413,7 +435,7 @@ namespace KMail {
     //
     // Tab Widget: Templates
     //
-    tab = new QWidget( tabWidget );
+    tab = new QWidget( mTabWidget );
     vlay = new QVBoxLayout( tab );
     vlay->setMargin( marginHint() );
     vlay->setSpacing( spacingHint() );
@@ -449,25 +471,25 @@ namespace KMail {
 #ifdef KDEPIM_MOBILE_UI
     tab->hide(); // not yet mobile ready
 #else
-    tabWidget->addTab( tab, i18n("Templates") );
+    mTabWidget->addTab( tab, i18n("Templates") );
 #endif
 
     //
     // Tab Widget: Signature
     //
-    mSignatureConfigurator = new KPIMIdentities::SignatureConfigurator( tabWidget );
+    mSignatureConfigurator = new KPIMIdentities::SignatureConfigurator( mTabWidget );
     mSignatureConfigurator->layout()->setMargin( KDialog::marginHint() );
-    tabWidget->addTab( mSignatureConfigurator, i18n("Signature") );
+    mTabWidget->addTab( mSignatureConfigurator, i18n("Signature") );
 
     //
     // Tab Widget: Picture
     //
-    mXFaceConfigurator = new XFaceConfigurator( tabWidget );
+    mXFaceConfigurator = new XFaceConfigurator( mTabWidget );
     mXFaceConfigurator->layout()->setMargin( KDialog::marginHint() );
 #ifdef KDEPIM_MOBILE_UI
     mXFaceConfigurator->hide(); // not yet mobile ready
 #else
-    tabWidget->addTab( mXFaceConfigurator, i18n("Picture") );
+    mTabWidget->addTab( mXFaceConfigurator, i18n("Picture") );
 #endif
 
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
@@ -477,8 +499,8 @@ namespace KMail {
 #endif
     mNameEdit->setFocus();
 
-    connect( tabWidget, SIGNAL(currentChanged(QWidget*)),
-             SLOT(slotAboutToShow(QWidget*)) );
+    connect( mTabWidget, SIGNAL(currentChanged(int)),
+             SLOT(slotAboutToShow(int)) );
     setHelp( QString(), "kmail" );
   }
 
@@ -489,17 +511,16 @@ namespace KMail {
 #endif
   }
 
-  void IdentityDialog::slotAboutToShow( QWidget * w ) {
+  void IdentityDialog::slotAboutToShow( int index ) {
+    QWidget *w = mTabWidget->widget( index );
     if ( w == mCryptographyTab ) {
       // set the configured email address as initial query of the key
       // requesters:
       const QString email = mEmailEdit->text().trimmed();
-#ifndef KCM_KPIMIDENTITIES_STANDALONE
       mPGPEncryptionKeyRequester->setInitialQuery( email );
       mPGPSigningKeyRequester->setInitialQuery( email );
       mSMIMEEncryptionKeyRequester->setInitialQuery( email );
       mSMIMESigningKeyRequester->setInitialQuery( email );
-#endif
     }
   }
 
@@ -549,9 +570,17 @@ namespace KMail {
       return;
     }
 
-    const QString email = mEmailEdit->text().trimmed();
+    const QStringList aliases = mAliasEdit->stringList();
+    foreach ( const QString &alias, aliases ) {
+      if ( !KPIMUtils::isValidSimpleAddress( alias ) ) {
+        const QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
+        KMessageBox::sorry( this, errorMsg, i18n( "Invalid Email Alias \"%1\"", alias ) );
+        return;
+      }
+    }
 
     // Validate email addresses
+    const QString email = mEmailEdit->text().trimmed();
     if ( !KPIMUtils::isValidSimpleAddress( email ) ) {
       QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
       KMessageBox::sorry( this, errorMsg, i18n("Invalid Email Address") );
@@ -576,7 +605,6 @@ namespace KMail {
 
     const QString email = validationJob->property( "email" ).toString();
 
-#ifndef KCM_KPIMIDENTITIES_STANDALONE
     const std::vector<GpgME::Key> &pgpSigningKeys =
       mPGPSigningKeyRequester->keys();
     const std::vector<GpgME::Key> &pgpEncryptionKeys =
@@ -628,7 +656,6 @@ namespace KMail {
         return;
       }
     }
-#endif
 
 
     if ( mSignatureConfigurator->isSignatureEnabled() &&
@@ -664,15 +691,14 @@ namespace KMail {
     // "General" tab:
     mNameEdit->setText( ident.fullName() );
     mOrganizationEdit->setText( ident.organization() );
-    mEmailEdit->setText( ident.emailAddr() );
+    mEmailEdit->setText( ident.primaryEmailAddress() );
+    mAliasEdit->setStringList( ident.emailAliases() );
 
     // "Cryptography" tab:
-#ifndef KCM_KPIMIDENTITIES_STANDALONE
     mPGPSigningKeyRequester->setFingerprint( ident.pgpSigningKey() );
     mPGPEncryptionKeyRequester->setFingerprint( ident.pgpEncryptionKey() );
     mSMIMESigningKeyRequester->setFingerprint( ident.smimeSigningKey() );
     mSMIMEEncryptionKeyRequester->setFingerprint( ident.smimeEncryptionKey() );
-#endif
 
     mPreferredCryptoMessageFormat->setCurrentIndex( format2cb(
        Kleo::stringToCryptoMessageFormat( ident.preferredCryptoMessageFormat() ) ) );
@@ -746,8 +772,8 @@ namespace KMail {
     ident.setFullName( mNameEdit->text() );
     ident.setOrganization( mOrganizationEdit->text() );
     QString email = mEmailEdit->text();
-    ident.setEmailAddr( email );
-#ifndef KCM_KPIMIDENTITIES_STANDALONE
+    ident.setPrimaryEmailAddress( email );
+    ident.setEmailAliases( mAliasEdit->stringList() );
     // "Cryptography" tab:
     ident.setPGPSigningKey( mPGPSigningKeyRequester->fingerprint().toLatin1() );
     ident.setPGPEncryptionKey( mPGPEncryptionKeyRequester->fingerprint().toLatin1() );
@@ -755,7 +781,6 @@ namespace KMail {
     ident.setSMIMEEncryptionKey( mSMIMEEncryptionKeyRequester->fingerprint().toLatin1() );
     ident.setPreferredCryptoMessageFormat(
        Kleo::cryptoMessageFormatToString(cb2format( mPreferredCryptoMessageFormat->currentIndex() ) ) );
-#endif
     // "Advanced" tab:
     ident.setReplyToAddr( mReplyToEdit->text() );
     ident.setBcc( mBccEdit->text() );

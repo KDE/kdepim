@@ -330,9 +330,15 @@ void Kleo::KeyRequester::slotKeyListResult( const GpgME::KeyListResult & res ) {
 
 
 void Kleo::KeyRequester::slotDialogButtonClicked() {
+#ifndef KDEPIM_MOBILE_UI
   KeySelectionDialog * dlg = mKeys.empty()
     ? new KeySelectionDialog( mDialogCaption, mDialogMessage, mInitialQuery, mKeyUsage, mMulti, false, this )
     : new KeySelectionDialog( mDialogCaption, mDialogCaption, mKeys, mKeyUsage, mMulti, false, this ) ;
+#else
+  KeySelectionDialog * dlg = mKeys.empty()
+    ? new KeySelectionDialog( mDialogCaption, mDialogMessage, mInitialQuery, mKeyUsage, mMulti, false, 0 )
+    : new KeySelectionDialog( mDialogCaption, mDialogCaption, mKeys, mKeyUsage, mMulti, false, 0 ) ;
+#endif
 
   if ( dlg->exec() == QDialog::Accepted ) {
     if ( mMulti )

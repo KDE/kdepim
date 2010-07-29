@@ -30,27 +30,30 @@
 #include "core/model.h"
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
+#include "core/settings.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"
 
-#include <QGridLayout>
-#include <QVariant>
-#include <QToolButton>
 #include <QActionGroup>
-#include <QTimer>
+#include <QBoxLayout>
+#include <QGridLayout>
 #include <QHeaderView>
+#include <QTimer>
+#include <QToolButton>
+#include <QVariant>
 
-#include <KMenu>
-#include <KConfig>
-#include <KDebug>
-#include <KIconLoader>
-#include <KLineEdit>
-#include <KIcon>
-#include <KLocale>
-#include <KComboBox>
+#include <KDE/KAction>
+#include <KDE/KComboBox>
+#include <KDE/KConfig>
+#include <KDE/KDebug>
+#include <KDE/KIcon>
+#include <KDE/KIconLoader>
+#include <KDE/KLineEdit>
+#include <KDE/KLocale>
+#include <KDE/KMenu>
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 using namespace MessageList::Core;
 
@@ -60,6 +63,7 @@ public:
   Private( Widget *owner )
     : q( owner ), mView( 0 ), mSearchEdit( 0 ),
       mSearchTimer( 0 ), mStatusFilterCombo( 0 ),
+      mOpenFullSearchButton( 0 ),
       mStorageModel( 0 ), mAggregation( 0 ),
       mTheme( 0 ), mFilter( 0 ),
       mStorageUsesPrivateTheme( false ),
@@ -96,9 +100,10 @@ public:
   View *mView;
   QString mLastAggregationId;
   QString mLastThemeId;
-  KLineEdit * mSearchEdit;
-  QTimer * mSearchTimer;
-  KComboBox * mStatusFilterCombo;
+  KLineEdit *mSearchEdit;
+  QTimer *mSearchTimer;
+  KComboBox *mStatusFilterCombo;
+  QToolButton *mOpenFullSearchButton;
 
   StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
                                          ///  is owned by MessageList::Widget.
@@ -133,6 +138,7 @@ Widget::Widget( QWidget *pParent )
   d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
   d->mSearchEdit->setObjectName( "quicksearch" );
   d->mSearchEdit->setClearButtonShown( true );
+  d->mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
   connect( d->mSearchEdit, SIGNAL( textEdited( const QString & ) ),
            SLOT( searchEditTextEdited( const QString & ) ) );
@@ -144,16 +150,18 @@ Widget::Widget( QWidget *pParent )
 
   // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
   d->mStatusFilterCombo = new KComboBox( this ) ;
+  d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
   g->addWidget( d->mStatusFilterCombo, 0, 1 );
 
   // The "Open Full Search" button
-  QToolButton * tb = new QToolButton( this );
-  tb->setIcon( KIcon( "edit-find-mail" ) );
-  tb->setText( i18n( "Open Full Search" ) );
-  tb->setToolTip( tb->text() );
-  g->addWidget( tb, 0, 2 );
+  d->mOpenFullSearchButton = new QToolButton( this );
+  d->mOpenFullSearchButton->setIcon( KIcon( "edit-find-mail" ) );
+  d->mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
+  d->mOpenFullSearchButton->setToolTip( d->mOpenFullSearchButton->text() );
+  d->mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
+  g->addWidget( d->mOpenFullSearchButton, 0, 2 );
 
-  connect( tb, SIGNAL( clicked() ),
+  connect( d->mOpenFullSearchButton, SIGNAL( clicked() ),
            this, SIGNAL( fullSearchRequest() ) );
 
 
@@ -189,57 +197,84 @@ Widget::~Widget()
   delete d;
 }
 
+void Widget::changeQuicksearchVisibility()
+{
+  KLineEdit * const lineEdit = d->mSearchEdit;
+  QWidget * const comboBox = d->mStatusFilterCombo;
+  QWidget * const fullSearchButton = d->mOpenFullSearchButton;
+  if ( lineEdit ) {
+    const bool visible = lineEdit->isVisible() &&
+                         comboBox->isVisible() &&
+                         fullSearchButton->isVisible();
+    if ( visible ) {
+      //if we hide it we do not want to apply the filter,
+      //otherwise someone is maybe stuck with x new emails
+      //and cannot read it because of filter
+      lineEdit->clear();
+
+      //we focus the message list if we hide the searchbar
+      d->mView->setFocus( Qt::OtherFocusReason );
+    }
+    else {
+      // on show: we focus the lineedit for fast filtering
+      lineEdit->setFocus( Qt::OtherFocusReason );
+    }
+    lineEdit->setVisible( !visible );
+    comboBox->setVisible( !visible );
+    fullSearchButton->setVisible( !visible );
+    Settings::self()->setShowQuickSearch( !visible );
+  }
+}
+
 void Widget::populateStatusFilterCombo()
 {
   d->mStatusFilterCombo->clear();
 
-  d->mStatusFilterCombo->addItem( i18n( "Any Status" ) );
-  d->mStatusFilterCombo->setItemIcon( 0, SmallIcon("system-run") );
-  d->mStatusFilterCombo->setItemData( 0, QVariant( static_cast< int >( 0 ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("system-run"), i18n( "Any Status" ), 0 );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "New" ) );
-  d->mStatusFilterCombo->setItemIcon( 1, SmallIcon("mail-unread-new") );
-  d->mStatusFilterCombo->setItemData( 1, QVariant( static_cast< int >( KPIM::MessageStatus::statusNew().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-unread"),
+                                  i18nc( "@action:inmenu Status of a message", "Unread" ),
+                                  Akonadi::MessageStatus::statusUnread().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Unread" ) );
-  d->mStatusFilterCombo->setItemIcon( 2, SmallIcon("mail-unread") );
-  d->mStatusFilterCombo->setItemData( 2, QVariant( static_cast< int >( KPIM::MessageStatus::statusUnread().toQInt32() | KPIM::MessageStatus::statusNew().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-replied"),
+                                  i18nc( "@action:inmenu Status of a message", "Replied" ),
+                                  Akonadi::MessageStatus::statusReplied().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Replied" ) );
-  d->mStatusFilterCombo->setItemIcon( 3, SmallIcon("mail-replied") );
-  d->mStatusFilterCombo->setItemData( 3, QVariant( static_cast< int >( KPIM::MessageStatus::statusReplied().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-forwarded"),
+                                  i18nc( "@action:inmenu Status of a message", "Forwarded" ),
+                                  Akonadi::MessageStatus::statusForwarded().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Forwarded" ) );
-  d->mStatusFilterCombo->setItemIcon( 4, SmallIcon("mail-forwarded") );
-  d->mStatusFilterCombo->setItemData( 4, QVariant( static_cast< int >( KPIM::MessageStatus::statusForwarded().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("emblem-important"),
+                                  i18nc( "@action:inmenu Status of a message", "Important"),
+                                  Akonadi::MessageStatus::statusForwarded().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Important") );
-  d->mStatusFilterCombo->setItemIcon( 5, SmallIcon("emblem-important") );
-  d->mStatusFilterCombo->setItemData( 5, QVariant( static_cast< int >( KPIM::MessageStatus::statusImportant().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-task"),
+                                  i18nc( "@action:inmenu Status of a message", "Action Item" ),
+                                  Akonadi::MessageStatus::statusToAct().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Action Item" ) );
-  d->mStatusFilterCombo->setItemIcon( 6, SmallIcon("mail-task") );
-  d->mStatusFilterCombo->setItemData( 6, QVariant( static_cast< int >( KPIM::MessageStatus::statusToAct().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-watch"),
+                                  i18nc( "@action:inmenu Status of a message", "Watched" ),
+                                  Akonadi::MessageStatus::statusWatched().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Watched" ) );
-  d->mStatusFilterCombo->setItemIcon( 7, SmallIcon("mail-thread-watch") );
-  d->mStatusFilterCombo->setItemData( 7, QVariant( static_cast< int >( KPIM::MessageStatus::statusWatched().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-thread-ignored"),
+                                  i18nc( "@action:inmenu Status of a message", "Ignored" ),
+                                  Akonadi::MessageStatus::statusIgnored().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Ignored" ) );
-  d->mStatusFilterCombo->setItemIcon( 8, SmallIcon("mail-thread-ignored") );
-  d->mStatusFilterCombo->setItemData( 8, QVariant( static_cast< int >( KPIM::MessageStatus::statusIgnored().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-attachment"),
+                                  i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
+                                  Akonadi::MessageStatus::statusHasAttachment().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Has Attachment" ) );
-  d->mStatusFilterCombo->setItemIcon( 9, SmallIcon("mail-attachment") );
-  d->mStatusFilterCombo->setItemData( 9, QVariant( static_cast< int >( KPIM::MessageStatus::statusHasAttachment().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-invitation"),
+                                  i18nc( "@action:inmenu Status of a message", "Has Invitation" ),
+                                  Akonadi::MessageStatus::statusHasInvitation().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Spam" ) );
-  d->mStatusFilterCombo->setItemIcon( 10, SmallIcon("mail-mark-junk") );
-  d->mStatusFilterCombo->setItemData( 10, QVariant( static_cast< int >( KPIM::MessageStatus::statusSpam().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-junk"),
+                                  i18nc( "@action:inmenu Status of a message", "Spam" ),
+                                  Akonadi::MessageStatus::statusSpam().toQInt32() );
 
-  d->mStatusFilterCombo->addItem( i18n( "Ham" ) );
-  d->mStatusFilterCombo->setItemIcon( 11, SmallIcon("mail-mark-notjunk") );
-  d->mStatusFilterCombo->setItemData( 11, QVariant( static_cast< int >( KPIM::MessageStatus::statusHam().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( SmallIcon("mail-mark-notjunk"),
+                                  i18nc( "@action:inmenu Status of a message", "Ham" ),
+                                  Akonadi::MessageStatus::statusHam().toQInt32() );
 
   d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
   fillMessageTagCombo( d->mStatusFilterCombo );
@@ -255,12 +290,12 @@ MessageItem *Widget::currentMessageItem() const
   return view()->currentMessageItem();
 }
 
-KPIM::MessageStatus Widget::currentFilterStatus() const
+Akonadi::MessageStatus Widget::currentFilterStatus() const
 {
   if ( !d->mFilter )
-    return KPIM::MessageStatus();
+    return Akonadi::MessageStatus();
 
-  KPIM::MessageStatus ret;
+  Akonadi::MessageStatus ret;
   ret.fromQInt32( d->mFilter->statusMask() );
   return ret;
 }
@@ -1110,7 +1145,7 @@ void Widget::viewJobBatchTerminated()
 {
 }
 
-void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear )
+void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear )
 {
   Q_UNUSED( msg );
   Q_UNUSED( set );

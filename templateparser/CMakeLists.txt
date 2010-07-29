@@ -14,6 +14,7 @@ set( templateparser_LIB_SRCS
 
 include_directories(
     ${Boost_INCLUDE_DIR}
+    ${SOPRANO_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_SOURCE_DIR}/messagecore
 )
@@ -30,7 +31,7 @@ kde4_add_ui_files(templateparser_LIB_SRCS
 )
 
 
-kde4_add_library( templateparser SHARED ${templateparser_LIB_SRCS} )
+kde4_add_library( templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS} )
 target_link_libraries( templateparser messageviewer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore kleo kpgp ${QGPGME_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} )
 set_target_properties( templateparser PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

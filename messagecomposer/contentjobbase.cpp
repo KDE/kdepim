@@ -71,7 +71,7 @@ ContentJobBase::~ContentJobBase()
 
 void ContentJobBase::start()
 {
-  QTimer::singleShot( 0, this, SLOT(doStart()) );
+  doStart();
 }
 
 KMime::Content *ContentJobBase::content() const

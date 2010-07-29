@@ -136,11 +136,16 @@ public:
   /// Returns the list of tags. This is calculated on demand and cached in mTagList
   QList<Tag*> getTagList() const;
 
+  bool tagListInitialized() const;
+
   /// Returns the tag with the highest priority, or 0 if there are no tags
   const Tag* bestTag() const;
 
   /// Deletes the internal list of tags
   void invalidateTagCache();
+
+  /// Deletes the cache of the annotation
+  void invalidateAnnotationCache();
 
   ThreadingStatus mThreadingStatus;
   QString mMessageIdMD5;            ///< always set
@@ -148,11 +153,14 @@ public:
   QString mReferencesIdMD5;         ///< set only if we're doing threading
   QString mStrippedSubjectMD5;      ///< set only if we're doing threading
   QUrl mNepomukResourceUri;         ///< The URI under which this item can be found in Nepomuk
-  bool mSubjectIsPrefixed;          ///< set only if we're doing subject based threading
   EncryptionState mEncryptionState;
   SignatureState mSignatureState;
   unsigned long mUniqueId;          ///< The unique id of this message (serial number of KMMsgBase at the moment of writing)
-  bool mAboutToBeRemoved;           ///< Set to true when this item is going to be deleted and shouldn't be selectable
+
+  bool mAboutToBeRemoved : 1;       ///< Set to true when this item is going to be deleted and shouldn't be selectable
+  bool mSubjectIsPrefixed : 1;      ///< set only if we're doing subject based threading
+  bool mAnnotationStateChecked : 1; ///< The state of the annotation below has been checked
+  bool mHasAnnotation : 1;          ///< Cached value for hasAnnotation()
 
   static QColor mColorNewMessage;
   static QColor mColorUnreadMessage;
@@ -185,7 +193,7 @@ QFont MessageItem::Private::mFontImportantMessage;
 QFont MessageItem::Private::mFontToDoMessage;
 
 MessageItem::Private::Private()
-  : mTagList( 0 )
+  : mAnnotationStateChecked( false ), mTagList( 0 )
 {
 }
 
@@ -201,6 +209,11 @@ void MessageItem::Private::invalidateTagCache()
     delete mTagList;
     mTagList = 0;
   }
+}
+
+void MessageItem::Private::invalidateAnnotationCache()
+{
+  mAnnotationStateChecked = false;
 }
 
 const MessageItem::Tag* MessageItem::Private::bestTag() const
@@ -266,6 +279,11 @@ QList<MessageItem::Tag*> MessageItem::Private::getTagList() const
   return *mTagList;
 }
 
+bool MessageItem::Private::tagListInitialized() const
+{
+  return mTagList != 0;
+}
+
 MessageItem::MessageItem()
   : Item( Message ), ModelInvariantIndex(), d( new Private )
 {
@@ -286,12 +304,18 @@ QList< MessageItem::Tag * > MessageItem::tagList() const
 
 bool MessageItem::hasAnnotation() const
 {
+  if ( d->mAnnotationStateChecked )
+    return d->mHasAnnotation;
+
   Nepomuk::Resource resource( d->mNepomukResourceUri );
   if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
-    return !resource.description().isEmpty();
+    d->mHasAnnotation = !resource.description().isEmpty();
   } else {
-    return false;
+    d->mHasAnnotation = false;
   }
+
+  d->mAnnotationStateChecked = true;
+  return d->mHasAnnotation;
 }
 
 QString MessageItem::annotation() const
@@ -308,6 +332,8 @@ void MessageItem::editAnnotation()
   KPIM::AnnotationEditDialog *dialog = new KPIM::AnnotationEditDialog( d->mNepomukResourceUri );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
+  // invalidate the cached mHasAnnotation value
+  d->mAnnotationStateChecked = false;
 }
 
 QString MessageItem::contentSummary() const
@@ -365,12 +391,15 @@ void MessageItem::invalidateTagCache()
   d->invalidateTagCache();
 }
 
+void MessageItem::invalidateAnnotationCache()
+{
+  d->invalidateAnnotationCache();
+}
+
 QColor MessageItem::textColor() const
 {
   QColor clr;
-  if ( status().isNew() ) {
-    clr = d->mColorNewMessage;
-  } else if ( status().isUnread() ) {
+  if ( status().isUnread() ) {
     clr = d->mColorUnreadMessage;
   } else if ( status().isImportant() ) {
     clr = d->mColorImportantMessage;
@@ -398,9 +427,14 @@ QColor MessageItem::backgroundColor() const
 
 QFont MessageItem::font() const
 {
-  const Tag *bestTag = d->bestTag();
-  if ( bestTag != 0 && bestTag->font() != QFont() ) {
-    return bestTag->font();
+  // for preformance reasons we don't want font retrieval to trigger
+  // full tags loading, as the font is used for geometry calculation
+  // and thus this method called for each item
+  if ( d->tagListInitialized() ) {
+    const Tag *bestTag = d->bestTag();
+    if ( bestTag != 0 && bestTag->font() != QFont() ) {
+      return bestTag->font();
+    }
   }
 
   QFont font;
@@ -408,8 +442,6 @@ QFont MessageItem::font() const
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
   if ( status().isImportant() ) {
     font = d->mFontImportantMessage;
-  } else if ( status().isNew() ) {
-    font = d->mFontNewMessage;
   } else if ( status().isUnread() ) {
     font = d->mFontUnreadMessage;
   } else if ( status().isToAct() ) {

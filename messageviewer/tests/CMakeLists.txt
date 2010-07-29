@@ -24,16 +24,31 @@ target_link_libraries(htmlquotecolorertest
 
 ########### objecttreeparsertest ###############
 
-set(objecttreeparsertest_SRCS objecttreeparsertest.cpp)
+set(objecttreeparsertest_SRCS objecttreeparsertest.cpp ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp )
 add_definitions(-DKMAIL_UNITTESTS=YES)
 kde4_add_unit_test(objecttreeparsertest TESTNAME messageviewer-objecttreeparsertest ${objecttreeparsertest_SRCS})
 target_link_libraries(objecttreeparsertest
   messageviewer
+  kleo
+  ${QGPGME_LIBRARIES}
   ${QT_QTTEST_LIBRARY}
   ${QT_QTCORE_LIBRARY}
-  ${QT_QT3SUPPORT_LIBRARY}
   ${KDE4_KIO_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
 )
 
+########### viewertest_gui ###############
+
+set(viewertest_gui_SRCS viewertest_gui.cpp)
+kde4_add_executable(viewertest_gui TEST ${viewertest_gui_SRCS})
+target_link_libraries(viewertest_gui
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+  ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  messageviewer
+)

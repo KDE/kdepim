@@ -41,7 +41,7 @@
 #include <akonadi/standardactionmanager.h>
 #include <akonadi/entitylistview.h>
 #include <akonadi/entitytreeview.h>
-#include <akonadi/entitytreeviewstatesaver.h>
+#include <akonadi/etmviewstatesaver.h>
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadi/statisticsproxymodel.h>
@@ -203,17 +203,12 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   Nepomuk::ResourceManager::instance()->init();
 
-  const KConfigGroup cfg( KGlobal::config(), "CollectionViewState" );
-  EntityTreeViewStateSaver* saver = new EntityTreeViewStateSaver( mCollectionView );
-  saver->restoreState( cfg );
+  restoreState();
 }
 
 BrowserWidget::~BrowserWidget()
 {
-  KConfigGroup cfg( KGlobal::config(), "CollectionViewState" );
-  EntityTreeViewStateSaver saver( mCollectionView );
-  saver.saveState( cfg );
-  cfg.sync();
+  saveState();
 }
 
 void BrowserWidget::clear()
@@ -455,18 +450,20 @@ void BrowserWidget::dumpToXmlResult( KJob* job )
     KMessageBox::error( this, job->errorString() );
 }
 
-void BrowserWidget::slotBrowserModelAboutToBeReset()
+void BrowserWidget::saveState()
 {
+  ETMViewStateSaver saver;
+  saver.setView( mCollectionView );
   KConfigGroup cfg( KGlobal::config(), "CollectionViewState" );
-  EntityTreeViewStateSaver saver( mCollectionView );
   saver.saveState( cfg );
   cfg.sync();
 }
 
-void BrowserWidget::slotBrowserModelReset()
+void BrowserWidget::restoreState()
 {
+  ETMViewStateSaver *saver = new ETMViewStateSaver;
+  saver->setView( mCollectionView );
   const KConfigGroup cfg( KGlobal::config(), "CollectionViewState" );
-  EntityTreeViewStateSaver* saver = new EntityTreeViewStateSaver( mCollectionView );
   saver->restoreState( cfg );
 }
 

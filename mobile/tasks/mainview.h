@@ -1,7 +1,7 @@
 /*
 * This file is part of Akonadi
 *
-* Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+* Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 * 02110-1301  USA
 */
+
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
@@ -25,8 +26,14 @@
 
 class MainView : public KDeclarativeMainView
 {
+  Q_OBJECT
 public:
     explicit MainView( QWidget *parent = 0 );
+
+public slots:
+    void newTask();
+    void setPercentComplete(int row, int percentComplete);
+    void editIncidence( const Akonadi::Item &item );
 };
 
 #endif // MAINVIEW_H

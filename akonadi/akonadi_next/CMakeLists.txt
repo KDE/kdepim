@@ -24,18 +24,13 @@ set( akonadi_next_SRCS
   notecreatorandselector.cpp
   entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
-  kbreadcrumbselectionmodel.cpp
-  krecursivefilterproxymodel.cpp
-  kmodelindexproxymapper.cpp
-  kviewstatesaver.cpp
-  kproxyitemselectionmodel.cpp
-  etmstatesaver.cpp
   collectionchildorderattribute.cpp
   collectionselectionproxymodel.cpp
   modeltest.cpp
   quotacolorproxymodel.cpp
   checkableitemproxymodel.cpp
   incidenceattachmentmodel.cpp
+  kviewstatemaintainer.cpp
   # TODO Move this to akonadi-kabc
   contactsmodel.cpp
   # TODO Move this to akonadi-mail?
@@ -44,10 +39,9 @@ set( akonadi_next_SRCS
   amazingdelegate.cpp
   modelstatesaver.cpp
   entitymodelstatesaver.cpp
-  recursivecollectionfilterproxymodel.cpp
 )
 
-kde4_add_library(akonadi_next SHARED ${akonadi_next_SRCS} )
+kde4_add_library(akonadi_next ${LIBRARY_TYPE} ${akonadi_next_SRCS} )
 
 target_link_libraries(akonadi_next
                       ${AKONADI_COMMON_LIBRARIES}

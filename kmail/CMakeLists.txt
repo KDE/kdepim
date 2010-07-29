@@ -2,7 +2,6 @@ project(kmail)
 
 include(CheckIncludeFiles)
 
-add_definitions(-DQT3_SUPPORT_WARNINGS)
 add_definitions(-DDISABLE_NEPOMUK_LEGACY)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${KDE4_DATA_DIR}/cmake/modules)
@@ -38,19 +37,16 @@ include_directories(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 
-if (QT_QT3SUPPORT_FOUND)
 add_subdirectory(about)
 add_subdirectory(pics)
 add_subdirectory(icons)
 add_subdirectory(avscripts)
 add_subdirectory(tests)
 add_subdirectory(kconf_update)
-endif (QT_QT3SUPPORT_FOUND)
 add_subdirectory(kcm_kpimidentities)
 
 ########### kmailprivate ###############
 
-if (QT_QT3SUPPORT_FOUND)
 set(kmailprivate_LIB_SRCS
    foldercollectionmonitor.cpp
    readablecollectionproxymodel.cpp
@@ -201,12 +197,8 @@ kde4_add_ui_files(kmailprivate_LIB_SRCS
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
-  set(DELETE_INVITATIONS_AFTER_REPLY_DEFAULT true)
-  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT true)
 else(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
-  set(DELETE_INVITATIONS_AFTER_REPLY_DEFAULT false)
-  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT false)
 endif(KDEPIM_ENTERPRISE_BUILD)
 
 configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)
@@ -217,7 +209,7 @@ kde4_add_kcfg_files(kmailprivate_LIB_SRCS
 )
 
 
-kde4_add_library(kmailprivate SHARED ${kmailprivate_LIB_SRCS})
+kde4_add_library(kmailprivate ${LIBRARY_TYPE} ${kmailprivate_LIB_SRCS})
 target_link_libraries(kmailprivate
   ${KDEPIMLIBS_KMIME_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBS}
@@ -250,6 +242,7 @@ target_link_libraries(kmailprivate
   ${SOPRANO_LIBRARIES}
   niefast_apps
   ${QT_QTWEBKIT_LIBRARY}
+  ${QT_QTSCRIPT_LIBRARY}
   ${NEPOMUK_LIBRARIES}
   ${NEPOMUK_QUERY_LIBRARIES}
 )
@@ -293,6 +286,7 @@ target_link_libraries(kmail
   ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   kmailprivate
   kdepim
+  ${QT_QTSCRIPT_LIBRARY}
 )
 
 ########### install files ###############
@@ -336,5 +330,4 @@ install(FILES
   DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
 )
 
-endif (QT_QT3SUPPORT_FOUND)
 

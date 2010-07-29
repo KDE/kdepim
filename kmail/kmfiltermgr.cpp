@@ -14,8 +14,9 @@ using KMail::FilterImporterExporter;
 using KMail::MessageProperty;
 
 #include <akonadi/changerecorder.h>
-#include <akonadi/itemmovejob.h>
+#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/itemmovejob.h>
 
 // other KDE headers
 #include <kdebug.h>
@@ -37,7 +38,8 @@ using KMail::MessageProperty;
 KMFilterMgr::KMFilterMgr( bool popFilter )
   : mEditDialog( 0 ),
     bPopFilter( popFilter ),
-    mShowLater( false )
+    mShowLater( false ),
+    mRequiresBody( false )
 {
   if ( bPopFilter ) {
     kDebug() << "pPopFilter set";
@@ -107,6 +109,9 @@ int KMFilterMgr::processPop( const Akonadi::Item & item ) const {
 
 bool KMFilterMgr::beginFiltering( const Akonadi::Item &item ) const
 {
+  //KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+  //kDebug() << "filtering" << msg->subject()->asUnicodeString();
+
   if (MessageProperty::filtering( item ))
     return false;
   MessageProperty::setFiltering( item, true );
@@ -180,8 +185,9 @@ int KMFilterMgr::process( const Akonadi::Item &item, FilterSet set,
         // filter matches
         atLeastOneRuleMatched = true;
         // execute actions:
-        if ( (*it)->execActions(item, stopIt) == KMFilter::CriticalError )
+        if ( (*it)->execActions(item, stopIt) == KMFilter::CriticalError ) {
           return 2;
+        }
       }
     }
   }
@@ -190,10 +196,11 @@ int KMFilterMgr::process( const Akonadi::Item &item, FilterSet set,
   /* endFilter does a take() and addButKeepUID() to ensure the changed
    * message is on disk. This is unnessecary if nothing matched, so just
    * reset state and don't update the listview at all. */
-  if ( atLeastOneRuleMatched )
+  if ( atLeastOneRuleMatched ) {
     endFiltering( item );
-  else
+  } else {
     MessageProperty::setFiltering( item, false );
+  }
   if ( targetFolder.isValid() ) {
     new Akonadi::ItemMoveJob( item, targetFolder, this ); // TODO: check result
     return 0;
@@ -353,16 +360,43 @@ void KMFilterMgr::dump(void) const
 //-----------------------------------------------------------------------------
 void KMFilterMgr::endUpdate(void)
 {
-  const bool requiresBody = std::find_if( mFilters.constBegin(), mFilters.constEnd(),
+  mRequiresBody = std::find_if( mFilters.constBegin(), mFilters.constEnd(),
       boost::bind( &KMFilter::requiresBody, _1 ) ) != mFilters.constEnd();
-  mChangeRecorder->itemFetchScope().fetchFullPayload( requiresBody );
 
   emit filterListUpdated();
 }
 
 void KMFilterMgr::itemAdded(const Akonadi::Item& item, const Akonadi::Collection &collection)
 {
-  process( item, Inbound, true, collection.resource() );
+  // We only filter the inboxes, not mail that arrives into other folders
+  // TODO should probably also check SpecialMailCollections once there
+  // is a method in there which directly checks for the attribute
+  if (collection.name().toLower() == "inbox") {
+    if ( mRequiresBody ) {
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
+      job->fetchScope().fetchFullPayload( true );
+      job->setProperty( "resource", collection.resource() );
+      connect( job, SIGNAL( result( KJob* ) ), SLOT( itemAddedFetchResult( KJob* ) ) );
+    } else {
+      process( item, Inbound, true, collection.resource() );
+    }
+  }
+}
+
+void KMFilterMgr::itemAddedFetchResult( KJob *job )
+{
+  if ( job->error() ) {
+    kError() << job->error() << job->errorString();
+    return;
+  }
+
+  Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  Q_ASSERT( fetchJob );
+
+  if ( fetchJob->items().count() == 1 ) {
+    const Akonadi::Item item = fetchJob->items().first();
+    process( item, Inbound, true, fetchJob->property( "resource" ).toString() );
+  }
 }
 
 #include "kmfiltermgr.moc"

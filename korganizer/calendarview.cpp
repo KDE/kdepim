@@ -831,7 +831,8 @@ void CalendarView::changeIncidenceDisplay( const Item &item, int action )
   }
 }
 
-void CalendarView::updateView( const QDate &start, const QDate &end, const bool updateTodos )
+void CalendarView::updateView( const QDate &start, const QDate &end,
+                               const bool updateTodos )
 {
   if ( updateTodos ) {
     mTodoList->updateView();
@@ -966,12 +967,13 @@ void CalendarView::edit_paste()
   bool useEndTime = false;
 
   KOrg::BaseView *curView = mViewManager->currentView();
-  if ( !curView ) {
-    return;
-  }
 
   KOAgendaView *aView = mViewManager->agendaView();
   MonthView *mView = mViewManager->monthView();
+
+  if ( !curView ) {
+    return;
+  }
 
   if ( curView == aView && aView->selectionStart().isValid() ) {
     date = aView->selectionStart().date();
@@ -1945,7 +1947,7 @@ void CalendarView::mailFreeBusy( int daysToPublish )
 
 void CalendarView::uploadFreeBusy()
 {
-  Akonadi::Groupware::instance()->freeBusyManager()->publishFreeBusy( this );
+  Akonadi::FreeBusyManager::self()->publishFreeBusy( this );
 }
 
 void CalendarView::schedule( KCal::iTIPMethod method, const Item &item )
@@ -2526,7 +2528,7 @@ void CalendarView::showIncidence( const Item &item )
   KOEventViewerDialog *eventViewer = new KOEventViewerDialog( this );
   eventViewer->setIncidence( item, QDate() );
   // Disable the Edit button for read-only Incidences.
-  if ( !Akonadi::hasChangeRights( item ) ) {
+  if ( !mCalendar->hasChangeRights( item ) ) {
     eventViewer->enableButton( KDialog::User1, false );
   }
 
@@ -2581,7 +2583,7 @@ bool CalendarView::editIncidence( const Item &item, bool isCounter )
     return true;
   }
 
-  if ( !Akonadi::hasChangeRights( item ) ) {
+  if ( !mCalendar->hasChangeRights( item ) ) {
     showIncidence( item );
     return true;
   }
@@ -2677,7 +2679,7 @@ bool CalendarView::deleteIncidence( const Item &item, bool force )
     return true;
   }
 
-  if ( !Akonadi::hasDeleteRights( item ) ) {
+  if ( !mCalendar->hasDeleteRights( item ) ) {
     if ( !force ) {
       KMessageBox::information(
         this,

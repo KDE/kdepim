@@ -274,19 +274,20 @@ void KOTodoModel::processChange( const Item & aitem, int action )
     emit dataChanged( miChanged,
                       miChanged.sibling( miChanged.row(), mColumnCount - 1 ) );
   } else if ( action == Akonadi::IncidenceChanger::INCIDENCEADDED ) {
-    // the todo should not be in our tree...
-    Q_ASSERT( !findTodo( Akonadi::incidence ( aitem )->uid() ) );
+    const bool found = findTodo( Akonadi::incidence ( aitem )->uid() );
 
-    insertTodo( aitem );
+    // "found" can be true, with akonadi calendarview listens to ETM model signals
+    // and calls updateview, which calls reloadTodos().  I think we have lots of room
+    // for optimization and refactoring in this area. Calling reloadTodos() for one incidence
+    // doesn't justify it.
+    if ( !found ) {
+      insertTodo( aitem );
+    }
   } else if ( action == Akonadi::IncidenceChanger::INCIDENCEDELETED ) {
     TodoTreeNode *ttTodo = findTodo( Akonadi::incidence ( aitem )->uid() );
     if ( !ttTodo || !ttTodo->isValid() ) {
       return;
     }
-
-    // somebody should assure that all todo's which relate to this one
-    // are un-linked before deleting this one
-    Q_ASSERT( !ttTodo->hasChildren() );
 
     // find the model index of the deleted incidence
     QModelIndex miDeleted = getModelIndex( ttTodo );
@@ -541,7 +542,7 @@ Qt::ItemFlags KOTodoModel::flags( const QModelIndex &index ) const
 
   const Todo::Ptr todo = Akonadi::todo( node->mTodo );
 
-  if ( Akonadi::hasChangeRights( node->mTodo ) ) {
+  if ( mCalendar->hasChangeRights( node->mTodo ) ) {
     // the following columns are editable:
     switch ( index.column() ) {
     case SummaryColumn:
@@ -812,7 +813,7 @@ bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int 
   }
   const Todo::Ptr todo = Akonadi::todo( node->mTodo );
 
-  if ( Akonadi::hasChangeRights( node->mTodo ) ) {
+  if ( mCalendar->hasChangeRights( node->mTodo ) ) {
     Todo::Ptr oldTodo( todo->clone() );
     Akonadi::IncidenceChanger::WhatChanged modified = Akonadi::IncidenceChanger::UNKNOWN_MODIFIED;
 

@@ -1041,14 +1041,8 @@ static inline bool message_type_matches( Item * item, MessageTypeFilter messageT
     case MessageTypeAny:
       return true;
     break;
-    case MessageTypeNewOnly:
-      return item->status().isNew();
-    break;
     case MessageTypeUnreadOnly:
       return item->status().isUnread();
-    break;
-    case MessageTypeNewOrUnreadOnly:
-      return item->status().isNew() || item->status().isUnread();
     break;
     default:
       // nuthin here
@@ -1989,7 +1983,7 @@ void View::mouseDoubleClickEvent( QMouseEvent * e )
   }
 }
 
-void View::changeMessageStatus( MessageItem * it, const KPIM::MessageStatus &set, const KPIM::MessageStatus &unset )
+void View::changeMessageStatus( MessageItem * it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset )
 {
   // We first change the status of MessageItem itself. This will make the change
   // visible to the user even if the Model is actually in the middle of a long job (maybe it's loading)
@@ -2002,7 +1996,7 @@ void View::changeMessageStatus( MessageItem * it, const KPIM::MessageStatus &set
   qint32 stat = it->status().toQInt32();
   stat |= set.toQInt32();
   stat &= ~( unset.toQInt32() );
-  KPIM::MessageStatus status;
+  Akonadi::MessageStatus status;
   status.fromQInt32( stat );
   it->setStatus( status );
 
@@ -2054,32 +2048,32 @@ void View::mousePressEvent( QMouseEvent * e )
               case Theme::ContentItem::ActionItemStateIcon:
                 changeMessageStatus(
                     static_cast< MessageItem * >( it ),
-                    it->status().isToAct() ? KPIM::MessageStatus() : KPIM::MessageStatus::statusToAct(),
-                    it->status().isToAct() ? KPIM::MessageStatus::statusToAct() : KPIM::MessageStatus()
+                    it->status().isToAct() ? Akonadi::MessageStatus() : Akonadi::MessageStatus::statusToAct(),
+                    it->status().isToAct() ? Akonadi::MessageStatus::statusToAct() : Akonadi::MessageStatus()
                   );
                 return; // don't select the item
               break;
               case Theme::ContentItem::ImportantStateIcon:
                 changeMessageStatus(
                     static_cast< MessageItem * >( it ),
-                    it->status().isImportant() ? KPIM::MessageStatus() : KPIM::MessageStatus::statusImportant(),
-                    it->status().isImportant() ? KPIM::MessageStatus::statusImportant() : KPIM::MessageStatus()
+                    it->status().isImportant() ? Akonadi::MessageStatus() : Akonadi::MessageStatus::statusImportant(),
+                    it->status().isImportant() ? Akonadi::MessageStatus::statusImportant() : Akonadi::MessageStatus()
                   );
                 return; // don't select the item
               break;
               case Theme::ContentItem::SpamHamStateIcon:
                 changeMessageStatus(
                     static_cast< MessageItem * >( it ),
-                    it->status().isSpam() ? KPIM::MessageStatus() : ( it->status().isHam() ? KPIM::MessageStatus::statusSpam() : KPIM::MessageStatus::statusHam() ),
-                    it->status().isSpam() ? KPIM::MessageStatus::statusSpam() : ( it->status().isHam() ? KPIM::MessageStatus::statusHam() : KPIM::MessageStatus() )
+                    it->status().isSpam() ? Akonadi::MessageStatus() : ( it->status().isHam() ? Akonadi::MessageStatus::statusSpam() : Akonadi::MessageStatus::statusHam() ),
+                    it->status().isSpam() ? Akonadi::MessageStatus::statusSpam() : ( it->status().isHam() ? Akonadi::MessageStatus::statusHam() : Akonadi::MessageStatus() )
                   );
                 return; // don't select the item
               break;
               case Theme::ContentItem::WatchedIgnoredStateIcon:
                 changeMessageStatus(
                     static_cast< MessageItem * >( it ),
-                    it->status().isIgnored() ? KPIM::MessageStatus() : ( it->status().isWatched() ? KPIM::MessageStatus::statusIgnored() : KPIM::MessageStatus::statusWatched() ),
-                    it->status().isIgnored() ? KPIM::MessageStatus::statusIgnored() : ( it->status().isWatched() ? KPIM::MessageStatus::statusWatched() : KPIM::MessageStatus() )
+                    it->status().isIgnored() ? Akonadi::MessageStatus() : ( it->status().isWatched() ? Akonadi::MessageStatus::statusIgnored() : Akonadi::MessageStatus::statusWatched() ),
+                    it->status().isIgnored() ? Akonadi::MessageStatus::statusIgnored() : ( it->status().isWatched() ? Akonadi::MessageStatus::statusWatched() : Akonadi::MessageStatus() )
                   );
                 return; // don't select the item
               break;
@@ -2320,12 +2314,11 @@ bool View::event( QEvent *e )
 
         statsText = i18np( "<b>%1</b> reply", "<b>%1</b> replies", mi->childItemCount() );
         statsText += QLatin1String( ", " );
-
+        
         statsText += i18np(
-            "<b>%1</b> message in subtree (<b>%2</b> new + <b>%3</b> unread)",
-            "<b>%1</b> messages in subtree (<b>%2</b> new + <b>%3</b> unread)",
+            "<b>%1</b> message in subtree (<b>%2</b> unread)",
+            "<b>%1</b> messages in subtree (<b>%2</b> unread)",
             stats.mTotalChildCount,
-            stats.mNewChildCount,
             stats.mUnreadChildCount
           );
 
@@ -2520,10 +2513,9 @@ bool View::event( QEvent *e )
         }
 
         statsText += i18np(
-            "<b>%1</b> message (<b>%2</b> new + <b>%3</b> unread)",
-            "<b>%1</b> messages (<b>%2</b> new + <b>%3</b> unread)",
+            "<b>%1</b> message (<b>%2</b> unread)",
+            "<b>%1</b> messages (<b>%2</b> unread)",
             stats.mTotalChildCount,
-            stats.mNewChildCount,
             stats.mUnreadChildCount
           );
 
@@ -2568,7 +2560,7 @@ void View::focusQuickSearch()
   d->mWidget->focusQuickSearch();
 }
 
-KPIM::MessageStatus View::currentFilterStatus() const
+Akonadi::MessageStatus View::currentFilterStatus() const
 {
   return d->mWidget->currentFilterStatus();
 }

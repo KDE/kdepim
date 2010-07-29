@@ -53,7 +53,7 @@
 #include "core/manager.h"
 #include "core/messageitemsetmanager.h"
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 #include "messagecore/stringutil.h"
 
 #include <QApplication>
@@ -296,9 +296,8 @@ Model::Model( View *pParent )
   d->mCachedFourWeeksAgoLabel = i18n( "Four Weeks Ago" );
   d->mCachedFiveWeeksAgoLabel = i18n( "Five Weeks Ago" );
 
-  d->mCachedWatchedOrIgnoredStatusBits = KPIM::MessageStatus::statusIgnored().toQInt32() | KPIM::MessageStatus::statusWatched().toQInt32();
-  d->mCachedNewStatusBits = KPIM::MessageStatus::statusNew().toQInt32();
-  d->mCachedNewOrUnreadStatusBits = KPIM::MessageStatus::statusNew().toQInt32() | KPIM::MessageStatus::statusUnread().toQInt32();
+  d->mCachedWatchedOrIgnoredStatusBits = Akonadi::MessageStatus::statusIgnored().toQInt32() | Akonadi::MessageStatus::statusWatched().toQInt32();
+  d->mCachedUnreadStatusBits = Akonadi::MessageStatus::statusUnread().toQInt32();
 
   connect( _k_heartBeatTimer, SIGNAL(timeout()),
            this, SLOT(checkIfDateChanged()) );
@@ -311,7 +310,10 @@ Model::Model( View *pParent )
 Model::~Model()
 {
   setStorageModel( 0 );
+
   d->clearJobList();
+  d->mOldestItem = 0;
+  d->mNewestItem = 0;
   d->clearUnassignedMessageLists();
   d->clearOrphanChildrenHash();
   d->clearThreadingCacheMessageSubjectMD5ToMessageItem();
@@ -513,6 +515,9 @@ QModelIndex Model::index( Item *item, int column ) const
   if ( !d->mModelForItemFunctions )
     return QModelIndex(); // called with disconnected UI: the item isn't known on the Qt side, yet
 
+  if ( !item ) {
+    return QModelIndex();
+  }
   // FIXME: This function is a bottleneck
   Item * par = item->parent();
   if ( !par )
@@ -958,6 +963,14 @@ void ModelPrivate::clearUnassignedMessageLists()
 
   // Sometimes the things get a little complicated since in Pass2 and Pass3
   // we have transitional states in that the MessageItem object can be in two of these lists.
+
+  // WARNING: This function does NOT fixup mNewestItem and mOldestItem. If one of these
+  // two messages is in the lists below, it's deleted and the member becomes a dangling pointer.
+  // The caller must ensure that both mNewestItem and mOldestItem are set to 0
+  // and this is enforced in the assert below to avoid errors. This basically means
+  // that this function should be called only when the storage model changes or
+  // when the model is destroyed.
+  Q_ASSERT( ( mOldestItem == 0 ) && ( mNewestItem == 0 ) );
 
   QList< MessageItem * >::Iterator it;
 
@@ -1801,10 +1814,10 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
               attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
           } // else to do status changed, but it doesn't match sorting order: no need to re-sort
         break;
-        case SortOrder::SortMessagesByNewUnreadStatus:
-          if ( propertyChangeMask & NewUnreadStatusChanged ) // new / unread status changed
+        case SortOrder::SortMessagesByUnreadStatus:
+          if ( propertyChangeMask & UnreadStatusChanged ) // new / unread status changed
           {
-            if ( messageItemNeedsReSorting< ItemNewUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+            if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
               attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
           } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
     break;
@@ -1876,10 +1889,10 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
           attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
       } // else to do status changed, but it doesn't match sorting order: no need to re-sort
     break;
-    case SortOrder::SortMessagesByNewUnreadStatus:
-      if ( propertyChangeMask & NewUnreadStatusChanged ) // new / unread status changed
+    case SortOrder::SortMessagesByUnreadStatus:
+      if ( propertyChangeMask & UnreadStatusChanged ) // new / unread status changed
       {
-        if ( messageItemNeedsReSorting< ItemNewUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
+        if ( messageItemNeedsReSorting< ItemUnreadStatusComparator >( mSortOrder->messageSortDirection(), parent->d, static_cast< MessageItem * >( item ) ) )
           attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
       } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
     break;
@@ -2096,13 +2109,13 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
     if ( pParent->status().isWatched() )
     {
       int row = mInvariantRowMapper->modelInvariantIndexToModelIndexRow( mi );
-      mi->setStatus( KPIM::MessageStatus::statusWatched() );
-      mStorageModel->setMessageItemStatus( mi, row, KPIM::MessageStatus::statusWatched() );
+      mi->setStatus( Akonadi::MessageStatus::statusWatched() );
+      mStorageModel->setMessageItemStatus( mi, row, Akonadi::MessageStatus::statusWatched() );
     } else if ( pParent->status().isIgnored() )
     {
       int row = mInvariantRowMapper->modelInvariantIndexToModelIndexRow( mi );
-      mi->setStatus( KPIM::MessageStatus::statusIgnored() );
-      mStorageModel->setMessageItemStatus( mi, row, KPIM::MessageStatus::statusIgnored() );
+      mi->setStatus( Akonadi::MessageStatus::statusIgnored() );
+      mStorageModel->setMessageItemStatus( mi, row, Akonadi::MessageStatus::statusIgnored() );
     }
   }
 
@@ -2155,8 +2168,8 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
     case SortOrder::SortMessagesByActionItemStatus:
       INSERT_MESSAGE_WITH_COMPARATOR( ItemActionItemStatusComparator )
     break;
-    case SortOrder::SortMessagesByNewUnreadStatus:
-      INSERT_MESSAGE_WITH_COMPARATOR( ItemNewUnreadStatusComparator )
+    case SortOrder::SortMessagesByUnreadStatus:
+      INSERT_MESSAGE_WITH_COMPARATOR( ItemUnreadStatusComparator )
     break;
     case SortOrder::NoMessageSorting:
       pParent->appendChildItem( mModelForItemFunctions, mi );
@@ -2178,20 +2191,16 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
         if ( childNeedsExpanding )
           pParent->setInitialExpandStatus( Item::ExpandNeeded );
       break;
-      case Aggregation::ExpandThreadsWithNewMessages:
-        // expand only if new (or it has children marked for expansion)
-        if ( childNeedsExpanding || mi->status().isNew() )
-          pParent->setInitialExpandStatus( Item::ExpandNeeded );
-      break;
+      case Aggregation::ExpandThreadsWithNewMessages: // No more new status. fall through to unread if it exists in config
       case Aggregation::ExpandThreadsWithUnreadMessages:
-        // expand only if unread or new (or it has children marked for expansion)
-        if ( childNeedsExpanding || mi->status().isUnread() || mi->status().isNew() )
+        // expand only if unread (or it has children marked for expansion)
+        if ( childNeedsExpanding || mi->status().isUnread() )
           pParent->setInitialExpandStatus( Item::ExpandNeeded );
       break;
       case Aggregation::ExpandThreadsWithUnreadOrImportantMessages:
-        // expand only if unread, new, important or todo (or it has children marked for expansion)
+        // expand only if unread, important or todo (or it has children marked for expansion)
         // FIXME: Wouldn't it be nice to be able to test for bitmasks in MessageStatus ?
-        if ( childNeedsExpanding || mi->status().isUnread() || mi->status().isNew() || mi->status().isImportant() || mi->status().isToAct() )
+        if ( childNeedsExpanding || mi->status().isUnread() || mi->status().isImportant() || mi->status().isToAct() )
           pParent->setInitialExpandStatus( Item::ExpandNeeded );
       break;
       case Aggregation::AlwaysExpandThreads:
@@ -3221,7 +3230,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
     time_t prevDate = message->date();
     time_t prevMaxDate = message->maxDate();
     bool toDoStatus = message->status().isToAct();
-    qint32 prevNewUnreadStatus = message->status().toQInt32() & mCachedNewOrUnreadStatusBits;
+    qint32 prevUnreadStatus = message->status().toQInt32() & mCachedUnreadStatusBits;
 
     // The subject based threading cache is sorted by date: we must remove
     // the item and re-insert it since updateMessageItemData() may change the date too.
@@ -3246,8 +3255,8 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
        propertyChangeMask |= MaxDateChanged;
     if ( toDoStatus != message->status().isToAct() )
        propertyChangeMask |= ActionItemStatusChanged;
-    if ( prevNewUnreadStatus != ( message->status().toQInt32() & mCachedNewOrUnreadStatusBits ) )
-       propertyChangeMask |= NewUnreadStatusChanged;
+    if ( prevUnreadStatus != ( message->status().toQInt32() & mCachedUnreadStatusBits ) )
+       propertyChangeMask |= UnreadStatusChanged;
 
     if ( propertyChangeMask )
     {
@@ -3277,31 +3286,25 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
     // (re-)apply the filter, if needed
     if ( mFilter && message->isViewable() )
     {
-      // We explicitly avoid handling one particular case: the filter
-      // set to "new messages only". This is because simply clicking
-      // on the message would then remove the "new" status and the message
-      // would disappear from the list. This is not what we want :)
-      if ( ! (mFilter->statusMask() & mCachedNewStatusBits ) )
-      {
-        // In all the other cases we (re-)apply the filter to the topmost subtree that this message is in.
-        Item * pTopMostNonRoot = message->topmostNonRoot();
+      // In all the other cases we (re-)apply the filter to the topmost subtree that this message is in.
+      Item * pTopMostNonRoot = message->topmostNonRoot();
 
-        Q_ASSERT( pTopMostNonRoot );
-        Q_ASSERT( pTopMostNonRoot != mRootItem );
-        Q_ASSERT( pTopMostNonRoot->parent() == mRootItem );
+      Q_ASSERT( pTopMostNonRoot );
+      Q_ASSERT( pTopMostNonRoot != mRootItem );
+      Q_ASSERT( pTopMostNonRoot->parent() == mRootItem );
 
-        // FIXME: The call below works, but it's expensive when we are updating
-        //        a lot of items with filtering enabled. This is because the updated
-        //        items are likely to be in the same subtree which we then filter multiple times.
-        //        A point for us is that when filtering there shouldn't be really many
-        //        items in the view so the user isn't going to update a lot of them at once...
-        //        Well... anyway, the alternative would be to write yet another
-        //        specialized routine that would update only the "message" item
-        //        above and climb up eventually hiding parents (without descending the sibling subtrees again).
-        //        If people complain about performance in this particular case I'll consider that solution.
+      // FIXME: The call below works, but it's expensive when we are updating
+      //        a lot of items with filtering enabled. This is because the updated
+      //        items are likely to be in the same subtree which we then filter multiple times.
+      //        A point for us is that when filtering there shouldn't be really many
+      //        items in the view so the user isn't going to update a lot of them at once...
+      //        Well... anyway, the alternative would be to write yet another
+      //        specialized routine that would update only the "message" item
+      //        above and climb up eventually hiding parents (without descending the sibling subtrees again).
+      //        If people complain about performance in this particular case I'll consider that solution.
 
-        applyFilterToSubtree( pTopMostNonRoot, QModelIndex() );
-      }
+      applyFilterToSubtree( pTopMostNonRoot, QModelIndex() );
+
     } // otherwise there is no filter or the item isn't viewable: very likely
       // left detached while propagating property changes. Will filter it
       // on reattach.
@@ -3989,13 +3992,8 @@ void ModelPrivate::viewItemJobStep()
           case PreSelectLastSelected:
             // fall down
           break;
-          case PreSelectFirstNewCentered:
-            bSelectionDone = mView->selectFirstMessageItem( MessageTypeNewOnly, true ); // center
-            if ( !bSelectionDone ) // try to fallback to unread
-              bSelectionDone = mView->selectFirstMessageItem( MessageTypeUnreadOnly, true ); // center
-          break;
-          case PreSelectFirstNewOrUnreadCentered:
-            bSelectionDone = mView->selectFirstMessageItem( MessageTypeNewOrUnreadOnly, true ); // center
+          case PreSelectFirstUnreadCentered:
+            bSelectionDone = mView->selectFirstMessageItem( MessageTypeUnreadOnly, true ); // center
           break;
           case PreSelectOldestCentered:
             mView->setCurrentMessageItem( mOldestItem, true /* center */ );
@@ -4351,10 +4349,15 @@ void ModelPrivate::slotStorageModelRowsRemoved( const QModelIndex &parent, int f
         if ( to >= job->endIndex() )
         {
           // The change completely covers the job: kill it
-          delete job;
-          mViewItemJobs.removeAt( idx );
-          idx--;
-          jobCount--;
+
+          // We don't delete the job since we want the other passes to be completed
+          // This is because the Pass1Fill may have already filled mUnassignedMessageListForPass2
+          // and may have set mOldestItem and mNewestItem. We *COULD* clear the unassigned
+          // message list with clearUnassignedMessageLists() but mOldestItem and mNewestItem
+          // could be still dangling pointers. So we just move the current index of the job
+          // after the end (so storage model scan terminates) and let it complete spontaneously.
+          job->setCurrentIndex( job->endIndex() + 1 );
+          
         } else if ( to >= job->currentIndex() )
         {
           // The change partially covers the job. Only a part of it can be completed

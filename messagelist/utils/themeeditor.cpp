@@ -26,7 +26,7 @@
 #include "core/manager.h"
 #include "utils/comboboxutils.h"
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include <QActionGroup>
 #include <QCheckBox>
@@ -219,14 +219,14 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   mSampleGroupHeaderItem->rawAppendChildItem( mSampleMessageItem );
   mSampleMessageItem->setParent( mSampleGroupHeaderItem );
 
-  KPIM::MessageStatus stat;
+  Akonadi::MessageStatus stat;
 
   stat.fromQInt32( 0x7fffffff );
   stat.setQueued( false );
   stat.setSent( false );
-  stat.setNew();
   stat.setSpam( true );
   stat.setWatched( true );
+  stat.setHasInvitation();
   //stat.setHasAttachment( false );
 
   mSampleMessageItem->setStatus( stat );
@@ -1402,6 +1402,10 @@ ThemeEditor::ThemeEditor( QWidget *parent )
   cil->setToolTip( Theme::ContentItem::description( cil->type() ) );
   gblayout->addWidget( cil, 1, 5 );
 
+  cil = new ThemeContentItemSourceLabel( gb, Theme::ContentItem::InvitationIcon );
+  cil->setPixmap( *( Manager::instance()->pixmapMessageInvitation() ) );
+  cil->setToolTip( Theme::ContentItem::description( cil->type() ) );
+  gblayout->addWidget( cil, 2, 5 );
 
 
 

@@ -1,17 +1,23 @@
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Name=KOrganizer Mobile
-Name[ca]=KOrganizer mòbil
-Name[en_GB]=KOrganizer Mobile
-Name[es]=KOrganizer móvil
-Name[km]=KOrganizer Mobile
-Name[pt]=KOrganizer Móvel
-Name[pt_BR]=KOrganizer Móvel
-Name[sv]=Korganizer för mobil
-Name[uk]=Мобільний KOrganizer
-Name[x-test]=xxKOrganizer Mobilexx
-Exec=korganizer-mobile
+Name=KDE Calendar
+Name[es]=Calendario de KDE
+Name[ja]=KDE カレンダー
+Name[nds]=KDE-Kalenner
+Name[pt]=Calendário do KDE
+Name[pt_BR]=Calendário do KDE
+Name[sv]=KDE:s kalender
+Name[uk]=Календар KDE
+Name[x-test]=xxKDE Calendarxx
+Name[zh_CN]=KDE 日历
+Name[zh_TW]=KDE 行事曆
+Exec=korganizer-mobile.sh
 
-Icon=office-calendar
+Icon=korganizer-mobile
 Type=Application
+MimeType=text/calendar;
+X-KDE-ServiceTypes=DBUS/Organizer
+X-KDE-StartupNotify=true
+X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.korganizer

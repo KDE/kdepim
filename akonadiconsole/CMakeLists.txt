@@ -10,6 +10,8 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(akonadiconsole_bin_SRCS
   agentwidget.cpp
+  agentconfigdialog.cpp
+  agentconfigmodel.cpp
   akonadibrowsermodel.cpp
   browserwidget.cpp
   collectionattributespage.cpp
@@ -55,6 +57,7 @@ qt4_add_dbus_interface( akonadiconsole_bin_SRCS
 
 kde4_add_ui_files(akonadiconsole_bin_SRCS
   agentwidget.ui
+  agentconfigdialog.ui
   browserwidget_itemview.ui
   browserwidget_contentview.ui
   collectionattributespage.ui

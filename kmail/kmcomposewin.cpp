@@ -37,7 +37,6 @@
 #include "kmmainwidget.h"
 #include "kmreadermainwin.h"
 //#include "mailcomposeradaptor.h" // TODO port all D-Bus stuff...
-#include "objecttreeparser.h"
 #include "messageviewer/stl_util.h"
 #include "messageviewer/util.h"
 #include "messagecore/stringutil.h"
@@ -77,12 +76,11 @@
 #include <templateparser/templateparser.h>
 #include <templatesconfiguration.h>
 #include "messagecore/nodehelper.h"
-#include "messagecore/messagestatus.h"
+#include <akonadi/kmime/messagestatus.h>
 #include "messagecore/messagehelpers.h"
 
 // LIBKDEPIM includes
 #include <libkdepim/recentaddresses.h>
-#include <libkdepim/kdescendantsproxymodel_p.h>
 
 // KDEPIMLIBS includes
 #include <akonadi/collectioncombobox.h>
@@ -108,6 +106,7 @@
 #include <kapplication.h>
 #include <kcharsets.h>
 #include <kdebug.h>
+#include <libkdepim/kdescendantsproxymodel_p.h>
 #include <kedittoolbar.h>
 #include <kencodingfiledialog.h>
 #include <kinputdialog.h>
@@ -188,7 +187,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
     mIdentityAction( 0 ), mTransportAction( 0 ), mFccAction( 0 ),
     mWordWrapAction( 0 ), mFixedFontAction( 0 ), mAutoSpellCheckingAction( 0 ),
     mDictionaryAction( 0 ), mSnippetAction( 0 ),
-    //mEncodingAction( 0 ),
     mCodecAction( 0 ),
     mCryptoModuleAction( 0 ),
     mEncryptChiasmusAction( 0 ),
@@ -253,7 +251,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, Composer::TemplateC
   mDictionaryCombo = new DictionaryComboBox( mHeadersArea );
   mDictionaryCombo->setToolTip( i18n( "Select the dictionary to use when spell-checking this message" ) );
 
-  Akonadi::CollectionComboBox* fcc = new Akonadi::CollectionComboBox( mHeadersArea );
+  Akonadi::CollectionComboBox* fcc = new Akonadi::CollectionComboBox( kmkernel->collectionModel(), mHeadersArea );
   fcc->setMimeTypeFilter( QStringList()<<KMime::Message::mimeType() );
   fcc->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   fcc->setToolTip( i18n( "Select the sent-mail folder where a copy of this message will be saved" ) );
@@ -463,7 +461,7 @@ KMComposeWin::~KMComposeWin()
     item.setMimeType( "message/rfc822" );
     MessageStatus status;
     status.setRead();
-    item.setFlags( status.getStatusFlags() );
+    item.setFlags( status.statusFlags() );
     new Akonadi::ItemCreateJob( item, mFolder );
     // FIXME: listen to the result signal. The whole thing needs to be moved
     //        out of the destructor for this
@@ -566,7 +564,6 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
   mEdtFrom->setFont( mBodyFont );
   mEdtReplyTo->setFont( mBodyFont );
   mEdtSubject->setFont( mBodyFont );
-  mComposerBase->recipientsEditor()->setEditFont( mBodyFont );
 
   if ( !reload ) {
     QSize siz = GlobalSettings::self()->composerSize();
@@ -649,6 +646,14 @@ void KMComposeWin::writeConfig( void )
 
 Message::Composer* KMComposeWin::createSimpleComposer()
 {
+  QList< QByteArray > charsets = mCodecAction->mimeCharsets();
+  if( !mOriginalPreferredCharset.isEmpty() ) {
+    charsets.insert( 0, mOriginalPreferredCharset );
+  }
+  mComposerBase->setFrom( from() );
+  mComposerBase->setReplyTo( replyTo() );
+  mComposerBase->setSubject( subject() );
+  mComposerBase->setCharsets( charsets );
   return mComposerBase->createSimpleComposer();
 }
 
@@ -1200,7 +1205,7 @@ void KMComposeWin::setupActions( void )
   actionCollection()->addAction( "charsets", mCodecAction );
   mWordWrapAction = new KToggleAction( i18n( "&Wordwrap" ), this );
   actionCollection()->addAction( "wordwrap", mWordWrapAction );
-  mWordWrapAction->setChecked( GlobalSettings::self()->wordWrap() );
+  mWordWrapAction->setChecked( MessageComposer::MessageComposerSettings::self()->wordWrap() );
   connect( mWordWrapAction, SIGNAL(toggled(bool)), SLOT(slotWordWrapToggled(bool)) );
 
   mSnippetAction = new KToggleAction( i18n("&Snippets"), this );
@@ -1380,7 +1385,7 @@ void KMComposeWin::setupEditor( void )
   QFontMetrics fm( mBodyFont );
   mComposerBase->editor()->setTabStopWidth( fm.width( QChar(' ') ) * 8 );
 
-  slotWordWrapToggled( GlobalSettings::self()->wordWrap() );
+  slotWordWrapToggled( MessageComposer::MessageComposerSettings::self()->wordWrap() );
 
   // Font setup
   slotUpdateFont();
@@ -1895,8 +1900,10 @@ int KMComposeWin::signingChainCertNearExpiryWarningThresholdInDays()
 
 void KMComposeWin::slotSendFailed( const QString& msg )
 {
-//   setModified( false );
+  //   setModified( false );
   setEnabled( true );
+  KMessageBox::sorry( mMainWidget, msg,
+                      i18n( "Sending Message Failed" ) );
 }
 
 void KMComposeWin::slotSendSuccessful()
@@ -2095,7 +2102,7 @@ void KMComposeWin::slotUpdateFont()
 
 QString KMComposeWin::smartQuote( const QString & msg )
 {
-  return MessageCore::StringUtil::smartQuote( msg, GlobalSettings::self()->lineWrapWidth() );
+  return MessageCore::StringUtil::smartQuote( msg, MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
 }
 
 void KMComposeWin::slotPasteAsAttachment()
@@ -2127,7 +2134,7 @@ QString KMComposeWin::addQuotesToText( const QString &inputText ) const
   answer.replace( '\n', '\n' + indentStr );
   answer.prepend( indentStr );
   answer += '\n';
-  return MessageCore::StringUtil::smartQuote( answer, GlobalSettings::self()->lineWrapWidth() );
+  return MessageCore::StringUtil::smartQuote( answer, MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
 }
 
 //-----------------------------------------------------------------------------
@@ -2188,7 +2195,7 @@ void KMComposeWin::slotCopy()
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotPaste()
 {
-  QWidget *fw = focusWidget();
+  QWidget * const fw = focusWidget();
   if ( !fw ) {
     return;
   }
@@ -2196,8 +2203,10 @@ void KMComposeWin::slotPaste()
     mComposerBase->editor()->paste();
   }
   else {
-    QKeyEvent k( QEvent::KeyPress, Qt::Key_V, Qt::ControlModifier );
-    qApp->notify( fw, &k );
+    QLineEdit * const lineEdit = ::qobject_cast<QLineEdit*>( fw );
+    if ( lineEdit ) {
+      lineEdit->paste();
+    }
   }
 }
 
@@ -2352,7 +2361,7 @@ void KMComposeWin::setSigning( bool sign, bool setByUser )
 void KMComposeWin::slotWordWrapToggled( bool on )
 {
   if ( on )
-    mComposerBase->editor()->enableWordWrap( GlobalSettings::self()->lineWrapWidth() );
+    mComposerBase->editor()->enableWordWrap( MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
   else
     mComposerBase->editor()->disableWordWrap();
 }
@@ -2456,7 +2465,7 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
     if ( mComposerBase->to().isEmpty() ) {
       if ( mComposerBase->cc().isEmpty() && mComposerBase->bcc().isEmpty() ) {
         KMessageBox::information( this,
-                                  i18n("You must specify at least one receiver,"
+                                  i18n("You must specify at least one receiver, "
                                        "either in the To: field or as CC or as BCC.") );
 
         return;
@@ -2493,6 +2502,8 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
       return;
     }
 
+
+    setEnabled( false );
     // Validate the To:, CC: and BCC fields
     const QStringList recipients = QStringList() << mComposerBase->to().trimmed() << mComposerBase->cc().trimmed() << mComposerBase->bcc().trimmed();
 
@@ -2503,8 +2514,18 @@ void KMComposeWin::doSend( MessageSender::SendMethod method,
     job->start();
 
     // we'll call send from within slotDoDelaySend
-  } else
+  } else {
+    if( saveIn == MessageSender::SaveInDrafts && mEncryptAction->isChecked() &&
+        !GlobalSettings::self()->neverEncryptDrafts() &&
+        mComposerBase->to().isEmpty() && mComposerBase->cc().isEmpty() ) {
+
+      KMessageBox::information( this, i18n("You must specify at least one receiver "
+                                            "in order to be able to encrypt a draft.")
+                              );
+      return;
+    }
     doDelayedSend( method, saveIn );
+  }
 }
 
 void KMComposeWin::slotDoDelayedSend( KJob *job )
@@ -2552,7 +2573,6 @@ void KMComposeWin::doDelayedSend( MessageSender::SendMethod method, MessageSende
                                     || mSigningAndEncryptionExplicitlyDisabled ) );
 
 
-  setEnabled( false );
   mComposerBase->send( method, saveIn );
 }
 
@@ -2677,6 +2697,7 @@ void KMComposeWin::enableHtml()
 
   mSaveFont = mComposerBase->editor()->currentFont();
   mComposerBase->editor()->updateActionStates();
+  mComposerBase->editor()->setActionsEnabled( true );
 }
 
 
@@ -2696,6 +2717,7 @@ void KMComposeWin::disableHtml( Message::ComposerViewBase::Confirmation confirma
   }
 
   mComposerBase->editor()->switchToPlainText();
+  mComposerBase->editor()->setActionsEnabled( false );
   slotUpdateFont();
   if ( toolBar( "htmlToolBar" )->isVisible() ) {
     // See the comment in enableHtml() why we use a singleshot timer, similar situation here.

@@ -23,6 +23,9 @@
 
 #include "kdeclarativemainview.h"
 
+class CalendarInterface;
+class QDate;
+
 namespace Akonadi
 {
 class Calendar;
@@ -32,16 +35,22 @@ class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
 public:
-    explicit MainView( QWidget *parent = 0 );
+    explicit MainView( QWidget* parent = 0 );
 
+    ~MainView();
+    
 public slots:
-    void showFavoriteCalendar();
     void showRegularCalendar();
 
     void setCurrentEventItemId( qint64 id );
 
-    void startIncidenceEditor();
+    void newEvent();
+    void newTodo();
+    void editIncidence( const Akonadi::Item &item, const QDate &date );
 
+private slots:
+    void delayedInit();
+  
 private:
   Akonadi::Calendar *m_calendar;
 };

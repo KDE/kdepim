@@ -49,7 +49,7 @@ namespace KNode
                   KAboutData::License_GPL,
                   ki18n("Copyright © 1999–2010 KNode authors"),
                   KLocalizedString(),
-                  "http://kontact.kde.org/knode/" )
+                  "http://userbase.kde.org/KNode" )
   {
     setOrganizationDomain( "kde.org" );
     using KNode::authors;

@@ -30,13 +30,13 @@
 #include "bilboblog.h"
 #include <QPointer>
 
+class KStatusNotifierItem;
 class KTabWidget;
 class QProgressBar;
 class QToolButton;
 class Toolbox;
 class KSelectAction;
 class PostEntry;
-class KSystemTrayIcon;
 
 /**
 Main window of blogilo...
@@ -120,7 +120,7 @@ private:
     Toolbox *toolbox;
     QDockWidget *toolboxDock;
     QPointer<PostEntry> activePost;
-    KSystemTrayIcon *systemTray;
+    KStatusNotifierItem *systemTray;
     KTabWidget *tabPosts;
 
     QToolButton *btnRemovePost;

@@ -19,6 +19,8 @@
     USA.
 */
 
+// READ THE README FILE
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 

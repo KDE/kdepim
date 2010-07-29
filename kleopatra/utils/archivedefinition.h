@@ -54,6 +54,15 @@ namespace Kleo {
     public:
         virtual ~ArchiveDefinition();
 
+        enum ArgumentPassingMethod {
+            CommandLine,
+            NewlineSeparatedInputFile,
+            NullSeparatedInputFile,
+
+            NumArgumentPassingMethods
+        };
+
+        ArgumentPassingMethod argumentPassingMethod() const { return m_method; }
         QString id() const { return m_id; }
         QString label() const { return m_label; }
 
@@ -64,6 +73,9 @@ namespace Kleo {
         static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions();
         static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions( QStringList & errors );
 
+    protected:
+        void setArgumentPassingMethod( ArgumentPassingMethod method ) { m_method = method; }
+
     private:
         virtual QString doGetCommand() const = 0;
         virtual QStringList doGetArguments( const QStringList & files ) const = 0;
@@ -71,6 +83,7 @@ namespace Kleo {
         const QString m_id;
         const QString m_label;
         const QStringList m_extensions;
+        ArgumentPassingMethod m_method;
     };
         
 }

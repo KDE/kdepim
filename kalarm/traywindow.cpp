@@ -23,7 +23,11 @@
 
 #include "alarmcalendar.h"
 #include "alarmlistview.h"
+#ifdef USE_AKONADI
+#include "akonadimodel.h"
+#else
 #include "alarmresources.h"
+#endif
 #include "alarmtext.h"
 #include "functions.h"
 #include "kalarmapp.h"
@@ -32,14 +36,8 @@
 #include "newalarmaction.h"
 #include "prefdlg.h"
 #include "preferences.h"
+#include "synchtimer.h"
 #include "templatemenuaction.h"
-
-#include <stdlib.h>
-
-#include <QToolTip>
-#include <QMouseEvent>
-#include <QList>
-#include <QTimer>
 
 #include <kactioncollection.h>
 #include <ktoggleaction.h>
@@ -55,6 +53,13 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
+#include <QToolTip>
+#include <QMouseEvent>
+#include <QList>
+#include <QTimer>
+
+#include <stdlib.h>
+
 
 struct TipItem
 {
@@ -69,34 +74,18 @@ struct TipItem
 =============================================================================*/
 
 TrayWindow::TrayWindow(MainWindow* parent)
-	: KSystemTrayIcon(parent),
+	: KStatusNotifierItem(parent),
 	  mAssocMainWindow(parent),
+#ifdef USE_AKONADI
+	  mAlarmsModel(0),
+#endif
 	  mHaveDisabledAlarms(false)
 {
 	kDebug();
-	// Set up GUI icons
-	mIconEnabled  = loadIcon("kalarm");
-	if (mIconEnabled.isNull())
-		KMessageBox::sorry(parent, i18nc("@info", "Cannot load system tray icon."));
-	else
-	{
-		// Create the all alarms disabled icon, by converting the normal icon to grey
-		KIconLoader* loader = KIconLoader::global();
-		QImage icon = mIconEnabled.pixmap(loader->currentSize(KIconLoader::Panel)).toImage();
-		QImage iconDisabled = icon;
-		KIconEffect::toGray(iconDisabled, 1.0);
-		mIconDisabled = QIcon(QPixmap::fromImage(iconDisabled));
-
-		// Create the partially disabled icon, by overlaying the normal icon
-		// with a disabled indication
-		QImage disabled = loader->loadIcon("partdisabled", KIconLoader::Panel, icon.width(), KIconLoader::DefaultState, QStringList("emblems")).toImage();
-		KIconEffect::overlay(icon, disabled);
-		mIconSomeDisabled = QIcon(QPixmap::fromImage(icon));
-	}
-#ifdef __GNUC__
-#warning How to implement drag-and-drop?
-#endif
-	//setAcceptDrops(true);         // allow drag-and-drop onto this window
+	setToolTipIconByName("kalarm");
+	setToolTipTitle(KGlobal::mainComponent().aboutData()->programName());
+	setIconByName("kalarm");
+	setStatus(KStatusNotifierItem::Active);
 
 	// Set up the context menu
 	KActionCollection* actions = actionCollection();
@@ -138,11 +127,56 @@ TrayWindow::TrayWindow(MainWindow* parent)
 	// Set icon to correspond with the alarms enabled menu status
 	setEnabledStatus(theApp()->alarmsEnabled());
 
-	connect(AlarmResources::instance(), SIGNAL(resourceStatusChanged(AlarmResource*, AlarmResources::Change)), SLOT(slotResourceStatusChanged()));
+#ifdef USE_AKONADI
+	connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(const Akonadi::Collection&, AkonadiModel::Change, bool)), SLOT(slotCalendarStatusChanged()));
+#else
+	connect(AlarmResources::instance(), SIGNAL(resourceStatusChanged(AlarmResource*, AlarmResources::Change)), SLOT(slotCalendarStatusChanged()));
+#endif
 	connect(AlarmCalendar::resources(), SIGNAL(haveDisabledAlarmsChanged(bool)), SLOT(slotHaveDisabledAlarms(bool)));
-	connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), SLOT(slotActivated(QSystemTrayIcon::ActivationReason)));
-	slotResourceStatusChanged();   // initialise action states
+    connect(this, SIGNAL(activateRequested(bool, const QPoint&)), SLOT(slotActivateRequested()));
+    connect(this, SIGNAL(secondaryActivateRequested(const QPoint&)), SLOT(slotSecondaryActivateRequested()));
+	slotCalendarStatusChanged();   // initialise action states
 	slotHaveDisabledAlarms(AlarmCalendar::resources()->haveDisabledAlarms());
+
+	// Hack: KSNI does not let us know when it is about to show the tooltip,
+	// so we need to update it whenever something change in it.
+
+	// This timer ensure updateToolTip() is not called several times in a row
+	mToolTipUpdateTimer = new QTimer(this);
+	mToolTipUpdateTimer->setInterval(0);
+	mToolTipUpdateTimer->setSingleShot(true);
+	connect(mToolTipUpdateTimer, SIGNAL(timeout()), SLOT(updateToolTip()));
+
+	// Update every minute to show accurate deadlines
+	MinuteTimer::connect(mToolTipUpdateTimer, SLOT(start()));
+
+	// Update when alarms are modified
+#ifdef USE_AKONADI
+	connect(AlarmListModel::all(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(AlarmListModel::all(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(AlarmListModel::all(), SIGNAL(rowsMoved(const QModelIndex&, int, int, const QModelIndex&, int)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(AlarmListModel::all(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(AlarmListModel::all(), SIGNAL(modelReset()),
+	        mToolTipUpdateTimer, SLOT(start()));
+#else
+	connect(EventListModel::alarms(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(EventListModel::alarms(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(EventListModel::alarms(), SIGNAL(rowsMoved(const QModelIndex&, int, int, const QModelIndex&, int)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(EventListModel::alarms(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+	        mToolTipUpdateTimer, SLOT(start()));
+	connect(EventListModel::alarms(), SIGNAL(modelReset()),
+	        mToolTipUpdateTimer, SLOT(start()));
+#endif
+
+	// Update when tooltip preferences are modified
+	Preferences::connect(SIGNAL(tooltipPreferencesChanged()), mToolTipUpdateTimer, SLOT(start()));
 }
 
 TrayWindow::~TrayWindow()
@@ -153,15 +187,20 @@ TrayWindow::~TrayWindow()
 }
 
 /******************************************************************************
-* Called when the status of a resource has changed.
+* Called when the status of a calendar has changed.
 * Enable or disable actions appropriately.
 */
-void TrayWindow::slotResourceStatusChanged()
+void TrayWindow::slotCalendarStatusChanged()
 {
-	// Find whether there are any writable active alarm resources
-	bool active = AlarmResources::instance()->activeCount(AlarmResource::ACTIVE, true);
-	mActionNew->setEnabled(active);
+	// Find whether there are any writable active alarm calendars
+#ifdef USE_AKONADI
+	bool active = !CollectionControlModel::enabledCollections(KAlarm::CalEvent::ACTIVE, true).isEmpty();
+	mActionNewFromTemplate->setEnabled(active && TemplateListModel::all()->haveEvents());
+#else
+	bool active = AlarmResources::instance()->activeCount(KAlarm::CalEvent::ACTIVE, true);
 	mActionNewFromTemplate->setEnabled(active && EventListModel::templates()->haveEvents());
+#endif
+	mActionNew->setEnabled(active);
 }
 
 /******************************************************************************
@@ -196,7 +235,8 @@ void TrayWindow::slotPreferences()
 */
 void TrayWindow::slotQuit()
 {
-	theApp()->doQuit(parentWidget());
+	// FIXME: Do we really need a slotQuit()?
+	theApp()->doQuit(static_cast<QWidget*>(parent()));
 }
 
 /******************************************************************************
@@ -206,7 +246,8 @@ void TrayWindow::slotQuit()
 void TrayWindow::setEnabledStatus(bool status)
 {
 	kDebug() << (int)status;
-	setIcon(status ? (mHaveDisabledAlarms ? mIconSomeDisabled : mIconEnabled) : mIconDisabled);
+	updateIcon();
+	updateToolTip();
 }
 
 /******************************************************************************
@@ -217,75 +258,68 @@ void TrayWindow::slotHaveDisabledAlarms(bool haveDisabled)
 {
 	kDebug() << haveDisabled;
 	mHaveDisabledAlarms = haveDisabled;
-	if (mActionEnabled->isChecked())
-		setIcon(haveDisabled ? mIconSomeDisabled : mIconEnabled);
+	updateIcon();
+	updateToolTip();
 }
 
 /******************************************************************************
-*  Called when the mouse is clicked over the panel icon.
 *  A left click displays the KAlarm main window.
+*/
+void TrayWindow::slotActivateRequested()
+{
+	// Left click: display/hide the first main window
+	if (mAssocMainWindow  &&  mAssocMainWindow->isVisible())
+	{
+		mAssocMainWindow->raise();
+		mAssocMainWindow->activateWindow();
+	}
+}
+
+/******************************************************************************
 *  A middle button click displays the New Alarm window.
 */
-void TrayWindow::slotActivated(QSystemTrayIcon::ActivationReason reason)
+void TrayWindow::slotSecondaryActivateRequested()
 {
-	if (reason == QSystemTrayIcon::Trigger)
-	{
-		// Left click: display/hide the first main window
-		if (mAssocMainWindow  &&  mAssocMainWindow->isVisible())
-		{
-			mAssocMainWindow->raise();
-			mAssocMainWindow->activateWindow();
-		}
-	}
-	else if (reason == QSystemTrayIcon::MiddleClick)
-	{
-		if (mActionNew->isEnabled())
-			mActionNew->trigger();    // display a New Alarm dialog
-	}
+	if (mActionNew->isEnabled())
+		mActionNew->trigger();    // display a New Alarm dialog
 }
 
 /******************************************************************************
-*  Called when the drag cursor enters the panel icon.
+*  Adjust tooltip according to the app state.
+*  The tooltip text shows alarms due in the next 24 hours. The limit of 24
+*  hours is because only times, not dates, are displayed.
 */
-void TrayWindow::dragEnterEvent(QDragEnterEvent* e)
+void TrayWindow::updateToolTip()
 {
-	MainWindow::executeDragEnterEvent(e);
-}
-
-/******************************************************************************
-*  Called when an object is dropped on the panel icon.
-*  If the object is recognised, the edit alarm dialog is opened appropriately.
-*/
-void TrayWindow::dropEvent(QDropEvent* e)
-{
-	MainWindow::executeDropEvent(0, e);
-}
-
-/******************************************************************************
-*  Called when any event occurs.
-*  If it's a tooltip event, display the tooltip text showing alarms due in the
-*  next 24 hours. The limit of 24 hours is because only times, not dates, are
-*  displayed.
-*/
-bool TrayWindow::event(QEvent* e)
-{
-	if (e->type() != QEvent::ToolTip)
-		return KSystemTrayIcon::event(e);
-	QHelpEvent* he = (QHelpEvent*)e;
 	bool enabled = theApp()->alarmsEnabled();
-	QString altext;
-	if (enabled  &&  Preferences::tooltipAlarmCount())
-		altext = tooltipAlarmText();
-	QString text;
+	QString subTitle;
+	if (enabled && Preferences::tooltipAlarmCount())
+		subTitle = tooltipAlarmText();
+
 	if (!enabled)
-		text = i18nc("@info:tooltip 'KAlarm - disabled'", "%1 - disabled", KGlobal::mainComponent().aboutData()->programName());
+		subTitle = i18n("Disabled");
 	else if (mHaveDisabledAlarms)
-		text = i18nc("@info:tooltip Brief: some alarms are disabled", "%1<nl/>(Some alarms disabled)%2", KGlobal::mainComponent().aboutData()->programName(), altext);
+	{
+		if (!subTitle.isEmpty())
+			subTitle += "<br/>";
+		subTitle += i18nc("@info:tooltip Brief: some alarms are disabled", "(Some alarms disabled)");
+	}
+	setToolTipSubTitle(subTitle);
+}
+
+/******************************************************************************
+*  Adjust icon according to the app state.
+*/
+void TrayWindow::updateIcon()
+{
+	if (theApp()->alarmsEnabled())
+	{
+		setIconByName(mHaveDisabledAlarms ? "kalarm-partdisabled" : "kalarm");
+	}
 	else
-		text = i18nc("@info:tooltip", "%1%2", KGlobal::mainComponent().aboutData()->programName(), altext);
-	kDebug() << text;
-	QToolTip::showText(he->globalPos(), text);
-	return true;
+	{
+		setIconByName("kalarm-disabled");
+	}
 }
 
 /******************************************************************************
@@ -303,16 +337,35 @@ QString TrayWindow::tooltipAlarmText() const
 	// Get today's and tomorrow's alarms, sorted in time order
 	int i, iend;
 	QList<TipItem> items;
+#ifdef USE_AKONADI
+	if (!mAlarmsModel)
+	{
+		mAlarmsModel = new AlarmListModel(const_cast<TrayWindow*>(this));
+		mAlarmsModel->setEventTypeFilter(KAlarm::CalEvent::ACTIVE);
+		mAlarmsModel->sort(AlarmListModel::TimeColumn);
+	}
+	for (i = 0, iend = mAlarmsModel->rowCount();  i < iend;  ++i)
+#else
 	KAEvent::List events = AlarmCalendar::resources()->events(KDateTime(now.date(), QTime(0,0,0), KDateTime::LocalZone), tomorrow, KAlarm::CalEvent::ACTIVE);
 	for (i = 0, iend = events.count();  i < iend;  ++i)
+#endif
 	{
+#ifdef USE_AKONADI
+		KAEvent mevent = mAlarmsModel->event(i);
+		KAEvent* event = &mevent;
+#else
 		KAEvent* event = events[i];
+#endif
 		if (event->enabled()  &&  !event->expired()  &&  event->action() == KAEvent::MESSAGE)
 		{
 			TipItem item;
 			QDateTime dateTime = event->nextTrigger(KAEvent::DISPLAY_TRIGGER).effectiveKDateTime().toLocalZone().dateTime();
 			if (dateTime > tomorrow.dateTime())
+#ifdef USE_AKONADI
+				break;   // ignore alarms after tomorrow at the current clock time
+#else
 				continue;   // ignore alarms after tomorrow at the current clock time
+#endif
 			item.dateTime = dateTime;
 
 			// The alarm is due today, or early tomorrow
@@ -353,7 +406,9 @@ QString TrayWindow::tooltipAlarmText() const
 	for (i = 0, iend = items.count();  i < iend;  ++i)
 	{
 		kDebug() << "--" << (count+1) << ")" << items[i].text;
-		text += "<br />" + items[i].text;
+		if (i > 0)
+			text += "<br />";
+		text += items[i].text;
 		if (++count == maxCount)
 			break;
 	}

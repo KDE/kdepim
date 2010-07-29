@@ -78,7 +78,7 @@ void KNode::StringFilter::expand( KNGroup *g )
 
   expanded = data;
   expanded.replace( QRegExp("%MYNAME"), id.fullName() );
-  expanded.replace( QRegExp("%MYEMAIL"), id.emailAddr() );
+  expanded.replace( QRegExp("%MYEMAIL"), id.primaryEmailAddress() );
 }
 
 

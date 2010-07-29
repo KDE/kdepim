@@ -143,12 +143,12 @@ void IdentityEditionDialog::loadFromIdentity( uint uoid )
 
   mNameEdit->setText( identity.fullName() );
   mOrganisationEdit->setText( identity.organization() );
-  mEmailEdit->setText( identity.emailAddr() );
+  mEmailEdit->setText( identity.primaryEmailAddress() );
   mReplytoEdit->setText( identity.replyToAddr() );
   mMailcopiestoEdit->setText( identity.property( "Mail-Copies-To" ).toString() );
   mSignatureConfigurator->setSignature( identity.signature() );
   mSigningKeyRequester->setFingerprint( QString::fromLatin1( identity.pgpSigningKey() ) );
-  mSigningKeyRequester->setInitialQuery( identity.emailAddr() );
+  mSigningKeyRequester->setInitialQuery( identity.primaryEmailAddress() );
 }
 
 void IdentityEditionDialog::saveIntoIdentity( uint uoid ) const
@@ -158,7 +158,7 @@ void IdentityEditionDialog::saveIntoIdentity( uint uoid ) const
 
   identity.setFullName( mNameEdit->text().trimmed() );
   identity.setOrganization( mOrganisationEdit->text().trimmed() );
-  identity.setEmailAddr( mEmailEdit->text().trimmed() );
+  identity.setPrimaryEmailAddress( mEmailEdit->text().trimmed() );
   identity.setReplyToAddr( mReplytoEdit->text().trimmed() );
   identity.setProperty( "Mail-Copies-To", mMailcopiestoEdit->text().trimmed() );
   identity.setSignature( mSignatureConfigurator->signature() );

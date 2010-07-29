@@ -245,7 +245,7 @@ public:
   QString mFormattedSize;                     ///< The size above formatted as string, this is done only on request
   QString mFormattedDate;                     ///< The formatted date of the message, formatting takes time so it is done only on request
   QString mFormattedMaxDate;                  ///< The maximum date above formatted (lazily)
-  KPIM::MessageStatus mStatus;                ///< The status of the message (may be extended to groups in the future)
+  Akonadi::MessageStatus mStatus;                ///< The status of the message (may be extended to groups in the future)
 };
 
 /**
@@ -408,21 +408,11 @@ public:
  * A helper class used with MessageList::Item::childItemNeedsReSorting() and
  * MessageList::Item::insertChildItem().
  */
-class ItemNewUnreadStatusComparator
+class ItemUnreadStatusComparator
 {
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    if ( first->status().isNew() )
-    {
-      // fist is new
-      if ( second->status().isNew() )
-        return first->date() >= second->date(); // both are new
-      // new comes always first with respect to non-new
-      return true;
-    }
-    if ( second->status().isNew() )
-      return false;
     if ( first->status().isUnread() )
     {
       // fist is unread

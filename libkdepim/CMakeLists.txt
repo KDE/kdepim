@@ -1,7 +1,6 @@
 KDE4_NO_ENABLE_FINAL(libkdepim)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-#add_definitions(-DQT3_SUPPORT_WARNINGS)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_subdirectory(tests)
@@ -17,7 +16,6 @@ set(kdepim_LIB_SRCS
    addemailaddressjob.cpp
    addcontactjob.cpp
    openemailaddressjob.cpp
-   kdescendantsproxymodel.cpp
    ktimeedit.cpp
    kprefsdialog.cpp
    kdateedit.cpp
@@ -25,6 +23,7 @@ set(kdepim_LIB_SRCS
    addresseelineedit.cpp
    kdatepickerpopup.cpp
    kcheckcombobox.cpp
+   kweekdaycheckcombo.cpp
    ktimezonecombobox.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp
@@ -42,7 +41,16 @@ set(kdepim_LIB_SRCS
    kmailcompletion.cpp
    uistatesaver.cpp
    pimmessagebox.cpp
+   multiplyingline.cpp
+   multiplyinglineeditor.cpp
+   multiplyinglineview_p.cpp
 )
+
+if (NOT WINCE)
+  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
+    kdescendantsproxymodel.cpp
+  )
+endif (NOT WINCE)
 
 if (KDEPIMLIBS_KRESOURCES_LIBRARY)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
@@ -50,7 +58,7 @@ if (KDEPIMLIBS_KRESOURCES_LIBRARY)
   )
 endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
 
-kde4_add_library(kdepim SHARED ${kdepim_LIB_SRCS})
+kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 
 target_link_libraries(kdepim
   ${KDEPIMLIBS_KRESOURCES_LIBS}

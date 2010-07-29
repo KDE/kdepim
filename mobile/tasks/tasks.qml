@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,22 +18,29 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 import org.kde 4.5
-import org.kde.akonadi 4.5
+import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kcal 4.5 as KCal
 
 KPIM.MainView {
   id: tasksMobile
 
-  SystemPalette { id: palette; colorGroup: "Active" }
+  function goBackToListing()
+  {
+    taskView.visible = false;
+    collectionView.visible = true;
+    itemListPage.visible = true;
+    taskView.itemId = -1;
+  }
 
   KCal.IncidenceView {
     id: taskView
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
     width: parent.width
     height: parent.height
+    visible: false
 
     z: 0
 
@@ -51,160 +58,285 @@ KPIM.MainView {
       if ( taskView.itemId >= 0 )
         itemList.previousItem();
     }
+
+    KPIM.Button {
+      anchors.bottom: backButton.top
+      anchors.right: parent.right
+      anchors.margins: 12
+      width: 70
+      height: 70
+      icon: KDE.locate( "data", "mobileui/edit-button.png" );
+      onClicked: {
+        application.editIncidence( parent.item );
+        eventView.visible = false;
+        agendaView.visible = true;
+      }
+    }
+    KPIM.Button {
+      id: backButton
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      anchors.margins: 12
+      width: 70
+      height: 70
+      icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
+      onClicked: {
+        goBackToListing();
+      }
+    }
   }
+
+  QML.Item {
+    id : mainWorkView
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+
+    Akonadi.AkonadiBreadcrumbNavigationView {
+      id : collectionView
+      anchors.top: parent.top
+      width: 1/3 * parent.width
+      anchors.bottom : selectButton.top
+      //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
+      anchors.left: parent.left
+
+      multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 tasks", collectionView.numSelected,
+                                                                                                        application.numSelectedAccounts,
+                                                                                                        itemList.count)
+      breadcrumbItemsModel : breadcrumbCollectionsModel
+      selectedItemModel : selectedCollectionModel
+      childItemsModel : childCollectionsModel
+    }
+    KPIM.Button2 {
+      id : selectButton
+      anchors.left: collectionView.left
+      anchors.right: collectionView.right
+      anchors.bottom : parent.bottom
+      anchors.bottomMargin : { (collectionView.numSelected == 1) ? -selectButton.height : 0 }
+      buttonText : (collectionView.numSelected <= 1) ? KDE.i18n("Select") : KDE.i18n("Change Selection")
+      opacity : { (collectionView.numSelected == 1) ? 0 : 1 }
+      onClicked : {
+        application.persistCurrentSelection("preFavSelection");
+        favoriteSelector.visible = true;
+        mainWorkView.visible = false;
+      }
+    }
+
+    KPIM.StartCanvas {
+      id : startPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      anchors.leftMargin : 10
+      anchors.rightMargin : 10
+
+      opacity : collectionView.hasSelection ? 0 : 1
+      showAccountsList : false
+      favoritesModel : favoritesList
+
+      contextActions : [
+        QML.Column {
+          anchors.fill: parent
+          height : 70
+          KPIM.Button2 {
+            width: parent.width
+            buttonText : KDE.i18n( "New Task" )
+            onClicked: { application.newTask(); actionPanel.collapse() }
+          }
+        }
+      ]
+    }
+
+    QML.Rectangle {
+      id : accountPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : (collectionView.hasSelection && !collectionView.hasBreadcrumbs) && (itemList.count == 0) ? 1 : 0
+
+
+      KPIM.Button2 {
+        anchors.top : parent.top
+        anchors.topMargin : 30
+        anchors.left : parent.left
+        anchors.right : parent.right
+        anchors.leftMargin : 10
+        anchors.rightMargin : 10
+        buttonText : KDE.i18n( "New Task" )
+        onClicked : {
+          application.newTask();
+        }
+      }
+      KPIM.Button2 {
+        anchors.bottom : parent.bottom
+        anchors.bottomMargin : 10
+        anchors.right : parent.right
+        anchors.rightMargin : 35
+        width : 230
+        buttonText : KDE.i18n( "Configure Account" )
+        onClicked : {
+          application.configureCurrentAccount();
+        }
+      }
+    }
+
+    QML.Rectangle {
+      id : emptyFolderPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : (collectionView.hasBreadcrumbs && itemList.count == 0 ) ? 1 : 0
+      // TODO: content
+      QML.Text {
+        text : KDE.i18n("No tasks in this folder");
+        height : 20;
+        font.italic : true
+        horizontalAlignment : QML.Text.AlignHCenter
+        anchors.verticalCenter : parent.verticalCenter;
+        anchors.horizontalCenter : parent.horizontalCenter
+      }
+    }
+
+    QML.Rectangle {
+      id : itemListPage
+      anchors.left : collectionView.right
+      anchors.top : parent.top
+      anchors.bottom : parent.bottom
+      anchors.right : parent.right
+      color : "#00000000"
+      opacity : itemList.count > 0 ? 1 : 0
+
+      KPIM.ItemListView {
+        id: itemList
+        delegate: [
+          KPIM.ItemListViewDelegate {
+            id : listDelegate
+            height : itemListView.height / 7
+            summaryContent: [
+              QML.Text {
+                id : summaryLabel
+                anchors.top : parent.top
+                anchors.topMargin : 1
+                anchors.left : parent.left
+                anchors.leftMargin : 10
+                anchors.right: parent.right
+                anchors.rightMargin: completionSlider.width
+                text: KDE.i18n( "Task: %1", model.summary )
+                color : "#0C55BB"
+                font.pixelSize: 16
+                elide: "ElideRight"
+              },
+              QML.Text {
+                anchors.top : summaryLabel.bottom
+                anchors.topMargin : 1
+                anchors.left : parent.left
+                anchors.leftMargin : 10
+                anchors.right: parent.right
+                anchors.rightMargin: completionSlider.width
+                height : 30;
+                text: KDE.i18n( "Details: %1", model.description )
+                color: "#3B3B3B"
+                font.pointSize: 14
+                elide: "ElideRight"
+              },
+              KPIM.CompletionSlider {
+                id: completionSlider
+                anchors.top: parent.top
+                anchors.right: parent.right
+                percentComplete : model.percentComplete
+                onPercentCompleteChanged : {
+                  application.setPercentComplete(model.index, percentComplete);
+                }
+              },
+              QML.Image {
+                id : importantFlagImage
+                anchors.verticalCenter : parent.verticalCenter;
+                anchors.left : parent.left
+                anchors.leftMargin : 15
+                source : KDE.iconPath("emblem-important.png", parent.height + 16)
+                opacity : model.is_important ? 0.25 : 0
+              }
+            ]
+          }
+        ]
+
+        model: itemModel
+        anchors.fill: parent
+        onItemSelected: {
+          taskView.itemId = itemList.currentItemId;
+          taskView.visible = true;
+          collectionView.visible = false;
+          itemListPage.visible = false;
+        }
+      }
+    }
+  }
+  Akonadi.FavoriteSelector {
+    id : favoriteSelector
+    anchors.fill : parent
+    visible : false
+    styleSheet: window.styleSheet
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.clearPersistedSelection("preFavSelection");
+    }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.restorePersistedSelection("preFavSelection");
+    }
+  }
+
 
 
   SlideoutPanelContainer {
     anchors.fill: parent
 
     SlideoutPanel {
-      anchors.fill: parent
-      id: startPanel
-      titleIcon: KDE.iconPath( "view-pim-tasks", 48 )
-      handlePosition: 30
-      handleHeight: 78
-      content: [
-        KPIM.StartCanvas {
-          id : startPage
-          anchors.fill : parent
-          anchors.leftMargin : 50
-          startText: KDE.i18n( "Tasks start page" )
-
-          contextActions : [
-            KPIM.Button {
-              id : start_newEmailButton
-              width: parent.width
-              height: 480 / 6
-              buttonText : KDE.i18n( "Start new task" )
-              onClicked : {
-                console.log( "Write new task clicked" );
-              }
-            }
-
-//            },
-//            KPIM.Button {
-//              id : start_newAccountButton
-//              anchors.top : start_newEmailButton.bottom
-//              height : 20
-//              width : 200
-//              buttonText : "Add Account"
-//              onClicked : {
-//                console.log( "Add Account clicked" );
-//                application.launchAccountWizard();
-//              }
-//            }
-          ]
-        }
-      ]
-    }
-
-    SlideoutPanel {
-      id: folderPanel
-      titleText: KDE.i18n( "Folders" )
-      handlePosition : 108
-      handleHeight: 150
-      anchors.fill : parent
-      content: [
-        Item {
-          anchors.fill: parent
-
-           AkonadiBreadcrumbNavigationView {
-             id : collectionView
-             width: 1/3 * folderPanel.contentWidth
-             anchors.top: parent.top
-             anchors.bottom: parent.bottom
-             anchors.left: parent.left
-             anchors.rightMargin: 4
-             breadcrumbItemsModel : breadcrumbCollectionsModel
-             selectedItemModel : selectedCollectionModel
-             childItemsModel : childCollectionsModel
-           }
-
-           KPIM.ItemListView {
-             id: itemList
-             delegate: [
-               KPIM.ItemListViewDelegate {
-                 summaryContent: [
-                   Text {
-                     anchors.top: parent.top
-                     anchors.left: parent.left
-                     text: KDE.i18n( "Task: %1", model.summary )
-                     font.bold: true
-                   },
-                   Text {
-                     anchors.top: parent.top
-                     anchors.right: parent.right
-                     text: KDE.i18n( "%1%", model.percentComplete )
-                   }
-                 ]
-                 detailsContent: [
-                    Column {
-                      anchors.fill: parent
-                      Item {
-                        width: parent.width
-                        height: summaryLabel.height
-                        Text {
-                          id: summaryLabel
-                          anchors.top: parent.top
-                          anchors.left: parent.left
-                          text: KDE.i18n( "Task: %1",  model.summary )
-                          font.bold: true
-                          color: palette.highlightedText
-                        }
-                        Text {
-                          anchors.top: parent.top
-                          anchors.right: parent.right
-                          text: KDE.i18n( "%1%", model.percentComplete )
-                          color: palette.highlightedText
-                        }
-                      }
-                      Text {
-                        text: KDE.i18n( "Details: %1", model.description )
-                        color: palette.highlightedText
-                      }
-                    }
-                 ]
-               }
-             ]
-
-             model: itemModel
-             anchors.top: parent.top
-             anchors.bottom: parent.bottom
-             anchors.right: parent.right
-             anchors.left: collectionView.right
-             onItemSelected: {
-               taskView.itemId = itemList.currentItemId;
-               folderPanel.collapse()
-             }
-           }
-        }
-      ]
-    }
-
-    SlideoutPanel {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
       handleHeight: 150
-      anchors.fill : parent
       contentWidth: 240
+      anchors.fill : parent
       content: [
           KPIM.Button {
-            id: moveButton
+            id: newTaskButton
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: KDE.i18n( "Move" )
-            onClicked: actionPanel.collapse();
+            buttonText: KDE.i18n( "New Task" )
+            onClicked: {
+              application.newTask();
+              actionPanel.collapse();
+            }
           },
-          KPIM.Button {
+          KPIM.Action {
+            id: syncButton
+            anchors.top: newTaskButton.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            hardcoded_height: parent.height / 6
+            action : application.getAction("akonadi_collection_sync")
+            onTriggered : actionPanel.collapse();
+          },
+          KPIM.Action {
              id: deleteButton
-             anchors.top: moveButton.bottom;
+             anchors.top: syncButton.bottom;
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: KDE.i18n( "Delete" )
-             onClicked: actionPanel.collapse();
+             action : application.getAction("akonadi_item_delete")
+             onTriggered : actionPanel.collapse();
            },
            KPIM.Button {
              id: previousButton
@@ -234,6 +366,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       anchors.fill: parent
+      handlePosition : 150
       id: attachmentPanel
       visible: taskView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
@@ -248,13 +381,18 @@ KPIM.MainView {
     }
   }
 
-   Connections {
+   QML.Connections {
      target: collectionView
      onChildCollectionSelected : { application.setSelectedChildCollectionRow( row ); }
    }
 
-   Connections {
+   QML.Connections {
      target: collectionView
      onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
+   }
+
+   QML.Connections {
+     target: taskView
+     onIncidenceRemoved : { goBackToListing(); }
    }
 }

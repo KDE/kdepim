@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KSIEVE_EXPORT
-# if defined(MAKE_KSIEVE_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KSIEVE_EXPORT
+# elif defined(MAKE_KSIEVE_LIB)
    /* We are building this library */ 
 #  define KSIEVE_EXPORT KDE_EXPORT
 # else

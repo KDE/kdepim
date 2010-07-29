@@ -267,7 +267,7 @@ public:
    */
   bool folderIsSentMailFolder( const Akonadi::Collection& );
 
-  bool isImapFolder( const Akonadi::Collection& );
+  bool isImapFolder( const Akonadi::Collection& ) const;
 
   const KComponentData &xmlGuiInstance() { return mXmlGuiInstance; }
   void setXmlGuiInstance( const KComponentData &instance ) { mXmlGuiInstance = instance; }
@@ -401,7 +401,7 @@ public slots:
   void slotRunBackgroundTasks();
 
   void slotConfigChanged();
-    void slotDefaultCollectionsChanged();
+  void slotDefaultCollectionsChanged();
 
 signals:
   void configChanged();
@@ -418,13 +418,14 @@ private slots:
   /** Updates identities when a transport has been renamed. */
   void transportRenamed( int id, const QString &oldName, const QString &newName );
   void itemDispatchStarted();
-  void instanceProgressChanged( Akonadi::AgentInstance );
+  void instanceStatusChanged( Akonadi::AgentInstance );
   void createDefaultCollectionDone( KJob * job);
 
   void initFolders();
   void akonadiStateChanged( Akonadi::ServerManager::State );
   void slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item);
 private:
+  void migrateFromKMail1();
   void openReader( bool onlyCheck );
   QSharedPointer<FolderCollection> currentFolderCollection();
 
@@ -473,7 +474,8 @@ private:
   Akonadi::EntityTreeModel *mEntityTreeModel;
   Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
 
-  QList<KPIM::ProgressItem *>mListProgressItem;
+  /// List of Akonadi resources that are currently being checked.
+  QList<QString> mResoucesBeingChecked;
 
   int mWrapCol;
 };

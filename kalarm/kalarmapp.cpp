@@ -27,7 +27,9 @@
 #include "commandoptions.h"
 #include "dbushandler.h"
 #include "editdlgtypes.h"
+#ifndef USE_AKONADI
 #include "eventlistmodel.h"
+#endif
 #include "functions.h"
 #include "kamail.h"
 #include "karecurrence.h"
@@ -56,6 +58,7 @@
 #include <netwm.h>
 #include <kdebug.h>
 #include <kshell.h>
+#include <ksystemtrayicon.h>
 
 #include <QObject>
 #include <QTimer>
@@ -787,6 +790,7 @@ void KAlarmApp::removeWindow(TrayWindow*)
 */
 bool KAlarmApp::displayTrayIcon(bool show, MainWindow* parent)
 {
+	kDebug();
 	static bool creating = false;
 	if (show)
 	{
@@ -805,7 +809,6 @@ bool KAlarmApp::displayTrayIcon(bool show, MainWindow* parent)
 			}
 			mTrayWindow = new TrayWindow(parent ? parent : MainWindow::firstWindow());
 			connect(mTrayWindow, SIGNAL(deleted()), SIGNAL(trayIconToggled()));
-			mTrayWindow->show();
 			emit trayIconToggled();
 
 			if (!checkSystemTray())
@@ -872,7 +875,7 @@ void KAlarmApp::slotShowInSystemTrayChanged()
 		else
 		{
 			if (win  &&  win->isHidden())
-				delete win;
+				win->show();
 		}
 		--mActiveCount;
 	}
@@ -2001,7 +2004,11 @@ void setEventCommandError(const KAEvent& event, KAEvent::CmdErrType err)
 	KAEvent* ev = AlarmCalendar::resources()->event(event.id());
 	if (ev  &&  ev->commandError() != err)
 		ev->setCommandError(err);
+#ifdef USE_AKONADI
+	AkonadiModel::instance()->updateCommandError(event);
+#else
 	EventListModel::alarms()->updateCommandError(event.id());
+#endif
 }
 
 void clearEventCommandError(const KAEvent& event, KAEvent::CmdErrType err)
@@ -2014,7 +2021,11 @@ void clearEventCommandError(const KAEvent& event, KAEvent::CmdErrType err)
 		newerr = static_cast<KAEvent::CmdErrType>(ev->commandError() & ~err);
 		ev->setCommandError(newerr);
 	}
+#ifdef USE_AKONADI
+	AkonadiModel::instance()->updateCommandError(event);
+#else
 	EventListModel::alarms()->updateCommandError(event.id());
+#endif
 }
 
 

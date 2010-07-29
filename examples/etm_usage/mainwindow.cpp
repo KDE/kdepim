@@ -19,10 +19,13 @@
     USA.
 */
 
+// READ THE README FILE
+
 #include "mainwindow.h"
 
 #include <akonadi/control.h>
 
+#include "desctab.h"
 #include "tab1widget.h"
 #include "tab2widget.h"
 #include "tab2_5widget.h"
@@ -35,6 +38,8 @@
 #include "recursiveitemlistwidget.h"
 #include "entityfindingwidget.h"
 #include "collectionmonitoredwidget.h"
+#include "checkable2.h"
+#include "unreadmailsincollectionswidget.h"
 
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
@@ -44,6 +49,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 
   Akonadi::Control::start();
 
+  tabWidget->addTab(new Checkable2(tabWidget), "Checkable2");
+  tabWidget->addTab(new DescTabWidget(tabWidget), "Desc");
   tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
   tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
   tabWidget->addTab(new Tab2_5Widget(tabWidget), "Type specific data");
@@ -56,6 +63,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new RecursiveItemListWidget(tabWidget), "Items only");
   tabWidget->addTab(new EntityFindingWidget(tabWidget), "Find entities");
   tabWidget->addTab(new CollectionMonitoredWidget(tabWidget), "SetCollectionMonitored");
+  tabWidget->addTab(new UnreadMailsInCollectionsWidget(tabWidget), "UnreadMails");
 
   setCentralWidget(tabWidget);
 }

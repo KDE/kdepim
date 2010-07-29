@@ -43,7 +43,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
                     ${CMAKE_BINARY_DIR}/akonadi/kcal
                     ${CMAKE_SOURCE_DIR}/akonadi/
                     ${CMAKE_SOURCE_DIR}/korganizer/printing
-                    ${CMAKE_SOURCE_DIR}/kdgantt1
                     ${CMAKE_BINARY_DIR}/libkdepim
                     ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
                     ${CMAKE_BINARY_DIR}/libkdepimdbusinterfaces
@@ -146,7 +145,7 @@ kde4_add_ui_files(korganizer_core_LIB_SRCS
 
 kde4_add_kcfg_files(korganizer_core_LIB_SRCS koprefs_base.kcfgc )
 
-kde4_add_library(korganizer_core SHARED ${korganizer_core_LIB_SRCS})
+kde4_add_library(korganizer_core ${LIBRARY_TYPE} ${korganizer_core_LIB_SRCS})
 
 target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} kdepim incidenceeditors akonadi-kcal_next korganizer_interfaces)
 
@@ -159,7 +158,6 @@ install(TARGETS korganizer_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if (QT_QT3SUPPORT_FOUND)
 set(korganizerprivate_LIB_SRCS
-  ${libkdgantt1_SRCS}
   collectiongeneralpage.cpp
   koalternatelabel.cpp
   kodecorationlabel.cpp
@@ -242,7 +240,7 @@ qt4_add_dbus_interfaces(korganizerprivate_LIB_SRCS org.kde.korganizer.Korganizer
 qt4_add_dbus_interfaces(korganizerprivate_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml)
 qt4_add_dbus_interfaces(korganizerprivate_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
 
-kde4_add_library(korganizerprivate SHARED ${korganizerprivate_LIB_SRCS})
+kde4_add_library(korganizerprivate ${LIBRARY_TYPE} ${korganizerprivate_LIB_SRCS})
 
 target_link_libraries(korganizerprivate
   ${KDE4_KNEWSTUFF2_LIBS} ${KDE4_KNEWSTUFF3_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KPRINTUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} ${ZLIB_LIBRARY}
@@ -258,6 +256,7 @@ target_link_libraries(korganizerprivate
   akonadi-kcal_next
   akonadi_next
   incidenceeditors
+  kdgantt2
 )
 
 set_target_properties(korganizerprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

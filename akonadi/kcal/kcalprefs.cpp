@@ -297,7 +297,7 @@ bool KCalPrefs::thatIsMe( const QString &_email )
 
   for ( Akonadi::IdentityManager::ConstIterator it = Akonadi::identityManager()->begin();
         it != Akonadi::identityManager()->end(); ++it ) {
-    if ( email == (*it).emailAddr() ) {
+    if ( (*it).matchesEmailAddress( email ) ) {
       return true;
     }
   }

@@ -19,18 +19,20 @@
     02110-1301, USA.
 */
 
+// READ THE README FILE
+
 #ifndef UNREADMAILSWIDGET_H
 #define UNREADMAILSWIDGET_H
 
 #include <QWidget>
 
-#include <akonadi_next/krecursivefilterproxymodel.h>
+#include <krecursivefilterproxymodel.h>
 
 
 class QTreeView;
 class EntityTreeWidget;
 
-class UnreadMailsTree : public Future::KRecursiveFilterProxyModel
+class UnreadMailsTree : public KRecursiveFilterProxyModel
 {
   Q_OBJECT
 public:

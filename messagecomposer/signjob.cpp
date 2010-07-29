@@ -174,6 +174,8 @@ void SignJob::process()
   }
   
   kDebug() << "signing content:" << content;
+
+  // FIXME: Make this async
   GpgME::SigningResult res = job->exec( d->signers,
                                         content,
                                         d->signingMode( d->format ),

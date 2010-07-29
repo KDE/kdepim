@@ -26,8 +26,10 @@
 #include <kmime/kmime_mdn.h>
 #include <akonadi/entity.h>
 #include <akonadi/item.h>
+#include <Akonadi/Collection>
 
-#include "messagecore/messagestatus.h"
+#include <akonadi/kmime/messagestatus.h>
+#include <messagecore/mdnstateattribute.h>
 
 namespace KPIMIdentities {
   class IdentityManager;
@@ -67,7 +69,7 @@ public:
                      ///  template
   };
   
-  explicit MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id );
+  explicit MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id, const Akonadi::Collection&col = Akonadi::Collection() );
   virtual ~MessageFactory();
 
   /**
@@ -120,7 +122,7 @@ public:
       @param s See docs for KMime::MDN::SendingMode (in KMail, use MDNAdvideDialog to ask the user for this parameter)
       @param m See docs for KMime::MDN::DispositionModifier
 
-      @return The notification message or 0, if none should be sent.
+      @return The notification message or 0, if none should be sent, as well as the state of the MDN operation.
    **/
   KMime::Message::Ptr createMDN( KMime::MDN::ActionMode a,
                                   KMime::MDN::DispositionType d,
@@ -139,7 +141,7 @@ public:
    * @param msgs List of messages to be composed into a digest
    */
   QPair< KMime::Message::Ptr, KMime::Content* > createForwardDigestMIME( QList<KMime::Message::Ptr> msgs );
-  
+
   /**
    * Set the identity manager to be used when creating messages.
    * Required to be set before create* is called, otherwise the created messages
@@ -206,7 +208,7 @@ public:
    *  cases according to RFC 2298.
    */
   static bool MDNRequested( KMime::Message::Ptr msg );
-  
+
   /**
    * If sending an MDN requires confirmation due to multiple addresses.
    *
@@ -234,9 +236,9 @@ public:
   * If the MDN headers contain options that KMail can't parse
   */
   static bool MDNMDNUnknownOption( KMime::Message::Ptr msg );
-  
-  static void link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const KPIM::MessageStatus& aStatus );
-  
+
+  static void link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus& aStatus );
+
 private:
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
@@ -252,9 +254,9 @@ private:
    *  preferred charsets, and if all fail, use UTF-8.
    */
   void applyCharset( const KMime::Message::Ptr msg );
-  
+
   QByteArray getRefStr( const KMime::Message::Ptr &msg );
-  
+
   // TODO move IdentityManager used in KMail to kdepimlibs when not in freeze
   KPIMIdentities::IdentityManager* m_identityManager;
   // Required parts to create messages
@@ -262,16 +264,20 @@ private:
   Akonadi::Entity::Id m_origId;
   Akonadi::Item::Id m_folderId;
   Akonadi::Item::Id m_parentFolderId;
-  
+
+  Akonadi::Collection m_collection;
+
   // Optional settings the calling class may set
   MessageComposer::ReplyStrategy m_replyStrategy;
   QString m_selection, m_template;
   bool m_quote, m_allowDecryption;
   QStringList m_mailingListAddresses;
   Akonadi::Item::Id m_id;
-  
+
 };
 
 }
+
+Q_DECLARE_METATYPE( MessageComposer::ReplyStrategy )
 
 #endif

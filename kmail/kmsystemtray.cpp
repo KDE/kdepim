@@ -264,7 +264,7 @@ void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model
       continue;
     Akonadi::CollectionStatistics statistics = collection.statistics();
     qint64 count = qMax( 0LL, statistics.unreadCount() );
-    if ( count >= 0 ) {
+    if ( count > 0 ) {
       QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
       if ( col && col->ignoreNewMail() )
         continue;
@@ -387,10 +387,10 @@ void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelInde
     if ( KMail::Util::isVirtualCollection( collection ) )
       continue;
 
-    Akonadi::CollectionStatistics statistics = collection.statistics();
-    qint64 count = qMax( 0LL, statistics.unreadCount() );
+    const Akonadi::CollectionStatistics statistics = collection.statistics();
+    const qint64 count = qMax( 0LL, statistics.unreadCount() );
 
-    if ( count >= 0 ) {
+    if ( count > 0 ) {
       QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
       if ( col && !col->ignoreNewMail() ) {
         mCount += count;
@@ -412,7 +412,7 @@ void KMSystemTray::unreadMail( const QAbstractItemModel *model, const QModelInde
     setStatus( KStatusNotifierItem::Active );
   }
 
-  kDebug()<<" mCount :"<<mCount;
+  //kDebug()<<" mCount :"<<mCount;
   updateCount();
 }
 

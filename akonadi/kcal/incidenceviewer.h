@@ -78,6 +78,11 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceViewer : public QWidget, public Akonadi:
     Akonadi::Item incidence() const;
 
     /**
+     * Returns the active date used for the currently displayed incidence
+     */
+    QDate activeDate() const;
+    
+    /**
      * Returns the attachment model for the currently displayed incidence.
      */
     QAbstractItemModel *attachmentModel() const;
@@ -102,9 +107,10 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceViewer : public QWidget, public Akonadi:
     /**
      * Sets the @p incidence that shall be displayed in the viewer.
      *
-     * @param date TODO:
+     * @param activeDate The active date is used to calculate the actual date of
+     *                   the selected incidence in case of recurring incidences.
      */
-    void setIncidence( const Akonadi::Item &incidence, const QDate &date = QDate() );
+    void setIncidence( const Akonadi::Item &incidence, const QDate &activeDate = QDate() );
 
   private:
     /**

@@ -22,6 +22,7 @@
 
 #include "kmeditor.h"
 #include "textpart.h"
+#include "messageviewer/nodehelper.h"
 
 #include <KEncodingFileDialog>
 #include <KLocale>
@@ -220,6 +221,12 @@ KMeditor::KMeditor( QWidget *parent )
   d->init();
 }
 
+KMeditor::KMeditor( QWidget *parent, const QString & configFile )
+ : TextEdit( parent, configFile ), d( new KMeditorPrivate( this ) )
+{
+  d->init();
+}
+
 KMeditor::~KMeditor()
 {
   delete d;
@@ -269,7 +276,7 @@ KUrl KMeditor::insertFile()
   KUrl url;
   if ( fdlg->exec() ) {
     url = fdlg->selectedUrl();
-    url.setFileEncoding( fdlg->selectedEncoding() );
+    url.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( fdlg->selectedEncoding() ) );
   }
   delete fdlg;
   return url;

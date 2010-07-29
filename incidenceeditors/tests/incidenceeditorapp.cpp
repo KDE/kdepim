@@ -33,6 +33,7 @@
 #include <ksystemtimezone.h>
 #include <KLineEdit>
 
+#include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionview.h>
 #include <akonadi/collectionfilterproxymodel.h>
@@ -48,7 +49,11 @@
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/control.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/calendarmodel.h>
 #include <akonadi/kcal/incidencechanger.h>
+#include <akonadi/kcal/incidencemimetypevisitor.h>
 
 #include <KCal/Incidence>
 
@@ -201,7 +206,33 @@ class MainWidget : public QWidget
       connect( m_itemview, SIGNAL(activated(QModelIndex)),
                this, SLOT(itemActivated()) );
 
-      m_changer = new IncidenceChanger( 0, this, Collection().id() );
+      ChangeRecorder *changeRecorder = new ChangeRecorder( this );
+      changeRecorder->setCollectionMonitored( Collection::root(), true );
+
+      ItemFetchScope scope;
+      scope.fetchFullPayload( true );
+      //scope.fetchAttribute<EntityDisplayAttribute>();
+               
+      changeRecorder->fetchCollection( true );
+      changeRecorder->setItemFetchScope( scope );
+
+      changeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::eventMimeType(), true );
+      changeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::todoMimeType(), true );
+      changeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::journalMimeType(), true );
+
+      CalendarModel* calendarModel = new CalendarModel( changeRecorder, this );
+
+      // no collections, just items
+      calendarModel->setCollectionFetchStrategy( EntityTreeModel::InvisibleCollectionFetch );
+
+      EntityMimeTypeFilterModel *filterModel = new EntityMimeTypeFilterModel( this );
+      filterModel->setHeaderGroup( EntityTreeModel::ItemListHeaders );
+      filterModel->setSourceModel( calendarModel );
+      filterModel->setSortRole( CalendarModel::SortRole );
+
+      Akonadi::Calendar *calendar = new Akonadi::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
+
+      m_changer = new IncidenceChanger( calendar, this, Collection().id() );
     }
     virtual ~MainWidget() {}
 

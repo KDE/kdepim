@@ -31,6 +31,7 @@
 #include <akonadi/item.h>
 #include <akonadi/kmime/messageparts.h>
 #include <kmime/kmime_message.h>
+#include <Akonadi/CollectionFetchScope>
 
 
 FolderCollectionMonitor::FolderCollectionMonitor(QObject *parent)
@@ -39,6 +40,8 @@ FolderCollectionMonitor::FolderCollectionMonitor(QObject *parent)
   // monitor collection changes
   mMonitor = new Akonadi::ChangeRecorder( this );
   mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
+  mMonitor->fetchCollectionStatistics( true );
+  mMonitor->collectionFetchScope().setIncludeStatistics( true );
   mMonitor->fetchCollection( true );
   mMonitor->setAllMonitored( true );
   mMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
@@ -69,7 +72,7 @@ void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *mod
     const QModelIndex index = model->index( row, 0, parentIndex );
     const Akonadi::Collection collection = model->data( index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
 
-    if ( KMail::Util::isVirtualCollection( collection ) )
+    if ( !collection.isValid() || KMail::Util::isVirtualCollection( collection ) )
       continue;
 
     QSharedPointer<FolderCollection> col = FolderCollection::forCollection( collection );
@@ -104,7 +107,7 @@ void FolderCollectionMonitor::slotExpungeJob( KJob *job )
   Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
   if ( !fjob )
     return;
-  Akonadi::Item::List lstItem = fjob->items();
+  const Akonadi::Item::List lstItem = fjob->items();
   if ( lstItem.isEmpty() )
     return;
   Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob(lstItem,this );

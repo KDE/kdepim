@@ -30,6 +30,7 @@
 
 #include <kpimutils/email.h>
 #include <kabc/vcarddrag.h>
+#include <kabc/contactgroup.h>
 #include <kabc/vcardconverter.h>
 
 #include <kio/netaccess.h>
@@ -43,6 +44,9 @@
 #include <QCursor>
 #include <QKeyEvent>
 #include <QDropEvent>
+#include <kabc/contactgrouptool.h>
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <QtCore/QBuffer>
 
 using namespace MessageComposer;
 
@@ -143,21 +147,34 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
         if ( KIO::NetAccess::download( url, fileName, parentWidget() ) ) {
           QFile file( fileName );
           file.open( QIODevice::ReadOnly );
-          const QByteArray data = file.readAll();
+          QByteArray data = file.readAll();
           file.close();
           list += converter.parseVCards( data );
           KIO::NetAccess::removeTempFile( fileName );
+          
+          if( list.isEmpty() ) { // try to parse a contact group
+            KABC::ContactGroup group;
+            QBuffer dataStream( &data );
+            dataStream.open( QIODevice::ReadOnly );
+            QString error;
+            if( KABC::ContactGroupTool::convertFromXml( &dataStream, group, &error ) ) {
+              Akonadi::ContactGroupExpandJob* expandJob = new Akonadi::ContactGroupExpandJob( group );
+              connect( expandJob, SIGNAL( result( KJob* ) ), this, SLOT( groupDropExpandResult( KJob* ) ) );
+              expandJob->start();
+            }
+          }
         } else {
           QString caption( i18n( "vCard Import Failed" ) );
           QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>", url.url() );
           KMessageBox::error( parentWidget(), text, caption );
         }
       }
-      // Now, let the user choose which addressee to add.
-      KABC::Addressee::List::Iterator ait;
-      foreach( const KABC::Addressee& addressee, list )
-        insertEmails( addressee.emails() );
     }
+    
+    // Now, let the user choose which addressee to add.
+    KABC::Addressee::List::Iterator ait;
+    foreach( const KABC::Addressee& addressee, list )
+      insertEmails( addressee.emails() );
   }
 
   // Case three: Let AddresseeLineEdit deal with the rest
@@ -165,6 +182,21 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
     KPIM::AddresseeLineEdit::dropEvent( event );
   }
 }
+
+void ComposerLineEdit::groupDropExpandResult( KJob* job )
+{
+  Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+
+  if( !expandJob )
+    return;
+  
+  const KABC::Addressee::List contacts = expandJob->contacts();
+  foreach( const KABC::Addressee& addressee, contacts ) 
+    insertEmails( addressee.emails() );
+
+  job->deleteLater();
+}
+
 
 void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {

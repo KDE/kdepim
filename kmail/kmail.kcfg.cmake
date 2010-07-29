@@ -13,8 +13,7 @@
         <label></label>
         <whatsthis></whatsthis>
         <choices>
-          <choice name="SelectFirstNew"/>
-          <choice name="SelectFirstUnreadNew"/>
+          <choice name="SelectFirstUnread"/>
           <choice name="SelectLastSelected"/>
           <choice name="SelectNewest"/>
           <choice name="SelectOldest"/>
@@ -81,9 +80,9 @@
     </group>
 
     <group name="FolderSelectionDialog">
-      <entry name="LastSelectedFolder" type="String">
+      <entry name="LastSelectedFolder" type="LongLong">
         <whatsthis>The most recently selected folder in the folder selection dialog.</whatsthis>
-        <default>inbox</default>
+        <default>-1</default>
       </entry>
 
     </group>
@@ -185,16 +184,6 @@
         <whatsthis>Remember this dictionary, so that it will be used in future composer windows as well.
         </whatsthis>
         <default>false</default>
-      </entry>
-      <entry name="WordWrap" type="Bool" key="word-wrap">
-        <label>Word &amp;wrap at column:</label>
-        <default>true</default>
-      </entry>
-      <entry name="LineWrapWidth" type="Int" key="break-at">
-        <label></label>
-        <default>78</default>
-        <min>30</min>
-        <max>998</max>
       </entry>
        <entry name="TooManyRecipients" type="Bool" key="too-many-recipients">
         <label>Warn if the number of recipients is larger than</label>

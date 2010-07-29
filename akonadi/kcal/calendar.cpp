@@ -93,6 +93,22 @@ void Calendar::Private::rowsAboutToBeRemovedInTreeModel( const QModelIndex &pare
   collectionsRemoved( collectionsFromModel( m_treeModel, parent, start, end ) );
 }
 
+void Calendar::Private::dataChangedInTreeModel( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+{
+  Q_ASSERT( topLeft.row() <= bottomRight.row() );
+  const int endRow = bottomRight.row();
+  QModelIndex i( topLeft );
+  int row = i.row();
+  while ( row <= endRow ) {
+    const Collection col = collectionFromIndex( i );
+    if ( col.isValid() ) {
+      // Attributes might have changed, store the new collection and discard the old one
+      m_collectionMap.insert( col.id(), col );
+    }
+    ++row;
+    i = i.sibling( row, topLeft.column() );
+  }
+}
 
 void Calendar::Private::rowsInserted( const QModelIndex &parent, int start, int end )
 {
@@ -147,23 +163,6 @@ void Calendar::Private::dataChanged( const QModelIndex& topLeft, const QModelInd
     i = i.sibling( row, topLeft.column() );
   }
   emit q->calendarChanged();
-}
-
-void Calendar::Private::dataChangedInTreeModel( const QModelIndex& topLeft, const QModelIndex& bottomRight )
-{
-  Q_ASSERT( topLeft.row() <= bottomRight.row() );
-  const int endRow = bottomRight.row();
-  QModelIndex i( topLeft );
-  int row = i.row();
-  while ( row <= endRow ) {
-    const Collection col = collectionFromIndex( i );
-    if ( col.isValid() ) {
-      emit q->calendarChanged();
-      return;
-    }
-    ++row;
-    i = i.sibling( row, topLeft.column() );
-  }
 }
 
 Calendar::Private::~Private()
@@ -281,13 +280,15 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode )
   }
 
   if ( alreadyExisted ) {
+    const bool existedInUidMap = m_uidToItemId.contains( ui );
     if ( m_uidToItemId.value( ui ) != item.id() ) {
       kDebug()<< "item.id() = " << item.id() << "; cached id = " << m_uidToItemId.value( ui )
-              << "item uid = "  << ui.uid
-              << "; calendar = " << q;
+              << "; item uid = "  << ui.uid
+              << "; calendar = " << q
+              << "; existed in cache = " << existedInUidMap;
+      Q_ASSERT_X( false, "updateItem", "uidToId map disagrees with item id" );
     }
 
-    Q_ASSERT( m_uidToItemId.value( ui ) == item.id() );
     QHash<Item::Id,Item::Id>::Iterator oldParentIt = m_childToParent.find( id );
     if ( oldParentIt != m_childToParent.end() ) {
       const KCal::Incidence::Ptr parentInc = Akonadi::incidence( m_itemMap.value( oldParentIt.value() ) );
@@ -400,7 +401,6 @@ void Calendar::Private::itemsAdded( const Item::List &items )
 void Calendar::Private::collectionsAdded( const Collection::List &collections )
 {
   kDebug() << "adding collections: " << collections.count();
- 
   foreach( const Collection &collection, collections ) {
     m_collectionMap[collection.id()] = collection;
   }
@@ -552,7 +552,7 @@ void Calendar::incidenceUpdated( KCal::IncidenceBase *incidence )
 #endif
 }
 
-Item Calendar::event( const Item::Id &id ) const
+Item Calendar::event( Item::Id id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::event( item ) )
@@ -561,7 +561,7 @@ Item Calendar::event( const Item::Id &id ) const
     return Item();
 }
 
-Item Calendar::todo( const Item::Id &id ) const
+Item Calendar::todo( Item::Id id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::todo( item ) )
@@ -745,7 +745,7 @@ Item::List Calendar::rawEvents( EventSortField sortField, SortDirection sortDire
 }
 
 
-Item Calendar::journal( const Item::Id &id ) const
+Item Calendar::journal( Item::Id id ) const
 {
   const Item item = d->m_itemMap.value( id );
   if ( Akonadi::journal( item ) ) {
@@ -987,8 +987,7 @@ Item::List Calendar::rawIncidences()
 Item::List Calendar::sortEvents( const Item::List &eventList_,
                                   EventSortField sortField,
                                   SortDirection sortDirection )
-{
-  Item::List eventList = eventList_;
+{ Item::List eventList = eventList_;
   Item::List eventListSorted;
   Item::List tempList, t;
   Item::List alphaList;
@@ -1205,7 +1204,7 @@ KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &item,
   return KCal::Incidence::Ptr( newInc );
 }
 
-Item Calendar::incidence( const Item::Id &uid ) const
+Item Calendar::incidence( Item::Id uid ) const
 {
   Item i = event( uid );
   if ( i.isValid() ) {
@@ -1860,11 +1859,29 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
 
 }
 
-Collection Calendar::collection( const Akonadi::Collection::Id &id )
+Collection Calendar::collection( const Akonadi::Collection::Id &id ) const
 {
   if ( d->m_collectionMap.contains( id ) ) {
     return d->m_collectionMap[id];
   } else {
     return Collection();
   }
+}
+
+bool Calendar::hasChangeRights( const Akonadi::Item &item ) const
+{
+  // if the users changes the rights, item.parentCollection()
+  // can still have the old rights, so we use call collection()
+  // which returns the updated one
+  const Collection col = collection( item.parentCollection().id() );
+  return col.rights() & Collection::CanChangeItem;
+}
+
+bool Calendar::hasDeleteRights( const Akonadi::Item &item ) const
+{
+  // if the users changes the rights, item.parentCollection()
+  // can still have the old rights, so we use call collection()
+  // which returns the updated one
+  const Collection col = collection( item.parentCollection().id() );
+  return col.rights() & Collection::CanDeleteItem;
 }

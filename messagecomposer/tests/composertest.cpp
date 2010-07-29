@@ -40,6 +40,7 @@ using namespace Message;
 #include <messagecore/nodehelper.h>
 
 #include <messageviewer/objecttreeparser.h>
+#include <messagecore/tests/util.h>
 #include <messageviewer/nodehelper.h>
 
 
@@ -85,6 +86,23 @@ void ComposerTest::testAttachments()
       QCOMPARE( plain->contentType()->mimeType(), QByteArray( "x-some/x-type" ) );
     }
   }
+}
+
+void ComposerTest::testAutoSave()
+{
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  AttachmentPart::Ptr attachment = AttachmentPart::Ptr( new AttachmentPart );
+  attachment->setData( "abc" );
+  attachment->setMimeType( "x-some/x-type" );
+  composer->addAttachmentPart( attachment );
+
+  // This tests if autosave in crash mode works without invoking an event loop, since using an
+  // event loop in the crash handler would be a pretty bad idea
+  composer->setAutoSave( true );
+  composer->start();
+  QVERIFY( composer->finished() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
 }
 
 void ComposerTest::testSignOpenPGPMime()
@@ -239,7 +257,7 @@ void ComposerTest::testBCCEncrypt()
   fillComposerData( composer );
   composer->infoPart()->setBcc( QStringList( QString::fromLatin1( "bcc@bcc.org" ) ) );
 
-  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys();
+  std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
 
   QStringList primRecipients;
   primRecipients << QString::fromLocal8Bit( "you@you.you" );
@@ -411,7 +429,7 @@ void ComposerTest::fillComposerData( Composer* composer )
 
 void ComposerTest::fillComposerCryptoData( Composer* composer )
 {
-  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys();
+  std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
 
   kDebug() << "got num of keys:" << keys.size();
   
@@ -430,8 +448,9 @@ bool ComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
 
   Composer *composer = new Composer;
   fillComposerData( composer );
+  composer->infoPart()->setFrom( QString::fromLatin1( "test@example.com" ) );
 
-  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys( true );
+  std::vector<GpgME::Key> keys = MessageCore::Test::getKeys( true );
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "you@you.you" );
   QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
@@ -463,8 +482,7 @@ bool ComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
     Q_ASSERT( ComposerTestUtil::verifySignatureAndEncryption( message.get(), QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), f ) );
   }
     
-
-  Q_ASSERT( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  Q_ASSERT( message->from()->asUnicodeString() == QString::fromLocal8Bit( "test@example.com" ) );
   Q_ASSERT( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
 
   return true;

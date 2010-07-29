@@ -70,10 +70,8 @@ struct _statusNames {
 
 static struct _statusNames statusNames[] = {
   { "Important", MessageStatus::statusImportant() },
-  { "New", MessageStatus::statusNew() },
-  { "Unread", MessageStatus::statusNewAndUnread() },
+  { "Unread", MessageStatus::statusUnread() },
   { "Read", MessageStatus::statusRead() },
-  { "Old", MessageStatus::statusOld() },
   { "Deleted", MessageStatus::statusDeleted() },
   { "Replied", MessageStatus::statusReplied() },
   { "Forwarded", MessageStatus::statusForwarded() },
@@ -720,7 +718,7 @@ bool KMSearchRuleStatus::isEmpty() const
 bool KMSearchRuleStatus::matches( const Akonadi::Item &item ) const
 {
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-  KPIM::MessageStatus status;
+  Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
   bool rc = false;
   switch ( function() ) {

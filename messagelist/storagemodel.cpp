@@ -20,6 +20,7 @@
 
 #include <messagecore/stringutil.h>
 #include <messagecore/globalsettings.h>
+#include <messagecore/nodehelper.h>
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
@@ -100,6 +101,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
 
   d->mModel = itemFilter;
 
+  kDebug() << "Using model:" << model->metaObject()->className();
   connect( d->mSopranoModel.data(), SIGNAL(statementAdded(Soprano::Statement)),
            SLOT(statementChanged(Soprano::Statement)) );
   connect( d->mSopranoModel.data(), SIGNAL(statementRemoved(Soprano::Statement)),
@@ -299,8 +301,13 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   const KMime::Message::Ptr mail = messageForRow( row );
   Q_ASSERT( mail );
 
-  KPIM::MessageStatus stat;
+  Akonadi::MessageStatus stat;
   stat.setStatusFromFlags( item.flags() );
+
+  // FIXME: Attachment and invitation state should be stored on the server as well!
+  if ( MessageCore::NodeHelper::isInvitation( mail.get() ) ) {
+    stat.setHasInvitation( true );
+  }
 
   mi->setStatus( stat );
 
@@ -329,13 +336,15 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   }
 
   mi->invalidateTagCache();
+  mi->invalidateAnnotationCache();
 }
 
 void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
-                                         int row, const KPIM::MessageStatus &status )
+                                         int row, const Akonadi::MessageStatus &status )
 {
+  Q_UNUSED( mi );
   Item item = itemForRow( row );
-  item.setFlags( status.getStatusFlags() );
+  item.setFlags( status.statusFlags() );
   new ItemModifyJob( item, this );
 }
 
@@ -405,7 +414,9 @@ void StorageModel::prepareForScan()
 
 void StorageModel::Private::statementChanged( const Soprano::Statement &statement )
 {
-  if ( statement.predicate() == Soprano::Vocabulary::NAO::hasTag() ) {
+  if ( statement.predicate() == Soprano::Vocabulary::NAO::hasTag() ||
+       statement.predicate() == Soprano::Vocabulary::NAO::description() )
+  {
     const Akonadi::Item item = Item::fromUrl( statement.subject().uri() );
     if ( !item.isValid() ) {
       return;

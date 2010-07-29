@@ -19,6 +19,8 @@
     02110-1301, USA.
 */
 
+// READ THE README FILE
+
 #include "collectionmonitoredwidget.h"
 
 #include "entitytreewidget.h"

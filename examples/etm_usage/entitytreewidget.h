@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+// READ THE README FILE
+
 #ifndef ENTITYTREEWIDGET_H
 #define ENTITYTREEWIDGET_H
 
@@ -51,10 +53,12 @@ public:
 
 public:
   void init();
+  QString dumpLevel(const QModelIndex &parent, int level);
 
-private slots:
+public slots:
   void mimeTypesChoiceChanged( int index );
   void mimeTypesChanged( const QString &mimetypeList );
+  void dumpTree();
 
 private:
   QTreeView *m_treeView;

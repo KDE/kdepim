@@ -42,44 +42,7 @@
 
 #include <stdlib.h>
 #include <gpgme++/keylistresult.h>
-
-std::vector<GpgME::Key> ComposerTestUtil::getKeys( bool smime )
-{
-
-  setenv("GNUPGHOME", KDESRCDIR "/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1); 
-  setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromAscii( "/.kde-unit-test" ) ), 1);
-
-  Kleo::KeyListJob * job = 0;
-
-  if( smime ) {
-    const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "smime" );
-    job = backend->keyListJob( false );
-  } else {
-    const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-    job = backend->keyListJob( false );
-  }
-  Q_ASSERT( job );
-
-  std::vector< GpgME::Key > keys;
-  GpgME::KeyListResult res = job->exec( QStringList(), true, keys );
-
-  if( !smime )
-    Q_ASSERT( keys.size() == 3 );
-
-  Q_ASSERT( !res.error() );
-  kDebug() << "got private keys:" << keys.size();
-
-  for(std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i ) {
-    kDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
-    kDebug() << "key numuserIds:" << i->numUserIDs();
-    for(uint k = 0; k < i->numUserIDs(); ++k ) {
-      kDebug() << "userIDs:" << i->userID( k ).email();
-    }
-  }
-
-  return keys;
-}
+#include <messagecore/tests/util.h>
 
 bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f ) {
 
@@ -91,7 +54,7 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
-  TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
   MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
   MessageViewer::ProcessResult pResult( nh );
@@ -153,7 +116,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
-  TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
   MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
   MessageViewer::ProcessResult pResult( nh );
@@ -217,7 +180,7 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
-  TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
   MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0  );
   MessageViewer::ProcessResult pResult( nh );

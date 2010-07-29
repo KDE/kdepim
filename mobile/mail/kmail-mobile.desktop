@@ -1,17 +1,18 @@
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Name=KMail Mobile
-Name[ca]=KMail mòbil
-Name[en_GB]=KMail Mobile
-Name[es]=KMail móvil
-Name[km]=KMail Mobile
-Name[pt]=KMail Móvel
-Name[pt_BR]=KMail Móvel
-Name[sv]=Kmail för mobil
-Name[uk]=Мобільний KMail
-Name[x-test]=xxKMail Mobilexx
-Exec=kmail-mobile
+Name=KDE Mail
+Name[es]=Correo de KDE
+Name[ja]=KDE Mail
+Name[nds]=KDE-Nettpost
+Name[pt]=Correio do KDE
+Name[pt_BR]=E-mail do KDE
+Name[sv]=KDE:s e-postprogram
+Name[uk]=Пошта KDE
+Name[x-test]=xxKDE Mailxx
+Name[zh_CN]=KDE 电子邮件
+Name[zh_TW]=KDE 郵件軟體
+Exec=kmail-mobile.sh
 
 Icon=kmail-mobile
 Type=Application

@@ -78,6 +78,7 @@ namespace KMail {
 }
 
 class FolderTreeWidget;
+class FolderSelectionDialog;
 
 class KMAIL_EXPORT KMMainWidget : public QWidget
 {
@@ -229,7 +230,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotMessageSelected( const Akonadi::Item & );
 
     void slotItemsFetchedForActivation( const Akonadi::Item::List &list );
-    void slotMessageStatusChangeRequest(  const Akonadi::Item &, const KPIM::MessageStatus &, const KPIM::MessageStatus & );
+    void slotMessageStatusChangeRequest(  const Akonadi::Item &, const Akonadi::MessageStatus &, const Akonadi::MessageStatus & );
 
 
     void slotReplaceMsgByUnencryptedVersion();
@@ -282,11 +283,11 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void captionChangeRequest( const QString &caption );
 
   protected:
+    void restoreCollectionFolderViewConfig();
     void setupActions();
     void createWidgets();
     void deleteWidgets();
     void layoutSplitters();
-    void updateFileMenu();
     void newFromTemplate( const Akonadi::Item& );
     void moveSelectedMessagesToFolder( const Akonadi::Collection & dest );
     void copySelectedMessagesToFolder( const Akonadi::Collection& dest );
@@ -304,6 +305,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     KSharedConfig::Ptr config();
 
   protected slots:
+    void updateFileMenu();
     void slotCheckOneAccount( QAction* );
 #if 0
     void slotMailChecked( bool newMail, bool sendOnCheck,
@@ -355,7 +357,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotCollapseThread();
     void slotCollapseAllThreads();
     void slotShowMsgSrc();
-    void slotSetThreadStatusNew();
     void slotSetThreadStatusUnread();
     void slotSetThreadStatusRead();
     void slotSetThreadStatusImportant();
@@ -479,7 +480,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
      * The set parameter must not be null and the ownership is passed to this function.
      */
     void setMessageSetStatus( const QList<Akonadi::Item> &select,
-        const KPIM::MessageStatus &status,
+        const Akonadi::MessageStatus &status,
         bool toggle
       );
     /**
@@ -490,7 +491,23 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     /**
      * This applies setMessageSetStatus() on the current thread.
      */
-    void setCurrentThreadStatus( const KPIM::MessageStatus &status, bool toggle );
+    void setCurrentThreadStatus( const Akonadi::MessageStatus &status, bool toggle );
+
+    void applyFilters( const QList<Akonadi::Item>& selectedMessages );
+
+    /**
+     * Internal helper that creates the folder selection dialog used for the
+     * move and copy to folder actions on demand. Only folders where items can
+     * be added are listed.
+     */
+    FolderSelectionDialog* moveOrCopyToDialog();
+
+    /**
+     * Internal helper that creates the folder selection dialog used for
+     * jumping to folders, or adding them as favourites. All folders are listed.
+     */
+    FolderSelectionDialog* selectFromAllFoldersDialog();
+
   private slots:
     /**
      * Called when a "move to trash" operation is completed
@@ -536,7 +553,6 @@ private:
     KActionMenu *mThreadStatusMenu, *mApplyFilterActionsMenu;
     KAction *mCopyActionMenu;
     KAction *mMoveActionMenu;
-    KAction *mMarkThreadAsNewAction;
     KAction *mMarkThreadAsReadAction;
     KAction *mMarkThreadAsUnreadAction;
     KToggleAction *mToggleThreadImportantAction;
@@ -574,6 +590,9 @@ private:
 
     //  QPopupMenu *mMessageMenu;
     KMail::SearchWindow *mSearchWin;
+
+    FolderSelectionDialog* mMoveOrCopyToDialog;
+    FolderSelectionDialog* mSelectFromAllFoldersDialog;
 
     KAction *mRemoveFolderAction,
       *mExpireFolderAction,
@@ -618,8 +637,6 @@ private:
     bool mGoToFirstUnreadMessageInSelectedFolder;
     MessageList::Core::PreSelectionMode mPreSelectionMode;
 
-    KPIM::ProgressItem *mFilterProgressItem;
-
     struct collectionInfo {
       collectionInfo( const Akonadi::Collection& collection = Akonadi::Collection(), int nb = 0 ) {
         col = collection;
@@ -636,7 +653,10 @@ private:
       int nbMail;
     };
 
+    /// Map from folder paths to collection information.
+    /// Used during mail check to remember how many mails there are in the folders
     QMap<QString, collectionInfo> mCheckMail;
+
     bool mCheckMailInProgress;
 };
 

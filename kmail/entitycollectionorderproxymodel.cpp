@@ -20,6 +20,7 @@
 #include "kmkernel.h"
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/kmime/specialmailcollections.h>
 #include <kdebug.h>
 
 class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
@@ -57,6 +58,9 @@ EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel( QObject *paren
   : EntityOrderProxyModel( parent ), d( new EntityCollectionOrderProxyModelPrivate() )
 {
   setDynamicSortFilter(true);
+  connect( Akonadi::SpecialMailCollections::self(), SIGNAL( defaultCollectionsChanged() ),
+           this, SLOT( slotDefaultCollectionsChanged () ) );
+
 }
 
 EntityCollectionOrderProxyModel::~EntityCollectionOrderProxyModel()
@@ -66,6 +70,12 @@ EntityCollectionOrderProxyModel::~EntityCollectionOrderProxyModel()
   delete d;
 }
 
+
+void EntityCollectionOrderProxyModel::slotDefaultCollectionsChanged()
+{
+  if ( !d->manualSortingActive )
+    invalidate();
+}
 
 bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex&left, const QModelIndex & right ) const
 {
@@ -78,8 +88,8 @@ bool EntityCollectionOrderProxyModel::lessThan( const QModelIndex&left, const QM
       Akonadi::Collection::Id leftData = left.data( Akonadi::EntityTreeModel::CollectionIdRole ).toLongLong();
       Akonadi::Collection::Id rightData = right.data( Akonadi::EntityTreeModel::CollectionIdRole ).toLongLong();
 
-      int leftPos = d->orderSpecialCollection.indexOf( leftData );
-      int rightPos = d->orderSpecialCollection.indexOf( rightData );
+      const int leftPos = d->orderSpecialCollection.indexOf( leftData );
+      const int rightPos = d->orderSpecialCollection.indexOf( rightData );
       if ( leftPos < 0 && rightPos < 0 )
         return QSortFilterProxyModel::lessThan( left, right );
       else if ( leftPos >= 0 && rightPos < 0)

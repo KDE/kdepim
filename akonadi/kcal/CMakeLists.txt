@@ -29,16 +29,18 @@ set( kcalakonadi_LIB_SRC
      mailclient.cpp
      kcalprefs.cpp
      mailscheduler.cpp
+     freebusydownloadjob.cpp
      freebusymanager.cpp
      dndfactory.cpp
      incidencechanger.cpp
+     invitations/invitationhandler.cpp
 )
 
 kde4_add_kcfg_files(kcalakonadi_LIB_SRC kcalprefs_base.kcfgc )
 
 qt4_add_dbus_interface(kcalakonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 
-kde4_add_library( akonadi-kcal_next SHARED ${kcalakonadi_LIB_SRC} )
+kde4_add_library( akonadi-kcal_next ${LIBRARY_TYPE} ${kcalakonadi_LIB_SRC} )
 
 target_link_libraries( akonadi-kcal_next  ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBS}

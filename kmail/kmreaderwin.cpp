@@ -296,6 +296,7 @@ void KMReaderWin::displayBusyPage()
 
   displaySplashPage( info );
 }
+#include <Akonadi/ItemModifyJob>
 
 void KMReaderWin::displayOfflinePage()
 {
@@ -335,7 +336,7 @@ void KMReaderWin::displayAboutPage()
     QString featuresText =
       i18n("<p>Some of the new features in this release of KMail include "
            "(compared to KMail %1, which is part of KDE Software Compilation %2):</p>\n",
-       QString("1.13"), QString("4.4")); // prior KMail and KDE version
+           QString("1.13"), KDE::versionRelease() ); // prior KMail and KDE version
     featuresText += "<ul>\n";
     for ( int i = 0 ; i < numKMailNewFeatures ; i++ )
       featuresText += "<li>" + i18n( kmailNewFeatures[i] ) + "</li>\n";
@@ -383,7 +384,7 @@ void KMReaderWin::slotTouchMessage()
   MessageStatus status;
   status.setStatusFromFlags( message().flags() );
 
-  if ( !status.isNew() && !status.isUnread() )
+  if ( !status.isUnread() )
     return;
 
   Akonadi::Item::List items;
@@ -411,17 +412,19 @@ void KMReaderWin::slotTouchMessage()
   if ( !msg )
     return;
 
-  KMime::MDN::SendingMode s = MDNAdviceDialog::checkMDNHeaders( msg );
-  KConfigGroup mdnConfig( KMKernel::config(), "MDN" );
-  int quote = mdnConfig.readEntry<int>( "quote-message", 0 );
-
-  MessageFactory factory( msg, mViewer->messageItem().id() );
-  factory.setIdentityManager( KMKernel::self()->identityManager() );
-  factory.setFolderIdentity( KMail::Util::folderIdentity( message() ) );
-  KMime::Message::Ptr receipt = factory.createMDN( KMime::MDN::ManualAction, MDN::Displayed, s, quote );
-  if (receipt ) {
-    if ( !kmkernel->msgSender()->send( receipt ) ) // send or queue
-      KMessageBox::error( this, i18n("Could not send MDN.") );
+  QPair< bool, KMime::MDN::SendingMode > mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( message(), KMime::MDN::Displayed );
+  if( mdnSend.first ) {
+    KConfigGroup mdnConfig( KMKernel::config(), "MDN" );
+    int quote = mdnConfig.readEntry<int>( "quote-message", 0 );
+    MessageFactory factory( msg, Akonadi::Item().id() );
+    factory.setIdentityManager( KMKernel::self()->identityManager() );
+    factory.setFolderIdentity( KMail::Util::folderIdentity( message() ) );
+    KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::ManualAction, KMime::MDN::Displayed, mdnSend.second, quote );
+    if ( mdn ) {
+      if( !kmkernel->msgSender()->send( mdn, MessageSender::SendLater ) ) {
+        kDebug() << "Sending failed.";
+      }
+    }
   }
 }
 
@@ -449,8 +452,7 @@ void KMReaderWin::setMsgPart( KMime::Content* aMsgPart )
 //-----------------------------------------------------------------------------
 QString KMReaderWin::copyText() const
 {
-  QString temp = mViewer->selectedText();
-  return temp;
+  return mViewer->selectedText();
 }
 
 //-----------------------------------------------------------------------------
@@ -619,7 +621,7 @@ void KMReaderWin::setMessage( const Akonadi::Item &item, Viewer::UpdateMode upda
   if ( item.isValid() ) {
     MessageStatus status;
     status.setStatusFromFlags( item.flags() );
-    if ( ( status.isUnread() || status.isNew() ) && MessageViewer::GlobalSettings::self()->delayedMarkAsRead() ) {
+    if ( status.isUnread() && MessageViewer::GlobalSettings::self()->delayedMarkAsRead() ) {
       if (MessageViewer::GlobalSettings::self()->delayedMarkTime() != 0 )
         mDelayedMarkTimer.start( MessageViewer::GlobalSettings::self()->delayedMarkTime() * 1000 );
       else
@@ -650,7 +652,8 @@ void KMReaderWin::slotUrlClicked( const Akonadi::Item & item, const KUrl & url )
   uint identity = 0;
   if ( item.isValid() && item.parentCollection().isValid() ) {
     QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection() );
-    identity = fd->identity();
+    if ( fd )
+      identity = fd->identity();
   }
   KMail::Util::handleClickedURL( url, identity );
 }

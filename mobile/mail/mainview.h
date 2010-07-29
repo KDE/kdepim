@@ -24,6 +24,9 @@
 #include "kdeclarativemainview.h"
 
 #include <messagecomposer/messagefactory.h>
+#include <Akonadi/KMime/SpecialMailCollections>
+
+class KJob;
 
 /** The new KMMainWidget ;-) */
 class MainView : public KDeclarativeMainView
@@ -34,12 +37,33 @@ class MainView : public KDeclarativeMainView
 
   public slots:
     void startComposer();
+    void restoreDraft( quint64 id );
     void reply( quint64 id );
     void replyToAll( quint64 id );
     void forwardInline( quint64 id );
 
+    void markImportant(bool checked);
+    void markMailTask(bool checked);
+    void modifyDone(KJob *job);
+    void dataChanged();
+
+    bool isDraft( int row );
+    bool folderIsDrafts(const Akonadi::Collection & col);
+
+    // HACK until mark-as-read logic is in messageviewer
+    virtual void setListSelectedRow(int row);
+
+  private slots:
+    void replyFetchResult( KJob *job );
+    void forwardInlineFetchResult( KJob *job );
+    void composeFetchResult( KJob *job );
+    void initDefaultFolders();
+    void createDefaultCollectionDone( KJob *job);
+    void deleteItemResult( KJob *job );
+
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
+    void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
 };
 
 #endif

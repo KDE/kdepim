@@ -51,6 +51,7 @@ class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 
   private slots:
     void editRecentAddresses();
+    void groupDropExpandResult( KJob* );
 
   private:
     void dropEvent( QDropEvent *event );

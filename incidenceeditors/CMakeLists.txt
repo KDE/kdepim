@@ -1,3 +1,7 @@
+if (KDEPIM_MOBILE_UI)
+  remove_definitions(-DKDEPIM_MOBILE_UI)
+endif()
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/incidenceeditors
     ${CMAKE_BINARY_DIR}/incidenceeditors
@@ -17,19 +21,6 @@ endif ()
 ########### next target ###############
 
 set( incidenceeditors_LIB_SRCS
-    incidenceeditor-ng/incidenceeditor.cpp
-    incidenceeditor-ng/combinedincidenceeditor.cpp
-    incidenceeditor-ng/incidencegeneraleditor.cpp
-    incidenceeditor-ng/incidencedatetimeeditor.cpp
-    incidenceeditor-ng/incidencedescriptioneditor.cpp
-    incidenceeditor-ng/incidenceattachmenteditor.cpp
-    incidenceeditor-ng/incidencerecurrenceeditor.cpp
-    incidenceeditor-ng/incidencerecurrencedialog.cpp
-    incidenceeditor-ng/attachmenticonview.cpp
-    incidenceeditor-ng/attachmenteditdialog.cpp
-    incidenceeditor-ng/incidenceeditorgeneralpage.cpp
-
-    #incidencegeneraleditor.cpp
     autochecktreewidget.cpp
     categoryconfig.cpp
     categoryhierarchyreader.cpp
@@ -67,19 +58,10 @@ endif ()
 kde4_add_ui_files( incidenceeditors_LIB_SRCS
    categoryselectdialog_base.ui
    editoralarms_base.ui
-   #incidencegeneral.ui
    template_management_dialog_base.ui
-
-   # IncidenceEditorsNG ui files
-   incidenceeditor-ng/attachmenteditdialog.ui
-   incidenceeditor-ng/incidencegeneraleditor.ui
-   incidenceeditor-ng/incidencedatetime.ui
-   incidenceeditor-ng/incidencedescription.ui
-   incidenceeditor-ng/incidenceattachmenteditor.ui
-   incidenceeditor-ng/incidencerecurrenceeditor.ui
 )
 
-kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
+kde4_add_library(incidenceeditors ${LIBRARY_TYPE} ${incidenceeditors_LIB_SRCS})
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -107,4 +89,5 @@ endif ()
 set_target_properties(incidenceeditors PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+add_subdirectory( incidenceeditor-ng )
 add_subdirectory( tests )

@@ -1,7 +1,7 @@
 /*
 * This file is part of Akonadi
 *
-* Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+* Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -23,16 +23,25 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
+#include <incidenceeditors/korganizereditorconfig.h>
+
 #include "mainview.h"
 
+using namespace IncidenceEditors;
 
 int main( int argc, char **argv )
 {
   const QByteArray& ba = QByteArray( "tasks-mobile" );
   const KLocalizedString name = ki18n( "Tasks Mobile" );
 
+  // NOTE: This is necessary to avoid a crash, but will result in an empty config.
+  //       To make this really configurable do something like KOrganizerEditorConfig
+  //       in incidinceeditors/groupwareintegration.cpp
+  EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
+
   KAboutData aboutData( ba, ba, name, ba, name );
   KCmdLineArgs::init( argc, argv, &aboutData );
+  KDeclarativeApplication::initCmdLine();
   KDeclarativeApplication app;
 
   MainView view;

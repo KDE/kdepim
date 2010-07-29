@@ -70,6 +70,11 @@ bool MailScheduler::publish( KCal::IncidenceBase *incidence, const QString &reci
     from, bccMe, recipients, messageText, KCalPrefs::instance()->mMailTransport );
 }
 
+bool MailScheduler::performTransaction( const KCal::Incidence::Ptr &incidence, KCal::iTIPMethod method )
+{
+  return performTransaction( incidence.get(), method );
+}
+
 bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method, const QString &recipients )
 {
   QString from = KCalPrefs::instance()->email();

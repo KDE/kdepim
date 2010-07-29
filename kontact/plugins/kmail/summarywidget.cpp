@@ -29,11 +29,15 @@
 #include <KontactInterface/Core>
 #include <KontactInterface/Plugin>
 
+#include <kmime/kmime_message.h>
+
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/CollectionStatistics>
+#include <Akonadi/CollectionFetchScope>
 #include <akonadi_next/entitymodelstatesaver.h>
 #include <akonadi_next/checkableitemproxymodel.h>
+
 
 #include <KConfigGroup>
 #include <KDebug>
@@ -65,9 +69,11 @@ SummaryWidget::SummaryWidget( KontactInterface::Plugin *plugin, QWidget *parent 
 
   // Create a new change recorder.
   mChangeRecorder = new Akonadi::ChangeRecorder( this );
-  mChangeRecorder->setMimeTypeMonitored( "Message/rfc822" );
+  mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
   mChangeRecorder->fetchCollectionStatistics( true );
   mChangeRecorder->setAllMonitored( true );
+  mChangeRecorder->collectionFetchScope().setIncludeStatistics( true );
+
 
   mModel = new Akonadi::EntityTreeModel( mChangeRecorder, this );
   mModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
@@ -204,7 +210,7 @@ void SummaryWidget::updateFolderList()
   mModelState->restoreConfig( config );
   int counter = 0;
   kDebug() << "Iterating over" << mModel->rowCount() << "collections.";
-  bool showFolderPaths = config.readEntry( "showFolderPaths", false );
+  const bool showFolderPaths = config.readEntry( "showFolderPaths", false );
   displayModel( QModelIndex(), counter, showFolderPaths, QStringList() );
 
   if ( counter == 0 ) {
@@ -214,8 +220,8 @@ void SummaryWidget::updateFolderList()
     mLabels.append( label );
   }
 
-  QList<QLabel*>::iterator lit;
-  for ( lit = mLabels.begin(); lit != mLabels.end(); ++lit ) {
+  QList<QLabel*>::const_iterator lit;
+  for ( lit = mLabels.constBegin(); lit != mLabels.constEnd(); ++lit ) {
     (*lit)->show();
   }
 }

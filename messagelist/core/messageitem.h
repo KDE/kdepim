@@ -123,6 +123,9 @@ public:
   /// fetched from Nepomuk again
   void invalidateTagCache();
 
+  /// Same as invalidateTagCache(), only for the annotation
+  void invalidateAnnotationCache();
+
   QColor textColor() const;
 
   QColor backgroundColor() const;

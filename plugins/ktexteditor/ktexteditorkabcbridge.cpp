@@ -37,7 +37,7 @@ KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *w
   IdentityManager manager( true, widget );
   Identity defaultIdentity = manager.defaultIdentity();
 
-  if ( defaultIdentity.fullName().isEmpty() && defaultIdentity.emailAddr().isEmpty() ) {
+  if ( defaultIdentity.fullName().isEmpty() && defaultIdentity.primaryEmailAddress().isEmpty() ) {
     const int result = KMessageBox::questionYesNo( widget,
                                                    i18n( "The template needs information about you, but it looks as if you have not yet provided that information. Do you want to provide it now?" ),
                                                    i18n( "Missing personal information" ) );
@@ -70,7 +70,7 @@ KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *w
   else if ( placeHolder == "fullname" )
     return contact.assembledName();
   else if ( placeHolder == "email" )
-    return defaultIdentity.emailAddr();
+    return defaultIdentity.primaryEmailAddress();
   else
     return QString();
 }

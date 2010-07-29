@@ -3,7 +3,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 ########### next target ###############
 
-if ( QT_QT3SUPPORT_FOUND )
 set(test_keylister_SRCS test_keylister.cpp )
 
 kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
@@ -11,12 +10,9 @@ kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
 target_link_libraries(test_keylister
     kleo
     ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDE3SUPPORT_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QGPGME_LIBRARIES}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QT3SUPPORT_LIBRARY} )
-endif( QT_QT3SUPPORT_FOUND )
+    ${QT_QTGUI_LIBRARY} )
 
 
 ########### next target ###############
@@ -32,11 +28,11 @@ target_link_libraries(test_keygen  kleo ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} 
 
 ########### next target ###############
 
-#set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
+set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
 
-#kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
+kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
 
-#target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} )
 
 ########### next target ###############
 

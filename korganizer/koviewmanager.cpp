@@ -47,6 +47,7 @@
 #include <KGlobal>
 #include <KTabWidget>
 
+#include <QAction>
 #include <QStackedWidget>
 
 #include "koviewmanager.moc"
@@ -673,11 +674,10 @@ void KOViewManager::currentAgendaViewTabChanged( QWidget *widget )
 
 void KOViewManager::setUpdateNeeded()
 {
-  if ( mAgendaView ) {
-    mAgendaView->setUpdateNeeded();
-  }
-  if ( mAgendaSideBySideView ) {
-    mAgendaSideBySideView->setUpdateNeeded();
+  foreach( BaseView *view, mViews ) {
+    if ( view ) {
+      view->setUpdateNeeded( true );
+    }
   }
 }
 

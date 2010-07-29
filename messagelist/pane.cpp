@@ -35,7 +35,7 @@
 #include "widget.h"
 #include "core/settings.h"
 #include "core/manager.h"
-#include "messagecore/messagestatus.h"
+#include <akonadi/kmime/messagestatus.h>
 #include "core/model.h"
 
 namespace MessageList
@@ -450,8 +450,8 @@ void Pane::createNewTab()
            this, SIGNAL(messageActivated(Akonadi::Item)) );
   connect( w, SIGNAL(selectionChanged()),
            this, SIGNAL(selectionChanged()) );
-  connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)),
-           this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)) );
+  connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)),
+           this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)) );
 
   connect( w, SIGNAL(statusMessage(QString)),
            this, SIGNAL(statusMessage(QString)) );
@@ -550,11 +550,10 @@ QList<Akonadi::Item> Pane::currentThreadAsMessageList() const
 QList<Akonadi::Item> Pane::itemListFromPersistentSet( MessageList::Core::MessageItemSetReference ref )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( w == 0 ) {
-    return QList<Akonadi::Item>();
+  if ( w ) {
+    return w->itemListFromPersistentSet(ref);
   }
-  return w->itemListFromPersistentSet(ref);
-
+  return QList<Akonadi::Item>();
 }
 
 void Pane::deletePersistentSet( MessageList::Core::MessageItemSetReference ref )
@@ -573,11 +572,11 @@ void Pane::markMessageItemsAsAboutToBeRemoved( MessageList::Core::MessageItemSet
   }
 }
 
-KPIM::MessageStatus Pane::currentFilterStatus() const
+Akonadi::MessageStatus Pane::currentFilterStatus() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
   if ( w == 0 ) {
-    return KPIM::MessageStatus();
+    return Akonadi::MessageStatus();
   }
   return w->currentFilterStatus();
 }
@@ -585,28 +584,28 @@ KPIM::MessageStatus Pane::currentFilterStatus() const
 QString Pane::currentFilterSearchString() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( w == 0 ) {
-    return QString();
+  if ( w ) {
+    return w->currentFilterSearchString();
   }
-  return w->currentFilterSearchString();
+  return QString();
 }
 
 bool Pane::isThreaded() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( w == 0 ) {
-    return false;
+  if ( w ) {
+    return w->isThreaded();
   }
-  return w->isThreaded();
+  return false;
 }
 
 bool Pane::selectionEmpty() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( w == 0 ) {
-    return false;
+  if ( w ) {
+    return w->selectionEmpty();
   }
-  return w->selectionEmpty();
+  return false;
 }
 
 bool Pane::getSelectionStats( Akonadi::Item::List &selectedItems,
@@ -628,17 +627,17 @@ bool Pane::getSelectionStats( Akonadi::Item::List &selectedItems,
 MessageList::Core::MessageItemSetReference Pane::selectionAsPersistentSet( bool includeCollapsedChildren ) const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( w == 0 )
-    return -1;
-  return w->selectionAsPersistentSet( includeCollapsedChildren );
+  if ( w )
+    return w->selectionAsPersistentSet( includeCollapsedChildren );
+  return -1;
 }
 
 MessageList::Core::MessageItemSetReference Pane::currentThreadAsPersistentSet() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( w == 0 )
-    return -1;
-  return w->currentThreadAsPersistentSet();
+  if ( w )
+    return w->currentThreadAsPersistentSet();
+  return -1;
 }
 
 void Pane::focusView()
@@ -661,9 +660,9 @@ void Pane::reloadGlobalConfiguration()
 QItemSelectionModel* Pane::currentItemSelectionModel()
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( w == 0 )
-    return 0;
-  return w->view()->selectionModel();
+  if ( w )
+    return w->view()->selectionModel();
+  return 0;
 }
 
 

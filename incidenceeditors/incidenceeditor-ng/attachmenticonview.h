@@ -4,7 +4,8 @@
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
-  Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -47,7 +48,7 @@ class AttachmentIconView : public QListWidget
 {
   friend class EditorAttachments;
   public:
-    AttachmentIconView( QWidget *parent );
+    AttachmentIconView( QWidget *parent = 0 );
 
     QMimeData* mimeData() const;
     KUrl tempFileForAttachment( KCal::Attachment *attachment ) const;

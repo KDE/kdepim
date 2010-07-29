@@ -2,7 +2,7 @@
   This file is part of libkdepim.
 
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
-  Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+  Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ class KCheckComboBox::Private
   public:
     Private( KCheckComboBox *qq )
       : q( qq )
+      , mLineEditIsReceiver( false )
       , mSeparator( QLatin1String( "," ) )
       , mSqueezeText( false )
       , mIgnoreHide( false )
@@ -56,6 +57,7 @@ class KCheckComboBox::Private
     void toggleCheckState( const QModelIndex &index );
 
   public:
+    bool mLineEditIsReceiver;
     QString mSeparator;
     QString mDefaultText;
     bool mSqueezeText;
@@ -66,6 +68,7 @@ class KCheckComboBox::Private
 
 void KCheckComboBox::Private::makeInsertedItemsCheckable(const QModelIndex &parent, int start, int end)
 {
+  Q_UNUSED( parent );
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>( q->model() );
   Q_ASSERT( model );
   for ( int r = start; r <= end; ++r ) {
@@ -124,7 +127,8 @@ void KCheckComboBox::Private::toggleCheckState( const QModelIndex &index )
 void KCheckComboBox::Private::toggleCheckState( int pos )
 {
   Q_UNUSED( pos );
-  toggleCheckState( q->view()->currentIndex() );
+  if ( !mLineEditIsReceiver )
+    toggleCheckState( q->view()->currentIndex() );
 }
 
 /// Class KCheckComboBox
@@ -184,6 +188,9 @@ QStringList KCheckComboBox::checkedItems() const
     QModelIndexList indexes = model()->match( index, Qt::CheckStateRole,
                                               Qt::Checked, -1, Qt::MatchExactly );
     foreach ( const QModelIndex &index, indexes ) {
+      if ( index.data( Qt::UserRole ).isNull() )
+        items += index.data( Qt::DisplayRole ).toString();
+      else
       items += index.data( Qt::UserRole ).toString();
     }
   }
@@ -225,6 +232,28 @@ void KCheckComboBox::setSqueezeText( bool squeeze )
     d->mSqueezeText = squeeze;
     d->updateCheckedItems();
   }
+}
+
+bool KCheckComboBox::itemEnabled( int index )
+{
+  Q_ASSERT( index >= 0 && index <= count() );
+
+  QStandardItemModel *itemModel = qobject_cast<QStandardItemModel *>( model() );
+  Q_ASSERT( itemModel );
+
+  QStandardItem *item = itemModel->item( index, 0 );
+  return item->isEnabled();
+}
+
+void KCheckComboBox::setItemEnabled( int index, bool enabled )
+{
+  Q_ASSERT( index >= 0 && index <= count() );
+
+  QStandardItemModel *itemModel = qobject_cast<QStandardItemModel *>( model() );
+  Q_ASSERT( itemModel );
+
+  QStandardItem *item = itemModel->item( index, 0 );
+  item->setEnabled( enabled );
 }
 
 QString KCheckComboBox::separator() const
@@ -304,9 +333,11 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
       d->mIgnoreHide = true;
 
       if ( receiver == lineEdit() ) {
+        d->mLineEditIsReceiver = true;
         showPopup();
         return true;
-      }
+      } else
+        d->mLineEditIsReceiver = false;
 
       break;
     default:

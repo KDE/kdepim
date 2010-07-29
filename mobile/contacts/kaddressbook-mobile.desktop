@@ -1,17 +1,18 @@
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Name=KAddressbook Mobile
-Name[ca]=KAddressBook mòbil
-Name[en_GB]=KAddressbook Mobile
-Name[es]=KAddressBook móvil
-Name[km]=KAddressbook Mobile
-Name[pt]=KAddressBook Móvel
-Name[pt_BR]=KAddressBook Móvel
-Name[sv]=Adressbok för mobil
-Name[uk]=Мобільна KAddressBook
-Name[x-test]=xxKAddressbook Mobilexx
-Exec=kaddressbook-mobile
+Name=KDE Addressbook
+Name[es]=Libreta de direcciones de KDE
+Name[ja]=KDE AddressBook
+Name[nds]=KDE-Adressbook
+Name[pt]=Livro de Endereços do KDE
+Name[pt_BR]=Livro de endereços do KDE
+Name[sv]=KDE:s adressbok
+Name[uk]=Адресна книга KDE
+Name[x-test]=xxKDE Addressbookxx
+Name[zh_CN]=KDE 地址簿
+Name[zh_TW]=KDE 通訊錄
+Exec=kaddressbook-mobile.sh
 
-Icon=view-pim-contacts
+Icon=kaddressbook-mobile
 Type=Application

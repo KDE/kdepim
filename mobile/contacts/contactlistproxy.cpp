@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -26,6 +26,8 @@
 
 ContactListProxy::ContactListProxy(QObject* parent) : ListProxy( parent )
 {
+  setDynamicSortFilter( true );
+  sort( 0, Qt::AscendingOrder );
 }
 
 QVariant ContactListProxy::data(const QModelIndex& index, int role) const
@@ -69,6 +71,28 @@ void ContactListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   names.insert( NameRole, "name" );
   names.insert( PictureRole, "picture" );
   setRoleNames( names );
+}
+
+static QString nameForItem( const Akonadi::Item &item )
+{
+  if ( item.hasPayload<KABC::Addressee>() )
+    return item.payload<KABC::Addressee>().realName();
+
+  if ( item.hasPayload<KABC::ContactGroup>() )
+    return item.payload<KABC::ContactGroup>().name();
+
+  return QString();
+}
+
+bool ContactListProxy::lessThan( const QModelIndex& left, const QModelIndex& right ) const
+{
+  const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+  const QString leftName = nameForItem( leftItem );
+  const QString rightName = nameForItem( rightItem );
+
+  return (QString::localeAwareCompare( leftName, rightName ) < 0);
 }
 
 QString ContactListProxy::typeForIndex(int row) const

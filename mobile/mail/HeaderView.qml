@@ -25,27 +25,116 @@ import org.kde.pim.mobileui 4.5 as KPIM
 KPIM.ItemListView {
   delegate: [
     KPIM.ItemListViewDelegate {
-      summaryContent: [
+      height : itemListView.height / 7
+      summaryContent : [
         QML.Text {
-          anchors.fill: parent
-          text: model.subject
+          id: fromLabel
+          anchors.top : parent.top
+          anchors.topMargin : 1
+          anchors.left : parent.left
+          anchors.leftMargin : 10
+          text : model.from
+          color : "#0C55BB"
+          font.pixelSize: 16
+          elide: "ElideRight"
+          width: parent.width - dateLabel.width - anchors.leftMargin - dateLabel.anchors.rightMargin
+        },
+        QML.Text {
+          id: dateLabel
+          anchors { top: parent.top; topMargin: 1; right: parent.right; rightMargin: deleteAction.width }
+          text: model.date
+          color: "#0C55BB"
+          font.pixelSize: 16
+          horizontalAlignment: "AlignRight"
+        },
+        QML.Text {
+          id: subjectLabel
+          anchors.top : fromLabel.bottom
+          anchors.topMargin : 1
+          anchors.left : parent.left
+          anchors.leftMargin : 10
+          anchors.right: parent.right
+          anchors.rightMargin: deleteAction.width
+          height : 30;
+          text : model.subject
+          font.pointSize: 14
+          color : model.is_unread ? "#E10909" : "#3B3B3B"
+          elide: "ElideRight"
+        },
+        QML.Image {
+          id : importantFlagImage
+          anchors.verticalCenter : parent.verticalCenter;
+          anchors.left : parent.left
+          anchors.leftMargin : 15
+          source : "important-email.png"
+          opacity : model.is_important ? 0.25 : 0
+        },
+        QML.Image {
+          id : actionFlagImage
+          anchors.verticalCenter : parent.verticalCenter;
+          anchors.left : importantFlagImage.right
+          source : "action-item-email.png"
+          opacity : model.is_action_item ? 0.25 : 0
+        },
+        KPIM.Action{
+          id : deleteAction
+          anchors.verticalCenter: parent.verticalCenter;
+          anchors.right : parent.right;
+          width: imageWidth
+          height : imageHeight
+          action : application.getAction("akonadi_item_delete")
+          hidable : false
+          showText : false
+          opacity : 0.6
+          onTriggered : {
+            application.setListSelectedRow(model.index);
+          }
+          image : KDE.locate( "data", "mobileui/delete-button.png" );
         }
       ]
-      detailsContent: [
-        QML.Column {
-          anchors.fill: parent
-          QML.Text {
-            text: model.subject
-            font.bold: true
-            color: palette.highlightedText
+
+      states : [
+        QML.State {
+          name : "deleteFaded"
+          when : itemListView.flicking
+          QML.PropertyChanges {
+            target : deleteAction;
+            opacity : 0
           }
-          QML.Text {
-            text: KDE.i18n( "From: %1",  model.from )
-            color: palette.highlightedText
+          QML.PropertyChanges {
+            target : deleteAction.anchors;
+            rightMargin : -deleteAction.width
           }
-          QML.Text {
-            text: KDE.i18n( "Date: %1",  model.date )
-            color: palette.highlightedText
+        }
+      ]
+      transitions : [
+        QML.Transition {
+          from : ""
+          to   : "deleteFaded"
+          QML.PropertyAnimation {
+            target : deleteAction
+            properties : "opacity"
+            duration: 500
+            easing.type: "OutQuad"
+          }
+        },
+        QML.Transition {
+          from : "deleteFaded"
+          to   : ""
+          QML.SequentialAnimation {
+            QML.PauseAnimation {
+              // delay a bit
+              duration: {
+                // TODO: figure out how to do this.
+                0
+              }
+            }
+            QML.PropertyAnimation {
+              target : deleteAction.anchors
+              properties : "rightMargin"
+              duration: 500
+              easing.type: "InQuad"
+            }
           }
         }
       ]

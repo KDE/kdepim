@@ -4,12 +4,14 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
     ${QT_QTDBUS_INCLUDE_DIR}
     ${Boost_INCLUDE_DIR}
+    ${Grantlee_INCLUDE_DIRS}
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 add_subdirectory(icons)
 add_subdirectory(printing)
+add_subdirectory(tests)
 if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif(QGPGME_FOUND)
@@ -62,14 +64,25 @@ set( kaddressbook_LIB_SRCS
   ${kaddressbook_xxport_SRCS}
 )
 
+if (Grantlee_FOUND)
+  set( kaddressbook_LIB_SRCS ${kaddressbook_LIB_SRCS}
+       grantleecontactformatter.cpp
+       grantleecontactgroupformatter.cpp
+     )
+  add_definitions(-DGRANTLEE_FOUND)
+endif (Grantlee_FOUND)
+
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
-kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
+kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate kdepim akonadi_next ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KCMUTILS_LIBS} )
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif(QGPGME_FOUND)
 
+if (Grantlee_FOUND)
+  target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
+endif (Grantlee_FOUND)
 
 set_target_properties(kaddressbookprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kaddressbookprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
@@ -105,3 +118,12 @@ target_link_libraries(kaddressbookpart ${KDE4_KPARTS_LIBS} kaddressbookprivate )
 install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
+install( FILES
+         viewertemplates/contact.html
+         viewertemplates/contact_embedded.html
+         viewertemplates/contact_row.html
+         viewertemplates/contactgroup.html
+         viewertemplates/contactgroup_embedded.html
+         viewertemplates/contactgroup_additionalfieldrow.html
+         viewertemplates/contactgroup_memberrow.html
+         DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/viewertemplates/default/)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,9 +24,8 @@
 
 using namespace Akonadi;
 
-TaskListProxy::TaskListProxy( int customRoleBaseline, QObject* parent )
-  : ListProxy( parent ),
-    mCustomRoleBaseline( customRoleBaseline )
+TaskListProxy::TaskListProxy( QObject* parent )
+  : ListProxy( parent )
 { }
 
 QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
@@ -35,7 +34,7 @@ QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
 
   if ( item.isValid() && item.hasPayload<KCal::Todo::Ptr>() ) {
     const KCal::Todo::Ptr incidence = item.payload<KCal::Todo::Ptr>();
-    switch ( relativeCustomRole( role ) ) {
+    switch ( role ) {
     case Summary:
       return incidence->summary();
     case Description:
@@ -48,15 +47,32 @@ QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
   return QSortFilterProxyModel::data(index, role);
 }
 
+bool TaskListProxy::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  if ( role == PercentComplete )
+  {
+    Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+    if ( item.isValid() && item.hasPayload<KCal::Todo::Ptr>() ) {
+      KCal::Todo::Ptr incidence = item.payload<KCal::Todo::Ptr>();
+      incidence->setPercentComplete(value.toInt());
+      item.setPayload(incidence);
+      return QSortFilterProxyModel::setData(index, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+    }
+  }
+  return QSortFilterProxyModel::setData(index, value, role);
+}
+
+
 void TaskListProxy::setSourceModel( QAbstractItemModel* sourceModel )
 {
   ListProxy::setSourceModel(sourceModel);
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
-  names.insert( absoluteCustomRole( Summary ), "summary" );
-  names.insert( absoluteCustomRole( Description ), "description" );
-  names.insert( absoluteCustomRole( PercentComplete ), "percentComplete" );
+  names.insert( Summary, "summary" );
+  names.insert( Description, "description" );
+  names.insert( PercentComplete, "percentComplete" );
   setRoleNames( names );
 }
 

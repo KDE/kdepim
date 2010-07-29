@@ -79,6 +79,7 @@ using KMime::DateFormatter;
 #include "kleo/cryptobackendfactory.h"
 #include "libkleo/ui/keyrequester.h"
 #include "libkleo/ui/keyselectiondialog.h"
+#include "libkleo/ui/cryptoconfigdialog.h"
 
 #include <mailtransport/transportmanagementwidget.h>
 using MailTransport::TransportManagementWidget;
@@ -420,7 +421,7 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
   ConfigAgentDelegate *configDelegate = new ConfigAgentDelegate( mAccountsReceiving.mAccountList->view() );
   mAccountsReceiving.mAccountList->view()->setItemDelegate( configDelegate );
   connect( configDelegate, SIGNAL( optionsClicked( const QString &, const QPoint & ) ), this, SLOT( slotShowMailCheckMenu( const QString &, const QPoint & ) ) );
-  
+
   connect( mAccountsReceiving.mAccountList, SIGNAL( currentChanged( const Akonadi::AgentInstance&, const Akonadi::AgentInstance& ) ),
            SLOT( slotAccountSelected( const Akonadi::AgentInstance& ) ) );
   connect( mAccountsReceiving.mAccountList, SIGNAL(doubleClicked(Akonadi::AgentInstance)),
@@ -465,6 +466,7 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
 
   bool IncludeInManualChecks;
   bool OfflineOnShutdown;
+  bool CheckOnStartup;
   if( !mRetrievalHash.contains( ident ) ) {
 
     const QString resourceGroupPattern( "Resource %1" );
@@ -472,20 +474,25 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
 
     IncludeInManualChecks = group.readEntry( "IncludeInManualChecks", true );
     OfflineOnShutdown = group.readEntry( "OfflineOnShutdown", false );
-
-    QSharedPointer<RetrievalOptions> opts( new RetrievalOptions( IncludeInManualChecks, OfflineOnShutdown ) );
+    CheckOnStartup = group.readEntry( "CheckOnStartup", false );
+    QSharedPointer<RetrievalOptions> opts( new RetrievalOptions( IncludeInManualChecks, OfflineOnShutdown, CheckOnStartup ) );
     mRetrievalHash.insert( ident, opts );
   } else {
     QSharedPointer<RetrievalOptions> opts = mRetrievalHash.value( ident );
     IncludeInManualChecks = opts->IncludeInManualChecks;
     OfflineOnShutdown = opts->OfflineOnShutdown;
+    CheckOnStartup = opts->CheckOnStartup;
   }
 
-  QAction *manualMailCheck = new QAction( i18nc( "Label to a checkbox, so is either checked/unchecked", "Include in Manual Mail Check" ), menu );
-  manualMailCheck->setCheckable( true );
-  manualMailCheck->setChecked( IncludeInManualChecks );
-  manualMailCheck->setData( ident );
-  menu->addAction( manualMailCheck );
+  if ( ( ident != QLatin1String( "akonadi_nepomuktag_resource" ) ) &&
+       ( ident != QLatin1String( "akonadi_search_resource" ) ) ) {
+    QAction *manualMailCheck = new QAction( i18nc( "Label to a checkbox, so is either checked/unchecked", "Include in Manual Mail Check" ), menu );
+    manualMailCheck->setCheckable( true );
+    manualMailCheck->setChecked( IncludeInManualChecks );
+    manualMailCheck->setData( ident );
+    menu->addAction( manualMailCheck );
+    connect( manualMailCheck, SIGNAL( toggled( bool ) ), this, SLOT( slotIncludeInCheckChanged( bool ) ) );
+  }
 
   QAction *switchOffline = new QAction( i18nc( "Label to a checkbox, so is either checked/unchecked", "Switch offline on KMail Shutdown" ), menu );
   switchOffline->setCheckable( true );
@@ -493,16 +500,34 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
   switchOffline->setData( ident );
   menu->addAction( switchOffline );
 
-  connect( manualMailCheck, SIGNAL( toggled( bool ) ), this, SLOT( slotIncludeInCheckChanged( bool ) ) );
-  connect( switchOffline, SIGNAL( toggled( bool ) ), this, SLOT( slotOfflineOnShutdownChanged( bool ) ) );
+  QAction *checkOnStartup = new QAction( i18n( "Check mail on startup" ), menu );
+  checkOnStartup->setCheckable( true );
+  checkOnStartup->setChecked( CheckOnStartup );
+  checkOnStartup->setData( ident );
+  menu->addAction( checkOnStartup );
 
-  menu->popup(  mAccountsReceiving.mAccountList->view()->mapToGlobal( pos ) );
+  connect( switchOffline, SIGNAL( toggled( bool ) ), this, SLOT( slotOfflineOnShutdownChanged( bool ) ) );
+  connect( checkOnStartup, SIGNAL( toggled( bool ) ), this, SLOT( slotCheckOnStatupChanged( bool ) ) );
+
+  menu->exec(  mAccountsReceiving.mAccountList->view()->mapToGlobal( pos ) );
+  delete menu;
 }
+
+void AccountsPageReceivingTab::slotCheckOnStatupChanged( bool checked )
+{
+  QAction* action = qobject_cast< QAction* >( sender() );
+  const QString ident = action->data().toString();
+
+  QSharedPointer<RetrievalOptions> opts = mRetrievalHash.value( ident );
+  opts->CheckOnStartup = checked;
+  slotEmitChanged();
+}
+
 
 void AccountsPageReceivingTab::slotIncludeInCheckChanged( bool checked )
 {
   QAction* action = qobject_cast< QAction* >( sender() );
-  QString ident = action->data().toString();
+  const QString ident = action->data().toString();
 
   QSharedPointer<RetrievalOptions> opts = mRetrievalHash.value( ident );
   opts->IncludeInManualChecks = checked;
@@ -567,6 +592,14 @@ void AccountsPage::ReceivingTab::slotModifySelectedAccount()
 void AccountsPage::ReceivingTab::slotRemoveSelectedAccount()
 {
   const Akonadi::AgentInstance instance =  mAccountsReceiving.mAccountList->currentAgentInstance();
+
+  int rc = KMessageBox::questionYesNo( this,
+                                       i18n("Do you want to remove account: %1", instance.name()),
+                                       i18n("Remove account"));
+  if ( rc == KMessageBox::No ) {
+    return;
+  }
+
   if ( instance.isValid() )
     Akonadi::AgentManager::self()->removeInstance( instance );
 
@@ -597,11 +630,6 @@ void AccountsPage::ReceivingTab::doLoadOther()
 
 void AccountsPage::ReceivingTab::save()
 {
-#if 0 //TODO port to akonadi
-  kmkernel->cleanupImapFolders();
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   // Save Mail notification settings
   KConfigGroup general( KMKernel::config(), "General" );
   general.writeEntry( "beep-on-mail", mAccountsReceiving.mBeepNewMailCheck->isChecked() );
@@ -615,9 +643,10 @@ void AccountsPage::ReceivingTab::save()
     QSharedPointer<RetrievalOptions> opts = it.value();
     group.writeEntry( "IncludeInManualChecks", opts->IncludeInManualChecks);
     group.writeEntry( "OfflineOnShutdown", opts->OfflineOnShutdown);
+    group.writeEntry( "CheckOnStartup", opts->CheckOnStartup);
   }
-  
-  
+
+
 
 }
 
@@ -1693,7 +1722,7 @@ void AppearancePage::MessageTagTab::slotEmitChangeCheck()
 
 void AppearancePage::MessageTagTab::slotMoveTagUp()
 {
-  int tmp_index = mTagListBox->currentRow();
+  const int tmp_index = mTagListBox->currentRow();
   if ( tmp_index <= 0 )
     return;
   swapTagsInListBox( tmp_index, tmp_index - 1 );
@@ -1707,7 +1736,7 @@ void AppearancePage::MessageTagTab::slotMoveTagUp()
 
 void AppearancePage::MessageTagTab::slotMoveTagDown()
 {
-  int tmp_index = mTagListBox->currentRow();
+  const int tmp_index = mTagListBox->currentRow();
   if ( ( tmp_index < 0 )
         || ( tmp_index >= int( mTagListBox->count() ) - 1 ) )
     return;
@@ -2121,7 +2150,7 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
   hlay = new QHBoxLayout(); // inherits spacing
   vlay->addLayout( hlay );
   mWordWrapCheck = new QCheckBox(
-           GlobalSettings::self()->wordWrapItem()->label(), this);
+           MessageComposer::MessageComposerSettings::self()->wordWrapItem()->label(), this);
   mWordWrapCheck->setObjectName( "wordWrap" );
   hlay->addWidget( mWordWrapCheck );
   connect( mWordWrapCheck, SIGNAL( stateChanged(int) ),
@@ -2129,7 +2158,6 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
 
   mWrapColumnSpin = new KIntSpinBox( 30/*min*/, 78/*max*/, 1/*step*/,
            78/*init*/, this );
-  mWrapColumnSpin->setObjectName( "kcfg_LineWrapWidth" );
   mWrapColumnSpin->setEnabled( false ); // since !mWordWrapCheck->isChecked()
   connect( mWrapColumnSpin, SIGNAL( valueChanged(int) ),
            this, SLOT( slotEmitChanged( void ) ) );
@@ -2284,8 +2312,8 @@ void ComposerPage::GeneralTab::doLoadFromGlobalSettings()
   mQuoteSelectionOnlyCheck->setChecked( MessageComposer::MessageComposerSettings::self()->quoteSelectionOnly() );
   mStripSignatureCheck->setChecked( TemplateParser::GlobalSettings::self()->stripSignature() );
   mAutoRequestMDNCheck->setChecked( GlobalSettings::self()->requestMDN() );
-  mWordWrapCheck->setChecked( GlobalSettings::self()->wordWrap() );
-  mWrapColumnSpin->setValue( GlobalSettings::self()->lineWrapWidth() );
+  mWordWrapCheck->setChecked( MessageComposer::MessageComposerSettings::self()->wordWrap() );
+  mWrapColumnSpin->setValue( MessageComposer::MessageComposerSettings::self()->lineWrapWidth() );
   mAutoSave->setValue( GlobalSettings::self()->autosaveInterval() );
   mShowRecentAddressesInComposer->setChecked( MessageComposer::MessageComposerSettings::self()->showRecentAddressesInComposer() );
 
@@ -2312,8 +2340,8 @@ void ComposerPage::GeneralTab::save() {
   MessageComposer::MessageComposerSettings::self()->setQuoteSelectionOnly( mQuoteSelectionOnlyCheck->isChecked() );
   TemplateParser::GlobalSettings::self()->setStripSignature( mStripSignatureCheck->isChecked() );
   GlobalSettings::self()->setRequestMDN( mAutoRequestMDNCheck->isChecked() );
-  GlobalSettings::self()->setWordWrap( mWordWrapCheck->isChecked() );
-  GlobalSettings::self()->setLineWrapWidth( mWrapColumnSpin->value() );
+  MessageComposer::MessageComposerSettings::self()->setWordWrap( mWordWrapCheck->isChecked() );
+  MessageComposer::MessageComposerSettings::self()->setLineWrapWidth( mWrapColumnSpin->value() );
   GlobalSettings::self()->setAutosaveInterval( mAutoSave->value() );
   MessageComposer::MessageComposerSettings::self()->setShowRecentAddressesInComposer( mShowRecentAddressesInComposer->isChecked() );
 
@@ -2944,7 +2972,7 @@ void ComposerPage::AttachmentsTab::doLoadFromGlobalSettings()
   mMissingAttachmentDetectionCheck->setChecked(
     GlobalSettings::self()->showForgottenAttachmentWarning() );
 
-  QStringList attachWordsList = GlobalSettings::self()->attachmentKeywords();
+  const QStringList attachWordsList = GlobalSettings::self()->attachmentKeywords();
   mAttachWordsListEditor->setStringList( attachWordsList );
 }
 
@@ -3102,8 +3130,10 @@ void SecurityPage::GeneralTab::save()
       MessageViewer::GlobalSettings::self()->setHtmlMail( mSGTab.mHtmlMailCheck->isChecked() );
       foreach( const Akonadi::Collection &collection, kmkernel->allFolders() ) {
         QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( collection );
-        KConfigGroup config( KMKernel::config(), fd->configGroupName() );
-        config.writeEntry("htmlMailOverride", false);
+        if ( fd ) {
+          KConfigGroup config( KMKernel::config(), fd->configGroupName() );
+          config.writeEntry("htmlMailOverride", false);
+        }
       }
     }
   }
@@ -3204,6 +3234,7 @@ SecurityPageWarningTab::SecurityPageWarningTab( QWidget * parent )
   connect( mWidget->warnReceiverNotInCertificateCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
 
   connect( mWidget->gnupgButton, SIGNAL(clicked()), SLOT(slotConfigureGnupg()) );
+  connect( mWidget->chiasmusButton, SIGNAL(clicked()), SLOT(slotConfigureChiasmus()) );
   connect( mWidget->enableAllWarningsPB, SIGNAL(clicked()), SLOT(slotReenableAllWarningsClicked()) );
 }
 
@@ -3278,9 +3309,31 @@ void SecurityPage::WarningTab::slotReenableAllWarningsClicked()
 
 void SecurityPage::WarningTab::slotConfigureGnupg()
 {
-  KCMultiDialog dlg;
-  dlg.addModule( "kleopatra_config_gnupgsystem" );
-  dlg.exec();
+  QPointer<KCMultiDialog> dlg( new KCMultiDialog( this ) );
+  dlg->addModule( "kleopatra_config_gnupgsystem" );
+  dlg->exec();
+  delete dlg;
+}
+
+void SecurityPage::WarningTab::slotConfigureChiasmus()
+{
+  using namespace Kleo;
+  // Find Chiasmus backend:
+  if ( const CryptoBackendFactory * const bf = Kleo::CryptoBackendFactory::instance() )
+    for ( unsigned int i = 0 ; const CryptoBackend * const b = bf->backend( i ) ; ++i )
+      if ( b->name() == QLatin1String( "Chiasmus" ) )
+        if ( CryptoConfig * const c = b->config() ) {
+          QPointer<CryptoConfigDialog> dlg( new CryptoConfigDialog( c, this ) );
+          dlg->exec();
+          delete dlg;
+          break;
+        } else {
+          kWarning() << "Found Chiasmus backend, but there doesn't seem to be a config object available from it.";
+        }
+      else
+        kDebug() << "Skipping" << b->name() << "backend (not \"Chiasmus\")";
+  else
+    kDebug() << "Kleo::CryptoBackendFactory::instance() returned NULL!";
 }
 
 ////

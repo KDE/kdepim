@@ -40,7 +40,8 @@ public:
     HideVirtualFolder = 4,
     NotAllowToCreateNewFolder = 8,
     HideOutboxFolder = 16,
-    HideImapFolder = 32
+    HideImapFolder = 32,
+    NotUseGlobalSettings = 64
   };
   Q_DECLARE_FLAGS( SelectionFolderOptions, SelectionFolderOption )
 
@@ -55,7 +56,6 @@ public:
 
   Akonadi::Collection::List selectedCollections() const;
 
-
 private slots:
   void slotSelectionChanged();
   void slotAddChildFolder();
@@ -63,10 +63,10 @@ private slots:
   void rowsInserted( const QModelIndex& col, int, int );
 
 protected:
-  virtual void keyPressEvent( QKeyEvent *e );
   void readConfig();
   void writeConfig();
   bool canCreateCollection( Akonadi::Collection & parentCol );
+  /*reimp*/ void hideEvent( QHideEvent* );
 
 private:
   class FolderSelectionDialogPrivate;

@@ -28,6 +28,7 @@
 #include "storagemodel.h"
 #include "core/messageitem.h"
 #include "core/view.h"
+#include <core/settings.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QAction>
@@ -36,14 +37,16 @@
 #include <QtGui/QDragMoveEvent>
 #include <QtGui/QDropEvent>
 
+#include <KDE/KActionCollection>
+#include <KDE/KComboBox>
 #include <KDE/KDebug>
 #include <KDE/KIcon>
 #include <KDE/KIconLoader>
 #include <KDE/KLocale>
 #include <KDE/KMenu>
+#include <KDE/KToggleAction>
 #include <KDE/KXMLGUIClient>
 #include <KDE/KXMLGUIFactory>
-#include <KDE/KComboBox>
 
 #include <Nepomuk/Tag>
 
@@ -89,12 +92,23 @@ Widget::~Widget()
 void Widget::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
+
+  if ( d->mXmlGuiClient ) {
+    KToggleAction * const showHideQuicksearch = new KToggleAction( i18n( "Show Quick Search Bar" ), this );
+    showHideQuicksearch->setShortcut( Qt::CTRL + Qt::Key_H );
+    showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
+
+    d->mXmlGuiClient->actionCollection()->addAction( "show_quick_search", showHideQuicksearch );
+    connect( showHideQuicksearch, SIGNAL( triggered( bool ) ), this, SLOT( changeQuicksearchVisibility() ) );
+  }
 }
 
 bool Widget::canAcceptDrag( const QDropEvent * e )
 {
-  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
+  if ( e->source() == view()->viewport() )
+    return false;
 
+  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
   if ( collections.size()!=1 )
     return false; // no folder here or too many (in case we can't decide where the drop will end)
 
@@ -265,7 +279,7 @@ void Widget::viewMessageListContextPopupRequest( const QList< MessageList::Core:
   }
 }
 
-void Widget::viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear )
+void Widget::viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear )
 {
   Q_ASSERT( msg ); // must not be null
   Q_ASSERT( storageModel() );
@@ -531,7 +545,7 @@ QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 }
 
 
-KPIM::MessageStatus Widget::currentFilterStatus() const
+Akonadi::MessageStatus Widget::currentFilterStatus() const
 {
   return view()->currentFilterStatus();
 }

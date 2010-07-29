@@ -68,6 +68,7 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
     mWriteConfig( writeconfig ),
     mOldIgnoreNewMail( false )
 {
+  assert( col.isValid() );
   mIdentity = KMKernel::self()->identityManager()->defaultIdentity().uoid();
 
   readConfig();
@@ -127,7 +128,7 @@ Akonadi::CollectionStatistics FolderCollection::statistics() const
   return mCollection.statistics();
 }
 
-Akonadi::Collection FolderCollection::collection()
+Akonadi::Collection FolderCollection::collection() const
 {
   return mCollection;
 }
@@ -178,7 +179,7 @@ void FolderCollection::readConfig()
   mOldIgnoreNewMail = mIgnoreNewMail;
 
 
-  QString shortcut( configGroup.readEntry( "Shortcut" ) );
+  const QString shortcut( configGroup.readEntry( "Shortcut" ) );
   if ( !shortcut.isEmpty() ) {
     KShortcut sc( shortcut );
     setShortcut( sc, 0 );
@@ -272,13 +273,17 @@ uint FolderCollection::identity() const
     int identityId = -1;
     OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface = KMail::Util::createImapSettingsInterface( mCollection.resource() );
     if ( imapSettingsInterface->isValid() ) {
-      QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
-      if ( reply.isValid() && reply.value() > 0 ) {
-        identityId = reply;
+      QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
+      if( useDefault.isValid() && useDefault.value() )
+        return mIdentity;
+
+       QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
+      if ( remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0 ) {
+        identityId = remoteAccountIdent;
       }
     }
     delete imapSettingsInterface;
-    if ( identityId != -1 )
+    if ( identityId != -1 && !KMKernel::self()->identityManager()->identityForUoid( identityId ).isNull() )
       return identityId;
   }
   return mIdentity;
@@ -389,47 +394,16 @@ void FolderCollection::daysToExpire(int& unreadDays, int& readDays) {
 }
 
 
-void FolderCollection::markNewAsUnread()
-{
-  if ( mCollection.isValid() ) {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCollection,this );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotMarkNewAsUnreadfetchDone( KJob* ) ) );
-  }
-}
-
-void FolderCollection::slotMarkNewAsUnreadfetchDone( KJob * job )
-{
-  if ( job->error() )
-    return;
-
-  Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
-  Q_ASSERT( fjob );
-
-  Akonadi::Item::List items;
-  foreach( const Akonadi::Item &item, fjob->items() ) {
-    MessageStatus status;
-    status.setStatusFromFlags( item.flags() );
-    if ( !status.isNew() ) {
-      items.append( item );
-    }
-  }
-
-  if ( items.empty() )
-    return;
-  KMCommand *command = new KMSetStatusCommand( MessageStatus::statusUnread(), items );
-  command->start();
-}
-
 void FolderCollection::markUnreadAsRead()
 {
   if ( mCollection.isValid() ) {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCollection,this );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotMarkNewAsReadfetchDone( KJob* ) ) );
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotMarkAsReadfetchDone( KJob* ) ) );
   }
 }
 
-void FolderCollection::slotMarkNewAsReadfetchDone( KJob * job)
+void FolderCollection::slotMarkAsReadfetchDone( KJob * job)
 {
   if ( job->error() )
     return;
@@ -440,7 +414,7 @@ void FolderCollection::slotMarkNewAsReadfetchDone( KJob * job)
   foreach( const Akonadi::Item &item, fjob->items() ) {
     MessageStatus status;
     status.setStatusFromFlags( item.flags() );
-    if (status.isNew() || status.isUnread()) {
+    if (status.isUnread()) {
       items.append( item );
     }
   }

@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+// READ THE README FILE
+
 #include <KApplication>
 #include <KLocale>
 #include <KAboutData>
@@ -39,9 +41,10 @@ int main(int argc, char *argv[])
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
+  app.setQuitOnLastWindowClosed(true);
 
-  MainWindow *mainWindow = new MainWindow();
-  mainWindow->show();
+  MainWindow mainWindow;
+  mainWindow.show();
 
   return app.exec();
 }

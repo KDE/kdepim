@@ -20,6 +20,7 @@
 */
 
 #include "jobtrackerwidget.h"
+#include <QCheckBox>
 
 #include "jobtrackermodel.h"
 
@@ -43,10 +44,16 @@ JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent )
   : QWidget( parent ),
   d( new Private )
 {
+  d->model = new JobTrackerModel( name, this );
+
   QVBoxLayout *layout = new QVBoxLayout( this );
 
+  QCheckBox* enableCB = new QCheckBox( this );
+  enableCB->setText("Enable job tracker");
+  connect( enableCB, SIGNAL(toggled(bool)), d->model, SLOT(setEnabled(bool)) );
+  layout->addWidget(enableCB);
+
   QTreeView *tv = new QTreeView( this );
-  d->model = new JobTrackerModel( name, this );
   tv->setModel( d->model );
   tv->expandAll();
   tv->setAlternatingRowColors( true );
@@ -69,12 +76,6 @@ void JobTrackerWidget::contextMenu( const QPoint &pos )
 {
   QMenu menu;
   menu.addAction( i18n( "Clear View" ), d->model, SLOT(resetTracker()) );
-  QAction *action = new QAction(&menu);
-  action->setCheckable( true );
-  action->setChecked( d->model->isEnabled() );
-  action->setText( i18n("Enabled") );
-  connect( action, SIGNAL(toggled(bool)), d->model, SLOT(setEnabled(bool)) );
-  menu.addAction( action );
   menu.exec( mapToGlobal( pos ) );
 }
 

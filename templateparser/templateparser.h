@@ -107,11 +107,16 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     void setWordWrap( bool wrap, int wrapColWidth = 80 );
 
     
-  /**
-   * Set the identity manager to be used when creating the template.
-   */
-  void setIdentityManager( KPIMIdentities::IdentityManager* ident );
+    /**
+     * Set the identity manager to be used when creating the template.
+     */
+    void setIdentityManager( KPIMIdentities::IdentityManager* ident );
 
+    /**
+     * Sets the list of charsets to try to use to encode the resulting
+     *  text. They are tried in order until one matches, or utf-8 as a fallback.
+     */
+    void setCharsets( const QStringList& charsets );
   
     virtual void process( const KMime::Message::Ptr &aorig_msg,
                           const Akonadi::Collection& afolder = Akonadi::Collection() );
@@ -152,6 +157,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     KPIMIdentities::IdentityManager* m_identityManager;
     bool mWrap;
     int mColWrap;
+    QStringList m_charsets;
 
     /**
      * If there was a text selection set in the constructor, that will be returned.
@@ -242,6 +248,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 
 };
 
-} // namespace MessageComposer
+} // namespace TemplateParser
 
 #endif // __KMAIL_TEMPLATEPARSER_H__
