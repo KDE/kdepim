@@ -28,7 +28,7 @@
 #include <akonadi/item.h>
 #include <Akonadi/Collection>
 
-#include "messagecore/messagestatus.h"
+#include <akonadi/kmime/messagestatus.h>
 #include <messagecore/mdnstateattribute.h>
 
 namespace KPIMIdentities {
@@ -237,7 +237,7 @@ public:
   */
   static bool MDNMDNUnknownOption( KMime::Message::Ptr msg );
 
-  static void link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const KPIM::MessageStatus& aStatus );
+  static void link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus& aStatus );
 
 private:
     /** @return the UOID of the identity for this message.

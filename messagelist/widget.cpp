@@ -267,7 +267,7 @@ void Widget::viewMessageListContextPopupRequest( const QList< MessageList::Core:
   }
 }
 
-void Widget::viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear )
+void Widget::viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear )
 {
   Q_ASSERT( msg ); // must not be null
   Q_ASSERT( storageModel() );
@@ -533,7 +533,7 @@ QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 }
 
 
-KPIM::MessageStatus Widget::currentFilterStatus() const
+Akonadi::MessageStatus Widget::currentFilterStatus() const
 {
   return view()->currentFilterStatus();
 }

@@ -26,7 +26,7 @@
 #include "core/manager.h"
 #include "utils/comboboxutils.h"
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include <QActionGroup>
 #include <QCheckBox>
@@ -219,7 +219,7 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   mSampleGroupHeaderItem->rawAppendChildItem( mSampleMessageItem );
   mSampleMessageItem->setParent( mSampleGroupHeaderItem );
 
-  KPIM::MessageStatus stat;
+  Akonadi::MessageStatus stat;
 
   stat.fromQInt32( 0x7fffffff );
   stat.setQueued( false );

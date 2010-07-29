@@ -300,7 +300,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   const KMime::Message::Ptr mail = messageForRow( row );
   Q_ASSERT( mail );
 
-  KPIM::MessageStatus stat;
+  Akonadi::MessageStatus stat;
   stat.setStatusFromFlags( item.flags() );
 
   mi->setStatus( stat );
@@ -334,10 +334,10 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
 }
 
 void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
-                                         int row, const KPIM::MessageStatus &status )
+                                         int row, const Akonadi::MessageStatus &status )
 {
   Item item = itemForRow( row );
-  item.setFlags( status.getStatusFlags() );
+  item.setFlags( status.statusFlags() );
   new ItemModifyJob( item, this );
 }
 

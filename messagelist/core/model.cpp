@@ -53,7 +53,7 @@
 #include "core/manager.h"
 #include "core/messageitemsetmanager.h"
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 #include "messagecore/stringutil.h"
 
 #include <QApplication>
@@ -296,8 +296,8 @@ Model::Model( View *pParent )
   d->mCachedFourWeeksAgoLabel = i18n( "Four Weeks Ago" );
   d->mCachedFiveWeeksAgoLabel = i18n( "Five Weeks Ago" );
 
-  d->mCachedWatchedOrIgnoredStatusBits = KPIM::MessageStatus::statusIgnored().toQInt32() | KPIM::MessageStatus::statusWatched().toQInt32();
-  d->mCachedUnreadStatusBits = KPIM::MessageStatus::statusUnread().toQInt32();
+  d->mCachedWatchedOrIgnoredStatusBits = Akonadi::MessageStatus::statusIgnored().toQInt32() | Akonadi::MessageStatus::statusWatched().toQInt32();
+  d->mCachedUnreadStatusBits = Akonadi::MessageStatus::statusUnread().toQInt32();
 
   connect( _k_heartBeatTimer, SIGNAL(timeout()),
            this, SLOT(checkIfDateChanged()) );
@@ -2109,13 +2109,13 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
     if ( pParent->status().isWatched() )
     {
       int row = mInvariantRowMapper->modelInvariantIndexToModelIndexRow( mi );
-      mi->setStatus( KPIM::MessageStatus::statusWatched() );
-      mStorageModel->setMessageItemStatus( mi, row, KPIM::MessageStatus::statusWatched() );
+      mi->setStatus( Akonadi::MessageStatus::statusWatched() );
+      mStorageModel->setMessageItemStatus( mi, row, Akonadi::MessageStatus::statusWatched() );
     } else if ( pParent->status().isIgnored() )
     {
       int row = mInvariantRowMapper->modelInvariantIndexToModelIndexRow( mi );
-      mi->setStatus( KPIM::MessageStatus::statusIgnored() );
-      mStorageModel->setMessageItemStatus( mi, row, KPIM::MessageStatus::statusIgnored() );
+      mi->setStatus( Akonadi::MessageStatus::statusIgnored() );
+      mStorageModel->setMessageItemStatus( mi, row, Akonadi::MessageStatus::statusIgnored() );
     }
   }
 

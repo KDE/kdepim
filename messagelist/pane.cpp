@@ -35,7 +35,7 @@
 #include "widget.h"
 #include "core/settings.h"
 #include "core/manager.h"
-#include "messagecore/messagestatus.h"
+#include <akonadi/kmime/messagestatus.h>
 #include "core/model.h"
 
 namespace MessageList
@@ -450,8 +450,8 @@ void Pane::createNewTab()
            this, SIGNAL(messageActivated(Akonadi::Item)) );
   connect( w, SIGNAL(selectionChanged()),
            this, SIGNAL(selectionChanged()) );
-  connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)),
-           this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)) );
+  connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)),
+           this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)) );
 
   connect( w, SIGNAL(statusMessage(QString)),
            this, SIGNAL(statusMessage(QString)) );
@@ -572,11 +572,11 @@ void Pane::markMessageItemsAsAboutToBeRemoved( MessageList::Core::MessageItemSet
   }
 }
 
-KPIM::MessageStatus Pane::currentFilterStatus() const
+Akonadi::MessageStatus Pane::currentFilterStatus() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
   if ( w == 0 ) {
-    return KPIM::MessageStatus();
+    return Akonadi::MessageStatus();
   }
   return w->currentFilterStatus();
 }
