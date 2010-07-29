@@ -58,7 +58,6 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
 
   protected slots:
     void slotLineAdded( KPIM::MultiplyingLine* );
-    void slotLineDeleted( int pos );
     void slotCalculateTotal();
 };
 }
