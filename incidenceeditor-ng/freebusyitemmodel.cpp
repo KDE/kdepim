@@ -257,7 +257,7 @@ void FreeBusyItemModel::removeAttendee( const KCalCore::Attendee::Ptr& attendee 
     FreeBusyItem::Ptr anItem;
     for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
         anItem = mFreeBusyItems[i];
-        if ( anItem->attendee() == attendee ) {
+        if ( *anItem->attendee() == *attendee ) {
             if ( anItem->updateTimerID() != 0 ) {
                 killTimer( anItem->updateTimerID() );
             }
