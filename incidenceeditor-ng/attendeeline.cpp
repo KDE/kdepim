@@ -217,9 +217,10 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   topLayout->addWidget( mResponseCheck );
 
   connect( mEdit, SIGNAL( returnPressed() ), SLOT( slotReturnPressed() ) );
-  connect( mEdit, SIGNAL( deleteMe() ), SLOT( slotPropagateDeletion() ) );
+  connect( mEdit, SIGNAL( deleteMe() ),
+           SLOT( slotPropagateDeletion() ), Qt::QueuedConnection );
   connect( mEdit, SIGNAL( textChanged( const QString & ) ),
-    SLOT( slotTextChanged( const QString & ) ) );
+           SLOT( slotTextChanged( const QString & ) ), Qt::QueuedConnection );
   connect( mEdit, SIGNAL( upPressed() ), SLOT( slotFocusUp() ) );
   connect( mEdit, SIGNAL( downPressed() ), SLOT( slotFocusDown() ) );
 
@@ -236,9 +237,12 @@ AttendeeLine::AttendeeLine(QWidget* parent)
   connect( mResponseCheck, SIGNAL( leftPressed() ), mStateCombo, SLOT( setFocus() ) );
   connect( mResponseCheck, SIGNAL( rightPressed() ), SIGNAL( rightPressed() ) );
 
-  connect( mEdit, SIGNAL( editingFinished() ), SLOT( slotHandleChange() ) );
-  connect( mEdit, SIGNAL( textCompleted() ), SLOT( slotHandleChange() ) );
-  connect( mEdit, SIGNAL( clearButtonClicked() ), SLOT( slotPropagateDeletion() ) );
+  connect( mEdit, SIGNAL( editingFinished() ),
+           SLOT( slotHandleChange() ), Qt::QueuedConnection );
+  connect( mEdit, SIGNAL( textCompleted() ),
+           SLOT( slotHandleChange() ), Qt::QueuedConnection );
+  connect( mEdit, SIGNAL( clearButtonClicked() ),
+           SLOT( slotPropagateDeletion() ), Qt::QueuedConnection );
 
   connect( mRoleCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
   connect( mStateCombo, SIGNAL( itemChanged() ), this, SLOT( slotComboChanged() ) );
@@ -446,8 +450,8 @@ void AttendeeLine::slotHandleChange()
   } else {
     mEdit->setCursorPosition( 0 );
     emit editingFinished( this );
+    dataFromFields();
   }
-  dataFromFields();
 }
 
 void AttendeeLine::slotTextChanged( const QString& /*str*/ )
