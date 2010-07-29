@@ -89,7 +89,7 @@ public:
     void setPartMetaData( KMime::Content* node, const PartMetaData &metaData );
     PartMetaData partMetaData( KMime::Content* node );
 
-    QString iconName( KMime::Content *node, int size = KIconLoader::Desktop ) const;
+    static QString iconName( KMime::Content *node, int size = KIconLoader::Desktop );
 
     /**
      *  Set the 'Content-Type' by mime-magic from the contents of the body.
@@ -145,6 +145,10 @@ public:
     bool isNodeDisplayedEmbedded( KMime::Content* node ) const;
     void setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded );
 
+    // Same as above, but this time determines if the node was hidden or not
+    bool isNodeDisplayedHidden( KMime::Content* node ) const;
+    void setNodeDisplayedHidden( KMime::Content* node, bool displayedHidden );
+
     /**
      * Writes the given message part to a temporary file and returns the
      * name of this file or QString() if writing failed.
@@ -179,6 +183,11 @@ public:
     QString asHREF( const KMime::Content* node, const QString &place );
 
     static bool isToltecMessage( KMime::Content* node );
+
+    /**
+     * @return true if this node is a child or an encapsulated message
+     */
+    static bool isInEncapsulatedMessage( KMime::Content* node );
 
     /**
      * Returns the charset for the given node. If no charset is specified
@@ -238,6 +247,16 @@ public:
     static QByteArray toUsAscii(const QString& _str, bool *ok);
 
     static QString fromAsString( KMime::Content* node );
+
+    struct AttachmentDisplayInfo
+    {
+      QString label;
+      QString icon;
+      bool displayInHeader;
+    };
+
+    static AttachmentDisplayInfo attachmentDisplayInfo( KMime::Content *node );
+
 private:
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none
@@ -260,6 +279,7 @@ private:
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
     QMap<KMime::Message::Ptr, KMime::Message::Ptr > mUnencryptedMessages;
     QSet<KMime::Content *> mDisplayEmbeddedNodes;
+    QSet<KMime::Content *> mDisplayHiddenNodes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
     QMap<KMime::Content*, QMap<QByteArray, Interface::BodyPartMemento*> > mBodyPartMementoMap;

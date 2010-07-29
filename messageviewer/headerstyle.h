@@ -96,6 +96,9 @@ public:
   //
   virtual QString format( KMime::Message *message ) const = 0;
 
+  // Should return true if this style has an attachment quick list
+  virtual bool hasAttachmentQuickList() const;
+
   void setMessagePath( const QString &path ) { mMessagePath = path; }
   QString messagePath() const { return mMessagePath; }
 

@@ -67,6 +67,8 @@ using KPIMUtils::LinkLocator;
 
 using namespace MessageCore;
 
+namespace MessageViewer {
+
 //
 // Convenience functions:
 //
@@ -94,11 +96,15 @@ static QString dateString( KMime::Message *message, bool printing, bool shortDat
   }
 }
 
+bool HeaderStyle::hasAttachmentQuickList() const
+{
+  return false;
+}
+
 //
 // BriefHeaderStyle
 //   Show everything in a single line, don't show header field names.
 //
-namespace MessageViewer {
 class BriefHeaderStyle : public HeaderStyle {
   friend class HeaderStyle;
 protected:
@@ -315,6 +321,11 @@ public:
   HeaderStyle * prev() const { return plain(); }
 
   QString format( KMime::Message *message ) const;
+
+  virtual bool hasAttachmentQuickList() const {
+    return true;
+  }
+
   static QString imgToDataUrl( const QImage & image );
 
 private:
@@ -715,6 +726,10 @@ public:
   HeaderStyle * prev() const { return fancy(); }
 
   QString format( KMime::Message *message ) const;
+
+  virtual bool hasAttachmentQuickList() const {
+    return true;
+  }
 };
 
 QString EnterpriseHeaderStyle::format( KMime::Message *message ) const

@@ -24,6 +24,7 @@
 #include "util.h"
 
 #include <messagecore/nodehelper.h>
+#include <messagecore/stringutil.h>
 #include "messagecore/globalsettings.h"
 
 #include <kmime/kmime_content.h>
@@ -157,6 +158,7 @@ void NodeHelper::clear()
   }
   mExtraContents.clear();
   mDisplayEmbeddedNodes.clear();
+  mDisplayHiddenNodes.clear();
 }
 
 
@@ -349,6 +351,22 @@ bool NodeHelper::isToltecMessage( KMime::Content* node )
   return true;
 }
 
+bool NodeHelper::isInEncapsulatedMessage( KMime::Content* node )
+{
+  const KMime::Content * const topLevel = node->topLevel();
+  const KMime::Content * cur = node;
+  while ( cur && cur != topLevel ) {
+    const bool parentIsMessage = cur->parent() && cur->parent()->contentType( false ) &&
+                                 cur->parent()->contentType()->mimeType().toLower() == "message/rfc822";
+    if ( parentIsMessage && cur->parent() != topLevel ) {
+      return true;
+    }
+    cur = cur->parent();
+  }
+  return false;
+}
+
+
 QByteArray NodeHelper::charset( KMime::Content *node )
 {
   if ( node->contentType( false ) )
@@ -452,7 +470,7 @@ KMMsgSignatureState NodeHelper::overallSignatureState( KMime::Content* node ) co
     return myState;
 }
 
-QString NodeHelper::iconName( KMime::Content *node, int size ) const
+QString NodeHelper::iconName( KMime::Content *node, int size )
 {
   if ( !node )
     return QString();
@@ -641,6 +659,20 @@ void NodeHelper::setNodeDisplayedEmbedded( KMime::Content* node, bool displayedE
     mDisplayEmbeddedNodes.insert( node );
   else
     mDisplayEmbeddedNodes.remove( node );
+}
+
+bool NodeHelper::isNodeDisplayedHidden( KMime::Content* node ) const
+{
+  return mDisplayHiddenNodes.contains( node );
+}
+
+void NodeHelper::setNodeDisplayedHidden( KMime::Content* node, bool displayedHidden )
+{
+  if( displayedHidden ) {
+    mDisplayHiddenNodes.insert( node );
+  } else {
+    mDisplayEmbeddedNodes.remove( node );
+  }
 }
 
 QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
@@ -869,5 +901,29 @@ KMime::Message* NodeHelper::messageWithExtraContent( KMime::Content* topLevelNod
   return m;
 }
 
+NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo( KMime::Content* node )
+{
+  AttachmentDisplayInfo info;
+  info.icon = iconName( node, KIconLoader::Small );
+  info.label = fileName( node );
+  if( info.label.isEmpty() ) {
+    info.label = node->contentDescription()->asUnicodeString();
+  }
+
+  bool typeBlacklisted = node->contentType()->mediaType().toLower() == "multipart";
+  if ( !typeBlacklisted ) {
+    typeBlacklisted = MessageCore::StringUtil::isCryptoPart( node->contentType()->mediaType(),
+                                                             node->contentType()->subType(),
+                                                             node->contentDisposition()->filename() );
+  }
+  typeBlacklisted = typeBlacklisted || node == node->topLevel();
+  const bool firstTextChildOfEncapsulatedMsg =
+        node->contentType()->mediaType().toLower() == "text" &&
+        node->contentType()->subType().toLower() == "plain" &&
+        node->parent() && node->parent()->contentType()->mediaType().toLower() == "message";
+  typeBlacklisted = typeBlacklisted || firstTextChildOfEncapsulatedMsg;
+  info.displayInHeader = !info.label.isEmpty() && !info.icon.isEmpty() && !typeBlacklisted;
+  return info;
+}
 
 }

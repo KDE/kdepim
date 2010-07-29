@@ -346,14 +346,17 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     return;
   }
 
-  if ( attachmentStrategy() == AttachmentStrategy::hidden() &&
+  const AttachmentStrategy *const as = attachmentStrategy();
+  if ( as && as->defaultDisplay( node ) == AttachmentStrategy::None &&
         !showOnlyOneMimePart() &&
-        node->parent() /* message is not an attachment */ )
+        node->parent() /* message is not an attachment */ ) {
+    mNodeHelper->setNodeDisplayedHidden( node, true );
     return;
+  }
 
   bool asIcon = true;
   if ( !result.neverDisplayInline() )
-    if ( const AttachmentStrategy * as = attachmentStrategy() )
+    if ( as )
       asIcon = as->defaultDisplay( node ) == AttachmentStrategy::AsIcon;
 
    // Show it inline if showOnlyOneMimePart(), which means the user clicked the image
@@ -373,10 +376,13 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     */
 
   if ( asIcon ) {
-    if ( attachmentStrategy() != AttachmentStrategy::hidden()
-          || showOnlyOneMimePart() )
+    if ( !( as && as->defaultDisplay( node ) == AttachmentStrategy::None ) ||
+         showOnlyOneMimePart() ) {
       // Write the node as icon only
       writePartIcon( node );
+    } else {
+      mNodeHelper->setNodeDisplayedHidden( node, true );
+    }
   } else if ( result.isImage() ) {
     // Embed the image
     mNodeHelper->setNodeDisplayedEmbedded( node, true );

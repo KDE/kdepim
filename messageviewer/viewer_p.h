@@ -432,7 +432,7 @@ public:
   bool showRawToltecMail() const { return mShowRawToltecMail; }
   void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
 
-  void scrollToAttachment( const KMime::Content *node );
+  void scrollToAttachment( KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
 
   void attachmentView( KMime::Content *atmNode );
@@ -511,6 +511,7 @@ public slots:
   void slotSmartAttachments();
   void slotInlineAttachments();
   void slotHideAttachments();
+  void slotHeaderOnlyAttachments();
 
   /** Some attachment operations. */
   void slotDelayedResize();
@@ -612,6 +613,7 @@ public:
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
       *mViewSourceAction, *mSaveMessageAction;
+  KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;

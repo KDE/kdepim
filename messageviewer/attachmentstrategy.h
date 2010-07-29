@@ -53,7 +53,7 @@ public:
   //
   // Factory methods:
   //
-  enum Type { Iconic, Smart, Inlined, Hidden };
+  enum Type { Iconic, Smart, Inlined, Hidden, HeaderOnly };
 
   static const AttachmentStrategy * create( Type type );
   static const AttachmentStrategy * create( const QString & type );
@@ -62,6 +62,7 @@ public:
   static const AttachmentStrategy * smart();
   static const AttachmentStrategy * inlined();
   static const AttachmentStrategy * hidden();
+  static const AttachmentStrategy * headerOnly();
 
   //
   // Navigation methods:
@@ -79,6 +80,9 @@ public:
 
   virtual bool inlineNestedMessages() const = 0;
   virtual Display defaultDisplay( KMime::Content * node ) const = 0;
+  virtual bool requiresAttachmentListInHeader() const {
+    return false;
+  }
 };
 
 }
