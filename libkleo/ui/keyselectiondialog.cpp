@@ -366,6 +366,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 #ifndef KDEPIM_MOBILE_UI
     QLabel* textLabel = new QLabel( text, page );
     textLabel->setWordWrap( true );
+
+    // Setting the size policy is necessary as a workaround for https://issues.kolab.org/issue4429
+    // and http://bugreports.qt.nokia.com/browse/QTBUG-8740
+    textLabel->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     connect( textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager(QString)) );
     mTopLayout->addWidget( textLabel );
 #endif
