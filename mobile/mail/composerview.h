@@ -101,6 +101,7 @@ class ComposerView : public KDeclarativeFullScreenView
     bool m_sign;
     bool m_encrypt;
     bool m_busy;
+    bool m_draft;
 };
 
 #endif

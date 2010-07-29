@@ -71,7 +71,8 @@ ComposerView::ComposerView(QWidget* parent) :
   m_jobCount( 0 ),
   m_sign( false ),
   m_encrypt( false ),
-  m_busy(false)
+  m_busy( false ),
+  m_draft( false )
 {
   setSubject( QString() );
 
@@ -267,6 +268,11 @@ void ComposerView::addAttachment()
 
 void ComposerView::success()
 {
+  if (m_draft) {
+    m_draft = false;
+    return;
+  }
+
   QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
   KNotification *notify = new KNotification("emailsent");
   notify->setComponentData(KComponentData("kmail-mobile"));
@@ -318,6 +324,7 @@ void ComposerView::saveDraft()
 {
   const MessageSender::SendMethod method = MessageSender::SendLater;
   const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
+  m_draft = true;
   send ( method, saveIn );
 }
 
