@@ -248,9 +248,10 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
 
   // Make sure the whole content is relative, so that nothing is painted over the header
   // if a malicious message uses absolute positioning.
+  // Also force word wrapping, which is useful for printing, see https://issues.kolab.org/issue3992.
   bool isRoot = node->isTopLevel();
   if ( isRoot && htmlWriter() )
-    htmlWriter()->queue( "<div style=\"position: relative\">\n" );
+    htmlWriter()->queue( "<div style=\"position: relative; word-wrap: break-word\">\n" );
 
   for( ; node ; node = MessageCore::NodeHelper::nextSibling( node ) )
   {
