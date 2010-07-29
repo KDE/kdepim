@@ -34,7 +34,7 @@
 
 using namespace IncidenceEditorsNG;
 
-FreePeriodModel::FreePeriodModel( QObject* parent ): QAbstractListModel( parent )
+FreePeriodModel::FreePeriodModel( QObject* parent ): QAbstractTableModel( parent )
 {
     qRegisterMetaType<KCalCore::Period>("KCalCore::Period");
 }
@@ -45,21 +45,35 @@ IncidenceEditorsNG::FreePeriodModel::~FreePeriodModel()
 
 QVariant FreePeriodModel::data( const QModelIndex& index, int role ) const
 {
-    if( !index.isValid() )
+    if( !index.isValid() || !hasIndex( index.row(), index.column() ) )
       return QVariant();
 
-    if( index.row() > mPeriodList.size() - 1 )
-      return QVariant();
-
-    switch( role ) {
-      case Qt::DisplayRole:
-        return stringify( index.row() );
-      case Qt::ToolTipRole:
-        return tooltipify( index.row() );
-      case FreePeriodModel::PeriodRole:
-        return QVariant::fromValue( mPeriodList.at( index.row() ) );
-      default:
-        return QVariant();
+    if( index.column() == 0 ) { //day
+      switch( role ) {
+        case Qt::DisplayRole:
+          return day( index.row() );
+        case Qt::ToolTipRole:
+          return tooltipify( index.row() );
+        case FreePeriodModel::PeriodRole:
+          return QVariant::fromValue( mPeriodList.at( index.row() ) );
+        case Qt::TextAlignmentRole:
+          return Qt::AlignRight;
+        default:
+          return QVariant();
+       }
+    } else { // everything else
+        switch( role ) {
+        case Qt::DisplayRole:
+          return date( index.row() );
+        case Qt::ToolTipRole:
+          return tooltipify( index.row() );
+        case FreePeriodModel::PeriodRole:
+          return QVariant::fromValue( mPeriodList.at( index.row() ) );
+        case Qt::TextAlignmentRole:
+          return Qt::AlignLeft;
+        default:
+          return QVariant();
+        }
     }
 }
 
@@ -69,6 +83,12 @@ int FreePeriodModel::rowCount( const QModelIndex& parent ) const
     return mPeriodList.size();
   return 0;
 }
+
+int FreePeriodModel::columnCount(const QModelIndex& parent) const
+{
+    return 2;
+}
+
 
 QVariant FreePeriodModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
@@ -111,6 +131,30 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay( const KCalCore::Perio
     // Perform some jiggery pokery to remove duplicates
     QSet<KCalCore::Period>set = splitList.toSet();
     return QList<KCalCore::Period>::fromSet( set );
+}
+
+QString FreePeriodModel::day(int index) const
+{
+    KCalCore::Period period = mPeriodList.at( index );
+    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+    const QDate startDate = period.start().date();
+    return calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) + ",";
+}
+
+QString FreePeriodModel::date(int index) const
+{
+    KCalCore::Period period = mPeriodList.at( index );
+    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+
+    const QDate startDate = period.start().date();
+    const QString startTime = KGlobal::locale()->formatTime( period.start().time(), false, true );
+    const QString endTime = KGlobal::locale()->formatTime( period.end().time(), false, true );
+    const QString longMonthName = calSys->monthName( startDate );
+    return ki18nc( "A time period duration. KLocale is used to format the components. example: 12 June, 8:00am to 9:30am",
+                  "%1 %2, %3 to %4").subs( startDate.day() )
+                                        .subs( longMonthName )
+                                        .subs( startTime )
+                                        .subs( endTime ).toString();
 }
 
 

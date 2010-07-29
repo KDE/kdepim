@@ -75,9 +75,9 @@ void FreePeriodModelTest::testSplitByDay()
     const KDateTime endPeriod1( QDate( 2010, 7, 24 ), QTime( 23, 59, 59, 999 ), KDateTime::UTC );
     const KDateTime startPeriod2( QDate( 2010, 7, 25 ), QTime( 0, 0, 0, 0 ), KDateTime::UTC );
 
-    QModelIndex index = model->index( 0 );
+    QModelIndex index = model->index( 0, 0 );
     KCalCore::Period period1 = model->data( index, FreePeriodModel::PeriodRole ).value<KCalCore::Period>();
-    index = model->index( 1 );
+    index = model->index( 1, 0 );
     KCalCore::Period period2 = model->data( index, FreePeriodModel::PeriodRole ).value<KCalCore::Period>();
 
     QCOMPARE( period1.start(), startDt );
