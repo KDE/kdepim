@@ -38,7 +38,7 @@ class AttendeeData : public KPIM::MultiplyingLineData, public KCalCore::Attendee
               bool rsvp = false, Attendee::PartStat status = Attendee::None,
               Attendee::Role role = Attendee::ReqParticipant, const QString &uid = QString() )
               : KCalCore::Attendee( name, email, rsvp, status, role, uid ) {}
-    AttendeeData( const KCalCore::Attendee::Ptr &attendee ) : KCalCore::Attendee( *attendee.data() ) {}
+    AttendeeData( const KCalCore::Attendee::Ptr &attendee ) : KCalCore::Attendee( *attendee ) {}
 
     virtual void clear();
     virtual bool isEmpty() const;
