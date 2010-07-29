@@ -112,6 +112,19 @@ namespace {
 
 }
 
+static QString try_extensions( const QString & path ) {
+    static const char exts[][4] = {
+        "", "exe", "bat", "bin", "cmd",
+    };
+    static const size_t numExts = sizeof exts / sizeof *exts ;
+    for ( unsigned int i = 0 ; i < numExts ; ++i ) {
+        const QFileInfo fi( path + QLatin1Char('.') + QLatin1String( exts[i] ) );
+        if ( fi.exists() )
+            return fi.filePath();
+    }
+    return QString();
+}
+
 static void parse_command( QString cmdline, const QString & id, const QString & whichCommand,
                            QString * command, QStringList * prefix, QStringList * suffix, ChecksumDefinition::ArgumentPassingMethod * method )
 {
@@ -148,10 +161,7 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
         throw ChecksumDefinitionError( id, i18n("'%1' entry is empty/missing", whichCommand) );
     const QFileInfo fi1( l.front() );
     if ( fi1.isAbsolute() )
-        if ( !fi1.exists() )
-            throw ChecksumDefinitionError( id, i18n("'%1' not found in filesystem", whichCommand) );
-        else
-            *command = l.front();
+        *command = try_extensions( l.front() );
     else
         *command = KStandardDirs::findExe( fi1.fileName() );
     if ( command->isEmpty() )
