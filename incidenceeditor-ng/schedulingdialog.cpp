@@ -63,7 +63,7 @@ SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startT
 
     connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCalCore::Period::List & ) ) );
 
-    mListView->setModel( mPeriodModel );
+    mTableView->setModel( mPeriodModel );
 
     mStartDate->setDate( startDate );
     mEndDate->setDate( mStartDate->date().addDays( 7 ) );
