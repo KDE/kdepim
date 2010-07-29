@@ -137,7 +137,7 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
            .replace( INSTALLPATH_PLACEHOLDER, QLatin1String("__path_goes_here__") );
     l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
     l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
-    if ( l.contains( QLatin1String("__path_goes_here__") ) )
+    if ( l.indexOf( QRegExp( QLatin1String(".*__path_goes_here__.*") ) ) >= 0 )
         l = l.replaceInStrings( QLatin1String("__path_goes_here__"), ChecksumDefinition::installPath() );
     if ( errors == KShell::BadQuoting )
         throw ChecksumDefinitionError( id, i18n("Quoting error in '%1' entry", whichCommand) );
