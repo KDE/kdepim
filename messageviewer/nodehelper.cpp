@@ -652,7 +652,7 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
     //if the node is an extra node, prepent the index of the extra node to the url
     for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
       QList<KMime::Content*> extraNodes = it.value();
-      for ( uint i = 0; i < extraNodes.size(); ++i )  {
+      for ( int i = 0; i < extraNodes.size(); ++i )  {
         if ( node->topLevel() == extraNodes[i] ) {
           indexStr.prepend( QString("%1:").arg(i) );
           it = mExtraContents.end();
