@@ -44,9 +44,9 @@
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/selectionproxymodel.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include <KMime/Message>
-#include <messagecore/messagestatus.h>
 
 #include "itemviewerwidget.h"
 
