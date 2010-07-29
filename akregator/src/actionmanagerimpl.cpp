@@ -255,16 +255,17 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
     QString themesPath ( KStandardDirs::locate("data","akregator/themes/") );
 
     QDir dirsPath( themesPath );
-    dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks );
-    dirsPath.setSorting( QDir::Name );
+    dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
     QStringList themeDirNames = dirsPath.entryList();
 
-    QSet<QString> themeDirs;
+    QSet<QString> themesSet;
 
     foreach(const QString &dirname, themeDirNames) {
       QDir dir(dirname);
-      themeDirs.insert(dir.dirName());
+      themesSet.insert(dir.dirName());
     }
+    QStringList themeDirs = themesSet.toList();
+    themeDirs.sort();
 
     // Set themes menu
     mSelectThemeAction  = new KSelectAction(i18n("&Themes"), this);
@@ -275,8 +276,12 @@ void ActionManagerImpl::initMainWidget(MainWidget* mainWidget)
 
     foreach(const QString &dirName, themeDirs) {
       KAction* themeAction = new KAction(this);
-      //Should write a method instead, just for testing.
-      KDesktopFile* themeDesktop = new KDesktopFile( themesPath + dirName + "/theme-" + dirName +  ".desktop" );
+      
+      QFile desktopFile(themesPath + dirName + "/theme-" + dirName +  ".desktop");
+      if ( !desktopFile.exists() )
+        continue;
+
+      KDesktopFile* themeDesktop = new KDesktopFile( desktopFile.fileName() );
       themeAction->setData(dirName);
       themeAction->data().toString();
       themeAction->setText( themeDesktop->readName() );
