@@ -410,7 +410,8 @@ void IncidenceAttendee::slotEventDurationChanged()
   KDateTime start = mDateTime->currentStartDateTime();
   KDateTime end = mDateTime->currentEndDateTime();
 
-  Q_ASSERT( start < end );
+  if ( start >= end ) // This can happen, especially for todos.
+    return;
 
   kDebug() << start << end;
 
