@@ -342,7 +342,6 @@ void ConflictResolver::findAllFreeSlots()
     for( int slot = 0; slot < fbArray.size(); ++slot ) {
         KDateTime dateTime = begin.addSecs( slot * mSlotResolutionSeconds );
         int dayOfWeek = calSys->dayOfWeek( dateTime.date() ) - 1; // bitarray is 0 indexed
-        kDebug() << dayOfWeek << mWeekdays[dayOfWeek];
         if( !mWeekdays[dayOfWeek] )
             fbArray[slot] = 1;
     }
