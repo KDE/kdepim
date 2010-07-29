@@ -66,7 +66,9 @@ set( kaddressbook_LIB_SRCS
 
 if (Grantlee_FOUND)
   set( kaddressbook_LIB_SRCS ${kaddressbook_LIB_SRCS}
-       grantleecontactformatter.cpp )
+       grantleecontactformatter.cpp
+       grantleecontactgroupformatter.cpp
+     )
   add_definitions(-DGRANTLEE_FOUND)
 endif (Grantlee_FOUND)
 
@@ -119,5 +121,9 @@ install(FILES kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES
          viewertemplates/contact.html
          viewertemplates/contact_embedded.html
-         viewertemplates/row.html
+         viewertemplates/contact_row.html
+         viewertemplates/contactgroup.html
+         viewertemplates/contactgroup_embedded.html
+         viewertemplates/contactgroup_additionalfieldrow.html
+         viewertemplates/contactgroup_memberrow.html
          DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/viewertemplates/default/)

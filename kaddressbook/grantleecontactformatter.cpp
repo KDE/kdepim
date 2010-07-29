@@ -41,7 +41,6 @@ class GrantleeContactFormatter::Private
   public:
     Private( const QString &templatePath )
     {
-      qDebug("GrantleeContactFormatter::Private called");
       mEngine = new Grantlee::Engine;
 
       mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
@@ -51,11 +50,11 @@ class GrantleeContactFormatter::Private
       mEngine->addTemplateLoader( mTemplateLoader );
       mSelfcontainedTemplate = mEngine->loadByName( "contact.html" );
       if ( mSelfcontainedTemplate->error() )
-        qDebug() << "error:" << mSelfcontainedTemplate->errorString();
+        mErrorMessage += mSelfcontainedTemplate->errorString();
 
       mEmbeddableTemplate = mEngine->loadByName( "contact_embedded.html" );
       if ( mEmbeddableTemplate->error() )
-        qDebug() << "error:" << mEmbeddableTemplate->errorString();
+        mErrorMessage += mEmbeddableTemplate->errorString();
     }
 
     ~Private()
@@ -68,6 +67,7 @@ class GrantleeContactFormatter::Private
     Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
     Grantlee::Template mSelfcontainedTemplate;
     Grantlee::Template mEmbeddableTemplate;
+    QString mErrorMessage;
 };
 
 GrantleeContactFormatter::GrantleeContactFormatter( const QString &templatePath )
@@ -135,6 +135,9 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
 
 QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 {
+  if ( !d->mErrorMessage.isEmpty() )
+    return d->mErrorMessage;
+
   KABC::Addressee rawContact;
   const Akonadi::Item localItem = item();
   if ( localItem.isValid() && localItem.hasPayload<KABC::Addressee>() )

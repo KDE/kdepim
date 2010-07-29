@@ -32,6 +32,7 @@
 
 #ifdef GRANTLEE_FOUND
 #include "grantleecontactformatter.h"
+#include "grantleecontactgroupformatter.h"
 #endif
 
 #include <akonadi/akonadi_next/collectionselectionproxymodel.h>
@@ -386,6 +387,11 @@ void MainWidget::setupGui()
        new Akonadi::GrantleeContactFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
 
  mContactDetails->setContactFormatter( formatter );
+
+ Akonadi::GrantleeContactGroupFormatter *groupFormatter =
+       new Akonadi::GrantleeContactGroupFormatter( KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+
+ mContactGroupDetails->setContactGroupFormatter( groupFormatter );
 #endif
 }
 
