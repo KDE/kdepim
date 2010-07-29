@@ -38,7 +38,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   if ( item.isValid() && item.hasPayload<KMime::Message::Ptr>() ) {
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-    KPIM::MessageStatus messageStatus;
+    Akonadi::MessageStatus messageStatus;
     messageStatus.setStatusFromFlags(item.flags());
     switch ( role ) {
       case SubjectRole:

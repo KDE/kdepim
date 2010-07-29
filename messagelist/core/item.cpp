@@ -419,12 +419,12 @@ void Item::setParent( Item *pParent )
   d->mParent = pParent;
 }
 
-const KPIM::MessageStatus &Item::status() const
+const Akonadi::MessageStatus &Item::status() const
 {
   return d->mStatus;
 }
 
-void Item::setStatus( const KPIM::MessageStatus &status )
+void Item::setStatus( const Akonadi::MessageStatus &status )
 {
   d->mStatus = status;
 }
@@ -516,7 +516,7 @@ void MessageList::Core::Item::initialSetup( time_t date, size_t size,
 }
 
 void MessageList::Core::Item::setSubjectAndStatus(const QString &subject,
-                                                  const KPIM::MessageStatus &status)
+                                                  const Akonadi::MessageStatus &status)
 {
   d->mSubject = subject;
   d->mStatus = status;

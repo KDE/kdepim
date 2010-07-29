@@ -21,7 +21,7 @@
 #ifndef KMAIL_MESSAGE_HELPER_H
 #define KMAIL_MESSAGE_HELPER_H
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 #include "messagecomposer_export.h"
 
 #include <kmime/kmime_headers.h>
@@ -122,7 +122,7 @@ namespace MessageHelper {
   QList<Nepomuk::Tag> tagList(const Akonadi::Item &msg);
   void setTagList( const Akonadi::Item &msg, const QList<Nepomuk::Tag> &tags );
 
-  void link( const KMime::Message::Ptr &msg, const Akonadi::Item & item,const KPIM::MessageStatus& aStatus );
+  void link( const KMime::Message::Ptr &msg, const Akonadi::Item & item,const Akonadi::MessageStatus& aStatus );
 }
 
 

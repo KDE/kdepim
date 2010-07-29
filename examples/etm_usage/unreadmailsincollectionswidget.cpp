@@ -72,7 +72,7 @@ bool UnreadMailsInCollectionsProxy::filterAcceptsRow(int source_row, const QMode
   Q_ASSERT(index.isValid());
   const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
   Q_ASSERT(item.isValid());
-  KPIM::MessageStatus messageStatus;
+  Akonadi::MessageStatus messageStatus;
   messageStatus.setStatusFromFlags(item.flags());
 
   // Or messageStatus.isImportant();

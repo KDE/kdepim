@@ -67,7 +67,7 @@ public:
   virtual bool initializeMessageItem( MessageList::Core::MessageItem *mi, int row, bool bUseReceiver ) const;
   virtual void fillMessageItemThreadingData( MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset ) const;
   virtual void updateMessageItemData( MessageList::Core::MessageItem *mi, int row ) const;
-  virtual void setMessageItemStatus( MessageList::Core::MessageItem *mi, int row, const KPIM::MessageStatus &status );
+  virtual void setMessageItemStatus( MessageList::Core::MessageItem *mi, int row, const Akonadi::MessageStatus &status );
 
   virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
   virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;

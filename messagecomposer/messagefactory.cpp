@@ -28,7 +28,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 #include <kmime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
 #include <messagecore/stringutil.h>
@@ -267,7 +267,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
   applyCharset( msg );
 
-  link( msg, m_id, KPIM::MessageStatus::statusReplied() );
+  link( msg, m_id, Akonadi::MessageStatus::statusReplied() );
   if ( m_parentFolderId > 0 ) {
     KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( m_parentFolderId ), "utf-8" );
     msg->setHeader( header );
@@ -347,7 +347,7 @@ KMime::Message::Ptr MessageFactory::createForward()
 
   applyCharset( msg );
 
-  link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
+  link( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
   msg->assemble();
   return msg;
 }
@@ -394,13 +394,13 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
 #else
     kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
-    link( fwdMsg, m_origId, KPIM::MessageStatus::statusForwarded() );
+    link( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
     attachments << msgPart;
   }
 
   applyCharset( msg );
 
-  link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
+  link( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
 //   msg->assemble();
   return QPair< KMime::Message::Ptr, QList< KMime::Content* > >( msg, QList< KMime::Content* >() << attachments );
 }
@@ -493,7 +493,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   msg->setHeader( header );
   msg->assemble();
 
-  link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
+  link( msg, m_id, Akonadi::MessageStatus::statusForwarded() );
   return msg;
 }
 
@@ -648,7 +648,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
     part->fromUnicodeString( QString::fromLatin1( fMsg->encodedContent() ) );
     part->assemble();
 
-    link( fMsg, m_origId, KPIM::MessageStatus::statusForwarded() );
+    link( fMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
     digest->addContent( part );
   }
   digest->assemble();
@@ -795,7 +795,7 @@ bool MessageFactory::MDNMDNUnknownOption( KMime::Message::Ptr msg )
   return false;
 }
 
-void MessageFactory::link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const KPIM::MessageStatus& aStatus )
+void MessageFactory::link( const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus& aStatus )
 {
   Q_ASSERT( aStatus.isReplied() || aStatus.isForwarded() || aStatus.isDeleted() );
 

@@ -35,7 +35,7 @@ class QTimer;
 class QActionGroup;
 class KComboBox;
 
-namespace KPIM
+namespace Akonadi
 {
   class MessageStatus;
 }
@@ -95,9 +95,9 @@ public:
   Core::MessageItem * currentMessageItem() const;
 
   /**
-   * Returns the KPIM::MessageStatus in the current quicksearch field.
+   * Returns the Akonadi::MessageStatus in the current quicksearch field.
    */
-  KPIM::MessageStatus currentFilterStatus() const;
+  Akonadi::MessageStatus currentFilterStatus() const;
 
   /**
    * Returns the search term in the current quicksearch field.
@@ -196,7 +196,7 @@ protected:
    * This is called by View when a message item is manipulated by the user
    * in a way that it's status should change. (e.g, by clicking on a status icon, for example).
    */
-  virtual void viewMessageStatusChangeRequest( MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
+  virtual void viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear );
 
   /**
    * This is called by View to signal a start of a (possibly lengthy) job batch.

@@ -233,9 +233,9 @@ public:
   QList<Akonadi::Item> currentThreadAsMessageList() const;
 
   /**
-   * Returns the KPIM::MessageStatus in the current quicksearch field.
+   * Returns the Akonadi::MessageStatus in the current quicksearch field.
    */
-  KPIM::MessageStatus currentFilterStatus() const;
+  Akonadi::MessageStatus currentFilterStatus() const;
 
   /**
    * Returns the search term in the current quicksearch field.
@@ -352,7 +352,7 @@ protected:
   /**
    * Reimplemented from MessageList::Core::Widget
    */
-  virtual void viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
+  virtual void viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear );
 
 
 
@@ -383,7 +383,7 @@ signals:
   /**
    * Emitted when a message wants its status to be changed
    */
-  void messageStatusChangeRequest( const Akonadi::Item &item, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
+  void messageStatusChangeRequest( const Akonadi::Item &item, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear );
 
 private:
   class Private;

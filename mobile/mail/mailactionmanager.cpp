@@ -73,7 +73,7 @@ void MailActionManager::updateActions()
   if (!item.hasPayload<KMime::Message::Ptr>())
     return;
 
-  KPIM::MessageStatus status;
+  Akonadi::MessageStatus status;
   status.setStatusFromFlags(item.flags());
 
   m_actionCollection->action("mark_message_important")->setEnabled(true);

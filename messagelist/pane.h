@@ -251,9 +251,9 @@ public:
   void focusQuickSearch();
 
   /**
-   * Returns the KPIM::MessageStatus in the current quicksearch field.
+   * Returns the Akonadi::MessageStatus in the current quicksearch field.
    */
-  KPIM::MessageStatus currentFilterStatus() const;
+  Akonadi::MessageStatus currentFilterStatus() const;
 
   /**
    * Returns the search term in the current quicksearch field.
@@ -390,7 +390,7 @@ signals:
   /**
    * Emitted when a message wants its status to be changed
    */
-  void messageStatusChangeRequest( const Akonadi::Item &item, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
+  void messageStatusChangeRequest( const Akonadi::Item &item, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear );
 
   /**
    * Emitted when a full search is requested.

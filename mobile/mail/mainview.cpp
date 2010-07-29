@@ -192,7 +192,7 @@ void MainView::markImportant(bool checked)
   if (!item.hasPayload<KMime::Message::Ptr>())
     return;
 
-  KPIM::MessageStatus status;
+  Akonadi::MessageStatus status;
   status.setStatusFromFlags(item.flags());
   if (checked && status.isImportant())
     return;
@@ -216,7 +216,7 @@ void MainView::markMailTask(bool checked)
   if (!item.hasPayload<KMime::Message::Ptr>())
     return;
 
-  KPIM::MessageStatus status;
+  Akonadi::MessageStatus status;
   status.setStatusFromFlags(item.flags());
   if (checked && status.isToAct())
     return;
@@ -249,7 +249,7 @@ void MainView::dataChanged()
   if (!item.hasPayload<KMime::Message::Ptr>())
     return;
 
-  KPIM::MessageStatus status;
+  Akonadi::MessageStatus status;
   status.setStatusFromFlags(item.flags());
 
   actionCollection()->action("mark_message_important")->setChecked(status.isImportant());
@@ -264,7 +264,7 @@ void MainView::setListSelectedRow(int row)
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-  KPIM::MessageStatus status;
+  Akonadi::MessageStatus status;
   status.setStatusFromFlags(item.flags());
   if ( status.isUnread() )
   {
