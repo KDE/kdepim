@@ -105,6 +105,8 @@ QString Kleo::gpg4winInstallPath() {
 }
 
 QString Kleo::gpgConfListDir( const char * which ) {
+    if ( !which || !*which )
+        return QString();
     const QString gpgConfPath = Kleo::gpgConfPath();
     if ( gpgConfPath.isEmpty() )
         return QString();
@@ -118,8 +120,15 @@ QString Kleo::gpgConfListDir( const char * which ) {
     }
     const QList<QByteArray> lines = gpgConf.readAllStandardOutput().split( '\n' );
     Q_FOREACH( const QByteArray & line, lines )
-        if ( line.startsWith( which ) && line[qstrlen(which)] == ':' )
-            return QDir::fromNativeSeparators( QFile::decodeName( hexdecode( line.mid( qstrlen(which) + 1 ) ) ) );
+        if ( line.startsWith( which ) && line[qstrlen(which)] == ':' ) {
+            const int begin = qstrlen(which) + 1;
+            int end = line.size();
+            while ( end && line[end-1] == '\n' || line[end-1] == '\r' )
+                --end;
+            const QString result = QDir::fromNativeSeparators( QFile::decodeName( hexdecode( line.mid( begin, end - begin ) ) ) );
+            qDebug( "gpgConfListDir: found %s for '%s' entry", qPrintable( result ), which );
+            return result;
+        }
     qDebug( "gpgConfListDir(): didn't find '%s' entry in output:\n%s", which, gpgConf.readAllStandardError().constData() );
     return QString();
 }
