@@ -25,6 +25,7 @@
 #include <QtCore/QVector>
 
 #include <KCalendarSystem>
+#include <KGlobal>
 #include <kcalcore/freebusy.h>
 #include <KDebug>
 
@@ -49,12 +50,14 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject* parent )
     // the connection was made
     // triggerReload();
 
-    // set default values
-    mWeekdays.setBit( 0 ); //Monday
-    mWeekdays.setBit( 1 ); //Tuesday
-    mWeekdays.setBit( 2 ); //Wednesday
-    mWeekdays.setBit( 3 ); //Thursday
-    mWeekdays.setBit( 4 ); //Friday.. surprise!
+    // set default values, all the days
+    mWeekdays.setBit( 0 ); // Monday
+    mWeekdays.setBit( 1 );
+    mWeekdays.setBit( 2 );
+    mWeekdays.setBit( 3 );
+    mWeekdays.setBit( 4 );
+    mWeekdays.setBit( 5 );
+    mWeekdays.setBit( 6 ); // Sunday
     mMandatoryRoles << KCalCore::Attendee::ReqParticipant << KCalCore::Attendee::OptParticipant << KCalCore::Attendee::NonParticipant << KCalCore::Attendee::Chair;
 
     connect( mFBModel, SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), SLOT( freebusyDataChanged() ) );
@@ -331,13 +334,27 @@ void ConflictResolver::findAllFreeSlots()
 
     Q_ASSERT( fbTable.size() == number_attendees );
 
+    // Now, create another array to represent the allowed weekdays constraints
+    // All days which are not allowed, will be marked as busy
+    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+    QVector<int> fbArray( range );
+    fbArray.fill( 0 ); // initialize to zero
+    for( int slot = 0; slot < fbArray.size(); ++slot ) {
+        KDateTime dateTime = begin.addSecs( slot * mSlotResolutionSeconds );
+        int dayOfWeek = calSys->dayOfWeek( dateTime.date() ) - 1; // bitarray is 0 indexed
+        kDebug() << dayOfWeek << mWeekdays[dayOfWeek];
+        if( !mWeekdays[dayOfWeek] )
+            fbArray[slot] = 1;
+    }
+    fbTable.append( fbArray );
+
     // Create the composite array that will hold the sums for
     // each 15 minute timeslot
     QVector<int> summed( range );
     summed.fill( 0 ); // initialize to zero
 
     // Sum the columns of the table
-    for ( int i = 0; i < number_attendees; ++i )
+    for ( int i = 0; i < fbTable.size(); ++i )
         for ( int j = 0; j < range; ++j ) {
             summed[j] += fbTable[i][j];
         }
@@ -421,27 +438,29 @@ void ConflictResolver::calculateConflicts()
 
 void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
 {
-  mWeekdays = weekdays;
+    mWeekdays = weekdays;
+    calculateConflicts();
 }
 
 void ConflictResolver::setMandatoryRoles( const QSet< KCalCore::Attendee::Role >& roles )
 {
-  mMandatoryRoles = roles;
+    mMandatoryRoles = roles;
+    calculateConflicts();
 }
 
 bool ConflictResolver::matchesRoleConstraint( const KCalCore::Attendee::Ptr &attendee )
 {
-  return mMandatoryRoles.contains( attendee->role() );
+    return mMandatoryRoles.contains( attendee->role() );
 }
 
 KCalCore::Period::List ConflictResolver::availableSlots() const
 {
-  return mAvailableSlots;
+    return mAvailableSlots;
 }
 
 void ConflictResolver::setResolution( int seconds )
 {
-  mSlotResolutionSeconds = seconds;
+    mSlotResolutionSeconds = seconds;
 }
 
 FreeBusyItemModel* ConflictResolver::model() const
