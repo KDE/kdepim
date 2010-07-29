@@ -112,13 +112,7 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
                         WidescreenView,
                         CombinedView };
 
-        ViewMode viewMode() const { return m_viewMode; }
-
-        QString mThemeName;
-        
-        QString themeName() {
-          return mThemeName;          
-        }
+        ViewMode viewMode() const { return m_viewMode; }        
 
     signals:
         /** emitted when the unread count of "All Feeds" was changed */
@@ -272,6 +266,8 @@ class AKREGATORPART_EXPORT MainWidget : public QWidget
 
         ActionManagerImpl* m_actionManager;
         FeedListManagementImpl* const m_feedListManagementInterface;
+
+        QString mThemeNameSelected;
 };
 
 } // namespace Akregator

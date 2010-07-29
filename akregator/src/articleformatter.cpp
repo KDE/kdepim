@@ -27,7 +27,6 @@
 #include "article.h"
 #include "feed.h"
 #include "folder.h"
-#include "mainwidget.h"
 #include "treenode.h"
 #include "treenodevisitor.h"
 #include "utils.h"
@@ -94,9 +93,7 @@ ArticleFormatter::ArticleFormatter( QPaintDevice* device ) : d( new Private( dev
     loader->setTemplateDirs( QStringList() << KStandardDirs::locate("data","akregator/themes/") );
 
     mEngine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH );
-    // should use dynamic data, m_mainWidget->themeName(), doesn't work
-    mThemeName = "planet-kde"; 
-    // KDebug << mThemeName;
+    mThemeName = "planet-kde";
 }
 
 ArticleFormatter::~ArticleFormatter()
@@ -115,7 +112,12 @@ int ArticleFormatter::pointsToPixel(int pointSize) const
     return ( pointSize * d->device->logicalDpiY() + 36 ) / 72 ;
 }
 
-QString ArticleFormatter::setTheming( const QString &themeName, const Article& article, IconOption icon) const {
+void ArticleFormatter::setThemeName( const QString &themeName )
+{
+    mThemeName = themeName;
+}
+
+QString ArticleFormatter::renderTheme( const QString &themeName, const Article& article, IconOption icon, const QString &formatter ) const {
 
     Grantlee::Template t = mEngine->loadByName( themeName + "/default.html" );
     QVariantHash data;
@@ -124,6 +126,9 @@ QString ArticleFormatter::setTheming( const QString &themeName, const Article& a
     const QString enc = formatEnclosure( *article.enclosure() );
 
     data.insert( QLatin1String( "dir" ) , dir );
+
+    if ( formatter == "Normal" )
+        data.insert( QLatin1String( "NormalView" ) , "" );
 
     const QString strippedTitle = Utils::stripTags( article.title() );
     if (!strippedTitle.isEmpty())
@@ -285,7 +290,8 @@ class DefaultNormalViewFormatter::SummaryVisitor : public TreeNodeVisitor
 
 QString DefaultNormalViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    return setTheming( mThemeName, article, icon );
+    QString formatter = "Normal";
+    return renderTheme( mThemeName, article, icon, formatter );
 }
 
 DefaultCombinedViewFormatter::DefaultCombinedViewFormatter(const KUrl& imageDir, QPaintDevice* device ) : ArticleFormatter( device ), m_imageDir(imageDir)
@@ -306,7 +312,8 @@ DefaultNormalViewFormatter::~DefaultNormalViewFormatter()
 
 QString DefaultCombinedViewFormatter::formatArticle(const Article& article, IconOption icon) const
 {
-    return setTheming( mThemeName, article, icon );
+    QString formatter =  "Combined";
+    return renderTheme( mThemeName, article, icon, formatter );
 }
 
 QString DefaultNormalViewFormatter::formatSummary(TreeNode* node) const

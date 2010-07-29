@@ -161,6 +161,11 @@ int ArticleViewer::pointsToPixel(int pointSize) const
     return ( pointSize * m_part->view()->logicalDpiY() + 36 ) / 72 ;
 }
 
+void ArticleViewer::setTheme( const QString &themeName )
+{
+    mThemeName = themeName;
+}
+
 void ArticleViewer::slotOpenUrlRequestDelayed(const KUrl& url, const KParts::OpenUrlArguments& args, const KParts::BrowserArguments& browserArgs)
 {
     OpenUrlRequest req(url);
@@ -646,6 +651,13 @@ void ArticleViewer::reload()
     beginWriting();
     m_part->write(m_currentText);
     endWriting();
+
+    if (m_viewMode == NormalView || m_viewMode == SummaryView)
+        m_normalViewFormatter->setThemeName( mThemeName );
+    else    
+        m_combinedViewFormatter->setThemeName( mThemeName );
+
+    //kDebug() << "kdeeeeeeeeeeeeeeeeeeee" << mThemeName;
 }
 
 void ArticleViewer::displayAboutPage()

@@ -78,6 +78,8 @@ class ArticleViewer : public QWidget
          *  @param node The node to observe */
         void showNode(Akregator::TreeNode* node);
 
+        void setTheme( const QString &themeName );
+
     public slots:
 
         void slotZoomIn(int);
@@ -202,6 +204,7 @@ class ArticleViewer : public QWidget
         ArticleViewerPart* m_part;
         boost::shared_ptr<ArticleFormatter> m_normalViewFormatter;
         boost::shared_ptr<ArticleFormatter> m_combinedViewFormatter;
+        QString mThemeName;
 };
 
 class ArticleViewerPart : public KHTMLPart

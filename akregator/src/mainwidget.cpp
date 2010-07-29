@@ -540,19 +540,13 @@ void Akregator::MainWidget::slotCombinedView()
 
 void Akregator::MainWidget::slotSetTheme( QAction *themeAction )
 {
-  mThemeName = themeAction->data().toString();
+    mThemeNameSelected = themeAction->data().toString();
+    m_articleViewer->setTheme( mThemeNameSelected );
+    m_articleViewer->reload();
 
-  switch (Settings::viewMode())
-  {
-      case CombinedView:
-          slotCombinedView();
-          break;
-      case WidescreenView:
-          slotWidescreenView();
-          break;
-      default:
-          slotNormalView();
-  }
+    m_articleListView->slotNextArticle();
+
+    Settings::setViewMode( m_viewMode );
 }
 
 void Akregator::MainWidget::slotMoveCurrentNodeUp()

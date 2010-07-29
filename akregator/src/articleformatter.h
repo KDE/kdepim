@@ -38,7 +38,6 @@ namespace Grantlee
 namespace Akregator {
 
 class Article;
-class MainWidget;
 class TreeNode;
 
 class ArticleFormatter
@@ -60,15 +59,15 @@ class ArticleFormatter
         
         virtual QString formatSummary(TreeNode* node) const = 0;       
 
-        QString mThemeName;
+        void setThemeName( const QString &themeName );
 
-        // method to set up the theme
-        QString setTheming( const QString &themeName , const Article& article, IconOption icon) const;
-        MainWidget* m_mainWidget;
+        QString renderTheme( const QString &themeName , const Article& article, IconOption icon, const QString &formatter ) const;
       
     protected:        
         int pointsToPixel(int pointSize) const;
+
         Grantlee::Engine *mEngine;        
+        QString mThemeName;
 
     private:
         class Private;
