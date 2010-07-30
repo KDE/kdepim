@@ -34,6 +34,7 @@ install(FILES korganizer-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES korganizer-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   korganizer-mobile.qml
+  KorganizerActions.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )
