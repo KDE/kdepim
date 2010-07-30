@@ -142,8 +142,8 @@ QString FreePeriodModel::date(int index) const
     const KCalendarSystem *calSys = KGlobal::locale()->calendar();
 
     const QDate startDate = period.start().date();
-    const QString startTime = KGlobal::locale()->formatTime( period.start().time(), false, true );
-    const QString endTime = KGlobal::locale()->formatTime( period.end().time(), false, true );
+    const QString startTime = KGlobal::locale()->formatTime( period.start().time() );
+    const QString endTime = KGlobal::locale()->formatTime( period.end().time() );
     const QString longMonthName = calSys->monthName( startDate );
     return ki18nc( "A time period duration. It is preceeded/followed (based on the orientation) by the name of the week, see the message above. example: 12 June, 8:00am to 9:30am",
                   "%1 %2, %3 to %4").subs( startDate.day() )
