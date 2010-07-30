@@ -36,7 +36,6 @@ class KComboBox;
 class FreeBusyItem;
 class RowController;
 class QStandardItemModel;
-class FreeBusyGanttProxyModel;
 
 namespace KDGantt {
   class DateTimeGrid;
@@ -47,6 +46,7 @@ namespace IncidenceEditorsNG {
 
 class ConflictResolver;
 class FreeBusyItemModel;
+class FreeBusyGanttProxyModel;
 
 class VisualFreeBusyWidget : public QWidget
 {

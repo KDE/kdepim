@@ -23,17 +23,15 @@
 #include "conflictresolver.h"
 #include "freebusyitem.h"
 #include "freebusyitemmodel.h"
+#include "freebusyganttproxymodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 
-#include <kcalcore/attendee.h>
-#include <kcalcore/freebusy.h>
 #include <kcalutils/stringify.h>
 
-#include <KSystemTimeZones>
 #include <KComboBox>
 #include <KLocale>
 #include <KMenu>
@@ -49,147 +47,8 @@
 #include <QPushButton>
 #include <QHeaderView>
 #include <QScrollBar>
- #include <QSortFilterProxyModel>
 
 using namespace IncidenceEditorsNG;
-
-/**
- * This is a private proxy model, that wraps the free busy data exposed
- * by the FreeBusyItemModel for use by KDGantt2.
- *
- * This model exposes the FreeBusyPeriods, which are the child level nodes
- * in FreeBusyItemModel, as a list.
- *
- * @see FreeBusyItemMode
- * @see FreeBusyItem
- */
-class FreeBusyGanttProxyModel : public QAbstractProxyModel
-{
-public:
-    FreeBusyGanttProxyModel( QObject* parent = 0 )
-      : QAbstractProxyModel( parent )
-    {}
-    QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const
-    {
-        if( !index.isValid() )
-          return QVariant();
-        QModelIndex source_index = mapToSource( index );
-        if( !source_index.isValid() )
-            return QVariant();
-
-        KDateTime::Spec timeSpec = KSystemTimeZones::local();
-        KCalCore::FreeBusyPeriod period  = sourceModel()->data( source_index, FreeBusyItemModel::FreeBusyPeriodRole ).value<KCalCore::Period>();
-        switch( role ) {
-          case KDGantt::ItemTypeRole:
-              return KDGantt::TypeTask;
-          case KDGantt::StartTimeRole:
-              return period.start().toTimeSpec( timeSpec ).dateTime();
-          case KDGantt::EndTimeRole:
-              return period.end().toTimeSpec( timeSpec ).dateTime();
-          case Qt::BackgroundRole:
-              return Qt::red;
-          case Qt::ToolTipRole:
-              return tooltipify( period, timeSpec );
-          case Qt::DisplayRole:
-                kDebug() << "OMG";
-                kDebug() << sourceModel()->data( source_index.parent(), Qt::DisplayRole ).toString();
-                return sourceModel()->data( source_index.parent(), Qt::DisplayRole );
-          default:
-            return QVariant();
-        }
-    }
-
-    int columnCount( const QModelIndex& parent = QModelIndex() ) const { return 1; }
-
-    int rowCount( const QModelIndex& parent = QModelIndex() ) const
-    {
-        int count = 0;
-        for( int i = 0; i < sourceModel()->rowCount(); ++i )
-        {
-            QModelIndex parent = sourceModel()->index( i, 1 );
-            count += sourceModel()->rowCount( parent );
-        }
-        return count;
-    }
-
-    QModelIndex mapFromSource( const QModelIndex& sourceIndex ) const
-    {
-        if( !sourceIndex.isValid() )
-            return QModelIndex();
-
-        if( !sourceIndex.parent().isValid() )
-            return QModelIndex();
-
-        int count = 0;
-        for( int i = 0; i < sourceIndex.parent().row(); ++i ) {
-            QModelIndex parent = sourceModel()->index( i, 1 );
-            count += sourceModel()->rowCount( parent );
-        }
-        count += sourceIndex.row();
-
-        return index( count, 1 );
-    }
-
-    QModelIndex mapToSource( const QModelIndex& proxyIndex ) const
-    {
-        int proxy_row = proxyIndex.row();
-        int count = 0;
-        QModelIndex parent;
-        bool found = false;
-        for( int i = 0; i < sourceModel()->rowCount(); ++i ) {
-            parent = sourceModel()->index( i, 1 );
-            count += sourceModel()->rowCount( parent );
-            if( count >= proxy_row ) {
-                found = true;
-                break;
-            }
-        }
-        if( !found ) {
-            kDebug() << "source model parent not found";
-            return QModelIndex();
-        }
-//         kDebug() << "count - proxy_row" << count - proxy_row;
-        return sourceModel()->index( count - proxy_row, 1, parent );
-    }
-
-    QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const
-    {
-        if( row >= rowCount() || column >= 1 )
-            return QModelIndex();
-
-        return createIndex( row, 1 );
-    }
-
-    QModelIndex parent(const QModelIndex& child) const
-    {
-        return QModelIndex();
-    }
-
-    QString tooltipify( const KCalCore::FreeBusyPeriod &period, const KDateTime::Spec &timeSpec ) const
-    {
-       QString toolTip = "<qt>";
-        toolTip += "<b>" + i18nc( "@info:tooltip", "Free/Busy Period" ) + "</b>";
-        toolTip += "<hr>";
-        if ( !period.summary().isEmpty() ) {
-            toolTip += "<i>" + i18nc( "@info:tooltip", "Summary:" ) + "</i>" + "&nbsp;";
-            toolTip += period.summary();
-            toolTip += "<br>";
-        }
-        if ( !period.location().isEmpty() ) {
-            toolTip += "<i>" + i18nc( "@info:tooltip", "Location:" ) + "</i>" + "&nbsp;";
-            toolTip += period.location();
-            toolTip += "<br>";
-        }
-        toolTip += "<i>" + i18nc( "@info:tooltip period start time", "Start:" ) + "</i>" + "&nbsp;";
-        toolTip += KGlobal::locale()->formatDateTime( period.start().toTimeSpec( timeSpec ).dateTime() );
-        toolTip += "<br>";
-        toolTip += "<i>" + i18nc( "@info:tooltip period end time", "End:" ) + "</i>" + "&nbsp;";
-        toolTip += KGlobal::locale()->formatDateTime( period.end().toTimeSpec( timeSpec ).dateTime() );
-        toolTip += "<br>";
-        toolTip += "</qt>";
-        return toolTip;
-    }
-};
 
 class RowController : public KDGantt::AbstractRowController
 {

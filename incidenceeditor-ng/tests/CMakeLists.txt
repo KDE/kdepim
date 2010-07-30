@@ -22,4 +22,5 @@ IE_UNIT_TESTS(
   conflictresolvertest
   testfreebusyitemmodel
   testfreeperiodmodel
+  testfreebusyganttproxymodel
 )

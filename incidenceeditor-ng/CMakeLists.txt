@@ -40,6 +40,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   freebusyitem.cpp
   freebusyitemmodel.cpp
+  freebusyganttproxymodel.cpp
   freeperiodmodel.cpp
   conflictresolver.cpp
 
