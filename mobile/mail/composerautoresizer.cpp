@@ -20,7 +20,7 @@
 
 #include "composerautoresizer.h"
 
-#ifdef Q_MODULE_MAEMO5
+#ifdef Q_WS_MAEMO_5
 #include <QtGui/qabstractkineticscroller.h>
 #endif
 
