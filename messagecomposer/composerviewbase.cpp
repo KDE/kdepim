@@ -1084,10 +1084,12 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
 
   m_editor->setRichTextSupport( KRichTextWidget::FullTextFormattingSupport |
                                KRichTextWidget::FullListSupport |
+#if KDE_IS_VERSION(4, 5, 60)
+                               KRichTextWidget::SupportDirection |
+#endif
                                KRichTextWidget::SupportAlignment |
                                KRichTextWidget::SupportRuleLine |
-                               KRichTextWidget::SupportHyperlinks |
-                               KRichTextWidget::SupportAlignment );
+                               KRichTextWidget::SupportHyperlinks );
   m_editor->enableImageActions();
 
   m_editor->document()->setModified( false );
