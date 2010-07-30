@@ -432,7 +432,7 @@ void ConflictResolver::calculateConflicts()
     emit conflictsDetected( count );
 
     if( !mCalculateTimer.isActive() )
-      mCalculateTimer.start( 2000 );
+      mCalculateTimer.start( 0 );
 }
 
 void ConflictResolver::setAllowedWeekdays( const QBitArray& weekdays )
