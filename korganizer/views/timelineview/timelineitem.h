@@ -21,8 +21,6 @@
 #ifndef KORG_TIMELINEITEM_H
 #define KORG_TIMELINEITEM_H
 
-#include <kcalcore/incidence.h>
-
 #include <Akonadi/Item>
 
 #include <KDateTime>
@@ -34,7 +32,10 @@
 class KDGanttView;
 class KDCanvasPolygon;
 
-using namespace KCalCore;
+namespace KCal {
+  class Incidence;
+}
+using namespace KCal;
 
 namespace Akonadi {
   class Calendar;

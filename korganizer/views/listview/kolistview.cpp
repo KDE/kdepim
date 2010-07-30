@@ -25,6 +25,7 @@
 */
 
 #include "kolistview.h"
+#include <kcalprefs.h>
 #include "koeventpopupmenu.h"
 #include "koglobals.h"
 #include "kohelper.h"
@@ -33,18 +34,14 @@
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/utils.h>
 
-#include <kcalutils/incidenceformatter.h>
-#include <kcalcore/todo.h>
-#include <kcalcore/visitor.h>
-#include <kcalcore/journal.h>
-
-#include <kcalprefs.h>
+#include <KCal/IncidenceFormatter>
+#include <KCal/Todo>
+#include <KCal/Journal>
 
 #include <QBoxLayout>
 
 using namespace Akonadi;
 using namespace KOrg;
-using namespace KCalUtils;
 
 enum {
   Summary_Column = 0,
@@ -90,23 +87,23 @@ void KOListViewToolTip::maybeTip( const QPoint &pos )
   This class provides the initialization of a KOListViewItem for calendar
   components using the Incidence::Visitor.
 */
-class KOListView::ListItemVisitor : public Visitor
+class KOListView::ListItemVisitor : public IncidenceBase::Visitor
 {
   public:
     ListItemVisitor( KOListViewItem *item ) : mItem( item ) {}
     ~ListItemVisitor() {}
 
-    bool visit( Event::Ptr  );
-    bool visit( Todo::Ptr  );
-    bool visit( Journal::Ptr  );
-    bool visit( FreeBusy::Ptr  ) { // to inhibit hidden virtual compile warning
+    bool visit( Event * );
+    bool visit( Todo * );
+    bool visit( Journal * );
+    bool visit( FreeBusy * ) { // to inhibit hidden virtual compile warning
       return true;
     };
   private:
     KOListViewItem *mItem;
 };
 
-bool KOListView::ListItemVisitor::visit( Event::Ptr e )
+bool KOListView::ListItemVisitor::visit( Event *e )
 {
   mItem->setText( Summary_Column, e->summary() );
   if ( e->isAlarmEnabled() ) {
@@ -166,7 +163,7 @@ bool KOListView::ListItemVisitor::visit( Event::Ptr e )
   return true;
 }
 
-bool KOListView::ListItemVisitor::visit( Todo::Ptr t )
+bool KOListView::ListItemVisitor::visit( Todo *t )
 {
   static const QPixmap todoPxmp = KOGlobals::self()->smallIcon( "view-calendar-tasks" );
   static const QPixmap todoDonePxmp = KOGlobals::self()->smallIcon( "task-complete" );
@@ -227,7 +224,7 @@ bool KOListView::ListItemVisitor::visit( Todo::Ptr t )
   return true;
 }
 
-bool KOListView::ListItemVisitor::visit( Journal::Ptr t )
+bool KOListView::ListItemVisitor::visit( Journal *t )
 {
   static const QPixmap jrnalPxmp = KOGlobals::self()->smallIcon( "view-pim-journal" );
   mItem->setPixmap( Summary_Column, jrnalPxmp );
@@ -400,7 +397,7 @@ void KOListView::addIncidence( const Item &aitem, const QDate &date )
        tinc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     int years = KOHelper::yearDiff( tinc->dtStart().date(), mEndDate );
     if ( years > 0 ) {
-      tinc = Incidence::Ptr( tinc->clone() );
+      tinc.reset( tinc->clone() );
       tinc->setReadOnly( false );
       tinc->setSummary( i18np( "%2 (1 year)", "%2 (%1 years)", years, tinc->summary() ) );
       tinc->setReadOnly( true );
@@ -408,7 +405,7 @@ void KOListView::addIncidence( const Item &aitem, const QDate &date )
   }
   KOListViewItem *item = new KOListViewItem( aitem.id(), mListView );
   ListItemVisitor v( item );
-  if ( !tinc->accept( v, tinc ) ) {
+  if ( !tinc->accept( v ) ) {
     delete item;
   }
 }

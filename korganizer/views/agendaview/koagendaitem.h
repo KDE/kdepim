@@ -27,8 +27,6 @@
 
 #include "cellitem.h"
 
-#include <kcalcore/incidence.h>
-
 #include <Akonadi/Item>
 
 #include <QDate>
@@ -45,7 +43,7 @@ namespace Akonadi {
   class Calendar;
 }
 
-using namespace KCalCore;
+using namespace KCal;
 
 class QDragEnterEvent;
 class QDropEvent;

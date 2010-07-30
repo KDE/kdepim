@@ -25,15 +25,17 @@
 #ifndef KOTODOMODEL_H
 #define KOTODOMODEL_H
 
-#include <kcalcore/todo.h>
-
 #include <QAbstractItemModel>
 #include <QString>
 #include <QHash>
 
 #include <Akonadi/Item>
 
-using namespace KCalCore;
+namespace KCal {
+  class Incidence;
+  class Todo;
+}
+using namespace KCal;
 
 namespace Akonadi {
   class Calendar;
@@ -165,7 +167,7 @@ class KOTodoModel : public QAbstractItemModel
      *
      * @param todo the todo that will be checked
      */
-    bool isInHierarchyLoop( const KCalCore::Todo::Ptr &todo ) const;
+    bool isInHierarchyLoop( const KCal::Todo *todo ) const;
 
     /** Insert a todo at the right place in the todo tree.
      *

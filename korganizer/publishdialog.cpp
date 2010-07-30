@@ -29,8 +29,8 @@
 #include "publishdialog.h"
 
 #include <akonadi/contact/emailaddressselectiondialog.h>
-#include <kcalcore/attendee.h>
-#include <kcalcore/person.h>
+#include <kcal/attendee.h>
+#include <kcal/person.h>
 #include <kpimutils/email.h>
 
 #include <klineedit.h>
@@ -84,7 +84,7 @@ PublishDialog::~PublishDialog()
 {
 }
 
-void PublishDialog::addAttendee( const Attendee::Ptr &attendee )
+void PublishDialog::addAttendee( Attendee *attendee )
 {
   mUI.mNameLineEdit->setEnabled( true );
   mUI.mEmailLineEdit->setEnabled( true );

@@ -29,14 +29,13 @@
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/utils.h>
 
-#include <kcalutils/incidenceformatter.h>
-#include <kcalcore/todo.h>
+#include <KCal/IncidenceFormatter>
+#include <KCal/Todo>
 
 #include <QBoxLayout>
 
-using namespace KCalCore;
+using namespace KCal;
 using namespace Akonadi;
-using namespace KCalUtils;
 
 void WhatsNextTextBrowser::setSource( const QUrl &name )
 {
@@ -101,7 +100,7 @@ void KOWhatsNextView::updateView()
   KDateTime::Spec timeSpec = KCalPrefs::instance()->timeSpec();
 
   events = calendar()->events( mStartDate, mEndDate, timeSpec, false );
-  events = calendar()->sortEvents( events, Akonadi::EventSortStartDate, Akonadi::SortDirectionAscending );
+  events = calendar()->sortEvents( events, EventSortStartDate, SortDirectionAscending );
 
   if ( events.count() > 0 ) {
     mText += "<p></p>";
@@ -146,8 +145,7 @@ void KOWhatsNextView::updateView()
   }
 
   mTodos.clear();
-  Item::List todos = calendar()->todos( Akonadi::TodoSortDueDate,
-                                        Akonadi::SortDirectionAscending );
+  Item::List todos = calendar()->todos( TodoSortDueDate, SortDirectionAscending );
   if ( todos.count() > 0 ) {
     kil.loadIcon( "view-calendar-tasks", KIconLoader::NoGroup, 22,
                   KIconLoader::DefaultState, QStringList(), &ipath );
@@ -183,7 +181,7 @@ void KOWhatsNextView::updateView()
   events = calendar()->events( QDate::currentDate(), QDate( 2975, 12, 6 ), timeSpec );
   Q_FOREACH ( const Item &evItem, events ) {
     Event::Ptr ev = Akonadi::event( evItem );
-    Attendee::Ptr me = ev->attendeeByMails( myEmails );
+    Attendee *me = ev->attendeeByMails( myEmails );
     if ( me != 0 ) {
       if ( me->status() == Attendee::NeedsAction && me->RSVP() ) {
         if ( replies == 0 ) {
@@ -205,7 +203,7 @@ void KOWhatsNextView::updateView()
   Todo::List::ConstIterator it3;
   Q_FOREACH( const Item & todoItem, todos ) {
     Todo::Ptr to = Akonadi::todo( todoItem );
-    Attendee::Ptr me = to->attendeeByMails( myEmails );
+    Attendee *me = to->attendeeByMails( myEmails );
     if ( me != 0 ) {
       if ( me->status() == Attendee::NeedsAction && me->RSVP() ) {
         if ( replies == 0 ) {
@@ -295,10 +293,10 @@ void KOWhatsNextView::appendEvent( const Item &aitem, const QDateTime &start,
     }
   }
   mText += "</b></td><td><a ";
-  if ( incidence->type() == Incidence::TypeEvent ) {
+  if ( incidence->type() == "Event" ) {
     mText += "href=\"event:";
   }
-  if ( incidence->type() == Incidence::TypeTodo ) {
+  if ( incidence->type() == "Todo" ) {
     mText += "href=\"todo:";
   }
   mText += incidence->uid() + "\">";

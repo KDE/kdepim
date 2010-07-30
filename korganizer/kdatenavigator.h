@@ -28,7 +28,7 @@
 #include <QFrame>
 #include <QDateTime>
 
-#include <kcalcore/incidencebase.h> //for DateList typedef
+#include <kcal/incidencebase.h> //for DateList typedef
 
 class KODayMatrix;
 class NavigatorBar;
@@ -37,7 +37,7 @@ namespace Akonadi {
   class Item;
   class Calendar;
 }
-using namespace KCalCore;
+using namespace KCal;
 
 class QEvent;
 class QLabel;
@@ -57,7 +57,7 @@ class KDateNavigator: public QFrame
 
     void setBaseDate( const QDate & );
 
-    KCalCore::DateList selectedDates() const
+    KCal::DateList selectedDates() const
     {
       return mSelectedDates;
     }
@@ -84,7 +84,7 @@ class KDateNavigator: public QFrame
     QDate month() const;
 
   public slots:
-    void selectDates( const KCalCore::DateList & );
+    void selectDates( const KCal::DateList & );
     void selectPreviousMonth();
     void selectNextMonth();
     void updateView();
@@ -93,7 +93,7 @@ class KDateNavigator: public QFrame
     void updateToday();
 
   signals:
-    void datesSelected( const KCalCore::DateList & );
+    void datesSelected( const KCal::DateList & );
     void incidenceDropped( const Akonadi::Item &, const QDate & );
     void incidenceDroppedMove( const Akonadi::Item &, const QDate & );
     void newEventSignal( const QDate & );
@@ -129,7 +129,7 @@ class KDateNavigator: public QFrame
 
     KODayMatrix *mDayMatrix;
 
-    KCalCore::DateList mSelectedDates;
+    KCal::DateList mSelectedDates;
     QDate mBaseDate;
 
     // Disabling copy constructor and assignment operator

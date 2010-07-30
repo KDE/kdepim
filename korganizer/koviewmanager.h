@@ -50,11 +50,11 @@ namespace KOrg {
   class MonthView;
 }
 
-using namespace KOrg;
-
-namespace KCalCore {
+namespace KCal {
   class CalFilter;
-};
+}
+
+using namespace KOrg;
 
 /**
   This class manages the views of the calendar. It owns the objects and handles
@@ -62,7 +62,6 @@ namespace KCalCore {
 */
 class KOViewManager : public QObject
 {
-
   Q_OBJECT
   public:
 
@@ -134,7 +133,7 @@ class KOViewManager : public QObject
 
     // sets filter on calendarsearch based views, this method can be removed from here when
     // calendarsearch stuff is removed from baseview, do we need a calendarsearch object per view?
-    void setFilter( KCalCore::CalFilter *filter );
+    void setFilter( KCal::CalFilter *filter );
 
   signals:
     void configChanged();

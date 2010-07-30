@@ -22,17 +22,15 @@
 #include "timelineitem.h"
 #include <kcalprefs.h>
 
-#include <kcalcore/incidence.h>
-#include <kcalutils/incidenceformatter.h>
+#include <KCal/Incidence>
+#include <KCal/IncidenceFormatter>
 
 #include "kdgantt2/kdganttglobal.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/utils.h>
 
-
 using namespace KOrg;
-using namespace KCalUtils;
 using namespace Akonadi;
 
 TimelineItem::TimelineItem( Akonadi::Calendar *calendar, uint index, QStandardItemModel* model, QObject *parent )
@@ -50,7 +48,7 @@ void TimelineItem::insertIncidence( const Item &aitem,
 {
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
   KDateTime start = incidence->dtStart().toTimeSpec( KCalPrefs::instance()->timeSpec() );
-  KDateTime end = incidence->dateTime( Incidence::RoleEnd ).toTimeSpec( KCalPrefs::instance()->timeSpec() );
+  KDateTime end = incidence->dtEnd().toTimeSpec( KCalPrefs::instance()->timeSpec() );
 
   if ( _start.isValid() ) {
     start = _start;
@@ -121,7 +119,7 @@ TimelineSubItem::TimelineSubItem( const Item &incidence,
   setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
   setData( IncidenceFormatter::toolTipStr(
                   Akonadi::displayName( incidence.parentCollection() ),
-                  Akonadi::incidence( incidence ), originalStart().date(),
+                  Akonadi::incidence( incidence ).get(), originalStart().date(),
                   true, KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
   if ( !Akonadi::incidence( incidence )->isReadOnly() ) {
     setFlags( Qt::ItemIsSelectable );
@@ -151,3 +149,4 @@ QDateTime TimelineSubItem::endTime() const
 {
   return data( KDGantt::EndTimeRole ).toDateTime();
 }
+
