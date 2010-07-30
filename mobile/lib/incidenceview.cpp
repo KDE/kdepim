@@ -56,6 +56,8 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mEditor( new CombinedIncidenceEditor( parent ) )
   , mEditorDateTime( 0 )
 {
+  setAttribute(Qt::WA_DeleteOnClose);
+
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
