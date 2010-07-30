@@ -35,6 +35,13 @@ class ItemPrivateData;
 
 namespace IncidenceEditorsNG
 {
+/**
+ * The FreeBusyItemModel is a 2-level tree structure.
+ * 
+ * The top level parent nodes represent the freebusy items, and
+ * the 2nd-level child nodes represent the FreeBusyPeriods of the parent
+ * freebusy item.
+ */
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
 {
 Q_OBJECT

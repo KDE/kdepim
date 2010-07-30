@@ -53,6 +53,16 @@
 
 using namespace IncidenceEditorsNG;
 
+/**
+ * This is a private proxy model, that wraps the free busy data exposed
+ * by the FreeBusyItemModel for use by KDGantt2.
+ *
+ * This model exposes the FreeBusyPeriods, which are the child level nodes
+ * in FreeBusyItemModel, as a list.
+ *
+ * @see FreeBusyItemMode
+ * @see FreeBusyItem
+ */
 class FreeBusyGanttProxyModel : public QAbstractProxyModel
 {
 public:
@@ -66,8 +76,6 @@ public:
         QModelIndex source_index = mapToSource( index );
         if( !source_index.isValid() )
             return QVariant();
-
-        kDebug() << "hi";
 
         KDateTime::Spec timeSpec = KSystemTimeZones::local();
         KCalCore::FreeBusyPeriod period  = sourceModel()->data( source_index, FreeBusyItemModel::FreeBusyPeriodRole ).value<KCalCore::Period>();
