@@ -231,6 +231,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     void updateDayLabelSizes();
 
+    void alignAgendas();
+
   private:
 
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
