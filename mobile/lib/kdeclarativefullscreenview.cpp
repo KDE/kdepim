@@ -47,6 +47,17 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 {
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
 
+#ifndef Q_OS_WINCE
+  // make MainView use OpenGL ES2 backend for better performance
+  // right now, the best performance can be achieved with a GLWidget
+  // and the use of the raster graphicssystem.
+  QGLFormat format = QGLFormat::defaultFormat();
+  format.setSampleBuffers(false);
+  glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
+  glWidget->setAutoFillBackground(false);
+  setViewport(glWidget);
+#endif
+
   QTime t;
   if ( debugTiming ) {
     t.start();
@@ -97,6 +108,15 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
     kWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
   }
 }
+
+KDeclarativeFullScreenView::~KDeclarativeFullScreenView()
+{
+#ifndef Q_OS_WINCE
+  kDebug() << "---> TESTE";
+  delete glWidget;
+#endif
+}
+
 void KDeclarativeFullScreenView::setQmlFile(const QString& source)
 {
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");

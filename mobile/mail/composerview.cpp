@@ -77,6 +77,7 @@ ComposerView::ComposerView(QWidget* parent) :
   m_mdnrequested( false )
 {
   setSubject( QString() );
+  setAttribute(Qt::WA_DeleteOnClose);
 
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
@@ -326,10 +327,13 @@ void ComposerView::closeEvent( QCloseEvent * event )
     saveDraft();
   } else if (rc == KMessageBox::Cancel ) {
     event->ignore();
+    return;
   } else {
     // remove autosaves if the message was discarded
     m_composerBase->cleanupAutoSave();
   }
+
+  event->accept();
 }
 
 void ComposerView::saveDraft()

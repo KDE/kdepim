@@ -22,6 +22,11 @@
 
 #include <QtDeclarative/QDeclarativeView>
 
+#ifndef Q_OS_WINCE
+#include <QGLWidget>
+#endif
+
+
 #include "mobileui_export.h"
 
 class KActionCollection;
@@ -40,6 +45,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     * @param qmlFileName is used to find the QML file in ${APP_DATA_DIR}/qmlFileName.qml
     */
     KDeclarativeFullScreenView( const QString &qmlFileName, QWidget *parent = 0 );
+    virtual ~KDeclarativeFullScreenView();
 
   public slots:
     /** Triggers de-fullscreen/task switcher */
@@ -54,6 +60,9 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 
   private:
     KActionCollection *mActionCollection;
+#ifndef Q_OS_WINCE
+    QGLWidget *glWidget;
+#endif
 };
 
 #endif
