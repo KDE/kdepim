@@ -112,7 +112,6 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 KDeclarativeFullScreenView::~KDeclarativeFullScreenView()
 {
 #ifndef Q_OS_WINCE
-  kDebug() << "---> TESTE";
   delete glWidget;
 #endif
 }
