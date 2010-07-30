@@ -1354,7 +1354,7 @@ void KMKernel::recoverDeadLetters()
   }
 
   foreach( const QString &fileName, dir.entryList( QStringList(), QDir::Files, QDir::NoSort ) ) {
-    QFile file( fileName );
+    QFile file( dir.absoluteFilePath( fileName ) );
     if ( !file.open( QIODevice::ReadOnly ) ) {
       kWarning() << "Unable to open autosave file" << fileName;
       continue;
