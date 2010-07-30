@@ -88,6 +88,9 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void signEmail( bool sign ) { m_sign = sign; }
     void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }
+    void urgentEmail ( bool urgent ) { m_urgent = urgent; }
+    void mdnRequestEmail ( bool request ) { m_mdnrequested = request; }
+
     void saveDraft();
 
  protected:
@@ -102,6 +105,8 @@ class ComposerView : public KDeclarativeFullScreenView
     bool m_encrypt;
     bool m_busy;
     bool m_draft;
+    bool m_urgent;
+    bool m_mdnrequested;
 };
 
 #endif

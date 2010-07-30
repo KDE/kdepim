@@ -72,7 +72,9 @@ ComposerView::ComposerView(QWidget* parent) :
   m_sign( false ),
   m_encrypt( false ),
   m_busy( false ),
-  m_draft( false )
+  m_draft( false ),
+  m_urgent( false ),
+  m_mdnrequested( false )
 {
   setSubject( QString() );
 
@@ -140,6 +142,16 @@ ComposerView::ComposerView(QWidget* parent) :
   action->setText( i18n( "Save as Draft" ) );
   action->setIcon( KIcon( "document-save" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
+
+  action = actionCollection()->addAction("urgent");
+  action->setText( i18n( "Urgent" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(urgentEmail(bool)));
+
+  action = actionCollection()->addAction("options_request_mdn");
+  action->setText( i18n( "Request Notification" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(mdnRequestEmail(bool)));
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -195,10 +207,10 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
 
   m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
 
-  /* Default till UI exists
-  m_composerBase->setCharsets( );
-  m_composerBase->setUrgent( );
-  m_composerBase->setMDNRequested( ); */
+  // Default till UI exists
+  //  m_composerBase->setCharsets( );
+  m_composerBase->setUrgent( m_urgent );
+  m_composerBase->setMDNRequested( m_mdnrequested );
 
   m_composerBase->send( method, saveIn );
 }
