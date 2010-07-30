@@ -48,6 +48,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
 
+#include <kdeversion.h>
 #include <KSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
