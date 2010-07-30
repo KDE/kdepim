@@ -37,7 +37,7 @@
 
 using namespace IncidenceEditorsNG;
 
-SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startTime , ConflictResolver* resolver, QWidget* parent  )
+SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startTime, int duration, ConflictResolver* resolver, QWidget* parent  )
   : KDialog( parent ),
   mResolver( resolver ),
   mPeriodModel( new FreePeriodModel( this ) )
@@ -46,6 +46,9 @@ SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startT
     setupUi( w );
     setMainWidget( w );
     fillCombos();
+
+    Q_ASSERT( duration > 0 );
+    mDuration = duration;
 
     mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8, this );
     QVBoxLayout *ganttlayout = new QVBoxLayout( mGanttTab );
@@ -64,8 +67,12 @@ SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startT
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
     connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCalCore::Period::List & ) ) );
+    connect( mMoveBeginTimeEdit, SIGNAL( timeChanged( const QTime & ) ), this, SLOT( slotSetEndTimeLabel( const QTime & ) ) );
 
     mTableView->setModel( mPeriodModel );
+    connect( mTableView->selectionModel(), SIGNAL( currentRowChanged( const QModelIndex &, const QModelIndex & ) ),
+             this, SLOT( slotRowSelectionChanged( const QModelIndex &, const QModelIndex & ) ) );
+
 
     mStartDate->setDate( startDate );
     mEndDate->setDate( mStartDate->date().addDays( 7 ) );
@@ -76,6 +83,8 @@ SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startT
     mResolver->setEarliestTime( mStartTime->time() );
     mResolver->setLatestDate( mEndDate->date() );
     mResolver->setLatestTime( mEndTime->time() );
+
+    mMoveApptGroupBox->hide();
 }
 
 SchedulingDialog::~SchedulingDialog()
@@ -160,3 +169,40 @@ void SchedulingDialog::slotMandatoryRolesChanged()
     }
     mResolver->setMandatoryRoles( roles );
 }
+
+void SchedulingDialog::slotRowSelectionChanged( const QModelIndex& current, const QModelIndex& previous )
+{
+    Q_UNUSED( previous );
+    if( !current.isValid() ) {
+      mMoveApptGroupBox->hide();
+      return;
+    }
+    KCalCore::Period period = current.data( FreePeriodModel::PeriodRole ).value<KCalCore::Period>();
+    const QDate startDate = period.start().date();
+
+    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+    const QString dayLabel = ki18nc( "Day of week followed by day of the month, then the month. example: Monday, 12 June",
+                                "%1, %2 %3" )
+                              .subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+                              .subs( startDate.day() )
+                              .subs( calSys->monthName( startDate ) ).toString();
+
+    mMoveDayLabel->setText( dayLabel );
+//     mMoveBeginTimeEdit->setDateTime( period.start().dateTime() );
+//     mMoveBeginTimeEdit->setDateTimeRange( period.start().dateTime(),  period.end().addSecs( -mDuration ).dateTime() );
+    mMoveBeginTimeEdit->setTimeRange( period.start().time(), period.end().addSecs( -mDuration ).time() );
+    mMoveBeginTimeEdit->setTime( period.start().time() );
+    slotSetEndTimeLabel( period.start().time() );
+    mMoveApptGroupBox->show();
+}
+
+void SchedulingDialog::slotSetEndTimeLabel( const QTime& startTime )
+{
+    kDebug() << startTime;
+    const QTime endTime = startTime.addSecs( mDuration );
+    const QString endTimeLabel = ki18nc( "This is a suffix following a time selecting widget. Example: [timeedit] to 10:00am",
+                                     "to %1" )
+                                  .subs( KGlobal::locale()->formatTime( endTime ) ).toString();
+    mMoveEndTimeLabel->setText( endTimeLabel );
+}
+

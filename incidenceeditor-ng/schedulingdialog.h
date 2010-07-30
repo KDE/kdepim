@@ -40,7 +40,7 @@ class SchedulingDialog : public KDialog, private Ui_Dialog
 {
   Q_OBJECT
 public:
-    SchedulingDialog(  const QDate& startDate, const QTime& startTime , ConflictResolver* resolver, QWidget* parent  );
+    SchedulingDialog(  const QDate& startDate, const QTime& startTime, int duration, ConflictResolver* resolver, QWidget* parent  );
     ~SchedulingDialog();
 
 signals:
@@ -54,11 +54,15 @@ private slots:
     void slotMandatoryRolesChanged();
     void slotStartDateChanged( const QDate & newDate );
 
+    void slotRowSelectionChanged( const QModelIndex & current, const QModelIndex & previous );
+    void slotSetEndTimeLabel( const QTime & startTime );
+
 private:
     void updateWeekDays( const QDate& oldDate );
     void fillCombos();
 
     QDate mStDate;
+    int mDuration;//!< In seconds
 
     ConflictResolver* mResolver;
     FreePeriodModel* mPeriodModel;

@@ -328,7 +328,8 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
     if( mSchedulingDialog )
       delete mSchedulingDialog.data();
 
-    mSchedulingDialog = new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), mConflictResolver, mParentWidget );
+    int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
+    mSchedulingDialog = new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget );
     mSchedulingDialog->exec();
 
     delete mSchedulingDialog.data();
