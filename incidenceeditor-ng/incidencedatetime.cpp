@@ -636,4 +636,17 @@ void IncidenceDateTime::setTimes( const KDateTime &start, const KDateTime &end )
 //   emitDateTimeStr();
 }
 
+void IncidenceDateTime::setStartDate( const QDate& newDate )
+{
+  mUi->mStartDateEdit->setDate( newDate );
+  updateStartDate( newDate );
+}
+
+void IncidenceDateTime::setStartTime( const QTime& newTime )
+{
+  mUi->mStartTimeEdit->setTime( newTime );
+  updateStartTime( newTime );
+}
+
+
 #include "moc_incidencedatetime.cpp"

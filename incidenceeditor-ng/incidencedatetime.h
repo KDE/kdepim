@@ -64,6 +64,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     KDateTime currentStartDateTime() const;
     KDateTime currentEndDateTime() const;
 
+    void setStartTime( const QTime &newTime );
+    void setStartDate( const QDate &newDate );
+
   signals:
     void startDateChanged( const QDate &newDate );
     void startTimeChanged( const QTime &newTime );
