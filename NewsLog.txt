@@ -1,3 +1,14 @@
+Friday, July 30th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue3908: Mail view and print layout problem if description of attachment is to long (rt#5872)
+* kolab/issue4261: Wish: Print whole day events at top of a day print (rt#6084)
+* kolab/issue3974: Clicking on an ics/vcs-attachment doesn't import or display the events of the attachment (rt#5812)
+* kolab/issue4429: Key selection dialog is too small. 'Abbrechen' button is cut
+
+
 Friday, July 23th 2010
 
 Problems addressed
