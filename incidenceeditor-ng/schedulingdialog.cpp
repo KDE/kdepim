@@ -188,21 +188,32 @@ void SchedulingDialog::slotRowSelectionChanged( const QModelIndex& current, cons
                               .subs( calSys->monthName( startDate ) ).toString();
 
     mMoveDayLabel->setText( dayLabel );
-//     mMoveBeginTimeEdit->setDateTime( period.start().dateTime() );
-//     mMoveBeginTimeEdit->setDateTimeRange( period.start().dateTime(),  period.end().addSecs( -mDuration ).dateTime() );
     mMoveBeginTimeEdit->setTimeRange( period.start().time(), period.end().addSecs( -mDuration ).time() );
     mMoveBeginTimeEdit->setTime( period.start().time() );
     slotSetEndTimeLabel( period.start().time() );
     mMoveApptGroupBox->show();
+
+    mSelectedDate = startDate;
 }
 
 void SchedulingDialog::slotSetEndTimeLabel( const QTime& startTime )
 {
-    kDebug() << startTime;
     const QTime endTime = startTime.addSecs( mDuration );
     const QString endTimeLabel = ki18nc( "This is a suffix following a time selecting widget. Example: [timeedit] to 10:00am",
                                      "to %1" )
                                   .subs( KGlobal::locale()->formatTime( endTime ) ).toString();
     mMoveEndTimeLabel->setText( endTimeLabel );
+
+    mSelectedTime = startTime;
 }
 
+
+QDate SchedulingDialog::selectedStartDate() const
+{
+    return mSelectedDate;
+}
+
+QTime SchedulingDialog::selectedStartTime() const
+{
+    return mSelectedTime;
+}

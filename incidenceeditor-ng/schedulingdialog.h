@@ -43,6 +43,9 @@ public:
     SchedulingDialog(  const QDate& startDate, const QTime& startTime, int duration, ConflictResolver* resolver, QWidget* parent  );
     ~SchedulingDialog();
 
+    QDate selectedStartDate() const;
+    QTime selectedStartTime() const;
+
 signals:
     void startDateChanged( const QDate &newDate );
     void startTimeChanged( const QTime &newTime );
@@ -62,6 +65,8 @@ private:
     void fillCombos();
 
     QDate mStDate;
+    QDate mSelectedDate;
+    QTime mSelectedTime;
     int mDuration;//!< In seconds
 
     ConflictResolver* mResolver;

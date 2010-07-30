@@ -67,7 +67,6 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   , mParentWidget( parent )
   , mAttendeeEditor( new AttendeeEditor )
   , mConflictResolver( 0 )
-  , mSchedulingDialog()
   , mDateTime( dateTime )
 {
   setObjectName( "IncidenceAttendee" );
@@ -109,8 +108,6 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
   connect( mConflictResolver, SIGNAL( conflictsDetected( int ) ), this, SLOT( slotUpdateConflictLabel( int ) ) );
   slotUpdateConflictLabel( 0 ); //initialize label
 
-//  connect( mAttendeeEditor, SIGNAL( lineAdded(KPIM::MultiplyingLine*) ),
-//           SLOT( checkDirtyStatus() ) );
   connect( mAttendeeEditor, SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ),
            SLOT( checkIfExpansionIsNeeded( KPIM::MultiplyingLine* ) ) );
   connect( mAttendeeEditor, SIGNAL( changed( KCalCore::Attendee::Ptr, KCalCore::Attendee::Ptr ) ),
@@ -325,14 +322,13 @@ void IncidenceAttendee::slotSelectAddresses()
 void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 {
 #ifndef KDEPIM_MOBILE_UI
-    if( mSchedulingDialog )
-      delete mSchedulingDialog.data();
-
     int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
-    mSchedulingDialog = new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget );
-    mSchedulingDialog->exec();
-
-    delete mSchedulingDialog.data();
+    QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget ) );
+    if( dialog->exec() == KDialog::Accepted ) {
+        kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
+        mDateTime->setStartDate( dialog->selectedStartDate() );
+        mDateTime->setStartTime( dialog->selectedStartTime() );
+    }
 #endif
 }
 
@@ -400,14 +396,8 @@ void IncidenceAttendee::slotEventDurationChanged()
 
   kDebug() << start << end;
 
-#ifndef KDEPIM_MOBILE_UI
-  if( !mSchedulingDialog ) {
-    // when we aren't showing the dialog, the search timeframe
-    // should be the same as the event's.
-    mConflictResolver->setEarliestDateTime( start );
-    mConflictResolver->setLatestDateTime( end );
-  }
-#endif
+  mConflictResolver->setEarliestDateTime( start );
+  mConflictResolver->setLatestDateTime( end );
 }
 
 void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )

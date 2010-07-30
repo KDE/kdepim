@@ -25,8 +25,6 @@
 
 #include <kcalcore/incidence.h>
 
-#include <QPointer>
-
 class KJob;
 
 namespace Ui {
@@ -97,10 +95,8 @@ private:
     QWidget* mParentWidget;
     AttendeeEditor *mAttendeeEditor;
     ConflictResolver *mConflictResolver;
-    QPointer<SchedulingDialog> mSchedulingDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
     IncidenceDateTime *mDateTime;
-
     QString mOrganizer;
 };
 
