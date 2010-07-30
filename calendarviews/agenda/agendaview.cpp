@@ -327,8 +327,6 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   // Don't call it now, bottom agenda isn't fully up yet
   QMetaObject::invokeMethod( this, "alignAgendas", Qt::QueuedConnection );
 
-  createDayLabels( true );
-
   /* Connect the agendas */
 
   connectAgenda( d->mAgenda, d->mAllDayAgenda );
@@ -584,7 +582,7 @@ void AgendaView::createDayLabels( bool force )
   d->mLayoutTopDayLabels->setMargin( 0 );
   // this spacer moves the day labels over to line up with the day columns
   QSpacerItem *spacer =
-    new QSpacerItem( d->mTimeLabelsZone->timeLabelsWidth(), 1, QSizePolicy::Fixed );
+    new QSpacerItem( d->mTimeLabelsZone->width(), 1, QSizePolicy::Fixed );
   d->mLayoutTopDayLabels->addSpacerItem( spacer );
   KVBox *topWeekLabelBox = new KVBox( d->mTopDayLabels );
   d->mLayoutTopDayLabels->addWidget( topWeekLabelBox );
@@ -1904,6 +1902,7 @@ void AgendaView::alignAgendas()
   d->mDummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->width() -
                                       d->mTimeBarHeaderFrame->width() );
 
+  createDayLabels( true );
 }
 
 #include "agendaview.moc"
