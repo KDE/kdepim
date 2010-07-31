@@ -26,13 +26,13 @@
 */
 #include <assert.h>
 
-#include <qintdict.h>
-#include <qdatetime.h>
-#include <qapplication.h>
-#include <qpopupmenu.h>
-#include <qcursor.h>
-#include <qpainter.h>
-#include <qlabel.h>
+#include <tqintdict.h>
+#include <tqdatetime.h>
+#include <tqapplication.h>
+#include <tqpopupmenu.h>
+#include <tqcursor.h>
+#include <tqpainter.h>
+#include <tqlabel.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -62,19 +62,19 @@
 
 ////////////////////////////////////////////////////////////////////////////
 MarcusBains::MarcusBains(KOAgenda *_agenda,const char *name)
-    : QFrame(_agenda->viewport(),name), agenda(_agenda)
+    : TQFrame(_agenda->viewport(),name), agenda(_agenda)
 {
   setLineWidth(0);
   setMargin(0);
   setBackgroundColor(Qt::red);
-  minutes = new QTimer(this);
-  connect(minutes, SIGNAL(timeout()), this, SLOT(updateLocation()));
+  minutes = new TQTimer(this);
+  connect(minutes, TQT_SIGNAL(timeout()), this, TQT_SLOT(updateLocation()));
   minutes->start(0, true);
 
-  mTimeBox = new QLabel(this);
+  mTimeBox = new TQLabel(this);
   mTimeBox->setAlignment(Qt::AlignRight | Qt::AlignBottom);
-  QPalette pal = mTimeBox->palette();
-  pal.setColor(QColorGroup::Foreground, Qt::red);
+  TQPalette pal = mTimeBox->palette();
+  pal.setColor(TQColorGroup::Foreground, Qt::red);
   mTimeBox->setPalette(pal);
   mTimeBox->setAutoMask(true);
 
@@ -90,7 +90,7 @@ MarcusBains::~MarcusBains()
 
 int MarcusBains::todayColumn()
 {
-  QDate currentDate = QDate::currentDate();
+  TQDate currentDate = TQDate::currentDate();
 
   DateList dateList = agenda->dateList();
   DateList::ConstIterator it;
@@ -107,7 +107,7 @@ int MarcusBains::todayColumn()
 
 void MarcusBains::updateLocation(bool recalculate)
 {
-  QTime tim = QTime::currentTime();
+  TQTime tim = TQTime::currentTime();
   if((tim.hour() == 0) && (oldTime.hour()==23))
     recalculate = true;
 
@@ -157,9 +157,9 @@ void MarcusBains::updateLocation(bool recalculate)
 /*
   Create an agenda widget with rows rows and columns columns.
 */
-KOAgenda::KOAgenda( int columns, int rows, int rowSize, QWidget *parent,
+KOAgenda::KOAgenda( int columns, int rows, int rowSize, TQWidget *parent,
                     const char *name, WFlags f )
-  : QScrollView( parent, name, f ), mChanger( 0 )
+  : TQScrollView( parent, name, f ), mChanger( 0 )
 {
   mColumns = columns;
   mRows = rows;
@@ -175,8 +175,8 @@ KOAgenda::KOAgenda( int columns, int rows, int rowSize, QWidget *parent,
   Create an agenda widget with columns columns and one row. This is used for
   all-day events.
 */
-KOAgenda::KOAgenda( int columns, QWidget *parent, const char *name, WFlags f )
-  : QScrollView( parent, name, f )
+KOAgenda::KOAgenda( int columns, TQWidget *parent, const char *name, WFlags f )
+  : TQScrollView( parent, name, f )
 {
   mColumns = columns;
   mRows = 1;
@@ -200,12 +200,12 @@ Incidence *KOAgenda::selectedIncidence() const
 }
 
 
-QDate KOAgenda::selectedIncidenceDate() const
+TQDate KOAgenda::selectedIncidenceDate() const
 {
-  return ( mSelectedItem ? mSelectedItem->itemDate() : QDate() );
+  return ( mSelectedItem ? mSelectedItem->itemDate() : TQDate() );
 }
 
-const QString KOAgenda::lastSelectedUid() const
+const TQString KOAgenda::lastSelectedUid() const
 {
   return mSelectedUid;
 }
@@ -226,16 +226,16 @@ void KOAgenda::init()
   // effect. Has to be fixed.
   setFocusPolicy( WheelFocus );
 
-  connect( &mScrollUpTimer, SIGNAL( timeout() ), SLOT( scrollUp() ) );
-  connect( &mScrollDownTimer, SIGNAL( timeout() ), SLOT( scrollDown() ) );
+  connect( &mScrollUpTimer, TQT_SIGNAL( timeout() ), TQT_SLOT( scrollUp() ) );
+  connect( &mScrollDownTimer, TQT_SIGNAL( timeout() ), TQT_SLOT( scrollDown() ) );
 
-  mStartCell = QPoint( 0, 0 );
-  mEndCell = QPoint( 0, 0 );
+  mStartCell = TQPoint( 0, 0 );
+  mEndCell = TQPoint( 0, 0 );
 
   mHasSelection = false;
-  mSelectionStartPoint = QPoint( 0, 0 );
-  mSelectionStartCell = QPoint( 0, 0 );
-  mSelectionEndCell = QPoint( 0, 0 );
+  mSelectionStartPoint = TQPoint( 0, 0 );
+  mSelectionStartCell = TQPoint( 0, 0 );
+  mSelectionEndCell = TQPoint( 0, 0 );
 
   mOldLowerScrollValue = -1;
   mOldUpperScrollValue = -1;
@@ -247,7 +247,7 @@ void KOAgenda::init()
   mItemMoved = false;
 
   mSelectedItem = 0;
-  mSelectedUid = QString::null;
+  mSelectedUid = TQString::null;
 
   setAcceptDrops( true );
   installEventFilter( this );
@@ -273,8 +273,8 @@ void KOAgenda::init()
 
   calculateWorkingHours();
 
-  connect( verticalScrollBar(), SIGNAL( valueChanged( int ) ),
-           SLOT( checkScrollBoundaries( int ) ) );
+  connect( verticalScrollBar(), TQT_SIGNAL( valueChanged( int ) ),
+           TQT_SLOT( checkScrollBoundaries( int ) ) );
 
   // Create the Marcus Bains line.
   if( mAllDayMode ) {
@@ -334,71 +334,71 @@ void KOAgenda::changeColumns(int columns)
 //  init();
 //  update();
 
-  QResizeEvent event( size(), size() );
+  TQResizeEvent event( size(), size() );
 
-  QApplication::sendEvent( this, &event );
+  TQApplication::sendEvent( this, &event );
 }
 
 /*
   This is the eventFilter function, which gets all events from the KOAgendaItems
   contained in the agenda. It has to handle moving and resizing for all items.
 */
-bool KOAgenda::eventFilter ( QObject *object, QEvent *event )
+bool KOAgenda::eventFilter ( TQObject *object, TQEvent *event )
 {
 //  kdDebug(5850) << "KOAgenda::eventFilter() " << int( event->type() ) << endl;
 
   switch( event->type() ) {
-    case QEvent::MouseButtonPress:
-    case QEvent::MouseButtonDblClick:
-    case QEvent::MouseButtonRelease:
-    case QEvent::MouseMove:
-      return eventFilter_mouse( object, static_cast<QMouseEvent *>( event ) );
+    case TQEvent::MouseButtonPress:
+    case TQEvent::MouseButtonDblClick:
+    case TQEvent::MouseButtonRelease:
+    case TQEvent::MouseMove:
+      return eventFilter_mouse( object, static_cast<TQMouseEvent *>( event ) );
 #ifndef QT_NO_WHEELEVENT
-    case QEvent::Wheel:
-      return eventFilter_wheel( object, static_cast<QWheelEvent *>( event ) );
+    case TQEvent::Wheel:
+      return eventFilter_wheel( object, static_cast<TQWheelEvent *>( event ) );
 #endif
-    case QEvent::KeyPress:
-    case QEvent::KeyRelease:
-      return eventFilter_key( object, static_cast<QKeyEvent *>( event ) );
+    case TQEvent::KeyPress:
+    case TQEvent::KeyRelease:
+      return eventFilter_key( object, static_cast<TQKeyEvent *>( event ) );
 
-    case ( QEvent::Leave ):
+    case ( TQEvent::Leave ):
       if ( !mActionItem )
         setCursor( arrowCursor );
       if ( object == viewport() )
         emit leaveAgenda();
       return true;
 
-    case QEvent::Enter:
+    case TQEvent::Enter:
       emit enterAgenda();
-      return QScrollView::eventFilter( object, event );
+      return TQScrollView::eventFilter( object, event );
 
 #ifndef KORG_NODND
-    case QEvent::DragEnter:
-    case QEvent::DragMove:
-    case QEvent::DragLeave:
-    case QEvent::Drop:
- //   case QEvent::DragResponse:
-      return eventFilter_drag(object, static_cast<QDropEvent*>(event));
+    case TQEvent::DragEnter:
+    case TQEvent::DragMove:
+    case TQEvent::DragLeave:
+    case TQEvent::Drop:
+ //   case TQEvent::DragResponse:
+      return eventFilter_drag(object, static_cast<TQDropEvent*>(event));
 #endif
 
     default:
-      return QScrollView::eventFilter( object, event );
+      return TQScrollView::eventFilter( object, event );
   }
 }
 
-bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
+bool KOAgenda::eventFilter_drag( TQObject *object, TQDropEvent *de )
 {
 #ifndef KORG_NODND
-  QPoint viewportPos;
+  TQPoint viewportPos;
   if ( object != viewport() && object != this ) {
-    viewportPos = static_cast<QWidget *>( object )->mapToParent( de->pos() );
+    viewportPos = static_cast<TQWidget *>( object )->mapToParent( de->pos() );
   } else {
     viewportPos = de->pos();
   }
 
   switch ( de->type() ) {
-    case QEvent::DragEnter:
-    case QEvent::DragMove:
+    case TQEvent::DragEnter:
+    case TQEvent::DragMove:
       if ( ICalDrag::canDecode( de ) || VCalDrag::canDecode( de ) ) {
 
         DndFactory factory( mCalendar );
@@ -412,10 +412,10 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
         return true;
       } else return false;
       break;
-    case QEvent::DragLeave:
+    case TQEvent::DragLeave:
       return false;
       break;
-    case QEvent::Drop:
+    case TQEvent::Drop:
       {
         if ( !ICalDrag::canDecode( de ) && !VCalDrag::canDecode( de ) ) {
           return false;
@@ -426,23 +426,23 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
 
         if ( todo ) {
           de->acceptAction();
-          QPoint pos;
+          TQPoint pos;
           // FIXME: This is a bad hack, as the viewportToContents seems to be off by
           // 2000 (which is the left upper corner of the viewport). It works correctly
           // for agendaItems.
           if ( object == this  ) {
-            pos = viewportPos + QPoint( contentsX(), contentsY() );
+            pos = viewportPos + TQPoint( contentsX(), contentsY() );
           } else {
             pos = viewportToContents( viewportPos );
           }
-          QPoint gpos = contentsToGrid( pos );
+          TQPoint gpos = contentsToGrid( pos );
           emit droppedToDo( todo, gpos, mAllDayMode );
           return true;
         }
       }
       break;
 
-    case QEvent::DragResponse:
+    case TQEvent::DragResponse:
     default:
       break;
   }
@@ -451,14 +451,14 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
   return false;
 }
 
-bool KOAgenda::eventFilter_key( QObject *, QKeyEvent *ke )
+bool KOAgenda::eventFilter_key( TQObject *, TQKeyEvent *ke )
 {
   // kdDebug(5850) << "KOAgenda::eventFilter_key() " << ke->type() << endl;
 
   // If Return is pressed bring up an editor for the current selected time span.
   if ( ke->key() == Key_Return ) {
-    if ( ke->type() == QEvent::KeyPress ) mReturnPressed = true;
-    else if ( ke->type() == QEvent::KeyRelease ) {
+    if ( ke->type() == TQEvent::KeyPress ) mReturnPressed = true;
+    else if ( ke->type() == TQEvent::KeyRelease ) {
       if ( mReturnPressed ) {
         emitNewEventForSelection();
         mReturnPressed = false;
@@ -472,7 +472,7 @@ bool KOAgenda::eventFilter_key( QObject *, QKeyEvent *ke )
   // Ignore all input that does not produce any output
   if ( ke->text().isEmpty() ) return false;
 
-  if ( ke->type() == QEvent::KeyPress || ke->type() == QEvent::KeyRelease ) {
+  if ( ke->type() == TQEvent::KeyPress || ke->type() == TQEvent::KeyRelease ) {
     switch ( ke->key() ) {
       case Key_Escape:
       case Key_Return:
@@ -494,7 +494,7 @@ bool KOAgenda::eventFilter_key( QObject *, QKeyEvent *ke )
       case Key_Alt:
         break;
       default:
-        mTypeAheadEvents.append( new QKeyEvent( ke->type(), ke->key(),
+        mTypeAheadEvents.append( new TQKeyEvent( ke->type(), ke->key(),
                                                 ke->ascii(), ke->state(),
                                                 ke->text(), ke->isAutoRepeat(),
                                                 ke->count() ) );
@@ -517,23 +517,23 @@ void KOAgenda::finishTypeAhead()
 {
 //  kdDebug(5850) << "KOAgenda::finishTypeAhead()" << endl;
   if ( typeAheadReceiver() ) {
-    for( QEvent *e = mTypeAheadEvents.first(); e;
+    for( TQEvent *e = mTypeAheadEvents.first(); e;
          e = mTypeAheadEvents.next() ) {
 //      kdDebug(5850) << "sendEvent() " << int( typeAheadReceiver() ) << endl;
-      QApplication::sendEvent( typeAheadReceiver(), e );
+      TQApplication::sendEvent( typeAheadReceiver(), e );
     }
   }
   mTypeAheadEvents.clear();
   mTypeAhead = false;
 }
 #ifndef QT_NO_WHEELEVENT
-bool KOAgenda::eventFilter_wheel ( QObject *object, QWheelEvent *e )
+bool KOAgenda::eventFilter_wheel ( TQObject *object, TQWheelEvent *e )
 {
-  QPoint viewportPos;
+  TQPoint viewportPos;
   bool accepted=false;
   if  ( ( e->state() & ShiftButton) == ShiftButton ) {
     if ( object != viewport() ) {
-      viewportPos = ( (QWidget *) object )->mapToParent( e->pos() );
+      viewportPos = ( (TQWidget *) object )->mapToParent( e->pos() );
     } else {
       viewportPos = e->pos();
     }
@@ -547,7 +547,7 @@ bool KOAgenda::eventFilter_wheel ( QObject *object, QWheelEvent *e )
 
   if  ( ( e->state() & ControlButton ) == ControlButton ){
     if ( object != viewport() ) {
-      viewportPos = ( (QWidget *)object )->mapToParent( e->pos() );
+      viewportPos = ( (TQWidget *)object )->mapToParent( e->pos() );
     } else {
       viewportPos = e->pos();
     }
@@ -561,17 +561,17 @@ bool KOAgenda::eventFilter_wheel ( QObject *object, QWheelEvent *e )
   return accepted;
 }
 #endif
-bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
+bool KOAgenda::eventFilter_mouse(TQObject *object, TQMouseEvent *me)
 {
-  QPoint viewportPos;
+  TQPoint viewportPos;
   if (object != viewport()) {
-    viewportPos = ((QWidget *)object)->mapToParent(me->pos());
+    viewportPos = ((TQWidget *)object)->mapToParent(me->pos());
   } else {
     viewportPos = me->pos();
   }
 
   switch (me->type())  {
-    case QEvent::MouseButtonPress:
+    case TQEvent::MouseButtonPress:
 //        kdDebug(5850) << "koagenda: filtered button press" << endl;
       if (object != viewport()) {
         if (me->button() == RightButton) {
@@ -602,7 +602,7 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
         if (me->button() == RightButton)
         {
           // if mouse pointer is not in selection, select the cell below the cursor
-          QPoint gpos = contentsToGrid( viewportToContents( viewportPos ) );
+          TQPoint gpos = contentsToGrid( viewportToContents( viewportPos ) );
           if ( !ptInSelection( gpos ) ) {
             mSelectionStartCell = gpos;
             mSelectionEndCell = gpos;
@@ -616,7 +616,7 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
         else
         {
           // if mouse pointer is in selection, don't change selection
-          QPoint gpos = contentsToGrid( viewportToContents( viewportPos ) );
+          TQPoint gpos = contentsToGrid( viewportToContents( viewportPos ) );
           if ( !ptInSelection( gpos ) ) {
             selectItem(0);
             mActionItem = 0;
@@ -627,7 +627,7 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
       }
       break;
 
-    case QEvent::MouseButtonRelease:
+    case TQEvent::MouseButtonRelease:
       if (mActionItem) {
         endItemAction();
       } else if ( mActionType == SELECT ) {
@@ -639,10 +639,10 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
                            viewportToContents( viewportPos ) ) ));
       break;
 
-    case QEvent::MouseMove: {
+    case TQEvent::MouseMove: {
       // This nasty gridToContents(contentsToGrid(..)) is needed to
       // avoid an offset of a few pixels. Don't ask me why...
-      QPoint indicatorPos = gridToContents(contentsToGrid(
+      TQPoint indicatorPos = gridToContents(contentsToGrid(
                                           viewportToContents( viewportPos )));
       if (object != viewport()) {
         KOAgendaItem *moveItem = dynamic_cast<KOAgendaItem *>(object);
@@ -656,12 +656,12 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
               // show cursor at the current begin of the item
               KOAgendaItem *firstItem = mActionItem->firstMultiItem();
               if (!firstItem) firstItem = mActionItem;
-              indicatorPos = gridToContents( QPoint( firstItem->cellXLeft(),
+              indicatorPos = gridToContents( TQPoint( firstItem->cellXLeft(),
                                                      firstItem->cellYTop() ) );
 
             } else if ( mActionType == RESIZEBOTTOM ) {
               // RESIZETOP is handled correctly, only resizebottom works differently
-              indicatorPos = gridToContents( QPoint( mActionItem->cellXLeft(),
+              indicatorPos = gridToContents( TQPoint( mActionItem->cellXLeft(),
                                                      mActionItem->cellYBottom()+1 ) );
             }
 
@@ -674,7 +674,7 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
             // show cursor at end of timespan
             if ( ((mStartCell.y() < mEndCell.y()) && (mEndCell.x() >= mStartCell.x())) ||
                  (mEndCell.x() > mStartCell.x()) )
-              indicatorPos = gridToContents( QPoint(mEndCell.x(), mEndCell.y()+1) );
+              indicatorPos = gridToContents( TQPoint(mEndCell.x(), mEndCell.y()+1) );
             else
               indicatorPos = gridToContents( mEndCell );
           }
@@ -682,7 +682,7 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
       emit mousePosSignal( indicatorPos );
       break; }
 
-    case QEvent::MouseButtonDblClick:
+    case TQEvent::MouseButtonDblClick:
       if (object == viewport()) {
         selectItem(0);
         emit newEventSignal();
@@ -702,7 +702,7 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
   return true;
 }
 
-bool KOAgenda::ptInSelection( QPoint gpos ) const
+bool KOAgenda::ptInSelection( TQPoint gpos ) const
 {
   if ( !mHasSelection ) {
     return false;
@@ -716,7 +716,7 @@ bool KOAgenda::ptInSelection( QPoint gpos ) const
   return true;
 }
 
-void KOAgenda::startSelectAction( const QPoint &viewportPos )
+void KOAgenda::startSelectAction( const TQPoint &viewportPos )
 {
   emit newStartSelectSignal();
 
@@ -724,8 +724,8 @@ void KOAgenda::startSelectAction( const QPoint &viewportPos )
   mSelectionStartPoint = viewportPos;
   mHasSelection = true;
 
-  QPoint pos = viewportToContents( viewportPos );
-  QPoint gpos = contentsToGrid( pos );
+  TQPoint pos = viewportToContents( viewportPos );
+  TQPoint gpos = contentsToGrid( pos );
 
   // Store new selection
   mStartCell = gpos;
@@ -736,12 +736,12 @@ void KOAgenda::startSelectAction( const QPoint &viewportPos )
   updateContents();
 }
 
-void KOAgenda::performSelectAction(const QPoint& viewportPos)
+void KOAgenda::performSelectAction(const TQPoint& viewportPos)
 {
-  QPoint pos = viewportToContents( viewportPos );
-  QPoint gpos = contentsToGrid( pos );
+  TQPoint pos = viewportToContents( viewportPos );
+  TQPoint gpos = contentsToGrid( pos );
 
-  QPoint clipperPos = clipper()->
+  TQPoint clipperPos = clipper()->
                       mapFromGlobal(viewport()->mapToGlobal(viewportPos));
 
   // Scroll if cursor was moved to upper or lower end of agenda.
@@ -771,7 +771,7 @@ void KOAgenda::performSelectAction(const QPoint& viewportPos)
   }
 }
 
-void KOAgenda::endSelectAction( const QPoint &currentPos )
+void KOAgenda::endSelectAction( const TQPoint &currentPos )
 {
   mScrollUpTimer.stop();
   mScrollDownTimer.stop();
@@ -782,19 +782,19 @@ void KOAgenda::endSelectAction( const QPoint &currentPos )
 
   if ( KOPrefs::instance()->mSelectionStartsEditor ) {
     if ( ( mSelectionStartPoint - currentPos ).manhattanLength() >
-         QApplication::startDragDistance() ) {
+         TQApplication::startDragDistance() ) {
        emitNewEventForSelection();
     }
   }
 }
 
 KOAgenda::MouseActionType KOAgenda::isInResizeArea( bool horizontal,
-    const QPoint &pos, KOAgendaItem*item )
+    const TQPoint &pos, KOAgendaItem*item )
 {
   if (!item) return NOP;
-  QPoint gridpos = contentsToGrid( pos );
-  QPoint contpos = gridToContents( gridpos +
-      QPoint( (KOGlobals::self()->reverseLayout())?1:0, 0 ) );
+  TQPoint gridpos = contentsToGrid( pos );
+  TQPoint contpos = gridToContents( gridpos +
+      TQPoint( (KOGlobals::self()->reverseLayout())?1:0, 0 ) );
 
 //kdDebug(5850)<<"contpos="<<contpos<<", pos="<<pos<<", gpos="<<gpos<<endl;
 //kdDebug(5850)<<"clXLeft="<<clXLeft<<", clXRight="<<clXRight<<endl;
@@ -834,9 +834,9 @@ KOAgenda::MouseActionType KOAgenda::isInResizeArea( bool horizontal,
   }
 }
 
-void KOAgenda::startItemAction(const QPoint& viewportPos)
+void KOAgenda::startItemAction(const TQPoint& viewportPos)
 {
-  QPoint pos = viewportToContents( viewportPos );
+  TQPoint pos = viewportToContents( viewportPos );
   mStartCell = contentsToGrid( pos );
   mEndCell = mStartCell;
 
@@ -852,18 +852,18 @@ void KOAgenda::startItemAction(const QPoint& viewportPos)
   setActionCursor( mActionType, true );
 }
 
-void KOAgenda::performItemAction(const QPoint& viewportPos)
+void KOAgenda::performItemAction(const TQPoint& viewportPos)
 {
 //  kdDebug(5850) << "viewportPos: " << viewportPos.x() << "," << viewportPos.y() << endl;
-//  QPoint point = viewport()->mapToGlobal(viewportPos);
+//  TQPoint point = viewport()->mapToGlobal(viewportPos);
 //  kdDebug(5850) << "Global: " << point.x() << "," << point.y() << endl;
 //  point = clipper()->mapFromGlobal(point);
 //  kdDebug(5850) << "clipper: " << point.x() << "," << point.y() << endl;
 //  kdDebug(5850) << "visible height: " << visibleHeight() << endl;
-  QPoint pos = viewportToContents( viewportPos );
+  TQPoint pos = viewportToContents( viewportPos );
 //  kdDebug(5850) << "contents: " << x << "," << y << "\n" << endl;
-  QPoint gpos = contentsToGrid( pos );
-  QPoint clipperPos = clipper()->
+  TQPoint gpos = contentsToGrid( pos );
+  TQPoint clipperPos = clipper()->
                       mapFromGlobal(viewport()->mapToGlobal(viewportPos));
 
   // Cursor left active agenda area.
@@ -925,7 +925,7 @@ void KOAgenda::performItemAction(const QPoint& viewportPos)
       if (!firstItem) firstItem = mActionItem;
       KOAgendaItem *lastItem = mActionItem->lastMultiItem();
       if (!lastItem) lastItem = mActionItem;
-      QPoint deltapos = gpos - mEndCell;
+      TQPoint deltapos = gpos - mEndCell;
       KOAgendaItem *moveItem = firstItem;
       while (moveItem) {
         bool changed=false;
@@ -947,7 +947,7 @@ void KOAgenda::performItemAction(const QPoint& viewportPos)
               mItems.append( newFirst );
               moveItem->resize( int( mGridSpacingX * newFirst->cellWidth() ),
                                 int( mGridSpacingY * newFirst->cellHeight() ));
-              QPoint cpos = gridToContents( QPoint( newFirst->cellXLeft(), newFirst->cellYTop() ) );
+              TQPoint cpos = gridToContents( TQPoint( newFirst->cellXLeft(), newFirst->cellYTop() ) );
               addChild( newFirst, cpos.x(), cpos.y() );
             } else {
               newFirst = insertItem( moveItem->incidence(), moveItem->itemDate(),
@@ -992,7 +992,7 @@ void KOAgenda::performItemAction(const QPoint& viewportPos)
               mItems.append(newLast);
               moveItem->resize( int( mGridSpacingX * newLast->cellWidth() ),
                                 int( mGridSpacingY * newLast->cellHeight() ));
-              QPoint cpos = gridToContents( QPoint( newLast->cellXLeft(), newLast->cellYTop() ) ) ;
+              TQPoint cpos = gridToContents( TQPoint( newLast->cellXLeft(), newLast->cellYTop() ) ) ;
               addChild( newLast, cpos.x(), cpos.y() );
             } else {
               newLast = insertItem( moveItem->incidence(), moveItem->itemDate(),
@@ -1050,7 +1050,7 @@ void KOAgenda::endItemAction()
   if ( mItemMoved ) {
     bool modify = true;
     if ( mActionItem->incidence()->doesRecur() ) {
-      int res = KOMessageBox::fourBtnMsgBox( this, QMessageBox::Question,
+      int res = KOMessageBox::fourBtnMsgBox( this, TQMessageBox::Question,
           i18n("The item you try to change is a recurring item. Shall the changes "
                "be applied only to this single occurrence, only to the future items, "
                "or to all items in the recurrence?"),
@@ -1132,7 +1132,7 @@ void KOAgenda::endItemAction()
 
       KOAgendaItem *modif = placeItem;
 
-      QPtrList<KOAgendaItem> oldconflictItems = placeItem->conflictItems();
+      TQPtrList<KOAgendaItem> oldconflictItems = placeItem->conflictItems();
       KOAgendaItem *item;
       for ( item = oldconflictItems.first(); item != 0;
             item = oldconflictItems.next() ) {
@@ -1179,15 +1179,15 @@ void KOAgenda::setActionCursor( int actionType, bool acting )
   }
 }
 
-void KOAgenda::setNoActionCursor( KOAgendaItem *moveItem, const QPoint& viewportPos )
+void KOAgenda::setNoActionCursor( KOAgendaItem *moveItem, const TQPoint& viewportPos )
 {
 //  kdDebug(5850) << "viewportPos: " << viewportPos.x() << "," << viewportPos.y() << endl;
-//  QPoint point = viewport()->mapToGlobal(viewportPos);
+//  TQPoint point = viewport()->mapToGlobal(viewportPos);
 //  kdDebug(5850) << "Global: " << point.x() << "," << point.y() << endl;
 //  point = clipper()->mapFromGlobal(point);
 //  kdDebug(5850) << "clipper: " << point.x() << "," << point.y() << endl;
 
-  QPoint pos = viewportToContents( viewportPos );
+  TQPoint pos = viewportToContents( viewportPos );
   bool noResize = (moveItem && moveItem->incidence() &&
       moveItem->incidence()->type() == "Todo");
 
@@ -1201,10 +1201,10 @@ void KOAgenda::setNoActionCursor( KOAgendaItem *moveItem, const QPoint& viewport
 */
 double KOAgenda::calcSubCellWidth( KOAgendaItem *item )
 {
-  QPoint pt, pt1;
-  pt = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) );
-  pt1 = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) +
-                        QPoint( 1, 1 ) );
+  TQPoint pt, pt1;
+  pt = gridToContents( TQPoint( item->cellXLeft(), item->cellYTop() ) );
+  pt1 = gridToContents( TQPoint( item->cellXLeft(), item->cellYTop() ) +
+                        TQPoint( 1, 1 ) );
   pt1 -= pt;
   int maxSubCells = item->subCells();
   double newSubCellWidth;
@@ -1224,7 +1224,7 @@ void KOAgenda::adjustItemPosition( KOAgendaItem *item )
   int clXLeft = item->cellXLeft();
   if ( KOGlobals::self()->reverseLayout() )
     clXLeft = item->cellXRight() + 1;
-  QPoint cpos = gridToContents( QPoint( clXLeft, item->cellYTop() ) );
+  TQPoint cpos = gridToContents( TQPoint( clXLeft, item->cellYTop() ) );
   moveChild( item, cpos.x(), cpos.y() );
 }
 
@@ -1234,9 +1234,9 @@ void KOAgenda::placeAgendaItem( KOAgendaItem *item, double subCellWidth )
 //            << " subCellWidth: " << subCellWidth << endl;
 
   // "left" upper corner, no subcells yet, RTL layouts have right/left switched, widths are negative then
-  QPoint pt = gridToContents( QPoint( item->cellXLeft(), item->cellYTop() ) );
+  TQPoint pt = gridToContents( TQPoint( item->cellXLeft(), item->cellYTop() ) );
   // right lower corner
-  QPoint pt1 = gridToContents( QPoint( item->cellXLeft() + item->cellWidth(),
+  TQPoint pt1 = gridToContents( TQPoint( item->cellXLeft() + item->cellWidth(),
       item->cellYBottom()+1 ) );
 
   double subCellPos = item->subCell() * subCellWidth;
@@ -1296,16 +1296,16 @@ void KOAgenda::placeSubCells( KOAgendaItem *placeItem )
   kdDebug(5850) << "KOAgenda::placeSubCells()..." << endl;
 #endif
 
-  QPtrList<KOrg::CellItem> cells;
+  TQPtrList<KOrg::CellItem> cells;
   KOAgendaItem *item;
   for ( item = mItems.first(); item != 0; item = mItems.next() ) {
     cells.append( item );
   }
 
-  QPtrList<KOrg::CellItem> items = KOrg::CellItem::placeItem( cells,
+  TQPtrList<KOrg::CellItem> items = KOrg::CellItem::placeItem( cells,
                                                               placeItem );
 
-  placeItem->setConflictItems( QPtrList<KOAgendaItem>() );
+  placeItem->setConflictItems( TQPtrList<KOAgendaItem>() );
   double newSubCellWidth = calcSubCellWidth( placeItem );
   KOrg::CellItem *i;
   for ( i = items.first(); i; i = items.next() ) {
@@ -1322,22 +1322,22 @@ void KOAgenda::placeSubCells( KOAgendaItem *placeItem )
 
 int KOAgenda::columnWidth( int column )
 {
-  int start = gridToContents( QPoint( column, 0 ) ).x();
+  int start = gridToContents( TQPoint( column, 0 ) ).x();
   if (KOGlobals::self()->reverseLayout() )
     column--;
   else
     column++;
-  int end = gridToContents( QPoint( column, 0 ) ).x();
+  int end = gridToContents( TQPoint( column, 0 ) ).x();
   return end - start;
 }
 /*
   Draw grid in the background of the agenda.
 */
-void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
+void KOAgenda::drawContents(TQPainter* p, int cx, int cy, int cw, int ch)
 {
-  QPixmap db(cw, ch);
+  TQPixmap db(cw, ch);
   db.fill(KOPrefs::instance()->mAgendaBgColor);
-  QPainter dbp(&db);
+  TQPainter dbp(&db);
   dbp.translate(-cx,-cy);
 
 //  kdDebug(5850) << "KOAgenda::drawContents()" << endl;
@@ -1345,8 +1345,8 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
 
   // Highlight working hours
   if (mWorkingHoursEnable) {
-    QPoint pt1( cx, mWorkingHoursYTop );
-    QPoint pt2( cx+cw, mWorkingHoursYBottom );
+    TQPoint pt1( cx, mWorkingHoursYTop );
+    TQPoint pt2( cx+cw, mWorkingHoursYBottom );
     if ( pt2.x() >= pt1.x() /*&& pt2.y() >= pt1.y()*/) {
       int gxStart = contentsToGrid( pt1 ).x();
       int gxEnd = contentsToGrid( pt2 ).x();
@@ -1358,7 +1358,7 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
       }
       int xoffset = ( KOGlobals::self()->reverseLayout()?1:0 );
       while( gxStart <= gxEnd ) {
-        int xStart = gridToContents( QPoint( gxStart+xoffset, 0 ) ).x();
+        int xStart = gridToContents( TQPoint( gxStart+xoffset, 0 ) ).x();
         int xWidth = columnWidth( gxStart ) + 1;
         if ( pt2.y() < pt1.y() ) {
           // overnight working hours
@@ -1389,32 +1389,32 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
 
   // draw selection
   if ( mHasSelection ) {
-    QPoint pt, pt1;
+    TQPoint pt, pt1;
 
     if ( mSelectionEndCell.x() > mSelectionStartCell.x() ) { // multi day selection
       // draw start day
       pt = gridToContents( mSelectionStartCell );
-      pt1 = gridToContents( QPoint( mSelectionStartCell.x() + 1, mRows + 1 ) );
-      dbp.fillRect( QRect( pt, pt1 ), KOPrefs::instance()->mHighlightColor );
+      pt1 = gridToContents( TQPoint( mSelectionStartCell.x() + 1, mRows + 1 ) );
+      dbp.fillRect( TQRect( pt, pt1 ), KOPrefs::instance()->mHighlightColor );
       // draw all other days between the start day and the day of the selection end
       for ( int c = mSelectionStartCell.x() + 1; c < mSelectionEndCell.x(); ++c ) {
-        pt = gridToContents( QPoint( c, 0 ) );
-        pt1 = gridToContents( QPoint( c + 1, mRows + 1 ) );
-        dbp.fillRect( QRect( pt, pt1 ), KOPrefs::instance()->mHighlightColor );
+        pt = gridToContents( TQPoint( c, 0 ) );
+        pt1 = gridToContents( TQPoint( c + 1, mRows + 1 ) );
+        dbp.fillRect( TQRect( pt, pt1 ), KOPrefs::instance()->mHighlightColor );
       }
       // draw end day
-      pt = gridToContents( QPoint( mSelectionEndCell.x(), 0 ) );
-      pt1 = gridToContents( mSelectionEndCell + QPoint(1,1) );
-      dbp.fillRect( QRect( pt, pt1), KOPrefs::instance()->mHighlightColor );
+      pt = gridToContents( TQPoint( mSelectionEndCell.x(), 0 ) );
+      pt1 = gridToContents( mSelectionEndCell + TQPoint(1,1) );
+      dbp.fillRect( TQRect( pt, pt1), KOPrefs::instance()->mHighlightColor );
     }  else { // single day selection
       pt = gridToContents( mSelectionStartCell );
-      pt1 = gridToContents( mSelectionEndCell + QPoint(1,1) );
-      dbp.fillRect( QRect( pt, pt1 ), KOPrefs::instance()->mHighlightColor );
+      pt1 = gridToContents( mSelectionEndCell + TQPoint(1,1) );
+      dbp.fillRect( TQRect( pt, pt1 ), KOPrefs::instance()->mHighlightColor );
     }
   }
 
-  QPen hourPen( KOPrefs::instance()->mAgendaBgColor.dark( 150 ) );
-  QPen halfHourPen( KOPrefs::instance()->mAgendaBgColor.dark( 125 ) );
+  TQPen hourPen( KOPrefs::instance()->mAgendaBgColor.dark( 150 ) );
+  TQPen halfHourPen( KOPrefs::instance()->mAgendaBgColor.dark( 125 ) );
   dbp.setPen( hourPen );
 
   // Draw vertical lines of grid, start with the last line not yet visible
@@ -1445,23 +1445,23 @@ void KOAgenda::drawContents(QPainter* p, int cx, int cy, int cw, int ch)
 /*
   Convert srcollview contents coordinates to agenda grid coordinates.
 */
-QPoint KOAgenda::contentsToGrid ( const QPoint &pos ) const
+TQPoint KOAgenda::contentsToGrid ( const TQPoint &pos ) const
 {
   int gx = int( KOGlobals::self()->reverseLayout() ?
         mColumns - pos.x()/mGridSpacingX : pos.x()/mGridSpacingX );
   int gy = int( pos.y()/mGridSpacingY );
-  return QPoint( gx, gy );
+  return TQPoint( gx, gy );
 }
 
 /*
   Convert agenda grid coordinates to scrollview contents coordinates.
 */
-QPoint KOAgenda::gridToContents( const QPoint &gpos ) const
+TQPoint KOAgenda::gridToContents( const TQPoint &gpos ) const
 {
   int x = int( KOGlobals::self()->reverseLayout() ?
              (mColumns - gpos.x())*mGridSpacingX : gpos.x()*mGridSpacingX );
   int y = int( gpos.y()*mGridSpacingY );
-  return QPoint( x, y );
+  return TQPoint( x, y );
 }
 
 
@@ -1469,7 +1469,7 @@ QPoint KOAgenda::gridToContents( const QPoint &gpos ) const
   Return Y coordinate corresponding to time. Coordinates are rounded to fit into
   the grid.
 */
-int KOAgenda::timeToY(const QTime &time)
+int KOAgenda::timeToY(const TQTime &time)
 {
 //  kdDebug(5850) << "Time: " << time.toString() << endl;
   int minutesPerCell = 24 * 60 / mRows;
@@ -1487,14 +1487,14 @@ int KOAgenda::timeToY(const QTime &time)
   Return time corresponding to cell y coordinate. Coordinates are rounded to
   fit into the grid.
 */
-QTime KOAgenda::gyToTime(int gy)
+TQTime KOAgenda::gyToTime(int gy)
 {
 //  kdDebug(5850) << "gyToTime: " << gy << endl;
   int secondsPerCell = 24 * 60 * 60/ mRows;
 
   int timeSeconds = secondsPerCell * gy;
 
-  QTime time( 0, 0, 0 );
+  TQTime time( 0, 0, 0 );
   if ( timeSeconds < 24 * 60 * 60 ) {
     time = time.addSecs(timeSeconds);
   } else {
@@ -1505,10 +1505,10 @@ QTime KOAgenda::gyToTime(int gy)
   return time;
 }
 
-QMemArray<int> KOAgenda::minContentsY()
+TQMemArray<int> KOAgenda::minContentsY()
 {
-  QMemArray<int> minArray;
-  minArray.fill( timeToY( QTime(23, 59) ), mSelectedDates.count() );
+  TQMemArray<int> minArray;
+  minArray.fill( timeToY( TQTime(23, 59) ), mSelectedDates.count() );
   for ( KOAgendaItem *item = mItems.first();
         item != 0; item = mItems.next() ) {
     int ymin = item->cellYTop();
@@ -1522,10 +1522,10 @@ QMemArray<int> KOAgenda::minContentsY()
   return minArray;
 }
 
-QMemArray<int> KOAgenda::maxContentsY()
+TQMemArray<int> KOAgenda::maxContentsY()
 {
-  QMemArray<int> maxArray;
-  maxArray.fill( timeToY( QTime(0, 0) ), mSelectedDates.count() );
+  TQMemArray<int> maxArray;
+  maxArray.fill( timeToY( TQTime(0, 0) ), mSelectedDates.count() );
   for ( KOAgendaItem *item = mItems.first();
         item != 0; item = mItems.next() ) {
     int ymax = item->cellYBottom();
@@ -1539,7 +1539,7 @@ QMemArray<int> KOAgenda::maxContentsY()
   return maxArray;
 }
 
-void KOAgenda::setStartTime( const QTime &startHour )
+void KOAgenda::setStartTime( const TQTime &startHour )
 {
   double startPos = ( startHour.hour()/24. + startHour.minute()/1440. +
                       startHour.second()/86400. ) * mRows * gridSpacingY();
@@ -1550,7 +1550,7 @@ void KOAgenda::setStartTime( const QTime &startHour )
 /*
   Insert KOAgendaItem into agenda.
 */
-KOAgendaItem *KOAgenda::insertItem( Incidence *incidence, const QDate &qd, int X,
+KOAgendaItem *KOAgenda::insertItem( Incidence *incidence, const TQDate &qd, int X,
                                     int YTop, int YBottom )
 {
 #if 0
@@ -1568,10 +1568,10 @@ KOAgendaItem *KOAgenda::insertItem( Incidence *incidence, const QDate &qd, int X
   mActionType = NOP;
 
   KOAgendaItem *agendaItem = new KOAgendaItem( incidence, qd, viewport() );
-  connect( agendaItem, SIGNAL( removeAgendaItem( KOAgendaItem * ) ),
-           SLOT( removeAgendaItem( KOAgendaItem * ) ) );
-  connect( agendaItem, SIGNAL( showAgendaItem( KOAgendaItem * ) ),
-           SLOT( showAgendaItem( KOAgendaItem * ) ) );
+  connect( agendaItem, TQT_SIGNAL( removeAgendaItem( KOAgendaItem * ) ),
+           TQT_SLOT( removeAgendaItem( KOAgendaItem * ) ) );
+  connect( agendaItem, TQT_SIGNAL( showAgendaItem( KOAgendaItem * ) ),
+           TQT_SLOT( showAgendaItem( KOAgendaItem * ) ) );
 
   if ( YBottom <= YTop ) {
     kdDebug(5850) << "KOAgenda::insertItem(): Text: " << agendaItem->text() << " YSize<0" << endl;
@@ -1602,7 +1602,7 @@ KOAgendaItem *KOAgenda::insertItem( Incidence *incidence, const QDate &qd, int X
 /*
   Insert all-day KOAgendaItem into agenda.
 */
-KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const QDate &qd,
+KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const TQDate &qd,
                                           int XBegin, int XEnd )
 {
   if ( !mAllDayMode ) {
@@ -1613,10 +1613,10 @@ KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const QDate &qd,
   mActionType = NOP;
 
   KOAgendaItem *agendaItem = new KOAgendaItem( event, qd, viewport() );
-  connect( agendaItem, SIGNAL( removeAgendaItem( KOAgendaItem* ) ),
-           SLOT( removeAgendaItem( KOAgendaItem* ) ) );
-  connect( agendaItem, SIGNAL( showAgendaItem( KOAgendaItem* ) ),
-           SLOT( showAgendaItem( KOAgendaItem* ) ) );
+  connect( agendaItem, TQT_SIGNAL( removeAgendaItem( KOAgendaItem* ) ),
+           TQT_SLOT( removeAgendaItem( KOAgendaItem* ) ) );
+  connect( agendaItem, TQT_SIGNAL( showAgendaItem( KOAgendaItem* ) ),
+           TQT_SLOT( showAgendaItem( KOAgendaItem* ) ) );
 
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
@@ -1640,7 +1640,7 @@ KOAgendaItem *KOAgenda::insertAllDayItem( Incidence *event, const QDate &qd,
 }
 
 
-void KOAgenda::insertMultiItem (Event *event,const QDate &qd,int XBegin,int XEnd,
+void KOAgenda::insertMultiItem (Event *event,const TQDate &qd,int XBegin,int XEnd,
                                 int YTop,int YBottom)
 {
   if (mAllDayMode) {
@@ -1650,11 +1650,11 @@ void KOAgenda::insertMultiItem (Event *event,const QDate &qd,int XBegin,int XEnd
   mActionType = NOP;
 
   int cellX,cellYTop,cellYBottom;
-  QString newtext;
+  TQString newtext;
   int width = XEnd - XBegin + 1;
   int count = 0;
   KOAgendaItem *current = 0;
-  QPtrList<KOAgendaItem> multiItems;
+  TQPtrList<KOAgendaItem> multiItems;
   int visibleCount = mSelectedDates.first().daysTo(mSelectedDates.last());
   for ( cellX = XBegin; cellX <= XEnd; ++cellX ) {
     ++count;
@@ -1664,7 +1664,7 @@ void KOAgenda::insertMultiItem (Event *event,const QDate &qd,int XBegin,int XEnd
       else cellYTop = 0;
       if ( cellX == XEnd ) cellYBottom = YBottom;
       else cellYBottom = rows() - 1;
-      newtext = QString("(%1/%2): ").arg( count ).arg( width );
+      newtext = TQString("(%1/%2): ").arg( count ).arg( width );
       newtext.append( event->summary() );
 
       current = insertItem( event, qd, cellX, cellYTop, cellYBottom );
@@ -1699,7 +1699,7 @@ void KOAgenda::removeIncidence( Incidence *incidence )
   // First find all items to be deleted and store them
   // in its own list. Otherwise removeAgendaItem will reset
   // the current position and mess this up.
-  QPtrList<KOAgendaItem> itemsToRemove;
+  TQPtrList<KOAgendaItem> itemsToRemove;
 
   KOAgendaItem *item = mItems.first();
   while ( item ) {
@@ -1732,7 +1732,7 @@ bool KOAgenda::removeAgendaItem( KOAgendaItem *item )
   // we found the item. Let's remove it and update the conflicts
   bool taken = false;
   KOAgendaItem *thisItem = item;
-  QPtrList<KOAgendaItem> conflictItems = thisItem->conflictItems();
+  TQPtrList<KOAgendaItem> conflictItems = thisItem->conflictItems();
   removeChild( thisItem );
   int pos = mItems.find( thisItem );
   if ( pos>=0 ) {
@@ -1748,7 +1748,7 @@ bool KOAgenda::removeAgendaItem( KOAgendaItem *item )
 
   }
   mItemsToDelete.append( thisItem );
-  QTimer::singleShot( 0, this, SLOT( deleteItemsToDelete() ) );
+  TQTimer::singleShot( 0, this, TQT_SLOT( deleteItemsToDelete() ) );
   return taken;
 }
 
@@ -1757,7 +1757,7 @@ void KOAgenda::deleteItemsToDelete()
   mItemsToDelete.clear();
 }
 
-/*QSizePolicy KOAgenda::sizePolicy() const
+/*TQSizePolicy KOAgenda::sizePolicy() const
 {
   // Thought this would make the all-day event agenda minimum size and the
   // normal agenda take the remaining space. But it doesnt work. The QSplitter
@@ -1765,21 +1765,21 @@ void KOAgenda::deleteItemsToDelete()
   // Preferred one.
   // But it doesnt hurt, so it stays.
   if (mAllDayMode) {
-    return QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+    return TQSizePolicy(TQSizePolicy::Expanding,TQSizePolicy::Preferred);
   } else {
-    return QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    return TQSizePolicy(TQSizePolicy::Expanding,TQSizePolicy::Expanding);
   }
 }
 */
 
 /*
-  Overridden from QScrollView to provide proper resizing of KOAgendaItems.
+  Overridden from TQScrollView to provide proper resizing of KOAgendaItems.
 */
-void KOAgenda::resizeEvent ( QResizeEvent *ev )
+void KOAgenda::resizeEvent ( TQResizeEvent *ev )
 {
 //  kdDebug(5850) << "KOAgenda::resizeEvent" << endl;
 
-  QSize newSize( ev->size() );
+  TQSize newSize( ev->size() );
   if (mAllDayMode) {
     mGridSpacingX = double( newSize.width() - 2 * frameWidth() ) / (double)mColumns;
     mGridSpacingY = newSize.height() - 2 * frameWidth();
@@ -1792,9 +1792,9 @@ void KOAgenda::resizeEvent ( QResizeEvent *ev )
       mGridSpacingY = mDesiredGridSpacingY;
   }
   calculateWorkingHours();
-  QTimer::singleShot( 0, this, SLOT( resizeAllContents() ) );
+  TQTimer::singleShot( 0, this, TQT_SLOT( resizeAllContents() ) );
   emit gridSpacingYChanged( mGridSpacingY * 4 );
-  QScrollView::resizeEvent(ev);
+  TQScrollView::resizeEvent(ev);
 }
 
 void KOAgenda::resizeAllContents()
@@ -1919,7 +1919,7 @@ void KOAgenda::selectItem(KOAgendaItem *item)
   emit incidenceSelected( incidence );
 }
 
-void KOAgenda::selectItemByUID( const QString& uid )
+void KOAgenda::selectItemByUID( const TQString& uid )
 {
   KOAgendaItem *item;
   for ( item = mItems.first(); item != 0; item = mItems.next() ) {
@@ -1931,7 +1931,7 @@ void KOAgenda::selectItemByUID( const QString& uid )
 }
 
 // This function seems never be called.
-void KOAgenda::keyPressEvent( QKeyEvent *kev )
+void KOAgenda::keyPressEvent( TQKeyEvent *kev )
 {
   switch(kev->key()) {
     case Key_PageDown:
@@ -1955,7 +1955,7 @@ void KOAgenda::calculateWorkingHours()
 {
   mWorkingHoursEnable = !mAllDayMode;
 
-  QTime tmp = KOPrefs::instance()->mWorkingHoursStart.time();
+  TQTime tmp = KOPrefs::instance()->mWorkingHoursStart.time();
   mWorkingHoursYTop = int( 4 * mGridSpacingY *
                            ( tmp.hour() + tmp.minute() / 60. +
                              tmp.second() / 3600. ) );
@@ -1977,24 +1977,24 @@ void KOAgenda::setDateList(const DateList &selectedDates)
     marcus_bains();
 }
 
-void KOAgenda::setHolidayMask(QMemArray<bool> *mask)
+void KOAgenda::setHolidayMask(TQMemArray<bool> *mask)
 {
   mHolidayMask = mask;
 
 }
 
-void KOAgenda::contentsMousePressEvent ( QMouseEvent *event )
+void KOAgenda::contentsMousePressEvent ( TQMouseEvent *event )
 {
   kdDebug(5850) << "KOagenda::contentsMousePressEvent(): type: " << event->type() << endl;
-  QScrollView::contentsMousePressEvent(event);
+  TQScrollView::contentsMousePressEvent(event);
 }
 
-void KOAgenda::setTypeAheadReceiver( QObject *o )
+void KOAgenda::setTypeAheadReceiver( TQObject *o )
 {
   mTypeAheadReceiver = o;
 }
 
-QObject *KOAgenda::typeAheadReceiver() const
+TQObject *KOAgenda::typeAheadReceiver() const
 {
   return mTypeAheadReceiver;
 }

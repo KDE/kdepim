@@ -18,7 +18,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qfile.h>
+#include <tqfile.h>
 
 #include <kabc/vcardconverter.h>
 #include <kdebug.h>
@@ -88,13 +88,13 @@ void ResourceCached::loadCache()
   mIdMapper.load();
 
   // load cache
-  QFile file( cacheFile() );
+  TQFile file( cacheFile() );
   if ( !file.open( IO_ReadOnly ) )
     return;
 
 
   KABC::VCardConverter converter;
-  KABC::Addressee::List list = converter.parseVCards( QString::fromUtf8( file.readAll() ) );
+  KABC::Addressee::List list = converter.parseVCards( TQString::fromUtf8( file.readAll() ) );
   KABC::Addressee::List::Iterator it;
 
   for ( it = list.begin(); it != list.end(); ++it ) {
@@ -112,14 +112,14 @@ void ResourceCached::saveCache()
   mIdMapper.save();
 
   // save cache
-  QFile file( cacheFile() );
+  TQFile file( cacheFile() );
   if ( !file.open( IO_WriteOnly ) )
     return;
 
   KABC::Addressee::List list = mAddrMap.values();
 
   KABC::VCardConverter converter;
-  QString vCard = converter.createVCards( list );
+  TQString vCard = converter.createVCards( list );
   file.writeBlock( vCard.utf8(), vCard.utf8().length() );
   file.close();
 }
@@ -133,13 +133,13 @@ void ResourceCached::clearCache()
 void ResourceCached::cleanUpCache( const KABC::Addressee::List &addrList )
 {
   // load cache
-  QFile file( cacheFile() );
+  TQFile file( cacheFile() );
   if ( !file.open( IO_ReadOnly ) )
     return;
 
 
   KABC::VCardConverter converter;
-  KABC::Addressee::List list = converter.parseVCards( QString::fromUtf8( file.readAll() ) );
+  KABC::Addressee::List list = converter.parseVCards( TQString::fromUtf8( file.readAll() ) );
   KABC::Addressee::List::Iterator cacheIt;
   KABC::Addressee::List::ConstIterator it;
 
@@ -185,7 +185,7 @@ void ResourceCached::clearChange( const KABC::Addressee &addr )
   mDeletedAddressees.remove( addr.uid() );
 }
 
-void ResourceCached::clearChange( const QString &uid )
+void ResourceCached::clearChange( const TQString &uid )
 {
   mAddedAddressees.remove( uid );
   mChangedAddressees.remove( uid );
@@ -207,19 +207,19 @@ KABC::Addressee::List ResourceCached::deletedAddressees() const
   return mDeletedAddressees.values();
 }
 
-QString ResourceCached::cacheFile() const
+TQString ResourceCached::cacheFile() const
 {
   return locateLocal( "cache", "kabc/kresources/" + identifier() );
 }
 
-QString ResourceCached::changesCacheFile( const QString &type ) const
+TQString ResourceCached::changesCacheFile( const TQString &type ) const
 {
   return locateLocal( "cache", "kabc/changescache/" + identifier() + "_" + type );
 }
 
-void ResourceCached::saveChangesCache( const QMap<QString, KABC::Addressee> &map, const QString &type )
+void ResourceCached::saveChangesCache( const TQMap<TQString, KABC::Addressee> &map, const TQString &type )
 {
-  QFile file( changesCacheFile( type ) );
+  TQFile file( changesCacheFile( type ) );
 
   const KABC::Addressee::List list = map.values();
   if ( list.isEmpty() ) {
@@ -231,8 +231,8 @@ void ResourceCached::saveChangesCache( const QMap<QString, KABC::Addressee> &map
     }
 
     KABC::VCardConverter converter;
-    const QString vCards = converter.createVCards( list );
-    QCString content = vCards.utf8();
+    const TQString vCards = converter.createVCards( list );
+    TQCString content = vCards.utf8();
     file.writeBlock( content, content.length() );
   }
 }
@@ -244,15 +244,15 @@ void ResourceCached::saveChangesCache()
   saveChangesCache( mChangedAddressees, "changed" );
 }
 
-void ResourceCached::loadChangesCache( QMap<QString, KABC::Addressee> &map, const QString &type )
+void ResourceCached::loadChangesCache( TQMap<TQString, KABC::Addressee> &map, const TQString &type )
 {
-  QFile file( changesCacheFile( type ) );
+  TQFile file( changesCacheFile( type ) );
   if ( !file.open( IO_ReadOnly ) )
     return;
 
   KABC::VCardConverter converter;
 
-  const KABC::Addressee::List list = converter.parseVCards( QString::fromUtf8( file.readAll() ) );
+  const KABC::Addressee::List list = converter.parseVCards( TQString::fromUtf8( file.readAll() ) );
   KABC::Addressee::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     map.insert( (*it).uid(), *it );

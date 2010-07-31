@@ -23,22 +23,22 @@
 */
 
 
-#include <qwidget.h>
-#include <qtooltip.h>
-#include <qlayout.h>
-#include <qvbox.h>
-#include <qhbox.h>
-#include <qbuttongroup.h>
-#include <qvgroupbox.h>
-#include <qwidgetstack.h>
-#include <qdatetime.h>
-#include <qlineedit.h>
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qcombobox.h>
-#include <qspinbox.h>
-#include <qwhatsthis.h>
+#include <tqwidget.h>
+#include <tqtooltip.h>
+#include <tqlayout.h>
+#include <tqvbox.h>
+#include <tqhbox.h>
+#include <tqbuttongroup.h>
+#include <tqvgroupbox.h>
+#include <tqwidgetstack.h>
+#include <tqdatetime.h>
+#include <tqlineedit.h>
+#include <tqlabel.h>
+#include <tqcheckbox.h>
+#include <tqpushbutton.h>
+#include <tqcombobox.h>
+#include <tqspinbox.h>
+#include <tqwhatsthis.h>
 
 #include <kglobal.h>
 #include <kdialog.h>
@@ -67,8 +67,8 @@
 #include "koeditorgeneral.moc"
 #include "kohelper.h"
 
-KOEditorGeneral::KOEditorGeneral(QObject* parent, const char* name) :
-  QObject( parent, name ), mAttachments(0)
+KOEditorGeneral::KOEditorGeneral(TQObject* parent, const char* name) :
+  TQObject( parent, name ), mAttachments(0)
 {
   mAlarmList.setAutoDelete( true );
 }
@@ -78,111 +78,111 @@ KOEditorGeneral::~KOEditorGeneral()
 }
 
 
-FocusLineEdit::FocusLineEdit( QWidget *parent )
-  : QLineEdit( parent ), mSkipFirst( true )
+FocusLineEdit::FocusLineEdit( TQWidget *parent )
+  : TQLineEdit( parent ), mSkipFirst( true )
 {
 }
 
-void FocusLineEdit::focusInEvent ( QFocusEvent *e )
+void FocusLineEdit::focusInEvent ( TQFocusEvent *e )
 {
   if ( !mSkipFirst ) {
     emit focusReceivedSignal();
   } else {
     mSkipFirst = false;
   }
-  QLineEdit::focusInEvent( e );
+  TQLineEdit::focusInEvent( e );
 }
 
 
-void KOEditorGeneral::initHeader( QWidget *parent,QBoxLayout *topLayout)
+void KOEditorGeneral::initHeader( TQWidget *parent,TQBoxLayout *topLayout)
 {
-  QGridLayout *headerLayout = new QGridLayout();
+  TQGridLayout *headerLayout = new TQGridLayout();
   headerLayout->setSpacing( topLayout->spacing() );
   topLayout->addLayout( headerLayout );
 
 #if 0
-  mOwnerLabel = new QLabel(i18n("Owner:"),parent);
+  mOwnerLabel = new TQLabel(i18n("Owner:"),parent);
   headerLayout->addMultiCellWidget(mOwnerLabel,0,0,0,1);
 #endif
 
-  QString whatsThis = i18n("Sets the Title of this event or to-do.");
-  QLabel *summaryLabel = new QLabel( i18n("T&itle:"), parent );
-  QWhatsThis::add( summaryLabel, whatsThis );
-  QFont f = summaryLabel->font();
+  TQString whatsThis = i18n("Sets the Title of this event or to-do.");
+  TQLabel *summaryLabel = new TQLabel( i18n("T&itle:"), parent );
+  TQWhatsThis::add( summaryLabel, whatsThis );
+  TQFont f = summaryLabel->font();
   f.setBold( true );
   summaryLabel->setFont(f);
   headerLayout->addWidget(summaryLabel,1,0);
 
   mSummaryEdit = new FocusLineEdit( parent );
-  QWhatsThis::add( mSummaryEdit, whatsThis );
-  connect( mSummaryEdit, SIGNAL( focusReceivedSignal() ),
-           SIGNAL( focusReceivedSignal() ) );
+  TQWhatsThis::add( mSummaryEdit, whatsThis );
+  connect( mSummaryEdit, TQT_SIGNAL( focusReceivedSignal() ),
+           TQT_SIGNAL( focusReceivedSignal() ) );
   headerLayout->addWidget(mSummaryEdit,1,1);
   summaryLabel->setBuddy( mSummaryEdit );
 
-  mAttendeeSummaryLabel = new QLabel( parent );
+  mAttendeeSummaryLabel = new TQLabel( parent );
   updateAttendeeSummary( 0 );
   headerLayout->addWidget( mAttendeeSummaryLabel, 1, 2 );
 
   whatsThis = i18n("Sets where the event or to-do will take place.");
-  QLabel *locationLabel = new QLabel( i18n("&Location:"), parent );
-  QWhatsThis::add( locationLabel, whatsThis );
+  TQLabel *locationLabel = new TQLabel( i18n("&Location:"), parent );
+  TQWhatsThis::add( locationLabel, whatsThis );
   headerLayout->addWidget(locationLabel,2,0);
 
-  mLocationEdit = new QLineEdit( parent );
-  QWhatsThis::add( mLocationEdit, whatsThis );
+  mLocationEdit = new TQLineEdit( parent );
+  TQWhatsThis::add( mLocationEdit, whatsThis );
   headerLayout->addMultiCellWidget( mLocationEdit, 2, 2, 1, 2 );
   locationLabel->setBuddy( mLocationEdit );
 
-  QBoxLayout *thirdLineLayout = new QHBoxLayout();
+  TQBoxLayout *thirdLineLayout = new TQHBoxLayout();
   headerLayout->addMultiCellLayout( thirdLineLayout, 3, 3, 0, 2 );
 
-  mResourceLabel = new QLabel( parent );
+  mResourceLabel = new TQLabel( parent );
   mResourceLabel->hide();
   thirdLineLayout->addWidget( mResourceLabel );
 
   whatsThis = i18n("Allows you to select the categories that this event or to-do belongs to.");
-  QLabel *categoriesLabel = new QLabel( i18n("Categories:"), parent );
-  QWhatsThis::add( categoriesLabel, whatsThis );
+  TQLabel *categoriesLabel = new TQLabel( i18n("Categories:"), parent );
+  TQWhatsThis::add( categoriesLabel, whatsThis );
   thirdLineLayout->addWidget( categoriesLabel );
   mCategoriesLabel = new KSqueezedTextLabel( parent );
-  QWhatsThis::add( mCategoriesLabel, whatsThis );
-  mCategoriesLabel->setFrameStyle(QFrame::Panel|QFrame::Sunken);
+  TQWhatsThis::add( mCategoriesLabel, whatsThis );
+  mCategoriesLabel->setFrameStyle(TQFrame::Panel|TQFrame::Sunken);
   thirdLineLayout->addWidget( mCategoriesLabel );
 
-  mCategoriesButton = new QPushButton( parent );
+  mCategoriesButton = new TQPushButton( parent );
   mCategoriesButton->setText(i18n("&Select..."));
-  QWhatsThis::add( mCategoriesButton, whatsThis );
-  connect(mCategoriesButton,SIGNAL(clicked()),SLOT(selectCategories()));
+  TQWhatsThis::add( mCategoriesButton, whatsThis );
+  connect(mCategoriesButton,TQT_SIGNAL(clicked()),TQT_SLOT(selectCategories()));
   thirdLineLayout->addWidget( mCategoriesButton );
 }
 
-void KOEditorGeneral::initSecrecy(QWidget *parent, QBoxLayout *topLayout)
+void KOEditorGeneral::initSecrecy(TQWidget *parent, TQBoxLayout *topLayout)
 {
-  QBoxLayout *secrecyLayout = new QHBoxLayout( topLayout );
+  TQBoxLayout *secrecyLayout = new TQHBoxLayout( topLayout );
 
-  QLabel *secrecyLabel = new QLabel(i18n("Acc&ess:"),parent);
-  QString whatsThis = i18n("Sets whether the access to this event or to-do "
+  TQLabel *secrecyLabel = new TQLabel(i18n("Acc&ess:"),parent);
+  TQString whatsThis = i18n("Sets whether the access to this event or to-do "
   			   "is restricted. Please note that KOrganizer "
 			   "currently does not use this setting, so the "
 			   "implementation of the restrictions will depend "
 			   "on the groupware server. This means that events "
 			   "or to-dos marked as private or confidential may "
 			   "be visible to others.");
-  QWhatsThis::add( secrecyLabel, whatsThis );
+  TQWhatsThis::add( secrecyLabel, whatsThis );
   secrecyLayout->addWidget(secrecyLabel);
 
-  mSecrecyCombo = new QComboBox(parent);
-  QWhatsThis::add( mSecrecyCombo, whatsThis );
+  mSecrecyCombo = new TQComboBox(parent);
+  TQWhatsThis::add( mSecrecyCombo, whatsThis );
   mSecrecyCombo->insertStringList(Incidence::secrecyList());
   secrecyLayout->addWidget(mSecrecyCombo);
   secrecyLabel->setBuddy( mSecrecyCombo );
 }
 
-void KOEditorGeneral::initDescription(QWidget *parent,QBoxLayout *topLayout)
+void KOEditorGeneral::initDescription(TQWidget *parent,TQBoxLayout *topLayout)
 {
   mDescriptionEdit = new KTextEdit(parent);
-  QWhatsThis::add( mDescriptionEdit,
+  TQWhatsThis::add( mDescriptionEdit,
 		   i18n("Sets the description for this event or to-do. This "
 			"will be displayed in a reminder if one is set, "
 			"as well as in a tooltip when you hover over the "
@@ -195,70 +195,70 @@ void KOEditorGeneral::initDescription(QWidget *parent,QBoxLayout *topLayout)
   topLayout->addWidget(mDescriptionEdit, 4);
 }
 
-void KOEditorGeneral::initAlarm(QWidget *parent,QBoxLayout *topLayout)
+void KOEditorGeneral::initAlarm(TQWidget *parent,TQBoxLayout *topLayout)
 {
-  QBoxLayout *alarmLayout = new QHBoxLayout(topLayout);
+  TQBoxLayout *alarmLayout = new TQHBoxLayout(topLayout);
 
-  mAlarmBell = new QLabel(parent);
+  mAlarmBell = new TQLabel(parent);
   mAlarmBell->setPixmap(KOGlobals::self()->smallIcon("bell"));
   alarmLayout->addWidget( mAlarmBell );
 
 
-  mAlarmStack = new QWidgetStack( parent );
+  mAlarmStack = new TQWidgetStack( parent );
   alarmLayout->addWidget( mAlarmStack );
 
-  mAlarmInfoLabel = new QLabel( i18n("No reminders configured"), mAlarmStack );
+  mAlarmInfoLabel = new TQLabel( i18n("No reminders configured"), mAlarmStack );
   mAlarmStack->addWidget( mAlarmInfoLabel, AdvancedAlarmLabel );
 
-  QHBox *simpleAlarmBox = new QHBox( mAlarmStack );
+  TQHBox *simpleAlarmBox = new TQHBox( mAlarmStack );
   mAlarmStack->addWidget( simpleAlarmBox, SimpleAlarmPage );
 
-  mAlarmButton = new QCheckBox(i18n("&Reminder:"), simpleAlarmBox );
-  QWhatsThis::add( mAlarmButton,
+  mAlarmButton = new TQCheckBox(i18n("&Reminder:"), simpleAlarmBox );
+  TQWhatsThis::add( mAlarmButton,
        i18n("Activates a reminder for this event or to-do.") );
 
-  QString whatsThis = i18n("Sets how long before the event occurs "
+  TQString whatsThis = i18n("Sets how long before the event occurs "
                            "the reminder will be triggered.");
-  mAlarmTimeEdit = new QSpinBox( 0, 99999, 1, simpleAlarmBox, "alarmTimeEdit" );
+  mAlarmTimeEdit = new TQSpinBox( 0, 99999, 1, simpleAlarmBox, "alarmTimeEdit" );
   mAlarmTimeEdit->setValue( 0 );
-  QWhatsThis::add( mAlarmTimeEdit, whatsThis );
+  TQWhatsThis::add( mAlarmTimeEdit, whatsThis );
 
-  mAlarmIncrCombo = new QComboBox( false, simpleAlarmBox );
-  QWhatsThis::add( mAlarmIncrCombo, whatsThis );
+  mAlarmIncrCombo = new TQComboBox( false, simpleAlarmBox );
+  TQWhatsThis::add( mAlarmIncrCombo, whatsThis );
   mAlarmIncrCombo->insertItem( i18n("minute(s)") );
   mAlarmIncrCombo->insertItem( i18n("hour(s)") );
   mAlarmIncrCombo->insertItem( i18n("day(s)") );
 //  mAlarmIncrCombo->setMinimumHeight(20);
-  connect(mAlarmButton, SIGNAL(toggled(bool)), mAlarmTimeEdit, SLOT(setEnabled(bool)));
-  connect(mAlarmButton, SIGNAL(toggled(bool)), mAlarmIncrCombo, SLOT(setEnabled(bool)));
+  connect(mAlarmButton, TQT_SIGNAL(toggled(bool)), mAlarmTimeEdit, TQT_SLOT(setEnabled(bool)));
+  connect(mAlarmButton, TQT_SIGNAL(toggled(bool)), mAlarmIncrCombo, TQT_SLOT(setEnabled(bool)));
   mAlarmTimeEdit->setEnabled( false );
   mAlarmIncrCombo->setEnabled( false );
 
-  mAlarmEditButton = new QPushButton( i18n("Advanced"), parent );
+  mAlarmEditButton = new TQPushButton( i18n("Advanced"), parent );
   mAlarmEditButton->setEnabled( false );
   alarmLayout->addWidget( mAlarmEditButton );
-  connect( mAlarmButton, SIGNAL(toggled(bool)), mAlarmEditButton, SLOT(setEnabled( bool)));
-  connect( mAlarmEditButton, SIGNAL( clicked() ),
-      SLOT( editAlarms() ) );
+  connect( mAlarmButton, TQT_SIGNAL(toggled(bool)), mAlarmEditButton, TQT_SLOT(setEnabled( bool)));
+  connect( mAlarmEditButton, TQT_SIGNAL( clicked() ),
+      TQT_SLOT( editAlarms() ) );
 
 }
 
-void KOEditorGeneral::initAttachments(QWidget *parent,QBoxLayout *topLayout)
+void KOEditorGeneral::initAttachments(TQWidget *parent,TQBoxLayout *topLayout)
 {
   mAttachments = new KOEditorAttachments( KDialog::spacingHint(), parent );
-  connect( mAttachments, SIGNAL( openURL( const KURL & ) ) ,
-           this, SIGNAL( openURL( const KURL & ) ) );
+  connect( mAttachments, TQT_SIGNAL( openURL( const KURL & ) ) ,
+           this, TQT_SIGNAL( openURL( const KURL & ) ) );
   topLayout->addWidget( mAttachments, 1 );
 }
 
-void KOEditorGeneral::addAttachments( const QStringList &attachments,
-                                      const QStringList &mimeTypes,
+void KOEditorGeneral::addAttachments( const TQStringList &attachments,
+                                      const TQStringList &mimeTypes,
                                       bool inlineAttachments )
 {
-  QStringList::ConstIterator it;
+  TQStringList::ConstIterator it;
   uint i = 0;
   for ( it = attachments.begin(); it != attachments.end(); ++it, ++i ) {
-    QString mimeType;
+    TQString mimeType;
     if ( mimeTypes.count() > i )
       mimeType = mimeTypes[ i ];
     mAttachments->addAttachment( *it, mimeType, !inlineAttachments );
@@ -271,8 +271,8 @@ void KOEditorGeneral::selectCategories()
   KOGlobals::fitDialogToScreen( categoryDialog );
   categoryDialog->setSelected( mCategories );
 
-  connect(categoryDialog, SIGNAL(editCategories()), this, SIGNAL(openCategoryDialog()));
-  connect(this, SIGNAL(updateCategoryConfig()), categoryDialog, SLOT(updateCategoryConfig()));
+  connect(categoryDialog, TQT_SIGNAL(editCategories()), this, TQT_SIGNAL(openCategoryDialog()));
+  connect(this, TQT_SIGNAL(updateCategoryConfig()), categoryDialog, TQT_SLOT(updateCategoryConfig()));
 
   if ( categoryDialog->exec() ) {
     setCategories( categoryDialog->selectedCategories() );
@@ -310,7 +310,7 @@ void KOEditorGeneral::toggleAlarm( bool on )
     mAlarmButton->setChecked( on );
 }
 
-void KOEditorGeneral::setCategories( const QStringList &categories )
+void KOEditorGeneral::setCategories( const TQStringList &categories )
 {
   mCategoriesLabel->setText( categories.join(",") );
   mCategories = categories;
@@ -422,7 +422,7 @@ void KOEditorGeneral::readIncidence(Incidence *event, Calendar *calendar)
 
   mAttachments->readIncidence( event );
 
-  QString resLabel = KOHelper::resourceLabel( calendar, event );
+  TQString resLabel = KOHelper::resourceLabel( calendar, event );
   if ( !resLabel.isEmpty() ) {
     mResourceLabel->setText( i18n( "Calendar: %1" ).arg( resLabel ) );
     mResourceLabel->show();
@@ -435,7 +435,7 @@ Alarm *KOEditorGeneral::alarmFromSimplePage() const
     Alarm *alarm = new Alarm( 0 );
     alarm->setDisplayAlarm("");
     alarm->setEnabled(true);
-    QString tmpStr = mAlarmTimeEdit->text();
+    TQString tmpStr = mAlarmTimeEdit->text();
     int j = mAlarmTimeEdit->value() * -60;
     if (mAlarmIncrCombo->currentItem() == 1)
       j = j * 60;
@@ -478,17 +478,17 @@ void KOEditorGeneral::writeIncidence(Incidence *event)
   mAttachments->writeIncidence( event );
 }
 
-void KOEditorGeneral::setSummary( const QString &text )
+void KOEditorGeneral::setSummary( const TQString &text )
 {
   mSummaryEdit->setText( text );
 }
 
-void KOEditorGeneral::setDescription( const QString &text )
+void KOEditorGeneral::setDescription( const TQString &text )
 {
   mDescriptionEdit->setText( text );
 }
 
-QObject *KOEditorGeneral::typeAheadReceiver() const
+TQObject *KOEditorGeneral::typeAheadReceiver() const
 {
   return mSummaryEdit;
 }

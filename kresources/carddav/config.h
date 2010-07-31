@@ -42,7 +42,7 @@ class KDE_EXPORT ResourceCardDavConfig : public KRES::ConfigWidget
 
 public:
 
-    ResourceCardDavConfig(QWidget *parent = 0);
+    ResourceCardDavConfig(TQWidget *parent = 0);
 
 public slots:
 
@@ -55,11 +55,11 @@ protected:
 
 private:
 
-    QLineEdit *mUrl;
-    QLineEdit *mUsername;
-    QLineEdit *mPassword;
-    QCheckBox *mRememberPassword;
-    QCheckBox *mUseUriNotUID;
+    TQLineEdit *mUrl;
+    TQLineEdit *mUsername;
+    TQLineEdit *mPassword;
+    TQCheckBox *mRememberPassword;
+    TQCheckBox *mUseUriNotUID;
     CardDavReloadConfig* mReloadConfig;
     CardDavSaveConfig* mSaveConfig;
 

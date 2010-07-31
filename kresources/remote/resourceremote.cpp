@@ -22,9 +22,9 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include <qdatetime.h>
-#include <qstring.h>
-#include <qptrlist.h>
+#include <tqdatetime.h>
+#include <tqstring.h>
+#include <tqptrlist.h>
 
 #include <kdebug.h>
 #include <kurl.h>
@@ -101,7 +101,7 @@ void ResourceRemote::init()
 
 void ResourceRemote::readConfig( const KConfig *config )
 {
-  QString url = config->readEntry( "DownloadUrl" );
+  TQString url = config->readEntry( "DownloadUrl" );
   mDownloadUrl = KURL( url );
 
   url = config->readEntry( "UploadUrl" );
@@ -195,11 +195,11 @@ bool ResourceRemote::doLoad()
 
     mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true,
                                     false, !mUseProgressManager );
-    connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-            SLOT( slotLoadJobResult( KIO::Job * ) ) );
+    connect( mDownloadJob, TQT_SIGNAL( result( KIO::Job * ) ),
+            TQT_SLOT( slotLoadJobResult( KIO::Job * ) ) );
     if ( mUseProgressManager ) {
-        connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-                SLOT( slotPercent( KIO::Job *, unsigned long ) ) );
+        connect( mDownloadJob, TQT_SIGNAL( percent( KIO::Job *, unsigned long ) ),
+                TQT_SLOT( slotPercent( KIO::Job *, unsigned long ) ) );
         mProgress = KPIM::ProgressManager::createProgressItem(
             KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
 
@@ -222,8 +222,8 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
 {
   if ( job->error() ) {
     // TODO: Should detect 404, 401 etc. vs host not found and prompt to create new resource only when 404 is returned
-    QString warningString = QString("<b>") + i18n("Remote data access failure") + QString("</b><p>") + i18n("Detailed information") \
-           + QString(":<br>") + job->errorString() + QString("<p>") + i18n("What would you like to do?");
+    TQString warningString = TQString("<b>") + i18n("Remote data access failure") + TQString("</b><p>") + i18n("Detailed information") \
+           + TQString(":<br>") + job->errorString() + TQString("<p>") + i18n("What would you like to do?");
     int rc = KMessageBox::warningContinueCancel(0,
 	   warningString, i18n("Remote Data Access Failure"), i18n("&Continue with cached resource"));
     if ( rc == KMessageBox::Continue ) {
@@ -281,8 +281,8 @@ bool ResourceRemote::doSave()
   saveCache();
 
   mUploadJob = KIO::file_copy( KURL( cacheFile() ), mUploadUrl, -1, true );
-  connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotSaveJobResult( KIO::Job * ) ) );
+  connect( mUploadJob, TQT_SIGNAL( result( KIO::Job * ) ),
+           TQT_SLOT( slotSaveJobResult( KIO::Job * ) ) );
 
   return true;
 }
@@ -325,13 +325,13 @@ void ResourceRemote::dump() const
   kdDebug(5800) << "  ReloadPolicy: " << reloadPolicy() << endl;
 }
 
-void ResourceRemote::addInfoText( QString &txt ) const
+void ResourceRemote::addInfoText( TQString &txt ) const
 {
   txt += "<br>";
   txt += i18n("URL: %1").arg( mDownloadUrl.prettyURL() );
 }
 
-bool ResourceRemote::setValue( const QString &key, const QString &value )
+bool ResourceRemote::setValue( const TQString &key, const TQString &value )
 {
   if ( key == "URL" ) {
     setUploadUrl( KURL( value ) );

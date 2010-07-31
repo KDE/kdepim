@@ -1,0 +1,70 @@
+/*
+    knode.h
+
+    KNode, the KDE newsreader
+    Copyright (c) 1999-2005 the KNode authors.
+    See file AUTHORS for details
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
+*/
+
+#ifndef KNODE_H
+#define KNODE_H
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <kmainwindow.h>
+#include <kdialogbase.h>
+#include "resource.h"
+
+#include <tqglobal.h>
+
+class KURL;
+
+namespace KPIM { 
+  class StatusbarProgressWidget; 
+  class ProgressDialog; 
+}
+using KPIM::StatusbarProgressWidget;
+using KPIM::ProgressDialog;
+class KRSqueezedTextLabel;
+
+class KNMainWidget;
+class KNHeaderView;
+
+
+class KNMainWindow : public KMainWindow
+{
+  Q_OBJECT
+
+public:
+  KNMainWindow( TQWidget* parentWidget=0 );
+  ~KNMainWindow();
+  void openURL( const KURL& );
+  KNMainWidget *mainWidget() { return m_mainWidget; }
+
+public slots:
+  void slotConfToolbar();
+  void slotNewToolbarConfig();
+  void slotConfKeys();
+protected:
+  bool queryClose();
+private:
+  void setupStatusBar();
+  KNMainWidget *m_mainWidget;
+  StatusbarProgressWidget *mLittleProgress;
+  ProgressDialog *mProgressDialog;
+  KRSqueezedTextLabel *mStatusMsgLabel;
+private slots:
+  void slotShowStatusMsg( const TQString& );
+};
+
+#endif // KNODE_H

@@ -35,7 +35,7 @@
 #ifndef KCALDAV_AUTOWIDGETS_H
 #define KCALDAV_AUTOWIDGETS_H
 
-#include <qwidget.h>
+#include <tqwidget.h>
 #include <kdemacros.h>
 
 namespace KCal {
@@ -51,7 +51,7 @@ class KDE_EXPORT CalDavReloadConfig : public QWidget
 {
   Q_OBJECT
   public:
-    explicit CalDavReloadConfig( QWidget *parent = 0 );
+    explicit CalDavReloadConfig( TQWidget *parent = 0 );
     ~CalDavReloadConfig();
   public slots:
     void loadSettings( ResourceCached *resource );
@@ -77,7 +77,7 @@ class KDE_EXPORT CalDavSaveConfig : public QWidget
 {
     Q_OBJECT
   public:
-    explicit CalDavSaveConfig( QWidget *parent = 0 );
+    explicit CalDavSaveConfig( TQWidget *parent = 0 );
     ~CalDavSaveConfig();
 
   public slots:

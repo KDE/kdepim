@@ -1,0 +1,241 @@
+/*  -*- c++ -*-
+    kmime_codecs.cpp
+
+    This file is part of KMime, the KDE internet mail/usenet news message library.
+    Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
+
+    KMime is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License, version 2, as
+    published by the Free Software Foundation.
+
+    KMime is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this library with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
+*/
+
+#include "kmime_codecs.h"
+#include "kmime_util.h"
+
+#include "kmime_codec_base64.h"
+#include "kmime_codec_qp.h"
+#include "kmime_codec_uuencode.h"
+#include "kmime_codec_identity.h"
+
+#include <kdebug.h>
+
+#include <tqcstring.h>
+#include <kstaticdeleter.h>
+
+#include <cassert>
+#include <cstring>
+
+using namespace KMime;
+
+namespace KMime {
+
+// global list of KMime::Codec's
+TQAsciiDict<Codec>* Codec::all = 0;
+static KStaticDeleter<TQAsciiDict<Codec> > sdAll;
+#if defined(QT_THREAD_SUPPORT)
+TQMutex* Codec::dictLock = 0;
+static KStaticDeleter<TQMutex> sdDictLock;
+#endif
+
+void Codec::fillDictionary() {
+
+  all->setAutoDelete(true);
+
+  //all->insert( "7bit", new SevenBitCodec() );
+  //all->insert( "8bit", new EightBitCodec() );
+  all->insert( "base64", new Base64Codec() );
+  all->insert( "quoted-printable", new QuotedPrintableCodec() );
+  all->insert( "b", new Rfc2047BEncodingCodec() );
+  all->insert( "q", new Rfc2047QEncodingCodec() );
+  all->insert( "x-kmime-rfc2231", new Rfc2231EncodingCodec() );
+  all->insert( "x-uuencode", new UUCodec() );
+  //all->insert( "binary", new BinaryCodec() );
+
+}
+
+Codec * Codec::codecForName( const char * name ) {
+#if defined(QT_THREAD_SUPPORT)
+  if ( !dictLock )
+    sdDictLock.setObject( dictLock, new TQMutex );
+  dictLock->lock(); // protect "all"
+#endif
+  if ( !all ) {
+    sdAll.setObject( all, new TQAsciiDict<Codec>( 11, false /* case-insensitive */) );
+    fillDictionary();
+  }
+  Codec * codec = (*all)[ name ];
+#if defined(QT_THREAD_SUPPORT)
+  dictLock->unlock();
+#endif
+
+  if ( !codec )
+    kdDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
+
+  return codec;
+}
+
+Codec * Codec::codecForName( const TQCString & name ) {
+  return codecForName( name.data() );
+}
+
+bool Codec::encode( const char* & scursor, const char * const send,
+		    char* & dcursor, const char * const dend,
+		    bool withCRLF ) const
+{
+  // get an encoder:
+  Encoder * enc = makeEncoder( withCRLF );
+  assert( enc );
+
+  // encode and check for output buffer overflow:
+  while ( !enc->encode( scursor, send, dcursor, dend ) )
+    if ( dcursor == dend ) {
+      delete enc;
+      return false; // not enough space in output buffer
+    }
+
+  // finish and check for output buffer overflow:
+  while ( !enc->finish( dcursor, dend ) )
+    if ( dcursor == dend ) {
+      delete enc;
+      return false; // not enough space in output buffer
+    }
+
+  // cleanup and return:
+  delete enc;
+  return true; // successfully encoded.
+}
+
+TQByteArray Codec::encode( const TQByteArray & src, bool withCRLF ) const
+{
+  // allocate buffer for the worst case:
+  TQByteArray result( maxEncodedSizeFor( src.size(), withCRLF ) );
+
+  // set up iterators:
+  TQByteArray::ConstIterator iit = src.begin();
+  TQByteArray::ConstIterator iend = src.end();
+  TQByteArray::Iterator oit = result.begin();
+  TQByteArray::ConstIterator oend = result.end();
+
+  // encode
+  if ( !encode( iit, iend, oit, oend, withCRLF ) )
+    kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
+	      << endl;
+
+  // shrink result to actual size:
+  result.truncate( oit - result.begin() );
+
+  return result;
+}
+
+TQCString Codec::encodeToQCString( const TQByteArray & src, bool withCRLF ) const
+{
+  // allocate buffer for the worst case (remember to add one for the trailing NUL)
+  TQCString result( maxEncodedSizeFor( src.size(), withCRLF ) + 1 );
+
+  // set up iterators:
+  TQByteArray::ConstIterator iit = src.begin();
+  TQByteArray::ConstIterator iend = src.end();
+  TQByteArray::Iterator oit = result.begin();
+  TQByteArray::ConstIterator oend = result.end() - 1;
+
+  // encode
+  if ( !encode( iit, iend, oit, oend, withCRLF ) )
+    kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
+	      << endl;
+
+  // shrink result to actual size:
+  result.truncate( oit - result.begin() );
+
+  return result;
+}
+
+TQByteArray Codec::decode( const TQByteArray & src, bool withCRLF ) const
+{
+  // allocate buffer for the worst case:
+  TQByteArray result( maxDecodedSizeFor( src.size(), withCRLF ) );
+
+  // set up iterators:
+  TQByteArray::ConstIterator iit = src.begin();
+  TQByteArray::ConstIterator iend = src.end();
+  TQByteArray::Iterator oit = result.begin();
+  TQByteArray::ConstIterator oend = result.end();
+
+  // decode
+  if ( !decode( iit, iend, oit, oend, withCRLF ) )
+    kdFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
+	      << endl;
+
+  // shrink result to actual size:
+  result.truncate( oit - result.begin() );
+
+  return result;
+}
+
+bool Codec::decode( const char* & scursor, const char * const send,
+		    char* & dcursor, const char * const dend,
+		    bool withCRLF ) const
+{
+  // get a decoder:
+  Decoder * dec = makeDecoder( withCRLF );
+  assert( dec );
+
+  // decode and check for output buffer overflow:
+  while ( !dec->decode( scursor, send, dcursor, dend ) )
+    if ( dcursor == dend ) {
+      delete dec;
+      return false; // not enough space in output buffer
+    }
+
+  // finish and check for output buffer overflow:
+  while ( !dec->finish( dcursor, dend ) )
+    if ( dcursor == dend ) {
+      delete dec;
+      return false; // not enough space in output buffer
+    }
+
+  // cleanup and return:
+  delete dec;
+  return true; // successfully encoded.
+}
+
+// write as much as possible off the output buffer. Return true if
+// flushing was complete, false if some chars could not be flushed.
+bool Encoder::flushOutputBuffer( char* & dcursor, const char * const dend ) {
+  int i;
+  // copy output buffer to output stream:
+  for ( i = 0 ; dcursor != dend && i < mOutputBufferCursor ; ++i )
+    *dcursor++ = mOutputBuffer[i];
+
+  // calculate the number of missing chars:
+  int numCharsLeft = mOutputBufferCursor - i;
+  // push the remaining chars to the begin of the buffer:
+  if ( numCharsLeft )
+    qmemmove( mOutputBuffer, mOutputBuffer + i, numCharsLeft );
+  // adjust cursor:
+  mOutputBufferCursor = numCharsLeft;
+
+  return !numCharsLeft;
+}
+
+
+} // namespace KMime

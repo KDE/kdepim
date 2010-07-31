@@ -1,0 +1,63 @@
+/*
+    ktnefproperty.h
+
+    Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
+
+    This file is part of KTNEF, the KDE TNEF support library/program.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ */
+
+#ifndef KTNEFPROPERTY_H
+#define KTNEFPROPERTY_H
+
+#include <tqvariant.h>
+#include <tqstring.h>
+#include <kdepimmacros.h>
+
+class KDE_EXPORT KTNEFProperty
+{
+public:
+	enum MAPIType
+	{
+		UInt16  = 0x0002,
+		ULong   = 0x0003,
+		Float   = 0x0004,
+		Double  = 0x0005,
+		Boolean = 0x000B,
+		Object  = 0x000D,
+		Time    = 0x0040,
+		String8 = 0x001E,
+		UString = 0x001F,
+		Binary  = 0x0102
+	};
+
+	KTNEFProperty();
+	KTNEFProperty( int key_, int type_, const TQVariant& value_, const TQVariant& name_ = TQVariant() );
+	KTNEFProperty( const KTNEFProperty& p );
+
+	TQString keyString();
+	TQString valueString();
+	static TQString formatValue( const TQVariant& v, bool beautify=true );
+
+	int key() const;
+	int type() const;
+	TQVariant value() const;
+	TQVariant name() const;
+	bool isVector() const;
+
+private:
+	int _key;
+	int _type;
+	TQVariant _value;
+	TQVariant _name;
+};
+
+#endif /* KTNEFPROPERTY_H */

@@ -20,17 +20,17 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include <qcombobox.h>
-#include <qdockarea.h>
-#include <qguardedptr.h>
-#include <qhbox.h>
-#include <qimage.h>
-#include <qobjectlist.h>
-#include <qprogressbar.h>
-#include <qpushbutton.h>
-#include <qsplitter.h>
-#include <qtimer.h>
-#include <qwhatsthis.h>
+#include <tqcombobox.h>
+#include <tqdockarea.h>
+#include <tqguardedptr.h>
+#include <tqhbox.h>
+#include <tqimage.h>
+#include <tqobjectlist.h>
+#include <tqprogressbar.h>
+#include <tqpushbutton.h>
+#include <tqsplitter.h>
+#include <tqtimer.h>
+#include <tqwhatsthis.h>
 
 #include <dcopclient.h>
 #include <kapplication.h>
@@ -86,16 +86,16 @@ using namespace Kontact;
 class SettingsDialogWrapper : public KSettings::Dialog
 {
   public:
-    SettingsDialogWrapper( ContentInListView content, QWidget * parent = 0 )
+    SettingsDialogWrapper( ContentInListView content, TQWidget * parent = 0 )
       : KSettings::Dialog( content, parent, 0 )
     {
     }
 
 
-    void fixButtonLabel( QWidget *widget )
+    void fixButtonLabel( TQWidget *widget )
     {
-      QObject *object = widget->child( "KJanusWidget::buttonBelowList" );
-      QPushButton *button = static_cast<QPushButton*>( object );
+      TQObject *object = widget->child( "KJanusWidget::buttonBelowList" );
+      TQPushButton *button = static_cast<TQPushButton*>( object );
       if ( button )
         button->setText( i18n( "Select Components ..." ) );
     }
@@ -119,11 +119,11 @@ void MainWindow::initGUI()
   setupActions();
   setHelpMenuEnabled( false );
   KHelpMenu *helpMenu = new KHelpMenu( this, 0, true, actionCollection() );
-  connect( helpMenu, SIGNAL( showAboutApplication() ),
-           SLOT( showAboutDialog() ) );
+  connect( helpMenu, TQT_SIGNAL( showAboutApplication() ),
+           TQT_SLOT( showAboutDialog() ) );
 
-  KStdAction::keyBindings( this, SLOT( configureShortcuts() ), actionCollection() );
-  KStdAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
+  KStdAction::keyBindings( this, TQT_SLOT( configureShortcuts() ), actionCollection() );
+  KStdAction::configureToolbars( this, TQT_SLOT( configureToolbars() ), actionCollection() );
   setXMLFile( "kontactui.rc" );
 
   setStandardToolBarMenuEnabled( true );
@@ -133,18 +133,18 @@ void MainWindow::initGUI()
   resize( 700, 520 ); // initial size to prevent a scrollbar in sidepane
   setAutoSaveSettings();
 
-  connect( Kontact::ProfileManager::self(), SIGNAL( profileLoaded( const QString& ) ), 
-           this, SLOT( slotLoadProfile( const QString& ) ) );
-  connect( Kontact::ProfileManager::self(), SIGNAL( saveToProfileRequested( const QString& ) ), 
-           this, SLOT( slotSaveToProfile( const QString& ) ) );
+  connect( Kontact::ProfileManager::self(), TQT_SIGNAL( profileLoaded( const TQString& ) ), 
+           this, TQT_SLOT( slotLoadProfile( const TQString& ) ) );
+  connect( Kontact::ProfileManager::self(), TQT_SIGNAL( saveToProfileRequested( const TQString& ) ), 
+           this, TQT_SLOT( slotSaveToProfile( const TQString& ) ) );
 }
 
 
 void MainWindow::initObject()
 {
   KTrader::OfferList offers = KTrader::self()->query(
-      QString::fromLatin1( "Kontact/Plugin" ),
-      QString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
+      TQString::fromLatin1( "Kontact/Plugin" ),
+      TQString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
   mPluginInfos = KPluginInfo::fromServices( offers, Prefs::self()->config(), "Plugins" );
 
   KPluginInfo::List::Iterator it;
@@ -154,8 +154,8 @@ void MainWindow::initObject()
 
   // prepare the part manager
   mPartManager = new KParts::PartManager( this );
-  connect( mPartManager, SIGNAL( activePartChanged( KParts::Part* ) ),
-           this, SLOT( slotActivePartChanged( KParts::Part* ) ) );
+  connect( mPartManager, TQT_SIGNAL( activePartChanged( KParts::Part* ) ),
+           this, TQT_SLOT( slotActivePartChanged( KParts::Part* ) ) );
 
   loadPlugins();
 
@@ -165,7 +165,7 @@ void MainWindow::initObject()
   }
 
   KSettings::Dispatcher::self()->registerInstance( instance(), this,
-                                                   SLOT( updateConfig() ) );
+                                                   TQT_SLOT( updateConfig() ) );
 
   loadSettings();
 
@@ -174,10 +174,10 @@ void MainWindow::initObject()
   showTip( false );
 
   // done initializing
-  slotShowStatusMsg( QString::null );
+  slotShowStatusMsg( TQString::null );
 
-  connect( KPIM::BroadcastStatus::instance(), SIGNAL( statusMsg( const QString& ) ),
-           this, SLOT( slotShowStatusMsg( const QString&  ) ) );
+  connect( KPIM::BroadcastStatus::instance(), TQT_SIGNAL( statusMsg( const TQString& ) ),
+           this, TQT_SLOT( slotShowStatusMsg( const TQString&  ) ) );
 
   // launch commandline specified module if any
   activatePluginModule();
@@ -194,7 +194,7 @@ MainWindow::~MainWindow()
 {
   saveSettings();
 
-  QPtrList<KParts::Part> parts = *mPartManager->parts();
+  TQPtrList<KParts::Part> parts = *mPartManager->parts();
 
   for ( KParts::Part *p = parts.last(); p; p = parts.prev() ) {
     delete p;
@@ -204,7 +204,7 @@ MainWindow::~MainWindow()
   Prefs::self()->writeConfig();
 }
 
-void MainWindow::setActivePluginModule( const QString &module )
+void MainWindow::setActivePluginModule( const TQString &module )
 {
   mActiveModule = module;
   activatePluginModule();
@@ -225,39 +225,39 @@ void MainWindow::activatePluginModule()
 void MainWindow::initWidgets()
 {
   // includes sidebar and part stack
-  mTopWidget = new QHBox( this );
-  mTopWidget->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mTopWidget = new TQHBox( this );
+  mTopWidget->setFrameStyle( TQFrame::Panel | TQFrame::Sunken );
   setCentralWidget( mTopWidget );
 
-  QHBox *mBox = 0;
-  mSplitter = new QSplitter( mTopWidget );
-  mBox = new QHBox( mTopWidget );
+  TQHBox *mBox = 0;
+  mSplitter = new TQSplitter( mTopWidget );
+  mBox = new TQHBox( mTopWidget );
   mSidePane = new IconSidePane( this, mSplitter );
-  mSidePane->setSizePolicy( QSizePolicy( QSizePolicy::Maximum,
-                                         QSizePolicy::Preferred ) );
+  mSidePane->setSizePolicy( TQSizePolicy( TQSizePolicy::Maximum,
+                                         TQSizePolicy::Preferred ) );
   // donÄt occupy screen estate on load
-  QValueList<int> sizes;
+  TQValueList<int> sizes;
   sizes << 0;
   mSplitter->setSizes(sizes);
 
   mSidePane->setActionCollection( actionCollection() );
 
-  connect( mSidePane, SIGNAL( pluginSelected( Kontact::Plugin * ) ),
-           SLOT( selectPlugin( Kontact::Plugin * ) ) );
+  connect( mSidePane, TQT_SIGNAL( pluginSelected( Kontact::Plugin * ) ),
+           TQT_SLOT( selectPlugin( Kontact::Plugin * ) ) );
 
-  QVBox *vBox;
+  TQVBox *vBox;
   if ( mSplitter ) {
-    vBox = new QVBox( mSplitter );
+    vBox = new TQVBox( mSplitter );
   } else {
-    vBox = new QVBox( mBox );
+    vBox = new TQVBox( mBox );
   }
 
   vBox->setSpacing( 0 );
 
-  mPartsStack = new QWidgetStack( vBox );
+  mPartsStack = new TQWidgetStack( vBox );
   initAboutScreen();
 
-  QString loading = i18n( "<h2 style='text-align:center; margin-top: 0px; margin-bottom: 0px'>%1</h2>" )
+  TQString loading = i18n( "<h2 style='text-align:center; margin-top: 0px; margin-bottom: 0px'>%1</h2>" )
                     .arg( i18n("Loading Kontact...") );
 
   paintAboutScreen( loading );
@@ -277,10 +277,10 @@ void MainWindow::initWidgets()
 }
 
 
-void MainWindow::paintAboutScreen( const QString& msg )
+void MainWindow::paintAboutScreen( const TQString& msg )
 {
-  QString location = locate( "data", "kontact/about/main.html" );
-  QString content = KPIM::kFileToString( location );
+  TQString location = locate( "data", "kontact/about/main.html" );
+  TQString content = KPIM::kFileToString( location );
   content = content.arg( locate( "data", "libkdepim/about/kde_infopage.css" ) );
   if ( kapp->reverseLayout() )
     content = content.arg( "@import \"%1\";" ).arg( locate( "data", "libkdepim/about/kde_infopage_rtl.css" ) );
@@ -289,18 +289,18 @@ void MainWindow::paintAboutScreen( const QString& msg )
 
   mIntroPart->begin( KURL( location ) );
 
-  QString appName( i18n( "KDE Kontact" ) );
-  QString catchPhrase( i18n( "Get Organized!" ) );
-  QString quickDescription( i18n( "The KDE Personal Information Management Suite" ) );
+  TQString appName( i18n( "KDE Kontact" ) );
+  TQString catchPhrase( i18n( "Get Organized!" ) );
+  TQString quickDescription( i18n( "The KDE Personal Information Management Suite" ) );
 
-  mIntroPart->write( content.arg( QFont().pointSize() + 2 ).arg( appName )
+  mIntroPart->write( content.arg( TQFont().pointSize() + 2 ).arg( appName )
       .arg( catchPhrase ).arg( quickDescription ).arg( msg ) );
   mIntroPart->end();
 }
 
 void MainWindow::initAboutScreen()
 {
-  QHBox *introbox = new QHBox( mPartsStack );
+  TQHBox *introbox = new TQHBox( mPartsStack );
   mPartsStack->addWidget( introbox );
   mPartsStack->raiseWidget( introbox );
   mIntroPart = new KHTMLPart( introbox );
@@ -314,19 +314,19 @@ void MainWindow::initAboutScreen()
   mIntroPart->view()->setLineWidth( 0 );
 
   connect( mIntroPart->browserExtension(),
-           SIGNAL( openURLRequest( const KURL&, const KParts::URLArgs& ) ),
-           SLOT( slotOpenUrl( const KURL& ) ) );
+           TQT_SIGNAL( openURLRequest( const KURL&, const KParts::URLArgs& ) ),
+           TQT_SLOT( slotOpenUrl( const KURL& ) ) );
 
   connect( mIntroPart->browserExtension(),
-           SIGNAL( createNewWindow( const KURL&, const KParts::URLArgs& ) ),
-           SLOT( slotOpenUrl( const KURL& ) ) );
+           TQT_SIGNAL( createNewWindow( const KURL&, const KParts::URLArgs& ) ),
+           TQT_SLOT( slotOpenUrl( const KURL& ) ) );
 }
 
 void MainWindow::setupActions()
 {
-  KStdAction::quit( this, SLOT( slotQuit() ), actionCollection() );
+  KStdAction::quit( this, TQT_SLOT( slotQuit() ), actionCollection() );
   mNewActions = new KToolBarPopupAction( KGuiItem( i18n( "New" ), "" ),
-                                         KStdAccel::shortcut(KStdAccel::New), this, SLOT( slotNewClicked() ),
+                                         KStdAccel::shortcut(KStdAccel::New), this, TQT_SLOT( slotNewClicked() ),
                                          actionCollection(), "action_new" );
 
   KConfig* const cfg = Prefs::self()->config();
@@ -335,36 +335,36 @@ void MainWindow::setupActions()
 
   if ( mSyncActionsEnabled ) {
     mSyncActions = new KToolBarPopupAction( KGuiItem( i18n( "Synchronize" ), "kitchensync" ),
-                                            KStdAccel::shortcut(KStdAccel::Reload), this, SLOT( slotSyncClicked() ),
+                                            KStdAccel::shortcut(KStdAccel::Reload), this, TQT_SLOT( slotSyncClicked() ),
                                             actionCollection(), "action_sync" );
   }
-  new KAction( i18n( "Configure Kontact..." ), "configure", 0, this, SLOT( slotPreferences() ),
+  new KAction( i18n( "Configure Kontact..." ), "configure", 0, this, TQT_SLOT( slotPreferences() ),
                actionCollection(), "settings_configure_kontact" );
 
-  new KAction( i18n( "Configure &Profiles..." ), 0, this, SLOT( slotConfigureProfiles() ),
+  new KAction( i18n( "Configure &Profiles..." ), 0, this, TQT_SLOT( slotConfigureProfiles() ),
                actionCollection(), "settings_configure_kontact_profiles" );
 
-  new KAction( i18n( "&Kontact Introduction" ), 0, this, SLOT( slotShowIntroduction() ),
+  new KAction( i18n( "&Kontact Introduction" ), 0, this, TQT_SLOT( slotShowIntroduction() ),
                actionCollection(), "help_introduction" );
-  new KAction( i18n( "&Tip of the Day" ), 0, this, SLOT( slotShowTip() ),
+  new KAction( i18n( "&Tip of the Day" ), 0, this, TQT_SLOT( slotShowTip() ),
                actionCollection(), "help_tipofday" );
-  new KAction( i18n( "&Request Feature..." ), 0, this, SLOT( slotRequestFeature() ),
+  new KAction( i18n( "&Request Feature..." ), 0, this, TQT_SLOT( slotRequestFeature() ),
                actionCollection(), "help_requestfeature" );
   
-  KWidgetAction* spacerAction = new KWidgetAction( new QWidget( this ), "SpacerAction", "", 0, 0, actionCollection(), "navigator_spacer_item" );
+  KWidgetAction* spacerAction = new KWidgetAction( new TQWidget( this ), "SpacerAction", "", 0, 0, actionCollection(), "navigator_spacer_item" );
   spacerAction->setAutoSized( true );
 }
 
 void MainWindow::slotConfigureProfiles()
 {
-  QGuardedPtr<Kontact::ProfileDialog> dlg = new Kontact::ProfileDialog( this );
+  TQGuardedPtr<Kontact::ProfileDialog> dlg = new Kontact::ProfileDialog( this );
   dlg->setModal( true );
   dlg->exec();
   delete dlg;
 }
 
 namespace {
-    void copyConfigEntry( KConfig* source, KConfig* dest, const QString& group, const QString& key, const QString& defaultValue=QString() )
+    void copyConfigEntry( KConfig* source, KConfig* dest, const TQString& group, const TQString& key, const TQString& defaultValue=TQString() )
     {
         source->setGroup( group );
         dest->setGroup( group );
@@ -372,9 +372,9 @@ namespace {
     }
 }
 
-void MainWindow::slotSaveToProfile( const QString& id )
+void MainWindow::slotSaveToProfile( const TQString& id )
 {
-  const QString path = Kontact::ProfileManager::self()->profileById( id ).saveLocation();
+  const TQString path = Kontact::ProfileManager::self()->profileById( id ).saveLocation();
   if ( path.isNull() )
     return;
 
@@ -396,9 +396,9 @@ void MainWindow::slotSaveToProfile( const QString& id )
   }
 }
 
-void MainWindow::slotLoadProfile( const QString& id )
+void MainWindow::slotLoadProfile( const TQString& id )
 {
-  const QString path = Kontact::ProfileManager::self()->profileById( id ).saveLocation();
+  const TQString path = Kontact::ProfileManager::self()->profileById( id ).saveLocation();
   if ( path.isNull() )
     return;
 
@@ -408,11 +408,11 @@ void MainWindow::slotLoadProfile( const QString& id )
   saveSettings();
 
   const KConfig profile( path+"/kontactrc", /*read-only=*/false, /*useglobals=*/false );
-  const QStringList groups = profile.groupList();
-  for ( QStringList::ConstIterator it = groups.begin(), end = groups.end(); it != end; ++it )
+  const TQStringList groups = profile.groupList();
+  for ( TQStringList::ConstIterator it = groups.begin(), end = groups.end(); it != end; ++it )
   {
     cfg->setGroup( *it );
-    typedef QMap<QString, QString> StringMap;
+    typedef TQMap<TQString, TQString> StringMap;
     const StringMap entries = profile.entryMap( *it );
     for ( StringMap::ConstIterator it2 = entries.begin(), end = entries.end(); it2 != end; ++it2 )
     {
@@ -463,8 +463,8 @@ Plugin *MainWindow::pluginFromInfo( const KPluginInfo *info )
 
 void MainWindow::loadPlugins()
 {
-  QPtrList<Plugin> plugins;
-  QPtrList<KParts::Part> loadDelayed;
+  TQPtrList<Plugin> plugins;
+  TQPtrList<KParts::Part> loadDelayed;
 
   uint i;
   KPluginInfo::List::ConstIterator it;
@@ -490,10 +490,10 @@ void MainWindow::loadPlugins()
     plugin->setTitle( (*it)->name() );
     plugin->setIcon( (*it)->icon() );
 
-    QVariant libNameProp = (*it)->property( "X-KDE-KontactPartLibraryName" );
-    QVariant exeNameProp = (*it)->property( "X-KDE-KontactPartExecutableName" );
-    QVariant loadOnStart = (*it)->property( "X-KDE-KontactPartLoadOnStart" );
-    QVariant hasPartProp = (*it)->property( "X-KDE-KontactPluginHasPart" );
+    TQVariant libNameProp = (*it)->property( "X-KDE-KontactPartLibraryName" );
+    TQVariant exeNameProp = (*it)->property( "X-KDE-KontactPartExecutableName" );
+    TQVariant loadOnStart = (*it)->property( "X-KDE-KontactPartLoadOnStart" );
+    TQVariant hasPartProp = (*it)->property( "X-KDE-KontactPluginHasPart" );
 
     if ( !loadOnStart.isNull() && loadOnStart.toBool() )
       mDelayedPreload.append( plugin );
@@ -518,7 +518,7 @@ void MainWindow::loadPlugins()
     Plugin *plugin = plugins.at( i );
 
     KAction *action;
-    QPtrList<KAction> *actionList = plugin->newActions();
+    TQPtrList<KAction> *actionList = plugin->newActions();
 
     for ( action = actionList->first(); action; action = actionList->next() ) {
       kdDebug(5600) << "Plugging " << action->name() << endl;
@@ -558,7 +558,7 @@ bool MainWindow::removePlugin( const KPluginInfo *info )
       Plugin *plugin = *it;
 
       KAction *action;
-      QPtrList<KAction> *actionList = plugin->newActions();
+      TQPtrList<KAction> *actionList = plugin->newActions();
 
       for ( action = actionList->first(); action; action = actionList->next() ) {
         kdDebug(5600) << "Unplugging " << action->name() << endl;
@@ -686,7 +686,7 @@ void MainWindow::selectPlugin( Kontact::Plugin *plugin )
     return;
   }
 
-  KApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) );
+  KApplication::setOverrideCursor( TQCursor( Qt::WaitCursor ) );
 
   KParts::Part *part = plugin->part();
 
@@ -701,13 +701,13 @@ void MainWindow::selectPlugin( Kontact::Plugin *plugin )
   }
 
   // store old focus widget
-  QWidget *focusWidget = kapp->focusWidget();
+  TQWidget *focusWidget = kapp->focusWidget();
   if ( mCurrentPlugin && focusWidget ) {
     // save the focus widget only when it belongs to the activated part
-    QWidget *parent = focusWidget->parentWidget();
+    TQWidget *parent = focusWidget->parentWidget();
     while ( parent ) {
       if ( parent == mCurrentPlugin->part()->widget() )
-        mFocusWidgets.insert( mCurrentPlugin->identifier(), QGuardedPtr<QWidget>( focusWidget ) );
+        mFocusWidgets.insert( mCurrentPlugin->identifier(), TQGuardedPtr<TQWidget>( focusWidget ) );
 
       parent = parent->parentWidget();
     }
@@ -719,7 +719,7 @@ void MainWindow::selectPlugin( Kontact::Plugin *plugin )
   plugin->select();
 
   mPartManager->setActivePart( part );
-  QWidget *view = part->widget();
+  TQWidget *view = part->widget();
   Q_ASSERT( view );
 
   if ( view ) {
@@ -779,13 +779,13 @@ void MainWindow::selectPlugin( Kontact::Plugin *plugin )
       }
     }
   }
-  QStringList invisibleActions = plugin->invisibleToolbarActions();
+  TQStringList invisibleActions = plugin->invisibleToolbarActions();
 
-  QStringList::ConstIterator it;
+  TQStringList::ConstIterator it;
   for ( it = invisibleActions.begin(); it != invisibleActions.end(); ++it ) {
     KAction *action = part->actionCollection()->action( (*it).latin1() );
     if ( action ) {
-      QPtrListIterator<KToolBar> it(  toolBarIterator() );
+      TQPtrListIterator<KToolBar> it(  toolBarIterator() );
       for (  ; it.current() ; ++it ) {
         action->unplug( it.current() );
       }
@@ -795,7 +795,7 @@ void MainWindow::selectPlugin( Kontact::Plugin *plugin )
   KApplication::restoreOverrideCursor();
 }
 
-void MainWindow::selectPlugin( const QString &pluginName )
+void MainWindow::selectPlugin( const TQString &pluginName )
 {
   PluginList::ConstIterator end = mPlugins.end();
   for ( PluginList::ConstIterator it = mPlugins.begin(); it != end; ++it )
@@ -845,10 +845,10 @@ void MainWindow::slotShowIntroduction()
 
 void MainWindow::showTip( bool force )
 {
-  QStringList tips;
+  TQStringList tips;
   PluginList::ConstIterator end = mPlugins.end();
   for ( PluginList::ConstIterator it = mPlugins.begin(); it != end; ++it ) {
-    QString file = (*it)->tipFile();
+    TQString file = (*it)->tipFile();
     if ( !file.isEmpty() )
       tips.append( file );
   }
@@ -867,11 +867,11 @@ void MainWindow::slotPreferences()
   static SettingsDialogWrapper *dlg = 0;
   if ( !dlg ) {
     // do not show settings of components running standalone
-    QValueList<KPluginInfo*> filteredPlugins = mPluginInfos;
+    TQValueList<KPluginInfo*> filteredPlugins = mPluginInfos;
     PluginList::ConstIterator it;
     for ( it = mPlugins.begin(); it != mPlugins.end(); ++it )
       if ( (*it)->isRunningStandalone() ) {
-        QValueList<KPluginInfo*>::ConstIterator infoIt;
+        TQValueList<KPluginInfo*>::ConstIterator infoIt;
         for ( infoIt = filteredPlugins.begin(); infoIt != filteredPlugins.end(); ++infoIt ) {
           if ( (*infoIt)->pluginName() == (*it)->identifier() ) {
             filteredPlugins.remove( *infoIt );
@@ -881,18 +881,18 @@ void MainWindow::slotPreferences()
       }
     dlg = new SettingsDialogWrapper( KSettings::Dialog::Configurable, this );
     dlg->addPluginInfos( filteredPlugins );
-    connect( dlg, SIGNAL( pluginSelectionChanged() ),
-             SLOT( pluginsChanged() ) );
+    connect( dlg, TQT_SIGNAL( pluginSelectionChanged() ),
+             TQT_SLOT( pluginsChanged() ) );
   }
 
   dlg->show();
   dlg->fixButtonLabel( this );
 }
 
-int MainWindow::startServiceFor( const QString& serviceType,
-                                 const QString& constraint,
-                                 const QString& preferences,
-                                 QString *error, QCString* dcopService,
+int MainWindow::startServiceFor( const TQString& serviceType,
+                                 const TQString& constraint,
+                                 const TQString& preferences,
+                                 TQString *error, TQCString* dcopService,
                                  int flags )
 {
   PluginList::ConstIterator end = mPlugins.end();
@@ -932,7 +932,7 @@ void MainWindow::updateConfig()
 
 void MainWindow::showAboutDialog()
 {
-  KApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) );
+  KApplication::setOverrideCursor( TQCursor( Qt::WaitCursor ) );
 
   if ( !mAboutDialog )
     mAboutDialog = new AboutDialog( this );
@@ -958,8 +958,8 @@ void MainWindow::configureToolbars()
   saveMainWindowSettings( KGlobal::config(), "MainWindow" );
 
   KEditToolbar edit( factory() );
-  connect( &edit, SIGNAL( newToolbarConfig() ),
-           this, SLOT( slotNewToolbarConfig() ) );
+  connect( &edit, TQT_SIGNAL( newToolbarConfig() ),
+           this, TQT_SLOT( slotNewToolbarConfig() ) );
   edit.exec();
 }
 
@@ -988,13 +988,13 @@ void MainWindow::readProperties( KConfig *config )
 {
   Core::readProperties( config );
 
-  QStringList activePlugins = config->readListEntry( "ActivePlugins" );
-  QValueList<Plugin*>::ConstIterator it = mPlugins.begin();
-  QValueList<Plugin*>::ConstIterator end = mPlugins.end();
+  TQStringList activePlugins = config->readListEntry( "ActivePlugins" );
+  TQValueList<Plugin*>::ConstIterator it = mPlugins.begin();
+  TQValueList<Plugin*>::ConstIterator end = mPlugins.end();
   for ( ; it != end; ++it ) {
     Plugin *plugin = *it;
     if ( !plugin->isRunningStandalone() ) {
-      QStringList::ConstIterator activePlugin = activePlugins.find( plugin->identifier() );
+      TQStringList::ConstIterator activePlugin = activePlugins.find( plugin->identifier() );
       if ( activePlugin != activePlugins.end() ) {
         plugin->readProperties( config );
       }
@@ -1006,7 +1006,7 @@ void MainWindow::saveProperties( KConfig *config )
 {
   Core::saveProperties( config );
 
-  QStringList activePlugins;
+  TQStringList activePlugins;
 
   KPluginInfo::List::Iterator it = mPluginInfos.begin();
   KPluginInfo::List::Iterator end = mPluginInfos.end();
@@ -1031,8 +1031,8 @@ bool MainWindow::queryClose()
     return true;
 
   bool localClose = true;
-  QValueList<Plugin*>::ConstIterator end = mPlugins.end();
-  QValueList<Plugin*>::ConstIterator it = mPlugins.begin();
+  TQValueList<Plugin*>::ConstIterator end = mPlugins.end();
+  TQValueList<Plugin*>::ConstIterator it = mPlugins.begin();
   for ( ; it != end; ++it ) {
     Plugin *plugin = *it;
     if ( !plugin->isRunningStandalone() )
@@ -1043,7 +1043,7 @@ bool MainWindow::queryClose()
   return localClose;
 }
 
-void MainWindow::slotShowStatusMsg( const QString &msg )
+void MainWindow::slotShowStatusMsg( const TQString &msg )
 {
   if ( !statusBar() || !mStatusMsgLabel )
      return;
@@ -1051,16 +1051,16 @@ void MainWindow::slotShowStatusMsg( const QString &msg )
   mStatusMsgLabel->setText( msg );
 }
 
-QString MainWindow::introductionString()
+TQString MainWindow::introductionString()
 {
   KIconLoader *iconloader = KGlobal::iconLoader();
   int iconSize = iconloader->currentSize( KIcon::Desktop );
 
-  QString handbook_icon_path = iconloader->iconPath( "contents2",  KIcon::Desktop );
-  QString html_icon_path = iconloader->iconPath( "html",  KIcon::Desktop );
-  QString wizard_icon_path = iconloader->iconPath( "wizard",  KIcon::Desktop );
+  TQString handbook_icon_path = iconloader->iconPath( "contents2",  KIcon::Desktop );
+  TQString html_icon_path = iconloader->iconPath( "html",  KIcon::Desktop );
+  TQString wizard_icon_path = iconloader->iconPath( "wizard",  KIcon::Desktop );
 
-  QString info = i18n( "<h2 style='text-align:center; margin-top: 0px;'>Welcome to Kontact %1</h2>"
+  TQString info = i18n( "<h2 style='text-align:center; margin-top: 0px;'>Welcome to Kontact %1</h2>"
       "<p>%1</p>"
       "<table align=\"center\">"
       "<tr><td><a href=\"%1\"><img width=\"%1\" height=\"%1\" src=\"%1\" /></a></td>"

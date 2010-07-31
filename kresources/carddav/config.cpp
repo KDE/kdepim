@@ -25,9 +25,9 @@
 #include <klistview.h>
 #include <kurlrequester.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqcheckbox.h>
 
 /*=========================================================================
 | NAMESPACE
@@ -69,7 +69,7 @@ CardDavPrefs* ResourceCardDavConfig::getPrefs(ResourceCardDav* res) {
 | CONSTRUCTOR / DESTRUCTOR
  ========================================================================*/
 
-ResourceCardDavConfig::ResourceCardDavConfig( QWidget *parent )
+ResourceCardDavConfig::ResourceCardDavConfig( TQWidget *parent )
     : KRES::ConfigWidget( parent )
 {
     setupUI();
@@ -112,38 +112,38 @@ void ResourceCardDavConfig::saveSettings( KRES::Resource *resource ) {
 }
 
 void ResourceCardDavConfig::setupUI() {
-    QVBoxLayout *vertical = new QVBoxLayout(this);
+    TQVBoxLayout *vertical = new TQVBoxLayout(this);
 
-    QGridLayout *mainLayout = new QGridLayout( this );
+    TQGridLayout *mainLayout = new TQGridLayout( this );
 
     // URL
-    QLabel *label = new QLabel( i18n( "URL:" ), this );
-    mUrl = new QLineEdit( this );
+    TQLabel *label = new TQLabel( i18n( "URL:" ), this );
+    mUrl = new TQLineEdit( this );
     mainLayout->addWidget( label, 1, 0 );
     mainLayout->addWidget( mUrl, 1, 1 );
 
     // Username
-    label = new QLabel( i18n( "Username:" ), this );
-    mUsername = new QLineEdit( this );
+    label = new TQLabel( i18n( "Username:" ), this );
+    mUsername = new TQLineEdit( this );
     mainLayout->addWidget( label, 2, 0 );
     mainLayout->addWidget( mUsername, 2, 1 );
 
     // Password
-    label = new QLabel( i18n( "Password:" ), this );
-    mPassword = new QLineEdit( this );
-    mPassword->setEchoMode( QLineEdit::Password );
+    label = new TQLabel( i18n( "Password:" ), this );
+    mPassword = new TQLineEdit( this );
+    mPassword->setEchoMode( TQLineEdit::Password );
     mainLayout->addWidget( label, 3, 0 );
     mainLayout->addWidget( mPassword, 3, 1 );
 
     // Remember password checkbox
-    mRememberPassword = new QCheckBox( i18n("Remember password"), this );
+    mRememberPassword = new TQCheckBox( i18n("Remember password"), this );
     mainLayout->addWidget(mRememberPassword, 4, 1);
 
-    mUseUriNotUID = new QCheckBox( i18n( "Use URI instead of UID when modifying existing contacts" ), this );
+    mUseUriNotUID = new TQCheckBox( i18n( "Use URI instead of UID when modifying existing contacts" ), this );
     mainLayout->addWidget( mUseUriNotUID, 5, 1 );
 
     // configs
-    QHBoxLayout* horizontal = new QHBoxLayout(this);
+    TQHBoxLayout* horizontal = new TQHBoxLayout(this);
 
     // Reload config
     mReloadConfig = new CardDavReloadConfig(this);

@@ -1,0 +1,339 @@
+/*
+ *   karm
+ *   This file only: Copyright (C) 1999  Espen Sand, espensa@online.no
+ *   Modifications (see CVS log) Copyright (C) 2000 Klarälvdalens
+ *   Datakonsult AB <kalle@dalheimer.de>, Jesper Pedersen <blackie@kde.org>
+ *
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ */
+#include <tqbuttongroup.h>
+#include <tqcombobox.h>
+#include <tqgroupbox.h>
+#include <tqhbox.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqlineedit.h>
+#include <tqradiobutton.h>
+#include <tqsizepolicy.h>
+#include <tqstring.h>
+#include <tqwidget.h>
+#include <tqwhatsthis.h>
+
+#include <klocale.h>            // i18n
+#include <kwinmodule.h>
+
+#include "edittaskdialog.h"
+#include "ktimewidget.h"
+#include "kdebug.h"
+
+EditTaskDialog::EditTaskDialog( TQString caption, bool editDlg,
+                                DesktopList* desktopList)
+  : KDialogBase(0, "EditTaskDialog", true, caption, Ok|Cancel, Ok, true ),
+    origTime( 0 ), origSession( 0 )
+{
+  TQWidget *page = new TQWidget( this ); 
+  setMainWidget(page);
+  KWinModule kwinmodule(0, KWinModule::INFO_DESKTOP);
+
+  TQVBoxLayout *lay1 = new TQVBoxLayout(page);
+  
+  TQHBoxLayout *lay2 = new TQHBoxLayout();
+  lay1->addLayout(lay2);
+  
+  // The name of the widget
+  TQLabel *label = new TQLabel( i18n("Task &name:"), page, "name" );
+  lay2->addWidget( label );
+  lay2->addSpacing(5);
+  
+  
+  _name = new TQLineEdit( page, "lineedit" );
+  
+  _name->setMinimumWidth(fontMetrics().maxWidth()*15);
+  lay2->addWidget( _name );
+  label->setBuddy( _name );
+
+
+  // The "Edit Absolut" radio button
+  lay1->addSpacing(10);lay1->addStretch(1); 
+  _absoluteRB = new TQRadioButton( i18n( "Edit &absolute" ), page,
+                                  "_absoluteRB" );
+  lay1->addWidget( _absoluteRB );
+  connect( _absoluteRB, TQT_SIGNAL( clicked() ), this, TQT_SLOT( slotAbsolutePressed() ) );
+  
+
+  // Absolute times
+  TQHBoxLayout *lay5 = new TQHBoxLayout();
+  lay1->addLayout(lay5);
+  lay5->addSpacing(20);
+  TQGridLayout *lay3 = new TQGridLayout( 2, 2, -1, "lay3" );
+  lay5->addLayout(lay3);
+  
+  _sessionLA = new TQLabel( i18n("&Session time: "), page, "session time" );
+
+  // Time
+  _timeLA = new TQLabel( i18n("&Time:"), page, "time" );
+  lay3->addWidget( _timeLA, 0, 0 );
+  _timeLA->setSizePolicy( TQSizePolicy( (TQSizePolicy::SizeType)1, 
+                                         (TQSizePolicy::SizeType)0, 
+                                         0, 
+                                         0, 
+                                         _timeLA->sizePolicy().hasHeightForWidth()) );
+
+  // Based on measuring pixels in a screenshot, it looks like the fontmetrics
+  // call includes the ampersand when calculating the width.  To be sure
+  // things will line up (no matter what language or widget style), set all
+  // three date entry label controls to the same width.
+  _timeLA->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
+
+  _timeTW = new KArmTimeWidget( page, "_timeTW" );
+  lay3->addWidget( _timeTW, 0, 1 );
+  _timeLA->setBuddy( _timeTW );
+  
+
+  // Session
+  lay3->addWidget( _sessionLA, 1, 0 );
+
+  _sessionTW = new KArmTimeWidget( page, "_sessionTW" );
+  lay3->addWidget( _sessionTW, 1, 1 );
+  _sessionLA->setBuddy( _sessionTW );
+  _sessionLA->setSizePolicy( TQSizePolicy( (TQSizePolicy::SizeType)1, 
+                                         (TQSizePolicy::SizeType)0, 
+                                         0, 
+                                         0, 
+                                         _sessionLA->sizePolicy().hasHeightForWidth()) );
+  _sessionLA->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
+
+
+  // The "Edit relative" radio button
+  lay1->addSpacing(10);
+  lay1->addStretch(1);
+  _relativeRB = new TQRadioButton( i18n( "Edit &relative (apply to both time and"
+                                        " session time)" ), page, "_relativeRB" );
+  lay1->addWidget( _relativeRB );
+  connect( _relativeRB, TQT_SIGNAL( clicked() ), this, TQT_SLOT(slotRelativePressed()) );
+  
+  // The relative times
+  TQHBoxLayout *lay4 = new TQHBoxLayout();
+  lay1->addLayout( lay4 );
+  lay4->addSpacing(20);
+  
+  _operator = new TQComboBox(page);
+  _operator->insertItem( TQString::fromLatin1( "+" ) );
+  _operator->insertItem( TQString::fromLatin1( "-" ) );
+  _operator->setSizePolicy( TQSizePolicy( (TQSizePolicy::SizeType)1, 
+                                         (TQSizePolicy::SizeType)0, 
+                                         0, 
+                                         0, 
+                                         _operator->sizePolicy().hasHeightForWidth()) );
+  //kdDebug() << "text width=" << fontMetrics().width( _sessionLA->text() ) << endl;
+  _operator->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
+  lay4->addWidget( _operator );
+
+  _diffTW = new KArmTimeWidget( page, "_sessionAddTW" );
+  lay4->addWidget( _diffTW );
+
+  desktopCount = kwinmodule.numberOfDesktops();
+  
+  // If desktopList contains higher numbered desktops than desktopCount then
+  // delete those from desktopList. This may be the case if the user has
+  // configured virtual desktops. The values in desktopList are sorted.
+  if ( (desktopList != 0) && (desktopList->size() > 0) ) 
+  {
+    DesktopList::iterator rit = desktopList->begin();
+    while (*rit < desktopCount && rit!=desktopList->end()) 
+    {
+      ++rit;
+    }
+    desktopList->erase(rit, desktopList->end());
+  }
+
+  // The "Choose Desktop" checkbox
+  lay1->addSpacing(10);
+  lay1->addStretch(1);
+  
+  _desktopCB = new TQCheckBox(i18n("A&uto tracking"), page);
+  _desktopCB->setEnabled(true);
+  lay1->addWidget(_desktopCB);
+  
+  TQGroupBox* groupBox;
+  {
+    int lines = (int)(desktopCount/2);
+    if (lines*2 != desktopCount) lines++; 
+      groupBox = new TQButtonGroup( lines, TQGroupBox::Horizontal,
+                                   i18n("In Desktop"), page, "_desktopsGB");
+  }
+  lay1->addWidget(groupBox);
+
+  TQHBoxLayout *lay6 = new TQHBoxLayout();
+
+  lay1->addLayout(lay6);
+  for (int i=0; i<desktopCount; i++) {
+    _deskBox.push_back(new TQCheckBox(groupBox,TQString::number(i).latin1()));
+    _deskBox[i]->setText(kwinmodule.desktopName(i+1));
+    _deskBox[i]->setChecked(false);
+
+    lay6->addWidget(_deskBox[i]);
+  }
+  // check specified Desktop Check Boxes
+  bool enableDesktops = false;
+
+  if ( (desktopList != 0) && (desktopList->size() > 0) ) 
+  {
+    DesktopList::iterator it = desktopList->begin();
+    while (it != desktopList->end()) 
+    {
+      _deskBox[*it]->setChecked(true);
+      it++;
+    }
+    enableDesktops = true;
+  }
+  // if some desktops were specified, then enable the parent box
+  _desktopCB->setChecked(enableDesktops);
+
+  for (int i=0; i<desktopCount; i++)
+    _deskBox[i]->setEnabled(enableDesktops);
+  
+  connect(_desktopCB, TQT_SIGNAL(clicked()), this, TQT_SLOT(slotAutoTrackingPressed()));
+
+  lay1->addStretch(1);
+
+
+  if ( editDlg ) {
+    // This is an edit dialog.
+    _operator->setFocus();
+  }
+  else {
+    // This is an initial dialog
+    _name->setFocus();
+  }
+
+  slotRelativePressed();
+
+  // Whats this help.
+  TQWhatsThis::add( _name,
+                   i18n( "Enter the name of the task here. "
+                         "This name is for your eyes only."));
+  TQWhatsThis::add( _absoluteRB,
+                   i18n( "Use this option to set the time spent on this task "
+                         "to an absolute value.\n\nFor example, if you have "
+                         "worked exactly four hours on this task during the current "
+                         "session, you would set the Session time to 4 hr." ) );
+  TQWhatsThis::add( _relativeRB,
+                   i18n( "Use this option to change the time spent on this task "
+                         "relative to its current value.\n\nFor example, if you worked "
+                         "on this task for one hour without the timer running, you "
+                         "would add 1 hr." ) );
+  TQWhatsThis::add( _timeTW,
+                   i18n( "This is the time the task has been "
+                         "running since all times were reset."));
+  TQWhatsThis::add( _sessionTW,
+                   i18n( "This is the time the task has been running this "
+                         "session."));
+  TQWhatsThis::add( _diffTW, i18n( "Specify how much time to add or subtract "
+                                  "to the overall and session time"));
+
+  TQWhatsThis::add( _desktopCB, 
+                   i18n( "Use this option to automatically start the timer "
+                         "on this task when you switch to the specified desktop(s)." ) );
+  TQWhatsThis::add( groupBox, 
+                   i18n( "Select the desktop(s) that will automatically start the "
+                         "timer on this task." ) );
+}
+
+  
+void EditTaskDialog::slotAbsolutePressed()
+{
+  _relativeRB->setChecked( false );
+  _absoluteRB->setChecked( true );
+
+  _operator->setEnabled( false );
+  _diffTW->setEnabled( false );
+
+  _timeLA->setEnabled( true );
+  _sessionLA->setEnabled( true );
+  _timeTW->setEnabled( true );
+  _sessionTW->setEnabled( true );
+}
+
+void EditTaskDialog::slotRelativePressed()
+{
+  _relativeRB->setChecked( true );
+  _absoluteRB->setChecked( false );
+
+  _operator->setEnabled( true );
+  _diffTW->setEnabled( true );
+
+  _timeLA->setEnabled( false );
+  _sessionLA->setEnabled( false );
+  _timeTW->setEnabled( false );
+  _sessionTW->setEnabled( false );
+}
+
+void EditTaskDialog::slotAutoTrackingPressed()
+{
+  bool checked = _desktopCB->isChecked();
+  for (unsigned int i=0; i<_deskBox.size(); i++)
+    _deskBox[i]->setEnabled(checked);
+
+  if (!checked)  // uncheck all desktop boxes
+    for (int i=0; i<desktopCount; i++) 
+      _deskBox[i]->setChecked(false);
+}
+
+void EditTaskDialog::setTask( const TQString &name, long time, long session )
+{
+  _name->setText( name );
+  
+  _timeTW->setTime( time );
+  _sessionTW->setTime( session );
+  origTime = time;
+  origSession = session;
+}
+
+
+TQString EditTaskDialog::taskName() const
+{ 
+  return( _name->text() ); 
+}
+
+
+void EditTaskDialog::status(long *time, long *timeDiff, long *session, 
+                           long *sessionDiff, DesktopList *desktopList) const
+{ 
+  if ( _absoluteRB->isChecked() ) {
+    *time = _timeTW->time();
+    *session = _sessionTW->time();
+  }
+  else {
+    int diff = _diffTW->time();
+    if ( _operator->currentItem() == 1) {
+      diff = -diff;
+    }
+    *time = origTime + diff;
+    *session = origSession + diff;
+  }
+
+  *timeDiff = *time - origTime;
+  *sessionDiff = *session - origSession;
+
+  for (unsigned int i=0; i<_deskBox.size(); i++) {
+    if (_deskBox[i]->isChecked())
+      desktopList->push_back(i);
+  }
+}
+
+#include "edittaskdialog.moc"

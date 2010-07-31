@@ -18,9 +18,9 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 *******************************************************************/
 
-#include <qclipboard.h>
-#include <qptrlist.h>
-#include <qtooltip.h>
+#include <tqclipboard.h>
+#include <tqptrlist.h>
+#include <tqtooltip.h>
 
 #include <kdebug.h>
 #include <kaction.h>
@@ -60,12 +60,12 @@ using namespace KNetwork;
 class KNotesKeyDialog : public KDialogBase
 {
 public:
-    KNotesKeyDialog( KGlobalAccel *globals, QWidget *parent, const char* name = 0 )
+    KNotesKeyDialog( KGlobalAccel *globals, TQWidget *parent, const char* name = 0 )
         : KDialogBase( parent, name, true, i18n("Configure Shortcuts"), Default|Ok|Cancel, Ok )
     {
         m_keyChooser = new KKeyChooser( globals, this );
         setMainWidget( m_keyChooser );
-        connect( this, SIGNAL(defaultClicked()), m_keyChooser, SLOT(allDefault()) );
+        connect( this, TQT_SIGNAL(defaultClicked()), m_keyChooser, TQT_SLOT(allDefault()) );
     }
 
     void insert( KActionCollection *actions )
@@ -84,7 +84,7 @@ private:
 };
 
 
-int KNotesApp::KNoteActionList::compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 )
+int KNotesApp::KNoteActionList::compareItems( TQPtrCollection::Item s1, TQPtrCollection::Item s2 )
 {
     if ( ((KAction*)s1)->text() == ((KAction*)s2)->text() )
         return 0;
@@ -93,39 +93,39 @@ int KNotesApp::KNoteActionList::compareItems( QPtrCollection::Item s1, QPtrColle
 
 
 KNotesApp::KNotesApp()
-    : DCOPObject("KNotesIface"), QLabel( 0, 0, WType_TopLevel ),
+    : DCOPObject("KNotesIface"), TQLabel( 0, 0, WType_TopLevel ),
       m_alarm( 0 ), m_listener( 0 ), m_find( 0 ), m_findPos( 0 )
 {
-    connect( kapp, SIGNAL(lastWindowClosed()), kapp, SLOT(quit()) );
+    connect( kapp, TQT_SIGNAL(lastWindowClosed()), kapp, TQT_SLOT(quit()) );
 
     m_noteList.setAutoDelete( true );
     m_noteActions.setAutoDelete( true );
 
     // create the dock widget...
     KWin::setSystemTrayWindowFor( winId(), qt_xrootwin() );
-    QToolTip::add( this, i18n( "KNotes: Sticky notes for KDE" ) );
+    TQToolTip::add( this, i18n( "KNotes: Sticky notes for KDE" ) );
     setBackgroundMode( X11ParentRelative );
-    setPixmap( KSystemTray::loadSizedIcon( "knotes", QWidget::width() ) );
+    setPixmap( KSystemTray::loadSizedIcon( "knotes", TQWidget::width() ) );
 
     // set the initial style
     KNote::setStyle( KNotesGlobalConfig::style() );
 
     // create the GUI...
     new KAction( i18n("New Note"), "filenew", 0,
-        this, SLOT(newNote()), actionCollection(), "new_note" );
+        this, TQT_SLOT(newNote()), actionCollection(), "new_note" );
     new KAction( i18n("New Note From Clipboard"), "editpaste", 0,
-        this, SLOT(newNoteFromClipboard()), actionCollection(), "new_note_clipboard" );
+        this, TQT_SLOT(newNoteFromClipboard()), actionCollection(), "new_note_clipboard" );
     new KAction( i18n("Show All Notes"), "knotes", 0,
-        this, SLOT(showAllNotes()), actionCollection(), "show_all_notes" );
+        this, TQT_SLOT(showAllNotes()), actionCollection(), "show_all_notes" );
     new KAction( i18n("Hide All Notes"), "fileclose", 0,
-        this, SLOT(hideAllNotes()), actionCollection(), "hide_all_notes" );
+        this, TQT_SLOT(hideAllNotes()), actionCollection(), "hide_all_notes" );
     new KHelpMenu( this, kapp->aboutData(), false, actionCollection() );
 
-    KStdAction::find( this, SLOT(slotOpenFindDialog()), actionCollection() );
-    KStdAction::preferences( this, SLOT(slotPreferences()), actionCollection() );
-    KStdAction::keyBindings( this, SLOT(slotConfigureAccels()), actionCollection() );
+    KStdAction::find( this, TQT_SLOT(slotOpenFindDialog()), actionCollection() );
+    KStdAction::preferences( this, TQT_SLOT(slotPreferences()), actionCollection() );
+    KStdAction::keyBindings( this, TQT_SLOT(slotConfigureAccels()), actionCollection() );
     //FIXME: no shortcut removing!?
-    KStdAction::quit( this, SLOT(slotQuit()), actionCollection() )->setShortcut( 0 );
+    KStdAction::quit( this, TQT_SLOT(slotQuit()), actionCollection() )->setShortcut( 0 );
 
     setXMLFile( instance()->instanceName() + "appui.rc" );
 
@@ -137,12 +137,12 @@ KNotesApp::KNotesApp()
     m_note_menu = static_cast<KPopupMenu*>(m_guiFactory->container( "notes_menu", this ));
 
     // get the most recent XML UI file
-    QString xmlFileName = instance()->instanceName() + "ui.rc";
-    QString filter = QString::fromLatin1( instance()->instanceName() + '/' ) + xmlFileName;
-    QStringList fileList = instance()->dirs()->findAllResources( "data", filter ) +
+    TQString xmlFileName = instance()->instanceName() + "ui.rc";
+    TQString filter = TQString::fromLatin1( instance()->instanceName() + '/' ) + xmlFileName;
+    TQStringList fileList = instance()->dirs()->findAllResources( "data", filter ) +
                            instance()->dirs()->findAllResources( "data", xmlFileName );
 
-    QString doc;
+    TQString doc;
     KXMLGUIClient::findMostRecentXMLFile( fileList, doc );
     m_noteGUI.setContent( doc );
 
@@ -150,16 +150,16 @@ KNotesApp::KNotesApp()
     m_globalAccel = new KGlobalAccel( this, "global accel" );
     m_globalAccel->insert( "global_new_note", i18n("New Note"), "",
                            ALT+SHIFT+Key_N, ALT+SHIFT+Key_N ,
-                           this, SLOT(newNote()), true, true );
+                           this, TQT_SLOT(newNote()), true, true );
     m_globalAccel->insert( "global_new_note_clipboard", i18n("New Note From Clipboard"), "",
                            ALT+SHIFT+Key_C, ALT+SHIFT+Key_C,
-                           this, SLOT(newNoteFromClipboard()), true, true );
+                           this, TQT_SLOT(newNoteFromClipboard()), true, true );
     m_globalAccel->insert( "global_hide_all_notes", i18n("Hide All Notes"), "",
                            ALT+SHIFT+Key_H, ALT+SHIFT+Key_H ,
-                           this, SLOT(hideAllNotes()), true, true );
+                           this, TQT_SLOT(hideAllNotes()), true, true );
     m_globalAccel->insert( "global_show_all_notes", i18n("Show All Notes"), "",
                            ALT+SHIFT+Key_S, ALT+SHIFT+Key_S,
-                           this, SLOT(showAllNotes()), true, true );
+                           this, TQT_SLOT(showAllNotes()), true, true );
 
     m_globalAccel->readSettings();
 
@@ -174,16 +174,16 @@ KNotesApp::KNotesApp()
 
     // create the resource manager
     m_manager = new KNotesResourceManager();
-    connect( m_manager, SIGNAL(sigRegisteredNote( KCal::Journal * )),
-             this,      SLOT(createNote( KCal::Journal * )) );
-    connect( m_manager, SIGNAL(sigDeregisteredNote( KCal::Journal * )),
-             this,      SLOT(killNote( KCal::Journal * )) );
+    connect( m_manager, TQT_SIGNAL(sigRegisteredNote( KCal::Journal * )),
+             this,      TQT_SLOT(createNote( KCal::Journal * )) );
+    connect( m_manager, TQT_SIGNAL(sigDeregisteredNote( KCal::Journal * )),
+             this,      TQT_SLOT(killNote( KCal::Journal * )) );
 
     // read the notes
     m_manager->load();
 
     // read the old config files, convert and add them
-    KCal::CalendarLocal calendar( QString::fromLatin1( "UTC" ) );
+    KCal::CalendarLocal calendar( TQString::fromLatin1( "UTC" ) );
     if ( KNotesLegacy::convert( &calendar ) )
     {
         KCal::Journal::List notes = calendar.journals();
@@ -201,7 +201,7 @@ KNotesApp::KNotesApp()
     // create the socket and possibly start listening for connections
     m_listener = new KServerSocket();
     m_listener->setResolutionEnabled( true );
-    connect( m_listener, SIGNAL(readyAccept()), SLOT(acceptConnection()) );
+    connect( m_listener, TQT_SIGNAL(readyAccept()), TQT_SLOT(acceptConnection()) );
     updateNetworkListener();
 
     if ( m_noteList.count() == 0 && !kapp->isRestored() )
@@ -210,15 +210,15 @@ KNotesApp::KNotesApp()
     updateNoteActions();
 }
 
-void KNotesApp::resizeEvent ( QResizeEvent * )
+void KNotesApp::resizeEvent ( TQResizeEvent * )
 {
 	// Honor Free Desktop specifications that allow for arbitrary system tray icon sizes
-	QPixmap origpixmap;
-	QPixmap scaledpixmap;
-	QImage newIcon;
-	origpixmap = KSystemTray::loadSizedIcon( "knotes", QWidget::width() );
+	TQPixmap origpixmap;
+	TQPixmap scaledpixmap;
+	TQImage newIcon;
+	origpixmap = KSystemTray::loadSizedIcon( "knotes", TQWidget::width() );
 	newIcon = origpixmap;
-	newIcon = newIcon.smoothScale(QWidget::width(), QWidget::height());
+	newIcon = newIcon.smoothScale(TQWidget::width(), TQWidget::height());
 	scaledpixmap = newIcon;
 	setPixmap(scaledpixmap);
 }
@@ -244,7 +244,7 @@ bool KNotesApp::commitData( QSessionManager& )
 
 // -------------------- public DCOP interface -------------------- //
 
-QString KNotesApp::newNote( const QString& name, const QString& text )
+TQString KNotesApp::newNote( const TQString& name, const TQString& text )
 {
     // create the new note
     KCal::Journal *journal = new KCal::Journal();
@@ -253,7 +253,7 @@ QString KNotesApp::newNote( const QString& name, const QString& text )
     if ( !name.isEmpty() )
         journal->setSummary( name );
     else
-        journal->setSummary( KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() ) );
+        journal->setSummary( KGlobal::locale()->formatDateTime( TQDateTime::currentDateTime() ) );
 
     // the body of the note
     journal->setDescription( text );
@@ -265,22 +265,22 @@ QString KNotesApp::newNote( const QString& name, const QString& text )
     return journal->uid();
 }
 
-QString KNotesApp::newNoteFromClipboard( const QString& name )
+TQString KNotesApp::newNoteFromClipboard( const TQString& name )
 {
-    const QString& text = KApplication::clipboard()->text();
+    const TQString& text = KApplication::clipboard()->text();
     return newNote( name, text );
 }
 
 void KNotesApp::hideAllNotes() const
 {
-    QDictIterator<KNote> it( m_noteList );
+    TQDictIterator<KNote> it( m_noteList );
     for ( ; *it; ++it )
         (*it)->close();
 }
 
 void KNotesApp::showAllNotes() const
 {
-    QDictIterator<KNote> it( m_noteList );
+    TQDictIterator<KNote> it( m_noteList );
     for ( ; *it; ++it )
     {
         (*it)->show();
@@ -288,7 +288,7 @@ void KNotesApp::showAllNotes() const
     }
 }
 
-void KNotesApp::showNote( const QString& id ) const
+void KNotesApp::showNote( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -297,7 +297,7 @@ void KNotesApp::showNote( const QString& id ) const
         kdWarning(5500) << "showNote: no note with id: " << id << endl;
 }
 
-void KNotesApp::hideNote( const QString& id ) const
+void KNotesApp::hideNote( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -306,7 +306,7 @@ void KNotesApp::hideNote( const QString& id ) const
         kdWarning(5500) << "hideNote: no note with id: " << id << endl;
 }
 
-void KNotesApp::killNote( const QString& id, bool force )
+void KNotesApp::killNote( const TQString& id, bool force )
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -316,15 +316,15 @@ void KNotesApp::killNote( const QString& id, bool force )
 }
 
 // "bool force = false" doesn't work with dcop
-void KNotesApp::killNote( const QString& id )
+void KNotesApp::killNote( const TQString& id )
 {
     killNote( id, false );
 }
 
-QMap<QString,QString> KNotesApp::notes() const
+TQMap<TQString,TQString> KNotesApp::notes() const
 {
-    QMap<QString,QString> notes;
-    QDictIterator<KNote> it( m_noteList );
+    TQMap<TQString,TQString> notes;
+    TQDictIterator<KNote> it( m_noteList );
 
     for ( ; it.current(); ++it )
         notes.insert( it.current()->noteId(), it.current()->name() );
@@ -332,25 +332,25 @@ QMap<QString,QString> KNotesApp::notes() const
     return notes;
 }
 
-QString KNotesApp::name( const QString& id ) const
+TQString KNotesApp::name( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
         return note->name();
     else
-        return QString::null;
+        return TQString::null;
 }
 
-QString KNotesApp::text( const QString& id ) const
+TQString KNotesApp::text( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
         return note->text();
     else
-        return QString::null;
+        return TQString::null;
 }
 
-void KNotesApp::setName( const QString& id, const QString& newName )
+void KNotesApp::setName( const TQString& id, const TQString& newName )
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -359,7 +359,7 @@ void KNotesApp::setName( const QString& id, const QString& newName )
         kdWarning(5500) << "setName: no note with id: " << id << endl;
 }
 
-void KNotesApp::setText( const QString& id, const QString& newText )
+void KNotesApp::setText( const TQString& id, const TQString& newText )
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -368,34 +368,34 @@ void KNotesApp::setText( const QString& id, const QString& newText )
         kdWarning(5500) << "setText: no note with id: " << id << endl;
 }
 
-QString KNotesApp::fgColor( const QString& id ) const
+TQString KNotesApp::fgColor( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
         return note->fgColor().name();
     else
-        return QString::null;
+        return TQString::null;
 }
 
-QString KNotesApp::bgColor( const QString& id ) const
+TQString KNotesApp::bgColor( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
         return note->bgColor().name();
     else
-        return QString::null;
+        return TQString::null;
 }
 
-void KNotesApp::setColor( const QString& id, const QString& fgColor, const QString& bgColor )
+void KNotesApp::setColor( const TQString& id, const TQString& fgColor, const TQString& bgColor )
 {
     KNote* note = m_noteList[id];
     if ( note )
-        note->setColor( QColor( fgColor ), QColor( bgColor ) );
+        note->setColor( TQColor( fgColor ), TQColor( bgColor ) );
     else
         kdWarning(5500) << "setColor: no note with id: " << id << endl;
 }
 
-int KNotesApp::width( const QString& id ) const
+int KNotesApp::width( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -404,7 +404,7 @@ int KNotesApp::width( const QString& id ) const
         return 0;
 }
 
-int KNotesApp::height( const QString& id ) const
+int KNotesApp::height( const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -413,7 +413,7 @@ int KNotesApp::height( const QString& id ) const
         return 0;
 }
 
-void KNotesApp::move( const QString& id, int x, int y ) const
+void KNotesApp::move( const TQString& id, int x, int y ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -422,7 +422,7 @@ void KNotesApp::move( const QString& id, int x, int y ) const
         kdWarning(5500) << "move: no note with id: " << id << endl;
 }
 
-void KNotesApp::resize( const QString& id, int width, int height ) const
+void KNotesApp::resize( const TQString& id, int width, int height ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -431,15 +431,15 @@ void KNotesApp::resize( const QString& id, int width, int height ) const
         kdWarning(5500) << "resize: no note with id: " << id << endl;
 }
 
-void KNotesApp::sync( const QString& app )
+void KNotesApp::sync( const TQString& app )
 {
-    QDictIterator<KNote> it( m_noteList );
+    TQDictIterator<KNote> it( m_noteList );
 
     for ( ; it.current(); ++it )
         it.current()->sync( app );
 }
 
-bool KNotesApp::isNew( const QString& app, const QString& id ) const
+bool KNotesApp::isNew( const TQString& app, const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -448,7 +448,7 @@ bool KNotesApp::isNew( const QString& app, const QString& id ) const
         return false;
 }
 
-bool KNotesApp::isModified( const QString& app, const QString& id ) const
+bool KNotesApp::isModified( const TQString& app, const TQString& id ) const
 {
     KNote* note = m_noteList[id];
     if ( note )
@@ -460,7 +460,7 @@ bool KNotesApp::isModified( const QString& app, const QString& id ) const
 
 // ------------------- protected methods ------------------- //
 
-void KNotesApp::mousePressEvent( QMouseEvent* e )
+void KNotesApp::mousePressEvent( TQMouseEvent* e )
 {
     if ( !rect().contains( e->pos() ) )
         return;
@@ -470,7 +470,7 @@ void KNotesApp::mousePressEvent( QMouseEvent* e )
     case LeftButton:
         if ( m_noteList.count() == 1 )
         {
-            QDictIterator<KNote> it( m_noteList );
+            TQDictIterator<KNote> it( m_noteList );
             showNote( it.toFirst() );
         }
         else if ( m_note_menu->count() > 0 )
@@ -490,13 +490,13 @@ void KNotesApp::mousePressEvent( QMouseEvent* e )
 void KNotesApp::slotShowNote()
 {
     // tell the WM to give this note focus
-    showNote( QString::fromUtf8( sender()->name() ) );
+    showNote( TQString::fromUtf8( sender()->name() ) );
 }
 
 void KNotesApp::slotWalkThroughNotes()
 {
     // show next note
-    QDictIterator<KNote> it( m_noteList );
+    TQDictIterator<KNote> it( m_noteList );
     KNote *first = it.toFirst();
     for ( ; *it; ++it )
         if ( (*it)->hasFocus() )
@@ -516,11 +516,11 @@ void KNotesApp::slotOpenFindDialog()
     findDia.setHasCursor( false );
     findDia.setSupportsBackwardsFind( false );
 
-    if ( findDia.exec() != QDialog::Accepted )
+    if ( findDia.exec() != TQDialog::Accepted )
         return;
 
     delete m_findPos;
-    m_findPos = new QDictIterator<KNote>( m_noteList );
+    m_findPos = new TQDictIterator<KNote>( m_noteList );
 
     // this could be in an own method if searching without a dialog should be possible
     delete m_find;
@@ -556,15 +556,15 @@ void KNotesApp::slotPreferences()
     // create a new preferences dialog...
     KNoteConfigDlg *dialog = new KNoteConfigDlg( 0, i18n("Settings"), this,
                                                  "KNotes Settings" );
-    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(updateNetworkListener()) );
-    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(updateStyle()) );
+    connect( dialog, TQT_SIGNAL(settingsChanged()), this, TQT_SLOT(updateNetworkListener()) );
+    connect( dialog, TQT_SIGNAL(settingsChanged()), this, TQT_SLOT(updateStyle()) );
     dialog->show();
 }
 
 void KNotesApp::slotConfigureAccels()
 {
     KNotesKeyDialog keys( m_globalAccel, this );
-    QDictIterator<KNote> notes( m_noteList );
+    TQDictIterator<KNote> notes( m_noteList );
     if ( !m_noteList.isEmpty() )
         keys.insert( (*notes)->actionCollection() );
     keys.configure();
@@ -581,8 +581,8 @@ void KNotesApp::slotConfigureAccels()
         return;
 
     notes.toFirst();
-    QValueList<KAction *> list = (*notes)->actionCollection()->actions();
-    for ( QValueList<KAction *>::iterator it = list.begin(); it != list.end(); ++it )
+    TQValueList<KAction *> list = (*notes)->actionCollection()->actions();
+    for ( TQValueList<KAction *>::iterator it = list.begin(); it != list.end(); ++it )
     {
         notes.toFirst();
         for ( ++notes; *notes; ++notes )
@@ -602,7 +602,7 @@ void KNotesApp::slotNoteKilled( KCal::Journal *journal )
 
 void KNotesApp::slotQuit()
 {
-    QDictIterator<KNote> it( m_noteList );
+    TQDictIterator<KNote> it( m_noteList );
 
     for ( ; *it; ++it )
         if ( (*it)->isModified() )
@@ -628,14 +628,14 @@ void KNotesApp::createNote( KCal::Journal *journal )
     KNote *newNote = new KNote( m_noteGUI, journal, 0, journal->uid().utf8() );
     m_noteList.insert( newNote->noteId(), newNote );
 
-    connect( newNote, SIGNAL(sigRequestNewNote()), SLOT(newNote()) );
-    connect( newNote, SIGNAL(sigShowNextNote()), SLOT(slotWalkThroughNotes()) );
-    connect( newNote, SIGNAL(sigKillNote( KCal::Journal* )),
-                        SLOT(slotNoteKilled( KCal::Journal* )) );
-    connect( newNote, SIGNAL(sigNameChanged()), SLOT(updateNoteActions()) );
-    connect( newNote, SIGNAL(sigDataChanged()), SLOT(saveNotes()) );
-    connect( newNote, SIGNAL(sigColorChanged()), SLOT(updateNoteActions()) );
-    connect( newNote, SIGNAL(sigFindFinished()), SLOT(slotFindNext()) );
+    connect( newNote, TQT_SIGNAL(sigRequestNewNote()), TQT_SLOT(newNote()) );
+    connect( newNote, TQT_SIGNAL(sigShowNextNote()), TQT_SLOT(slotWalkThroughNotes()) );
+    connect( newNote, TQT_SIGNAL(sigKillNote( KCal::Journal* )),
+                        TQT_SLOT(slotNoteKilled( KCal::Journal* )) );
+    connect( newNote, TQT_SIGNAL(sigNameChanged()), TQT_SLOT(updateNoteActions()) );
+    connect( newNote, TQT_SIGNAL(sigDataChanged()), TQT_SLOT(saveNotes()) );
+    connect( newNote, TQT_SIGNAL(sigColorChanged()), TQT_SLOT(updateNoteActions()) );
+    connect( newNote, TQT_SIGNAL(sigFindFinished()), TQT_SLOT(slotFindNext()) );
 
     // don't call this during startup for each and every loaded note
     if ( m_alarm )
@@ -656,8 +656,8 @@ void KNotesApp::acceptConnection()
     if ( s )
     {
         KNotesNetworkReceiver *recv = new KNotesNetworkReceiver( s );
-        connect( recv, SIGNAL(sigNoteReceived( const QString &, const QString & )),
-                 this, SLOT(newNote( const QString &, const QString & )) );
+        connect( recv, TQT_SIGNAL(sigNoteReceived( const TQString &, const TQString & )),
+                 this, TQT_SLOT(newNote( const TQString &, const TQString & )) );
     }
 }
 
@@ -669,7 +669,7 @@ void KNotesApp::saveNotes()
 
 void KNotesApp::saveConfigs()
 {
-    QDictIterator<KNote> it( m_noteList );
+    TQDictIterator<KNote> it( m_noteList );
     for ( ; it.current(); ++it )
         it.current()->saveConfig();
 }
@@ -679,14 +679,14 @@ void KNotesApp::updateNoteActions()
     unplugActionList( "notes" );
     m_noteActions.clear();
 
-    for ( QDictIterator<KNote> it( m_noteList ); it.current(); ++it )
+    for ( TQDictIterator<KNote> it( m_noteList ); it.current(); ++it )
     {
         KAction *action = new KAction( it.current()->name().replace("&", "&&"),
-                                       KShortcut(), this, SLOT(slotShowNote()),
-                                       (QObject *)0,
+                                       KShortcut(), this, TQT_SLOT(slotShowNote()),
+                                       (TQObject *)0,
                                        it.current()->noteId().utf8() );
         KIconEffect effect;
-        QPixmap icon = effect.apply( kapp->miniIcon(), KIconEffect::Colorize, 1,
+        TQPixmap icon = effect.apply( kapp->miniIcon(), KIconEffect::Colorize, 1,
                                      it.current()->paletteBackgroundColor(), false );
         action->setIconSet( icon );
         m_noteActions.append( action );
@@ -745,7 +745,7 @@ void KNotesApp::updateNetworkListener()
 
     if ( KNotesGlobalConfig::receiveNotes() )
     {
-        m_listener->setAddress( QString::number( KNotesGlobalConfig::port() ) );
+        m_listener->setAddress( TQString::number( KNotesGlobalConfig::port() ) );
         m_listener->bind();
         m_listener->listen();
     }
@@ -755,9 +755,9 @@ void KNotesApp::updateStyle()
 {
     KNote::setStyle( KNotesGlobalConfig::style() );
 
-    QDictIterator<KNote> it( m_noteList );
+    TQDictIterator<KNote> it( m_noteList );
     for ( ; it.current(); ++it )
-        QApplication::postEvent( *it, new QEvent( QEvent::LayoutHint ) );
+        TQApplication::postEvent( *it, new TQEvent( TQEvent::LayoutHint ) );
 }
 
 #include "knotesapp.moc"

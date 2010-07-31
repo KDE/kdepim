@@ -26,12 +26,12 @@
 #include <time.h>
 #include <unistd.h>
 
-#include <qdir.h>
-#include <qstring.h>
-#include <qfont.h>
-#include <qcolor.h>
-#include <qmap.h>
-#include <qstringlist.h>
+#include <tqdir.h>
+#include <tqstring.h>
+#include <tqfont.h>
+#include <tqcolor.h>
+#include <tqmap.h>
+#include <tqstringlist.h>
 
 #include <kglobalsettings.h>
 #include <kglobal.h>
@@ -55,10 +55,10 @@
 KOPrefs *KOPrefs::mInstance = 0;
 static KStaticDeleter<KOPrefs> insd;
 
-QColor getTextColor(const QColor &c)
+TQColor getTextColor(const TQColor &c)
 {
   float luminance = (c.red() * 0.299) + (c.green() * 0.587) + (c.blue() * 0.114);
-  return (luminance > 128.0) ? QColor( 0, 0 ,0 ) : QColor( 255, 255 ,255 );
+  return (luminance > 128.0) ? TQColor( 0, 0 ,0 ) : TQColor( 255, 255 ,255 );
 }
 
 
@@ -68,9 +68,9 @@ KOPrefs::KOPrefs() :
   mCategoryColors.setAutoDelete( true );
   mResourceColors.setAutoDelete( true );
 
-  mDefaultCategoryColor = QColor( 151, 235, 121 );
+  mDefaultCategoryColor = TQColor( 151, 235, 121 );
 
-  mDefaultResourceColor = QColor();//Default is a color invalid
+  mDefaultResourceColor = TQColor();//Default is a color invalid
 
   mDefaultTimeBarFont = KGlobalSettings::generalFont();
   // make a large default time bar font, at least 16 points.
@@ -84,7 +84,7 @@ KOPrefs::KOPrefs() :
   KConfigSkeleton::setCurrentGroup( "General" );
 
   addItemPath( "Html Export File", mHtmlExportFile,
-   QDir::homeDirPath() + "/" + i18n( "Default export file", "calendar.html" ) );
+   TQDir::homeDirPath() + "/" + i18n( "Default export file", "calendar.html" ) );
 
   timeBarFontItem()->setDefaultValue( mDefaultTimeBarFont );
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
@@ -119,7 +119,7 @@ void KOPrefs::usrSetDefaults()
   // settings for example.
 
   KEMailSettings settings;
-  QString tmp = settings.getSetting(KEMailSettings::RealName);
+  TQString tmp = settings.getSetting(KEMailSettings::RealName);
   if ( !tmp.isEmpty() ) setUserName( tmp );
   tmp = settings.getSetting(KEMailSettings::EmailAddress);
   if ( !tmp.isEmpty() ) setUserEmail( tmp );
@@ -136,7 +136,7 @@ void KOPrefs::usrSetDefaults()
 void KOPrefs::fillMailDefaults()
 {
   userEmailItem()->swapDefault();
-  QString defEmail = userEmailItem()->value();
+  TQString defEmail = userEmailItem()->value();
   userEmailItem()->swapDefault();
 
   if ( userEmail() == defEmail ) {
@@ -149,7 +149,7 @@ void KOPrefs::fillMailDefaults()
 
 void KOPrefs::setTimeZoneIdDefault()
 {
-  QString zone;
+  TQString zone;
 
   zone = KTimezones().local()->name();
 
@@ -179,28 +179,28 @@ void KOPrefs::usrReadConfig()
   // old category colors, ignore if they have the old default
   // should be removed a few versions after 3.2...
   config()->setGroup("Category Colors");
-  QValueList<QColor> oldCategoryColors;
-  QStringList::Iterator it;
+  TQValueList<TQColor> oldCategoryColors;
+  TQStringList::Iterator it;
   for (it = mCustomCategories.begin();it != mCustomCategories.end();++it ) {
-    QColor c = config()->readColorEntry(*it, &mDefaultCategoryColor);
-    oldCategoryColors.append( (c == QColor(196,196,196)) ?
+    TQColor c = config()->readColorEntry(*it, &mDefaultCategoryColor);
+    oldCategoryColors.append( (c == TQColor(196,196,196)) ?
                               mDefaultCategoryColor : c);
   }
 
   // new category colors
   config()->setGroup("Category Colors2");
-  QValueList<QColor>::Iterator it2;
+  TQValueList<TQColor>::Iterator it2;
   for (it = mCustomCategories.begin(), it2 = oldCategoryColors.begin();
        it != mCustomCategories.end(); ++it, ++it2 ) {
-      QColor c = config()->readColorEntry(*it, &*it2);
+      TQColor c = config()->readColorEntry(*it, &*it2);
       if ( c != mDefaultCategoryColor )
           setCategoryColor(*it,c);
   }
 
   config()->setGroup( "Resources Colors" );
-  QMap<QString, QString> map = config()->entryMap( "Resources Colors" );
+  TQMap<TQString, TQString> map = config()->entryMap( "Resources Colors" );
 
-  QMapIterator<QString, QString> it3;
+  TQMapIterator<TQString, TQString> it3;
   for( it3 = map.begin(); it3 != map.end(); ++it3 ) {
     kdDebug(5850)<< "KOPrefs::usrReadConfig: key: " << it3.key() << " value: "
       << it3.data()<<endl;
@@ -232,14 +232,14 @@ void KOPrefs::usrWriteConfig()
   config()->writeEntry("Custom Categories",mCustomCategories);
 
   config()->setGroup("Category Colors2");
-  QDictIterator<QColor> it(mCategoryColors);
+  TQDictIterator<TQColor> it(mCategoryColors);
   while (it.current()) {
     config()->writeEntry(it.currentKey(),*(it.current()));
     ++it;
   }
 
   config()->setGroup( "Resources Colors" );
-  QDictIterator<QColor> it2( mResourceColors );
+  TQDictIterator<TQColor> it2( mResourceColors );
   while( it2.current() ) {
     config()->writeEntry( it2.currentKey(), *( it2.current() ) );
     ++it2;
@@ -269,14 +269,14 @@ void KOPrefs::usrWriteConfig()
   KPimPrefs::usrWriteConfig();
 }
 
-void KOPrefs::setCategoryColor( const QString &cat, const QColor & color)
+void KOPrefs::setCategoryColor( const TQString &cat, const TQColor & color)
 {
-  mCategoryColors.replace( cat, new QColor( color ) );
+  mCategoryColors.replace( cat, new TQColor( color ) );
 }
 
-QColor *KOPrefs::categoryColor( const QString &cat )
+TQColor *KOPrefs::categoryColor( const TQString &cat )
 {
-  QColor *color = 0;
+  TQColor *color = 0;
 
   if ( !cat.isEmpty() ) color = mCategoryColors[ cat ];
 
@@ -285,28 +285,28 @@ QColor *KOPrefs::categoryColor( const QString &cat )
 }
 
 
-bool KOPrefs::hasCategoryColor( const QString& cat ) const
+bool KOPrefs::hasCategoryColor( const TQString& cat ) const
 {
     return mCategoryColors[ cat ];
 }
 
-void KOPrefs::setResourceColor ( const QString &cal, const QColor &color )
+void KOPrefs::setResourceColor ( const TQString &cal, const TQColor &color )
 {
   kdDebug(5850)<<"KOPrefs::setResourceColor: " << cal << " color: "<<
     color.name()<<endl;
-  mResourceColors.replace( cal, new QColor( color ) );
+  mResourceColors.replace( cal, new TQColor( color ) );
 }
 
-QColor* KOPrefs::resourceColor( const QString &cal )
+TQColor* KOPrefs::resourceColor( const TQString &cal )
 {
-  QColor *color=0;
+  TQColor *color=0;
   if( !cal.isEmpty() ) color = mResourceColors[cal];
 
   // assign default color if enabled
   if ( !cal.isEmpty() && !color && assignDefaultResourceColors() ) {
-    QColor defColor( 0x37, 0x7A, 0xBC );
+    TQColor defColor( 0x37, 0x7A, 0xBC );
     if ( defaultResourceColorSeed() > 0 && defaultResourceColorSeed() - 1 < (int)defaultResourceColors().size() ) {
-        defColor = QColor( defaultResourceColors()[defaultResourceColorSeed()-1] );
+        defColor = TQColor( defaultResourceColors()[defaultResourceColorSeed()-1] );
     } else {
         int h, s, v;
         defColor.getHsv( h, s, v );
@@ -325,7 +325,7 @@ QColor* KOPrefs::resourceColor( const QString &cal )
     return &mDefaultResourceColor;
 }
 
-QString KOPrefs::fullName()
+TQString KOPrefs::fullName()
 {
   if ( mEmailControlCenter ) {
     KEMailSettings settings;
@@ -335,7 +335,7 @@ QString KOPrefs::fullName()
   }
 }
 
-QString KOPrefs::email()
+TQString KOPrefs::email()
 {
   if ( mEmailControlCenter ) {
     KEMailSettings settings;
@@ -345,10 +345,10 @@ QString KOPrefs::email()
   }
 }
 
-QStringList KOPrefs::allEmails()
+TQStringList KOPrefs::allEmails()
 {
   // Grab emails from the email identities
-  QStringList lst = KOCore::self()->identityManager()->allEmails();
+  TQStringList lst = KOCore::self()->identityManager()->allEmails();
   // Add emails configured in korganizer
   lst += mAdditionalMails;
   // Add emails from the user's kaddressbook entry
@@ -360,16 +360,16 @@ QStringList KOPrefs::allEmails()
   return lst;
 }
 
-QStringList KOPrefs::fullEmails()
+TQStringList KOPrefs::fullEmails()
 {
-  QStringList fullEmails;
+  TQStringList fullEmails;
   // The user name and email from the config dialog:
-  fullEmails << QString("%1 <%2>").arg( fullName() ).arg( email() );
+  fullEmails << TQString("%1 <%2>").arg( fullName() ).arg( email() );
 
-  QStringList::Iterator it;
+  TQStringList::Iterator it;
   // Grab emails from the email identities
   KPIM::IdentityManager *idmanager = KOCore::self()->identityManager();
-  QStringList lst = idmanager->identities();
+  TQStringList lst = idmanager->identities();
   KPIM::IdentityManager::ConstIterator it1;
   for ( it1 = idmanager->begin() ; it1 != idmanager->end() ; ++it1 ) {
     fullEmails << (*it1).fullEmailAddr();
@@ -377,7 +377,7 @@ QStringList KOPrefs::fullEmails()
   // Add emails configured in korganizer
   lst = mAdditionalMails;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    fullEmails << QString("%1 <%2>").arg( fullName() ).arg( *it );
+    fullEmails << TQString("%1 <%2>").arg( fullName() ).arg( *it );
   }
   // Add emails from the user's kaddressbook entry
   KABC::Addressee me = KABC::StdAddressBook::self()->whoAmI();
@@ -390,7 +390,7 @@ QStringList KOPrefs::fullEmails()
   return fullEmails;
 }
 
-bool KOPrefs::thatIsMe( const QString& _email )
+bool KOPrefs::thatIsMe( const TQString& _email )
 {
   // NOTE: this method is called for every created agenda view item, so we need to keep
   // performance in mind
@@ -405,13 +405,13 @@ bool KOPrefs::thatIsMe( const QString& _email )
 
   // in case email contains a full name, strip it out
   // the below is the simpler but slower version of the following KMime code
-  // const QString email = KPIM::getEmailAddress( _email );
-  const QCString tmp = _email.utf8();
+  // const TQString email = KPIM::getEmailAddress( _email );
+  const TQCString tmp = _email.utf8();
   const char *cursor = tmp.data();
   const char *end = tmp.data() + tmp.length();
   KMime::Types::Mailbox mbox;
   KMime::HeaderParsing::parseMailbox( cursor, end, mbox );
-  const QString email = mbox.addrSpec.asString();
+  const TQString email = mbox.addrSpec.asString();
 
   for ( KPIM::IdentityManager::ConstIterator it = KOCore::self()->identityManager()->begin();
         it != KOCore::self()->identityManager()->end(); ++it ) {
@@ -421,7 +421,7 @@ bool KOPrefs::thatIsMe( const QString& _email )
 
   if ( mAdditionalMails.find( email ) != mAdditionalMails.end() )
     return true;
-  QStringList lst = mMyAddrBookMails;
+  TQStringList lst = mMyAddrBookMails;
   if ( lst.find( email ) != lst.end() )
     return true;
   return false;

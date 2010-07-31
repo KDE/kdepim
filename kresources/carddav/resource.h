@@ -17,8 +17,8 @@
 #define KABC_RESOURCECARDDAV_H
 
 #include "preferences.h"
-#include <qthread.h>
-#include <qptrqueue.h>
+#include <tqthread.h>
+#include <tqptrqueue.h>
 
 #include <kabcresourcecached.h>
 #include <libkdepim/progressmanager.h>
@@ -84,14 +84,14 @@ protected slots:
 protected:
 
     struct LoadingTask {
-        QString url;
+        TQString url;
     };
 
     struct WritingTask {
-        QString url;
-        QString added;
-        QString changed;
-        QString deleted;
+        TQString url;
+        TQString added;
+        TQString changed;
+        TQString deleted;
     };
 
 
@@ -126,28 +126,28 @@ protected:
      * Initiates calendar loading process.
      * @param url URL to load calendar data from.
      */
-    void startLoading(const QString& url);
+    void startLoading(const TQString& url);
 
     /**
      * Checks if the data is correct and can be parsed.
      * @param data ical string to check.
      * @return true if the data is correct, false otherwise.
      */
-    bool checkData(const QString& data);
+    bool checkData(const TQString& data);
 
     /**
      * Parses the data and adds events to the calendar.
      * @param data calendar data.
      * @return true on success, false on fail.
      */
-    bool parseData(const QString& data);
+    bool parseData(const TQString& data);
 
     /**
      * Initiates calendar writing process.
      * @param url URL to save calendar data to.
      * @return true if write was queued successfully, false if not
      */
-    bool startWriting(const QString& url);
+    bool startWriting(const TQString& url);
 
     /**
      * Ensures incidences' read-only states are the same as the calendar's read-only state.
@@ -178,7 +178,7 @@ protected:
      */
     void writingQueuePush(const WritingTask *task);
 
-    virtual bool event ( QEvent * e );
+    virtual bool event ( TQEvent * e );
 
 private:
 
@@ -209,12 +209,12 @@ private:
     KPIM::ProgressItem *mProgress;
 
     bool mLoadingQueueReady;
-    QPtrQueue<LoadingTask> mLoadingQueue;
+    TQPtrQueue<LoadingTask> mLoadingQueue;
 
     bool mWritingQueueReady;
-    QPtrQueue<WritingTask> mWritingQueue;
+    TQPtrQueue<WritingTask> mWritingQueue;
 
-    QTimer *mWriteRetryTimer;
+    TQTimer *mWriteRetryTimer;
 
 };
 

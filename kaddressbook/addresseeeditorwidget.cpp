@@ -1,0 +1,909 @@
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
+*/
+
+#include <tqcheckbox.h>
+#include <tqhbox.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqlistbox.h>
+#include <tqpushbutton.h>
+#include <tqtabwidget.h>
+#include <tqtextedit.h>
+#include <tqtoolbutton.h>
+#include <tqtooltip.h>
+
+#include <kabc/resource.h>
+#include <kabc/stdaddressbook.h>
+#include <kaccelmanager.h>
+#include <kapplication.h>
+#include <kconfig.h>
+#include <kcombobox.h>
+#include <kdebug.h>
+#include <kdialogbase.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <klineedit.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kseparator.h>
+#include <ksqueezedtextlabel.h>
+#include <kstandarddirs.h>
+
+#include <libkdepim/addresseelineedit.h>
+#include <libkdepim/categoryeditdialog.h>
+#include <libkdepim/categoryselectdialog.h>
+#include <libkdepim/kdateedit.h>
+#include <libkdepim/resourceabc.h>
+
+#include "addresseditwidget.h"
+#include "advancedcustomfields.h"
+#include "emaileditwidget.h"
+#include "imeditwidget.h"
+#include "kabprefs.h"
+#include "keywidget.h"
+#include "nameeditdialog.h"
+#include "phoneeditwidget.h"
+#include "secrecywidget.h"
+
+#include "addresseeeditorwidget.h"
+
+AddresseeEditorWidget::AddresseeEditorWidget( TQWidget *parent, const char *name )
+  : AddresseeEditorBase( parent, name ),
+    mBlockSignals( false ), mReadOnly( false )
+{
+  kdDebug(5720) << "AddresseeEditorWidget()" << endl;
+
+  initGUI();
+  mCategorySelectDialog = 0;
+  mCategoryEditDialog = 0;
+
+  // Load the empty addressee as defaults
+  load();
+
+  mDirty = false;
+}
+
+AddresseeEditorWidget::~AddresseeEditorWidget()
+{
+  kdDebug(5720) << "~AddresseeEditorWidget()" << endl;
+}
+
+void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
+{
+  if ( mAddressee.uid() == addr.uid() )
+    return;
+  mAddressee = addr;
+
+  bool readOnly = false;
+  if ( KABC::Resource *res = addr.resource() ) {
+    if ( res->readOnly() ) {
+      readOnly = true;
+
+    //Kolab resources have finer access control than planned in the overall design.
+    } else if ( res->inherits( "KPIM::ResourceABC" ) ) {
+      KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
+
+      TQString subresource = resAbc->uidToResourceMap()[ addr.uid() ];
+      if ( !subresource.isEmpty() )
+        readOnly |= !resAbc->subresourceWritable( subresource );
+    }
+  }
+  setReadOnly( readOnly );
+
+  load();
+}
+
+const KABC::Addressee &AddresseeEditorWidget::addressee()
+{
+  return mAddressee;
+}
+
+void AddresseeEditorWidget::textChanged( const TQString& )
+{
+  emitModified();
+}
+
+void AddresseeEditorWidget::initGUI()
+{
+  TQVBoxLayout *layout = new TQVBoxLayout( this );
+
+  mTabWidget = new TQTabWidget( this );
+  layout->addWidget( mTabWidget );
+
+  setupTab1();
+  setupTab2();
+  setupAdditionalTabs();
+  setupCustomFieldsTabs();
+
+  connect( mTabWidget, TQT_SIGNAL( currentChanged(TQWidget*) ),
+           TQT_SLOT( pageChanged(TQWidget*) ) );
+}
+
+void AddresseeEditorWidget::setupTab1()
+{
+  // This is the General tab
+  TQWidget *tab1 = new TQWidget( mTabWidget );
+
+  TQGridLayout *layout = new TQGridLayout( tab1, 11, 7 );
+  layout->setMargin( KDialogBase::marginHint() );
+  layout->setSpacing( KDialogBase::spacingHint() );
+
+  TQLabel *label;
+  KSeparator* bar;
+  TQPushButton *button;
+
+  //////////////////////////////////
+  // Upper left group (person info)
+
+  // Person icon
+  label = new TQLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop,
+                                                      KIcon::SizeMedium ) );
+  layout->addMultiCellWidget( label, 0, 1, 0, 0 );
+
+  // First name
+  button = new TQPushButton( i18n( "Edit Name..." ), tab1 );
+  TQToolTip::add( button, i18n( "Edit the contact's name" ) );
+  mNameEdit = new KLineEdit( tab1, "mNameEdit" );
+  connect( mNameEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( nameTextChanged( const TQString& ) ) );
+  connect( button, TQT_SIGNAL( clicked() ), TQT_SLOT( nameButtonClicked() ) );
+  mNameLabel = new KSqueezedTextLabel( tab1 );
+
+  if ( KABPrefs::instance()->automaticNameParsing() ) {
+    mNameLabel->hide();
+    mNameEdit->show();
+  } else {
+    mNameEdit->hide();
+    mNameLabel->show();
+  }
+
+  layout->addWidget( button, 0, 1 );
+  layout->addWidget( mNameEdit, 0, 2 );
+  layout->addWidget( mNameLabel, 0, 2 );
+  label = new TQLabel( i18n( "<roleLabel>:", "%1:" ).arg( KABC::Addressee::roleLabel() ), tab1 );
+  mRoleEdit = new KLineEdit( tab1 );
+  connect( mRoleEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mRoleEdit );
+  layout->addWidget( label, 1, 1 );
+  layout->addWidget( mRoleEdit, 1, 2 );
+
+  // Organization
+  label = new TQLabel( i18n( "<organizationLabel>:", "%1:" ).arg( KABC::Addressee::organizationLabel() ), tab1 );
+  mOrgEdit = new KLineEdit( tab1 );
+  label->setBuddy( mOrgEdit );
+  connect( mOrgEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( organizationTextChanged( const TQString& ) ) );
+  layout->addWidget( label, 2, 1 );
+  layout->addWidget( mOrgEdit, 2, 2 );
+
+  // File as (formatted name)
+  label = new TQLabel( i18n( "Formatted name:" ), tab1 );
+  mFormattedNameLabel = new KSqueezedTextLabel( tab1 );
+  layout->addWidget( label, 3, 1 );
+  layout->addWidget( mFormattedNameLabel, 3, 2 );
+
+  // Left hand separator. This separator doesn't go all the way
+  // across so the dialog still flows from top to bottom
+  bar = new KSeparator( KSeparator::HLine, tab1 );
+  layout->addMultiCellWidget( bar, 4, 4, 0, 2 );
+
+  //////////////////////////////////////
+  // Phone numbers (upper right)
+  label = new TQLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "kaddressbook",
+                    KIcon::Desktop, KIcon::SizeMedium ) );
+  layout->addMultiCellWidget( label, 0, 1, 3, 3 );
+
+  mPhoneEditWidget = new PhoneEditWidget( tab1 );
+  connect( mPhoneEditWidget, TQT_SIGNAL( modified() ), TQT_SLOT( emitModified() ) );
+  layout->addMultiCellWidget( mPhoneEditWidget, 0, 3, 4, 6 );
+
+  bar = new KSeparator( KSeparator::HLine, tab1 );
+  layout->addMultiCellWidget( bar, 4, 4, 3, 6 );
+
+  //////////////////////////////////////
+  // Addresses (lower left)
+  label = new TQLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "kfm_home", KIcon::Desktop,
+                                                     KIcon::SizeMedium ) );
+  layout->addMultiCellWidget( label, 5, 6, 0, 0 );
+
+  mAddressEditWidget = new AddressEditWidget( tab1 );
+  connect( mAddressEditWidget, TQT_SIGNAL( modified() ), TQT_SLOT( emitModified() ) );
+  layout->addMultiCellWidget( mAddressEditWidget, 5, 10, 1, 2 );
+
+  //////////////////////////////////////
+  // Email / Web (lower right)
+  label = new TQLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "email", KIcon::Desktop,
+                                                     KIcon::SizeMedium ) );
+  layout->addMultiCellWidget( label, 5, 6, 3, 3 );
+
+  mEmailWidget = new EmailEditWidget( tab1 );
+  connect( mEmailWidget, TQT_SIGNAL( modified() ), TQT_SLOT( emitModified() ) );
+  layout->addMultiCellWidget( mEmailWidget, 5, 6, 4, 6 );
+
+  // add the separator
+  bar = new KSeparator( KSeparator::HLine, tab1 );
+  layout->addMultiCellWidget( bar, 7, 7, 3, 6 );
+
+  TQHBoxLayout *homePageLayout = new TQHBoxLayout( 0, 11, 7 );
+
+  label = new TQLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "homepage", KIcon::Desktop,
+                                                     KIcon::SizeMedium ) );
+  homePageLayout->addWidget( label );
+
+  label = new TQLabel( i18n( "<urlLabel>:", "%1:" ).arg( KABC::Addressee::urlLabel() ), tab1 );
+  mURLEdit = new KLineEdit( tab1 );
+  connect( mURLEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mURLEdit );
+  homePageLayout->addWidget( label );
+  homePageLayout->addWidget( mURLEdit );
+  layout->addMultiCellLayout( homePageLayout, 8, 8, 3, 6 );
+
+  TQHBoxLayout *blogLayout = new TQHBoxLayout( 0, 11, 7 );
+  label = new TQLabel( i18n("Blog feed:"), tab1 );
+  blogLayout->addWidget( label );
+  mBlogEdit = new KLineEdit( tab1 );
+  blogLayout->addWidget( mBlogEdit );
+  connect( mBlogEdit, TQT_SIGNAL( textChanged( const TQString & ) ),
+           TQT_SLOT( textChanged( const TQString & ) ) );
+  label->setBuddy( mBlogEdit );
+  layout->addMultiCellLayout( blogLayout, 9, 9, 4, 6 );
+
+  mIMWidget = new IMEditWidget( tab1, mAddressee );
+  connect( mIMWidget, TQT_SIGNAL( modified() ), TQT_SLOT( emitModified() ) );
+  layout->addMultiCellWidget( mIMWidget, 10, 10, 4, 6 );
+
+  layout->addColSpacing( 6, 50 );
+
+  bar = new KSeparator( KSeparator::HLine, tab1 );
+  layout->addMultiCellWidget( bar, 11, 11, 0, 6 );
+
+  ///////////////////////////////////////
+  TQHBox *categoryBox = new TQHBox( tab1 );
+  categoryBox->setSpacing( KDialogBase::spacingHint() );
+
+  // Categories
+  mCategoryButton = new TQPushButton( i18n( "Select Categories..." ), categoryBox );
+  connect( mCategoryButton, TQT_SIGNAL( clicked() ), TQT_SLOT( selectCategories() ) );
+
+  mCategoryEdit = new KLineEdit( categoryBox );
+  mCategoryEdit->setReadOnly( true );
+  connect( mCategoryEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+
+  mSecrecyWidget = new SecrecyWidget( categoryBox );
+  connect( mSecrecyWidget, TQT_SIGNAL( changed() ), TQT_SLOT( emitModified() ) );
+
+  layout->addMultiCellWidget( categoryBox, 12, 12, 0, 6 );
+
+  // Build the layout and add to the tab widget
+  layout->activate(); // required
+
+  mTabWidget->addTab( tab1, i18n( "&General" ) );
+}
+
+void AddresseeEditorWidget::setupTab2()
+{
+  // This is the Details tab
+  TQWidget *tab2 = new TQWidget( mTabWidget );
+
+  TQGridLayout *layout = new TQGridLayout( tab2, 6, 6 );
+  layout->setMargin( KDialogBase::marginHint() );
+  layout->setSpacing( KDialogBase::spacingHint() );
+
+  TQLabel *label;
+  KSeparator* bar;
+
+  ///////////////////////
+  // Office info
+
+  // Department
+  label = new TQLabel( tab2 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "folder", KIcon::Desktop,
+                                                     KIcon::SizeMedium ) );
+  layout->addMultiCellWidget( label, 0, 1, 0, 0 );
+
+  label = new TQLabel( i18n( "Department:" ), tab2 );
+  layout->addWidget( label, 0, 1 );
+  mDepartmentEdit = new KLineEdit( tab2 );
+  connect( mDepartmentEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mDepartmentEdit );
+  layout->addWidget( mDepartmentEdit, 0, 2 );
+
+  label = new TQLabel( i18n( "Office:" ), tab2 );
+  layout->addWidget( label, 1, 1 );
+  mOfficeEdit = new KLineEdit( tab2 );
+  connect( mOfficeEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mOfficeEdit );
+  layout->addWidget( mOfficeEdit, 1, 2 );
+
+  label = new TQLabel( i18n( "Profession:" ), tab2 );
+  layout->addWidget( label, 2, 1 );
+  mProfessionEdit = new KLineEdit( tab2 );
+  connect( mProfessionEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mProfessionEdit );
+  layout->addWidget( mProfessionEdit, 2, 2 );
+
+  label = new TQLabel( i18n( "Manager\'s name:" ), tab2 );
+  layout->addWidget( label, 0, 3 );
+  mManagerEdit = new KPIM::AddresseeLineEdit( tab2 );
+  connect( mManagerEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mManagerEdit );
+  layout->addMultiCellWidget( mManagerEdit, 0, 0, 4, 5 );
+
+  label = new TQLabel( i18n( "Assistant's name:" ), tab2 );
+  layout->addWidget( label, 1, 3 );
+  mAssistantEdit = new KPIM::AddresseeLineEdit( tab2 );
+  connect( mAssistantEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mAssistantEdit );
+  layout->addMultiCellWidget( mAssistantEdit, 1, 1, 4, 5 );
+
+  label = new TQLabel( i18n( "<titleLabel>:", "%1:" ).arg( KABC::Addressee::titleLabel() ), tab2 );
+  layout->addWidget( label, 2, 3 );
+  mTitleEdit = new KLineEdit( tab2 );
+  connect( mTitleEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mTitleEdit );
+  layout->addMultiCellWidget( mTitleEdit, 2, 2, 4, 5 );
+
+  bar = new KSeparator( KSeparator::HLine, tab2 );
+  layout->addMultiCellWidget( bar, 3, 3, 0, 5 );
+
+  /////////////////////////////////////////////////
+  // Personal info
+
+  label = new TQLabel( tab2 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop,
+                                                     KIcon::SizeMedium ) );
+  layout->addMultiCellWidget( label, 4, 5, 0, 0 );
+
+  label = new TQLabel( i18n( "Nickname:" ), tab2 );
+  layout->addWidget( label, 4, 1 );
+  mNicknameEdit = new KLineEdit( tab2 );
+  connect( mNicknameEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mNicknameEdit );
+  layout->addWidget( mNicknameEdit, 4, 2 );
+
+  label = new TQLabel( i18n( "Partner's name:" ), tab2 );
+  layout->addWidget( label, 5, 1 );
+  mSpouseEdit = new KPIM::AddresseeLineEdit( tab2 );
+  connect( mSpouseEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( textChanged( const TQString& ) ) );
+  label->setBuddy( mSpouseEdit );
+  layout->addWidget( mSpouseEdit, 5, 2 );
+
+  label = new TQLabel( i18n( "Birthdate:" ), tab2 );
+  layout->addWidget( label, 4, 3 );
+  mBirthdayPicker = new KDateEdit( tab2 );
+  connect( mBirthdayPicker, TQT_SIGNAL( dateChanged( const TQDate& ) ),
+           TQT_SLOT( dateChanged( const TQDate& ) ) );
+  connect( mBirthdayPicker, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( emitModified() ) );
+  label->setBuddy( mBirthdayPicker );
+  layout->addWidget( mBirthdayPicker, 4, 4 );
+
+  label = new TQLabel( i18n( "Anniversary:" ), tab2 );
+  layout->addWidget( label, 5, 3 );
+  mAnniversaryPicker = new KDateEdit( tab2 );
+  connect( mAnniversaryPicker, TQT_SIGNAL( dateChanged( const TQDate& ) ),
+           TQT_SLOT( dateChanged( const TQDate& ) ) );
+  connect( mAnniversaryPicker, TQT_SIGNAL( textChanged( const TQString& ) ),
+           TQT_SLOT( emitModified() ) );
+  label->setBuddy( mAnniversaryPicker );
+  layout->addWidget( mAnniversaryPicker, 5, 4 );
+
+  bar = new KSeparator( KSeparator::HLine, tab2 );
+  layout->addMultiCellWidget( bar, 6, 6, 0, 5 );
+
+   //////////////////////////////////////
+  // Notes
+  label = new TQLabel( i18n( "Note:" ), tab2 );
+  label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
+  layout->addWidget( label, 7, 0 );
+  mNoteEdit = new TQTextEdit( tab2 );
+  mNoteEdit->setWordWrap( TQTextEdit::WidgetWidth );
+  mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
+  connect( mNoteEdit, TQT_SIGNAL( textChanged() ), TQT_SLOT( emitModified() ) );
+  label->setBuddy( mNoteEdit );
+  layout->addMultiCellWidget( mNoteEdit, 7, 7, 1, 5 );
+
+   // Build the layout and add to the tab widget
+  layout->activate(); // required
+
+  mTabWidget->addTab( tab2, i18n( "&Details" ) );
+}
+
+void AddresseeEditorWidget::setupAdditionalTabs()
+{
+  ContactEditorWidgetManager *manager = ContactEditorWidgetManager::self();
+
+  // create all tab pages and add the widgets
+  for ( int i = 0; i < manager->count(); ++i ) {
+    TQString pageIdentifier = manager->factory( i )->pageIdentifier();
+    TQString pageTitle = manager->factory( i )->pageTitle();
+
+    if ( pageIdentifier == "misc" )
+      pageTitle = i18n( "Misc" );
+
+    ContactEditorTabPage *page = mTabPages[ pageIdentifier ];
+    if ( page == 0 ) { // tab not yet available, create one
+      page = new ContactEditorTabPage( mTabWidget );
+      mTabPages.insert( pageIdentifier, page );
+
+      mTabWidget->addTab( page, pageTitle );
+
+      connect( page, TQT_SIGNAL( changed() ), TQT_SLOT( emitModified() ) );
+    }
+
+    KAB::ContactEditorWidget *widget
+              = manager->factory( i )->createWidget( KABC::StdAddressBook::self( true ),
+                                                     page );
+    if ( widget )
+      page->addWidget( widget );
+  }
+
+  // query the layout update
+  TQDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->updateLayout();
+}
+
+void AddresseeEditorWidget::setupCustomFieldsTabs()
+{
+  TQStringList activePages = KABPrefs::instance()->advancedCustomFields();
+
+  const TQStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
+  for ( TQStringList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
+    if ( activePages.find( (*it).mid( (*it).findRev('/') + 1 ) ) == activePages.end() )
+      continue;
+
+    ContactEditorTabPage *page = new ContactEditorTabPage( mTabWidget );
+    AdvancedCustomFields *wdg = new AdvancedCustomFields( *it, KABC::StdAddressBook::self( true ), page );
+    if ( wdg ) {
+      mTabPages.insert( wdg->pageIdentifier(), page );
+      mTabWidget->addTab( page, wdg->pageTitle() );
+
+      page->addWidget( wdg );
+      page->updateLayout();
+
+      connect( page, TQT_SIGNAL( changed() ), TQT_SLOT( emitModified() ) );
+    } else
+      delete page;
+  }
+}
+
+void AddresseeEditorWidget::load()
+{
+  kdDebug(5720) << "AddresseeEditorWidget::load()" << endl;
+
+  // Block signals in case anything tries to emit modified
+  // CS: This doesn't seem to work.
+  bool block = signalsBlocked();
+  blockSignals( true );
+  mBlockSignals = true; // used for internal signal blocking
+
+  mNameEdit->blockSignals( true );
+  mNameEdit->setText( mAddressee.assembledName() );
+  mNameEdit->blockSignals( false );
+
+  if ( mAddressee.formattedName().isEmpty() ) {
+    KConfig config( "kaddressbookrc" );
+    config.setGroup( "General" );
+    mFormattedNameType = config.readNumEntry( "FormattedNameType", 1 );
+    mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
+  } else {
+    if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::SimpleName ) )
+      mFormattedNameType = NameEditDialog::SimpleName;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::FullName ) )
+      mFormattedNameType = NameEditDialog::FullName;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::ReverseNameWithComma ) )
+      mFormattedNameType = NameEditDialog::ReverseNameWithComma;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::ReverseName ) )
+      mFormattedNameType = NameEditDialog::ReverseName;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::Organization ) )
+      mFormattedNameType = NameEditDialog::Organization;
+    else
+      mFormattedNameType = NameEditDialog::CustomName;
+  }
+
+  mFormattedNameLabel->setText( mAddressee.formattedName() );
+
+  mRoleEdit->setText( mAddressee.role() );
+  mOrgEdit->setText( mAddressee.organization() );
+#if KDE_IS_VERSION(3,5,8)
+  mDepartmentEdit->setText( mAddressee.department() );
+  // compatibility with older versions
+  if ( mAddressee.department().isEmpty() )
+#endif
+    mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
+  mURLEdit->setURL( mAddressee.url() );
+  mURLEdit->home( false );
+  mBlogEdit->setURL( mAddressee.custom( "KADDRESSBOOK", "BlogFeed" ) );
+  mNoteEdit->setText( mAddressee.note() );
+  mEmailWidget->setEmails( mAddressee.emails() );
+  mPhoneEditWidget->setPhoneNumbers( mAddressee.phoneNumbers() );
+  mAddressEditWidget->setAddresses( mAddressee, mAddressee.addresses() );
+  mBirthdayPicker->setDate( mAddressee.birthday().date() );
+
+  TQString anniversaryStr = mAddressee.custom( "KADDRESSBOOK", "X-Anniversary" );
+  TQDate anniversary = (anniversaryStr.isEmpty() ? TQDate() : TQDate::fromString( anniversaryStr, Qt::ISODate ));
+  mAnniversaryPicker->setDate( anniversary );
+  mNicknameEdit->setText( mAddressee.nickName() );
+  mCategoryEdit->setText( mAddressee.categories().join( "," ) );
+
+  mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
+
+  // Load customs
+  mIMWidget->setPreferredIM( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
+  mSpouseEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-SpousesName" ) );
+  mManagerEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-ManagersName" ) );
+  mAssistantEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
+  mOfficeEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Office" ) );
+  mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
+  mTitleEdit->setText( mAddressee.title() );
+
+  TQDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->loadContact( &mAddressee );
+
+  blockSignals( block );
+  mBlockSignals = false;
+
+  mDirty = false;
+}
+
+void AddresseeEditorWidget::save()
+{
+  if ( !mDirty ) return;
+
+  mAddressee.setRole( mRoleEdit->text() );
+  mAddressee.setOrganization( mOrgEdit->text() );
+#if KDE_IS_VERSION(3,5,8)
+  mAddressee.setDepartment( mDepartmentEdit->text() );
+#else
+  if ( !mDepartmentEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Department", mDepartmentEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Department" );
+#endif
+
+  TQString homepage = mURLEdit->text().stripWhiteSpace();
+  if ( homepage.isEmpty() )
+     mAddressee.setUrl( KURL() );
+  else {
+     if( !homepage.startsWith("http") )
+       homepage = "http://" + homepage;
+     mAddressee.setUrl( KURL( homepage ) );
+  }
+  if ( !mBlogEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", mBlogEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "BlogFeed" );
+
+  mAddressee.setNote( mNoteEdit->text() );
+  if ( mBirthdayPicker->date().isValid() )
+    mAddressee.setBirthday( TQDateTime( mBirthdayPicker->date() ) );
+  else
+    mAddressee.setBirthday( TQDateTime() );
+
+  mAddressee.setNickName( mNicknameEdit->text() );
+  mAddressee.setCategories( TQStringList::split( ",", mCategoryEdit->text() ) );
+
+  mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
+
+  // save custom fields
+  if ( !mIMWidget->preferredIM().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMWidget->preferredIM() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-IMAddress" );
+  if ( !mSpouseEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", mSpouseEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-SpousesName" );
+  if ( !mManagerEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-ManagersName", mManagerEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-ManagersName" );
+  if ( !mAssistantEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName", mAssistantEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-AssistantsName" );
+
+  if ( !mOfficeEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Office", mOfficeEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Office" );
+  if ( !mProfessionEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", mProfessionEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Profession" );
+
+  if ( mAnniversaryPicker->date().isValid() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Anniversary",
+                             mAnniversaryPicker->date().toString( Qt::ISODate ) );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Anniversary" );
+
+  mAddressee.setTitle( mTitleEdit->text() );
+
+  // Save the email addresses
+  mAddressee.setEmails( mEmailWidget->emails() );
+
+  // Save the phone numbers
+  KABC::PhoneNumber::List phoneNumbers;
+  KABC::PhoneNumber::List::ConstIterator phoneIter;
+  phoneNumbers = mAddressee.phoneNumbers();
+  for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
+        ++phoneIter )
+    mAddressee.removePhoneNumber( *phoneIter );
+
+  phoneNumbers = mPhoneEditWidget->phoneNumbers();
+  for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
+        ++phoneIter )
+    mAddressee.insertPhoneNumber( *phoneIter );
+
+  // Save the addresses
+  KABC::Address::List addresses;
+  KABC::Address::List::ConstIterator addressIter;
+  addresses = mAddressee.addresses();
+  for ( addressIter = addresses.begin(); addressIter != addresses.end();
+        ++addressIter )
+    mAddressee.removeAddress( *addressIter );
+
+  addresses = mAddressEditWidget->addresses();
+  for ( addressIter = addresses.begin(); addressIter != addresses.end();
+        ++addressIter )
+    mAddressee.insertAddress( *addressIter );
+
+  TQDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->storeContact( &mAddressee );
+
+  mDirty = false;
+}
+
+bool AddresseeEditorWidget::dirty()
+{
+  return mDirty;
+}
+
+void AddresseeEditorWidget::nameTextChanged( const TQString &text )
+{
+  // use the addressee class to parse the name for us
+  AddresseeConfig config( mAddressee );
+  if ( config.automaticNameParsing() ) {
+    if ( !mAddressee.formattedName().isEmpty() ) {
+      TQString fn = mAddressee.formattedName();
+      mAddressee.setNameFromString( text );
+      mAddressee.setFormattedName( fn );
+    } else {
+      // use extra addressee to avoid a formatted name assignment
+      Addressee addr;
+      addr.setNameFromString( text );
+      mAddressee.setPrefix( addr.prefix() );
+      mAddressee.setGivenName( addr.givenName() );
+      mAddressee.setAdditionalName( addr.additionalName() );
+      mAddressee.setFamilyName( addr.familyName() );
+      mAddressee.setSuffix( addr.suffix() );
+    }
+  }
+
+  nameBoxChanged();
+
+  emitModified();
+}
+
+void AddresseeEditorWidget::organizationTextChanged( const TQString &text )
+{
+
+  AddresseeConfig config( mAddressee );
+  if ( config.automaticNameParsing() )
+    mAddressee.setOrganization( text );
+
+  nameBoxChanged();
+
+  mAddressEditWidget->updateAddressee( mAddressee );
+
+  emitModified();
+}
+
+void AddresseeEditorWidget::nameBoxChanged()
+{
+  KABC::Addressee addr;
+  AddresseeConfig config( mAddressee );
+  if ( config.automaticNameParsing() ) {
+    addr.setNameFromString( mNameEdit->text() );
+    mNameLabel->hide();
+    mNameEdit->show();
+  } else {
+    addr = mAddressee;
+    mNameEdit->hide();
+    mNameLabel->setText( mNameEdit->text() );
+    mNameLabel->show();
+  }
+
+  if ( mFormattedNameType != NameEditDialog::CustomName ) {
+    mFormattedNameLabel->setText( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
+    mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
+  }
+
+  mAddressEditWidget->updateAddressee( mAddressee );
+}
+
+void AddresseeEditorWidget::nameButtonClicked()
+{
+  // show the name dialog.
+  NameEditDialog dialog( mAddressee, mFormattedNameType, mReadOnly, this );
+
+  if ( dialog.exec() ) {
+    if ( dialog.changed() ) {
+      mAddressee.setFamilyName( dialog.familyName() );
+      mAddressee.setGivenName( dialog.givenName() );
+      mAddressee.setPrefix( dialog.prefix() );
+      mAddressee.setSuffix( dialog.suffix() );
+      mAddressee.setAdditionalName( dialog.additionalName() );
+      mFormattedNameType = dialog.formattedNameType();
+      if ( mFormattedNameType == NameEditDialog::CustomName ) {
+        mFormattedNameLabel->setText( dialog.customFormattedName() );
+        mAddressee.setFormattedName( dialog.customFormattedName() );
+      }
+      // Update the name edit.
+      bool block = mNameEdit->signalsBlocked();
+      mNameEdit->blockSignals( true );
+      mNameEdit->setText( mAddressee.assembledName() );
+      mNameEdit->blockSignals( block );
+
+      // Update the combo box.
+      nameBoxChanged();
+
+      emitModified();
+    }
+  }
+}
+
+void AddresseeEditorWidget::selectCategories()
+{
+  // Show the category dialog
+  if ( mCategorySelectDialog == 0 ) {
+    mCategorySelectDialog = new KPIM::CategorySelectDialog( KABPrefs::instance(), this );
+    connect( mCategorySelectDialog, TQT_SIGNAL( categoriesSelected( const TQStringList& ) ),
+             this, TQT_SLOT( categoriesSelected( const TQStringList& ) ) );
+    connect( mCategorySelectDialog, TQT_SIGNAL( editCategories() ),
+             this, TQT_SLOT( editCategories() ) );
+  }
+
+  mCategorySelectDialog->setSelected( TQStringList::split( ",", mCategoryEdit->text() ) );
+  mCategorySelectDialog->exec();
+}
+
+void AddresseeEditorWidget::categoriesSelected( const TQStringList &list )
+{
+  mCategoryEdit->setText( list.join( "," ) );
+}
+
+void AddresseeEditorWidget::editCategories()
+{
+  if ( mCategoryEditDialog == 0 ) {
+    mCategoryEditDialog = new KPIM::CategoryEditDialog( KABPrefs::instance(), this );
+    connect( mCategoryEditDialog, TQT_SIGNAL( categoryConfigChanged() ),
+             mCategorySelectDialog, TQT_SLOT( updateCategoryConfig() ) );
+  }
+
+  mCategoryEditDialog->exec();
+}
+
+void AddresseeEditorWidget::emitModified()
+{
+  if ( mBlockSignals )
+    return;
+
+  mDirty = true;
+
+  emit modified();
+}
+
+void AddresseeEditorWidget::dateChanged( const TQDate& )
+{
+  emitModified();
+}
+
+void AddresseeEditorWidget::invalidDate()
+{
+  KMessageBox::sorry( this, i18n( "You must specify a valid date" ) );
+}
+
+void AddresseeEditorWidget::pageChanged( TQWidget *wdg )
+{
+  if ( wdg )
+    KAcceleratorManager::manage( wdg );
+}
+
+void AddresseeEditorWidget::setInitialFocus()
+{
+  mNameEdit->setFocus();
+}
+
+bool AddresseeEditorWidget::readyToClose()
+{
+  bool ok = true;
+
+  TQDate date = mBirthdayPicker->date();
+  if ( !date.isValid() && !mBirthdayPicker->currentText().isEmpty() ) {
+    KMessageBox::error( this, i18n( "You have to enter a valid birthdate." ) );
+    ok = false;
+  }
+
+  date = mAnniversaryPicker->date();
+  if ( !date.isValid() && !mAnniversaryPicker->currentText().isEmpty() ) {
+    KMessageBox::error( this, i18n( "You have to enter a valid anniversary." ) );
+    ok = false;
+  }
+
+  return ok;
+}
+
+void AddresseeEditorWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+
+  mNameEdit->setReadOnly( readOnly );
+  mRoleEdit->setReadOnly( readOnly );
+  mOrgEdit->setReadOnly( readOnly );
+  mPhoneEditWidget->setReadOnly( readOnly );
+  mAddressEditWidget->setReadOnly( readOnly );
+  mEmailWidget->setReadOnly( readOnly );
+  mURLEdit->setReadOnly( readOnly );
+  mBlogEdit->setReadOnly( readOnly );
+  mIMWidget->setReadOnly( readOnly );
+  mCategoryButton->setEnabled( !readOnly );
+  mSecrecyWidget->setReadOnly( readOnly );
+  mDepartmentEdit->setReadOnly( readOnly );
+  mOfficeEdit->setReadOnly( readOnly );
+  mProfessionEdit->setReadOnly( readOnly );
+  mManagerEdit->setReadOnly( readOnly );
+  mAssistantEdit->setReadOnly( readOnly );
+  mTitleEdit->setReadOnly( readOnly );
+  mNicknameEdit->setReadOnly( readOnly );
+  mSpouseEdit->setReadOnly( readOnly );
+  mBirthdayPicker->setEnabled( !readOnly );
+  mAnniversaryPicker->setEnabled( !readOnly );
+  mNoteEdit->setReadOnly( mReadOnly );
+
+  TQDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->setReadOnly( readOnly );
+}
+
+#include "addresseeeditorwidget.moc"

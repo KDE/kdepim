@@ -1,0 +1,372 @@
+/*
+    This file is part of libkcal.
+
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
+
+#include "folderlister.h"
+#include "groupwaredataadaptor.h"
+#include "kresources_groupwareprefs.h"
+
+#include <kio/job.h>
+
+#include <kdebug.h>
+#include <kconfig.h>
+#include <tqstringlist.h>
+
+using namespace KPIM;
+
+FolderLister::FolderLister( Type type )
+  : mType( type ), mAdaptor( 0 )
+{
+}
+
+void FolderLister::setFolders( const FolderLister::Entry::List &folders )
+{
+  mFolders = folders;
+}
+
+void FolderLister::setWriteDestinationId( KPIM::FolderLister::ContentType type, const TQString &id )
+{
+  mWriteDestinationId[ type ] = id;
+}
+
+TQString FolderLister::writeDestinationId( KPIM::FolderLister::ContentType type ) const
+{
+  if ( mWriteDestinationId.contains( type ) ) {
+    return mWriteDestinationId[type];
+  } else if ( mWriteDestinationId.contains( KPIM::FolderLister::All ) ) {
+    return mWriteDestinationId[ KPIM::FolderLister::All ];
+  } else if ( mWriteDestinationId.contains( KPIM::FolderLister::Unknown ) ) {
+    return mWriteDestinationId[ KPIM::FolderLister::Unknown ];
+  } else return TQString::null;
+}
+
+
+KURL::List FolderLister::activeFolderIds() const
+{
+  KURL::List ids;
+
+  FolderLister::Entry::List::ConstIterator it;
+  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+    if ( (*it).active ) {
+      ids.append( KURL((*it).id) );
+    }
+  }
+
+  return ids;
+}
+
+bool FolderLister::isActive( const TQString &id ) const
+{
+  FolderLister::Entry::List::ConstIterator it;
+  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+    if ( (*it).id == id ) return (*it).active;
+  }
+  return false;
+}
+
+TQStringList FolderLister::contentTypeToStrings( ContentType type )
+{
+kdDebug() << "FolderLister::contentTypeToStrings( type=" << type << ")" << endl;
+  TQStringList cont;
+  if ( type == All ) {
+    cont << "All";
+  } else if ( type == Unknown ) {
+    cont << "Unknown";
+  } else {
+    if ( type & Contact ) cont << "Contact";
+    if ( type & Event )   cont << "Event";
+    if ( type & Todo )    cont << "Todo";
+    if ( type & Journal ) cont << "Journal";
+    if ( type & Message ) cont << "Message";
+    if ( type & Memo )    cont << "Memo";
+    if ( type & Folder )  cont << "Folder";
+  }
+  return cont;
+}
+
+FolderLister::ContentType FolderLister::contentTypeFromString( const TQString &type )
+{
+  if ( type == "All" )     return All;
+  if ( type == "Contact" ) return Contact;
+  if ( type == "Event" )   return Event;
+  if ( type == "Todo" )    return Todo;
+  if ( type == "Journal" ) return Journal;
+  if ( type == "Message" ) return Message;
+  if ( type == "Memo" )    return Memo;
+  if ( type == "Folder" )  return Folder;
+  return Unknown;
+}
+
+TQValueList<FolderLister::ContentType> FolderLister::supportedTypes()
+{
+  if ( adaptor() ) {
+    return adaptor()->supportedTypes();
+  } else {
+    return TQValueList<ContentType>();
+  }
+}
+
+
+
+void FolderLister::readConfig( KPIM::GroupwarePrefsBase *newprefs )
+{
+  kdDebug(7000) << "FolderLister::readConfig()" << endl;
+  mFolders.clear();
+
+  TQStringList active = newprefs->activeFolders();
+  int nr = newprefs->folderNumber();
+
+  for ( int i=0; i<nr; ++i ) {
+    TQStringList l( newprefs->folder( i ) );
+//     TQStringList l( cfgg.readListEntry( TQString("Folder%1").arg( i ) ) );
+    Entry e;
+    if ( l.count()>0 ) {
+      e.id = l.first();
+      l.pop_front();
+    }
+    if ( l.count()>1 ) {
+      e.name = l.first();
+      l.pop_front();
+    }
+    e.type = Unknown;
+    for ( TQStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
+      e.type = (FolderLister::ContentType)( e.type | contentTypeFromString( *it ) );
+    }
+    if ( active.find( e.id ) != active.end() ) e.active = true;
+    mFolders.append( e );
+  }
+
+  TQStringList destinations( newprefs->defaultDestinations() );
+  
+  #define readDestination(type) \
+    if ( destinations.count()>0 ) { \
+      mWriteDestinationId[ type ] = destinations.first(); \
+      destinations.pop_front(); \
+    }
+  readDestination( FolderLister::Event );
+  readDestination( FolderLister::Todo );
+  readDestination( FolderLister::Journal );
+  readDestination( FolderLister::Contact );
+  readDestination( FolderLister::All );
+  readDestination( FolderLister::Unknown );
+  #undef readDestination
+}
+
+void FolderLister::writeConfig( GroupwarePrefsBase *newprefs )
+{
+  TQStringList ids;
+  TQStringList names;
+  TQStringList active;
+
+//   KConfigGroup cfgg( newprefs->config(), "Folders" );
+  int nr = 0;
+  Entry::List::ConstIterator it;
+  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+    TQStringList lst;
+    lst << (*it).id;
+    lst << (*it).name;
+    lst += contentTypeToStrings( (*it).type );
+    newprefs->setFolder( nr, lst );
+//     cfgg.writeEntry( TQString("Folder%1").arg( nr ), lst );
+    if ( (*it).active ) active.append( (*it).id );
+    nr++;
+  }
+  newprefs->setFolderNumber( nr );
+
+  newprefs->setActiveFolders( active );
+
+  TQStringList defaultFolders;
+  #define writeDestination(type) \
+    if ( mWriteDestinationId.contains( type ) ) \
+      defaultFolders << mWriteDestinationId[type]; \
+    else defaultFolders << TQString::null;
+  writeDestination( KPIM::FolderLister::Event );
+  writeDestination( KPIM::FolderLister::Todo );
+  writeDestination( KPIM::FolderLister::Journal );
+  writeDestination( KPIM::FolderLister::Contact );
+  writeDestination( KPIM::FolderLister::All );
+  writeDestination( KPIM::FolderLister::Unknown );
+  #undef writeDestination
+
+  newprefs->setDefaultDestinations( defaultFolders );
+}
+
+void FolderLister::setAdaptor( KPIM::GroupwareDataAdaptor *adaptor )
+{
+  if ( mAdaptor ) {
+    disconnect( mAdaptor, 0, this, 0 );
+  }
+  mAdaptor = adaptor;
+  connect( mAdaptor, TQT_SIGNAL( folderInfoRetrieved( const KURL &,
+                            const TQString &, KPIM::FolderLister::ContentType ) ),
+           this, TQT_SLOT( processFolderResult( const KURL &, const TQString &,
+                                           KPIM::FolderLister::ContentType ) ) );
+  connect( mAdaptor, TQT_SIGNAL( folderSubitemRetrieved( const KURL &, bool ) ),
+           this, TQT_SLOT( folderSubitemRetrieved( const KURL &, bool ) ) );
+}
+
+void FolderLister::folderSubitemRetrieved( const KURL &url, bool isFolder )
+{
+  if ( isFolder )
+    doRetrieveFolder( url );
+  else {
+    KURL u( url ) ;
+    u.setUser( TQString::null );
+    u.setPass( TQString::null );
+    mProcessedPathes.append( url.path(-1) );
+  }
+}
+
+void FolderLister::retrieveFolders( const KURL &u )
+{
+kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
+  mUrls.clear();
+  mProcessedPathes.clear();
+  bool firstRetrieve = mFolders.isEmpty();
+  mFolders = defaultFolders();
+  Entry::List::Iterator it = mFolders.begin(); 
+
+  for ( ; it != mFolders.end(); ++it ) {
+    if ( firstRetrieve ) {
+      (*it).active = true;
+    } else {
+      (*it).active = isActive( (*it).id );
+    }
+  }
+
+  doRetrieveFolder( u );
+}
+
+void FolderLister::doRetrieveFolder( const KURL &u )
+{
+  kdDebug(7000) << "FolderLister::doRetrieveFolder: " << u.prettyURL() << endl;
+
+  KURL url( u );
+  if ( adaptor() ) adaptor()->adaptDownloadUrl( url );
+  if ( mUrls.contains( url ) || mProcessedPathes.contains( url.path(-1) ) ) {
+    kdDebug()<<"Item "<<u.path(-1)<<" is already being downloaded "<<endl;
+  } else {
+
+    KIO::Job *listjob = createListFoldersJob( url );
+    if ( listjob ) {
+      mUrls.append( url );
+
+      kdDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" 
+                    << url.prettyURL() << endl;
+      connect( listjob, TQT_SIGNAL( result( KIO::Job * ) ),
+               TQT_SLOT( slotListJobResult( KIO::Job * ) ) );
+    } else {
+      // TODO: Indicate a problem to the user!
+      kdWarning() << "Unable to create the folder list job for the url " 
+                  << url.prettyURL() << endl;
+    }
+  }
+  if ( mUrls.isEmpty() ) {
+    kdDebug()<<"No more URLS to download, emitting foldersRead()"<<endl;
+    emit foldersRead();
+  }
+}
+
+FolderLister::Entry::List FolderLister::defaultFolders()
+{
+  if ( adaptor() ) {
+    return adaptor()->defaultFolders();
+  } else {
+    return Entry::List();
+  }
+}
+
+void FolderLister::processFolderResult( const KURL &href, 
+                                        const TQString &displayName, 
+                                        ContentType type )
+{
+kdDebug() << "FolderLister::processFolderResult( href=" << href.url() << ", displayName=" << displayName << ", type=" << int(type) << endl;
+  if ( ( mType == Calendar && ( type & ( Event | Todo |Journal) ) ) ||
+       ( mType == AddressBook && (type & Contact ) ) ) {
+
+    if ( !href.isEmpty() && !displayName.isEmpty() ) {
+      Entry entry;
+      entry.id = href.url();
+      entry.name = displayName;
+      entry.type = type;
+      entry.active = isActive( entry.id );
+
+      mFolders.append( entry );
+    }
+    kdDebug(7000) << "FOLDER: " << displayName << endl;
+kdDebug()<<"mFolders.size="<<mFolders.size()<<endl;
+  } else {
+kdDebug() << "Folder "<< href << " is not of correct type ("<<type<<")"<<endl;
+  }
+}
+
+void FolderLister::slotListJobResult( KIO::Job *job )
+{
+  kdDebug(7000) << "OpenGroupware::slotListJobResult(): " << endl;
+  kdDebug() << "URLS (" << mUrls.count() << "): " << mUrls.toStringList().join(" | ") << endl;
+  kdDebug() << "Processed URLS (" << mProcessedPathes.count() << "): "
+            << mProcessedPathes.join(" | ") << endl;
+  KIO::SimpleJob *j = dynamic_cast<KIO::SimpleJob*>(job);
+  if ( j ) {
+    mUrls.remove( j->url() );
+    mProcessedPathes.append( j->url().path(-1) );
+  }
+
+  if ( job->error() ) {
+    kdError() << "Unable to retrieve folders." << endl;
+  } else {
+    interpretListFoldersJob( job );
+  }
+  kdDebug() << "After URLS (" << mUrls.count() << "): " 
+            << mUrls.toStringList().join(" | ") << endl;
+  kdDebug() << "After Processed URLS (" << mProcessedPathes.count() << "): "
+            << mProcessedPathes.join(" | ") << endl;
+  if ( mUrls.isEmpty() ) {
+    kdDebug()<<"No more URLS to download, emitting foldersRead()"<<endl;
+    emit foldersRead();
+  }
+}
+
+void FolderLister::interpretListFoldersJob( KIO::Job *job )
+{
+  if ( adaptor() ) {
+    adaptor()->interpretListFoldersJob( job, this );
+  } else {
+    // TODO: Error handling should show a message to the user!
+    kdError() << "The FolderLister does not have a GroupwareDataAdaptor, so "
+                 "it cannot interpret the response!" << endl;
+  }
+}
+
+KIO::Job *FolderLister::createListFoldersJob( const KURL &url )
+{
+  if ( adaptor() ) {
+    return adaptor()->createListFoldersJob( url );
+  } else {
+    // TODO: Error handling should show a message to the user!
+    kdError() << "The FolderLister does not have a GroupwareDataAdaptor, so "
+                 "it cannot create the job for the folder list!" << endl;
+    return 0;
+  }
+}
+
+#include "folderlister.moc"

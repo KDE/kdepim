@@ -21,13 +21,13 @@
 #include "ldapsearchdialog.h"
 #include "ldapclient.h"
 
-#include <qcheckbox.h>
-#include <qgroupbox.h>
-#include <qheader.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qlistview.h>
-#include <qpushbutton.h>
+#include <tqcheckbox.h>
+#include <tqgroupbox.h>
+#include <tqheader.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqlistview.h>
+#include <tqpushbutton.h>
 
 #include <kabc/addresslineedit.h>
 #include <kapplication.h>
@@ -39,23 +39,23 @@
 
 using namespace KPIM;
 
-static QString asUtf8( const QByteArray &val )
+static TQString asUtf8( const TQByteArray &val )
 {
   if ( val.isEmpty() )
-    return QString::null;
+    return TQString::null;
 
   const char *data = val.data();
 
-  //QString::fromUtf8() bug workaround
+  //TQString::fromUtf8() bug workaround
   if ( data[ val.size() - 1 ] == '\0' )
-    return QString::fromUtf8( data, val.size() - 1 );
+    return TQString::fromUtf8( data, val.size() - 1 );
   else
-    return QString::fromUtf8( data, val.size() );
+    return TQString::fromUtf8( data, val.size() );
 }
 
-static QString join( const KPIM::LdapAttrValue& lst, const QString& sep )
+static TQString join( const KPIM::LdapAttrValue& lst, const TQString& sep )
 {
-  QString res;
+  TQString res;
   bool alredy = false;
   for ( KPIM::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     if ( alredy )
@@ -66,9 +66,9 @@ static QString join( const KPIM::LdapAttrValue& lst, const QString& sep )
   return res;
 }
 
-static QMap<QString, QString>& adrbookattr2ldap()
+static TQMap<TQString, TQString>& adrbookattr2ldap()
 {
-  static QMap<QString, QString> keys;
+  static TQMap<TQString, TQString> keys;
 
   if ( keys.isEmpty() ) {
     keys[ i18n( "Title" ) ] = "title";
@@ -97,46 +97,46 @@ static QMap<QString, QString>& adrbookattr2ldap()
 class ContactListItem : public QListViewItem
 {
   public:
-    ContactListItem( QListView* parent, const KPIM::LdapAttrMap& attrs )
-      : QListViewItem( parent ), mAttrs( attrs )
+    ContactListItem( TQListView* parent, const KPIM::LdapAttrMap& attrs )
+      : TQListViewItem( parent ), mAttrs( attrs )
     { }
 
     KPIM::LdapAttrMap mAttrs;
 
-    virtual QString text( int col ) const
+    virtual TQString text( int col ) const
     {
       // Look up a suitable attribute for column col
-      const QString colName = listView()->columnText( col );
-      const QString ldapAttrName = adrbookattr2ldap()[ colName ];
+      const TQString colName = listView()->columnText( col );
+      const TQString ldapAttrName = adrbookattr2ldap()[ colName ];
       return join( mAttrs[ ldapAttrName ], ", " );
     }
 };
 
-LDAPSearchDialog::LDAPSearchDialog( QWidget* parent, const char* name )
+LDAPSearchDialog::LDAPSearchDialog( TQWidget* parent, const char* name )
   : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
     User2 | User3 | Cancel, Default, parent, name, false, true )
 {
   setButtonCancel( KStdGuiItem::close() );
-  QFrame *page = plainPage();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, marginHint(), spacingHint() );
+  TQFrame *page = plainPage();
+  TQVBoxLayout *topLayout = new TQVBoxLayout( page, marginHint(), spacingHint() );
 
-  QGroupBox *groupBox = new QGroupBox( i18n( "Search for Addresses in Directory" ),
+  TQGroupBox *groupBox = new TQGroupBox( i18n( "Search for Addresses in Directory" ),
                                        page );
-  groupBox->setFrameShape( QGroupBox::Box );
-  groupBox->setFrameShadow( QGroupBox::Sunken );
+  groupBox->setFrameShape( TQGroupBox::Box );
+  groupBox->setFrameShadow( TQGroupBox::Sunken );
   groupBox->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *boxLayout = new QGridLayout( groupBox->layout(), 2,
+  TQGridLayout *boxLayout = new TQGridLayout( groupBox->layout(), 2,
                                             5, spacingHint() );
   boxLayout->setColStretch( 1, 1 );
 
-  QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );
+  TQLabel *label = new TQLabel( i18n( "Search for:" ), groupBox );
   boxLayout->addWidget( label, 0, 0 );
 
   mSearchEdit = new KLineEdit( groupBox );
   boxLayout->addWidget( mSearchEdit, 0, 1 );
   label->setBuddy( mSearchEdit );
 
-  label = new QLabel( i18n( "in" ), groupBox );
+  label = new TQLabel( i18n( "in" ), groupBox );
   boxLayout->addWidget( label, 0, 2 );
 
   mFilterCombo = new KComboBox( groupBox );
@@ -146,8 +146,8 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent, const char* name )
   mFilterCombo->insertItem( i18n( "Work Number" ) );
   boxLayout->addWidget( mFilterCombo, 0, 3 );
 
-  QSize buttonSize;
-  mSearchButton = new QPushButton( i18n( "Stop" ), groupBox );
+  TQSize buttonSize;
+  mSearchButton = new TQPushButton( i18n( "Stop" ), groupBox );
   buttonSize = mSearchButton->sizeHint();
   mSearchButton->setText( i18n( "Search" ) );
   if ( buttonSize.width() < mSearchButton->sizeHint().width() )
@@ -157,7 +157,7 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent, const char* name )
   mSearchButton->setDefault( true );
   boxLayout->addWidget( mSearchButton, 0, 4 );
 
-  mRecursiveCheckbox = new QCheckBox( i18n( "Recursive search" ), groupBox  );
+  mRecursiveCheckbox = new TQCheckBox( i18n( "Recursive search" ), groupBox  );
   mRecursiveCheckbox->setChecked( true );
   boxLayout->addMultiCellWidget( mRecursiveCheckbox, 1, 1, 0, 4 );
 
@@ -168,13 +168,13 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent, const char* name )
 
   topLayout->addWidget( groupBox );
 
-  mResultListView = new QListView( page );
-  mResultListView->setSelectionMode( QListView::Multi );
+  mResultListView = new TQListView( page );
+  mResultListView->setSelectionMode( TQListView::Multi );
   mResultListView->setAllColumnsShowFocus( true );
   mResultListView->setShowSortIndicator( true );
   topLayout->addWidget( mResultListView );
 
-  resize( QSize( 600, 400).expandedTo( minimumSizeHint() ) );
+  resize( TQSize( 600, 400).expandedTo( minimumSizeHint() ) );
 
   setButtonText( User1, i18n( "Unselect All" ) );
   setButtonText( User2, i18n( "Select All" ) );
@@ -183,10 +183,10 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent, const char* name )
   mNumHosts = 0;
   mIsOK = false;
 
-  connect( mRecursiveCheckbox, SIGNAL( toggled( bool ) ),
-	   this, SLOT( slotSetScope( bool ) ) );
-  connect( mSearchButton, SIGNAL( clicked() ),
-	   this, SLOT( slotStartSearch() ) );
+  connect( mRecursiveCheckbox, TQT_SIGNAL( toggled( bool ) ),
+	   this, TQT_SLOT( slotSetScope( bool ) ) );
+  connect( mSearchButton, TQT_SIGNAL( clicked() ),
+	   this, TQT_SLOT( slotStartSearch() ) );
 
   setTabOrder(mSearchEdit, mFilterCombo);
   setTabOrder(mFilterCombo, mSearchButton);
@@ -226,42 +226,42 @@ void LDAPSearchDialog::restoreSettings()
     for ( int j = 0; j < mNumHosts; ++j ) {
         KPIM::LdapServer ldapServer;
 
-      QString host = config->readEntry( QString( "SelectedHost%1" ).arg( j ), "" );
+      TQString host = config->readEntry( TQString( "SelectedHost%1" ).arg( j ), "" );
       if ( !host.isEmpty() )
           ldapServer.setHost( host );
 
-      int port = config->readUnsignedNumEntry( QString( "SelectedPort%1" ).arg( j ) );
+      int port = config->readUnsignedNumEntry( TQString( "SelectedPort%1" ).arg( j ) );
       if ( port )
         ldapServer.setPort( port );
 
-      QString base = config->readEntry( QString( "SelectedBase%1" ).arg( j ), "" );
+      TQString base = config->readEntry( TQString( "SelectedBase%1" ).arg( j ), "" );
       if ( !base.isEmpty() )
         ldapServer.setBaseDN( base );
 
-      QString bindDN = config->readEntry( QString( "SelectedBind%1" ).arg( j ), "" );
+      TQString bindDN = config->readEntry( TQString( "SelectedBind%1" ).arg( j ), "" );
       if ( !bindDN.isEmpty() )
         ldapServer.setBindDN( bindDN );
 
-      QString pwdBindDN = config->readEntry( QString( "SelectedPwdBind%1" ).arg( j ), "" );
+      TQString pwdBindDN = config->readEntry( TQString( "SelectedPwdBind%1" ).arg( j ), "" );
       if ( !pwdBindDN.isEmpty() )
         ldapServer.setPwdBindDN( pwdBindDN );
 
       KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
       ldapClient->setServer( ldapServer );
       
-      QStringList attrs;
+      TQStringList attrs;
 
-      for ( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
+      for ( TQMap<TQString,TQString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
         attrs << *it;
 
       ldapClient->setAttrs( attrs );
 
-      connect( ldapClient, SIGNAL( result( const KPIM::LdapObject& ) ),
-	       this, SLOT( slotAddResult( const KPIM::LdapObject& ) ) );
-      connect( ldapClient, SIGNAL( done() ),
-	       this, SLOT( slotSearchDone() ) );
-      connect( ldapClient, SIGNAL( error( const QString& ) ),
-	       this, SLOT( slotError( const QString& ) ) );
+      connect( ldapClient, TQT_SIGNAL( result( const KPIM::LdapObject& ) ),
+	       this, TQT_SLOT( slotAddResult( const KPIM::LdapObject& ) ) );
+      connect( ldapClient, TQT_SIGNAL( done() ),
+	       this, TQT_SLOT( slotSearchDone() ) );
+      connect( ldapClient, TQT_SIGNAL( error( const TQString& ) ),
+	       this, TQT_SLOT( slotError( const TQString& ) ) );
 
       mLdapClientList.append( ldapClient );
     }
@@ -324,7 +324,7 @@ void LDAPSearchDialog::slotSetScope( bool rec )
   }
 }
 
-QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
+TQString LDAPSearchDialog::makeFilter( const TQString& query, const TQString& attr,
                                       bool startsWith )
 {
   /* The reasoning behind this filter is:
@@ -333,7 +333,7 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
    * This allows both resource accounts with an email address which are not a person and
    * person entries without an email address to show up, while still not showing things
    * like structural entries in the ldap tree. */
-  QString result( "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))(" );
+  TQString result( "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))(" );
   if( query.isEmpty() )
     // Return a filter that matches everything
     return result + "|(cn=*)(sn=*)" + ")";
@@ -351,7 +351,7 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
       result = result.arg( "telephoneNumber" ).arg( query );
     } else {
       // Error?
-      result = QString::null;
+      result = TQString::null;
       return result;
     }
   }
@@ -363,17 +363,17 @@ void LDAPSearchDialog::slotStartSearch()
 {
   cancelQuery();
 
-  QApplication::setOverrideCursor( Qt::waitCursor );
+  TQApplication::setOverrideCursor( Qt::waitCursor );
   mSearchButton->setText( i18n( "Stop" ) );
 
-  disconnect( mSearchButton, SIGNAL( clicked() ),
-              this, SLOT( slotStartSearch() ) );
-  connect( mSearchButton, SIGNAL( clicked() ),
-           this, SLOT( slotStopSearch() ) );
+  disconnect( mSearchButton, TQT_SIGNAL( clicked() ),
+              this, TQT_SLOT( slotStartSearch() ) );
+  connect( mSearchButton, TQT_SIGNAL( clicked() ),
+           this, TQT_SLOT( slotStopSearch() ) );
 
   bool startsWith = (mSearchType->currentItem() == 1);
 
-  QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText(), startsWith );
+  TQString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText(), startsWith );
 
    // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
@@ -398,22 +398,22 @@ void LDAPSearchDialog::slotSearchDone()
       return;
   }
 
-  disconnect( mSearchButton, SIGNAL( clicked() ),
-              this, SLOT( slotStopSearch() ) );
-  connect( mSearchButton, SIGNAL( clicked() ),
-           this, SLOT( slotStartSearch() ) );
+  disconnect( mSearchButton, TQT_SIGNAL( clicked() ),
+              this, TQT_SLOT( slotStopSearch() ) );
+  connect( mSearchButton, TQT_SIGNAL( clicked() ),
+           this, TQT_SLOT( slotStartSearch() ) );
 
   mSearchButton->setText( i18n( "Search" ) );
-  QApplication::restoreOverrideCursor();
+  TQApplication::restoreOverrideCursor();
 }
 
-void LDAPSearchDialog::slotError( const QString& error )
+void LDAPSearchDialog::slotError( const TQString& error )
 {
-  QApplication::restoreOverrideCursor();
+  TQApplication::restoreOverrideCursor();
   KMessageBox::error( this, error );
 }
 
-void LDAPSearchDialog::closeEvent( QCloseEvent* e )
+void LDAPSearchDialog::closeEvent( TQCloseEvent* e )
 {
   slotStopSearch();
   e->accept();
@@ -423,15 +423,15 @@ void LDAPSearchDialog::closeEvent( QCloseEvent* e )
  * Returns a ", " separated list of email addresses that were
  * checked by the user
  */
-QString LDAPSearchDialog::selectedEMails() const
+TQString LDAPSearchDialog::selectedEMails() const
 {
-  QStringList result;
+  TQStringList result;
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
     if ( cli->isSelected() ) {
-      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
+      TQString email = asUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
       if ( !email.isEmpty() ) {
-        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
+        TQString name = asUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
         if ( name.isEmpty() ) {
           result << email;
         } else {

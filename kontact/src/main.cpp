@@ -34,7 +34,7 @@
 #include <ktrader.h>
 #include "plugin.h"
 
-#include <qlabel.h>
+#include <tqlabel.h>
 #include "prefs.h"
 
 #include "alarmclient.h"
@@ -72,12 +72,12 @@ static void listPlugins()
 {
   KInstance instance( "kontact" ); // Can't use KontactApp since it's too late for adding cmdline options
   KTrader::OfferList offers = KTrader::self()->query(
-    QString::fromLatin1( "Kontact/Plugin" ),
-    QString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
+    TQString::fromLatin1( "Kontact/Plugin" ),
+    TQString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
   for ( KService::List::Iterator it = offers.begin(); it != offers.end(); ++it ) {
     KService::Ptr service = (*it);
     // skip summary only plugins
-    QVariant var = service->property( "X-KDE-KontactPluginHasPart" );
+    TQVariant var = service->property( "X-KDE-KontactPluginHasPart" );
     if ( var.isValid() && var.toBool() == false )
       continue;
     cout << service->library().remove( "libkontact_" ).latin1() << endl;
@@ -87,12 +87,12 @@ static void listPlugins()
 int KontactApp::newInstance()
 {
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  QString moduleName;
+  TQString moduleName;
   if ( Kontact::Prefs::self()->forceStartupPlugin() ) {
     moduleName = Kontact::Prefs::self()->forcedStartupPlugin();
   }
   if ( args->isSet( "module" ) ) {
-    moduleName = QString::fromLocal8Bit( args->getOption( "module" ) );
+    moduleName = TQString::fromLocal8Bit( args->getOption( "module" ) );
   }
 
   if ( !mSessionRestored ) {

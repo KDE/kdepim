@@ -26,9 +26,9 @@
 #include <klistview.h>
 #include <kurlrequester.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqcheckbox.h>
 
 /*=========================================================================
 | NAMESPACE
@@ -70,7 +70,7 @@ CalDavPrefs* ResourceCalDavConfig::getPrefs(ResourceCalDav* res) {
 | CONSTRUCTOR / DESTRUCTOR
  ========================================================================*/
 
-ResourceCalDavConfig::ResourceCalDavConfig( QWidget *parent )
+ResourceCalDavConfig::ResourceCalDavConfig( TQWidget *parent )
     : KRES::ConfigWidget( parent )
 {
     setupUI();
@@ -111,35 +111,35 @@ void ResourceCalDavConfig::saveSettings( KRES::Resource *resource ) {
 }
 
 void ResourceCalDavConfig::setupUI() {
-    QVBoxLayout *vertical = new QVBoxLayout(this);
+    TQVBoxLayout *vertical = new TQVBoxLayout(this);
 
-    QGridLayout *mainLayout = new QGridLayout( this );
+    TQGridLayout *mainLayout = new TQGridLayout( this );
 
     // URL
-    QLabel *label = new QLabel( i18n( "URL:" ), this );
-    mUrl = new QLineEdit( this );
+    TQLabel *label = new TQLabel( i18n( "URL:" ), this );
+    mUrl = new TQLineEdit( this );
     mainLayout->addWidget( label, 1, 0 );
     mainLayout->addWidget( mUrl, 1, 1 );
 
     // Username
-    label = new QLabel( i18n( "Username:" ), this );
-    mUsername = new QLineEdit( this );
+    label = new TQLabel( i18n( "Username:" ), this );
+    mUsername = new TQLineEdit( this );
     mainLayout->addWidget( label, 2, 0 );
     mainLayout->addWidget( mUsername, 2, 1 );
 
     // Password
-    label = new QLabel( i18n( "Password:" ), this );
-    mPassword = new QLineEdit( this );
-    mPassword->setEchoMode( QLineEdit::Password );
+    label = new TQLabel( i18n( "Password:" ), this );
+    mPassword = new TQLineEdit( this );
+    mPassword->setEchoMode( TQLineEdit::Password );
     mainLayout->addWidget( label, 3, 0 );
     mainLayout->addWidget( mPassword, 3, 1 );
 
     // Remember password checkbox
-    mRememberPassword = new QCheckBox( i18n("Remember password"), this );
+    mRememberPassword = new TQCheckBox( i18n("Remember password"), this );
     mainLayout->addWidget(mRememberPassword, 4, 1);
 
     // configs
-    QHBoxLayout* horizontal = new QHBoxLayout(this);
+    TQHBoxLayout* horizontal = new TQHBoxLayout(this);
 
     // Reload config
     mReloadConfig = new CalDavReloadConfig(this);

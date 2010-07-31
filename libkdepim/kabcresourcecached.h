@@ -64,22 +64,22 @@ class KDE_EXPORT ResourceCached : public Resource
     bool hasChanges() const;
     void clearChanges();
     void clearChange( const KABC::Addressee& );
-    void clearChange( const QString& );
+    void clearChange( const TQString& );
 
     KABC::Addressee::List addedAddressees() const;
     KABC::Addressee::List changedAddressees() const;
     KABC::Addressee::List deletedAddressees() const;
 
   protected:
-    virtual QString cacheFile() const;
+    virtual TQString cacheFile() const;
 
     /**
       Functions for keeping the changes persistent.
      */
-    virtual QString changesCacheFile( const QString& ) const;
-    void loadChangesCache( QMap<QString, KABC::Addressee>&, const QString& );
+    virtual TQString changesCacheFile( const TQString& ) const;
+    void loadChangesCache( TQMap<TQString, KABC::Addressee>&, const TQString& );
     void loadChangesCache();
-    void saveChangesCache( const QMap<QString, KABC::Addressee>&, const QString& );
+    void saveChangesCache( const TQMap<TQString, KABC::Addressee>&, const TQString& );
     void saveChangesCache();
 
     void setIdMapperIdentifier();
@@ -87,9 +87,9 @@ class KDE_EXPORT ResourceCached : public Resource
   private:
     KPIM::IdMapper mIdMapper;
 
-    QMap<QString, KABC::Addressee> mAddedAddressees;
-    QMap<QString, KABC::Addressee> mChangedAddressees;
-    QMap<QString, KABC::Addressee> mDeletedAddressees;
+    TQMap<TQString, KABC::Addressee> mAddedAddressees;
+    TQMap<TQString, KABC::Addressee> mChangedAddressees;
+    TQMap<TQString, KABC::Addressee> mDeletedAddressees;
 
     class ResourceCachedPrivate;
     ResourceCachedPrivate *d;

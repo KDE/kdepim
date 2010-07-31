@@ -20,10 +20,10 @@
 
 #include <typeinfo>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qspinbox.h>
-#include <qwhatsthis.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqspinbox.h>
+#include <tqwhatsthis.h>
 
 #include <kconfigskeleton.h>
 #include <klocale.h>
@@ -40,19 +40,19 @@
 
 using namespace KCal;
 
-ResourceTVAnytimeConfig::ResourceTVAnytimeConfig( QWidget* parent,  const char* name )
+ResourceTVAnytimeConfig::ResourceTVAnytimeConfig( TQWidget* parent,  const char* name )
     : KRES::ConfigWidget( parent, name )
 {
   resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+  TQGridLayout *mainLayout = new TQGridLayout( this, 2, 2 );
 
-  QLabel *label = new QLabel( i18n( "Schedule tarball URL:" ), this );
+  TQLabel *label = new TQLabel( i18n( "Schedule tarball URL:" ), this );
   mainLayout->addWidget( label, 1, 0 );
   mUrl = new KLineEdit( this );
   mainLayout->addWidget( mUrl, 1, 1 );
-  label = new QLabel( i18n( "Retrieve how many days?" ), this );
+  label = new TQLabel( i18n( "Retrieve how many days?" ), this );
   mainLayout->addWidget( label, 2, 0 );
-  mDays = new QSpinBox( this );
+  mDays = new TQSpinBox( this );
   mainLayout->addWidget( mDays, 2, 1 );
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
   mainLayout->addMultiCellWidget( mReloadConfig, 3, 3, 0, 1 );
@@ -73,7 +73,7 @@ void ResourceTVAnytimeConfig::loadSettings( KRES::Resource *resource )
     KConfigSkeleton::ItemInt * daysItem = res->prefs()->daysItem();
     mDays->setMinValue( daysItem->minValue().toInt() );
     mDays->setMaxValue( daysItem->maxValue().toInt() );
-    QWhatsThis::add( mDays, daysItem->whatsThis() );
+    TQWhatsThis::add( mDays, daysItem->whatsThis() );
     mUrl->setText( res->prefs()->url() );
     mDays->setValue( res->prefs()->days() );
     mReloadConfig->loadSettings( res );

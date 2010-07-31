@@ -27,7 +27,7 @@ TVAnytimePrefs::TVAnytimePrefs()
 {
 }
 
-QString TVAnytimePrefs::scheduleUrl() const
+TQString TVAnytimePrefs::scheduleUrl() const
 {
   return url();
 }

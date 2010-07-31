@@ -1,0 +1,68 @@
+/*
+    This file is part of KOrganizer.
+    Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+*/
+#ifndef KORG_EXCHANGE_H
+#define KORG_EXCHANGE_H
+
+#include <tqstring.h>
+#include <tqdatetime.h>
+
+#include <korganizer/part.h>
+
+#include <libkcal/incidence.h>
+#include <libkcal/event.h>
+
+#include <exchangeaccount.h>
+#include <exchangeclient.h>
+
+// using namespace KOrg;
+using namespace KCal;
+
+class Exchange : public KOrg::Part {
+    Q_OBJECT
+  public:
+    Exchange( KOrg::MainWindow *, const char *name );
+    ~Exchange();
+
+    TQString info();
+    // This method is used for the category of the key bindings
+    TQString shortInfo();
+
+  signals:
+    void enableIncidenceActions( bool );
+    void calendarChanged();
+    void calendarChanged(const TQDate&start,const TQDate&end);
+
+  private slots:
+    void download();
+    void upload();
+    void remove();
+    void configure();
+    void test();
+    void slotIncidenceSelected( Incidence * );
+
+  private:
+    void test2();
+    void showError( int error, const TQString& moreInfo = TQString::null );
+
+    KPIM::ExchangeClient *mClient;
+    KPIM::ExchangeAccount* mAccount;
+};
+
+#endif
+

@@ -19,8 +19,8 @@
 #include "job.h"
 
 #include <string>
-#include <qstring.h>
-#include <qdatetime.h>
+#include <tqstring.h>
+#include <tqdatetime.h>
 
 namespace KABC {
 
@@ -38,7 +38,7 @@ public:
     /**
      * @param url URL to load.
      */
-    CardDavWriter(const QString& url = QString()) :
+    CardDavWriter(const TQString& url = TQString()) :
         CardDavJob(url)
     {
         clearObjects();
@@ -49,7 +49,7 @@ public:
      * @param s icalendar-formatted string consists of all added incidences plus necessary calendar info.
      * May be an empty string, which means there is no added incidences to send.
      */
-    void setAddedObjects(const QString& s) {
+    void setAddedObjects(const TQString& s) {
         mAdded = s;
     }
 
@@ -58,7 +58,7 @@ public:
      * @param s icalendar-formatted string consists of all changed incidences plus necessary calendar info.
      * May be an empty string, which means there is no changed incidences to send.
      */
-    void setChangedObjects(const QString& s) {
+    void setChangedObjects(const TQString& s) {
         mChanged = s;
     }
 
@@ -67,7 +67,7 @@ public:
      * @param s icalendar-formatted string consists of all deleted incidences plus necessary calendar info.
      * May be an empty string, which means there is no deleted incidences to send.
      */
-    void setDeletedObjects(const QString& s) {
+    void setDeletedObjects(const TQString& s) {
         mDeleted = s;
     }
 
@@ -88,7 +88,7 @@ protected:
 
     /// Just a wrapper above libcaldav functions.
     template<typename Operation>
-    int pushObjects(const QString& data, Operation op, int okCode, runtime_info* RT) {
+    int pushObjects(const TQString& data, Operation op, int okCode, runtime_info* RT) {
         int r = okCode;
         if (!data.isNull() && !data.isEmpty()) {
             r = op(std::string(data.ascii()).c_str(), std::string(url().ascii()).c_str(), RT);
@@ -98,9 +98,9 @@ protected:
 
 private:
 
-    QString mAdded;
-    QString mChanged;
-    QString mDeleted;
+    TQString mAdded;
+    TQString mChanged;
+    TQString mDeleted;
 };
 
 } // namespace KABC

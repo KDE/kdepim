@@ -29,7 +29,7 @@ class TVAnytimePrefs : public TVAnytimePrefsBase
   public:
     TVAnytimePrefs();
 
-    QString scheduleUrl() const;
+    TQString scheduleUrl() const;
 };
 
 }

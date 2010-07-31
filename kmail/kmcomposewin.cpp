@@ -119,14 +119,14 @@ using KRecentAddress::RecentAddresses;
 #include <kzip.h>
 #include <ksavefile.h>
 
-#include <qtabdialog.h>
-#include <qregexp.h>
-#include <qbuffer.h>
-#include <qtooltip.h>
-#include <qtextcodec.h>
-#include <qheader.h>
-#include <qwhatsthis.h>
-#include <qfontdatabase.h>
+#include <tqtabdialog.h>
+#include <tqregexp.h>
+#include <tqbuffer.h>
+#include <tqtooltip.h>
+#include <tqtextcodec.h>
+#include <tqheader.h>
+#include <tqwhatsthis.h>
+#include <tqfontdatabase.h>
 
 #include <mimelib/mimepp.h>
 
@@ -191,28 +191,28 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   mSubjectTextWasSpellChecked = false;
   if (kmkernel->xmlGuiInstance())
     setInstance( kmkernel->xmlGuiInstance() );
-  mMainWidget = new QWidget(this);
+  mMainWidget = new TQWidget(this);
   // splitter between the headers area and the actual editor
-  mHeadersToEditorSplitter = new QSplitter( Qt::Vertical, mMainWidget, "mHeadersToEditorSplitter" );
+  mHeadersToEditorSplitter = new TQSplitter( Qt::Vertical, mMainWidget, "mHeadersToEditorSplitter" );
   mHeadersToEditorSplitter->setChildrenCollapsible( false );
-  mHeadersArea = new QWidget( mHeadersToEditorSplitter );
-  mHeadersArea->setSizePolicy( mHeadersToEditorSplitter->sizePolicy().horData(), QSizePolicy::Maximum );
-  QVBoxLayout *v = new QVBoxLayout( mMainWidget );
+  mHeadersArea = new TQWidget( mHeadersToEditorSplitter );
+  mHeadersArea->setSizePolicy( mHeadersToEditorSplitter->sizePolicy().horData(), TQSizePolicy::Maximum );
+  TQVBoxLayout *v = new TQVBoxLayout( mMainWidget );
   v->addWidget( mHeadersToEditorSplitter );
   mIdentity = new KPIM::IdentityCombo(kmkernel->identityManager(), mHeadersArea);
   mDictionaryCombo = new DictionaryComboBox( mHeadersArea );
   mFcc = new KMFolderComboBox(mHeadersArea);
   mFcc->showOutboxFolder( false );
-  mTransport = new QComboBox(true, mHeadersArea);
+  mTransport = new TQComboBox(true, mHeadersArea);
   mEdtFrom = new KMLineEdit(false,mHeadersArea, "fromLine");
 
   mEdtReplyTo = new KMLineEdit(true,mHeadersArea, "replyToLine");
-  mLblReplyTo = new QLabel(mHeadersArea);
-  mBtnReplyTo = new QPushButton("...",mHeadersArea);
-  mBtnReplyTo->setFocusPolicy(QWidget::NoFocus);
-  connect(mBtnReplyTo,SIGNAL(clicked()),SLOT(slotAddrBookReplyTo()));
-  connect(mEdtReplyTo,SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-          SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
+  mLblReplyTo = new TQLabel(mHeadersArea);
+  mBtnReplyTo = new TQPushButton("...",mHeadersArea);
+  mBtnReplyTo->setFocusPolicy(TQWidget::NoFocus);
+  connect(mBtnReplyTo,TQT_SIGNAL(clicked()),TQT_SLOT(slotAddrBookReplyTo()));
+  connect(mEdtReplyTo,TQT_SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+          TQT_SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
 
   if ( mClassicalRecipients ) {
     mRecipientsEditor = 0;
@@ -221,37 +221,37 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
     mEdtCc = new KMLineEdit(true,mHeadersArea, "ccLine");
     mEdtBcc = new KMLineEdit(true,mHeadersArea, "bccLine");
 
-    mLblTo = new QLabel(mHeadersArea);
-    mLblCc = new QLabel(mHeadersArea);
-    mLblBcc = new QLabel(mHeadersArea);
+    mLblTo = new TQLabel(mHeadersArea);
+    mLblCc = new TQLabel(mHeadersArea);
+    mLblBcc = new TQLabel(mHeadersArea);
 
-    mBtnTo = new QPushButton("...",mHeadersArea);
-    mBtnCc = new QPushButton("...",mHeadersArea);
-    mBtnBcc = new QPushButton("...",mHeadersArea);
-    //mBtnFrom = new QPushButton("...",mHeadersArea);
+    mBtnTo = new TQPushButton("...",mHeadersArea);
+    mBtnCc = new TQPushButton("...",mHeadersArea);
+    mBtnBcc = new TQPushButton("...",mHeadersArea);
+    //mBtnFrom = new TQPushButton("...",mHeadersArea);
 
-    QString tip = i18n("Select email address(es)");
-    QToolTip::add( mBtnTo, tip );
-    QToolTip::add( mBtnCc, tip );
-    QToolTip::add( mBtnBcc, tip );
-    QToolTip::add( mBtnReplyTo, tip );
+    TQString tip = i18n("Select email address(es)");
+    TQToolTip::add( mBtnTo, tip );
+    TQToolTip::add( mBtnCc, tip );
+    TQToolTip::add( mBtnBcc, tip );
+    TQToolTip::add( mBtnReplyTo, tip );
 
-    mBtnTo->setFocusPolicy(QWidget::NoFocus);
-    mBtnCc->setFocusPolicy(QWidget::NoFocus);
-    mBtnBcc->setFocusPolicy(QWidget::NoFocus);
-    //mBtnFrom->setFocusPolicy(QWidget::NoFocus);
+    mBtnTo->setFocusPolicy(TQWidget::NoFocus);
+    mBtnCc->setFocusPolicy(TQWidget::NoFocus);
+    mBtnBcc->setFocusPolicy(TQWidget::NoFocus);
+    //mBtnFrom->setFocusPolicy(TQWidget::NoFocus);
 
-    connect(mBtnTo,SIGNAL(clicked()),SLOT(slotAddrBookTo()));
-    connect(mBtnCc,SIGNAL(clicked()),SLOT(slotAddrBookTo()));
-    connect(mBtnBcc,SIGNAL(clicked()),SLOT(slotAddrBookTo()));
-    //connect(mBtnFrom,SIGNAL(clicked()),SLOT(slotAddrBookFrom()));
+    connect(mBtnTo,TQT_SIGNAL(clicked()),TQT_SLOT(slotAddrBookTo()));
+    connect(mBtnCc,TQT_SIGNAL(clicked()),TQT_SLOT(slotAddrBookTo()));
+    connect(mBtnBcc,TQT_SIGNAL(clicked()),TQT_SLOT(slotAddrBookTo()));
+    //connect(mBtnFrom,TQT_SIGNAL(clicked()),TQT_SLOT(slotAddrBookFrom()));
 
-    connect(mEdtTo,SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-            SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
-    connect(mEdtCc,SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-            SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
-    connect(mEdtBcc,SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-            SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
+    connect(mEdtTo,TQT_SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+            TQT_SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
+    connect(mEdtCc,TQT_SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+            TQT_SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
+    connect(mEdtBcc,TQT_SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+            TQT_SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
 
     mEdtTo->setFocus();
   } else {
@@ -270,23 +270,23 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
 
     mRecipientsEditor = new RecipientsEditor( mHeadersArea );
     connect( mRecipientsEditor,
-             SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ),
-             SLOT( slotCompletionModeChanged( KGlobalSettings::Completion ) ) );
-    connect( mRecipientsEditor, SIGNAL(sizeHintChanged()), SLOT(recipientEditorSizeHintChanged()) );
+             TQT_SIGNAL( completionModeChanged( KGlobalSettings::Completion ) ),
+             TQT_SLOT( slotCompletionModeChanged( KGlobalSettings::Completion ) ) );
+    connect( mRecipientsEditor, TQT_SIGNAL(sizeHintChanged()), TQT_SLOT(recipientEditorSizeHintChanged()) );
 
     mRecipientsEditor->setFocus();
   }
   mEdtSubject = new KMLineEditSpell(false,mHeadersArea, "subjectLine");
-  mLblIdentity = new QLabel(mHeadersArea);
-  mDictionaryLabel = new QLabel( mHeadersArea );
-  mLblFcc = new QLabel(mHeadersArea);
-  mLblTransport = new QLabel(mHeadersArea);
-  mLblFrom = new QLabel(mHeadersArea);
-  mLblSubject = new QLabel(mHeadersArea);
-  QString sticky = i18n("Sticky");
-  mBtnIdentity = new QCheckBox(sticky,mHeadersArea);
-  mBtnFcc = new QCheckBox(sticky,mHeadersArea);
-  mBtnTransport = new QCheckBox(sticky,mHeadersArea);
+  mLblIdentity = new TQLabel(mHeadersArea);
+  mDictionaryLabel = new TQLabel( mHeadersArea );
+  mLblFcc = new TQLabel(mHeadersArea);
+  mLblTransport = new TQLabel(mHeadersArea);
+  mLblFrom = new TQLabel(mHeadersArea);
+  mLblSubject = new TQLabel(mHeadersArea);
+  TQString sticky = i18n("Sticky");
+  mBtnIdentity = new TQCheckBox(sticky,mHeadersArea);
+  mBtnFcc = new TQCheckBox(sticky,mHeadersArea);
+  mBtnTransport = new TQCheckBox(sticky,mHeadersArea);
 
   //setWFlags( WType_TopLevel | WStyle_Dialog );
   mHtmlMarkup = GlobalSettings::self()->useHtmlMarkup();
@@ -303,31 +303,31 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   mFixedFontAction = 0;
   mTempDir = 0;
   // the attachment view is separated from the editor by a splitter
-  mSplitter = new QSplitter( Qt::Vertical, mHeadersToEditorSplitter, "mSplitter" );
+  mSplitter = new TQSplitter( Qt::Vertical, mHeadersToEditorSplitter, "mSplitter" );
   mSplitter->setChildrenCollapsible( false );
-  mSnippetSplitter = new QSplitter( Qt::Horizontal, mSplitter, "mSnippetSplitter");
+  mSnippetSplitter = new TQSplitter( Qt::Horizontal, mSplitter, "mSnippetSplitter");
   mSnippetSplitter->setChildrenCollapsible( false );
 
-  QWidget *editorAndCryptoStateIndicators = new QWidget( mSnippetSplitter );
-  QVBoxLayout *vbox = new QVBoxLayout( editorAndCryptoStateIndicators );
-  QHBoxLayout *hbox = new QHBoxLayout( vbox );
+  TQWidget *editorAndCryptoStateIndicators = new TQWidget( mSnippetSplitter );
+  TQVBoxLayout *vbox = new TQVBoxLayout( editorAndCryptoStateIndicators );
+  TQHBoxLayout *hbox = new TQHBoxLayout( vbox );
   {
-      mSignatureStateIndicator = new QLabel( editorAndCryptoStateIndicators );
+      mSignatureStateIndicator = new TQLabel( editorAndCryptoStateIndicators );
       mSignatureStateIndicator->setAlignment( Qt::AlignHCenter );
       hbox->addWidget( mSignatureStateIndicator );
 
       KConfigGroup reader( KMKernel::config(), "Reader" );
-      QPalette p( mSignatureStateIndicator->palette() );
+      TQPalette p( mSignatureStateIndicator->palette() );
 
-      QColor defaultSignedColor( 0x40, 0xFF, 0x40 ); // light green // pgp ok, trusted key
-      QColor defaultEncryptedColor( 0x00, 0x80, 0xFF ); // light blue // pgp encrypted
-      p.setColor( QColorGroup::Background, reader.readColorEntry( "PGPMessageOkKeyOk", &defaultSignedColor ) );
+      TQColor defaultSignedColor( 0x40, 0xFF, 0x40 ); // light green // pgp ok, trusted key
+      TQColor defaultEncryptedColor( 0x00, 0x80, 0xFF ); // light blue // pgp encrypted
+      p.setColor( TQColorGroup::Background, reader.readColorEntry( "PGPMessageOkKeyOk", &defaultSignedColor ) );
       mSignatureStateIndicator->setPalette( p );
 
-      mEncryptionStateIndicator = new QLabel( editorAndCryptoStateIndicators );
+      mEncryptionStateIndicator = new TQLabel( editorAndCryptoStateIndicators );
       mEncryptionStateIndicator->setAlignment( Qt::AlignHCenter );
       hbox->addWidget( mEncryptionStateIndicator );
-      p.setColor( QColorGroup::Background, reader.readColorEntry( "PGPMessageEncr" , &defaultEncryptedColor ) );
+      p.setColor( TQColorGroup::Background, reader.readColorEntry( "PGPMessageEncr" , &defaultEncryptedColor ) );
       mEncryptionStateIndicator->setPalette( p );
   }
 
@@ -344,11 +344,11 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   mEditor->setTextFormat(Qt::PlainText);
   mEditor->setAcceptDrops( true );
 
-  QWhatsThis::add( mBtnIdentity,
+  TQWhatsThis::add( mBtnIdentity,
     GlobalSettings::self()->stickyIdentityItem()->whatsThis() );
-  QWhatsThis::add( mBtnFcc,
+  TQWhatsThis::add( mBtnFcc,
     GlobalSettings::self()->stickyFccItem()->whatsThis() );
-  QWhatsThis::add( mBtnTransport,
+  TQWhatsThis::add( mBtnTransport,
     GlobalSettings::self()->stickyTransportItem()->whatsThis() );
 
   mSpellCheckInProgress=false;
@@ -356,13 +356,13 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   setCaption( i18n("Composer") );
   setMinimumSize(200,200);
 
-  mBtnIdentity->setFocusPolicy(QWidget::NoFocus);
-  mBtnFcc->setFocusPolicy(QWidget::NoFocus);
-  mBtnTransport->setFocusPolicy(QWidget::NoFocus);
+  mBtnIdentity->setFocusPolicy(TQWidget::NoFocus);
+  mBtnFcc->setFocusPolicy(TQWidget::NoFocus);
+  mBtnTransport->setFocusPolicy(TQWidget::NoFocus);
 
   mAtmListView = new AttachmentListView( this, mSplitter,
                                          "attachment list view" );
-  mAtmListView->setSelectionMode( QListView::Extended );
+  mAtmListView->setSelectionMode( TQListView::Extended );
   mAtmListView->addColumn( i18n("Name"), 200 );
   mAtmListView->addColumn( i18n("Size"), 80 );
   mAtmListView->addColumn( i18n("Encoding"), 120 );
@@ -383,20 +383,20 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   mAtmListView->setAllColumnsShowFocus( true );
 
   connect( mAtmListView,
-           SIGNAL( doubleClicked( QListViewItem* ) ),
-           SLOT( slotAttachEdit() ) );
+           TQT_SIGNAL( doubleClicked( TQListViewItem* ) ),
+           TQT_SLOT( slotAttachEdit() ) );
   connect( mAtmListView,
-           SIGNAL( rightButtonPressed( QListViewItem*, const QPoint&, int ) ),
-           SLOT( slotAttachPopupMenu( QListViewItem*, const QPoint&, int ) ) );
+           TQT_SIGNAL( rightButtonPressed( TQListViewItem*, const TQPoint&, int ) ),
+           TQT_SLOT( slotAttachPopupMenu( TQListViewItem*, const TQPoint&, int ) ) );
   connect( mAtmListView,
-           SIGNAL( selectionChanged() ),
-           SLOT( slotUpdateAttachActions() ) );
+           TQT_SIGNAL( selectionChanged() ),
+           TQT_SLOT( slotUpdateAttachActions() ) );
   connect( mAtmListView,
-           SIGNAL( attachmentDeleted() ),
-           SLOT( slotAttachRemove() ) );
+           TQT_SIGNAL( attachmentDeleted() ),
+           TQT_SLOT( slotAttachRemove() ) );
   connect( mAtmListView,
-           SIGNAL( dragStarted() ),
-           SLOT( slotAttachmentDragStarted() ) );
+           TQT_SIGNAL( dragStarted() ),
+           TQT_SLOT( slotAttachmentDragStarted() ) );
   mAttachMenu = 0;
 
   readConfig();
@@ -407,32 +407,32 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
 
   applyMainWindowSettings(KMKernel::config(), "Composer");
 
-  connect( mEdtSubject, SIGNAL( subjectTextSpellChecked() ),
-           SLOT( slotSubjectTextSpellChecked() ) );
-  connect(mEdtSubject,SIGNAL(textChanged(const QString&)),
-          SLOT(slotUpdWinTitle(const QString&)));
-  connect(mIdentity,SIGNAL(identityChanged(uint)),
-          SLOT(slotIdentityChanged(uint)));
-  connect( kmkernel->identityManager(), SIGNAL(changed(uint)),
-          SLOT(slotIdentityChanged(uint)));
+  connect( mEdtSubject, TQT_SIGNAL( subjectTextSpellChecked() ),
+           TQT_SLOT( slotSubjectTextSpellChecked() ) );
+  connect(mEdtSubject,TQT_SIGNAL(textChanged(const TQString&)),
+          TQT_SLOT(slotUpdWinTitle(const TQString&)));
+  connect(mIdentity,TQT_SIGNAL(identityChanged(uint)),
+          TQT_SLOT(slotIdentityChanged(uint)));
+  connect( kmkernel->identityManager(), TQT_SIGNAL(changed(uint)),
+          TQT_SLOT(slotIdentityChanged(uint)));
 
-  connect(mEdtFrom,SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-          SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
-  connect(kmkernel->folderMgr(),SIGNAL(folderRemoved(KMFolder*)),
-                                  SLOT(slotFolderRemoved(KMFolder*)));
-  connect(kmkernel->imapFolderMgr(),SIGNAL(folderRemoved(KMFolder*)),
-                                  SLOT(slotFolderRemoved(KMFolder*)));
-  connect(kmkernel->dimapFolderMgr(),SIGNAL(folderRemoved(KMFolder*)),
-                                  SLOT(slotFolderRemoved(KMFolder*)));
-  connect( kmkernel, SIGNAL( configChanged() ),
-           this, SLOT( slotConfigChanged() ) );
+  connect(mEdtFrom,TQT_SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+          TQT_SLOT(slotCompletionModeChanged(KGlobalSettings::Completion)));
+  connect(kmkernel->folderMgr(),TQT_SIGNAL(folderRemoved(KMFolder*)),
+                                  TQT_SLOT(slotFolderRemoved(KMFolder*)));
+  connect(kmkernel->imapFolderMgr(),TQT_SIGNAL(folderRemoved(KMFolder*)),
+                                  TQT_SLOT(slotFolderRemoved(KMFolder*)));
+  connect(kmkernel->dimapFolderMgr(),TQT_SIGNAL(folderRemoved(KMFolder*)),
+                                  TQT_SLOT(slotFolderRemoved(KMFolder*)));
+  connect( kmkernel, TQT_SIGNAL( configChanged() ),
+           this, TQT_SLOT( slotConfigChanged() ) );
 
-  connect (mEditor, SIGNAL (spellcheck_done(int)),
-    this, SLOT (slotSpellcheckDone (int)));
-  connect (mEditor, SIGNAL( attachPNGImageData(const QByteArray &) ),
-    this, SLOT ( slotAttachPNGImageData(const QByteArray &) ) );
-  connect (mEditor, SIGNAL( focusChanged(bool) ),
-    this, SLOT (editorFocusChanged(bool)) );
+  connect (mEditor, TQT_SIGNAL (spellcheck_done(int)),
+    this, TQT_SLOT (slotSpellcheckDone (int)));
+  connect (mEditor, TQT_SIGNAL( attachPNGImageData(const TQByteArray &) ),
+    this, TQT_SLOT ( slotAttachPNGImageData(const TQByteArray &) ) );
+  connect (mEditor, TQT_SIGNAL( focusChanged(bool) ),
+    this, TQT_SLOT (editorFocusChanged(bool)) );
 
   mMainWidget->resize(480,510);
   setCentralWidget(mMainWidget);
@@ -474,7 +474,7 @@ KMComposeWin::~KMComposeWin()
     delete mMsg;
     mMsg = 0;
   }
-  QMap<KIO::Job*, atmLoadData>::Iterator it = mMapAtmLoadData.begin();
+  TQMap<KIO::Job*, atmLoadData>::Iterator it = mMapAtmLoadData.begin();
   while ( it != mMapAtmLoadData.end() )
   {
     KIO::Job *job = it.key();
@@ -514,7 +514,7 @@ void KMComposeWin::send(int how)
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::addAttachmentsAndSend(const KURL::List &urls, const QString &/*comment*/, int how)
+void KMComposeWin::addAttachmentsAndSend(const KURL::List &urls, const TQString &/*comment*/, int how)
 {
   if (urls.isEmpty())
   {
@@ -523,7 +523,7 @@ void KMComposeWin::addAttachmentsAndSend(const KURL::List &urls, const QString &
   }
   mAttachFilesSend = how;
   mAttachFilesPending = urls;
-  connect(this, SIGNAL(attachmentAdded(const KURL&, bool)), SLOT(slotAttachedFile(const KURL&)));
+  connect(this, TQT_SIGNAL(attachmentAdded(const KURL&, bool)), TQT_SLOT(slotAttachedFile(const KURL&)));
   for( KURL::List::ConstIterator itr = urls.begin(); itr != urls.end(); ++itr ) {
     if (!addAttach( *itr ))
       mAttachFilesPending.remove(mAttachFilesPending.find(*itr)); // only remove one copy of the url
@@ -549,20 +549,20 @@ void KMComposeWin::slotAttachedFile(const KURL &url)
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::addAttachment(KURL url,QString /*comment*/)
+void KMComposeWin::addAttachment(KURL url,TQString /*comment*/)
 {
   addAttach(url);
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::addAttachment(const QString &name,
-                                 const QCString &/*cte*/,
-                                 const QByteArray &data,
-                                 const QCString &type,
-                                 const QCString &subType,
-                                 const QCString &paramAttr,
-                                 const QString &paramValue,
-                                 const QCString &contDisp)
+void KMComposeWin::addAttachment(const TQString &name,
+                                 const TQCString &/*cte*/,
+                                 const TQByteArray &data,
+                                 const TQCString &type,
+                                 const TQCString &subType,
+                                 const TQCString &paramAttr,
+                                 const TQString &paramValue,
+                                 const TQCString &contDisp)
 {
   if (!data.isEmpty()) {
     KMMessagePart *msgPart = new KMMessagePart;
@@ -570,7 +570,7 @@ void KMComposeWin::addAttachment(const QString &name,
     if( type == "message" && subType == "rfc822" ) {
        msgPart->setMessageBody( data );
     } else {
-       QValueList<int> dummy;
+       TQValueList<int> dummy;
        msgPart->setBodyAndGuessCte(data, dummy,
               kmkernel->msgSender()->sendQuotedPrintable());
     }
@@ -583,29 +583,29 @@ void KMComposeWin::addAttachment(const QString &name,
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::slotAttachPNGImageData(const QByteArray &image)
+void KMComposeWin::slotAttachPNGImageData(const TQByteArray &image)
 {
   bool ok;
 
-  QString attName = KInputDialog::getText( "KMail", i18n("Name of the attachment:"), QString::null, &ok, this );
+  TQString attName = KInputDialog::getText( "KMail", i18n("Name of the attachment:"), TQString::null, &ok, this );
   if ( !ok )
     return;
 
   if ( !attName.lower().endsWith(".png") ) attName += ".png";
 
-  addAttachment( attName, "base64", image, "image", "png", QCString(), QString(), QCString() );
+  addAttachment( attName, "base64", image, "image", "png", TQCString(), TQString(), TQCString() );
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setBody(QString body)
+void KMComposeWin::setBody(TQString body)
 {
   mEditor->setText(body);
 }
 
 //-----------------------------------------------------------------------------
-bool KMComposeWin::event(QEvent *e)
+bool KMComposeWin::event(TQEvent *e)
 {
-  if (e->type() == QEvent::ApplicationPaletteChange)
+  if (e->type() == TQEvent::ApplicationPaletteChange)
   {
      readColorConfig();
   }
@@ -617,8 +617,8 @@ bool KMComposeWin::event(QEvent *e)
 void KMComposeWin::readColorConfig(void)
 {
   if ( GlobalSettings::self()->useDefaultColors() ) {
-    mForeColor = QColor(kapp->palette().active().text());
-    mBackColor = QColor(kapp->palette().active().base());
+    mForeColor = TQColor(kapp->palette().active().text());
+    mBackColor = TQColor(kapp->palette().active().base());
   } else {
     mForeColor = GlobalSettings::self()->foregroundColor();
     mBackColor = GlobalSettings::self()->backgroundColor();
@@ -626,9 +626,9 @@ void KMComposeWin::readColorConfig(void)
 
   // Color setup
   mPalette = kapp->palette();
-  QColorGroup cgrp  = mPalette.active();
-  cgrp.setColor( QColorGroup::Base, mBackColor);
-  cgrp.setColor( QColorGroup::Text, mForeColor);
+  TQColorGroup cgrp  = mPalette.active();
+  cgrp.setColor( TQColorGroup::Base, mBackColor);
+  cgrp.setColor( TQColorGroup::Text, mForeColor);
   mPalette.setDisabled(cgrp);
   mPalette.setActive(cgrp);
   mPalette.setInactive(cgrp);
@@ -657,8 +657,8 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
   }
   mBtnFcc->setChecked( GlobalSettings::self()->stickyFcc() );
   mBtnTransport->setChecked( GlobalSettings::self()->stickyTransport() );
-  QStringList transportHistory = GlobalSettings::self()->transportHistory();
-  QString currentTransport = GlobalSettings::self()->currentTransport();
+  TQStringList transportHistory = GlobalSettings::self()->transportHistory();
+  TQString currentTransport = GlobalSettings::self()->currentTransport();
 
   mEdtFrom->setCompletionMode( (KGlobalSettings::Completion)GlobalSettings::self()->completionMode() );
   mEdtReplyTo->setCompletionMode( (KGlobalSettings::Completion)GlobalSettings::self()->completionMode() );
@@ -691,7 +691,7 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
   mEdtSubject->setFont(mBodyFont);
 
   if ( !reload ) {
-    QSize siz = GlobalSettings::self()->composerSize();
+    TQSize siz = GlobalSettings::self()->composerSize();
     if (siz.width() < 200) siz.setWidth(200);
     if (siz.height() < 200) siz.setHeight(200);
     resize(siz);
@@ -699,7 +699,7 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
     if ( !GlobalSettings::self()->snippetSplitterPosition().isEmpty() ) {
       mSnippetSplitter->setSizes( GlobalSettings::self()->snippetSplitterPosition() );
     } else {
-      QValueList<int> defaults;
+      TQValueList<int> defaults;
       defaults << (int)(width() * 0.8) << (int)(width() * 0.2);
       mSnippetSplitter->setSizes( defaults );
     }
@@ -723,7 +723,7 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
     setTransport( currentTransport );
   }
 
-  QString fccName = "";
+  TQString fccName = "";
   if ( mBtnFcc->isChecked() ) {
     fccName = GlobalSettings::self()->previousFcc();
   } else if ( !ident.fcc().isEmpty() ) {
@@ -745,7 +745,7 @@ void KMComposeWin::writeConfig(void)
   GlobalSettings::self()->setPreviousFcc( mFcc->getFolder()->idString() );
   GlobalSettings::self()->setAutoSpellChecking(
                         mAutoSpellCheckingAction->isChecked() );
-  QStringList transportHistory = GlobalSettings::self()->transportHistory();
+  TQStringList transportHistory = GlobalSettings::self()->transportHistory();
   transportHistory.remove(mTransport->currentText());
     if (KMTransportInfo::availableTransports().findIndex(mTransport
     ->currentText()) == -1) {
@@ -776,8 +776,8 @@ void KMComposeWin::autoSaveMessage()
   if ( mAutoSaveTimer )
     mAutoSaveTimer->stop();
 
-  connect( this, SIGNAL( applyChangesDone( bool ) ),
-           this, SLOT( slotContinueAutoSave() ) );
+  connect( this, TQT_SIGNAL( applyChangesDone( bool ) ),
+           this, TQT_SLOT( slotContinueAutoSave() ) );
   // This method is called when KMail crashed, so don't try signing/encryption
   // and don't disable controls because it is also called from a timer and
   // then the disabling is distracting.
@@ -788,8 +788,8 @@ void KMComposeWin::autoSaveMessage()
 
 void KMComposeWin::slotContinueAutoSave()
 {
-  disconnect( this, SIGNAL( applyChangesDone( bool ) ),
-              this, SLOT( slotContinueAutoSave() ) );
+  disconnect( this, TQT_SIGNAL( applyChangesDone( bool ) ),
+              this, TQT_SLOT( slotContinueAutoSave() ) );
 
   // Ok, it's done now - continue dead letter saving
   if ( mComposedMessages.isEmpty() ) {
@@ -802,7 +802,7 @@ void KMComposeWin::slotContinueAutoSave()
 
   kdDebug(5006) << k_funcinfo << "opening autoSaveFile " << mAutoSaveFilename
                 << endl;
-  const QString filename =
+  const TQString filename =
     KMKernel::localDataPath() + "autosave/cur/" + mAutoSaveFilename;
   KSaveFile autoSaveFile( filename, 0600 );
   int status = autoSaveFile.status();
@@ -904,7 +904,7 @@ int KMComposeWin::calcColumnWidth(int which, long allShowing, int width)
   if ( (allShowing & which) == 0 )
     return width;
 
-  QLabel *w;
+  TQLabel *w;
   if ( which == HDR_IDENTITY )
     w = mLblIdentity;
   else if ( which == HDR_DICTIONARY )
@@ -946,7 +946,7 @@ void KMComposeWin::rethinkFields(bool fromSlot)
 
   delete mGrid;
 
-  mGrid = new QGridLayout( mHeadersArea, numRows, 3, KDialogBase::marginHint()/2, KDialogBase::spacingHint());
+  mGrid = new TQGridLayout( mHeadersArea, numRows, 3, KDialogBase::marginHint()/2, KDialogBase::spacingHint());
   mGrid->setColStretch(0, 1);
   mGrid->setColStretch(1, 100);
   mGrid->setColStretch(2, 1);
@@ -986,7 +986,7 @@ void KMComposeWin::rethinkFields(bool fromSlot)
   rethinkHeaderLine(showHeaders,HDR_FROM, row, i18n("sender address field", "&From:"),
                     mLblFrom, mEdtFrom /*, mBtnFrom */ );
 
-  QWidget *prevFocus = mEdtFrom;
+  TQWidget *prevFocus = mEdtFrom;
 
   if (!fromSlot) mReplyToAction->setChecked(abs(mShowHeaders)&HDR_REPLY_TO);
   rethinkHeaderLine(showHeaders,HDR_REPLY_TO,row,i18n("&Reply to:"),
@@ -1037,22 +1037,22 @@ void KMComposeWin::rethinkFields(bool fromSlot)
     ++row;
 
     if ( showHeaders & HDR_REPLY_TO ) {
-      connect( mEdtReplyTo, SIGNAL( focusDown() ), mRecipientsEditor,
-        SLOT( setFocusTop() ) );
+      connect( mEdtReplyTo, TQT_SIGNAL( focusDown() ), mRecipientsEditor,
+        TQT_SLOT( setFocusTop() ) );
     } else {
-    connect( mEdtFrom, SIGNAL( focusDown() ), mRecipientsEditor,
-      SLOT( setFocusTop() ) );
+    connect( mEdtFrom, TQT_SIGNAL( focusDown() ), mRecipientsEditor,
+      TQT_SLOT( setFocusTop() ) );
     }
     if ( showHeaders & HDR_REPLY_TO ) {
-      connect( mRecipientsEditor, SIGNAL( focusUp() ), mEdtReplyTo, SLOT( setFocus() ) );
+      connect( mRecipientsEditor, TQT_SIGNAL( focusUp() ), mEdtReplyTo, TQT_SLOT( setFocus() ) );
     } else {
-      connect( mRecipientsEditor, SIGNAL( focusUp() ), mEdtFrom, SLOT( setFocus() ) );
+      connect( mRecipientsEditor, TQT_SIGNAL( focusUp() ), mEdtFrom, TQT_SLOT( setFocus() ) );
     }
 
-    connect( mRecipientsEditor, SIGNAL( focusDown() ), mEdtSubject,
-      SLOT( setFocus() ) );
-    connect( mEdtSubject, SIGNAL( focusUp() ), mRecipientsEditor,
-      SLOT( setFocusBottom() ) );
+    connect( mRecipientsEditor, TQT_SIGNAL( focusDown() ), mEdtSubject,
+      TQT_SLOT( setFocus() ) );
+    connect( mEdtSubject, TQT_SIGNAL( focusUp() ), mRecipientsEditor,
+      TQT_SLOT( setFocusBottom() ) );
 
     prevFocus = mRecipientsEditor;
   }
@@ -1090,27 +1090,27 @@ void KMComposeWin::rethinkFields(bool fromSlot)
     mRecipientsEditor->setFirstColumnWidth( mLabelWidth );
 }
 
-QWidget *KMComposeWin::connectFocusMoving( QWidget *prev, QWidget *next )
+TQWidget *KMComposeWin::connectFocusMoving( TQWidget *prev, TQWidget *next )
 {
-  connect( prev, SIGNAL( focusDown() ), next, SLOT( setFocus() ) );
-  connect( next, SIGNAL( focusUp() ), prev, SLOT( setFocus() ) );
+  connect( prev, TQT_SIGNAL( focusDown() ), next, TQT_SLOT( setFocus() ) );
+  connect( next, TQT_SIGNAL( focusUp() ), prev, TQT_SLOT( setFocus() ) );
 
   return next;
 }
 
 //-----------------------------------------------------------------------------
 void KMComposeWin::rethinkHeaderLine(int aValue, int aMask, int& aRow,
-                                     const QString &aLabelStr, QLabel* aLbl,
-                                     QLineEdit* aEdt, QPushButton* aBtn,
-                                     const QString &toolTip, const QString &whatsThis )
+                                     const TQString &aLabelStr, TQLabel* aLbl,
+                                     TQLineEdit* aEdt, TQPushButton* aBtn,
+                                     const TQString &toolTip, const TQString &whatsThis )
 {
   if (aValue & aMask)
   {
     aLbl->setText(aLabelStr);
     if ( !toolTip.isEmpty() )
-      QToolTip::add( aLbl, toolTip );
+      TQToolTip::add( aLbl, toolTip );
     if ( !whatsThis.isEmpty() )
-      QWhatsThis::add( aLbl, whatsThis );
+      TQWhatsThis::add( aLbl, whatsThis );
     aLbl->setFixedWidth( mLabelWidth );
     aLbl->setBuddy(aEdt);
     mGrid->addWidget(aLbl, aRow, 0);
@@ -1137,8 +1137,8 @@ void KMComposeWin::rethinkHeaderLine(int aValue, int aMask, int& aRow,
 
 //-----------------------------------------------------------------------------
 void KMComposeWin::rethinkHeaderLine(int aValue, int aMask, int& aRow,
-                                     const QString &aLabelStr, QLabel* aLbl,
-                                     QComboBox* aCbx, QCheckBox* aChk)
+                                     const TQString &aLabelStr, TQLabel* aLbl,
+                                     TQComboBox* aCbx, TQCheckBox* aChk)
 {
   if (aValue & aMask)
   {
@@ -1172,12 +1172,12 @@ void KMComposeWin::rethinkHeaderLine(int aValue, int aMask, int& aRow,
 //-----------------------------------------------------------------------------
 void KMComposeWin::getTransportMenu()
 {
-  QStringList availTransports;
+  TQStringList availTransports;
 
   mActNowMenu->clear();
   mActLaterMenu->clear();
   availTransports = KMail::TransportManager::transportNames();
-  QStringList::Iterator it;
+  TQStringList::Iterator it;
   int id = 0;
   for(it = availTransports.begin(); it != availTransports.end() ; ++it, id++)
   {
@@ -1196,14 +1196,14 @@ void KMComposeWin::setupActions(void)
   {
     //default = send now, alternative = queue
     ( void )  new KAction( i18n("&Send Mail"), "mail_send", CTRL+Key_Return,
-                        this, SLOT(slotSendNow()), actionCollection(),"send_default");
+                        this, TQT_SLOT(slotSendNow()), actionCollection(),"send_default");
 
     // FIXME: change to mail_send_via icon when this exits.
     actActionNowMenu =  new KActionMenu (i18n("&Send Mail Via"), "mail_send",
 		    actionCollection(), "send_default_via" );
 
     (void) new KAction (i18n("Send &Later"), "queue", 0, this,
-			SLOT(slotSendLater()), actionCollection(),"send_alternative");
+			TQT_SLOT(slotSendLater()), actionCollection(),"send_alternative");
     actActionLaterMenu = new KActionMenu (i18n("Send &Later Via"), "queue",
 		    actionCollection(), "send_alternative_via" );
 
@@ -1213,12 +1213,12 @@ void KMComposeWin::setupActions(void)
     //default = queue, alternative = send now
     (void) new KAction (i18n("Send &Later"), "queue",
                         CTRL+Key_Return,
-                        this, SLOT(slotSendLater()), actionCollection(),"send_default");
+                        this, TQT_SLOT(slotSendLater()), actionCollection(),"send_default");
     actActionLaterMenu = new KActionMenu (i18n("Send &Later Via"), "queue",
 		    actionCollection(), "send_default_via" );
 
    ( void )  new KAction( i18n("&Send Mail"), "mail_send", 0,
-                        this, SLOT(slotSendNow()), actionCollection(),"send_alternative");
+                        this, TQT_SLOT(slotSendNow()), actionCollection(),"send_alternative");
 
     // FIXME: change to mail_send_via icon when this exits.
     actActionNowMenu =  new KActionMenu (i18n("&Send Mail Via"), "mail_send",
@@ -1230,98 +1230,98 @@ void KMComposeWin::setupActions(void)
   actActionNowMenu->setDelayed(true);
   actActionLaterMenu->setDelayed(true);
 
-  connect(  actActionNowMenu, SIGNAL(  activated() ), this,
-		    SLOT( slotSendNow() ) );
-  connect(  actActionLaterMenu, SIGNAL(  activated() ), this,
-		    SLOT( slotSendLater() ) );
+  connect(  actActionNowMenu, TQT_SIGNAL(  activated() ), this,
+		    TQT_SLOT( slotSendNow() ) );
+  connect(  actActionLaterMenu, TQT_SIGNAL(  activated() ), this,
+		    TQT_SLOT( slotSendLater() ) );
 
 
   mActNowMenu = actActionNowMenu->popupMenu();
   mActLaterMenu = actActionLaterMenu->popupMenu();
 
-  connect(  mActNowMenu, SIGNAL(  activated( int ) ), this,
-		    SLOT( slotSendNowVia( int ) ) );
-  connect(  mActNowMenu, SIGNAL(  aboutToShow() ), this,
-		    SLOT( getTransportMenu() ) );
+  connect(  mActNowMenu, TQT_SIGNAL(  activated( int ) ), this,
+		    TQT_SLOT( slotSendNowVia( int ) ) );
+  connect(  mActNowMenu, TQT_SIGNAL(  aboutToShow() ), this,
+		    TQT_SLOT( getTransportMenu() ) );
 
-  connect(  mActLaterMenu, SIGNAL(  activated( int ) ), this,
-		  SLOT( slotSendLaterVia( int ) ) );
-  connect(  mActLaterMenu, SIGNAL(  aboutToShow() ), this,
-		  SLOT( getTransportMenu() ) );
+  connect(  mActLaterMenu, TQT_SIGNAL(  activated( int ) ), this,
+		  TQT_SLOT( slotSendLaterVia( int ) ) );
+  connect(  mActLaterMenu, TQT_SIGNAL(  aboutToShow() ), this,
+		  TQT_SLOT( getTransportMenu() ) );
 
 
 
 
   (void) new KAction (i18n("Save as &Draft"), "filesave", 0,
-                      this, SLOT(slotSaveDraft()),
+                      this, TQT_SLOT(slotSaveDraft()),
                       actionCollection(), "save_in_drafts");
   (void) new KAction (i18n("Save as &Template"), "filesave", 0,
-                      this, SLOT(slotSaveTemplate()),
+                      this, TQT_SLOT(slotSaveTemplate()),
                       actionCollection(), "save_in_templates");
   (void) new KAction (i18n("&Insert File..."), "fileopen", 0,
-                      this,  SLOT(slotInsertFile()),
+                      this,  TQT_SLOT(slotInsertFile()),
                       actionCollection(), "insert_file");
   mRecentAction = new KRecentFilesAction (i18n("&Insert File Recent"),
 		      "fileopen", 0,
-		      this,  SLOT(slotInsertRecentFile(const KURL&)),
+		      this,  TQT_SLOT(slotInsertRecentFile(const KURL&)),
 		      actionCollection(), "insert_file_recent");
 
   mRecentAction->loadEntries( KMKernel::config() );
 
   (void) new KAction (i18n("&Address Book"), "contents",0,
-                      this, SLOT(slotAddrBook()),
+                      this, TQT_SLOT(slotAddrBook()),
                       actionCollection(), "addressbook");
   (void) new KAction (i18n("&New Composer"), "mail_new",
                       KStdAccel::shortcut(KStdAccel::New),
-                      this, SLOT(slotNewComposer()),
+                      this, TQT_SLOT(slotNewComposer()),
                       actionCollection(), "new_composer");
   (void) new KAction (i18n("New Main &Window"), "window_new", 0,
-                      this, SLOT(slotNewMailReader()),
+                      this, TQT_SLOT(slotNewMailReader()),
                       actionCollection(), "open_mailreader");
 
   if ( !mClassicalRecipients ) {
     new KAction( i18n("Select &Recipients..."), CTRL + Key_L, mRecipientsEditor,
-      SLOT( selectRecipients() ), actionCollection(), "select_recipients" );
+      TQT_SLOT( selectRecipients() ), actionCollection(), "select_recipients" );
     new KAction( i18n("Save &Distribution List..."), 0, mRecipientsEditor,
-      SLOT( saveDistributionList() ), actionCollection(),
+      TQT_SLOT( saveDistributionList() ), actionCollection(),
       "save_distribution_list" );
   }
 
-  //KStdAction::save(this, SLOT(), actionCollection(), "save_message");
-  KStdAction::print (this, SLOT(slotPrint()), actionCollection());
-  KStdAction::close (this, SLOT(slotClose()), actionCollection());
+  //KStdAction::save(this, TQT_SLOT(), actionCollection(), "save_message");
+  KStdAction::print (this, TQT_SLOT(slotPrint()), actionCollection());
+  KStdAction::close (this, TQT_SLOT(slotClose()), actionCollection());
 
-  KStdAction::undo (this, SLOT(slotUndo()), actionCollection());
-  KStdAction::redo (this, SLOT(slotRedo()), actionCollection());
-  KStdAction::cut (this, SLOT(slotCut()), actionCollection());
-  KStdAction::copy (this, SLOT(slotCopy()), actionCollection());
-  KStdAction::pasteText (this, SLOT(slotPasteClipboard()), actionCollection());
-  KStdAction::selectAll (this, SLOT(slotMarkAll()), actionCollection());
+  KStdAction::undo (this, TQT_SLOT(slotUndo()), actionCollection());
+  KStdAction::redo (this, TQT_SLOT(slotRedo()), actionCollection());
+  KStdAction::cut (this, TQT_SLOT(slotCut()), actionCollection());
+  KStdAction::copy (this, TQT_SLOT(slotCopy()), actionCollection());
+  KStdAction::pasteText (this, TQT_SLOT(slotPasteClipboard()), actionCollection());
+  KStdAction::selectAll (this, TQT_SLOT(slotMarkAll()), actionCollection());
 
-  KStdAction::find (this, SLOT(slotFind()), actionCollection());
-  KStdAction::findNext(this, SLOT(slotSearchAgain()), actionCollection());
+  KStdAction::find (this, TQT_SLOT(slotFind()), actionCollection());
+  KStdAction::findNext(this, TQT_SLOT(slotSearchAgain()), actionCollection());
 
-  KStdAction::replace (this, SLOT(slotReplace()), actionCollection());
-  KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
+  KStdAction::replace (this, TQT_SLOT(slotReplace()), actionCollection());
+  KStdAction::spelling (this, TQT_SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
 
-  mPasteQuotation = new KAction (i18n("Pa&ste as Quotation"),0,this,SLOT( slotPasteClipboardAsQuotation()),
+  mPasteQuotation = new KAction (i18n("Pa&ste as Quotation"),0,this,TQT_SLOT( slotPasteClipboardAsQuotation()),
                       actionCollection(), "paste_quoted");
 
-  (void) new KAction (i18n("Paste as Attac&hment"),0,this,SLOT( slotPasteClipboardAsAttachment()),
+  (void) new KAction (i18n("Paste as Attac&hment"),0,this,TQT_SLOT( slotPasteClipboardAsAttachment()),
                       actionCollection(), "paste_att");
 
   mAddQuoteChars = new KAction(i18n("Add &Quote Characters"), 0, this,
-              SLOT(slotAddQuotes()), actionCollection(), "tools_quote");
+              TQT_SLOT(slotAddQuotes()), actionCollection(), "tools_quote");
 
   mRemQuoteChars = new KAction(i18n("Re&move Quote Characters"), 0, this,
-              SLOT(slotRemoveQuotes()), actionCollection(), "tools_unquote");
+              TQT_SLOT(slotRemoveQuotes()), actionCollection(), "tools_unquote");
 
 
-  (void) new KAction (i18n("Cl&ean Spaces"), 0, this, SLOT(slotCleanSpace()),
+  (void) new KAction (i18n("Cl&ean Spaces"), 0, this, TQT_SLOT(slotCleanSpace()),
                       actionCollection(), "clean_spaces");
 
   mFixedFontAction = new KToggleAction( i18n("Use Fi&xed Font"), 0, this,
-                      SLOT(slotUpdateFont()), actionCollection(), "toggle_fixedfont" );
+                      TQT_SLOT(slotUpdateFont()), actionCollection(), "toggle_fixedfont" );
   mFixedFontAction->setChecked( GlobalSettings::self()->useFixedFont() );
 
   //these are checkable!!!
@@ -1334,16 +1334,16 @@ void KMComposeWin::setupActions(void)
   mRequestMDNAction->setChecked(GlobalSettings::self()->requestMDN());
   //----- Message-Encoding Submenu
   mEncodingAction = new KSelectAction( i18n( "Se&t Encoding" ), "charset",
-                                      0, this, SLOT(slotSetCharset() ),
+                                      0, this, TQT_SLOT(slotSetCharset() ),
                                       actionCollection(), "charsets" );
   mWordWrapAction = new KToggleAction (i18n("&Wordwrap"), 0,
                       actionCollection(), "wordwrap");
   mWordWrapAction->setChecked(GlobalSettings::self()->wordWrap());
-  connect(mWordWrapAction, SIGNAL(toggled(bool)), SLOT(slotWordWrapToggled(bool)));
+  connect(mWordWrapAction, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotWordWrapToggled(bool)));
 
   mSnippetAction = new KToggleAction ( i18n("&Snippets"), 0,
                                        actionCollection(), "snippets");
-  connect(mSnippetAction, SIGNAL(toggled(bool)), mSnippetWidget, SLOT(setShown(bool)) );
+  connect(mSnippetAction, TQT_SIGNAL(toggled(bool)), mSnippetWidget, TQT_SLOT(setShown(bool)) );
   mSnippetAction->setChecked( GlobalSettings::self()->showSnippetManager() );
 
   mAutoSpellCheckingAction =
@@ -1353,93 +1353,93 @@ void KMComposeWin::setupActions(void)
   mAutoSpellCheckingAction->setEnabled( !GlobalSettings::self()->useExternalEditor() );
   mAutoSpellCheckingAction->setChecked( !GlobalSettings::self()->useExternalEditor() && spellChecking );
   slotAutoSpellCheckingToggled( !GlobalSettings::self()->useExternalEditor() && spellChecking );
-  connect( mAutoSpellCheckingAction, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotAutoSpellCheckingToggled( bool ) ) );
+  connect( mAutoSpellCheckingAction, TQT_SIGNAL( toggled( bool ) ),
+           this, TQT_SLOT( slotAutoSpellCheckingToggled( bool ) ) );
 
-  QStringList encodings = KMMsgBase::supportedEncodings(true);
+  TQStringList encodings = KMMsgBase::supportedEncodings(true);
   encodings.prepend( i18n("Auto-Detect"));
   mEncodingAction->setItems( encodings );
   mEncodingAction->setCurrentItem( -1 );
 
   //these are checkable!!!
   markupAction = new KToggleAction (i18n("Formatting (HTML)"), 0, this,
-                                    SLOT(slotToggleMarkup()),
+                                    TQT_SLOT(slotToggleMarkup()),
                       actionCollection(), "html");
 
   mAllFieldsAction = new KToggleAction (i18n("&All Fields"), 0, this,
-                                       SLOT(slotView()),
+                                       TQT_SLOT(slotView()),
                                        actionCollection(), "show_all_fields");
   mIdentityAction = new KToggleAction (i18n("&Identity"), 0, this,
-                                      SLOT(slotView()),
+                                      TQT_SLOT(slotView()),
                                       actionCollection(), "show_identity");
   mDictionaryAction = new KToggleAction (i18n("&Dictionary"), 0, this,
-                                         SLOT(slotView()),
+                                         TQT_SLOT(slotView()),
                                          actionCollection(), "show_dictionary");
   mFccAction = new KToggleAction (i18n("&Sent-Mail Folder"), 0, this,
-                                 SLOT(slotView()),
+                                 TQT_SLOT(slotView()),
                                  actionCollection(), "show_fcc");
   mTransportAction = new KToggleAction (i18n("&Mail Transport"), 0, this,
-                                      SLOT(slotView()),
+                                      TQT_SLOT(slotView()),
                                       actionCollection(), "show_transport");
   mFromAction = new KToggleAction (i18n("&From"), 0, this,
-                                  SLOT(slotView()),
+                                  TQT_SLOT(slotView()),
                                   actionCollection(), "show_from");
   mReplyToAction = new KToggleAction (i18n("&Reply To"), 0, this,
-                                       SLOT(slotView()),
+                                       TQT_SLOT(slotView()),
                                        actionCollection(), "show_reply_to");
   if ( mClassicalRecipients ) {
     mToAction = new KToggleAction (i18n("&To"), 0, this,
-                                  SLOT(slotView()),
+                                  TQT_SLOT(slotView()),
                                   actionCollection(), "show_to");
     mCcAction = new KToggleAction (i18n("&CC"), 0, this,
-                                  SLOT(slotView()),
+                                  TQT_SLOT(slotView()),
                                   actionCollection(), "show_cc");
     mBccAction = new KToggleAction (i18n("&BCC"), 0, this,
-                                   SLOT(slotView()),
+                                   TQT_SLOT(slotView()),
                                    actionCollection(), "show_bcc");
   }
   mSubjectAction = new KToggleAction (i18n("S&ubject"), 0, this,
-                                     SLOT(slotView()),
+                                     TQT_SLOT(slotView()),
                                      actionCollection(), "show_subject");
   //end of checkable
 
   mAppendSignatureAction = new KAction (i18n("Append S&ignature"), 0, this,
-                      SLOT(slotAppendSignature()),
+                      TQT_SLOT(slotAppendSignature()),
                       actionCollection(), "append_signature");
   mPrependSignatureAction =  new KAction (i18n("Prepend S&ignature"), 0, this,
-                      SLOT(slotPrependSignature()),
+                      TQT_SLOT(slotPrependSignature()),
                       actionCollection(), "prepend_signature");
 
   mInsertSignatureAction =  new KAction (i18n("Insert Signature At C&ursor Position"), "edit", 0, this,
-                      SLOT(slotInsertSignatureAtCursor()),
+                      TQT_SLOT(slotInsertSignatureAtCursor()),
                       actionCollection(), "insert_signature_at_cursor_position");
 
   mAttachPK  = new KAction (i18n("Attach &Public Key..."), 0, this,
-                           SLOT(slotInsertPublicKey()),
+                           TQT_SLOT(slotInsertPublicKey()),
                            actionCollection(), "attach_public_key");
   mAttachMPK = new KAction (i18n("Attach &My Public Key"), 0, this,
-                           SLOT(slotInsertMyPublicKey()),
+                           TQT_SLOT(slotInsertMyPublicKey()),
                            actionCollection(), "attach_my_public_key");
   (void) new KAction (i18n("&Attach File..."), "attach",
-                      0, this, SLOT(slotAttachFile()),
+                      0, this, TQT_SLOT(slotAttachFile()),
                       actionCollection(), "attach");
   mAttachRemoveAction = new KAction (i18n("&Remove Attachment"), 0, this,
-                      SLOT(slotAttachRemove()),
+                      TQT_SLOT(slotAttachRemove()),
                       actionCollection(), "remove");
   mAttachSaveAction = new KAction (i18n("&Save Attachment As..."), "filesave",0,
-                      this, SLOT(slotAttachSave()),
+                      this, TQT_SLOT(slotAttachSave()),
                       actionCollection(), "attach_save");
   mAttachPropertiesAction = new KAction (i18n("Attachment Pr&operties"), 0, this,
-                      SLOT(slotAttachProperties()),
+                      TQT_SLOT(slotAttachProperties()),
                       actionCollection(), "attach_properties");
 
   setStandardToolBarMenuEnabled(true);
 
-  KStdAction::keyBindings(this, SLOT(slotEditKeys()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
-  KStdAction::preferences(kmkernel, SLOT(slotShowConfigurationDialog()), actionCollection());
+  KStdAction::keyBindings(this, TQT_SLOT(slotEditKeys()), actionCollection());
+  KStdAction::configureToolbars(this, TQT_SLOT(slotEditToolbars()), actionCollection());
+  KStdAction::preferences(kmkernel, TQT_SLOT(slotShowConfigurationDialog()), actionCollection());
 
-  (void) new KAction (i18n("&Spellchecker..."), 0, this, SLOT(slotSpellcheckConfig()),
+  (void) new KAction (i18n("&Spellchecker..."), 0, this, TQT_SLOT(slotSpellcheckConfig()),
                       actionCollection(), "setup_spellchecker");
 
   if ( Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" ) ) {
@@ -1448,8 +1448,8 @@ void KMComposeWin::setupActions(void)
                                            "encrypt_message_chiasmus" );
     a->setCheckedState( KGuiItem( i18n( "Encrypt Message with Chiasmus..." ), "chiencrypted" ) );
     mEncryptChiasmusAction = a;
-    connect( mEncryptChiasmusAction, SIGNAL(toggled(bool)),
-             this, SLOT(slotEncryptChiasmusToggled(bool)) );
+    connect( mEncryptChiasmusAction, TQT_SIGNAL(toggled(bool)),
+             this, TQT_SLOT(slotEncryptChiasmusToggled(bool)) );
   } else {
     mEncryptChiasmusAction = 0;
   }
@@ -1495,23 +1495,23 @@ void KMComposeWin::setupActions(void)
     setSigning( ( canOpenPGPSign || canSMIMESign ) && GlobalSettings::self()->pgpAutoSign() );
   }
 
-  connect(mEncryptAction, SIGNAL(toggled(bool)),
-                         SLOT(slotEncryptToggled( bool )));
-  connect(mSignAction,    SIGNAL(toggled(bool)),
-                         SLOT(slotSignToggled(    bool )));
+  connect(mEncryptAction, TQT_SIGNAL(toggled(bool)),
+                         TQT_SLOT(slotEncryptToggled( bool )));
+  connect(mSignAction,    TQT_SIGNAL(toggled(bool)),
+                         TQT_SLOT(slotSignToggled(    bool )));
 
-  QStringList l;
+  TQStringList l;
   for ( int i = 0 ; i < numCryptoMessageFormats ; ++i )
     l.push_back( Kleo::cryptoMessageFormatToLabel( cryptoMessageFormats[i] ) );
 
   mCryptoModuleAction = new KSelectAction( i18n( "&Cryptographic Message Format" ), 0,
-					   this, SLOT(slotSelectCryptoModule()),
+					   this, TQT_SLOT(slotSelectCryptoModule()),
 					   actionCollection(), "options_select_crypto" );
   mCryptoModuleAction->setItems( l );
   mCryptoModuleAction->setCurrentItem( format2cb( ident.preferredCryptoMessageFormat() ) );
   slotSelectCryptoModule( true /* initialize */ );
 
-  QStringList styleItems;
+  TQStringList styleItems;
   styleItems << i18n( "Standard" );
   styleItems << i18n( "Bulleted List (Disc)" );
   styleItems << i18n( "Bulleted List (Circle)" );
@@ -1523,48 +1523,48 @@ void KMComposeWin::setupActions(void)
   listAction = new KSelectAction( i18n( "Select Style" ), 0, actionCollection(),
                                  "text_list" );
   listAction->setItems( styleItems );
-  connect( listAction, SIGNAL( activated( const QString& ) ),
-           SLOT( slotListAction( const QString& ) ) );
+  connect( listAction, TQT_SIGNAL( activated( const TQString& ) ),
+           TQT_SLOT( slotListAction( const TQString& ) ) );
   fontAction = new KFontAction( "Select Font", 0, actionCollection(),
                                "text_font" );
-  connect( fontAction, SIGNAL( activated( const QString& ) ),
-           SLOT( slotFontAction( const QString& ) ) );
+  connect( fontAction, TQT_SIGNAL( activated( const TQString& ) ),
+           TQT_SLOT( slotFontAction( const TQString& ) ) );
   fontSizeAction = new KFontSizeAction( "Select Size", 0, actionCollection(),
                                        "text_size" );
-  connect( fontSizeAction, SIGNAL( fontSizeChanged( int ) ),
-           SLOT( slotSizeAction( int ) ) );
+  connect( fontSizeAction, TQT_SIGNAL( fontSizeChanged( int ) ),
+           TQT_SLOT( slotSizeAction( int ) ) );
 
   alignLeftAction = new KToggleAction (i18n("Align Left"), "text_left", 0,
-                      this, SLOT(slotAlignLeft()), actionCollection(),
+                      this, TQT_SLOT(slotAlignLeft()), actionCollection(),
                       "align_left");
   alignLeftAction->setChecked( true );
   alignRightAction = new KToggleAction (i18n("Align Right"), "text_right", 0,
-                      this, SLOT(slotAlignRight()), actionCollection(),
+                      this, TQT_SLOT(slotAlignRight()), actionCollection(),
                       "align_right");
   alignCenterAction = new KToggleAction (i18n("Align Center"), "text_center", 0,
-                       this, SLOT(slotAlignCenter()), actionCollection(),
+                       this, TQT_SLOT(slotAlignCenter()), actionCollection(),
                        "align_center");
   textBoldAction = new KToggleAction( i18n("&Bold"), "text_bold", CTRL+Key_B,
-                                     this, SLOT(slotTextBold()),
+                                     this, TQT_SLOT(slotTextBold()),
                                      actionCollection(), "text_bold");
   textItalicAction = new KToggleAction( i18n("&Italic"), "text_italic", CTRL+Key_I,
-                                       this, SLOT(slotTextItalic()),
+                                       this, TQT_SLOT(slotTextItalic()),
                                        actionCollection(), "text_italic");
   textUnderAction = new KToggleAction( i18n("&Underline"), "text_under", CTRL+Key_U,
-                                     this, SLOT(slotTextUnder()),
+                                     this, TQT_SLOT(slotTextUnder()),
                                      actionCollection(), "text_under");
   actionFormatReset = new KAction( i18n( "Reset Font Settings" ), "eraser", 0,
-                                     this, SLOT( slotFormatReset() ),
+                                     this, TQT_SLOT( slotFormatReset() ),
                                      actionCollection(), "format_reset");
   actionFormatColor = new KAction( i18n( "Text Color..." ), "colorize", 0,
-                                     this, SLOT( slotTextColor() ),
+                                     this, TQT_SLOT( slotTextColor() ),
                                      actionCollection(), "format_color");
 
   //  editorFocusChanged(false);
   createGUI("kmcomposerui.rc");
 
-  connect( toolBar("htmlToolBar"), SIGNAL( visibilityChanged(bool) ),
-           this, SLOT( htmlToolBarVisibilityChanged(bool) ) );
+  connect( toolBar("htmlToolBar"), TQT_SIGNAL( visibilityChanged(bool) ),
+           this, TQT_SLOT( htmlToolBarVisibilityChanged(bool) ) );
 
   // In Kontact, this entry would read "Configure Kontact", but bring
   // up KMail's config dialog. That's sensible, though, so fix the label.
@@ -1589,7 +1589,7 @@ void KMComposeWin::setupStatusBar(void)
 void KMComposeWin::updateCursorPosition()
 {
   int col,line;
-  QString temp;
+  TQString temp;
   line = mEditor->currentLine();
   col = mEditor->currentColumn();
   temp = i18n(" Line: %1 ").arg(line+1);
@@ -1602,11 +1602,11 @@ void KMComposeWin::updateCursorPosition()
 //-----------------------------------------------------------------------------
 void KMComposeWin::setupEditor(void)
 {
-  //QPopupMenu* menu;
+  //TQPopupMenu* menu;
   mEditor->setModified(false);
-  QFontMetrics fm(mBodyFont);
-  mEditor->setTabStopWidth(fm.width(QChar(' ')) * 8);
-  //mEditor->setFocusPolicy(QWidget::ClickFocus);
+  TQFontMetrics fm(mBodyFont);
+  mEditor->setTabStopWidth(fm.width(TQChar(' ')) * 8);
+  //mEditor->setFocusPolicy(TQWidget::ClickFocus);
 
   slotWordWrapToggled( GlobalSettings::self()->wordWrap() );
 
@@ -1615,110 +1615,110 @@ void KMComposeWin::setupEditor(void)
 
   /* installRBPopup() is broken in kdelibs, we should wait for
           the new klibtextedit (dnaber, 2002-01-01)
-  menu = new QPopupMenu(this);
+  menu = new TQPopupMenu(this);
   //#ifdef BROKEN
   menu->insertItem(i18n("Undo"),mEditor,
-                   SLOT(undo()), KStdAccel::shortcut(KStdAccel::Undo));
+                   TQT_SLOT(undo()), KStdAccel::shortcut(KStdAccel::Undo));
   menu->insertItem(i18n("Redo"),mEditor,
-                   SLOT(redo()), KStdAccel::shortcut(KStdAccel::Redo));
+                   TQT_SLOT(redo()), KStdAccel::shortcut(KStdAccel::Redo));
   menu->insertSeparator();
   //#endif //BROKEN
-  menu->insertItem(i18n("Cut"), this, SLOT(slotCut()));
-  menu->insertItem(i18n("Copy"), this, SLOT(slotCopy()));
-  menu->insertItem(i18n("Paste"), this, SLOT(slotPasteClipboard()));
-  menu->insertItem(i18n("Mark All"),this, SLOT(slotMarkAll()));
+  menu->insertItem(i18n("Cut"), this, TQT_SLOT(slotCut()));
+  menu->insertItem(i18n("Copy"), this, TQT_SLOT(slotCopy()));
+  menu->insertItem(i18n("Paste"), this, TQT_SLOT(slotPasteClipboard()));
+  menu->insertItem(i18n("Mark All"),this, TQT_SLOT(slotMarkAll()));
   menu->insertSeparator();
-  menu->insertItem(i18n("Find..."), this, SLOT(slotFind()));
-  menu->insertItem(i18n("Replace..."), this, SLOT(slotReplace()));
+  menu->insertItem(i18n("Find..."), this, TQT_SLOT(slotFind()));
+  menu->insertItem(i18n("Replace..."), this, TQT_SLOT(slotReplace()));
   menu->insertSeparator();
-  menu->insertItem(i18n("Fixed Font Widths"), this, SLOT(slotUpdateFont()));
+  menu->insertItem(i18n("Fixed Font Widths"), this, TQT_SLOT(slotUpdateFont()));
   mEditor->installRBPopup(menu);
   */
   updateCursorPosition();
-  connect(mEditor,SIGNAL(CursorPositionChanged()),SLOT(updateCursorPosition()));
-  connect( mEditor, SIGNAL( currentFontChanged( const QFont & ) ),
-          this, SLOT( fontChanged( const QFont & ) ) );
-  connect( mEditor, SIGNAL( currentAlignmentChanged( int ) ),
-          this, SLOT( alignmentChanged( int ) ) );
+  connect(mEditor,TQT_SIGNAL(CursorPositionChanged()),TQT_SLOT(updateCursorPosition()));
+  connect( mEditor, TQT_SIGNAL( currentFontChanged( const TQFont & ) ),
+          this, TQT_SLOT( fontChanged( const TQFont & ) ) );
+  connect( mEditor, TQT_SIGNAL( currentAlignmentChanged( int ) ),
+          this, TQT_SLOT( alignmentChanged( int ) ) );
 
 }
 
 
 //-----------------------------------------------------------------------------
-static QString cleanedUpHeaderString( const QString & s )
+static TQString cleanedUpHeaderString( const TQString & s )
 {
   // remove invalid characters from the header strings
-  QString res( s );
+  TQString res( s );
   res.replace( '\r', "" );
   res.replace( '\n', " " );
   return res.stripWhiteSpace();
 }
 
 //-----------------------------------------------------------------------------
-QString KMComposeWin::subject() const
+TQString KMComposeWin::subject() const
 {
   return cleanedUpHeaderString( mEdtSubject->text() );
 }
 
 //-----------------------------------------------------------------------------
-QString KMComposeWin::to() const
+TQString KMComposeWin::to() const
 {
   if ( mEdtTo ) {
     return cleanedUpHeaderString( mEdtTo->text() );
   } else if ( mRecipientsEditor ) {
     return mRecipientsEditor->recipientString( Recipient::To );
   } else {
-    return QString::null;
+    return TQString::null;
   }
 }
 
 //-----------------------------------------------------------------------------
-QString KMComposeWin::cc() const
+TQString KMComposeWin::cc() const
 {
   if ( mEdtCc && !mEdtCc->isHidden() ) {
     return cleanedUpHeaderString( mEdtCc->text() );
   } else if ( mRecipientsEditor ) {
     return mRecipientsEditor->recipientString( Recipient::Cc );
   } else {
-    return QString::null;
+    return TQString::null;
   }
 }
 
 //-----------------------------------------------------------------------------
-QString KMComposeWin::bcc() const
+TQString KMComposeWin::bcc() const
 {
   if ( mEdtBcc && !mEdtBcc->isHidden() ) {
     return cleanedUpHeaderString( mEdtBcc->text() );
   } else if ( mRecipientsEditor ) {
     return mRecipientsEditor->recipientString( Recipient::Bcc );
   } else {
-    return QString::null;
+    return TQString::null;
   }
 }
 
 //-----------------------------------------------------------------------------
-QString KMComposeWin::from() const
+TQString KMComposeWin::from() const
 {
   return cleanedUpHeaderString( mEdtFrom->text() );
 }
 
 //-----------------------------------------------------------------------------
-QString KMComposeWin::replyTo() const
+TQString KMComposeWin::replyTo() const
 {
   if ( mEdtReplyTo ) {
     return cleanedUpHeaderString( mEdtReplyTo->text() );
   } else {
-    return QString::null;
+    return TQString::null;
   }
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::verifyWordWrapLengthIsAdequate(const QString &body)
+void KMComposeWin::verifyWordWrapLengthIsAdequate(const TQString &body)
 {
   int maxLineLength = 0;
   int curPos;
   int oldPos = 0;
-  if (mEditor->QTextEdit::wordWrap() == QTextEdit::FixedColumnWidth) {
+  if (mEditor->TQTextEdit::wordWrap() == TQTextEdit::FixedColumnWidth) {
     for (curPos = 0; curPos < (int)body.length(); ++curPos)
         if (body[curPos] == '\n') {
           if ((curPos - oldPos) > maxLineLength)
@@ -1733,10 +1733,10 @@ void KMComposeWin::verifyWordWrapLengthIsAdequate(const QString &body)
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::decryptOrStripOffCleartextSignature( QCString& body )
+void KMComposeWin::decryptOrStripOffCleartextSignature( TQCString& body )
 {
-  QPtrList<Kpgp::Block> pgpBlocks;
-  QStrList nonPgpBlocks;
+  TQPtrList<Kpgp::Block> pgpBlocks;
+  TQStrList nonPgpBlocks;
   if( Kpgp::Module::prepareMessageForDecryption( body,
                                                  pgpBlocks, nonPgpBlocks ) )
   {
@@ -1764,7 +1764,7 @@ void KMComposeWin::decryptOrStripOffCleartextSignature( QCString& body )
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setTransport( const QString & transport )
+void KMComposeWin::setTransport( const TQString & transport )
 {
   kdDebug(5006) << "KMComposeWin::setTransport( \"" << transport << "\" )" << endl;
   // Don't change the transport combobox if transport is empty
@@ -1829,15 +1829,15 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
   // don't overwrite the header values with identity specific values
   // unless the identity is sticky
   if ( !stickyIdentity ) {
-    disconnect(mIdentity,SIGNAL(identityChanged(uint)),
-               this, SLOT(slotIdentityChanged(uint)));
+    disconnect(mIdentity,TQT_SIGNAL(identityChanged(uint)),
+               this, TQT_SLOT(slotIdentityChanged(uint)));
   }
   // load the mId into the gui, sticky or not, without emitting
   mIdentity->setCurrentIdentity( mId );
   const uint idToApply = mId;
   if ( !stickyIdentity ) {
-    connect(mIdentity,SIGNAL(identityChanged(uint)),
-            this, SLOT(slotIdentityChanged(uint)));
+    connect(mIdentity,TQT_SIGNAL(identityChanged(uint)),
+            this, TQT_SLOT(slotIdentityChanged(uint)));
   }  else {
     // load the message's state into the mId, without applying it to the gui
     // that's so we can detect that the id changed (because a sticky was set)
@@ -1856,7 +1856,7 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
 
   // check for the presence of a DNT header, indicating that MDN's were
   // requested
-  QString mdnAddr = newMsg->headerField("Disposition-Notification-To");
+  TQString mdnAddr = newMsg->headerField("Disposition-Notification-To");
   mRequestMDNAction->setChecked( ( !mdnAddr.isEmpty() &&
                                   im->thatIsMe( mdnAddr ) ) ||
                                   GlobalSettings::self()->requestMDN() );
@@ -1868,7 +1868,7 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
     mMsg->removeHeaderField("X-Face");
   else
   {
-    QString xface = ident.xface();
+    TQString xface = ident.xface();
     if (!xface.isEmpty())
     {
       int numNL = ( xface.length() - 1 ) / 70;
@@ -1932,7 +1932,7 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
   mAttachMPK->setEnabled( Kleo::CryptoBackendFactory::instance()->openpgp() &&
 			  !ident.pgpEncryptionKey().isEmpty() );
 
-  QString transport = newMsg->headerField("X-KMail-Transport");
+  TQString transport = newMsg->headerField("X-KMail-Transport");
   if (!mBtnTransport->isChecked() && !transport.isEmpty())
     setTransport( transport );
 
@@ -1972,14 +1972,14 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
 
           // get cte decoded body part
           mCharset = n->msgPart().charset();
-          QCString bodyDecoded = n->msgPart().bodyDecoded();
+          TQCString bodyDecoded = n->msgPart().bodyDecoded();
 
           // respect html part charset
-          const QTextCodec *codec = KMMsgBase::codecForName( mCharset );
+          const TQTextCodec *codec = KMMsgBase::codecForName( mCharset );
           if ( codec ) {
             mEditor->setText( codec->toUnicode( bodyDecoded ) );
           } else {
-            mEditor->setText( QString::fromLocal8Bit( bodyDecoded ) );
+            mEditor->setText( TQString::fromLocal8Bit( bodyDecoded ) );
           }
         }
 
@@ -1995,16 +1995,16 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
     if ( mCharset.isEmpty() ||  mCharset == "default" )
       mCharset = mDefCharset;
 
-    QCString bodyDecoded = mMsg->bodyDecoded();
+    TQCString bodyDecoded = mMsg->bodyDecoded();
 
     if( allowDecryption )
       decryptOrStripOffCleartextSignature( bodyDecoded );
 
-    const QTextCodec *codec = KMMsgBase::codecForName(mCharset);
+    const TQTextCodec *codec = KMMsgBase::codecForName(mCharset);
     if (codec) {
       mEditor->setText(codec->toUnicode(bodyDecoded));
     } else
-      mEditor->setText(QString::fromLocal8Bit(bodyDecoded));
+      mEditor->setText(TQString::fromLocal8Bit(bodyDecoded));
   }
 #ifdef BROKEN_FOR_OPAQUE_SIGNED_OR_ENCRYPTED_MAILS
   const int num = mMsg->numBodyParts();
@@ -2048,7 +2048,7 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
       if ( mCharset.isEmpty() || mCharset == "default" )
         mCharset = mDefCharset;
 
-      QCString bodyDecoded = bodyPart.bodyDecoded();
+      TQCString bodyDecoded = bodyPart.bodyDecoded();
 
       if( allowDecryption )
         decryptOrStripOffCleartextSignature( bodyDecoded );
@@ -2059,18 +2059,18 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
       // out. Ingo, 2002-04-21
       //verifyWordWrapLengthIsAdequate(bodyDecoded);
 
-      const QTextCodec *codec = KMMsgBase::codecForName(mCharset);
+      const TQTextCodec *codec = KMMsgBase::codecForName(mCharset);
       if (codec)
         mEditor->setText(codec->toUnicode(bodyDecoded));
       else
-        mEditor->setText(QString::fromLocal8Bit(bodyDecoded));
+        mEditor->setText(TQString::fromLocal8Bit(bodyDecoded));
       //mEditor->insertLine("\n", -1); <-- why ?
     } else mEditor->setText("");
     for( int i = firstAttachment; i < num; ++i )
     {
       KMMessagePart *msgPart = new KMMessagePart;
       mMsg->bodyPart(i, msgPart);
-      QCString mimeType = msgPart->typeStr().lower() + '/'
+      TQCString mimeType = msgPart->typeStr().lower() + '/'
                         + msgPart->subtypeStr().lower();
       // don't add the detached signature as attachment when editting a
       // PGP/MIME signed message
@@ -2083,16 +2083,16 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
     if ( mCharset.isEmpty() ||  mCharset == "default" )
       mCharset = mDefCharset;
 
-    QCString bodyDecoded = mMsg->bodyDecoded();
+    TQCString bodyDecoded = mMsg->bodyDecoded();
 
     if( allowDecryption )
       decryptOrStripOffCleartextSignature( bodyDecoded );
 
-    const QTextCodec *codec = KMMsgBase::codecForName(mCharset);
+    const TQTextCodec *codec = KMMsgBase::codecForName(mCharset);
     if (codec) {
       mEditor->setText(codec->toUnicode(bodyDecoded));
     } else
-      mEditor->setText(QString::fromLocal8Bit(bodyDecoded));
+      mEditor->setText(TQString::fromLocal8Bit(bodyDecoded));
   }
 
   setCharset(mCharset);
@@ -2105,11 +2105,11 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
     // Not user friendy if this modal fileseletor opens before the
     // composer.
     //
-    //QTimer::singleShot( 200, this, SLOT(slotAppendSignature()) );
+    //TQTimer::singleShot( 200, this, TQT_SLOT(slotAppendSignature()) );
       if ( GlobalSettings::self()->prependSignature() ) {
-        QTimer::singleShot( 0, this, SLOT(slotPrependSignature()) );
+        TQTimer::singleShot( 0, this, TQT_SLOT(slotPrependSignature()) );
       } else {
-        QTimer::singleShot( 0, this, SLOT(slotAppendSignature()) );
+        TQTimer::singleShot( 0, this, TQT_SLOT(slotAppendSignature()) );
       }
   }
 
@@ -2126,7 +2126,7 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
 
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setFcc( const QString &idString )
+void KMComposeWin::setFcc( const TQString &idString )
 {
   // check if the sent-mail folder still exists
   if ( ! idString.isEmpty() && kmkernel->findFolderById( idString ) ) {
@@ -2179,15 +2179,15 @@ bool KMComposeWin::queryClose ()
     return false;
   if ( kmkernel->shuttingDown() || kapp->sessionSaving() )
     return true;
-  if ( mComposer && mComposer->isPerformingSignOperation() ) // since the non-gpg-agent gpg plugin gets a passphrase using QDialog::exec()
+  if ( mComposer && mComposer->isPerformingSignOperation() ) // since the non-gpg-agent gpg plugin gets a passphrase using TQDialog::exec()
     return false;                                            // the user can try to close the window, which destroys mComposer mid-call.
 
   if ( isModified() ) {
     bool istemplate = ( mFolder!=0 && mFolder->isTemplates() );
-    const QString savebut = ( istemplate ?
+    const TQString savebut = ( istemplate ?
                               i18n("Re&save as Template") :
                               i18n("&Save as Draft") );
-    const QString savetext = ( istemplate ?
+    const TQString savetext = ( istemplate ?
                                i18n("Resave this message in the Templates folder. "
                                     "It can then be used at a later time.") :
                                i18n("Save this message in the Drafts folder. "
@@ -2196,7 +2196,7 @@ bool KMComposeWin::queryClose ()
     const int rc = KMessageBox::warningYesNoCancel( this,
            i18n("Do you want to save the message for later or discard it?"),
            i18n("Close Composer"),
-           KGuiItem(savebut, "filesave", QString::null, savetext),
+           KGuiItem(savebut, "filesave", TQString::null, savetext),
            KStdGuiItem::discard() );
     if ( rc == KMessageBox::Cancel )
       return false;
@@ -2223,37 +2223,37 @@ bool KMComposeWin::userForgotAttachment()
     return false;
 
 
-  QStringList attachWordsList = GlobalSettings::self()->attachmentKeywords();
+  TQStringList attachWordsList = GlobalSettings::self()->attachmentKeywords();
 
   if ( attachWordsList.isEmpty() ) {
     // default value (FIXME: this is duplicated in configuredialog.cpp)
-    attachWordsList << QString::fromLatin1("attachment")
-                    << QString::fromLatin1("attached");
-    if ( QString::fromLatin1("attachment") != i18n("attachment") )
+    attachWordsList << TQString::fromLatin1("attachment")
+                    << TQString::fromLatin1("attached");
+    if ( TQString::fromLatin1("attachment") != i18n("attachment") )
       attachWordsList << i18n("attachment");
-    if ( QString::fromLatin1("attached") != i18n("attached") )
+    if ( TQString::fromLatin1("attached") != i18n("attached") )
       attachWordsList << i18n("attached");
   }
 
-  QRegExp rx ( QString::fromLatin1("\\b") +
+  TQRegExp rx ( TQString::fromLatin1("\\b") +
                attachWordsList.join("\\b|\\b") +
-               QString::fromLatin1("\\b") );
+               TQString::fromLatin1("\\b") );
   rx.setCaseSensitive( false );
 
   bool gotMatch = false;
 
   // check whether the subject contains one of the attachment key words
   // unless the message is a reply or a forwarded message
-  QString subj = subject();
+  TQString subj = subject();
   gotMatch =    ( KMMessage::stripOffPrefixes( subj ) == subj )
              && ( rx.search( subj ) >= 0 );
 
   if ( !gotMatch ) {
     // check whether the non-quoted text contains one of the attachment key
     // words
-    QRegExp quotationRx ("^([ \\t]*([|>:}#]|[A-Za-z]+>))+");
+    TQRegExp quotationRx ("^([ \\t]*([|>:}#]|[A-Za-z]+>))+");
     for ( int i = 0; i < mEditor->numLines(); ++i ) {
-      QString line = mEditor->textLine( i );
+      TQString line = mEditor->textLine( i );
       gotMatch =    ( quotationRx.search( line ) < 0 )
                  && ( rx.search( line ) >= 0 );
       if ( gotMatch )
@@ -2294,8 +2294,8 @@ void KMComposeWin::applyChanges( bool dontSignNorEncrypt, bool dontDisable )
 
   // Make new job and execute it
   mComposer = new MessageComposer( this );
-  connect( mComposer, SIGNAL( done( bool ) ),
-           this, SLOT( slotComposerDone( bool ) ) );
+  connect( mComposer, TQT_SIGNAL( done( bool ) ),
+           this, TQT_SLOT( slotComposerDone( bool ) ) );
 
   // TODO: Add a cancel button for the following operations?
   // Disable any input to the window, so that we have a snapshot of the
@@ -2355,7 +2355,7 @@ bool KMComposeWin::addAttach(const KURL aUrl)
 
   const int maxAttachmentSize = GlobalSettings::maximumAttachmentSize();
   const uint maximumAttachmentSizeInByte = maxAttachmentSize*1024*1024;
-  if ( aUrl.isLocalFile() && QFileInfo( aUrl.pathOrURL() ).size() > maximumAttachmentSizeInByte ) {
+  if ( aUrl.isLocalFile() && TQFileInfo( aUrl.pathOrURL() ).size() > maximumAttachmentSizeInByte ) {
     KMessageBox::sorry( this, i18n( "<qt><p>Your administrator has disallowed attaching files bigger than %1 MB.</p>" ).arg( maxAttachmentSize ) );
     return false;
   }
@@ -2364,17 +2364,17 @@ bool KMComposeWin::addAttach(const KURL aUrl)
   KIO::Scheduler::scheduleJob( job );
   atmLoadData ld;
   ld.url = aUrl;
-  ld.data = QByteArray();
+  ld.data = TQByteArray();
   ld.insert = false;
   if( !aUrl.fileEncoding().isEmpty() )
     ld.encoding = aUrl.fileEncoding().latin1();
 
   mMapAtmLoadData.insert(job, ld);
   mAttachJobs[job] = aUrl;
-  connect(job, SIGNAL(result(KIO::Job *)),
-          this, SLOT(slotAttachFileResult(KIO::Job *)));
-  connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)),
-          this, SLOT(slotAttachFileData(KIO::Job *, const QByteArray &)));
+  connect(job, TQT_SIGNAL(result(KIO::Job *)),
+          this, TQT_SLOT(slotAttachFileResult(KIO::Job *)));
+  connect(job, TQT_SIGNAL(data(KIO::Job *, const TQByteArray &)),
+          this, TQT_SLOT(slotAttachFileData(KIO::Job *, const TQByteArray &)));
   return true;
 }
 
@@ -2403,10 +2403,10 @@ void KMComposeWin::addAttach(const KMMessagePart* msgPart)
     mTempDir = 0;
   }
 
-  connect( lvi, SIGNAL( compress( int ) ),
-      this, SLOT( compressAttach( int ) ) );
-  connect( lvi, SIGNAL( uncompress( int ) ),
-      this, SLOT( uncompressAttach( int ) ) );
+  connect( lvi, TQT_SIGNAL( compress( int ) ),
+      this, TQT_SLOT( compressAttach( int ) ) );
+  connect( lvi, TQT_SIGNAL( uncompress( int ) ),
+      this, TQT_SLOT( uncompressAttach( int ) ) );
 
   slotUpdateAttachActions();
 }
@@ -2416,7 +2416,7 @@ void KMComposeWin::addAttach(const KMMessagePart* msgPart)
 void KMComposeWin::slotUpdateAttachActions()
 {
   int selectedCount = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it ) {
     if ( (*it)->isSelected() ) {
       ++selectedCount;
     }
@@ -2430,9 +2430,9 @@ void KMComposeWin::slotUpdateAttachActions()
 
 //-----------------------------------------------------------------------------
 
-QString KMComposeWin::prettyMimeType( const QString& type )
+TQString KMComposeWin::prettyMimeType( const TQString& type )
 {
-  QString t = type.lower();
+  TQString t = type.lower();
   KServiceType::Ptr st = KServiceType::serviceType( t );
   return st ? st->comment() : t;
 }
@@ -2464,7 +2464,7 @@ void KMComposeWin::msgPartToItem(const KMMessagePart* msgPart,
 
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::removeAttach(const QString &aUrl)
+void KMComposeWin::removeAttach(const TQString &aUrl)
 {
   int idx;
   KMMessagePart* msgPart;
@@ -2530,8 +2530,8 @@ void KMComposeWin::addrBookSelInto()
 void KMComposeWin::addrBookSelIntoOld()
 {
   AddressesDialog dlg( this );
-  QString txt;
-  QStringList lst;
+  TQString txt;
+  TQStringList lst;
 
   txt = to();
   if ( !txt.isEmpty() ) {
@@ -2553,7 +2553,7 @@ void KMComposeWin::addrBookSelIntoOld()
 
   dlg.setRecentAddresses( RecentAddresses::self( KMKernel::config() )->kabcAddresses() );
 
-  if (dlg.exec()==QDialog::Rejected) return;
+  if (dlg.exec()==TQDialog::Rejected) return;
 
   mEdtTo->setText( dlg.to().join(", ") );
   mEdtTo->setEdited( true );
@@ -2577,8 +2577,8 @@ void KMComposeWin::addrBookSelIntoNew()
 
   AddresseeSelectorDialog dlg( &selection );
 
-  QString txt;
-  QStringList lst;
+  TQString txt;
+  TQStringList lst;
 
   txt = to();
   if ( !txt.isEmpty() ) {
@@ -2598,9 +2598,9 @@ void KMComposeWin::addrBookSelIntoNew()
       selection.setSelectedBCC( lst );
   }
 
-  if (dlg.exec()==QDialog::Rejected) return;
+  if (dlg.exec()==TQDialog::Rejected) return;
 
-  QStringList list = selection.to() + selection.toDistributionLists();
+  TQStringList list = selection.to() + selection.toDistributionLists();
   mEdtTo->setText( list.join(", ") );
   mEdtTo->setEdited( true );
 
@@ -2621,7 +2621,7 @@ void KMComposeWin::addrBookSelIntoNew()
 
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setCharset(const QCString& aCharset, bool forceDefault)
+void KMComposeWin::setCharset(const TQCString& aCharset, bool forceDefault)
 {
   if ((forceDefault && GlobalSettings::self()->forceReplyCharset()) || aCharset.isEmpty())
     mCharset = mDefCharset;
@@ -2637,10 +2637,10 @@ void KMComposeWin::setCharset(const QCString& aCharset, bool forceDefault)
     return;
   }
 
-  QStringList encodings = mEncodingAction->items();
+  TQStringList encodings = mEncodingAction->items();
   int i = 0;
   bool charsetFound = false;
-  for ( QStringList::Iterator it = encodings.begin(); it != encodings.end();
+  for ( TQStringList::Iterator it = encodings.begin(); it != encodings.end();
      ++it, i++ )
   {
     if (i > 0 && ((mCharset == "us-ascii" && i == 1) ||
@@ -2692,7 +2692,7 @@ void KMComposeWin::slotAttachFile()
   // We will not care about any permissions, existence or whatsoever in
   // this function.
 
-  KFileDialog fdlg(QString::null, QString::null, this, 0, true);
+  KFileDialog fdlg(TQString::null, TQString::null, this, 0, true);
   fdlg.setOperationMode( KFileDialog::Other );
   fdlg.setCaption(i18n("Attach File"));
   fdlg.okButton()->setGuiItem(KGuiItem(i18n("&Attach"),"fileopen"));
@@ -2706,11 +2706,11 @@ void KMComposeWin::slotAttachFile()
 
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::slotAttachFileData(KIO::Job *job, const QByteArray &data)
+void KMComposeWin::slotAttachFileData(KIO::Job *job, const TQByteArray &data)
 {
-  QMap<KIO::Job*, atmLoadData>::Iterator it = mMapAtmLoadData.find(job);
+  TQMap<KIO::Job*, atmLoadData>::Iterator it = mMapAtmLoadData.find(job);
   assert(it != mMapAtmLoadData.end());
-  QBuffer buff((*it).data);
+  TQBuffer buff((*it).data);
   buff.open(IO_WriteOnly | IO_Append);
   buff.writeBlock(data.data(), data.size());
   buff.close();
@@ -2720,10 +2720,10 @@ void KMComposeWin::slotAttachFileData(KIO::Job *job, const QByteArray &data)
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotAttachFileResult(KIO::Job *job)
 {
-  QMap<KIO::Job*, atmLoadData>::Iterator it = mMapAtmLoadData.find(job);
+  TQMap<KIO::Job*, atmLoadData>::Iterator it = mMapAtmLoadData.find(job);
   assert(it != mMapAtmLoadData.end());
   KURL attachURL;
-  QMap<KIO::Job*, KURL>::iterator jit = mAttachJobs.find(job);
+  TQMap<KIO::Job*, KURL>::iterator jit = mAttachJobs.find(job);
   bool attachURLfound = (jit != mAttachJobs.end());
   if (attachURLfound)
   {
@@ -2742,18 +2742,18 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
   {
     (*it).data.resize((*it).data.size() + 1);
     (*it).data[(*it).data.size() - 1] = '\0';
-    if ( const QTextCodec * codec = KGlobal::charsets()->codecForName((*it).encoding) )
+    if ( const TQTextCodec * codec = KGlobal::charsets()->codecForName((*it).encoding) )
       mEditor->insert( codec->toUnicode( (*it).data ) );
     else
-      mEditor->insert( QString::fromLocal8Bit( (*it).data ) );
+      mEditor->insert( TQString::fromLocal8Bit( (*it).data ) );
     mMapAtmLoadData.remove(it);
     if (attachURLfound)
       emit attachmentAdded(attachURL, true);
     return;
   }
-  QCString partCharset;
+  TQCString partCharset;
   if ( !( *it ).url.fileEncoding().isEmpty() ) {
-    partCharset = QCString( ( *it ).url.fileEncoding().latin1() );
+    partCharset = TQCString( ( *it ).url.fileEncoding().latin1() );
   } else {
     EncodingDetector ed;
     KLocale *loc = KGlobal::locale();
@@ -2767,9 +2767,9 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
   KMMessagePart* msgPart;
 
   KCursorSaver busy(KBusyPtr::busy());
-  QString name( (*it).url.fileName() );
+  TQString name( (*it).url.fileName() );
   // ask the job for the mime type of the file
-  QString mimeType = static_cast<KIO::MimetypeJob*>(job)->mimetype();
+  TQString mimeType = static_cast<KIO::MimetypeJob*>(job)->mimetype();
 
   if ( name.isEmpty() ) {
     // URL ends with '/' (e.g. http://www.kde.org/)
@@ -2778,8 +2778,8 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
       name = "index.html";
     else {
       // try to determine a reasonable extension
-      QStringList patterns( KMimeType::mimeType( mimeType )->patterns() );
-      QString ext;
+      TQStringList patterns( KMimeType::mimeType( mimeType )->patterns() );
+      TQString ext;
       if( !patterns.isEmpty() ) {
         ext = patterns[0];
         int i = ext.findRev( '.' );
@@ -2788,30 +2788,30 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
         else if( i > 0 )
           ext = ext.mid( i );
       }
-      name = QString("unknown") += ext;
+      name = TQString("unknown") += ext;
     }
   }
 
   name.truncate( 256 ); // is this needed?
 
-  QCString encoding = KMMsgBase::autoDetectCharset(partCharset,
+  TQCString encoding = KMMsgBase::autoDetectCharset(partCharset,
     KMMessage::preferredCharsets(), name);
   if ( encoding.isEmpty() )
     encoding = "utf-8";
 
-  QCString encName;
+  TQCString encName;
   if ( GlobalSettings::self()->outlookCompatibleAttachments() )
     encName = KMMsgBase::encodeRFC2047String( name, encoding );
   else
     encName = KMMsgBase::encodeRFC2231String( name, encoding );
   bool RFC2231encoded = false;
   if ( !GlobalSettings::self()->outlookCompatibleAttachments() )
-    RFC2231encoded = name != QString( encName );
+    RFC2231encoded = name != TQString( encName );
 
   // create message part
   msgPart = new KMMessagePart;
   msgPart->setName(name);
-  QValueList<int> allowedCTEs;
+  TQValueList<int> allowedCTEs;
   if ( mimeType == "message/rfc822" ) {
     msgPart->setMessageBody( (*it).data );
     allowedCTEs << DwMime::kCte7bit;
@@ -2826,7 +2826,7 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
     slash = mimeType.length();
   msgPart->setTypeStr( mimeType.left( slash ).latin1() );
   msgPart->setSubtypeStr( mimeType.mid( slash + 1 ).latin1() );
-  msgPart->setContentDisposition(QCString("attachment;\n\tfilename")
+  msgPart->setContentDisposition(TQCString("attachment;\n\tfilename")
     + ( RFC2231encoded ? "*=" + encName : "=\"" + encName + '"' ) );
 
   mMapAtmLoadData.remove(it);
@@ -2836,10 +2836,10 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
   // show message part dialog, if not configured away (default):
   KConfigGroup composer(KMKernel::config(), "Composer");
   if ( GlobalSettings::self()->showMessagePartDialogOnAttach() ) {
-    const KCursorSaver saver( QCursor::ArrowCursor );
+    const KCursorSaver saver( TQCursor::ArrowCursor );
     KMMsgPartDialogCompat dlg(mMainWidget);
     int encodings = 0;
-    for ( QValueListConstIterator<int> it = allowedCTEs.begin() ;
+    for ( TQValueListConstIterator<int> it = allowedCTEs.begin() ;
           it != allowedCTEs.end() ; ++it )
       switch ( *it ) {
       case DwMime::kCteBase64: encodings |= KMMsgPartDialog::Base64; break;
@@ -2859,7 +2859,7 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
     }
   }
   mAtmModified = true;
-  if (msgPart->typeStr().lower() != "text") msgPart->setCharset(QCString());
+  if (msgPart->typeStr().lower() != "text") msgPart->setCharset(TQCString());
 
   // add the new attachment to the list
   addAttach(msgPart);
@@ -2872,7 +2872,7 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotInsertFile()
 {
-  KFileDialog fdlg(QString::null, QString::null, this, 0, true);
+  KFileDialog fdlg(TQString::null, TQString::null, this, 0, true);
   fdlg.setOperationMode( KFileDialog::Opening );
   fdlg.okButton()->setText(i18n("&Insert"));
   fdlg.setCaption(i18n("Insert File"));
@@ -2882,7 +2882,7 @@ void KMComposeWin::slotInsertFile()
   for (int i = 0; i < combo->count(); i++)
     if (KGlobal::charsets()->codecForName(KGlobal::charsets()->
       encodingForName(combo->text(i)))
-      == QTextCodec::codecForLocale()) combo->setCurrentItem(i);
+      == TQTextCodec::codecForLocale()) combo->setCurrentItem(i);
   if (!fdlg.exec()) return;
 
   KURL u = fdlg.selectedURL();
@@ -2891,9 +2891,9 @@ void KMComposeWin::slotInsertFile()
   {
     KConfig *config = KMKernel::config();
     KConfigGroupSaver saver( config, "Composer" );
-    QString encoding = KGlobal::charsets()->encodingForName(combo->currentText()).latin1();
-    QStringList urls = config->readListEntry( "recent-urls" );
-    QStringList encodings = config->readListEntry( "recent-encodings" );
+    TQString encoding = KGlobal::charsets()->encodingForName(combo->currentText()).latin1();
+    TQStringList urls = config->readListEntry( "recent-urls" );
+    TQStringList encodings = config->readListEntry( "recent-encodings" );
     // Prevent config file from growing without bound
     // Would be nicer to get this constant from KRecentFilesAction
     uint mMaxRecentFiles = 30;
@@ -2924,25 +2924,25 @@ void KMComposeWin::slotInsertRecentFile(const KURL& u)
   KIO::Job *job = KIO::get(u);
   atmLoadData ld;
   ld.url = u;
-  ld.data = QByteArray();
+  ld.data = TQByteArray();
   ld.insert = true;
   // Get the encoding previously used when inserting this file
   {
     KConfig *config = KMKernel::config();
     KConfigGroupSaver saver( config, "Composer" );
-    QStringList urls = config->readListEntry( "recent-urls" );
-    QStringList encodings = config->readListEntry( "recent-encodings" );
+    TQStringList urls = config->readListEntry( "recent-urls" );
+    TQStringList encodings = config->readListEntry( "recent-encodings" );
     int index = urls.findIndex( u.prettyURL() );
     if (index != -1) {
-      QString encoding = encodings[ index ];
+      TQString encoding = encodings[ index ];
       ld.encoding = encoding.latin1();
     }
   }
   mMapAtmLoadData.insert(job, ld);
-  connect(job, SIGNAL(result(KIO::Job *)),
-          this, SLOT(slotAttachFileResult(KIO::Job *)));
-  connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)),
-          this, SLOT(slotAttachFileData(KIO::Job *, const QByteArray &)));
+  connect(job, TQT_SIGNAL(result(KIO::Job *)),
+          this, TQT_SLOT(slotAttachFileResult(KIO::Job *)));
+  connect(job, TQT_SIGNAL(data(KIO::Job *, const TQByteArray &)),
+          this, TQT_SLOT(slotAttachFileData(KIO::Job *, const TQByteArray &)));
 }
 
 
@@ -3043,12 +3043,12 @@ void KMComposeWin::slotSelectCryptoModule( bool init )
   }
 }
 
-static void showExportError( QWidget * w, const GpgME::Error & err ) {
+static void showExportError( TQWidget * w, const GpgME::Error & err ) {
   assert( err );
-  const QString msg = i18n("<qt><p>An error occurred while trying to export "
+  const TQString msg = i18n("<qt><p>An error occurred while trying to export "
 			   "the key from the backend:</p>"
 			   "<p><b>%1</b></p></qt>")
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+    .arg( TQString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( w, msg, i18n("Key Export Failed") );
 }
 
@@ -3069,8 +3069,8 @@ void KMComposeWin::startPublicKeyExport() {
   Kleo::ExportJob * job = Kleo::CryptoBackendFactory::instance()->openpgp()->publicKeyExportJob( true );
   assert( job );
 
-  connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
-	   this, SLOT(slotPublicKeyExportResult(const GpgME::Error&,const QByteArray&)) );
+  connect( job, TQT_SIGNAL(result(const GpgME::Error&,const TQByteArray&)),
+	   this, TQT_SLOT(slotPublicKeyExportResult(const GpgME::Error&,const TQByteArray&)) );
 
   const GpgME::Error err = job->start( mFingerprint );
   if ( err )
@@ -3079,7 +3079,7 @@ void KMComposeWin::startPublicKeyExport() {
     (void)new Kleo::ProgressDialog( job, i18n("Exporting key..."), this );
 }
 
-void KMComposeWin::slotPublicKeyExportResult( const GpgME::Error & err, const QByteArray & keydata ) {
+void KMComposeWin::slotPublicKeyExportResult( const GpgME::Error & err, const TQByteArray & keydata ) {
   if ( err ) {
     showExportError( this, err );
     return;
@@ -3090,9 +3090,9 @@ void KMComposeWin::slotPublicKeyExportResult( const GpgME::Error & err, const QB
   msgPart->setName( i18n("OpenPGP key 0x%1").arg( mFingerprint ) );
   msgPart->setTypeStr("application");
   msgPart->setSubtypeStr("pgp-keys");
-  QValueList<int> dummy;
+  TQValueList<int> dummy;
   msgPart->setBodyAndGuessCte(keydata, dummy, false);
-  msgPart->setContentDisposition( "attachment;\n\tfilename=0x" + QCString( mFingerprint.latin1() ) + ".asc" );
+  msgPart->setContentDisposition( "attachment;\n\tfilename=0x" + TQCString( mFingerprint.latin1() ) + ".asc" );
 
   // add the new attachment to the list
   addAttach(msgPart);
@@ -3110,7 +3110,7 @@ void KMComposeWin::slotInsertPublicKey()
 				false /* no multi selection */,
 				false /* no remember choice box */,
 				this, "attach public key selection dialog" );
-  if ( dlg.exec() != QDialog::Accepted )
+  if ( dlg.exec() != TQDialog::Accepted )
     return;
 
   mFingerprint = dlg.fingerprint();
@@ -3119,32 +3119,32 @@ void KMComposeWin::slotInsertPublicKey()
 
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::slotAttachPopupMenu(QListViewItem *, const QPoint &, int)
+void KMComposeWin::slotAttachPopupMenu(TQListViewItem *, const TQPoint &, int)
 {
   if (!mAttachMenu)
   {
-     mAttachMenu = new QPopupMenu(this);
+     mAttachMenu = new TQPopupMenu(this);
 
      mOpenId = mAttachMenu->insertItem(i18n("to open", "Open"), this,
-                             SLOT(slotAttachOpen()));
+                             TQT_SLOT(slotAttachOpen()));
      mOpenWithId = mAttachMenu->insertItem(i18n("Open With..."), this,
-                             SLOT(slotAttachOpenWith()));
+                             TQT_SLOT(slotAttachOpenWith()));
      mViewId = mAttachMenu->insertItem(i18n("to view", "View"), this,
-                             SLOT(slotAttachView()));
-     mEditId = mAttachMenu->insertItem( i18n("Edit"), this, SLOT(slotAttachEdit()) );
+                             TQT_SLOT(slotAttachView()));
+     mEditId = mAttachMenu->insertItem( i18n("Edit"), this, TQT_SLOT(slotAttachEdit()) );
      mEditWithId = mAttachMenu->insertItem( i18n("Edit With..."), this,
-                                            SLOT(slotAttachEditWith()) );
-     mRemoveId = mAttachMenu->insertItem(i18n("Remove"), this, SLOT(slotAttachRemove()));
+                                            TQT_SLOT(slotAttachEditWith()) );
+     mRemoveId = mAttachMenu->insertItem(i18n("Remove"), this, TQT_SLOT(slotAttachRemove()));
      mSaveAsId = mAttachMenu->insertItem( SmallIconSet("filesaveas"), i18n("Save As..."), this,
-                                          SLOT( slotAttachSave() ) );
+                                          TQT_SLOT( slotAttachSave() ) );
      mPropertiesId = mAttachMenu->insertItem( i18n("Properties"), this,
-                                              SLOT( slotAttachProperties() ) );
+                                              TQT_SLOT( slotAttachProperties() ) );
      mAttachMenu->insertSeparator();
-     mAttachMenu->insertItem(i18n("Add Attachment..."), this, SLOT(slotAttachFile()));
+     mAttachMenu->insertItem(i18n("Add Attachment..."), this, TQT_SLOT(slotAttachFile()));
   }
 
   int selectedCount = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it ) {
     if ( (*it)->isSelected() ) {
       ++selectedCount;
     }
@@ -3159,14 +3159,14 @@ void KMComposeWin::slotAttachPopupMenu(QListViewItem *, const QPoint &, int)
   mAttachMenu->setItemEnabled( mSaveAsId, selectedCount == 1 );
   mAttachMenu->setItemEnabled( mPropertiesId, selectedCount == 1 );
 
-  mAttachMenu->popup(QCursor::pos());
+  mAttachMenu->popup(TQCursor::pos());
 }
 
 //-----------------------------------------------------------------------------
 int KMComposeWin::currentAttachmentNum()
 {
   int i = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it, ++i )
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it, ++i )
     if ( *it == mAtmListView->currentItem() )
       return i;
   return -1;
@@ -3206,7 +3206,7 @@ void KMComposeWin::slotAttachProperties()
       }
     }
   }
-  if (msgPart->typeStr().lower() != "text") msgPart->setCharset(QCString());
+  if (msgPart->typeStr().lower() != "text") msgPart->setCharset(TQCString());
 }
 
 //-----------------------------------------------------------------------------
@@ -3224,10 +3224,10 @@ void KMComposeWin::compressAttach( int idx )
 
   KMMessagePart* msgPart;
   msgPart = mAtmList.at( i );
-  QByteArray array;
-  QBuffer dev( array );
+  TQByteArray array;
+  TQBuffer dev( array );
   KZip zip( &dev );
-  QByteArray decoded = msgPart->bodyDecodedBinary();
+  TQByteArray decoded = msgPart->bodyDecodedBinary();
   if ( ! zip.open( IO_WriteOnly ) ) {
     KMessageBox::sorry(0, i18n("KMail could not compress the file.") );
     static_cast<KMAtmListViewItem*>( mAtmItemList.at( i ) )->setCompress( false );
@@ -3244,7 +3244,7 @@ void KMComposeWin::compressAttach( int idx )
   zip.close();
   if ( array.size() >= decoded.size() ) {
     if ( KMessageBox::questionYesNo( this, i18n("The compressed file is larger "
-        "than the original. Do you want to keep the original one?" ), QString::null, i18n("Keep"), i18n("Compress") )
+        "than the original. Do you want to keep the original one?" ), TQString::null, i18n("Keep"), i18n("Compress") )
          == KMessageBox::Yes ) {
       static_cast<KMAtmListViewItem*>( mAtmItemList.at( i ) )->setCompress( false );
       return;
@@ -3255,24 +3255,24 @@ void KMComposeWin::compressAttach( int idx )
 
   msgPart->setCteStr( "base64" );
   msgPart->setBodyEncodedBinary( array );
-  QString name = msgPart->name() + ".zip";
+  TQString name = msgPart->name() + ".zip";
 
   msgPart->setName( name );
 
-  QCString cDisp = "attachment;";
-  QCString encoding = KMMsgBase::autoDetectCharset( msgPart->charset(),
+  TQCString cDisp = "attachment;";
+  TQCString encoding = KMMsgBase::autoDetectCharset( msgPart->charset(),
     KMMessage::preferredCharsets(), name );
   kdDebug(5006) << "encoding: " << encoding << endl;
   if ( encoding.isEmpty() ) encoding = "utf-8";
   kdDebug(5006) << "encoding after: " << encoding << endl;
-  QCString encName;
+  TQCString encName;
   if ( GlobalSettings::self()->outlookCompatibleAttachments() )
     encName = KMMsgBase::encodeRFC2047String( name, encoding );
   else
     encName = KMMsgBase::encodeRFC2231String( name, encoding );
 
   cDisp += "\n\tfilename";
-  if ( name != QString( encName ) )
+  if ( name != TQString( encName ) )
     cDisp += "*=" + encName;
   else
     cDisp += "=\"" + encName + '"';
@@ -3304,9 +3304,9 @@ void KMComposeWin::uncompressAttach( int idx )
   KMMessagePart* msgPart;
   msgPart = mAtmList.at( i );
 
-  QBuffer dev( msgPart->bodyDecodedBinary() );
+  TQBuffer dev( msgPart->bodyDecodedBinary() );
   KZip zip( &dev );
-  QByteArray decoded;
+  TQByteArray decoded;
 
   decoded = msgPart->bodyDecodedBinary();
   if ( ! zip.open( IO_ReadOnly ) ) {
@@ -3328,30 +3328,30 @@ void KMComposeWin::uncompressAttach( int idx )
       static_cast<KMAtmListViewItem*>( mAtmItemList.at(i) )->uncompressedCodec() );
 
   msgPart->setBodyEncodedBinary( entry->data() );
-  QString name = entry->name();
+  TQString name = entry->name();
   msgPart->setName( name );
 
   zip.close();
 
-  QCString cDisp = "attachment;";
-  QCString encoding = KMMsgBase::autoDetectCharset( msgPart->charset(),
+  TQCString cDisp = "attachment;";
+  TQCString encoding = KMMsgBase::autoDetectCharset( msgPart->charset(),
     KMMessage::preferredCharsets(), name );
   if ( encoding.isEmpty() ) encoding = "utf-8";
 
-  QCString encName;
+  TQCString encName;
   if ( GlobalSettings::self()->outlookCompatibleAttachments() )
     encName = KMMsgBase::encodeRFC2047String( name, encoding );
   else
     encName = KMMsgBase::encodeRFC2231String( name, encoding );
 
   cDisp += "\n\tfilename";
-  if ( name != QString( encName ) )
+  if ( name != TQString( encName ) )
     cDisp += "*=" + encName;
   else
     cDisp += "=\"" + encName + '"';
   msgPart->setContentDisposition( cDisp );
 
-  QCString type, subtype;
+  TQCString type, subtype;
   static_cast<KMAtmListViewItem*>( mAtmItemList.at( i ) )->uncompressedMimeType( type,
         subtype );
 
@@ -3367,7 +3367,7 @@ void KMComposeWin::uncompressAttach( int idx )
 void KMComposeWin::slotAttachView()
 {
   int i = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
     if ( (*it)->isSelected() ) {
       viewAttach( i );
     }
@@ -3377,7 +3377,7 @@ void KMComposeWin::slotAttachView()
 void KMComposeWin::slotAttachOpen()
 {
   int i = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
     if ( (*it)->isSelected() ) {
       openAttach( i, false );
     }
@@ -3388,7 +3388,7 @@ void KMComposeWin::slotAttachOpen()
 void KMComposeWin::slotAttachOpenWith()
 {
   int i = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
     if ( (*it)->isSelected() ) {
       openAttach( i, true );
     }
@@ -3398,7 +3398,7 @@ void KMComposeWin::slotAttachOpenWith()
 void KMComposeWin::slotAttachEdit()
 {
   int i = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
     if ( (*it)->isSelected() ) {
       editAttach( i, false );
     }
@@ -3408,7 +3408,7 @@ void KMComposeWin::slotAttachEdit()
 void KMComposeWin::slotAttachEditWith()
 {
   int i = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it, ++i ) {
     if ( (*it)->isSelected() ) {
       editAttach( i, true );
     }
@@ -3425,7 +3425,7 @@ bool KMComposeWin::inlineSigningEncryptionSelected() {
 //-----------------------------------------------------------------------------
 void KMComposeWin::viewAttach( int index )
 {
-  QString pname;
+  TQString pname;
   KMMessagePart* msgPart;
   msgPart = mAtmList.at(index);
   pname = msgPart->name().stripWhiteSpace();
@@ -3446,7 +3446,7 @@ void KMComposeWin::viewAttach( int index )
 void KMComposeWin::openAttach( int index, bool with )
 {
   KMMessagePart* msgPart = mAtmList.at(index);
-  const QString contentTypeStr =
+  const TQString contentTypeStr =
     ( msgPart->typeStr() + '/' + msgPart->subtypeStr() ).lower();
 
   KMimeType::Ptr mimetype;
@@ -3462,8 +3462,8 @@ void KMComposeWin::openAttach( int index, bool with )
 
   KPIM::kByteArrayToFile( msgPart->bodyDecodedBinary(), atmTempFile->name(), false, false,
     false );
-  if ( ::chmod( QFile::encodeName( atmTempFile->name() ), S_IRUSR ) != 0) {
-    QFile::remove(url.path());
+  if ( ::chmod( TQFile::encodeName( atmTempFile->name() ), S_IRUSR ) != 0) {
+    TQFile::remove(url.path());
     return;
   }
 
@@ -3472,12 +3472,12 @@ void KMComposeWin::openAttach( int index, bool with )
 
   if ( with || !offer || mimetype->name() == "application/octet-stream" ) {
     if ( ( !KRun::displayOpenWithDialog( url, autoDelete ) ) && autoDelete ) {
-      QFile::remove(url.path());
+      TQFile::remove(url.path());
     }
   }
   else {
     if ( ( !KRun::run( *offer, url, autoDelete ) ) && autoDelete ) {
-        QFile::remove( url.path() );
+        TQFile::remove( url.path() );
     }
   }
 }
@@ -3485,7 +3485,7 @@ void KMComposeWin::openAttach( int index, bool with )
 void KMComposeWin::editAttach(int index, bool openWith)
 {
   KMMessagePart* msgPart = mAtmList.at(index);
-  const QString contentTypeStr =
+  const TQString contentTypeStr =
     ( msgPart->typeStr() + '/' + msgPart->subtypeStr() ).lower();
 
   KTempFile* atmTempFile = new KTempFile();
@@ -3496,7 +3496,7 @@ void KMComposeWin::editAttach(int index, bool openWith)
 
 
   KMail::EditorWatcher *watcher = new KMail::EditorWatcher( KURL( atmTempFile->name() ), contentTypeStr, openWith, this );
-  connect( watcher, SIGNAL(editDone(KMail::EditorWatcher*)), SLOT(slotEditDone(KMail::EditorWatcher*)) );
+  connect( watcher, TQT_SIGNAL(editDone(KMail::EditorWatcher*)), TQT_SLOT(slotEditDone(KMail::EditorWatcher*)) );
   if ( watcher->start() ) {
     mEditorMap.insert( watcher, msgPart );
     mEditorTempFiles.insert( watcher, atmTempFile );
@@ -3507,7 +3507,7 @@ void KMComposeWin::editAttach(int index, bool openWith)
 void KMComposeWin::slotAttachSave()
 {
   KMMessagePart* msgPart;
-  QString fileName, pname;
+  TQString fileName, pname;
   int idx = currentAttachmentNum();
 
   if (idx < 0) return;
@@ -3516,7 +3516,7 @@ void KMComposeWin::slotAttachSave()
   pname = msgPart->name();
   if (pname.isEmpty()) pname="unnamed";
 
-  KURL url = KFileDialog::getSaveURL(QString::null, QString::null, 0, i18n("Save Attachment As"));
+  KURL url = KFileDialog::getSaveURL(TQString::null, TQString::null, 0, i18n("Save Attachment As"));
 
   if( url.isEmpty() )
     return;
@@ -3530,7 +3530,7 @@ void KMComposeWin::slotAttachRemove()
 {
   bool attachmentRemoved = false;
   int i = 0;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ) {
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ) {
     if ( (*it)->isSelected() ) {
       removeAttach( i );
       attachmentRemoved = true;
@@ -3574,15 +3574,15 @@ void KMComposeWin::slotUpdateFont()
   mEditor->setFont( mFixedFontAction->isChecked() ? mFixedFont : mBodyFont );
 }
 
-QString KMComposeWin::quotePrefixName() const
+TQString KMComposeWin::quotePrefixName() const
 {
     if ( !msg() )
-        return QString::null;
+        return TQString::null;
 
     int languageNr = GlobalSettings::self()->replyCurrentLanguage();
-    ReplyPhrases replyPhrases( QString::number(languageNr) );
+    ReplyPhrases replyPhrases( TQString::number(languageNr) );
     replyPhrases.readConfig();
-    QString quotePrefix = msg()->formatString(
+    TQString quotePrefix = msg()->formatString(
                  replyPhrases.indentPrefix() );
 
     quotePrefix = msg()->formatString(quotePrefix);
@@ -3593,7 +3593,7 @@ void KMComposeWin::slotPasteClipboardAsQuotation()
 {
     if( mEditor->hasFocus() && msg() )
     {
-        QString s = QApplication::clipboard()->text();
+        TQString s = TQApplication::clipboard()->text();
         if (!s.isEmpty())
             mEditor->insert(addQuotesToText(s));
     }
@@ -3601,25 +3601,25 @@ void KMComposeWin::slotPasteClipboardAsQuotation()
 
 void KMComposeWin::slotPasteClipboardAsAttachment()
 {
-  KURL url( QApplication::clipboard()->text( QClipboard::Clipboard ) );
+  KURL url( TQApplication::clipboard()->text( QClipboard::Clipboard ) );
   if ( url.isValid() ) {
-    addAttach(QApplication::clipboard()->text( QClipboard::Clipboard ) );
+    addAttach(TQApplication::clipboard()->text( QClipboard::Clipboard ) );
     return;
   }
 
-  QMimeSource *mimeSource = QApplication::clipboard()->data();
-  if ( QImageDrag::canDecode(mimeSource) ) {
+  TQMimeSource *mimeSource = TQApplication::clipboard()->data();
+  if ( TQImageDrag::canDecode(mimeSource) ) {
     slotAttachPNGImageData(mimeSource->encodedData("image/png"));
   }
   else {
     bool ok;
-    QString attName = KInputDialog::getText( "KMail", i18n("Name of the attachment:"), QString::null, &ok, this );
+    TQString attName = KInputDialog::getText( "KMail", i18n("Name of the attachment:"), TQString::null, &ok, this );
     if ( !ok )
       return;
     KMMessagePart *msgPart = new KMMessagePart;
     msgPart->setName(attName);
-    QValueList<int> dummy;
-    msgPart->setBodyAndGuessCte(QCString(QApplication::clipboard()->text().latin1()), dummy,
+    TQValueList<int> dummy;
+    msgPart->setBodyAndGuessCte(TQCString(TQApplication::clipboard()->text().latin1()), dummy,
                                 kmkernel->msgSender()->sendQuotedPrintable());
     addAttach(msgPart);
   }
@@ -3634,13 +3634,13 @@ void KMComposeWin::slotAddQuotes()
         // else add quotes only on the lines that are marked.
 
         if ( mEditor->hasMarkedText() ) {
-            QString s = mEditor->markedText();
+            TQString s = mEditor->markedText();
             if(!s.isEmpty())
                 mEditor->insert(addQuotesToText(s));
         } else {
             int l =  mEditor->currentLine();
             int c =  mEditor->currentColumn();
-            QString s =  mEditor->textLine(l);
+            TQString s =  mEditor->textLine(l);
             s.prepend(quotePrefixName());
             mEditor->insertLine(s,l);
             mEditor->removeLine(l+1);
@@ -3649,23 +3649,23 @@ void KMComposeWin::slotAddQuotes()
     }
 }
 
-QString KMComposeWin::addQuotesToText(const QString &inputText)
+TQString KMComposeWin::addQuotesToText(const TQString &inputText)
 {
-    QString answer = QString( inputText );
-    QString indentStr = quotePrefixName();
+    TQString answer = TQString( inputText );
+    TQString indentStr = quotePrefixName();
     answer.replace( '\n', '\n' + indentStr);
     answer.prepend( indentStr );
     answer += '\n';
     return KMMessage::smartQuote( answer, GlobalSettings::self()->lineWrapWidth() );
 }
 
-QString KMComposeWin::removeQuotesFromText(const QString &inputText)
+TQString KMComposeWin::removeQuotesFromText(const TQString &inputText)
 {
-    QString s = inputText;
+    TQString s = inputText;
 
     // remove first leading quote
-    QString quotePrefix = '^' + quotePrefixName();
-    QRegExp rx(quotePrefix);
+    TQString quotePrefix = '^' + quotePrefixName();
+    TQRegExp rx(quotePrefix);
     s.remove(rx);
 
     // now remove all remaining leading quotes
@@ -3685,12 +3685,12 @@ void KMComposeWin::slotRemoveQuotes()
         // else remove quotes only on the lines that are marked.
 
         if ( mEditor->hasMarkedText() ) {
-            QString s = mEditor->markedText();
+            TQString s = mEditor->markedText();
             mEditor->insert(removeQuotesFromText(s));
         } else {
             int l = mEditor->currentLine();
             int c = mEditor->currentColumn();
-            QString s = mEditor->textLine(l);
+            TQString s = mEditor->textLine(l);
             mEditor->insertLine(removeQuotesFromText(s),l);
             mEditor->removeLine(l+1);
             mEditor->setCursorPosition(l,c-2);
@@ -3701,50 +3701,50 @@ void KMComposeWin::slotRemoveQuotes()
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotUndo()
 {
-  QWidget* fw = focusWidget();
+  TQWidget* fw = focusWidget();
   if (!fw) return;
 
   if ( ::qt_cast<KEdit*>(fw) )
-      static_cast<QTextEdit*>(fw)->undo();
-  else if (::qt_cast<QLineEdit*>(fw))
-      static_cast<QLineEdit*>(fw)->undo();
+      static_cast<TQTextEdit*>(fw)->undo();
+  else if (::qt_cast<TQLineEdit*>(fw))
+      static_cast<TQLineEdit*>(fw)->undo();
 }
 
 void KMComposeWin::slotRedo()
 {
-  QWidget* fw = focusWidget();
+  TQWidget* fw = focusWidget();
   if (!fw) return;
 
   if (::qt_cast<KEdit*>(fw))
       static_cast<KEdit*>(fw)->redo();
-  else if (::qt_cast<QLineEdit*>(fw))
-      static_cast<QLineEdit*>(fw)->redo();
+  else if (::qt_cast<TQLineEdit*>(fw))
+      static_cast<TQLineEdit*>(fw)->redo();
 }
 
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotCut()
 {
-  QWidget* fw = focusWidget();
+  TQWidget* fw = focusWidget();
   if (!fw) return;
 
   if (::qt_cast<KEdit*>(fw))
       static_cast<KEdit*>(fw)->cut();
-  else if (::qt_cast<QLineEdit*>(fw))
-      static_cast<QLineEdit*>(fw)->cut();
+  else if (::qt_cast<TQLineEdit*>(fw))
+      static_cast<TQLineEdit*>(fw)->cut();
 }
 
 
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotCopy()
 {
-  QWidget* fw = focusWidget();
+  TQWidget* fw = focusWidget();
   if (!fw) return;
 
 #ifdef KeyPress
 #undef KeyPress
 #endif
 
-  QKeyEvent k(QEvent::KeyPress, Key_C, 0, ControlButton);
+  TQKeyEvent k(TQEvent::KeyPress, Key_C, 0, ControlButton);
   kapp->notify(fw, &k);
 }
 
@@ -3757,20 +3757,20 @@ void KMComposeWin::slotPasteClipboard()
 
 void KMComposeWin::paste( QClipboard::Mode mode )
 {
-  QWidget* fw = focusWidget();
+  TQWidget* fw = focusWidget();
   if (!fw) return;
 
-  QMimeSource *mimeSource = QApplication::clipboard()->data( mode );
+  TQMimeSource *mimeSource = TQApplication::clipboard()->data( mode );
   if ( mimeSource->provides("image/png") )  {
     slotAttachPNGImageData(mimeSource->encodedData("image/png"));
   } else if ( KURLDrag::canDecode( mimeSource ) ) {
         KURL::List urlList;
         if( KURLDrag::decode( mimeSource, urlList ) ) {
-            const QString asText = i18n("Add as Text");
-            const QString asAttachment = i18n("Add as Attachment");
-            const QString text = i18n("Please select whether you want to insert the content as text into the editor, "
+            const TQString asText = i18n("Add as Text");
+            const TQString asAttachment = i18n("Add as Attachment");
+            const TQString text = i18n("Please select whether you want to insert the content as text into the editor, "
                     "or append the referenced file as an attachment.");
-            const QString caption = i18n("Paste as text or attachment?");
+            const TQString caption = i18n("Paste as text or attachment?");
 
             int id = KMessageBox::questionYesNoCancel( this, text, caption,
                     KGuiItem( asText ), KGuiItem( asAttachment) );
@@ -3789,9 +3789,9 @@ void KMComposeWin::paste( QClipboard::Mode mode )
                 break;
             }
         }
-  } else if ( QTextDrag::canDecode( mimeSource ) ) {
-      QString s;
-      if ( QTextDrag::decode( mimeSource, s ) )
+  } else if ( TQTextDrag::canDecode( mimeSource ) ) {
+      TQString s;
+      if ( TQTextDrag::decode( mimeSource, s ) )
           mEditor->insert( s );
   }
 }
@@ -3800,11 +3800,11 @@ void KMComposeWin::paste( QClipboard::Mode mode )
 //-----------------------------------------------------------------------------
 void KMComposeWin::slotMarkAll()
 {
-  QWidget* fw = focusWidget();
+  TQWidget* fw = focusWidget();
   if (!fw) return;
 
-  if (::qt_cast<QLineEdit*>(fw))
-      static_cast<QLineEdit*>(fw)->selectAll();
+  if (::qt_cast<TQLineEdit*>(fw))
+      static_cast<TQLineEdit*>(fw)->selectAll();
   else if (::qt_cast<KEdit*>(fw))
       static_cast<KEdit*>(fw)->selectAll();
 }
@@ -3839,14 +3839,14 @@ void KMComposeWin::slotNewMailReader()
 
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::slotUpdWinTitle(const QString& text)
+void KMComposeWin::slotUpdWinTitle(const TQString& text)
 {
-  QString s( text );
+  TQString s( text );
   // Remove characters that show badly in most window decorations:
   // newlines tend to become boxes.
   if (text.isEmpty())
     setCaption("("+i18n("unnamed")+")");
-  else setCaption( s.replace( QChar('\n'), ' ' ) );
+  else setCaption( s.replace( TQChar('\n'), ' ' ) );
 }
 
 
@@ -3951,19 +3951,19 @@ void KMComposeWin::slotWordWrapToggled(bool on)
 {
   if (on)
   {
-    mEditor->setWordWrap( QTextEdit::FixedColumnWidth );
+    mEditor->setWordWrap( TQTextEdit::FixedColumnWidth );
     mEditor->setWrapColumnOrWidth( GlobalSettings::self()->lineWrapWidth() );
   }
   else
   {
-    mEditor->setWordWrap( QTextEdit::WidgetWidth );
+    mEditor->setWordWrap( TQTextEdit::WidgetWidth );
   }
 }
 
 
 void KMComposeWin::disableWordWrap()
 {
-    mEditor->setWordWrap( QTextEdit::NoWrap );
+    mEditor->setWordWrap( TQTextEdit::NoWrap );
 }
 
 
@@ -3971,15 +3971,15 @@ void KMComposeWin::disableWordWrap()
 void KMComposeWin::slotPrint()
 {
   mMessageWasModified = isModified();
-  connect( this, SIGNAL( applyChangesDone( bool ) ),
-           this, SLOT( slotContinuePrint( bool ) ) );
+  connect( this, TQT_SIGNAL( applyChangesDone( bool ) ),
+           this, TQT_SLOT( slotContinuePrint( bool ) ) );
   applyChanges( true );
 }
 
 void KMComposeWin::slotContinuePrint( bool rc )
 {
-  disconnect( this, SIGNAL( applyChangesDone( bool ) ),
-              this, SLOT( slotContinuePrint( bool ) ) );
+  disconnect( this, TQT_SIGNAL( applyChangesDone( bool ) ),
+              this, TQT_SLOT( slotContinuePrint( bool ) ) );
 
   if( rc ) {
     if ( mComposedMessages.isEmpty() ) {
@@ -3993,12 +3993,12 @@ void KMComposeWin::slotContinuePrint( bool rc )
 }
 
 //----------------------------------------------------------------------------
-bool KMComposeWin::validateAddresses( QWidget * parent, const QString & addresses )
+bool KMComposeWin::validateAddresses( TQWidget * parent, const TQString & addresses )
 {
-  QString brokenAddress;
+  TQString brokenAddress;
   KPIM::EmailParseResult errorCode = KMMessage::isValidEmailAddressList( KMMessage::expandAliases( addresses ), brokenAddress );
   if ( !( errorCode == KPIM::AddressOk || errorCode == KPIM::AddressEmpty ) ) {
-    QString errorMsg( "<qt><p><b>" + brokenAddress +
+    TQString errorMsg( "<qt><p><b>" + brokenAddress +
                       "</b></p><p>" + KPIM::emailParseResultToString( errorCode ) +
                       "</p></qt>" );
     KMessageBox::sorry( parent, errorMsg, i18n("Invalid Email Address") );
@@ -4100,7 +4100,7 @@ void KMComposeWin::doSend( KMail::MessageSender::SendMethod method,
   // rectify the problem by editing their outgoing preferences and
   // resending.
   // Hence this following conditional
-  QString hf = mMsg->headerField("X-KMail-Transport");
+  TQString hf = mMsg->headerField("X-KMail-Transport");
   if ((mTransport->currentText() != mTransport->text(0)) ||
       (!hf.isEmpty() && (hf != mTransport->text(0))))
     mMsg->setHeaderField("X-KMail-Transport", mTransport->currentText());
@@ -4109,19 +4109,19 @@ void KMComposeWin::doSend( KMail::MessageSender::SendMethod method,
 
   const bool neverEncrypt = ( mDisableBreaking && GlobalSettings::self()->neverEncryptDrafts() )
                            || mSigningAndEncryptionExplicitlyDisabled;
-  connect( this, SIGNAL( applyChangesDone( bool ) ),
-           SLOT( slotContinueDoSend( bool ) ) );
+  connect( this, TQT_SIGNAL( applyChangesDone( bool ) ),
+           TQT_SLOT( slotContinueDoSend( bool ) ) );
 
   if ( mEditor->textFormat() == Qt::RichText )
     mMsg->setHeaderField( "X-KMail-Markup", "true" );
   else
     mMsg->removeHeaderField( "X-KMail-Markup" );
   if ( mEditor->textFormat() == Qt::RichText && inlineSigningEncryptionSelected() ) {
-    QString keepBtnText = mEncryptAction->isChecked() ?
+    TQString keepBtnText = mEncryptAction->isChecked() ?
       mSignAction->isChecked() ? i18n( "&Keep markup, do not sign/encrypt" )
                                : i18n( "&Keep markup, do not encrypt" )
       : i18n( "&Keep markup, do not sign" );
-    QString yesBtnText = mEncryptAction->isChecked() ?
+    TQString yesBtnText = mEncryptAction->isChecked() ?
       mSignAction->isChecked() ? i18n("Sign/Encrypt (delete markup)")
       : i18n( "Encrypt (delete markup)" )
       : i18n( "Sign (delete markup)" );
@@ -4147,7 +4147,7 @@ void KMComposeWin::doSend( KMail::MessageSender::SendMethod method,
       // signing and encryption state, so let's add a header instead
     mMsg->setHeaderField( "X-KMail-SignatureActionEnabled", mSignAction->isChecked()? "true":"false" );
     mMsg->setHeaderField( "X-KMail-EncryptActionEnabled", mEncryptAction->isChecked()? "true":"false"  );
-    mMsg->setHeaderField( "X-KMail-CryptoMessageFormat", QString::number( cryptoMessageFormat() ) );
+    mMsg->setHeaderField( "X-KMail-CryptoMessageFormat", TQString::number( cryptoMessageFormat() ) );
   } else {
     mMsg->removeHeaderField( "X-KMail-SignatureActionEnabled" );
     mMsg->removeHeaderField( "X-KMail-EncryptActionEnabled" );
@@ -4160,7 +4160,7 @@ void KMComposeWin::doSend( KMail::MessageSender::SendMethod method,
   applyChanges( neverEncrypt );
 }
 
-bool KMComposeWin::saveDraftOrTemplate( const QString &folderName,
+bool KMComposeWin::saveDraftOrTemplate( const TQString &folderName,
                                         KMMessage *msg )
 {
   KMFolder *theFolder = 0, *imapTheFolder = 0;
@@ -4222,15 +4222,15 @@ void KMComposeWin::slotContinueDoSend( bool sentOk )
 {
   kdDebug(5006) << "KMComposeWin::slotContinueDoSend( " << sentOk << " )"
                 << endl;
-  disconnect( this, SIGNAL( applyChangesDone( bool ) ),
-              this, SLOT( slotContinueDoSend( bool ) ) );
+  disconnect( this, TQT_SIGNAL( applyChangesDone( bool ) ),
+              this, TQT_SLOT( slotContinueDoSend( bool ) ) );
 
   if ( !sentOk ) {
     mDisableBreaking = false;
     return;
   }
 
-  for ( QValueVector<KMMessage*>::iterator it = mComposedMessages.begin() ; it != mComposedMessages.end() ; ++it ) {
+  for ( TQValueVector<KMMessage*>::iterator it = mComposedMessages.begin() ; it != mComposedMessages.end() ; ++it ) {
 
     // remove fields that contain no data (e.g. an empty Cc: or Bcc:)
     (*it)->cleanupHeader();
@@ -4247,7 +4247,7 @@ void KMComposeWin::slotContinueDoSend( bool sentOk )
       (*it)->setCc( KMMessage::expandAliases( cc() ));
       if( !mComposer->originalBCC().isEmpty() )
 	(*it)->setBcc( KMMessage::expandAliases( mComposer->originalBCC() ));
-      QString recips = (*it)->headerField( "X-KMail-Recipients" );
+      TQString recips = (*it)->headerField( "X-KMail-Recipients" );
       if( !recips.isEmpty() ) {
 	(*it)->setHeaderField( "X-KMail-Recipients", KMMessage::expandAliases( recips ), KMMessage::Address );
       }
@@ -4300,8 +4300,8 @@ void KMComposeWin::slotSaveTemplate() {
 //----------------------------------------------------------------------------
 void KMComposeWin::slotSendNowVia( int item )
 {
-  QStringList availTransports= KMail::TransportManager::transportNames();
-  QString customTransport = availTransports[ item ];
+  TQStringList availTransports= KMail::TransportManager::transportNames();
+  TQString customTransport = availTransports[ item ];
 
   mTransport->setCurrentText( customTransport );
   slotSendNow();
@@ -4310,8 +4310,8 @@ void KMComposeWin::slotSendNowVia( int item )
 //----------------------------------------------------------------------------
 void KMComposeWin::slotSendLaterVia( int item )
 {
-  QStringList availTransports= KMail::TransportManager::transportNames();
-  QString customTransport = availTransports[ item ];
+  TQStringList availTransports= KMail::TransportManager::transportNames();
+  TQString customTransport = availTransports[ item ];
 
   mTransport->setCurrentText( customTransport );
   slotSendLater();
@@ -4415,7 +4415,7 @@ void KMComposeWin::slotCleanSpace()
   // Yes, extra space in a quote string is squeezed.
   // Signatures are respected (i.e. not cleaned).
 
-  QString s;
+  TQString s;
   if ( mEditor->hasMarkedText() ) {
     s = mEditor->markedText();
     if( s.isEmpty() )
@@ -4425,7 +4425,7 @@ void KMComposeWin::slotCleanSpace()
   }
 
   // Remove the signature for now.
-  QString sig;
+  TQString sig;
   bool restore = false;
   const KPIM::Identity & ident =
     kmkernel->identityManager()->identityForUoid( mId );
@@ -4440,16 +4440,16 @@ void KMComposeWin::slotCleanSpace()
   }
 
   // Squeeze tabs and spaces
-  QRegExp squeeze( "[\t ]+" );
-  s.replace( squeeze, QChar( ' ' ) );
+  TQRegExp squeeze( "[\t ]+" );
+  s.replace( squeeze, TQChar( ' ' ) );
 
   // Remove trailing whitespace
-  QRegExp trailing( "\\s+$" );
-  s.replace( trailing, QChar( '\n' ) );
+  TQRegExp trailing( "\\s+$" );
+  s.replace( trailing, TQChar( '\n' ) );
 
   // Single space lines
-  QRegExp singleSpace( "[\n]{2,}" );
-  s.replace( singleSpace, QChar( '\n' ) );
+  TQRegExp singleSpace( "[\n]{2,}" );
+  s.replace( singleSpace, TQChar( '\n' ) );
 
   // Restore the signature
   if ( restore )
@@ -4497,7 +4497,7 @@ void KMComposeWin::toggleMarkup(bool markup)
       // save the buttonstates because setColor calls fontChanged
       bool _bold = textBoldAction->isChecked();
       bool _italic = textItalicAction->isChecked();
-      mEditor->setColor(QColor(0,0,0));
+      mEditor->setColor(TQColor(0,0,0));
       textBoldAction->setChecked(_bold);
       textItalicAction->setChecked(_italic);
       mEditor->setSelection ( paraFrom, indexFrom, paraTo, indexTo);
@@ -4517,7 +4517,7 @@ void KMComposeWin::toggleMarkup(bool markup)
     if ( mUseHTMLEditor ) { // it was turned on
       mUseHTMLEditor = false;
       mEditor->setTextFormat(Qt::PlainText);
-      QString text = mEditor->text();
+      TQString text = mEditor->text();
       mEditor->setText(text); // otherwise the text still looks formatted
       mEditor->setModified(true);
       slotAutoSpellCheckingToggled(true);
@@ -4546,7 +4546,7 @@ void KMComposeWin::slotAutoSpellCheckingToggled( bool on )
     mAutoSpellCheckingAction->setChecked(false); // set it to false again
   }
 
-  QString temp;
+  TQString temp;
   if ( on )
     temp = i18n( "Spellcheck: on" );
   else
@@ -4560,8 +4560,8 @@ void KMComposeWin::slotSpellcheck()
   mSubjectTextWasSpellChecked = false;
   mSpellCheckInProgress=true;
   /*
-    connect (mEditor, SIGNAL (spellcheck_progress (unsigned)),
-    this, SLOT (spell_progress (unsigned)));
+    connect (mEditor, TQT_SIGNAL (spellcheck_progress (unsigned)),
+    this, TQT_SLOT (spell_progress (unsigned)));
     */
 
   mEditor->spellcheck();
@@ -4573,7 +4573,7 @@ void KMComposeWin::slotUpdateSignatureActions()
   //edit menu accordingly.
   const KPIM::Identity & ident =
     kmkernel->identityManager()->identityForUoidOrDefault( mIdentity->currentIdentity() );
-  QString sig = ident.signatureText();
+  TQString sig = ident.signatureText();
 
   if ( sig.isEmpty() ) {
      mAppendSignatureAction->setEnabled( false );
@@ -4616,7 +4616,7 @@ void KMComposeWin::slotSpellcheckDone(int result)
       statusBar()->changeItem(i18n(" Spell check complete."),0);
       break;
   }
-  QTimer::singleShot( 2000, this, SLOT(slotSpellcheckDoneClearStatus()) );
+  TQTimer::singleShot( 2000, this, TQT_SLOT(slotSpellcheckDoneClearStatus()) );
 }
 
 void KMComposeWin::slotSpellcheckDoneClearStatus()
@@ -4665,7 +4665,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid )
       // of the identity, we assume that since the user typed it
       // they want to keep it
       if ( mEdtBcc->text() != ident.bcc() && !mEdtBcc->text().isEmpty() ) {
-        QString temp_string( mEdtBcc->text() + QString::fromLatin1(",") + ident.bcc() );
+        TQString temp_string( mEdtBcc->text() + TQString::fromLatin1(",") + ident.bcc() );
         mEdtBcc->setText( temp_string );
       } else {
         // if the user typed the same address as the preset BCC
@@ -4679,7 +4679,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid )
   // allowing the user to keep all addresses
   if( mEdtBcc && mEdtBcc->edited() && !ident.bcc().isEmpty() ) {
     if( !mEdtBcc->text().isEmpty() ) {
-      QString temp_string ( mEdtBcc->text() + QString::fromLatin1(",") + ident.bcc() );
+      TQString temp_string ( mEdtBcc->text() + TQString::fromLatin1(",") + ident.bcc() );
       mEdtBcc->setText( temp_string );
     } else {
       mEdtBcc->setText( ident.bcc() );
@@ -4705,7 +4705,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid )
     mMsg->removeHeaderField("X-Face");
   else
   {
-    QString xface = ident.xface();
+    TQString xface = ident.xface();
     if (!xface.isEmpty())
     {
       int numNL = ( xface.length() - 1 ) / 70;
@@ -4716,7 +4716,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid )
   }
 
   if ( !mBtnTransport->isChecked() ) {
-    QString transp = ident.transport();
+    TQString transp = ident.transport();
     if ( transp.isEmpty() )
     {
       mMsg->removeHeaderField("X-KMail-Transport");
@@ -4733,7 +4733,7 @@ void KMComposeWin::slotIdentityChanged( uint uoid )
       setFcc( ident.fcc() );
   }
 
-  QString edtText = mEditor->text();
+  TQString edtText = mEditor->text();
 
   if ( mOldSigText.isEmpty() ) {
     const KPIM::Identity &id =
@@ -4801,7 +4801,7 @@ void KMComposeWin::slotSpellcheckConfig()
                   KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok,
                   this, 0, true, true );
   KWin kwin;
-  QTabDialog qtd (this, "tabdialog", true);
+  TQTabDialog qtd (this, "tabdialog", true);
   KSpellConfig mKSpellConfig (&qtd);
   mKSpellConfig.layout()->setMargin( KDialog::marginHint() );
 
@@ -4817,7 +4817,7 @@ void KMComposeWin::slotSpellcheckConfig()
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::slotStatusMessage(const QString &message)
+void KMComposeWin::slotStatusMessage(const TQString &message)
 {
     statusBar()->changeItem( message, 0 );
 }
@@ -4827,8 +4827,8 @@ void KMComposeWin::slotEditToolbars()
   saveMainWindowSettings(KMKernel::config(), "Composer");
   KEditToolbar dlg(guiFactory(), this);
 
-  connect( &dlg, SIGNAL(newToolbarConfig()),
-           SLOT(slotUpdateToolbars()) );
+  connect( &dlg, TQT_SIGNAL(newToolbarConfig()),
+           TQT_SLOT(slotUpdateToolbars()) );
 
   dlg.exec();
 }
@@ -4887,15 +4887,15 @@ void KMComposeWin::updateAutoSave()
   }
   else {
     if ( !mAutoSaveTimer ) {
-      mAutoSaveTimer = new QTimer( this, "mAutoSaveTimer" );
-      connect( mAutoSaveTimer, SIGNAL( timeout() ),
-               this, SLOT( autoSaveMessage() ) );
+      mAutoSaveTimer = new TQTimer( this, "mAutoSaveTimer" );
+      connect( mAutoSaveTimer, TQT_SIGNAL( timeout() ),
+               this, TQT_SLOT( autoSaveMessage() ) );
     }
     mAutoSaveTimer->start( autoSaveInterval() );
   }
 }
 
-void KMComposeWin::setAutoSaveFilename( const QString & filename )
+void KMComposeWin::setAutoSaveFilename( const TQString & filename )
 {
   if ( !mAutoSaveFilename.isEmpty() )
     KMFolderMaildir::removeFile( KMKernel::localDataPath() + "autosave",
@@ -4911,7 +4911,7 @@ void KMComposeWin::cleanupAutoSave()
                   << mAutoSaveFilename << endl;
     KMFolderMaildir::removeFile( KMKernel::localDataPath() + "autosave",
                                  mAutoSaveFilename );
-    mAutoSaveFilename = QString();
+    mAutoSaveFilename = TQString();
   }
 }
 
@@ -4966,30 +4966,30 @@ void KMComposeWin::slotSetAlwaysSend( bool bAlways )
     mAlwaysSend = bAlways;
 }
 
-void KMComposeWin::slotListAction( const QString& style )
+void KMComposeWin::slotListAction( const TQString& style )
 {
     toggleMarkup(true);
     if ( style == i18n( "Standard" ) )
-       mEditor->setParagType( QStyleSheetItem::DisplayBlock, QStyleSheetItem::ListDisc );
+       mEditor->setParagType( TQStyleSheetItem::DisplayBlock, TQStyleSheetItem::ListDisc );
     else if ( style == i18n( "Bulleted List (Disc)" ) )
-       mEditor->setParagType( QStyleSheetItem::DisplayListItem, QStyleSheetItem::ListDisc );
+       mEditor->setParagType( TQStyleSheetItem::DisplayListItem, TQStyleSheetItem::ListDisc );
     else if ( style == i18n( "Bulleted List (Circle)" ) )
-       mEditor->setParagType( QStyleSheetItem::DisplayListItem, QStyleSheetItem::ListCircle );
+       mEditor->setParagType( TQStyleSheetItem::DisplayListItem, TQStyleSheetItem::ListCircle );
     else if ( style == i18n( "Bulleted List (Square)" ) )
-       mEditor->setParagType( QStyleSheetItem::DisplayListItem, QStyleSheetItem::ListSquare );
+       mEditor->setParagType( TQStyleSheetItem::DisplayListItem, TQStyleSheetItem::ListSquare );
     else if ( style == i18n( "Ordered List (Decimal)" ))
-       mEditor->setParagType( QStyleSheetItem::DisplayListItem, QStyleSheetItem::ListDecimal );
+       mEditor->setParagType( TQStyleSheetItem::DisplayListItem, TQStyleSheetItem::ListDecimal );
     else if ( style == i18n( "Ordered List (Alpha lower)" ) )
-       mEditor->setParagType( QStyleSheetItem::DisplayListItem, QStyleSheetItem::ListLowerAlpha );
+       mEditor->setParagType( TQStyleSheetItem::DisplayListItem, TQStyleSheetItem::ListLowerAlpha );
     else if ( style == i18n( "Ordered List (Alpha upper)" ) )
-       mEditor->setParagType( QStyleSheetItem::DisplayListItem, QStyleSheetItem::ListUpperAlpha );
+       mEditor->setParagType( TQStyleSheetItem::DisplayListItem, TQStyleSheetItem::ListUpperAlpha );
     mEditor->viewport()->setFocus();
 }
 
-void KMComposeWin::slotFontAction( const QString& font)
+void KMComposeWin::slotFontAction( const TQString& font)
 {
     toggleMarkup(true);
-    mEditor->QTextEdit::setFamily( font );
+    mEditor->TQTextEdit::setFamily( font );
     mEditor->viewport()->setFocus();
 }
 
@@ -5003,37 +5003,37 @@ void KMComposeWin::slotSizeAction( int size )
 void KMComposeWin::slotAlignLeft()
 {
     toggleMarkup(true);
-    mEditor->QTextEdit::setAlignment( AlignLeft );
+    mEditor->TQTextEdit::setAlignment( AlignLeft );
 }
 
 void KMComposeWin::slotAlignCenter()
 {
     toggleMarkup(true);
-    mEditor->QTextEdit::setAlignment( AlignHCenter );
+    mEditor->TQTextEdit::setAlignment( AlignHCenter );
 }
 
 void KMComposeWin::slotAlignRight()
 {
     toggleMarkup(true);
-    mEditor->QTextEdit::setAlignment( AlignRight );
+    mEditor->TQTextEdit::setAlignment( AlignRight );
 }
 
 void KMComposeWin::slotTextBold()
 {
     toggleMarkup(true);
-    mEditor->QTextEdit::setBold( textBoldAction->isChecked() );
+    mEditor->TQTextEdit::setBold( textBoldAction->isChecked() );
 }
 
 void KMComposeWin::slotTextItalic()
 {
     toggleMarkup(true);
-    mEditor->QTextEdit::setItalic( textItalicAction->isChecked() );
+    mEditor->TQTextEdit::setItalic( textItalicAction->isChecked() );
 }
 
 void KMComposeWin::slotTextUnder()
 {
     toggleMarkup(true);
-    mEditor->QTextEdit::setUnderline( textUnderAction->isChecked() );
+    mEditor->TQTextEdit::setUnderline( textUnderAction->isChecked() );
 }
 
 void KMComposeWin::slotFormatReset()
@@ -5043,7 +5043,7 @@ void KMComposeWin::slotFormatReset()
 }
 void KMComposeWin::slotTextColor()
 {
-  QColor color = mEditor->color();
+  TQColor color = mEditor->color();
 
   if ( KColorDialog::getColor( color, this ) ) {
     toggleMarkup(true);
@@ -5051,12 +5051,12 @@ void KMComposeWin::slotTextColor()
   }
 }
 
-void KMComposeWin::fontChanged( const QFont &f )
+void KMComposeWin::fontChanged( const TQFont &f )
 {
-  QFont fontTemp = f;
+  TQFont fontTemp = f;
   fontTemp.setBold( true );
   fontTemp.setItalic( true );
-  QFontInfo fontInfo( fontTemp );
+  TQFontInfo fontInfo( fontTemp );
 
   if ( fontInfo.bold() ) {
     textBoldAction->setChecked( f.bold() );
@@ -5113,7 +5113,7 @@ void KMComposeWin::slotEncryptChiasmusToggled( bool on ) {
     Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" );
 
   if ( !chiasmus ) {
-    const QString msg = Kleo::CryptoBackendFactory::instance()->knowsAboutProtocol( "Chiasmus" )
+    const TQString msg = Kleo::CryptoBackendFactory::instance()->knowsAboutProtocol( "Chiasmus" )
       ? i18n( "Please configure a Crypto Backend to use for "
               "Chiasmus encryption first.\n"
               "You can do this in the Crypto Backends tab of "
@@ -5125,9 +5125,9 @@ void KMComposeWin::slotEncryptChiasmusToggled( bool on ) {
     return;
   }
 
-  STD_NAMESPACE_PREFIX auto_ptr<Kleo::SpecialJob> job( chiasmus->specialJob( "x-obtain-keys", QMap<QString,QVariant>() ) );
+  STD_NAMESPACE_PREFIX auto_ptr<Kleo::SpecialJob> job( chiasmus->specialJob( "x-obtain-keys", TQMap<TQString,TQVariant>() ) );
   if ( !job.get() ) {
-    const QString msg = i18n( "Chiasmus backend does not offer the "
+    const TQString msg = i18n( "Chiasmus backend does not offer the "
                               "\"x-obtain-keys\" function. Please report this bug." );
     KMessageBox::error( this, msg, i18n( "Chiasmus Backend Error" ) );
     return;
@@ -5138,18 +5138,18 @@ void KMComposeWin::slotEncryptChiasmusToggled( bool on ) {
     return;
   }
 
-  const QVariant result = job->property( "result" );
-  if ( result.type() != QVariant::StringList ) {
-    const QString msg = i18n( "Unexpected return value from Chiasmus backend: "
+  const TQVariant result = job->property( "result" );
+  if ( result.type() != TQVariant::StringList ) {
+    const TQString msg = i18n( "Unexpected return value from Chiasmus backend: "
                               "The \"x-obtain-keys\" function did not return a "
                               "string list. Please report this bug." );
     KMessageBox::error( this, msg, i18n( "Chiasmus Backend Error" ) );
     return;
   }
 
-  const QStringList keys = result.toStringList();
+  const TQStringList keys = result.toStringList();
   if ( keys.empty() ) {
-    const QString msg = i18n( "No keys have been found. Please check that a "
+    const TQString msg = i18n( "No keys have been found. Please check that a "
                               "valid key path has been set in the Chiasmus "
                               "configuration." );
     KMessageBox::information( this, msg, i18n( "No Chiasmus Keys Found" ) );
@@ -5159,7 +5159,7 @@ void KMComposeWin::slotEncryptChiasmusToggled( bool on ) {
   ChiasmusKeySelector selectorDlg( this, i18n( "Chiasmus Encryption Key Selection" ),
                                    keys, GlobalSettings::chiasmusKey(),
                                    GlobalSettings::chiasmusOptions() );
-  if ( selectorDlg.exec() != QDialog::Accepted )
+  if ( selectorDlg.exec() != TQDialog::Accepted )
     return;
 
   GlobalSettings::setChiasmusOptions( selectorDlg.options() );
@@ -5180,7 +5180,7 @@ void KMComposeWin::slotEditDone(KMail::EditorWatcher * watcher)
     return;
 
   tf->file()->reset();
-  QByteArray data = tf->file()->readAll();
+  TQByteArray data = tf->file()->readAll();
   part->setBodyEncodedBinary( data );
 }
 
@@ -5200,14 +5200,14 @@ void KMComposeWin::slotAttachmentDragStarted()
 {
   kdDebug(5006) << k_funcinfo << endl;
   int idx = 0;
-  QStringList filenames;
-  for ( QPtrListIterator<QListViewItem> it(mAtmItemList); *it; ++it, ++idx ) {
+  TQStringList filenames;
+  for ( TQPtrListIterator<TQListViewItem> it(mAtmItemList); *it; ++it, ++idx ) {
     if ( (*it)->isSelected() ) {
       KMMessagePart* msgPart = mAtmList.at(idx);
       KTempDir * tempDir = new KTempDir(); // will be deleted on composer close
       tempDir->setAutoDelete( true );
       mTempDirs.insert( tempDir );
-      const QString fileName = tempDir->name() + "/" + msgPart->name();
+      const TQString fileName = tempDir->name() + "/" + msgPart->name();
       KPIM::kByteArrayToFile(msgPart->bodyDecodedBinary(),
                              fileName,
                              false, false, false);
@@ -5218,14 +5218,14 @@ void KMComposeWin::slotAttachmentDragStarted()
   }
   if ( filenames.isEmpty() ) return;
 
-  QUriDrag *drag  = new QUriDrag( mAtmListView );
+  TQUriDrag *drag  = new TQUriDrag( mAtmListView );
   drag->setFileNames( filenames );
   drag->dragCopy();
 }
 
 void KMComposeWin::recipientEditorSizeHintChanged()
 {
-  QTimer::singleShot( 1, this, SLOT(setMaximumHeaderSize()) );
+  TQTimer::singleShot( 1, this, TQT_SLOT(setMaximumHeaderSize()) );
 }
 
 void KMComposeWin::setMaximumHeaderSize()

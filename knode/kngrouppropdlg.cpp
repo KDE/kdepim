@@ -1,0 +1,181 @@
+/*
+    KNode, the KDE newsreader
+    Copyright (c) 1999-2005 the KNode authors.
+    See file AUTHORS for details
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
+*/
+
+#include <tqgroupbox.h>
+#include <tqlayout.h>
+#include <tqvbox.h>
+#include <tqcheckbox.h>
+
+#include <klocale.h>
+#include <klineedit.h>
+
+#include "knglobals.h"
+#include "knconfigmanager.h"
+#include "knconfigwidgets.h"
+#include "utilities.h"
+#include "kngroup.h"
+#include "kngrouppropdlg.h"
+#include <tqlabel.h>
+
+
+KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, TQWidget *parent, const char *name )
+  : KDialogBase(Tabbed, i18n("Properties of %1").arg(group->groupname()),
+                Ok|Cancel|Help, Ok, parent, name),
+    g_rp(group), n_ickChanged(false)
+{
+
+  // General tab ===============================================
+
+  TQWidget *page = addPage(i18n("&General"));
+  TQVBoxLayout *pageL = new TQVBoxLayout(page, 3);
+
+  // settings
+  TQGroupBox *gb=new TQGroupBox(i18n("Settings"), page);
+  pageL->addWidget(gb);
+  TQGridLayout *grpL=new TQGridLayout(gb, 3, 3, 15, 5);
+
+  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+
+  n_ick=new KLineEdit(gb);
+  if (g_rp->hasName())
+    n_ick->setText(g_rp->name());
+  TQLabel *l=new TQLabel(n_ick, i18n("&Nickname:"), gb);
+  grpL->addWidget(l,1,0);
+  grpL->addMultiCellWidget(n_ick,1,1,1,2);
+
+  u_seCharset=new TQCheckBox(i18n("&Use different default charset:"), gb);
+  u_seCharset->setChecked(g_rp->useCharset());
+  grpL->addMultiCellWidget(u_seCharset,2,2,0,1);
+
+  c_harset=new TQComboBox(false, gb);
+  c_harset->insertStringList(knGlobals.configManager()->postNewsTechnical()->composerCharsets());
+  c_harset->setCurrentItem(knGlobals.configManager()->postNewsTechnical()->indexForCharset(g_rp->defaultCharset()));
+  c_harset->setEnabled(g_rp->useCharset());
+  connect(u_seCharset, TQT_SIGNAL(toggled(bool)), c_harset, TQT_SLOT(setEnabled(bool)));
+  grpL->addWidget(c_harset, 2,2);
+
+  grpL->setColStretch(1,1);
+  grpL->setColStretch(2,2);
+
+  // group name & description
+  gb=new TQGroupBox(i18n("Description"), page);
+  pageL->addWidget(gb);
+  grpL=new TQGridLayout(gb, 4, 3, 15, 5);
+
+  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+
+  l=new TQLabel(i18n("Name:"), gb);
+  grpL->addWidget(l,1,0);
+  l=new TQLabel(group->groupname(),gb);
+  grpL->addWidget(l,1,2);
+
+  l=new TQLabel(i18n("Description:"), gb);
+  grpL->addWidget(l,2,0);
+  l=new TQLabel(g_rp->description(),gb);
+  grpL->addWidget(l,2,2);
+
+  l=new TQLabel(i18n("Status:"), gb);
+  grpL->addWidget(l,3,0);
+  TQString status;
+  switch (g_rp->status()) {
+    case KNGroup::unknown:  status=i18n("unknown");
+                            break;
+    case KNGroup::readOnly: status=i18n("posting forbidden");
+                            break;
+    case KNGroup::postingAllowed:  status=i18n("posting allowed");
+                                   break;
+    case KNGroup::moderated:       status=i18n("moderated");
+                                   break;
+  }
+  l=new TQLabel(status,gb);
+  grpL->addWidget(l,3,2);
+
+  grpL->addColSpacing(1,20);
+  grpL->setColStretch(2,1);
+
+  // statistics
+  gb=new TQGroupBox(i18n("Statistics"), page);
+  pageL->addWidget(gb);
+  grpL=new TQGridLayout(gb, 6, 3, 15, 5);
+
+  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+
+  l=new TQLabel(i18n("Articles:"), gb);
+  grpL->addWidget(l,1,0);
+  l=new TQLabel(TQString::number(g_rp->count()),gb);
+  grpL->addWidget(l,1,2);
+
+  l=new TQLabel(i18n("Unread articles:"), gb);
+  grpL->addWidget(l,2,0);
+  l=new TQLabel(TQString::number(g_rp->count()-g_rp->readCount()),gb);
+  grpL->addWidget(l,2,2);
+
+  l=new TQLabel(i18n("New articles:"), gb);
+  grpL->addWidget(l,3,0);
+  l=new TQLabel(TQString::number(g_rp->newCount()),gb);
+  grpL->addWidget(l,3,2);
+
+  l=new TQLabel(i18n("Threads with unread articles:"), gb);
+  grpL->addWidget(l,4,0);
+  l=new TQLabel(TQString::number(g_rp->statThrWithUnread()),gb);
+  grpL->addWidget(l,4,2);
+
+  l=new TQLabel(i18n("Threads with new articles:"), gb);
+  grpL->addWidget(l,5,0);
+  l=new TQLabel(TQString::number(g_rp->statThrWithNew()),gb);
+  grpL->addWidget(l,5,2);
+
+  grpL->addColSpacing(1,20);
+  grpL->setColStretch(2,1);
+
+  pageL->addStretch(1);
+
+  // Specfic Identity tab =========================================
+  i_dWidget=new KNConfig::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
+
+  // per server cleanup configuration
+  TQFrame* cleanupPage = addPage( i18n("&Cleanup") );
+  TQVBoxLayout *cleanupLayout = new TQVBoxLayout( cleanupPage, KDialog::spacingHint() );
+  mCleanupWidget = new KNConfig::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
+  mCleanupWidget->load();
+  cleanupLayout->addWidget( mCleanupWidget );
+  cleanupLayout->addStretch( 1 );
+
+  KNHelper::restoreWindowSize("groupPropDLG", this, sizeHint());
+}
+
+
+
+KNGroupPropDlg::~KNGroupPropDlg()
+{
+  KNHelper::saveWindowSize("groupPropDLG", size());
+}
+
+
+
+void KNGroupPropDlg::slotOk()
+{
+  if( !(g_rp->name()==n_ick->text()) ) {
+    g_rp->setName(n_ick->text());
+    n_ickChanged=true;
+  }
+
+  i_dWidget->save();
+  mCleanupWidget->save();
+
+  g_rp->setUseCharset(u_seCharset->isChecked());
+  g_rp->setDefaultCharset(c_harset->currentText().latin1());
+
+  accept();
+}

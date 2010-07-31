@@ -31,11 +31,11 @@
 
 #include "folderdiaquotatab_p.h"
 
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qprogressbar.h>
-#include <qwhatsthis.h>
-#include <qcombobox.h>
+#include <tqlayout.h>
+#include <tqlabel.h>
+#include <tqprogressbar.h>
+#include <tqwhatsthis.h>
+#include <tqcombobox.h>
 
 #include <math.h>
 
@@ -51,22 +51,22 @@ using namespace KMail;
 
 struct QuotaInfo;
 
-QuotaWidget::QuotaWidget( QWidget* parent, const char* name )
-        :QWidget( parent, name )
+QuotaWidget::QuotaWidget( TQWidget* parent, const char* name )
+        :TQWidget( parent, name )
 {
-      QVBoxLayout *box = new QVBoxLayout(this);
-      QWidget *stuff = new QWidget( this );
-      QGridLayout* layout =
-          new QGridLayout( stuff, 3, 3,
+      TQVBoxLayout *box = new TQVBoxLayout(this);
+      TQWidget *stuff = new TQWidget( this );
+      TQGridLayout* layout =
+          new TQGridLayout( stuff, 3, 3,
                            KDialog::marginHint(),
                            KDialog::spacingHint() );
-      mInfoLabel = new QLabel("", stuff );
-      mRootLabel = new QLabel("", stuff );
-      mProgressBar = new QProgressBar( stuff );
-      layout->addWidget( new QLabel( i18n("Root:" ), stuff ), 0, 0 );
+      mInfoLabel = new TQLabel("", stuff );
+      mRootLabel = new TQLabel("", stuff );
+      mProgressBar = new TQProgressBar( stuff );
+      layout->addWidget( new TQLabel( i18n("Root:" ), stuff ), 0, 0 );
       layout->addWidget( mRootLabel, 0, 1 );
-      layout->addWidget( new QLabel( i18n("Usage:"), stuff ), 1, 0 );
-      //layout->addWidget( new QLabel( i18n("Status:"), stuff ), 2, 0 );
+      layout->addWidget( new TQLabel( i18n("Usage:"), stuff ), 1, 0 );
+      //layout->addWidget( new TQLabel( i18n("Status:"), stuff ), 2, 0 );
       layout->addWidget( mInfoLabel, 1, 1 );
       layout->addWidget( mProgressBar, 2, 1 );
       box->addWidget( stuff );

@@ -42,7 +42,7 @@ class KDE_EXPORT ResourceTVAnytimeConfig : public KRES::ConfigWidget
 {
 Q_OBJECT
   public:
-    ResourceTVAnytimeConfig( QWidget *parent = 0, const char *name = 0 );
+    ResourceTVAnytimeConfig( TQWidget *parent = 0, const char *name = 0 );
 
   public slots:
     virtual void loadSettings( KRES::Resource *resource );
@@ -50,7 +50,7 @@ Q_OBJECT
 
   private:
     KLineEdit *mUrl;
-    QSpinBox *mDays;
+    TQSpinBox *mDays;
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;
     ResourceTVAnytime *mResource;

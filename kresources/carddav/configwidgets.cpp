@@ -39,14 +39,14 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
-#include <qradiobutton.h>
-#include <qspinbox.h>
-#include <qbuttongroup.h>
-#include <qgroupbox.h>
-#include <qhbox.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqcheckbox.h>
+#include <tqradiobutton.h>
+#include <tqspinbox.h>
+#include <tqbuttongroup.h>
+#include <tqgroupbox.h>
+#include <tqhbox.h>
 
 using namespace KABC;
 
@@ -58,8 +58,8 @@ class CardDavConfigPrivate
       : mGroup( 0 ),
         mIntervalSpin( 0 ) {}
 
-    QButtonGroup *mGroup;
-    QSpinBox *mIntervalSpin;
+    TQButtonGroup *mGroup;
+    TQSpinBox *mIntervalSpin;
 };
 
 class CardDavReloadConfig::Private
@@ -73,47 +73,47 @@ class CardDavSaveConfig::Private
 };
 //@endcond
 
-CardDavReloadConfig::CardDavReloadConfig( QWidget *parent )
-  : QWidget( parent ), d( new KABC::CardDavReloadConfig::Private() )
+CardDavReloadConfig::CardDavReloadConfig( TQWidget *parent )
+  : TQWidget( parent ), d( new KABC::CardDavReloadConfig::Private() )
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+  TQBoxLayout *topLayout = new TQVBoxLayout( this );
 
-  //QGroupBox *groupBox = new QGroupBox( i18nc( "@title:group", "Automatic Reload" ), this );
-  QGroupBox *groupBox = new QGroupBox( i18n( "Automatic Reload" ), this );
+  //TQGroupBox *groupBox = new TQGroupBox( i18nc( "@title:group", "Automatic Reload" ), this );
+  TQGroupBox *groupBox = new TQGroupBox( i18n( "Automatic Reload" ), this );
   topLayout->addWidget( groupBox );
 
-  QRadioButton *noAutomaticReload =
-    new QRadioButton(
+  TQRadioButton *noAutomaticReload =
+    new TQRadioButton(
       //i18nc( "@option:radio never reload the cache", "Never" ), groupBox );
       i18n( "Never" ), groupBox );
-  QRadioButton *automaticReloadOnStartup =
-    new QRadioButton(
+  TQRadioButton *automaticReloadOnStartup =
+    new TQRadioButton(
       //i18nc( "@option:radio reload the cache on startup", "Only on startup" ), groupBox );
       i18n( "Only on startup" ), groupBox );
-  QRadioButton *intervalRadio =
-    new QRadioButton(
+  TQRadioButton *intervalRadio =
+    new TQRadioButton(
 //       i18nc( "@option:radio reload the cache at regular intervals",
 //              "Regular interval" ), groupBox );
       i18n( "Regular interval" ), groupBox );
 
-  d->mGroup = new QButtonGroup( this );
+  d->mGroup = new TQButtonGroup( this );
   d->mGroup->hide();
   d->mGroup->insert( intervalRadio, 2 );
   d->mGroup->insert( automaticReloadOnStartup, 1 );
   d->mGroup->insert( noAutomaticReload, 0 );
 
-  connect( intervalRadio, SIGNAL( toggled( bool ) ),
-           SLOT( slotIntervalToggled( bool ) ) );
+  connect( intervalRadio, TQT_SIGNAL( toggled( bool ) ),
+           TQT_SLOT( slotIntervalToggled( bool ) ) );
 
-  QHBox *intervalBox = new QHBox( groupBox );
-  //new QLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );
-  new QLabel( i18n( "Interval in minutes:" ), intervalBox );
-  d->mIntervalSpin = new QSpinBox( intervalBox );
+  TQHBox *intervalBox = new TQHBox( groupBox );
+  //new TQLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );
+  new TQLabel( i18n( "Interval in minutes:" ), intervalBox );
+  d->mIntervalSpin = new TQSpinBox( intervalBox );
   d->mIntervalSpin->setRange( 1, 900 );
   d->mIntervalSpin->setEnabled( false );
 
   groupBox->setColumnLayout(1, Qt::Vertical);
-  QVBoxLayout *vbox = new QVBoxLayout(groupBox->layout());
+  TQVBoxLayout *vbox = new TQVBoxLayout(groupBox->layout());
   vbox->addWidget(intervalRadio);
   vbox->addWidget(intervalBox);
   vbox->addWidget(automaticReloadOnStartup);
@@ -152,54 +152,54 @@ void CardDavReloadConfig::slotIntervalToggled( bool checked )
   }
 }
 
-CardDavSaveConfig::CardDavSaveConfig( QWidget *parent )
-  : QWidget( parent ), d( new KABC::CardDavSaveConfig::Private() )
+CardDavSaveConfig::CardDavSaveConfig( TQWidget *parent )
+  : TQWidget( parent ), d( new KABC::CardDavSaveConfig::Private() )
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+  TQBoxLayout *topLayout = new TQVBoxLayout( this );
 
-  //QGroupBox *groupBox = new QGroupBox( i18nc( "@title:group", "Automatic Save" ), this );
-  QGroupBox *groupBox = new QGroupBox( i18n( "Automatic Save" ), this );
-  d->mGroup = new QButtonGroup( this );
+  //TQGroupBox *groupBox = new TQGroupBox( i18nc( "@title:group", "Automatic Save" ), this );
+  TQGroupBox *groupBox = new TQGroupBox( i18n( "Automatic Save" ), this );
+  d->mGroup = new TQButtonGroup( this );
   d->mGroup->hide();
   topLayout->addWidget( groupBox );
 
-  QRadioButton *never =
-    new QRadioButton(
+  TQRadioButton *never =
+    new TQRadioButton(
       //i18nc( "@option:radio never save the cache automatically", "Never" ), groupBox );
       i18n( "Never" ), groupBox );
-  QRadioButton *onExit =
-    new QRadioButton(
+  TQRadioButton *onExit =
+    new TQRadioButton(
       //i18nc( "@option:radio save the cache on exit", "Only on exit" ), groupBox );
       i18n( "Only on exit" ), groupBox );
 
-  QRadioButton *intervalRadio =
-    new QRadioButton(
+  TQRadioButton *intervalRadio =
+    new TQRadioButton(
       //i18nc( "@option:radio save the cache at regular intervals", "Regular interval" ), groupBox );
       i18n( "Regular interval" ), groupBox );
 
-  d->mGroup = new QButtonGroup( this );
+  d->mGroup = new TQButtonGroup( this );
   d->mGroup->hide();
   d->mGroup->insert( never, 0 );
   d->mGroup->insert( onExit, 1 );
   d->mGroup->insert( intervalRadio, 2 );
 
-  connect( intervalRadio, SIGNAL( toggled( bool ) ),
-           SLOT( slotIntervalToggled( bool ) ) );
+  connect( intervalRadio, TQT_SIGNAL( toggled( bool ) ),
+           TQT_SLOT( slotIntervalToggled( bool ) ) );
 
-  QHBox *intervalBox = new QHBox( groupBox );
-  //new QLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );
-  new QLabel( i18n( "Interval in minutes:" ), intervalBox );
-  d->mIntervalSpin = new QSpinBox( intervalBox );
+  TQHBox *intervalBox = new TQHBox( groupBox );
+  //new TQLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );
+  new TQLabel( i18n( "Interval in minutes:" ), intervalBox );
+  d->mIntervalSpin = new TQSpinBox( intervalBox );
   d->mIntervalSpin->setRange( 1, 900 );
   d->mIntervalSpin->setEnabled( false );
 
-  QRadioButton *delay =
-    new QRadioButton(
+  TQRadioButton *delay =
+    new TQRadioButton(
 //       i18nc( "@option:radio save the cache after some delay",
 //              "Delayed after changes" ), groupBox );
       i18n( "Delayed after changes" ), groupBox );
-  QRadioButton *every =
-    new QRadioButton(
+  TQRadioButton *every =
+    new TQRadioButton(
 //       i18nc( "@option:radio save the cache after every modification",
 //              "Immediately after changes" ), groupBox );
       i18n( "Immediately after changes" ), groupBox );
@@ -211,7 +211,7 @@ CardDavSaveConfig::CardDavSaveConfig( QWidget *parent )
   intervalBox->hide();
 
   groupBox->setColumnLayout(1, Qt::Vertical);
-  QVBoxLayout *vbox = new QVBoxLayout(groupBox->layout());
+  TQVBoxLayout *vbox = new TQVBoxLayout(groupBox->layout());
   vbox->addWidget(delay);
   vbox->addWidget(every);
   vbox->addWidget(intervalRadio);

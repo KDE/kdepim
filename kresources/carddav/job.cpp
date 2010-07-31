@@ -17,7 +17,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <qmutex.h>
+#include <tqmutex.h>
 
 #define log(s)      kdDebug() << s;
 
@@ -35,7 +35,7 @@ using namespace KABC;
 | CONSTRUCTOR AND DESTRUCTOR
  ========================================================================*/
 
-CardDavJob::CardDavJob(const QString& url) : mUseURI(false) {
+CardDavJob::CardDavJob(const TQString& url) : mUseURI(false) {
     cleanJob();
     setUrl(url);
 }
@@ -55,14 +55,14 @@ void CardDavJob::enableCarddavDebug(runtime_info* rt) {
     }
 }
 
-void CardDavJob::setErrorString(const QString& err, const long number) {
+void CardDavJob::setErrorString(const TQString& err, const long number) {
     mError = true;
     mErrorString = err;
     mErrorNumber = number;
 }
 
 void CardDavJob::processError(const carddav_error* err) {
-    QString error_string;
+    TQString error_string;
 
     long code = err->code;
 
@@ -103,8 +103,8 @@ void CardDavJob::run() {
 
     // Signal done
     // 1000 is read, 1001 is write
-    if (type() == 0) QApplication::postEvent ( parent(), new QEvent( static_cast<QEvent::Type>(1000) ) );
-    if (type() == 1) QApplication::postEvent ( parent(), new QEvent( static_cast<QEvent::Type>(1001) ) );
+    if (type() == 0) TQApplication::postEvent ( parent(), new TQEvent( static_cast<TQEvent::Type>(1000) ) );
+    if (type() == 1) TQApplication::postEvent ( parent(), new TQEvent( static_cast<TQEvent::Type>(1001) ) );
 }
 
 // EOF ========================================================================

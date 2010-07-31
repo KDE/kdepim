@@ -34,7 +34,7 @@
 #ifndef KCARDDAV_AUTOWIDGETS_H
 #define KCARDDAV_AUTOWIDGETS_H
 
-#include <qwidget.h>
+#include <tqwidget.h>
 #include <kdemacros.h>
 
 namespace KABC {
@@ -50,7 +50,7 @@ class KDE_EXPORT CardDavReloadConfig : public QWidget
 {
   Q_OBJECT
   public:
-    explicit CardDavReloadConfig( QWidget *parent = 0 );
+    explicit CardDavReloadConfig( TQWidget *parent = 0 );
     ~CardDavReloadConfig();
   public slots:
     void loadSettings( ResourceCached *resource );
@@ -76,7 +76,7 @@ class KDE_EXPORT CardDavSaveConfig : public QWidget
 {
     Q_OBJECT
   public:
-    explicit CardDavSaveConfig( QWidget *parent = 0 );
+    explicit CardDavSaveConfig( TQWidget *parent = 0 );
     ~CardDavSaveConfig();
 
   public slots:

@@ -27,7 +27,7 @@
 #include <kprocess.h>
 #include <kuserprofile.h>
 
-#include <qsocketnotifier.h>
+#include <tqsocketnotifier.h>
 
 #include <cassert>
 
@@ -48,8 +48,8 @@
 
 using namespace KMail;
 
-EditorWatcher::EditorWatcher(const KURL & url, const QString &mimeType, bool openWith, QObject * parent) :
-    QObject( parent ),
+EditorWatcher::EditorWatcher(const KURL & url, const TQString &mimeType, bool openWith, TQObject * parent) :
+    TQObject( parent ),
     mUrl( url ),
     mMimeType( mimeType ),
     mOpenWith( openWith ),
@@ -61,7 +61,7 @@ EditorWatcher::EditorWatcher(const KURL & url, const QString &mimeType, bool ope
     mDone( false )
 {
   assert( mUrl.isLocalFile() );
-  connect( &mTimer, SIGNAL(timeout()), SLOT(checkEditDone()) );
+  connect( &mTimer, TQT_SIGNAL(timeout()), TQT_SLOT(checkEditDone()) );
 }
 
 bool EditorWatcher::start()
@@ -71,7 +71,7 @@ bool EditorWatcher::start()
   list.append( mUrl );
   KService::Ptr offer = KServiceTypeProfile::preferredService( mMimeType, "Application" );
   if ( mOpenWith || !offer ) {
-    KOpenWithDlg dlg( list, i18n("Edit with:"), QString::null, 0 );
+    KOpenWithDlg dlg( list, i18n("Edit with:"), TQString::null, 0 );
     if ( !dlg.exec() )
       return false;
     offer = dlg.service();
@@ -85,8 +85,8 @@ bool EditorWatcher::start()
   if ( mInotifyFd > 0 ) {
     mInotifyWatch = inotify_add_watch( mInotifyFd, mUrl.path().latin1(), IN_CLOSE | IN_OPEN | IN_MODIFY );
     if ( mInotifyWatch >= 0 ) {
-      QSocketNotifier *sn = new QSocketNotifier( mInotifyFd, QSocketNotifier::Read, this );
-      connect( sn, SIGNAL(activated(int)), SLOT(inotifyEvent()) );
+      TQSocketNotifier *sn = new TQSocketNotifier( mInotifyFd, TQSocketNotifier::Read, this );
+      connect( sn, TQT_SIGNAL(activated(int)), TQT_SLOT(inotifyEvent()) );
       mHaveInotify = true;
       mFileModified = false;
     }
@@ -96,10 +96,10 @@ bool EditorWatcher::start()
 #endif
 
   // start the editor
-  QStringList params = KRun::processDesktopExec( *offer, list, false );
+  TQStringList params = KRun::processDesktopExec( *offer, list, false );
   mEditor = new KProcess( this );
   *mEditor << params;
-  connect( mEditor, SIGNAL(processExited(KProcess*)), SLOT(editorExited()) );
+  connect( mEditor, TQT_SIGNAL(processExited(KProcess*)), TQT_SLOT(editorExited()) );
   if ( !mEditor->start() )
     return false;
   mEditorRunning = true;

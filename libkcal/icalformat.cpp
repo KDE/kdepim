@@ -19,13 +19,13 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qdatetime.h>
-#include <qstring.h>
-#include <qptrlist.h>
-#include <qregexp.h>
-#include <qclipboard.h>
-#include <qfile.h>
-#include <qtextstream.h>
+#include <tqdatetime.h>
+#include <tqstring.h>
+#include <tqptrlist.h>
+#include <tqregexp.h>
+#include <tqclipboard.h>
+#include <tqfile.h>
+#include <tqtextstream.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -75,21 +75,21 @@ void ICalFormat::setImplementation( ICalFormatImpl *impl )
 #undef open
 #endif
 
-bool ICalFormat::load( Calendar *calendar, const QString &fileName)
+bool ICalFormat::load( Calendar *calendar, const TQString &fileName)
 {
   kdDebug(5800) << "ICalFormat::load() " << fileName << endl;
 
   clearException();
 
-  QFile file( fileName );
+  TQFile file( fileName );
   if (!file.open( IO_ReadOnly ) ) {
     kdDebug(5800) << "ICalFormat::load() load error" << endl;
     setException(new ErrorFormat(ErrorFormat::LoadError));
     return false;
   }
-  QTextStream ts( &file );
-  ts.setEncoding( QTextStream::Latin1 );
-  QString text = ts.read();
+  TQTextStream ts( &file );
+  ts.setEncoding( TQTextStream::Latin1 );
+  TQString text = ts.read();
   file.close();
 
   if ( text.stripWhiteSpace().isEmpty() ) // empty files are valid
@@ -99,13 +99,13 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
 }
 
 
-bool ICalFormat::save( Calendar *calendar, const QString &fileName )
+bool ICalFormat::save( Calendar *calendar, const TQString &fileName )
 {
   kdDebug(5800) << "ICalFormat::save(): " << fileName << endl;
 
   clearException();
 
-  QString text = toString( calendar );
+  TQString text = toString( calendar );
 
   if ( text.isNull() ) return false;
 
@@ -122,7 +122,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   }
 
   // Convert to UTF8 and save
-  QCString textUtf8 = text.utf8();
+  TQCString textUtf8 = text.utf8();
   file.file()->writeBlock( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.close() ) {
@@ -135,12 +135,12 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   return true;
 }
 
-bool ICalFormat::fromString( Calendar *cal, const QString &text )
+bool ICalFormat::fromString( Calendar *cal, const TQString &text )
 {
   return fromRawString( cal, text.utf8() );
 }
 
-bool ICalFormat::fromRawString( Calendar *cal, const QCString &text )
+bool ICalFormat::fromRawString( Calendar *cal, const TQCString &text )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
 
@@ -197,7 +197,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QCString &text )
   return success;
 }
 
-Incidence *ICalFormat::fromString( const QString &text )
+Incidence *ICalFormat::fromString( const TQString &text )
 {
   CalendarLocal cal( mTimeZoneId );
   fromString(&cal, text);
@@ -221,7 +221,7 @@ Incidence *ICalFormat::fromString( const QString &text )
   return ical ? ical->clone() : 0;
 }
 
-QString ICalFormat::toString( Calendar *cal )
+TQString ICalFormat::toString( Calendar *cal )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
 
@@ -259,7 +259,7 @@ QString ICalFormat::toString( Calendar *cal )
     icalcomponent_add_component( calendar, component );
   }
 
-  QString text = QString::fromUtf8( icalcomponent_as_ical_string( calendar ) );
+  TQString text = TQString::fromUtf8( icalcomponent_as_ical_string( calendar ) );
 
   icalcomponent_free( calendar );
   icalmemory_free_ring();
@@ -267,42 +267,42 @@ QString ICalFormat::toString( Calendar *cal )
   if (!text) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("libical error")));
-    return QString::null;
+    return TQString::null;
   }
 
   return text;
 }
 
-QString ICalFormat::toICalString( Incidence *incidence )
+TQString ICalFormat::toICalString( Incidence *incidence )
 {
   CalendarLocal cal( mTimeZoneId );
   cal.addIncidence( incidence->clone() );
   return toString( &cal );
 }
 
-QString ICalFormat::toString( Incidence *incidence )
+TQString ICalFormat::toString( Incidence *incidence )
 {
   icalcomponent *component;
 
   component = mImpl->writeIncidence( incidence );
 
-  QString text = QString::fromUtf8( icalcomponent_as_ical_string( component ) );
+  TQString text = TQString::fromUtf8( icalcomponent_as_ical_string( component ) );
 
   icalcomponent_free( component );
 
   return text;
 }
 
-QString ICalFormat::toString( RecurrenceRule *recurrence )
+TQString ICalFormat::toString( RecurrenceRule *recurrence )
 {
   icalproperty *property;
   property = icalproperty_new_rrule( mImpl->writeRecurrenceRule( recurrence ) );
-  QString text = QString::fromUtf8( icalproperty_as_ical_string( property ) );
+  TQString text = TQString::fromUtf8( icalproperty_as_ical_string( property ) );
   icalproperty_free( property );
   return text;
 }
 
-bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
+bool ICalFormat::fromString( RecurrenceRule * recurrence, const TQString& rrule )
 {
   if ( !recurrence ) return false;
   bool success = true;
@@ -321,7 +321,7 @@ bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
 }
 
 
-QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
+TQString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
                                           Scheduler::Method method)
 {
   icalcomponent *message = 0;
@@ -333,7 +333,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
       // We have a separation of scheduling ID and UID
       i = i->clone();
       i->setUid( i->schedulingID() );
-      i->setSchedulingID( QString::null );
+      i->setSchedulingID( TQString::null );
 
       // Build the message with the cloned incidence
       message = mImpl->createScheduleComponent( i, method );
@@ -347,7 +347,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
     message = mImpl->createScheduleComponent(incidence,method);
 
   // FIXME TODO: Don't we have to free message? What about the ical_string? MEMLEAK
-  QString messageText = QString::fromUtf8( icalcomponent_as_ical_string(message) );
+  TQString messageText = TQString::fromUtf8( icalcomponent_as_ical_string(message) );
 
 #if 0
   kdDebug(5800) << "ICalFormat::createScheduleMessage: message START\n"
@@ -358,7 +358,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
   return messageText;
 }
 
-FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
+FreeBusy *ICalFormat::parseFreeBusy( const TQString &str )
 {
   clearException();
 
@@ -389,14 +389,14 @@ FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
 }
 
 ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
-                                                   const QString &messageText )
+                                                   const TQString &messageText )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
   clearException();
 
   if (messageText.isEmpty())
   {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "messageText was empty, unable to parse into a ScheduleMessage" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, TQString::fromLatin1( "messageText was empty, unable to parse into a ScheduleMessage" ) ) );
     return 0;
   }
   // TODO FIXME: Don't we have to ical-free message??? MEMLEAK
@@ -405,7 +405,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if (!message)
   {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "icalparser was unable to parse messageText into a ScheduleMessage" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, TQString::fromLatin1( "icalparser was unable to parse messageText into a ScheduleMessage" ) ) );
     return 0;
   }
 
@@ -413,7 +413,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
                                                      ICAL_METHOD_PROPERTY);
   if (!m)
   {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "message didn't contain an ICAL_METHOD_PROPERTY" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, TQString::fromLatin1( "message didn't contain an ICAL_METHOD_PROPERTY" ) ) );
     return 0;
   }
 
@@ -451,7 +451,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if (!incidence) {
     kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QString::fromLatin1( "object is not a freebusy, event, todo or journal" ) ) );
+    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, TQString::fromLatin1( "object is not a freebusy, event, todo or journal" ) ) );
     return 0;
   }
 
@@ -563,13 +563,13 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   return new ScheduleMessage(incidence,method,status);
 }
 
-void ICalFormat::setTimeZone( const QString &id, bool utc )
+void ICalFormat::setTimeZone( const TQString &id, bool utc )
 {
   mTimeZoneId = id;
   mUtc = utc;
 }
 
-QString ICalFormat::timeZoneId() const
+TQString ICalFormat::timeZoneId() const
 {
   return mTimeZoneId;
 }

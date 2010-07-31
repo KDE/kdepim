@@ -101,21 +101,21 @@ using KMime::DateFormatter;
 #include <kcmultidialog.h>
 
 // Qt headers:
-#include <qvalidator.h>
-#include <qwhatsthis.h>
-#include <qvgroupbox.h>
-#include <qvbox.h>
-#include <qvbuttongroup.h>
-#include <qhbuttongroup.h>
-#include <qtooltip.h>
-#include <qlabel.h>
-#include <qtextcodec.h>
-#include <qheader.h>
-#include <qpopupmenu.h>
-#include <qradiobutton.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
-#include <qwidgetstack.h>
+#include <tqvalidator.h>
+#include <tqwhatsthis.h>
+#include <tqvgroupbox.h>
+#include <tqvbox.h>
+#include <tqvbuttongroup.h>
+#include <tqhbuttongroup.h>
+#include <tqtooltip.h>
+#include <tqlabel.h>
+#include <tqtextcodec.h>
+#include <tqheader.h>
+#include <tqpopupmenu.h>
+#include <tqradiobutton.h>
+#include <tqlayout.h>
+#include <tqcheckbox.h>
+#include <tqwidgetstack.h>
 
 // other headers:
 #include <assert.h>
@@ -155,37 +155,37 @@ namespace {
     I18N_NOOP("<qt><p>This setting has been fixed by your administrator.</p>"
               "<p>If you think this is an error, please contact him.</p></qt>");
 
-  void checkLockDown( QWidget * w, const KConfigBase & c, const char * key ) {
+  void checkLockDown( TQWidget * w, const KConfigBase & c, const char * key ) {
     if ( c.entryIsImmutable( key ) ) {
       w->setEnabled( false );
-      QToolTip::add( w, i18n( lockedDownWarning ) );
+      TQToolTip::add( w, i18n( lockedDownWarning ) );
     } else {
-      QToolTip::remove( w );
+      TQToolTip::remove( w );
     }
   }
 
-  void populateButtonGroup( QButtonGroup * g, const EnumConfigEntry & e ) {
+  void populateButtonGroup( TQButtonGroup * g, const EnumConfigEntry & e ) {
     g->setTitle( i18n( e.desc ) );
     g->layout()->setSpacing( KDialog::spacingHint() );
     for ( int i = 0 ; i < e.numItems ; ++i )
-      g->insert( new QRadioButton( i18n( e.items[i].desc ), g ), i );
+      g->insert( new TQRadioButton( i18n( e.items[i].desc ), g ), i );
   }
 
-  void populateCheckBox( QCheckBox * b, const BoolConfigEntry & e ) {
+  void populateCheckBox( TQCheckBox * b, const BoolConfigEntry & e ) {
     b->setText( i18n( e.desc ) );
   }
 
-  void loadWidget( QCheckBox * b, const KConfigBase & c, const BoolConfigEntry & e ) {
+  void loadWidget( TQCheckBox * b, const KConfigBase & c, const BoolConfigEntry & e ) {
     Q_ASSERT( c.group() == e.group );
     checkLockDown( b, c, e.key );
     b->setChecked( c.readBoolEntry( e.key, e.defaultValue ) );
   }
 
-  void loadWidget( QButtonGroup * g, const KConfigBase & c, const EnumConfigEntry & e ) {
+  void loadWidget( TQButtonGroup * g, const KConfigBase & c, const EnumConfigEntry & e ) {
     Q_ASSERT( c.group() == e.group );
     Q_ASSERT( g->count() == e.numItems );
     checkLockDown( g, c, e.key );
-    const QString s = c.readEntry( e.key, e.items[e.defaultItem].key );
+    const TQString s = c.readEntry( e.key, e.items[e.defaultItem].key );
     for ( int i = 0 ; i < e.numItems ; ++i )
       if ( s == e.items[i].key ) {
         g->setButton( i );
@@ -194,12 +194,12 @@ namespace {
     g->setButton( e.defaultItem );
   }
 
-  void saveCheckBox( QCheckBox * b, KConfigBase & c, const BoolConfigEntry & e ) {
+  void saveCheckBox( TQCheckBox * b, KConfigBase & c, const BoolConfigEntry & e ) {
     Q_ASSERT( c.group() == e.group );
     c.writeEntry( e.key, b->isChecked() );
   }
 
-  void saveButtonGroup( QButtonGroup * g, KConfigBase & c, const EnumConfigEntry & e ) {
+  void saveButtonGroup( TQButtonGroup * g, KConfigBase & c, const EnumConfigEntry & e ) {
     Q_ASSERT( c.group() == e.group );
     Q_ASSERT( g->count() == e.numItems );
     c.writeEntry( e.key, e.items[ g->id( g->selected() ) ].key );
@@ -213,7 +213,7 @@ namespace {
 }
 
 
-ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal )
+ConfigureDialog::ConfigureDialog( TQWidget *parent, const char *name, bool modal )
   : KCMultiDialog( KDialogBase::IconList, KGuiItem( i18n( "&Load Profile..." ) ),
                    KGuiItem(), User2, i18n( "Configure" ), parent, name, modal )
   , mProfileDialog( 0 )
@@ -241,7 +241,7 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal 
 
 }
 
-void ConfigureDialog::hideEvent( QHideEvent *ev ) {
+void ConfigureDialog::hideEvent( TQHideEvent *ev ) {
   KConfigGroup geometry( KMKernel::config(), "Geometry" );
   geometry.writeEntry( "ConfigureDialogWidth", width() );
   geometry.writeEntry( "ConfigureDialogHeight",height() );
@@ -267,8 +267,8 @@ void ConfigureDialog::slotUser2() {
     return;
   }
   mProfileDialog = new ProfileDialog( this, "mProfileDialog" );
-  connect( mProfileDialog, SIGNAL(profileSelected(KConfig*)),
-                this, SIGNAL(installProfile(KConfig*)) );
+  connect( mProfileDialog, TQT_SIGNAL(profileSelected(KConfig*)),
+                this, TQT_SIGNAL(installProfile(KConfig*)) );
   mProfileDialog->show();
 }
 
@@ -277,36 +277,36 @@ void ConfigureDialog::slotUser2() {
 // *                      IdentityPage                         *
 // *                                                           *
 // *************************************************************
-QString IdentityPage::helpAnchor() const {
-  return QString::fromLatin1("configure-identity");
+TQString IdentityPage::helpAnchor() const {
+  return TQString::fromLatin1("configure-identity");
 }
 
-IdentityPage::IdentityPage( QWidget * parent, const char * name )
+IdentityPage::IdentityPage( TQWidget * parent, const char * name )
   : ConfigModule( parent, name ),
     mIdentityDialog( 0 )
 {
-  QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
+  TQHBoxLayout * hlay = new TQHBoxLayout( this, 0, KDialog::spacingHint() );
 
   mIdentityList = new IdentityListView( this );
-  connect( mIdentityList, SIGNAL(selectionChanged()),
-           SLOT(slotIdentitySelectionChanged()) );
-  connect( mIdentityList, SIGNAL(itemRenamed(QListViewItem*,const QString&,int)),
-           SLOT(slotRenameIdentity(QListViewItem*,const QString&,int)) );
-  connect( mIdentityList, SIGNAL(doubleClicked(QListViewItem*,const QPoint&,int)),
-           SLOT(slotModifyIdentity()) );
-  connect( mIdentityList, SIGNAL(contextMenu(KListView*,QListViewItem*,const QPoint&)),
-           SLOT(slotContextMenu(KListView*,QListViewItem*,const QPoint&)) );
+  connect( mIdentityList, TQT_SIGNAL(selectionChanged()),
+           TQT_SLOT(slotIdentitySelectionChanged()) );
+  connect( mIdentityList, TQT_SIGNAL(itemRenamed(TQListViewItem*,const TQString&,int)),
+           TQT_SLOT(slotRenameIdentity(TQListViewItem*,const TQString&,int)) );
+  connect( mIdentityList, TQT_SIGNAL(doubleClicked(TQListViewItem*,const TQPoint&,int)),
+           TQT_SLOT(slotModifyIdentity()) );
+  connect( mIdentityList, TQT_SIGNAL(contextMenu(KListView*,TQListViewItem*,const TQPoint&)),
+           TQT_SLOT(slotContextMenu(KListView*,TQListViewItem*,const TQPoint&)) );
   // ### connect dragged(...), ...
 
   hlay->addWidget( mIdentityList, 1 );
 
-  QVBoxLayout * vlay = new QVBoxLayout( hlay ); // inherits spacing
+  TQVBoxLayout * vlay = new TQVBoxLayout( hlay ); // inherits spacing
 
-  QPushButton * button = new QPushButton( i18n("&Add..."), this );
-  mModifyButton = new QPushButton( i18n("&Modify..."), this );
-  mRenameButton = new QPushButton( i18n("&Rename"), this );
-  mRemoveButton = new QPushButton( i18n("Remo&ve"), this );
-  mSetAsDefaultButton = new QPushButton( i18n("Set as &Default"), this );
+  TQPushButton * button = new TQPushButton( i18n("&Add..."), this );
+  mModifyButton = new TQPushButton( i18n("&Modify..."), this );
+  mRenameButton = new TQPushButton( i18n("&Rename"), this );
+  mRemoveButton = new TQPushButton( i18n("Remo&ve"), this );
+  mSetAsDefaultButton = new TQPushButton( i18n("Set as &Default"), this );
   button->setAutoDefault( false );
   mModifyButton->setAutoDefault( false );
   mModifyButton->setEnabled( false );
@@ -316,16 +316,16 @@ IdentityPage::IdentityPage( QWidget * parent, const char * name )
   mRemoveButton->setEnabled( false );
   mSetAsDefaultButton->setAutoDefault( false );
   mSetAsDefaultButton->setEnabled( false );
-  connect( button, SIGNAL(clicked()),
-           this, SLOT(slotNewIdentity()) );
-  connect( mModifyButton, SIGNAL(clicked()),
-           this, SLOT(slotModifyIdentity()) );
-  connect( mRenameButton, SIGNAL(clicked()),
-           this, SLOT(slotRenameIdentity()) );
-  connect( mRemoveButton, SIGNAL(clicked()),
-           this, SLOT(slotRemoveIdentity()) );
-  connect( mSetAsDefaultButton, SIGNAL(clicked()),
-           this, SLOT(slotSetAsDefault()) );
+  connect( button, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotNewIdentity()) );
+  connect( mModifyButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotModifyIdentity()) );
+  connect( mRenameButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotRenameIdentity()) );
+  connect( mRemoveButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotRemoveIdentity()) );
+  connect( mSetAsDefaultButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotSetAsDefault()) );
   vlay->addWidget( button );
   vlay->addWidget( mModifyButton );
   vlay->addWidget( mRenameButton );
@@ -341,7 +341,7 @@ void IdentityPage::load()
   mOldNumberOfIdentities = im->shadowIdentities().count();
   // Fill the list:
   mIdentityList->clear();
-  QListViewItem * item = 0;
+  TQListViewItem * item = 0;
   for ( KPIM::IdentityManager::Iterator it = im->modifyBegin() ; it != im->modifyEnd() ; ++it )
     item = new IdentityListViewItem( mIdentityList, item, *it  );
   mIdentityList->setSelected( mIdentityList->currentItem(), true );
@@ -378,8 +378,8 @@ void IdentityPage::slotNewIdentity()
   KPIM::IdentityManager * im = kmkernel->identityManager();
   NewIdentityDialog dialog( im->shadowIdentities(), this, "new", true );
 
-  if( dialog.exec() == QDialog::Accepted ) {
-    QString identityName = dialog.identityName().stripWhiteSpace();
+  if( dialog.exec() == TQDialog::Accepted ) {
+    TQString identityName = dialog.identityName().stripWhiteSpace();
     assert( !identityName.isEmpty() );
 
     //
@@ -404,7 +404,7 @@ void IdentityPage::slotNewIdentity()
     // Insert into listview:
     //
     KPIM::Identity & newIdent = im->modifyIdentityForName( identityName );
-    QListViewItem * item = mIdentityList->selectedItem();
+    TQListViewItem * item = mIdentityList->selectedItem();
     if ( item )
       item = item->itemAbove();
     mIdentityList->setSelected( new IdentityListViewItem( mIdentityList,
@@ -425,7 +425,7 @@ void IdentityPage::slotModifyIdentity() {
   mIdentityDialog->setIdentity( item->identity() );
 
   // Hmm, an unmodal dialog would be nicer, but a modal one is easier ;-)
-  if ( mIdentityDialog->exec() == QDialog::Accepted ) {
+  if ( mIdentityDialog->exec() == TQDialog::Accepted ) {
     mIdentityDialog->updateIdentity( item->identity() );
     item->redisplay();
     emit changed(true);
@@ -447,7 +447,7 @@ void IdentityPage::slotRemoveIdentity()
     dynamic_cast<IdentityListViewItem*>( mIdentityList->selectedItem() );
   if ( !item ) return;
 
-  QString msg = i18n("<qt>Do you really want to remove the identity named "
+  TQString msg = i18n("<qt>Do you really want to remove the identity named "
                      "<b>%1</b>?</qt>").arg( item->identity().identityName() );
   if( KMessageBox::warningContinueCancel( this, msg, i18n("Remove Identity"),
    KGuiItem(i18n("&Remove"),"editdelete") ) == KMessageBox::Continue )
@@ -461,21 +461,21 @@ void IdentityPage::slotRemoveIdentity()
 void IdentityPage::slotRenameIdentity() {
   assert( !mIdentityDialog );
 
-  QListViewItem * item = mIdentityList->selectedItem();
+  TQListViewItem * item = mIdentityList->selectedItem();
   if ( !item ) return;
 
   mIdentityList->rename( item, 0 );
 }
 
-void IdentityPage::slotRenameIdentity( QListViewItem * i,
-                                       const QString & s, int col ) {
+void IdentityPage::slotRenameIdentity( TQListViewItem * i,
+                                       const TQString & s, int col ) {
   assert( col == 0 );
   Q_UNUSED( col );
 
   IdentityListViewItem * item = dynamic_cast<IdentityListViewItem*>( i );
   if ( !item ) return;
 
-  QString newName = s.stripWhiteSpace();
+  TQString newName = s.stripWhiteSpace();
   if ( !newName.isEmpty() &&
        !kmkernel->identityManager()->shadowIdentities().contains( newName ) ) {
     KPIM::Identity & ident = item->identity();
@@ -485,18 +485,18 @@ void IdentityPage::slotRenameIdentity( QListViewItem * i,
   item->redisplay();
 }
 
-void IdentityPage::slotContextMenu( KListView *, QListViewItem * i,
-                                    const QPoint & pos ) {
+void IdentityPage::slotContextMenu( KListView *, TQListViewItem * i,
+                                    const TQPoint & pos ) {
   IdentityListViewItem * item = dynamic_cast<IdentityListViewItem*>( i );
 
-  QPopupMenu * menu = new QPopupMenu( this );
-  menu->insertItem( i18n("Add..."), this, SLOT(slotNewIdentity()) );
+  TQPopupMenu * menu = new TQPopupMenu( this );
+  menu->insertItem( i18n("Add..."), this, TQT_SLOT(slotNewIdentity()) );
   if ( item ) {
-    menu->insertItem( i18n("Modify..."), this, SLOT(slotModifyIdentity()) );
+    menu->insertItem( i18n("Modify..."), this, TQT_SLOT(slotModifyIdentity()) );
     if ( mIdentityList->childCount() > 1 )
-      menu->insertItem( i18n("Remove"), this, SLOT(slotRemoveIdentity()) );
+      menu->insertItem( i18n("Remove"), this, TQT_SLOT(slotRemoveIdentity()) );
     if ( !item->identity().isDefault() )
-      menu->insertItem( i18n("Set as Default"), this, SLOT(slotSetAsDefault()) );
+      menu->insertItem( i18n("Set as Default"), this, TQT_SLOT(slotSetAsDefault()) );
   }
   menu->exec( pos );
   delete menu;
@@ -516,7 +516,7 @@ void IdentityPage::slotSetAsDefault() {
 }
 
 void IdentityPage::refreshList() {
-  for ( QListViewItemIterator it( mIdentityList ) ; it.current() ; ++it ) {
+  for ( TQListViewItemIterator it( mIdentityList ) ; it.current() ; ++it ) {
     IdentityListViewItem * item =
       dynamic_cast<IdentityListViewItem*>(it.current());
     if ( item )
@@ -536,7 +536,7 @@ void IdentityPage::slotIdentitySelectionChanged()
   mSetAsDefaultButton->setEnabled( item && !item->identity().isDefault() );
 }
 
-void IdentityPage::slotUpdateTransportCombo( const QStringList & sl )
+void IdentityPage::slotUpdateTransportCombo( const TQStringList & sl )
 {
   if ( mIdentityDialog ) mIdentityDialog->slotUpdateTransportCombo( sl );
 }
@@ -548,11 +548,11 @@ void IdentityPage::slotUpdateTransportCombo( const QStringList & sl )
 // *                       AccountsPage                         *
 // *                                                           *
 // *************************************************************
-QString AccountsPage::helpAnchor() const {
-  return QString::fromLatin1("configure-accounts");
+TQString AccountsPage::helpAnchor() const {
+  return TQString::fromLatin1("configure-accounts");
 }
 
-AccountsPage::AccountsPage( QWidget * parent, const char * name )
+AccountsPage::AccountsPage( TQWidget * parent, const char * name )
   : ConfigModuleWithTabs( parent, name )
 {
   //
@@ -560,42 +560,42 @@ AccountsPage::AccountsPage( QWidget * parent, const char * name )
   //
   mReceivingTab = new ReceivingTab();
   addTab( mReceivingTab, i18n( "&Receiving" ) );
-  connect( mReceivingTab, SIGNAL(accountListChanged(const QStringList &)),
-           this, SIGNAL(accountListChanged(const QStringList &)) );
+  connect( mReceivingTab, TQT_SIGNAL(accountListChanged(const TQStringList &)),
+           this, TQT_SIGNAL(accountListChanged(const TQStringList &)) );
 
   //
   // "Sending" tab:
   //
   mSendingTab = new SendingTab();
   addTab( mSendingTab, i18n( "&Sending" ) );
-  connect( mSendingTab, SIGNAL(transportListChanged(const QStringList&)),
-           this, SIGNAL(transportListChanged(const QStringList&)) );
+  connect( mSendingTab, TQT_SIGNAL(transportListChanged(const TQStringList&)),
+           this, TQT_SIGNAL(transportListChanged(const TQStringList&)) );
 
   load();
 }
 
-QString AccountsPage::SendingTab::helpAnchor() const {
-  return QString::fromLatin1("configure-accounts-sending");
+TQString AccountsPage::SendingTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-accounts-sending");
 }
 
-AccountsPageSendingTab::AccountsPageSendingTab( QWidget * parent, const char * name )
+AccountsPageSendingTab::AccountsPageSendingTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   mTransportInfoList.setAutoDelete( true );
   // temp. vars:
-  QVBoxLayout *vlay;
-  QVBoxLayout *btn_vlay;
-  QHBoxLayout *hlay;
-  QGridLayout *glay;
-  QPushButton *button;
-  QGroupBox   *group;
+  TQVBoxLayout *vlay;
+  TQVBoxLayout *btn_vlay;
+  TQHBoxLayout *hlay;
+  TQGridLayout *glay;
+  TQPushButton *button;
+  TQGroupBox   *group;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
   // label: zero stretch ### FIXME more
-  vlay->addWidget( new QLabel( i18n("Outgoing accounts (add at least one):"), this ) );
+  vlay->addWidget( new TQLabel( i18n("Outgoing accounts (add at least one):"), this ) );
 
   // hbox layout: stretch 10, spacing inherited from vlay
-  hlay = new QHBoxLayout();
+  hlay = new TQHBoxLayout();
   vlay->addLayout( hlay, 10 ); // high stretch b/c of the groupbox's sizeHint
 
   // transport list: left widget in hlay; stretch 1
@@ -605,137 +605,137 @@ AccountsPageSendingTab::AccountsPageSendingTab( QWidget * parent, const char * n
   mTransportList->addColumn( i18n("Type") );
   mTransportList->setAllColumnsShowFocus( true );
   mTransportList->setSorting( -1 );
-  connect( mTransportList, SIGNAL(selectionChanged()),
-           this, SLOT(slotTransportSelected()) );
-  connect( mTransportList, SIGNAL(doubleClicked( QListViewItem *)),
-           this, SLOT(slotModifySelectedTransport()) );
+  connect( mTransportList, TQT_SIGNAL(selectionChanged()),
+           this, TQT_SLOT(slotTransportSelected()) );
+  connect( mTransportList, TQT_SIGNAL(doubleClicked( TQListViewItem *)),
+           this, TQT_SLOT(slotModifySelectedTransport()) );
   hlay->addWidget( mTransportList, 1 );
 
   // a vbox layout for the buttons: zero stretch, spacing inherited from hlay
-  btn_vlay = new QVBoxLayout( hlay );
+  btn_vlay = new TQVBoxLayout( hlay );
 
   // "add..." button: stretch 0
-  button = new QPushButton( i18n("A&dd..."), this );
+  button = new TQPushButton( i18n("A&dd..."), this );
   button->setAutoDefault( false );
-  connect( button, SIGNAL(clicked()),
-           this, SLOT(slotAddTransport()) );
+  connect( button, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotAddTransport()) );
   btn_vlay->addWidget( button );
 
   // "modify..." button: stretch 0
-  mModifyTransportButton = new QPushButton( i18n("&Modify..."), this );
+  mModifyTransportButton = new TQPushButton( i18n("&Modify..."), this );
   mModifyTransportButton->setAutoDefault( false );
   mModifyTransportButton->setEnabled( false ); // b/c no item is selected yet
-  connect( mModifyTransportButton, SIGNAL(clicked()),
-           this, SLOT(slotModifySelectedTransport()) );
+  connect( mModifyTransportButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotModifySelectedTransport()) );
   btn_vlay->addWidget( mModifyTransportButton );
 
   // "remove" button: stretch 0
-  mRemoveTransportButton = new QPushButton( i18n("R&emove"), this );
+  mRemoveTransportButton = new TQPushButton( i18n("R&emove"), this );
   mRemoveTransportButton->setAutoDefault( false );
   mRemoveTransportButton->setEnabled( false ); // b/c no item is selected yet
-  connect( mRemoveTransportButton, SIGNAL(clicked()),
-           this, SLOT(slotRemoveSelectedTransport()) );
+  connect( mRemoveTransportButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotRemoveSelectedTransport()) );
   btn_vlay->addWidget( mRemoveTransportButton );
 
-  mSetDefaultTransportButton = new QPushButton( i18n("Set Default"), this );
+  mSetDefaultTransportButton = new TQPushButton( i18n("Set Default"), this );
   mSetDefaultTransportButton->setAutoDefault( false );
   mSetDefaultTransportButton->setEnabled( false );
-  connect ( mSetDefaultTransportButton, SIGNAL(clicked()),
-            this, SLOT(slotSetDefaultTransport()) );
+  connect ( mSetDefaultTransportButton, TQT_SIGNAL(clicked()),
+            this, TQT_SLOT(slotSetDefaultTransport()) );
   btn_vlay->addWidget( mSetDefaultTransportButton );
   btn_vlay->addStretch( 1 ); // spacer
 
   // "Common options" groupbox:
-  group = new QGroupBox( 0, Qt::Vertical,
+  group = new TQGroupBox( 0, Qt::Vertical,
                          i18n("Common Options"), this );
   vlay->addWidget(group);
 
   // a grid layout for the contents of the "common options" group box
-  glay = new QGridLayout( group->layout(), 5, 3, KDialog::spacingHint() );
+  glay = new TQGridLayout( group->layout(), 5, 3, KDialog::spacingHint() );
   glay->setColStretch( 2, 10 );
 
   // "confirm before send" check box:
-  mConfirmSendCheck = new QCheckBox( i18n("Confirm &before send"), group );
+  mConfirmSendCheck = new TQCheckBox( i18n("Confirm &before send"), group );
   glay->addMultiCellWidget( mConfirmSendCheck, 0, 0, 0, 1 );
-  connect( mConfirmSendCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mConfirmSendCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "send on check" combo:
-  mSendOnCheckCombo = new QComboBox( false, group );
-  mSendOnCheckCombo->insertStringList( QStringList()
+  mSendOnCheckCombo = new TQComboBox( false, group );
+  mSendOnCheckCombo->insertStringList( TQStringList()
                                       << i18n("Never Automatically")
                                       << i18n("On Manual Mail Checks")
                                       << i18n("On All Mail Checks") );
   glay->addWidget( mSendOnCheckCombo, 1, 1 );
-  connect( mSendOnCheckCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSendOnCheckCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "default send method" combo:
-  mSendMethodCombo = new QComboBox( false, group );
-  mSendMethodCombo->insertStringList( QStringList()
+  mSendMethodCombo = new TQComboBox( false, group );
+  mSendMethodCombo->insertStringList( TQStringList()
                                       << i18n("Send Now")
                                       << i18n("Send Later") );
   glay->addWidget( mSendMethodCombo, 2, 1 );
-  connect( mSendMethodCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSendMethodCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
 
   // "message property" combo:
   // ### FIXME: remove completely?
-  mMessagePropertyCombo = new QComboBox( false, group );
-  mMessagePropertyCombo->insertStringList( QStringList()
+  mMessagePropertyCombo = new TQComboBox( false, group );
+  mMessagePropertyCombo->insertStringList( TQStringList()
                      << i18n("Allow 8-bit")
                      << i18n("MIME Compliant (Quoted Printable)") );
   glay->addWidget( mMessagePropertyCombo, 3, 1 );
-  connect( mMessagePropertyCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mMessagePropertyCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "default domain" input field:
   mDefaultDomainEdit = new KLineEdit( group );
   glay->addMultiCellWidget( mDefaultDomainEdit, 4, 4, 1, 2 );
-  connect( mDefaultDomainEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mDefaultDomainEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // labels:
-  QLabel *l =  new QLabel( mSendOnCheckCombo, /*buddy*/
+  TQLabel *l =  new TQLabel( mSendOnCheckCombo, /*buddy*/
                             i18n("Send &messages in outbox folder:"), group );
   glay->addWidget( l, 1, 0 );
 
-  QString msg = i18n( GlobalSettings::self()->sendOnCheckItem()->whatsThis().utf8() );
-  QWhatsThis::add( l, msg );
-  QWhatsThis::add( mSendOnCheckCombo, msg );
+  TQString msg = i18n( GlobalSettings::self()->sendOnCheckItem()->whatsThis().utf8() );
+  TQWhatsThis::add( l, msg );
+  TQWhatsThis::add( mSendOnCheckCombo, msg );
 
-  glay->addWidget( new QLabel( mSendMethodCombo, /*buddy*/
+  glay->addWidget( new TQLabel( mSendMethodCombo, /*buddy*/
                                i18n("Defa&ult send method:"), group ), 2, 0 );
-  glay->addWidget( new QLabel( mMessagePropertyCombo, /*buddy*/
+  glay->addWidget( new TQLabel( mMessagePropertyCombo, /*buddy*/
                                i18n("Message &property:"), group ), 3, 0 );
-  l = new QLabel( mDefaultDomainEdit, /*buddy*/
+  l = new TQLabel( mDefaultDomainEdit, /*buddy*/
                           i18n("Defaul&t domain:"), group );
   glay->addWidget( l, 4, 0 );
 
-  // and now: add QWhatsThis:
+  // and now: add TQWhatsThis:
   msg = i18n( "<qt><p>The default domain is used to complete email "
               "addresses that only consist of the user's name."
               "</p></qt>" );
-  QWhatsThis::add( l, msg );
-  QWhatsThis::add( mDefaultDomainEdit, msg );
+  TQWhatsThis::add( l, msg );
+  TQWhatsThis::add( mDefaultDomainEdit, msg );
 }
 
 
 void AccountsPage::SendingTab::slotTransportSelected()
 {
-  QListViewItem *cur = mTransportList->selectedItem();
+  TQListViewItem *cur = mTransportList->selectedItem();
   mModifyTransportButton->setEnabled( cur );
   mRemoveTransportButton->setEnabled( cur );
   mSetDefaultTransportButton->setEnabled( cur );
 }
 
 // adds a number to @p name to make the name unique
-static inline QString uniqueName( const QStringList & list,
-                                  const QString & name )
+static inline TQString uniqueName( const TQStringList & list,
+                                  const TQString & name )
 {
   int suffix = 1;
-  QString result = name;
+  TQString result = name;
   while ( list.find( result ) != list.end() ) {
     result = i18n("%1: name; %2: number appended to it to make it unique "
                   "among a list of names", "%1 %2")
@@ -747,12 +747,12 @@ static inline QString uniqueName( const QStringList & list,
 
 void AccountsPage::SendingTab::slotSetDefaultTransport()
 {
-  QListViewItem *item = mTransportList->selectedItem();
+  TQListViewItem *item = mTransportList->selectedItem();
   if ( !item ) return;
 
   KMTransportInfo ti;
 
-  QListViewItemIterator it( mTransportList );
+  TQListViewItemIterator it( mTransportList );
   for ( ; it.current(); ++it ) {
   ti.readConfig( KMTransportInfo::findTransport( it.current()->text(0) ));
   if ( ti.type != "sendmail" ) {
@@ -778,17 +778,17 @@ void AccountsPage::SendingTab::slotAddTransport()
 
   { // limit scope of selDialog
     KMTransportSelDlg selDialog( this );
-    if ( selDialog.exec() != QDialog::Accepted ) return;
+    if ( selDialog.exec() != TQDialog::Accepted ) return;
     transportType = selDialog.selected();
   }
 
   KMTransportInfo *transportInfo = new KMTransportInfo();
   switch ( transportType ) {
   case 0: // smtp
-    transportInfo->type = QString::fromLatin1("smtp");
+    transportInfo->type = TQString::fromLatin1("smtp");
     break;
   case 1: // sendmail
-    transportInfo->type = QString::fromLatin1("sendmail");
+    transportInfo->type = TQString::fromLatin1("sendmail");
     transportInfo->name = i18n("Sendmail");
     transportInfo->host = _PATH_SENDMAIL; // ### FIXME: use const, not #define
     break;
@@ -800,12 +800,12 @@ void AccountsPage::SendingTab::slotAddTransport()
 
   // create list of names:
   // ### move behind dialog.exec()?
-  QStringList transportNames;
-  QPtrListIterator<KMTransportInfo> it( mTransportInfoList );
+  TQStringList transportNames;
+  TQPtrListIterator<KMTransportInfo> it( mTransportInfoList );
   for ( it.toFirst() ; it.current() ; ++it )
     transportNames << (*it)->name;
 
-  if( dialog.exec() != QDialog::Accepted ) {
+  if( dialog.exec() != TQDialog::Accepted ) {
     delete transportInfo;
     return;
   }
@@ -819,8 +819,8 @@ void AccountsPage::SendingTab::slotAddTransport()
 
   // append to listview:
   // ### FIXME: insert before the selected item, append on empty selection
-  QListViewItem *lastItem = mTransportList->firstChild();
-  QString typeDisplayName;
+  TQListViewItem *lastItem = mTransportList->firstChild();
+  TQString typeDisplayName;
   if ( lastItem ) {
     typeDisplayName = transportInfo->type;
   } else {
@@ -831,7 +831,7 @@ void AccountsPage::SendingTab::slotAddTransport()
       .arg( transportInfo->type );
     GlobalSettings::self()->setDefaultTransport( transportInfo->name );
   }
-  (void) new QListViewItem( mTransportList, lastItem, transportInfo->name,
+  (void) new TQListViewItem( mTransportList, lastItem, transportInfo->name,
                             typeDisplayName );
 
   // notify anyone who cares:
@@ -841,24 +841,24 @@ void AccountsPage::SendingTab::slotAddTransport()
 
 void AccountsPage::SendingTab::slotModifySelectedTransport()
 {
-  QListViewItem *item = mTransportList->selectedItem();
+  TQListViewItem *item = mTransportList->selectedItem();
   if ( !item ) return;
 
-  const QString& originalTransport = item->text(0);
+  const TQString& originalTransport = item->text(0);
 
-  QPtrListIterator<KMTransportInfo> it( mTransportInfoList );
+  TQPtrListIterator<KMTransportInfo> it( mTransportInfoList );
   for ( it.toFirst() ; it.current() ; ++it )
     if ( (*it)->name == item->text(0) ) break;
   if ( !it.current() ) return;
 
   KMTransportDialog dialog( i18n("Modify Transport"), (*it), this );
 
-  if ( dialog.exec() != QDialog::Accepted ) return;
+  if ( dialog.exec() != TQDialog::Accepted ) return;
 
   // create the list of names of transports, but leave out the current
   // item:
-  QStringList transportNames;
-  QPtrListIterator<KMTransportInfo> jt( mTransportInfoList );
+  TQStringList transportNames;
+  TQPtrListIterator<KMTransportInfo> jt( mTransportInfoList );
   int entryLocation = -1;
   for ( jt.toFirst() ; jt.current() ; ++jt )
     if ( jt != it )
@@ -874,9 +874,9 @@ void AccountsPage::SendingTab::slotModifySelectedTransport()
   // and insert the new name at the position of the old in the list of
   // strings; then broadcast the new list:
   transportNames.insert( transportNames.at( entryLocation ), (*it)->name );
-  const QString& newTransportName = (*it)->name;
+  const TQString& newTransportName = (*it)->name;
 
-  QStringList changedIdents;
+  TQStringList changedIdents;
   KPIM::IdentityManager * im = kmkernel->identityManager();
   for ( KPIM::IdentityManager::Iterator it = im->modifyBegin(); it != im->modifyEnd(); ++it ) {
     if ( originalTransport == (*it).transport() ) {
@@ -886,7 +886,7 @@ void AccountsPage::SendingTab::slotModifySelectedTransport()
   }
 
   if ( !changedIdents.isEmpty() ) {
-    QString information = i18n( "This identity has been changed to use the modified transport:",
+    TQString information = i18n( "This identity has been changed to use the modified transport:",
                           "These %n identities have been changed to use the modified transport:",
                           changedIdents.count() );
     KMessageBox::informationList( this, information, changedIdents );
@@ -898,39 +898,39 @@ void AccountsPage::SendingTab::slotModifySelectedTransport()
 
 void AccountsPage::SendingTab::slotRemoveSelectedTransport()
 {
-  QListViewItem *item = mTransportList->selectedItem();
+  TQListViewItem *item = mTransportList->selectedItem();
   if ( !item ) return;
 
-  QStringList changedIdents;
+  TQStringList changedIdents;
   KPIM::IdentityManager * im = kmkernel->identityManager();
   for ( KPIM::IdentityManager::Iterator it = im->modifyBegin(); it != im->modifyEnd(); ++it ) {
     if ( item->text( 0 ) == (*it).transport() ) {
-      (*it).setTransport( QString::null );
+      (*it).setTransport( TQString::null );
       changedIdents += (*it).identityName();
     }
   }
 
   // if the deleted transport is the currently used transport reset it to default
-  const QString& currentTransport = GlobalSettings::self()->currentTransport();
+  const TQString& currentTransport = GlobalSettings::self()->currentTransport();
   if ( item->text( 0 ) == currentTransport ) {
-    GlobalSettings::self()->setCurrentTransport( QString::null );
+    GlobalSettings::self()->setCurrentTransport( TQString::null );
   }
 
   if ( !changedIdents.isEmpty() ) {
-    QString information = i18n( "This identity has been changed to use the default transport:",
+    TQString information = i18n( "This identity has been changed to use the default transport:",
                           "These %n identities have been changed to use the default transport:",
                           changedIdents.count() );
     KMessageBox::informationList( this, information, changedIdents );
   }
 
-  QPtrListIterator<KMTransportInfo> it( mTransportInfoList );
+  TQPtrListIterator<KMTransportInfo> it( mTransportInfoList );
   for ( it.toFirst() ; it.current() ; ++it )
     if ( (*it)->name == item->text(0) ) break;
   if ( !it.current() ) return;
 
   KMTransportInfo ti;
 
-  QListViewItem *newCurrent = item->itemBelow();
+  TQListViewItem *newCurrent = item->itemBelow();
   if ( !newCurrent ) newCurrent = item->itemAbove();
   //mTransportList->removeItem( item );
   if ( newCurrent ) {
@@ -946,13 +946,13 @@ void AccountsPage::SendingTab::slotRemoveSelectedTransport()
       }
     }
   } else {
-    GlobalSettings::self()->setDefaultTransport( QString::null );
+    GlobalSettings::self()->setDefaultTransport( TQString::null );
   }
 
   delete item;
   mTransportInfoList.remove( it );
 
-  QStringList transportNames;
+  TQStringList transportNames;
   for ( it.toFirst() ; it.current() ; ++it )
     transportNames << (*it)->name;
   emit transportListChanged( transportNames );
@@ -969,22 +969,22 @@ void AccountsPage::SendingTab::doLoadOther() {
 
   int numTransports = general.readNumEntry("transports", 0);
 
-  QListViewItem *top = 0;
+  TQListViewItem *top = 0;
   mTransportInfoList.clear();
   mTransportList->clear();
-  QStringList transportNames;
+  TQStringList transportNames;
   for ( int i = 1 ; i <= numTransports ; i++ ) {
     KMTransportInfo *ti = new KMTransportInfo();
     ti->readConfig(i);
     mTransportInfoList.append( ti );
     transportNames << ti->name;
-    top = new QListViewItem( mTransportList, top, ti->name, ti->type );
+    top = new TQListViewItem( mTransportList, top, ti->name, ti->type );
   }
   emit transportListChanged( transportNames );
 
-  const QString &defaultTransport = GlobalSettings::self()->defaultTransport();
+  const TQString &defaultTransport = GlobalSettings::self()->defaultTransport();
 
-  QListViewItemIterator it( mTransportList );
+  TQListViewItemIterator it( mTransportList );
   for ( ; it.current(); ++it ) {
     if ( it.current()->text(0) == defaultTransport ) {
       if ( it.current()->text(1) != "sendmail" ) {
@@ -1008,7 +1008,7 @@ void AccountsPage::SendingTab::doLoadOther() {
 
   mConfirmSendCheck->setChecked( composer.readBoolEntry( "confirm-before-send",
                                                          false ) );
-  QString str = general.readEntry( "Default domain" );
+  TQString str = general.readEntry( "Default domain" );
   if( str.isEmpty() )
   {
     //### FIXME: Use the global convenience function instead of the homebrewed
@@ -1020,7 +1020,7 @@ void AccountsPage::SendingTab::doLoadOther() {
       buffer[255] = 0;
     else
       buffer[0] = 0;
-    str = QString::fromLatin1( *buffer ? buffer : "localhost" );
+    str = TQString::fromLatin1( *buffer ? buffer : "localhost" );
   }
   mDefaultDomainEdit->setText( str );
 }
@@ -1031,7 +1031,7 @@ void AccountsPage::SendingTab::save() {
 
   // Save transports:
   general.writeEntry( "transports", mTransportInfoList.count() );
-  QPtrListIterator<KMTransportInfo> it( mTransportInfoList );
+  TQPtrListIterator<KMTransportInfo> it( mTransportInfoList );
   for ( int i = 1 ; it.current() ; ++it, ++i )
     (*it)->writeConfig(i);
 
@@ -1046,27 +1046,27 @@ void AccountsPage::SendingTab::save() {
   general.writeEntry( "Default domain", mDefaultDomainEdit->text() );
 }
 
-QString AccountsPage::ReceivingTab::helpAnchor() const {
-  return QString::fromLatin1("configure-accounts-receiving");
+TQString AccountsPage::ReceivingTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-accounts-receiving");
 }
 
-AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent, const char * name )
+AccountsPageReceivingTab::AccountsPageReceivingTab( TQWidget * parent, const char * name )
   : ConfigModuleTab ( parent, name )
 {
   // temp. vars:
-  QVBoxLayout *vlay;
-  QVBoxLayout *btn_vlay;
-  QHBoxLayout *hlay;
-  QPushButton *button;
-  QGroupBox   *group;
+  TQVBoxLayout *vlay;
+  TQVBoxLayout *btn_vlay;
+  TQHBoxLayout *hlay;
+  TQPushButton *button;
+  TQGroupBox   *group;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // label: zero stretch
-  vlay->addWidget( new QLabel( i18n("Incoming accounts (add at least one):"), this ) );
+  vlay->addWidget( new TQLabel( i18n("Incoming accounts (add at least one):"), this ) );
 
   // hbox layout: stretch 10, spacing inherited from vlay
-  hlay = new QHBoxLayout();
+  hlay = new TQHBoxLayout();
   vlay->addLayout( hlay, 10 ); // high stretch to suppress groupbox's growing
 
   // account list: left widget in hlay; stretch 1
@@ -1076,75 +1076,75 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent, const char
   mAccountList->addColumn( i18n("Folder") );
   mAccountList->setAllColumnsShowFocus( true );
   mAccountList->setSorting( -1 );
-  connect( mAccountList, SIGNAL(selectionChanged()),
-           this, SLOT(slotAccountSelected()) );
-  connect( mAccountList, SIGNAL(doubleClicked( QListViewItem *)),
-           this, SLOT(slotModifySelectedAccount()) );
+  connect( mAccountList, TQT_SIGNAL(selectionChanged()),
+           this, TQT_SLOT(slotAccountSelected()) );
+  connect( mAccountList, TQT_SIGNAL(doubleClicked( TQListViewItem *)),
+           this, TQT_SLOT(slotModifySelectedAccount()) );
   hlay->addWidget( mAccountList, 1 );
 
   // a vbox layout for the buttons: zero stretch, spacing inherited from hlay
-  btn_vlay = new QVBoxLayout( hlay );
+  btn_vlay = new TQVBoxLayout( hlay );
 
   // "add..." button: stretch 0
-  button = new QPushButton( i18n("A&dd..."), this );
+  button = new TQPushButton( i18n("A&dd..."), this );
   button->setAutoDefault( false );
-  connect( button, SIGNAL(clicked()),
-           this, SLOT(slotAddAccount()) );
+  connect( button, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotAddAccount()) );
   btn_vlay->addWidget( button );
 
   // "modify..." button: stretch 0
-  mModifyAccountButton = new QPushButton( i18n("&Modify..."), this );
+  mModifyAccountButton = new TQPushButton( i18n("&Modify..."), this );
   mModifyAccountButton->setAutoDefault( false );
   mModifyAccountButton->setEnabled( false ); // b/c no item is selected yet
-  connect( mModifyAccountButton, SIGNAL(clicked()),
-           this, SLOT(slotModifySelectedAccount()) );
+  connect( mModifyAccountButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotModifySelectedAccount()) );
   btn_vlay->addWidget( mModifyAccountButton );
 
   // "remove..." button: stretch 0
-  mRemoveAccountButton = new QPushButton( i18n("R&emove"), this );
+  mRemoveAccountButton = new TQPushButton( i18n("R&emove"), this );
   mRemoveAccountButton->setAutoDefault( false );
   mRemoveAccountButton->setEnabled( false ); // b/c no item is selected yet
-  connect( mRemoveAccountButton, SIGNAL(clicked()),
-           this, SLOT(slotRemoveSelectedAccount()) );
+  connect( mRemoveAccountButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotRemoveSelectedAccount()) );
   btn_vlay->addWidget( mRemoveAccountButton );
   btn_vlay->addStretch( 1 ); // spacer
 
-  mCheckmailStartupCheck = new QCheckBox( i18n("Chec&k mail on startup"), this );
+  mCheckmailStartupCheck = new TQCheckBox( i18n("Chec&k mail on startup"), this );
   vlay->addWidget( mCheckmailStartupCheck );
-  connect( mCheckmailStartupCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCheckmailStartupCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "New Mail Notification" group box: stretch 0
-  group = new QVGroupBox( i18n("New Mail Notification"), this );
+  group = new TQVGroupBox( i18n("New Mail Notification"), this );
   vlay->addWidget( group );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
   // "beep on new mail" check box:
-  mBeepNewMailCheck = new QCheckBox(i18n("&Beep"), group );
-  mBeepNewMailCheck->setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
-                                                 QSizePolicy::Fixed ) );
-  connect( mBeepNewMailCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  mBeepNewMailCheck = new TQCheckBox(i18n("&Beep"), group );
+  mBeepNewMailCheck->setSizePolicy( TQSizePolicy( TQSizePolicy::MinimumExpanding,
+                                                 TQSizePolicy::Fixed ) );
+  connect( mBeepNewMailCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "Detailed new mail notification" check box
   mVerboseNotificationCheck =
-    new QCheckBox( i18n( "Deta&iled new mail notification" ), group );
-  mVerboseNotificationCheck->setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
-                                                         QSizePolicy::Fixed ) );
-  QToolTip::add( mVerboseNotificationCheck,
+    new TQCheckBox( i18n( "Deta&iled new mail notification" ), group );
+  mVerboseNotificationCheck->setSizePolicy( TQSizePolicy( TQSizePolicy::MinimumExpanding,
+                                                         TQSizePolicy::Fixed ) );
+  TQToolTip::add( mVerboseNotificationCheck,
                  i18n( "Show for each folder the number of newly arrived "
                        "messages" ) );
-  QWhatsThis::add( mVerboseNotificationCheck,
+  TQWhatsThis::add( mVerboseNotificationCheck,
     GlobalSettings::self()->verboseNewMailNotificationItem()->whatsThis() );
-  connect( mVerboseNotificationCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mVerboseNotificationCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "Other Actions" button:
-  mOtherNewMailActionsButton = new QPushButton( i18n("Other Actio&ns"), group );
-  mOtherNewMailActionsButton->setSizePolicy( QSizePolicy( QSizePolicy::Fixed,
-                                                          QSizePolicy::Fixed ) );
-  connect( mOtherNewMailActionsButton, SIGNAL(clicked()),
-           this, SLOT(slotEditNotifications()) );
+  mOtherNewMailActionsButton = new TQPushButton( i18n("Other Actio&ns"), group );
+  mOtherNewMailActionsButton->setSizePolicy( TQSizePolicy( TQSizePolicy::Fixed,
+                                                          TQSizePolicy::Fixed ) );
+  connect( mOtherNewMailActionsButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotEditNotifications()) );
 }
 
 AccountsPageReceivingTab::~AccountsPageReceivingTab()
@@ -1153,14 +1153,14 @@ AccountsPageReceivingTab::~AccountsPageReceivingTab()
   // we have a number of things to clean up:
 
   // The newly created accounts
-  QValueList< QGuardedPtr<KMAccount> >::Iterator it;
+  TQValueList< TQGuardedPtr<KMAccount> >::Iterator it;
   for (it = mNewAccounts.begin(); it != mNewAccounts.end(); ++it ) {
     delete (*it);
   }
   mNewAccounts.clear();
 
   // The modified accounts
-  QValueList<ModifiedAccountsType*>::Iterator j;
+  TQValueList<ModifiedAccountsType*>::Iterator j;
   for ( j = mModifiedAccounts.begin() ; j != mModifiedAccounts.end() ; ++j ) {
     delete (*j)->newAccount;
     delete (*j);
@@ -1172,31 +1172,31 @@ AccountsPageReceivingTab::~AccountsPageReceivingTab()
 
 void AccountsPage::ReceivingTab::slotAccountSelected()
 {
-  QListViewItem * item = mAccountList->selectedItem();
+  TQListViewItem * item = mAccountList->selectedItem();
   mModifyAccountButton->setEnabled( item );
   mRemoveAccountButton->setEnabled( item );
 }
 
-QStringList AccountsPage::ReceivingTab::occupiedNames()
+TQStringList AccountsPage::ReceivingTab::occupiedNames()
 {
-  QStringList accountNames = kmkernel->acctMgr()->getAccounts();
+  TQStringList accountNames = kmkernel->acctMgr()->getAccounts();
 
-  QValueList<ModifiedAccountsType*>::Iterator k;
+  TQValueList<ModifiedAccountsType*>::Iterator k;
   for (k = mModifiedAccounts.begin(); k != mModifiedAccounts.end(); ++k )
     if ((*k)->oldAccount)
       accountNames.remove( (*k)->oldAccount->name() );
 
-  QValueList< QGuardedPtr<KMAccount> >::Iterator l;
+  TQValueList< TQGuardedPtr<KMAccount> >::Iterator l;
   for (l = mAccountsToDelete.begin(); l != mAccountsToDelete.end(); ++l )
     if (*l)
       accountNames.remove( (*l)->name() );
 
-  QValueList< QGuardedPtr<KMAccount> >::Iterator it;
+  TQValueList< TQGuardedPtr<KMAccount> >::Iterator it;
   for (it = mNewAccounts.begin(); it != mNewAccounts.end(); ++it )
     if (*it)
       accountNames += (*it)->name();
 
-  QValueList<ModifiedAccountsType*>::Iterator j;
+  TQValueList<ModifiedAccountsType*>::Iterator j;
   for (j = mModifiedAccounts.begin(); j != mModifiedAccounts.end(); ++j )
     accountNames += (*j)->newAccount->name();
 
@@ -1205,7 +1205,7 @@ QStringList AccountsPage::ReceivingTab::occupiedNames()
 
 void AccountsPage::ReceivingTab::slotAddAccount() {
   KMAcctSelDlg accountSelectorDialog( this );
-  if( accountSelectorDialog.exec() != QDialog::Accepted ) return;
+  if( accountSelectorDialog.exec() != TQDialog::Accepted ) return;
 
   const char *accountType = 0;
   switch ( accountSelectorDialog.selected() ) {
@@ -1223,7 +1223,7 @@ void AccountsPage::ReceivingTab::slotAddAccount() {
   }
 
   KMAccount *account
-    = kmkernel->acctMgr()->create( QString::fromLatin1( accountType ) );
+    = kmkernel->acctMgr()->create( TQString::fromLatin1( accountType ) );
   if ( !account ) {
     // ### FIXME: Give the user more information. Is this error
     // recoverable?
@@ -1235,9 +1235,9 @@ void AccountsPage::ReceivingTab::slotAddAccount() {
 
   AccountDialog dialog( i18n("Add Account"), account, this );
 
-  QStringList accountNames = occupiedNames();
+  TQStringList accountNames = occupiedNames();
 
-  if( dialog.exec() != QDialog::Accepted ) {
+  if( dialog.exec() != TQDialog::Accepted ) {
     delete account;
     return;
   }
@@ -1245,12 +1245,12 @@ void AccountsPage::ReceivingTab::slotAddAccount() {
   account->deinstallTimer();
   account->setName( uniqueName( accountNames, account->name() ) );
 
-  QListViewItem *after = mAccountList->firstChild();
+  TQListViewItem *after = mAccountList->firstChild();
   while ( after && after->nextSibling() )
     after = after->nextSibling();
 
-  QListViewItem *listItem =
-    new QListViewItem( mAccountList, after, account->name(), account->type() );
+  TQListViewItem *listItem =
+    new TQListViewItem( mAccountList, after, account->name(), account->type() );
   if( account->folder() )
     listItem->setText( 2, account->folder()->label() );
 
@@ -1262,11 +1262,11 @@ void AccountsPage::ReceivingTab::slotAddAccount() {
 
 void AccountsPage::ReceivingTab::slotModifySelectedAccount()
 {
-  QListViewItem *listItem = mAccountList->selectedItem();
+  TQListViewItem *listItem = mAccountList->selectedItem();
   if( !listItem ) return;
 
   KMAccount *account = 0;
-  QValueList<ModifiedAccountsType*>::Iterator j;
+  TQValueList<ModifiedAccountsType*>::Iterator j;
   for (j = mModifiedAccounts.begin(); j != mModifiedAccounts.end(); ++j )
     if ( (*j)->newAccount->name() == listItem->text(0) ) {
       account = (*j)->newAccount;
@@ -1274,7 +1274,7 @@ void AccountsPage::ReceivingTab::slotModifySelectedAccount()
     }
 
   if ( !account ) {
-    QValueList< QGuardedPtr<KMAccount> >::Iterator it;
+    TQValueList< TQGuardedPtr<KMAccount> >::Iterator it;
     for ( it = mNewAccounts.begin() ; it != mNewAccounts.end() ; ++it )
       if ( (*it)->name() == listItem->text(0) ) {
         account = *it;
@@ -1309,12 +1309,12 @@ void AccountsPage::ReceivingTab::slotModifySelectedAccount()
     }
   }
 
-  QStringList accountNames = occupiedNames();
+  TQStringList accountNames = occupiedNames();
   accountNames.remove( account->name() );
 
   AccountDialog dialog( i18n("Modify Account"), account, this );
 
-  if( dialog.exec() != QDialog::Accepted ) return;
+  if( dialog.exec() != TQDialog::Accepted ) return;
 
   account->setName( uniqueName( accountNames, account->name() ) );
 
@@ -1329,11 +1329,11 @@ void AccountsPage::ReceivingTab::slotModifySelectedAccount()
 
 
 void AccountsPage::ReceivingTab::slotRemoveSelectedAccount() {
-  QListViewItem *listItem = mAccountList->selectedItem();
+  TQListViewItem *listItem = mAccountList->selectedItem();
   if( !listItem ) return;
 
   KMAccount *acct = 0;
-  QValueList<ModifiedAccountsType*>::Iterator j;
+  TQValueList<ModifiedAccountsType*>::Iterator j;
   for ( j = mModifiedAccounts.begin() ; j != mModifiedAccounts.end() ; ++j )
     if ( (*j)->newAccount->name() == listItem->text(0) ) {
       acct = (*j)->oldAccount;
@@ -1342,7 +1342,7 @@ void AccountsPage::ReceivingTab::slotRemoveSelectedAccount() {
       break;
     }
   if ( !acct ) {
-    QValueList< QGuardedPtr<KMAccount> >::Iterator it;
+    TQValueList< TQGuardedPtr<KMAccount> >::Iterator it;
     for ( it = mNewAccounts.begin() ; it != mNewAccounts.end() ; ++it )
       if ( (*it)->name() == listItem->text(0) ) {
         acct = *it;
@@ -1362,7 +1362,7 @@ void AccountsPage::ReceivingTab::slotRemoveSelectedAccount() {
     return;
   }
 
-  QListViewItem * item = listItem->itemBelow();
+  TQListViewItem * item = listItem->itemBelow();
   if ( !item ) item = listItem->itemAbove();
   delete listItem;
 
@@ -1388,17 +1388,17 @@ void AccountsPage::ReceivingTab::doLoadOther() {
   KConfigGroup general( KMKernel::config(), "General" );
 
   mAccountList->clear();
-  QListViewItem *top = 0;
+  TQListViewItem *top = 0;
 
   for( KMAccount *a = kmkernel->acctMgr()->first(); a!=0;
        a = kmkernel->acctMgr()->next() ) {
-    QListViewItem *listItem =
-      new QListViewItem( mAccountList, top, a->name(), a->type() );
+    TQListViewItem *listItem =
+      new TQListViewItem( mAccountList, top, a->name(), a->type() );
     if( a->folder() )
       listItem->setText( 2, a->folder()->label() );
     top = listItem;
   }
-  QListViewItem *listItem = mAccountList->firstChild();
+  TQListViewItem *listItem = mAccountList->firstChild();
   if ( listItem ) {
     mAccountList->setCurrentItem( listItem );
     mAccountList->setSelected( listItem, true );
@@ -1406,7 +1406,7 @@ void AccountsPage::ReceivingTab::doLoadOther() {
 
   mBeepNewMailCheck->setChecked( general.readBoolEntry("beep-on-mail", false ) );
   mCheckmailStartupCheck->setChecked( general.readBoolEntry("checkmail-startup", false) );
-  QTimer::singleShot( 0, this, SLOT( slotTweakAccountList() ) );
+  TQTimer::singleShot( 0, this, TQT_SLOT( slotTweakAccountList() ) );
 }
 
 void AccountsPage::ReceivingTab::slotTweakAccountList()
@@ -1418,13 +1418,13 @@ void AccountsPage::ReceivingTab::slotTweakAccountList()
 
 void AccountsPage::ReceivingTab::save() {
   // Add accounts marked as new
-  QValueList< QGuardedPtr<KMAccount> >::Iterator it;
+  TQValueList< TQGuardedPtr<KMAccount> >::Iterator it;
   for (it = mNewAccounts.begin(); it != mNewAccounts.end(); ++it ) {
     kmkernel->acctMgr()->add( *it ); // calls installTimer too
   }
 
   // Update accounts that have been modified
-  QValueList<ModifiedAccountsType*>::Iterator j;
+  TQValueList<ModifiedAccountsType*>::Iterator j;
   for ( j = mModifiedAccounts.begin() ; j != mModifiedAccounts.end() ; ++j ) {
     (*j)->oldAccount->pseudoAssign( (*j)->newAccount );
     delete (*j)->newAccount;
@@ -1471,11 +1471,11 @@ void AccountsPage::ReceivingTab::save() {
 // *                     AppearancePage                        *
 // *                                                           *
 // *************************************************************
-QString AppearancePage::helpAnchor() const {
-  return QString::fromLatin1("configure-appearance");
+TQString AppearancePage::helpAnchor() const {
+  return TQString::fromLatin1("configure-appearance");
 }
 
-AppearancePage::AppearancePage( QWidget * parent, const char * name )
+AppearancePage::AppearancePage( TQWidget * parent, const char * name )
   : ConfigModuleWithTabs( parent, name )
 {
   //
@@ -1518,8 +1518,8 @@ AppearancePage::AppearancePage( QWidget * parent, const char * name )
 }
 
 
-QString AppearancePage::FontsTab::helpAnchor() const {
-  return QString::fromLatin1("configure-appearance-fonts");
+TQString AppearancePage::FontsTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-appearance-fonts");
 }
 
 static const struct {
@@ -1545,58 +1545,58 @@ static const struct {
 };
 static const int numFontNames = sizeof fontNames / sizeof *fontNames;
 
-AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent, const char * name )
+AppearancePageFontsTab::AppearancePageFontsTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name ), mActiveFontIndex( -1 )
 {
   assert( numFontNames == sizeof mFont / sizeof *mFont );
   // tmp. vars:
-  QVBoxLayout *vlay;
-  QHBoxLayout *hlay;
-  QLabel      *label;
+  TQVBoxLayout *vlay;
+  TQHBoxLayout *hlay;
+  TQLabel      *label;
 
   // "Use custom fonts" checkbox, followed by <hr>
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
-  mCustomFontCheck = new QCheckBox( i18n("&Use custom fonts"), this );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  mCustomFontCheck = new TQCheckBox( i18n("&Use custom fonts"), this );
   vlay->addWidget( mCustomFontCheck );
   vlay->addWidget( new KSeparator( KSeparator::HLine, this ) );
-  connect ( mCustomFontCheck, SIGNAL( stateChanged( int ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  connect ( mCustomFontCheck, TQT_SIGNAL( stateChanged( int ) ),
+            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "font location" combo box and label:
-  hlay = new QHBoxLayout( vlay ); // inherites spacing
-  mFontLocationCombo = new QComboBox( false, this );
+  hlay = new TQHBoxLayout( vlay ); // inherites spacing
+  mFontLocationCombo = new TQComboBox( false, this );
   mFontLocationCombo->setEnabled( false ); // !mCustomFontCheck->isChecked()
 
-  QStringList fontDescriptions;
+  TQStringList fontDescriptions;
   for ( int i = 0 ; i < numFontNames ; i++ )
     fontDescriptions << i18n( fontNames[i].displayName );
   mFontLocationCombo->insertStringList( fontDescriptions );
 
-  label = new QLabel( mFontLocationCombo, i18n("Apply &to:"), this );
+  label = new TQLabel( mFontLocationCombo, i18n("Apply &to:"), this );
   label->setEnabled( false ); // since !mCustomFontCheck->isChecked()
   hlay->addWidget( label );
 
   hlay->addWidget( mFontLocationCombo );
   hlay->addStretch( 10 );
   vlay->addSpacing( KDialog::spacingHint() );
-  mFontChooser = new KFontChooser( this, "font", false, QStringList(),
+  mFontChooser = new KFontChooser( this, "font", false, TQStringList(),
                                    false, 4 );
   mFontChooser->setEnabled( false ); // since !mCustomFontCheck->isChecked()
   vlay->addWidget( mFontChooser );
-  connect ( mFontChooser, SIGNAL( fontSelected( const QFont& ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  connect ( mFontChooser, TQT_SIGNAL( fontSelected( const TQFont& ) ),
+            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
 
   // {en,dis}able widgets depending on the state of mCustomFontCheck:
-  connect( mCustomFontCheck, SIGNAL(toggled(bool)),
-           label, SLOT(setEnabled(bool)) );
-  connect( mCustomFontCheck, SIGNAL(toggled(bool)),
-           mFontLocationCombo, SLOT(setEnabled(bool)) );
-  connect( mCustomFontCheck, SIGNAL(toggled(bool)),
-           mFontChooser, SLOT(setEnabled(bool)) );
+  connect( mCustomFontCheck, TQT_SIGNAL(toggled(bool)),
+           label, TQT_SLOT(setEnabled(bool)) );
+  connect( mCustomFontCheck, TQT_SIGNAL(toggled(bool)),
+           mFontLocationCombo, TQT_SLOT(setEnabled(bool)) );
+  connect( mCustomFontCheck, TQT_SIGNAL(toggled(bool)),
+           mFontChooser, TQT_SLOT(setEnabled(bool)) );
   // load the right font settings into mFontChooser:
-  connect( mFontLocationCombo, SIGNAL(activated(int) ),
-           this, SLOT(slotFontSelectorChanged(int)) );
+  connect( mFontLocationCombo, TQT_SIGNAL(activated(int) ),
+           this, TQT_SLOT(slotFontSelectorChanged(int)) );
 }
 
 
@@ -1623,14 +1623,14 @@ void AppearancePage::FontsTab::slotFontSelectorChanged( int index )
   mActiveFontIndex = index;
 
   // Disonnect so the "Apply" button is not activated by the change
-  disconnect ( mFontChooser, SIGNAL( fontSelected( const QFont& ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  disconnect ( mFontChooser, TQT_SIGNAL( fontSelected( const TQFont& ) ),
+            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // Display the new setting:
   mFontChooser->setFont( mFont[index], fontNames[index].onlyFixed );
 
-  connect ( mFontChooser, SIGNAL( fontSelected( const QFont& ) ),
-            this, SLOT( slotEmitChanged( void ) ) );
+  connect ( mFontChooser, TQT_SIGNAL( fontSelected( const TQFont& ) ),
+            this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // Disable Family and Size list if we have selected a quote font:
   mFontChooser->enableColumn( KFontChooser::FamilyList|KFontChooser::SizeList,
@@ -1641,7 +1641,7 @@ void AppearancePage::FontsTab::doLoadOther() {
   KConfigGroup fonts( KMKernel::config(), "Fonts" );
 
   mFont[0] = KGlobalSettings::generalFont();
-  QFont fixedFont = KGlobalSettings::fixedFont();
+  TQFont fixedFont = KGlobalSettings::fixedFont();
   for ( int i = 0 ; i < numFontNames ; i++ )
     mFont[i] = fonts.readFontEntry( fontNames[i].configName,
       (fontNames[i].onlyFixed) ? &fixedFont : &mFont[0] );
@@ -1687,8 +1687,8 @@ void AppearancePage::FontsTab::save() {
       fonts.writeEntry( fontNames[i].configName, mFont[i] );
 }
 
-QString AppearancePage::ColorsTab::helpAnchor() const {
-  return QString::fromLatin1("configure-appearance-colors");
+TQString AppearancePage::ColorsTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-appearance-colors");
 }
 
 
@@ -1723,57 +1723,57 @@ static const struct {
 };
 static const int numColorNames = sizeof colorNames / sizeof *colorNames;
 
-AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent, const char * name )
+AppearancePageColorsTab::AppearancePageColorsTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // tmp. vars:
-  QVBoxLayout *vlay;
+  TQVBoxLayout *vlay;
 
   // "use custom colors" check box
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
-  mCustomColorCheck = new QCheckBox( i18n("&Use custom colors"), this );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  mCustomColorCheck = new TQCheckBox( i18n("&Use custom colors"), this );
   vlay->addWidget( mCustomColorCheck );
-  connect( mCustomColorCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCustomColorCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // color list box:
   mColorList = new ColorListBox( this );
   mColorList->setEnabled( false ); // since !mCustomColorCheck->isChecked()
-  QStringList modeList;
+  TQStringList modeList;
   for ( int i = 0 ; i < numColorNames ; i++ )
     mColorList->insertItem( new ColorListItem( i18n( colorNames[i].displayName ) ) );
   vlay->addWidget( mColorList, 1 );
 
   // "recycle colors" check box:
   mRecycleColorCheck =
-    new QCheckBox( i18n("Recycle colors on deep &quoting"), this );
+    new TQCheckBox( i18n("Recycle colors on deep &quoting"), this );
   mRecycleColorCheck->setEnabled( false );
   vlay->addWidget( mRecycleColorCheck );
-  connect( mRecycleColorCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mRecycleColorCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // close to quota threshold
-  QHBoxLayout *hbox = new QHBoxLayout(vlay);
-  QLabel *l = new QLabel( i18n("Close to quota threshold"), this );
+  TQHBoxLayout *hbox = new TQHBoxLayout(vlay);
+  TQLabel *l = new TQLabel( i18n("Close to quota threshold"), this );
   hbox->addWidget( l );
   l->setEnabled( false );
-  mCloseToQuotaThreshold = new QSpinBox( 0, 100, 1, this );
-  connect( mCloseToQuotaThreshold, SIGNAL( valueChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  mCloseToQuotaThreshold = new TQSpinBox( 0, 100, 1, this );
+  connect( mCloseToQuotaThreshold, TQT_SIGNAL( valueChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
   mCloseToQuotaThreshold->setSuffix( i18n("%"));
   hbox->addWidget( mCloseToQuotaThreshold );
-  hbox->addWidget( new QWidget(this), 2 );
+  hbox->addWidget( new TQWidget(this), 2 );
 
   // {en,dir}able widgets depending on the state of mCustomColorCheck:
-  connect( mCustomColorCheck, SIGNAL(toggled(bool)),
-           mColorList, SLOT(setEnabled(bool)) );
-  connect( mCustomColorCheck, SIGNAL(toggled(bool)),
-           mRecycleColorCheck, SLOT(setEnabled(bool)) );
-  connect( mCustomColorCheck, SIGNAL(toggled(bool)),
-           l, SLOT(setEnabled(bool)) );
+  connect( mCustomColorCheck, TQT_SIGNAL(toggled(bool)),
+           mColorList, TQT_SLOT(setEnabled(bool)) );
+  connect( mCustomColorCheck, TQT_SIGNAL(toggled(bool)),
+           mRecycleColorCheck, TQT_SLOT(setEnabled(bool)) );
+  connect( mCustomColorCheck, TQT_SIGNAL(toggled(bool)),
+           l, TQT_SLOT(setEnabled(bool)) );
 
-  connect( mCustomColorCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCustomColorCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 }
 
 void AppearancePage::ColorsTab::doLoadOther() {
@@ -1783,26 +1783,26 @@ void AppearancePage::ColorsTab::doLoadOther() {
   mRecycleColorCheck->setChecked( reader.readBoolEntry( "RecycleQuoteColors", false ) );
   mCloseToQuotaThreshold->setValue( GlobalSettings::closeToQuotaThreshold() );
 
-  static const QColor defaultColor[ numColorNames ] = {
+  static const TQColor defaultColor[ numColorNames ] = {
     kapp->palette().active().base(), // bg
     KGlobalSettings::alternateBackgroundColor(), // alt bg
     kapp->palette().active().text(), // fg
-    QColor( 0x00, 0x80, 0x00 ), // quoted l1
-    QColor( 0x00, 0x70, 0x00 ), // quoted l2
-    QColor( 0x00, 0x60, 0x00 ), // quoted l3
+    TQColor( 0x00, 0x80, 0x00 ), // quoted l1
+    TQColor( 0x00, 0x70, 0x00 ), // quoted l2
+    TQColor( 0x00, 0x60, 0x00 ), // quoted l3
     KGlobalSettings::linkColor(), // link
     KGlobalSettings::visitedLinkColor(), // visited link
     Qt::red, // misspelled words
     Qt::red, // new msg
     Qt::blue, // unread mgs
-    QColor( 0x00, 0x7F, 0x00 ), // important msg
+    TQColor( 0x00, 0x7F, 0x00 ), // important msg
     Qt::blue, // todo mgs
-    QColor( 0x00, 0x80, 0xFF ), // light blue // pgp encrypted
-    QColor( 0x40, 0xFF, 0x40 ), // light green // pgp ok, trusted key
-    QColor( 0xFF, 0xFF, 0x40 ), // light yellow // pgp ok, untrusted key
-    QColor( 0xFF, 0xFF, 0x40 ), // light yellow // pgp unchk
+    TQColor( 0x00, 0x80, 0xFF ), // light blue // pgp encrypted
+    TQColor( 0x40, 0xFF, 0x40 ), // light green // pgp ok, trusted key
+    TQColor( 0xFF, 0xFF, 0x40 ), // light yellow // pgp ok, untrusted key
+    TQColor( 0xFF, 0xFF, 0x40 ), // light yellow // pgp unchk
     Qt::red, // pgp bad
-    QColor( 0xFF, 0x40, 0x40 ), // warning text color: light red
+    TQColor( 0xFF, 0x40, 0x40 ), // warning text color: light red
     Qt::red, // close to quota
     Qt::lightGray, // colorbar plain bg
     Qt::black,     // colorbar plain fg
@@ -1814,8 +1814,8 @@ void AppearancePage::ColorsTab::doLoadOther() {
     mColorList->setColor( i,
       reader.readColorEntry( colorNames[i].configName, &defaultColor[i] ) );
   }
-  connect( mColorList, SIGNAL( changed( ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mColorList, TQT_SIGNAL( changed( ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 }
 
 void AppearancePage::ColorsTab::installProfile( KConfig * profile ) {
@@ -1847,8 +1847,8 @@ void AppearancePage::ColorsTab::save() {
   GlobalSettings::setCloseToQuotaThreshold( mCloseToQuotaThreshold->value() );
 }
 
-QString AppearancePage::LayoutTab::helpAnchor() const {
-  return QString::fromLatin1("configure-appearance-layout");
+TQString AppearancePage::LayoutTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-appearance-layout");
 }
 
 static const EnumConfigEntryItem folderListModes[] = {
@@ -1891,45 +1891,45 @@ static const EnumConfigEntry readerWindowMode = {
   readerWindowModes, DIM(readerWindowModes), 1
 };
 
-AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent, const char * name )
+AppearancePageLayoutTab::AppearancePageLayoutTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // tmp. vars:
-  QVBoxLayout * vlay;
+  TQVBoxLayout * vlay;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // "folder list" radio buttons:
-  populateButtonGroup( mFolderListGroup = new QHButtonGroup( this ), folderListMode );
+  populateButtonGroup( mFolderListGroup = new TQHButtonGroup( this ), folderListMode );
   vlay->addWidget( mFolderListGroup );
-  connect( mFolderListGroup, SIGNAL ( clicked( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mFolderListGroup, TQT_SIGNAL ( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
-  mFavoriteFolderViewCB = new QCheckBox( i18n("Show favorite folder view"), this );
-  connect( mFavoriteFolderViewCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  mFavoriteFolderViewCB = new TQCheckBox( i18n("Show favorite folder view"), this );
+  connect( mFavoriteFolderViewCB, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
   vlay->addWidget( mFavoriteFolderViewCB );
 
-  mFolderQuickSearchCB = new QCheckBox( i18n("Show folder quick search field"), this );
-  connect( mFolderQuickSearchCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  mFolderQuickSearchCB = new TQCheckBox( i18n("Show folder quick search field"), this );
+  connect( mFolderQuickSearchCB, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
   vlay->addWidget( mFolderQuickSearchCB );
 
   // "show reader window" radio buttons:
-  populateButtonGroup( mReaderWindowModeGroup = new QVButtonGroup( this ), readerWindowMode );
+  populateButtonGroup( mReaderWindowModeGroup = new TQVButtonGroup( this ), readerWindowMode );
   vlay->addWidget( mReaderWindowModeGroup );
-  connect( mReaderWindowModeGroup, SIGNAL ( clicked( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mReaderWindowModeGroup, TQT_SIGNAL ( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "Show MIME Tree" radio buttons:
-  populateButtonGroup( mMIMETreeModeGroup = new QVButtonGroup( this ), mimeTreeMode );
+  populateButtonGroup( mMIMETreeModeGroup = new TQVButtonGroup( this ), mimeTreeMode );
   vlay->addWidget( mMIMETreeModeGroup );
-  connect( mMIMETreeModeGroup, SIGNAL ( clicked( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mMIMETreeModeGroup, TQT_SIGNAL ( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "MIME Tree Location" radio buttons:
-  populateButtonGroup( mMIMETreeLocationGroup = new QHButtonGroup( this ), mimeTreeLocation );
+  populateButtonGroup( mMIMETreeLocationGroup = new TQHButtonGroup( this ), mimeTreeLocation );
   vlay->addWidget( mMIMETreeLocationGroup );
-  connect( mMIMETreeLocationGroup, SIGNAL ( clicked( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mMIMETreeLocationGroup, TQT_SIGNAL ( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   vlay->addStretch( 10 ); // spacer
 }
@@ -1972,8 +1972,8 @@ void AppearancePage::LayoutTab::save() {
 // Appearance Message List
 //
 
-QString AppearancePage::HeadersTab::helpAnchor() const {
-  return QString::fromLatin1("configure-appearance-headers");
+TQString AppearancePage::HeadersTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-appearance-headers");
 }
 
 static const struct {
@@ -1989,87 +1989,87 @@ static const struct {
 static const int numDateDisplayConfig =
   sizeof dateDisplayConfig / sizeof *dateDisplayConfig;
 
-AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent, const char * name )
+AppearancePageHeadersTab::AppearancePageHeadersTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name ),
     mCustomDateFormatEdit( 0 )
 {
   // tmp. vars:
-  QButtonGroup * group;
-  QRadioButton * radio;
+  TQButtonGroup * group;
+  TQRadioButton * radio;
 
-  QVBoxLayout * vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  TQVBoxLayout * vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // "General Options" group:
-  group = new QVButtonGroup( i18n( "General Options" ), this );
+  group = new TQVButtonGroup( i18n( "General Options" ), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
-  mShowQuickSearch = new QCheckBox( i18n("Show Quick Search"), group );
+  mShowQuickSearch = new TQCheckBox( i18n("Show Quick Search"), group );
 
-  mMessageSizeCheck = new QCheckBox( i18n("Display messa&ge sizes"), group );
+  mMessageSizeCheck = new TQCheckBox( i18n("Display messa&ge sizes"), group );
 
-  mCryptoIconsCheck = new QCheckBox( i18n( "Show crypto &icons" ), group );
+  mCryptoIconsCheck = new TQCheckBox( i18n( "Show crypto &icons" ), group );
 
-  mAttachmentCheck = new QCheckBox( i18n("Show attachment icon"), group );
+  mAttachmentCheck = new TQCheckBox( i18n("Show attachment icon"), group );
 
   mNestedMessagesCheck =
-    new QCheckBox( i18n("&Threaded message list"), group );
+    new TQCheckBox( i18n("&Threaded message list"), group );
 
-  connect( mShowQuickSearch, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mMessageSizeCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mAttachmentCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mCryptoIconsCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mNestedMessagesCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mShowQuickSearch, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mMessageSizeCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mAttachmentCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mCryptoIconsCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mNestedMessagesCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
 
   vlay->addWidget( group );
 
   // "Message Header Threading Options" group:
   mNestingPolicy =
-    new QVButtonGroup( i18n("Threaded Message List Options"), this );
+    new TQVButtonGroup( i18n("Threaded Message List Options"), this );
   mNestingPolicy->layout()->setSpacing( KDialog::spacingHint() );
 
   mNestingPolicy->insert(
-    new QRadioButton( i18n("Always &keep threads open"),
+    new TQRadioButton( i18n("Always &keep threads open"),
                       mNestingPolicy ), 0 );
   mNestingPolicy->insert(
-    new QRadioButton( i18n("Threads default to o&pen"),
+    new TQRadioButton( i18n("Threads default to o&pen"),
                       mNestingPolicy ), 1 );
   mNestingPolicy->insert(
-    new QRadioButton( i18n("Threads default to closed"),
+    new TQRadioButton( i18n("Threads default to closed"),
                       mNestingPolicy ), 2 );
   mNestingPolicy->insert(
-    new QRadioButton( i18n("Open threads that contain ne&w, unread "
+    new TQRadioButton( i18n("Open threads that contain ne&w, unread "
                            "or important messages and open watched threads."),
                       mNestingPolicy ), 3 );
 
   vlay->addWidget( mNestingPolicy );
 
-  connect( mNestingPolicy, SIGNAL( clicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mNestingPolicy, TQT_SIGNAL( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "Date Display" group:
-  mDateDisplay = new QVButtonGroup( i18n("Date Display"), this );
+  mDateDisplay = new TQVButtonGroup( i18n("Date Display"), this );
   mDateDisplay->layout()->setSpacing( KDialog::spacingHint() );
 
   for ( int i = 0 ; i < numDateDisplayConfig ; i++ ) {
-    QString buttonLabel = i18n(dateDisplayConfig[i].displayName);
+    TQString buttonLabel = i18n(dateDisplayConfig[i].displayName);
     if ( buttonLabel.contains("%1") )
       buttonLabel = buttonLabel.arg( DateFormatter::formatCurrentDate( dateDisplayConfig[i].dateDisplay ) );
-    radio = new QRadioButton( buttonLabel, mDateDisplay );
+    radio = new TQRadioButton( buttonLabel, mDateDisplay );
     mDateDisplay->insert( radio, i );
     if ( dateDisplayConfig[i].dateDisplay == DateFormatter::Custom ) {
       mCustomDateFormatEdit = new KLineEdit( mDateDisplay );
       mCustomDateFormatEdit->setEnabled( false );
-      connect( radio, SIGNAL(toggled(bool)),
-               mCustomDateFormatEdit, SLOT(setEnabled(bool)) );
-      connect( mCustomDateFormatEdit, SIGNAL(textChanged(const QString&)),
-               this, SLOT(slotEmitChanged(void)) );
-      QString customDateWhatsThis =
+      connect( radio, TQT_SIGNAL(toggled(bool)),
+               mCustomDateFormatEdit, TQT_SLOT(setEnabled(bool)) );
+      connect( mCustomDateFormatEdit, TQT_SIGNAL(textChanged(const TQString&)),
+               this, TQT_SLOT(slotEmitChanged(void)) );
+      TQString customDateWhatsThis =
         i18n("<qt><p><strong>These expressions may be used for the date:"
              "</strong></p>"
              "<ul>"
@@ -2101,14 +2101,14 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent, const char
              "</ul>"
              "<p><strong>All other input characters will be ignored."
              "</strong></p></qt>");
-      QWhatsThis::add( mCustomDateFormatEdit, customDateWhatsThis );
-      QWhatsThis::add( radio, customDateWhatsThis );
+      TQWhatsThis::add( mCustomDateFormatEdit, customDateWhatsThis );
+      TQWhatsThis::add( radio, customDateWhatsThis );
     }
   } // end for loop populating mDateDisplay
 
   vlay->addWidget( mDateDisplay );
-  connect( mDateDisplay, SIGNAL( clicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mDateDisplay, TQT_SIGNAL( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
 
   vlay->addStretch( 10 ); // spacer
@@ -2135,7 +2135,7 @@ void AppearancePage::HeadersTab::doLoadOther() {
                   general.readEntry( "customDateFormat" ) );
 }
 
-void AppearancePage::HeadersTab::setDateDisplay( int num, const QString & format ) {
+void AppearancePage::HeadersTab::setDateDisplay( int num, const TQString & format ) {
   DateFormatter::FormatType dateDisplay =
     static_cast<DateFormatter::FormatType>( num );
 
@@ -2186,13 +2186,13 @@ void AppearancePage::HeadersTab::save() {
     int result = KMessageBox::warningContinueCancel( this,
                    i18n("Changing the global threading setting will override "
                         "all folder specific values."),
-                   QString::null, KStdGuiItem::cont(), "threadOverride" );
+                   TQString::null, KStdGuiItem::cont(), "threadOverride" );
     if ( result == KMessageBox::Continue ) {
       geometry.writeEntry( "nestedMessages", mNestedMessagesCheck->isChecked() );
       // remove all threadMessagesOverride keys from all [Folder-*] groups:
-      QStringList groups = KMKernel::config()->groupList().grep( QRegExp("^Folder-") );
+      TQStringList groups = KMKernel::config()->groupList().grep( TQRegExp("^Folder-") );
       kdDebug(5006) << "groups.count() == " << groups.count() << endl;
-      for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
+      for ( TQStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
         KConfigGroup group( KMKernel::config(), *it );
         group.deleteEntry( "threadMessagesOverride" );
       }
@@ -2241,99 +2241,99 @@ static const BoolConfigEntry showExpandQuotesMark= {
 };
 
 
-QString AppearancePage::ReaderTab::helpAnchor() const {
-  return QString::fromLatin1("configure-appearance-reader");
+TQString AppearancePage::ReaderTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-appearance-reader");
 }
 
-AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent,
+AppearancePageReaderTab::AppearancePageReaderTab( TQWidget * parent,
                                                   const char * name )
   : ConfigModuleTab( parent, name )
 {
-  QVBoxLayout *vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  TQVBoxLayout *vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // "show colorbar" check box:
-  populateCheckBox( mShowColorbarCheck = new QCheckBox( this ), showColorbarMode );
+  populateCheckBox( mShowColorbarCheck = new TQCheckBox( this ), showColorbarMode );
   vlay->addWidget( mShowColorbarCheck );
-  connect( mShowColorbarCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mShowColorbarCheck, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "show spam status" check box;
-  populateCheckBox( mShowSpamStatusCheck = new QCheckBox( this ), showSpamStatusMode );
+  populateCheckBox( mShowSpamStatusCheck = new TQCheckBox( this ), showSpamStatusMode );
   vlay->addWidget( mShowSpamStatusCheck );
-  connect( mShowSpamStatusCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mShowSpamStatusCheck, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "replace smileys by emoticons" check box;
-  populateCheckBox( mShowEmoticonsCheck = new QCheckBox( this ), showEmoticons );
+  populateCheckBox( mShowEmoticonsCheck = new TQCheckBox( this ), showEmoticons );
   vlay->addWidget( mShowEmoticonsCheck );
-  connect( mShowEmoticonsCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mShowEmoticonsCheck, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "Use smaller font for quoted text" check box
-  mShrinkQuotesCheck = new QCheckBox( i18n( shrinkQuotes.desc ), this,
+  mShrinkQuotesCheck = new TQCheckBox( i18n( shrinkQuotes.desc ), this,
                                       "kcfg_ShrinkQuotes" );
   vlay->addWidget( mShrinkQuotesCheck );
-  connect( mShrinkQuotesCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mShrinkQuotesCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // "Show expand/collaps quote marks" check box;
-  QHBoxLayout *hlay= new QHBoxLayout( vlay ); // inherits spacing
-  populateCheckBox( mShowExpandQuotesMark= new QCheckBox( this ), showExpandQuotesMark);
+  TQHBoxLayout *hlay= new TQHBoxLayout( vlay ); // inherits spacing
+  populateCheckBox( mShowExpandQuotesMark= new TQCheckBox( this ), showExpandQuotesMark);
   hlay->addWidget( mShowExpandQuotesMark);
-  connect( mShowExpandQuotesMark, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mShowExpandQuotesMark, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   hlay->addStretch( 1 );
   mCollapseQuoteLevelSpin = new KIntSpinBox( 0/*min*/,10/*max*/,1/*step*/,
       3/*init*/,10/*base*/,this );
 
-  QLabel *label = new QLabel( mCollapseQuoteLevelSpin,
+  TQLabel *label = new TQLabel( mCollapseQuoteLevelSpin,
            GlobalSettings::self()->collapseQuoteLevelSpinItem()->label(), this );
 
   hlay->addWidget( label );
 
   mCollapseQuoteLevelSpin->setEnabled( false ); //since !mShowExpandQuotesMark->isCheckec()
-  connect(  mCollapseQuoteLevelSpin, SIGNAL( valueChanged( int ) ),
-      this, SLOT( slotEmitChanged( void ) ) );
+  connect(  mCollapseQuoteLevelSpin, TQT_SIGNAL( valueChanged( int ) ),
+      this, TQT_SLOT( slotEmitChanged( void ) ) );
   hlay->addWidget( mCollapseQuoteLevelSpin);
 
-  connect( mShowExpandQuotesMark, SIGNAL( toggled( bool ) ),
-      mCollapseQuoteLevelSpin, SLOT( setEnabled( bool ) ) );
+  connect( mShowExpandQuotesMark, TQT_SIGNAL( toggled( bool ) ),
+      mCollapseQuoteLevelSpin, TQT_SLOT( setEnabled( bool ) ) );
 
   // Fallback Character Encoding
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mCharsetCombo = new QComboBox( this );
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mCharsetCombo = new TQComboBox( this );
   mCharsetCombo->insertStringList( KMMsgBase::supportedEncodings( false ) );
 
-  connect( mCharsetCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCharsetCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  QString fallbackCharsetWhatsThis =
+  TQString fallbackCharsetWhatsThis =
     i18n( GlobalSettings::self()->fallbackCharacterEncodingItem()->whatsThis().utf8() );
-  QWhatsThis::add( mCharsetCombo, fallbackCharsetWhatsThis );
+  TQWhatsThis::add( mCharsetCombo, fallbackCharsetWhatsThis );
 
-  label = new QLabel( i18n("Fallback ch&aracter encoding:"), this );
+  label = new TQLabel( i18n("Fallback ch&aracter encoding:"), this );
   label->setBuddy( mCharsetCombo );
 
   hlay->addWidget( label );
   hlay->addWidget( mCharsetCombo );
 
   // Override Character Encoding
-  QHBoxLayout *hlay2 = new QHBoxLayout( vlay ); // inherits spacing
-  mOverrideCharsetCombo = new QComboBox( this );
-  QStringList encodings = KMMsgBase::supportedEncodings( false );
+  TQHBoxLayout *hlay2 = new TQHBoxLayout( vlay ); // inherits spacing
+  mOverrideCharsetCombo = new TQComboBox( this );
+  TQStringList encodings = KMMsgBase::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   mOverrideCharsetCombo->insertStringList( encodings );
   mOverrideCharsetCombo->setCurrentItem(0);
 
-  connect( mOverrideCharsetCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mOverrideCharsetCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  QString overrideCharsetWhatsThis =
+  TQString overrideCharsetWhatsThis =
     i18n( GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis().utf8() );
-  QWhatsThis::add( mOverrideCharsetCombo, overrideCharsetWhatsThis );
+  TQWhatsThis::add( mOverrideCharsetCombo, overrideCharsetWhatsThis );
 
-  label = new QLabel( i18n("&Override character encoding:"), this );
+  label = new TQLabel( i18n("&Override character encoding:"), this );
   label->setBuddy( mOverrideCharsetCombo );
 
   hlay2->addWidget( label );
@@ -2345,10 +2345,10 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent,
 
 void AppearancePage::ReaderTab::readCurrentFallbackCodec()
 {
-  QStringList encodings = KMMsgBase::supportedEncodings( false );
-  QStringList::ConstIterator it( encodings.begin() );
-  QStringList::ConstIterator end( encodings.end() );
-  QString currentEncoding = GlobalSettings::self()->fallbackCharacterEncoding();
+  TQStringList encodings = KMMsgBase::supportedEncodings( false );
+  TQStringList::ConstIterator it( encodings.begin() );
+  TQStringList::ConstIterator end( encodings.end() );
+  TQString currentEncoding = GlobalSettings::self()->fallbackCharacterEncoding();
   currentEncoding = currentEncoding.replace( "iso ", "iso-", false );
   ///kdDebug(5006) << "Looking for encoding: " << currentEncoding << endl;
   int i = 0;
@@ -2356,7 +2356,7 @@ void AppearancePage::ReaderTab::readCurrentFallbackCodec()
   bool found = false;
   for( ; it != end; ++it)
   {
-    const QString encoding = KGlobal::charsets()->encodingForName(*it);
+    const TQString encoding = KGlobal::charsets()->encodingForName(*it);
     if ( encoding == "iso-8859-15" )
         indexOfLatin9 = i;
     if( encoding == currentEncoding )
@@ -2373,15 +2373,15 @@ void AppearancePage::ReaderTab::readCurrentFallbackCodec()
 
 void AppearancePage::ReaderTab::readCurrentOverrideCodec()
 {
-  const QString &currentOverrideEncoding = GlobalSettings::self()->overrideCharacterEncoding();
+  const TQString &currentOverrideEncoding = GlobalSettings::self()->overrideCharacterEncoding();
   if ( currentOverrideEncoding.isEmpty() ) {
     mOverrideCharsetCombo->setCurrentItem( 0 );
     return;
   }
-  QStringList encodings = KMMsgBase::supportedEncodings( false );
+  TQStringList encodings = KMMsgBase::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
-  QStringList::Iterator it( encodings.begin() );
-  QStringList::Iterator end( encodings.end() );
+  TQStringList::Iterator it( encodings.begin() );
+  TQStringList::Iterator end( encodings.end() );
   uint i = 0;
   for( ; it != end; ++it)
   {
@@ -2397,7 +2397,7 @@ void AppearancePage::ReaderTab::readCurrentOverrideCodec()
     kdWarning(5006) << "Unknown override character encoding \"" << currentOverrideEncoding
                     << "\". Resetting to Auto." << endl;
     mOverrideCharsetCombo->setCurrentItem( 0 );
-    GlobalSettings::self()->setOverrideCharacterEncoding( QString::null );
+    GlobalSettings::self()->setOverrideCharacterEncoding( TQString::null );
   }
 }
 
@@ -2432,7 +2432,7 @@ void AppearancePage::ReaderTab::save() {
       KGlobal::charsets()->encodingForName( mCharsetCombo->currentText() ) );
   GlobalSettings::self()->setOverrideCharacterEncoding(
       mOverrideCharsetCombo->currentItem() == 0 ?
-        QString() :
+        TQString() :
         KGlobal::charsets()->encodingForName( mOverrideCharsetCombo->currentText() ) );
 }
 
@@ -2447,36 +2447,36 @@ void AppearancePage::ReaderTab::installProfile( KConfig * /* profile */ ) {
 }
 
 
-QString AppearancePage::SystemTrayTab::helpAnchor() const {
-  return QString::fromLatin1("configure-appearance-systemtray");
+TQString AppearancePage::SystemTrayTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-appearance-systemtray");
 }
 
-AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent,
+AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( TQWidget * parent,
                                                           const char * name )
   : ConfigModuleTab( parent, name )
 {
-  QVBoxLayout * vlay = new QVBoxLayout( this, KDialog::marginHint(),
+  TQVBoxLayout * vlay = new TQVBoxLayout( this, KDialog::marginHint(),
                                         KDialog::spacingHint() );
 
   // "Enable system tray applet" check box
-  mSystemTrayCheck = new QCheckBox( i18n("Enable system tray icon"), this );
+  mSystemTrayCheck = new TQCheckBox( i18n("Enable system tray icon"), this );
   vlay->addWidget( mSystemTrayCheck );
-  connect( mSystemTrayCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSystemTrayCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // System tray modes
-  mSystemTrayGroup = new QVButtonGroup( i18n("System Tray Mode"), this );
+  mSystemTrayGroup = new TQVButtonGroup( i18n("System Tray Mode"), this );
   mSystemTrayGroup->layout()->setSpacing( KDialog::spacingHint() );
   vlay->addWidget( mSystemTrayGroup );
-  connect( mSystemTrayGroup, SIGNAL( clicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mSystemTrayCheck, SIGNAL( toggled( bool ) ),
-           mSystemTrayGroup, SLOT( setEnabled( bool ) ) );
+  connect( mSystemTrayGroup, TQT_SIGNAL( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mSystemTrayCheck, TQT_SIGNAL( toggled( bool ) ),
+           mSystemTrayGroup, TQT_SLOT( setEnabled( bool ) ) );
 
-  mSystemTrayGroup->insert( new QRadioButton( i18n("Always show KMail in system tray"), mSystemTrayGroup ),
+  mSystemTrayGroup->insert( new TQRadioButton( i18n("Always show KMail in system tray"), mSystemTrayGroup ),
                             GlobalSettings::EnumSystemTrayPolicy::ShowAlways );
 
-  mSystemTrayGroup->insert( new QRadioButton( i18n("Only show KMail in system tray if there are unread messages"), mSystemTrayGroup ),
+  mSystemTrayGroup->insert( new TQRadioButton( i18n("Only show KMail in system tray if there are unread messages"), mSystemTrayGroup ),
                             GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread );
 
   vlay->addStretch( 10 ); // spacer
@@ -2512,11 +2512,11 @@ void AppearancePage::SystemTrayTab::save() {
 // *                                                           *
 // *************************************************************
 
-QString ComposerPage::helpAnchor() const {
-  return QString::fromLatin1("configure-composer");
+TQString ComposerPage::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer");
 }
 
-ComposerPage::ComposerPage( QWidget * parent, const char * name )
+ComposerPage::ComposerPage( TQWidget * parent, const char * name )
   : ConfigModuleWithTabs( parent, name )
 {
   //
@@ -2571,125 +2571,125 @@ ComposerPage::ComposerPage( QWidget * parent, const char * name )
   load();
 }
 
-QString ComposerPage::GeneralTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-general");
+TQString ComposerPage::GeneralTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-general");
 }
 
-ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent, const char * name )
+ComposerPageGeneralTab::ComposerPageGeneralTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // tmp. vars:
-  QVBoxLayout *vlay;
-  QHBoxLayout *hlay;
-  QGroupBox   *group;
-  QLabel      *label;
-  QHBox       *hbox;
-  QString      msg;
+  TQVBoxLayout *vlay;
+  TQHBoxLayout *hlay;
+  TQGroupBox   *group;
+  TQLabel      *label;
+  TQHBox       *hbox;
+  TQString      msg;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // some check buttons...
-  mAutoAppSignFileCheck = new QCheckBox(
+  mAutoAppSignFileCheck = new TQCheckBox(
            GlobalSettings::self()->autoTextSignatureItem()->label(),
            this );
   vlay->addWidget( mAutoAppSignFileCheck );
-  connect( mAutoAppSignFileCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAutoAppSignFileCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   mTopQuoteCheck =
-    new QCheckBox( GlobalSettings::self()->prependSignatureItem()->label(), this );
+    new TQCheckBox( GlobalSettings::self()->prependSignatureItem()->label(), this );
   vlay->addWidget( mTopQuoteCheck);
-  connect( mTopQuoteCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mTopQuoteCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  mSmartQuoteCheck = new QCheckBox(
+  mSmartQuoteCheck = new TQCheckBox(
            GlobalSettings::self()->smartQuoteItem()->label(),
            this, "kcfg_SmartQuote" );
   vlay->addWidget( mSmartQuoteCheck );
-  connect( mSmartQuoteCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mSmartQuoteCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  mAutoRequestMDNCheck = new QCheckBox(
+  mAutoRequestMDNCheck = new TQCheckBox(
            GlobalSettings::self()->requestMDNItem()->label(),
            this, "kcfg_RequestMDN" );
   vlay->addWidget( mAutoRequestMDNCheck );
-  connect( mAutoRequestMDNCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAutoRequestMDNCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  mShowRecentAddressesInComposer = new QCheckBox(
+  mShowRecentAddressesInComposer = new TQCheckBox(
            GlobalSettings::self()->showRecentAddressesInComposerItem()->label(),
            this, "kcfg_ShowRecentAddressesInComposer" );
   vlay->addWidget( mShowRecentAddressesInComposer );
-  connect( mShowRecentAddressesInComposer, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mShowRecentAddressesInComposer, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // a checkbox for "word wrap" and a spinbox for the column in
   // which to wrap:
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mWordWrapCheck = new QCheckBox(
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mWordWrapCheck = new TQCheckBox(
            GlobalSettings::self()->wordWrapItem()->label(),
            this, "kcfg_WordWrap" );
   hlay->addWidget( mWordWrapCheck );
-  connect( mWordWrapCheck, SIGNAL( stateChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWordWrapCheck, TQT_SIGNAL( stateChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   mWrapColumnSpin = new KIntSpinBox( 30/*min*/, 78/*max*/, 1/*step*/,
            78/*init*/, 10 /*base*/, this, "kcfg_LineWrapWidth" );
   mWrapColumnSpin->setEnabled( false ); // since !mWordWrapCheck->isChecked()
-  connect( mWrapColumnSpin, SIGNAL( valueChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWrapColumnSpin, TQT_SIGNAL( valueChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   hlay->addWidget( mWrapColumnSpin );
   hlay->addStretch( 1 );
   // only enable the spinbox if the checkbox is checked:
-  connect( mWordWrapCheck, SIGNAL(toggled(bool)),
-           mWrapColumnSpin, SLOT(setEnabled(bool)) );
+  connect( mWordWrapCheck, TQT_SIGNAL(toggled(bool)),
+           mWrapColumnSpin, TQT_SLOT(setEnabled(bool)) );
 
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
   mAutoSave = new KIntSpinBox( 0, 60, 1, 1, 10, this, "kcfg_AutosaveInterval" );
-  label = new QLabel( mAutoSave,
+  label = new TQLabel( mAutoSave,
            GlobalSettings::self()->autosaveIntervalItem()->label(), this );
   hlay->addWidget( label );
   hlay->addWidget( mAutoSave );
   mAutoSave->setSpecialValueText( i18n("No autosave") );
   mAutoSave->setSuffix( i18n(" min") );
   hlay->addStretch( 1 );
-  connect( mAutoSave, SIGNAL( valueChanged(int) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAutoSave, TQT_SIGNAL( valueChanged(int) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  QPushButton *completionOrderBtn = new QPushButton( i18n( "Configure Completion Order" ), this );
-  connect( completionOrderBtn, SIGNAL( clicked() ),
-           this, SLOT( slotConfigureCompletionOrder() ) );
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  TQPushButton *completionOrderBtn = new TQPushButton( i18n( "Configure Completion Order" ), this );
+  connect( completionOrderBtn, TQT_SIGNAL( clicked() ),
+           this, TQT_SLOT( slotConfigureCompletionOrder() ) );
   hlay->addWidget( completionOrderBtn );
-  hlay->addItem( new QSpacerItem(0, 0) );
+  hlay->addItem( new TQSpacerItem(0, 0) );
 
   // recent addresses
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  QPushButton *recentAddressesBtn = new QPushButton( i18n( "Edit Recent Addresses..." ), this );
-  connect( recentAddressesBtn, SIGNAL( clicked() ),
-           this, SLOT( slotConfigureRecentAddresses() ) );
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  TQPushButton *recentAddressesBtn = new TQPushButton( i18n( "Edit Recent Addresses..." ), this );
+  connect( recentAddressesBtn, TQT_SIGNAL( clicked() ),
+           this, TQT_SLOT( slotConfigureRecentAddresses() ) );
   hlay->addWidget( recentAddressesBtn );
-  hlay->addItem( new QSpacerItem(0, 0) );
+  hlay->addItem( new TQSpacerItem(0, 0) );
 
   // The "external editor" group:
-  group = new QVGroupBox( i18n("External Editor"), this );
+  group = new TQVGroupBox( i18n("External Editor"), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
-  mExternalEditorCheck = new QCheckBox(
+  mExternalEditorCheck = new TQCheckBox(
            GlobalSettings::self()->useExternalEditorItem()->label(),
            group, "kcfg_UseExternalEditor" );
-  connect( mExternalEditorCheck, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mExternalEditorCheck, TQT_SIGNAL( toggled( bool ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  hbox = new QHBox( group );
-  label = new QLabel( GlobalSettings::self()->externalEditorItem()->label(),
+  hbox = new TQHBox( group );
+  label = new TQLabel( GlobalSettings::self()->externalEditorItem()->label(),
                    hbox );
   mEditorRequester = new KURLRequester( hbox, "kcfg_ExternalEditor" );
-  connect( mEditorRequester, SIGNAL( urlSelected(const QString&) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mEditorRequester, SIGNAL( textChanged(const QString&) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mEditorRequester, TQT_SIGNAL( urlSelected(const TQString&) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mEditorRequester, TQT_SIGNAL( textChanged(const TQString&) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   hbox->setStretchFactor( mEditorRequester, 1 );
   label->setBuddy( mEditorRequester );
@@ -2699,16 +2699,16 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent, const char * n
                                "application/x-shellscript "
                                "application/x-desktop" );
   mEditorRequester->setEnabled( false ); // !mExternalEditorCheck->isChecked()
-  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
-           label, SLOT(setEnabled(bool)) );
-  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
-           mEditorRequester, SLOT(setEnabled(bool)) );
+  connect( mExternalEditorCheck, TQT_SIGNAL(toggled(bool)),
+           label, TQT_SLOT(setEnabled(bool)) );
+  connect( mExternalEditorCheck, TQT_SIGNAL(toggled(bool)),
+           mEditorRequester, TQT_SLOT(setEnabled(bool)) );
 
-  label = new QLabel( i18n("<b>%f</b> will be replaced with the "
+  label = new TQLabel( i18n("<b>%f</b> will be replaced with the "
                            "filename to edit."), group );
   label->setEnabled( false ); // see above
-  connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
-           label, SLOT(setEnabled(bool)) );
+  connect( mExternalEditorCheck, TQT_SIGNAL(toggled(bool)),
+           label, TQT_SLOT(setEnabled(bool)) );
 
   vlay->addWidget( group );
   vlay->addStretch( 100 );
@@ -2782,8 +2782,8 @@ void ComposerPage::GeneralTab::slotConfigureRecentAddresses( )
   dlg.setAddresses( RecentAddresses::self( KMKernel::config() )->addresses() );
   if ( dlg.exec() ) {
     RecentAddresses::self( KMKernel::config() )->clear();
-    const QStringList &addrList = dlg.addresses();
-    QStringList::ConstIterator it;
+    const TQStringList &addrList = dlg.addresses();
+    TQStringList::ConstIterator it;
     for ( it = addrList.constBegin(); it != addrList.constEnd(); ++it )
       RecentAddresses::self( KMKernel::config() )->add( *it );
   }
@@ -2796,25 +2796,25 @@ void ComposerPage::GeneralTab::slotConfigureCompletionOrder( )
   editor.exec();
 }
 
-QString ComposerPage::PhrasesTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-phrases");
+TQString ComposerPage::PhrasesTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-phrases");
 }
 
-ComposerPagePhrasesTab::ComposerPagePhrasesTab( QWidget * parent, const char * name )
+ComposerPagePhrasesTab::ComposerPagePhrasesTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // tmp. vars:
-  QGridLayout *glay;
-  QPushButton *button;
+  TQGridLayout *glay;
+  TQPushButton *button;
 
-  glay = new QGridLayout( this, 7, 3, KDialog::spacingHint() );
+  glay = new TQGridLayout( this, 7, 3, KDialog::spacingHint() );
   glay->setMargin( KDialog::marginHint() );
   glay->setColStretch( 1, 1 );
   glay->setColStretch( 2, 1 );
   glay->setRowStretch( 7, 1 );
 
   // row 0: help text
-  glay->addMultiCellWidget( new QLabel( i18n("<qt>The following placeholders are "
+  glay->addMultiCellWidget( new TQLabel( i18n("<qt>The following placeholders are "
                                              "supported in the reply phrases:<br>"
                                              "<b>%D</b>: date, <b>%S</b>: subject,<br>"
                                              "<b>%e</b>: sender's address, <b>%F</b>: sender's name, <b>%f</b>: sender's initials,<br>"
@@ -2826,54 +2826,54 @@ ComposerPagePhrasesTab::ComposerPagePhrasesTab( QWidget * parent, const char * n
 
   // row 1: label and language combo box:
   mPhraseLanguageCombo = new LanguageComboBox( false, this );
-  glay->addWidget( new QLabel( mPhraseLanguageCombo,
+  glay->addWidget( new TQLabel( mPhraseLanguageCombo,
                                i18n("Lang&uage:"), this ), 1, 0 );
   glay->addMultiCellWidget( mPhraseLanguageCombo, 1, 1, 1, 2 );
-  connect( mPhraseLanguageCombo, SIGNAL(activated(const QString&)),
-           this, SLOT(slotLanguageChanged(const QString&)) );
+  connect( mPhraseLanguageCombo, TQT_SIGNAL(activated(const TQString&)),
+           this, TQT_SLOT(slotLanguageChanged(const TQString&)) );
 
   // row 2: "add..." and "remove" push buttons:
-  button = new QPushButton( i18n("A&dd..."), this );
+  button = new TQPushButton( i18n("A&dd..."), this );
   button->setAutoDefault( false );
   glay->addWidget( button, 2, 1 );
-  mRemoveButton = new QPushButton( i18n("Re&move"), this );
+  mRemoveButton = new TQPushButton( i18n("Re&move"), this );
   mRemoveButton->setAutoDefault( false );
   mRemoveButton->setEnabled( false ); // combo doesn't contain anything...
   glay->addWidget( mRemoveButton, 2, 2 );
-  connect( button, SIGNAL(clicked()),
-           this, SLOT(slotNewLanguage()) );
-  connect( mRemoveButton, SIGNAL(clicked()),
-           this, SLOT(slotRemoveLanguage()) );
+  connect( button, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotNewLanguage()) );
+  connect( mRemoveButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotRemoveLanguage()) );
 
   // row 3: "reply to sender" line edit and label:
   mPhraseReplyEdit = new KLineEdit( this );
-  connect( mPhraseReplyEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  glay->addWidget( new QLabel( mPhraseReplyEdit,
+  connect( mPhraseReplyEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  glay->addWidget( new TQLabel( mPhraseReplyEdit,
                                i18n("Reply to se&nder:"), this ), 3, 0 );
   glay->addMultiCellWidget( mPhraseReplyEdit, 3, 3, 1, 2 ); // cols 1..2
 
   // row 4: "reply to all" line edit and label:
   mPhraseReplyAllEdit = new KLineEdit( this );
-  connect( mPhraseReplyAllEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  glay->addWidget( new QLabel( mPhraseReplyAllEdit,
+  connect( mPhraseReplyAllEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  glay->addWidget( new TQLabel( mPhraseReplyAllEdit,
                                i18n("Repl&y to all:"), this ), 4, 0 );
   glay->addMultiCellWidget( mPhraseReplyAllEdit, 4, 4, 1, 2 ); // cols 1..2
 
   // row 5: "forward" line edit and label:
   mPhraseForwardEdit = new KLineEdit( this );
-  connect( mPhraseForwardEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  glay->addWidget( new QLabel( mPhraseForwardEdit,
+  connect( mPhraseForwardEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  glay->addWidget( new TQLabel( mPhraseForwardEdit,
                                i18n("&Forward:"), this ), 5, 0 );
   glay->addMultiCellWidget( mPhraseForwardEdit, 5, 5, 1, 2 ); // cols 1..2
 
   // row 6: "quote indicator" line edit and label:
   mPhraseIndentPrefixEdit = new KLineEdit( this );
-  connect( mPhraseIndentPrefixEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  glay->addWidget( new QLabel( mPhraseIndentPrefixEdit,
+  connect( mPhraseIndentPrefixEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  glay->addWidget( new TQLabel( mPhraseIndentPrefixEdit,
                                i18n("&Quote indicator:"), this ), 6, 0 );
   glay->addMultiCellWidget( mPhraseIndentPrefixEdit, 6, 6, 1, 2 );
 
@@ -2908,10 +2908,10 @@ void ComposerPage::PhrasesTab::saveActiveLanguageItem() {
 void ComposerPage::PhrasesTab::slotNewLanguage()
 {
   NewLanguageDialog dialog( mLanguageList, parentWidget(), "New", true );
-  if ( dialog.exec() == QDialog::Accepted ) slotAddNewLanguage( dialog.language() );
+  if ( dialog.exec() == TQDialog::Accepted ) slotAddNewLanguage( dialog.language() );
 }
 
-void ComposerPage::PhrasesTab::slotAddNewLanguage( const QString& lang )
+void ComposerPage::PhrasesTab::slotAddNewLanguage( const TQString& lang )
 {
   mPhraseLanguageCombo->setCurrentItem(
     mPhraseLanguageCombo->insertLanguage( lang ) );
@@ -2924,7 +2924,7 @@ void ComposerPage::PhrasesTab::slotAddNewLanguage( const QString& lang )
                    locale.translate("Forwarded Message"),
                    locale.translate(">%_") ) );
   mRemoveButton->setEnabled( true );
-  slotLanguageChanged( QString::null );
+  slotLanguageChanged( TQString::null );
 }
 
 void ComposerPage::PhrasesTab::slotRemoveLanguage()
@@ -2945,7 +2945,7 @@ void ComposerPage::PhrasesTab::slotRemoveLanguage()
   emit changed( true );
 }
 
-void ComposerPage::PhrasesTab::slotLanguageChanged( const QString& )
+void ComposerPage::PhrasesTab::slotLanguageChanged( const TQString& )
 {
   int index = mPhraseLanguageCombo->currentItem();
   assert( index < (int)mLanguageList.count() );
@@ -2966,9 +2966,9 @@ void ComposerPage::PhrasesTab::doLoadFromGlobalSettings() {
 
   // build mLanguageList and mPhraseLanguageCombo:
   for ( int i = 0 ; i < numLang ; i++ ) {
-    ReplyPhrases replyPhrases( QString::number(i) );
+    ReplyPhrases replyPhrases( TQString::number(i) );
     replyPhrases.readConfig();
-    QString lang = replyPhrases.language();
+    TQString lang = replyPhrases.language();
     mLanguageList.append(
          LanguageItem( lang,
                        replyPhrases.phraseReplySender(),
@@ -2998,7 +2998,7 @@ void ComposerPage::PhrasesTab::save() {
   saveActiveLanguageItem();
   LanguageItemList::Iterator it = mLanguageList.begin();
   for ( int i = 0 ; it != mLanguageList.end() ; ++it, ++i ) {
-    ReplyPhrases replyPhrases( QString::number(i) );
+    ReplyPhrases replyPhrases( TQString::number(i) );
     replyPhrases.setLanguage( (*it).mLanguage );
     replyPhrases.setPhraseReplySender( (*it).mReply );
     replyPhrases.setPhraseReplyAll( (*it).mReplyAll );
@@ -3008,20 +3008,20 @@ void ComposerPage::PhrasesTab::save() {
   }
 }
 
-QString ComposerPage::TemplatesTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-templates");
+TQString ComposerPage::TemplatesTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-templates");
 }
 
-ComposerPageTemplatesTab::ComposerPageTemplatesTab( QWidget * parent, const char * name )
+ComposerPageTemplatesTab::ComposerPageTemplatesTab( TQWidget * parent, const char * name )
   : ConfigModuleTab ( parent, name )
 {
-  QVBoxLayout* vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  TQVBoxLayout* vlay = new TQVBoxLayout( this, 0, KDialog::spacingHint() );
 
   mWidget = new TemplatesConfiguration( this );
   vlay->addWidget( mWidget );
 
-  connect( mWidget, SIGNAL( changed() ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWidget, TQT_SIGNAL( changed() ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 }
 
 void ComposerPage::TemplatesTab::doLoadFromGlobalSettings() {
@@ -3032,20 +3032,20 @@ void ComposerPage::TemplatesTab::save() {
     mWidget->saveToGlobal();
 }
 
-QString ComposerPage::CustomTemplatesTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-custom-templates");
+TQString ComposerPage::CustomTemplatesTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-custom-templates");
 }
 
-ComposerPageCustomTemplatesTab::ComposerPageCustomTemplatesTab( QWidget * parent, const char * name )
+ComposerPageCustomTemplatesTab::ComposerPageCustomTemplatesTab( TQWidget * parent, const char * name )
   : ConfigModuleTab ( parent, name )
 {
-  QVBoxLayout* vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  TQVBoxLayout* vlay = new TQVBoxLayout( this, 0, KDialog::spacingHint() );
 
   mWidget = new CustomTemplates( this );
   vlay->addWidget( mWidget );
 
-  connect( mWidget, SIGNAL( changed() ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWidget, TQT_SIGNAL( changed() ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 }
 
 void ComposerPage::CustomTemplatesTab::doLoadFromGlobalSettings() {
@@ -3056,26 +3056,26 @@ void ComposerPage::CustomTemplatesTab::save() {
     mWidget->save();
 }
 
-QString ComposerPage::SubjectTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-subject");
+TQString ComposerPage::SubjectTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-subject");
 }
 
-ComposerPageSubjectTab::ComposerPageSubjectTab( QWidget * parent, const char * name )
+ComposerPageSubjectTab::ComposerPageSubjectTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // tmp. vars:
-  QVBoxLayout *vlay;
-  QGroupBox   *group;
-  QLabel      *label;
+  TQVBoxLayout *vlay;
+  TQGroupBox   *group;
+  TQLabel      *label;
 
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
-  group = new QVGroupBox( i18n("Repl&y Subject Prefixes"), this );
+  group = new TQVGroupBox( i18n("Repl&y Subject Prefixes"), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
   // row 0: help text:
-  label = new QLabel( i18n("Recognize any sequence of the following prefixes\n"
+  label = new TQLabel( i18n("Recognize any sequence of the following prefixes\n"
                            "(entries are case-insensitive regular expressions):"), group );
   label->setAlignment( AlignLeft|WordBreak );
 
@@ -3087,24 +3087,24 @@ ComposerPageSubjectTab::ComposerPageSubjectTab( QWidget * parent, const char * n
                                 i18n("A&dd..."), i18n("Re&move"),
                                 i18n("Mod&ify..."),
                                 i18n("Enter new reply prefix:") );
-  connect( mReplyListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mReplyListEditor, TQT_SIGNAL( changed( void ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // row 2: "replace [...]" check box:
-  mReplaceReplyPrefixCheck = new QCheckBox(
+  mReplaceReplyPrefixCheck = new TQCheckBox(
      GlobalSettings::self()->replaceReplyPrefixItem()->label(),
      group, "kcfg_ReplaceReplyPrefix" );
-  connect( mReplaceReplyPrefixCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mReplaceReplyPrefixCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   vlay->addWidget( group );
 
 
-  group = new QVGroupBox( i18n("For&ward Subject Prefixes"), this );
+  group = new TQVGroupBox( i18n("For&ward Subject Prefixes"), this );
   group->layout()->setSpacing( KDialog::marginHint() );
 
   // row 0: help text:
-  label= new QLabel( i18n("Recognize any sequence of the following prefixes\n"
+  label= new TQLabel( i18n("Recognize any sequence of the following prefixes\n"
                           "(entries are case-insensitive regular expressions):"), group );
   label->setAlignment( AlignLeft|WordBreak );
 
@@ -3115,15 +3115,15 @@ ComposerPageSubjectTab::ComposerPageSubjectTab( QWidget * parent, const char * n
                                 i18n("Remo&ve"),
                                 i18n("Modify..."),
                                 i18n("Enter new forward prefix:") );
-  connect( mForwardListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mForwardListEditor, TQT_SIGNAL( changed( void ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // row 3: "replace [...]" check box:
-  mReplaceForwardPrefixCheck = new QCheckBox(
+  mReplaceForwardPrefixCheck = new TQCheckBox(
        GlobalSettings::self()->replaceForwardPrefixItem()->label(),
        group, "kcfg_ReplaceForwardPrefix" );
-  connect( mReplaceForwardPrefixCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mReplaceForwardPrefixCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   vlay->addWidget( group );
 }
@@ -3140,20 +3140,20 @@ void ComposerPage::SubjectTab::save() {
   GlobalSettings::self()->setForwardPrefixes( mForwardListEditor->stringList() );
 }
 
-QString ComposerPage::CharsetTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-charset");
+TQString ComposerPage::CharsetTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-charset");
 }
 
-ComposerPageCharsetTab::ComposerPageCharsetTab( QWidget * parent, const char * name )
+ComposerPageCharsetTab::ComposerPageCharsetTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // tmp. vars:
-  QVBoxLayout *vlay;
-  QLabel      *label;
+  TQVBoxLayout *vlay;
+  TQLabel      *label;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
-  label = new QLabel( i18n("This list is checked for every outgoing message "
+  label = new TQLabel( i18n("This list is checked for every outgoing message "
                            "from the top to the bottom for a charset that "
                            "contains all required characters."), this );
   label->setAlignment( WordBreak);
@@ -3163,59 +3163,59 @@ ComposerPageCharsetTab::ComposerPageCharsetTab( QWidget * parent, const char * n
     new SimpleStringListEditor( this, 0, SimpleStringListEditor::All,
                                 i18n("A&dd..."), i18n("Remo&ve"),
                                 i18n("&Modify..."), i18n("Enter charset:") );
-  connect( mCharsetListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCharsetListEditor, TQT_SIGNAL( changed( void ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   vlay->addWidget( mCharsetListEditor, 1 );
 
-  mKeepReplyCharsetCheck = new QCheckBox( i18n("&Keep original charset when "
+  mKeepReplyCharsetCheck = new TQCheckBox( i18n("&Keep original charset when "
                                                 "replying or forwarding (if "
                                                 "possible)"), this );
-  connect( mKeepReplyCharsetCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mKeepReplyCharsetCheck, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
   vlay->addWidget( mKeepReplyCharsetCheck );
 
-  connect( mCharsetListEditor, SIGNAL(aboutToAdd(QString&)),
-           this, SLOT(slotVerifyCharset(QString&)) );
+  connect( mCharsetListEditor, TQT_SIGNAL(aboutToAdd(TQString&)),
+           this, TQT_SLOT(slotVerifyCharset(TQString&)) );
 }
 
-void ComposerPage::CharsetTab::slotVerifyCharset( QString & charset ) {
+void ComposerPage::CharsetTab::slotVerifyCharset( TQString & charset ) {
   if ( charset.isEmpty() ) return;
 
   // KCharsets::codecForName("us-ascii") returns "iso-8859-1" (cf. Bug #49812)
   // therefore we have to treat this case specially
-  if ( charset.lower() == QString::fromLatin1("us-ascii") ) {
-    charset = QString::fromLatin1("us-ascii");
+  if ( charset.lower() == TQString::fromLatin1("us-ascii") ) {
+    charset = TQString::fromLatin1("us-ascii");
     return;
   }
 
-  if ( charset.lower() == QString::fromLatin1("locale") ) {
-    charset =  QString::fromLatin1("%1 (locale)")
-      .arg( QCString( kmkernel->networkCodec()->mimeName() ).lower() );
+  if ( charset.lower() == TQString::fromLatin1("locale") ) {
+    charset =  TQString::fromLatin1("%1 (locale)")
+      .arg( TQCString( kmkernel->networkCodec()->mimeName() ).lower() );
     return;
   }
 
   bool ok = false;
-  QTextCodec *codec = KGlobal::charsets()->codecForName( charset, ok );
+  TQTextCodec *codec = KGlobal::charsets()->codecForName( charset, ok );
   if ( ok && codec ) {
-    charset = QString::fromLatin1( codec->mimeName() ).lower();
+    charset = TQString::fromLatin1( codec->mimeName() ).lower();
     return;
   }
 
   KMessageBox::sorry( this, i18n("This charset is not supported.") );
-  charset = QString::null;
+  charset = TQString::null;
 }
 
 void ComposerPage::CharsetTab::doLoadOther() {
   KConfigGroup composer( KMKernel::config(), "Composer" );
 
-  QStringList charsets = composer.readListEntry( "pref-charsets" );
-  for ( QStringList::Iterator it = charsets.begin() ;
+  TQStringList charsets = composer.readListEntry( "pref-charsets" );
+  for ( TQStringList::Iterator it = charsets.begin() ;
         it != charsets.end() ; ++it )
-    if ( (*it) == QString::fromLatin1("locale") ) {
-      QCString cset = kmkernel->networkCodec()->mimeName();
+    if ( (*it) == TQString::fromLatin1("locale") ) {
+      TQCString cset = kmkernel->networkCodec()->mimeName();
       KPIM::kAsciiToLower( cset.data() );
-      (*it) = QString("%1 (locale)").arg( cset );
+      (*it) = TQString("%1 (locale)").arg( cset );
     }
 
   mCharsetListEditor->setStringList( charsets );
@@ -3225,8 +3225,8 @@ void ComposerPage::CharsetTab::doLoadOther() {
 void ComposerPage::CharsetTab::save() {
   KConfigGroup composer( KMKernel::config(), "Composer" );
 
-  QStringList charsetList = mCharsetListEditor->stringList();
-  QStringList::Iterator it = charsetList.begin();
+  TQStringList charsetList = mCharsetListEditor->stringList();
+  TQStringList::Iterator it = charsetList.begin();
   for ( ; it != charsetList.end() ; ++it )
     if ( (*it).endsWith("(locale)") )
       (*it) = "locale";
@@ -3235,55 +3235,55 @@ void ComposerPage::CharsetTab::save() {
                        !mKeepReplyCharsetCheck->isChecked() );
 }
 
-QString ComposerPage::HeadersTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-headers");
+TQString ComposerPage::HeadersTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-headers");
 }
 
-ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent, const char * name )
+ComposerPageHeadersTab::ComposerPageHeadersTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // tmp. vars:
-  QVBoxLayout *vlay;
-  QHBoxLayout *hlay;
-  QGridLayout *glay;
-  QLabel      *label;
-  QPushButton *button;
+  TQVBoxLayout *vlay;
+  TQHBoxLayout *hlay;
+  TQGridLayout *glay;
+  TQLabel      *label;
+  TQPushButton *button;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // "Use custom Message-Id suffix" checkbox:
   mCreateOwnMessageIdCheck =
-    new QCheckBox( i18n("&Use custom message-id suffix"), this );
-  connect( mCreateOwnMessageIdCheck, SIGNAL ( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+    new TQCheckBox( i18n("&Use custom message-id suffix"), this );
+  connect( mCreateOwnMessageIdCheck, TQT_SIGNAL ( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
   vlay->addWidget( mCreateOwnMessageIdCheck );
 
   // "Message-Id suffix" line edit and label:
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
   mMessageIdSuffixEdit = new KLineEdit( this );
   // only ASCII letters, digits, plus, minus and dots are allowed
   mMessageIdSuffixValidator =
-    new QRegExpValidator( QRegExp( "[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*" ), this );
+    new TQRegExpValidator( TQRegExp( "[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*" ), this );
   mMessageIdSuffixEdit->setValidator( mMessageIdSuffixValidator );
-  label = new QLabel( mMessageIdSuffixEdit,
+  label = new TQLabel( mMessageIdSuffixEdit,
                       i18n("Custom message-&id suffix:"), this );
   label->setEnabled( false ); // since !mCreateOwnMessageIdCheck->isChecked()
   mMessageIdSuffixEdit->setEnabled( false );
   hlay->addWidget( label );
   hlay->addWidget( mMessageIdSuffixEdit, 1 );
-  connect( mCreateOwnMessageIdCheck, SIGNAL(toggled(bool) ),
-           label, SLOT(setEnabled(bool)) );
-  connect( mCreateOwnMessageIdCheck, SIGNAL(toggled(bool) ),
-           mMessageIdSuffixEdit, SLOT(setEnabled(bool)) );
-  connect( mMessageIdSuffixEdit, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mCreateOwnMessageIdCheck, TQT_SIGNAL(toggled(bool) ),
+           label, TQT_SLOT(setEnabled(bool)) );
+  connect( mCreateOwnMessageIdCheck, TQT_SIGNAL(toggled(bool) ),
+           mMessageIdSuffixEdit, TQT_SLOT(setEnabled(bool)) );
+  connect( mMessageIdSuffixEdit, TQT_SIGNAL( textChanged( const TQString& ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // horizontal rule and "custom header fields" label:
   vlay->addWidget( new KSeparator( KSeparator::HLine, this ) );
-  vlay->addWidget( new QLabel( i18n("Define custom mime header fields:"), this) );
+  vlay->addWidget( new TQLabel( i18n("Define custom mime header fields:"), this) );
 
   // "custom header fields" listbox:
-  glay = new QGridLayout( vlay, 5, 3 ); // inherits spacing
+  glay = new TQGridLayout( vlay, 5, 3 ); // inherits spacing
   glay->setRowStretch( 2, 1 );
   glay->setColStretch( 1, 1 );
   mTagList = new ListView( this, "tagList" );
@@ -3291,44 +3291,44 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent, const char * n
   mTagList->addColumn( i18n("Value") );
   mTagList->setAllColumnsShowFocus( true );
   mTagList->setSorting( -1 );
-  connect( mTagList, SIGNAL(selectionChanged()),
-           this, SLOT(slotMimeHeaderSelectionChanged()) );
+  connect( mTagList, TQT_SIGNAL(selectionChanged()),
+           this, TQT_SLOT(slotMimeHeaderSelectionChanged()) );
   glay->addMultiCellWidget( mTagList, 0, 2, 0, 1 );
 
   // "new" and "remove" buttons:
-  button = new QPushButton( i18n("Ne&w"), this );
-  connect( button, SIGNAL(clicked()), this, SLOT(slotNewMimeHeader()) );
+  button = new TQPushButton( i18n("Ne&w"), this );
+  connect( button, TQT_SIGNAL(clicked()), this, TQT_SLOT(slotNewMimeHeader()) );
   button->setAutoDefault( false );
   glay->addWidget( button, 0, 2 );
-  mRemoveHeaderButton = new QPushButton( i18n("Re&move"), this );
-  connect( mRemoveHeaderButton, SIGNAL(clicked()),
-           this, SLOT(slotRemoveMimeHeader()) );
+  mRemoveHeaderButton = new TQPushButton( i18n("Re&move"), this );
+  connect( mRemoveHeaderButton, TQT_SIGNAL(clicked()),
+           this, TQT_SLOT(slotRemoveMimeHeader()) );
   button->setAutoDefault( false );
   glay->addWidget( mRemoveHeaderButton, 1, 2 );
 
   // "name" and "value" line edits and labels:
   mTagNameEdit = new KLineEdit( this );
   mTagNameEdit->setEnabled( false );
-  mTagNameLabel = new QLabel( mTagNameEdit, i18n("&Name:"), this );
+  mTagNameLabel = new TQLabel( mTagNameEdit, i18n("&Name:"), this );
   mTagNameLabel->setEnabled( false );
   glay->addWidget( mTagNameLabel, 3, 0 );
   glay->addWidget( mTagNameEdit, 3, 1 );
-  connect( mTagNameEdit, SIGNAL(textChanged(const QString&)),
-           this, SLOT(slotMimeHeaderNameChanged(const QString&)) );
+  connect( mTagNameEdit, TQT_SIGNAL(textChanged(const TQString&)),
+           this, TQT_SLOT(slotMimeHeaderNameChanged(const TQString&)) );
 
   mTagValueEdit = new KLineEdit( this );
   mTagValueEdit->setEnabled( false );
-  mTagValueLabel = new QLabel( mTagValueEdit, i18n("&Value:"), this );
+  mTagValueLabel = new TQLabel( mTagValueEdit, i18n("&Value:"), this );
   mTagValueLabel->setEnabled( false );
   glay->addWidget( mTagValueLabel, 4, 0 );
   glay->addWidget( mTagValueEdit, 4, 1 );
-  connect( mTagValueEdit, SIGNAL(textChanged(const QString&)),
-           this, SLOT(slotMimeHeaderValueChanged(const QString&)) );
+  connect( mTagValueEdit, TQT_SIGNAL(textChanged(const TQString&)),
+           this, TQT_SLOT(slotMimeHeaderValueChanged(const TQString&)) );
 }
 
 void ComposerPage::HeadersTab::slotMimeHeaderSelectionChanged()
 {
-  QListViewItem * item = mTagList->selectedItem();
+  TQListViewItem * item = mTagList->selectedItem();
 
   if ( item ) {
     mTagNameEdit->setText( item->text( 0 ) );
@@ -3345,20 +3345,20 @@ void ComposerPage::HeadersTab::slotMimeHeaderSelectionChanged()
 }
 
 
-void ComposerPage::HeadersTab::slotMimeHeaderNameChanged( const QString & text ) {
+void ComposerPage::HeadersTab::slotMimeHeaderNameChanged( const TQString & text ) {
   // is called on ::setup(), when clearing the line edits. So be
   // prepared to not find a selection:
-  QListViewItem * item = mTagList->selectedItem();
+  TQListViewItem * item = mTagList->selectedItem();
   if ( item )
     item->setText( 0, text );
   emit changed( true );
 }
 
 
-void ComposerPage::HeadersTab::slotMimeHeaderValueChanged( const QString & text ) {
+void ComposerPage::HeadersTab::slotMimeHeaderValueChanged( const TQString & text ) {
   // is called on ::setup(), when clearing the line edits. So be
   // prepared to not find a selection:
-  QListViewItem * item = mTagList->selectedItem();
+  TQListViewItem * item = mTagList->selectedItem();
   if ( item )
     item->setText( 1, text );
   emit changed( true );
@@ -3367,7 +3367,7 @@ void ComposerPage::HeadersTab::slotMimeHeaderValueChanged( const QString & text 
 
 void ComposerPage::HeadersTab::slotNewMimeHeader()
 {
-  QListViewItem *listItem = new QListViewItem( mTagList );
+  TQListViewItem *listItem = new TQListViewItem( mTagList );
   mTagList->setCurrentItem( listItem );
   mTagList->setSelected( listItem, true );
   emit changed( true );
@@ -3377,7 +3377,7 @@ void ComposerPage::HeadersTab::slotNewMimeHeader()
 void ComposerPage::HeadersTab::slotRemoveMimeHeader()
 {
   // calling this w/o selection is a programming error:
-  QListViewItem * item = mTagList->selectedItem();
+  TQListViewItem * item = mTagList->selectedItem();
   if ( !item ) {
     kdDebug(5006) << "==================================================\n"
                   << "Error: Remove button was pressed although no custom header was selected\n"
@@ -3385,7 +3385,7 @@ void ComposerPage::HeadersTab::slotRemoveMimeHeader()
     return;
   }
 
-  QListViewItem * below = item->nextSibling();
+  TQListViewItem * below = item->nextSibling();
   delete item;
 
   if ( below )
@@ -3398,7 +3398,7 @@ void ComposerPage::HeadersTab::slotRemoveMimeHeader()
 void ComposerPage::HeadersTab::doLoadOther() {
   KConfigGroup general( KMKernel::config(), "General" );
 
-  QString suffix = general.readEntry( "myMessageIdSuffix" );
+  TQString suffix = general.readEntry( "myMessageIdSuffix" );
   mMessageIdSuffixEdit->setText( suffix );
   bool state = ( !suffix.isEmpty() &&
             general.readBoolEntry( "useCustomMessageIdSuffix", false ) );
@@ -3408,16 +3408,16 @@ void ComposerPage::HeadersTab::doLoadOther() {
   mTagNameEdit->clear();
   mTagValueEdit->clear();
 
-  QListViewItem * item = 0;
+  TQListViewItem * item = 0;
 
   int count = general.readNumEntry( "mime-header-count", 0 );
   for( int i = 0 ; i < count ; i++ ) {
     KConfigGroup config( KMKernel::config(),
-                         QCString("Mime #") + QCString().setNum(i) );
-    QString name  = config.readEntry( "name" );
-    QString value = config.readEntry( "value" );
+                         TQCString("Mime #") + TQCString().setNum(i) );
+    TQString name  = config.readEntry( "name" );
+    TQString value = config.readEntry( "value" );
     if( !name.isEmpty() )
-      item = new QListViewItem( mTagList, item, name, value );
+      item = new TQListViewItem( mTagList, item, name, value );
   }
   if ( mTagList->childCount() ) {
     mTagList->setCurrentItem( mTagList->firstChild() );
@@ -3438,11 +3438,11 @@ void ComposerPage::HeadersTab::save() {
                       mMessageIdSuffixEdit->text() );
 
   int numValidEntries = 0;
-  QListViewItem * item = mTagList->firstChild();
+  TQListViewItem * item = mTagList->firstChild();
   for ( ; item ; item = item->itemBelow() )
     if( !item->text(0).isEmpty() ) {
-      KConfigGroup config( KMKernel::config(), QCString("Mime #")
-                             + QCString().setNum( numValidEntries ) );
+      KConfigGroup config( KMKernel::config(), TQCString("Mime #")
+                             + TQCString().setNum( numValidEntries ) );
       config.writeEntry( "name",  item->text( 0 ) );
       config.writeEntry( "value", item->text( 1 ) );
       numValidEntries++;
@@ -3450,43 +3450,43 @@ void ComposerPage::HeadersTab::save() {
   general.writeEntry( "mime-header-count", numValidEntries );
 }
 
-QString ComposerPage::AttachmentsTab::helpAnchor() const {
-  return QString::fromLatin1("configure-composer-attachments");
+TQString ComposerPage::AttachmentsTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-composer-attachments");
 }
 
-ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent,
+ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( TQWidget * parent,
                                                         const char * name )
   : ConfigModuleTab( parent, name ) {
   // tmp. vars:
-  QVBoxLayout *vlay;
-  QLabel      *label;
+  TQVBoxLayout *vlay;
+  TQLabel      *label;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // "Outlook compatible attachment naming" check box
   mOutlookCompatibleCheck =
-    new QCheckBox( i18n( "Outlook-compatible attachment naming" ), this );
+    new TQCheckBox( i18n( "Outlook-compatible attachment naming" ), this );
   mOutlookCompatibleCheck->setChecked( false );
-  QToolTip::add( mOutlookCompatibleCheck, i18n(
+  TQToolTip::add( mOutlookCompatibleCheck, i18n(
     "Turn this option on to make Outlook(tm) understand attachment names "
     "containing non-English characters" ) );
-  connect( mOutlookCompatibleCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mOutlookCompatibleCheck, SIGNAL( clicked() ),
-           this, SLOT( slotOutlookCompatibleClicked() ) );
+  connect( mOutlookCompatibleCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mOutlookCompatibleCheck, TQT_SIGNAL( clicked() ),
+           this, TQT_SLOT( slotOutlookCompatibleClicked() ) );
   vlay->addWidget( mOutlookCompatibleCheck );
   vlay->addSpacing( 5 );
 
   // "Enable detection of missing attachments" check box
   mMissingAttachmentDetectionCheck =
-    new QCheckBox( i18n("E&nable detection of missing attachments"), this );
+    new TQCheckBox( i18n("E&nable detection of missing attachments"), this );
   mMissingAttachmentDetectionCheck->setChecked( true );
-  connect( mMissingAttachmentDetectionCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mMissingAttachmentDetectionCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
   vlay->addWidget( mMissingAttachmentDetectionCheck );
 
   // "Attachment key words" label and string list editor
-  label = new QLabel( i18n("Recognize any of the following key words as "
+  label = new TQLabel( i18n("Recognize any of the following key words as "
                            "intention to attach a file:"), this );
   label->setAlignment( AlignLeft|WordBreak );
   vlay->addWidget( label );
@@ -3498,14 +3498,14 @@ ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent,
                                 i18n("A&dd..."), i18n("Re&move"),
                                 i18n("Mod&ify..."),
                                 i18n("Enter new key word:") );
-  connect( mAttachWordsListEditor, SIGNAL( changed( void ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAttachWordsListEditor, TQT_SIGNAL( changed( void ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
   vlay->addWidget( mAttachWordsListEditor );
 
-  connect( mMissingAttachmentDetectionCheck, SIGNAL(toggled(bool) ),
-           label, SLOT(setEnabled(bool)) );
-  connect( mMissingAttachmentDetectionCheck, SIGNAL(toggled(bool) ),
-           mAttachWordsListEditor, SLOT(setEnabled(bool)) );
+  connect( mMissingAttachmentDetectionCheck, TQT_SIGNAL(toggled(bool) ),
+           label, TQT_SLOT(setEnabled(bool)) );
+  connect( mMissingAttachmentDetectionCheck, TQT_SIGNAL(toggled(bool) ),
+           mAttachWordsListEditor, TQT_SLOT(setEnabled(bool)) );
 }
 
 void ComposerPage::AttachmentsTab::doLoadFromGlobalSettings() {
@@ -3513,14 +3513,14 @@ void ComposerPage::AttachmentsTab::doLoadFromGlobalSettings() {
     GlobalSettings::self()->outlookCompatibleAttachments() );
   mMissingAttachmentDetectionCheck->setChecked(
     GlobalSettings::self()->showForgottenAttachmentWarning() );
-  QStringList attachWordsList = GlobalSettings::self()->attachmentKeywords();
+  TQStringList attachWordsList = GlobalSettings::self()->attachmentKeywords();
   if ( attachWordsList.isEmpty() ) {
     // default value
-    attachWordsList << QString::fromLatin1("attachment")
-                    << QString::fromLatin1("attached");
-    if ( QString::fromLatin1("attachment") != i18n("attachment") )
+    attachWordsList << TQString::fromLatin1("attachment")
+                    << TQString::fromLatin1("attached");
+    if ( TQString::fromLatin1("attachment") != i18n("attachment") )
       attachWordsList << i18n("attachment");
-    if ( QString::fromLatin1("attached") != i18n("attached") )
+    if ( TQString::fromLatin1("attached") != i18n("attached") )
       attachWordsList << i18n("attached");
   }
 
@@ -3555,11 +3555,11 @@ void ComposerPageAttachmentsTab::slotOutlookCompatibleClicked()
 // *                      SecurityPage                         *
 // *                                                           *
 // *************************************************************
-QString SecurityPage::helpAnchor() const {
-  return QString::fromLatin1("configure-security");
+TQString SecurityPage::helpAnchor() const {
+  return TQString::fromLatin1("configure-security");
 }
 
-SecurityPage::SecurityPage( QWidget * parent, const char * name )
+SecurityPage::SecurityPage( TQWidget * parent, const char * name )
   : ConfigModuleWithTabs( parent, name )
 {
   //
@@ -3602,26 +3602,26 @@ void SecurityPage::installProfile( KConfig * profile ) {
   mSMimeTab->installProfile( profile );
 }
 
-QString SecurityPage::GeneralTab::helpAnchor() const {
-  return QString::fromLatin1("configure-security-reading");
+TQString SecurityPage::GeneralTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-security-reading");
 }
 
-SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * name )
+SecurityPageGeneralTab::SecurityPageGeneralTab( TQWidget * parent, const char * name )
   : ConfigModuleTab ( parent, name )
 {
   // tmp. vars:
-  QVBoxLayout  *vlay;
-  QHBox        *hbox;
-  QGroupBox    *group;
-  QRadioButton *radio;
+  TQVBoxLayout  *vlay;
+  TQHBox        *hbox;
+  TQGroupBox    *group;
+  TQRadioButton *radio;
   KActiveLabel *label;
-  QWidget      *w;
-  QString       msg;
+  TQWidget      *w;
+  TQString       msg;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // QWhat'sThis texts
-  QString htmlWhatsThis = i18n( "<qt><p>Messages sometimes come in both formats. "
+  TQString htmlWhatsThis = i18n( "<qt><p>Messages sometimes come in both formats. "
               "This option controls whether you want the HTML part or the plain "
               "text part to be displayed.</p>"
               "<p>Displaying the HTML part makes the message look better, "
@@ -3638,7 +3638,7 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
               "<p><b>Note:</b> You can set this option on a per-folder basis "
               "from the <i>Folder</i> menu of KMail's main window.</p></qt>" );
 
-  QString externalWhatsThis = i18n( "<qt><p>Some mail advertisements are in HTML "
+  TQString externalWhatsThis = i18n( "<qt><p>Some mail advertisements are in HTML "
               "and contain references to, for example, images that the advertisers"
               " employ to find out that you have read their message "
               "(&quot;web bugs&quot;).</p>"
@@ -3651,7 +3651,7 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
               "messages that were not attached to it, you can enable this "
               "option, but you should be aware of the possible problem.</p></qt>" );
 
-  QString receiptWhatsThis = i18n( "<qt><h3>Message Disposition "
+  TQString receiptWhatsThis = i18n( "<qt><h3>Message Disposition "
               "Notification Policy</h3>"
               "<p>MDNs are a generalization of what is commonly called <b>read "
               "receipt</b>. The message author requests a disposition "
@@ -3684,18 +3684,18 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
 
 
   // "HTML Messages" group box:
-  group = new QVGroupBox( i18n( "HTML Messages" ), this );
+  group = new TQVGroupBox( i18n( "HTML Messages" ), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
-  mHtmlMailCheck = new QCheckBox( i18n("Prefer H&TML to plain text"), group );
-  QWhatsThis::add( mHtmlMailCheck, htmlWhatsThis );
-  connect( mHtmlMailCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  mExternalReferences = new QCheckBox( i18n("Allow messages to load e&xternal "
+  mHtmlMailCheck = new TQCheckBox( i18n("Prefer H&TML to plain text"), group );
+  TQWhatsThis::add( mHtmlMailCheck, htmlWhatsThis );
+  connect( mHtmlMailCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  mExternalReferences = new TQCheckBox( i18n("Allow messages to load e&xternal "
                                             "references from the Internet" ), group );
-  QWhatsThis::add( mExternalReferences, externalWhatsThis );
-  connect( mExternalReferences, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  TQWhatsThis::add( mExternalReferences, externalWhatsThis );
+  connect( mExternalReferences, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
   label = new KActiveLabel( i18n("<b>WARNING:</b> Allowing HTML in email may "
                            "increase the risk that your system will be "
                            "compromised by present and anticipated security "
@@ -3708,70 +3708,70 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
   vlay->addWidget( group );
 
   // encrypted messages group
-  group = new QVGroupBox( i18n("Encrypted Messages"), this );
+  group = new TQVGroupBox( i18n("Encrypted Messages"), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
-  mAlwaysDecrypt = new QCheckBox( i18n( "Attempt decryption of encrypted messages when viewing" ), group );
-  connect( mAlwaysDecrypt, SIGNAL(stateChanged(int)), this, SLOT(slotEmitChanged()) );
+  mAlwaysDecrypt = new TQCheckBox( i18n( "Attempt decryption of encrypted messages when viewing" ), group );
+  connect( mAlwaysDecrypt, TQT_SIGNAL(stateChanged(int)), this, TQT_SLOT(slotEmitChanged()) );
   vlay->addWidget( group );
 
   // "Message Disposition Notification" groupbox:
-  group = new QVGroupBox( i18n("Message Disposition Notifications"), this );
+  group = new TQVGroupBox( i18n("Message Disposition Notifications"), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
 
   // "ignore", "ask", "deny", "always send" radiobutton line:
-  mMDNGroup = new QButtonGroup( group );
+  mMDNGroup = new TQButtonGroup( group );
   mMDNGroup->hide();
-  connect( mMDNGroup, SIGNAL( clicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  hbox = new QHBox( group );
+  connect( mMDNGroup, TQT_SIGNAL( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  hbox = new TQHBox( group );
   hbox->setSpacing( KDialog::spacingHint() );
 
-  (void)new QLabel( i18n("Send policy:"), hbox );
+  (void)new TQLabel( i18n("Send policy:"), hbox );
 
-  radio = new QRadioButton( i18n("&Ignore"), hbox );
+  radio = new TQRadioButton( i18n("&Ignore"), hbox );
   mMDNGroup->insert( radio );
 
-  radio = new QRadioButton( i18n("As&k"), hbox );
+  radio = new TQRadioButton( i18n("As&k"), hbox );
   mMDNGroup->insert( radio );
 
-  radio = new QRadioButton( i18n("&Deny"), hbox );
+  radio = new TQRadioButton( i18n("&Deny"), hbox );
   mMDNGroup->insert( radio );
 
-  radio = new QRadioButton( i18n("Al&ways send"), hbox );
+  radio = new TQRadioButton( i18n("Al&ways send"), hbox );
   mMDNGroup->insert( radio );
 
   for ( int i = 0 ; i < mMDNGroup->count() ; ++i )
-      QWhatsThis::add( mMDNGroup->find( i ), receiptWhatsThis );
+      TQWhatsThis::add( mMDNGroup->find( i ), receiptWhatsThis );
 
-  w = new QWidget( hbox ); // spacer
+  w = new TQWidget( hbox ); // spacer
   hbox->setStretchFactor( w, 1 );
 
   // "Original Message quote" radiobutton line:
-  mOrigQuoteGroup = new QButtonGroup( group );
+  mOrigQuoteGroup = new TQButtonGroup( group );
   mOrigQuoteGroup->hide();
-  connect( mOrigQuoteGroup, SIGNAL( clicked( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mOrigQuoteGroup, TQT_SIGNAL( clicked( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  hbox = new QHBox( group );
+  hbox = new TQHBox( group );
   hbox->setSpacing( KDialog::spacingHint() );
 
-  (void)new QLabel( i18n("Quote original message:"), hbox );
+  (void)new TQLabel( i18n("Quote original message:"), hbox );
 
-  radio = new QRadioButton( i18n("Nothin&g"), hbox );
+  radio = new TQRadioButton( i18n("Nothin&g"), hbox );
   mOrigQuoteGroup->insert( radio );
 
-  radio = new QRadioButton( i18n("&Full message"), hbox );
+  radio = new TQRadioButton( i18n("&Full message"), hbox );
   mOrigQuoteGroup->insert( radio );
 
-  radio = new QRadioButton( i18n("Onl&y headers"), hbox );
+  radio = new TQRadioButton( i18n("Onl&y headers"), hbox );
   mOrigQuoteGroup->insert( radio );
 
-  w = new QWidget( hbox );
+  w = new TQWidget( hbox );
   hbox->setStretchFactor( w, 1 );
 
-  mNoMDNsWhenEncryptedCheck = new QCheckBox( i18n("Do not send MDNs in response to encrypted messages"), group );
-  connect( mNoMDNsWhenEncryptedCheck, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  mNoMDNsWhenEncryptedCheck = new TQCheckBox( i18n("Do not send MDNs in response to encrypted messages"), group );
+  connect( mNoMDNsWhenEncryptedCheck, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
 
   // Warning label:
   label = new KActiveLabel( i18n("<b>WARNING:</b> Unconditionally returning "
@@ -3783,11 +3783,11 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
   vlay->addWidget( group );
 
   // "Attached keys" group box:
-  group = new QVGroupBox( i18n( "Certificate && Key Bundle Attachments" ), this );
+  group = new TQVGroupBox( i18n( "Certificate && Key Bundle Attachments" ), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
-  mAutomaticallyImportAttachedKeysCheck = new QCheckBox( i18n("Automatically import keys and certificates"), group );
-  connect( mAutomaticallyImportAttachedKeysCheck, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  mAutomaticallyImportAttachedKeysCheck = new TQCheckBox( i18n("Automatically import keys and certificates"), group );
+  connect( mAutomaticallyImportAttachedKeysCheck, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
 
   vlay->addWidget( group );
 
@@ -3848,17 +3848,17 @@ void SecurityPage::GeneralTab::save() {
   if (reader.readBoolEntry( "htmlMail", false ) != mHtmlMailCheck->isChecked())
   {
     if (KMessageBox::warningContinueCancel(this, i18n("Changing the global "
-      "HTML setting will override all folder specific values."), QString::null,
+      "HTML setting will override all folder specific values."), TQString::null,
       KStdGuiItem::cont(), "htmlMailOverride") == KMessageBox::Continue)
     {
       reader.writeEntry( "htmlMail", mHtmlMailCheck->isChecked() );
-      QStringList names;
-      QValueList<QGuardedPtr<KMFolder> > folders;
+      TQStringList names;
+      TQValueList<TQGuardedPtr<KMFolder> > folders;
       kmkernel->folderMgr()->createFolderList(&names, &folders);
       kmkernel->imapFolderMgr()->createFolderList(&names, &folders);
       kmkernel->dimapFolderMgr()->createFolderList(&names, &folders);
       kmkernel->searchFolderMgr()->createFolderList(&names, &folders);
-      for (QValueList<QGuardedPtr<KMFolder> >::iterator it = folders.begin();
+      for (TQValueList<TQGuardedPtr<KMFolder> >::iterator it = folders.begin();
         it != folders.end(); ++it)
       {
         if (*it)
@@ -3879,24 +3879,24 @@ void SecurityPage::GeneralTab::save() {
 }
 
 
-QString SecurityPage::ComposerCryptoTab::helpAnchor() const {
-  return QString::fromLatin1("configure-security-composing");
+TQString SecurityPage::ComposerCryptoTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-security-composing");
 }
 
-SecurityPageComposerCryptoTab::SecurityPageComposerCryptoTab( QWidget * parent, const char * name )
+SecurityPageComposerCryptoTab::SecurityPageComposerCryptoTab( TQWidget * parent, const char * name )
   : ConfigModuleTab ( parent, name )
 {
   // the margins are inside mWidget itself
-  QVBoxLayout* vlay = new QVBoxLayout( this, 0, 0 );
+  TQVBoxLayout* vlay = new TQVBoxLayout( this, 0, 0 );
 
   mWidget = new ComposerCryptoConfiguration( this );
-  connect( mWidget->mAutoSignature, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mEncToSelf, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mShowEncryptionResult, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mShowKeyApprovalDlg, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mAutoEncrypt, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mNeverEncryptWhenSavingInDrafts, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->mStoreEncrypted, SIGNAL( toggled(bool) ), this, SLOT( slotEmitChanged() ) );
+  connect( mWidget->mAutoSignature, TQT_SIGNAL( toggled(bool) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mEncToSelf, TQT_SIGNAL( toggled(bool) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mShowEncryptionResult, TQT_SIGNAL( toggled(bool) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mShowKeyApprovalDlg, TQT_SIGNAL( toggled(bool) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mAutoEncrypt, TQT_SIGNAL( toggled(bool) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mNeverEncryptWhenSavingInDrafts, TQT_SIGNAL( toggled(bool) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mStoreEncrypted, TQT_SIGNAL( toggled(bool) ), this, TQT_SLOT( slotEmitChanged() ) );
   vlay->addWidget( mWidget );
 }
 
@@ -3954,33 +3954,33 @@ void SecurityPage::ComposerCryptoTab::save() {
   composer.writeEntry( "crypto-store-encrypted", mWidget->mStoreEncrypted->isChecked() );
 }
 
-QString SecurityPage::WarningTab::helpAnchor() const {
-  return QString::fromLatin1("configure-security-warnings");
+TQString SecurityPage::WarningTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-security-warnings");
 }
 
-SecurityPageWarningTab::SecurityPageWarningTab( QWidget * parent, const char * name )
+SecurityPageWarningTab::SecurityPageWarningTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // the margins are inside mWidget itself
-  QVBoxLayout* vlay = new QVBoxLayout( this, 0, 0 );
+  TQVBoxLayout* vlay = new TQVBoxLayout( this, 0, 0 );
 
   mWidget = new WarningConfiguration( this );
   vlay->addWidget( mWidget );
 
-  connect( mWidget->warnGroupBox, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
-  connect( mWidget->mWarnUnsigned, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
-  connect( mWidget->warnUnencryptedCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
-  connect( mWidget->warnReceiverNotInCertificateCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
-  connect( mWidget->mWarnSignKeyExpiresSB, SIGNAL( valueChanged( int ) ), SLOT( slotEmitChanged() ) );
-  connect( mWidget->mWarnSignChainCertExpiresSB, SIGNAL( valueChanged( int ) ), SLOT( slotEmitChanged() ) );
-  connect( mWidget->mWarnSignRootCertExpiresSB, SIGNAL( valueChanged( int ) ), SLOT( slotEmitChanged() ) );
+  connect( mWidget->warnGroupBox, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
+  connect( mWidget->mWarnUnsigned, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
+  connect( mWidget->warnUnencryptedCB, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
+  connect( mWidget->warnReceiverNotInCertificateCB, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
+  connect( mWidget->mWarnSignKeyExpiresSB, TQT_SIGNAL( valueChanged( int ) ), TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mWarnSignChainCertExpiresSB, TQT_SIGNAL( valueChanged( int ) ), TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mWarnSignRootCertExpiresSB, TQT_SIGNAL( valueChanged( int ) ), TQT_SLOT( slotEmitChanged() ) );
 
-  connect( mWidget->mWarnEncrKeyExpiresSB, SIGNAL( valueChanged( int ) ), SLOT( slotEmitChanged() ) );
-  connect( mWidget->mWarnEncrChainCertExpiresSB, SIGNAL( valueChanged( int ) ), SLOT( slotEmitChanged() ) );
-  connect( mWidget->mWarnEncrRootCertExpiresSB, SIGNAL( valueChanged( int ) ), SLOT( slotEmitChanged() ) );
+  connect( mWidget->mWarnEncrKeyExpiresSB, TQT_SIGNAL( valueChanged( int ) ), TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mWarnEncrChainCertExpiresSB, TQT_SIGNAL( valueChanged( int ) ), TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->mWarnEncrRootCertExpiresSB, TQT_SIGNAL( valueChanged( int ) ), TQT_SLOT( slotEmitChanged() ) );
 
-  connect( mWidget->enableAllWarningsPB, SIGNAL(clicked()),
-           SLOT(slotReenableAllWarningsClicked()) );
+  connect( mWidget->enableAllWarningsPB, TQT_SIGNAL(clicked()),
+           TQT_SLOT(slotReenableAllWarningsClicked()) );
 }
 
 void SecurityPage::WarningTab::doLoadOther() {
@@ -4063,21 +4063,21 @@ void SecurityPage::WarningTab::slotReenableAllWarningsClicked() {
 
 ////
 
-QString SecurityPage::SMimeTab::helpAnchor() const {
-  return QString::fromLatin1("configure-security-smime-validation");
+TQString SecurityPage::SMimeTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-security-smime-validation");
 }
 
-SecurityPageSMimeTab::SecurityPageSMimeTab( QWidget * parent, const char * name )
+SecurityPageSMimeTab::SecurityPageSMimeTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // the margins are inside mWidget itself
-  QVBoxLayout* vlay = new QVBoxLayout( this, 0, 0 );
+  TQVBoxLayout* vlay = new TQVBoxLayout( this, 0, 0 );
 
   mWidget = new SMimeConfiguration( this );
   vlay->addWidget( mWidget );
 
   // Button-group for exclusive radiobuttons
-  QButtonGroup* bg = new QButtonGroup( mWidget );
+  TQButtonGroup* bg = new TQButtonGroup( mWidget );
   bg->hide();
   bg->insert( mWidget->CRLRB );
   bg->insert( mWidget->OCSPRB );
@@ -4093,31 +4093,31 @@ SecurityPageSMimeTab::SecurityPageSMimeTab( QWidget * parent, const char * name 
 
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
 
-  connect( mWidget->CRLRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->OCSPRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->OCSPResponderURL, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->OCSPResponderSignature, SIGNAL( changed() ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->doNotCheckCertPolicyCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->neverConsultCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->fetchMissingCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
+  connect( mWidget->CRLRB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->OCSPRB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->OCSPResponderURL, TQT_SIGNAL( textChanged( const TQString& ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->OCSPResponderSignature, TQT_SIGNAL( changed() ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->doNotCheckCertPolicyCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->neverConsultCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->fetchMissingCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
 
-  connect( mWidget->ignoreServiceURLCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->ignoreHTTPDPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->disableHTTPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->honorHTTPProxyRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->useCustomHTTPProxyRB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->customHTTPProxy, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->ignoreLDAPDPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->disableLDAPCB, SIGNAL( toggled( bool ) ), this, SLOT( slotEmitChanged() ) );
-  connect( mWidget->customLDAPProxy, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotEmitChanged() ) );
+  connect( mWidget->ignoreServiceURLCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->ignoreHTTPDPCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->disableHTTPCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->honorHTTPProxyRB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->useCustomHTTPProxyRB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->customHTTPProxy, TQT_SIGNAL( textChanged( const TQString& ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->ignoreLDAPDPCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->disableLDAPCB, TQT_SIGNAL( toggled( bool ) ), this, TQT_SLOT( slotEmitChanged() ) );
+  connect( mWidget->customLDAPProxy, TQT_SIGNAL( textChanged( const TQString& ) ), this, TQT_SLOT( slotEmitChanged() ) );
 
-  connect( mWidget->disableHTTPCB, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotUpdateHTTPActions() ) );
-  connect( mWidget->ignoreHTTPDPCB, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotUpdateHTTPActions() ) );
+  connect( mWidget->disableHTTPCB, TQT_SIGNAL( toggled( bool ) ),
+           this, TQT_SLOT( slotUpdateHTTPActions() ) );
+  connect( mWidget->ignoreHTTPDPCB, TQT_SIGNAL( toggled( bool ) ),
+           this, TQT_SLOT( slotUpdateHTTPActions() ) );
 
   // Button-group for exclusive radiobuttons
-  QButtonGroup* bgHTTPProxy = new QButtonGroup( mWidget );
+  TQButtonGroup* bgHTTPProxy = new TQButtonGroup( mWidget );
   bgHTTPProxy->hide();
   bgHTTPProxy->insert( mWidget->honorHTTPProxyRB );
   bgHTTPProxy->insert( mWidget->useCustomHTTPProxyRB );
@@ -4132,13 +4132,13 @@ SecurityPageSMimeTab::~SecurityPageSMimeTab()
 {
 }
 
-static void disableDirmngrWidget( QWidget* w ) {
+static void disableDirmngrWidget( TQWidget* w ) {
   w->setEnabled( false );
-  QWhatsThis::remove( w );
-  QWhatsThis::add( w, i18n( "This option requires dirmngr >= 0.9.0" ) );
+  TQWhatsThis::remove( w );
+  TQWhatsThis::add( w, i18n( "This option requires dirmngr >= 0.9.0" ) );
 }
 
-static void initializeDirmngrCheckbox( QCheckBox* cb, Kleo::CryptoConfigEntry* entry ) {
+static void initializeDirmngrCheckbox( TQCheckBox* cb, Kleo::CryptoConfigEntry* entry ) {
   if ( entry )
     cb->setChecked( entry->boolValue() );
   else
@@ -4242,7 +4242,7 @@ void SecurityPage::SMimeTab::doLoadOther() {
   initializeDirmngrCheckbox( mWidget->ignoreLDAPDPCB, e.mIgnoreLDAPDPEntry );
   initializeDirmngrCheckbox( mWidget->disableLDAPCB, e.mDisableLDAPEntry );
   if ( e.mCustomHTTPProxy ) {
-    QString systemProxy = QString::fromLocal8Bit( getenv( "http_proxy" ) );
+    TQString systemProxy = TQString::fromLocal8Bit( getenv( "http_proxy" ) );
     if ( systemProxy.isEmpty() )
       systemProxy = i18n( "no proxy" );
     mWidget->systemHTTPProxy->setText( i18n( "(Current system setting: %1)" ).arg( systemProxy ) );
@@ -4280,7 +4280,7 @@ void SecurityPage::SMimeTab::slotUpdateHTTPActions() {
 void SecurityPage::SMimeTab::installProfile( KConfig * ) {
 }
 
-static void saveCheckBoxToKleoEntry( QCheckBox* cb, Kleo::CryptoConfigEntry* entry ) {
+static void saveCheckBoxToKleoEntry( TQCheckBox* cb, Kleo::CryptoConfigEntry* entry ) {
   const bool b = cb->isChecked();
   if ( entry && entry->boolValue() != b )
     entry->setBoolValue( b );
@@ -4306,7 +4306,7 @@ void SecurityPage::SMimeTab::save() {
   saveCheckBoxToKleoEntry( mWidget->neverConsultCB, e.mNeverConsultConfigEntry );
   saveCheckBoxToKleoEntry( mWidget->fetchMissingCB, e.mFetchMissingConfigEntry );
 
-  QString txt = mWidget->OCSPResponderURL->text();
+  TQString txt = mWidget->OCSPResponderURL->text();
   if ( e.mOCSPResponderURLConfigEntry && e.mOCSPResponderURLConfigEntry->stringValue() != txt )
     e.mOCSPResponderURLConfigEntry->setStringValue( txt );
 
@@ -4326,7 +4326,7 @@ void SecurityPage::SMimeTab::save() {
     if ( e.mHonorHTTPProxy && e.mHonorHTTPProxy->boolValue() != honor )
         e.mHonorHTTPProxy->setBoolValue( honor );
 
-    QString chosenProxy = mWidget->customHTTPProxy->text();
+    TQString chosenProxy = mWidget->customHTTPProxy->text();
     if ( chosenProxy != e.mCustomHTTPProxy->stringValue() )
       e.mCustomHTTPProxy->setStringValue( chosenProxy );
   }
@@ -4337,7 +4337,7 @@ void SecurityPage::SMimeTab::save() {
   mConfig->sync( true );
 }
 
-bool SecurityPageSMimeTab::process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData)
+bool SecurityPageSMimeTab::process(const TQCString &fun, const TQByteArray &data, TQCString& replyType, TQByteArray &replyData)
 {
     if ( fun == "load()" ) {
         replyType = "void";
@@ -4369,11 +4369,11 @@ Kleo::CryptoConfigEntry* SMIMECryptoConfigEntries::configEntry( const char* comp
 {
     Kleo::CryptoConfigEntry* entry = mConfig->entry( componentName, groupName, entryName );
     if ( !entry ) {
-        kdWarning(5006) << QString( "Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName ) << endl;
+        kdWarning(5006) << TQString( "Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName ) << endl;
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
-        kdWarning(5006) << QString( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() ) << endl;
+        kdWarning(5006) << TQString( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() ) << endl;
         return 0;
     }
     return entry;
@@ -4381,17 +4381,17 @@ Kleo::CryptoConfigEntry* SMIMECryptoConfigEntries::configEntry( const char* comp
 
 ////
 
-QString SecurityPage::CryptPlugTab::helpAnchor() const {
-  return QString::fromLatin1("configure-security-crypto-backends");
+TQString SecurityPage::CryptPlugTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-security-crypto-backends");
 }
 
-SecurityPageCryptPlugTab::SecurityPageCryptPlugTab( QWidget * parent, const char * name )
+SecurityPageCryptPlugTab::SecurityPageCryptPlugTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
-  QVBoxLayout * vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  TQVBoxLayout * vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   mBackendConfig = Kleo::CryptoBackendFactory::instance()->configWidget( this, "mBackendConfig" );
-  connect( mBackendConfig, SIGNAL( changed( bool ) ), this, SIGNAL( changed( bool ) ) );
+  connect( mBackendConfig, TQT_SIGNAL( changed( bool ) ), this, TQT_SIGNAL( changed( bool ) ) );
 
   vlay->addWidget( mBackendConfig );
 }
@@ -4414,11 +4414,11 @@ void SecurityPage::CryptPlugTab::save() {
 // *                        MiscPage                           *
 // *                                                           *
 // *************************************************************
-QString MiscPage::helpAnchor() const {
-  return QString::fromLatin1("configure-misc");
+TQString MiscPage::helpAnchor() const {
+  return TQString::fromLatin1("configure-misc");
 }
 
-MiscPage::MiscPage( QWidget * parent, const char * name )
+MiscPage::MiscPage( TQWidget * parent, const char * name )
   : ConfigModuleWithTabs( parent, name )
 {
   mFolderTab = new FolderTab();
@@ -4429,43 +4429,43 @@ MiscPage::MiscPage( QWidget * parent, const char * name )
   load();
 }
 
-QString MiscPage::FolderTab::helpAnchor() const {
-  return QString::fromLatin1("configure-misc-folders");
+TQString MiscPage::FolderTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-misc-folders");
 }
 
-MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
+MiscPageFolderTab::MiscPageFolderTab( TQWidget * parent, const char * name )
   : ConfigModuleTab( parent, name )
 {
   // temp. vars:
-  QVBoxLayout *vlay;
-  QHBoxLayout *hlay;
-  QLabel      *label;
+  TQVBoxLayout *vlay;
+  TQHBoxLayout *hlay;
+  TQLabel      *label;
 
-  vlay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  vlay = new TQVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   // "confirm before emptying folder" check box: stretch 0
   mEmptyFolderConfirmCheck =
-    new QCheckBox( i18n("Corresponds to Folder->Move All Messages to Trash",
+    new TQCheckBox( i18n("Corresponds to Folder->Move All Messages to Trash",
                         "Ask for co&nfirmation before moving all messages to "
                         "trash"),
                    this );
   vlay->addWidget( mEmptyFolderConfirmCheck );
-  connect( mEmptyFolderConfirmCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mEmptyFolderConfirmCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
   mExcludeImportantFromExpiry =
-    new QCheckBox( i18n("E&xclude important messages from expiry"), this );
+    new TQCheckBox( i18n("E&xclude important messages from expiry"), this );
   vlay->addWidget( mExcludeImportantFromExpiry );
-  connect( mExcludeImportantFromExpiry, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mExcludeImportantFromExpiry, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "when trying to find unread messages" combo + label: stretch 0
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mLoopOnGotoUnread = new QComboBox( false, this );
-  label = new QLabel( mLoopOnGotoUnread,
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mLoopOnGotoUnread = new TQComboBox( false, this );
+  label = new TQLabel( mLoopOnGotoUnread,
            i18n("to be continued with \"do not loop\", \"loop in current folder\", "
                 "and \"loop in all folders\".",
                 "When trying to find unread messages:"), this );
-  mLoopOnGotoUnread->insertStringList( QStringList()
+  mLoopOnGotoUnread->insertStringList( TQStringList()
       << i18n("continuation of \"When trying to find unread messages:\"",
               "Do not Loop")
       << i18n("continuation of \"When trying to find unread messages:\"",
@@ -4474,18 +4474,18 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
               "Loop in All Folders"));
   hlay->addWidget( label );
   hlay->addWidget( mLoopOnGotoUnread, 1 );
-  connect( mLoopOnGotoUnread, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mLoopOnGotoUnread, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // when entering a folder
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mActionEnterFolder = new QComboBox( false, this );
-  label = new QLabel( mActionEnterFolder,
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mActionEnterFolder = new TQComboBox( false, this );
+  label = new TQLabel( mActionEnterFolder,
            i18n("to be continued with \"jump to first new message\", "
                 "\"jump to first unread or new message\","
                 "and \"jump to last selected message\".",
                 "When entering a folder:"), this );
-  mActionEnterFolder->insertStringList( QStringList()
+  mActionEnterFolder->insertStringList( TQStringList()
       << i18n("continuation of \"When entering a folder:\"",
               "Jump to First New Message")
       << i18n("continuation of \"When entering a folder:\"",
@@ -4494,11 +4494,11 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
               "Jump to Last Selected Message"));
   hlay->addWidget( label );
   hlay->addWidget( mActionEnterFolder, 1 );
-  connect( mActionEnterFolder, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mActionEnterFolder, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mDelayedMarkAsRead = new QCheckBox( i18n("Mar&k selected message as read after"), this );
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mDelayedMarkAsRead = new TQCheckBox( i18n("Mar&k selected message as read after"), this );
   hlay->addWidget( mDelayedMarkAsRead );
   mDelayedMarkTime = new KIntSpinBox( 0 /*min*/, 60 /*max*/, 1/*step*/,
                                       0 /*init*/, 10 /*base*/, this);
@@ -4506,34 +4506,34 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
   mDelayedMarkTime->setEnabled( false ); // since mDelayedMarkAsREad is off
   hlay->addWidget( mDelayedMarkTime );
   hlay->addStretch( 1 );
-  connect( mDelayedMarkTime, SIGNAL( valueChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  connect( mDelayedMarkAsRead, SIGNAL(toggled(bool)),
-           mDelayedMarkTime, SLOT(setEnabled(bool)));
-  connect( mDelayedMarkAsRead, SIGNAL(toggled(bool)),
-           this , SLOT(slotEmitChanged( void )));
+  connect( mDelayedMarkTime, TQT_SIGNAL( valueChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  connect( mDelayedMarkAsRead, TQT_SIGNAL(toggled(bool)),
+           mDelayedMarkTime, TQT_SLOT(setEnabled(bool)));
+  connect( mDelayedMarkAsRead, TQT_SIGNAL(toggled(bool)),
+           this , TQT_SLOT(slotEmitChanged( void )));
 
   // "show popup after Drag'n'Drop" checkbox: stretch 0
   mShowPopupAfterDnD =
-    new QCheckBox( i18n("Ask for action after &dragging messages to another folder"), this );
+    new TQCheckBox( i18n("Ask for action after &dragging messages to another folder"), this );
   vlay->addWidget( mShowPopupAfterDnD );
-  connect( mShowPopupAfterDnD, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mShowPopupAfterDnD, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "default mailbox format" combo + label: stretch 0
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mMailboxPrefCombo = new QComboBox( false, this );
-  label = new QLabel( mMailboxPrefCombo,
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mMailboxPrefCombo = new TQComboBox( false, this );
+  label = new TQLabel( mMailboxPrefCombo,
                       i18n("to be continued with \"flat files\" and "
                            "\"directories\", resp.",
                            "By default, &message folders on disk are:"), this );
-  mMailboxPrefCombo->insertStringList( QStringList()
+  mMailboxPrefCombo->insertStringList( TQStringList()
           << i18n("continuation of \"By default, &message folders on disk are\"",
                   "Flat Files (\"mbox\" format)")
           << i18n("continuation of \"By default, &message folders on disk are\"",
                   "Directories (\"maildir\" format)") );
-  // and now: add QWhatsThis:
-  QString msg = i18n( "what's this help",
+  // and now: add TQWhatsThis:
+  TQString msg = i18n( "what's this help",
                       "<qt><p>This selects which mailbox format will be "
                       "the default for local folders:</p>"
                       "<p><b>mbox:</b> KMail's mail "
@@ -4547,52 +4547,52 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
                       "are separate files. This may waste a bit of space on "
                       "disk, but should be more robust, e.g. when moving "
                       "messages between folders.</p></qt>");
-  QWhatsThis::add( mMailboxPrefCombo, msg );
-  QWhatsThis::add( label, msg );
+  TQWhatsThis::add( mMailboxPrefCombo, msg );
+  TQWhatsThis::add( label, msg );
   hlay->addWidget( label );
   hlay->addWidget( mMailboxPrefCombo, 1 );
-  connect( mMailboxPrefCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mMailboxPrefCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "On startup..." option:
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
   mOnStartupOpenFolder = new FolderRequester( this,
       kmkernel->getKMMainWidget()->folderTree() );
-  label = new QLabel( mOnStartupOpenFolder,
+  label = new TQLabel( mOnStartupOpenFolder,
                       i18n("Open this folder on startup:"), this );
   hlay->addWidget( label );
   hlay->addWidget( mOnStartupOpenFolder, 1 );
-  connect( mOnStartupOpenFolder, SIGNAL( folderChanged( KMFolder* ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mOnStartupOpenFolder, TQT_SIGNAL( folderChanged( KMFolder* ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // "Empty &trash on program exit" option:
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mEmptyTrashCheck = new QCheckBox( i18n("Empty local &trash folder on program exit"),
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mEmptyTrashCheck = new TQCheckBox( i18n("Empty local &trash folder on program exit"),
                                     this );
   hlay->addWidget( mEmptyTrashCheck );
-  connect( mEmptyTrashCheck, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mEmptyTrashCheck, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
 #ifdef HAVE_INDEXLIB
   // indexing enabled option:
-  mIndexingEnabled = new QCheckBox( i18n("Enable full text &indexing"), this );
+  mIndexingEnabled = new TQCheckBox( i18n("Enable full text &indexing"), this );
   vlay->addWidget( mIndexingEnabled );
-  connect( mIndexingEnabled, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mIndexingEnabled, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 #endif
 
   // "Quota Units"
-  hlay = new QHBoxLayout( vlay ); // inherits spacing
-  mQuotaCmbBox = new QComboBox( false, this );
-  label = new QLabel( mQuotaCmbBox,
+  hlay = new TQHBoxLayout( vlay ); // inherits spacing
+  mQuotaCmbBox = new TQComboBox( false, this );
+  label = new TQLabel( mQuotaCmbBox,
                       i18n("Quota units: "), this );
-  mQuotaCmbBox->insertStringList( QStringList()
+  mQuotaCmbBox->insertStringList( TQStringList()
                    << i18n("KB")
                    << i18n("MB")
                    << i18n("GB") );
   hlay->addWidget( label );
   hlay->addWidget( mQuotaCmbBox, 1 );
-  connect( mQuotaCmbBox, SIGNAL( activated( int )  ), this, SLOT( slotEmitChanged( void ) ) );
+  connect( mQuotaCmbBox, TQT_SIGNAL( activated( int )  ), this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   vlay->addStretch( 1 );
 
@@ -4610,7 +4610,7 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
             "<p>Similarly, when searching for the previous unread message, "
             "the search will start from the bottom of the message list and continue to "
             "the previous folder depending on which option is selected.</p></qt>" );
-  QWhatsThis::add( mLoopOnGotoUnread, msg );
+  TQWhatsThis::add( mLoopOnGotoUnread, msg );
 
 #ifdef HAVE_INDEXLIB
  // this is probably overly pessimistic
@@ -4625,7 +4625,7 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent, const char * name )
 		  "</qt>"
 	    );
 
-  QWhatsThis::add( mIndexingEnabled, msg );
+  TQWhatsThis::add( mIndexingEnabled, msg );
 #endif
 }
 
@@ -4664,7 +4664,7 @@ void MiscPage::FolderTab::save() {
   general.writeEntry( "confirm-before-empty", mEmptyFolderConfirmCheck->isChecked() );
   general.writeEntry( "default-mailbox-format", mMailboxPrefCombo->currentItem() );
   general.writeEntry( "startupFolder", mOnStartupOpenFolder->folder() ?
-                                  mOnStartupOpenFolder->folder()->idString() : QString::null );
+                                  mOnStartupOpenFolder->folder()->idString() : TQString::null );
 
   GlobalSettings::self()->setDelayedMarkAsRead( mDelayedMarkAsRead->isChecked() );
   GlobalSettings::self()->setDelayedMarkTime( mDelayedMarkTime->value() );
@@ -4679,83 +4679,83 @@ void MiscPage::FolderTab::save() {
 #endif
 }
 
-QString MiscPage::GroupwareTab::helpAnchor() const {
-  return QString::fromLatin1("configure-misc-groupware");
+TQString MiscPage::GroupwareTab::helpAnchor() const {
+  return TQString::fromLatin1("configure-misc-groupware");
 }
 
-MiscPageGroupwareTab::MiscPageGroupwareTab( QWidget* parent, const char* name )
+MiscPageGroupwareTab::MiscPageGroupwareTab( TQWidget* parent, const char* name )
   : ConfigModuleTab( parent, name )
 {
-  QBoxLayout* vlay = new QVBoxLayout( this, KDialog::marginHint(),
+  TQBoxLayout* vlay = new TQVBoxLayout( this, KDialog::marginHint(),
                                       KDialog::spacingHint() );
   vlay->setAutoAdd( true );
 
   // IMAP resource setup
-  QVGroupBox* b1 = new QVGroupBox( i18n("&IMAP Resource Folder Options"),
+  TQVGroupBox* b1 = new TQVGroupBox( i18n("&IMAP Resource Folder Options"),
                                    this );
 
   mEnableImapResCB =
-    new QCheckBox( i18n("&Enable IMAP resource functionality"), b1 );
-  QToolTip::add( mEnableImapResCB,  i18n( "This enables the IMAP storage for "
+    new TQCheckBox( i18n("&Enable IMAP resource functionality"), b1 );
+  TQToolTip::add( mEnableImapResCB,  i18n( "This enables the IMAP storage for "
                                           "the Kontact applications" ) );
-  QWhatsThis::add( mEnableImapResCB,
+  TQWhatsThis::add( mEnableImapResCB,
         i18n( GlobalSettings::self()->theIMAPResourceEnabledItem()->whatsThis().utf8() ) );
-  connect( mEnableImapResCB, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mEnableImapResCB, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  mBox = new QWidget( b1 );
-  QGridLayout* grid = new QGridLayout( mBox, 5, 2, 0, KDialog::spacingHint() );
+  mBox = new TQWidget( b1 );
+  TQGridLayout* grid = new TQGridLayout( mBox, 5, 2, 0, KDialog::spacingHint() );
   grid->setColStretch( 1, 1 );
-  connect( mEnableImapResCB, SIGNAL( toggled(bool) ),
-           mBox, SLOT( setEnabled(bool) ) );
+  connect( mEnableImapResCB, TQT_SIGNAL( toggled(bool) ),
+           mBox, TQT_SLOT( setEnabled(bool) ) );
 
-  QLabel* storageFormatLA = new QLabel( i18n("&Format used for the groupware folders:"),
+  TQLabel* storageFormatLA = new TQLabel( i18n("&Format used for the groupware folders:"),
                                         mBox );
-  QString toolTip = i18n( "Choose the format to use to store the contents of the groupware folders." );
-  QString whatsThis = i18n( GlobalSettings::self()
+  TQString toolTip = i18n( "Choose the format to use to store the contents of the groupware folders." );
+  TQString whatsThis = i18n( GlobalSettings::self()
         ->theIMAPResourceStorageFormatItem()->whatsThis().utf8() );
   grid->addWidget( storageFormatLA, 0, 0 );
-  QToolTip::add( storageFormatLA, toolTip );
-  QWhatsThis::add( storageFormatLA, whatsThis );
-  mStorageFormatCombo = new QComboBox( false, mBox );
+  TQToolTip::add( storageFormatLA, toolTip );
+  TQWhatsThis::add( storageFormatLA, whatsThis );
+  mStorageFormatCombo = new TQComboBox( false, mBox );
   storageFormatLA->setBuddy( mStorageFormatCombo );
-  QStringList formatLst;
+  TQStringList formatLst;
   formatLst << i18n("Standard (Ical / Vcard)") << i18n("Kolab (XML)");
   mStorageFormatCombo->insertStringList( formatLst );
   grid->addWidget( mStorageFormatCombo, 0, 1 );
-  QToolTip::add( mStorageFormatCombo, toolTip );
-  QWhatsThis::add( mStorageFormatCombo, whatsThis );
-  connect( mStorageFormatCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotStorageFormatChanged( int ) ) );
+  TQToolTip::add( mStorageFormatCombo, toolTip );
+  TQWhatsThis::add( mStorageFormatCombo, whatsThis );
+  connect( mStorageFormatCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotStorageFormatChanged( int ) ) );
 
-  QLabel* languageLA = new QLabel( i18n("&Language of the groupware folders:"),
+  TQLabel* languageLA = new TQLabel( i18n("&Language of the groupware folders:"),
                                    mBox );
 
   toolTip = i18n( "Set the language of the folder names" );
   whatsThis = i18n( GlobalSettings::self()
         ->theIMAPResourceFolderLanguageItem()->whatsThis().utf8() );
   grid->addWidget( languageLA, 1, 0 );
-  QToolTip::add( languageLA, toolTip );
-  QWhatsThis::add( languageLA, whatsThis );
-  mLanguageCombo = new QComboBox( false, mBox );
+  TQToolTip::add( languageLA, toolTip );
+  TQWhatsThis::add( languageLA, whatsThis );
+  mLanguageCombo = new TQComboBox( false, mBox );
   languageLA->setBuddy( mLanguageCombo );
-  QStringList lst;
+  TQStringList lst;
   lst << i18n("English") << i18n("German") << i18n("French") << i18n("Dutch");
   mLanguageCombo->insertStringList( lst );
   grid->addWidget( mLanguageCombo, 1, 1 );
-  QToolTip::add( mLanguageCombo, toolTip );
-  QWhatsThis::add( mLanguageCombo, whatsThis );
-  connect( mLanguageCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  TQToolTip::add( mLanguageCombo, toolTip );
+  TQWhatsThis::add( mLanguageCombo, whatsThis );
+  connect( mLanguageCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  mFolderComboLabel = new QLabel( mBox ); // text depends on storage format
+  mFolderComboLabel = new TQLabel( mBox ); // text depends on storage format
   toolTip = i18n( "Set the parent of the resource folders" );
   whatsThis = i18n( GlobalSettings::self()->theIMAPResourceFolderParentItem()->whatsThis().utf8() );
-  QToolTip::add( mFolderComboLabel, toolTip );
-  QWhatsThis::add( mFolderComboLabel, whatsThis );
+  TQToolTip::add( mFolderComboLabel, toolTip );
+  TQWhatsThis::add( mFolderComboLabel, whatsThis );
   grid->addWidget( mFolderComboLabel, 2, 0 );
 
-  mFolderComboStack = new QWidgetStack( mBox );
+  mFolderComboStack = new TQWidgetStack( mBox );
   grid->addWidget( mFolderComboStack, 2, 1 );
 
   // First possibility in the widgetstack: a combo showing the list of all folders
@@ -4763,108 +4763,108 @@ MiscPageGroupwareTab::MiscPageGroupwareTab( QWidget* parent, const char* name )
   mFolderCombo = new FolderRequester( mBox,
       kmkernel->getKMMainWidget()->folderTree() );
   mFolderComboStack->addWidget( mFolderCombo, 0 );
-  QToolTip::add( mFolderCombo, toolTip );
-  QWhatsThis::add( mFolderCombo, whatsThis );
-  connect( mFolderCombo, SIGNAL( folderChanged( KMFolder* ) ),
-           this, SLOT( slotEmitChanged() ) );
+  TQToolTip::add( mFolderCombo, toolTip );
+  TQWhatsThis::add( mFolderCombo, whatsThis );
+  connect( mFolderCombo, TQT_SIGNAL( folderChanged( KMFolder* ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
   // Second possibility in the widgetstack: a combo showing the list of accounts
   // This is used with the kolab xml storage since the groupware folders
   // are always under the inbox.
   mAccountCombo = new KMail::AccountComboBox( mBox );
   mFolderComboStack->addWidget( mAccountCombo, 1 );
-  QToolTip::add( mAccountCombo, toolTip );
-  QWhatsThis::add( mAccountCombo, whatsThis );
-  connect( mAccountCombo, SIGNAL( activated( int ) ),
-           this, SLOT( slotEmitChanged() ) );
+  TQToolTip::add( mAccountCombo, toolTip );
+  TQWhatsThis::add( mAccountCombo, whatsThis );
+  connect( mAccountCombo, TQT_SIGNAL( activated( int ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
-  mHideGroupwareFolders = new QCheckBox( i18n( "&Hide groupware folders" ),
+  mHideGroupwareFolders = new TQCheckBox( i18n( "&Hide groupware folders" ),
                                          mBox, "HideGroupwareFoldersBox" );
   grid->addMultiCellWidget( mHideGroupwareFolders, 3, 3, 0, 0 );
-  QToolTip::add( mHideGroupwareFolders,
+  TQToolTip::add( mHideGroupwareFolders,
                  i18n( "When this is checked, you will not see the IMAP "
                        "resource folders in the folder tree." ) );
-  QWhatsThis::add( mHideGroupwareFolders, i18n( GlobalSettings::self()
+  TQWhatsThis::add( mHideGroupwareFolders, i18n( GlobalSettings::self()
            ->hideGroupwareFoldersItem()->whatsThis().utf8() ) );
-  connect( mHideGroupwareFolders, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mHideGroupwareFolders, TQT_SIGNAL( toggled( bool ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
-  mOnlyShowGroupwareFolders = new QCheckBox( i18n( "&Only show groupware folders for this account" ),
+  mOnlyShowGroupwareFolders = new TQCheckBox( i18n( "&Only show groupware folders for this account" ),
                                          mBox, "OnlyGroupwareFoldersBox" );
   grid->addMultiCellWidget( mOnlyShowGroupwareFolders, 3, 3, 1, 1 );
-  QToolTip::add( mOnlyShowGroupwareFolders,
+  TQToolTip::add( mOnlyShowGroupwareFolders,
                  i18n( "When this is checked, you will not see normal  "
                        "mail folders in the folder tree for the account "
                        "configured for groupware." ) );
-  QWhatsThis::add( mOnlyShowGroupwareFolders, i18n( GlobalSettings::self()
+  TQWhatsThis::add( mOnlyShowGroupwareFolders, i18n( GlobalSettings::self()
            ->showOnlyGroupwareFoldersForGroupwareAccountItem()->whatsThis().utf8() ) );
-  connect( mOnlyShowGroupwareFolders, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotEmitChanged() ) );
+  connect( mOnlyShowGroupwareFolders, TQT_SIGNAL( toggled( bool ) ),
+           this, TQT_SLOT( slotEmitChanged() ) );
 
-  mSyncImmediately = new QCheckBox( i18n( "Synchronize groupware changes immediately" ), mBox );
-  QToolTip::add( mSyncImmediately,
+  mSyncImmediately = new TQCheckBox( i18n( "Synchronize groupware changes immediately" ), mBox );
+  TQToolTip::add( mSyncImmediately,
                  i18n( "Synchronize groupware changes in disconnected IMAP folders immediately when being online." ) );
-  connect( mSyncImmediately, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+  connect( mSyncImmediately, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
   grid->addMultiCellWidget( mSyncImmediately, 4, 4, 0, 1 );
   
-  mDeleteInvitations = new QCheckBox( 
+  mDeleteInvitations = new TQCheckBox( 
              i18n( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem()->label().utf8() ), mBox );
-  QWhatsThis::add( mDeleteInvitations, i18n( GlobalSettings::self()
+  TQWhatsThis::add( mDeleteInvitations, i18n( GlobalSettings::self()
              ->deleteInvitationEmailsAfterSendingReplyItem()->whatsThis().utf8() ) );
-    connect( mDeleteInvitations, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+    connect( mDeleteInvitations, TQT_SIGNAL(toggled(bool)), TQT_SLOT(slotEmitChanged()) );
     grid->addMultiCellWidget( mDeleteInvitations, 5, 5, 0, 1 );
 
   // Groupware functionality compatibility setup
-  b1 = new QVGroupBox( i18n("Groupware Compatibility && Legacy Options"), this );
+  b1 = new TQVGroupBox( i18n("Groupware Compatibility && Legacy Options"), this );
 
-  gBox = new QVBox( b1 );
+  gBox = new TQVBox( b1 );
 #if 0
   // Currently believed to be disused.
-  mEnableGwCB = new QCheckBox( i18n("&Enable groupware functionality"), b1 );
+  mEnableGwCB = new TQCheckBox( i18n("&Enable groupware functionality"), b1 );
   gBox->setSpacing( KDialog::spacingHint() );
-  connect( mEnableGwCB, SIGNAL( toggled(bool) ),
-           gBox, SLOT( setEnabled(bool) ) );
-  connect( mEnableGwCB, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mEnableGwCB, TQT_SIGNAL( toggled(bool) ),
+           gBox, TQT_SLOT( setEnabled(bool) ) );
+  connect( mEnableGwCB, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 #endif
   mEnableGwCB = 0;
-  mLegacyMangleFromTo = new QCheckBox( i18n( "Mangle From:/To: headers in replies to invitations" ), gBox );
-  QToolTip::add( mLegacyMangleFromTo, i18n( "Turn this option on in order to make Outlook(tm) understand your answers to invitation replies" ) );
-  QWhatsThis::add( mLegacyMangleFromTo, i18n( GlobalSettings::self()->
+  mLegacyMangleFromTo = new TQCheckBox( i18n( "Mangle From:/To: headers in replies to invitations" ), gBox );
+  TQToolTip::add( mLegacyMangleFromTo, i18n( "Turn this option on in order to make Outlook(tm) understand your answers to invitation replies" ) );
+  TQWhatsThis::add( mLegacyMangleFromTo, i18n( GlobalSettings::self()->
            legacyMangleFromToHeadersItem()->whatsThis().utf8() ) );
-  connect( mLegacyMangleFromTo, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-  mLegacyBodyInvites = new QCheckBox( i18n( "Send invitations in the mail body" ), gBox );
-  QToolTip::add( mLegacyBodyInvites, i18n( "Turn this option on in order to make Outlook(tm) understand your answers to invitations" ) );
-  QWhatsThis::add( mLegacyMangleFromTo, i18n( GlobalSettings::self()->
+  connect( mLegacyMangleFromTo, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
+  mLegacyBodyInvites = new TQCheckBox( i18n( "Send invitations in the mail body" ), gBox );
+  TQToolTip::add( mLegacyBodyInvites, i18n( "Turn this option on in order to make Outlook(tm) understand your answers to invitations" ) );
+  TQWhatsThis::add( mLegacyMangleFromTo, i18n( GlobalSettings::self()->
            legacyBodyInvitesItem()->whatsThis().utf8() ) );
-  connect( mLegacyBodyInvites, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotLegacyBodyInvitesToggled( bool ) ) );
-  connect( mLegacyBodyInvites, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mLegacyBodyInvites, TQT_SIGNAL( toggled( bool ) ),
+           this, TQT_SLOT( slotLegacyBodyInvitesToggled( bool ) ) );
+  connect( mLegacyBodyInvites, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  mExchangeCompatibleInvitations = new QCheckBox( i18n( "Exchange compatible invitation naming" ), gBox );
-  QToolTip::add( mExchangeCompatibleInvitations, i18n( "Microsoft Outlook, when used in combination with a Microsoft Exchange server, has a problem understanding standards-compliant groupware e-mail. Turn this option on to send groupware invitations in a way that Microsoft Exchange understands." ) );
-  QWhatsThis::add( mExchangeCompatibleInvitations, i18n( GlobalSettings::self()->
+  mExchangeCompatibleInvitations = new TQCheckBox( i18n( "Exchange compatible invitation naming" ), gBox );
+  TQToolTip::add( mExchangeCompatibleInvitations, i18n( "Microsoft Outlook, when used in combination with a Microsoft Exchange server, has a problem understanding standards-compliant groupware e-mail. Turn this option on to send groupware invitations in a way that Microsoft Exchange understands." ) );
+  TQWhatsThis::add( mExchangeCompatibleInvitations, i18n( GlobalSettings::self()->
            exchangeCompatibleInvitationsItem()->whatsThis().utf8() ) );
-  connect( mExchangeCompatibleInvitations, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mExchangeCompatibleInvitations, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
-  mAutomaticSending = new QCheckBox( i18n( "Automatic invitation sending" ), gBox );
-  QToolTip::add( mAutomaticSending, i18n( "When this is on, the user will not see the mail composer window. Invitation mails are sent automatically" ) );
-  QWhatsThis::add( mAutomaticSending, i18n( GlobalSettings::self()->
+  mAutomaticSending = new TQCheckBox( i18n( "Automatic invitation sending" ), gBox );
+  TQToolTip::add( mAutomaticSending, i18n( "When this is on, the user will not see the mail composer window. Invitation mails are sent automatically" ) );
+  TQWhatsThis::add( mAutomaticSending, i18n( GlobalSettings::self()->
            automaticSendingItem()->whatsThis().utf8() ) );
-  connect( mAutomaticSending, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
+  connect( mAutomaticSending, TQT_SIGNAL( stateChanged( int ) ),
+           this, TQT_SLOT( slotEmitChanged( void ) ) );
 
   // Open space padding at the end
-  new QLabel( this );
+  new TQLabel( this );
 }
 
 void MiscPageGroupwareTab::slotLegacyBodyInvitesToggled( bool on )
 {
   if ( on ) {
-    QString txt = i18n( "<qt>Invitations are normally sent as attachments to "
+    TQString txt = i18n( "<qt>Invitations are normally sent as attachments to "
                         "a mail. This switch changes the invitation mails to "
                         "be sent in the text of the mail instead; this is "
                         "necessary to send invitations and replies to "
@@ -4875,7 +4875,7 @@ void MiscPageGroupwareTab::slotLegacyBodyInvitesToggled( bool on )
                         "resulting messages look very odd.<br>People that have email "
                         "programs that do understand invitations will still "
                         "be able to work with this.</qt>" );
-    KMessageBox::information( this, txt, QString::null,
+    KMessageBox::information( this, txt, TQString::null,
                               "LegacyBodyInvitesWarning" );
   }
   // Invitations in the body are autosent in any case (no point in editing raw ICAL)
@@ -4914,7 +4914,7 @@ void MiscPage::GroupwareTab::doLoadFromGlobalSettings() {
   mSyncImmediately->setChecked( GlobalSettings::self()->immediatlySyncDIMAPOnGroupwareChanges() );
   mDeleteInvitations->setChecked( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
 
-  QString folderId( GlobalSettings::self()->theIMAPResourceFolderParent() );
+  TQString folderId( GlobalSettings::self()->theIMAPResourceFolderParent() );
   if( !folderId.isNull() && kmkernel->findFolderById( folderId ) ) {
     mFolderCombo->setFolder( folderId );
   } else {
@@ -4980,7 +4980,7 @@ void MiscPage::GroupwareTab::save() {
 
   // If there is a leftover folder in the foldercombo, getFolder can
   // return 0. In that case we really don't have it enabled
-  QString folderId;
+  TQString folderId;
   if (  format == 0 ) {
     KMFolder* folder = mFolderCombo->folder();
     if (  folder )
@@ -5007,7 +5007,7 @@ void MiscPage::GroupwareTab::save() {
     // Inbox folder of the selected account
     KMAccount* acct = mAccountCombo->currentAccount();
     if (  acct ) {
-      folderId = QString( ".%1.directory/INBOX" ).arg( acct->id() );
+      folderId = TQString( ".%1.directory/INBOX" ).arg( acct->id() );
       GlobalSettings::self()->setTheIMAPResourceAccount( acct->id() );
     }
   }
@@ -5039,15 +5039,15 @@ void MiscPage::GroupwareTab::slotStorageFormatChanged( int format )
 // *                                                           *
 // *************************************************************
 AccountUpdater::AccountUpdater(ImapAccountBase *account)
-    : QObject()
+    : TQObject()
 {
   mAccount = account;
 }
 
 void AccountUpdater::update()
 {
-  connect( mAccount, SIGNAL( connectionResult(int, const QString&) ),
-          this, SLOT( namespacesFetched() ) );
+  connect( mAccount, TQT_SIGNAL( connectionResult(int, const TQString&) ),
+          this, TQT_SLOT( namespacesFetched() ) );
   mAccount->makeConnection();
 }
 

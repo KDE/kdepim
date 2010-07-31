@@ -17,10 +17,10 @@
 #ifndef KCALDAV_JOB_H
 #define KCALDAV_JOB_H
 
-#include <qthread.h>
-#include <qstring.h>
-#include <qdatetime.h>
-#include <qapplication.h>
+#include <tqthread.h>
+#include <tqstring.h>
+#include <tqdatetime.h>
+#include <tqapplication.h>
 
 extern "C" {
     #include <libcaldav/caldav.h>
@@ -35,28 +35,28 @@ namespace KCal {
 /**
  * Calendar job.
  */
-class CalDavJob : public QThread {
+class CalDavJob : public TQThread {
 
 public:
 
     /**
      * @param url URL to load.
      */
-    CalDavJob(const QString& url = QString());
+    CalDavJob(const TQString& url = TQString());
 
     virtual ~CalDavJob();
 
     /**
      * Sets a new URL to load.
      */
-    virtual void setUrl(const QString& s) {
+    virtual void setUrl(const TQString& s) {
         mUrl = s;
     }
 
     /**
      * Sets the parent qobject.
      */
-    virtual void setParent(QObject *s) {
+    virtual void setParent(TQObject *s) {
         mParent = s;
     }
 
@@ -70,14 +70,14 @@ public:
     /**
      * @return URL to load.
      */
-    virtual QString url() const {
+    virtual TQString url() const {
         return mUrl;
     }
 
     /**
      * @return parent object
      */
-    virtual QObject *parent() {
+    virtual TQObject *parent() {
         return mParent;
     }
 
@@ -98,7 +98,7 @@ public:
     /**
      * @return an error string.
      */
-    virtual QString errorString() const {
+    virtual TQString errorString() const {
         return mErrorString;
     }
 
@@ -134,7 +134,7 @@ protected:
     /**
      * Sets an error string to @p err. Also sets an error flag.
      */
-    void setErrorString(const QString& str, const long number);
+    void setErrorString(const TQString& str, const long number);
 
     /**
      * Process an error.
@@ -146,11 +146,11 @@ protected:
 
 private:
 
-    QString mUrl;
+    TQString mUrl;
     bool mError;
-    QString mErrorString;
+    TQString mErrorString;
     long mErrorNumber;
-    QObject *mParent;
+    TQObject *mParent;
     int mType;
 
     void enableCaldavDebug(runtime_info*);

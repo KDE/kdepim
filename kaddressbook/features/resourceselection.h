@@ -40,11 +40,11 @@ class ResourceSelection : public KAB::ExtensionWidget
   Q_OBJECT
 
   public:
-    ResourceSelection( KAB::Core*, QWidget *parent, const char *name );
+    ResourceSelection( KAB::Core*, TQWidget *parent, const char *name );
     virtual ~ResourceSelection();
 
-    QString title() const;
-    QString identifier() const;
+    TQString title() const;
+    TQString identifier() const;
 
     void contactsSelectionChanged() {};
 
@@ -52,21 +52,21 @@ class ResourceSelection : public KAB::ExtensionWidget
     void add();
     void edit();
     void remove();
-    void currentChanged( QListViewItem* );
+    void currentChanged( TQListViewItem* );
 
     void updateView();
 
     void slotSubresourceAdded( KPIM::ResourceABC *resource,
-                               const QString& /*type*/,
-                               const QString& subResource );
+                               const TQString& /*type*/,
+                               const TQString& subResource );
     void slotSubresourceRemoved( KPIM::ResourceABC* /*resource*/,
-                                 const QString& /*type*/,
-                                 const QString& subResource );
+                                 const TQString& /*type*/,
+                                 const TQString& subResource );
     void slotSubresourceChanged( KPIM::ResourceABC* /*resource*/,
-                               const QString& /*type*/,
-                               const QString& subResource );
+                               const TQString& /*type*/,
+                               const TQString& subResource );
 
-    void contextMenuRequested ( QListViewItem *i, const QPoint &pos, int );
+    void contextMenuRequested ( TQListViewItem *i, const TQPoint &pos, int );
 
     void showInfo();
 
@@ -77,14 +77,14 @@ class ResourceSelection : public KAB::ExtensionWidget
     void initGUI();
 
     ResourceItem* selectedItem() const;
-    ResourceItem* findSubResourceItem( KPIM::ResourceABC *resource, const QString &subResource );
+    ResourceItem* findSubResourceItem( KPIM::ResourceABC *resource, const TQString &subResource );
 
     KListView *mListView;
-    QPushButton *mAddButton;
-    QPushButton *mEditButton;
-    QPushButton *mRemoveButton;
+    TQPushButton *mAddButton;
+    TQPushButton *mEditButton;
+    TQPushButton *mRemoveButton;
 
-    QString mLastResource;
+    TQString mLastResource;
 
     KRES::Manager<KABC::Resource> *mManager;
 };

@@ -37,8 +37,8 @@ using namespace KMail;
 QuotaJobs::GetQuotarootJob* QuotaJobs::getQuotaroot(
     KIO::Slave* slave, const KURL& url )
 {
-  QByteArray packedArgs;
-  QDataStream stream( packedArgs, IO_WriteOnly );
+  TQByteArray packedArgs;
+  TQDataStream stream( packedArgs, IO_WriteOnly );
   stream << (int)'Q' << (int)'R' << url;
 
   GetQuotarootJob* job = new GetQuotarootJob( url, packedArgs, false );
@@ -47,36 +47,36 @@ QuotaJobs::GetQuotarootJob* QuotaJobs::getQuotaroot(
 }
 
 QuotaJobs::GetQuotarootJob::GetQuotarootJob( const KURL& url,
-                                             const QByteArray &packedArgs,
+                                             const TQByteArray &packedArgs,
                                              bool showProgressInfo )
   : KIO::SimpleJob( url, KIO::CMD_SPECIAL, packedArgs, showProgressInfo )
 {
-  connect( this, SIGNAL(infoMessage(KIO::Job*,const QString&)),
-           SLOT(slotInfoMessage(KIO::Job*,const QString&)) );
+  connect( this, TQT_SIGNAL(infoMessage(KIO::Job*,const TQString&)),
+           TQT_SLOT(slotInfoMessage(KIO::Job*,const TQString&)) );
 }
 
-void QuotaJobs::GetQuotarootJob::slotInfoMessage( KIO::Job*, const QString& str )
+void QuotaJobs::GetQuotarootJob::slotInfoMessage( KIO::Job*, const TQString& str )
 {
   // Parse the result
-  QStringList results = QStringList::split("\r", str);
-  QStringList roots;
+  TQStringList results = TQStringList::split("\r", str);
+  TQStringList roots;
   QuotaInfoList quotas;
   if ( results.size() > 0 ) {
     // the first line is the available roots
-    roots = QStringList::split(" ", results.front() );
+    roots = TQStringList::split(" ", results.front() );
     results.pop_front();
     // the rest are pairs of root -> list of triplets
     while ( results.size() > 0 ) {
-      QString root = results.front(); results.pop_front();
+      TQString root = results.front(); results.pop_front();
       // and the quotas
       if ( results.size() > 0 ) {
-        QStringList triplets = QStringList::split(" ", results.front() );
+        TQStringList triplets = TQStringList::split(" ", results.front() );
         results.pop_front();
         while ( triplets.size() > 0 ) {
           // there's always three, the label, current and max values
-          QString name = triplets.front(); triplets.pop_front();
-          QString current = triplets.front(); triplets.pop_front();
-          QString max = triplets.front(); triplets.pop_front();
+          TQString name = triplets.front(); triplets.pop_front();
+          TQString current = triplets.front(); triplets.pop_front();
+          TQString max = triplets.front(); triplets.pop_front();
           QuotaInfo info( name, root, current, max );
           quotas.append( info );
         }
@@ -100,21 +100,21 @@ QuotaJobs::GetStorageQuotaJob* QuotaJobs::getStorageQuota(
 QuotaJobs::GetStorageQuotaJob::GetStorageQuotaJob( KIO::Slave* slave, const KURL& url )
   : KIO::Job( false )
 {
-    QByteArray packedArgs;
-    QDataStream stream( packedArgs, IO_WriteOnly );
+    TQByteArray packedArgs;
+    TQDataStream stream( packedArgs, IO_WriteOnly );
     stream << (int)'Q' << (int)'R' << url;
 
     QuotaJobs::GetQuotarootJob *job =
         new QuotaJobs::GetQuotarootJob( url, packedArgs, false );
-    connect(job, SIGNAL(quotaInfoReceived(const QuotaInfoList&)),
-            SLOT(slotQuotaInfoReceived(const QuotaInfoList&)));
-    connect(job, SIGNAL(quotaRootResult(const QStringList&)),
-            SLOT(slotQuotarootResult(const QStringList&)));
+    connect(job, TQT_SIGNAL(quotaInfoReceived(const QuotaInfoList&)),
+            TQT_SLOT(slotQuotaInfoReceived(const QuotaInfoList&)));
+    connect(job, TQT_SIGNAL(quotaRootResult(const TQStringList&)),
+            TQT_SLOT(slotQuotarootResult(const TQStringList&)));
     KIO::Scheduler::assignJobToSlave( slave, job );
     addSubjob( job );
 }
 
-void QuotaJobs::GetStorageQuotaJob::slotQuotarootResult( const QStringList& roots )
+void QuotaJobs::GetStorageQuotaJob::slotQuotarootResult( const TQStringList& roots )
 {
     Q_UNUSED(roots); // we only support one for now
     if ( !mStorageQuotaInfo.isValid() && !error() ) {

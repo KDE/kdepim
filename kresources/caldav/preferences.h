@@ -44,7 +44,7 @@ public:
     /**
      * @param prefix Unique prefix of the resource instance (use identifier() method).
      */
-    CalDavPrefs(const QString& prefix)
+    CalDavPrefs(const TQString& prefix)
         : mWallet(NULL)
         , mNoWallet(false)
         , mPrefix(prefix)
@@ -67,25 +67,25 @@ public:
      * to be properly saved, call this method after ensuring the remember flag
      * is set.
      */
-    void setPassword(const QString& p);
+    void setPassword(const TQString& p);
 
     /**
      * Returns password. The password is taken from the wallet.
      * May return an empty string, if there is no password available.
      */
-    QString password();
+    TQString password();
 
     /**
      * Returns the username.
      */
-    QString getusername();
+    TQString getusername();
 
     void setRememberPassword(bool v);
 
     /**
      * @return A full URL to connect to CalDAV server (including username and password).
      */
-    QString getFullUrl();
+    TQString getFullUrl();
 
 protected:
 
@@ -94,7 +94,7 @@ protected:
      * can use the same config file.
      * @param prefix Unique prefix of the resource instance.
      */
-    void addPrefix(const QString& prefix);
+    void addPrefix(const TQString& prefix);
 
     /**
      * Returns the wallet or NULL, if the wallet can't be obtained.
@@ -106,7 +106,7 @@ protected:
      * @param folder the wallet working folder
      * @return true, if the folder has been set, and false otherwise.
      */
-    bool setWalletFolder(const QString& folder);
+    bool setWalletFolder(const TQString& folder);
 
     /**
      * Removes the wallet. If @p noWallet is set, the wallet has been marked inaccessible, so that subsequent
@@ -119,14 +119,14 @@ protected:
      * @param password password to write
      * @return true on success, false on failure
      */
-    bool writePasswordToWallet(const QString& password);
+    bool writePasswordToWallet(const TQString& password);
 
     /**
      * Extracts password from the wallet.
      * @param password a variable to save read password to.
      * @return true on success, false on failure
      */
-    bool readPasswordFromWallet(QString& password);
+    bool readPasswordFromWallet(TQString& password);
 
     /**
      * Clears password in the wallet.
@@ -136,15 +136,15 @@ protected:
 
 private:
 
-    static const QString NO_PASSWORD;
-    static const QString WALLET_FOLDER;
-    static const QString WALLET_PWD_SUFFIX;
+    static const TQString NO_PASSWORD;
+    static const TQString WALLET_FOLDER;
+    static const TQString WALLET_PWD_SUFFIX;
 
     KWallet::Wallet* mWallet;
     bool mNoWallet;
 
-    QString mPrefix;
-    QString mPassword;
+    TQString mPrefix;
+    TQString mPassword;
 };
 
 } // namespace KCal

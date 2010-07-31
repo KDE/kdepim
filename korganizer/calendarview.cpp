@@ -91,27 +91,27 @@
 #include <krun.h>
 #include <kdirwatch.h>
 
-#include <qapplication.h>
-#include <qclipboard.h>
-#include <qcursor.h>
-#include <qmultilineedit.h>
-#include <qtimer.h>
-#include <qwidgetstack.h>
-#include <qptrlist.h>
-#include <qfile.h>
-#include <qlayout.h>
+#include <tqapplication.h>
+#include <tqclipboard.h>
+#include <tqcursor.h>
+#include <tqmultilineedit.h>
+#include <tqtimer.h>
+#include <tqwidgetstack.h>
+#include <tqptrlist.h>
+#include <tqfile.h>
+#include <tqlayout.h>
 #ifndef KORG_NOSPLITTER
-#include <qsplitter.h>
+#include <tqsplitter.h>
 #endif
-#include <qvbox.h>
-#include <qwhatsthis.h>
+#include <tqvbox.h>
+#include <tqwhatsthis.h>
 
 #include <stdlib.h>
 #include <assert.h>
 
 using namespace KOrg;
 
-CalendarView::CalendarView( QWidget *parent, const char *name )
+CalendarView::CalendarView( TQWidget *parent, const char *name )
   : CalendarViewBase( parent, name ),
     mHistory( 0 ),
     mCalendar( CalendarNull::self() ),
@@ -133,61 +133,61 @@ CalendarView::CalendarView( QWidget *parent, const char *name )
   mNavigator = new DateNavigator( this );
   mDateChecker = new DateChecker( this );
 
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+  TQBoxLayout *topLayout = new TQVBoxLayout( this );
 
 #ifndef KORG_NOSPLITTER
   // create the main layout frames.
-  mPanner = new QSplitter( QSplitter::Horizontal, this,
+  mPanner = new TQSplitter( TQSplitter::Horizontal, this,
                            "CalendarView::Panner" );
   topLayout->addWidget( mPanner );
 
-  mLeftSplitter = new QSplitter( QSplitter::Vertical, mPanner,
+  mLeftSplitter = new TQSplitter( TQSplitter::Vertical, mPanner,
                                  "CalendarView::LeftFrame" );
-//  mPanner->setResizeMode( mLeftSplitter, QSplitter::Stretch );
+//  mPanner->setResizeMode( mLeftSplitter, TQSplitter::Stretch );
 
   mDateNavigator = new DateNavigatorContainer( mLeftSplitter,
                                                "CalendarView::DateNavigator" );
 
-//  mLeftSplitter->setResizeMode( mDateNavigator, QSplitter::Stretch );
+//  mLeftSplitter->setResizeMode( mDateNavigator, TQSplitter::Stretch );
   mLeftSplitter->setCollapsible( mDateNavigator, true );
   mTodoList = new KOTodoView( CalendarNull::self(), mLeftSplitter, "todolist" );
 
   mEventViewer = new KOEventViewer( mLeftSplitter,"EventViewer" );
 
-  QVBox *rightBox = new QVBox( mPanner );
+  TQVBox *rightBox = new TQVBox( mPanner );
   mNavigatorBar = new NavigatorBar( rightBox );
-  mRightFrame = new QWidgetStack( rightBox );
+  mRightFrame = new TQWidgetStack( rightBox );
   rightBox->setStretchFactor( mRightFrame, 1 );
 
   mLeftFrame = mLeftSplitter;
 #else
-  QWidget *mainBox;
-  QWidget *leftFrame;
+  TQWidget *mainBox;
+  TQWidget *leftFrame;
 
   if ( KOPrefs::instance()->mVerticalScreen ) {
-    mainBox = new QVBox( this );
-    leftFrame = new QHBox( mainBox );
+    mainBox = new TQVBox( this );
+    leftFrame = new TQHBox( mainBox );
   } else {
-    mainBox = new QHBox( this );
-    leftFrame = new QVBox( mainBox );
+    mainBox = new TQHBox( this );
+    leftFrame = new TQVBox( mainBox );
   }
 
   topLayout->addWidget( mainBox );
 
   mDateNavigator = new KDateNavigator( leftFrame, true,
                                        "CalendarView::DateNavigator",
-                                       QDate::currentDate() );
+                                       TQDate::currentDate() );
   mTodoList = new KOTodoView( CalendarNull::self(), leftFrame, "todolist" );
 
   mEventViewer = new KOEventViewer ( leftFrame, "EventViewer" );
 
-  QWidget *rightBox = new QWidget( mainBox );
-  QBoxLayout *rightLayout = new QVBoxLayout( rightBox );
+  TQWidget *rightBox = new TQWidget( mainBox );
+  TQBoxLayout *rightLayout = new TQVBoxLayout( rightBox );
 
-  mNavigatorBar = new NavigatorBar( QDate::currentDate(), rightBox );
+  mNavigatorBar = new NavigatorBar( TQDate::currentDate(), rightBox );
   rightLayout->addWidget( mNavigatorBar );
 
-  mRightFrame = new QWidgetStack( rightBox );
+  mRightFrame = new TQWidgetStack( rightBox );
   rightLayout->addWidget( mRightFrame );
 
   mLeftFrame = leftFrame;
@@ -198,73 +198,73 @@ CalendarView::CalendarView( QWidget *parent, const char *name )
   }
 #endif
 
-  connect( mNavigator, SIGNAL( datesSelected( const KCal::DateList & ) ),
-           SLOT( showDates( const KCal::DateList & ) ) );
-  connect( mNavigator, SIGNAL( datesSelected( const KCal::DateList & ) ),
-           mDateNavigator, SLOT( selectDates( const KCal::DateList & ) ) );
+  connect( mNavigator, TQT_SIGNAL( datesSelected( const KCal::DateList & ) ),
+           TQT_SLOT( showDates( const KCal::DateList & ) ) );
+  connect( mNavigator, TQT_SIGNAL( datesSelected( const KCal::DateList & ) ),
+           mDateNavigator, TQT_SLOT( selectDates( const KCal::DateList & ) ) );
 
-  connect( mNavigatorBar, SIGNAL( goPrevYear() ),
-           mNavigator, SLOT( selectPreviousYear() ) );
-  connect( mNavigatorBar, SIGNAL( goNextYear() ),
-           mNavigator, SLOT( selectNextYear() ) );
-  connect( mNavigatorBar, SIGNAL( goPrevMonth() ),
-           mNavigator, SLOT( selectPreviousMonth() ) );
-  connect( mNavigatorBar, SIGNAL( goNextMonth() ),
-           mNavigator, SLOT( selectNextMonth() ) );
-  connect( mNavigatorBar, SIGNAL( goMonth(int) ),
-           mNavigator, SLOT( selectMonth(int) ) );
+  connect( mNavigatorBar, TQT_SIGNAL( goPrevYear() ),
+           mNavigator, TQT_SLOT( selectPreviousYear() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( goNextYear() ),
+           mNavigator, TQT_SLOT( selectNextYear() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( goPrevMonth() ),
+           mNavigator, TQT_SLOT( selectPreviousMonth() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( goNextMonth() ),
+           mNavigator, TQT_SLOT( selectNextMonth() ) );
+  connect( mNavigatorBar, TQT_SIGNAL( goMonth(int) ),
+           mNavigator, TQT_SLOT( selectMonth(int) ) );
 
-  connect( mNavigator, SIGNAL( datesSelected( const KCal::DateList & ) ),
-           mNavigatorBar, SLOT( selectDates( const KCal::DateList & ) ) );
+  connect( mNavigator, TQT_SIGNAL( datesSelected( const KCal::DateList & ) ),
+           mNavigatorBar, TQT_SLOT( selectDates( const KCal::DateList & ) ) );
 
-  connect( mDateNavigator, SIGNAL( weekClicked( const QDate & ) ),
-           mNavigator, SLOT( selectWeek( const QDate & ) ) );
+  connect( mDateNavigator, TQT_SIGNAL( weekClicked( const TQDate & ) ),
+           mNavigator, TQT_SLOT( selectWeek( const TQDate & ) ) );
 
-  connect( mDateNavigator, SIGNAL( goPrevYear() ),
-           mNavigator, SLOT( selectPreviousYear() ) );
-  connect( mDateNavigator, SIGNAL( goNextYear() ),
-           mNavigator, SLOT( selectNextYear() ) );
-  connect( mDateNavigator, SIGNAL( goPrevMonth() ),
-           mNavigator, SLOT( selectPreviousMonth() ) );
-  connect( mDateNavigator, SIGNAL( goNextMonth() ),
-           mNavigator, SLOT( selectNextMonth() ) );
-  connect( mDateNavigator, SIGNAL( goMonth(int) ),
-           mNavigator, SLOT( selectMonth(int) ) );
+  connect( mDateNavigator, TQT_SIGNAL( goPrevYear() ),
+           mNavigator, TQT_SLOT( selectPreviousYear() ) );
+  connect( mDateNavigator, TQT_SIGNAL( goNextYear() ),
+           mNavigator, TQT_SLOT( selectNextYear() ) );
+  connect( mDateNavigator, TQT_SIGNAL( goPrevMonth() ),
+           mNavigator, TQT_SLOT( selectPreviousMonth() ) );
+  connect( mDateNavigator, TQT_SIGNAL( goNextMonth() ),
+           mNavigator, TQT_SLOT( selectNextMonth() ) );
+  connect( mDateNavigator, TQT_SIGNAL( goMonth(int) ),
+           mNavigator, TQT_SLOT( selectMonth(int) ) );
 
-  connect( mDateNavigator, SIGNAL( goPrevious() ),
-           mNavigator, SLOT( selectPrevious() ) );
-  connect( mDateNavigator, SIGNAL( goNext() ),
-           mNavigator, SLOT( selectNext() ) );
+  connect( mDateNavigator, TQT_SIGNAL( goPrevious() ),
+           mNavigator, TQT_SLOT( selectPrevious() ) );
+  connect( mDateNavigator, TQT_SIGNAL( goNext() ),
+           mNavigator, TQT_SLOT( selectNext() ) );
 
-  connect( mDateNavigator, SIGNAL( datesSelected( const KCal::DateList & ) ),
-           mNavigator, SLOT( selectDates( const KCal::DateList & ) ) );
+  connect( mDateNavigator, TQT_SIGNAL( datesSelected( const KCal::DateList & ) ),
+           mNavigator, TQT_SLOT( selectDates( const KCal::DateList & ) ) );
 
-  connect( mDateNavigator, SIGNAL(incidenceDropped(Incidence*, const QDate&)),
-           SLOT( addIncidenceOn( Incidence *, const QDate & ) ) );
-  connect( mDateNavigator, SIGNAL(incidenceDroppedMove(Incidence*,const QDate&)),
-           SLOT( moveIncidenceTo( Incidence *, const QDate & ) ) );
+  connect( mDateNavigator, TQT_SIGNAL(incidenceDropped(Incidence*, const TQDate&)),
+           TQT_SLOT( addIncidenceOn( Incidence *, const TQDate & ) ) );
+  connect( mDateNavigator, TQT_SIGNAL(incidenceDroppedMove(Incidence*,const TQDate&)),
+           TQT_SLOT( moveIncidenceTo( Incidence *, const TQDate & ) ) );
 
-  connect( mDateChecker, SIGNAL( dayPassed( const QDate & ) ),
-           mTodoList, SLOT( dayPassed( const QDate & ) ) );
-  connect( mDateChecker, SIGNAL( dayPassed( const QDate & ) ),
-           SIGNAL( dayPassed( const QDate & ) ) );
-  connect( mDateChecker, SIGNAL( dayPassed( const QDate & ) ),
-           mDateNavigator, SLOT( updateToday() ) );
+  connect( mDateChecker, TQT_SIGNAL( dayPassed( const TQDate & ) ),
+           mTodoList, TQT_SLOT( dayPassed( const TQDate & ) ) );
+  connect( mDateChecker, TQT_SIGNAL( dayPassed( const TQDate & ) ),
+           TQT_SIGNAL( dayPassed( const TQDate & ) ) );
+  connect( mDateChecker, TQT_SIGNAL( dayPassed( const TQDate & ) ),
+           mDateNavigator, TQT_SLOT( updateToday() ) );
 
-  connect( this, SIGNAL( configChanged() ),
-           mDateNavigator, SLOT( updateConfig() ) );
+  connect( this, TQT_SIGNAL( configChanged() ),
+           mDateNavigator, TQT_SLOT( updateConfig() ) );
 
-  connect( this, SIGNAL( incidenceSelected(Incidence *) ),
-           mEventViewer, SLOT ( setIncidence (Incidence *) ) );
+  connect( this, TQT_SIGNAL( incidenceSelected(Incidence *) ),
+           mEventViewer, TQT_SLOT ( setIncidence (Incidence *) ) );
 
   //TODO: do a pretty Summary,
-  QString s;
+  TQString s;
   s = i18n( "<p><em>No Item Selected</em></p>"
            "<p>Select an event, to-do or journal entry to view its details "
            "here.</p>");
 
   mEventViewer->setDefaultText( s );
-  QWhatsThis::add( mEventViewer,
+  TQWhatsThis::add( mEventViewer,
                    i18n( "View the details of events, journal entries or to-dos "
                          "selected in KOrganizer's main view here." ) );
   mEventViewer->setIncidence( 0 );
@@ -275,13 +275,13 @@ CalendarView::CalendarView( QWidget *parent, const char *name )
   KOGlobals::self()->
       setHolidays( new KHolidays( KOPrefs::instance()->mHolidays ) );
 
-  connect( QApplication::clipboard(), SIGNAL( dataChanged() ),
-           SLOT( checkClipboard() ) );
+  connect( TQApplication::clipboard(), TQT_SIGNAL( dataChanged() ),
+           TQT_SLOT( checkClipboard() ) );
 
-  connect( mTodoList, SIGNAL( incidenceSelected( Incidence * ) ),
-           SLOT( processTodoListSelection( Incidence * ) ) );
-  disconnect( mTodoList, SIGNAL( incidenceSelected( Incidence * ) ),
-           this, SLOT( processMainViewSelection( Incidence * ) ) );
+  connect( mTodoList, TQT_SIGNAL( incidenceSelected( Incidence * ) ),
+           TQT_SLOT( processTodoListSelection( Incidence * ) ) );
+  disconnect( mTodoList, TQT_SIGNAL( incidenceSelected( Incidence * ) ),
+           this, TQT_SLOT( processMainViewSelection( Incidence * ) ) );
 
   kdDebug(5850) << "CalendarView::CalendarView() done" << endl;
 }
@@ -305,8 +305,8 @@ void CalendarView::setCalendar( Calendar *cal )
 
   delete mHistory;
   mHistory = new History( mCalendar );
-  connect( mHistory, SIGNAL( undone() ), SLOT( updateView() ) );
-  connect( mHistory, SIGNAL( redone() ), SLOT( updateView() ) );
+  connect( mHistory, TQT_SIGNAL( undone() ), TQT_SLOT( updateView() ) );
+  connect( mHistory, TQT_SIGNAL( redone() ), TQT_SLOT( updateView() ) );
 
   if ( mChanger ) delete mChanger;
   setIncidenceChanger( new IncidenceChanger( mCalendar, this ) );
@@ -322,23 +322,23 @@ void CalendarView::setIncidenceChanger( IncidenceChangerBase *changer )
 {
   mChanger = changer;
   emit newIncidenceChanger( mChanger );
-  connect( mChanger, SIGNAL( incidenceAdded( Incidence* ) ),
-           this, SLOT( incidenceAdded( Incidence* ) ) );
-  connect( mChanger, SIGNAL( incidenceChanged( Incidence*, Incidence*, int ) ),
-           this, SLOT( incidenceChanged( Incidence*, Incidence*, int ) ) );
-  connect( mChanger, SIGNAL( incidenceChanged( Incidence*, Incidence* ) ),
-           this, SLOT( incidenceChanged( Incidence*, Incidence* ) ) );
-  connect( mChanger, SIGNAL( incidenceToBeDeleted( Incidence * ) ),
-           this, SLOT( incidenceToBeDeleted( Incidence * ) ) );
-  connect( mChanger, SIGNAL( incidenceDeleted( Incidence * ) ),
-           this, SLOT( incidenceDeleted( Incidence * ) ) );
+  connect( mChanger, TQT_SIGNAL( incidenceAdded( Incidence* ) ),
+           this, TQT_SLOT( incidenceAdded( Incidence* ) ) );
+  connect( mChanger, TQT_SIGNAL( incidenceChanged( Incidence*, Incidence*, int ) ),
+           this, TQT_SLOT( incidenceChanged( Incidence*, Incidence*, int ) ) );
+  connect( mChanger, TQT_SIGNAL( incidenceChanged( Incidence*, Incidence* ) ),
+           this, TQT_SLOT( incidenceChanged( Incidence*, Incidence* ) ) );
+  connect( mChanger, TQT_SIGNAL( incidenceToBeDeleted( Incidence * ) ),
+           this, TQT_SLOT( incidenceToBeDeleted( Incidence * ) ) );
+  connect( mChanger, TQT_SIGNAL( incidenceDeleted( Incidence * ) ),
+           this, TQT_SLOT( incidenceDeleted( Incidence * ) ) );
 
-  connect( mChanger, SIGNAL( schedule( Scheduler::Method, Incidence*) ),
-           this, SLOT( schedule( Scheduler::Method, Incidence*) ) );
+  connect( mChanger, TQT_SIGNAL( schedule( Scheduler::Method, Incidence*) ),
+           this, TQT_SLOT( schedule( Scheduler::Method, Incidence*) ) );
 
 
-  connect( this, SIGNAL( cancelAttendees( Incidence * ) ),
-           mChanger, SLOT( cancelAttendees( Incidence * ) ) );
+  connect( this, TQT_SIGNAL( cancelAttendees( Incidence * ) ),
+           mChanger, TQT_SLOT( cancelAttendees( Incidence * ) ) );
 }
 
 Calendar *CalendarView::calendar()
@@ -354,14 +354,14 @@ KOIncidenceEditor *CalendarView::editorDialog( Incidence *incidence ) const
   else return 0;
 }
 
-QDate CalendarView::startDate()
+TQDate CalendarView::startDate()
 {
   DateList dates = mNavigator->selectedDates();
 
   return dates.first();
 }
 
-QDate CalendarView::endDate()
+TQDate CalendarView::endDate()
 {
   DateList dates = mNavigator->selectedDates();
 
@@ -369,7 +369,7 @@ QDate CalendarView::endDate()
 }
 
 
-bool CalendarView::openCalendar(const QString& filename, bool merge)
+bool CalendarView::openCalendar(const TQString& filename, bool merge)
 {
   kdDebug(5850) << "CalendarView::openCalendar(): " << filename << endl;
 
@@ -378,7 +378,7 @@ bool CalendarView::openCalendar(const QString& filename, bool merge)
     return false;
   }
 
-  if (!QFile::exists(filename)) {
+  if (!TQFile::exists(filename)) {
     kdDebug(5850) << "CalendarView::openCalendar(): Error! File '" << filename
               << "' doesn't exist." << endl;
   }
@@ -424,7 +424,7 @@ bool CalendarView::openCalendar(const QString& filename, bool merge)
   }
 }
 
-bool CalendarView::saveCalendar( const QString& filename )
+bool CalendarView::saveCalendar( const TQString& filename )
 {
   kdDebug(5850) << "CalendarView::saveCalendar(): " << filename << endl;
 
@@ -466,7 +466,7 @@ void CalendarView::readSettings()
 {
 //  kdDebug(5850) << "CalendarView::readSettings()" << endl;
 
-  QString str;
+  TQString str;
 
   // read settings from the KConfig, supplying reasonable
   // defaults where none are to be found
@@ -476,7 +476,7 @@ void CalendarView::readSettings()
 #ifndef KORG_NOSPLITTER
   config->setGroup( "KOrganizer Geometry" );
 
-  QValueList<int> sizes = config->readIntListEntry( "Separator1" );
+  TQValueList<int> sizes = config->readIntListEntry( "Separator1" );
   if ( sizes.count() != 2 ) {
     sizes << mDateNavigator->minimumSizeHint().width();
     sizes << 300;
@@ -490,7 +490,7 @@ void CalendarView::readSettings()
   mEventViewer->readSettings( config );
 
   mViewManager->readSettings( config );
-  mTodoList->restoreLayout( config, QString( "Todo Layout" ) );
+  mTodoList->restoreLayout( config, TQString( "Todo Layout" ) );
 
   readFilterSettings( config );
 
@@ -510,7 +510,7 @@ void CalendarView::writeSettings()
 #ifndef KORG_NOSPLITTER
   config->setGroup( "KOrganizer Geometry" );
 
-  QValueList<int> list = mPanner->sizes();
+  TQValueList<int> list = mPanner->sizes();
   config->writeEntry( "Separator1", list );
 
   list = mLeftSplitter->sizes();
@@ -518,7 +518,7 @@ void CalendarView::writeSettings()
 #endif
   mEventViewer->writeSettings( config );
   mViewManager->writeSettings( config );
-  mTodoList->saveLayout( config, QString( "Todo Layout" ) );
+  mTodoList->saveLayout( config, TQString( "Todo Layout" ) );
 
   KOPrefs::instance()->writeConfig();
 
@@ -538,11 +538,11 @@ void CalendarView::readFilterSettings( KConfig *config )
 
   config->setGroup( "General" );
   // FIXME: Move the filter loading and saving to the CalFilter class in libkcal
-  QStringList filterList = config->readListEntry ("CalendarFilters" );
-  QString currentFilter = config->readEntry( "Current Filter" );
+  TQStringList filterList = config->readListEntry ("CalendarFilters" );
+  TQString currentFilter = config->readEntry( "Current Filter" );
 
-  QStringList::ConstIterator it = filterList.begin();
-  QStringList::ConstIterator end = filterList.end();
+  TQStringList::ConstIterator it = filterList.begin();
+  TQStringList::ConstIterator end = filterList.end();
   while( it != end ) {
 //    kdDebug(5850) << "  filter: " << (*it) << endl;
     CalFilter *filter;
@@ -571,7 +571,7 @@ void CalendarView::writeFilterSettings( KConfig *config )
 {
 //  kdDebug(5850) << "CalendarView::writeFilterSettings()" << endl;
 
-  QStringList filterList;
+  TQStringList filterList;
 
   CalFilter *filter = mFilters.first();
   while( filter ) {
@@ -588,17 +588,17 @@ void CalendarView::writeFilterSettings( KConfig *config )
   if ( mCurrentFilter ) {
     config->writeEntry( "Current Filter", mCurrentFilter->name() );
   } else {
-    config->writeEntry( "Current Filter", QString::null );
+    config->writeEntry( "Current Filter", TQString::null );
   }
 }
 
 
-void CalendarView::goDate( const QDate& date )
+void CalendarView::goDate( const TQDate& date )
 {
   mNavigator->selectDate( date );
 }
 
-void CalendarView::showDate(const QDate & date)
+void CalendarView::showDate(const TQDate & date)
 {
   int dateCount = mNavigator->datesCount();
   if ( dateCount == 7 )
@@ -628,7 +628,7 @@ void CalendarView::goPrevious()
     mNavigator->selectPrevious();
 }
 
-void CalendarView::updateConfig( const QCString& receiver)
+void CalendarView::updateConfig( const TQCString& receiver)
 {
   if ( receiver != "korganizer" ) return;
   kdDebug(5850) << "CalendarView::updateConfig()" << endl;
@@ -636,12 +636,12 @@ void CalendarView::updateConfig( const QCString& receiver)
   KOGlobals::self()->
     setHolidays( new KHolidays( KOPrefs::instance()->mHolidays ) );
 
-  QString tz(  mCalendar->timeZoneId() );
+  TQString tz(  mCalendar->timeZoneId() );
   // Only set a new time zone if it changed. This prevents the window
   // from being modified on start
   if ( tz != KOPrefs::instance()->mTimeZoneId ) {
 
-    const QString question( i18n("The timezone setting was changed. Do you want to keep the absolute time of "
+    const TQString question( i18n("The timezone setting was changed. Do you want to keep the absolute time of "
                                 "the items in your calendar, which will show them to be at a different time than "
                                 "before, or move them to be at the old time also in the new timezone?") );
     int rc = KMessageBox::questionYesNo( this, question,
@@ -714,18 +714,18 @@ void CalendarView::incidenceChanged( Incidence *oldIncidence,
       Todo *todo = static_cast<Todo *>(newIncidence);
       if ( todo->isCompleted()
       || what == KOGlobals::COMPLETION_MODIFIED_WITH_RECURRENCE ) {
-        QString timeStr = KGlobal::locale()->formatTime( QTime::currentTime() );
-        QString description = i18n( "To-do completed: %1 (%2)" ).arg(
+        TQString timeStr = KGlobal::locale()->formatTime( TQTime::currentTime() );
+        TQString description = i18n( "To-do completed: %1 (%2)" ).arg(
           newIncidence->summary() ).arg( timeStr );
 
-        Journal::List journals = calendar()->journals( QDate::currentDate() );
+        Journal::List journals = calendar()->journals( TQDate::currentDate() );
         Journal *journal;
 
         if ( journals.isEmpty() ) {
           journal = new Journal();
-          journal->setDtStart( QDateTime::currentDateTime() );
+          journal->setDtStart( TQDateTime::currentDateTime() );
 
-          QString dateStr = KGlobal::locale()->formatDate( QDate::currentDate() );
+          TQString dateStr = KGlobal::locale()->formatDate( TQDate::currentDate() );
           journal->setSummary( i18n("Journal of %1").arg( dateStr ) );
           journal->setDescription( description );
 
@@ -786,7 +786,7 @@ void CalendarView::checkForFilteredChange( Incidence *incidence )
   }
 }
 
-void CalendarView::startMultiModify( const QString &text )
+void CalendarView::startMultiModify( const TQString &text )
 {
   history()->startMultiModify( text );
 }
@@ -814,7 +814,7 @@ void CalendarView::changeIncidenceDisplay( Incidence *incidence, int action )
 }
 
 
-void CalendarView::updateView(const QDate &start, const QDate &end)
+void CalendarView::updateView(const TQDate &start, const TQDate &end)
 {
   mTodoList->updateView();
   mViewManager->updateView(start, end);
@@ -873,10 +873,10 @@ void CalendarView::edit_paste()
 // In all other cases, paste the event on the first day of the
 // selection in the day matrix on the left
 
-  QDate date;
+  TQDate date;
   // create an invalid time to check if we got a new time for the eevent
-  QTime time(-1,-1);
-  QDateTime startDT, endDT;
+  TQTime time(-1,-1);
+  TQDateTime startDT, endDT;
   bool useEndTime = false;
 
   KOAgendaView *aView = mViewManager->agendaView();
@@ -929,7 +929,7 @@ void CalendarView::edit_options()
   mDialogManager->showOptionsDialog();
 }
 
-void CalendarView::dateTimesForNewEvent( QDateTime &startDt, QDateTime &endDt, bool &allDay )
+void CalendarView::dateTimesForNewEvent( TQDateTime &startDt, TQDateTime &endDt, bool &allDay )
 {
   if ( !startDt.isValid() ) {
     // Default start is the first selected date with the preferred time as set
@@ -949,12 +949,12 @@ void CalendarView::dateTimesForNewEvent( QDateTime &startDt, QDateTime &endDt, b
   mViewManager->currentView()->eventDurationHint( startDt, endDt, allDay );
 }
 
-KOEventEditor *CalendarView::newEventEditor( const QDateTime &startDtParam,
-     const QDateTime &endDtParam, bool allDayParam)
+KOEventEditor *CalendarView::newEventEditor( const TQDateTime &startDtParam,
+     const TQDateTime &endDtParam, bool allDayParam)
 {
   // let the current view change the default start/end datetime
   bool allDay = allDayParam;
-  QDateTime startDt( startDtParam ), endDt( endDtParam );
+  TQDateTime startDt( startDtParam ), endDt( endDtParam );
   // Adjust the start/end date times (i.e. replace invalid values by defaults,
   // and let the view adjust the type.
   dateTimesForNewEvent( startDt, endDt, allDay );
@@ -973,30 +973,30 @@ KOEventEditor *CalendarView::newEventEditor( const QDateTime &startDtParam,
 void CalendarView::newEvent()
 {
   kdDebug(5850) << "CalendarView::newEvent()" << endl;
-  newEvent( QDateTime(), QDateTime() );
+  newEvent( TQDateTime(), TQDateTime() );
 }
 
-void CalendarView::newEvent( const QDate &dt )
+void CalendarView::newEvent( const TQDate &dt )
 {
-  QDateTime startDt( dt, KOPrefs::instance()->mStartTime.time() );
-  return newEvent( QDateTime( dt ), QDateTime() );
+  TQDateTime startDt( dt, KOPrefs::instance()->mStartTime.time() );
+  return newEvent( TQDateTime( dt ), TQDateTime() );
 }
 
-void CalendarView::newEvent( const QDateTime &startDt )
+void CalendarView::newEvent( const TQDateTime &startDt )
 {
-  return newEvent( startDt, QDateTime() );
+  return newEvent( startDt, TQDateTime() );
 }
 
-void CalendarView::newEvent( const QDateTime &startDt, const QDateTime &endDt,
+void CalendarView::newEvent( const TQDateTime &startDt, const TQDateTime &endDt,
                              bool allDay )
 {
   KOEventEditor *eventEditor = newEventEditor( startDt, endDt, allDay );
   eventEditor->show();
 }
 
-void CalendarView::newEvent( const QString &summary, const QString &description,
-                             const QStringList &attachments, const QStringList &attendees,
-                             const QStringList &attachmentMimetypes, bool inlineAttachment )
+void CalendarView::newEvent( const TQString &summary, const TQString &description,
+                             const TQStringList &attachments, const TQStringList &attendees,
+                             const TQStringList &attachmentMimetypes, bool inlineAttachment )
 {
   KOEventEditor *eventEditor = newEventEditor();
   eventEditor->setTexts( summary, description );
@@ -1007,9 +1007,9 @@ void CalendarView::newEvent( const QString &summary, const QString &description,
   eventEditor->show();
 }
 
-void CalendarView::newTodo( const QString &summary, const QString &description,
-                            const QStringList &attachments, const QStringList &attendees,
-                            const QStringList &attachmentMimetypes, bool inlineAttachment )
+void CalendarView::newTodo( const TQString &summary, const TQString &description,
+                            const TQStringList &attachments, const TQStringList &attendees,
+                            const TQStringList &attachmentMimetypes, bool inlineAttachment )
 {
   kdDebug(5850) << k_funcinfo << endl;
   KOTodoEditor *todoEditor = mDialogManager->getTodoEditor();
@@ -1024,14 +1024,14 @@ void CalendarView::newTodo( const QString &summary, const QString &description,
 void CalendarView::newTodo()
 {
   kdDebug(5850) << k_funcinfo << endl;
-  QDateTime dtDue;
+  TQDateTime dtDue;
   bool allday = true;
   KOTodoEditor *todoEditor = mDialogManager->getTodoEditor();
   connectIncidenceEditor( todoEditor );
   todoEditor->newTodo();
   if ( mViewManager->currentView()->isEventView() ) {
     dtDue.setDate( mNavigator->selectedDates().first() );
-    QDateTime dtDummy = QDateTime::currentDateTime();
+    TQDateTime dtDummy = TQDateTime::currentDateTime();
     mViewManager->currentView()->
       eventDurationHint( dtDue, dtDummy, allday );
     todoEditor->setDates( dtDue, allday );
@@ -1039,27 +1039,27 @@ void CalendarView::newTodo()
   todoEditor->show();
 }
 
-void CalendarView::newTodo( const QDate &date )
+void CalendarView::newTodo( const TQDate &date )
 {
   KOTodoEditor *todoEditor = mDialogManager->getTodoEditor();
   connectIncidenceEditor( todoEditor );
   todoEditor->newTodo();
-  todoEditor->setDates( QDateTime( date, QTime::currentTime() ), true );
+  todoEditor->setDates( TQDateTime( date, TQTime::currentTime() ), true );
   todoEditor->show();
 }
 
 void CalendarView::newJournal()
 {
   kdDebug(5850) << "CalendarView::newJournal()" << endl;
-  newJournal( QString::null, QDate() );
+  newJournal( TQString::null, TQDate() );
 }
 
-void CalendarView::newJournal( const QDate &date)
+void CalendarView::newJournal( const TQDate &date)
 {
-  newJournal( QString::null, date );
+  newJournal( TQString::null, date );
 }
 
-void CalendarView::newJournal( const QString &text, const QDate &date )
+void CalendarView::newJournal( const TQString &text, const TQDate &date )
 {
   KOJournalEditor *journalEditor = mDialogManager->getJournalEditor();
   connectIncidenceEditor( journalEditor );
@@ -1084,20 +1084,20 @@ void CalendarView::newSubTodo(Todo *parentEvent)
   KOTodoEditor *todoEditor = mDialogManager->getTodoEditor();
   connectIncidenceEditor( todoEditor );
   todoEditor->newTodo();
-  todoEditor->setDates( QDateTime(), false, parentEvent );
+  todoEditor->setDates( TQDateTime(), false, parentEvent );
   todoEditor->show();
 }
 
 void CalendarView::newFloatingEvent()
 {
   DateList tmpList = mNavigator->selectedDates();
-  QDate date = tmpList.first();
+  TQDate date = tmpList.first();
 
-  newEvent( QDateTime( date, QTime( 12, 0, 0 ) ),
-            QDateTime( date, QTime( 12, 0, 0 ) ), true );
+  newEvent( TQDateTime( date, TQTime( 12, 0, 0 ) ),
+            TQDateTime( date, TQTime( 12, 0, 0 ) ), true );
 }
 
-bool CalendarView::addIncidence( const QString &ical )
+bool CalendarView::addIncidence( const TQString &ical )
 {
   kdDebug(5850) << "CalendarView::addIncidence:\n" << ical << endl;
   ICalFormat format;
@@ -1201,7 +1201,7 @@ bool CalendarView::makeSubTodosIndependents ( Todo *todo )
   return true;
 }
 
-bool CalendarView::deleteIncidence( const QString &uid, bool force )
+bool CalendarView::deleteIncidence( const TQString &uid, bool force )
 {
   Incidence *inc = mCalendar->incidence( uid );
   if ( inc ) {
@@ -1241,7 +1241,7 @@ void CalendarView::toggleAlarm( Incidence *incidence )
 //  mClickedItem->updateIcons();
 }
 
-void CalendarView::dissociateOccurrence( Incidence *incidence, const QDate &date )
+void CalendarView::dissociateOccurrence( Incidence *incidence, const TQDate &date )
 {
   if ( !incidence || !mChanger ) {
     kdDebug(5850) << "CalendarView::toggleAlarm() called without having a clicked item" << endl;
@@ -1269,7 +1269,7 @@ void CalendarView::dissociateOccurrence( Incidence *incidence, const QDate &date
   delete oldincidence;
 }
 
-void CalendarView::dissociateFutureOccurrence( Incidence *incidence, const QDate &date )
+void CalendarView::dissociateFutureOccurrence( Incidence *incidence, const TQDate &date )
 {
   if ( !incidence || !mChanger ) {
     kdDebug(5850) << "CalendarView::toggleAlarm() called without having a clicked item" << endl;
@@ -1319,7 +1319,7 @@ void CalendarView::schedule_publish(Incidence *incidence)
       publishdlg->addAttendee( *it );
     }
   }
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == TQDialog::Accepted ) {
     Incidence *inc = incidence->clone();
     inc->registerObserver( 0 );
     inc->clearAttendees();
@@ -1383,10 +1383,10 @@ void CalendarView::schedule_forward(Incidence * incidence)
   }
 
   PublishDialog publishdlg;
-  if ( publishdlg.exec() == QDialog::Accepted ) {
-    QString recipients = publishdlg.addresses();
+  if ( publishdlg.exec() == TQDialog::Accepted ) {
+    TQString recipients = publishdlg.addresses();
     ICalFormat format;
-    QString messageText = format.createScheduleMessage( incidence, Scheduler::Request );
+    TQString messageText = format.createScheduleMessage( incidence, Scheduler::Request );
     KOMailClient mailer;
     if ( mailer.mailTo( incidence, recipients, messageText ) ) {
 
@@ -1400,8 +1400,8 @@ void CalendarView::schedule_forward(Incidence * incidence)
 
 void CalendarView::mailFreeBusy( int daysToPublish )
 {
-  QDateTime start = QDateTime::currentDateTime();
-  QDateTime end = start.addDays(daysToPublish);
+  TQDateTime start = TQDateTime::currentDateTime();
+  TQDateTime end = start.addDays(daysToPublish);
 
   FreeBusy *freebusy = new FreeBusy(mCalendar, start, end);
   freebusy->setOrganizer( Person( KOPrefs::instance()->fullName(),
@@ -1412,7 +1412,7 @@ void CalendarView::mailFreeBusy( int daysToPublish )
      << KGlobal::locale()->formatDateTime( end ) << endl;
 
   PublishDialog *publishdlg = new PublishDialog();
-  if ( publishdlg->exec() == QDialog::Accepted ) {
+  if ( publishdlg->exec() == TQDialog::Accepted ) {
     // Send the mail
     KCal::MailScheduler scheduler( mCalendar );
     if ( scheduler.publish( freebusy, publishdlg->addresses() ) ) {
@@ -1507,7 +1507,7 @@ void CalendarView::print()
 #ifndef KORG_NOPRINTER
   KOCoreHelper helper;
   CalPrinter printer( this, mCalendar, &helper );
-  connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
+  connect( this, TQT_SIGNAL(configChanged()), &printer, TQT_SLOT(updateConfig()) );
 
   KOrg::BaseView *currentView = mViewManager->currentView();
 
@@ -1531,14 +1531,14 @@ void CalendarView::exportWeb()
   // seem to load the config theirselves
   if ( settings ) settings->readConfig();
   ExportWebDialog *dlg = new ExportWebDialog( settings, this );
-  connect( dlg,  SIGNAL( exportHTML( HTMLExportSettings* ) ),
-           this, SIGNAL( exportHTML( HTMLExportSettings* ) ) );
+  connect( dlg,  TQT_SIGNAL( exportHTML( HTMLExportSettings* ) ),
+           this, TQT_SIGNAL( exportHTML( HTMLExportSettings* ) ) );
   dlg->show();
 }
 
 void CalendarView::exportICalendar()
 {
-  QString filename = KFileDialog::getSaveFileName("icalout.ics",i18n("*.ics|ICalendars"),this);
+  TQString filename = KFileDialog::getSaveFileName("icalout.ics",i18n("*.ics|ICalendars"),this);
 
   // Force correct extension
   if (filename.right(4) != ".ics") filename += ".ics";
@@ -1557,7 +1557,7 @@ void CalendarView::exportVCalendar()
     if (result != KMessageBox::Continue) return;
   }
 
-  QString filename = KFileDialog::getSaveFileName("vcalout.vcs",i18n("*.vcs|vCalendars"),this);
+  TQString filename = KFileDialog::getSaveFileName("vcalout.vcs",i18n("*.vcs|vCalendars"),this);
 
 	// TODO: I don't like forcing extensions:
   // Force correct extension
@@ -1634,7 +1634,7 @@ void CalendarView::processIncidenceSelection( Incidence *incidence )
 void CalendarView::checkClipboard()
 {
 #ifndef KORG_NODND
-  if (ICalDrag::canDecode(QApplication::clipboard()->data())) {
+  if (ICalDrag::canDecode(TQApplication::clipboard()->data())) {
     kdDebug(5850) << "CalendarView::checkClipboard() true" << endl;
     emit pasteEnabled(true);
   } else {
@@ -1672,7 +1672,7 @@ void CalendarView::editFilters()
 */
 void CalendarView::updateFilter()
 {
-  QStringList filters;
+  TQStringList filters;
   CalFilter *filter;
 
   int pos = mFilters.find( mCurrentFilter );
@@ -1709,7 +1709,7 @@ void CalendarView::filterActivated( int filterNo )
   emit filterChanged();
 }
 
-QString CalendarView::currentFilterName() const
+TQString CalendarView::currentFilterName() const
 {
   if ( mCurrentFilter) {
     return mCurrentFilter->name();
@@ -1862,7 +1862,7 @@ void CalendarView::editIncidence()
   editIncidence( selectedIncidence() );
 }
 
-bool CalendarView::editIncidence( const QString& uid )
+bool CalendarView::editIncidence( const TQString& uid )
 {
   kdDebug(5850) << "CalendarView::editIncidence()" << endl;
   return editIncidence( mCalendar->incidence( uid ) );
@@ -2028,7 +2028,7 @@ void CalendarView::deleteIncidence(Incidence *incidence, bool force)
   }
 
   if ( incidence->doesRecur() ) {
-    QDate itemDate = mViewManager->currentSelectionDate();
+    TQDate itemDate = mViewManager->currentSelectionDate();
     kdDebug(5850) << "Recurrence-Date: " << itemDate.toString() << endl;
     int km = KMessageBox::Ok;
     if ( !force ) {
@@ -2040,7 +2040,7 @@ void CalendarView::deleteIncidence(Incidence *incidence, bool force)
                "and all its recurrences?").arg( incidence->summary() ),
                i18n("KOrganizer Confirmation"), i18n("Delete All") );
       } else {
-        km = KOMessageBox::fourBtnMsgBox( this, QMessageBox::Warning,
+        km = KOMessageBox::fourBtnMsgBox( this, TQMessageBox::Warning,
           i18n("The calendar item \"%1\" recurs over multiple dates. "
                "Do you want to delete only the current one on %2, only all "
                "future recurrences, or all its recurrences?" )
@@ -2091,8 +2091,8 @@ void CalendarView::deleteIncidence(Incidence *incidence, bool force)
 
 void CalendarView::connectIncidenceEditor( KOIncidenceEditor *editor )
 {
-  connect( this, SIGNAL( newIncidenceChanger( IncidenceChangerBase* ) ),
-           editor, SLOT( setIncidenceChanger( IncidenceChangerBase* ) ) );
+  connect( this, TQT_SIGNAL( newIncidenceChanger( IncidenceChangerBase* ) ),
+           editor, TQT_SLOT( setIncidenceChanger( IncidenceChangerBase* ) ) );
   editor->setIncidenceChanger( mChanger );
 }
 
@@ -2172,17 +2172,17 @@ void CalendarView::editCanceled( Incidence *i )
   mCalendar->endChange( i );
 }
 
-void CalendarView::showErrorMessage( const QString &msg )
+void CalendarView::showErrorMessage( const TQString &msg )
 {
   KMessageBox::error( this, msg );
 }
 
 void CalendarView::updateCategories()
 {
-  QStringList allCats( calendar()->categories() );
+  TQStringList allCats( calendar()->categories() );
   allCats.sort();
-  QStringList categories( KOPrefs::instance()->mCustomCategories );
-  for ( QStringList::ConstIterator si = allCats.constBegin(); si != allCats.constEnd(); ++si ) {
+  TQStringList categories( KOPrefs::instance()->mCustomCategories );
+  for ( TQStringList::ConstIterator si = allCats.constBegin(); si != allCats.constEnd(); ++si ) {
     if ( categories.find( *si ) == categories.end() ) {
       categories.append( *si );
     }
@@ -2193,7 +2193,7 @@ void CalendarView::updateCategories()
   emit categoriesChanged();
 }
 
-void CalendarView::addIncidenceOn( Incidence *incadd, const QDate &dt )
+void CalendarView::addIncidenceOn( Incidence *incadd, const TQDate &dt )
 {
   if ( !incadd || !mChanger ) {
     KMessageBox::sorry(this, i18n("Unable to copy the item to %1.")
@@ -2210,8 +2210,8 @@ void CalendarView::addIncidenceOn( Incidence *incadd, const QDate &dt )
     Event *event = static_cast<Event*>(incidence);
 
     // Adjust date
-    QDateTime start = event->dtStart();
-    QDateTime end = event->dtEnd();
+    TQDateTime start = event->dtStart();
+    TQDateTime end = event->dtEnd();
 
     int duration = start.daysTo( end );
     start.setDate( dt );
@@ -2222,7 +2222,7 @@ void CalendarView::addIncidenceOn( Incidence *incadd, const QDate &dt )
 
   } else if ( incidence->type() == "Todo" ) {
     Todo *todo = static_cast<Todo*>(incidence);
-    QDateTime due = todo->dtDue();
+    TQDateTime due = todo->dtDue();
     due.setDate( dt );
 
     todo->setDtDue( due );
@@ -2235,7 +2235,7 @@ void CalendarView::addIncidenceOn( Incidence *incadd, const QDate &dt )
   }
 }
 
-void CalendarView::moveIncidenceTo( Incidence *incmove, const QDate &dt )
+void CalendarView::moveIncidenceTo( Incidence *incmove, const TQDate &dt )
 {
   if ( !incmove || !mChanger ) {
     KMessageBox::sorry( this, i18n("Unable to move the item to %1.")
@@ -2257,8 +2257,8 @@ void CalendarView::moveIncidenceTo( Incidence *incmove, const QDate &dt )
     Event *event = static_cast<Event*>(incidence);
 
     // Adjust date
-    QDateTime start = event->dtStart();
-    QDateTime end = event->dtEnd();
+    TQDateTime start = event->dtStart();
+    TQDateTime end = event->dtEnd();
 
     int duration = start.daysTo( end );
     start.setDate( dt );
@@ -2269,7 +2269,7 @@ void CalendarView::moveIncidenceTo( Incidence *incmove, const QDate &dt )
 
   } else if ( incidence->type() == "Todo" ) {
     Todo *todo = static_cast<Todo*>(incidence);
-    QDateTime due = todo->dtDue();
+    TQDateTime due = todo->dtDue();
     due.setDate( dt );
 
     todo->setDtDue( due );

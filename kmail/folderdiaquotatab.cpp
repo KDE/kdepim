@@ -38,11 +38,11 @@
 #include "kmacctcachedimap.h"
 #include "imapaccountbase.h"
 
-#include <qwidgetstack.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qprogressbar.h>
-#include <qwhatsthis.h>
+#include <tqwidgetstack.h>
+#include <tqlayout.h>
+#include <tqlabel.h>
+#include <tqprogressbar.h>
+#include <tqwhatsthis.h>
 
 #include "folderdiaquotatab_p.h"
 
@@ -50,18 +50,18 @@
 
 using namespace KMail;
 
-KMail::FolderDiaQuotaTab::FolderDiaQuotaTab( KMFolderDialog* dlg, QWidget* parent, const char* name )
+KMail::FolderDiaQuotaTab::FolderDiaQuotaTab( KMFolderDialog* dlg, TQWidget* parent, const char* name )
   : FolderDiaTab( parent, name ),
     mImapAccount( 0 ),
     mDlg( dlg )
 {
-  QVBoxLayout* topLayout = new QVBoxLayout( this );
+  TQVBoxLayout* topLayout = new TQVBoxLayout( this );
   // We need a widget stack to show either a label ("no qutoa support", "please wait"...)
   // or quota info
-  mStack = new QWidgetStack( this );
+  mStack = new TQWidgetStack( this );
   topLayout->addWidget( mStack );
 
-  mLabel = new QLabel( mStack );
+  mLabel = new TQLabel( mStack );
   mLabel->setAlignment( AlignHCenter | AlignVCenter | WordBreak );
   mStack->addWidget( mLabel );
 
@@ -120,20 +120,20 @@ void KMail::FolderDiaQuotaTab::load()
   mLabel->setText( i18n( "Connecting to server %1, please wait..." ).arg( mImapAccount->host() ) );
   ImapAccountBase::ConnectionState state = mImapAccount->makeConnection();
   if ( state == ImapAccountBase::Error ) { // Cancelled by user, or slave can't start
-    slotConnectionResult( -1, QString::null );
+    slotConnectionResult( -1, TQString::null );
   } else if ( state == ImapAccountBase::Connecting ) {
-    connect( mImapAccount, SIGNAL( connectionResult(int, const QString&) ),
-             this, SLOT( slotConnectionResult(int, const QString&) ) );
+    connect( mImapAccount, TQT_SIGNAL( connectionResult(int, const TQString&) ),
+             this, TQT_SLOT( slotConnectionResult(int, const TQString&) ) );
   } else { // Connected
-    slotConnectionResult( 0, QString::null );
+    slotConnectionResult( 0, TQString::null );
   }
 
 }
 
-void KMail::FolderDiaQuotaTab::slotConnectionResult( int errorCode, const QString& errorMsg )
+void KMail::FolderDiaQuotaTab::slotConnectionResult( int errorCode, const TQString& errorMsg )
 {
-  disconnect( mImapAccount, SIGNAL( connectionResult(int, const QString&) ),
-              this, SLOT( slotConnectionResult(int, const QString&) ) );
+  disconnect( mImapAccount, TQT_SIGNAL( connectionResult(int, const TQString&) ),
+              this, TQT_SLOT( slotConnectionResult(int, const TQString&) ) );
   if ( errorCode ) {
     if ( errorCode == -1 )  // unspecified error
       mLabel->setText( i18n( "Error connecting to server %1" ).arg( mImapAccount->host() ) );
@@ -142,8 +142,8 @@ void KMail::FolderDiaQuotaTab::slotConnectionResult( int errorCode, const QStrin
       mLabel->setText( KIO::buildErrorString( errorCode, errorMsg ) );
     return;
   }
-  connect( mImapAccount, SIGNAL( receivedStorageQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& ) ),
-          this, SLOT( slotReceivedQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& ) ) );
+  connect( mImapAccount, TQT_SIGNAL( receivedStorageQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& ) ),
+          this, TQT_SLOT( slotReceivedQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& ) ) );
   KMFolder* folder = mDlg->folder() ? mDlg->folder() : mDlg->parentFolder();
   mImapAccount->getStorageQuotaInfo( folder, mImapPath );
 }
@@ -155,8 +155,8 @@ void KMail::FolderDiaQuotaTab::slotReceivedQuotaInfo( KMFolder* folder,
   if ( folder == mDlg->folder() ? mDlg->folder() : mDlg->parentFolder() ) {
     //KMFolderImap* folderImap = static_cast<KMFolderImap*>( folder->storage() );
 
-    disconnect( mImapAccount, SIGNAL(receivedStorageQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& )),
-                this, SLOT(slotReceivedQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& )) );
+    disconnect( mImapAccount, TQT_SIGNAL(receivedStorageQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& )),
+                this, TQT_SLOT(slotReceivedQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& )) );
 
     if ( job && job->error() ) {
       if ( job->error() == KIO::ERR_UNSUPPORTED_ACTION )

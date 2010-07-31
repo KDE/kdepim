@@ -46,8 +46,8 @@
 
 namespace KMail {
 
-LocalSubscriptionDialog::LocalSubscriptionDialog( QWidget *parent, const QString &caption,
-    ImapAccountBase *acct, QString startPath )
+LocalSubscriptionDialog::LocalSubscriptionDialog( TQWidget *parent, const TQString &caption,
+    ImapAccountBase *acct, TQString startPath )
   : SubscriptionDialog( parent, caption, acct, startPath ),
     mAccount( acct )
 {
@@ -76,7 +76,7 @@ void LocalSubscriptionDialog::processFolderListing()
     if (done == 1000)
     {
       emit listChanged();
-      QTimer::singleShot(0, this, SLOT(processItems()));
+      TQTimer::singleShot(0, this, TQT_SLOT(processItems()));
       return;
     }
     ++mCount;
@@ -94,10 +94,10 @@ void LocalSubscriptionDialog::setCheckedStateOfAllItems()
 {
    // iterate over all items and check them, unless they are
    // in the account's local subscription blacklist
-   QDictIterator<GroupItem> it( mItemDict );
+   TQDictIterator<GroupItem> it( mItemDict );
    for ( ; it.current(); ++it ) {
      GroupItem *item = it.current();
-     QString path = it.currentKey();
+     TQString path = it.currentKey();
      item->setOn( mAccount->locallySubscribedTo( path ) );
    }
 }
@@ -107,7 +107,7 @@ void LocalSubscriptionDialog::doSave()
 {
   bool somethingHappened = false;
   // subscribe
-  QListViewItemIterator it(subView);
+  TQListViewItemIterator it(subView);
   for ( ; it.current(); ++it) {
     static_cast<ImapAccountBase*>(account())->changeLocalSubscription(
         static_cast<GroupItem*>(it.current())->info().path, true );
@@ -115,13 +115,13 @@ void LocalSubscriptionDialog::doSave()
   }
 
   // unsubscribe
-  QListViewItemIterator it2(unsubView);
+  TQListViewItemIterator it2(unsubView);
   if ( unsubView->childCount() > 0 ) {
-    const QString message = i18n("Locally unsubscribing from folders will remove all "
+    const TQString message = i18n("Locally unsubscribing from folders will remove all "
         "information that is present locally about those folders. The folders will "
         "not be changed on the server. Press cancel now if you want to make sure "
         "all local changes have been written to the server by checking mail first.");
-    const QString caption = i18n("Local changes will be lost when unsubscribing");
+    const TQString caption = i18n("Local changes will be lost when unsubscribing");
     if ( KMessageBox::warningContinueCancel( this, message, caption )
         != KMessageBox::Cancel ) {
       somethingHappened = true;

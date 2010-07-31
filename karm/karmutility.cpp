@@ -1,0 +1,23 @@
+#ifndef KARM_UTILITY_H
+#define KARM_UTILITY_H
+
+#include <stdlib.h>
+
+#include <kglobal.h>
+#include <klocale.h>
+#include "karmutility.h"
+
+TQString formatTime( long minutes, bool decimal )
+{
+  TQString time;
+  if ( decimal ) {
+    time.sprintf("%.2f", minutes / 60.0);
+    time.replace( '.', KGlobal::locale()->decimalSymbol() );
+  }
+  else time.sprintf("%s%ld:%02ld",
+    (minutes < 0) ? KGlobal::locale()->negativeSign().utf8().data() : "",
+    labs(minutes / 60), labs(minutes % 60));
+  return time;
+}
+
+#endif // KARM_UTILITY_H

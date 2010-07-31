@@ -42,9 +42,9 @@ namespace KMail {
     Q_OBJECT
 
     public:
-      LocalSubscriptionDialog( QWidget *parent, const QString &caption,
+      LocalSubscriptionDialog( TQWidget *parent, const TQString &caption,
                                ImapAccountBase* acct,
-                               QString startPath = QString::null );
+                               TQString startPath = TQString::null );
       virtual ~LocalSubscriptionDialog();
 
     protected:

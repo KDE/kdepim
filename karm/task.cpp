@@ -1,0 +1,465 @@
+#include <tqcstring.h>
+#include <tqdatetime.h>
+#include <tqstring.h>
+#include <tqtimer.h>
+
+#include <kiconloader.h>
+
+#include "kapplication.h"       // kapp
+#include "kdebug.h"
+
+#include "event.h"
+
+#include "karmutility.h"
+#include "task.h"
+#include "taskview.h"
+#include "preferences.h"
+
+
+const int gSecondsPerMinute = 60;
+
+
+TQPtrVector<TQPixmap> *Task::icons = 0;
+
+Task::Task( const TQString& taskName, long minutes, long sessionTime,
+            DesktopList desktops, TaskView *parent)
+  : TQObject(), TQListViewItem(parent)
+{ 
+  init(taskName, minutes, sessionTime, desktops, 0);
+}
+
+Task::Task( const TQString& taskName, long minutes, long sessionTime,
+            DesktopList desktops, Task *parent)
+  : TQObject(), TQListViewItem(parent)
+{
+  init(taskName, minutes, sessionTime, desktops, 0);
+}
+
+Task::Task( KCal::Todo* todo, TaskView* parent )
+  : TQObject(), TQListViewItem( parent )
+{
+  long minutes = 0;
+  TQString name;
+  long sessionTime = 0;
+  int percent_complete = 0;
+  DesktopList desktops;
+
+  parseIncidence(todo, minutes, sessionTime, name, desktops, percent_complete);
+  init(name, minutes, sessionTime, desktops, percent_complete);
+}
+
+void Task::init( const TQString& taskName, long minutes, long sessionTime,
+                 DesktopList desktops, int percent_complete)
+{
+  // If our parent is the taskview then connect our totalTimesChanged
+  // signal to its receiver
+  if ( ! parent() )
+    connect( this, TQT_SIGNAL( totalTimesChanged ( long, long ) ),
+             listView(), TQT_SLOT( taskTotalTimesChanged( long, long) ));
+
+  connect( this, TQT_SIGNAL( deletingTask( Task* ) ),
+           listView(), TQT_SLOT( deletingTask( Task* ) ));
+
+  if (icons == 0) {
+    icons = new TQPtrVector<TQPixmap>(8);
+    KIconLoader kil("karm"); // always load icons from the KArm application
+    for (int i=0; i<8; i++)
+    {
+      TQPixmap *icon = new TQPixmap();
+      TQString name;
+      name.sprintf("watch-%d.xpm",i);
+      *icon = kil.loadIcon( name, KIcon::User );
+      icons->insert(i,icon);
+    }
+  }
+
+  _removing = false;
+  _name = taskName.stripWhiteSpace();
+  _lastStart = TQDateTime::currentDateTime();
+  _totalTime = _time = minutes;
+  _totalSessionTime = _sessionTime = sessionTime;
+  _timer = new TQTimer(this);
+  _desktops = desktops;
+  connect(_timer, TQT_SIGNAL(timeout()), this, TQT_SLOT(updateActiveIcon()));
+  setPixmap(1, UserIcon(TQString::fromLatin1("empty-watch.xpm")));
+  _currentPic = 0;
+  _percentcomplete = percent_complete;
+
+  update();
+  changeParentTotalTimes( _sessionTime, _time);
+}
+
+Task::~Task() {
+  emit deletingTask(this);
+  delete _timer;
+}
+
+void Task::setRunning( bool on, KarmStorage* storage, TQDateTime whenStarted, TQDateTime whenStopped  )
+// Sets a task running or stopped. If the task is to be stopped, whenStarted is not evaluated.
+// on=true if the task shall be started on=false if the task shall be stopped
+// This is the back-end, the front-end is StartTimerFor()
+{
+  kdDebug(5970) << "Entering Task::setRunning " << "on=" << on << "whenStarted=" << whenStarted << " whenStopped=" << whenStopped << endl;
+  if ( on ) 
+  {
+    if (!_timer->isActive()) 
+    {
+      _timer->start(1000);
+      storage->startTimer(this);
+      _currentPic=7;
+      _lastStart = whenStarted;
+      updateActiveIcon();
+    }
+  }
+  else 
+  {
+    if (_timer->isActive()) 
+    {
+      _timer->stop();
+      if ( ! _removing ) 
+      {
+        storage->stopTimer(this, whenStopped);
+        setPixmap(1, UserIcon(TQString::fromLatin1("empty-watch.xpm")));
+      }
+    }
+  }
+}
+
+void Task::setUid(TQString uid) {
+  _uid = uid;
+}
+
+bool Task::isRunning() const
+{
+  return _timer->isActive();
+}
+
+void Task::setName( const TQString& name, KarmStorage* storage )
+{
+  kdDebug(5970) << "Task:setName: " << name << endl;
+
+  TQString oldname = _name;
+  if ( oldname != name ) {
+    _name = name;
+    storage->setName(this, oldname);
+    update();
+  }
+}
+
+void Task::setPercentComplete(const int percent, KarmStorage *storage)
+{
+  kdDebug(5970) << "Task::setPercentComplete(" << percent << ", storage): "
+    << _uid << endl;
+
+  if (!percent)
+    _percentcomplete = 0;
+  else if (percent > 100)
+    _percentcomplete = 100;
+  else if (percent < 0)
+    _percentcomplete = 0;
+  else
+    _percentcomplete = percent;
+
+  if (isRunning() && _percentcomplete==100) taskView()->stopTimerFor(this);
+
+  setPixmapProgress();
+
+  // When parent marked as complete, mark all children as complete as well.
+  // Complete tasks are not displayed in the task view, so if a parent is
+  // marked as complete and some of the children are not, then we get an error
+  // message.  KArm actually keep chugging along in this case and displays the
+  // child tasks just fine, so an alternative solution is to remove that error
+  // message (from KarmStorage::load).  But I think it makes more sense that
+  // if you mark a parent task as complete, then all children should be
+  // complete as well.
+  //
+  // This behavior is consistent with KOrganizer (as of 2003-09-24).
+  if (_percentcomplete == 100)
+  {
+    for (Task* child= this->firstChild(); child; child = child->nextSibling())
+      child->setPercentComplete(_percentcomplete, storage);
+  }
+}
+
+void Task::setPixmapProgress()
+{
+  TQPixmap* icon = new TQPixmap();
+  if (_percentcomplete >= 100)
+    *icon = UserIcon("task-complete.xpm");
+  else
+    *icon = UserIcon("task-incomplete.xpm");
+  setPixmap(0, *icon);
+}
+
+bool Task::isComplete() { return _percentcomplete == 100; }
+
+void Task::removeFromView()
+{
+  while ( Task* child = firstChild() )
+    child->removeFromView();
+  delete this;
+}
+
+void Task::setDesktopList ( DesktopList desktopList )
+{
+  _desktops = desktopList;
+}
+
+void Task::changeTime( long minutes, KarmStorage* storage )
+{
+  changeTimes( minutes, minutes, storage); 
+}
+
+void Task::changeTimes( long minutesSession, long minutes, KarmStorage* storage)
+{
+  if( minutesSession != 0 || minutes != 0) 
+  {
+    _sessionTime += minutesSession;
+    _time += minutes;
+    if ( storage ) storage->changeTime(this, minutes * gSecondsPerMinute);
+    changeTotalTimes( minutesSession, minutes );
+  }
+}
+
+void Task::changeTotalTimes( long minutesSession, long minutes )
+{
+  kdDebug(5970)
+    << "Task::changeTotalTimes(" << minutesSession << ", "
+    << minutes << ") for " << name() << endl;
+
+  _totalSessionTime += minutesSession;
+  _totalTime += minutes;
+  update();
+  changeParentTotalTimes( minutesSession, minutes );
+}
+
+void Task::resetTimes()
+{
+  _totalSessionTime -= _sessionTime;
+  _totalTime -= _time;
+  changeParentTotalTimes( -_sessionTime, -_time);
+  _sessionTime = 0;
+  _time = 0;
+  update();
+}
+
+void Task::changeParentTotalTimes( long minutesSession, long minutes )
+{
+  //kdDebug(5970)
+  //  << "Task::changeParentTotalTimes(" << minutesSession << ", "
+  //  << minutes << ") for " << name() << endl;
+
+  if ( isRoot() )
+    emit totalTimesChanged( minutesSession, minutes );
+  else
+    parent()->changeTotalTimes( minutesSession, minutes );
+}
+
+bool Task::remove( TQPtrList<Task>& activeTasks, KarmStorage* storage)
+{
+  kdDebug(5970) << "Task::remove: " << _name << endl;
+
+  bool ok = true;
+
+  _removing = true;
+  storage->removeTask(this);
+  if( isRunning() ) setRunning( false, storage );
+
+  for (Task* child = this->firstChild(); child; child = child->nextSibling())
+  {
+    if (child->isRunning())
+      child->setRunning(false, storage);
+    child->remove(activeTasks, storage);
+  }
+
+  changeParentTotalTimes( -_sessionTime, -_time);
+
+  _removing = false;
+
+  return ok;
+}
+
+void Task::updateActiveIcon()
+{
+  _currentPic = (_currentPic+1) % 8;
+  setPixmap(1, *(*icons)[_currentPic]);
+}
+
+TQString Task::fullName() const
+{
+  if (isRoot())
+    return name();
+  else
+    return parent()->fullName() + TQString::fromLatin1("/") + name();
+}
+
+KCal::Todo* Task::asTodo(KCal::Todo* todo) const
+{
+
+  Q_ASSERT( todo != NULL );
+
+  kdDebug(5970) << "Task::asTodo: name() = '" << name() << "'" << endl;
+  todo->setSummary( name() );
+
+  // Note: if the date start is empty, the KOrganizer GUI will have the
+  // checkbox blank, but will prefill the todo's starting datetime to the
+  // time the file is opened.
+  // todo->setDtStart( current );
+
+  todo->setCustomProperty( kapp->instanceName(),
+      TQCString( "totalTaskTime" ), TQString::number( _time ) );
+  todo->setCustomProperty( kapp->instanceName(),
+      TQCString( "totalSessionTime" ), TQString::number( _sessionTime) );
+
+  if (getDesktopStr().isEmpty())
+    todo->removeCustomProperty(kapp->instanceName(), TQCString("desktopList"));
+  else
+    todo->setCustomProperty( kapp->instanceName(),
+        TQCString( "desktopList" ), getDesktopStr() );
+
+  todo->setOrganizer( Preferences::instance()->userRealName() );
+
+  todo->setPercentComplete(_percentcomplete);
+
+  return todo;
+}
+
+bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
+    long& sessionMinutes, TQString& name, DesktopList& desktops,
+    int& percent_complete )
+{
+  bool ok;
+
+  name = incident->summary();
+  _uid = incident->uid();
+
+  _comment = incident->description();
+
+  ok = false;
+  minutes = incident->customProperty( kapp->instanceName(),
+      TQCString( "totalTaskTime" )).toInt( &ok );
+  if ( !ok )
+    minutes = 0;
+
+  ok = false;
+  sessionMinutes = incident->customProperty( kapp->instanceName(),
+      TQCString( "totalSessionTime" )).toInt( &ok );
+  if ( !ok )
+    sessionMinutes = 0;
+
+  TQString desktopList = incident->customProperty( kapp->instanceName(),
+      TQCString( "desktopList" ) );
+  TQStringList desktopStrList = TQStringList::split( TQString::fromLatin1(","),
+      desktopList );
+  desktops.clear();
+
+  for ( TQStringList::iterator iter = desktopStrList.begin();
+        iter != desktopStrList.end();
+        ++iter ) {
+    int desktopInt = (*iter).toInt( &ok );
+    if ( ok ) {
+      desktops.push_back( desktopInt );
+    }
+  }
+
+  percent_complete = static_cast<KCal::Todo*>(incident)->percentComplete();
+
+  //kdDebug(5970) << "Task::parseIncidence: "
+  //  << name << ", Minutes: " << minutes
+  //  <<  ", desktop: " << desktopList << endl;
+
+  return true;
+}
+
+TQString Task::getDesktopStr() const
+{
+  if ( _desktops.empty() )
+    return TQString();
+
+  TQString desktopstr;
+  for ( DesktopList::const_iterator iter = _desktops.begin();
+        iter != _desktops.end();
+        ++iter ) {
+    desktopstr += TQString::number( *iter ) + TQString::fromLatin1( "," );
+  }
+  desktopstr.remove( desktopstr.length() - 1, 1 );
+  return desktopstr;
+}
+
+void Task::cut()
+{
+  //kdDebug(5970) << "Task::cut - " << name() << endl;
+  changeParentTotalTimes( -_totalSessionTime, -_totalTime);
+  if ( ! parent())
+    listView()->takeItem(this);
+  else
+    parent()->takeItem(this);
+}
+
+void Task::move(Task* destination)
+{
+  cut();
+  paste(destination);
+}
+
+void Task::paste(Task* destination)
+{
+  destination->insertItem(this);
+  changeParentTotalTimes( _totalSessionTime, _totalTime);
+}
+
+void Task::update()
+{
+  setText(0, _name);
+  setText(1, formatTime(_sessionTime));
+  setText(2, formatTime(_time));
+  setText(3, formatTime(_totalSessionTime));
+  setText(4, formatTime(_totalTime));
+}
+
+void Task::addComment( TQString comment, KarmStorage* storage )
+{
+  _comment = _comment + TQString::fromLatin1("\n") + comment;
+  storage->addComment(this, comment);
+}
+
+TQString Task::comment() const
+{
+  return _comment;
+}
+
+int Task::compare ( TQListViewItem * i, int col, bool ascending ) const
+{
+  long thistime = 0;
+  long thattime = 0;
+  Task *task = static_cast<Task*>(i);
+
+  switch ( col )
+  {
+    case 1: 
+      thistime = _sessionTime;
+      thattime = task->sessionTime();
+      break;
+    case 2:
+      thistime = _time;
+      thattime = task->time();
+      break;
+    case 3:
+      thistime = _totalSessionTime;
+      thattime = task->totalSessionTime();
+      break;
+    case 4:
+      thistime = _totalTime;
+      thattime = task->totalTime();
+      break;
+    default:
+      return key(col, ascending).localeAwareCompare( i->key(col, ascending) );
+  }
+
+  if ( thistime < thattime ) return -1;
+  if ( thistime > thattime ) return 1;
+  return 0;
+
+}
+
+#include "task.moc"

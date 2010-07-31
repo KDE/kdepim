@@ -35,8 +35,8 @@
 
 
 KOrganizerIfaceImpl::KOrganizerIfaceImpl( ActionManager* actionManager,
-                                          QObject* parent, const char* name )
-  : DCOPObject( "KOrganizerIface" ), QObject( parent, name ),
+                                          TQObject* parent, const char* name )
+  : DCOPObject( "KOrganizerIface" ), TQObject( parent, name ),
     mActionManager( actionManager )
 {
 }
@@ -45,12 +45,12 @@ KOrganizerIfaceImpl::~KOrganizerIfaceImpl()
 {
 }
 
-bool KOrganizerIfaceImpl::openURL( const QString &url )
+bool KOrganizerIfaceImpl::openURL( const TQString &url )
 {
   return mActionManager->openURL( url );
 }
 
-bool KOrganizerIfaceImpl::mergeURL( const QString &url )
+bool KOrganizerIfaceImpl::mergeURL( const TQString &url )
 {
   return mActionManager->mergeURL( url );
 }
@@ -65,27 +65,27 @@ bool KOrganizerIfaceImpl::saveURL()
   return mActionManager->saveURL();
 }
 
-bool KOrganizerIfaceImpl::saveAsURL( const QString &url )
+bool KOrganizerIfaceImpl::saveAsURL( const TQString &url )
 {
   return mActionManager->saveAsURL( url );
 }
 
-QString KOrganizerIfaceImpl::getCurrentURLasString() const
+TQString KOrganizerIfaceImpl::getCurrentURLasString() const
 {
   return mActionManager->getCurrentURLasString();
 }
 
-bool KOrganizerIfaceImpl::deleteIncidence( const QString &uid, bool force )
+bool KOrganizerIfaceImpl::deleteIncidence( const TQString &uid, bool force )
 {
   return mActionManager->deleteIncidence( uid, force );
 }
 
-bool KOrganizerIfaceImpl::editIncidence( const QString &uid )
+bool KOrganizerIfaceImpl::editIncidence( const TQString &uid )
 {
   return mActionManager->editIncidence( uid );
 }
 
-bool KOrganizerIfaceImpl::addIncidence( const QString &ical )
+bool KOrganizerIfaceImpl::addIncidence( const TQString &ical )
 {
   return mActionManager->addIncidence( ical );
 }
@@ -95,12 +95,12 @@ bool KOrganizerIfaceImpl::canQueryClose()
   return (!(mActionManager->queryClose()));
 }
 
-void KOrganizerIfaceImpl::loadProfile( const QString& path )
+void KOrganizerIfaceImpl::loadProfile( const TQString& path )
 {
     mActionManager->loadProfile( path );
 }
 
-void KOrganizerIfaceImpl::saveToProfile( const QString& path ) const
+void KOrganizerIfaceImpl::saveToProfile( const TQString& path ) const
 {
     mActionManager->saveToProfile( path );
 }

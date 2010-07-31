@@ -39,8 +39,8 @@
 #include <kaction.h>
 #include <kstdaction.h>
 
-#include <qtooltip.h>
-#include <qfile.h>
+#include <tqtooltip.h>
+#include <tqfile.h>
 
 #include <stdlib.h>
 
@@ -64,16 +64,16 @@ AlarmDockWindow::AlarmDockWindow( const char *name )
   setPixmap( alarmsEnabled ? mPixmapEnabled : mPixmapDisabled );
 
   // Set up the context menu
-  mSuspendAll = contextMenu()->insertItem( i18n("Suspend All"), this, SLOT( slotSuspendAll() ) );
-  mDismissAll = contextMenu()->insertItem( i18n("Dismiss All"), this, SLOT( slotDismissAll() ) );
+  mSuspendAll = contextMenu()->insertItem( i18n("Suspend All"), this, TQT_SLOT( slotSuspendAll() ) );
+  mDismissAll = contextMenu()->insertItem( i18n("Dismiss All"), this, TQT_SLOT( slotDismissAll() ) );
   contextMenu()->setItemEnabled( mSuspendAll, false );
   contextMenu()->setItemEnabled( mDismissAll, false );
 
   contextMenu()->insertSeparator();
   mAlarmsEnabledId = contextMenu()->insertItem( i18n("Reminders Enabled"), this,
-                                                SLOT( toggleAlarmsEnabled() ) );
+                                                TQT_SLOT( toggleAlarmsEnabled() ) );
   mAutostartId = contextMenu()->insertItem( i18n("Start Reminder Daemon at Login"), this,
-                                                SLOT( toggleAutostart() ) );
+                                                TQT_SLOT( toggleAutostart() ) );
   contextMenu()->setItemChecked( mAutostartId, autostart );
   contextMenu()->setItemChecked( mAlarmsEnabledId, alarmsEnabled );
 
@@ -86,25 +86,25 @@ AlarmDockWindow::AlarmDockWindow( const char *name )
     kdDebug(5890) << "No Quit standard action." << endl;
   } else {
 #if KDE_IS_VERSION(3,3,90)
-    quit->disconnect( SIGNAL( activated() ), this,
-                      SLOT( maybeQuit() ) );
-    connect( quit, SIGNAL( activated() ), SLOT( slotQuit() ) );
+    quit->disconnect( TQT_SIGNAL( activated() ), this,
+                      TQT_SLOT( maybeQuit() ) );
+    connect( quit, TQT_SIGNAL( activated() ), TQT_SLOT( slotQuit() ) );
   }
 #else //FIXME: remove for KDE 4.0
-    quit->disconnect( SIGNAL( activated() ), qApp,
-                      SLOT( closeAllWindows() ) );
+    quit->disconnect( TQT_SIGNAL( activated() ), qApp,
+                      TQT_SLOT( closeAllWindows() ) );
   }
-  connect( this, SIGNAL( quitSelected() ), SLOT( slotQuit() ) );
+  connect( this, TQT_SIGNAL( quitSelected() ), TQT_SLOT( slotQuit() ) );
 #endif
 
-  QToolTip::add(this, mName );
+  TQToolTip::add(this, mName );
 }
 
 AlarmDockWindow::~AlarmDockWindow()
 {
 }
 
-void AlarmDockWindow::resizeEvent ( QResizeEvent * )
+void AlarmDockWindow::resizeEvent ( TQResizeEvent * )
 {
 	// Honor Free Desktop specifications that allow for arbitrary system tray icon sizes
 	mPixmapEnabled  = loadSizedIcon( "korgac", width() );
@@ -117,17 +117,17 @@ void AlarmDockWindow::resizeEvent ( QResizeEvent * )
 
 void AlarmDockWindow::slotUpdate( int reminders )
 {
-  QToolTip::remove( this );
+  TQToolTip::remove( this );
   if ( reminders > 0 )
   {
-    QToolTip::add( this, i18n( "There is 1 active reminder.",
+    TQToolTip::add( this, i18n( "There is 1 active reminder.",
                    "There are %n active reminders.", reminders ) );
     contextMenu()->setItemEnabled( mSuspendAll, true );
     contextMenu()->setItemEnabled( mDismissAll, true );
   }
   else
   {
-    QToolTip::add( this, mName );
+    TQToolTip::add( this, mName );
     contextMenu()->setItemEnabled( mSuspendAll, false );
     contextMenu()->setItemEnabled( mDismissAll, false );
   }
@@ -175,16 +175,16 @@ void AlarmDockWindow::enableAutostart( bool enable )
   contextMenu()->setItemChecked( mAutostartId, enable );
 }
 
-void AlarmDockWindow::mousePressEvent( QMouseEvent *e )
+void AlarmDockWindow::mousePressEvent( TQMouseEvent *e )
 {
   if ( e->button() == LeftButton ) {
-    kapp->startServiceByDesktopName( "korganizer", QString::null );
+    kapp->startServiceByDesktopName( "korganizer", TQString::null );
   } else {
     KSystemTray::mousePressEvent( e );
   }
 }
 
-//void AlarmDockWindow::closeEvent( QCloseEvent * )
+//void AlarmDockWindow::closeEvent( TQCloseEvent * )
 void AlarmDockWindow::slotQuit()
 {
   int result = KMessageBox::questionYesNoCancel( this,
@@ -192,7 +192,7 @@ void AlarmDockWindow::slotQuit()
            "(note that you will not get reminders whilst the daemon is not running)?"),
       i18n("Close KOrganizer Reminder Daemon"),
       i18n("Start"), i18n("Do Not Start"),
-      QString::fromLatin1("AskForStartAtLogin")
+      TQString::fromLatin1("AskForStartAtLogin")
       );
 
   bool autostart = true;

@@ -18,7 +18,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <qmutex.h>
+#include <tqmutex.h>
 
 #define log(s)      kdDebug() << s;
 
@@ -36,7 +36,7 @@ using namespace KCal;
 | CONSTRUCTOR AND DESTRUCTOR
  ========================================================================*/
 
-CalDavJob::CalDavJob(const QString& url) {
+CalDavJob::CalDavJob(const TQString& url) {
     cleanJob();
     setUrl(url);
 }
@@ -56,14 +56,14 @@ void CalDavJob::enableCaldavDebug(runtime_info* rt) {
     }
 }
 
-void CalDavJob::setErrorString(const QString& err, const long number) {
+void CalDavJob::setErrorString(const TQString& err, const long number) {
     mError = true;
     mErrorString = err;
     mErrorNumber = number;
 }
 
 void CalDavJob::processError(const caldav_error* err) {
-    QString error_string;
+    TQString error_string;
 
     long code = err->code;
 
@@ -104,8 +104,8 @@ void CalDavJob::run() {
 
     // Signal done
     // 1000 is read, 1001 is write
-    if (type() == 0) QApplication::postEvent ( parent(), new QEvent( static_cast<QEvent::Type>(1000) ) );
-    if (type() == 1) QApplication::postEvent ( parent(), new QEvent( static_cast<QEvent::Type>(1001) ) );
+    if (type() == 0) TQApplication::postEvent ( parent(), new TQEvent( static_cast<TQEvent::Type>(1000) ) );
+    if (type() == 1) TQApplication::postEvent ( parent(), new TQEvent( static_cast<TQEvent::Type>(1001) ) );
 }
 
 // EOF ========================================================================

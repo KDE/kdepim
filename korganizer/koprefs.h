@@ -24,7 +24,7 @@
 #ifndef KOPREFS_H
 #define KOPREFS_H
 
-#include <qdict.h>
+#include <tqdict.h>
 
 #include <kdepimmacros.h>
 
@@ -35,7 +35,7 @@ class QFont;
 class QColor;
 class QStringList;
 
-QColor getTextColor(const QColor &c);
+TQColor getTextColor(const TQColor &c);
 
 
 class KDE_EXPORT KOPrefs : public KOPrefsBase
@@ -72,46 +72,46 @@ class KDE_EXPORT KOPrefs : public KOPrefsBase
 
   public:
     // preferences data
-    void setFullName( const QString & );
-    QString fullName();
-    void setEmail( const QString & );
-    QString email();
+    void setFullName( const TQString & );
+    TQString fullName();
+    void setEmail( const TQString & );
+    TQString email();
     /// Returns all email addresses for the user.
-    QStringList allEmails();
+    TQStringList allEmails();
     /// Returns all email addresses together with the full username for the user.
-    QStringList fullEmails();
+    TQStringList fullEmails();
     /// Return true if the given email belongs to the user
-    bool thatIsMe( const QString& email );
+    bool thatIsMe( const TQString& email );
 
-    void setCategoryColor( const QString &cat, const QColor &color );
-    QColor *categoryColor( const QString &cat );
-    bool hasCategoryColor( const QString &cat ) const;
+    void setCategoryColor( const TQString &cat, const TQColor &color );
+    TQColor *categoryColor( const TQString &cat );
+    bool hasCategoryColor( const TQString &cat ) const;
 
-    void setResourceColor ( const QString &, const QColor & );
-    QColor* resourceColor( const QString & );
+    void setResourceColor ( const TQString &, const TQColor & );
+    TQColor* resourceColor( const TQString & );
 
-    QString mHtmlExportFile;
+    TQString mHtmlExportFile;
     bool mAlarmsEnabledByDefault;
 
     // Groupware passwords
-    QString mPublishPassword;
-    QString mRetrievePassword;
+    TQString mPublishPassword;
+    TQString mRetrievePassword;
 
   private:
-    QDict<QColor> mCategoryColors;
-    QColor mDefaultCategoryColor;
+    TQDict<TQColor> mCategoryColors;
+    TQColor mDefaultCategoryColor;
 
-    QDict<QColor> mResourceColors;
-    QColor mDefaultResourceColor;
+    TQDict<TQColor> mResourceColors;
+    TQColor mDefaultResourceColor;
 
-    QFont mDefaultTimeBarFont;
-    QFont mDefaultMonthViewFont;
+    TQFont mDefaultTimeBarFont;
+    TQFont mDefaultMonthViewFont;
 
-    QStringList mMyAddrBookMails;
+    TQStringList mMyAddrBookMails;
 
   public: // Do not use - except in KOPrefsDialogMain
-    QString mName;
-    QString mEmail;
+    TQString mName;
+    TQString mEmail;
 };
 
 #endif

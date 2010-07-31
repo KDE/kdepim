@@ -21,7 +21,7 @@
 #ifndef KCAL_RESOURCETVANYTIME_H
 #define KCAL_RESOURCETVANYTIME_H
 
-#include <qtimer.h>
+#include <tqtimer.h>
 
 #include <libkdepim/progressmanager.h>
 
@@ -38,8 +38,8 @@ class QDomDocument;
 class KTar;
 class KTempFile;
 
-typedef QMap< QString, Service > ServiceMap;
-typedef QMap< QString, QString > UidMap;
+typedef TQMap< TQString, Service > ServiceMap;
+typedef TQMap< TQString, TQString > UidMap;
 
 namespace KCal {
 
@@ -63,13 +63,13 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
 
     TVAnytimePrefsBase *prefs();
 
-    QStringList subresources() const;
-    const QString labelForSubresource( const QString& subresource ) const;
-    QString subresourceIdentifier( Incidence *incidence );
+    TQStringList subresources() const;
+    const TQString labelForSubresource( const TQString& subresource ) const;
+    TQString subresourceIdentifier( Incidence *incidence );
     /** Is this subresource active? */
-    bool subresourceActive( const QString& ) const;
+    bool subresourceActive( const TQString& ) const;
     /** (De)activate the subresource */
-    virtual void setSubresourceActive( const QString &, bool );
+    virtual void setSubresourceActive( const TQString &, bool );
 
     bool doOpen();
     void doClose();
@@ -84,7 +84,7 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
     /**
      * Extract the XML from the given filename within the schedule archive
      */
-    QDomDocument archiveFileXml( const QString & name );
+    TQDomDocument archiveFileXml( const TQString & name );
 
     /**
      * Read the tv schedule from the tarball downloaded to mDestination
@@ -94,10 +94,10 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
     /** 
      * Read the service information map from the supplied xml
      */
-    bool readServiceInformation( const QDomDocument & );
+    bool readServiceInformation( const TQDomDocument & );
     bool readServices() { return true; }
-    bool readService( const QString & serviceId );
-    bool readProgrammeInformation( const QDomDocument & );
+    bool readService( const TQString & serviceId );
+    bool readProgrammeInformation( const TQDomDocument & );
 
   protected slots:
     void slotJobResult( KIO::Job * );
@@ -113,14 +113,14 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
 
     bool mIsShowingError;
 
-    QTimer mResourceChangedTimer;
+    TQTimer mResourceChangedTimer;
     KTempFile * mDestination;
     KTar * mScheduleArchive;
 
     ServiceMap mServiceMap;
     UidMap mUidMap;
     //TODO: read this from subresource config
-    QStringList mActiveServices;
+    TQStringList mActiveServices;
     
 };
 

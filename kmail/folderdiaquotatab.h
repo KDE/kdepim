@@ -55,7 +55,7 @@ class FolderDiaQuotaTab : public FolderDiaTab
   Q_OBJECT
 
 public:
-  FolderDiaQuotaTab( KMFolderDialog* dlg, QWidget* parent, const char* name = 0 );
+  FolderDiaQuotaTab( KMFolderDialog* dlg, TQWidget* parent, const char* name = 0 );
 
   virtual void load();
   virtual bool save();
@@ -68,17 +68,17 @@ private:
   void showQuotaWidget();
 private slots:
   // Network (KIO) slots
-  void slotConnectionResult( int, const QString& );
+  void slotConnectionResult( int, const TQString& );
   void slotReceivedQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& );
 
 
 private:
 
-  QLabel* mLabel;
+  TQLabel* mLabel;
   KMail::QuotaWidget* mQuotaWidget;
-  QWidgetStack* mStack;
+  TQWidgetStack* mStack;
   ImapAccountBase* mImapAccount;
-  QString mImapPath;
+  TQString mImapPath;
   KMFolderDialog* mDlg;
 
   QuotaInfo mQuotaInfo;

@@ -19,8 +19,8 @@
 
 #include "job.h"
 
-#include <qstring.h>
-#include <qdatetime.h>
+#include <tqstring.h>
+#include <tqdatetime.h>
 
 namespace KCal {
 
@@ -38,7 +38,7 @@ public:
     /**
      * @param url URL to load.
      */
-    CalDavReader(const QString& url = QString()) :
+    CalDavReader(const TQString& url = TQString()) :
         CalDavJob(url)
         , mGetAll(true)
     {
@@ -49,7 +49,7 @@ public:
      * This method call disables the effect of setGetAll() call.
      * setGetAll() call disables the effect of this method.
      */
-    void setRange(const QDateTime& start, const QDateTime& end) {
+    void setRange(const TQDateTime& start, const TQDateTime& end) {
         mGetAll = false;
         mTimeStart = start;
         mTimeEnd = end;
@@ -67,7 +67,7 @@ public:
     /**
      * @return downloaded calendar data in iCal format.
      */
-    QString data() const {
+    TQString data() const {
         return mData;
     }
 
@@ -79,10 +79,10 @@ protected:
 
 private:
 
-    QString mData;
+    TQString mData;
     bool mGetAll;
-    QDateTime mTimeStart;
-    QDateTime mTimeEnd;
+    TQDateTime mTimeStart;
+    TQDateTime mTimeEnd;
 
 };
 

@@ -21,13 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qlayout.h>
-#include <qpopupmenu.h>
-#include <qpushbutton.h>
-#include <qtimer.h>
-#include <qlabel.h>
-#include <qheader.h>
-#include <qtooltip.h>
+#include <tqlayout.h>
+#include <tqpopupmenu.h>
+#include <tqpushbutton.h>
+#include <tqtimer.h>
+#include <tqlabel.h>
+#include <tqheader.h>
+#include <tqtooltip.h>
 
 #include <kabc/resource.h>
 #include <kdialog.h>
@@ -58,7 +58,7 @@ class ResourceItem : public QCheckListItem
 {
   public:
     ResourceItem( KListView *parent, KABC::Resource *resource )
-      : QCheckListItem( parent, resource->resourceName(), CheckBox ),
+      : TQCheckListItem( parent, resource->resourceName(), CheckBox ),
         mResource( resource ), mChecked( false ),
         mIsSubresource( false ), mSubItemsCreated( false ),
         mResourceIdentifier()
@@ -69,8 +69,8 @@ class ResourceItem : public QCheckListItem
     }
 
     ResourceItem( KPIM::ResourceABC *resourceABC, ResourceItem* parent,
-                  const QString& resourceIdent )
-      : QCheckListItem( parent, resourceABC->subresourceLabel( resourceIdent ), CheckBox ),
+                  const TQString& resourceIdent )
+      : TQCheckListItem( parent, resourceABC->subresourceLabel( resourceIdent ), CheckBox ),
         mResource( resourceABC ), mChecked( false ),
         mIsSubresource( true ), mSubItemsCreated( false ),
         mResourceIdentifier( resourceIdent )
@@ -89,7 +89,7 @@ class ResourceItem : public QCheckListItem
     }
     bool checked() const { return mChecked; }
     KABC::Resource *resource() const { return mResource; }
-    QString resourceIdentifier() const { return mResourceIdentifier; }
+    TQString resourceIdentifier() const { return mResourceIdentifier; }
     bool isSubResource() const { return mIsSubresource; }
 
     virtual void stateChange( bool active );
@@ -99,21 +99,21 @@ class ResourceItem : public QCheckListItem
     bool mChecked;
     const bool mIsSubresource;
     bool mSubItemsCreated;
-    const QString mResourceIdentifier;
+    const TQString mResourceIdentifier;
 };
 
 // Comes from korganizer/resourceview.cpp
 void ResourceItem::createSubresourceItems()
 {
   KPIM::ResourceABC* res = dynamic_cast<KPIM::ResourceABC *>( mResource );
-  QStringList subresources;
+  TQStringList subresources;
   if ( res )
     subresources = res->subresources();
   if ( !subresources.isEmpty() ) {
     setOpen( true );
     setExpandable( true );
     // This resource has subresources
-    QStringList::ConstIterator it;
+    TQStringList::ConstIterator it;
     for ( it = subresources.begin(); it != subresources.end(); ++it ) {
       (void)new ResourceItem( res, this, *it );
     }
@@ -134,7 +134,7 @@ void ResourceItem::stateChange( bool active )
 
 ////
 
-ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent, const char *name )
+ResourceSelection::ResourceSelection( KAB::Core *core, TQWidget *parent, const char *name )
   : KAB::ExtensionWidget( core, parent, name ), mManager( 0 )
 {
   initGUI();
@@ -142,49 +142,49 @@ ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent, const ch
   AddressBookWrapper *wrapper = static_cast<AddressBookWrapper*>( core->addressBook() );
   mManager = wrapper->getResourceManager();
 
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( add() ) );
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
+  connect( mAddButton, TQT_SIGNAL( clicked() ), TQT_SLOT( add() ) );
+  connect( mEditButton, TQT_SIGNAL( clicked() ), TQT_SLOT( edit() ) );
+  connect( mRemoveButton, TQT_SIGNAL( clicked() ), TQT_SLOT( remove() ) );
 
-  connect( mListView, SIGNAL( clicked( QListViewItem* ) ),
-           SLOT( currentChanged( QListViewItem* ) ) );
+  connect( mListView, TQT_SIGNAL( clicked( TQListViewItem* ) ),
+           TQT_SLOT( currentChanged( TQListViewItem* ) ) );
 
-  connect( mListView, SIGNAL( contextMenuRequested ( QListViewItem *,
-                                                     const QPoint &, int ) ),
-           SLOT( contextMenuRequested( QListViewItem *, const QPoint &,
+  connect( mListView, TQT_SIGNAL( contextMenuRequested ( TQListViewItem *,
+                                                     const TQPoint &, int ) ),
+           TQT_SLOT( contextMenuRequested( TQListViewItem *, const TQPoint &,
                                        int ) ) );
 
-  QTimer::singleShot( 0, this, SLOT( updateView() ) );
+  TQTimer::singleShot( 0, this, TQT_SLOT( updateView() ) );
 }
 
 ResourceSelection::~ResourceSelection()
 {
 }
 
-void ResourceSelection::contextMenuRequested ( QListViewItem *i,
-                                          const QPoint &pos, int )
+void ResourceSelection::contextMenuRequested ( TQListViewItem *i,
+                                          const TQPoint &pos, int )
 {
   ResourceItem *item = static_cast<ResourceItem *>( i );
 
-  QPopupMenu *menu = new QPopupMenu( this );
-  connect( menu, SIGNAL( aboutToHide() ), menu, SLOT( deleteLater() ) );
+  TQPopupMenu *menu = new TQPopupMenu( this );
+  connect( menu, TQT_SIGNAL( aboutToHide() ), menu, TQT_SLOT( deleteLater() ) );
   if ( item ) {
     int reloadId = menu->insertItem( i18n("Re&load"), this,
-                                     SLOT( reloadResource() ) );
+                                     TQT_SLOT( reloadResource() ) );
     menu->setItemEnabled( reloadId, item->resource()->isActive() );
     int saveId = menu->insertItem( i18n("&Save"), this,
-                                   SLOT( saveResource() ) );
+                                   TQT_SLOT( saveResource() ) );
     menu->setItemEnabled( saveId, item->resource()->isActive() );
     menu->insertSeparator();
 
-//     menu->insertItem( i18n("Show &Info"), this, SLOT( showInfo() ) );
+//     menu->insertItem( i18n("Show &Info"), this, TQT_SLOT( showInfo() ) );
 
-    menu->insertItem( i18n("&Edit..."), this, SLOT( edit() ) );
-    menu->insertItem( i18n("&Remove"), this, SLOT( remove() ) );
+    menu->insertItem( i18n("&Edit..."), this, TQT_SLOT( edit() ) );
+    menu->insertItem( i18n("&Remove"), this, TQT_SLOT( remove() ) );
 
     menu->insertSeparator();
  }
-  menu->insertItem( i18n("&Add..."), this, SLOT( add() ) );
+  menu->insertItem( i18n("&Add..."), this, TQT_SLOT( add() ) );
 
   menu->popup( pos );
 }
@@ -215,33 +215,33 @@ void ResourceSelection::showInfo()
   ResourceItem *item = selectedItem();
   if ( !item ) return;
 
-//   QString txt = "<qt>" + item->resource()->infoText() + "</qt>";
+//   TQString txt = "<qt>" + item->resource()->infoText() + "</qt>";
 //   KMessageBox::information( this, txt );
 }
 
-QString ResourceSelection::title() const
+TQString ResourceSelection::title() const
 {
   return i18n( "Address Books" );
 }
 
-QString ResourceSelection::identifier() const
+TQString ResourceSelection::identifier() const
 {
   return "resourceselection";
 }
 
 void ResourceSelection::add()
 {
-  QStringList types = mManager->resourceTypeNames();
-  QStringList descs = mManager->resourceTypeDescriptions();
+  TQStringList types = mManager->resourceTypeNames();
+  TQStringList descs = mManager->resourceTypeDescriptions();
 
   bool ok = false;
-  QString desc = KInputDialog::getItem( i18n( "Add Address Book" ),
+  TQString desc = KInputDialog::getItem( i18n( "Add Address Book" ),
                                         i18n( "Please select type of the new address book:" ),
                                         descs, 0, false, &ok, this );
   if ( !ok )
     return;
 
-  QString type = types[ descs.findIndex( desc ) ];
+  TQString type = types[ descs.findIndex( desc ) ];
 
   // Create new resource
   KABC::Resource *resource = mManager->createResource( type );
@@ -254,7 +254,7 @@ void ResourceSelection::add()
   resource->setResourceName( i18n( "%1 address book" ).arg( type ) );
   resource->setAddressBook(core()->addressBook());
 
-  KRES::ConfigDialog dlg( this, QString( "contact" ), resource );
+  KRES::ConfigDialog dlg( this, TQString( "contact" ), resource );
 
   if ( dlg.exec() ) {
     core()->addressBook()->addResource( resource );
@@ -279,7 +279,7 @@ void ResourceSelection::edit()
   // thus keep their data rather than their pointer
   KABC::Resource *resource = item->resource();
 
-  KRES::ConfigDialog dlg( this, QString( "contact" ), resource );
+  KRES::ConfigDialog dlg( this, TQString( "contact" ), resource );
 
   if ( dlg.exec() ) {
     mManager->change( resource );
@@ -311,7 +311,7 @@ void ResourceSelection::remove()
   updateView();
 }
 
-void ResourceSelection::currentChanged( QListViewItem *item )
+void ResourceSelection::currentChanged( TQListViewItem *item )
 {
   ResourceItem *resItem = static_cast<ResourceItem*>( item );
   bool state = (resItem && !resItem->isSubResource() );
@@ -367,28 +367,28 @@ void ResourceSelection::updateView()
     KPIM::ResourceABC* resource = dynamic_cast<KPIM::ResourceABC *>( *it );
     if ( resource ) {
       disconnect( resource, 0, this, 0 );
-      connect( resource, SIGNAL( signalSubresourceAdded( KPIM::ResourceABC *,
-                                                         const QString &, const QString & ) ),
-               SLOT( slotSubresourceAdded( KPIM::ResourceABC *,
-                                           const QString &, const QString & ) ) );
+      connect( resource, TQT_SIGNAL( signalSubresourceAdded( KPIM::ResourceABC *,
+                                                         const TQString &, const TQString & ) ),
+               TQT_SLOT( slotSubresourceAdded( KPIM::ResourceABC *,
+                                           const TQString &, const TQString & ) ) );
 
-      connect( resource, SIGNAL( signalSubresourceRemoved( KPIM::ResourceABC *,
-                                                           const QString &, const QString & ) ),
-               SLOT( slotSubresourceRemoved( KPIM::ResourceABC *,
-                                             const QString &, const QString & ) ) );
+      connect( resource, TQT_SIGNAL( signalSubresourceRemoved( KPIM::ResourceABC *,
+                                                           const TQString &, const TQString & ) ),
+               TQT_SLOT( slotSubresourceRemoved( KPIM::ResourceABC *,
+                                             const TQString &, const TQString & ) ) );
 
-      connect( resource, SIGNAL( signalSubresourceChanged( KPIM::ResourceABC *,
-                                                           const QString &, const QString & ) ),
-               SLOT( slotSubresourceChanged( KPIM::ResourceABC *,
-                                             const QString &, const QString & ) ) );
+      connect( resource, TQT_SIGNAL( signalSubresourceChanged( KPIM::ResourceABC *,
+                                                           const TQString &, const TQString & ) ),
+               TQT_SLOT( slotSubresourceChanged( KPIM::ResourceABC *,
+                                             const TQString &, const TQString & ) ) );
 
-      //connect( resource, SIGNAL( resourceSaved( KPIM::ResourceABC * ) ),
-      //         SLOT( closeResource( KPIM::ResourceABC * ) ) );
+      //connect( resource, TQT_SIGNAL( resourceSaved( KPIM::ResourceABC * ) ),
+      //         TQT_SLOT( closeResource( KPIM::ResourceABC * ) ) );
       item->createSubresourceItems();
     }
   }
 
-  QListViewItemIterator itemIt( mListView );
+  TQListViewItemIterator itemIt( mListView );
   while ( itemIt.current() ) {
     ResourceItem *item = static_cast<ResourceItem*>( itemIt.current() );
     if ( item->resource()->identifier() == mLastResource ) {
@@ -405,11 +405,11 @@ void ResourceSelection::updateView()
 
 // Add a new entry
 void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
-                                              const QString& /*type*/,
-                                              const QString& subResource )
+                                              const TQString& /*type*/,
+                                              const TQString& subResource )
 {
   kdDebug(5720) << k_funcinfo << resource->resourceName() << " " << subResource << endl;
-  QListViewItem *i = mListView->findItem( resource->resourceName(), 0 );
+  TQListViewItem *i = mListView->findItem( resource->resourceName(), 0 );
   if ( !i )
     // Not found
     return;
@@ -426,8 +426,8 @@ void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
 
 // Remove an entry
 void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* resource,
-                                                const QString& /*type*/,
-                                                const QString& subResource )
+                                                const TQString& /*type*/,
+                                                const TQString& subResource )
 {
   ResourceItem *item = findSubResourceItem( resource, subResource );
   delete item;
@@ -437,8 +437,8 @@ void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* resource,
 
 // change an entry
 void ResourceSelection::slotSubresourceChanged( KPIM::ResourceABC* resource,
-                                                const QString& type,
-                                                const QString& subResource )
+                                                const TQString& type,
+                                                const TQString& subResource )
 {
   kdDebug(5720) << resource->resourceName() << subResource;
 
@@ -463,14 +463,14 @@ ResourceItem* ResourceSelection::selectedItem() const
 }
 
 ResourceItem* ResourceSelection::findSubResourceItem( KPIM::ResourceABC *resource,
-                                                const QString &subResource )
+                                                const TQString &subResource )
 {
-    QListViewItemIterator parentIt( mListView );
+    TQListViewItemIterator parentIt( mListView );
     for ( ; *parentIt; ++parentIt ) {
         if ( static_cast<ResourceItem*>(*parentIt)->resource() != resource )
             continue;
 
-        QListViewItemIterator childIt( *parentIt );
+        TQListViewItemIterator childIt( *parentIt );
         for ( ; *childIt; ++childIt ) {
             ResourceItem *item = static_cast<ResourceItem*>(*childIt);
             if ( item->resourceIdentifier() == subResource )
@@ -483,30 +483,30 @@ ResourceItem* ResourceSelection::findSubResourceItem( KPIM::ResourceABC *resourc
 
 void ResourceSelection::initGUI()
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+  TQBoxLayout *topLayout = new TQVBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
 
-  QBoxLayout *buttonLayout = new QHBoxLayout();
+  TQBoxLayout *buttonLayout = new TQHBoxLayout();
   buttonLayout->setSpacing( KDialog::spacingHint() );
   topLayout->addLayout( buttonLayout );
 
-  QLabel *abLabel = new QLabel( i18n( "Address Books" ), this );
+  TQLabel *abLabel = new TQLabel( i18n( "Address Books" ), this );
   buttonLayout->addWidget( abLabel );
   buttonLayout->addStretch( 1 );
 
-  mAddButton = new QPushButton( this );
+  mAddButton = new TQPushButton( this );
   mAddButton->setIconSet( SmallIconSet( "add" ) );
-  QToolTip::add( mAddButton, i18n( "Add addressbook" ) );
+  TQToolTip::add( mAddButton, i18n( "Add addressbook" ) );
   buttonLayout->addWidget( mAddButton );
-  mEditButton = new QPushButton( this );
+  mEditButton = new TQPushButton( this );
   mEditButton->setIconSet( SmallIconSet( "edit" ) );
   mEditButton->setEnabled( false );
-  QToolTip::add( mEditButton, i18n( "Edit addressbook settings" ) );
+  TQToolTip::add( mEditButton, i18n( "Edit addressbook settings" ) );
   buttonLayout->addWidget( mEditButton );
-  mRemoveButton = new QPushButton( this );
+  mRemoveButton = new TQPushButton( this );
   mRemoveButton->setIconSet( SmallIconSet( "remove" ) );
   mRemoveButton->setEnabled( false );
-  QToolTip::add( mRemoveButton, i18n( "Remove addressbook" ) );
+  TQToolTip::add( mRemoveButton, i18n( "Remove addressbook" ) );
   buttonLayout->addWidget( mRemoveButton );
 
   mListView = new KListView( this );
@@ -519,12 +519,12 @@ void ResourceSelection::initGUI()
 class ResourceSelectionFactory : public KAB::ExtensionFactory
 {
   public:
-    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
+    KAB::ExtensionWidget *extension( KAB::Core *core, TQWidget *parent, const char *name )
     {
       return new ResourceSelection( core, parent, name );
     }
 
-    QString identifier() const
+    TQString identifier() const
     {
       return "resourceselection";
     }

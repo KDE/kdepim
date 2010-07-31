@@ -1,0 +1,291 @@
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
+*/
+
+#include <kapplication.h>
+#include <tqcheckbox.h>
+#include <kcolorbutton.h>
+#include <kconfig.h>
+#include <kdebug.h>
+#include <kdialog.h>
+#include <kfontcombo.h>
+#include <kglobalsettings.h>
+#include <tqlayout.h>
+#include <klocale.h>
+#include <knuminput.h>
+#include <tqpaintdevicemetrics.h>
+#include <tqpainter.h>
+#include <kprinter.h>
+#include <kstandarddirs.h>
+
+#include "ds_appearance.h"
+#include "printingwizard.h"
+#include "printprogress.h"
+#include "printstyle.h"
+
+#include "detailledstyle.h"
+
+using namespace KABPrinting;
+
+const char *ConfigSectionName = "DetailedPrintStyle";
+const char *UseKDEFonts = "UseKDEFonts";
+const char *HeaderFont = "HeaderFont";
+const char *HeaderFontSize = "HeaderFontSize";
+const char *HeadlinesFont = "HeadlineFont";
+const char *HeadlinesFontSize = "HeadlineFontSize";
+const char *BodyFont = "BodyFont";
+const char *BodyFontSize = "BodyFontSize";
+const char *DetailsFont = "DetailsFont";
+const char *DetailsFontSize = "DetailsFontSize";
+const char *FixedFont = "FixedFont";
+const char *FixedFontSize = "FixedFontSize";
+const char *ColoredContactHeaders = "UseColoredContactHeaders";
+const char *ContactHeaderForeColor = "ContactHeaderForeColor";
+const char *ContactHeaderBGColor = "ContactHeaderBGColor";
+
+
+DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *name )
+  : PrintStyle( parent, name ),
+    mPageAppearance( new AppearancePage( parent, "AppearancePage" ) ),
+    mPainter( 0 ),
+    mPrintProgress( 0 )
+{
+  KConfig *config;
+  TQFont font;
+  bool kdeFonts;
+  TQFont standard = KGlobalSettings::generalFont();
+  TQFont fixed = KGlobalSettings::fixedFont();
+
+  setPreview( "detailed-style.png" );
+
+  addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
+
+  config = kapp->config();
+  config->setGroup( ConfigSectionName );
+
+  kdeFonts = config->readBoolEntry( UseKDEFonts, true );
+  mPageAppearance->cbStandardFonts->setChecked( kdeFonts );
+
+  font = config->readFontEntry( HeaderFont, &standard );
+  mPageAppearance->kfcHeaderFont->setCurrentFont( font.family() );
+  mPageAppearance->kisbHeaderFontSize->setValue( font.pointSize() );
+
+  font = config->readFontEntry( HeadlinesFont, &standard );
+  mPageAppearance->kfcHeadlineFont->setCurrentFont( font.family() );
+  mPageAppearance->kisbHeadlineFontSize->setValue( font.pointSize() );
+
+  font = config->readFontEntry( BodyFont, &standard );
+  mPageAppearance->kfcBodyFont->setCurrentFont( font.family() );
+  mPageAppearance->kisbBodyFontSize->setValue( font.pointSize() );
+
+  font = config->readFontEntry( DetailsFont, &standard );
+  mPageAppearance->kfcDetailsFont->setCurrentFont( font.family() );
+  mPageAppearance->kisbDetailsFontSize->setValue( font.pointSize() );
+
+  font = config->readFontEntry( FixedFont, &fixed );
+  mPageAppearance->kfcFixedFont->setCurrentFont( font.family() );
+  mPageAppearance->kisbFixedFontSize->setValue( font.pointSize() );
+
+  mPageAppearance->cbBackgroundColor->setChecked(
+      config->readBoolEntry( ColoredContactHeaders, true ) );
+  mPageAppearance->kcbHeaderBGColor->setColor(
+      config->readColorEntry( ContactHeaderBGColor, &Qt::black ) );
+  mPageAppearance->kcbHeaderTextColor->setColor(
+      config->readColorEntry( ContactHeaderForeColor, &Qt::white ) );
+
+  mPageAppearance->layout()->setMargin( KDialog::marginHint() );
+  mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );
+}
+
+DetailledPrintStyle::~DetailledPrintStyle()
+{
+  delete mPainter;
+  mPainter = 0;
+}
+
+void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )
+{
+  mPrintProgress = progress;
+
+  progress->addMessage( i18n( "Setting up fonts and colors" ) );
+  progress->setProgress( 0 );
+
+  bool useKDEFonts;
+  TQFont font;
+  TQColor foreColor = Qt::black;
+  TQColor headerColor = Qt::white;
+  bool useHeaderColor = true;
+  TQColor backColor = Qt::black;
+  bool useBGColor;
+
+  // save, always available defaults:
+  TQFont header = TQFont("Helvetica", 12, TQFont::Normal);
+  TQFont headlines = TQFont("Helvetica", 12, TQFont::Normal, true);
+  TQFont body = TQFont("Helvetica", 12, TQFont::Normal);
+  TQFont fixed = TQFont("Courier", 12, TQFont::Normal);
+  TQFont comment = TQFont("Helvetica", 10, TQFont::Normal);
+
+  // store the configuration settings:
+  KConfig *config = kapp->config();
+  config->setGroup( ConfigSectionName );
+  useKDEFonts = mPageAppearance->cbStandardFonts->isChecked();
+  config->writeEntry( UseKDEFonts, useKDEFonts );
+
+  // read the font and color selections from the wizard pages:
+  useBGColor=mPageAppearance->cbBackgroundColor->isChecked();
+  config->writeEntry( ColoredContactHeaders, useBGColor );
+
+  // use colored contact headers, otherwise use plain black and white):
+  if ( useBGColor ) {
+    headerColor = mPageAppearance->kcbHeaderTextColor->color();
+    backColor = mPageAppearance->kcbHeaderBGColor->color();
+    config->writeEntry( ContactHeaderForeColor, headerColor );
+    config->writeEntry( ContactHeaderBGColor, backColor );
+  }
+
+  if ( mPageAppearance->cbStandardFonts->isChecked() ) {
+    TQFont standard = KGlobalSettings::generalFont();
+    header = standard;
+    headlines = standard;
+    body = standard;
+    fixed = KGlobalSettings::fixedFont();
+    comment = standard;
+  } else {
+    header.setFamily( mPageAppearance->kfcHeaderFont->currentText() );
+    header.setPointSize( mPageAppearance->kisbHeaderFontSize->value() );
+    config->writeEntry( HeaderFont, header );
+
+    // headlines:
+    headlines.setFamily( mPageAppearance->kfcHeadlineFont->currentText() );
+    headlines.setPointSize( mPageAppearance->kisbHeadlineFontSize->value() );
+    config->writeEntry( HeadlinesFont, headlines );
+
+    // body:
+    body.setFamily( mPageAppearance->kfcBodyFont->currentText() );
+    body.setPointSize( mPageAppearance->kisbBodyFontSize->value() );
+    config->writeEntry( BodyFont, body );
+
+    // details:
+    comment.setFamily( mPageAppearance->kfcDetailsFont->currentText() );
+    comment.setPointSize( mPageAppearance->kisbDetailsFontSize->value() );
+    config->writeEntry( DetailsFont, comment );
+
+    // fixed:
+    fixed.setFamily( mPageAppearance->kfcFixedFont->currentText() );
+    fixed.setPointSize( mPageAppearance->kisbFixedFontSize->value() );
+    config->writeEntry( FixedFont, fixed );
+  }
+
+  mPainter = new KABEntryPainter;
+  mPainter->setForegroundColor( foreColor );
+  mPainter->setHeaderColor( headerColor );
+  mPainter->setBackgroundColor( backColor );
+  mPainter->setUseHeaderColor( useHeaderColor );
+  mPainter->setHeaderFont( header );
+  mPainter->setHeadLineFont( headlines );
+  mPainter->setBodyFont( body );
+  mPainter->setFixedFont( fixed );
+  mPainter->setCommentFont( comment );
+
+  KPrinter *printer = wizard()->printer();
+
+  TQPainter painter;
+  progress->addMessage( i18n( "Setting up margins and spacing" ) );
+  int marginTop = 0,
+      marginLeft = 64, // to allow stapling, need refinement with two-side prints
+      marginRight = 0,
+      marginBottom = 0;
+
+  register int left, top, width, height;
+
+  painter.begin( printer );
+  printer->setFullPage( true ); // use whole page
+
+  TQPaintDeviceMetrics metrics( printer );
+
+  left = QMAX( printer->margins().width(), marginLeft );
+  top = QMAX( printer->margins().height(), marginTop );
+  width = metrics.width() - left - QMAX( printer->margins().width(), marginRight );
+  height = metrics.height() - top - QMAX( printer->margins().height(), marginBottom );
+
+  painter.setViewport( left, top, width, height );
+  progress->addMessage( i18n( "Printing" ) );
+
+  printEntries( contacts, printer, &painter,
+                TQRect( 0, 0, metrics.width(), metrics.height() ) );
+
+  progress->addMessage( i18n( "Done" ) );
+  painter.end();
+
+  config->sync();
+}
+
+bool DetailledPrintStyle::printEntries( const KABC::Addressee::List &contacts,
+                                        KPrinter *printer,
+                                        TQPainter *painter,
+                                        const TQRect &window)
+{
+  TQRect brect;
+  int ypos = 0, count = 0;
+
+  KABC::Addressee::List::ConstIterator it;
+  for ( it = contacts.begin(); it != contacts.end(); ++it ) {
+    if ( !(*it).isEmpty() ) {
+      // do a faked print to get the bounding rect:
+      if ( !mPainter->printAddressee( *it, window, painter, ypos, true, &brect) ) {
+        // it does not fit on the page beginning at ypos:
+        printer->newPage();
+
+        // WORK_TO_DO: this assumes the entry fits on the whole page
+        // (dunno how to fix this without being illogical)
+        ypos = 0;
+      }
+
+      mPainter->printAddressee( *it, window, painter, ypos, false, &brect );
+      ypos += brect.height();
+    }
+
+    mPrintProgress->setProgress( (count++ * 100) / contacts.count() );
+  }
+
+  mPrintProgress->setProgress( 100 );
+
+  return true;
+}
+
+DetailledPrintStyleFactory::DetailledPrintStyleFactory( PrintingWizard *parent,
+                                                        const char *name )
+  : PrintStyleFactory( parent, name )
+{
+}
+
+PrintStyle *DetailledPrintStyleFactory::create() const
+{
+  return new DetailledPrintStyle( mParent, mName );
+}
+
+TQString DetailledPrintStyleFactory::description() const
+{
+  return i18n( "Detailed Style" );
+}
+
+#include "detailledstyle.moc"

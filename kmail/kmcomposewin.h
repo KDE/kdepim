@@ -16,17 +16,17 @@
 
 #include <set>
 
-#include <qlabel.h>
-#include <qlistview.h>
+#include <tqlabel.h>
+#include <tqlistview.h>
 
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qclipboard.h>
-#include <qpalette.h>
-#include <qfont.h>
-#include <qptrlist.h>
-#include <qvaluevector.h>
-#include <qsplitter.h>
+#include <tqcheckbox.h>
+#include <tqpushbutton.h>
+#include <tqclipboard.h>
+#include <tqpalette.h>
+#include <tqfont.h>
+#include <tqptrlist.h>
+#include <tqvaluevector.h>
+#include <tqsplitter.h>
 
 #include <kio/job.h>
 #include <kglobalsettings.h>
@@ -116,24 +116,24 @@ public: // mailserviceimpl
    * From MailComposerIface
    */
   void send(int how);
-  void addAttachmentsAndSend(const KURL::List &urls, const QString &comment, int how);
-  void addAttachment(KURL url,QString comment);
-  void addAttachment(const QString &name,
-                    const QCString &cte,
-                    const QByteArray &data,
-                    const QCString &type,
-                    const QCString &subType,
-                    const QCString &paramAttr,
-                    const QString &paramValue,
-                    const QCString &contDisp);
+  void addAttachmentsAndSend(const KURL::List &urls, const TQString &comment, int how);
+  void addAttachment(KURL url,TQString comment);
+  void addAttachment(const TQString &name,
+                    const TQCString &cte,
+                    const TQByteArray &data,
+                    const TQCString &type,
+                    const TQCString &subType,
+                    const TQCString &paramAttr,
+                    const TQString &paramValue,
+                    const TQCString &contDisp);
 public: // kmcommand
-  void setBody (QString body);
+  void setBody (TQString body);
 
 private:
   /**
    * To catch palette changes
    */
-  virtual bool event(QEvent *e);
+  virtual bool event(TQEvent *e);
 
   /**
    * update colors
@@ -149,7 +149,7 @@ private:
    * If necessary increases the word wrap of the editor so that it will
    * not wrap the body string
    */
-   void verifyWordWrapLengthIsAdequate(const QString&);
+   void verifyWordWrapLengthIsAdequate(const TQString&);
 
 public: // kmkernel, kmcommands, callback
   /**
@@ -172,7 +172,7 @@ public: // kmkernel
   /**
    * Set the filename which is used for autosaving.
    */
-  void setAutoSaveFilename( const QString & filename );
+  void setAutoSaveFilename( const TQString & filename );
 
 private:
   /**
@@ -208,7 +208,7 @@ public: // kmkernel, kmcommand, mailserviceimpl
   /**
    * Recode to the specified charset
    */
-   void setCharset(const QCString& aCharset, bool forceDefault = FALSE);
+   void setCharset(const TQCString& aCharset, bool forceDefault = FALSE);
 
 public: // kmcommand
   /**
@@ -235,8 +235,8 @@ private:
     * If found, returns its localized description, otherwise the @p type
     * in lowercase.
     */
-   static QString prettyMimeType( const QString& type );
-    QString quotePrefixName() const;
+   static TQString prettyMimeType( const TQString& type );
+    TQString quotePrefixName() const;
 
 private: // kmedit:
   KMLineEditSpell *sujectLineWidget() const { return mEdtSubject;}
@@ -294,7 +294,7 @@ private slots:
   void slotPasteClipboardAsAttachment();
   void slotAddQuotes();
   void slotRemoveQuotes();
-  void slotAttachPNGImageData(const QByteArray &image);
+  void slotAttachPNGImageData(const TQByteArray &image);
 
   void slotMarkAll();
 
@@ -342,7 +342,7 @@ private slots:
   /**
    * XML-GUI stuff
    */
-  void slotStatusMessage(const QString &message);
+  void slotStatusMessage(const TQString &message);
   void slotEditToolbars();
   void slotUpdateToolbars();
   void slotEditKeys();
@@ -353,7 +353,7 @@ private slots:
   /**
    * Change window title to given string.
    */
-  void slotUpdWinTitle(const QString& );
+  void slotUpdWinTitle(const TQString& );
 
   /**
    * Switch the icon to lock or unlock respectivly.
@@ -406,7 +406,7 @@ private slots:
   /**
    * Open a popup-menu in the attachments-listbox.
    */
-  void slotAttachPopupMenu(QListViewItem *, const QPoint &, int);
+  void slotAttachPopupMenu(TQListViewItem *, const TQPoint &, int);
 
   /**
    * Returns the number of the current attachment in the listbox,
@@ -461,11 +461,11 @@ private slots:
   /**
    * KIO slots for attachment insertion
    */
-  void slotAttachFileData(KIO::Job *, const QByteArray &);
+  void slotAttachFileData(KIO::Job *, const TQByteArray &);
   void slotAttachFileResult(KIO::Job *);
 
-  void slotListAction(const QString &);
-  void slotFontAction(const QString &);
+  void slotListAction(const TQString &);
+  void slotFontAction(const TQString &);
   void slotSizeAction(int);
   void slotAlignLeft();
   void slotAlignCenter();
@@ -475,7 +475,7 @@ private slots:
   void slotTextUnder();
   void slotFormatReset();
   void slotTextColor();
-  void fontChanged( const QFont & );
+  void fontChanged( const TQFont & );
   void alignmentChanged( int );
 
 public: // kmkernel, attachmentlistview
@@ -517,21 +517,21 @@ private:
   /**
     Connect signals for moving focus by arrow keys. Returns next edit.
   */
-  QWidget *connectFocusMoving( QWidget *prev, QWidget *next );
+  TQWidget *connectFocusMoving( TQWidget *prev, TQWidget *next );
 
   /**
    * Show or hide header lines
    */
 
   void rethinkHeaderLine( int aValue, int aMask, int& aRow,
-                          const QString &aLabelStr, QLabel* aLbl,
-                          QLineEdit* aEdt, QPushButton* aBtn = 0,
-                          const QString &toolTip = QString::null,
-                          const QString &whatsThis = QString::null );
+                          const TQString &aLabelStr, TQLabel* aLbl,
+                          TQLineEdit* aEdt, TQPushButton* aBtn = 0,
+                          const TQString &toolTip = TQString::null,
+                          const TQString &whatsThis = TQString::null );
 
   void rethinkHeaderLine( int value, int mask, int& row,
-                          const QString& labelStr, QLabel* lbl,
-                          QComboBox* cbx, QCheckBox *chk );
+                          const TQString& labelStr, TQLabel* lbl,
+                          TQComboBox* cbx, TQCheckBox *chk );
 
   /**
    * Initialization methods
@@ -544,19 +544,19 @@ private:
   /**
    * Header fields.
    */
-  QString subject() const;
-  QString to() const;
-  QString cc() const;
-  QString bcc() const;
-  QString from() const;
-  QString replyTo() const;
+  TQString subject() const;
+  TQString to() const;
+  TQString cc() const;
+  TQString bcc() const;
+  TQString from() const;
+  TQString replyTo() const;
 
   /**
    * Use the given folder as sent-mail folder if the given folder exists.
    * Else show an error message and use the default sent-mail folder as
    * sent-mail folder.
    */
-  void setFcc( const QString &idString );
+  void setFcc( const TQString &idString );
 
   /**
    * Ask for confirmation if the message was changed before close.
@@ -585,11 +585,11 @@ private:
   /**
    * Remove an attachment from the list.
    */
-   void removeAttach(const QString &url);
+   void removeAttach(const TQString &url);
    void removeAttach(int idx);
 
    /**
-    * Updates an item in the QListView to represnet a given message part
+    * Updates an item in the TQListView to represnet a given message part
     */
    void msgPartToItem(const KMMessagePart* msgPart, KMAtmListViewItem *lvi,
         bool loadDefaults = true );
@@ -641,12 +641,12 @@ private:
    * This function is for example used to restore the unencrypted/unsigned
    * message text for editting.
    */
-  static void decryptOrStripOffCleartextSignature( QCString& );
+  static void decryptOrStripOffCleartextSignature( TQCString& );
 
   /**
    * Save the message into the Drafts or Templates folder.
    */
-  bool saveDraftOrTemplate( const QString &folderName, KMMessage *msg );
+  bool saveDraftOrTemplate( const TQString &folderName, KMMessage *msg );
 
   /**
    * Send the message. Returns true if the message was sent successfully.
@@ -656,7 +656,7 @@ private:
                KMComposeWin::SaveIn saveIn = KMComposeWin::None );
 
   /**
-   * Returns the autosave interval in milliseconds (as needed for QTimer).
+   * Returns the autosave interval in milliseconds (as needed for TQTimer).
    */
   int autoSaveInterval() const;
 
@@ -681,7 +681,7 @@ private:
    * @return true if all addresses are valid.
    * @return false if one or several addresses are invalid.
    */
-  static bool validateAddresses( QWidget * parent, const QString & addresses );
+  static bool validateAddresses( TQWidget * parent, const TQString & addresses );
 
   /**
    * Sets the transport combobox to @p transport. If @p transport is empty
@@ -689,7 +689,7 @@ private:
    * nor a custom transport then the combobox is set to the default transport.
    * @param transport the transport the combobox should be set to
    */
-  void setTransport( const QString & transport );
+  void setTransport( const TQString & transport );
 
   /**
    * Helper to insert the signature of the current identy at the
@@ -707,26 +707,26 @@ private slots:
     void setMaximumHeaderSize();
 
 private:
-  QWidget   *mMainWidget;
-  QComboBox *mTransport;
+  TQWidget   *mMainWidget;
+  TQComboBox *mTransport;
   KMail::DictionaryComboBox *mDictionaryCombo;
   KPIM::IdentityCombo    *mIdentity;
   KMFolderComboBox *mFcc;
   KMLineEdit *mEdtFrom, *mEdtReplyTo, *mEdtTo, *mEdtCc, *mEdtBcc;
   KMLineEditSpell *mEdtSubject;
-  QLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
-  QLabel    *mLblFrom, *mLblReplyTo, *mLblTo, *mLblCc, *mLblBcc, *mLblSubject;
-  QLabel    *mDictionaryLabel;
-  QCheckBox *mBtnIdentity, *mBtnTransport, *mBtnFcc;
-  QPushButton *mBtnTo, *mBtnCc, *mBtnBcc, /* *mBtnFrom, */ *mBtnReplyTo;
+  TQLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
+  TQLabel    *mLblFrom, *mLblReplyTo, *mLblTo, *mLblCc, *mLblBcc, *mLblSubject;
+  TQLabel    *mDictionaryLabel;
+  TQCheckBox *mBtnIdentity, *mBtnTransport, *mBtnFcc;
+  TQPushButton *mBtnTo, *mBtnCc, *mBtnBcc, /* *mBtnFrom, */ *mBtnReplyTo;
   bool mSpellCheckInProgress;
   bool mDone;
   bool mAtmModified;
 
   KMEdit* mEditor;
-  QGridLayout* mGrid;
+  TQGridLayout* mGrid;
   KMMessage *mMsg;
-  QValueVector<KMMessage*> mComposedMessages;
+  TQValueVector<KMMessage*> mComposedMessages;
   KMail::AttachmentListView* mAtmListView;
   int mAtmColEncrypt;
   int mAtmColSign;
@@ -734,9 +734,9 @@ private:
   int mAtmEncryptColWidth;
   int mAtmSignColWidth;
   int mAtmCompressColWidth;
-  QPtrList<QListViewItem> mAtmItemList;
-  QPtrList<KMMessagePart> mAtmList;
-  QPopupMenu *mAttachMenu;
+  TQPtrList<TQListViewItem> mAtmItemList;
+  TQPtrList<KMMessagePart> mAtmList;
+  TQPopupMenu *mAttachMenu;
   int mOpenId, mOpenWithId, mViewId, mRemoveId, mSaveAsId, mPropertiesId, mEditId, mEditWithId;
   bool mAutoDeleteMsg;
   bool mSigningAndEncryptionExplicitlyDisabled;
@@ -749,11 +749,11 @@ private:
   int mNumHeaders;
   bool mUseHTMLEditor;
   bool mHtmlMarkup;
-  QFont mBodyFont, mFixedFont;
-  QPtrList<KTempFile> mAtmTempList;
-  QPalette mPalette;
+  TQFont mBodyFont, mFixedFont;
+  TQPtrList<KTempFile> mAtmTempList;
+  TQPalette mPalette;
   uint mId;
-  QString mOldSigText;
+  TQString mOldSigText;
 
   KAction *mAttachPK, *mAttachMPK,
           *mAttachRemoveAction, *mAttachSaveAction, *mAttachPropertiesAction,
@@ -782,16 +782,16 @@ private:
   KSelectAction *mEncodingAction;
   KSelectAction *mCryptoModuleAction;
 
-  QCString mCharset;
-  QCString mDefCharset;
-  QStringList mCharsets;
+  TQCString mCharset;
+  TQCString mDefCharset;
+  TQStringList mCharsets;
   bool mAutoCharset;
 
   bool mAlwaysSend;
 
-  QStringList mFolderNames;
-  QValueList<QGuardedPtr<KMFolder> > mFolderList;
-  QMap<KIO::Job*, KURL> mAttachJobs;
+  TQStringList mFolderNames;
+  TQValueList<TQGuardedPtr<KMFolder> > mFolderList;
+  TQMap<KIO::Job*, KURL> mAttachJobs;
   KURL::List mAttachFilesPending;
   int mAttachFilesSend;
 
@@ -804,8 +804,8 @@ private:
 
   bool mSubjectTextWasSpellChecked;
 
-  QString addQuotesToText( const QString &inputText );
-  QString removeQuotesFromText( const QString &inputText );
+  TQString addQuotesToText( const TQString &inputText );
+  TQString removeQuotesFromText( const TQString &inputText );
   // helper method for rethinkFields
   int calcColumnWidth(int which, long allShowing, int width);
 
@@ -825,7 +825,7 @@ private slots:
    * Helper method (you could call is a bottom-half :) for
    * startPublicKeyExport()
    */
-  void slotPublicKeyExportResult( const GpgME::Error & err, const QByteArray & keydata );
+  void slotPublicKeyExportResult( const GpgME::Error & err, const TQByteArray & keydata );
 
   /**
    *  toggle automatic spellchecking
@@ -842,20 +842,20 @@ private slots:
    */
   void slotUpdateSignatureAndEncrypionStateIndicators();
 private:
-  QColor mForeColor,mBackColor;
-  QFont mSaveFont;
-  QSplitter *mHeadersToEditorSplitter;
-  QWidget* mHeadersArea;
-  QSplitter *mSplitter;
-  QSplitter *mSnippetSplitter;
+  TQColor mForeColor,mBackColor;
+  TQFont mSaveFont;
+  TQSplitter *mHeadersToEditorSplitter;
+  TQWidget* mHeadersArea;
+  TQSplitter *mSplitter;
+  TQSplitter *mSnippetSplitter;
   struct atmLoadData
   {
     KURL url;
-    QByteArray data;
+    TQByteArray data;
     bool insert;
-    QCString encoding;
+    TQCString encoding;
   };
-  QMap<KIO::Job *, atmLoadData> mMapAtmLoadData;
+  TQMap<KIO::Job *, atmLoadData> mMapAtmLoadData;
 
   // These are for passing on methods over the applyChanges calls
   KMail::MessageSender::SendMethod mSendMethod;
@@ -872,7 +872,7 @@ private:
   bool mMessageWasModified;
 
   // Temp var for slotInsert(My)PublicKey():
-  QString mFingerprint;
+  TQString mFingerprint;
 
   // Temp ptr for saving image from clipboard
   KTempDir *mTempDir;
@@ -882,18 +882,18 @@ private:
   RecipientsEditor *mRecipientsEditor;
   int mLabelWidth;
 
-  QTimer *mAutoSaveTimer;
-  QString mAutoSaveFilename;
+  TQTimer *mAutoSaveTimer;
+  TQString mAutoSaveFilename;
   int mLastAutoSaveErrno; // holds the errno of the last try to autosave
 
-  QPopupMenu *mActNowMenu;
-  QPopupMenu *mActLaterMenu;
+  TQPopupMenu *mActNowMenu;
+  TQPopupMenu *mActLaterMenu;
 
-  QMap<KMail::EditorWatcher*, KMMessagePart*> mEditorMap;
-  QMap<KMail::EditorWatcher*, KTempFile*> mEditorTempFiles;
+  TQMap<KMail::EditorWatcher*, KMMessagePart*> mEditorMap;
+  TQMap<KMail::EditorWatcher*, KTempFile*> mEditorTempFiles;
 
-  QLabel *mSignatureStateIndicator;
-  QLabel *mEncryptionStateIndicator;
+  TQLabel *mSignatureStateIndicator;
+  TQLabel *mEncryptionStateIndicator;
 
   SnippetWidget *mSnippetWidget;
   std::set<KTempDir*> mTempDirs;

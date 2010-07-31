@@ -15,10 +15,10 @@
 
 #include <string.h>
 
-#include <qurl.h>
-#include <qmessagebox.h>
-#include <qapplication.h>
-#include <qeventloop.h>
+#include <tqurl.h>
+#include <tqmessagebox.h>
+#include <tqapplication.h>
+#include <tqeventloop.h>
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
@@ -26,13 +26,13 @@
 #include <klocale.h>
 #include <kpassdlg.h>
 
-#include <qdatetime.h>
-#include <qmutex.h>
-#include <qthread.h>
-#include <qtimer.h>
+#include <tqdatetime.h>
+#include <tqmutex.h>
+#include <tqthread.h>
+#include <tqtimer.h>
 
 #ifdef KCARDDAV_DEBUG
-    #include <qfile.h>
+    #include <tqfile.h>
 #endif
 
 #include "resource.h"
@@ -105,7 +105,7 @@ ResourceCardDav::~ResourceCardDav() {
     while ((mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady) {
         readLockout = true;
         sleep(1);
-        qApp->processEvents(QEventLoop::ExcludeUserInput);
+        qApp->processEvents(TQEventLoop::ExcludeUserInput);
     }
 
     if (mWriter) {
@@ -144,7 +144,7 @@ bool ResourceCardDav::load() {
         return true;	// Silently fail; the user has obviously not responded to a dialog and we don't need to pop up more of them!
     }
 
-    log(QString("doLoad(%1)").arg(syncCache));
+    log(TQString("doLoad(%1)").arg(syncCache));
 
     // FIXME KABC
     //clearCache();
@@ -166,7 +166,7 @@ bool ResourceCardDav::load() {
 bool ResourceCardDav::doSave() {
     bool syncCache = true;
 
-    log(QString("doSave(%1)").arg(syncCache));
+    log(TQString("doSave(%1)").arg(syncCache));
 
     if (!hasChanges()) {
         log("no changes");
@@ -194,7 +194,7 @@ bool ResourceCardDav::doSave() {
         clearChanges();
         if (mWriteRetryTimer != NULL) {
             if (mWriteRetryTimer->isActive() == false) {
-                disconnect( mWriteRetryTimer, SIGNAL(timeout()), this, SLOT(doSave()) );
+                disconnect( mWriteRetryTimer, TQT_SIGNAL(timeout()), this, TQT_SLOT(doSave()) );
                 delete mWriteRetryTimer;
                 mWriteRetryTimer = NULL;
             }
@@ -253,8 +253,8 @@ void ResourceCardDav::init() {
     // creating jobs
     // Qt4 handles this quite differently, as shown below,
     // whereas Qt3 needs events (see ::event())
-//     connect(mLoader, SIGNAL(finished()), this, SLOT(loadFinished()));
-//     connect(mWriter, SIGNAL(finished()), this, SLOT(writingFinished()));
+//     connect(mLoader, TQT_SIGNAL(finished()), this, TQT_SLOT(loadFinished()));
+//     connect(mWriter, TQT_SIGNAL(finished()), this, TQT_SLOT(writingFinished()));
 
     setType("ResourceCardDav");
 }
@@ -338,14 +338,14 @@ void ResourceCardDav::loadingQueuePop() {
     mLoader->setType(0);
     mLoader->setUseURI(mPrefs->getUseURI());
 
-    //QDateTime dt(QDate::currentDate());
+    //TQDateTime dt(TQDate::currentDate());
     //mLoader->setRange(dt.addDays(-CACHE_DAYS), dt.addDays(CACHE_DAYS));
     //mLoader->setGetAll();
 
     mLoadingQueueReady = false;
 
     log("starting actual download job");
-    mLoader->start(QThread::LowestPriority);
+    mLoader->start(TQThread::LowestPriority);
 
     // if all ok, removing the task from the queue
     mLoadingQueue.dequeue();
@@ -354,7 +354,7 @@ void ResourceCardDav::loadingQueuePop() {
     delete t;
 }
 
-void ResourceCardDav::startLoading(const QString& url) {
+void ResourceCardDav::startLoading(const TQString& url) {
     LoadingTask *t = new LoadingTask;
     t->url = url;
     loadingQueuePush(t);
@@ -373,29 +373,29 @@ void ResourceCardDav::loadFinished() {
     if (loader->error()) {
         if (loader->errorNumber() == -401) {
             if (NULL != mPrefs) {
-                QCString newpass;
-                if (KPasswordDialog::getPassword (newpass, QString("<b>") + i18n("Remote authorization required") + QString("</b><p>") + i18n("Please input the password for") + QString(" ") + mPrefs->getusername(), NULL) != 1) {
+                TQCString newpass;
+                if (KPasswordDialog::getPassword (newpass, TQString("<b>") + i18n("Remote authorization required") + TQString("</b><p>") + i18n("Please input the password for") + TQString(" ") + mPrefs->getusername(), NULL) != 1) {
                     log("load error: " + loader->errorString() );
-                    addressBook()->error(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+                    addressBook()->error(TQString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
                 }
                 else {
                     // Set new password and try again
-                    mPrefs->setPassword(QString(newpass));
+                    mPrefs->setPassword(TQString(newpass));
                     startLoading(mPrefs->getFullUrl());
                 }
             }
             else {
                 log("load error: " + loader->errorString() );
-                addressBook()->error(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+                addressBook()->error(TQString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
             }
         }
         else {
             log("load error: " + loader->errorString() );
-            addressBook()->error(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+            addressBook()->error(TQString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
         }
     } else {
         log("successful load");
-        QString data = loader->data();
+        TQString data = loader->data();
 
         if (!data.isNull() && !data.isEmpty()) {
             data.replace("\r\n", "\n"); // to avoid \r\n becomes \n\n after the next line
@@ -422,7 +422,7 @@ void ResourceCardDav::loadFinished() {
     loadingQueuePop();
 }
 
-bool ResourceCardDav::checkData(const QString& data) {
+bool ResourceCardDav::checkData(const TQString& data) {
     log("checking the data");
 
     KABC::VCardConverter converter;
@@ -436,7 +436,7 @@ bool ResourceCardDav::checkData(const QString& data) {
     return ret;
 }
 
-bool ResourceCardDav::parseData(const QString& data) {
+bool ResourceCardDav::parseData(const TQString& data) {
     log("parseData()");
 
     bool ret = true;
@@ -471,11 +471,11 @@ bool ResourceCardDav::parseData(const QString& data) {
 
     // debug code here -------------------------------------------------------
 #ifdef KCARDDAV_DEBUG
-    const QString fout_path = "/tmp/kcarddav_download_" + identifier() + ".tmp";
+    const TQString fout_path = "/tmp/kcarddav_download_" + identifier() + ".tmp";
 
-    QFile fout(fout_path);
+    TQFile fout(fout_path);
     if (fout.open(IO_WriteOnly | IO_Append)) {
-        QTextStream sout(&fout);
+        TQTextStream sout(&fout);
         sout << "---------- " << resourceName() << ": --------------------------------\n";
         sout << data << "\n";
         fout.close();
@@ -553,11 +553,11 @@ void ResourceCardDav::writingQueuePop() {
     mWriter->setUseURI(mPrefs->getUseURI());
 
 #ifdef KCARDDAV_DEBUG
-    const QString fout_path = "/tmp/kcarddav_upload_" + identifier() + ".tmp";
+    const TQString fout_path = "/tmp/kcarddav_upload_" + identifier() + ".tmp";
 
-    QFile fout(fout_path);
+    TQFile fout(fout_path);
     if (fout.open(IO_WriteOnly | IO_Append)) {
-        QTextStream sout(&fout);
+        TQTextStream sout(&fout);
         sout << "---------- " << resourceName() << ": --------------------------------\n";
         sout << "================== Added:\n" << t->added << "\n";
         sout << "================== Changed:\n" << t->changed << "\n";
@@ -575,7 +575,7 @@ void ResourceCardDav::writingQueuePop() {
     mWritingQueueReady = false;
 
     log("starting actual write job");
-    mWriter->start(QThread::LowestPriority);
+    mWriter->start(TQThread::LowestPriority);
 
     // if all ok, remove the task from the queue
     mWritingQueue.dequeue();
@@ -584,7 +584,7 @@ void ResourceCardDav::writingQueuePop() {
     delete t;
 }
 
-bool ResourceCardDav::event ( QEvent * e ) {
+bool ResourceCardDav::event ( TQEvent * e ) {
     if (e->type() == 1000) {
         // Read done
         loadFinished();
@@ -598,7 +598,7 @@ bool ResourceCardDav::event ( QEvent * e ) {
     else return FALSE;
 }
 
-bool ResourceCardDav::startWriting(const QString& url) {
+bool ResourceCardDav::startWriting(const TQString& url) {
     log("startWriting: url = " + url);
 
     WritingTask *t = new WritingTask;
@@ -609,8 +609,8 @@ bool ResourceCardDav::startWriting(const QString& url) {
     // Before these calls are made any existing read (and maybe write) threads should be finished
     if ((mLoader->running() == true) || (mLoadingQueue.isEmpty() == false) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false)) {
         if (mWriteRetryTimer == NULL) {
-            mWriteRetryTimer = new QTimer(this);
-            connect( mWriteRetryTimer, SIGNAL(timeout()), SLOT(doSave()) );
+            mWriteRetryTimer = new TQTimer(this);
+            connect( mWriteRetryTimer, TQT_SIGNAL(timeout()), TQT_SLOT(doSave()) );
         }
         mWriteRetryTimer->start(1000, TRUE);
         return false;
@@ -642,25 +642,25 @@ void ResourceCardDav::writingFinished() {
     if (mWriter->error() && (abs(mWriter->errorNumber()) != 207)) {
         if (mWriter->errorNumber() == -401) {
             if (NULL != mPrefs) {
-                QCString newpass;
-                if (KPasswordDialog::getPassword (newpass, QString("<b>") + i18n("Remote authorization required") + QString("</b><p>") + i18n("Please input the password for") + QString(" ") + mPrefs->getusername(), NULL) != 1) {
+                TQCString newpass;
+                if (KPasswordDialog::getPassword (newpass, TQString("<b>") + i18n("Remote authorization required") + TQString("</b><p>") + i18n("Please input the password for") + TQString(" ") + mPrefs->getusername(), NULL) != 1) {
                     log("write error: " + mWriter->errorString());
-                    addressBook()->error(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+                    addressBook()->error(TQString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
                 }
                 else {
                     // Set new password and try again
-                    mPrefs->setPassword(QString(newpass));
+                    mPrefs->setPassword(TQString(newpass));
                     startWriting(mPrefs->getFullUrl());
                 }
             }
             else {
                 log("write error: " + mWriter->errorString());
-                addressBook()->error(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+                addressBook()->error(TQString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
             }
         }
         else {
             log("write error: " + mWriter->errorString());
-            addressBook()->error(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+            addressBook()->error(TQString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
         }
     } else {
         log("success");

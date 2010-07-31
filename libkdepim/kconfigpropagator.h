@@ -1,0 +1,165 @@
+/*
+    This file is part of libkdepim.
+
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
+#ifndef KCONFIGPROPAGATOR_H
+#define KCONFIGPROPAGATOR_H
+
+#include <tqstring.h>
+#include <tqvaluelist.h>
+#include <tqdom.h>
+#include <tqptrlist.h>
+
+#include <kdepimmacros.h>
+
+class KConfigSkeleton;
+class KConfigSkeletonItem;
+
+class KDE_EXPORT KConfigPropagator
+{
+  public:
+
+    /**
+      Create KConfigPropagator object without associated source configuration.
+    */
+    KConfigPropagator();
+    /**
+      Create KConfigPropagator object.
+      
+      @param skeleton KConfigSkeleton object used as source for the propagation
+      @param kcfgFile file name of kcfg file containing the propagation rules
+    */
+    KConfigPropagator( KConfigSkeleton *skeleton, const TQString &kcfgFile );
+    virtual ~KConfigPropagator() {}
+
+    KConfigSkeleton *skeleton() { return mSkeleton; }
+
+    /*
+      Commit changes according to propagation rules.
+    */
+    void commit();
+
+    class KDE_EXPORT Condition
+    {
+      public:
+        Condition() : isValid( false ) {}
+      
+        TQString file;
+        TQString group;
+        TQString key;
+        TQString value;
+        
+        bool isValid;
+    };
+
+    class KDE_EXPORT Rule
+    {
+      public:
+        typedef TQValueList<Rule> List;
+        
+        Rule() : hideValue( false ) {}
+        
+        TQString sourceFile;
+        TQString sourceGroup;
+        TQString sourceEntry;
+
+        TQString targetFile;
+        TQString targetGroup;
+        TQString targetEntry;
+
+        Condition condition;
+
+        bool hideValue;
+    };
+
+    class KDE_EXPORT Change
+    {
+      public:
+        typedef TQPtrList<Change> List;
+
+        Change( const TQString &title ) : mTitle( title ) {}
+        virtual ~Change();
+      
+        void setTitle( const TQString &title ) { mTitle = title; }
+        TQString title() const { return mTitle; }
+
+        virtual TQString arg1() const { return TQString::null; }
+        virtual TQString arg2() const { return TQString::null; }
+
+        virtual void apply() = 0;
+
+      private:
+        TQString mTitle;
+    };
+
+    class KDE_EXPORT ChangeConfig : public Change
+    {
+      public:
+        ChangeConfig();
+        ~ChangeConfig() {}
+
+        TQString arg1() const;
+        TQString arg2() const;
+
+        void apply();
+
+        TQString file;
+        TQString group;
+        TQString name;
+        TQString label;
+        TQString value;
+        bool hideValue;
+    };
+
+    void updateChanges();
+    
+    Change::List changes();
+
+    Rule::List rules();
+
+  protected:
+    void init();
+
+    /**
+      Implement this function in a subclass if you want to add changes which
+      can't be expressed as propagations in the kcfg file.
+    */
+    virtual void addCustomChanges( Change::List & ) {}
+
+    KConfigSkeletonItem *findItem( const TQString &group, const TQString &name );
+
+    TQString itemValueAsString( KConfigSkeletonItem * );
+
+    void readKcfgFile();
+
+    Rule parsePropagation( const TQDomElement &e );
+    Condition parseCondition( const TQDomElement &e );
+
+    void parseConfigEntryPath( const TQString &path, TQString &file,
+                               TQString &group, TQString &entry );
+
+  private:
+    KConfigSkeleton *mSkeleton;
+    TQString mKcfgFile;
+
+    Rule::List mRules;
+    Change::List mChanges;    
+};
+
+#endif

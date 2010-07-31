@@ -30,7 +30,7 @@
 
 #include "folderjob.h"
 
-#include <qguardedptr.h>
+#include <tqguardedptr.h>
 
 class FolderStorage;
 class KMFolderDir;
@@ -91,17 +91,17 @@ protected slots:
   /**
     Called when the online IMAP folder creation finished.
   */
-  void folderCreationDone( const QString &name, bool success );
+  void folderCreationDone( const TQString &name, bool success );
 
 signals:
   /** Emitted when the job is done, check the success bool */
   void folderCopyComplete( bool success );
 
 protected:
-  QGuardedPtr<FolderStorage> const mStorage;
+  TQGuardedPtr<FolderStorage> const mStorage;
   KMFolderDir* const mNewParent;
-  QGuardedPtr<KMFolder> mNewFolder;
-  QPtrListIterator<KMFolderNode> mChildFolderNodeIterator;
+  TQGuardedPtr<KMFolder> mNewFolder;
+  TQPtrListIterator<KMFolderNode> mChildFolderNodeIterator;
   KMFolder* mNextChildFolder;
 };
 

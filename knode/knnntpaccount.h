@@ -1,0 +1,117 @@
+/*
+    knnntpaccount.h
+
+    KNode, the KDE newsreader
+    Copyright (c) 1999-2004 the KNode authors.
+    See file AUTHORS for details
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
+*/
+
+#ifndef KNNNTPACCOUNT_H
+#define KNNNTPACCOUNT_H
+
+#include <tqdatetime.h>
+
+#include "kncollection.h"
+#include "knserverinfo.h"
+#include <tqobject.h>
+#include <tqtimer.h>
+
+class KNNntpAccount;
+
+namespace KNConfig {
+  class Identity;
+  class Cleanup;
+}
+
+
+class KNNntpAccountIntervalChecking : public TQObject  {
+
+  Q_OBJECT
+
+  public:
+    KNNntpAccountIntervalChecking(KNNntpAccount *account);
+    ~KNNntpAccountIntervalChecking();
+    void installTimer();
+    void deinstallTimer();
+
+  protected:
+    TQTimer *t_imer;
+    KNNntpAccount *a_ccount;
+
+  protected slots:
+    void slotCheckNews();
+
+};
+
+class KNNntpAccount : public KNCollection , public KNServerInfo {
+
+  public:
+    KNNntpAccount();
+    ~KNNntpAccount();
+
+    collectionType type()             { return CTnntpAccount; }
+
+    /** tries to read information, returns false if it fails to do so */
+    bool readInfo(const TQString &confPath);
+    void saveInfo();
+    //void syncInfo();
+    TQString path();
+    /** returns true when the user accepted */
+    bool editProperties(TQWidget *parent);
+
+    // news interval checking
+    void startTimer();
+
+    //get
+    bool fetchDescriptions() const         { return f_etchDescriptions; }
+    TQDate lastNewFetch() const             { return l_astNewFetch; }
+    bool wasOpen() const                   { return w_asOpen; }
+    bool useDiskCache() const              { return u_seDiskCache; }
+    KNConfig::Identity* identity() const   { return i_dentity; }
+    bool intervalChecking() const          { return i_ntervalChecking; }
+    int checkInterval() const              { return c_heckInterval; }
+    KNConfig::Cleanup *cleanupConfig() const { return mCleanupConf; }
+
+    /** Returns the cleanup configuration that should be used for this account */
+    KNConfig::Cleanup *activeCleanupConfig() const;
+
+    //set
+    void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
+    void setLastNewFetch(TQDate date)  { l_astNewFetch = date; }
+    void setUseDiskCache(bool b)      { u_seDiskCache=b; }
+    void setCheckInterval(int c);
+    void setIntervalChecking(bool b)  { i_ntervalChecking=b; }
+
+  protected:
+    /** server specific identity */
+    KNConfig::Identity *i_dentity;
+    /** account specific cleanup configuration */
+    KNConfig::Cleanup *mCleanupConf;
+    /** use an additional "list newsgroups" command to fetch the newsgroup descriptions */
+    bool f_etchDescriptions;
+    /** last use of "newgroups" */
+    TQDate l_astNewFetch;
+    /** was the server open in the listview on the last shutdown? */
+    bool w_asOpen;
+    /** cache fetched articles on disk */
+    bool u_seDiskCache;
+    /** is interval checking enabled */
+    bool i_ntervalChecking;
+    int c_heckInterval;
+
+    /** helper class for news interval checking, manages the TQTimer */
+    KNNntpAccountIntervalChecking *a_ccountIntervalChecking;
+
+};
+
+#endif
+
+// kate: space-indent on; indent-width 2;

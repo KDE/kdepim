@@ -81,7 +81,7 @@ void CopyFolderJob::copyMessagesToTargetDir()
   // Hmmmm. Tasty hack. Can I have fries with that?
   mStorage->blockSignals( true );
   // move all messages to the new folder
-  QPtrList<KMMsgBase> msgList;
+  TQPtrList<KMMsgBase> msgList;
   for ( int i = 0; i < mStorage->count(); i++ )
   {
     const KMMsgBase* msgBase = mStorage->getMsgBase( i );
@@ -95,8 +95,8 @@ void CopyFolderJob::copyMessagesToTargetDir()
     slotCopyNextChild(); // no contents, check subfolders
   } else {
     KMCommand *command = new KMCopyCommand( mNewFolder, msgList );
-    connect( command, SIGNAL( completed( KMCommand * ) ),
-        this, SLOT( slotCopyCompleted( KMCommand * ) ) );
+    connect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+        this, TQT_SLOT( slotCopyCompleted( KMCommand * ) ) );
     command->start();
   }
 }
@@ -104,8 +104,8 @@ void CopyFolderJob::copyMessagesToTargetDir()
 void CopyFolderJob::slotCopyCompleted( KMCommand* command )
 {
   kdDebug(5006) << k_funcinfo << (command?command->result():0) << endl;
-  disconnect( command, SIGNAL( completed( KMCommand * ) ),
-      this, SLOT( slotCopyCompleted( KMCommand * ) ) );
+  disconnect( command, TQT_SIGNAL( completed( KMCommand * ) ),
+      this, TQT_SLOT( slotCopyCompleted( KMCommand * ) ) );
 
   mStorage->blockSignals( false );
 
@@ -160,8 +160,8 @@ void CopyFolderJob::slotCopyNextChild( bool success )
   // let it do its thing and report back when we are ready to do the next sibling
   mNextChildFolder->open( "copyfolder" ); // refcount
   FolderJob* job = new CopyFolderJob( mNextChildFolder->storage(), dir);
-  connect( job, SIGNAL( folderCopyComplete( bool ) ),
-           this, SLOT( slotCopyNextChild( bool ) ) );
+  connect( job, TQT_SIGNAL( folderCopyComplete( bool ) ),
+           this, TQT_SLOT( slotCopyNextChild( bool ) ) );
   job->start();
 }
 
@@ -191,13 +191,13 @@ bool CopyFolderJob::createTargetDir()
     if (anAccount->makeConnection() == ImapAccountBase::Connected) {
       mNewFolder = kmkernel->imapFolderMgr()->createFolder( mStorage->folder()->name(), false, typenew, mNewParent );
       if ( mNewFolder ) {
-        QString imapPath;
+        TQString imapPath;
         imapPath = anAccount->createImapPath( selectedStorage->imapPath(), mStorage->folder()->name() );
         KMFolderImap* newStorage = static_cast<KMFolderImap*>( mNewFolder->storage() );
-        connect( selectedStorage, SIGNAL(folderCreationResult(const QString&, bool)),
-                 this, SLOT(folderCreationDone(const QString&, bool)) );
-        selectedStorage->createFolder(mStorage->folder()->name(), QString::null); // create it on the server
-        newStorage->initializeFrom( selectedStorage, imapPath, QString::null );
+        connect( selectedStorage, TQT_SIGNAL(folderCreationResult(const TQString&, bool)),
+                 this, TQT_SLOT(folderCreationDone(const TQString&, bool)) );
+        selectedStorage->createFolder(mStorage->folder()->name(), TQString::null); // create it on the server
+        newStorage->initializeFrom( selectedStorage, imapPath, TQString::null );
         static_cast<KMFolderImap*>(mNewParent->owner()->storage())->setAccount( selectedStorage->account() );
         waitForFolderCreation = true;
         success = true;
@@ -268,7 +268,7 @@ void CopyFolderJob::rollback()
   deleteLater();
 }
 
-void CopyFolderJob::folderCreationDone(const QString & name, bool success)
+void CopyFolderJob::folderCreationDone(const TQString & name, bool success)
 {
   if ( mStorage->folder()->name() != name )
     return; // not our business

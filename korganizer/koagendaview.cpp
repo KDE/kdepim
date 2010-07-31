@@ -22,22 +22,22 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qhbox.h>
-#include <qvbox.h>
-#include <qlabel.h>
-#include <qframe.h>
-#include <qlayout.h>
+#include <tqhbox.h>
+#include <tqvbox.h>
+#include <tqlabel.h>
+#include <tqframe.h>
+#include <tqlayout.h>
 #ifndef KORG_NOSPLITTER
-#include <qsplitter.h>
+#include <tqsplitter.h>
 #endif
-#include <qfont.h>
-#include <qfontmetrics.h>
-#include <qpopupmenu.h>
-#include <qtooltip.h>
-#include <qpainter.h>
-#include <qpushbutton.h>
-#include <qcursor.h>
-#include <qbitarray.h>
+#include <tqfont.h>
+#include <tqfontmetrics.h>
+#include <tqpopupmenu.h>
+#include <tqtooltip.h>
+#include <tqpainter.h>
+#include <tqpushbutton.h>
+#include <tqcursor.h>
+#include <tqbitarray.h>
 
 #include <kapplication.h>
 #include <kdebug.h>
@@ -76,8 +76,8 @@
 using namespace KOrg;
 
 
-EventIndicator::EventIndicator(Location loc,QWidget *parent,const char *name)
-  : QFrame(parent,name)
+EventIndicator::EventIndicator(Location loc,TQWidget *parent,const char *name)
+  : TQFrame(parent,name)
 {
   mColumns = 1;
   mEnabled.resize( mColumns );
@@ -93,7 +93,7 @@ EventIndicator::~EventIndicator()
 {
 }
 
-void EventIndicator::drawContents(QPainter *p)
+void EventIndicator::drawContents(TQPainter *p)
 {
 //  kdDebug(5850) << "======== top: " << contentsRect().top() << "  bottom "
 //         << contentsRect().bottom() << "  left " << contentsRect().left()
@@ -106,7 +106,7 @@ void EventIndicator::drawContents(QPainter *p)
       int xOffset = KOGlobals::self()->reverseLayout() ?
                (mColumns - 1 - i)*cellWidth + cellWidth/2 -mPixmap.width()/2 :
                i*cellWidth + cellWidth/2 -mPixmap.width()/2;
-      p->drawPixmap(QPoint(xOffset,0),mPixmap);
+      p->drawPixmap(TQPoint(xOffset,0),mPixmap);
     }
   }
 }
@@ -132,12 +132,12 @@ void EventIndicator::enableColumn(int column, bool enable)
 ////////////////////////////////////////////////////////////////////////////
 
 
-KOAlternateLabel::KOAlternateLabel(const QString &shortlabel, const QString &longlabel,
-    const QString &extensivelabel, QWidget *parent, const char *name )
-  : QLabel(parent, name), mTextTypeFixed(false), mShortText(shortlabel),
+KOAlternateLabel::KOAlternateLabel(const TQString &shortlabel, const TQString &longlabel,
+    const TQString &extensivelabel, TQWidget *parent, const char *name )
+  : TQLabel(parent, name), mTextTypeFixed(false), mShortText(shortlabel),
     mLongText(longlabel), mExtensiveText(extensivelabel)
 {
-  setSizePolicy(QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed ));
+  setSizePolicy(TQSizePolicy( TQSizePolicy::Expanding, TQSizePolicy::Fixed ));
   if (mExtensiveText.isEmpty()) mExtensiveText = mLongText;
   squeezeTextToLabel();
 }
@@ -149,25 +149,25 @@ KOAlternateLabel::~KOAlternateLabel()
 void KOAlternateLabel::useShortText()
 {
   mTextTypeFixed = true;
-  QLabel::setText( mShortText );
-  QToolTip::remove( this );
-  QToolTip::add( this, mExtensiveText );
+  TQLabel::setText( mShortText );
+  TQToolTip::remove( this );
+  TQToolTip::add( this, mExtensiveText );
 }
 
 void KOAlternateLabel::useLongText()
 {
   mTextTypeFixed = true;
-  QLabel::setText( mLongText );
-  QToolTip::remove( this );
-  QToolTip::add( this, mExtensiveText );
+  TQLabel::setText( mLongText );
+  TQToolTip::remove( this );
+  TQToolTip::add( this, mExtensiveText );
 }
 
 void KOAlternateLabel::useExtensiveText()
 {
   mTextTypeFixed = true;
-  QLabel::setText( mExtensiveText );
-  QToolTip::remove( this );
-  QToolTip::hide();
+  TQLabel::setText( mExtensiveText );
+  TQToolTip::remove( this );
+  TQToolTip::hide();
 }
 
 void KOAlternateLabel::useDefaultText()
@@ -180,38 +180,38 @@ void KOAlternateLabel::squeezeTextToLabel()
 {
   if (mTextTypeFixed) return;
 
-  QFontMetrics fm(fontMetrics());
+  TQFontMetrics fm(fontMetrics());
   int labelWidth = size().width();
   int textWidth = fm.width(mLongText);
   int longTextWidth = fm.width(mExtensiveText);
   if (longTextWidth <= labelWidth) {
-    QLabel::setText( mExtensiveText );
-    QToolTip::remove( this );
-    QToolTip::hide();
+    TQLabel::setText( mExtensiveText );
+    TQToolTip::remove( this );
+    TQToolTip::hide();
   } else if (textWidth <= labelWidth) {
-    QLabel::setText( mLongText );
-    QToolTip::remove( this );
-    QToolTip::add( this, mExtensiveText );
+    TQLabel::setText( mLongText );
+    TQToolTip::remove( this );
+    TQToolTip::add( this, mExtensiveText );
   } else {
-    QLabel::setText( mShortText );
-    QToolTip::remove( this );
-    QToolTip::add( this, mExtensiveText );
+    TQLabel::setText( mShortText );
+    TQToolTip::remove( this );
+    TQToolTip::add( this, mExtensiveText );
   }
 }
 
-void KOAlternateLabel::resizeEvent( QResizeEvent * )
+void KOAlternateLabel::resizeEvent( TQResizeEvent * )
 {
   squeezeTextToLabel();
 }
 
-QSize KOAlternateLabel::minimumSizeHint() const
+TQSize KOAlternateLabel::minimumSizeHint() const
 {
-  QSize sh = QLabel::minimumSizeHint();
+  TQSize sh = TQLabel::minimumSizeHint();
   sh.setWidth(-1);
   return sh;
 }
 
-void KOAlternateLabel::setText( const QString &text ) {
+void KOAlternateLabel::setText( const TQString &text ) {
   mLongText = text;
   squeezeTextToLabel();
 }
@@ -221,14 +221,14 @@ void KOAlternateLabel::setText( const QString &text ) {
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 
-KOAgendaView::KOAgendaView(Calendar *cal,QWidget *parent,const char *name, bool isSideBySide ) :
+KOAgendaView::KOAgendaView(Calendar *cal,TQWidget *parent,const char *name, bool isSideBySide ) :
   KOrg::AgendaView (cal,parent,name), mExpandButton( 0 ), mAllowAgendaUpdate( true ),
   mUpdateItem( 0 ),
   mResource( 0 ),
   mIsSideBySide( isSideBySide ),
   mPendingChanges( true )
 {
-  mSelectedDates.append(QDate::currentDate());
+  mSelectedDates.append(TQDate::currentDate());
 
   mLayoutDayLabels = 0;
   mDayLabelsFrame = 0;
@@ -246,15 +246,15 @@ KOAgendaView::KOAgendaView(Calendar *cal,QWidget *parent,const char *name, bool 
     }
   }
 
-  QBoxLayout *topLayout = new QVBoxLayout(this);
+  TQBoxLayout *topLayout = new TQVBoxLayout(this);
 
   // Create day name labels for agenda columns
-  mDayLabelsFrame = new QHBox(this);
+  mDayLabelsFrame = new TQHBox(this);
   topLayout->addWidget(mDayLabelsFrame);
 
   // Create agenda splitter
 #ifndef KORG_NOSPLITTER
-  mSplitterAgenda = new QSplitter(Vertical,this);
+  mSplitterAgenda = new TQSplitter(Vertical,this);
   topLayout->addWidget(mSplitterAgenda);
 
 #if KDE_IS_VERSION( 3, 1, 93 )
@@ -263,40 +263,40 @@ KOAgendaView::KOAgendaView(Calendar *cal,QWidget *parent,const char *name, bool 
   mSplitterAgenda->setOpaqueResize();
 #endif
 
-  mAllDayFrame = new QHBox(mSplitterAgenda);
+  mAllDayFrame = new TQHBox(mSplitterAgenda);
 
-  QWidget *agendaFrame = new QWidget(mSplitterAgenda);
+  TQWidget *agendaFrame = new TQWidget(mSplitterAgenda);
 #else
-  QVBox *mainBox = new QVBox( this );
+  TQVBox *mainBox = new TQVBox( this );
   topLayout->addWidget( mainBox );
 
-  mAllDayFrame = new QHBox(mainBox);
+  mAllDayFrame = new TQHBox(mainBox);
 
-  QWidget *agendaFrame = new QWidget(mainBox);
+  TQWidget *agendaFrame = new TQWidget(mainBox);
 #endif
 
   // Create all-day agenda widget
-  mDummyAllDayLeft = new QVBox( mAllDayFrame );
+  mDummyAllDayLeft = new TQVBox( mAllDayFrame );
   if ( isSideBySide )
     mDummyAllDayLeft->hide();
 
   if ( KOPrefs::instance()->compactDialogs() ) {
-    mExpandButton = new QPushButton(mDummyAllDayLeft);
+    mExpandButton = new TQPushButton(mDummyAllDayLeft);
     mExpandButton->setPixmap( mNotExpandedPixmap );
-    mExpandButton->setSizePolicy( QSizePolicy( QSizePolicy::Fixed,
-                                  QSizePolicy::Fixed ) );
-    connect( mExpandButton, SIGNAL( clicked() ), SIGNAL( toggleExpand() ) );
+    mExpandButton->setSizePolicy( TQSizePolicy( TQSizePolicy::Fixed,
+                                  TQSizePolicy::Fixed ) );
+    connect( mExpandButton, TQT_SIGNAL( clicked() ), TQT_SIGNAL( toggleExpand() ) );
   } else {
-    QLabel *label = new QLabel( i18n("All Day"), mDummyAllDayLeft );
+    TQLabel *label = new TQLabel( i18n("All Day"), mDummyAllDayLeft );
     label->setAlignment( Qt::AlignRight | Qt::AlignVCenter | Qt::WordBreak );
   }
 
   mAllDayAgenda = new KOAgenda(1,mAllDayFrame);
-  QWidget *dummyAllDayRight = new QWidget(mAllDayFrame);
+  TQWidget *dummyAllDayRight = new TQWidget(mAllDayFrame);
 
   // Create agenda frame
-  QGridLayout *agendaLayout = new QGridLayout(agendaFrame,3,3);
-//  QHBox *agendaFrame = new QHBox(splitterAgenda);
+  TQGridLayout *agendaLayout = new TQGridLayout(agendaFrame,3,3);
+//  TQHBox *agendaFrame = new TQHBox(splitterAgenda);
 
   // create event indicator bars
   mEventIndicatorTop = new EventIndicator(EventIndicator::Top,agendaFrame);
@@ -304,7 +304,7 @@ KOAgendaView::KOAgendaView(Calendar *cal,QWidget *parent,const char *name, bool 
   mEventIndicatorBottom = new EventIndicator(EventIndicator::Bottom,
                                              agendaFrame);
   agendaLayout->addWidget(mEventIndicatorBottom,2,1);
-  QWidget *dummyAgendaRight = new QWidget(agendaFrame);
+  TQWidget *dummyAgendaRight = new TQWidget(agendaFrame);
   agendaLayout->addWidget(dummyAgendaRight,0,2);
 
   // Create time labels
@@ -341,27 +341,27 @@ KOAgendaView::KOAgendaView(Calendar *cal,QWidget *parent,const char *name, bool 
   updateTimeBarWidth();
 
   // Scrolling
-  connect(mAgenda->verticalScrollBar(),SIGNAL(valueChanged(int)),
-          mTimeLabels, SLOT(positionChanged()));
+  connect(mAgenda->verticalScrollBar(),TQT_SIGNAL(valueChanged(int)),
+          mTimeLabels, TQT_SLOT(positionChanged()));
 
   connect( mAgenda,
-    SIGNAL( zoomView( const int, const QPoint & ,const Qt::Orientation ) ),
-    SLOT( zoomView( const int, const QPoint &, const Qt::Orientation ) ) );
+    TQT_SIGNAL( zoomView( const int, const TQPoint & ,const Qt::Orientation ) ),
+    TQT_SLOT( zoomView( const int, const TQPoint &, const Qt::Orientation ) ) );
 
-  connect(mTimeLabels->verticalScrollBar(),SIGNAL(valueChanged(int)),
-          SLOT(setContentsPos(int)));
+  connect(mTimeLabels->verticalScrollBar(),TQT_SIGNAL(valueChanged(int)),
+          TQT_SLOT(setContentsPos(int)));
 
   // Create Events, depends on type of agenda
-  connect( mAgenda, SIGNAL(newTimeSpanSignal(const QPoint &, const QPoint &)),
-                    SLOT(newTimeSpanSelected(const QPoint &, const QPoint &)));
-  connect( mAllDayAgenda, SIGNAL(newTimeSpanSignal(const QPoint &, const QPoint &)),
-                          SLOT(newTimeSpanSelectedAllDay(const QPoint &, const QPoint &)));
+  connect( mAgenda, TQT_SIGNAL(newTimeSpanSignal(const TQPoint &, const TQPoint &)),
+                    TQT_SLOT(newTimeSpanSelected(const TQPoint &, const TQPoint &)));
+  connect( mAllDayAgenda, TQT_SIGNAL(newTimeSpanSignal(const TQPoint &, const TQPoint &)),
+                          TQT_SLOT(newTimeSpanSelectedAllDay(const TQPoint &, const TQPoint &)));
 
   // event indicator update
-  connect( mAgenda, SIGNAL(lowerYChanged(int)),
-                    SLOT(updateEventIndicatorTop(int)));
-  connect( mAgenda, SIGNAL(upperYChanged(int)),
-                    SLOT(updateEventIndicatorBottom(int)));
+  connect( mAgenda, TQT_SIGNAL(lowerYChanged(int)),
+                    TQT_SLOT(updateEventIndicatorTop(int)));
+  connect( mAgenda, TQT_SIGNAL(upperYChanged(int)),
+                    TQT_SLOT(updateEventIndicatorBottom(int)));
 
   connectAgenda( mAgenda, mAgendaPopup, mAllDayAgenda );
   connectAgenda( mAllDayAgenda, mAllDayAgendaPopup, mAgenda);
@@ -371,9 +371,9 @@ KOAgendaView::KOAgendaView(Calendar *cal,QWidget *parent,const char *name, bool 
 
   CalendarResources *calres = dynamic_cast<CalendarResources*>( cal );
   if ( calres ) {
-    connect( calres, SIGNAL(signalResourceAdded(ResourceCalendar *)), SLOT(resourcesChanged()) );
-    connect( calres, SIGNAL(signalResourceModified( ResourceCalendar *)), SLOT(resourcesChanged()) );
-    connect( calres, SIGNAL(signalResourceDeleted(ResourceCalendar *)), SLOT(resourcesChanged()) );
+    connect( calres, TQT_SIGNAL(signalResourceAdded(ResourceCalendar *)), TQT_SLOT(resourcesChanged()) );
+    connect( calres, TQT_SIGNAL(signalResourceModified( ResourceCalendar *)), TQT_SLOT(resourcesChanged()) );
+    connect( calres, TQT_SIGNAL(signalResourceDeleted(ResourceCalendar *)), TQT_SLOT(resourcesChanged()) );
   }
 }
 
@@ -386,55 +386,55 @@ KOAgendaView::~KOAgendaView()
   delete mAllDayAgendaPopup;
 }
 
-void KOAgendaView::connectAgenda( KOAgenda *agenda, QPopupMenu *popup,
+void KOAgendaView::connectAgenda( KOAgenda *agenda, TQPopupMenu *popup,
                                   KOAgenda *otherAgenda )
 {
-  connect( agenda, SIGNAL( showIncidencePopupSignal( Incidence *, const QDate & ) ),
-           popup, SLOT( showIncidencePopup( Incidence *, const QDate & ) ) );
+  connect( agenda, TQT_SIGNAL( showIncidencePopupSignal( Incidence *, const TQDate & ) ),
+           popup, TQT_SLOT( showIncidencePopup( Incidence *, const TQDate & ) ) );
 
-  connect( agenda, SIGNAL( showNewEventPopupSignal() ),
-           SLOT( showNewEventPopup() ) );
+  connect( agenda, TQT_SIGNAL( showNewEventPopupSignal() ),
+           TQT_SLOT( showNewEventPopup() ) );
 
   agenda->setCalendar( calendar() );
 
   // Create/Show/Edit/Delete Event
-  connect( agenda, SIGNAL( newEventSignal() ), SIGNAL( newEventSignal() ) );
+  connect( agenda, TQT_SIGNAL( newEventSignal() ), TQT_SIGNAL( newEventSignal() ) );
 
-  connect( agenda, SIGNAL( newStartSelectSignal() ),
-           otherAgenda, SLOT( clearSelection() ) );
-  connect( agenda, SIGNAL( newStartSelectSignal() ),
-           SIGNAL( timeSpanSelectionChanged()) );
+  connect( agenda, TQT_SIGNAL( newStartSelectSignal() ),
+           otherAgenda, TQT_SLOT( clearSelection() ) );
+  connect( agenda, TQT_SIGNAL( newStartSelectSignal() ),
+           TQT_SIGNAL( timeSpanSelectionChanged()) );
 
-  connect( agenda, SIGNAL( editIncidenceSignal( Incidence * ) ),
-                   SIGNAL( editIncidenceSignal( Incidence * ) ) );
-  connect( agenda, SIGNAL( showIncidenceSignal( Incidence * ) ),
-                   SIGNAL( showIncidenceSignal( Incidence * ) ) );
-  connect( agenda, SIGNAL( deleteIncidenceSignal( Incidence * ) ),
-                   SIGNAL( deleteIncidenceSignal( Incidence * ) ) );
+  connect( agenda, TQT_SIGNAL( editIncidenceSignal( Incidence * ) ),
+                   TQT_SIGNAL( editIncidenceSignal( Incidence * ) ) );
+  connect( agenda, TQT_SIGNAL( showIncidenceSignal( Incidence * ) ),
+                   TQT_SIGNAL( showIncidenceSignal( Incidence * ) ) );
+  connect( agenda, TQT_SIGNAL( deleteIncidenceSignal( Incidence * ) ),
+                   TQT_SIGNAL( deleteIncidenceSignal( Incidence * ) ) );
 
-  connect( agenda, SIGNAL( startMultiModify( const QString & ) ),
-                   SIGNAL( startMultiModify( const QString & ) ) );
-  connect( agenda, SIGNAL( endMultiModify() ),
-                   SIGNAL( endMultiModify() ) );
+  connect( agenda, TQT_SIGNAL( startMultiModify( const TQString & ) ),
+                   TQT_SIGNAL( startMultiModify( const TQString & ) ) );
+  connect( agenda, TQT_SIGNAL( endMultiModify() ),
+                   TQT_SIGNAL( endMultiModify() ) );
 
-  connect( agenda, SIGNAL( itemModified( KOAgendaItem * ) ),
-                   SLOT( updateEventDates( KOAgendaItem * ) ) );
-  connect( agenda, SIGNAL( enableAgendaUpdate( bool ) ),
-                   SLOT( enableAgendaUpdate( bool ) ) );
+  connect( agenda, TQT_SIGNAL( itemModified( KOAgendaItem * ) ),
+                   TQT_SLOT( updateEventDates( KOAgendaItem * ) ) );
+  connect( agenda, TQT_SIGNAL( enableAgendaUpdate( bool ) ),
+                   TQT_SLOT( enableAgendaUpdate( bool ) ) );
 
   // drag signals
-  connect( agenda, SIGNAL( startDragSignal( Incidence * ) ),
-           SLOT( startDrag( Incidence * ) ) );
+  connect( agenda, TQT_SIGNAL( startDragSignal( Incidence * ) ),
+           TQT_SLOT( startDrag( Incidence * ) ) );
 
   // synchronize selections
-  connect( agenda, SIGNAL( incidenceSelected( Incidence * ) ),
-           otherAgenda, SLOT( deselectItem() ) );
-  connect( agenda, SIGNAL( incidenceSelected( Incidence * ) ),
-           SIGNAL( incidenceSelected( Incidence * ) ) );
+  connect( agenda, TQT_SIGNAL( incidenceSelected( Incidence * ) ),
+           otherAgenda, TQT_SLOT( deselectItem() ) );
+  connect( agenda, TQT_SIGNAL( incidenceSelected( Incidence * ) ),
+           TQT_SIGNAL( incidenceSelected( Incidence * ) ) );
 
   // rescheduling of todos by d'n'd
-  connect( agenda, SIGNAL( droppedToDo( Todo *, const QPoint &, bool ) ),
-           SLOT( slotTodoDropped( Todo *, const QPoint &, bool ) ) );
+  connect( agenda, TQT_SIGNAL( droppedToDo( Todo *, const TQPoint &, bool ) ),
+           TQT_SLOT( slotTodoDropped( Todo *, const TQPoint &, bool ) ) );
 
 }
 
@@ -470,11 +470,11 @@ void KOAgendaView::zoomOutVertically( )
   }
 }
 
-void KOAgendaView::zoomInHorizontally( const QDate &date)
+void KOAgendaView::zoomInHorizontally( const TQDate &date)
 {
-  QDate begin;
-  QDate newBegin;
-  QDate dateToZoom = date;
+  TQDate begin;
+  TQDate newBegin;
+  TQDate dateToZoom = date;
   int ndays,count;
 
   begin = mSelectedDates.first();
@@ -502,11 +502,11 @@ void KOAgendaView::zoomInHorizontally( const QDate &date)
   }
 }
 
-void KOAgendaView::zoomOutHorizontally( const QDate &date )
+void KOAgendaView::zoomOutHorizontally( const TQDate &date )
 {
-  QDate begin;
-  QDate newBegin;
-  QDate dateToZoom = date;
+  TQDate begin;
+  TQDate newBegin;
+  TQDate dateToZoom = date;
   int ndays,count;
 
   begin = mSelectedDates.first();
@@ -531,17 +531,17 @@ void KOAgendaView::zoomOutHorizontally( const QDate &date )
     emit zoomViewHorizontally( newBegin, count );
 }
 
-void KOAgendaView::zoomView( const int delta, const QPoint &pos,
+void KOAgendaView::zoomView( const int delta, const TQPoint &pos,
   const Qt::Orientation orient )
 {
-  static QDate zoomDate;
-  static QTimer *t = new QTimer( this );
+  static TQDate zoomDate;
+  static TQTimer *t = new TQTimer( this );
 
 
   //Zoom to the selected incidence, on the other way
   // zoom to the date on screen after the first mousewheel move.
   if ( orient == Qt::Horizontal ) {
-    QDate date=mAgenda->selectedIncidenceDate();
+    TQDate date=mAgenda->selectedIncidenceDate();
     if ( date.isValid() )
       zoomDate=date;
     else{
@@ -556,13 +556,13 @@ void KOAgendaView::zoomView( const int delta, const QPoint &pos,
       zoomInHorizontally( zoomDate );
   } else {
     // Vertical zoom
-    QPoint posConstentsOld = mAgenda->gridToContents(pos);
+    TQPoint posConstentsOld = mAgenda->gridToContents(pos);
     if ( delta > 0 ) {
       zoomOutVertically();
     } else {
       zoomInVertically();
     }
-    QPoint posConstentsNew = mAgenda->gridToContents(pos);
+    TQPoint posConstentsNew = mAgenda->gridToContents(pos);
     mAgenda->scrollBy( 0, posConstentsNew.y() - posConstentsOld.y() );
   }
 }
@@ -576,8 +576,8 @@ void KOAgendaView::createDayLabels()
   // each updateView() call)
   delete mDayLabels;
 
-  mDayLabels = new QFrame (mDayLabelsFrame);
-  mLayoutDayLabels = new QHBoxLayout(mDayLabels);
+  mDayLabels = new TQFrame (mDayLabelsFrame);
+  mLayoutDayLabels = new TQHBoxLayout(mDayLabels);
   if ( !mIsSideBySide )
     mLayoutDayLabels->addSpacing(mTimeLabels->width());
 
@@ -585,35 +585,35 @@ void KOAgendaView::createDayLabels()
 
   DateList::ConstIterator dit;
   for( dit = mSelectedDates.begin(); dit != mSelectedDates.end(); ++dit ) {
-    QDate date = *dit;
-    QBoxLayout *dayLayout = new QVBoxLayout(mLayoutDayLabels);
+    TQDate date = *dit;
+    TQBoxLayout *dayLayout = new TQVBoxLayout(mLayoutDayLabels);
     mLayoutDayLabels->setStretchFactor(dayLayout, 1);
 //    dayLayout->setMinimumWidth(1);
 
     int dW = calsys->dayOfWeek(date);
-    QString veryLongStr = KGlobal::locale()->formatDate( date );
-    QString longstr = i18n( "short_weekday date (e.g. Mon 13)","%1 %2" )
+    TQString veryLongStr = KGlobal::locale()->formatDate( date );
+    TQString longstr = i18n( "short_weekday date (e.g. Mon 13)","%1 %2" )
         .arg( calsys->weekDayName( dW, true ) )
         .arg( calsys->day(date) );
-    QString shortstr = QString::number(calsys->day(date));
+    TQString shortstr = TQString::number(calsys->day(date));
 
     KOAlternateLabel *dayLabel = new KOAlternateLabel(shortstr,
       longstr, veryLongStr, mDayLabels);
     dayLabel->setMinimumWidth(1);
-    dayLabel->setAlignment(QLabel::AlignHCenter);
-    if (date == QDate::currentDate()) {
-      QFont font = dayLabel->font();
+    dayLabel->setAlignment(TQLabel::AlignHCenter);
+    if (date == TQDate::currentDate()) {
+      TQFont font = dayLabel->font();
       font.setBold(true);
       dayLabel->setFont(font);
     }
     dayLayout->addWidget(dayLabel);
 
     // if a holiday region is selected, show the holiday name
-    QStringList texts = KOGlobals::self()->holiday( date );
-    QStringList::ConstIterator textit = texts.begin();
+    TQStringList texts = KOGlobals::self()->holiday( date );
+    TQStringList::ConstIterator textit = texts.begin();
     for ( ; textit != texts.end(); ++textit ) {
       // use a KOAlternateLabel so when the text doesn't fit any more a tooltip is used
-      KOAlternateLabel*label = new KOAlternateLabel( (*textit), (*textit), QString::null, mDayLabels );
+      KOAlternateLabel*label = new KOAlternateLabel( (*textit), (*textit), TQString::null, mDayLabels );
       label->setMinimumWidth(1);
       label->setAlignment(AlignCenter);
       dayLayout->addWidget(label);
@@ -623,10 +623,10 @@ void KOAgendaView::createDayLabels()
     CalendarDecoration::List cds = KOCore::self()->calendarDecorations();
     CalendarDecoration *it;
     for(it = cds.first(); it; it = cds.next()) {
-      QString text = it->shortText( date );
+      TQString text = it->shortText( date );
       if ( !text.isEmpty() ) {
         // use a KOAlternateLabel so when the text doesn't fit any more a tooltip is used
-        KOAlternateLabel*label = new KOAlternateLabel( text, text, QString::null, mDayLabels );
+        KOAlternateLabel*label = new KOAlternateLabel( text, text, TQString::null, mDayLabels );
         label->setMinimumWidth(1);
         label->setAlignment(AlignCenter);
         dayLayout->addWidget(label);
@@ -634,7 +634,7 @@ void KOAgendaView::createDayLabels()
     }
 
     for(it = cds.first(); it; it = cds.next()) {
-      QWidget *wid = it->smallWidget(mDayLabels,date);
+      TQWidget *wid = it->smallWidget(mDayLabels,date);
       if ( wid ) {
 //      wid->setHeight(20);
         dayLayout->addWidget(wid);
@@ -681,7 +681,7 @@ Incidence::List KOAgendaView::selectedIncidences()
 DateList KOAgendaView::selectedDates()
 {
   DateList selected;
-  QDate qd;
+  TQDate qd;
 
   qd = mAgenda->selectedIncidenceDate();
   if (qd.isValid()) selected.append(qd);
@@ -692,17 +692,17 @@ DateList KOAgendaView::selectedDates()
   return selected;
 }
 
-bool KOAgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt,
+bool KOAgendaView::eventDurationHint( TQDateTime &startDt, TQDateTime &endDt,
                                       bool &allDay )
 {
   if ( selectionStart().isValid() ) {
-    QDateTime start = selectionStart();
-    QDateTime end = selectionEnd();
+    TQDateTime start = selectionStart();
+    TQDateTime end = selectionEnd();
 
     if ( start.secsTo( end ) == 15*60 ) {
       // One cell in the agenda view selected, e.g.
       // because of a double-click, => Use the default duration
-      QTime defaultDuration( KOPrefs::instance()->mDefaultDuration.time() );
+      TQTime defaultDuration( KOPrefs::instance()->mDefaultDuration.time() );
       int addSecs = ( defaultDuration.hour()*3600 ) +
                     ( defaultDuration.minute()*60 );
       end = start.addSecs( addSecs );
@@ -787,19 +787,19 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
 {
   kdDebug(5850) << "KOAgendaView::updateEventDates(): " << item->text() << endl;
 
-  QDateTime startDt,endDt;
+  TQDateTime startDt,endDt;
 
   // Start date of this incidence, calculate the offset from it (so recurring and
   // non-recurring items can be treated exactly the same, we never need to check
   // for doesRecur(), because we only move the start day by the number of days the
   // agenda item was really moved. Smart, isn't it?)
-  QDate thisDate;
+  TQDate thisDate;
   if ( item->cellXLeft() < 0 ) {
     thisDate = ( mSelectedDates.first() ).addDays( item->cellXLeft() );
   } else {
     thisDate = mSelectedDates[ item->cellXLeft() ];
   }
-  QDate oldThisDate( item->itemDate() );
+  TQDate oldThisDate( item->itemDate() );
   int daysOffset = oldThisDate.daysTo( thisDate );
   int daysLength = 0;
 
@@ -810,7 +810,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
   if ( !mChanger || !mChanger->beginChange(incidence) ) return;
   Incidence *oldIncidence = incidence->clone();
 
-  QTime startTime(0,0,0), endTime(0,0,0);
+  TQTime startTime(0,0,0), endTime(0,0,0);
   if ( incidence->doesFloat() ) {
     daysLength = item->cellWidth() - 1;
   } else {
@@ -863,14 +863,14 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
       case Recurrence::rYearlyPos: {
         int freq = recur->frequency();
         int duration = recur->duration();
-        QDate endDt( recur->endDate() );
+        TQDate endDt( recur->endDate() );
         bool negative = false;
 
-        QPtrList<Recurrence::rMonthPos> monthPos( recur->yearMonthPositions() );
+        TQPtrList<Recurrence::rMonthPos> monthPos( recur->yearMonthPositions() );
         if ( monthPos.first() ) {
           negative = monthPos.first()->negative;
         }
-        QBitArray days( 7 );
+        TQBitArray days( 7 );
         int pos = 0;
         days.fill( false );
         days.setBit( thisDate.dayOfWeek() - 1 );
@@ -893,7 +893,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
         case Recurrence::rYearlyDay: {
           int freq = recur->frequency();
           int duration = recur->duration();
-          QDate endDt( recur->endDate() );
+          TQDate endDt( recur->endDate() );
         // Terrible hack: to change the month days, I have to unset the recurrence, and set all days manually again
           recur->unsetRecurs();
           if ( duration == 0 ) { // end by date
@@ -906,7 +906,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
           case Recurrence::rYearlyMonth: {
             int freq = recur->frequency();
             int duration = recur->duration();
-            QDate endDt( recur->endDate() );
+            TQDate endDt( recur->endDate() );
         // Terrible hack: to change the month days, I have to unset the recurrence, and set all days manually again
             recur->unsetRecurs();
             if ( duration != 0 ) {
@@ -919,13 +919,13 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
             case Recurrence::rMonthlyPos: {
               int freq = recur->frequency();
               int duration = recur->duration();
-              QDate endDt( recur->endDate() );
-              QPtrList<Recurrence::rMonthPos> monthPos( recur->monthPositions() );
+              TQDate endDt( recur->endDate() );
+              TQPtrList<Recurrence::rMonthPos> monthPos( recur->monthPositions() );
               if ( !monthPos.isEmpty() ) {
           // FIXME: How shall I adapt the day x of week Y if we move the date across month borders???
           // for now, just use the date of the moved item and assume the recurrence only occurs on that day.
           // That's fine for korganizer, but might mess up other organizers.
-                QBitArray rDays( 7 );
+                TQBitArray rDays( 7 );
                 rDays = monthPos.first()->rDays;
                 bool negative = monthPos.first()->negative;
                 int newPos;
@@ -950,8 +950,8 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
               case Recurrence::rMonthlyDay: {
                 int freq = recur->frequency();
                 int duration = recur->duration();
-                QDate endDt( recur->endDate() );
-                QPtrList<int> monthDays( recur->monthDays() );
+                TQDate endDt( recur->endDate() );
+                TQPtrList<int> monthDays( recur->monthDays() );
         // Terrible hack: to change the month days, I have to unset the recurrence, and set all days manually again
                 recur->unsetRecurs();
                 if ( duration == 0 ) { // end by date
@@ -966,7 +966,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
 
                 break;}
                 case Recurrence::rWeekly: {
-                  QBitArray days(7), oldDays( recur->days() );
+                  TQBitArray days(7), oldDays( recur->days() );
                   int offset = daysOffset % 7;
                   if ( offset<0 ) offset = (offset+7) % 7;
         // rotate the days
@@ -1028,7 +1028,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
   // recreated. All others have to!!!
   if ( incidence->doesRecur() ) {
     mUpdateItem = incidence;
-    QTimer::singleShot( 0, this, SLOT( doUpdateItem() ) );
+    TQTimer::singleShot( 0, this, TQT_SLOT( doUpdateItem() ) );
   }
 
     enableAgendaUpdate( true );
@@ -1046,7 +1046,7 @@ void KOAgendaView::doUpdateItem()
 
 
 
-void KOAgendaView::showDates( const QDate &start, const QDate &end )
+void KOAgendaView::showDates( const TQDate &start, const TQDate &end )
 {
 //  kdDebug(5850) << "KOAgendaView::selectDates" << endl;
   if ( !mSelectedDates.isEmpty() && mSelectedDates.first() == start
@@ -1055,7 +1055,7 @@ void KOAgendaView::showDates( const QDate &start, const QDate &end )
 
   mSelectedDates.clear();
 
-  QDate d = start;
+  TQDate d = start;
   while (d <= end) {
     mSelectedDates.append(d);
     d = d.addDays( 1 );
@@ -1071,7 +1071,7 @@ void KOAgendaView::showIncidences( const Incidence::List & )
   kdDebug(5850) << "KOAgendaView::showIncidences( const Incidence::List & ) is not yet implemented" << endl;
 }
 
-void KOAgendaView::insertIncidence( Incidence *incidence, const QDate &curDate,
+void KOAgendaView::insertIncidence( Incidence *incidence, const TQDate &curDate,
                                     int curCol )
 {
   if ( !filterByResource( incidence ) )
@@ -1116,32 +1116,32 @@ void KOAgendaView::insertIncidence( Incidence *incidence, const QDate &curDate,
     }
   } else if ( event && event->isMultiDay() ) {
     int startY = mAgenda->timeToY( event->dtStart().time() );
-    QTime endtime( event->dtEnd().time() );
-    if ( endtime == QTime( 0, 0, 0 ) ) endtime = QTime( 23, 59, 59 );
+    TQTime endtime( event->dtEnd().time() );
+    if ( endtime == TQTime( 0, 0, 0 ) ) endtime = TQTime( 23, 59, 59 );
     int endY = mAgenda->timeToY( endtime ) - 1;
     if ( (beginX <= 0 && curCol == 0) || beginX == curCol ) {
       mAgenda->insertMultiItem( event, curDate, beginX, endX, startY, endY );
     }
     if ( beginX == curCol ) {
-      mMaxY[curCol] = mAgenda->timeToY( QTime(23,59) );
+      mMaxY[curCol] = mAgenda->timeToY( TQTime(23,59) );
       if ( startY < mMinY[curCol] ) mMinY[curCol] = startY;
     } else if ( endX == curCol ) {
-      mMinY[curCol] = mAgenda->timeToY( QTime(0,0) );
+      mMinY[curCol] = mAgenda->timeToY( TQTime(0,0) );
       if ( endY > mMaxY[curCol] ) mMaxY[curCol] = endY;
     } else {
-      mMinY[curCol] = mAgenda->timeToY( QTime(0,0) );
-      mMaxY[curCol] = mAgenda->timeToY( QTime(23,59) );
+      mMinY[curCol] = mAgenda->timeToY( TQTime(0,0) );
+      mMaxY[curCol] = mAgenda->timeToY( TQTime(23,59) );
     }
   } else {
     int startY = 0, endY = 0;
     if ( event ) {
       startY = mAgenda->timeToY( incidence->dtStart().time() );
-      QTime endtime( event->dtEnd().time() );
-      if ( endtime == QTime( 0, 0, 0 ) ) endtime = QTime( 23, 59, 59 );
+      TQTime endtime( event->dtEnd().time() );
+      if ( endtime == TQTime( 0, 0, 0 ) ) endtime = TQTime( 23, 59, 59 );
       endY = mAgenda->timeToY( endtime ) - 1;
     }
     if ( todo ) {
-      QTime t = todo->dtDue().time();
+      TQTime t = todo->dtDue().time();
       endY = mAgenda->timeToY( t ) - 1;
       startY = mAgenda->timeToY( t.addSecs( -1800 ) );
     }
@@ -1160,13 +1160,13 @@ void KOAgendaView::changeIncidenceDisplayAdded( Incidence *incidence )
      ( todo && !KOPrefs::instance()->showAllDayTodo() ) )
     return;
 
-  QDate f = mSelectedDates.first();
-  QDate l = mSelectedDates.last();
-  QDate startDt = incidence->dtStart().date();
+  TQDate f = mSelectedDates.first();
+  TQDate l = mSelectedDates.last();
+  TQDate startDt = incidence->dtStart().date();
 
   if ( incidence->doesRecur() ) {
     DateList::ConstIterator dit;
-    QDate curDate;
+    TQDate curDate;
     for( dit = mSelectedDates.begin(); dit != mSelectedDates.end(); ++dit ) {
       curDate = *dit;
 // FIXME: This breaks with recurring multi-day events!
@@ -1177,11 +1177,11 @@ void KOAgendaView::changeIncidenceDisplayAdded( Incidence *incidence )
     return;
   }
 
-  QDate endDt;
+  TQDate endDt;
   if ( incidence->type() == "Event" )
     endDt = (static_cast<Event *>(incidence))->dateEnd();
   if ( todo ) {
-    endDt = todo->isOverdue() ? QDate::currentDate()
+    endDt = todo->isOverdue() ? TQDate::currentDate()
                               : todo->dtDue().date();
 
     if ( endDt >= f && endDt <= l ) {
@@ -1228,7 +1228,7 @@ void KOAgendaView::changeIncidenceDisplay( Incidence *incidence, int mode )
   }
 }
 
-void KOAgendaView::fillAgenda( const QDate & )
+void KOAgendaView::fillAgenda( const TQDate & )
 {
   fillAgenda();
 }
@@ -1239,8 +1239,8 @@ void KOAgendaView::fillAgenda()
 
   /* Remember the uids of the selected items. In case one of the
    * items was deleted and re-added, we want to reselect it. */
-  const QString &selectedAgendaUid = mAgenda->lastSelectedUid();
-  const QString &selectedAllDayAgendaUid = mAllDayAgenda->lastSelectedUid();
+  const TQString &selectedAgendaUid = mAgenda->lastSelectedUid();
+  const TQString &selectedAllDayAgendaUid = mAllDayAgenda->lastSelectedUid();
 
   enableAgendaUpdate( true );
   clearView();
@@ -1264,13 +1264,13 @@ void KOAgendaView::fillAgenda()
 
   mAgenda->setDateList(mSelectedDates);
 
-  QDate today = QDate::currentDate();
+  TQDate today = TQDate::currentDate();
 
   bool somethingReselected = false;
   DateList::ConstIterator dit;
   int curCol = 0;
   for( dit = mSelectedDates.begin(); dit != mSelectedDates.end(); ++dit ) {
-    QDate currentDate = *dit;
+    TQDate currentDate = *dit;
 //    kdDebug(5850) << "KOAgendaView::fillAgenda(): " << currentDate.toString()
 //              << endl;
 
@@ -1279,8 +1279,8 @@ void KOAgendaView::fillAgenda()
                                    SortDirectionAscending);
 
     // Default values, which can never be reached
-    mMinY[curCol] = mAgenda->timeToY(QTime(23,59)) + 1;
-    mMaxY[curCol] = mAgenda->timeToY(QTime(0,0)) - 1;
+    mMinY[curCol] = mAgenda->timeToY(TQTime(23,59)) + 1;
+    mMaxY[curCol] = mAgenda->timeToY(TQTime(0,0)) - 1;
 
     unsigned int numEvent;
     for(numEvent=0;numEvent<dayEvents.count();++numEvent) {
@@ -1387,12 +1387,12 @@ void KOAgendaView::updateEventIndicatorBottom( int newY )
   mEventIndicatorBottom->update();
 }
 
-void KOAgendaView::slotTodoDropped( Todo *todo, const QPoint &gpos, bool allDay )
+void KOAgendaView::slotTodoDropped( Todo *todo, const TQPoint &gpos, bool allDay )
 {
   if ( gpos.x()<0 || gpos.y()<0 ) return;
-  QDate day = mSelectedDates[gpos.x()];
-  QTime time = mAgenda->gyToTime( gpos.y() );
-  QDateTime newTime( day, time );
+  TQDate day = mSelectedDates[gpos.x()];
+  TQTime time = mAgenda->gyToTime( gpos.y() );
+  TQDateTime newTime( day, time );
 
   if ( todo ) {
     Todo *existingTodo = calendar()->todo( todo->uid() );
@@ -1445,7 +1445,7 @@ void KOAgendaView::readSettings(KConfig *config)
   config->setGroup("Views");
 
 #ifndef KORG_NOSPLITTER
-  QValueList<int> sizes = config->readIntListEntry("Separator AgendaView");
+  TQValueList<int> sizes = config->readIntListEntry("Separator AgendaView");
   if (sizes.count() == 2) {
     mSplitterAgenda->setSizes(sizes);
   }
@@ -1461,7 +1461,7 @@ void KOAgendaView::writeSettings(KConfig *config)
   config->setGroup("Views");
 
 #ifndef KORG_NOSPLITTER
-  QValueList<int> list = mSplitterAgenda->sizes();
+  TQValueList<int> list = mSplitterAgenda->sizes();
   config->writeEntry("Separator AgendaView",list);
 #endif
 }
@@ -1505,26 +1505,26 @@ void KOAgendaView::clearSelection()
   mAllDayAgenda->deselectItem();
 }
 
-void KOAgendaView::newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end )
+void KOAgendaView::newTimeSpanSelectedAllDay( const TQPoint &start, const TQPoint &end )
 {
   newTimeSpanSelected( start, end );
   mTimeSpanInAllDay = true;
 }
 
-void KOAgendaView::newTimeSpanSelected( const QPoint &start, const QPoint &end )
+void KOAgendaView::newTimeSpanSelected( const TQPoint &start, const TQPoint &end )
 {
   if (!mSelectedDates.count()) return;
 
   mTimeSpanInAllDay = false;
 
-  QDate dayStart = mSelectedDates[ kClamp( start.x(), 0, (int)mSelectedDates.size() - 1 ) ];
-  QDate dayEnd = mSelectedDates[ kClamp( end.x(), 0, (int)mSelectedDates.size() - 1 ) ];
+  TQDate dayStart = mSelectedDates[ kClamp( start.x(), 0, (int)mSelectedDates.size() - 1 ) ];
+  TQDate dayEnd = mSelectedDates[ kClamp( end.x(), 0, (int)mSelectedDates.size() - 1 ) ];
 
-  QTime timeStart = mAgenda->gyToTime(start.y());
-  QTime timeEnd = mAgenda->gyToTime( end.y() + 1 );
+  TQTime timeStart = mAgenda->gyToTime(start.y());
+  TQTime timeEnd = mAgenda->gyToTime( end.y() + 1 );
 
-  QDateTime dtStart(dayStart,timeStart);
-  QDateTime dtEnd(dayEnd,timeEnd);
+  TQDateTime dtStart(dayStart,timeStart);
+  TQDateTime dtEnd(dayEnd,timeEnd);
 
   mTimeSpanBegin = dtStart;
   mTimeSpanEnd = dtEnd;
@@ -1532,12 +1532,12 @@ void KOAgendaView::newTimeSpanSelected( const QPoint &start, const QPoint &end )
 
 void KOAgendaView::deleteSelectedDateTime()
 {
-  mTimeSpanBegin.setDate(QDate());
-  mTimeSpanEnd.setDate(QDate());
+  mTimeSpanBegin.setDate(TQDate());
+  mTimeSpanEnd.setDate(TQDate());
   mTimeSpanInAllDay = false;
 }
 
-void KOAgendaView::setTypeAheadReceiver( QObject *o )
+void KOAgendaView::setTypeAheadReceiver( TQObject *o )
 {
   mAgenda->setTypeAheadReceiver( o );
   mAllDayAgenda->setTypeAheadReceiver( o );
@@ -1579,7 +1579,7 @@ void KOAgendaView::clearTimeSpanSelection()
   deleteSelectedDateTime();
 }
 
-void KOAgendaView::setResource(KCal::ResourceCalendar * res, const QString & subResource)
+void KOAgendaView::setResource(KCal::ResourceCalendar * res, const TQString & subResource)
 {
   mResource = res;
   mSubResource = subResource;

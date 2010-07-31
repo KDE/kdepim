@@ -16,8 +16,8 @@
 #include "preferences.h"
 
 #include <kwallet.h>
-#include <qstring.h>
-#include <qurl.h>
+#include <tqstring.h>
+#include <tqurl.h>
 #include <kdebug.h>
 
 /*=========================================================================
@@ -31,15 +31,15 @@ using namespace KWallet;
 | CONSTANTS
  ========================================================================*/
 
-const QString CardDavPrefs::NO_PASSWORD = "";
-const QString CardDavPrefs::WALLET_FOLDER = "CardDAV resource";
-const QString CardDavPrefs::WALLET_PWD_SUFFIX = ":carddav_password";
+const TQString CardDavPrefs::NO_PASSWORD = "";
+const TQString CardDavPrefs::WALLET_FOLDER = "CardDAV resource";
+const TQString CardDavPrefs::WALLET_PWD_SUFFIX = ":carddav_password";
 
 /*=========================================================================
 | METHODS
  ========================================================================*/
 
-bool CardDavPrefs::setWalletFolder(const QString& folder) {
+bool CardDavPrefs::setWalletFolder(const TQString& folder) {
     bool ret = true;
 
     if (!mNoWallet && NULL != mWallet) {
@@ -97,7 +97,7 @@ void CardDavPrefs::removeWallet(bool noWallet) {
     mNoWallet = noWallet;
 }
 
-void CardDavPrefs::addPrefix(const QString& prefix) {
+void CardDavPrefs::addPrefix(const TQString& prefix) {
     KConfigSkeletonItem::List itemList = items();
     KConfigSkeletonItem::List::Iterator it;
 
@@ -106,7 +106,7 @@ void CardDavPrefs::addPrefix(const QString& prefix) {
     }
 }
 
-bool CardDavPrefs::writePasswordToWallet(const QString& password) {
+bool CardDavPrefs::writePasswordToWallet(const TQString& password) {
 
     Wallet* w = getWallet();
 
@@ -123,12 +123,12 @@ bool CardDavPrefs::writePasswordToWallet(const QString& password) {
     return ret;
 }
 
-bool CardDavPrefs::readPasswordFromWallet(QString& password) {
+bool CardDavPrefs::readPasswordFromWallet(TQString& password) {
     Wallet* w = getWallet();
 
     bool ret = false;
     if (NULL != w) {
-        QString p;
+        TQString p;
         int rc = w->readPassword(mPrefix + WALLET_PWD_SUFFIX, p);
         if (0 == rc) {
             //CardDavPrefsSkel::setPassword(p);
@@ -160,7 +160,7 @@ bool CardDavPrefs::removePasswordFromWallet() {
     return ret;
 }
 
-void CardDavPrefs::setPassword(const QString& p) {
+void CardDavPrefs::setPassword(const TQString& p) {
 
     mPassword = p;
 
@@ -169,14 +169,14 @@ void CardDavPrefs::setPassword(const QString& p) {
     }
 }
 
-QString CardDavPrefs::password() {
+TQString CardDavPrefs::password() {
     if (NO_PASSWORD == mPassword) {
         readPasswordFromWallet(mPassword);
     }
     return mPassword;
 }
 
-QString CardDavPrefs::getusername() {
+TQString CardDavPrefs::getusername() {
     return username();
 }
 
@@ -210,10 +210,10 @@ bool CardDavPrefs::getUseURI() {
     return useURI();
 }
 
-QString CardDavPrefs::getFullUrl() {
+TQString CardDavPrefs::getFullUrl() {
 
-    QUrl t(url());
-    QString safeURL;
+    TQUrl t(url());
+    TQString safeURL;
     int firstAt;
 
     t.setUser(username());

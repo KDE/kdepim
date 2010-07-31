@@ -16,10 +16,10 @@
 
 #include <string.h>
 
-#include <qurl.h>
-#include <qmessagebox.h>
-#include <qapplication.h>
-#include <qeventloop.h>
+#include <tqurl.h>
+#include <tqmessagebox.h>
+#include <tqapplication.h>
+#include <tqeventloop.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
@@ -27,12 +27,12 @@
 #include <klocale.h>
 #include <kpassdlg.h>
 
-#include <qdatetime.h>
-#include <qmutex.h>
-#include <qthread.h>
+#include <tqdatetime.h>
+#include <tqmutex.h>
+#include <tqthread.h>
 
 #ifdef KCALDAV_DEBUG
-    #include <qfile.h>
+    #include <tqfile.h>
 #endif
 
 #include "resource.h"
@@ -105,7 +105,7 @@ ResourceCalDav::~ResourceCalDav() {
     while ((mWriter->running() == true) || (mWritingQueue.isEmpty() == false) || !mWritingQueueReady) {
         readLockout = true;
         sleep(1);
-        qApp->processEvents(QEventLoop::ExcludeUserInput);
+        qApp->processEvents(TQEventLoop::ExcludeUserInput);
     }
 
     if (mWriter) {
@@ -147,7 +147,7 @@ bool ResourceCalDav::doLoad() {
         return true;	// Silently fail; the user has obviously not responded to a dialog and we don't need to pop up more of them!
     }
 
-    log(QString("doLoad(%1)").arg(syncCache));
+    log(TQString("doLoad(%1)").arg(syncCache));
 
     clearCache();
 
@@ -168,7 +168,7 @@ bool ResourceCalDav::doLoad() {
 bool ResourceCalDav::doSave() {
     bool syncCache = true;
 
-    log(QString("doSave(%1)").arg(syncCache));
+    log(TQString("doSave(%1)").arg(syncCache));
 
     if (!hasChanges()) {
         log("no changes");
@@ -196,7 +196,7 @@ bool ResourceCalDav::doSave() {
         clearChanges();
         if (mWriteRetryTimer != NULL) {
             if (mWriteRetryTimer->isActive() == false) {
-                disconnect( mWriteRetryTimer, SIGNAL(timeout()), this, SLOT(doSave()) );
+                disconnect( mWriteRetryTimer, TQT_SIGNAL(timeout()), this, TQT_SLOT(doSave()) );
                 delete mWriteRetryTimer;
                 mWriteRetryTimer = NULL;
             }
@@ -253,8 +253,8 @@ void ResourceCalDav::init() {
     // creating jobs
     // Qt4 handles this quite differently, as shown below,
     // whereas Qt3 needs events (see ::event())
-//     connect(mLoader, SIGNAL(finished()), this, SLOT(loadFinished()));
-//     connect(mWriter, SIGNAL(finished()), this, SLOT(writingFinished()));
+//     connect(mLoader, TQT_SIGNAL(finished()), this, TQT_SLOT(loadFinished()));
+//     connect(mWriter, TQT_SIGNAL(finished()), this, TQT_SLOT(writingFinished()));
 
     setType("ResourceCalDav");
 }
@@ -341,14 +341,14 @@ void ResourceCalDav::loadingQueuePop() {
     mLoader->setParent(this);
     mLoader->setType(0);
 
-    QDateTime dt(QDate::currentDate());
+    TQDateTime dt(TQDate::currentDate());
     mLoader->setRange(dt.addDays(-CACHE_DAYS), dt.addDays(CACHE_DAYS));
     //mLoader->setGetAll();
 
     mLoadingQueueReady = false;
 
     log("starting actual download job");
-    mLoader->start(QThread::LowestPriority);
+    mLoader->start(TQThread::LowestPriority);
 
     // if all ok, removing the task from the queue
     mLoadingQueue.dequeue();
@@ -357,7 +357,7 @@ void ResourceCalDav::loadingQueuePop() {
     delete t;
 }
 
-void ResourceCalDav::startLoading(const QString& url) {
+void ResourceCalDav::startLoading(const TQString& url) {
     LoadingTask *t = new LoadingTask;
     t->url = url;
     loadingQueuePush(t);
@@ -376,29 +376,29 @@ void ResourceCalDav::loadFinished() {
     if (loader->error()) {
         if (loader->errorNumber() == -401) {
             if (NULL != mPrefs) {
-                QCString newpass;
-                if (KPasswordDialog::getPassword (newpass, QString("<b>") + i18n("Remote authorization required") + QString("</b><p>") + i18n("Please input the password for") + QString(" ") + mPrefs->getusername(), NULL) != 1) {
+                TQCString newpass;
+                if (KPasswordDialog::getPassword (newpass, TQString("<b>") + i18n("Remote authorization required") + TQString("</b><p>") + i18n("Please input the password for") + TQString(" ") + mPrefs->getusername(), NULL) != 1) {
                     log("load error: " + loader->errorString() );
-                    loadError(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+                    loadError(TQString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
                 }
                 else {
                     // Set new password and try again
-                    mPrefs->setPassword(QString(newpass));
+                    mPrefs->setPassword(TQString(newpass));
                     startLoading(mPrefs->getFullUrl());
                 }
             }
             else {
                 log("load error: " + loader->errorString() );
-                loadError(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+                loadError(TQString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
             }
         }
         else {
             log("load error: " + loader->errorString() );
-            loadError(QString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
+            loadError(TQString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
         }
     } else {
         log("successful load");
-        QString data = loader->data();
+        TQString data = loader->data();
 
         if (!data.isNull() && !data.isEmpty()) {
             // TODO: I don't know why, but some schedules on http://caldav-test.ioda.net/ (I used it for testing)
@@ -430,7 +430,7 @@ void ResourceCalDav::loadFinished() {
     loadingQueuePop();
 }
 
-bool ResourceCalDav::checkData(const QString& data) {
+bool ResourceCalDav::checkData(const TQString& data) {
     log("checking the data");
 
     ICalFormat ical;
@@ -443,7 +443,7 @@ bool ResourceCalDav::checkData(const QString& data) {
     return ret;
 }
 
-bool ResourceCalDav::parseData(const QString& data) {
+bool ResourceCalDav::parseData(const TQString& data) {
     log("parseData()");
 
     bool ret = true;
@@ -470,11 +470,11 @@ bool ResourceCalDav::parseData(const QString& data) {
 
     // debug code here -------------------------------------------------------
 #ifdef KCALDAV_DEBUG
-    const QString fout_path = "/tmp/kcaldav_download_" + identifier() + ".tmp";
+    const TQString fout_path = "/tmp/kcaldav_download_" + identifier() + ".tmp";
 
-    QFile fout(fout_path);
+    TQFile fout(fout_path);
     if (fout.open(IO_WriteOnly | IO_Append)) {
-        QTextStream sout(&fout);
+        TQTextStream sout(&fout);
         sout << "---------- " << resourceName() << ": --------------------------------\n";
         sout << data << "\n";
         fout.close();
@@ -504,13 +504,13 @@ bool ResourceCalDav::parseData(const QString& data) {
 | WRITING METHODS
  ========================================================================*/
 
-QString ResourceCalDav::getICalString(const Incidence::List& inc) {
+TQString ResourceCalDav::getICalString(const Incidence::List& inc) {
     if (inc.isEmpty()) {
         return "";
     }
 
     CalendarLocal loc(timeZoneId());
-    QString data = "";
+    TQString data = "";
     ICalFormat ical;
 
     // NOTE: This is very susceptible to invalid entries in added/changed/deletedIncidences
@@ -555,11 +555,11 @@ void ResourceCalDav::writingQueuePop() {
     mWriter->setType(1);
 
 #ifdef KCALDAV_DEBUG
-    const QString fout_path = "/tmp/kcaldav_upload_" + identifier() + ".tmp";
+    const TQString fout_path = "/tmp/kcaldav_upload_" + identifier() + ".tmp";
 
-    QFile fout(fout_path);
+    TQFile fout(fout_path);
     if (fout.open(IO_WriteOnly | IO_Append)) {
-        QTextStream sout(&fout);
+        TQTextStream sout(&fout);
         sout << "---------- " << resourceName() << ": --------------------------------\n";
         sout << "================== Added:\n" << t->added << "\n";
         sout << "================== Changed:\n" << t->changed << "\n";
@@ -577,7 +577,7 @@ void ResourceCalDav::writingQueuePop() {
     mWritingQueueReady = false;
 
     log("starting actual write job");
-    mWriter->start(QThread::LowestPriority);
+    mWriter->start(TQThread::LowestPriority);
 
     // if all ok, remove the task from the queue
     mWritingQueue.dequeue();
@@ -586,7 +586,7 @@ void ResourceCalDav::writingQueuePop() {
     delete t;
 }
 
-bool ResourceCalDav::event ( QEvent * e ) {
+bool ResourceCalDav::event ( TQEvent * e ) {
     if (e->type() == 1000) {
         // Read done
         loadFinished();
@@ -604,7 +604,7 @@ void ResourceCalDav::releaseReadLockout() {
     readLockout = false;
 }
 
-bool ResourceCalDav::startWriting(const QString& url) {
+bool ResourceCalDav::startWriting(const TQString& url) {
     log("startWriting: url = " + url);
 
     // WARNING: This will segfault if a separate read or write thread
@@ -612,8 +612,8 @@ bool ResourceCalDav::startWriting(const QString& url) {
     // Before these calls are made any existing read (and maybe write) threads should be finished
     if ((mLoader->running() == true) || (mLoadingQueue.isEmpty() == false) || (mWriter->running() == true) || (mWritingQueue.isEmpty() == false)) {
         if (mWriteRetryTimer == NULL) {
-            mWriteRetryTimer = new QTimer(this);
-            connect( mWriteRetryTimer, SIGNAL(timeout()), SLOT(doSave()) );
+            mWriteRetryTimer = new TQTimer(this);
+            connect( mWriteRetryTimer, TQT_SIGNAL(timeout()), TQT_SLOT(doSave()) );
         }
         mWriteRetryTimer->start(1000, TRUE);
         return false;
@@ -690,25 +690,25 @@ void ResourceCalDav::writingFinished() {
     if (mWriter->error() && (abs(mWriter->errorNumber()) != 207)) {
         if (mWriter->errorNumber() == -401) {
             if (NULL != mPrefs) {
-                QCString newpass;
-                if (KPasswordDialog::getPassword (newpass, QString("<b>") + i18n("Remote authorization required") + QString("</b><p>") + i18n("Please input the password for") + QString(" ") + mPrefs->getusername(), NULL) != 1) {
+                TQCString newpass;
+                if (KPasswordDialog::getPassword (newpass, TQString("<b>") + i18n("Remote authorization required") + TQString("</b><p>") + i18n("Please input the password for") + TQString(" ") + mPrefs->getusername(), NULL) != 1) {
                     log("write error: " + mWriter->errorString());
-                    saveError(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+                    saveError(TQString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
                 }
                 else {
                     // Set new password and try again
-                    mPrefs->setPassword(QString(newpass));
+                    mPrefs->setPassword(TQString(newpass));
                     startWriting(mPrefs->getFullUrl());
                 }
             }
             else {
                 log("write error: " + mWriter->errorString());
-                saveError(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+                saveError(TQString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
             }
         }
         else {
             log("write error: " + mWriter->errorString());
-            saveError(QString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
+            saveError(TQString("[%1] ").arg(abs(mWriter->errorNumber())) + mWriter->errorString());
         }
     } else {
         log("success");
@@ -716,7 +716,7 @@ void ResourceCalDav::writingFinished() {
     }
 
     // Give the remote system a few seconds to process the data before we allow any read operations
-    QTimer::singleShot( 3000, this, SLOT(releaseReadLockout()) );
+    TQTimer::singleShot( 3000, this, TQT_SLOT(releaseReadLockout()) );
 
     // Writing queue and mWritingQueueReady flag are not shared resources, i.e. only one thread has an access to them.
     // That's why no mutexes are required.

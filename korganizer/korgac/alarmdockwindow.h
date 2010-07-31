@@ -26,7 +26,7 @@
 
 #include <ksystemtray.h>
 
-#include <qpixmap.h>
+#include <tqpixmap.h>
 
 class AlarmDockWindow : public KSystemTray
 {
@@ -48,9 +48,9 @@ class AlarmDockWindow : public KSystemTray
     void dismissAllSignal();
 
   protected:
-    void mousePressEvent( QMouseEvent * );
-//    void closeEvent( QCloseEvent * );
-    void resizeEvent ( QResizeEvent * );
+    void mousePressEvent( TQMouseEvent * );
+//    void closeEvent( TQCloseEvent * );
+    void resizeEvent ( TQResizeEvent * );
 
   protected slots:
     void slotQuit();
@@ -58,9 +58,9 @@ class AlarmDockWindow : public KSystemTray
     void slotDismissAll();
 
   private:
-    QPixmap mPixmapEnabled;
-    QPixmap mPixmapDisabled;
-    QString mName;
+    TQPixmap mPixmapEnabled;
+    TQPixmap mPixmapDisabled;
+    TQString mName;
 
     int mAlarmsEnabledId;
     int mAutostartId;

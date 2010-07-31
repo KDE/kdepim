@@ -69,19 +69,19 @@
 #include <kdeversion.h>
 #include <kactionclasses.h>
 
-#include <qapplication.h>
-#include <qcursor.h>
-#include <qtimer.h>
-#include <qlabel.h>
+#include <tqapplication.h>
+#include <tqcursor.h>
+#include <tqtimer.h>
+#include <tqlabel.h>
 
 
 // FIXME: Several places in the file don't use KConfigXT yet!
 KOWindowList *ActionManager::mWindowList = 0;
 
 ActionManager::ActionManager( KXMLGUIClient *client, CalendarView *widget,
-                              QObject *parent, KOrg::MainWindow *mainWindow,
+                              TQObject *parent, KOrg::MainWindow *mainWindow,
                               bool isPart )
-  : QObject( parent ), KCalendarIface(), mRecent( 0 ),
+  : TQObject( parent ), KCalendarIface(), mRecent( 0 ),
     mResourceButtonsAction( 0 ), mResourceViewShowAction( 0 ), mCalendar( 0 ),
     mCalendarResources( 0 ), mResourceView( 0 ), mIsClosing( false )
 {
@@ -125,7 +125,7 @@ void ActionManager::init()
     mWindowList = new KOWindowList;
     // Show tip of the day, when the first calendar is shown.
     if ( !mIsPart )
-      QTimer::singleShot( 0, this, SLOT( showTipOnStart() ) );
+      TQTimer::singleShot( 0, this, TQT_SLOT( showTipOnStart() ) );
   }
   // Note: We need this ActionManager to be fully constructed, and
   // parent() to have a valid reference to it before the following
@@ -135,28 +135,28 @@ void ActionManager::init()
   initActions();
 
   // set up autoSaving stuff
-  mAutoSaveTimer = new QTimer( this );
-  connect( mAutoSaveTimer,SIGNAL( timeout() ), SLOT( checkAutoSave() ) );
+  mAutoSaveTimer = new TQTimer( this );
+  connect( mAutoSaveTimer,TQT_SIGNAL( timeout() ), TQT_SLOT( checkAutoSave() ) );
   if ( KOPrefs::instance()->mAutoSave &&
        KOPrefs::instance()->mAutoSaveInterval > 0 ) {
     mAutoSaveTimer->start( 1000 * 60 * KOPrefs::instance()->mAutoSaveInterval );
   }
 
-  mAutoArchiveTimer = new QTimer( this );
-  connect( mAutoArchiveTimer, SIGNAL( timeout() ), SLOT( slotAutoArchive() ) );
+  mAutoArchiveTimer = new TQTimer( this );
+  connect( mAutoArchiveTimer, TQT_SIGNAL( timeout() ), TQT_SLOT( slotAutoArchive() ) );
   // First auto-archive should be in 5 minutes (like in kmail).
   if ( KOPrefs::instance()->mAutoArchive )
     mAutoArchiveTimer->start( 5 * 60 * 1000, true ); // singleshot
 
   setTitle();
 
-  connect( mCalendarView, SIGNAL( modifiedChanged( bool ) ), SLOT( setTitle() ) );
-  connect( mCalendarView, SIGNAL( configChanged() ), SLOT( updateConfig() ) );
+  connect( mCalendarView, TQT_SIGNAL( modifiedChanged( bool ) ), TQT_SLOT( setTitle() ) );
+  connect( mCalendarView, TQT_SIGNAL( configChanged() ), TQT_SLOT( updateConfig() ) );
 
-  connect( mCalendarView, SIGNAL( incidenceSelected( Incidence * ) ),
-           this, SLOT( processIncidenceSelection( Incidence * ) ) );
-  connect( mCalendarView, SIGNAL( exportHTML( HTMLExportSettings * ) ),
-           this, SLOT( exportHTML( HTMLExportSettings * ) ) );
+  connect( mCalendarView, TQT_SIGNAL( incidenceSelected( Incidence * ) ),
+           this, TQT_SLOT( processIncidenceSelection( Incidence * ) ) );
+  connect( mCalendarView, TQT_SIGNAL( exportHTML( HTMLExportSettings * ) ),
+           this, TQT_SLOT( exportHTML( HTMLExportSettings * ) ) );
 
   processIncidenceSelection( 0 );
 
@@ -196,13 +196,13 @@ void ActionManager::createCalendarResources()
   mCalendarView->addExtension( &factory );
   mResourceView = factory.resourceView();
 
-  connect( mCalendarResources, SIGNAL( calendarChanged() ),
-           mCalendarView, SLOT(resourcesChanged() ) );
-  connect( mCalendarResources, SIGNAL( signalErrorMessage( const QString & ) ),
-           mCalendarView, SLOT( showErrorMessage( const QString & ) ) );
+  connect( mCalendarResources, TQT_SIGNAL( calendarChanged() ),
+           mCalendarView, TQT_SLOT(resourcesChanged() ) );
+  connect( mCalendarResources, TQT_SIGNAL( signalErrorMessage( const TQString & ) ),
+           mCalendarView, TQT_SLOT( showErrorMessage( const TQString & ) ) );
 
-  connect( mCalendarView, SIGNAL( configChanged() ),
-           SLOT( updateConfig() ) );
+  connect( mCalendarView, TQT_SIGNAL( configChanged() ),
+           TQT_SLOT( updateConfig() ) );
 
   initCalendar( mCalendarResources );
 }
@@ -225,58 +225,58 @@ void ActionManager::initActions()
   //~~~~~~~~~~~~~~~~~~~~~~~ LOADING / SAVING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if ( mIsPart ) {
     if ( mMainWindow->hasDocument() ) {
-      KStdAction::openNew( this, SLOT(file_new()), mACollection, "korganizer_openNew" );
-      KStdAction::open( this, SLOT( file_open() ), mACollection, "korganizer_open" );
-      mRecent = KStdAction::openRecent( this, SLOT( file_open( const KURL& ) ),
+      KStdAction::openNew( this, TQT_SLOT(file_new()), mACollection, "korganizer_openNew" );
+      KStdAction::open( this, TQT_SLOT( file_open() ), mACollection, "korganizer_open" );
+      mRecent = KStdAction::openRecent( this, TQT_SLOT( file_open( const KURL& ) ),
                                      mACollection, "korganizer_openRecent" );
-      KStdAction::revert( this,SLOT( file_revert() ), mACollection, "korganizer_revert" );
-      KStdAction::saveAs( this, SLOT( file_saveas() ), mACollection,
+      KStdAction::revert( this,TQT_SLOT( file_revert() ), mACollection, "korganizer_revert" );
+      KStdAction::saveAs( this, TQT_SLOT( file_saveas() ), mACollection,
                    "korganizer_saveAs" );
-      KStdAction::save( this, SLOT( file_save() ), mACollection, "korganizer_save" );
+      KStdAction::save( this, TQT_SLOT( file_save() ), mACollection, "korganizer_save" );
     }
-    KStdAction::print( mCalendarView, SLOT( print() ), mACollection, "korganizer_print" );
+    KStdAction::print( mCalendarView, TQT_SLOT( print() ), mACollection, "korganizer_print" );
   } else {
-    KStdAction::openNew( this, SLOT( file_new() ), mACollection );
-    KStdAction::open( this, SLOT( file_open() ), mACollection );
-    mRecent = KStdAction::openRecent( this, SLOT( file_open( const KURL& ) ),
+    KStdAction::openNew( this, TQT_SLOT( file_new() ), mACollection );
+    KStdAction::open( this, TQT_SLOT( file_open() ), mACollection );
+    mRecent = KStdAction::openRecent( this, TQT_SLOT( file_open( const KURL& ) ),
                                      mACollection );
     if ( mMainWindow->hasDocument() ) {
-      KStdAction::revert( this,SLOT( file_revert() ), mACollection );
-      KStdAction::save( this, SLOT( file_save() ), mACollection );
-      KStdAction::saveAs( this, SLOT( file_saveas() ), mACollection );
+      KStdAction::revert( this,TQT_SLOT( file_revert() ), mACollection );
+      KStdAction::save( this, TQT_SLOT( file_save() ), mACollection );
+      KStdAction::saveAs( this, TQT_SLOT( file_saveas() ), mACollection );
     }
-    KStdAction::print( mCalendarView, SLOT( print() ), mACollection );
+    KStdAction::print( mCalendarView, TQT_SLOT( print() ), mACollection );
   }
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~ IMPORT / EXPORT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  new KAction( i18n("Import &Calendar..."), 0, this, SLOT( file_merge() ),
+  new KAction( i18n("Import &Calendar..."), 0, this, TQT_SLOT( file_merge() ),
                mACollection, "import_icalendar" );
-  new KAction( i18n("&Import From UNIX Ical tool"), 0, this, SLOT( file_icalimport() ),
+  new KAction( i18n("&Import From UNIX Ical tool"), 0, this, TQT_SLOT( file_icalimport() ),
                mACollection, "import_ical" );
   new KAction( i18n("Get &Hot New Stuff..."), 0, this,
-               SLOT( downloadNewStuff() ), mACollection,
+               TQT_SLOT( downloadNewStuff() ), mACollection,
                "downloadnewstuff" );
 
   new KAction( i18n("Export &Web Page..."), "webexport", 0,
-               mCalendarView, SLOT( exportWeb() ),
+               mCalendarView, TQT_SLOT( exportWeb() ),
                mACollection, "export_web" );
   new KAction( i18n("&iCalendar..."), 0,
-               mCalendarView, SLOT( exportICalendar() ),
+               mCalendarView, TQT_SLOT( exportICalendar() ),
                mACollection, "export_icalendar" );
   new KAction( i18n("&vCalendar..."), 0,
-               mCalendarView, SLOT( exportVCalendar() ),
+               mCalendarView, TQT_SLOT( exportVCalendar() ),
                mACollection, "export_vcalendar" );
   new KAction( i18n("Upload &Hot New Stuff..."), 0, this,
-               SLOT( uploadNewStuff() ), mACollection,
+               TQT_SLOT( uploadNewStuff() ), mACollection,
                "uploadnewstuff" );
 
 
 
-  new KAction( i18n("Archive O&ld Entries..."), 0, this, SLOT( file_archive() ),
+  new KAction( i18n("Archive O&ld Entries..."), 0, this, TQT_SLOT( file_archive() ),
                     mACollection, "file_archive" );
   new KAction( i18n("delete completed to-dos", "Pur&ge Completed To-dos"), 0,
-               mCalendarView, SLOT( purgeCompleted() ), mACollection,
+               mCalendarView, TQT_SLOT( purgeCompleted() ), mACollection,
                "purge_completed" );
 
 
@@ -287,45 +287,45 @@ void ActionManager::initActions()
   KOrg::History *h = mCalendarView->history();
   if ( mIsPart ) {
     // edit menu
-    mCutAction = KStdAction::cut( mCalendarView, SLOT( edit_cut() ),
+    mCutAction = KStdAction::cut( mCalendarView, TQT_SLOT( edit_cut() ),
                                   mACollection, "korganizer_cut" );
-    mCopyAction = KStdAction::copy( mCalendarView, SLOT( edit_copy() ),
+    mCopyAction = KStdAction::copy( mCalendarView, TQT_SLOT( edit_copy() ),
                                     mACollection, "korganizer_copy" );
-    pasteAction = KStdAction::paste( mCalendarView, SLOT( edit_paste() ),
+    pasteAction = KStdAction::paste( mCalendarView, TQT_SLOT( edit_paste() ),
                                      mACollection, "korganizer_paste" );
-    mUndoAction = KStdAction::undo( h, SLOT( undo() ),
+    mUndoAction = KStdAction::undo( h, TQT_SLOT( undo() ),
                                     mACollection, "korganizer_undo" );
-    mRedoAction = KStdAction::redo( h, SLOT( redo() ),
+    mRedoAction = KStdAction::redo( h, TQT_SLOT( redo() ),
                                     mACollection, "korganizer_redo" );
   } else {
-    mCutAction = KStdAction::cut( mCalendarView,SLOT( edit_cut() ),
+    mCutAction = KStdAction::cut( mCalendarView,TQT_SLOT( edit_cut() ),
                                   mACollection );
-    mCopyAction = KStdAction::copy( mCalendarView,SLOT( edit_copy() ),
+    mCopyAction = KStdAction::copy( mCalendarView,TQT_SLOT( edit_copy() ),
                                     mACollection );
-    pasteAction = KStdAction::paste( mCalendarView,SLOT( edit_paste() ),
+    pasteAction = KStdAction::paste( mCalendarView,TQT_SLOT( edit_paste() ),
                                      mACollection );
-    mUndoAction = KStdAction::undo( h, SLOT( undo() ), mACollection );
-    mRedoAction = KStdAction::redo( h, SLOT( redo() ), mACollection );
+    mUndoAction = KStdAction::undo( h, TQT_SLOT( undo() ), mACollection );
+    mRedoAction = KStdAction::redo( h, TQT_SLOT( redo() ), mACollection );
   }
   mDeleteAction = new KAction( i18n("&Delete"), "editdelete", 0,
-                               mCalendarView, SLOT( appointment_delete() ),
+                               mCalendarView, TQT_SLOT( appointment_delete() ),
                                mACollection, "edit_delete" );
   if ( mIsPart ) {
-    KStdAction::find( mCalendarView->dialogManager(), SLOT( showSearchDialog() ),
+    KStdAction::find( mCalendarView->dialogManager(), TQT_SLOT( showSearchDialog() ),
                      mACollection, "korganizer_find" );
   } else {
-    KStdAction::find( mCalendarView->dialogManager(), SLOT( showSearchDialog() ),
+    KStdAction::find( mCalendarView->dialogManager(), TQT_SLOT( showSearchDialog() ),
                      mACollection );
   }
   pasteAction->setEnabled( false );
   mUndoAction->setEnabled( false );
   mRedoAction->setEnabled( false );
-  connect( mCalendarView, SIGNAL( pasteEnabled( bool ) ),
-           pasteAction, SLOT( setEnabled( bool ) ) );
-  connect( h, SIGNAL( undoAvailable( const QString & ) ),
-           SLOT( updateUndoAction( const QString & ) ) );
-  connect( h, SIGNAL( redoAvailable( const QString & ) ),
-           SLOT( updateRedoAction( const QString & ) ) );
+  connect( mCalendarView, TQT_SIGNAL( pasteEnabled( bool ) ),
+           pasteAction, TQT_SLOT( setEnabled( bool ) ) );
+  connect( h, TQT_SIGNAL( undoAvailable( const TQString & ) ),
+           TQT_SLOT( updateUndoAction( const TQString & ) ) );
+  connect( h, TQT_SIGNAL( redoAvailable( const TQString & ) ),
+           TQT_SLOT( updateRedoAction( const TQString & ) ) );
 
 
 
@@ -335,83 +335,83 @@ void ActionManager::initActions()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VIEWS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   new KAction( i18n("What's &Next"),
                KOGlobals::self()->smallIcon( "whatsnext" ), 0,
-               mCalendarView->viewManager(), SLOT( showWhatsNextView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showWhatsNextView() ),
                mACollection, "view_whatsnext" );
   new KAction( i18n("&Day"),
                KOGlobals::self()->smallIcon( "1day" ), 0,
-               mCalendarView->viewManager(), SLOT( showDayView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showDayView() ),
                mACollection, "view_day" );
   mNextXDays = new KAction( "",
                             KOGlobals::self()->smallIcon( "xdays" ), 0,
                             mCalendarView->viewManager(),
-                            SLOT( showNextXView() ),
+                            TQT_SLOT( showNextXView() ),
                             mACollection, "view_nextx" );
   mNextXDays->setText( i18n( "&Next Day", "Ne&xt %n Days",
                              KOPrefs::instance()->mNextXDays ) );
   new KAction( i18n("W&ork Week"),
                KOGlobals::self()->smallIcon( "5days" ), 0,
-               mCalendarView->viewManager(), SLOT( showWorkWeekView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showWorkWeekView() ),
                mACollection, "view_workweek" );
   new KAction( i18n("&Week"),
                KOGlobals::self()->smallIcon( "7days" ), 0,
-               mCalendarView->viewManager(), SLOT( showWeekView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showWeekView() ),
                mACollection, "view_week" );
   new KAction( i18n("&Month"),
                KOGlobals::self()->smallIcon( "month" ), 0,
-               mCalendarView->viewManager(), SLOT( showMonthView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showMonthView() ),
                mACollection, "view_month" );
   new KAction( i18n("&List"),
                KOGlobals::self()->smallIcon( "list" ), 0,
-               mCalendarView->viewManager(), SLOT( showListView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showListView() ),
                mACollection, "view_list" );
   new KAction( i18n("&To-do List"),
                KOGlobals::self()->smallIcon( "todo" ), 0,
-               mCalendarView->viewManager(), SLOT( showTodoView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showTodoView() ),
                mACollection, "view_todo" );
   new KAction( i18n("&Journal"),
                KOGlobals::self()->smallIcon( "journal" ), 0,
-               mCalendarView->viewManager(), SLOT( showJournalView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showJournalView() ),
                mACollection, "view_journal" );
   new KAction( i18n("&Timeline View"),
                KOGlobals::self()->smallIcon( "timeline" ), 0,
-               mCalendarView->viewManager(), SLOT( showTimelineView() ),
+               mCalendarView->viewManager(), TQT_SLOT( showTimelineView() ),
                mACollection, "view_timeline" );
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~ FILTERS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   new KAction( i18n("&Refresh"), 0,
-                    mCalendarView, SLOT( updateView() ),
+                    mCalendarView, TQT_SLOT( updateView() ),
                     mACollection, "update" );
 // TODO:
 //   new KAction( i18n("Hide &Completed To-dos"), 0,
-//                     mCalendarView, SLOT( toggleHideCompleted() ),
+//                     mCalendarView, TQT_SLOT( toggleHideCompleted() ),
 //                     mACollection, "hide_completed_todos" );
 
   mFilterAction = new KSelectAction( i18n("F&ilter"), 0,
                   mACollection, "filter_select" );
   mFilterAction->setEditable( false );
-  connect( mFilterAction, SIGNAL( activated(int) ),
-           mCalendarView, SLOT( filterActivated( int ) ) );
-  connect( mCalendarView, SIGNAL( newFilterListSignal( const QStringList & ) ),
-           mFilterAction, SLOT( setItems( const QStringList & ) ) );
-  connect( mCalendarView, SIGNAL( selectFilterSignal( int ) ),
-           mFilterAction, SLOT( setCurrentItem( int ) ) );
-  connect( mCalendarView, SIGNAL( filterChanged() ),
-           this, SLOT( setTitle() ) );
+  connect( mFilterAction, TQT_SIGNAL( activated(int) ),
+           mCalendarView, TQT_SLOT( filterActivated( int ) ) );
+  connect( mCalendarView, TQT_SIGNAL( newFilterListSignal( const TQStringList & ) ),
+           mFilterAction, TQT_SLOT( setItems( const TQStringList & ) ) );
+  connect( mCalendarView, TQT_SIGNAL( selectFilterSignal( int ) ),
+           mFilterAction, TQT_SLOT( setCurrentItem( int ) ) );
+  connect( mCalendarView, TQT_SIGNAL( filterChanged() ),
+           this, TQT_SLOT( setTitle() ) );
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ZOOM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // TODO: try to find / create better icons for the following 4 actions
   new KAction( i18n( "Zoom In Horizontally" ), "viewmag+", 0,
-                    mCalendarView->viewManager(), SLOT( zoomInHorizontally() ),
+                    mCalendarView->viewManager(), TQT_SLOT( zoomInHorizontally() ),
                     mACollection, "zoom_in_horizontally" );
   new KAction( i18n( "Zoom Out Horizontally" ), "viewmag-", 0,
-                    mCalendarView->viewManager(), SLOT( zoomOutHorizontally() ),
+                    mCalendarView->viewManager(), TQT_SLOT( zoomOutHorizontally() ),
                     mACollection, "zoom_out_horizontally" );
   new KAction( i18n( "Zoom In Vertically" ), "viewmag+", 0,
-                    mCalendarView->viewManager(), SLOT( zoomInVertically() ),
+                    mCalendarView->viewManager(), TQT_SLOT( zoomInVertically() ),
                     mACollection, "zoom_in_vertically" );
   new KAction( i18n( "Zoom Out Vertically" ), "viewmag-", 0,
-                    mCalendarView->viewManager(), SLOT( zoomOutVertically() ),
+                    mCalendarView->viewManager(), TQT_SLOT( zoomOutVertically() ),
                     mACollection, "zoom_out_vertically" );
 
 
@@ -420,73 +420,73 @@ void ActionManager::initActions()
   //************************** Actions MENU *********************************
 
   new KAction( i18n("Go to &Today"), "today", 0,
-                    mCalendarView,SLOT( goToday() ),
+                    mCalendarView,TQT_SLOT( goToday() ),
                     mACollection, "go_today" );
-  bool isRTL = QApplication::reverseLayout();
+  bool isRTL = TQApplication::reverseLayout();
   action = new KAction( i18n("Go &Backward"), isRTL ? "forward" : "back", 0,
-                        mCalendarView,SLOT( goPrevious() ),
+                        mCalendarView,TQT_SLOT( goPrevious() ),
                         mACollection, "go_previous" );
 
   // Changing the action text by setText makes the toolbar button disappear.
   // This has to be fixed first, before the connects below can be reenabled.
   /*
-  connect( mCalendarView, SIGNAL( changeNavStringPrev( const QString & ) ),
-           action, SLOT( setText( const QString & ) ) );
-  connect( mCalendarView, SIGNAL( changeNavStringPrev( const QString & ) ),
-           this, SLOT( dumpText( const QString & ) ) );*/
+  connect( mCalendarView, TQT_SIGNAL( changeNavStringPrev( const TQString & ) ),
+           action, TQT_SLOT( setText( const TQString & ) ) );
+  connect( mCalendarView, TQT_SIGNAL( changeNavStringPrev( const TQString & ) ),
+           this, TQT_SLOT( dumpText( const TQString & ) ) );*/
 
   action = new KAction( i18n("Go &Forward"), isRTL ? "back" : "forward", 0,
-                        mCalendarView,SLOT( goNext() ),
+                        mCalendarView,TQT_SLOT( goNext() ),
                         mACollection, "go_next" );
   /*
-  connect( mCalendarView,SIGNAL( changeNavStringNext( const QString & ) ),
-           action,SLOT( setText( const QString & ) ) );
+  connect( mCalendarView,TQT_SIGNAL( changeNavStringNext( const TQString & ) ),
+           action,TQT_SLOT( setText( const TQString & ) ) );
   */
 
 
   //************************** Actions MENU *********************************
   new KAction( i18n("New E&vent..."),
                KOGlobals::self()->smallIcon( "newappointment" ), 0,
-               mCalendarView, SLOT( newEvent() ),
+               mCalendarView, TQT_SLOT( newEvent() ),
                mACollection, "new_event" );
   new KAction( i18n("New &To-do..."),
                KOGlobals::self()->smallIcon( "newtodo" ), 0,
-               mCalendarView, SLOT( newTodo() ),
+               mCalendarView, TQT_SLOT( newTodo() ),
                mACollection, "new_todo" );
   action = new KAction( i18n("New Su&b-to-do..."), 0,
-                        mCalendarView,SLOT( newSubTodo() ),
+                        mCalendarView,TQT_SLOT( newSubTodo() ),
                         mACollection, "new_subtodo" );
   action->setEnabled( false );
-  connect( mCalendarView,SIGNAL( todoSelected( bool ) ),
-           action,SLOT( setEnabled( bool ) ) );
+  connect( mCalendarView,TQT_SIGNAL( todoSelected( bool ) ),
+           action,TQT_SLOT( setEnabled( bool ) ) );
   new KAction( i18n("New &Journal..."),
                KOGlobals::self()->smallIcon( "newjournal" ), 0,
-               mCalendarView, SLOT( newJournal() ),
+               mCalendarView, TQT_SLOT( newJournal() ),
                mACollection, "new_journal" );
 
   mShowIncidenceAction = new KAction( i18n("&Show"), 0,
-                                      mCalendarView,SLOT( showIncidence() ),
+                                      mCalendarView,TQT_SLOT( showIncidence() ),
                                       mACollection, "show_incidence" );
   mEditIncidenceAction = new KAction( i18n("&Edit..."), 0,
-                                      mCalendarView,SLOT( editIncidence() ),
+                                      mCalendarView,TQT_SLOT( editIncidence() ),
                                       mACollection, "edit_incidence" );
   mDeleteIncidenceAction = new KAction( i18n("&Delete"), Key_Delete,
-                                        mCalendarView,SLOT( deleteIncidence()),
+                                        mCalendarView,TQT_SLOT( deleteIncidence()),
                                         mACollection, "delete_incidence" );
 
   action = new KAction( i18n("&Make Sub-to-do Independent"), 0,
-                        mCalendarView,SLOT( todo_unsub() ),
+                        mCalendarView,TQT_SLOT( todo_unsub() ),
                         mACollection, "unsub_todo" );
   action->setEnabled( false );
-  connect( mCalendarView,SIGNAL( subtodoSelected( bool ) ),
-           action,SLOT( setEnabled( bool ) ) );
+  connect( mCalendarView,TQT_SIGNAL( subtodoSelected( bool ) ),
+           action,TQT_SLOT( setEnabled( bool ) ) );
 // TODO: Add item to move the incidence to different resource
 //   mAssignResourceAction = new KAction( i18n("Assign &Resource..."), 0,
-//                                        mCalendarView, SLOT( assignResource()),
+//                                        mCalendarView, TQT_SLOT( assignResource()),
 //                                        mACollection, "assign_resource" );
 // TODO: Add item to quickly toggle the reminder of a given incidence
 //   mToggleAlarmAction = new KToggleAction( i18n("&Activate Reminder"), 0,
-//                                         mCalendarView, SLOT( toggleAlarm()),
+//                                         mCalendarView, TQT_SLOT( toggleAlarm()),
 //                                         mACollection, "activate_alarm" );
 
 
@@ -494,63 +494,63 @@ void ActionManager::initActions()
 
   //************************** SCHEDULE MENU ********************************
   mPublishEvent = new KAction( i18n("&Publish Item Information..."), "mail_send", 0,
-                               mCalendarView, SLOT( schedule_publish() ),
+                               mCalendarView, TQT_SLOT( schedule_publish() ),
                                mACollection, "schedule_publish" );
   mPublishEvent->setEnabled( false );
 
   action = new KAction( i18n("Send &Invitation to Attendees"),"mail_generic",0,
-                        mCalendarView,SLOT( schedule_request() ),
+                        mCalendarView,TQT_SLOT( schedule_request() ),
                         mACollection,"schedule_request" );
   action->setEnabled( false );
-  connect( mCalendarView, SIGNAL( organizerEventsSelected( bool ) ),
-           action, SLOT( setEnabled( bool ) ) );
+  connect( mCalendarView, TQT_SIGNAL( organizerEventsSelected( bool ) ),
+           action, TQT_SLOT( setEnabled( bool ) ) );
 
   action = new KAction( i18n("Re&quest Update"), 0,
-                        mCalendarView, SLOT( schedule_refresh() ),
+                        mCalendarView, TQT_SLOT( schedule_refresh() ),
                         mACollection, "schedule_refresh" );
   action->setEnabled( false );
-  connect( mCalendarView,SIGNAL( groupEventsSelected( bool ) ),
-           action,SLOT( setEnabled( bool ) ) );
+  connect( mCalendarView,TQT_SIGNAL( groupEventsSelected( bool ) ),
+           action,TQT_SLOT( setEnabled( bool ) ) );
 
   action = new KAction( i18n("Send &Cancelation to Attendees"), 0,
-                        mCalendarView, SLOT( schedule_cancel() ),
+                        mCalendarView, TQT_SLOT( schedule_cancel() ),
                         mACollection, "schedule_cancel" );
   action->setEnabled( false );
-  connect( mCalendarView,SIGNAL( organizerEventsSelected( bool ) ),
-           action,SLOT( setEnabled( bool ) ) );
+  connect( mCalendarView,TQT_SIGNAL( organizerEventsSelected( bool ) ),
+           action,TQT_SLOT( setEnabled( bool ) ) );
 
   action = new KAction( i18n("Send Status &Update"),"mail_reply",0,
-                        mCalendarView,SLOT( schedule_reply() ),
+                        mCalendarView,TQT_SLOT( schedule_reply() ),
                         mACollection,"schedule_reply" );
   action->setEnabled( false );
-  connect( mCalendarView,SIGNAL( groupEventsSelected( bool ) ),
-           action,SLOT( setEnabled( bool ) ) );
+  connect( mCalendarView,TQT_SIGNAL( groupEventsSelected( bool ) ),
+           action,TQT_SLOT( setEnabled( bool ) ) );
 
   action = new KAction( i18n("counter proposal","Request Chan&ge"),0,
-                        mCalendarView,SLOT( schedule_counter() ),
+                        mCalendarView,TQT_SLOT( schedule_counter() ),
                         mACollection, "schedule_counter" );
   action->setEnabled( false );
-  connect( mCalendarView,SIGNAL( groupEventsSelected( bool ) ),
-           action,SLOT( setEnabled( bool ) ) );
+  connect( mCalendarView,TQT_SIGNAL( groupEventsSelected( bool ) ),
+           action,TQT_SLOT( setEnabled( bool ) ) );
 
   mForwardEvent = new KAction( i18n("&Send as iCalendar..."), "mail_forward", 0,
-                               mCalendarView, SLOT(schedule_forward()),
+                               mCalendarView, TQT_SLOT(schedule_forward()),
                                mACollection, "schedule_forward" );
   mForwardEvent->setEnabled( false );
 
   action = new KAction( i18n("&Mail Free Busy Information..."), 0,
-                        mCalendarView, SLOT( mailFreeBusy() ),
+                        mCalendarView, TQT_SLOT( mailFreeBusy() ),
                         mACollection, "mail_freebusy" );
   action->setEnabled( true );
 
   action = new KAction( i18n("&Upload Free Busy Information"), 0,
-                        mCalendarView, SLOT( uploadFreeBusy() ),
+                        mCalendarView, TQT_SLOT( uploadFreeBusy() ),
                         mACollection, "upload_freebusy" );
   action->setEnabled( true );
 
   if ( !mIsPart ) {
       action = new KAction( i18n("&Addressbook"),"contents",0,
-                            mCalendarView,SLOT( openAddressbook() ),
+                            mCalendarView,TQT_SLOT( openAddressbook() ),
                             mACollection,"addressbook" );
   }
 
@@ -561,13 +561,13 @@ void ActionManager::initActions()
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SIDEBAR ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   mDateNavigatorShowAction = new KToggleAction( i18n("Show Date Navigator"), 0,
-                      this, SLOT( toggleDateNavigator() ),
+                      this, TQT_SLOT( toggleDateNavigator() ),
                       mACollection, "show_datenavigator" );
   mTodoViewShowAction = new KToggleAction ( i18n("Show To-do View"), 0,
-                      this, SLOT( toggleTodoView() ),
+                      this, TQT_SLOT( toggleTodoView() ),
                       mACollection, "show_todoview" );
   mEventViewerShowAction = new KToggleAction ( i18n("Show Item Viewer"), 0,
-                      this, SLOT( toggleEventViewer() ),
+                      this, TQT_SLOT( toggleEventViewer() ),
                       mACollection, "show_eventviewer" );
   KConfig *config = KOGlobals::self()->config();
   config->setGroup( "Settings" );
@@ -586,10 +586,10 @@ void ActionManager::initActions()
 
   if ( !mMainWindow->hasDocument() ) {
     mResourceViewShowAction = new KToggleAction ( i18n("Show Resource View"), 0,
-                        this, SLOT( toggleResourceView() ),
+                        this, TQT_SLOT( toggleResourceView() ),
                         mACollection, "show_resourceview" );
     mResourceButtonsAction = new KToggleAction( i18n("Show &Resource Buttons"), 0,
-                        this, SLOT( toggleResourceButtons() ),
+                        this, TQT_SLOT( toggleResourceButtons() ),
                         mACollection, "show_resourcebuttons" );
     mResourceViewShowAction->setChecked(
         config->readBoolEntry( "ResourceViewVisible", true ) );
@@ -604,45 +604,45 @@ void ActionManager::initActions()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SIDEBAR ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   new KAction( i18n("Configure &Date && Time..."), 0,
-                    this, SLOT( configureDateTime() ),
+                    this, TQT_SLOT( configureDateTime() ),
                     mACollection, "conf_datetime" );
 // TODO: Add an item to show the resource management dlg
 //   new KAction( i18n("Manage &Resources..."), 0,
-//                     this, SLOT( manageResources() ),
+//                     this, TQT_SLOT( manageResources() ),
 //                     mACollection, "conf_resources" );
   new KAction( i18n("Manage View &Filters..."), "configure", 0,
-               mCalendarView, SLOT( editFilters() ),
+               mCalendarView, TQT_SLOT( editFilters() ),
                mACollection, "edit_filters" );
   new KAction( i18n("Manage C&ategories..."), 0,
-               mCalendarView->dialogManager(), SLOT( showCategoryEditDialog() ),
+               mCalendarView->dialogManager(), TQT_SLOT( showCategoryEditDialog() ),
                mACollection, "edit_categories" );
   if ( mIsPart ) {
     new KAction( i18n("&Configure Calendar..."), "configure", 0,
-                 mCalendarView, SLOT( edit_options() ),
+                 mCalendarView, TQT_SLOT( edit_options() ),
                  mACollection, "korganizer_configure" );
-    KStdAction::keyBindings( this, SLOT( keyBindings() ),
+    KStdAction::keyBindings( this, TQT_SLOT( keyBindings() ),
                              mACollection, "korganizer_configure_shortcuts" );
   } else {
-    KStdAction::preferences( mCalendarView, SLOT( edit_options() ),
+    KStdAction::preferences( mCalendarView, TQT_SLOT( edit_options() ),
                             mACollection );
-    KStdAction::keyBindings( this, SLOT( keyBindings() ), mACollection );
+    KStdAction::keyBindings( this, TQT_SLOT( keyBindings() ), mACollection );
   }
 
 
 
 
   //**************************** HELP MENU **********************************
-  KStdAction::tipOfDay( this, SLOT( showTip() ), mACollection,
+  KStdAction::tipOfDay( this, TQT_SLOT( showTip() ), mACollection,
                         "help_tipofday" );
 //   new KAction( i18n("Show Intro Page"), 0,
-//                     mCalendarView,SLOT( showIntro() ),
+//                     mCalendarView,TQT_SLOT( showIntro() ),
 //                     mACollection,"show_intro" );
 
 
 
 
   //************************* TOOLBAR ACTIONS *******************************
-  QLabel *filterLabel = new QLabel( i18n("Filter: "), mCalendarView );
+  TQLabel *filterLabel = new TQLabel( i18n("Filter: "), mCalendarView );
   filterLabel->hide();
   new KWidgetAction( filterLabel, i18n("Filter: "), 0, 0, 0,
                      mACollection, "filter_label" );
@@ -705,7 +705,7 @@ void ActionManager::file_new()
 void ActionManager::file_open()
 {
   KURL url;
-  QString defaultPath = locateLocal( "data","korganizer/" );
+  TQString defaultPath = locateLocal( "data","korganizer/" );
   url = KFileDialog::getOpenURL( defaultPath,i18n("*.vcs *.ics|Calendar Files"),
                                 dialogParent() );
 
@@ -738,12 +738,12 @@ void ActionManager::file_icalimport()
   // FIXME: eventually, we will need a dialog box to select import type, etc.
   // for now, hard-coded to ical file, $HOME/.calendar.
   int retVal = -1;
-  QString progPath;
+  TQString progPath;
   KTempFile tmpfn;
 
-  QString homeDir = QDir::homeDirPath() + QString::fromLatin1( "/.calendar" );
+  TQString homeDir = TQDir::homeDirPath() + TQString::fromLatin1( "/.calendar" );
 
-  if ( !QFile::exists( homeDir ) ) {
+  if ( !TQFile::exists( homeDir ) ) {
     KMessageBox::error( dialogParent(),
                        i18n( "You have no ical file in your home directory.\n"
                             "Import cannot proceed.\n" ) );
@@ -878,7 +878,7 @@ bool ActionManager::openURL( const KURL &url,bool merge )
     }
     setTitle();
   } else {
-    QString tmpFile;
+    TQString tmpFile;
     if( KIO::NetAccess::download( url, tmpFile, view() ) ) {
       kdDebug(5850) << "--- Downloaded to " << tmpFile << endl;
       bool success = mCalendarView->openCalendar( tmpFile, merge );
@@ -901,7 +901,7 @@ bool ActionManager::openURL( const KURL &url,bool merge )
       }
       return success;
     } else {
-      QString msg;
+      TQString msg;
       msg = i18n("Cannot download calendar from '%1'.").arg( url.prettyURL() );
       KMessageBox::error( dialogParent(), msg );
       return false;
@@ -918,7 +918,7 @@ bool ActionManager::addResource( const KURL &mUrl )
 
   ResourceCalendar *resource = 0;
 
-  QString name;
+  TQString name;
 
   kdDebug(5850) << "URL: " << mUrl << endl;
   if ( mUrl.isLocalFile() ) {
@@ -948,7 +948,7 @@ bool ActionManager::addResource( const KURL &mUrl )
     if ( mCalendarResources )
       mCalendarResources->resourceAdded( resource );
   } else {
-    QString msg = i18n("Unable to create calendar resource '%1'.")
+    TQString msg = i18n("Unable to create calendar resource '%1'.")
                       .arg( name );
     KMessageBox::error( dialogParent(), msg );
   }
@@ -976,7 +976,7 @@ void ActionManager::closeURL()
 
 bool ActionManager::saveURL()
 {
-  QString ext;
+  TQString ext;
 
   if ( mURL.isLocalFile() ) {
     ext = mFile.right( 4 );
@@ -993,7 +993,7 @@ bool ActionManager::saveURL()
         true );
     if ( result != KMessageBox::Continue ) return false;
 
-    QString filename = mURL.fileName();
+    TQString filename = mURL.fileName();
     filename.replace( filename.length() - 4, 4, ".ics" );
     mURL.setFileName( filename );
     if ( mURL.isLocalFile() ) {
@@ -1013,7 +1013,7 @@ bool ActionManager::saveURL()
 
   if ( !mURL.isLocalFile() ) {
     if ( !KIO::NetAccess::upload( mFile, mURL, view() ) ) {
-      QString msg = i18n("Cannot upload calendar to '%1'")
+      TQString msg = i18n("Cannot upload calendar to '%1'")
                     .arg( mURL.prettyURL() );
       KMessageBox::error( dialogParent() ,msg );
       return false;
@@ -1038,10 +1038,10 @@ void ActionManager::exportHTML()
   // seem to load the config theirselves
   settings.readConfig();
 
-  QDate qd1;
-  qd1 = QDate::currentDate();
-  QDate qd2;
-  qd2 = QDate::currentDate();
+  TQDate qd1;
+  qd1 = TQDate::currentDate();
+  TQDate qd2;
+  qd2 = TQDate::currentDate();
   if ( settings.monthView() )
     qd2.addMonths( 1 );
   else
@@ -1063,12 +1063,12 @@ void ActionManager::exportHTML( HTMLExportSettings *settings )
 
   KCal::HtmlExport mExport( mCalendarView->calendar(), settings );
 
-  QDate cdate = settings->dateStart().date();
-  QDate qd2 = settings->dateEnd().date();
+  TQDate cdate = settings->dateStart().date();
+  TQDate qd2 = settings->dateEnd().date();
   while ( cdate <= qd2 ) {
-    QStringList holidays = KOGlobals::self()->holiday( cdate );
+    TQStringList holidays = KOGlobals::self()->holiday( cdate );
     if ( !holidays.isEmpty() ) {
-      QStringList::ConstIterator it = holidays.begin();
+      TQStringList::ConstIterator it = holidays.begin();
       for ( ; it != holidays.end(); ++it ) {
         mExport.addHoliday( cdate, *it );
       }
@@ -1081,7 +1081,7 @@ void ActionManager::exportHTML( HTMLExportSettings *settings )
     mExport.save( dest.path() );
   } else {
     KTempFile tf;
-    QString tfile = tf.name();
+    TQString tfile = tf.name();
     tf.close();
     mExport.save( tfile );
     if ( !KIO::NetAccess::upload( tfile, dest, view() ) ) {
@@ -1105,7 +1105,7 @@ bool ActionManager::saveAsURL( const KURL &url )
     return false;
   }
 
-  QString fileOrig = mFile;
+  TQString fileOrig = mFile;
   KURL URLOrig = mURL;
 
   KTempFile *tempFile = 0;
@@ -1153,7 +1153,7 @@ bool ActionManager::saveModifiedURL()
     int result = KMessageBox::warningYesNoCancel(
         dialogParent(),
         i18n("The calendar has been modified.\nDo you want to save it?"),
-        QString::null,
+        TQString::null,
         KStdGuiItem::save(), KStdGuiItem::discard() );
     switch( result ) {
       case KMessageBox::Yes:
@@ -1184,9 +1184,9 @@ KURL ActionManager::getSaveURL()
 
   if ( url.isEmpty() ) return url;
 
-  QString filename = url.fileName( false );
+  TQString filename = url.fileName( false );
 
-  QString e = filename.right( 4 );
+  TQString e = filename.right( 4 );
   if ( e != ".vcs" && e != ".ics" ) {
     // Default save format is iCalendar
     filename += ".ics";
@@ -1215,7 +1215,7 @@ void ActionManager::readProperties( KConfig *config )
 
   bool isResourceCalendar(
     config->readBoolEntry( "UseResourceCalendar", true ) );
-  QString calendarUrl = config->readPathEntry( "Calendar" );
+  TQString calendarUrl = config->readPathEntry( "Calendar" );
 
   if ( !isResourceCalendar && !calendarUrl.isEmpty() ) {
     mMainWindow->init( true );
@@ -1284,8 +1284,8 @@ void ActionManager::configureDateTime()
   KProcess *proc = new KProcess;
   *proc << "kcmshell" << "language";
 
-  connect( proc,SIGNAL( processExited( KProcess * ) ),
-          SLOT( configureDateTimeFinished( KProcess * ) ) );
+  connect( proc,TQT_SIGNAL( processExited( KProcess * ) ),
+          TQT_SLOT( configureDateTimeFinished( KProcess * ) ) );
 
   if ( !proc->start() ) {
       KMessageBox::sorry( dialogParent(),
@@ -1296,7 +1296,7 @@ void ActionManager::configureDateTime()
 
 void ActionManager::showTip()
 {
-  KTipDialog::showTip( dialogParent(),QString::null,true );
+  KTipDialog::showTip( dialogParent(),TQString::null,true );
 }
 
 void ActionManager::showTipOnStart()
@@ -1314,7 +1314,7 @@ KOrg::MainWindow *ActionManager::findInstance( const KURL &url )
   }
 }
 
-void ActionManager::dumpText( const QString &str )
+void ActionManager::dumpText( const TQString &str )
 {
   kdDebug(5850) << "ActionManager::dumpText(): " << str << endl;
 }
@@ -1356,37 +1356,37 @@ void ActionManager::toggleResourceButtons()
   if ( mResourceView ) mResourceView->showButtons( visible );
 }
 
-bool ActionManager::openURL( const QString &url )
+bool ActionManager::openURL( const TQString &url )
 {
   return openURL( KURL( url ) );
 }
 
-bool ActionManager::mergeURL( const QString &url )
+bool ActionManager::mergeURL( const TQString &url )
 {
   return openURL( KURL( url ),true );
 }
 
-bool ActionManager::saveAsURL( const QString &url )
+bool ActionManager::saveAsURL( const TQString &url )
 {
   return saveAsURL( KURL( url ) );
 }
 
-QString ActionManager::getCurrentURLasString() const
+TQString ActionManager::getCurrentURLasString() const
 {
   return mURL.url();
 }
 
-bool ActionManager::editIncidence( const QString& uid )
+bool ActionManager::editIncidence( const TQString& uid )
 {
   return mCalendarView->editIncidence( uid );
 }
 
-bool ActionManager::deleteIncidence( const QString& uid, bool force )
+bool ActionManager::deleteIncidence( const TQString& uid, bool force )
 {
   return mCalendarView->deleteIncidence( uid, force );
 }
 
-bool ActionManager::addIncidence( const QString& ical )
+bool ActionManager::addIncidence( const TQString& ical )
 {
   return mCalendarView->addIncidence( ical );
 }
@@ -1410,7 +1410,7 @@ void ActionManager::uploadNewStuff()
   mNewStuff->upload();
 }
 
-QString ActionManager::localFileName()
+TQString ActionManager::localFileName()
 {
   return mFile;
 }
@@ -1515,9 +1515,9 @@ void ActionManager::setTitle()
   mMainWindow->setTitle();
 }
 
-KCalendarIface::ResourceRequestReply ActionManager::resourceRequest( const QValueList<QPair<QDateTime, QDateTime> >&,
- const QCString& resource,
- const QString& vCalIn )
+KCalendarIface::ResourceRequestReply ActionManager::resourceRequest( const TQValueList<QPair<TQDateTime, TQDateTime> >&,
+ const TQCString& resource,
+ const TQString& vCalIn )
 {
     kdDebug(5850) << k_funcinfo << "resource=" << resource << " vCalIn=" << vCalIn << endl;
     KCalendarIface::ResourceRequestReply reply;
@@ -1525,32 +1525,32 @@ KCalendarIface::ResourceRequestReply ActionManager::resourceRequest( const QValu
     return reply;
 }
 
-void ActionManager::openEventEditor( const QString& text )
+void ActionManager::openEventEditor( const TQString& text )
 {
   mCalendarView->newEvent( text );
 }
 
-void ActionManager::openEventEditor( const QString& summary,
-                                     const QString& description,
-                                     const QString& attachment )
+void ActionManager::openEventEditor( const TQString& summary,
+                                     const TQString& description,
+                                     const TQString& attachment )
 {
   mCalendarView->newEvent( summary, description, attachment );
 }
 
-void ActionManager::openEventEditor( const QString& summary,
-                                     const QString& description,
-                                     const QString& attachment,
-                                     const QStringList& attendees )
+void ActionManager::openEventEditor( const TQString& summary,
+                                     const TQString& description,
+                                     const TQString& attachment,
+                                     const TQStringList& attendees )
 {
   mCalendarView->newEvent( summary, description, attachment, attendees );
 }
 
-void ActionManager::openEventEditor( const QString & summary,
-                                     const QString & description,
-                                     const QString & uri,
-                                     const QString & file,
-                                     const QStringList & attendees,
-                                     const QString & attachmentMimetype )
+void ActionManager::openEventEditor( const TQString & summary,
+                                     const TQString & description,
+                                     const TQString & uri,
+                                     const TQString & file,
+                                     const TQStringList & attendees,
+                                     const TQString & attachmentMimetype )
 {
   int action = KOPrefs::instance()->defaultEmailAttachMethod();
   if ( attachmentMimetype != "message/rfc822" ) {
@@ -1562,11 +1562,11 @@ void ActionManager::openEventEditor( const QString & summary,
     menu->insertItem( i18n("Attach inline &without attachments"), KOPrefs::InlineBody );
     menu->insertSeparator();
     menu->insertItem( SmallIcon("cancel"), i18n("C&ancel"), KOPrefs::Ask );
-    action = menu->exec( QCursor::pos(), 0 );
+    action = menu->exec( TQCursor::pos(), 0 );
     delete menu;
   }
 
-  QString attData;
+  TQString attData;
   KTempFile tf;
   tf.setAutoDelete( true );
   switch ( action ) {
@@ -1580,12 +1580,12 @@ void ActionManager::openEventEditor( const QString & summary,
       break;
     case KOPrefs::InlineBody:
     {
-      QFile f( file );
+      TQFile f( file );
       if ( !f.open( IO_ReadOnly ) )
         return;
       KMime::Message *msg = new KMime::Message();
-      msg->setContent( QCString( f.readAll() ) );
-      QCString head = msg->head();
+      msg->setContent( TQCString( f.readAll() ) );
+      TQCString head = msg->head();
       msg->parse();
       if ( msg == msg->textContent() || msg->textContent() == 0 ) { // no attachments
         attData = file;
@@ -1603,7 +1603,7 @@ void ActionManager::openEventEditor( const QString & summary,
           if ( head.find( "Content-Type:", begin, false ) != begin &&
                 head.find( "Content-Transfer-Encoding:", begin, false ) != begin &&
                 !(skipFolded && (head[begin] == ' ' || head[end] == '\t')) ) {
-            QCString line = head.mid( begin, end - begin );
+            TQCString line = head.mid( begin, end - begin );
             tf.file()->writeBlock( line.data(), line.length() );
             tf.file()->writeBlock( "\n", 1 );
             skipFolded = false;
@@ -1616,12 +1616,12 @@ void ActionManager::openEventEditor( const QString & summary,
           if ( end < 0 && begin < (int)head.length() )
             end = head.length() - 1;
         }
-        QCString cte = msg->textContent()->contentTransferEncoding()->as7BitString();
+        TQCString cte = msg->textContent()->contentTransferEncoding()->as7BitString();
         if ( !cte.stripWhiteSpace().isEmpty() ) {
           tf.file()->writeBlock( cte.data(), cte.length() );
           tf.file()->writeBlock( "\n", 1 );
         }
-        QCString ct = msg->textContent()->contentType()->as7BitString();
+        TQCString ct = msg->textContent()->contentType()->as7BitString();
         if ( !ct.stripWhiteSpace().isEmpty() )
           tf.file()->writeBlock( ct.data(), ct.length() );
         tf.file()->writeBlock( "\n", 1 );
@@ -1640,32 +1640,32 @@ void ActionManager::openEventEditor( const QString & summary,
   mCalendarView->newEvent( summary, description, attData, attendees, attachmentMimetype, action != KOPrefs::Link );
 }
 
-void ActionManager::openTodoEditor( const QString& text )
+void ActionManager::openTodoEditor( const TQString& text )
 {
   mCalendarView->newTodo( text );
 }
 
-void ActionManager::openTodoEditor( const QString& summary,
-                                    const QString& description,
-                                    const QString& attachment )
+void ActionManager::openTodoEditor( const TQString& summary,
+                                    const TQString& description,
+                                    const TQString& attachment )
 {
   mCalendarView->newTodo( summary, description, attachment );
 }
 
-void ActionManager::openTodoEditor( const QString& summary,
-                                    const QString& description,
-                                    const QString& attachment,
-                                    const QStringList& attendees )
+void ActionManager::openTodoEditor( const TQString& summary,
+                                    const TQString& description,
+                                    const TQString& attachment,
+                                    const TQStringList& attendees )
 {
   mCalendarView->newTodo( summary, description, attachment, attendees );
 }
 
-void ActionManager::openTodoEditor(const QString & summary,
-                                   const QString & description,
-                                   const QString & uri,
-                                   const QString & file,
-                                   const QStringList & attendees,
-                                   const QString & attachmentMimetype)
+void ActionManager::openTodoEditor(const TQString & summary,
+                                   const TQString & description,
+                                   const TQString & uri,
+                                   const TQString & file,
+                                   const TQStringList & attendees,
+                                   const TQString & attachmentMimetype)
 {
   int action = KOPrefs::instance()->defaultTodoAttachMethod();
   if ( attachmentMimetype != "message/rfc822" ) {
@@ -1676,11 +1676,11 @@ void ActionManager::openTodoEditor(const QString & summary,
     menu->insertItem( i18n("Attach &inline"), KOPrefs::TodoAttachInlineFull );
     menu->insertSeparator();
     menu->insertItem( SmallIcon("cancel"), i18n("C&ancel"), KOPrefs::TodoAttachAsk );
-    action = menu->exec( QCursor::pos(), 0 );
+    action = menu->exec( TQCursor::pos(), 0 );
     delete menu;
   }
 
-  QString attData;
+  TQString attData;
   switch ( action ) {
     case KOPrefs::TodoAttachAsk:
       return;
@@ -1698,25 +1698,25 @@ void ActionManager::openTodoEditor(const QString & summary,
   mCalendarView->newTodo( summary, description, attData, attendees, attachmentMimetype, action != KOPrefs::Link );
 }
 
-void ActionManager::openJournalEditor( const QDate& date )
+void ActionManager::openJournalEditor( const TQDate& date )
 {
   mCalendarView->newJournal( date );
 }
 
-void ActionManager::openJournalEditor( const QString& text, const QDate& date )
+void ActionManager::openJournalEditor( const TQString& text, const TQDate& date )
 {
   mCalendarView->newJournal( text, date );
 }
 
-void ActionManager::openJournalEditor( const QString& text )
+void ActionManager::openJournalEditor( const TQString& text )
 {
   mCalendarView->newJournal( text );
 }
 
 //TODO:
-// void ActionManager::openJournalEditor( const QString& summary,
-//                                        const QString& description,
-//                                        const QString& attachment )
+// void ActionManager::openJournalEditor( const TQString& summary,
+//                                        const TQString& description,
+//                                        const TQString& attachment )
 // {
 //   mCalendarView->newJournal( summary, description, attachment );
 // }
@@ -1737,23 +1737,23 @@ void ActionManager::showEventView()
   mCalendarView->viewManager()->showEventView();
 }
 
-void ActionManager::goDate( const QDate& date )
+void ActionManager::goDate( const TQDate& date )
 {
   mCalendarView->goDate( date );
 }
 
-void ActionManager::goDate( const QString& date )
+void ActionManager::goDate( const TQString& date )
 {
   goDate( KGlobal::locale()->readDate( date ) );
 }
 
-void ActionManager::showDate(const QDate & date)
+void ActionManager::showDate(const TQDate & date)
 {
   mCalendarView->showDate( date );
 }
 
 
-void ActionManager::updateUndoAction( const QString &text )
+void ActionManager::updateUndoAction( const TQString &text )
 {
   if ( text.isNull() ) {
     mUndoAction->setEnabled( false );
@@ -1765,7 +1765,7 @@ void ActionManager::updateUndoAction( const QString &text )
   }
 }
 
-void ActionManager::updateRedoAction( const QString &text )
+void ActionManager::updateRedoAction( const TQString &text )
 {
   if ( text.isNull() ) {
     mRedoAction->setEnabled( false );
@@ -1785,12 +1785,12 @@ bool ActionManager::queryClose()
 
   if ( mCalendar && mCalendar->isModified() ) {
     int res = KMessageBox::questionYesNoCancel( dialogParent(),
-      i18n("The calendar contains unsaved changes. Do you want to save them before exiting?"), QString::null, KStdGuiItem::save(), KStdGuiItem::discard() );
+      i18n("The calendar contains unsaved changes. Do you want to save them before exiting?"), TQString::null, KStdGuiItem::save(), KStdGuiItem::discard() );
     // Exit on yes and no, don't exit on cancel. If saving fails, ask for exiting.
     if ( res == KMessageBox::Yes ) {
       close = saveModifiedURL();
       if ( !close ) {
-        int res1 = KMessageBox::questionYesNo( dialogParent(), i18n("Unable to save the calendar. Do you still want to close this window?"), QString::null, KStdGuiItem::close(), KStdGuiItem::cancel() );
+        int res1 = KMessageBox::questionYesNo( dialogParent(), i18n("Unable to save the calendar. Do you still want to close this window?"), TQString::null, KStdGuiItem::close(), KStdGuiItem::cancel() );
         close = ( res1 == KMessageBox::Yes );
       }
     } else {
@@ -1804,8 +1804,8 @@ bool ActionManager::queryClose()
       // FIXME: Put main window into a state indicating final saving.
       mIsClosing = true;
 // FIXME: Close main window when save is finished
-//      connect( mCalendarResources, SIGNAL( calendarSaved() ),
-//               mMainWindow, SLOT( close() ) );
+//      connect( mCalendarResources, TQT_SIGNAL( calendarSaved() ),
+//               mMainWindow, TQT_SLOT( close() ) );
     }
     if ( mCalendarResources->isSaving() ) {
       kdDebug(5850) << "ActionManager::queryClose(): isSaving" << endl;
@@ -1830,7 +1830,7 @@ void ActionManager::saveCalendar()
       if ( !url().isEmpty() ) {
         saveURL();
       } else {
-        QString location = locateLocal( "data", "korganizer/kontact.ics" );
+        TQString location = locateLocal( "data", "korganizer/kontact.ics" );
         saveAsURL( location );
       }
     }
@@ -1870,14 +1870,14 @@ void ActionManager::importCalendar( const KURL &url )
 
   ImportDialog *dialog;
   dialog = new ImportDialog( url, mMainWindow->topLevelWidget() );
-  connect( dialog, SIGNAL( dialogFinished( ImportDialog * ) ),
-           SLOT( slotImportDialogFinished( ImportDialog * ) ) );
-  connect( dialog, SIGNAL( openURL( const KURL &, bool ) ),
-           SLOT( openURL( const KURL &, bool ) ) );
-  connect( dialog, SIGNAL( newWindow( const KURL & ) ),
-           SIGNAL( actionNew( const KURL & ) ) );
-  connect( dialog, SIGNAL( addResource( const KURL & ) ),
-           SLOT( addResource( const KURL & ) ) );
+  connect( dialog, TQT_SIGNAL( dialogFinished( ImportDialog * ) ),
+           TQT_SLOT( slotImportDialogFinished( ImportDialog * ) ) );
+  connect( dialog, TQT_SIGNAL( openURL( const KURL &, bool ) ),
+           TQT_SLOT( openURL( const KURL &, bool ) ) );
+  connect( dialog, TQT_SIGNAL( newWindow( const KURL & ) ),
+           TQT_SIGNAL( actionNew( const KURL & ) ) );
+  connect( dialog, TQT_SIGNAL( addResource( const KURL & ) ),
+           TQT_SLOT( addResource( const KURL & ) ) );
 
   dialog->show();
 }
@@ -1902,23 +1902,23 @@ void ActionManager::slotAutoArchive()
     return;
   mAutoArchiveTimer->stop();
   EventArchiver archiver;
-  connect( &archiver, SIGNAL( eventsDeleted() ), mCalendarView, SLOT( updateView() ) );
+  connect( &archiver, TQT_SIGNAL( eventsDeleted() ), mCalendarView, TQT_SLOT( updateView() ) );
   archiver.runAuto( mCalendarView->calendar(), mCalendarView, false /*no gui*/ );
   // restart timer with the correct delay ( especially useful for the first time )
   slotAutoArchivingSettingsModified();
 }
 
-void ActionManager::loadProfile( const QString & path )
+void ActionManager::loadProfile( const TQString & path )
 {
   KOPrefs::instance()->writeConfig();
   KConfig* const cfg = KOPrefs::instance()->config();
 
   const KConfig profile( path+"/korganizerrc", /*read-only=*/false, /*useglobals=*/false );
-  const QStringList groups = profile.groupList();
-  for ( QStringList::ConstIterator it = groups.begin(), end = groups.end(); it != end; ++it )
+  const TQStringList groups = profile.groupList();
+  for ( TQStringList::ConstIterator it = groups.begin(), end = groups.end(); it != end; ++it )
   {
     cfg->setGroup( *it );
-    typedef QMap<QString, QString> StringMap;
+    typedef TQMap<TQString, TQString> StringMap;
     const StringMap entries = profile.entryMap( *it );
     for ( StringMap::ConstIterator it2 = entries.begin(), end = entries.end(); it2 != end; ++it2 )
     {
@@ -1931,7 +1931,7 @@ void ActionManager::loadProfile( const QString & path )
 }
 
 namespace {
-    void copyConfigEntry( KConfig* source, KConfig* dest, const QString& group, const QString& key, const QString& defaultValue=QString() )
+    void copyConfigEntry( KConfig* source, KConfig* dest, const TQString& group, const TQString& key, const TQString& defaultValue=TQString() )
     {
         source->setGroup( group );
         dest->setGroup( group );
@@ -1939,7 +1939,7 @@ namespace {
     }
 }
 
-void ActionManager::saveToProfile( const QString & path ) const
+void ActionManager::saveToProfile( const TQString & path ) const
 {
   KOPrefs::instance()->writeConfig();
   KConfig* const cfg = KOPrefs::instance()->config();
@@ -1948,7 +1948,7 @@ void ActionManager::saveToProfile( const QString & path ) const
   ::copyConfigEntry( cfg, &profile, "Views", "Agenda View Calendar Display" );
 }
 
-QWidget *ActionManager::dialogParent()
+TQWidget *ActionManager::dialogParent()
 {
   return mCalendarView->topLevelWidget();
 }

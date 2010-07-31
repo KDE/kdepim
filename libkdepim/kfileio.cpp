@@ -10,14 +10,14 @@
 #include <kdebug.h>
 
 #include <assert.h>
-#include <qdir.h>
+#include <tqdir.h>
 
 #include <klocale.h>
 #include <kstdguiitem.h>
 
-#include <qwidget.h>
-#include <qfile.h>
-#include <qfileinfo.h>
+#include <tqwidget.h>
+#include <tqfile.h>
+#include <tqfileinfo.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -26,20 +26,20 @@
 namespace KPIM {
 
 //-----------------------------------------------------------------------------
-static void msgDialog(const QString &msg)
+static void msgDialog(const TQString &msg)
 {
   KMessageBox::sorry(0, msg, i18n("File I/O Error"));
 }
 
 
 //-----------------------------------------------------------------------------
-KDE_EXPORT QCString kFileToString(const QString &aFileName, bool aEnsureNL, bool aVerbose)
+KDE_EXPORT TQCString kFileToString(const TQString &aFileName, bool aEnsureNL, bool aVerbose)
 {
-  QCString result;
-  QFileInfo info(aFileName);
+  TQCString result;
+  TQFileInfo info(aFileName);
   unsigned int readLen;
   unsigned int len = info.size();
-  QFile file(aFileName);
+  TQFile file(aFileName);
 
   //assert(aFileName!=0);
   if( aFileName.isEmpty() )
@@ -49,22 +49,22 @@ KDE_EXPORT QCString kFileToString(const QString &aFileName, bool aEnsureNL, bool
   {
     if (aVerbose)
       msgDialog(i18n("The specified file does not exist:\n%1").arg(aFileName));
-    return QCString();
+    return TQCString();
   }
   if (info.isDir())
   {
     if (aVerbose)
       msgDialog(i18n("This is a folder and not a file:\n%1").arg(aFileName));
-    return QCString();
+    return TQCString();
   }
   if (!info.isReadable())
   {
     if (aVerbose)
       msgDialog(i18n("You do not have read permissions "
 				   "to the file:\n%1").arg(aFileName));
-    return QCString();
+    return TQCString();
   }
-  if (len <= 0) return QCString();
+  if (len <= 0) return TQCString();
 
   if (!file.open(IO_Raw|IO_ReadOnly))
   {
@@ -79,7 +79,7 @@ KDE_EXPORT QCString kFileToString(const QString &aFileName, bool aEnsureNL, bool
     default:
       msgDialog(i18n("Error while reading file:\n%1").arg(aFileName));
     }
-    return QCString();
+    return TQCString();
   }
 
   result.resize(len + (int)aEnsureNL + 1);
@@ -93,10 +93,10 @@ KDE_EXPORT QCString kFileToString(const QString &aFileName, bool aEnsureNL, bool
 
   if (readLen < len)
   {
-    QString msg = i18n("Could only read %1 bytes of %2.")
+    TQString msg = i18n("Could only read %1 bytes of %2.")
 		.arg(readLen).arg(len);
     msgDialog(msg);
-    return QCString();
+    return TQCString();
   }
 
   return result;
@@ -104,13 +104,13 @@ KDE_EXPORT QCString kFileToString(const QString &aFileName, bool aEnsureNL, bool
 
 //-----------------------------------------------------------------------------
 #if 0 // unused
-QByteArray kFileToBytes(const QString &aFileName, bool aVerbose)
+TQByteArray kFileToBytes(const TQString &aFileName, bool aVerbose)
 {
-  QByteArray result;
-  QFileInfo info(aFileName);
+  TQByteArray result;
+  TQFileInfo info(aFileName);
   unsigned int readLen;
   unsigned int len = info.size();
-  QFile file(aFileName);
+  TQFile file(aFileName);
 
   //assert(aFileName!=0);
   if( aFileName.isEmpty() )
@@ -157,11 +157,11 @@ QByteArray kFileToBytes(const QString &aFileName, bool aVerbose)
 
   result.resize(len);
   readLen = file.readBlock(result.data(), len);
-  kdDebug(5300) << QString( "len %1" ).arg(len) << endl;
+  kdDebug(5300) << TQString( "len %1" ).arg(len) << endl;
 
   if (readLen < len)
   {
-    QString msg;
+    TQString msg;
     msg = i18n("Could only read %1 bytes of %2.")
 		.arg(readLen).arg(len);
     msgDialog(msg);
@@ -174,11 +174,11 @@ QByteArray kFileToBytes(const QString &aFileName, bool aVerbose)
 
 //-----------------------------------------------------------------------------
 KDE_EXPORT bool kBytesToFile(const char* aBuffer, int len,
-		   const QString &aFileName,
+		   const TQString &aFileName,
 		   bool aAskIfExists, bool aBackup, bool aVerbose)
 {
   // TODO: use KSaveFile
-  QFile file(aFileName);
+  TQFile file(aFileName);
   int writeLen, rc;
 
   //assert(aFileName!=0);
@@ -189,7 +189,7 @@ KDE_EXPORT bool kBytesToFile(const char* aBuffer, int len,
   {
     if (aAskIfExists)
     {
-      QString str;
+      TQString str;
       str = i18n("File %1 exists.\nDo you want to replace it?")
 		  .arg(aFileName);
       rc = KMessageBox::warningContinueCancel(0,
@@ -200,10 +200,10 @@ KDE_EXPORT bool kBytesToFile(const char* aBuffer, int len,
     {
       // make a backup copy
       // TODO: use KSaveFile::backupFile()
-      QString bakName = aFileName;
+      TQString bakName = aFileName;
       bakName += '~';
-      QFile::remove(bakName);
-      if( !QDir::current().rename(aFileName, bakName) )
+      TQFile::remove(bakName);
+      if( !TQDir::current().rename(aFileName, bakName) )
       {
 	// failed to rename file
 	if (!aVerbose) return FALSE;
@@ -243,7 +243,7 @@ KDE_EXPORT bool kBytesToFile(const char* aBuffer, int len,
   }
   else if (writeLen < len)
   {
-    QString msg = i18n("Could only write %1 bytes of %2.")
+    TQString msg = i18n("Could only write %1 bytes of %2.")
 		.arg(writeLen).arg(len);
     if (aVerbose)
       msgDialog(msg);
@@ -253,14 +253,14 @@ KDE_EXPORT bool kBytesToFile(const char* aBuffer, int len,
   return TRUE;
 }
 
-KDE_EXPORT bool kCStringToFile(const QCString& aBuffer, const QString &aFileName,
+KDE_EXPORT bool kCStringToFile(const TQCString& aBuffer, const TQString &aFileName,
 		   bool aAskIfExists, bool aBackup, bool aVerbose)
 {
     return kBytesToFile(aBuffer, aBuffer.length(), aFileName, aAskIfExists,
 	aBackup, aVerbose);
 }
 
-KDE_EXPORT bool kByteArrayToFile(const QByteArray& aBuffer, const QString &aFileName,
+KDE_EXPORT bool kByteArrayToFile(const TQByteArray& aBuffer, const TQString &aFileName,
 		   bool aAskIfExists, bool aBackup, bool aVerbose)
 {
     return kBytesToFile(aBuffer, aBuffer.size(), aFileName, aAskIfExists,
@@ -268,17 +268,17 @@ KDE_EXPORT bool kByteArrayToFile(const QByteArray& aBuffer, const QString &aFile
 }
 
 
-QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
+TQString checkAndCorrectPermissionsIfPossible( const TQString &toCheck,
   const bool recursive, const bool wantItReadable,
   const bool wantItWritable )
 {
   // First we have to find out which type the toCheck is. This can be
   // a directory (follow if recursive) or a file (check permissions).
   // Symlinks are followed as expected.
-  QFileInfo fiToCheck(toCheck);
+  TQFileInfo fiToCheck(toCheck);
   fiToCheck.setCaching(false);
-  QCString toCheckEnc = QFile::encodeName(toCheck);
-  QString error;
+  TQCString toCheckEnc = TQFile::encodeName(toCheck);
+  TQString error;
   struct stat statbuffer;
 
   if ( !fiToCheck.exists() ) {
@@ -291,7 +291,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
       kdDebug() << "wantItA: Can't read perms of " << toCheck << endl;
     }
-    QDir g( toCheck );
+    TQDir g( toCheck );
     if ( !g.isReadable() ) {
       if ( chmod( toCheckEnc, statbuffer.st_mode + S_IXUSR ) != 0 ) {
         error.append( i18n("%1 is not accessible and that is "
@@ -342,7 +342,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   // If it is a folder and recursive is true, then we check the contents of
   // the folder.
   if ( fiToCheck.isDir() && recursive ){
-    QDir g(toCheck);
+    TQDir g(toCheck);
     // First check if the folder is readable for us. If not, we get
     // some ugly crashes.
     if ( !g.isReadable() ){
@@ -350,10 +350,10 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     } else {
       const QFileInfoList *list = g.entryInfoList();
       QFileInfoListIterator it( *list );
-      QFileInfo *fi;
+      TQFileInfo *fi;
       while ((fi = it.current()) != 0) {
-        QString newToCheck = toCheck + "/" + fi->fileName();
-        QFileInfo fiNewToCheck(newToCheck);
+        TQString newToCheck = toCheck + "/" + fi->fileName();
+        TQFileInfo fiNewToCheck(newToCheck);
         if ( fi->fileName() != "." && fi->fileName() != ".." ) {
           error.append ( checkAndCorrectPermissionsIfPossible( newToCheck,
                                 recursive, wantItReadable, wantItWritable) );
@@ -365,11 +365,11 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   return error;
 }
 
-bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
-  const QString &toCheck, const bool recursive, const bool wantItReadable,
+bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( TQWidget *parent,
+  const TQString &toCheck, const bool recursive, const bool wantItReadable,
   const bool wantItWritable )
 {
-  QString error = checkAndCorrectPermissionsIfPossible(toCheck, recursive,
+  TQString error = checkAndCorrectPermissionsIfPossible(toCheck, recursive,
                                            wantItReadable, wantItWritable);
   // There is no KMessageBox with Retry, Cancel and Details.
   // so, I can't provide a functionality to recheck. So it now

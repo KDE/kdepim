@@ -22,10 +22,10 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qcursor.h>
-#include <qfile.h>
-#include <qwidget.h>
-#include <qdragobject.h>
+#include <tqcursor.h>
+#include <tqfile.h>
+#include <tqwidget.h>
+#include <tqdragobject.h>
 
 #include <kapplication.h>
 #include <kabc/vcardconverter.h>
@@ -52,7 +52,7 @@ typedef KGenericFactory< KOrganizerPlugin, Kontact::Core > KOrganizerPluginFacto
 K_EXPORT_COMPONENT_FACTORY( libkontact_korganizerplugin,
                             KOrganizerPluginFactory( "kontact_korganizerplugin" ) )
 
-KOrganizerPlugin::KOrganizerPlugin( Kontact::Core *core, const char *, const QStringList& )
+KOrganizerPlugin::KOrganizerPlugin( Kontact::Core *core, const char *, const TQStringList& )
   : Kontact::Plugin( core, core, "korganizer" ),
     mIface( 0 )
 {
@@ -61,11 +61,11 @@ KOrganizerPlugin::KOrganizerPlugin( Kontact::Core *core, const char *, const QSt
   instance()->iconLoader()->addAppDir("kdepim");
 
   insertNewAction( new KAction( i18n( "New Event..." ), "newappointment",
-                   CTRL+SHIFT+Key_E, this, SLOT( slotNewEvent() ), actionCollection(),
+                   CTRL+SHIFT+Key_E, this, TQT_SLOT( slotNewEvent() ), actionCollection(),
                    "new_event" ) );
 
   insertSyncAction( new KAction( i18n( "Synchronize Calendar" ), "reload",
-                   0, this, SLOT( slotSyncEvents() ), actionCollection(),
+                   0, this, TQT_SLOT( slotSyncEvents() ), actionCollection(),
                    "korganizer_sync" ) );
 
   mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
@@ -76,7 +76,7 @@ KOrganizerPlugin::~KOrganizerPlugin()
 {
 }
 
-Kontact::Summary *KOrganizerPlugin::createSummaryWidget( QWidget *parent )
+Kontact::Summary *KOrganizerPlugin::createSummaryWidget( TQWidget *parent )
 {
   return new SummaryWidget( this, parent );
 }
@@ -93,15 +93,15 @@ KParts::ReadOnlyPart *KOrganizerPlugin::createPart()
   return part;
 }
 
-QString KOrganizerPlugin::tipFile() const
+TQString KOrganizerPlugin::tipFile() const
 {
-  QString file = ::locate("data", "korganizer/tips");
+  TQString file = ::locate("data", "korganizer/tips");
   return file;
 }
 
-QStringList KOrganizerPlugin::invisibleToolbarActions() const
+TQStringList KOrganizerPlugin::invisibleToolbarActions() const
 {
-  QStringList invisible;
+  TQStringList invisible;
   invisible += "new_event";
   invisible += "new_todo";
   invisible += "new_journal";
@@ -133,10 +133,10 @@ void KOrganizerPlugin::slotNewEvent()
 void KOrganizerPlugin::slotSyncEvents()
 {
   DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", QString("Calendar") );
+  ref.send( "triggerSync", TQString("Calendar") );
 }
 
-bool KOrganizerPlugin::createDCOPInterface( const QString& serviceType )
+bool KOrganizerPlugin::createDCOPInterface( const TQString& serviceType )
 {
   kdDebug(5602) << k_funcinfo << serviceType << endl;
   if ( serviceType == "DCOP/Organizer" || serviceType == "DCOP/Calendar" ) {
@@ -152,36 +152,36 @@ bool KOrganizerPlugin::isRunningStandalone()
   return mUniqueAppWatcher->isRunningStandalone();
 }
 
-bool KOrganizerPlugin::canDecodeDrag( QMimeSource *mimeSource )
+bool KOrganizerPlugin::canDecodeDrag( TQMimeSource *mimeSource )
 {
-  return QTextDrag::canDecode( mimeSource ) ||
+  return TQTextDrag::canDecode( mimeSource ) ||
          KPIM::MailListDrag::canDecode( mimeSource );
 }
 
-void KOrganizerPlugin::processDropEvent( QDropEvent *event )
+void KOrganizerPlugin::processDropEvent( TQDropEvent *event )
 {
-  QString text;
+  TQString text;
 
   KABC::VCardConverter converter;
   if ( KVCardDrag::canDecode( event ) && KVCardDrag::decode( event, text ) ) {
     KABC::Addressee::List contacts = converter.parseVCards( text );
     KABC::Addressee::List::Iterator it;
 
-    QStringList attendees;
+    TQStringList attendees;
     for ( it = contacts.begin(); it != contacts.end(); ++it ) {
-      QString email = (*it).fullEmail();
+      TQString email = (*it).fullEmail();
       if ( email.isEmpty() )
         attendees.append( (*it).realName() + "<>" );
       else
         attendees.append( email );
     }
 
-    interface()->openEventEditor( i18n( "Meeting" ), QString::null, QString::null,
+    interface()->openEventEditor( i18n( "Meeting" ), TQString::null, TQString::null,
                                   attendees );
     return;
   }
 
-  if ( QTextDrag::decode( event, text ) ) {
+  if ( TQTextDrag::decode( event, text ) ) {
     kdDebug(5602) << "DROP:" << text << endl;
     interface()->openEventEditor( text );
     return;
@@ -194,16 +194,16 @@ void KOrganizerPlugin::processDropEvent( QDropEvent *event )
                           i18n("Drops of multiple mails are not supported." ) );
     } else {
       KPIM::MailSummary mail = mails.first();
-      QString txt = i18n("From: %1\nTo: %2\nSubject: %3").arg( mail.from() )
+      TQString txt = i18n("From: %1\nTo: %2\nSubject: %3").arg( mail.from() )
                     .arg( mail.to() ).arg( mail.subject() );
 
       KTempFile tf;
       tf.setAutoDelete( true );
-      QString uri = QString::fromLatin1("kmail:") + QString::number( mail.serialNumber() );
+      TQString uri = TQString::fromLatin1("kmail:") + TQString::number( mail.serialNumber() );
       tf.file()->writeBlock( event->encodedData( "message/rfc822" ) );
       tf.close();
       interface()->openEventEditor( i18n("Mail: %1").arg( mail.subject() ), txt,
-                                    uri, tf.name(), QStringList(), "message/rfc822" );
+                                    uri, tf.name(), TQStringList(), "message/rfc822" );
     }
     return;
   }
@@ -218,13 +218,13 @@ bool KOrganizerPlugin::queryClose() const {
   return (!canClose);
 }
 
-void KOrganizerPlugin::loadProfile( const QString& directory )
+void KOrganizerPlugin::loadProfile( const TQString& directory )
 {
   DCOPRef ref( "korganizer", "KOrganizerIface" );
   ref.send( "loadProfile", directory );
 }
 
-void KOrganizerPlugin::saveToProfile( const QString& directory ) const
+void KOrganizerPlugin::saveToProfile( const TQString& directory ) const
 {
   DCOPRef ref( "korganizer", "KOrganizerIface" );
   ref.send( "saveToProfile", directory );

@@ -38,30 +38,30 @@ class KOrganizerPlugin : public Kontact::Plugin
   Q_OBJECT
 
   public:
-    KOrganizerPlugin( Kontact::Core *core, const char *name, const QStringList& );
+    KOrganizerPlugin( Kontact::Core *core, const char *name, const TQStringList& );
     ~KOrganizerPlugin();
 
-    virtual bool createDCOPInterface( const QString& serviceType );
+    virtual bool createDCOPInterface( const TQString& serviceType );
     virtual bool isRunningStandalone();
     int weight() const { return 400; }
 
     virtual bool queryClose() const;
 
-    bool canDecodeDrag( QMimeSource * );
-    void processDropEvent( QDropEvent * );
+    bool canDecodeDrag( TQMimeSource * );
+    void processDropEvent( TQDropEvent * );
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parent );
+    virtual Kontact::Summary *createSummaryWidget( TQWidget *parent );
 
-    virtual QString tipFile() const;
-    virtual QStringList invisibleToolbarActions() const;
+    virtual TQString tipFile() const;
+    virtual TQStringList invisibleToolbarActions() const;
 
     void select();
 
     KCalendarIface_stub *interface();
 
 
-    void loadProfile( const QString& path );
-    void saveToProfile( const QString& path ) const;
+    void loadProfile( const TQString& path );
+    void saveToProfile( const TQString& path ) const;
 
   protected:
     KParts::ReadOnlyPart *createPart();

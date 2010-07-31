@@ -21,90 +21,90 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include <qdatetime.h>
-#include <qdom.h>
-#include <qmap.h>
-#include <qregexp.h>
-#include <qstring.h>
-#include <qstringlist.h>
+#include <tqdatetime.h>
+#include <tqdom.h>
+#include <tqmap.h>
+#include <tqregexp.h>
+#include <tqstring.h>
+#include <tqstringlist.h>
 #include <kurl.h>
 
 
 class ProgramInformation {
   public:
     ProgramInformation() {}
-    ProgramInformation( const QString & title, const QString &synopsis );
+    ProgramInformation( const TQString & title, const TQString &synopsis );
     virtual ~ProgramInformation() {}
 
-    QString id() const { return mId; }
-    QString title() const { return mTitle; }
-    QString synopsis() const { return mSynopsis; }
-    QStringList genres() const { return mGenres; }
+    TQString id() const { return mId; }
+    TQString title() const { return mTitle; }
+    TQString synopsis() const { return mSynopsis; }
+    TQStringList genres() const { return mGenres; }
 
-    void setId ( const QString & id ) { mId = id; }
-    void setGenres( const QStringList & genres ) { mGenres = genres; }
-    bool loadXML( const QDomElement & );
-    bool loadAttribute( const QDomElement& element );
+    void setId ( const TQString & id ) { mId = id; }
+    void setGenres( const TQStringList & genres ) { mGenres = genres; }
+    bool loadXML( const TQDomElement & );
+    bool loadAttribute( const TQDomElement& element );
 
   private:
-    QString mId;
-    QString mTitle;
-    QString mSynopsis;
-    QStringList mGenres;
+    TQString mId;
+    TQString mTitle;
+    TQString mSynopsis;
+    TQStringList mGenres;
 };
 
-typedef QMap< QString, ProgramInformation > ProgramInformationMap;
+typedef TQMap< TQString, ProgramInformation > ProgramInformationMap;
 
 class ScheduleEvent {
   public:
     ScheduleEvent() {}
     virtual ~ScheduleEvent() {}
     
-    QString crid() const { return mCrid; }
-    QDateTime startTime() const { return mStartTime; }
+    TQString crid() const { return mCrid; }
+    TQDateTime startTime() const { return mStartTime; }
     uint duration() const { return mDuration; }
-    QString programUrl() const { return mUrl; }
+    TQString programUrl() const { return mUrl; }
 
-    bool loadXML( const QDomElement & );
-    bool loadAttribute( const QDomElement& element );
+    bool loadXML( const TQDomElement & );
+    bool loadAttribute( const TQDomElement& element );
     
   private:
-    QString mCrid;
-    QString mUrl;
-    QDateTime mStartTime;
+    TQString mCrid;
+    TQString mUrl;
+    TQDateTime mStartTime;
     uint mDuration;
 
-    static QRegExp sRegExp;
+    static TQRegExp sRegExp;
 };
 
 class Service {
   public:
     Service();
-    Service( bool active, const QString & name, const QString & owner, const KURL & serviceUrl, const KURL & logo, const QStringList & genres );
+    Service( bool active, const TQString & name, const TQString & owner, const KURL & serviceUrl, const KURL & logo, const TQStringList & genres );
     virtual ~Service() {}
   
-    void setId( const QString & id ) { mId = id; }
+    void setId( const TQString & id ) { mId = id; }
     void setActive( bool active );
-    void setName( const QString& name );
+    void setName( const TQString& name );
     void setProgramInformation( const ProgramInformationMap & map );
 
-    QString id() const { return mId; }
+    TQString id() const { return mId; }
     bool active() const;
-    QString name() const;
+    TQString name() const;
     ProgramInformationMap programmeInformation() const;
 
-    bool loadXML( const QDomElement & );
-    bool loadDescription( const QDomElement & );
-    bool loadAttribute( const QDomElement& element );
+    bool loadXML( const TQDomElement & );
+    bool loadDescription( const TQDomElement & );
+    bool loadAttribute( const TQDomElement& element );
 
   private:
-    QString mId;
+    TQString mId;
     bool mActive;
-    QString mName;
-    QString mOwner;
+    TQString mName;
+    TQString mOwner;
     KURL mServiceUrl;
     KURL mLogo;
-    QStringList mGenres;
+    TQStringList mGenres;
     ProgramInformationMap mProgInfo;
 };
 

@@ -41,7 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <qfile.h>
+#include <tqfile.h>
 
 #undef Status // stupid X headers
 
@@ -81,14 +81,14 @@ void kmsetSignalHandler(void (*handler)(int))
 //-----------------------------------------------------------------------------
 
 namespace {
-  QString getMyHostName() {
+  TQString getMyHostName() {
     char hostNameC[256];
     // null terminate this C string
     hostNameC[255] = 0;
     // set the string to 0 length if gethostname fails
     if(gethostname(hostNameC, 255))
       hostNameC[0] = 0;
-    return QString::fromLocal8Bit(hostNameC);
+    return TQString::fromLocal8Bit(hostNameC);
   }
 } // anon namespace
 
@@ -137,24 +137,24 @@ void checkConfigUpdates() {
 
 void lockOrDie() {
 // Check and create a lock file to prevent concurrent access to kmail files
-  QString appName = kapp->instanceName();
+  TQString appName = kapp->instanceName();
   if ( appName.isEmpty() )
     appName = "kmail";
 
-  QString programName;
+  TQString programName;
   const KAboutData *about = kapp->aboutData();
   if ( about )
     programName = about->programName();
   if ( programName.isEmpty() )
     programName = i18n("KMail");
 
-  QString lockLocation = locateLocal("data", "kmail/lock");
+  TQString lockLocation = locateLocal("data", "kmail/lock");
   KSimpleConfig config(lockLocation);
   int oldPid = config.readNumEntry("pid", -1);
-  const QString oldHostName = config.readEntry("hostname");
-  const QString oldAppName = config.readEntry( "appName", appName );
-  const QString oldProgramName = config.readEntry( "programName", programName );
-  const QString hostName = getMyHostName();
+  const TQString oldHostName = config.readEntry("hostname");
+  const TQString oldAppName = config.readEntry( "appName", appName );
+  const TQString oldProgramName = config.readEntry( "programName", programName );
+  const TQString hostName = getMyHostName();
   bool first_instance = false;
   if ( oldPid == -1 )
       first_instance = true;
@@ -165,16 +165,16 @@ void lockOrDie() {
           // On linux with /proc we can even check that it's really kmail and not something else
           char path_buffer[MAXPATHLEN + 1];
           path_buffer[MAXPATHLEN] = 0;
-          const QString procPath = QString("/proc/%1/exe").arg(oldPid);
+          const TQString procPath = TQString("/proc/%1/exe").arg(oldPid);
           const int length = readlink (procPath.latin1(), path_buffer, MAXPATHLEN);
           if ( length == -1 ) // not such pid
               first_instance = true;
           else {
               path_buffer[length] = '\0';
-              const QString path = QFile::decodeName(path_buffer);
+              const TQString path = TQFile::decodeName(path_buffer);
               kdDebug() << k_funcinfo << path << endl;
               const int pos = path.findRev('/');
-              const QString fileName = path.mid(pos+1);
+              const TQString fileName = path.mid(pos+1);
               kdDebug() << "Found process " << oldPid << " running. It's: " << fileName << endl;
               first_instance = fileName != "kmail" && fileName != "kontact";
           }
@@ -189,7 +189,7 @@ void lockOrDie() {
   }
 
   if ( !first_instance ) {
-    QString msg;
+    TQString msg;
     if ( oldHostName == hostName ) {
       // this can only happen if the user is running this application on
       // different displays on the same machine. All other cases will be
@@ -200,8 +200,8 @@ void lockOrDie() {
                    "can cause the loss of mail. You should not start %1 "
                    "unless you are sure that it is not already running.")
               .arg( programName, programName );
-              // QString::arg( st ) only replaces the first occurrence of %1
-              // with st while QString::arg( s1, s2 ) replacess all occurrences
+              // TQString::arg( st ) only replaces the first occurrence of %1
+              // with st while TQString::arg( s1, s2 ) replacess all occurrences
               // of %1 with s1 and all occurrences of %2 with s2. So don't
               // even think about changing the above to .arg( programName ).
       else
@@ -228,7 +228,7 @@ void lockOrDie() {
 
     KCursorSaver idle( KBusyPtr::idle() );
     if ( KMessageBox::No ==
-         KMessageBox::warningYesNo( 0, msg, QString::null,
+         KMessageBox::warningYesNo( 0, msg, TQString::null,
                                     i18n("Start %1").arg( programName ),
                                     i18n("Exit") ) ) {
       exit(1);
@@ -261,7 +261,7 @@ void insertLibraryCataloguesAndIcons() {
 
 void cleanup()
 {
-  const QString lockLocation = locateLocal("data", "kmail/lock");
+  const TQString lockLocation = locateLocal("data", "kmail/lock");
   KSimpleConfig config(lockLocation);
   config.writeEntry("pid", -1);
   config.sync();

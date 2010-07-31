@@ -24,16 +24,16 @@
 
 #include "timelabels.h"
 
-#include <qhbox.h>
-#include <qvbox.h>
-#include <qlabel.h>
-#include <qframe.h>
-#include <qlayout.h>
-#include <qfont.h>
-#include <qfontmetrics.h>
-#include <qpainter.h>
-#include <qstringlist.h>
-#include <qdatetime.h>
+#include <tqhbox.h>
+#include <tqvbox.h>
+#include <tqlabel.h>
+#include <tqframe.h>
+#include <tqlayout.h>
+#include <tqfont.h>
+#include <tqfontmetrics.h>
+#include <tqpainter.h>
+#include <tqstringlist.h>
+#include <tqdatetime.h>
 
 #include <kglobal.h>
 
@@ -42,8 +42,8 @@
 #include "koprefs.h"
 #include "koagenda.h"
 
-TimeLabels::TimeLabels(int rows,QWidget *parent,const char *name,WFlags f) :
-  QScrollView(parent,name,f)
+TimeLabels::TimeLabels(int rows,TQWidget *parent,const char *name,WFlags f) :
+  TQScrollView(parent,name,f)
 {
   mRows = rows;
   mMiniWidth = 0;
@@ -59,7 +59,7 @@ TimeLabels::TimeLabels(int rows,QWidget *parent,const char *name,WFlags f) :
 
   viewport()->setBackgroundMode( PaletteBackground );
 
-  mMousePos = new QFrame(this);
+  mMousePos = new TQFrame(this);
   mMousePos->setLineWidth(0);
   mMousePos->setMargin(0);
   mMousePos->setBackgroundColor(Qt::red);
@@ -67,7 +67,7 @@ TimeLabels::TimeLabels(int rows,QWidget *parent,const char *name,WFlags f) :
   addChild(mMousePos, 0, 0);
 }
 
-void TimeLabels::mousePosChanged(const QPoint &pos)
+void TimeLabels::mousePosChanged(const TQPoint &pos)
 {
   moveChild(mMousePos, 0, pos.y());
 }
@@ -91,7 +91,7 @@ void TimeLabels::setCellHeight(double height)
   Optimization so that only the "dirty" portion of the scroll view
   is redrawn.  Unfortunately, this is not called by default paintEvent() method.
 */
-void TimeLabels::drawContents(QPainter *p,int cx, int cy, int cw, int ch)
+void TimeLabels::drawContents(TQPainter *p,int cx, int cy, int cw, int ch)
 {
   // bug:  the parameters cx and cw are the areas that need to be
   //       redrawn, not the area of the widget.  unfortunately, this
@@ -104,11 +104,11 @@ void TimeLabels::drawContents(QPainter *p,int cx, int cy, int cw, int ch)
 
   int cell = ((int)(cy/mCellHeight));
   double y = cell * mCellHeight;
-  QFontMetrics fm = fontMetrics();
-  QString hour;
-  QString suffix = "am";
+  TQFontMetrics fm = fontMetrics();
+  TQString hour;
+  TQString suffix = "am";
   int timeHeight =  fm.ascent();
-  QFont nFont = font();
+  TQFont nFont = font();
   p->setFont( font() );
 
   if (!KGlobal::locale()->use12Clock()) {
@@ -121,18 +121,18 @@ void TimeLabels::drawContents(QPainter *p,int cx, int cy, int cw, int ch)
     int pointS = nFont.pointSize();
     while ( pointS > 4 ) {
       nFont.setPointSize( pointS );
-      fm = QFontMetrics( nFont );
+      fm = TQFontMetrics( nFont );
       if ( fm.ascent() < mCellHeight )
         break;
       -- pointS;
     }
-    fm = QFontMetrics( nFont );
+    fm = TQFontMetrics( nFont );
     timeHeight = fm.ascent();
   }
   //timeHeight -= (timeHeight/4-2);
-  QFont sFont = nFont;
+  TQFont sFont = nFont;
   sFont.setPointSize( sFont.pointSize()/2 );
-  QFontMetrics fmS(  sFont );
+  TQFontMetrics fmS(  sFont );
   int startW = mMiniWidth - frameWidth()-2 ;
   int tw2 = fmS.width(suffix);
   int divTimeHeight = (timeHeight-1) /2 - 1;
@@ -183,7 +183,7 @@ void TimeLabels::updateConfig()
 
   setFont(KOPrefs::instance()->mTimeBarFont);
 
-  QString test = "20";
+  TQString test = "20";
   if ( KGlobal::locale()->use12Clock() )
       test = "12";
   mMiniWidth = fontMetrics().width( test );
@@ -192,9 +192,9 @@ void TimeLabels::updateConfig()
   else {
       test = "00";
   }
-  QFont sFont = font();
+  TQFont sFont = font();
   sFont.setPointSize(  sFont.pointSize()/2 );
-  QFontMetrics fmS(   sFont );
+  TQFontMetrics fmS(   sFont );
   mMiniWidth += fmS.width(  test ) + frameWidth()*2+4 ;
   // update geometry restrictions based on new settings
   setFixedWidth(  mMiniWidth );
@@ -226,20 +226,20 @@ void TimeLabels::setAgenda(KOAgenda* agenda)
 {
   mAgenda = agenda;
 
-  connect(mAgenda, SIGNAL(mousePosSignal(const QPoint &)), this, SLOT(mousePosChanged(const QPoint &)));
-  connect(mAgenda, SIGNAL(enterAgenda()), this, SLOT(showMousePos()));
-  connect(mAgenda, SIGNAL(leaveAgenda()), this, SLOT(hideMousePos()));
-  connect(mAgenda, SIGNAL(gridSpacingYChanged( double ) ), this, SLOT( setCellHeight( double ) ) );
+  connect(mAgenda, TQT_SIGNAL(mousePosSignal(const TQPoint &)), this, TQT_SLOT(mousePosChanged(const TQPoint &)));
+  connect(mAgenda, TQT_SIGNAL(enterAgenda()), this, TQT_SLOT(showMousePos()));
+  connect(mAgenda, TQT_SIGNAL(leaveAgenda()), this, TQT_SLOT(hideMousePos()));
+  connect(mAgenda, TQT_SIGNAL(gridSpacingYChanged( double ) ), this, TQT_SLOT( setCellHeight( double ) ) );
 }
 
 
 /** This is called in response to repaint() */
-void TimeLabels::paintEvent(QPaintEvent*)
+void TimeLabels::paintEvent(TQPaintEvent*)
 {
 //  kdDebug(5850) << "paintevent..." << endl;
   // this is another hack!
-//  QPainter painter(this);
-  //QString c
+//  TQPainter painter(this);
+  //TQString c
   repaintContents(contentsX(), contentsY(), visibleWidth(), visibleHeight());
 }
 

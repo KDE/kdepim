@@ -27,22 +27,22 @@ class KOrganizerIface : virtual public DCOPObject
 {
     K_DCOP
   k_dcop:
-    virtual bool openURL(const QString &url) = 0;
-    virtual bool mergeURL(const QString &url) = 0;
+    virtual bool openURL(const TQString &url) = 0;
+    virtual bool mergeURL(const TQString &url) = 0;
     virtual void closeURL() = 0;
     virtual bool saveURL() = 0;
     virtual bool canQueryClose() = 0;
-    virtual bool saveAsURL(const QString &url) = 0;
-    virtual QString getCurrentURLasString() const = 0;
-    virtual bool editIncidence(const QString &uid) = 0;
-    virtual bool deleteIncidence(const QString &uid) = 0;
+    virtual bool saveAsURL(const TQString &url) = 0;
+    virtual TQString getCurrentURLasString() const = 0;
+    virtual bool editIncidence(const TQString &uid) = 0;
+    virtual bool deleteIncidence(const TQString &uid) = 0;
     /**
       Delete the incidence with the given unique ID from the active calendar.
       @param uid The incidence's unique ID.
       @param force If true, all recurrences and sub-todos (if applicable) will
                    be deleted without prompting for confirmation.
     */
-    virtual bool deleteIncidence(const QString &uid, bool force) = 0;
+    virtual bool deleteIncidence(const TQString &uid, bool force) = 0;
     /**
       Add an incidence to the active calendar.
       @param iCal A calendar in iCalendar format containing the incidence. The
@@ -51,10 +51,10 @@ class KOrganizerIface : virtual public DCOPObject
                   optionally a VTIMEZONE component. If there is more than one
                   incidence, only the first is added to KOrganizer's calendar.
     */
-    virtual bool addIncidence(const QString &iCal) = 0;
+    virtual bool addIncidence(const TQString &iCal) = 0;
 
-    virtual void loadProfile( const QString& path ) = 0;
-    virtual void saveToProfile( const QString& path ) const = 0;
+    virtual void loadProfile( const TQString& path ) = 0;
+    virtual void saveToProfile( const TQString& path ) const = 0;
 };
 
 #endif

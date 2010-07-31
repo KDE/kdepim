@@ -21,14 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qheader.h>
-#include <qiconset.h>
-#include <qimage.h>
-#include <qdragobject.h>
-#include <qcombobox.h>
-#include <qpainter.h>
-#include <qbrush.h>
-#include <qevent.h>
+#include <tqheader.h>
+#include <tqiconset.h>
+#include <tqimage.h>
+#include <tqdragobject.h>
+#include <tqcombobox.h>
+#include <tqpainter.h>
+#include <tqbrush.h>
+#include <tqevent.h>
 
 #include <klocale.h>
 #include <kglobalsettings.h>
@@ -48,11 +48,11 @@
 // DynamicTip Methods
 
 DynamicTip::DynamicTip( ContactListView *parent)
-  : QToolTip( parent )
+  : TQToolTip( parent )
 {
 }
 
-void DynamicTip::maybeTip( const QPoint &pos )
+void DynamicTip::maybeTip( const TQPoint &pos )
 {
   if (!parentWidget()->inherits( "ContactListView" ))
     return;
@@ -61,9 +61,9 @@ void DynamicTip::maybeTip( const QPoint &pos )
   if (!plv->tooltips())
     return;
 
-  QPoint posVp = plv->viewport()->pos();
+  TQPoint posVp = plv->viewport()->pos();
 
-  QListViewItem *lvi = plv->itemAt( pos - posVp );
+  TQListViewItem *lvi = plv->itemAt( pos - posVp );
   if (!lvi)
     return;
 
@@ -71,8 +71,8 @@ void DynamicTip::maybeTip( const QPoint &pos )
   if (!plvi)
     return;
 
-  QString s;
-  QRect r = plv->itemRect( lvi );
+  TQString s;
+  TQRect r = plv->itemRect( lvi );
   r.moveBy( posVp.x(), posVp.y() );
 
     //kdDebug(5720) << "Tip rec: " << r.x() << "," << r.y() << "," << r.width()
@@ -89,13 +89,13 @@ void DynamicTip::maybeTip( const QPoint &pos )
   s += i18n("label: value", "%1: %2").arg(a.organizationLabel())
                                        .arg(a.organization());
 
-  QString notes = a.note().stripWhiteSpace();
+  TQString notes = a.note().stripWhiteSpace();
   if ( !notes.isEmpty() ) {
     notes += '\n';
     s += '\n' + i18n("label: value", "%1: \n").arg(a.noteLabel());
-    QFontMetrics fm( font() );
+    TQFontMetrics fm( font() );
 
-    // Begin word wrap code based on QMultiLineEdit code
+    // Begin word wrap code based on TQMultiLineEdit code
     int i = 0;
     bool doBreak = false;
     int linew = 0;
@@ -161,11 +161,11 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
   refresh();
 }
 
-QString ContactListViewItem::key(int column, bool ascending) const
+TQString ContactListViewItem::key(int column, bool ascending) const
 {
-  // Preserve behaviour of QListViewItem::key(), otherwise we cause a crash if the column does not exist
+  // Preserve behaviour of TQListViewItem::key(), otherwise we cause a crash if the column does not exist
   if ( column >= parentListView->columns() )
-    return QString::null;
+    return TQString::null;
 
 #if KDE_VERSION >= 319
   Q_UNUSED( ascending )
@@ -176,7 +176,7 @@ QString ContactListViewItem::key(int column, bool ascending) const
       // increment by one before converting to string so that -1 is not greater than 1
       // create the sort key by taking the numeric status 0 low, 5 high, and subtracting it from 5
       // so that the default ascending gives online before offline, etc.
-      QString key = QString::number( 5 - ( mIMProxy->presenceNumeric( mAddressee.uid() ) + 1 ) );
+      TQString key = TQString::number( 5 - ( mIMProxy->presenceNumeric( mAddressee.uid() ) + 1 ) );
       return key;
     }
     else {
@@ -186,12 +186,12 @@ QString ContactListViewItem::key(int column, bool ascending) const
   else
     return mFields[ column ]->sortKey( mAddressee );
 #else
-  return QListViewItem::key( column, ascending ).lower();
+  return TQListViewItem::key( column, ascending ).lower();
 #endif
 }
 
-void ContactListViewItem::paintCell(QPainter * p,
-                                    const QColorGroup & cg,
+void ContactListViewItem::paintCell(TQPainter * p,
+                                    const TQColorGroup & cg,
                                     int column,
                                     int width,
                                     int align)
@@ -232,13 +232,13 @@ void ContactListViewItem::refresh()
     if ( mIMProxy->presenceNumeric( mAddressee.uid() ) > 0 )
       setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
     else
-      setPixmap( parentListView->imColumn(), QPixmap() );
+      setPixmap( parentListView->imColumn(), TQPixmap() );
   }
 
   KABC::Field::List::ConstIterator it;
   for ( it = mFields.begin(); it != mFields.end(); ++it ) {
     if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
-      QDate date = mAddressee.birthday().date();
+      TQDate date = mAddressee.birthday().date();
       if ( date.isValid() )
         setText( i++, KGlobal::locale()->formatDate( date, true ) );
       else
@@ -258,7 +258,7 @@ void ContactListViewItem::setHasIM( bool hasIM )
 
 ContactListView::ContactListView(KAddressBookTableView *view,
                                  KABC::AddressBook* /* doc */,
-                                 QWidget *parent,
+                                 TQWidget *parent,
                                  const char *name )
   : KListView( parent, name ),
     pabWidget( view ),
@@ -278,15 +278,15 @@ ContactListView::ContactListView(KAddressBookTableView *view,
   setSelectionModeExt( KListView::Extended );
   setDropVisualizer(false);
 
-  connect(this, SIGNAL(dropped(QDropEvent*)),
-          this, SLOT(itemDropped(QDropEvent*)));
+  connect(this, TQT_SIGNAL(dropped(TQDropEvent*)),
+          this, TQT_SLOT(itemDropped(TQDropEvent*)));
 
   new DynamicTip( this );
 }
 
-void ContactListView::paintEmptyArea( QPainter * p, const QRect & rect )
+void ContactListView::paintEmptyArea( TQPainter * p, const TQRect & rect )
 {
-  QBrush b = palette().brush(QPalette::Active, QColorGroup::Base);
+  TQBrush b = palette().brush(TQPalette::Active, TQColorGroup::Base);
 
   // Get the brush, which will have the background pixmap if there is one.
   if (b.pixmap())
@@ -304,7 +304,7 @@ void ContactListView::paintEmptyArea( QPainter * p, const QRect & rect )
   }
 }
 
-void ContactListView::contentsMousePressEvent(QMouseEvent* e)
+void ContactListView::contentsMousePressEvent(TQMouseEvent* e)
 {
   presspos = e->pos();
   KListView::contentsMousePressEvent(e);
@@ -312,7 +312,7 @@ void ContactListView::contentsMousePressEvent(QMouseEvent* e)
 
 
 // To initiate a drag operation
-void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
+void ContactListView::contentsMouseMoveEvent( TQMouseEvent *e )
 {
   if ((e->state() & LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
     emit startAddresseeDrag();
@@ -321,17 +321,17 @@ void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
     KListView::contentsMouseMoveEvent( e );
 }
 
-bool ContactListView::acceptDrag(QDropEvent *e) const
+bool ContactListView::acceptDrag(TQDropEvent *e) const
 {
-  return QTextDrag::canDecode(e);
+  return TQTextDrag::canDecode(e);
 }
 
-void ContactListView::itemDropped(QDropEvent *e)
+void ContactListView::itemDropped(TQDropEvent *e)
 {
   contentsDropEvent(e);
 }
 
-void ContactListView::contentsDropEvent( QDropEvent *e )
+void ContactListView::contentsDropEvent( TQDropEvent *e )
 {
   emit addresseeDropped(e);
 }
@@ -346,11 +346,11 @@ void ContactListView::setAlternateBackgroundEnabled(bool enabled)
   }
   else
   {
-    setAlternateBackground(QColor());
+    setAlternateBackground(TQColor());
   }
 }
 
-void ContactListView::setBackgroundPixmap(const QString &filename)
+void ContactListView::setBackgroundPixmap(const TQString &filename)
 {
   if (filename.isEmpty())
   {
@@ -358,7 +358,7 @@ void ContactListView::setBackgroundPixmap(const QString &filename)
   }
   else
   {
-    setPaletteBackgroundPixmap(QPixmap(filename));
+    setPaletteBackgroundPixmap(TQPixmap(filename));
   }
 }
 

@@ -33,40 +33,40 @@
 
 #include "korganizeriface.h"
 
-#include <qobject.h>
+#include <tqobject.h>
 #include <kdepimmacros.h>
 
 class ActionManager;
 
 
-class KDE_EXPORT KOrganizerIfaceImpl : public QObject, virtual public KOrganizerIface {
+class KDE_EXPORT KOrganizerIfaceImpl : public TQObject, virtual public KOrganizerIface {
 public:
   KOrganizerIfaceImpl( ActionManager* mActionManager,
-                       QObject* parent=0, const char* name=0 );
+                       TQObject* parent=0, const char* name=0 );
   ~KOrganizerIfaceImpl();
 
-  bool openURL( const QString &url );
-  bool mergeURL( const QString &url );
+  bool openURL( const TQString &url );
+  bool mergeURL( const TQString &url );
   void closeURL();
   bool saveURL();
   bool canQueryClose();
-  bool saveAsURL( const QString &url );
-  QString getCurrentURLasString() const;
+  bool saveAsURL( const TQString &url );
+  TQString getCurrentURLasString() const;
 
-  bool editIncidence( const QString &uid );
+  bool editIncidence( const TQString &uid );
   /** @reimp from KOrganizerIface::deleteIncidence() */
-  bool deleteIncidence( const QString &uid )  { return deleteIncidence( uid, false ); }
+  bool deleteIncidence( const TQString &uid )  { return deleteIncidence( uid, false ); }
   /** @reimp from KOrganizerIface::deleteIncidence() */
-  bool deleteIncidence( const QString &uid, bool force );
+  bool deleteIncidence( const TQString &uid, bool force );
 
   /** @reimp from KOrganizerIface::addIncidence() */
-  bool addIncidence( const QString &iCal );
+  bool addIncidence( const TQString &iCal );
 
   /** @reimp from KOrganizerIface::loadProfile() */
-  void loadProfile( const QString& path );
+  void loadProfile( const TQString& path );
 
   /** @reimp from KOrganizerIface::saveToProfile() */
-  void saveToProfile( const QString& path ) const;
+  void saveToProfile( const TQString& path ) const;
 
 private:
   ActionManager* mActionManager;

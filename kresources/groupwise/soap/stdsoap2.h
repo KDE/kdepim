@@ -1294,7 +1294,7 @@ struct soap
   int send_timeout;		/* when > 0, gives socket send timeout in seconds, < 0 in usec */
   int connect_timeout;		/* when > 0, gives socket connect() timeout in seconds, < 0 in usec */
   int accept_timeout;		/* when > 0, gives socket accept() timeout in seconds, < 0 in usec */
-  int socket_flags;		/* socket recv() and send() flags, e.g. set to MSG_NOSIGNAL to disable sigpipe */
+  int socket_flags;		/* socket recv() and send() flags, e.g. set to MSG_NOQT_SIGNAL to disable sigpipe */
   int connect_flags;		/* connect() SOL_SOCKET sockopt flags, e.g. set to SO_DEBUG to debug socket */
   int bind_flags;		/* bind() SOL_SOCKET sockopt flags, e.g. set to SO_REUSEADDR to enable reuse */
   int accept_flags;		/* accept() SOL_SOCKET sockopt flags */

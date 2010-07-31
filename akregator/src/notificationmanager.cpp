@@ -1,0 +1,143 @@
+/*
+    This file is part of Akregator.
+
+    Copyright (C) 2005 Frank Osterfeld <frank.osterfeld at kdemail.net>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
+*/
+
+#include <klocale.h>
+#include <knotifyclient.h>
+#include <kstaticdeleter.h>
+#include <kurl.h>
+
+#include <tqlabel.h>
+#include <tqtimer.h>
+
+#include "feed.h"
+#include "notificationmanager.h"
+
+namespace Akregator {
+
+NotificationManager::NotificationManager() : TQObject()
+{
+    m_intervalsLapsed = 0;
+    m_checkInterval = 2000;
+    m_maxIntervals = 10;
+    m_running = false;
+    m_addedInLastInterval = false;
+    m_maxArticles = 20;
+    m_widget = NULL;
+    m_instance = NULL;
+}
+
+NotificationManager::~NotificationManager()
+{
+    m_self = 0;
+}
+
+void NotificationManager::setWidget(TQWidget* widget, KInstance* inst)
+{
+    m_widget = widget;
+    m_instance = inst != NULL ? inst : KGlobal::instance();
+}
+
+void NotificationManager::slotNotifyArticle(const Article& article)
+{
+    m_articles.append(article);
+    m_addedInLastInterval = true;
+    if (m_articles.count() >= m_maxArticles)
+        doNotify();
+    else if (!m_running)
+    {
+        m_running = true;
+        TQTimer::singleShot(m_checkInterval, this, TQT_SLOT(slotIntervalCheck()));
+    }
+}
+
+void NotificationManager::slotNotifyFeeds(const TQStringList& feeds)
+{
+    if (feeds.count() == 1)
+    {
+        KNotifyClient::Instance inst(m_instance);
+        KNotifyClient::event(m_widget->winId(), "feed_added", i18n("Feed added:\n %1").arg(feeds[0]));
+    }
+    else if (feeds.count() > 1)
+    {
+        TQString message;
+        for (TQStringList::ConstIterator it = feeds.begin(); it != feeds.end(); ++it)
+            message += *it + "\n";
+        KNotifyClient::Instance inst(m_instance);
+        KNotifyClient::event(m_widget->winId(), "feed_added", i18n("Feeds added:\n %1").arg(message));
+    }
+}
+
+void NotificationManager::doNotify()
+{
+    TQString message = "<html><body>";
+    TQString feedTitle;
+    TQValueList<Article>::ConstIterator it = m_articles.begin();
+    TQValueList<Article>::ConstIterator en = m_articles.end();
+    for (; it != en; ++it)
+    {
+        if (feedTitle != (*it).feed()->title())
+        {
+            feedTitle = (*it).feed()->title();
+            message += TQString("<p><b>%1:</b></p>").arg(feedTitle);
+        }
+        message += (*it).title() + "<br>";
+    }
+    message += "</body></html>";
+    KNotifyClient::Instance inst(m_instance);
+    KNotifyClient::event(m_widget->winId(), "new_articles", message);
+
+    m_articles.clear();
+    m_running = false;
+    m_intervalsLapsed = 0;
+    m_addedInLastInterval = false;
+}
+
+void NotificationManager::slotIntervalCheck()
+{
+    if (!m_running)
+        return;
+    m_intervalsLapsed++;
+    if (!m_addedInLastInterval || m_articles.count() >= m_maxArticles || m_intervalsLapsed >= m_maxIntervals)
+        doNotify();
+    else
+    {
+        m_addedInLastInterval = false;
+        TQTimer::singleShot(m_checkInterval, this, TQT_SLOT(slotIntervalCheck()));
+    }
+    
+}
+
+NotificationManager* NotificationManager::m_self;
+static KStaticDeleter<NotificationManager> notificationmanagersd;
+
+NotificationManager* NotificationManager::self()
+{
+    if (!m_self)
+        m_self = notificationmanagersd.setObject(m_self, new NotificationManager);
+    return m_self;
+}
+
+} // namespace Akregator
+
+#include "notificationmanager.moc"

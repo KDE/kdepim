@@ -1,0 +1,120 @@
+/*
+    This file is part of libkcal.
+
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
+
+#include <tqbuttongroup.h>
+#include <tqlayout.h>
+#include <tqradiobutton.h>
+#include <tqspinbox.h>
+#include <tqhbox.h>
+#include <tqlabel.h>
+
+#include <klocale.h>
+#include <kdebug.h>
+
+#include "resourcecached.h"
+
+#include "resourcecachedconfig.h"
+
+using namespace KCal;
+
+ResourceCachedReloadConfig::ResourceCachedReloadConfig( TQWidget *parent,
+                                                        const char *name )
+  : TQWidget( parent, name )
+{
+  TQBoxLayout *topLayout = new TQVBoxLayout( this );
+
+  mGroup = new TQButtonGroup( 1, Horizontal, i18n("Automatic Reload"), this );
+  topLayout->addWidget( mGroup );
+  new TQRadioButton( i18n("Never"), mGroup );
+  new TQRadioButton( i18n("On startup"), mGroup );
+
+  TQRadioButton *intervalRadio = new TQRadioButton( i18n("Regular interval"),
+                                                  mGroup );
+  connect( intervalRadio, TQT_SIGNAL( stateChanged( int ) ),
+           TQT_SLOT( slotIntervalStateChanged( int ) ) );
+  TQHBox *intervalBox = new TQHBox( mGroup );
+  new TQLabel( i18n("Interval in minutes"), intervalBox );
+  mIntervalSpin = new TQSpinBox( 1,900, 1,intervalBox );
+  mIntervalSpin->setEnabled( false );
+}
+
+void ResourceCachedReloadConfig::loadSettings( ResourceCached *resource )
+{
+  mGroup->setButton( resource->reloadPolicy() );
+  mIntervalSpin->setValue( resource->reloadInterval() );
+}
+
+void ResourceCachedReloadConfig::saveSettings( ResourceCached *resource )
+{
+  resource->setReloadPolicy( mGroup->selectedId() );
+  resource->setReloadInterval( mIntervalSpin->value() );
+}
+
+void ResourceCachedReloadConfig::slotIntervalStateChanged( int state )
+{
+  if ( state == TQButton::On ) mIntervalSpin->setEnabled( true );
+  else mIntervalSpin->setEnabled( false );
+}
+
+
+ResourceCachedSaveConfig::ResourceCachedSaveConfig( TQWidget *parent,
+                                                        const char *name )
+  : TQWidget( parent, name )
+{
+  TQBoxLayout *topLayout = new TQVBoxLayout( this );
+
+  mGroup = new TQButtonGroup( 1, Horizontal, i18n("Automatic Save"), this );
+  topLayout->addWidget( mGroup );
+  new TQRadioButton( i18n("Never"), mGroup );
+  new TQRadioButton( i18n("On exit"), mGroup );
+
+  TQRadioButton *intervalRadio = new TQRadioButton( i18n("Regular interval"),
+                                                  mGroup );
+  connect( intervalRadio, TQT_SIGNAL( stateChanged( int ) ),
+           TQT_SLOT( slotIntervalStateChanged( int ) ) );
+  TQHBox *intervalBox = new TQHBox( mGroup );
+  new TQLabel( i18n("Interval in minutes"), intervalBox );
+  mIntervalSpin = new TQSpinBox( 1,900, 1,intervalBox );
+  mIntervalSpin->setEnabled( false );
+
+  new TQRadioButton( i18n("Delayed after changes"), mGroup );
+  new TQRadioButton( i18n("On every change"), mGroup );
+}
+
+void ResourceCachedSaveConfig::loadSettings( ResourceCached *resource )
+{
+  mGroup->setButton( resource->savePolicy() );
+  mIntervalSpin->setValue( resource->saveInterval() );
+}
+
+void ResourceCachedSaveConfig::saveSettings( ResourceCached *resource )
+{
+  resource->setSavePolicy( mGroup->selectedId() );
+  resource->setSaveInterval( mIntervalSpin->value() );
+}
+
+void ResourceCachedSaveConfig::slotIntervalStateChanged( int state )
+{
+  if ( state == TQButton::On ) mIntervalSpin->setEnabled( true );
+  else mIntervalSpin->setEnabled( false );
+}
+
+#include "resourcecachedconfig.moc"

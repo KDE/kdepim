@@ -30,13 +30,13 @@
 
 #include <libkdepim/kpimprefs.h>
 
-#include <qapplication.h>
-#include <qdom.h>
-#include <qdatetime.h>
-#include <qptrlist.h>
-#include <qregexp.h>
-#include <qstringlist.h>
-#include <qtimer.h>
+#include <tqapplication.h>
+#include <tqdom.h>
+#include <tqdatetime.h>
+#include <tqptrlist.h>
+#include <tqregexp.h>
+#include <tqstringlist.h>
+#include <tqtimer.h>
 
 #include <kabc/locknull.h>
 #include <karchive.h>
@@ -93,8 +93,8 @@ void ResourceTVAnytime::init()
 
   //setReadOnly( true );
 
-  connect( &mResourceChangedTimer, SIGNAL( timeout() ),
-           this, SLOT( slotEmitResourceChanged() ) );
+  connect( &mResourceChangedTimer, TQT_SIGNAL( timeout() ),
+           this, TQT_SLOT( slotEmitResourceChanged() ) );
 }
 
 TVAnytimePrefsBase *ResourceTVAnytime::prefs()
@@ -110,7 +110,7 @@ void ResourceTVAnytime::readConfig( const KConfig *config )
 
   ResourceCached::readConfig( config );
 
-  QStringList defaultActive;
+  TQStringList defaultActive;
   defaultActive << "BBCOne" << "BBCTwo" << "BBCThree" << "BBCROne" << "BBCRTwo" << "BBCRThree" << "BBCRFour";
   mActiveServices = config->readListEntry( "ActiveServices", defaultActive );
   
@@ -125,7 +125,7 @@ void ResourceTVAnytime::writeConfig( KConfig *config )
   mPrefs->writeConfig();
 
   ResourceCached::writeConfig( config );
-  QStringList activeServices;
+  TQStringList activeServices;
   ServiceMap::ConstIterator it;
   for ( it = mServiceMap.begin(); it != mServiceMap.end(); ++it )
     if ( it.data().active() )
@@ -179,15 +179,15 @@ bool ResourceTVAnytime::doLoad()
 
   // TODO: find out if the file to download is fresh.  if not, just work with the cache.
   mDownloadJob = KIO::file_copy( url, destination, -1, true );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, TQT_SIGNAL( result( KIO::Job * ) ),
+           TQT_SLOT( slotJobResult( KIO::Job * ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading program schedule") );
 
   connect( mProgress,
-           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-           SLOT( cancelLoad() ) );
+           TQT_SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+           TQT_SLOT( cancelLoad() ) );
 
   return true;
 }
@@ -228,9 +228,9 @@ void ResourceTVAnytime::slotJobResult( KIO::Job *job )
   mDestination = 0;
 }
 
-QDomDocument ResourceTVAnytime::archiveFileXml( const QString & name )
+TQDomDocument ResourceTVAnytime::archiveFileXml( const TQString & name )
 {
-  QDomDocument result;
+  TQDomDocument result;
   const KArchiveDirectory *dir = mScheduleArchive->directory();
   const KArchiveEntry * entry = dir->entry( name );
   if ( entry && entry->isFile() )
@@ -243,11 +243,11 @@ QDomDocument ResourceTVAnytime::archiveFileXml( const QString & name )
 
 bool ResourceTVAnytime::readSchedule()
 {
-  QString uncompress = "application/x-gzip";
+  TQString uncompress = "application/x-gzip";
   mScheduleArchive = new KTar( mDestination->name(), uncompress );
   mScheduleArchive->open( IO_ReadOnly );
 
-  QDomDocument serviceInfo = archiveFileXml( "ServiceInformation.xml" );
+  TQDomDocument serviceInfo = archiveFileXml( "ServiceInformation.xml" );
   if ( !serviceInfo.isNull() )
     readServiceInformation( serviceInfo );
 
@@ -261,7 +261,7 @@ bool ResourceTVAnytime::readSchedule()
       readService( it.key() );
   }
 #else
-  QString serviceId = "BBCOne";
+  TQString serviceId = "BBCOne";
   Service s = mServiceMap[ serviceId ];
   if ( s.active() )
     readService( serviceId );
@@ -271,22 +271,22 @@ bool ResourceTVAnytime::readSchedule()
   return true;
 }
 
-bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo )
+bool ResourceTVAnytime::readServiceInformation( const TQDomDocument & serviceInfo )
 {
   kdDebug() << k_funcinfo << endl;
-  QDomElement docElem = serviceInfo.documentElement();
+  TQDomElement docElem = serviceInfo.documentElement();
 
-  QDomNode n = docElem.firstChild();
+  TQDomNode n = docElem.firstChild();
   while( !n.isNull() ) {
-    QDomElement e = n.toElement(); // try to convert the node to an element.
+    TQDomElement e = n.toElement(); // try to convert the node to an element.
     if( !e.isNull() && e.tagName() == "ProgramDescription" ) {
-      QDomNode n2 =  e.firstChild();
-      QDomElement e2 = n2.toElement();
+      TQDomNode n2 =  e.firstChild();
+      TQDomElement e2 = n2.toElement();
       if( !e2.isNull() && e2.tagName() == "ServiceInformationTable" ) {
-        QDomNode n3 =  e2.firstChild();
+        TQDomNode n3 =  e2.firstChild();
         while ( !n3.isNull() ) {
           Service s;
-          QDomElement e3 = n3.toElement();
+          TQDomElement e3 = n3.toElement();
           if (s.loadXML( e3 ) ) {
             s.setActive( mActiveServices.contains( s.id() ) );
             bool newService = !mServiceMap.contains( s.id() );   
@@ -311,24 +311,24 @@ bool ResourceTVAnytime::readServiceInformation( const QDomDocument & serviceInfo
   return true;
 }
 
-bool ResourceTVAnytime::readService( const QString & serviceId )
+bool ResourceTVAnytime::readService( const TQString & serviceId )
 {
   kdDebug() << k_funcinfo << endl;
   // open programme information table
   Service service = mServiceMap[ serviceId ];
 
-  QStringList entries = mScheduleArchive->directory()->entries();
-  QRegExp re( "^(\\d{8})" + serviceId );
-  QStringList dates;
-  QString todaysDate = QDate::currentDate().toString( "yyyyMMdd" );
-  for( QStringList::Iterator it = entries.begin(); it != entries.end(); ++it )
+  TQStringList entries = mScheduleArchive->directory()->entries();
+  TQRegExp re( "^(\\d{8})" + serviceId );
+  TQStringList dates;
+  TQString todaysDate = TQDate::currentDate().toString( "yyyyMMdd" );
+  for( TQStringList::Iterator it = entries.begin(); it != entries.end(); ++it )
   {
     if ( re.search( *it ) != -1 ) // this entry belongs to the requested service
     {
-      QString entry = re.cap( 1 );
+      TQString entry = re.cap( 1 );
       // handle this date according to user preferences
-      QDate entryDate( entry.left( 4 ).toInt(), entry.mid( 4, 2 ).toInt(), entry.right( 2 ).toInt() );
-      if ( entryDate < QDate::currentDate() || ( entryDate > QDate::currentDate().addDays( prefs()->days() - 1 ) ) )
+      TQDate entryDate( entry.left( 4 ).toInt(), entry.mid( 4, 2 ).toInt(), entry.right( 2 ).toInt() );
+      if ( entryDate < TQDate::currentDate() || ( entryDate > TQDate::currentDate().addDays( prefs()->days() - 1 ) ) )
         continue;
 
       if ( !dates.contains( re.cap( 1 ) ) )
@@ -338,23 +338,23 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
 
   kdDebug() << "reading schedule for " << serviceId << " on " << dates << endl;
 
-  for( QStringList::Iterator it = dates.begin(); it != dates.end(); ++it )
+  for( TQStringList::Iterator it = dates.begin(); it != dates.end(); ++it )
   {
     ProgramInformationMap progInfoMap = service.programmeInformation();
-    QString programInfoFileName = QString( *it + serviceId + "_pi.xml" );
-    QDomDocument programInfo = archiveFileXml( programInfoFileName );
+    TQString programInfoFileName = TQString( *it + serviceId + "_pi.xml" );
+    TQDomDocument programInfo = archiveFileXml( programInfoFileName );
     if ( !programInfo.isNull() ) {
-      QDomElement docElem = programInfo.documentElement();
-      QDomNode n = docElem.firstChild();
+      TQDomElement docElem = programInfo.documentElement();
+      TQDomNode n = docElem.firstChild();
       while( !n.isNull() ) {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
+        TQDomElement e = n.toElement(); // try to convert the node to an element.
         if( !e.isNull() && e.tagName() == "ProgramDescription" ) {
-          QDomNode n2 =  e.firstChild();
-          QDomElement e2 = n2.toElement();
+          TQDomNode n2 =  e.firstChild();
+          TQDomElement e2 = n2.toElement();
           if( !e2.isNull() && e2.tagName() == "ProgramInformationTable" ) {
-            QDomNode n3 =  e2.firstChild();
+            TQDomNode n3 =  e2.firstChild();
             while ( !n3.isNull() ) {
-              QDomElement e3 = n3.toElement();
+              TQDomElement e3 = n3.toElement();
               ProgramInformation pi; 
               if ( pi.loadXML( e3 ) ) {
                 //kdDebug() << "Found programme: " << pi.id() << "," << pi.title() << "," << pi.synopsis() << endl;
@@ -372,25 +372,25 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
       kdDebug() << "Service file: " << programInfoFileName << " not found in archive" << endl;
     // open programme location table, iterate and create incidences
   
-    QString programLocationFileName = QString( *it + serviceId + "_pl.xml" );
-    QDomDocument programLocation = archiveFileXml( programLocationFileName );
+    TQString programLocationFileName = TQString( *it + serviceId + "_pl.xml" );
+    TQDomDocument programLocation = archiveFileXml( programLocationFileName );
     if ( !programLocation.isNull() ) {
-      QDomElement docElem = programLocation.documentElement();
-      QDomNode n = docElem.firstChild();
+      TQDomElement docElem = programLocation.documentElement();
+      TQDomNode n = docElem.firstChild();
       while( !n.isNull() ) {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
+        TQDomElement e = n.toElement(); // try to convert the node to an element.
         if( !e.isNull() && e.tagName() == "ProgramDescription" ) {
-          QDomNode n2 =  e.firstChild();
-          QDomElement e2 = n2.toElement();
+          TQDomNode n2 =  e.firstChild();
+          TQDomElement e2 = n2.toElement();
           if( !e2.isNull() && e2.tagName() == "ProgramLocationTable" ) {
-            QDomNode n3 = e2.firstChild();
-            QDomElement e3 = n3.toElement();
+            TQDomNode n3 = e2.firstChild();
+            TQDomElement e3 = n3.toElement();
             if( !e3.isNull() && e3.tagName() == "Schedule" ) {
-              QString foundServiceId = e3.attribute( "serviceIDRef" );
+              TQString foundServiceId = e3.attribute( "serviceIDRef" );
               if ( serviceId == foundServiceId ) {
-                QDomNode n4 = e3.firstChild();
+                TQDomNode n4 = e3.firstChild();
                 while ( !n4.isNull() ) {
-                  QDomElement e4 = n4.toElement();
+                  TQDomElement e4 = n4.toElement();
                   ScheduleEvent se;
                   if ( se.loadXML( e4 ) ) {
                     ProgramInformation pi = progInfoMap[ se.crid() ];
@@ -428,31 +428,31 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
   return true;
 }
 
-QStringList ResourceTVAnytime::subresources() const
+TQStringList ResourceTVAnytime::subresources() const
 {
   //const_cast<ResourceTVAnytime*>( this )->doLoad();
   return mServiceMap.keys();
 }
 
 const QString
-ResourceTVAnytime::labelForSubresource( const QString& subresource ) const
+ResourceTVAnytime::labelForSubresource( const TQString& subresource ) const
 {
   Service s = mServiceMap[ subresource ];
   return s.name();
 }
 
-QString ResourceTVAnytime::subresourceIdentifier( Incidence *incidence )
+TQString ResourceTVAnytime::subresourceIdentifier( Incidence *incidence )
 {
   return incidence->customProperty( "TVANYWHERE", "SERVICEID" );
 }
 
-bool ResourceTVAnytime::subresourceActive( const QString & subresource ) const
+bool ResourceTVAnytime::subresourceActive( const TQString & subresource ) const
 {
   Service s = mServiceMap[ subresource ];
   return s.active();
 }
 
-void ResourceTVAnytime::setSubresourceActive( const QString & subresource, bool active )
+void ResourceTVAnytime::setSubresourceActive( const TQString & subresource, bool active )
 {
   if ( mServiceMap.contains( subresource ) )
   {

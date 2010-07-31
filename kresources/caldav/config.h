@@ -43,7 +43,7 @@ class KDE_EXPORT ResourceCalDavConfig : public KRES::ConfigWidget
 
 public:
 
-    ResourceCalDavConfig(QWidget *parent = 0);
+    ResourceCalDavConfig(TQWidget *parent = 0);
 
 public slots:
 
@@ -56,10 +56,10 @@ protected:
 
 private:
 
-    QLineEdit *mUrl;
-    QLineEdit *mUsername;
-    QLineEdit *mPassword;
-    QCheckBox *mRememberPassword;
+    TQLineEdit *mUrl;
+    TQLineEdit *mUsername;
+    TQLineEdit *mPassword;
+    TQCheckBox *mRememberPassword;
     CalDavReloadConfig* mReloadConfig;
     CalDavSaveConfig* mSaveConfig;
 

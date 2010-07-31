@@ -21,11 +21,11 @@
 #ifndef KNOTESAPP_H
 #define KNOTESAPP_H
 
-#include <qstring.h>
-#include <qdict.h>
-#include <qptrlist.h>
-#include <qlabel.h>
-#include <qdom.h>
+#include <tqstring.h>
+#include <tqdict.h>
+#include <tqptrlist.h>
+#include <tqlabel.h>
+#include <tqdom.h>
 
 #include <kapplication.h>
 #include <kxmlguiclient.h>
@@ -52,7 +52,7 @@ namespace KNetwork {
 }
 
 
-class KNotesApp : public QLabel, public KSessionManaged, virtual public KXMLGUIClient,
+class KNotesApp : public TQLabel, public KSessionManaged, virtual public KXMLGUIClient,
     virtual public KNotesAppIface
 {
     Q_OBJECT
@@ -60,49 +60,49 @@ public:
     KNotesApp();
     ~KNotesApp();
 
-    void showNote( const QString& id ) const;
-    void hideNote( const QString& id ) const;
+    void showNote( const TQString& id ) const;
+    void hideNote( const TQString& id ) const;
 
-    void killNote( const QString& id );
-    void killNote( const QString& id, bool force );
+    void killNote( const TQString& id );
+    void killNote( const TQString& id, bool force );
 
-    QString name( const QString& id ) const;
-    QString text( const QString& id ) const;
+    TQString name( const TQString& id ) const;
+    TQString text( const TQString& id ) const;
 
-    void setName( const QString& id, const QString& newName );
-    void setText( const QString& id, const QString& newText );
+    void setName( const TQString& id, const TQString& newName );
+    void setText( const TQString& id, const TQString& newText );
 
-    QString fgColor( const QString& id ) const;
-    QString bgColor( const QString& id ) const;
+    TQString fgColor( const TQString& id ) const;
+    TQString bgColor( const TQString& id ) const;
 
-    void setColor( const QString& id, const QString& fgColor,
-                                      const QString& bgColor );
+    void setColor( const TQString& id, const TQString& fgColor,
+                                      const TQString& bgColor );
 
-    QMap<QString,QString> notes() const;
+    TQMap<TQString,TQString> notes() const;
 
-    int width( const QString& noteId ) const;
-    int height( const QString& noteId ) const;
+    int width( const TQString& noteId ) const;
+    int height( const TQString& noteId ) const;
 
-    void move( const QString& noteId, int x, int y ) const;
-    void resize( const QString& noteId, int width, int height ) const;
+    void move( const TQString& noteId, int x, int y ) const;
+    void resize( const TQString& noteId, int width, int height ) const;
 
-    void sync( const QString& app );
-    bool isNew( const QString& app, const QString& id ) const;
-    bool isModified( const QString& app, const QString& id ) const;
+    void sync( const TQString& app );
+    bool isNew( const TQString& app, const TQString& id ) const;
+    bool isModified( const TQString& app, const TQString& id ) const;
 
     bool commitData( QSessionManager& );
 
 public slots:
-    QString newNote( const QString& name = QString::null,
-                     const QString& text = QString::null );
-    QString newNoteFromClipboard( const QString& name = QString::null );
+    TQString newNote( const TQString& name = TQString::null,
+                     const TQString& text = TQString::null );
+    TQString newNoteFromClipboard( const TQString& name = TQString::null );
 
     void hideAllNotes() const;
     void showAllNotes() const;
 
 protected:
-    void mousePressEvent( QMouseEvent* );
-    void resizeEvent ( QResizeEvent * );
+    void mousePressEvent( TQMouseEvent* );
+    void resizeEvent ( TQResizeEvent * );
 
 protected slots:
     void slotShowNote();
@@ -134,10 +134,10 @@ private slots:
     void killNote( KCal::Journal *journal );
 
 private:
-    class KNoteActionList : public QPtrList<KAction>
+    class KNoteActionList : public TQPtrList<KAction>
     {
     public:
-        virtual int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 );
+        virtual int compareItems( TQPtrCollection::Item s1, TQPtrCollection::Item s2 );
     };
 
     KNotesResourceManager *m_manager;
@@ -145,11 +145,11 @@ private:
     KNotesAlarm     *m_alarm;
     KNetwork::KServerSocket   *m_listener;
 
-    QDict<KNote>    m_noteList;
+    TQDict<KNote>    m_noteList;
     KNoteActionList m_noteActions;
 
     KFind           *m_find;
-    QDictIterator<KNote> *m_findPos;
+    TQDictIterator<KNote> *m_findPos;
 
     KPopupMenu      *m_note_menu;
     KPopupMenu      *m_context_menu;
@@ -158,7 +158,7 @@ private:
     KXMLGUIFactory  *m_guiFactory;
     KXMLGUIBuilder  *m_guiBuilder;
 
-    QDomDocument    m_noteGUI;
+    TQDomDocument    m_noteGUI;
 };
 
 #endif

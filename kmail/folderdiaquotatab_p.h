@@ -34,27 +34,27 @@
 #define FOLDERDIAQUOTA_P_H
 
 
-#include <qlabel.h>
-#include <qprogressbar.h>
-#include <qwhatsthis.h>
+#include <tqlabel.h>
+#include <tqprogressbar.h>
+#include <tqwhatsthis.h>
 
 #include "quotajobs.h"
 
 namespace KMail {
 
-class QuotaWidget : public QWidget {
+class QuotaWidget : public TQWidget {
 
  Q_OBJECT
 public:
-    QuotaWidget( QWidget* parent, const char* name = 0 );
+    QuotaWidget( TQWidget* parent, const char* name = 0 );
     virtual ~QuotaWidget() { }
     void setQuotaInfo( const KMail::QuotaInfo& info );
 
 private:
-    QLabel* mInfoLabel;
-    QLabel* mRootLabel;
-    QProgressBar* mProgressBar;
-    QString mUnits;
+    TQLabel* mInfoLabel;
+    TQLabel* mRootLabel;
+    TQProgressBar* mProgressBar;
+    TQString mUnits;
     int mFactor;
 };
 

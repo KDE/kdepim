@@ -25,14 +25,14 @@
 #include <kconfig.h>
 #include <kapplication.h>
 
-#include <qregexp.h>
-#include <qvaluelist.h>
+#include <tqregexp.h>
+#include <tqvaluelist.h>
 
 using namespace KMail;
 
 //-----------------------------------------------------------------------------
 AccountManager::AccountManager()
-    :QObject(), mNewMailArrived( false ), mInteractive( false ),
+    :TQObject(), mNewMailArrived( false ), mInteractive( false ),
      mTotalNewMailsArrived( 0 ), mDisplaySummary( false )
 {
   mAcctChecking.clear();
@@ -50,15 +50,15 @@ AccountManager::~AccountManager()
 void AccountManager::writeConfig( bool withSync )
 {
   KConfig* config = KMKernel::config();
-  QString groupName;
+  TQString groupName;
 
   KConfigGroupSaver saver(config, "General");
   config->writeEntry("accounts", mAcctList.count());
 
   // first delete all account groups in the config file:
-  QStringList accountGroups =
-    config->groupList().grep( QRegExp( "Account \\d+" ) );
-  for ( QStringList::Iterator it = accountGroups.begin() ;
+  TQStringList accountGroups =
+    config->groupList().grep( TQRegExp( "Account \\d+" ) );
+  for ( TQStringList::Iterator it = accountGroups.begin() ;
 	it != accountGroups.end() ; ++it )
     config->deleteGroup( *it );
 
@@ -78,8 +78,8 @@ void AccountManager::readConfig(void)
 {
   KConfig* config = KMKernel::config();
   KMAccount* acct;
-  QString acctType, acctName;
-  QCString groupName;
+  TQString acctType, acctName;
+  TQCString groupName;
   int i, num;
   uint id;
 
@@ -149,8 +149,8 @@ void AccountManager::processNextCheck( bool _newMail )
     kdDebug(5006) << "account " << acct->name() << " finished check" << endl;
     mAcctChecking.remove( acct );
     kmkernel->filterMgr()->deref();
-    disconnect( acct, SIGNAL( finishedCheck( bool, CheckStatus ) ),
-                      this, SLOT( processNextCheck( bool ) ) );
+    disconnect( acct, TQT_SIGNAL( finishedCheck( bool, CheckStatus ) ),
+                      this, TQT_SLOT( processNextCheck( bool ) ) );
   }
   if ( mAcctChecking.isEmpty() ) {
     // all checks finished, display summary
@@ -164,7 +164,7 @@ void AccountManager::processNextCheck( bool _newMail )
   }
   if ( mAcctTodo.isEmpty() ) return;
 
-  QString accountHostName;
+  TQString accountHostName;
 
   KMAccount *curAccount = 0;
   for ( AccountList::Iterator it ( mAcctTodo.begin() ), last ( mAcctTodo.end() ); it != last; ) {
@@ -180,7 +180,7 @@ void AccountManager::processNextCheck( bool _newMail )
 
   if ( curAccount->type() != "imap" && curAccount->type() != "cachedimap" &&
        curAccount->folder() == 0 ) {
-    QString tmp = i18n("Account %1 has no mailbox defined:\n"
+    TQString tmp = i18n("Account %1 has no mailbox defined:\n"
         "mail checking aborted;\n"
         "check your account settings.")
       .arg(curAccount->name());
@@ -196,18 +196,18 @@ void AccountManager::processNextCheck( bool _newMail )
     // Check with the network status daemon whether the network is available
     const int NetWorkStatusUnknown = 1;
     const int NetWorkStatusOnline = 8;
-    QCString replyType;
-    QByteArray params;
-    QByteArray reply;
+    TQCString replyType;
+    TQByteArray params;
+    TQByteArray reply;
 
-    QDataStream stream( params, IO_WriteOnly );
+    TQDataStream stream( params, IO_WriteOnly );
     stream << static_cast<NetworkAccount*>( curAccount )->host();
 
-    if ( kapp->dcopClient()->call( "kded", "networkstatus", "status(QString)",
+    if ( kapp->dcopClient()->call( "kded", "networkstatus", "status(TQString)",
                             params, replyType, reply ) && ( replyType == "int" ) )
     {
       int result;
-      QDataStream stream2(  reply, IO_ReadOnly );
+      TQDataStream stream2(  reply, IO_ReadOnly );
       stream2 >> result;
       kdDebug() << k_funcinfo << "networkstatus status = " << result << endl;
       // if it's not unknown (no networks announced by network control apps), and not offline, give up now
@@ -219,8 +219,8 @@ void AccountManager::processNextCheck( bool _newMail )
     }
   }
 
-  connect( curAccount, SIGNAL( finishedCheck( bool, CheckStatus ) ),
-                this, SLOT( processNextCheck( bool ) ) );
+  connect( curAccount, TQT_SIGNAL( finishedCheck( bool, CheckStatus ) ),
+                this, TQT_SLOT( processNextCheck( bool ) ) );
 
   KPIM::BroadcastStatus::instance()->setStatusMsg(
       i18n("Checking account %1 for new mail").arg(curAccount->name()));
@@ -234,7 +234,7 @@ void AccountManager::processNextCheck( bool _newMail )
 }
 
 //-----------------------------------------------------------------------------
-KMAccount* AccountManager::create( const QString &aType, const QString &aName, uint id )
+KMAccount* AccountManager::create( const TQString &aType, const TQString &aName, uint id )
 {
   KMAccount* act = 0;
   if ( id == 0 )
@@ -258,8 +258,8 @@ KMAccount* AccountManager::create( const QString &aType, const QString &aName, u
       kdWarning(5006) << "Attempt to instantiate a non-existing account type!" << endl;
       return 0;
   }
-  connect( act, SIGNAL( newMailsProcessed( const QMap<QString, int> & ) ),
-                this, SLOT( addToTotalNewMailCount( const QMap<QString, int> & ) ) );
+  connect( act, TQT_SIGNAL( newMailsProcessed( const TQMap<TQString, int> & ) ),
+                this, TQT_SLOT( addToTotalNewMailCount( const TQMap<TQString, int> & ) ) );
   return act;
 }
 
@@ -281,7 +281,7 @@ void AccountManager::add( KMAccount *account )
 
 
 //-----------------------------------------------------------------------------
-KMAccount* AccountManager::findByName(const QString &aName) const
+KMAccount* AccountManager::findByName(const TQString &aName) const
 {
   if ( aName.isEmpty() ) return 0;
 
@@ -370,9 +370,9 @@ void AccountManager::invalidateIMAPFolders()
 
 
 //-----------------------------------------------------------------------------
-QStringList  AccountManager::getAccounts() const
+TQStringList  AccountManager::getAccounts() const
 {
-  QStringList strList;
+  TQStringList strList;
   for ( AccountList::ConstIterator it( mAcctList.begin() ), end( mAcctList.end() ); it != end; ++it ) {
     strList.append( (*it)->name() );
   }
@@ -392,9 +392,9 @@ void AccountManager::intCheckMail(int item, bool _interactive)
 
 
 //-----------------------------------------------------------------------------
-void AccountManager::addToTotalNewMailCount( const QMap<QString, int> & newInFolder )
+void AccountManager::addToTotalNewMailCount( const TQMap<TQString, int> & newInFolder )
 {
-  for ( QMap<QString, int>::const_iterator it = newInFolder.begin();
+  for ( TQMap<TQString, int>::const_iterator it = newInFolder.begin();
         it != newInFolder.end(); ++it ) {
     mTotalNewMailsArrived += it.data();
     if ( mTotalNewInFolder.find( it.key() ) == mTotalNewInFolder.end() )
@@ -407,7 +407,7 @@ void AccountManager::addToTotalNewMailCount( const QMap<QString, int> & newInFol
 //-----------------------------------------------------------------------------
 uint AccountManager::createId()
 {
-  QValueList<uint> usedIds;
+  TQValueList<uint> usedIds;
   for ( AccountList::ConstIterator it( mAcctList.begin() ), end( mAcctList.end() ); it != end; ++it ) {
     usedIds << (*it)->id();
   }

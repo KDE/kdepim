@@ -25,10 +25,10 @@
 #include <kidna.h>
 #include <kmime_util.h>
 
-#include <qregexp.h>
+#include <tqregexp.h>
 
 //-----------------------------------------------------------------------------
-QStringList KPIM::splitEmailAddrList(const QString& aStr)
+TQStringList KPIM::splitEmailAddrList(const TQString& aStr)
 {
   // Features:
   // - always ignores quoted characters
@@ -38,12 +38,12 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
   // - ignores everything (including double quotes and commas)
   //   inside comments
 
-  QStringList list;
+  TQStringList list;
 
   if (aStr.isEmpty())
     return list;
 
-  QString addr;
+  TQString addr;
   uint addrstart = 0;
   int commentlevel = 0;
   bool insidequote = false;
@@ -101,10 +101,10 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
 
 //-----------------------------------------------------------------------------
 // Used by KPIM::splitAddress(...) and KPIM::getFirstEmailAddress(...).
-KPIM::EmailParseResult splitAddressInternal( const QCString& address,
-                                             QCString & displayName,
-                                             QCString & addrSpec,
-                                             QCString & comment,
+KPIM::EmailParseResult splitAddressInternal( const TQCString& address,
+                                             TQCString & displayName,
+                                             TQCString & addrSpec,
+                                             TQCString & comment,
                                              bool allowMultipleAddresses )
 {
 //  kdDebug() << "KMMessage::splitAddress( " << address << " )" << endl;
@@ -116,9 +116,9 @@ KPIM::EmailParseResult splitAddressInternal( const QCString& address,
   // these strings are later copied to displayName resp. addrSpec resp. comment
   // we don't operate directly on those variables, since as ByteArray deriverates
   // they have a miserable performance on operator+
-  QString dName;
-  QString aSpec;
-  QString cmmt;
+  TQString dName;
+  TQString aSpec;
+  TQString cmmt;
   
   if ( address.isEmpty() )
     return KPIM::AddressEmpty;
@@ -255,10 +255,10 @@ KPIM::EmailParseResult splitAddressInternal( const QCString& address,
 
 
 //-----------------------------------------------------------------------------
-KPIM::EmailParseResult KPIM::splitAddress( const QCString& address,
-                                           QCString & displayName,
-                                           QCString & addrSpec,
-                                           QCString & comment )
+KPIM::EmailParseResult KPIM::splitAddress( const TQCString& address,
+                                           TQCString & displayName,
+                                           TQCString & addrSpec,
+                                           TQCString & comment )
 {
   return splitAddressInternal( address, displayName, addrSpec, comment,
                                false /* don't allow multiple addresses */ );
@@ -266,24 +266,24 @@ KPIM::EmailParseResult KPIM::splitAddress( const QCString& address,
 
 
 //-----------------------------------------------------------------------------
-KPIM::EmailParseResult KPIM::splitAddress( const QString & address,
-                                           QString & displayName,
-                                           QString & addrSpec,
-                                           QString & comment )
+KPIM::EmailParseResult KPIM::splitAddress( const TQString & address,
+                                           TQString & displayName,
+                                           TQString & addrSpec,
+                                           TQString & comment )
 {
-  QCString d, a, c;
+  TQCString d, a, c;
   KPIM::EmailParseResult result = splitAddress( address.utf8(), d, a, c );
   if ( result == AddressOk ) {
-    displayName = QString::fromUtf8( d );
-    addrSpec = QString::fromUtf8( a );
-    comment = QString::fromUtf8( c );
+    displayName = TQString::fromUtf8( d );
+    addrSpec = TQString::fromUtf8( a );
+    comment = TQString::fromUtf8( c );
   }
   return result;
 }
 
 
 //-----------------------------------------------------------------------------
-KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
+KPIM::EmailParseResult KPIM::isValidEmailAddress( const TQString& aStr )
 {
   // If we are passed an empty string bail right away no need to process further
   // and waste resources
@@ -458,7 +458,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::emailParseResultToString( EmailParseResult errorCode )
+TQString KPIM::emailParseResultToString( EmailParseResult errorCode )
 {
   switch ( errorCode ) {
     case TooManyAts :
@@ -516,7 +516,7 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 }
 
 //-----------------------------------------------------------------------------
-bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
+bool KPIM::isValidSimpleEmailAddress( const TQString& aStr )
 {
   // If we are passed an empty string bail right away no need to process further
   // and waste resources
@@ -525,8 +525,8 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
   }
 
   int atChar = aStr.findRev( '@' );
-  QString domainPart = aStr.mid( atChar + 1);
-  QString localPart = aStr.left( atChar );
+  TQString domainPart = aStr.mid( atChar + 1);
+  TQString localPart = aStr.left( atChar );
   bool tooManyAtsFlag = false;
   bool inQuotedString = false;
   int atCount = localPart.contains( '@' );
@@ -547,7 +547,7 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
       }
   }
 
-  QString addrRx = "[a-zA-Z]*[~|{}`\\^?=/+*'&%$#!_\\w.-]*[~|{}`\\^?=/+*'&%$#!_a-zA-Z0-9-]@";
+  TQString addrRx = "[a-zA-Z]*[~|{}`\\^?=/+*'&%$#!_\\w.-]*[~|{}`\\^?=/+*'&%$#!_a-zA-Z0-9-]@";
   if ( localPart[ 0 ] == '\"' || localPart[ localPart.length()-1 ] == '\"' ) {
     addrRx = "\"[a-zA-Z@]*[\\w.@-]*[a-zA-Z0-9@]\"@";
   }
@@ -556,26 +556,26 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
   } else {
     addrRx += "[\\w-]+(\\.[\\w-]+)*";
   }
-  QRegExp rx( addrRx );
+  TQRegExp rx( addrRx );
   return  rx.exactMatch( aStr ) && !tooManyAtsFlag;
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::simpleEmailAddressErrorMsg()
+TQString KPIM::simpleEmailAddressErrorMsg()
 {
       return i18n("The email address you entered is not valid because it "
                   "does not seem to contain an actual email address, i.e. "
                   "something of the form joe@kde.org.");
 }
 //-----------------------------------------------------------------------------
-QCString KPIM::getEmailAddress( const QCString & address )
+TQCString KPIM::getEmailAddress( const TQCString & address )
 {
-  QCString dummy1, dummy2, addrSpec;
+  TQCString dummy1, dummy2, addrSpec;
   KPIM::EmailParseResult result =
     splitAddressInternal( address, dummy1, addrSpec, dummy2,
                           false /* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
-    addrSpec = QCString();
+    addrSpec = TQCString();
     kdDebug() // << k_funcinfo << "\n"
               << "Input: aStr\nError:"
               << emailParseResultToString( result ) << endl;
@@ -586,21 +586,21 @@ QCString KPIM::getEmailAddress( const QCString & address )
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::getEmailAddress( const QString & address )
+TQString KPIM::getEmailAddress( const TQString & address )
 {
-  return QString::fromUtf8( getEmailAddress( address.utf8() ) );
+  return TQString::fromUtf8( getEmailAddress( address.utf8() ) );
 }
 
 
 //-----------------------------------------------------------------------------
-QCString KPIM::getFirstEmailAddress( const QCString & addresses )
+TQCString KPIM::getFirstEmailAddress( const TQCString & addresses )
 {
-  QCString dummy1, dummy2, addrSpec;
+  TQCString dummy1, dummy2, addrSpec;
   KPIM::EmailParseResult result =
     splitAddressInternal( addresses, dummy1, addrSpec, dummy2,
                           true /* allow multiple addresses */ );
   if ( result != AddressOk ) {
-    addrSpec = QCString();
+    addrSpec = TQCString();
     kdDebug() // << k_funcinfo << "\n"
               << "Input: aStr\nError:"
               << emailParseResultToString( result ) << endl;
@@ -611,17 +611,17 @@ QCString KPIM::getFirstEmailAddress( const QCString & addresses )
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::getFirstEmailAddress( const QString & addresses )
+TQString KPIM::getFirstEmailAddress( const TQString & addresses )
 {
-  return QString::fromUtf8( getFirstEmailAddress( addresses.utf8() ) );
+  return TQString::fromUtf8( getFirstEmailAddress( addresses.utf8() ) );
 }
 
 
 //-----------------------------------------------------------------------------
-bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
+bool KPIM::getNameAndMail(const TQString& aStr, TQString& name, TQString& mail)
 {
-  name = QString::null;
-  mail = QString::null;
+  name = TQString::null;
+  mail = TQString::null;
 
   const int len=aStr.length();
   const char cQuotes = '"';
@@ -629,7 +629,7 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
   bool bInComment = false;
   bool bInQuotesOutsideOfEmail = false;
   int i=0, iAd=0, iMailStart=0, iMailEnd=0;
-  QChar c;
+  TQChar c;
   unsigned int commentstack = 0;
 
   // Find the '@' of the email address
@@ -791,10 +791,10 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
 
 
 //-----------------------------------------------------------------------------
-bool KPIM::compareEmail( const QString& email1, const QString& email2,
+bool KPIM::compareEmail( const TQString& email1, const TQString& email2,
                          bool matchName )
 {
-  QString e1Name, e1Email, e2Name, e2Email;
+  TQString e1Name, e1Email, e2Name, e2Email;
 
   getNameAndMail( email1, e1Name, e1Email );
   getNameAndMail( email2, e2Name, e2Email );
@@ -805,16 +805,16 @@ bool KPIM::compareEmail( const QString& email1, const QString& email2,
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::normalizedAddress( const QString & displayName,
-                                 const QString & addrSpec,
-                                 const QString & comment )
+TQString KPIM::normalizedAddress( const TQString & displayName,
+                                 const TQString & addrSpec,
+                                 const TQString & comment )
 {
   if ( displayName.isEmpty() && comment.isEmpty() )
     return addrSpec;
   else if ( comment.isEmpty() )
     return quoteNameIfNecessary( displayName ) + " <" + addrSpec + ">";
   else if ( displayName.isEmpty() ) {
-    QString commentStr = comment;
+    TQString commentStr = comment;
     return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + ">";
   }
   else
@@ -823,28 +823,28 @@ QString KPIM::normalizedAddress( const QString & displayName,
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::decodeIDN( const QString & addrSpec )
+TQString KPIM::decodeIDN( const TQString & addrSpec )
 {
   const int atPos = addrSpec.findRev( '@' );
   if ( atPos == -1 )
     return addrSpec;
 
-  QString idn = KIDNA::toUnicode( addrSpec.mid( atPos + 1 ) );
+  TQString idn = KIDNA::toUnicode( addrSpec.mid( atPos + 1 ) );
   if ( idn.isEmpty() )
-    return QString::null;
+    return TQString::null;
 
   return addrSpec.left( atPos + 1 ) + idn;
 }
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::encodeIDN( const QString & addrSpec )
+TQString KPIM::encodeIDN( const TQString & addrSpec )
 {
   const int atPos = addrSpec.findRev( '@' );
   if ( atPos == -1 )
     return addrSpec;
 
-  QString idn = KIDNA::toAscii( addrSpec.mid( atPos + 1 ) );
+  TQString idn = KIDNA::toAscii( addrSpec.mid( atPos + 1 ) );
   if ( idn.isEmpty() )
     return addrSpec;
 
@@ -853,19 +853,19 @@ QString KPIM::encodeIDN( const QString & addrSpec )
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
+TQString KPIM::normalizeAddressesAndDecodeIDNs( const TQString & str )
 {
 //  kdDebug() << "KPIM::normalizeAddressesAndDecodeIDNs( \""
 //                << str << "\" )" << endl;
   if( str.isEmpty() )
     return str;
 
-  const QStringList addressList = KPIM::splitEmailAddrList( str );
-  QStringList normalizedAddressList;
+  const TQStringList addressList = KPIM::splitEmailAddrList( str );
+  TQStringList normalizedAddressList;
 
-  QCString displayName, addrSpec, comment;
+  TQCString displayName, addrSpec, comment;
 
-  for( QStringList::ConstIterator it = addressList.begin();
+  for( TQStringList::ConstIterator it = addressList.begin();
        ( it != addressList.end() );
        ++it ) {
     if( !(*it).isEmpty() ) {
@@ -876,9 +876,9 @@ QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
         comment = KMime::decodeRFC2047String(comment).utf8();
 
         normalizedAddressList <<
-          normalizedAddress( QString::fromUtf8( displayName ),
-                             decodeIDN( QString::fromUtf8( addrSpec ) ),
-                             QString::fromUtf8( comment ) );
+          normalizedAddress( TQString::fromUtf8( displayName ),
+                             decodeIDN( TQString::fromUtf8( addrSpec ) ),
+                             TQString::fromUtf8( comment ) );
       }
       else {
         kdDebug() << "splitting address failed: " << *it << endl;
@@ -894,19 +894,19 @@ QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
+TQString KPIM::normalizeAddressesAndEncodeIDNs( const TQString & str )
 {
   //kdDebug() << "KPIM::normalizeAddressesAndEncodeIDNs( \""
   //              << str << "\" )" << endl;
   if( str.isEmpty() )
     return str;
 
-  const QStringList addressList = KPIM::splitEmailAddrList( str );
-  QStringList normalizedAddressList;
+  const TQStringList addressList = KPIM::splitEmailAddrList( str );
+  TQStringList normalizedAddressList;
 
-  QCString displayName, addrSpec, comment;
+  TQCString displayName, addrSpec, comment;
 
-  for( QStringList::ConstIterator it = addressList.begin();
+  for( TQStringList::ConstIterator it = addressList.begin();
        ( it != addressList.end() );
        ++it ) {
     if( !(*it).isEmpty() ) {
@@ -914,9 +914,9 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
            == AddressOk ) {
 
         normalizedAddressList <<
-          normalizedAddress( QString::fromUtf8( displayName ),
-                             encodeIDN( QString::fromUtf8( addrSpec ) ),
-                             QString::fromUtf8( comment ) );
+          normalizedAddress( TQString::fromUtf8( displayName ),
+                             encodeIDN( TQString::fromUtf8( addrSpec ) ),
+                             TQString::fromUtf8( comment ) );
       }
       else {
         kdDebug() << "splitting address failed: " << *it << endl;
@@ -935,12 +935,12 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
 
 //-----------------------------------------------------------------------------
 // Escapes unescaped doublequotes in str.
-static QString escapeQuotes( const QString & str )
+static TQString escapeQuotes( const TQString & str )
 {
   if ( str.isEmpty() )
-    return QString();
+    return TQString();
 
-  QString escaped;
+  TQString escaped;
   // reserve enough memory for the worst case ( """..."" -> \"\"\"...\"\" )
   escaped.reserve( 2*str.length() );
   unsigned int len = 0;
@@ -963,11 +963,11 @@ static QString escapeQuotes( const QString & str )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::quoteNameIfNecessary( const QString &str )
+TQString KPIM::quoteNameIfNecessary( const TQString &str )
 {
-  QString quoted = str;
+  TQString quoted = str;
 
-  QRegExp needQuotes(  "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
+  TQRegExp needQuotes(  "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
   // avoid double quoting
   if ( ( quoted[0] == '"' ) && ( quoted[quoted.length() - 1] == '"' ) ) {
     quoted = "\"" + escapeQuotes( quoted.mid( 1, quoted.length() - 2 ) ) + "\"";

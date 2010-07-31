@@ -23,17 +23,17 @@
 
 // Needed for ugly hack, to be removed in 4.0
 #include <unistd.h> // for usleep
-#include <qeventloop.h>
+#include <tqeventloop.h>
 
-#include <qclipboard.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qptrlist.h>
-#include <qwidgetstack.h>
-#include <qregexp.h>
-#include <qvbox.h>
+#include <tqclipboard.h>
+#include <tqdir.h>
+#include <tqfile.h>
+#include <tqlabel.h>
+#include <tqlayout.h>
+#include <tqptrlist.h>
+#include <tqwidgetstack.h>
+#include <tqregexp.h>
+#include <tqvbox.h>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
@@ -90,20 +90,20 @@
 
 #include "kabcore.h"
 
-KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
-                  const QString &file, const char *name )
+KABCore::KABCore( KXMLGUIClient *client, bool readWrite, TQWidget *parent,
+                  const TQString &file, const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
     mExtensionManager( 0 ), mJumpButtonBar( 0 ), mCategorySelectDialog( 0 ),
     mCategoryEditDialog( 0 ), mLdapSearchDialog( 0 ), mReadWrite( readWrite ),
     mModified( false )
 {
-  mWidget = new QWidget( parent, name );
+  mWidget = new TQWidget( parent, name );
 
   mIsPart = !parent->isA( "KAddressBookMain" );
 
-  mAddressBookChangedTimer = new QTimer( this );
-  connect( mAddressBookChangedTimer, SIGNAL( timeout() ),
-           this, SLOT( addressBookChanged() ) );
+  mAddressBookChangedTimer = new TQTimer( this );
+  connect( mAddressBookChangedTimer, TQT_SIGNAL( timeout() ),
+           this, TQT_SLOT( addressBookChanged() ) );
 
   if ( file.isEmpty() ) {
     mAddressBook = KABC::StdAddressBook::self( true );
@@ -140,49 +140,49 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   mSearchManager = new KAB::SearchManager( mAddressBook, parent );
 
-  connect( mSearchManager, SIGNAL( contactsUpdated() ),
-           this, SLOT( slotContactsUpdated() ) );
+  connect( mSearchManager, TQT_SIGNAL( contactsUpdated() ),
+           this, TQT_SLOT( slotContactsUpdated() ) );
 
   initGUI();
 
-  connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
-           SLOT( delayedAddressBookChanged() ) );
-  connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
-           SLOT( delayedAddressBookChanged() ) );
+  connect( mAddressBook, TQT_SIGNAL( addressBookChanged( AddressBook* ) ),
+           TQT_SLOT( delayedAddressBookChanged() ) );
+  connect( mAddressBook, TQT_SIGNAL( loadingFinished( Resource* ) ),
+           TQT_SLOT( delayedAddressBookChanged() ) );
 
   mIncSearchWidget->setFocus();
 
-  connect( mViewManager, SIGNAL( selected( const QString& ) ),
-           SLOT( setContactSelected( const QString& ) ) );
-  connect( mViewManager, SIGNAL( executed( const QString& ) ),
-           SLOT( editContact( const QString& ) ) );
-  connect( mViewManager, SIGNAL( modified() ),
-           SLOT( setModified() ) );
-  connect( mViewManager, SIGNAL( urlDropped( const KURL& ) ),
-           mXXPortManager, SLOT( importVCard( const KURL& ) ) );
-  connect( mViewManager, SIGNAL( viewFieldsChanged() ),
-           SLOT( updateIncSearchWidget() ) );
-  connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
-           this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );
-  connect( mExtensionManager, SIGNAL( deleted( const QStringList& ) ),
-           this, SLOT( extensionDeleted( const QStringList& ) ) );
+  connect( mViewManager, TQT_SIGNAL( selected( const TQString& ) ),
+           TQT_SLOT( setContactSelected( const TQString& ) ) );
+  connect( mViewManager, TQT_SIGNAL( executed( const TQString& ) ),
+           TQT_SLOT( editContact( const TQString& ) ) );
+  connect( mViewManager, TQT_SIGNAL( modified() ),
+           TQT_SLOT( setModified() ) );
+  connect( mViewManager, TQT_SIGNAL( urlDropped( const KURL& ) ),
+           mXXPortManager, TQT_SLOT( importVCard( const KURL& ) ) );
+  connect( mViewManager, TQT_SIGNAL( viewFieldsChanged() ),
+           TQT_SLOT( updateIncSearchWidget() ) );
+  connect( mExtensionManager, TQT_SIGNAL( modified( const KABC::Addressee::List& ) ),
+           this, TQT_SLOT( extensionModified( const KABC::Addressee::List& ) ) );
+  connect( mExtensionManager, TQT_SIGNAL( deleted( const TQStringList& ) ),
+           this, TQT_SLOT( extensionDeleted( const TQStringList& ) ) );
 
-  connect( mXXPortManager, SIGNAL( modified() ),
-           SLOT( setModified() ) );
+  connect( mXXPortManager, TQT_SIGNAL( modified() ),
+           TQT_SLOT( setModified() ) );
 
-  connect( mDetailsViewer, SIGNAL( highlightedMessage( const QString& ) ),
-           SLOT( detailsHighlighted( const QString& ) ) );
+  connect( mDetailsViewer, TQT_SIGNAL( highlightedMessage( const TQString& ) ),
+           TQT_SLOT( detailsHighlighted( const TQString& ) ) );
 
-  connect( mIncSearchWidget, SIGNAL( scrollUp() ),
-           mViewManager, SLOT( scrollUp() ) );
-  connect( mIncSearchWidget, SIGNAL( scrollDown() ),
-           mViewManager, SLOT( scrollDown() ) );
+  connect( mIncSearchWidget, TQT_SIGNAL( scrollUp() ),
+           mViewManager, TQT_SLOT( scrollUp() ) );
+  connect( mIncSearchWidget, TQT_SIGNAL( scrollDown() ),
+           mViewManager, TQT_SLOT( scrollDown() ) );
 
   mAddressBookService = new KAddressBookService( this );
 
   mCommandHistory = new KCommandHistory( actionCollection(), true );
-  connect( mCommandHistory, SIGNAL( commandExecuted() ),
-           mSearchManager, SLOT( reload() ) );
+  connect( mCommandHistory, TQT_SIGNAL( commandExecuted() ),
+           mSearchManager, TQT_SLOT( reload() ) );
 
   mSearchManager->reload();
 
@@ -218,14 +218,14 @@ void KABCore::restoreSettings()
   updateIncSearchWidget();
   mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
 
-  QValueList<int> splitterSize = KABPrefs::instance()->detailsSplitter();
+  TQValueList<int> splitterSize = KABPrefs::instance()->detailsSplitter();
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( 360 );
     splitterSize.append( 260 );
   }
   mDetailsSplitter->setSizes( splitterSize );
 
-  const QValueList<int> leftSplitterSizes = KABPrefs::instance()->leftSplitter();
+  const TQValueList<int> leftSplitterSizes = KABPrefs::instance()->leftSplitter();
   if ( !leftSplitterSizes.isEmpty() )
       mLeftSplitter->setSizes( leftSplitterSizes );
 }
@@ -263,17 +263,17 @@ KABC::Field *KABCore::currentSortField() const
   return mViewManager->currentSortField();
 }
 
-QStringList KABCore::selectedUIDs() const
+TQStringList KABCore::selectedUIDs() const
 {
   return mViewManager->selectedUids();
 }
 
-KABC::Resource *KABCore::requestResource( QWidget *parent )
+KABC::Resource *KABCore::requestResource( TQWidget *parent )
 {
-  QPtrList<KABC::Resource> kabcResources = addressBook()->resources();
+  TQPtrList<KABC::Resource> kabcResources = addressBook()->resources();
 
-  QPtrList<KRES::Resource> kresResources;
-  QPtrListIterator<KABC::Resource> resIt( kabcResources );
+  TQPtrList<KRES::Resource> kresResources;
+  TQPtrListIterator<KABC::Resource> resIt( kabcResources );
   KABC::Resource *resource;
   while ( ( resource = resIt.current() ) != 0 ) {
     ++resIt;
@@ -287,7 +287,7 @@ KABC::Resource *KABCore::requestResource( QWidget *parent )
   return static_cast<KABC::Resource*>( res ); // upcast
 }
 
-QWidget *KABCore::widget() const
+TQWidget *KABCore::widget() const
 {
   return mWidget;
 }
@@ -326,7 +326,7 @@ KStatusBar *KABCore::statusBar() const
   return mStatusBar;
 }
 
-void KABCore::setContactSelected( const QString &uid )
+void KABCore::setContactSelected( const TQString &uid )
 {
   // Avoid crash on exit
   if ( !mAddressBook ) {
@@ -369,7 +369,7 @@ void KABCore::setContactSelected( const QString &uid )
       if ( res->inherits( "KPIM::ResourceABC" ) ) {
         KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
 
-        QString subresource = resAbc->uidToResourceMap()[ ( *addrIt ).uid() ];
+        TQString subresource = resAbc->uidToResourceMap()[ ( *addrIt ).uid() ];
         if ( !subresource.isEmpty() && !resAbc->subresourceWritable( subresource ) ) {
           writable = false;
           break;
@@ -383,9 +383,9 @@ void KABCore::setContactSelected( const QString &uid )
       KABC::Resource *res = mAddressBook->resources().first();
       if ( res->inherits( "KPIM::ResourceABC" ) ) {
         KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
-        const QStringList subresources = resAbc->subresources();
+        const TQStringList subresources = resAbc->subresources();
         int writeables = 0;
-        for ( QStringList::ConstIterator it = subresources.begin(); it != subresources.end(); ++it ) {
+        for ( TQStringList::ConstIterator it = subresources.begin(); it != subresources.end(); ++it ) {
             if ( resAbc->subresourceActive(*it) && resAbc->subresourceWritable(*it) ) {
                 writeables++;
             }
@@ -412,7 +412,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionMerge->setEnabled( ( list.size() == 2 ) && writable );
 
   if ( mReadWrite ) {
-    QClipboard *cb = QApplication::clipboard();
+    QClipboard *cb = TQApplication::clipboard();
     list = AddresseeUtil::clipboardToAddressees( cb->text() );
     mActionPaste->setEnabled( !list.isEmpty() );
   }
@@ -424,58 +424,58 @@ void KABCore::sendMail()
   sendMail( mViewManager->selectedEmails().join( ", " ) );
 }
 
-void KABCore::sendMail( const QString& email )
+void KABCore::sendMail( const TQString& email )
 {
   kapp->invokeMailer( email, "" );
 }
 
 void KABCore::mailVCard()
 {
-  QStringList uids = mViewManager->selectedUids();
+  TQStringList uids = mViewManager->selectedUids();
   if ( !uids.isEmpty() )
     mailVCard( uids );
 }
 
-void KABCore::mailVCard( const QStringList &uids )
+void KABCore::mailVCard( const TQStringList &uids )
 {
   KABTools::mailVCards( uids, mAddressBook );
 }
 
 void KABCore::startChat()
 {
-  QStringList uids = mViewManager->selectedUids();
+  TQStringList uids = mViewManager->selectedUids();
   if ( !uids.isEmpty() )
     mKIMProxy->chatWithContact( uids.first() );
 }
 
-void KABCore::browse( const QString& url )
+void KABCore::browse( const TQString& url )
 {
   kapp->invokeBrowser( url );
 }
 
 void KABCore::selectAllContacts()
 {
-  mViewManager->setSelected( QString::null, true );
+  mViewManager->setSelected( TQString::null, true );
 }
 
 void KABCore::deleteContacts()
 {
-  QStringList uidList = mViewManager->selectedUids();
+  TQStringList uidList = mViewManager->selectedUids();
 
   deleteContacts( uidList );
 }
 
-void KABCore::deleteDistributionLists( const QStringList & names )
+void KABCore::deleteDistributionLists( const TQStringList & names )
 {
   if ( names.isEmpty() )
       return;
   if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this distribution list?",
                                                  "Do you really want to delete these %n distribution lists?", names.count() ),
-                                                 names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+                                                 names, TQString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
    return;
 
-  QStringList uids;
-  for ( QStringList::ConstIterator it = names.begin(); it != names.end(); ++it ) {
+  TQStringList uids;
+  for ( TQStringList::ConstIterator it = names.begin(); it != names.end(); ++it ) {
       uids.append( KPIM::DistributionList::findByName( mAddressBook, *it ).uid() );
   }
   DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
@@ -483,12 +483,12 @@ void KABCore::deleteDistributionLists( const QStringList & names )
   setModified( true );
 }
 
-void KABCore::deleteContacts( const QStringList &uids )
+void KABCore::deleteContacts( const TQStringList &uids )
 {
   if ( uids.count() > 0 ) {
-    QStringList names;
-    QStringList::ConstIterator it = uids.begin();
-    const QStringList::ConstIterator endIt( uids.end() );
+    TQStringList names;
+    TQStringList::ConstIterator it = uids.begin();
+    const TQStringList::ConstIterator endIt( uids.end() );
     while ( it != endIt ) {
       KABC::Addressee addr = mAddressBook->findByUid( *it );
       names.append( addr.realName().isEmpty() ? addr.preferredEmail() : addr.realName() );
@@ -497,14 +497,14 @@ void KABCore::deleteContacts( const QStringList &uids )
 
     if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?",
                                                  "Do you really want to delete these %n contacts?", uids.count() ),
-                                                 names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+                                                 names, TQString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
       return;
 
     DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
     mCommandHistory->addCommand( command );
 
     // now if we deleted anything, refresh
-    setContactSelected( QString::null );
+    setContactSelected( TQString::null );
     setModified( true );
   }
 }
@@ -513,17 +513,17 @@ void KABCore::copyContacts()
 {
   KABC::Addressee::List addrList = mViewManager->selectedAddressees();
 
-  QString clipText = AddresseeUtil::addresseesToClipboard( addrList );
+  TQString clipText = AddresseeUtil::addresseesToClipboard( addrList );
 
   kdDebug(5720) << "KABCore::copyContacts: " << clipText << endl;
 
-  QClipboard *cb = QApplication::clipboard();
+  QClipboard *cb = TQApplication::clipboard();
   cb->setText( clipText );
 }
 
 void KABCore::cutContacts()
 {
-  QStringList uidList = mViewManager->selectedUids();
+  TQStringList uidList = mViewManager->selectedUids();
 
   if ( uidList.size() > 0 ) {
     CutCommand *command = new CutCommand( mAddressBook, uidList );
@@ -535,7 +535,7 @@ void KABCore::cutContacts()
 
 void KABCore::pasteContacts()
 {
-  QClipboard *cb = QApplication::clipboard();
+  QClipboard *cb = TQApplication::clipboard();
 
   KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
 
@@ -570,7 +570,7 @@ void KABCore::mergeContacts()
   KABC::Addressee::List::Iterator it = list.begin();
   const KABC::Addressee::List::Iterator endIt( list.end() );
   KABC::Addressee origAddr = *it;
-  QStringList uids;
+  TQStringList uids;
   ++it;
   while ( it != endIt ) {
     uids.append( (*it).uid() );
@@ -596,20 +596,20 @@ void KABCore::setWhoAmI()
     return;
   }
 
-  QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), QString::null, i18n("Use"), i18n("Do Not Use") ) == KMessageBox::Yes )
+  TQString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
+  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), TQString::null, i18n("Use"), i18n("Do Not Use") ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
-void KABCore::incrementalTextSearch( const QString& text )
+void KABCore::incrementalTextSearch( const TQString& text )
 {
-  setContactSelected( QString::null );
+  setContactSelected( TQString::null );
   mSearchManager->search( text, mIncSearchWidget->currentFields() );
 }
 
-void KABCore::incrementalJumpButtonSearch( const QString& character )
+void KABCore::incrementalJumpButtonSearch( const TQString& character )
 {
-  mViewManager->setSelected( QString::null, false );
+  mViewManager->setSelected( TQString::null, false );
 
   KABC::AddresseeList list = mSearchManager->contacts();
   KABC::Field *field = mViewManager->currentSortField();
@@ -667,7 +667,7 @@ void KABCore::contactModified( const KABC::Addressee &addr )
 void KABCore::newDistributionList()
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
-  QString name = i18n( "New Distribution List" );
+  TQString name = i18n( "New Distribution List" );
   const KPIM::DistributionList distList = KPIM::DistributionList::findByName( addressBook(), name );
   if ( !distList.isEmpty() ) {
     bool foundUnused = false;
@@ -707,9 +707,9 @@ void KABCore::newContact()
   dialog->show();
 }
 
-void KABCore::addEmail( const QString &aStr )
+void KABCore::addEmail( const TQString &aStr )
 {
-  QString fullName, email;
+  TQString fullName, email;
 
   KABC::Addressee::parseEmailAddress( aStr, fullName, email );
 
@@ -717,7 +717,7 @@ void KABCore::addEmail( const QString &aStr )
   // This ugly hack will be removed in 4.0
   // addressbook may not be reloaded yet, as done asynchronously sometimes, so wait
   while ( !mAddressBook->loadingHasFinished() ) {
-    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+    TQApplication::eventLoop()->processEvents( TQEventLoop::ExcludeUserInput );
     // use sleep here to reduce cpu usage
     usleep( 100 );
   }
@@ -725,7 +725,7 @@ void KABCore::addEmail( const QString &aStr )
 
   // Try to lookup the addressee matching the email address
   bool found = false;
-  QStringList emailList;
+  TQStringList emailList;
   KABC::AddressBook::Iterator it;
   const KABC::AddressBook::Iterator endIt( mAddressBook->end() );
   for ( it = mAddressBook->begin(); !found && (it != endIt); ++it ) {
@@ -753,20 +753,20 @@ void KABCore::importVCard( const KURL &url )
   mXXPortManager->importVCard( url );
 }
 
-void KABCore::importVCardFromData( const QString &vCard )
+void KABCore::importVCardFromData( const TQString &vCard )
 {
   mXXPortManager->importVCardFromData( vCard );
 }
 
-void KABCore::editContact( const QString &uid )
+void KABCore::editContact( const TQString &uid )
 {
   if ( mExtensionManager->isQuickEditVisible() )
     return;
 
   // First, locate the contact entry
-  QString localUID = uid;
+  TQString localUID = uid;
   if ( localUID.isNull() ) {
-    QStringList uidList = mViewManager->selectedUids();
+    TQStringList uidList = mViewManager->selectedUids();
     if ( uidList.count() > 0 )
       localUID = *( uidList.at( 0 ) );
   }
@@ -775,7 +775,7 @@ void KABCore::editContact( const QString &uid )
   // for calls with given uid, as done from commandline and DCOP
   // addressbook may not be reloaded yet, as done asynchronously, so wait
   else while ( !mAddressBook->loadingHasFinished() ) {
-    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+    TQApplication::eventLoop()->processEvents( TQEventLoop::ExcludeUserInput );
     // use sleep here to reduce cpu usage
     usleep( 100 );
   }
@@ -806,18 +806,18 @@ void KABCore::editContact( const QString &uid )
 
 void KABCore::copySelectedContactToResource()
 {
-    storeContactIn( QString(), true /*copy*/);
+    storeContactIn( TQString(), true /*copy*/);
 }
 
 void KABCore::moveSelectedContactToResource()
 {
-    storeContactIn( QString(), false /*copy*/);
+    storeContactIn( TQString(), false /*copy*/);
 }
 
-void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
+void KABCore::storeContactIn( const TQString &uid, bool copy /*false*/ )
 {
   // First, locate the contact entry
-  QStringList uidList;
+  TQStringList uidList;
   if ( uid.isNull() ) {
     uidList = mViewManager->selectedUids();
   } else {
@@ -828,8 +828,8 @@ void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
     return;
 
   KABLock::self( mAddressBook )->lock( resource );
-  QStringList::Iterator it( uidList.begin() );
-  const QStringList::Iterator endIt( uidList.end() );
+  TQStringList::Iterator it( uidList.begin() );
+  const TQStringList::Iterator endIt( uidList.end() );
   while ( it != endIt ) {
     KABC::Addressee addr = mAddressBook->findByUid( *it++ );
     if ( !addr.isEmpty() ) {
@@ -855,8 +855,8 @@ void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
 
 void KABCore::save()
 {
-  QPtrList<KABC::Resource> resources = mAddressBook->resources();
-  QPtrListIterator<KABC::Resource> it( resources );
+  TQPtrList<KABC::Resource> resources = mAddressBook->resources();
+  TQPtrListIterator<KABC::Resource> it( resources );
   while ( it.current() && !it.current()->readOnly() ) {
     KABC::Ticket *ticket = mAddressBook->requestSaveTicket( it.current() );
     if ( ticket ) {
@@ -922,33 +922,33 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
   }
 }
 
-void KABCore::extensionDeleted( const QStringList &uidList )
+void KABCore::extensionDeleted( const TQStringList &uidList )
 {
   DeleteCommand *command = new DeleteCommand( mAddressBook, uidList );
   mCommandHistory->addCommand( command );
 
   // now if we deleted anything, refresh
-  setContactSelected( QString::null );
+  setContactSelected( TQString::null );
   setModified( true );
 }
 
-QString KABCore::getNameByPhone( const QString &phone )
+TQString KABCore::getNameByPhone( const TQString &phone )
 {
 #if KDE_IS_VERSION(3,4,89)
   // This ugly hack will be removed in 4.0
   // addressbook may not be reloaded yet, as done asynchronously, so wait
   while ( !mAddressBook->loadingHasFinished() ) {
-    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+    TQApplication::eventLoop()->processEvents( TQEventLoop::ExcludeUserInput );
     // use sleep here to reduce cpu usage
     usleep( 100 );
   }
 #endif
 
-  QRegExp r( "[/*/-/ ]" );
-  QString localPhone( phone );
+  TQRegExp r( "[/*/-/ ]" );
+  TQString localPhone( phone );
 
   bool found = false;
-  QString ownerName = "";
+  TQString ownerName = "";
   KABC::PhoneNumber::List phoneList;
 
   KABC::AddressBook::ConstIterator iter;
@@ -981,10 +981,10 @@ void KABCore::openLDAPDialog()
 
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, this, mWidget );
-    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ),
-            SLOT( addressBookChanged() ) );
-    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ),
-            SLOT( setModified() ) );
+    connect( mLdapSearchDialog, TQT_SIGNAL( addresseesAdded() ),
+            TQT_SLOT( addressBookChanged() ) );
+    connect( mLdapSearchDialog, TQT_SIGNAL( addresseesAdded() ),
+            TQT_SLOT( setModified() ) );
   } else
     mLdapSearchDialog->restoreSettings();
 
@@ -998,8 +998,8 @@ void KABCore::configure()
   saveSettings();
 
   KCMultiDialog dlg( mWidget, "", true );
-  connect( &dlg, SIGNAL( configCommitted() ),
-           this, SLOT( configurationChanged() ) );
+  connect( &dlg, TQT_SIGNAL( configCommitted() ),
+           this, TQT_SLOT( configurationChanged() ) );
 
   dlg.addModule( "kabconfig.desktop" );
   dlg.addModule( "kabldapconfig.desktop" );
@@ -1023,7 +1023,7 @@ void KABCore::print()
   wizard.exec();
 }
 
-void KABCore::detailsHighlighted( const QString &msg )
+void KABCore::detailsHighlighted( const TQString &msg )
 {
   if ( mStatusBar ) {
     if ( !mStatusBar->hasItem( 2 ) )
@@ -1033,9 +1033,9 @@ void KABCore::detailsHighlighted( const QString &msg )
   }
 }
 
-void KABCore::showContactsAddress( const QString &addrUid )
+void KABCore::showContactsAddress( const TQString &addrUid )
 {
-  QStringList uidList = mViewManager->selectedUids();
+  TQStringList uidList = mViewManager->selectedUids();
   if ( uidList.isEmpty() )
     return;
 
@@ -1064,8 +1064,8 @@ bool KABCore::queryClose()
   saveSettings();
   KABPrefs::instance()->writeConfig();
 
-  QPtrList<KABC::Resource> resources = mAddressBook->resources();
-  QPtrListIterator<KABC::Resource> it( resources );
+  TQPtrList<KABC::Resource> resources = mAddressBook->resources();
+  TQPtrListIterator<KABC::Resource> it( resources );
   while ( it.current() ) {
     it.current()->close();
     ++it;
@@ -1085,7 +1085,7 @@ void KABCore::delayedAddressBookChanged()
 
 void KABCore::addressBookChanged()
 {
-  const QStringList selectedUids = mViewManager->selectedUids();
+  const TQStringList selectedUids = mViewManager->selectedUids();
 
   mAddressBookChangedTimer->stop();
 
@@ -1094,9 +1094,9 @@ void KABCore::addressBookChanged()
 
   mSearchManager->reload();
 
-  mViewManager->setSelected( QString::null, false );
+  mViewManager->setSelected( TQString::null, false );
 
-  QString uid = QString::null;
+  TQString uid = TQString::null;
   if ( !selectedUids.isEmpty() ) {
     uid = selectedUids.first();
     mViewManager->setSelected( uid, true );
@@ -1107,132 +1107,132 @@ void KABCore::addressBookChanged()
   updateCategories();
 }
 
-AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
+AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( TQWidget *parent,
                                                              const char *name )
 {
   AddresseeEditorDialog *dialog = new AddresseeEditorDialog( this, parent,
                                                  name ? name : "editorDialog" );
-  connect( dialog, SIGNAL( contactModified( const KABC::Addressee& ) ),
-           SLOT( contactModified( const KABC::Addressee& ) ) );
-  connect( dialog, SIGNAL( editorDestroyed( const QString& ) ),
-           SLOT( slotEditorDestroyed( const QString& ) ) );
+  connect( dialog, TQT_SIGNAL( contactModified( const KABC::Addressee& ) ),
+           TQT_SLOT( contactModified( const KABC::Addressee& ) ) );
+  connect( dialog, TQT_SIGNAL( editorDestroyed( const TQString& ) ),
+           TQT_SLOT( slotEditorDestroyed( const TQString& ) ) );
 
   return dialog;
 }
 
-void KABCore::activateDetailsWidget( QWidget *widget )
+void KABCore::activateDetailsWidget( TQWidget *widget )
 {
   if ( mDetailsStack->visibleWidget() == widget )
     return;
   mDetailsStack->raiseWidget( widget );
 }
 
-void KABCore::deactivateDetailsWidget( QWidget *widget )
+void KABCore::deactivateDetailsWidget( TQWidget *widget )
 {
   if ( mDetailsStack->visibleWidget() != widget )
     return;
   mDetailsStack->raiseWidget( mDetailsWidget );
 }
 
-void KABCore::slotEditorDestroyed( const QString &uid )
+void KABCore::slotEditorDestroyed( const TQString &uid )
 {
   AddresseeEditorDialog *dialog = mEditorDict.take( uid );
 
   KABC::Addressee addr = dialog->addressee();
 
   if ( !addr.resource()->readOnly() ) {
-    QApplication::setOverrideCursor( Qt::waitCursor );
+    TQApplication::setOverrideCursor( Qt::waitCursor );
     KABLock::self( mAddressBook )->unlock( addr.resource() );
-    QApplication::restoreOverrideCursor();
+    TQApplication::restoreOverrideCursor();
   }
 }
 
 void KABCore::initGUI()
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( mWidget, 0, 0 );
+  TQVBoxLayout *topLayout = new TQVBoxLayout( mWidget, 0, 0 );
   KToolBar* searchTB = new KToolBar( mWidget, "search toolbar");
   searchTB->boxLayout()->setSpacing( KDialog::spacingHint() );
   mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget");
   searchTB->setStretchableWidget( mIncSearchWidget );
-  connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
-           SLOT( incrementalTextSearch( const QString& ) ) );
+  connect( mIncSearchWidget, TQT_SIGNAL( doSearch( const TQString& ) ),
+           TQT_SLOT( incrementalTextSearch( const TQString& ) ) );
 
-  mDetailsSplitter = new QSplitter( mWidget );
+  mDetailsSplitter = new TQSplitter( mWidget );
 
-  mLeftSplitter = new QSplitter( mDetailsSplitter );
+  mLeftSplitter = new TQSplitter( mDetailsSplitter );
   mLeftSplitter->setOrientation( KABPrefs::instance()->contactListAboveExtensions() ? Qt::Vertical : Qt::Horizontal );
 
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
 
-  mDetailsStack = new QWidgetStack( mDetailsSplitter );
-  mExtensionManager = new ExtensionManager( new QWidget( mLeftSplitter ), mDetailsStack, this, this );
-  connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ),
-           this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
-  connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ),
-           this, SLOT( activateDetailsWidget( QWidget* ) ) );
+  mDetailsStack = new TQWidgetStack( mDetailsSplitter );
+  mExtensionManager = new ExtensionManager( new TQWidget( mLeftSplitter ), mDetailsStack, this, this );
+  connect( mExtensionManager, TQT_SIGNAL( detailsWidgetDeactivated( TQWidget* ) ),
+           this, TQT_SLOT( deactivateDetailsWidget( TQWidget* ) ) );
+  connect( mExtensionManager, TQT_SIGNAL( detailsWidgetActivated( TQWidget* ) ),
+           this, TQT_SLOT( activateDetailsWidget( TQWidget* ) ) );
 
-  QWidget *viewWidget = new QWidget( mLeftSplitter );
+  TQWidget *viewWidget = new TQWidget( mLeftSplitter );
   if ( KABPrefs::instance()->contactListAboveExtensions() )
     mLeftSplitter->moveToFirst( viewWidget );
-  QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
+  TQVBoxLayout *viewLayout = new TQVBoxLayout( viewWidget );
   viewLayout->setSpacing( KDialog::spacingHint() );
 
-  mViewHeaderLabel = new QLabel( viewWidget );
-//  mViewHeaderLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
+  mViewHeaderLabel = new TQLabel( viewWidget );
+//  mViewHeaderLabel->setSizePolicy( TQSizePolicy::Minimum, TQSizePolicy::Fixed );
   mViewHeaderLabel->setText( i18n( "Contacts" ) );
   viewLayout->addWidget( mViewHeaderLabel );
   mViewManager = new ViewManager( this, viewWidget );
   viewLayout->addWidget( mViewManager, 1 );
 
 #ifdef KDEPIM_NEW_DISTRLISTS
-  mDistListButtonWidget = new QWidget( viewWidget );
-  QHBoxLayout *buttonLayout = new QHBoxLayout( mDistListButtonWidget );
+  mDistListButtonWidget = new TQWidget( viewWidget );
+  TQHBoxLayout *buttonLayout = new TQHBoxLayout( mDistListButtonWidget );
   buttonLayout->setSpacing( KDialog::spacingHint() );
   buttonLayout->addStretch( 1 );
 
   KPushButton *addDistListButton = new KPushButton( mDistListButtonWidget );
   addDistListButton->setText( i18n( "Add" ) );
-  connect( addDistListButton, SIGNAL( clicked() ),
-           this, SLOT( editSelectedDistributionList() ) );
+  connect( addDistListButton, TQT_SIGNAL( clicked() ),
+           this, TQT_SLOT( editSelectedDistributionList() ) );
   buttonLayout->addWidget( addDistListButton );
   mDistListButtonWidget->setShown( false );
   viewLayout->addWidget( mDistListButtonWidget );
 
   KPushButton *removeDistListButton = new KPushButton( mDistListButtonWidget );
   removeDistListButton->setText( i18n( "Remove" ) );
-  connect( removeDistListButton, SIGNAL( clicked() ),
-           this, SLOT( removeSelectedContactsFromDistList() ) );
+  connect( removeDistListButton, TQT_SIGNAL( clicked() ),
+           this, TQT_SLOT( removeSelectedContactsFromDistList() ) );
   buttonLayout->addWidget( removeDistListButton );
 #endif
 
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
 
-  connect( mFilterSelectionWidget, SIGNAL( filterActivated( int ) ),
-           mViewManager, SLOT( setActiveFilter( int ) ) );
+  connect( mFilterSelectionWidget, TQT_SIGNAL( filterActivated( int ) ),
+           mViewManager, TQT_SLOT( setActiveFilter( int ) ) );
 
-  mDetailsWidget = new QWidget( mDetailsSplitter );
-  mDetailsLayout = new QHBoxLayout( mDetailsWidget );
+  mDetailsWidget = new TQWidget( mDetailsSplitter );
+  mDetailsLayout = new TQHBoxLayout( mDetailsWidget );
 
-  mDetailsPage = new QWidget( mDetailsWidget );
+  mDetailsPage = new TQWidget( mDetailsWidget );
   mDetailsLayout->addWidget( mDetailsPage );
 
-  QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage, 0, 0 );
+  TQHBoxLayout *detailsPageLayout = new TQHBoxLayout( mDetailsPage, 0, 0 );
   mDetailsViewer = new KPIM::AddresseeView( mDetailsPage );
-  mDetailsViewer->setVScrollBarMode( QScrollView::Auto );
+  mDetailsViewer->setVScrollBarMode( TQScrollView::Auto );
   detailsPageLayout->addWidget( mDetailsViewer );
 
   mDistListEntryView = new KAB::DistributionListEntryView( this, mWidget );
-  connect( mDistListEntryView, SIGNAL( distributionListClicked( const QString& ) ),
-           this, SLOT( sendMailToDistributionList( const QString& ) ) );
+  connect( mDistListEntryView, TQT_SIGNAL( distributionListClicked( const TQString& ) ),
+           this, TQT_SLOT( sendMailToDistributionList( const TQString& ) ) );
   mDetailsStack->addWidget( mDistListEntryView );
   mDetailsStack->addWidget( mDetailsWidget );
   mDetailsStack->raiseWidget( mDetailsWidget );
   mDetailsSplitter->moveToLast( mDetailsStack );
 
-  connect( mDetailsViewer, SIGNAL( addressClicked( const QString&) ),
-           this, SLOT( showContactsAddress( const QString& ) ) );
+  connect( mDetailsViewer, TQT_SIGNAL( addressClicked( const TQString&) ),
+           this, TQT_SLOT( showContactsAddress( const TQString& ) ) );
 
   topLayout->setStretchFactor( mDetailsSplitter, 1 );
 
@@ -1247,62 +1247,62 @@ void KABCore::createJumpButtonBar()
   mDetailsLayout->addWidget( mJumpButtonBar );
   mDetailsLayout->setStretchFactor( mJumpButtonBar, 1 );
 
-  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
-           SLOT( incrementalJumpButtonSearch( const QString& ) ) );
-  connect( mViewManager, SIGNAL( sortFieldChanged() ),
-           mJumpButtonBar, SLOT( updateButtons() ) );
+  connect( mJumpButtonBar, TQT_SIGNAL( jumpToLetter( const TQString& ) ),
+           TQT_SLOT( incrementalJumpButtonSearch( const TQString& ) ) );
+  connect( mViewManager, TQT_SIGNAL( sortFieldChanged() ),
+           mJumpButtonBar, TQT_SLOT( updateButtons() ) );
 }
 
 void KABCore::initActions()
 {
-  connect( QApplication::clipboard(), SIGNAL( dataChanged() ),
-           SLOT( clipboardDataChanged() ) );
+  connect( TQApplication::clipboard(), TQT_SIGNAL( dataChanged() ),
+           TQT_SLOT( clipboardDataChanged() ) );
 
   KAction *action;
 
   // file menu
   mActionMail = new KAction( i18n( "&Send Email to Contact..." ), "mail_send", 0,
-                             this, SLOT( sendMail() ), actionCollection(), "file_mail" );
-  action = KStdAction::print( this, SLOT( print() ), actionCollection() );
+                             this, TQT_SLOT( sendMail() ), actionCollection(), "file_mail" );
+  action = KStdAction::print( this, TQT_SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
   mActionSave = KStdAction::save( this,
-                             SLOT( save() ), actionCollection(), "file_sync" );
+                             TQT_SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
   action = new KAction( i18n( "&New Contact..." ), "identity", CTRL+Key_N, this,
-               SLOT( newContact() ), actionCollection(), "file_new_contact" );
+               TQT_SLOT( newContact() ), actionCollection(), "file_new_contact" );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
   action = new KAction( i18n( "&New Distribution List..." ), "kontact_contacts", 0, this,
-               SLOT( newDistributionList() ), actionCollection(), "file_new_distributionlist" );
+               TQT_SLOT( newDistributionList() ), actionCollection(), "file_new_distributionlist" );
   action->setWhatsThis( i18n( "Create a new distribution list<p>You will be presented with a dialog where you can create a new distribution list." ) );
 
   mActionMailVCard = new KAction( i18n("Send &Contact..."), "mail_post_to", 0,
-                                  this, SLOT( mailVCard() ),
+                                  this, TQT_SLOT( mailVCard() ),
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
   mActionChat = new KAction( i18n("Chat &With..."), 0,
-                                  this, SLOT( startChat() ),
+                                  this, TQT_SLOT( startChat() ),
                                   actionCollection(), "file_chat" );
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
 
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
-                                      this, SLOT( editContact() ),
+                                      this, TQT_SLOT( editContact() ),
                                       actionCollection(), "file_properties" );
   mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers." ) );
 
   mActionMerge = new KAction( i18n( "&Merge Contacts" ), "", 0,
-                              this, SLOT( mergeContacts() ),
+                              this, TQT_SLOT( mergeContacts() ),
                               actionCollection(), "edit_merge" );
 
   // edit menu
-  mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );
-  mActionCut = KStdAction::cut( this, SLOT( cutContacts() ), actionCollection() );
-  mActionPaste = KStdAction::paste( this, SLOT( pasteContacts() ), actionCollection() );
-  action = KStdAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
+  mActionCopy = KStdAction::copy( this, TQT_SLOT( copyContacts() ), actionCollection() );
+  mActionCut = KStdAction::cut( this, TQT_SLOT( cutContacts() ), actionCollection() );
+  mActionPaste = KStdAction::paste( this, TQT_SLOT( pasteContacts() ), actionCollection() );
+  action = KStdAction::selectAll( this, TQT_SLOT( selectAllContacts() ), actionCollection() );
   mActionCopy->setWhatsThis( i18n( "Copy the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionCut->setWhatsThis( i18n( "Cuts the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionPaste->setWhatsThis( i18n( "Paste the previously cut or copied contacts from clipboard." ) );
@@ -1311,19 +1311,19 @@ void KABCore::initActions()
 //  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 
   mActionDelete = new KAction( i18n( "&Delete Contact" ), "editdelete",
-                               Key_Delete, this, SLOT( deleteContacts() ),
+                               Key_Delete, this, TQT_SLOT( deleteContacts() ),
                                actionCollection(), "edit_delete" );
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
   mActionCopyAddresseeTo = new KAction( i18n( "&Copy Contact To..." ), "", 0,
-                                      this, SLOT( copySelectedContactToResource() ),
+                                      this, TQT_SLOT( copySelectedContactToResource() ),
                                       actionCollection(), "copy_contact_to" );
-  const QString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." );
+  const TQString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." );
   mActionCopyAddresseeTo->setWhatsThis( copyMoveWhatsThis );
 
   mActionMoveAddresseeTo = new KAction( i18n( "M&ove Contact To..." ), "", 0,
-                                      this, SLOT( moveSelectedContactToResource() ),
+                                      this, TQT_SLOT( moveSelectedContactToResource() ),
                                       actionCollection(), "move_contact_to" );
   mActionMoveAddresseeTo->setWhatsThis( copyMoveWhatsThis );
 
@@ -1332,41 +1332,41 @@ void KABCore::initActions()
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar") );
-  connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
+  connect( mActionJumpBar, TQT_SIGNAL( toggled( bool ) ), TQT_SLOT( setJumpButtonBarVisible( bool ) ) );
 
   mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
   mActionDetails->setCheckedState( i18n( "Hide Details") );
-  connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
+  connect( mActionDetails, TQT_SIGNAL( toggled( bool ) ), TQT_SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )
     action = new KAction( i18n( "&Configure Address Book..." ), "configure", 0,
-                          this, SLOT( configure() ), actionCollection(),
+                          this, TQT_SLOT( configure() ), actionCollection(),
                           "kaddressbook_configure" );
   else
-    action = KStdAction::preferences( this, SLOT( configure() ), actionCollection() );
+    action = KStdAction::preferences( this, TQT_SLOT( configure() ), actionCollection() );
 
   action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
 
   // misc
   action = new KAction( i18n( "&Lookup Addresses in LDAP Directory..." ), "find", 0,
-                        this, SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
+                        this, TQT_SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
   mActionWhoAmI = new KAction( i18n( "Set as Personal Contact Data" ), "personal", 0, this,
-                               SLOT( setWhoAmI() ), actionCollection(),
+                               TQT_SLOT( setWhoAmI() ), actionCollection(),
                                "edit_set_personal" );
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
 
   mActionCategories = new KAction( i18n( "Select Categories..." ), 0, this,
-                                   SLOT( setCategories() ), actionCollection(),
+                                   TQT_SLOT( setCategories() ), actionCollection(),
                                    "edit_set_categories" );
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   KAction *clearLocation = new KAction( i18n( "Clear Search Bar" ),
-					QApplication::reverseLayout() ? "clear_left" : "locationbar_erase",
-					CTRL+Key_L, this, SLOT( slotClearSearchBar() ), actionCollection(), "clear_search" );
+					TQApplication::reverseLayout() ? "clear_left" : "locationbar_erase",
+					CTRL+Key_L, this, TQT_SLOT( slotClearSearchBar() ), actionCollection(), "clear_search" );
   clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"
 				     "Clears the content of the quick search bar." ) );
 
@@ -1376,7 +1376,7 @@ void KABCore::initActions()
 void KABCore::clipboardDataChanged()
 {
   if ( mReadWrite )
-    mActionPaste->setEnabled( !QApplication::clipboard()->text().isEmpty() );
+    mActionPaste->setEnabled( !TQApplication::clipboard()->text().isEmpty() );
 }
 
 void KABCore::updateIncSearchWidget()
@@ -1386,12 +1386,12 @@ void KABCore::updateIncSearchWidget()
 
 void KABCore::updateCategories()
 {
-  QStringList categories( allCategories() );
+  TQStringList categories( allCategories() );
   categories.sort();
 
-  const QStringList customCategories( KABPrefs::instance()->customCategories() );
-  QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt( customCategories.end() );
+  const TQStringList customCategories( KABPrefs::instance()->customCategories() );
+  TQStringList::ConstIterator it;
+  const TQStringList::ConstIterator endIt( customCategories.end() );
   for ( it = customCategories.begin(); it != endIt; ++it ) {
     if ( categories.find( *it ) == categories.end() ) {
       categories.append( *it );
@@ -1405,10 +1405,10 @@ void KABCore::updateCategories()
     mCategoryEditDialog->reload();
 }
 
-QStringList KABCore::allCategories() const
+TQStringList KABCore::allCategories() const
 {
-  QStringList categories, allCategories;
-  QStringList::ConstIterator catIt;
+  TQStringList categories, allCategories;
+  TQStringList::ConstIterator catIt;
 
   // Avoid crash on exit
   if ( !mAddressBook ) {
@@ -1419,7 +1419,7 @@ QStringList KABCore::allCategories() const
   const KABC::AddressBook::ConstIterator endIt( mAddressBook->end() );
   for ( it = mAddressBook->begin(); it != endIt; ++it ) {
     categories = (*it).categories();
-    const QStringList::ConstIterator catEndIt( categories.end() );
+    const TQStringList::ConstIterator catEndIt( categories.end() );
     for ( catIt = categories.begin(); catIt != catEndIt; ++catIt ) {
       if ( !allCategories.contains( *catIt ) )
         allCategories.append( *catIt );
@@ -1434,34 +1434,34 @@ void KABCore::setCategories()
   // Show the category dialog
   if ( mCategorySelectDialog == 0 ) {
     mCategorySelectDialog = new KPIM::CategorySelectDialog( KABPrefs::instance(), mWidget );
-    connect( mCategorySelectDialog, SIGNAL( categoriesSelected( const QStringList& ) ),
-             SLOT( categoriesSelected( const QStringList& ) ) );
-    connect( mCategorySelectDialog, SIGNAL( editCategories() ), SLOT( editCategories() ) );
+    connect( mCategorySelectDialog, TQT_SIGNAL( categoriesSelected( const TQStringList& ) ),
+             TQT_SLOT( categoriesSelected( const TQStringList& ) ) );
+    connect( mCategorySelectDialog, TQT_SIGNAL( editCategories() ), TQT_SLOT( editCategories() ) );
   }
 
   mCategorySelectDialog->show();
   mCategorySelectDialog->raise();
 }
 
-void KABCore::categoriesSelected( const QStringList &categories )
+void KABCore::categoriesSelected( const TQStringList &categories )
 {
   bool merge = false;
-  QString msg = i18n( "Merge with existing categories?" );
-  if ( KMessageBox::questionYesNo( mWidget, msg, QString::null, i18n( "Merge" ), i18n( "Do Not Merge" ) ) == KMessageBox::Yes )
+  TQString msg = i18n( "Merge with existing categories?" );
+  if ( KMessageBox::questionYesNo( mWidget, msg, TQString::null, i18n( "Merge" ), i18n( "Do Not Merge" ) ) == KMessageBox::Yes )
     merge = true;
 
-  QStringList uids = mViewManager->selectedUids();
-  QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt( uids.end() );
+  TQStringList uids = mViewManager->selectedUids();
+  TQStringList::ConstIterator it;
+  const TQStringList::ConstIterator endIt( uids.end() );
   for ( it = uids.begin(); it != endIt; ++it ) {
     KABC::Addressee addr = mAddressBook->findByUid( *it );
     if ( !addr.isEmpty() ) {
       if ( !merge )
         addr.setCategories( categories );
       else {
-        QStringList addrCategories = addr.categories();
-        QStringList::ConstIterator catIt;
-        const QStringList::ConstIterator catEndIt( categories.end() );
+        TQStringList addrCategories = addr.categories();
+        TQStringList::ConstIterator catIt;
+        const TQStringList::ConstIterator catEndIt( categories.end() );
         for ( catIt = categories.begin(); catIt != catEndIt; ++catIt ) {
           if ( !addrCategories.contains( *catIt ) )
             addrCategories.append( *catIt );
@@ -1481,8 +1481,8 @@ void KABCore::editCategories()
 {
   if ( mCategoryEditDialog == 0 ) {
     mCategoryEditDialog = new KPIM::CategoryEditDialog( KABPrefs::instance(), mWidget );
-    connect( mCategoryEditDialog, SIGNAL( categoryConfigChanged() ),
-             mCategorySelectDialog, SLOT( updateCategoryConfig() ) );
+    connect( mCategoryEditDialog, TQT_SIGNAL( categoryConfigChanged() ),
+             mCategorySelectDialog, TQT_SLOT( updateCategoryConfig() ) );
   }
 
   mCategoryEditDialog->show();
@@ -1498,7 +1498,7 @@ void KABCore::slotClearSearchBar()
 void KABCore::slotContactsUpdated()
 {
   if ( mStatusBar ) {
-    QString msg( i18n( "%n contact matches", "%n contacts matching", mSearchManager->contacts().count() ) );
+    TQString msg( i18n( "%n contact matches", "%n contacts matching", mSearchManager->contacts().count() ) );
     if ( !mStatusBar->hasItem( 1 ) )
       mStatusBar->insertItem( msg, 1 );
     else
@@ -1511,14 +1511,14 @@ void KABCore::slotContactsUpdated()
 bool KABCore::handleCommandLine( KAddressBookIface* iface )
 {
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  QCString addrStr = args->getOption( "addr" );
-  QCString uidStr = args->getOption( "uid" );
+  TQCString addrStr = args->getOption( "addr" );
+  TQCString uidStr = args->getOption( "uid" );
 
-  QString addr, uid, vcard;
+  TQString addr, uid, vcard;
   if ( !addrStr.isEmpty() )
-    addr = QString::fromLocal8Bit( addrStr );
+    addr = TQString::fromLocal8Bit( addrStr );
   if ( !uidStr.isEmpty() )
-    uid = QString::fromLocal8Bit( uidStr );
+    uid = TQString::fromLocal8Bit( uidStr );
 
   bool doneSomething = false;
 
@@ -1553,10 +1553,10 @@ void KABCore::removeSelectedContactsFromDistList()
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
   if ( dist.isEmpty() )
     return;
-  const QStringList uids = selectedUIDs();
+  const TQStringList uids = selectedUIDs();
   if ( uids.isEmpty() )
       return;
-  for ( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
+  for ( TQStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
       dist.removeEntry ( *it );
   }
   addressBook()->insertAddressee( dist );
@@ -1564,14 +1564,14 @@ void KABCore::removeSelectedContactsFromDistList()
 #endif
 }
 
-void KABCore::sendMailToDistributionList( const QString &name )
+void KABCore::sendMailToDistributionList( const TQString &name )
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), name );
   if ( dist.isEmpty() )
     return;
   typedef KPIM::DistributionList::Entry::List EntryList;
-  QStringList mails;
+  TQStringList mails;
   const EntryList entries = dist.entries( addressBook() );
   for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
     mails += (*it).addressee.fullEmail( (*it).email );
@@ -1587,7 +1587,7 @@ void KABCore::editSelectedDistributionList()
 }
 
 
-void KABCore::editDistributionList( const QString &name )
+void KABCore::editDistributionList( const TQString &name )
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
   editDistributionList( KPIM::DistributionList::findByName( addressBook(), name ) );
@@ -1596,7 +1596,7 @@ void KABCore::editDistributionList( const QString &name )
 
 #ifdef KDEPIM_NEW_DISTRLISTS
 
-void KABCore::showDistributionListEntry( const QString& uid )
+void KABCore::showDistributionListEntry( const TQString& uid )
 {
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
   if ( !dist.isEmpty() ) {
@@ -1616,9 +1616,9 @@ void KABCore::editDistributionList( const KPIM::DistributionList &dist )
 {
   if ( dist.isEmpty() )
     return;
-  QGuardedPtr<KPIM::DistributionListEditor::EditorWidget> dlg = new KPIM::DistributionListEditor::EditorWidget( addressBook(), widget() );
+  TQGuardedPtr<KPIM::DistributionListEditor::EditorWidget> dlg = new KPIM::DistributionListEditor::EditorWidget( addressBook(), widget() );
   dlg->setDistributionList( dist );
-  if ( dlg->exec() == QDialog::Accepted && dlg ) {
+  if ( dlg->exec() == TQDialog::Accepted && dlg ) {
     const KPIM::DistributionList newDist = dlg->distributionList();
     if ( newDist != dist ) {
       addressBook()->insertAddressee( newDist );
@@ -1634,7 +1634,7 @@ KPIM::DistributionList::List KABCore::distributionLists() const
   return mSearchManager->distributionLists();
 }
 
-void KABCore::setSelectedDistributionList( const QString &name )
+void KABCore::setSelectedDistributionList( const TQString &name )
 {
   mSelectedDistributionList = name;
   mSearchManager->setSelectedDistributionList( name );
@@ -1642,14 +1642,14 @@ void KABCore::setSelectedDistributionList( const QString &name )
   mDistListButtonWidget->setShown( !mSelectedDistributionList.isNull() );
   if ( !name.isNull() ) {
     mDetailsStack->raiseWidget( mDistListEntryView );
-    const QStringList selectedUids = selectedUIDs();
-    showDistributionListEntry( selectedUids.isEmpty() ? QString() : selectedUids.first() );
+    const TQStringList selectedUids = selectedUIDs();
+    showDistributionListEntry( selectedUids.isEmpty() ? TQString() : selectedUids.first() );
   }
   else
     mDetailsStack->raiseWidget( mExtensionManager->activeDetailsWidget() ? mExtensionManager->activeDetailsWidget() : mDetailsWidget );
 }
 
-QStringList KABCore::distributionListNames() const
+TQStringList KABCore::distributionListNames() const
 {
   return mSearchManager->distributionListNames();
 }

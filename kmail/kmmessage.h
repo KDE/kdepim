@@ -1,0 +1,916 @@
+// -*- mode: C++; c-file-style: "gnu" -*-
+/* kmmessage.h: Mime Message Class
+ *
+ */
+#ifndef kmmessage_h
+#define kmmessage_h
+
+/** @file This file defines Mime Message classes. */
+
+// for large file support
+#include <config.h>
+#include <sys/types.h>
+
+#include <mimelib/string.h>
+#include "kmmsgbase.h"
+#include "isubject.h"
+
+#include <kmime_mdn.h>
+
+#include<libemailfunctions/email.h>
+
+template <typename T>
+class QValueList;
+
+class QStringList;
+class QString;
+class QTextCodec;
+class QStrList;
+
+class KMFolder;
+class KMFolderIndex;
+class DwMessage;
+class KMMessagePart;
+class KMMsgInfo;
+class KMHeaders;
+class KMForwardDigestCommand;
+
+namespace KMime {
+  class CharFreq;
+  namespace Types {
+    class AddrSpec;
+    class Address;
+    typedef TQValueList<Address> AddressList;
+    typedef TQValueList<AddrSpec> AddrSpecList;
+  }
+}
+
+namespace KMail {
+  class HeaderStrategy;
+}
+
+class DwBodyPart;
+class DwMediaType;
+class DwHeaders;
+
+class partNode;
+
+namespace KMail {
+  enum ReplyStrategy { ReplySmart = 0,
+                       ReplyAuthor,
+                       ReplyList,
+                       ReplyAll,
+                       ReplyNone };
+}
+
+/** This is a Mime Message. */
+class KMMessage: public KMMsgBase, public KMail::ISubject
+{
+  friend class ::KMForwardDigestCommand; // needed for MIME Digest forward
+
+public:
+  // promote some of KMMsgBase's methods to public:
+  using KMMsgBase::parent;
+  using KMMsgBase::setParent;
+  using KMMsgBase::enableUndo; // KMFolder
+  using KMMsgBase::setEnableUndo; // dto.
+  using KMMsgBase::isRead; // dto.
+  using KMMsgBase::isUnread; // dto.
+  using KMMsgBase::isNew; // dto.
+  using KMMsgBase::isOld;
+  using KMMsgBase::isWatched;
+  using KMMsgBase::isIgnored;
+  using KMMsgBase::setEncryptionStateChar; // KMAcct*
+  using KMMsgBase::setSignatureStateChar; // dto.
+
+  /** Straight forward initialization. */
+  KMMessage(KMFolder* parent=0);
+
+  /** Constructor from a DwMessage. KMMessage takes possession of the
+      DwMessage, so don't dare to delete it.
+  */
+  KMMessage(DwMessage*);
+
+  /** Copy constructor. Does *not* automatically load the message. */
+  KMMessage(KMMsgInfo& msgInfo);
+
+  /** Copy constructor. */
+  KMMessage( const KMMessage& other );
+
+#if 0 // currently unused
+  /** Assignment operator. */
+  const KMMessage& operator=( const KMMessage& other ) {
+    if( &other == this )
+      return *this;
+    assign( other );
+    return *this;
+  }
+#endif
+
+  /** Destructor. */
+  virtual ~KMMessage();
+
+  /** Get KMMsgBase for this object */
+  KMMsgBase & toMsgBase() { return *this; }
+  const KMMsgBase & toMsgBase() const { return *this; }
+
+  /** Returns TRUE if object is a real message (not KMMsgInfo or KMMsgBase) */
+  bool isMessage() const;
+
+  /** @return whether the priority: or x-priority headers indicate
+       that this message should be considered urgent
+   **/
+  bool isUrgent() const;
+
+  /** Specifies an unencrypted copy of this message to be stored
+      in a separate member variable to allow saving messages in
+      unencrypted form that were sent in encrypted form.
+      NOTE: Ownership of @p unencrypted transfers to this KMMessage,
+            and it will be deleted in the d'tor.
+  */
+  void setUnencryptedMsg( KMMessage* unencrypted );
+
+  /** Returns TRUE if the message contains an unencrypted copy of itself. */
+  bool hasUnencryptedMsg() const { return 0 != mUnencryptedMsg; }
+
+  /** Returns an unencrypted copy of this message or 0 if none exists. */
+  KMMessage* unencryptedMsg() const { return mUnencryptedMsg; }
+
+  /** Returns an unencrypted copy of this message or 0 if none exists.
+      \note This function removes the internal unencrypted message pointer
+      from the message: the process calling takeUnencryptedMsg() must
+      delete the returned pointer when no longer needed.
+  */
+  KMMessage* takeUnencryptedMsg()
+  {
+    KMMessage* ret = mUnencryptedMsg;
+    mUnencryptedMsg = 0;
+    return ret;
+  }
+
+  /** Mark the message as deleted */
+  void del() { setStatus(KMMsgStatusDeleted); }
+
+  /** Undelete the message. Same as touch */
+  void undel() { setStatus(KMMsgStatusOld); }
+
+  /** Touch the message - mark it as read */
+  void touch() { setStatus(KMMsgStatusOld); }
+
+  /** Create a new message that is a reply to this message, filling all
+      required header fields with the proper values. The returned message
+      is not stored in any folder. Marks this message as replied. */
+  KMMessage* createReply( KMail::ReplyStrategy replyStrategy = KMail::ReplySmart,
+                          TQString selection=TQString::null, bool noQuote=false,
+                          bool allowDecryption=true, bool selectionIsBody=false,
+                          const TQString &tmpl = TQString::null );
+
+  /** Create a new message that is a redirect to this message, filling all
+    required header fields with the proper values. The returned message
+    is not stored in any folder. Marks this message as replied.
+    Redirects differ from forwards so they are forwarded to some other
+    user, mail is not changed and the reply-to field is set to
+    the email address of the original sender
+   */
+  KMMessage* createRedirect( const TQString &toStr );
+
+  /** Create the forwarded body for the message. */
+  TQCString createForwardBody();
+
+  /** Create a new message that is a forward of this message, filling all
+    required header fields with the proper values. The returned message
+    is not stored in any folder. Marks this message as forwarded. */
+  KMMessage* createForward( const TQString &tmpl = TQString::null );
+
+  /** Create a new message that is a delivery receipt of this message,
+      filling required header fileds with the proper values. The
+      returned message is not stored in any folder. */
+  KMMessage* createDeliveryReceipt() const;
+
+  /** Create a new message that is a MDN for this message, filling all
+      required fields with proper values. The returned message is not
+      stored in any folder.
+
+      @param a Use AutomaticAction for filtering and ManualAction for
+               user-induced events.
+      @param d See docs for KMime::MDN::DispositionType
+      @param m See docs for KMime::MDN::DispositionModifier
+      @param allowGUI Set to true if this method is allowed to ask the
+                      user questions
+
+      @return The notification message or 0, if none should be sent.
+   **/
+  KMMessage* createMDN( KMime::MDN::ActionMode a,
+          KMime::MDN::DispositionType d,
+          bool allowGUI=false,
+          TQValueList<KMime::MDN::DispositionModifier> m=TQValueList<KMime::MDN::DispositionModifier>() );
+
+  /** Remove all headers but the content description ones, and those in the white list. */
+  void sanitizeHeaders( const TQStringList& whiteList = TQStringList() );
+
+  /** Parse the string and create this message from it. */
+  void fromDwString(const DwString& str, bool setStatus=false);
+  void fromString(const TQCString& str, bool setStatus=false);
+  void fromByteArray(const TQByteArray & ba, bool setStatus=false);
+
+  /** Return the entire message contents in the DwString. This function
+      is *fast* even for large message since it does *not* involve a
+      string copy.
+  */
+  const DwString& asDwString() const;
+  const DwMessage *asDwMessage();
+
+  /** Return the entire message contents as a string. This function is
+      slow for large message since it involves a string copy. If you
+      need the string representation only for a short time
+      (i.e. without the chance of calling any function in the
+      underlying mimelib, then you should use the asDwString function.
+      @see asDwString
+  */
+  TQCString asString() const;
+
+  /**
+   * Return the message contents with the headers that should not be
+   * sent stripped off.
+   */
+  TQByteArray asSendableString() const;
+
+  /**
+   * Return the message header with the headers that should not be
+   * sent stripped off.
+   */
+  TQCString headerAsSendableString() const;
+
+  /**
+   * Remove all private header fields: *Status: and X-KMail-*
+   **/
+  void removePrivateHeaderFields();
+
+  /** Return reference to Content-Type header for direct manipulation. */
+  DwMediaType& dwContentType();
+
+  /** Return header as string. */
+  TQString headerAsString() const;
+
+  /** Returns a decoded body part string to be further processed
+    by function asQuotedString().
+    THIS FUNCTION WILL BE REPLACED ONCE KMime IS FULLY INTEGRATED
+    (khz, June 05 2002)*/
+  void parseTextStringFromDwPart( partNode * root,
+                                          TQCString& parsedString,
+                                          const TQTextCodec*& codec,
+                                          bool& isHTML ) const;
+
+  /** Initialize header fields. Should be called on new messages
+    if they are not set manually. E.g. before composing. Calling
+    of setAutomaticFields(), see below, is still required. */
+  void initHeader(uint identity=0);
+
+  /** Initialize headers fields according to the identity and the transport
+    header of the given original message */
+  void initFromMessage(const KMMessage *msg, bool idHeaders = true);
+
+  /** @return the UOID of the identity for this message.
+      Searches the "x-kmail-identity" header and if that fails,
+      searches with KPIM::IdentityManager::identityForAddress()
+      and if that fails queries the KMMsgBase::parent() folder for a default.
+   **/
+  uint identityUoid() const;
+
+  /** Set the from, to, cc, bcc, encrytion etc headers as specified in the
+   * given identity. */
+  void applyIdentity( uint id );
+
+  /** Removes empty fields from the header, e.g. an empty Cc: or Bcc:
+    field. */
+  void cleanupHeader();
+
+  /** Set fields that are either automatically set (Message-id)
+    or that do not change from one message to another (MIME-Version).
+    Call this method before sending *after* all changes to the message
+    are done because this method does things different if there are
+    attachments / multiple body parts. */
+  void setAutomaticFields(bool isMultipart=false);
+
+  /** Get or set the 'Date' header field */
+  TQString dateStr() const;
+  /** Returns the message date in asctime format or an empty string if the
+      message lacks a Date header. */
+  TQCString dateShortStr() const;
+  TQString dateIsoStr() const;
+  time_t date() const;
+  void setDate(const TQCString& str);
+  void setDate(time_t aUnixTime);
+
+  /** Set the 'Date' header field to the current date. */
+  void setDateToday();
+
+  /** Get or set the 'To' header field */
+  TQString to() const;
+  void setTo(const TQString& aStr);
+  TQString toStrip() const;
+
+  /** Get or set the 'ReplyTo' header field */
+  TQString replyTo() const;
+  void setReplyTo( const TQString &aStr );
+  void setReplyTo(KMMessage*);
+
+  /** Get or set the 'Cc' header field */
+  TQString cc() const;
+  void setCc( const TQString &aStr );
+  TQString ccStrip() const;
+
+  /** Get or set the 'Bcc' header field */
+  TQString bcc() const;
+  void setBcc( const TQString &aStr );
+
+  /** Get or set the 'Fcc' header field */
+  TQString fcc() const;
+  void setFcc( const TQString &aStr );
+
+  /** Get or set the 'Drafts' folder */
+  TQString drafts() const { return mDrafts; }
+  void setDrafts( const TQString &aStr );
+
+  /** Get or set the 'Templates' folder */
+  TQString templates() const { return mTemplates; }
+  void setTemplates( const TQString &aStr );
+
+  /** Get or set the 'From' header field */
+  TQString from() const;
+  void setFrom(const TQString& aStr);
+  TQString fromStrip() const;
+
+  /** @return The addr-spec of either the Sender: (if one is given) or
+   * the first addr-spec in From: */
+  TQString sender() const;
+
+  /** Get or set the 'Who' header field. The actual field that is
+      returned depends on the contents of the owning folders whoField().
+      Usually this is 'From', but it can also contain 'To'. */
+  TQString who() const;
+
+  /** Get or set the 'Subject' header field */
+  TQString subject() const;
+  void setSubject(const TQString& aStr);
+
+  /** Calculate strippedSubject */
+  void initStrippedSubjectMD5() {};
+
+  /** Get or set the 'X-Mark' header field */
+  TQString xmark() const;
+  void setXMark(const TQString& aStr);
+
+  /** Get or set the 'In-Reply-To' header field */
+  TQString replyToId() const;
+  void setReplyToId(const TQString& aStr);
+  TQString replyToIdMD5() const;
+
+  /** Get the second to last id from the References header
+      field. If outgoing messages are not kept in the same
+      folder as incoming ones, this will be a good place to
+      thread the message beneath.
+      bob               <- second to last reference points to this
+       |_kmailuser      <- not in our folder, but Outbox
+           |_bob        <- In-Reply-To points to our mail above
+
+      Thread like this:
+      bob
+       |_bob
+
+      using replyToAuxIdMD5
+    */
+  TQString replyToAuxIdMD5() const;
+
+  /**
+    Get a hash of the subject with all prefixes such as Re: removed.
+    Used for threading.
+  */
+  TQString strippedSubjectMD5() const;
+
+  /**
+    Validate a list of email addresses, and also allow
+    aliases and distribution lists to be expanded
+    before validation.
+    @return Enum to describe the error.
+    @return brokenAddress the address that was faulty.
+    FIXME: this should be in libemailfucntions but that
+           requires moving expandAliases and all that
+           it brings
+  */
+  static KPIM::EmailParseResult isValidEmailAddressList( const TQString& aStr,
+                                                         TQString& brokenAddress );
+
+  /**
+    Get a hash of the subject.
+    Used for threading.
+  */
+  TQString subjectMD5() const;
+
+  /** Is the subject prefixed by Re: or similar? */
+  bool subjectIsPrefixed() const;
+
+  /** Get or set the 'Message-Id' header field */
+  TQString msgId() const;
+  void setMsgId(const TQString& aStr);
+  TQString msgIdMD5() const;
+
+  /** Get or set the references for this message */
+  TQString references() const;
+  void setReferences(const TQCString& aStr);
+
+  /** Returns the message ID, useful for followups */
+  TQCString id() const;
+
+  /** Sets the message serial number. If defaulted to zero, the
+    serial number will be assigned using the dictionary. Note that
+    unless it is explicitely set the serial number will remain 0
+    as long as the mail is not in a folder. */
+  void setMsgSerNum(unsigned long newMsgSerNum = 0);
+
+  /** Returns the value of a header field with the given name. If multiple
+      header fields with the given name might exist then you should use
+      headerFields() instead.
+  */
+  TQString headerField(const TQCString& name) const;
+
+  enum HeaderFieldType { Unstructured, Structured, Address };
+
+  /** Set the header field with the given name to the given value.
+      If prepend is set to true, the header is inserted at the beginning
+      and does not overwrite an existing header field with the same name.
+  */
+  void setHeaderField( const TQCString& name, const TQString& value,
+                       HeaderFieldType type = Unstructured,
+                       bool prepend = false );
+
+  /** Returns a list of the values of all header fields with the given name. */
+  TQStringList headerFields( const TQCString& name ) const;
+
+  /** Returns the raw value of a header field with the given name. If multiple
+      header fields with the given name might exist then you should use
+      rawHeaderFields() instead.
+  */
+  TQCString rawHeaderField( const TQCString & name ) const;
+
+  /** Returns a list of the raw values of all header fields with the given
+      name.
+  */
+  TQValueList<TQCString> rawHeaderFields( const TQCString & field ) const;
+
+  /** Splits the given address list into separate addresses. */
+  static KMime::Types::AddressList splitAddrField( const TQCString & str );
+
+  /** Returns header address list as string list.
+      Valid for the following fields: To, Bcc, Cc, ReplyTo, ResentBcc,
+      ResentCc, ResentReplyTo, ResentTo */
+  KMime::Types::AddressList headerAddrField(const TQCString& name) const;
+  KMime::Types::AddrSpecList extractAddrSpecs( const TQCString & headerNames ) const;
+
+  /** Remove header field with given name */
+  void removeHeaderField(const TQCString& name);
+
+  /** Remove all header fields with given name */
+  void removeHeaderFields(const TQCString& name);
+
+  /** Get or set the 'Content-Type' header field
+      The member functions that involve enumerated types (ints)
+      will work only for well-known types or subtypes. */
+  TQCString typeStr() const;
+  int type() const;
+  void setTypeStr(const TQCString& aStr);
+  void setType(int aType);
+  /** Subtype */
+  TQCString subtypeStr() const;
+  int subtype() const;
+  void setSubtypeStr(const TQCString& aStr);
+  void setSubtype(int aSubtype);
+  /** add or change a parameter of a DwMediaType field */
+  static void setDwMediaTypeParam( DwMediaType &mType,
+                                   const TQCString& attr,
+                                   const TQCString& val );
+  /** add or change a parameter of the Content-Type field */
+  void setContentTypeParam(const TQCString& attr, const TQCString& val);
+
+  /** get the DwHeaders
+      (make sure to call setNeedsAssembly() function after directly
+       modyfying internal data like the headers) */
+  DwHeaders& headers() const;
+
+  /** tell the message that internal data were changed
+      (must be called after directly modifying message structures
+       e.g. when like changing header information by accessing
+       the header via headers() function) */
+  void setNeedsAssembly();
+
+  /** Get or set the 'Content-Transfer-Encoding' header field
+      The member functions that involve enumerated types (ints)
+      will work only for well-known encodings. */
+  TQCString contentTransferEncodingStr() const;
+  int  contentTransferEncoding() const;
+  void setContentTransferEncodingStr(const TQCString& aStr);
+  void setContentTransferEncoding(int aCte);
+
+  /** Cte is short for ContentTransferEncoding.
+      These functions are an alternative to the ones with longer names. */
+  TQCString cteStr() const { return contentTransferEncodingStr(); }
+  int cte() const { return contentTransferEncoding(); }
+  void setCteStr(const TQCString& aStr) { setContentTransferEncodingStr(aStr); }
+  void setCte(int aCte) { setContentTransferEncoding(aCte); }
+
+  /** Sets this body part's content to @p str. @p str is subject to
+      automatic charset and CTE detection.
+   **/
+  void setBodyFromUnicode( const TQString & str );
+
+  /** Returns the body part decoded to unicode.
+   **/
+  TQString bodyToUnicode(const TQTextCodec* codec=0) const;
+
+  /** Get the message body. Does not decode the body. */
+  TQCString body() const;
+
+  /** Set the message body. Does not encode the body. */
+  void setBody(const TQCString& aStr);
+  void setBody(const DwString& aStr);
+  void setBody(const char* aStr); // avoid ambiguous calls
+
+  /** Hack to enable structured body parts to be set as flat text... */
+  void setMultiPartBody( const TQCString & aStr );
+
+  /** Set the message body, encoding it according to the current content
+      transfer encoding. The first method for null terminated strings,
+      the second for binary data */
+  void setBodyEncoded(const TQCString& aStr);
+  void setBodyEncodedBinary(const TQByteArray& aStr);
+
+  /** Returns a list of content-transfer-encodings that can be used with
+      the given result of the character frequency analysis of a message or
+      message part under the given restrictions. */
+  static TQValueList<int> determineAllowedCtes( const KMime::CharFreq& cf,
+                                               bool allow8Bit,
+                                               bool willBeSigned );
+
+  /** Sets body, encoded in the best fitting
+    content-transfer-encoding, which is determined by character
+    frequency count.
+
+    @param aBuf       input buffer
+    @param allowedCte return: list of allowed cte's
+    @param allow8Bit  whether "8bit" is allowed as cte.
+    @param willBeSigned whether "7bit"/"8bit" is allowed as cte according to RFC 3156
+  */
+  void setBodyAndGuessCte( const TQByteArray& aBuf,
+                                   TQValueList<int>& allowedCte,
+                                   bool allow8Bit = false,
+                                   bool willBeSigned = false );
+  void setBodyAndGuessCte( const TQCString& aBuf,
+                                   TQValueList<int>& allowedCte,
+                                   bool allow8Bit = false,
+                                   bool willBeSigned = false );
+
+  /** Returns a decoded version of the body from the current content transfer
+      encoding. The first method returns a null terminated string, the second
+      method is meant for binary data, not null is appended */
+  TQCString bodyDecoded() const;
+  TQByteArray bodyDecodedBinary() const;
+
+  /** Number of body parts the message has. This is one for plain messages
+      without any attachment. */
+  int numBodyParts() const;
+
+  /** Return the first DwBodyPart matching a given Content-Type
+      or zero, if no found. */
+  DwBodyPart * findDwBodyPart( int type, int subtype ) const;
+
+  /** Return the first DwBodyPart matching a given Content-Type
+      or zero, if no found. */
+  DwBodyPart * findDwBodyPart( const TQCString& type, const TQCString&  subtype ) const;
+
+  /** Return the first DwBodyPart matching a given partSpecifier
+      or zero, if no found. */
+  DwBodyPart* findDwBodyPart( DwBodyPart* part, const TQString & partSpecifier );
+
+  /** Get the DwBodyPart at position in aIdx.  Indexing starts at 0.
+      If there is no body part at that index, return value will be zero. */
+  DwBodyPart * dwBodyPart( int aIdx ) const;
+
+  /** Get the number of the given DwBodyPart.
+      If no body part is given, return value will be -1. */
+  int partNumber( DwBodyPart * aDwBodyPart ) const;
+
+  /** Get the 1st DwBodyPart.
+      If there is no body part, return value will be zero. */
+  DwBodyPart * getFirstDwBodyPart() const;
+  DwMessage * getTopLevelPart() const { return mMsg; }
+
+  /** Fill the KMMessagePart structure for a given DwBodyPart.
+      If withBody is false the body of the KMMessagePart will be left
+      empty and only the headers of the part will be filled in*/
+  static void bodyPart(DwBodyPart* aDwBodyPart, KMMessagePart* aPart,
+          bool withBody = true );
+
+  /** Get the body part at position in aIdx.  Indexing starts at 0.
+      If there is no body part at that index, aPart will have its
+      attributes set to empty values. */
+  void bodyPart(int aIdx, KMMessagePart* aPart) const;
+
+  /** Compose a DwBodyPart (needed for adding a part to the message). */
+  DwBodyPart* createDWBodyPart(const KMMessagePart* aPart);
+
+  /** Append a DwBodyPart to the message. */
+  void addDwBodyPart(DwBodyPart * aDwPart);
+
+  /** Append a body part to the message. */
+  void addBodyPart(const KMMessagePart* aPart);
+
+  /** Delete all body parts. */
+  void deleteBodyParts();
+
+  /** Set "Status" and "X-Status" fields of the message from the
+   * internal message status. */
+  void setStatusFields();
+
+  /** Generates the Message-Id. It uses either the Message-Id suffix
+   * defined by the user or the given email address as suffix. The address
+   * must be given as addr-spec as defined in RFC 2822.
+   */
+  static TQString generateMessageId( const TQString& addr );
+
+  /** Convert '<' into "&lt;" resp. '>' into "&gt;" in order to
+    * prevent their interpretation by KHTML.
+    * Does *not* use the Qt replace function but runs a very fast C code
+    * the same way as lf2crlf() does.
+   */
+  static TQCString html2source( const TQCString & src );
+
+  /** Encodes an email address as mailto URL
+   */
+  static TQString encodeMailtoUrl( const TQString& str );
+
+  /** Decodes a mailto URL
+    */
+  static TQString decodeMailtoUrl( const TQString& url );
+
+  /** This function generates a displayable string from a list of email
+      addresses.
+      Input : mailbox-list
+      Output: comma separated list of display name resp. comment resp.
+              address
+  */
+  static TQCString stripEmailAddr(const TQCString& emailAddr);
+
+  /** Does the same as the above function. Shouldn't be used.
+   */
+  static TQString stripEmailAddr(const TQString& emailAddr);
+
+  /** Quotes the following characters which have a special meaning in HTML:
+   * '<'  '>'  '&'  '"'. Additionally '\\n' is converted to "<br />" if
+   * @p removeLineBreaks is false. If @p removeLineBreaks is true, then
+   * '\\n' is removed. Last but not least '\\r' is removed.
+   */
+  static TQString quoteHtmlChars( const TQString& str,
+                                 bool removeLineBreaks = false );
+
+  /** Converts the email address(es) to (a) nice HTML mailto: anchor(s).
+   * If stripped is TRUE then the visible part of the anchor contains
+   * only the name part and not the given emailAddr.
+   */
+  static TQString emailAddrAsAnchor(const TQString& emailAddr,
+          bool stripped=true, const TQString& cssStyle = TQString::null, bool link = true);
+
+  /** Strips an address from an address list. This is for example used
+      when replying to all.
+  */
+  static TQStringList stripAddressFromAddressList( const TQString& address,
+                                                  const TQStringList& addresses );
+
+  /** Strips all the user's addresses from an address list. This is used
+      when replying.
+  */
+  static TQStringList stripMyAddressesFromAddressList( const TQStringList& list );
+
+  /** Returns true if the given address is contained in the given address list.
+  */
+  static bool addressIsInAddressList( const TQString& address,
+                                      const TQStringList& addresses );
+
+  /** Expands aliases (distribution lists and nick names) and appends a
+      domain part to all email addresses which are missing the domain part.
+  */
+  static TQString expandAliases( const TQString& recipients );
+
+  /** Uses the hostname as domain part and tries to determine the real name
+      from the entries in the password file.
+  */
+  static TQString guessEmailAddressFromLoginName( const TQString& userName );
+
+  /**
+   *  Given argument msg add quoting characters and relayout for max width maxLength
+   *  @param msg the string which it to be quoted
+   *  @param maxLineLength reformat text to be this amount of columns at maximum, adding
+   *    linefeeds at word boundaries to make it fit.
+   */
+  static TQString smartQuote( const TQString &msg, int maxLineLength );
+
+  /** Get the default message charset.*/
+  static TQCString defaultCharset();
+
+  /** Get a list of preferred message charsets.*/
+  static const TQStringList &preferredCharsets();
+
+  /** Replaces every occurrence of "${foo}" in @p s with headerField("foo") */
+  TQString replaceHeadersInString( const TQString & s ) const;
+
+  /** Get the message charset.*/
+  TQCString charset() const;
+
+  /** Set the message charset. */
+  void setCharset(const TQCString& aStr);
+
+  /** Get a TQTextCodec suitable for this message part */
+  const TQTextCodec * codec() const;
+
+  /** Set the charset the user selected for the message to display */
+  void setOverrideCodec( const TQTextCodec* codec ) { mOverrideCodec = codec; }
+
+  /** Allow decoding of HTML for quoting */
+  void setDecodeHTML(bool aDecodeHTML)
+  { mDecodeHTML = aDecodeHTML; }
+
+  /** Reads config settings from group "KMMessage" and sets all internal
+   * variables (e.g. indent-prefix, etc.) */
+  static void readConfig();
+
+  /** Creates reference string for reply to messages.
+   *  reference = original first reference + original last reference + original msg-id
+   */
+  TQCString getRefStr() const;
+
+  /** Get/set offset in mail folder. */
+  off_t folderOffset() const { return mFolderOffset; }
+  void setFolderOffset(off_t offs) { if(mFolderOffset != offs) { mFolderOffset=offs; setDirty(true); } }
+
+  /** Get/set filename in mail folder. */
+  TQString fileName() const { return mFileName; }
+  void setFileName(const TQString& file) { if(mFileName != file) { mFileName=file; setDirty(true); } }
+
+  /** Get/set size of message in the folder including the whole header in
+      bytes. Can be 0, if the message is not in a folder.
+      The setting of mMsgSize = mMsgLength = sz is needed for popFilter*/
+  size_t msgSize() const { return mMsgSize; }
+  void setMsgSize(size_t sz) { if(mMsgSize != sz) { mMsgSize = sz; setDirty(true); } }
+
+  /** Unlike the above function this works also, if the message is not in a
+      folder */
+  size_t msgLength() const
+    { return (mMsgLength) ? mMsgLength : mMsgSize; }
+  void setMsgLength(size_t sz) { mMsgLength = sz; }
+
+  /** Get/set size on server */
+  size_t msgSizeServer() const;
+  void setMsgSizeServer(size_t sz);
+
+  /** Get/set UID */
+  ulong UID() const;
+  void setUID(ulong uid);
+
+  /** Status of the message. */
+  KMMsgStatus status() const { return mStatus; }
+  /** Set status and mark dirty. */
+  void setStatus(const KMMsgStatus status, int idx = -1);
+  void setStatus(const char* s1, const char* s2=0) { KMMsgBase::setStatus(s1, s2); }
+
+  /** Set encryption status of the message. */
+  void setEncryptionState(const KMMsgEncryptionState, int idx = -1);
+
+  /** Set signature status of the message. */
+  void setSignatureState(const KMMsgSignatureState, int idx = -1);
+
+  void setMDNSentState( KMMsgMDNSentState status, int idx=-1 );
+
+  /** Encryption status of the message. */
+  KMMsgEncryptionState encryptionState() const { return mEncryptionState; }
+
+  /** Signature status of the message. */
+  KMMsgSignatureState signatureState() const { return mSignatureState; }
+
+  KMMsgMDNSentState mdnSentState() const { return mMDNSentState; }
+
+  /** Links this message to @p aMsg, setting link type to @p aStatus. */
+  void link(const KMMessage *aMsg, KMMsgStatus aStatus);
+  /** Returns the information for the Nth link into @p retMsg
+   * and @p retStatus. */
+  void getLink(int n, ulong *retMsgSerNum, KMMsgStatus *retStatus) const;
+
+  /** Convert wildcards into normal string */
+  TQString formatString(const TQString&) const;
+
+  /** Sets the body of the specified part */
+  void updateBodyPart(const TQString partSpecifier, const TQByteArray & data);
+
+  /** Returns the last DwBodyPart that was updated */
+  DwBodyPart* lastUpdatedPart() { return mLastUpdated; }
+
+  /** Return true if the complete message is available without referring to the backing store.*/
+  bool isComplete() const { return mComplete; }
+  /** Set if the message is a complete message */
+  void setComplete( bool v ) { mComplete = v; }
+
+  /** Return if the message is ready to be shown */
+  bool readyToShow() const { return mReadyToShow; }
+  /** Set if the message is ready to be shown */
+  void setReadyToShow( bool v ) { mReadyToShow = v; }
+
+  void updateAttachmentState(DwBodyPart * part = 0);
+
+  /** Return, if the message should not be deleted */
+  bool transferInProgress() const;
+  /** Set that the message shall not be deleted because it is still required */
+  void setTransferInProgress(bool value, bool force = false);
+
+  /** Returns an mbox message separator line for this message, i.e. a
+      string of the form
+      "From local@domain.invalid Sat Jun 12 14:00:00 2004\n".
+  */
+  TQCString mboxMessageSeparator();
+
+  /** Returns message body with quoting header and indented by the
+    given indentation string. This is suitable for including the message
+    in another message of for replies, forwards. The header string is
+    a template where the following fields are replaced with the
+    corresponding values:
+    <pre>
+        %D: date of this message
+        %S: subject of this message
+        %F: sender (from) of this message
+        %%: a single percent sign
+    </pre>
+    No attachments are handled if includeAttach is false.
+    The signature is stripped if aStripSignature is true and
+    smart quoting is turned on. Signed or encrypted texts
+    get converted to plain text when allowDecryption is true. */
+  TQString asQuotedString( const TQString & headerStr,
+          const TQString & indentStr,
+          const TQString & selection=TQString::null,
+          bool aStripSignature=true,
+          bool allowDecryption=true) const;
+
+  /** Return the textual content of the message as plain text,
+      converting HTML to plain text if necessary. */
+  TQString asPlainText( bool stripSignature, bool allowDecryption ) const;
+
+  /** Get stored cursor position */
+  int getCursorPos() { return mCursorPos; };
+  /** Set cursor position as offset from message start */
+  void setCursorPos(int pos) { mCursorPos = pos; };
+
+  /** Get the KMMsgInfo object that was set with setMsgInfo(). */
+  KMMsgInfo* msgInfo() { return mMsgInfo; }
+  /** Set the KMMsgInfo object corresponding to this message. */
+  void setMsgInfo( KMMsgInfo* msgInfo ) { mMsgInfo = msgInfo; }
+
+  /* This is set in kmreaderwin if a message is being parsed to avoid
+     other parts of kmail (e.g. kmheaders) destroying the message.
+     Parsing can take longer and can be async (in case of gpg mails) */
+  bool isBeingParsed() const { return mIsParsed; }
+  void setIsBeingParsed( bool t ) { mIsParsed = t; }
+
+  /** Delete this message as soon as it no longer in use. */
+  void deleteWhenUnused();
+
+private:
+
+  /** Initialization shared by the ctors. */
+  void init( DwMessage* aMsg = 0 );
+  /** Assign the values of @param other to this message. Used in the copy c'tor. */
+  void assign( const KMMessage& other );
+
+  TQString mDrafts;
+  TQString mTemplates;
+  mutable DwMessage* mMsg;
+  mutable bool       mNeedsAssembly :1;
+  bool mDecodeHTML :1;
+  bool mReadyToShow :1;
+  bool mComplete :1;
+  bool mIsParsed : 1;
+  static const KMail::HeaderStrategy * sHeaderStrategy;
+  static TQString sForwardStr;
+  const TQTextCodec * mOverrideCodec;
+
+  TQString mFileName;
+  off_t mFolderOffset;
+  size_t mMsgSize, mMsgLength;
+  time_t mDate;
+  KMMsgEncryptionState mEncryptionState;
+  KMMsgSignatureState mSignatureState;
+  KMMsgMDNSentState mMDNSentState;
+  KMMessage* mUnencryptedMsg;
+  DwBodyPart* mLastUpdated;
+  int mCursorPos;
+  KMMsgInfo* mMsgInfo; // used to remember the KMMsgInfo object this KMMessage replaced in the KMMsgList
+  static TQValueList<KMMessage*> sPendingDeletes;
+};
+
+
+#endif /*kmmessage_h*/

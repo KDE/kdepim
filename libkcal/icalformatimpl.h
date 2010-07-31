@@ -22,8 +22,8 @@
 #ifndef KCAL_ICALFORMATIMPL_H
 #define KCAL_ICALFORMATIMPL_H
 
-#include <qstring.h>
-#include <qdict.h>
+#include <tqstring.h>
+#include <tqdict.h>
 
 #include "scheduler.h"
 #include "freebusy.h"
@@ -65,7 +65,7 @@ class ICalFormatImpl
     icalrecurrencetype writeRecurrenceRule( RecurrenceRule *recur );
     icalcomponent *writeAlarm(Alarm *alarm);
 
-    QString extractErrorProperty(icalcomponent *);
+    TQString extractErrorProperty(icalcomponent *);
     Todo *readTodo(icalcomponent *vtodo);
     Event *readEvent(icalcomponent *vevent, icalcomponent *vtimezone);
     FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
@@ -79,16 +79,16 @@ class ICalFormatImpl
     void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
     void readAlarm(icalcomponent *alarm,Incidence *incidence);
     /** Return the PRODID string loaded from calendar file */
-    const QString &loadedProductId()  { return mLoadedProductId; }
+    const TQString &loadedProductId()  { return mLoadedProductId; }
 
-    static icaltimetype writeICalDate(const QDate &);
-    static QDate readICalDate(icaltimetype);
-    icaltimetype writeICalDateTime(const QDateTime &);
-    QDateTime readICalDateTime( icalproperty*, icaltimetype&, icaltimezone* tz = 0 );
+    static icaltimetype writeICalDate(const TQDate &);
+    static TQDate readICalDate(icaltimetype);
+    icaltimetype writeICalDateTime(const TQDateTime &);
+    TQDateTime readICalDateTime( icalproperty*, icaltimetype&, icaltimezone* tz = 0 );
     static icaldurationtype writeICalDuration(int seconds);
     static int readICalDuration(icaldurationtype);
-    static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
-    icaldatetimeperiodtype writeICalDateTimePeriod( const QDateTime &date );
+    static icaldatetimeperiodtype writeICalDatePeriod( const TQDate &date );
+    icaldatetimeperiodtype writeICalDateTimePeriod( const TQDateTime &date );
 
     icalcomponent *createCalendarComponent(Calendar * = 0);
     icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
@@ -105,7 +105,7 @@ class ICalFormatImpl
     ICalFormat *mParent;
     Calendar *mCalendar;
 
-    QString mLoadedProductId;         // PRODID string loaded from calendar file
+    TQString mLoadedProductId;         // PRODID string loaded from calendar file
 
     Event::List mEventsRelate;           // events with relations
     Todo::List mTodosRelate;             // todos with relations

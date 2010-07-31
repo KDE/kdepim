@@ -1,0 +1,479 @@
+/**
+ *  kmacctcachedimap.cpp
+ *
+ *  Copyright (c) 2002-2004 Bo Thorsen <bo@sonofthor.dk>
+ *  Copyright (c) 2002-2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; version 2 of the License
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ *  In addition, as a special exception, the copyright holders give
+ *  permission to link the code of this program with any edition of
+ *  the Qt library by Trolltech AS, Norway (or with modified versions
+ *  of Qt that use the same license as Qt), and distribute linked
+ *  combinations including the two.  You must obey the GNU General
+ *  Public License in all respects for all of the code used other than
+ *  Qt.  If you modify this file, you may extend this exception to
+ *  your version of the file, but you are not obligated to do so.  If
+ *  you do not wish to do so, delete this exception statement from
+ *  your version.
+ */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include "kmacctcachedimap.h"
+using KMail::SieveConfig;
+
+#include "kmfoldertree.h"
+#include "kmfoldermgr.h"
+#include "kmfiltermgr.h"
+#include "kmfoldercachedimap.h"
+#include "kmmainwin.h"
+#include "accountmanager.h"
+using KMail::AccountManager;
+#include "progressmanager.h"
+
+#include <kio/passdlg.h>
+#include <kio/scheduler.h>
+#include <kio/slave.h>
+#include <kdebug.h>
+#include <kstandarddirs.h>
+#include <kapplication.h>
+#include <kconfig.h>
+
+#include <tqstylesheet.h>
+
+KMAcctCachedImap::KMAcctCachedImap( AccountManager* aOwner,
+				    const TQString& aAccountName, uint id )
+  : KMail::ImapAccountBase( aOwner, aAccountName, id ), mFolder( 0 ),
+    mAnnotationCheckPassed(false),
+    mGroupwareType( GroupwareKolab ),
+    mSentCustomLoginCommand(false)
+{
+  // Never EVER set this for the cached IMAP account
+  mAutoExpunge = false;
+}
+
+
+//-----------------------------------------------------------------------------
+KMAcctCachedImap::~KMAcctCachedImap()
+{
+  killAllJobsInternal( true );
+}
+
+
+//-----------------------------------------------------------------------------
+TQString KMAcctCachedImap::type() const
+{
+  return "cachedimap";
+}
+
+void KMAcctCachedImap::init() {
+  ImapAccountBase::init();
+}
+
+//-----------------------------------------------------------------------------
+void KMAcctCachedImap::pseudoAssign( const KMAccount * a ) {
+  killAllJobs( true );
+  if (mFolder)
+  {
+    mFolder->setContentState(KMFolderCachedImap::imapNoInformation);
+    mFolder->setSubfolderState(KMFolderCachedImap::imapNoInformation);
+  }
+  ImapAccountBase::pseudoAssign( a );
+}
+
+//-----------------------------------------------------------------------------
+void KMAcctCachedImap::setImapFolder(KMFolderCachedImap *aFolder)
+{
+  mFolder = aFolder;
+  mFolder->setImapPath( "/" );
+  mFolder->setAccount( this );
+}
+
+
+//-----------------------------------------------------------------------------
+void KMAcctCachedImap::setAutoExpunge( bool /*aAutoExpunge*/ )
+{
+  // Never EVER set this for the cached IMAP account
+  mAutoExpunge = false;
+}
+
+//-----------------------------------------------------------------------------
+void KMAcctCachedImap::killAllJobs( bool disconnectSlave )
+{
+  //kdDebug(5006) << "killAllJobs: disconnectSlave=" << disconnectSlave << "  " << mapJobData.count() << " jobs in map." << endl;
+  TQValueList<KMFolderCachedImap*> folderList = killAllJobsInternal( disconnectSlave );
+  for( TQValueList<KMFolderCachedImap*>::Iterator it = folderList.begin(); it != folderList.end(); ++it ) {
+    KMFolderCachedImap *fld = *it;
+    fld->resetSyncState();
+    fld->setContentState(KMFolderCachedImap::imapNoInformation);
+    fld->setSubfolderState(KMFolderCachedImap::imapNoInformation);
+    fld->sendFolderComplete(false);
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Common between killAllJobs and the destructor - which shouldn't call sendFolderComplete
+TQValueList<KMFolderCachedImap*> KMAcctCachedImap::killAllJobsInternal( bool disconnectSlave )
+{
+  // Make list of folders to reset. This must be done last, since folderComplete
+  // can trigger the next queued mail check already.
+  TQValueList<KMFolderCachedImap*> folderList;
+  TQMap<KIO::Job*, jobData>::Iterator it = mapJobData.begin();
+  for (; it != mapJobData.end(); ++it) {
+    if ((*it).parent)
+      folderList << static_cast<KMFolderCachedImap*>((*it).parent->storage());
+    // Kill the job - except if it's the one that already died and is calling us
+    if ( !it.key()->error() && mSlave ) {
+      it.key()->kill();
+      mSlave = 0; // killing a job, kills the slave
+    }
+  }
+  mapJobData.clear();
+
+  // Clear the joblist. Make SURE to stop the job emitting "finished"
+  for( TQPtrListIterator<CachedImapJob> it( mJobList ); it.current(); ++it )
+    it.current()->setPassiveDestructor( true );
+  KMAccount::deleteFolderJobs();
+
+  if ( disconnectSlave && mSlave ) {
+    KIO::Scheduler::disconnectSlave( mSlave );
+    mSlave = 0;
+  }
+  return folderList;
+}
+
+//-----------------------------------------------------------------------------
+void KMAcctCachedImap::cancelMailCheck()
+{
+  // Make list of folders to reset, like in killAllJobs
+  TQValueList<KMFolderCachedImap*> folderList;
+  TQMap<KIO::Job*, jobData>::Iterator it = mapJobData.begin();
+  for (; it != mapJobData.end(); ++it) {
+    if ( (*it).cancellable && (*it).parent )
+      folderList << static_cast<KMFolderCachedImap*>((*it).parent->storage());
+  }
+  // Kill jobs
+  ImapAccountBase::cancelMailCheck();
+  // Reset sync states and emit folderComplete, this is important for
+  // KMAccount::checkingMail() to be reset, in case we restart checking mail later.
+  for( TQValueList<KMFolderCachedImap*>::Iterator it = folderList.begin(); it != folderList.end(); ++it ) {
+    KMFolderCachedImap *fld = *it;
+    fld->resetSyncState();
+    fld->setContentState(KMFolderCachedImap::imapNoInformation);
+    fld->setSubfolderState(KMFolderCachedImap::imapNoInformation);
+    fld->sendFolderComplete(false);
+  }
+}
+
+//-----------------------------------------------------------------------------
+void KMAcctCachedImap::killJobsForItem(KMFolderTreeItem * fti)
+{
+  TQMap<KIO::Job *, jobData>::Iterator it = mapJobData.begin();
+  while (it != mapJobData.end())
+  {
+    if (it.data().parent == fti->folder())
+    {
+      killAllJobs();
+      break;
+    }
+    else ++it;
+  }
+}
+
+// Reimplemented from ImapAccountBase because we only check one folder at a time
+void KMAcctCachedImap::slotCheckQueuedFolders()
+{
+    mMailCheckFolders.clear();
+    mMailCheckFolders.append( mFoldersQueuedForChecking.front() );
+    mFoldersQueuedForChecking.pop_front();
+    if ( mFoldersQueuedForChecking.isEmpty() )
+      disconnect( this, TQT_SIGNAL( finishedCheck( bool, CheckStatus ) ),
+                  this, TQT_SLOT( slotCheckQueuedFolders() ) );
+
+    kmkernel->acctMgr()->singleCheckMail(this, true);
+    mMailCheckFolders.clear();
+}
+
+void KMAcctCachedImap::processNewMail( bool /*interactive*/ )
+{
+  assert( mFolder );  // George says "better to crash then lose mail"
+
+  if ( mMailCheckFolders.isEmpty() )
+    processNewMail( mFolder, true );
+  else {
+    KMFolder* f = mMailCheckFolders.front();
+    mMailCheckFolders.pop_front();
+    processNewMail( static_cast<KMFolderCachedImap *>( f->storage() ), false );
+  }
+}
+
+void KMAcctCachedImap::processNewMail( KMFolderCachedImap* folder,
+                                       bool recurse )
+{
+  assert( folder ); // George says "better to crash then lose mail"
+
+  // This should never be set for a cached IMAP account
+  mAutoExpunge = false;
+  mCountLastUnread = 0;
+  mUnreadBeforeCheck.clear();
+  // stop sending noops during sync, that will keep the connection open
+  mNoopTimer.stop();
+
+  // reset namespace todo
+  if ( folder == mFolder ) {
+    TQStringList nsToList = namespaces()[PersonalNS];
+    TQStringList otherNSToCheck = namespaces()[OtherUsersNS];
+    otherNSToCheck += namespaces()[SharedNS];
+    for ( TQStringList::Iterator it = otherNSToCheck.begin();
+          it != otherNSToCheck.end(); ++it ) {
+      if ( (*it).isEmpty() ) {
+        // empty namespaces are included in the "normal" listing
+        // as the folders are created under the root folder
+        nsToList += *it;
+      }
+    }
+    folder->setNamespacesToList( nsToList );
+  }
+
+  Q_ASSERT( !mMailCheckProgressItem );
+  mMailCheckProgressItem = KPIM::ProgressManager::createProgressItem(
+    "MailCheck" + TQString::number( id() ),
+    TQStyleSheet::escape( folder->label() ), // will be changed immediately in serverSync anyway
+    TQString::null,
+    true, // can be cancelled
+    useSSL() || useTLS() );
+  connect( mMailCheckProgressItem, TQT_SIGNAL( progressItemCanceled( KPIM::ProgressItem* ) ),
+           this, TQT_SLOT( slotProgressItemCanceled( KPIM::ProgressItem* ) ) );
+
+  folder->setAccount(this);
+  connect(folder, TQT_SIGNAL(folderComplete(KMFolderCachedImap*, bool)),
+          this, TQT_SLOT(postProcessNewMail(KMFolderCachedImap*, bool)));
+  folder->serverSync( recurse );
+}
+
+void KMAcctCachedImap::postProcessNewMail( KMFolderCachedImap* folder, bool )
+{
+  mNoopTimer.start( 60000 ); // send a noop every minute to avoid "connection broken" errors
+  disconnect(folder, TQT_SIGNAL(folderComplete(KMFolderCachedImap*, bool)),
+             this, TQT_SLOT(postProcessNewMail(KMFolderCachedImap*, bool)));
+  mMailCheckProgressItem->setComplete();
+  mMailCheckProgressItem = 0;
+
+  if ( folder == mFolder ) {
+    // We remove everything from the deleted folders list after a full sync.
+    // Even if it fails (no permission), because on the next sync we want the folder to reappear,
+    //  instead of the user being stuck with "can't delete" every time.
+    // And we do it for _all_ deleted folders, even those that were deleted on the server in the first place (slotListResult).
+    //  Otherwise this might have side effects much later (e.g. when regaining permissions to a folder we could see before)
+
+#if 0 // this opens a race: delete a folder during a sync (after the sync checked that folder), and it'll be forgotten...
+    mDeletedFolders.clear();
+#endif
+    mPreviouslyDeletedFolders.clear();
+  }
+
+  KMail::ImapAccountBase::postProcessNewMail();
+}
+
+void KMAcctCachedImap::addUnreadMsgCount( const KMFolderCachedImap *folder,
+                                          int countUnread )
+{
+  if ( folder->imapPath() != "/INBOX/" ) {
+    // new mail in INBOX is processed with KMAccount::processNewMsg() and
+    // therefore doesn't need to be counted here
+    const TQString folderId = folder->folder()->idString();
+    int newInFolder = countUnread;
+    if ( mUnreadBeforeCheck.find( folderId ) != mUnreadBeforeCheck.end() )
+      newInFolder -= mUnreadBeforeCheck[folderId];
+    if ( newInFolder > 0 )
+      addToNewInFolder( folderId, newInFolder );
+  }
+  mCountUnread += countUnread;
+}
+
+void KMAcctCachedImap::addLastUnreadMsgCount( const KMFolderCachedImap *folder,
+                                              int countLastUnread )
+{
+  mUnreadBeforeCheck[folder->folder()->idString()] = countLastUnread;
+  mCountLastUnread += countLastUnread;
+}
+
+//
+//
+// read/write config
+//
+//
+
+void KMAcctCachedImap::readConfig( /*const*/ KConfig/*Base*/ & config ) {
+  ImapAccountBase::readConfig( config );
+  // Apparently this method is only ever called once (from KMKernel::init) so this is ok
+  mPreviouslyDeletedFolders = config.readListEntry( "deleted-folders" );
+  mDeletedFolders.clear(); // but just in case...
+  const TQStringList oldPaths = config.readListEntry( "renamed-folders-paths" );
+  const TQStringList newNames = config.readListEntry( "renamed-folders-names" );
+  TQStringList::const_iterator it = oldPaths.begin();
+  TQStringList::const_iterator nameit = newNames.begin();
+  for( ; it != oldPaths.end() && nameit != newNames.end(); ++it, ++nameit ) {
+    addRenamedFolder( *it, TQString::null, *nameit );
+  }
+  mGroupwareType = (GroupwareType)config.readNumEntry( "groupwareType", GroupwareKolab );
+}
+
+void KMAcctCachedImap::writeConfig( KConfig/*Base*/ & config ) /*const*/ {
+  ImapAccountBase::writeConfig( config );
+  config.writeEntry( "deleted-folders", mDeletedFolders + mPreviouslyDeletedFolders );
+  config.writeEntry( "renamed-folders-paths", mRenamedFolders.keys() );
+  const TQValueList<RenamedFolder> values = mRenamedFolders.values();
+  TQStringList lstNames;
+  TQValueList<RenamedFolder>::const_iterator it = values.begin();
+  for ( ; it != values.end() ; ++it )
+    lstNames.append( (*it).mNewName );
+  config.writeEntry( "renamed-folders-names", lstNames );
+  config.writeEntry( "groupwareType", mGroupwareType );
+}
+
+void KMAcctCachedImap::invalidateIMAPFolders()
+{
+  invalidateIMAPFolders( mFolder );
+}
+
+void KMAcctCachedImap::invalidateIMAPFolders( KMFolderCachedImap* folder )
+{
+  if( !folder || !folder->folder() )
+    return;
+
+  folder->setAccount(this);
+
+  TQStringList strList;
+  TQValueList<TQGuardedPtr<KMFolder> > folderList;
+  kmkernel->dimapFolderMgr()->createFolderList( &strList, &folderList,
+						folder->folder()->child(), TQString::null,
+						false );
+  TQValueList<TQGuardedPtr<KMFolder> >::Iterator it;
+  mCountLastUnread = 0;
+  mUnreadBeforeCheck.clear();
+
+  for( it = folderList.begin(); it != folderList.end(); ++it ) {
+    KMFolder *f = *it;
+    if( f && f->folderType() == KMFolderTypeCachedImap ) {
+      KMFolderCachedImap *cfolder = static_cast<KMFolderCachedImap*>(f->storage());
+      // This invalidates the folder completely
+      cfolder->setUidValidity("INVALID");
+      cfolder->writeUidCache();
+      processNewMailSingleFolder( f );
+    }
+  }
+  folder->setUidValidity("INVALID");
+  folder->writeUidCache();
+
+  processNewMailSingleFolder( folder->folder() );
+}
+
+//-----------------------------------------------------------------------------
+void KMAcctCachedImap::addDeletedFolder( KMFolder* folder )
+{
+  if ( !folder || folder->folderType() != KMFolderTypeCachedImap )
+    return;
+  KMFolderCachedImap* storage = static_cast<KMFolderCachedImap*>(folder->storage());
+  addDeletedFolder( storage->imapPath() );
+  kdDebug(5006) << k_funcinfo << storage->imapPath() << endl;
+
+  // Add all child folders too
+  if( folder->child() ) {
+    KMFolderNode *node = folder->child()->first();
+    while( node ) {
+      if( !node->isDir() ) {
+        addDeletedFolder( static_cast<KMFolder*>( node ) ); // recurse
+      }
+      node = folder->child()->next();
+    }
+  }
+}
+
+void KMAcctCachedImap::addDeletedFolder( const TQString& imapPath )
+{
+  mDeletedFolders << imapPath;
+}
+
+TQStringList KMAcctCachedImap::deletedFolderPaths( const TQString& subFolderPath ) const
+{
+  TQStringList lst;
+  for ( TQStringList::const_iterator it = mDeletedFolders.begin(); it != mDeletedFolders.end(); ++it ) {
+    if ( (*it).startsWith( subFolderPath ) )
+      // We must reverse the order, so that sub sub sub folders are deleted first
+      lst.prepend( *it );
+  }
+  for ( TQStringList::const_iterator it = mPreviouslyDeletedFolders.begin(); it != mPreviouslyDeletedFolders.end(); ++it ) {
+    if ( (*it).startsWith( subFolderPath ) )
+      lst.prepend( *it );
+  }
+  kdDebug(5006) << "KMAcctCachedImap::deletedFolderPaths for " << subFolderPath << " returning: " << lst << endl;
+  Q_ASSERT( !lst.isEmpty() );
+  return lst;
+}
+
+bool KMAcctCachedImap::isDeletedFolder( const TQString& subFolderPath ) const
+{
+  return mDeletedFolders.find( subFolderPath ) != mDeletedFolders.end();
+}
+
+bool KMAcctCachedImap::isPreviouslyDeletedFolder( const TQString& subFolderPath ) const
+{
+  return mPreviouslyDeletedFolders.find( subFolderPath ) != mPreviouslyDeletedFolders.end();
+}
+
+void KMAcctCachedImap::removeDeletedFolder( const TQString& subFolderPath )
+{
+  mDeletedFolders.remove( subFolderPath );
+  mPreviouslyDeletedFolders.remove( subFolderPath );
+}
+
+void KMAcctCachedImap::addRenamedFolder( const TQString& subFolderPath, const TQString& oldLabel, const TQString& newName )
+{
+  mRenamedFolders.insert( subFolderPath, RenamedFolder( oldLabel, newName ) );
+}
+
+void KMAcctCachedImap::removeRenamedFolder( const TQString& subFolderPath )
+{
+  mRenamedFolders.remove( subFolderPath );
+}
+
+void KMAcctCachedImap::slotProgressItemCanceled( ProgressItem* )
+{
+  bool abortConnection = !mSlaveConnected;
+  killAllJobs( abortConnection );
+  if ( abortConnection ) {
+    // If we were trying to connect, tell kmfoldercachedimap so that it moves on
+    emit connectionResult( KIO::ERR_USER_CANCELED, TQString::null );
+  }
+}
+
+FolderStorage* const KMAcctCachedImap::rootFolder() const
+{
+  return mFolder;
+}
+
+
+TQString KMAcctCachedImap::renamedFolder( const TQString& imapPath ) const
+{
+  TQMap<TQString, RenamedFolder>::ConstIterator renit = mRenamedFolders.find( imapPath );
+  if ( renit != mRenamedFolders.end() )
+    return (*renit).mNewName;
+  return TQString::null;
+}
+
+#include "kmacctcachedimap.moc"

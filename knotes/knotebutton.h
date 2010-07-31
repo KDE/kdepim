@@ -1,0 +1,51 @@
+/*******************************************************************
+ KNotes -- Notes for the KDE project
+
+ Copyright (c) 1997-2004, The KNotes Developers
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+*******************************************************************/
+
+#ifndef KNOTEBUTTON_H
+#define KNOTEBUTTON_H
+
+#include <tqpushbutton.h>
+
+class QPainter;
+class QEvent;
+class QResizeEvent;
+
+
+class KNoteButton: public QPushButton
+{
+    Q_OBJECT
+public:
+    KNoteButton( const TQString& icon, TQWidget *parent=0, const char *name=0 );
+    ~KNoteButton();
+
+    virtual TQSize sizeHint() const;
+
+protected:
+    virtual void enterEvent( TQEvent * );
+    virtual void leaveEvent( TQEvent * );
+
+    virtual void drawButton( TQPainter *p );
+    virtual void drawButtonLabel( TQPainter *p );
+
+private:
+    bool m_flat;
+};
+
+#endif

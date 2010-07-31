@@ -21,7 +21,7 @@
 #ifndef LDAPSEARCHDIALOG_H
 #define LDAPSEARCHDIALOG_H
 
-#include <qptrlist.h>
+#include <tqptrlist.h>
 
 #include <ldapclient.h>
 #include <kdialogbase.h>
@@ -40,15 +40,15 @@ class LDAPSearchDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    LDAPSearchDialog( QWidget* parent, const char* name = 0 );
+    LDAPSearchDialog( TQWidget* parent, const char* name = 0 );
     ~LDAPSearchDialog();
 
     bool isOK() const { return mIsOK; }
 
     void restoreSettings();
 
-    void setSearchText( const QString &text ) { mSearchEdit->setText( text ); }
-    QString selectedEMails() const;
+    void setSearchText( const TQString &text ) { mSearchEdit->setText( text ); }
+    TQString selectedEMails() const;
   signals:
     void addresseesAdded();
 
@@ -58,7 +58,7 @@ class LDAPSearchDialog : public KDialogBase
     void slotStartSearch();
     void slotStopSearch();
     void slotSearchDone();
-    void slotError( const QString& );
+    void slotError( const TQString& );
     virtual void slotHelp();
     virtual void slotUser1();
     virtual void slotUser2();
@@ -66,25 +66,25 @@ class LDAPSearchDialog : public KDialogBase
 
   protected:
 
-    virtual void closeEvent( QCloseEvent* );
+    virtual void closeEvent( TQCloseEvent* );
 
   private:
     void saveSettings();
 
-    QString makeFilter( const QString& query, const QString& attr, bool startsWith );
+    TQString makeFilter( const TQString& query, const TQString& attr, bool startsWith );
 
     void cancelQuery();
 
     int mNumHosts;
-    QPtrList<KPIM::LdapClient> mLdapClientList;
+    TQPtrList<KPIM::LdapClient> mLdapClientList;
     bool mIsOK;
     KComboBox* mFilterCombo;
     KComboBox* mSearchType;
     KLineEdit* mSearchEdit;
 
-    QCheckBox* mRecursiveCheckbox;
-    QListView* mResultListView;
-    QPushButton* mSearchButton;
+    TQCheckBox* mRecursiveCheckbox;
+    TQListView* mResultListView;
+    TQPushButton* mSearchButton;
 };
 
 
