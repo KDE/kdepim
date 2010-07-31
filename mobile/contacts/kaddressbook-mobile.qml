@@ -248,7 +248,7 @@ KPIM.MainView {
       opacity : (collectionView.hasBreadcrumbs && contactList.count == 0 ) ? 1 : 0
       // TODO: content
       QML.Text {
-        text : KDE.i18n("No contacts in this addressbook");
+        text : KDE.i18n("No contacts in this address book");
         height : 20;
         font.italic : true
         horizontalAlignment : QML.Text.AlignHCenter
