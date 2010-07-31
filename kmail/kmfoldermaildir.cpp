@@ -561,10 +561,20 @@ void KMFolderMaildir::readFileHeaderIntern( const QString& dir,
   // messages in the 'cur' directory are Read by default.. but may
   // actually be some other state (but not New)
   if ( status.isRead() ) {
-    if ( !file.contains( GlobalSettings::maildirFilenameSeparator() + QLatin1String( "2," ) ) ) {
-      status.setUnread();
-    } else if ( file.right(5) == ( GlobalSettings::maildirFilenameSeparator() + QLatin1String( "2,RS"  ) ) ) {
-      status.setReplied();
+    int i = file.lastIndexOf(GlobalSettings::maildirFilenameSeparator() + QLatin1String( "2," ));
+    if ( i < 0) {
+       status.setUnread();
+    } else {
+      QString st = file.mid(i);
+      if (!st.contains('S'))
+        status.setUnread();
+      if (st.contains('R'))
+        status.setReplied();
+// ### additional flags that could be supported:
+//       if (st.contains('P'))
+//         status.setForwarded();
+//       if (st.contains('F'))
+//         status.setImportant();
     }
   }
 
@@ -646,16 +656,22 @@ void KMFolderMaildir::readFileHeaderIntern( const QString& dir,
       if (!statusStr.isEmpty())
       {
         // only handle those states not determined by the file suffix
-        if (statusStr[0] == 'S')
+        if (statusStr.contains('S'))
           status.setSent();
-        else if (statusStr[0] == 'F')
+        if (statusStr.contains('F'))
           status.setForwarded();
-        else if (statusStr[0] == 'D')
+        if (statusStr.contains('D'))
           status.setDeleted();
-        else if (statusStr[0] == 'Q')
+        if (statusStr.contains('Q'))
           status.setQueued();
-        else if (statusStr[0] == 'G')
+        if (statusStr.contains('K'))
+          status.setToAct();
+        if (statusStr.contains('G'))
           status.setImportant();
+        if (statusStr.contains('T'))
+          status.setHasAttachment();
+        if (statusStr.contains('C'))
+          status.setHasAttachment(false);
       }
 
       contentTypeStr = contentTypeStr.trimmed();
