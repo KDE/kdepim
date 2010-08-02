@@ -52,7 +52,7 @@ class VisualFreeBusyWidget : public QWidget
 {
 Q_OBJECT
 public:
-    VisualFreeBusyWidget( FreeBusyItemModel* model, int spacing = 8, QWidget* parent = 0 );
+    explicit VisualFreeBusyWidget( FreeBusyItemModel* model, int spacing = 8, QWidget* parent = 0 );
     ~VisualFreeBusyWidget();
 
 signals:

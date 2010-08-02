@@ -38,7 +38,7 @@ class InvitationDispatcher : public QObject
 {
   Q_OBJECT
   public:
-    InvitationDispatcher( Akonadi::Calendar *calendar, QObject *parent = 0 );
+    explicit InvitationDispatcher( Akonadi::Calendar *calendar, QObject *parent = 0 );
     ~InvitationDispatcher();
 
     /**
