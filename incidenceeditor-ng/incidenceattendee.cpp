@@ -441,7 +441,7 @@ void IncidenceAttendee::slotOrganizerChanged( const QString & newOrganizer )
     }
 
     if ( !newOrganizerAttendee ) {
-      bool rsvp = !iAmOrganizer(); // if it is the user, dont make him rsvp.
+      bool rsvp = !iAmOrganizer(); // if it is the user, don't make him rsvp.
       KCalCore::Attendee::PartStat status = iAmOrganizer() ? KCalCore::Attendee::Accepted
                                                            : KCalCore::Attendee::NeedsAction;
 

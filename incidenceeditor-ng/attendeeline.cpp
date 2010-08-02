@@ -297,7 +297,7 @@ void AttendeeLine::dataFromFields()
   mData->setUid( mUid );
 
   clearModified();
-  if( !( oldAttendee == mData->attendee() ) && !email.isEmpty() /*if email is empty, we dont want to update anything*/ ) {
+  if( !( oldAttendee == mData->attendee() ) && !email.isEmpty() /*if email is empty, we don't want to update anything*/ ) {
     kDebug() << oldAttendee->email() << mData->email();
     emit changed( oldAttendee, mData->attendee() );
   }

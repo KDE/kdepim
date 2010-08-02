@@ -31,7 +31,7 @@ class Calendar;
 class InvitationDispatcherPrivate;
 
 /**
-  Listens to an EditorItemManager and sends out the invitations everytime an
+  Listens to an EditorItemManager and sends out the invitations every time an
   Incidence was saved successfuly.
  */
 class InvitationDispatcher : public QObject
