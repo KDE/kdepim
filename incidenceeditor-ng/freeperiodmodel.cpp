@@ -105,22 +105,23 @@ void FreePeriodModel::slotNewFreePeriods( const KCalCore::Period::List& freePeri
 KCalCore::Period::List FreePeriodModel::splitPeriodsByDay( const KCalCore::Period::List& freePeriods )
 {
     KCalCore::Period::List splitList;
-    foreach( KCalCore::Period period, freePeriods ) {
+    foreach( const KCalCore::Period &period, freePeriods ) {
         if( period.start().date() == period.end().date() )  {
             splitList << period; // period occurs on the same day
             continue;
         }
 
+        KCalCore::Period tmpPeriod = period;
         while( period.start().date() != period.end().date() ) {
             const KDateTime midnight( period.start().date(), QTime( 23, 59, 59, 999 ), period.start().timeSpec() );
             KCalCore::Period firstPeriod( period.start(), midnight );
             KCalCore::Period secondPeriod( midnight.addMSecs( 1 ), period.end() );
             if( firstPeriod.duration().asSeconds() >= 5*60 /*5 minutes*/ )
                 splitList << firstPeriod;
-            period = secondPeriod;
+            tmpPeriod = secondPeriod;
         }
         if( period.duration().asSeconds() >= 5*60 /*5 minutes*/ )
-            splitList << period;
+            splitList << tmpPeriod;
     }
 
     // Perform some jiggery pokery to remove duplicates
