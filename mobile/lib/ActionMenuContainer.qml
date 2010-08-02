@@ -60,7 +60,7 @@ Rectangle {
         if (children[i].totalWidth != undefined)
           children[i].totalWidth = _topLevel.width - actionItemWidth
         if (children[i].depth != undefined)
-          children[i].depth = i * ( actionItemHeight + actionItemSpacing )
+          children[i].depth = - myColumn.height + ( (i) * ( actionItemHeight + actionItemSpacing ) )
         if (children[i].actionItemSpacing != undefined)
           children[i].actionItemSpacing = actionItemSpacing
         if (children[i].actionItemHeight != undefined)
@@ -69,6 +69,10 @@ Rectangle {
         children[i].triggered.connect( myColumn, triggered )
         // children[i].width = parent.actionItemWidth
       }
+    }
+
+    onHeightChanged : {
+      refresh()
     }
 
     onChildrenChanged : {
