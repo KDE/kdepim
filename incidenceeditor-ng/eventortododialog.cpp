@@ -193,9 +193,10 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
 {
   QString tabText;
   if ( newCount > 0 ) {
-    tabText = i18n( "Reminder (%1)", newCount );
+    tabText = i18nc( "@title:tab Tab to configure the reminders of an event or todo",
+                     "Reminder (%1)", newCount );
   } else {
-    tabText = i18n( "Reminder" );
+    tabText = i18nc( "@title:tab Tab to configure the reminders of an event or todo", "Reminder" );
   }
 
   mUi->mTabWidget->setTabText( 2, tabText );
@@ -203,7 +204,8 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
 
 void EventOrTodoDialogPrivate::handleRecurrenceChange( int type )
 {
-  QString tabText = i18n( "Rec&urrence" );
+  QString tabText = i18nc( "@title:tab Tab to configure the recurrence of an event or todo",
+                           "Rec&urrence" );
 
   // Keep this numbers in sync with the items in mUi->mRecurrenceTypeCombo. I
   // tried adding an enum to IncidenceRecurrence but for whatever reason I could
@@ -213,16 +215,16 @@ void EventOrTodoDialogPrivate::handleRecurrenceChange( int type )
   case 0: // None
     break;
   case 1: // Daily
-    tabText += i18nc( "Daily recurring event, capital first letter only", " (D)" );
+    tabText += i18nc( "@title:tab Daily recurring event, capital first letter only", " (D)" );
     break;
   case 2: // Weekly
-    tabText += i18nc( "Weekly recurring event, capital first letter only", " (W)" );
+    tabText += i18nc( "@title:tab Weekly recurring event, capital first letter only", " (W)" );
     break;
   case 3: // Monthly
-    tabText += i18nc( "Monthly recurring event, capital first letter only", " (M)" );
+    tabText += i18nc( "@title:tab Monthly recurring event, capital first letter only", " (M)" );
     break;
   case 4: // Yearly
-    tabText += i18nc( "Yearly recurring event, capital first letter only", " (Y)" );
+    tabText += i18nc( "@title:tab Yearly recurring event, capital first letter only", " (Y)" );
     break;
   }
 
@@ -305,18 +307,18 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 4, i18n( "Attac&hments (%1)", newCount ) );
+    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo", "Attac&hments (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 4, i18n( "Attac&hments" ) );
+    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo", "Attac&hments" ) );
   }
 }
 
 void EventOrTodoDialogPrivate::updateAttendeeCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 1, i18n( "&Attendees (%1)", newCount ) );
+    mUi->mTabWidget->setTabText( 1, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 1, i18n( "&Attendees" ) );
+    mUi->mTabWidget->setTabText( 1, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees" ) );
   }
 }
 
@@ -338,7 +340,7 @@ void EventOrTodoDialogPrivate::handleItemSaveFail( Akonadi::EditorItemManager::S
 {
   Q_Q( EventOrTodoDialog );
 
-  const QString message = i18n( "Unable to store the incidence in the calendar. Try again?\n\n Reason: %1", errorMessage );
+  const QString message = i18nc( "@info", "Unable to store the incidence in the calendar. Try again?\n\n Reason: %1", errorMessage );
   if ( KMessageBox::warningYesNo( q, message ) == KMessageBox::Yes ) {
     mItemManager->save();
   } else {

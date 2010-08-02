@@ -383,7 +383,7 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( splitter, SIGNAL( splitterMoved(int,int) ), SLOT( splitterMoved() ) );
   mLeftView = new QTreeWidget;
   mLeftView->setHeader( new GanttHeaderView );
-  mLeftView->setHeaderLabel( i18n("Attendee") );
+  mLeftView->setHeaderLabel( i18nc( "@label:listbox A list showing attendees", "Attendee") );
   mLeftView->setRootIsDecorated( false );
   mLeftView->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   mLeftView->setContextMenuPolicy( Qt::CustomContextMenu );

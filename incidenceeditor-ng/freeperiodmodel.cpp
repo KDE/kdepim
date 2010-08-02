@@ -134,7 +134,7 @@ QString FreePeriodModel::day(int index) const
     KCalCore::Period period = mPeriodList.at( index );
     const KCalendarSystem *calSys = KGlobal::locale()->calendar();
     const QDate startDate = period.start().date();
-    return ki18nc( "Day of the week name, example: Monday,", "%1," ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
+    return ki18nc( "@label Day of the week name, example: Monday,", "%1," ).subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) ).toString();
 }
 
 QString FreePeriodModel::date(int index) const
@@ -146,7 +146,7 @@ QString FreePeriodModel::date(int index) const
     const QString startTime = KGlobal::locale()->formatTime( period.start().time() );
     const QString endTime = KGlobal::locale()->formatTime( period.end().time() );
     const QString longMonthName = calSys->monthName( startDate );
-    return ki18nc( "A time period duration. It is preceded/followed (based on the orientation) by the name of the week, see the message above. example: 12 June, 8:00am to 9:30am",
+    return ki18nc( "@label A time period duration. It is preceded/followed (based on the orientation) by the name of the week, see the message above. example: 12 June, 8:00am to 9:30am",
                   "%1 %2, %3 to %4").subs( startDate.day() )
                                         .subs( longMonthName )
                                         .subs( startTime )
@@ -165,7 +165,7 @@ QString FreePeriodModel::stringify( int index ) const
     const QString longMonthName = calSys->monthName( startDate );
     const QString dayofWeek = calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName );
     // TODO i18n, ping chusslove
-    return ki18nc( "A time period duration. KLocale is used to format the components. example: Monday, 12 June, 8:00am to 9:30am",
+    return ki18nc( "@label A time period duration. KLocale is used to format the components. example: Monday, 12 June, 8:00am to 9:30am",
                   "%1, %2 %3, %4 to %5").subs( dayofWeek )
                                         .subs( startDate.day() )
                                         .subs( longMonthName )

@@ -56,7 +56,7 @@ void IncidenceCompletionPriority::Private::sliderValueChanged( int value )
     mOrigPercentCompleted = -1;
   }
 
-  mUi->mCompletedLabel->setText( i18n( "%1% completed", value ) );
+  mUi->mCompletedLabel->setText( i18nc( "@label:slider Sets the current completion percentage of a task","%1% completed", value ) );
 
   slotSetDirty();
 }

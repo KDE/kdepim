@@ -182,7 +182,7 @@ void SchedulingDialog::slotRowSelectionChanged( const QModelIndex& current, cons
     const QDate startDate = period.start().date();
 
     const KCalendarSystem *calSys = KGlobal::locale()->calendar();
-    const QString dayLabel = ki18nc( "Day of week followed by day of the month, then the month. example: Monday, 12 June",
+    const QString dayLabel = ki18nc( "@label Day of week followed by day of the month, then the month. example: Monday, 12 June",
                                 "%1, %2 %3" )
                               .subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
                               .subs( startDate.day() )
@@ -200,7 +200,7 @@ void SchedulingDialog::slotRowSelectionChanged( const QModelIndex& current, cons
 void SchedulingDialog::slotSetEndTimeLabel( const QTime& startTime )
 {
     const QTime endTime = startTime.addSecs( mDuration );
-    const QString endTimeLabel = ki18nc( "This is a suffix following a time selecting widget. Example: [timeedit] to 10:00am",
+    const QString endTimeLabel = ki18nc( "@label This is a suffix following a time selecting widget. Example: [timeedit] to 10:00am",
                                      "to %1" )
                                   .subs( KGlobal::locale()->formatTime( endTime ) ).toString();
     mMoveEndTimeLabel->setText( endTimeLabel );
