@@ -30,9 +30,6 @@
 
 class KJob;
 
-namespace KPIM {
-  class ProgressItem;
-}
 
 class MESSAGECOMPOSER_EXPORT AkonadiSender: public QObject, public MessageSender
 {
@@ -72,7 +69,6 @@ private slots:
 
 private:
   QString mCustomTransport;
-  KPIM::ProgressItem *mProgressItem;
   QSet<KJob*> mPendingJobs;
 
 };
