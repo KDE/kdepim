@@ -40,6 +40,7 @@ class DistributionListDialog : public KDialog
 
   public slots:
     void slotUser1();
+    void slotTitleChanged( const QString& );
 
   private Q_SLOTS:
     void slotDelayedSetRecipients( KJob* );
