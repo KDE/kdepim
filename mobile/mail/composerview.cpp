@@ -78,6 +78,12 @@ ComposerView::ComposerView(QWidget* parent) :
 {
   setSubject( QString() );
   setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ComposerView::delayedInit()
+{
+  kDebug();
+  KDeclarativeFullScreenView::delayedInit();
 
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );

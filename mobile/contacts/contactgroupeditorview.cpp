@@ -159,11 +159,17 @@ ContactGroupEditorView::ContactGroupEditorView( QWidget *parent )
     d( new Private( this ) )
 {
   setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ContactGroupEditorView::delayedInit()
+{
+  KDeclarativeFullScreenView::delayedInit();
+
   qmlRegisterType<DeclarativeEditorContactGroup>( "org.kde.contacteditors", 4, 5, "ContactGroupEditor" );
-  
+
   connect( d->mItemManager, SIGNAL( itemSaveFinished() ), SLOT( saveFinished() ) );
   connect( d->mItemManager, SIGNAL( itemSaveFailed( QString ) ), SLOT( saveFailed( QString ) ) );
-}    
+}
 
 ContactGroupEditorView::~ContactGroupEditorView()
 {

@@ -80,6 +80,9 @@ class ComposerView : public KDeclarativeFullScreenView
     void changed();
     void busyChanged();
 
+  protected slots:
+    void delayedInit();
+
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
     void addAttachment();

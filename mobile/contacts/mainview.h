@@ -40,6 +40,9 @@ class MainView : public KDeclarativeMainView
 
     void newContactGroup();
     void editContactGroup( const Akonadi::Item &item );
+
+  protected slots:
+    virtual void delayedInit();
 };
 
 #endif // MAINVIEW_H

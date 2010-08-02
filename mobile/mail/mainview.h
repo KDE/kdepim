@@ -53,6 +53,9 @@ class MainView : public KDeclarativeMainView
     // HACK until mark-as-read logic is in messageviewer
     virtual void setListSelectedRow(int row);
 
+  protected slots:
+    void delayedInit();
+
   private slots:
     void replyFetchResult( KJob *job );
     void forwardInlineFetchResult( KJob *job );

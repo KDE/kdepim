@@ -67,6 +67,9 @@ protected:
    */
   bool isLoadingSelected();
 
+protected slots:
+  void delayedInit();
+
 public:
   virtual ~KDeclarativeMainView();
 

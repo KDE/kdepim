@@ -193,6 +193,11 @@ ContactEditorView::ContactEditorView( QWidget *parent )
     d( new Private( this ) )
 {
   setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ContactEditorView::delayedInit()
+{
+  KDeclarativeFullScreenView::delayedInit();
 
   qmlRegisterType<DeclarativeEditorGeneral>( "org.kde.contacteditors", 4, 5, "ContactEditorGeneral" );
   qmlRegisterType<DeclarativeEditorBusiness>( "org.kde.contacteditors", 4, 5, "ContactEditorBusiness" );

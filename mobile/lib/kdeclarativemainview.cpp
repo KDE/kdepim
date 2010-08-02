@@ -66,6 +66,13 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   : KDeclarativeFullScreenView( appName, parent )
   , d( new KDeclarativeMainViewPrivate )
 {
+  d->mListProxy = listProxy;
+}
+
+void KDeclarativeMainView::delayedInit()
+{
+  kDebug();
+  KDeclarativeFullScreenView::delayedInit();
 
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
 
@@ -80,11 +87,6 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   if ( debugTiming ) {
     kWarning() << "Catalog inserted" << t.elapsed() << &t;
   }
-
-  setResizeMode( QDeclarativeView::SizeRootObjectToView );
-#ifdef Q_WS_MAEMO_5
-  setWindowState( Qt::WindowFullScreen );
-#endif
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
   d->mChangeRecorder->fetchCollection( true );
@@ -108,10 +110,9 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mItemFilter->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   d->mItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  d->mListProxy = listProxy;
-  if ( listProxy ) {
-    listProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
-    listProxy->setSourceModel( d->mItemFilter );
+  if ( d->mListProxy ) {
+    d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
+    d->mListProxy->setSourceModel( d->mItemFilter );
   }
 
   if ( debugTiming ) {
@@ -129,8 +130,8 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( resettingModel ) ) );
   engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->childItemModel() ) ) );
   engine()->rootContext()->setContextProperty( "folderSelectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectionModel() ) ) );
-  if ( listProxy )
-    engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
+  if ( d->mListProxy )
+    engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
 
@@ -160,7 +161,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   engine()->rootContext()->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
   engine()->rootContext()->setContextProperty( "allFoldersModel", QVariant::fromValue( static_cast<QObject*>( allFoldersModel ) ) );
 
-  d->mItemSelectionModel = new QItemSelectionModel( listProxy ? static_cast<QAbstractItemModel *>( listProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
+  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
 
   if ( debugTiming ) {

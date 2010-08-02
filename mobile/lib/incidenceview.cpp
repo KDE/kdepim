@@ -57,7 +57,11 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mEditorDateTime( 0 )
 {
   setAttribute(Qt::WA_DeleteOnClose);
+}
 
+void IncidenceView::delayedInit()
+{
+  KDeclarativeFullScreenView::delayedInit();
   qmlRegisterType<DCollectionCombo>( "org.kde.incidenceeditors", 4, 5, "CollectionCombo" );
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );

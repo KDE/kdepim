@@ -48,7 +48,7 @@ public slots:
     void newTodo();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
 
-private slots:
+protected slots:
     void delayedInit();
   
 private:

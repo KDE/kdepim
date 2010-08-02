@@ -49,6 +49,12 @@
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
+}
+
+void MainView::delayedInit()
+{
+  kDebug();
+  KDeclarativeMainView::delayedInit();
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
 
   QTime t;

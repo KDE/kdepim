@@ -30,6 +30,12 @@
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
 {
+}
+
+void MainView::delayedInit()
+{
+  KDeclarativeMainView::delayedInit();
+
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();

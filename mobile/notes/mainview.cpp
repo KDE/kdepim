@@ -40,6 +40,12 @@ using namespace Akonadi;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
+}
+
+void MainView::delayedInit()
+{
+  KDeclarativeMainView::delayedInit();
+
   addMimeType( "text/x-vnd.akonadi.note" );
   itemFetchScope().fetchFullPayload();
 }

@@ -39,6 +39,12 @@ using namespace Akonadi;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
 {
+}
+
+void MainView::delayedInit()
+{
+  KDeclarativeMainView::delayedInit();
+
   addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 }

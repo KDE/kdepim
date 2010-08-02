@@ -52,7 +52,10 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
 
   protected:
     void closeEvent( QCloseEvent *event );
-    
+
+  protected slots:
+    virtual void delayedInit();
+
   private:
     class Private;
     Private *const d;
