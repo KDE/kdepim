@@ -75,9 +75,11 @@
 {% if spamHTML %}
   <table width="100%" style="background-image:url('{% media_finder "fancy/images/background_spam.png" %}'); border-top: solid #000 1px ! important;" >
   <tr>
-    <td dir="{{ subjectDir }}">
+    <td>
+      <div class="spamheader" dir="{{ subjectDir }}">
       <span style="padding-top: 1px ! important;font-size: 10px;"><b>Spam Status</b></span>&nbsp;
-      <span style="padding-left: 20px; padding-top: 1px ! important;">{{ spamHTML }}</span>
+      <span style="padding-left: 20px; padding-top: 1px ! important;">{{ spamHTML|safe }}</span>
+      </div>
     </td>
   </tr>
   </table>

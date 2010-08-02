@@ -266,6 +266,11 @@ QString HeaderTheme::setTheming( const QString &themeName, KMime::Message *messa
                    drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
   }
 
+  if ( !spamHTML.isEmpty() ) {
+    data.insert( QLatin1String( "spamHTML" ), spamHTML );
+    kDebug() << "Spammmmmmmmmmmmmmmmmmmmmmmm:" << spamHTML;
+  }
+
   QString photoURL;
   int photoWidth = 60;
   int photoHeight = 60;
@@ -371,11 +376,6 @@ QString HeaderTheme::setTheming( const QString &themeName, KMime::Message *messa
     data.insert( QLatin1String( "photoWidth" ), photoWidth );
     data.insert( QLatin1String( "photoHeight" ), photoHeight );
     kDebug() << "Got a photo:" << photoURL;
-  }
-
-  if ( !spamHTML.isEmpty() ) {
-    //data.insert( QLatin1String( "spamHTML" ), spamHTML );
-    kDebug() << "Spam:" << spamHTML;
   }
 
   Grantlee::Context c( data );

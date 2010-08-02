@@ -97,10 +97,11 @@ public:
   QString setTheming( const QString &styleName , KMime::Message *message ) const;
 
   static QString imgToDataUrl( const QImage & image );
-  static QString drawSpamMeter( SpamError spamError, double percent, double confidence,
-  const QString & filterHeader, const QString & confidenceHeader );
 
 private:
+
+  static QString drawSpamMeter( SpamError spamError, double percent, double confidence,
+  const QString & filterHeader, const QString & confidenceHeader );
 
   QString mMessagePath;
   const HeaderTheme *mTheme;

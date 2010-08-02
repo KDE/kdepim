@@ -191,7 +191,8 @@ ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
     mHasPendingAsyncJobs( other.hasPendingAsyncJobs() ),
     mAllowAsync( other.allowAsync() ),
     mAttachmentStrategy( other.attachmentStrategy() ),
-    mDeleteNodeHelper( false ) // TODO see above
+    mDeleteNodeHelper( false ), // TODO see above
+    mEngine(other.mEngine)
 {
 
 }
