@@ -52,6 +52,8 @@ install(FILES
   Action.qml
   FakeAction.qml
   ActionList.qml
+  ReorderList.qml
+  ReorderListContainer.qml
   ActionListItem.qml
   ActionMenuContainer.qml
   AttachmentList.qml
