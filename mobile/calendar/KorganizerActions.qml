@@ -14,6 +14,9 @@ ActionMenuContainer {
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
     }
+    upAction : "fav_up"
+    downAction : "fav_down"
+    deleteAction : "fav_delete"
     model : favoritesList
   }
   ReorderList {
@@ -23,6 +26,9 @@ ActionMenuContainer {
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
     }
+    upAction : "acc_up"
+    downAction : "acc_down"
+    deleteAction : "acc_delete"
     model : allFoldersModel
   }
   ActionList {

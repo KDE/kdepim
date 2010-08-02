@@ -35,9 +35,9 @@ Rectangle {
   property alias model : myList.model
   property alias delegate : myList.delegate
 
-  property string upAction
-  property string downAction
-  property string deleteAction
+  property alias upAction : upAction.name
+  property alias downAction : downAction.name
+  property alias deleteAction : deleteAction.name
 
   signal triggered(string triggeredName)
 
@@ -54,9 +54,9 @@ Rectangle {
     anchors.right : parent.right
     actionItemWidth : width
     actionItemHeight : 70
-    FakeAction { name : "move_up" }
-    FakeAction { name : "move_down" }
-    FakeAction { name : "delete" }
+    FakeAction { id : upAction }
+    FakeAction { id : downAction }
+    FakeAction { id : deleteAction }
   }
 
   onActionItemSpacingChanged : {

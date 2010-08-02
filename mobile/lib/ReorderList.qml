@@ -36,6 +36,10 @@ QML.Item {
   property alias columnHeight : _listContent.height
   property alias depth : _listContent.bottomMargin
 
+  property alias upAction : _listContent.upAction
+  property alias downAction : _listContent.downAction
+  property alias deleteAction : _listContent.deleteAction
+
   /*
   property alias actionItemSpacing : _listContent.actionItemSpacing
   property alias actionItemHeight : _listContent.actionItemHeight
