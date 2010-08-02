@@ -26,13 +26,13 @@
       </font>
      </property>
      <property name="toolTip">
-      <string extracomment="@info:tooltip">Set the title</string>
+      <string comment="@info:tooltip">Set the title</string>
      </property>
      <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Sets the Title of this event or to-do.</string>
+      <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
      </property>
      <property name="text">
-      <string extracomment="@label">T&amp;itle:</string>
+      <string comment="@label">T&amp;itle:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -51,10 +51,10 @@
       </sizepolicy>
      </property>
      <property name="toolTip">
-      <string extracomment="@info:tooltip">Set the title</string>
+      <string comment="@info:tooltip">Set the title</string>
      </property>
      <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Sets the Title of this event or to-do.</string>
+      <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
      </property>
     </widget>
    </item>
@@ -67,7 +67,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string extracomment="@label">&amp;Location:</string>
+      <string comment="@label">&amp;Location:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -86,10 +86,10 @@
       </sizepolicy>
      </property>
      <property name="toolTip">
-      <string extracomment="@info:tooltip">Set the location</string>
+      <string comment="@info:tooltip">Set the location</string>
      </property>
      <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Sets where the event or to-do will take place.</string>
+      <string comment="@info:whatsthis">Sets where the event or to-do will take place.</string>
      </property>
     </widget>
    </item>
@@ -102,7 +102,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&amp;Start:</string>
+      <string comment="@label Start date/time of the event or task">&amp;Start:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -115,17 +115,17 @@
    <item row="3" column="1">
     <widget class="QCheckBox" name="mStartCheck">
      <property name="whatsThis">
-      <string>Sets the start date for this to-do</string>
+      <string comment="@info:whatsthis" >Sets the start date for this to-do</string>
      </property>
      <property name="text">
-      <string extracomment="@option:check to-do start datetime"/>
+      <string comment="@option:check to-do start datetime"/>
      </property>
     </widget>
    </item>
    <item row="3" column="2">
     <widget class="QDateEdit" name="mStartDateEdit">
      <property name="displayFormat">
-      <string>MM.dd.yyyy</string>
+      <string comment="@info date formatting string" >MM.dd.yyyy</string>
      </property>
     </widget>
    </item>
@@ -154,7 +154,7 @@
       </sizepolicy>
      </property>
      <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+      <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
      </property>
     </widget>
    </item>
@@ -167,7 +167,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&amp;End:</string>
+      <string comment="@label End date/time of the task or event">&amp;End:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -180,10 +180,10 @@
    <item row="5" column="1">
     <widget class="QCheckBox" name="mEndCheck">
      <property name="whatsThis">
-      <string>Sets the due date for this to-do.</string>
+      <string comment="@info:whatsthis" >Sets the due date for this to-do.</string>
      </property>
      <property name="text">
-      <string extracomment="to-do due datetime"/>
+      <string comment="to-do due datetime"/>
      </property>
     </widget>
    </item>
@@ -196,7 +196,7 @@
       </sizepolicy>
      </property>
      <property name="displayFormat">
-      <string>MM.dd.yyyy</string>
+      <string comment="@info date formatting string" >MM.dd.yyyy</string>
      </property>
     </widget>
    </item>
@@ -225,17 +225,17 @@
       </sizepolicy>
      </property>
      <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+      <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
      </property>
     </widget>
    </item>
    <item row="7" column="1" colspan="3">
     <widget class="QCheckBox" name="mWholeDayCheck">
      <property name="whatsThis">
-      <string>Set if this to-do's start and due dates have times associated with them.</string>
+      <string comment="@info:whatsthis">Set if this to-do's start and due dates have times associated with them.</string>
      </property>
      <property name="text">
-      <string>Whole day</string>
+      <string comment="@option:check The event or task takes the whole day" >Whole day</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -270,7 +270,7 @@
       <item>
        <widget class="QLabel" name="mCompletedLabel">
         <property name="text">
-         <string>completed</string>
+         <string comment="@label:slider completed percentage of a task">completed</string>
         </property>
        </widget>
       </item>
@@ -293,63 +293,63 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Priority:</string>
+         <string comment="@label:listbox Priority of the task">Priority:</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="KComboBox" name="mPriorityCombo">
         <property name="currentIndex">
-         <number>5</number>
+         <number>0</number>
         </property>
         <item>
          <property name="text">
-          <string>unspecified</string>
+          <string comment="@item:inlistbox No priority specified for a task">unspecified</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>1 (highest)</string>
+          <string comment="@item:inlistbox highest priority for a task">1 (highest)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>2</string>
+          <string comment="@item:inlistbox">2</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>3</string>
+          <string comment="@item:inlistbox">3</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>4</string>
+          <string comment="@item:inlistbox">4</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>5 (medium)</string>
+          <string comment="@item:inlistbox medium priority for a task">5 (medium)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>6</string>
+          <string comment="@item:inlistbox">6</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>7</string>
+          <string comment="@item:inlistbox">7</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>8</string>
+          <string comment="@item:inlistbox">8</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>9 (lowest)</string>
+          <string comment="@item:inlistbox lowest priority for a task">9 (lowest)</string>
          </property>
         </item>
        </widget>
@@ -373,7 +373,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="mTaskLabel">
      <property name="text">
-      <string>Task:</string>
+      <string comment="@label Task specific line in the dialog containing completed and priority">Task:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -383,18 +383,13 @@
    <item row="8" column="1" colspan="3">
     <widget class="QCheckBox" name="mFreeBusyCheck">
      <property name="text">
-      <string>Blocks me for other events</string>
+      <string comment="@option:check">Blocks me for other events</string>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KPIM::KTimeZoneComboBox</class>
-   <extends>KComboBox</extends>
-   <header>ktimezonecombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
@@ -404,6 +399,11 @@
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KTimeZoneComboBox</class>
+   <extends>KComboBox</extends>
+   <header>ktimezonecombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
