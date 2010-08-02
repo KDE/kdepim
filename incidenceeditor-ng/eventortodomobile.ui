@@ -298,7 +298,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="mPriorityCombo">
+       <widget class="KComboBox" name="mPriorityCombo">
         <property name="currentIndex">
          <number>5</number>
         </property>
