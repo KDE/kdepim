@@ -176,6 +176,13 @@ KPIM.MainView {
     anchors.left: parent.left
     width: 1/3 * parent.width
 
+    Image {
+      id: backgroundImage
+      x: 0
+      y: 0
+      source: "korganizer-mobile-background.png"
+    }
+
     AkonadiBreadcrumbNavigationView {
       id : collectionView
       anchors.top: parent.top
