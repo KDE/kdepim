@@ -36,11 +36,24 @@ Rectangle {
 
   signal triggered(string triggeredName)
 
+  function showOnlyCategory(category)
+  {
+    myColumn.showOnlyCategory(category)
+  }
+
   Column {
     height : parent.height
     width : parent.actionItemWidth
     id : myColumn
     spacing : actionItemSpacing
+
+    function showOnlyCategory(category)
+    {
+      for ( var i = 0; i < children.length; ++i ) {
+        if ( children[i].category != undefined )
+          children[i].visible = (children[i].category == category);
+      }
+    }
 
     function triggered(triggeredName) {
       _topLevel.triggered(triggeredName)
