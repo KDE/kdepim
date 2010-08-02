@@ -17,8 +17,8 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef _FREEPERIODMODEL_TEST_H
-#define _FREEPERIODMODEL_TEST_H
+#ifndef TESTFREEPERIODMODEL_H
+#define TESTFREEPERIODMODEL_H
 
 #include <QtCore/QObject>
 
@@ -29,4 +29,4 @@ private Q_SLOTS:
     void testModelValidity();
     void testSplitByDay();
 };
-#endif //_FREEPERIODMODEL_TEST_H
+#endif // TESTFREEPERIODMODEL_H

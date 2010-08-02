@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef INCIDENCEGENERALEDITOR_H
-#define INCIDENCEGENERALEDITOR_H
+#ifndef INCIDENCEWHATWHERE_H
+#define INCIDENCEWHATWHERE_H
 
 #include "incidenceeditors-ng_export.h"
 #include "incidenceeditor-ng.h"
@@ -53,4 +53,4 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceWhatWhere : public IncidenceEditor
 
 } // IncidenceEditorsNG
 
-#endif // INCIDENCEGENERALEDITOR_H
+#endif // INCIDENCEWHATWHERE_H

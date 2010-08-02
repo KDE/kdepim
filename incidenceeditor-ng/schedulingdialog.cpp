@@ -23,7 +23,6 @@
 #include "conflictresolver.h"
 #include "visualfreebusywidget.h"
 #include "freeperiodmodel.h"
-#include "visualfreebusywidget.h"
 
 #include <kcalcore/attendee.h>
 #include <kcalutils/stringify.h>

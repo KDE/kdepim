@@ -17,8 +17,8 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef _FREEBUSYITEMMODEL_TEST_H
-#define _FREEBUSYITEMMODEL_TEST_H
+#ifndef TESTFREEBUSYITEMMODEL_H
+#define TESTFREEBUSYITEMMODEL_H
 
 #include <QtCore/QObject>
 
@@ -30,4 +30,4 @@ private Q_SLOTS:
     void testModelValidity2();
     void testInsertFreeBusy();
 };
-#endif //_FREEBUSYITEMMODEL_TEST_H
+#endif // TESTFREEBUSYITEMMODEL_H
