@@ -169,7 +169,11 @@ private:
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
 
-  bool addIncidence( KCal::Incidence* i, const QString& subresource,
+
+  /**
+     Caller guarantees i is not null.
+   */
+  bool addIncidence( KCal::Incidence *i, const QString& subresource,
                      Q_UINT32 sernum );
 
   void addEvent( const QString& xml, const QString& subresource,

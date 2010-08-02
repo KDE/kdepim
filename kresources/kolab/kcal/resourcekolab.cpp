@@ -525,6 +525,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
                                   Q_UINT32 sernum )
 {
   Q_ASSERT( incidence );
+
   if ( !incidence ) {
     return false;
   }
@@ -542,14 +543,15 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
 
   const QString& type = incidence->type();
-  if ( type == "Event" )
+  if ( type == "Event" ) {
     map = &mEventSubResources;
-  else if ( type == "Todo" )
+  } else if ( type == "Todo" ) {
     map = &mTodoSubResources;
-  else if ( type == "Journal" )
+  } else if ( type == "Journal" ) {
     map = &mJournalSubResources;
-  else
+  } else {
     kdWarning() << "unknown type " << type << endl;
+  }
 
   if ( !mSilent ) { /* We got this one from the user, tell KMail. */
     // Find out if this event was previously stored in KMail
@@ -581,13 +583,14 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       text += "<br>";
       if ( incidence->type() == "Event" ) {
         Event* event = static_cast<Event*>( incidence );
-        if ( event->hasEndDate() )
+        if ( event->hasEndDate() ) {
           if ( !event->doesFloat() ) {
             text += i18n( "<b>End:</b> %1, %2" )
                     .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
           } else {
             text += i18n( "<b>End:</b> %1" ).arg( event->dtEndDateStr() );
           }
+        }
         text += "<br>";
       }
 
@@ -640,7 +643,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
     }
   } else { /* KMail told us */
-    bool ourOwnUpdate = mUidsPendingUpdate.contains(  uid );
+    const bool ourOwnUpdate = mUidsPendingUpdate.contains(  uid );
     /* Check if we updated this one, which means kmail deleted and added it.
      * We know the new state, so lets just not do much at all. The old incidence
      * in the calendar remains valid, but the serial number changed, so we need to
@@ -658,6 +661,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( mUidMap.contains( uid ) ) {
         if ( mUidMap[ uid ].resource() == subResource ) {
           if ( (*map)[ subResource ].writable() ) {
+            kdDebug() << "DEBUG lets resolve the conflict " << endl;
             resolveConflict( incidence, subResource, sernum );
           } else {
             kdWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
@@ -726,14 +730,16 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
 {
   KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId(), this, subresource, sernum );
   Q_ASSERT( event );
-  if( event ) {
+  if ( event ) {
       addIncidence( event, subresource, sernum );
   }
 }
 
 bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
 {
-  if ( incidence->isReadOnly() ) return false;
+  if ( incidence->isReadOnly() ) {
+    return false;
+  }
 
   const QString uid = incidence->uid();
   if( !mUidMap.contains( uid ) ) return false; // Odd
@@ -792,10 +798,11 @@ bool ResourceKolab::addTodo( KCal::Todo *todo )
 
 bool ResourceKolab::addTodo( KCal::Todo *todo, const QString &subResource )
 {
-  if ( mUidMap.contains( todo->uid() ) )
+  if ( mUidMap.contains( todo->uid() ) ) {
     return true; //noop
-  else
+  } else {
     return addIncidence( todo, subResource, 0 );
+  }
 }
 
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
@@ -803,8 +810,9 @@ void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
 {
   KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId(), this, subresource, sernum );
   Q_ASSERT( todo );
-  if( todo )
-      addIncidence( todo, subresource, sernum );
+  if ( todo ) {
+    addIncidence( todo, subresource, sernum );
+  }
 }
 
 bool ResourceKolab::deleteTodo( KCal::Todo* todo )
@@ -925,27 +933,33 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
   bool rc = true;
   TemporarySilencer t( this ); // RAII
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
-       && type != kmailJournalContentsType )
+       && type != kmailJournalContentsType ) {
     // Not ours
     return false;
-  if ( !subresourceActive( subResource ) ) return true;
+  }
+
+  if ( !subresourceActive( subResource ) ) {
+    return true;
+  }
 
   if ( format == KMailICalIface::StorageXML ) {
     // If this data file is one of ours, load it here
-    if ( type == kmailCalendarContentsType )
+    if ( type == kmailCalendarContentsType ) {
       addEvent( data, subResource, sernum );
-    else if ( type == kmailTodoContentsType )
+    } else if ( type == kmailTodoContentsType ) {
       addTodo( data, subResource, sernum );
-    else if ( type == kmailJournalContentsType )
+    } else if ( type == kmailJournalContentsType ) {
       addJournal( data, subResource, sernum );
-    else
+    } else {
       rc = false;
+    }
   } else {
     Incidence *inc = mFormat.fromString( data );
-    if ( !inc )
-      rc = false;
-    else
+    if ( inc ) {
       addIncidence( inc, subResource, sernum );
+    } else {
+      rc = false;
+    }
   }
   return rc;
 }
