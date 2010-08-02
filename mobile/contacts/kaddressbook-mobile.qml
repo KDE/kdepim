@@ -130,6 +130,13 @@ KPIM.MainView {
     anchors.left: parent.left
     anchors.right : parent.right
 
+    QML.Image {
+      id: backgroundImage
+      x: 0
+      y: 0
+      source: "kaddressbook-mobile-background.png"
+    }
+
     Akonadi.AkonadiBreadcrumbNavigationView {
       id : collectionView
       anchors.top: parent.top
