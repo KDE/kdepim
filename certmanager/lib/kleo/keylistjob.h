@@ -43,7 +43,7 @@ namespace GpgME {
   class KeyListResult;
 }
 
-class QStringList;
+class TQStringList;
 
 namespace Kleo {
 

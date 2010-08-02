@@ -25,7 +25,7 @@
 #include <kdialogbase.h>
 #include <libkdepim/kdateedit.h>
 
-class QCheckBox;
+class TQCheckBox;
 class KDateEdit;
 
 class PrintDialog : public KDialogBase

@@ -35,7 +35,7 @@
 #define __KLEO_QGPGMEPROGRESSTOKENMAPPER_H__
 
 
-class QString;
+class TQString;
 
 namespace Kleo {
 

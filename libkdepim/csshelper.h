@@ -36,7 +36,7 @@
 #include <tqfont.h>
 #include <tqpaintdevicemetrics.h>
 
-class QString;
+class TQString;
 
 namespace KPIM {
 

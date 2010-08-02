@@ -32,8 +32,8 @@
 #ifndef __KMAIL_HEADERSTRATEGY_H__
 #define __KMAIL_HEADERSTRATEGY_H__
 
-class QString;
-class QStringList;
+class TQString;
+class TQStringList;
 
 namespace KMail {
 

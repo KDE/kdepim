@@ -30,9 +30,9 @@
 
 class KComboBox;
 class KLineEdit;
-class QCheckBox;
-class QPushButton;
-class QSpinBox;
+class TQCheckBox;
+class TQPushButton;
+class TQSpinBox;
 
 class ConfigGuiIRMC : public ConfigGui
 {

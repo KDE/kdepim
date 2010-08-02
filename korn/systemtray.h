@@ -21,7 +21,7 @@
 
 #include <ksystemtray.h>
 
-class QWidget;
+class TQWidget;
 
 /**
  * This class is an implementation of a KSystemTray class.

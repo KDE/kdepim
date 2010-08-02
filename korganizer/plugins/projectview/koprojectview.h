@@ -32,13 +32,13 @@
 #include "KGanttItem.h"
 
 class KGantt;
-class QLineEdit;
-class QFont;
-class QLabel;
-class QPopupMenu;
-class QListBox;
-class QStrList;
-class QListView;
+class TQLineEdit;
+class TQFont;
+class TQLabel;
+class TQPopupMenu;
+class TQListBox;
+class TQStrList;
+class TQListView;
 
 /**
   This class provides an item of the project view. It is a xQTask with

@@ -22,7 +22,7 @@
 #include "knarticle.h"
 #include "knwidgets.h"
 
-class QLabel;
+class TQLabel;
 
 class KNGroup;
 class KNFolder;

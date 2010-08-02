@@ -32,10 +32,10 @@
 
 #include "interfaces/MailTransportServiceIface.h"
 
-class QString;
+class TQString;
 class KURL;
-template <typename T> class QMemArray;
-typedef TQMemArray<char> QByteArray;
+template <typename T> class TQMemArray;
+typedef TQMemArray<char> TQByteArray;
 
 
 namespace KMail {

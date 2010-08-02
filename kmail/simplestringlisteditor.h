@@ -36,8 +36,8 @@
 #include <tqstringlist.h>
 #include <tqstring.h>
 
-class QListBox;
-class QPushButton;
+class TQListBox;
+class TQPushButton;
 
 //
 //

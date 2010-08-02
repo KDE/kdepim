@@ -17,13 +17,13 @@
 
 #include "kdialogbase.h"
 
-class QString;
-class QCheckBox;
-class QLineEdit;
-class QTextEdit;
+class TQString;
+class TQCheckBox;
+class TQLineEdit;
+class TQTextEdit;
 class KDateWidget;
 class KIntSpinBox;
-template <typename T> class QValueList;
+template <typename T> class TQValueList;
 
 namespace KMime {
   namespace Types {

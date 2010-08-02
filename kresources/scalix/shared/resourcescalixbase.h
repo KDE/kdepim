@@ -40,7 +40,7 @@
 #include "subresource.h"
 #include <kmail/kmailicalIface.h>
 
-class QCString;
+class TQCString;
 class KURL;
 
 namespace Scalix {

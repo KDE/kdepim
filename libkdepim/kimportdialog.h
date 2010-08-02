@@ -30,8 +30,8 @@
 
 #include <kdialogbase.h>
 
-class QTable;
-class QListView;
+class TQTable;
+class TQListView;
 
 class KImportDialog;
 class KComboBox;

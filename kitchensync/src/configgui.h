@@ -25,9 +25,9 @@
 
 #include <tqwidget.h>
 
-class QBoxLayout;
+class TQBoxLayout;
 class KLineEdit;
-class QTextEdit;
+class TQTextEdit;
 
 class ConfigGui : public QWidget
 {

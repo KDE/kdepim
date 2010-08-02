@@ -28,14 +28,14 @@
 
 #include <tqvbox.h>
 
-class QLabel;
+class TQLabel;
 class KActiveLabel;
-class QCheckBox;
-class QGridLayout;
+class TQCheckBox;
+class TQGridLayout;
 class KLineEdit;
 class KTextEdit;
 class KTimeEdit;
-class QButton;
+class TQButton;
 namespace KOrg {
 class IncidenceChangerBase;
 }

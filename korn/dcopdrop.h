@@ -30,8 +30,8 @@ class KornMailSubject;
 
 class KConfigBase;
 
-template<class A, class B> class QMap;
-class QString;
+template<class A, class B> class TQMap;
+class TQString;
 
 /**
  * This class implements a KMailDrop for DCOP-objects.

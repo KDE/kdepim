@@ -23,8 +23,8 @@
 
 #include <tqwidget.h>
 
-class QLineEdit;
-class QPushButton;
+class TQLineEdit;
+class TQPushButton;
 
 namespace KIO {
 class Job;

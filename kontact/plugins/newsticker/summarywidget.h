@@ -35,8 +35,8 @@
 #include "summary.h"
 #include <kurl.h>
 
-class QVBoxLayout;
-class QLabel;
+class TQVBoxLayout;
+class TQLabel;
 
 class DCOPRef;
 class KURLLabel;

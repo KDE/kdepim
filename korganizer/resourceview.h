@@ -36,7 +36,7 @@ class CalendarResources;
 using namespace KCal;
 class KListView;
 class ResourceView;
-class QPushButton;
+class TQPushButton;
 
 class ResourceViewFactory : public CalendarViewExtension::Factory
 {

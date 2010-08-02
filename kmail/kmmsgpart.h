@@ -27,8 +27,8 @@
 #include <tqdict.h>
 
 template <typename T>
-class QValueList;
-class QTextCodec;
+class TQValueList;
+class TQTextCodec;
 class DwString;
 
 class KMMessagePart

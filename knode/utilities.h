@@ -23,11 +23,11 @@
 #include <tqptrvector.h>
 #include <tqptrlist.h>
 
-class QWidget;
-class QString;
-class QChar;
-class QStringList;
-class QSize;
+class TQWidget;
+class TQString;
+class TQChar;
+class TQStringList;
+class TQSize;
 
 class KTempFile;
 

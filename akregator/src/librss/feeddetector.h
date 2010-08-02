@@ -28,7 +28,7 @@
 #include <tqstring.h>
 #include <tqvaluelist.h>
 
-class QStringList;
+class TQStringList;
 class KURL;
 
 namespace RSS

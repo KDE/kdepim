@@ -28,11 +28,11 @@
 
 #include "desktoplist.h"
 
-class QComboBox;
-class QLabel;
-class QLineEdit;
-class QRadioButton;
-class QString;
+class TQComboBox;
+class TQLabel;
+class TQLineEdit;
+class TQRadioButton;
+class TQString;
 
 class KArmTimeWidget;
 

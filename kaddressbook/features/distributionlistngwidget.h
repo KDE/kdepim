@@ -31,11 +31,11 @@
 
 #include <tqstringlist.h>
 
-class QDragEnterEvent;
-class QDragMoveEvent;
-class QDropEvent;
-class QPoint;
-class QPushButton;
+class TQDragEnterEvent;
+class TQDragMoveEvent;
+class TQDropEvent;
+class TQPoint;
+class TQPushButton;
 
 namespace KABC {
     class DistributionListManager;

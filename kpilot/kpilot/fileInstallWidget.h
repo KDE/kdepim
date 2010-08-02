@@ -34,9 +34,9 @@
 
 #include "pilotComponent.h"
 
-class QMultiLineEdit;
-class QPushButton;
-class QIconDragItem;
+class TQMultiLineEdit;
+class TQPushButton;
+class TQIconDragItem;
 
 class KIconView;
 class KPilotInstaller;

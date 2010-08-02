@@ -30,12 +30,12 @@
 
 #include <libkcal/attendee.h>
 
-class QPushButton;
-class QCheckBox;
-class QLineEdit;
-class QLabel;
-class QComboBox;
-class QHBox;
+class TQPushButton;
+class TQCheckBox;
+class TQLineEdit;
+class TQLabel;
+class TQComboBox;
+class TQHBox;
 class KDateEdit;
 class KOEditorFreeBusy;
 

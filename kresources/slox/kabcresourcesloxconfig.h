@@ -23,7 +23,7 @@
 #include <kresources/configwidget.h>
 #include <kdepimmacros.h>
 
-class QCheckBox;
+class TQCheckBox;
 class KLineEdit;
 class KURLRequester;
 class KPushButton;

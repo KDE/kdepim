@@ -37,8 +37,8 @@
 #include <tqvaluevector.h>
 #include <kdepimmacros.h>
 
-class QStringList;
-class QWidget;
+class TQStringList;
+class TQWidget;
 
 namespace Kleo {
   class DNAttributeOrderConfigWidget;

@@ -40,11 +40,11 @@
 
 class KMMainWidget;
 class KProgress;
-class QPushButton;
-class QWidgetStack;
-class QBoxLayout;
-class QLabel;
-class QTimer;
+class TQPushButton;
+class TQWidgetStack;
+class TQBoxLayout;
+class TQLabel;
+class TQTimer;
 
 namespace KPIM {
 class SSLLabel;

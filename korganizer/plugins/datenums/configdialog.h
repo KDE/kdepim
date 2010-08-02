@@ -21,7 +21,7 @@
 
 #include <kdialogbase.h>
 
-class QButtonGroup;
+class TQButtonGroup;
 
 class ConfigDialog : public KDialogBase
 {

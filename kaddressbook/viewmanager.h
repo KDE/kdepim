@@ -28,8 +28,8 @@
 #include <tqwidget.h>
 #include <kaddressbookview.h>
 
-class QDropEvent;
-class QWidgetStack;
+class TQDropEvent;
+class TQWidgetStack;
 
 class KAction;
 class KSelectAction;

@@ -30,8 +30,8 @@
 
 #include <tqobject.h>
 
-class QString;
-template <class T> class QValueList;
+class TQString;
+template <class T> class TQValueList;
 
 namespace Akregator
 {

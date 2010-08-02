@@ -21,9 +21,9 @@
 
 class Protocol;
 
-template< class T > class QDict;
-class QString;
-class QStringList;
+template< class T > class TQDict;
+class TQString;
+class TQStringList;
 
 class Protocols
 {

@@ -28,8 +28,8 @@
 
 class KMFilter;
 class KMFilterDlg;
-template <typename T> class QValueVector;
-template <typename T> class QValueList;
+template <typename T> class TQValueVector;
+template <typename T> class TQValueList;
 
 class KMFilterMgr: public QObject
 {

@@ -26,12 +26,12 @@
 
 #include <kdialogbase.h>
 
-class QRadioButton;
-class QComboBox;
+class TQRadioButton;
+class TQComboBox;
 class KIntNumInput;
 class KURLRequester;
 class KDateEdit;
-class QCheckBox;
+class TQCheckBox;
 
 namespace KCal {
 class Calendar;

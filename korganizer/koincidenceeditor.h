@@ -28,7 +28,7 @@
 #include <kdialogbase.h>
 #include <kurl.h>
 
-class QDateTime;
+class TQDateTime;
 
 namespace KPIM {
 class CategorySelectDialog;

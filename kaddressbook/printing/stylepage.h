@@ -30,9 +30,9 @@
 #include <kabc/addressbook.h>
 #include <kabc/field.h>
 
-class QLabel;
-class QPixmap;
-class QRadioButton;
+class TQLabel;
+class TQPixmap;
+class TQRadioButton;
 class KComboBox;
 
 class StylePage : public QWidget

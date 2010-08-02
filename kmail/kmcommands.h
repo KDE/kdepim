@@ -17,7 +17,7 @@
 #include <kservice.h>
 #include <ktempfile.h>
 
-class QPopupMenu;
+class TQPopupMenu;
 class KMainWindow;
 class KAction;
 class KProgressDialog;

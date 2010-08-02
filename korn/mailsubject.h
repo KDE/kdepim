@@ -1,7 +1,7 @@
 #ifndef MailSubject_h
 #define MailSubject_h
 
-class QTextCodec;
+class TQTextCodec;
 
 class KMailDrop;
 

@@ -24,9 +24,9 @@
 #include <kdepimmacros.h>
 
 class KLineEdit;
-class QCheckBox;
-class QSpinBox;
-class QGroupBox;
+class TQCheckBox;
+class TQSpinBox;
+class TQGroupBox;
 
 class KDE_EXPORT GroupwiseWizard : public KConfigWizard
 {

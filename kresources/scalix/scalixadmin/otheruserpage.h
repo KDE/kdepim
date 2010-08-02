@@ -25,7 +25,7 @@
 
 #include "otherusermanager.h"
 
-class QPushButton;
+class TQPushButton;
 class OtherUserView;
 
 class OtherUserPage : public QWidget

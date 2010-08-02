@@ -28,8 +28,8 @@
 
 #include "extensionwidget.h"
 
-class QListViewItem;
-class QPushButton;
+class TQListViewItem;
+class TQPushButton;
 
 namespace KPIM { class ResourceABC; }
 

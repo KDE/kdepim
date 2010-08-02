@@ -44,7 +44,7 @@
 namespace Kleo {
   class CryptoConfig;
 }
-class QString;
+class TQString;
 class KpgpWrapper;
 
 namespace Kleo {

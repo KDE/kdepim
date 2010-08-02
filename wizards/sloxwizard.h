@@ -24,7 +24,7 @@
 #include <kdepimmacros.h>
 
 class KLineEdit;
-class QCheckBox;
+class TQCheckBox;
 
 class KDE_EXPORT SloxWizard : public KConfigWizard
 {

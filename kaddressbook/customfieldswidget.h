@@ -36,12 +36,12 @@
 
 #include "contacteditorwidget.h"
 
-class QCheckBox;
-class QGridLayout;
-class QLabel;
-class QPushButton;
-class QVBoxLayout;
-class QWidget;
+class TQCheckBox;
+class TQGridLayout;
+class TQLabel;
+class TQPushButton;
+class TQVBoxLayout;
+class TQWidget;
 
 class KComboBox;
 class KLineEdit;

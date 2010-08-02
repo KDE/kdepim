@@ -15,11 +15,11 @@
 
 #include "global.h"
 
-class QDateTime;
-class QDomNode;
-template <class> class QValueList;
-class QString;
-class QWidget;
+class TQDateTime;
+class TQDomNode;
+template <class> class TQValueList;
+class TQString;
+class TQWidget;
 class KURL;
 class KURLLabel;
 

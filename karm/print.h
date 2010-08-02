@@ -5,8 +5,8 @@
 #undef GrayScale // X11 headers
 #include <kprinter.h>
 
-class QPainter;
-class QString;
+class TQPainter;
+class TQString;
 
 class Task;
 class TaskView;

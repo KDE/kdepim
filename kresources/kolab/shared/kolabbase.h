@@ -38,7 +38,7 @@
 #include <tqdatetime.h>
 #include <tqcolor.h>
 
-class QFile;
+class TQFile;
 
 namespace KCal {
   class Incidence;

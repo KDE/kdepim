@@ -33,7 +33,7 @@
  
 #include "kandyview.h"
 
-class QPrinter;
+class TQPrinter;
 
 class KandyPrefsDialog;
 

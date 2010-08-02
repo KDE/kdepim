@@ -29,19 +29,19 @@
 #include <tqguardedptr.h>
 #include "imapaccountbase.h"
 
-class QRegExpValidator;
-class QCheckBox;
-class QComboBox;
-class QPushButton;
-class QLabel;
-class QLineEdit;
-class QRadioButton;
-class QToolButton;
+class TQRegExpValidator;
+class TQCheckBox;
+class TQComboBox;
+class TQPushButton;
+class TQLabel;
+class TQLineEdit;
+class TQRadioButton;
+class TQToolButton;
 class KIntNumInput;
 class KMAccount;
 class KMFolder;
 class KMServerTest;
-class QButtonGroup;
+class TQButtonGroup;
 
 namespace KPIM {
 class IdentityCombo;

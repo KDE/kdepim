@@ -25,8 +25,8 @@
 
 #include <kdepimmacros.h>
 
-class QPixmap;
-class QIconSet;
+class TQPixmap;
+class TQIconSet;
 class KCalendarSystem;
 class AlarmClient;
 

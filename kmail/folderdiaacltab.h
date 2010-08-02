@@ -37,9 +37,9 @@
 
 class KMFolderImap;
 class KPushButton;
-class QWidgetStack;
-class QHBox;
-class QVButtonGroup;
+class TQWidgetStack;
+class TQHBox;
+class TQVButtonGroup;
 class KListView;
 namespace KIO { class Job; }
 

@@ -23,7 +23,7 @@
 
 #include <kconfigdialog.h>
 
-class QString;
+class TQString;
 class KNoteConfig;
 
 

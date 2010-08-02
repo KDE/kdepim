@@ -25,8 +25,8 @@
 
 #include "timeperiod.h"
 #include "timeselector.h"
-class QBoxLayout;
-class QWidgetStack;
+class TQBoxLayout;
+class TQWidgetStack;
 class CheckBox;
 
 

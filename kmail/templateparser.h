@@ -24,9 +24,9 @@
 #include <tqobject.h>
 
 class KMMessage;
-class QString;
+class TQString;
 class KMFolder;
-class QObject;
+class TQObject;
 class KProcess;
 
 class TemplateParser : public QObject

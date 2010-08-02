@@ -24,7 +24,7 @@
 #ifndef GOOGLESEARCHRESULT_H
 #define GOOGLESEARCHRESULT_H
 
-class QString;
+class TQString;
 class ResultElementArray;
 class DirectoryCategoryArray;
 

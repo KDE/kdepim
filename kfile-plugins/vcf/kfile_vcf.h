@@ -22,7 +22,7 @@
 
 #include <kfilemetainfo.h>
 
-class QStringList;
+class TQStringList;
 
 class KVcfPlugin: public KFilePlugin
 {

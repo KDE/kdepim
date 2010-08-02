@@ -41,7 +41,7 @@ class CryptPlugWrapper;
 namespace Kleo {
   class CryptoConfig;
 }
-class QString;
+class TQString;
 
 namespace Kleo {
 

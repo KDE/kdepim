@@ -25,8 +25,8 @@
 
 #include <kdialogbase.h>
 
-class QCheckBox;
-class QLineEdit;
+class TQCheckBox;
+class TQLineEdit;
 
 namespace Scalix {
 class Delegate;

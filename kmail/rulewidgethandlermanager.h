@@ -37,10 +37,10 @@
 
 #include <tqvaluevector.h>
 
-class QObject;
-class QCString;
-class QString;
-class QWidgetStack;
+class TQObject;
+class TQCString;
+class TQString;
+class TQWidgetStack;
 
 namespace KMail {
 

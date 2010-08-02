@@ -40,7 +40,7 @@
 class KActionCollection;
 class KMFolder;
 class KMFolderTree;
-class QLabel;
+class TQLabel;
 
 namespace KMail {
 

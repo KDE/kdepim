@@ -27,10 +27,10 @@
 
 #include "configgui.h"
 
-class QCheckBox;
-class QLabel;
-class QPushButton;
-class QSpinBox;
+class TQCheckBox;
+class TQLabel;
+class TQPushButton;
+class TQSpinBox;
 
 class KComboBox;
 class KLineEdit;

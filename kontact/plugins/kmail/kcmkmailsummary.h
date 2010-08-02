@@ -30,8 +30,8 @@
 
 class KListView;
 
-class QCheckBox;
-class QCheckListItem;
+class TQCheckBox;
+class TQCheckListItem;
 
 class KCMKMailSummary : public KCModule
 {

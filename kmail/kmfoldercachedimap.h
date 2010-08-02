@@ -51,8 +51,8 @@ using KMail::FolderJob;
 using KMail::QuotaInfo;
 class KMCommand;
 
-class QComboBox;
-class QRadioButton;
+class TQComboBox;
+class TQRadioButton;
 
 namespace KMail {
   class AttachmentStrategy;

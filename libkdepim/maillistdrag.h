@@ -111,7 +111,7 @@ public:
     /* The format for this drag - "x-kmail-drag/message-list" */
     static const char* format();
     
-    /* Returns TRUE if the information in e can be decoded into a QString;
+    /* Returns TRUE if the information in e can be decoded into a TQString;
        otherwsie returns FALSE */
     static bool canDecode( TQMimeSource* e );
 

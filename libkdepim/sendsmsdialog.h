@@ -24,8 +24,8 @@
 
 #include <kdialogbase.h>
 
-class QLabel;
-class QTextEdit;
+class TQLabel;
+class TQTextEdit;
 
 class SendSMSDialog : public KDialogBase
 {

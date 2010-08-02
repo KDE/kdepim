@@ -21,13 +21,13 @@
 #include <libkpimidentities/identity.h> // for Signature::Type
 using KPIM::Signature;
 
-class QComboBox;
-class QCheckBox;
+class TQComboBox;
+class TQCheckBox;
 class KURLRequester;
 class KLineEdit;
-class QString;
-class QPushButton;
-class QTextEdit;
+class TQString;
+class TQPushButton;
+class TQTextEdit;
 
 namespace KMail {
 

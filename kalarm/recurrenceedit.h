@@ -29,13 +29,13 @@
 #include <tqvaluelist.h>
 
 #include "datetime.h"
-class QWidgetStack;
-class QGroupBox;
-class QLabel;
-class QListBox;
-class QButton;
-class QPushButton;
-class QBoxLayout;
+class TQWidgetStack;
+class TQGroupBox;
+class TQLabel;
+class TQListBox;
+class TQButton;
+class TQPushButton;
+class TQBoxLayout;
 class SpinBox;
 class CheckBox;
 class RadioButton;

@@ -28,8 +28,8 @@
 
 class ATCommand;
 class ATParameter;
-class QDomElement;
-class QDomDocument;
+class TQDomElement;
+class TQDomDocument;
 
 /**
   TQListView item representing a modem command.

@@ -31,7 +31,7 @@ class KNGroupManager;
 class KNArticleManager;
 class KNArticleFactory;
 class KNFolderManager;
-class QWidget;
+class TQWidget;
 class KNFilterManager;
 class KNMainWidget;
 class KNScoringManager;

@@ -31,11 +31,11 @@
 class KDateEdit;
 class KTimeEdit;
 class KTextEdit;
-class QLineEdit;
-class QLabel;
-class QBoxLayout;
-class QCheckBox;
-class QWidget;
+class TQLineEdit;
+class TQLabel;
+class TQBoxLayout;
+class TQCheckBox;
+class TQWidget;
 
 namespace KCal {
 class Incidence;

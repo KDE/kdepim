@@ -32,8 +32,8 @@
 #include <summary.h>
 #include <uniqueapphandler.h>
 
-class QMimeSource;
-class QDropEvent;
+class TQMimeSource;
+class TQDropEvent;
 
 class KMailUniqueAppHandler : public Kontact::UniqueAppHandler
 {

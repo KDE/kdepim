@@ -21,7 +21,7 @@
 
 #include <kio/slavebase.h>
 
-class QCString;
+class TQCString;
 class KURL;
 
 /**

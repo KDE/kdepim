@@ -25,7 +25,7 @@
 
 #include <tqvaluelist.h>
 
-class QString;
+class TQString;
 
 namespace KPIM {
   class AddresseeView;

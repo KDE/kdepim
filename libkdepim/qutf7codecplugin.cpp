@@ -29,7 +29,7 @@
 #include <tqstringlist.h>
 #include <tqvaluelist.h>
 
-class QTextCodec;
+class TQTextCodec;
 
 // ######### This file isn't compiled currently
 

@@ -28,7 +28,7 @@
 
 #include <korganizer/baseview.h>
 
-class QListView;
+class TQListView;
 
 class KOEventViewerDialog;
 

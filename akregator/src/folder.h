@@ -28,10 +28,10 @@
 
 #include "treenode.h"
 
-class QDomDocument;
-class QDomElement;
-class QStringList;
-template <class T> class QValueList;
+class TQDomDocument;
+class TQDomElement;
+class TQStringList;
+template <class T> class TQValueList;
 
 namespace Akregator
 {

@@ -24,7 +24,7 @@
 #include <libkcal/scheduler.h>
 #include <tqobject.h>
 
-class QWidget;
+class TQWidget;
 namespace KCal {
 class Calendar;
 class Incidence;

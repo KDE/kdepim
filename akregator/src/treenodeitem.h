@@ -27,8 +27,8 @@
 
 #include <klistview.h>
 
-class QPoint;
-class QString;
+class TQPoint;
+class TQString;
 
 namespace Akregator {
 

@@ -25,8 +25,8 @@
 #include <tqstring.h>
 #include <kdialogbase.h>
 
-class QHBox;
-class QPushButton;
+class TQHBox;
+class TQPushButton;
 class KArtsDispatcher;
 namespace KDE { class PlayObject; }
 class LineEdit;

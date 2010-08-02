@@ -19,7 +19,7 @@
 
 #include <tqobject.h>
 
-class QString;
+class TQString;
 class KAction;
 class SnippetGroup;
 

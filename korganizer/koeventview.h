@@ -36,7 +36,7 @@ class Incidence;
 using namespace KCal;
 
 class KOEventPopupMenu;
-class QPopupMenu;
+class TQPopupMenu;
 
 /**
   KOEventView is the abstract base class from which all other

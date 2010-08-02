@@ -30,7 +30,7 @@
 #include <kurl.h>
 
 
-class QRadioButton;
+class TQRadioButton;
 
 class ImportDialog : public KDialogBase
 {

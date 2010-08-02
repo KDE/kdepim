@@ -30,7 +30,7 @@
 
 #include <tqpixmap.h>
 
-class QPoint;
+class TQPoint;
 
 namespace Akregator 
 {

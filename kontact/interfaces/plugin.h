@@ -29,13 +29,13 @@
 #include <kdepimmacros.h>
 #include <tqptrlist.h>
 
-class QStringList;
+class TQStringList;
 class DCOPClient;
 class DCOPObject;
 class KAboutData;
 class KAction;
 class KConfig;
-class QWidget;
+class TQWidget;
 namespace KParts { class ReadOnlyPart; }
 
 /**

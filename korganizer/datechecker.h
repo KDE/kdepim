@@ -28,7 +28,7 @@
 #include <tqobject.h>
 #include <tqdatetime.h>
 
-class QTimer;
+class TQTimer;
 
 class KCalendarSystem;
 

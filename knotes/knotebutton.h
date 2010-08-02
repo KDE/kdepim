@@ -23,9 +23,9 @@
 
 #include <tqpushbutton.h>
 
-class QPainter;
-class QEvent;
-class QResizeEvent;
+class TQPainter;
+class TQEvent;
+class TQResizeEvent;
 
 
 class KNoteButton: public QPushButton

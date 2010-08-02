@@ -38,7 +38,7 @@
 
 class partNode;
 
-class QTextCodec;
+class TQTextCodec;
 
 namespace KMail {
 

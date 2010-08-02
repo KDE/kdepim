@@ -23,8 +23,8 @@
 
 class KConfig;
 
-class QString;
-class QWidget;
+class TQString;
+class TQWidget;
 
 /**
  * This class is a extention on KEditListBox.

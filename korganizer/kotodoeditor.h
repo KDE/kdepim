@@ -28,7 +28,7 @@
 
 #include "koincidenceeditor.h"
 
-class QDateTime;
+class TQDateTime;
 class KOEditorGeneralTodo;
 class KOEditorRecurrence;
 /**

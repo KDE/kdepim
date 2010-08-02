@@ -23,7 +23,7 @@
 
 #include <tqdatetime.h>
 #include <kurl.h>
-class QString;
+class TQString;
 
 /**
  Stores entries from export dialog.

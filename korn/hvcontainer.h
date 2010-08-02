@@ -23,7 +23,7 @@
 
 class BoxContainerItem;
 
-class QHBox;
+class TQHBox;
 
 /**
  * This is a BoxContainer for both Horizontal and Vertical displays.

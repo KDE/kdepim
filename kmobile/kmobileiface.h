@@ -8,7 +8,7 @@
 #include <dcopobject.h>
 #include <tqstringlist.h>
 
-class QStringList;
+class TQStringList;
 
 class kmobileIface : virtual public DCOPObject
 {

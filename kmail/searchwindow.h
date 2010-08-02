@@ -30,15 +30,15 @@
 #include <kdialogbase.h>
 #include <kxmlguiclient.h>
 
-class QCheckBox;
-class QComboBox;
-class QGridLayout;
-class QLabel;
-class QLineEdit;
+class TQCheckBox;
+class TQComboBox;
+class TQGridLayout;
+class TQLabel;
+class TQLineEdit;
 class KListView;
-class QListViewItem;
-class QPushButton;
-class QRadioButton;
+class TQListViewItem;
+class TQPushButton;
+class TQRadioButton;
 class KAction;
 class KActionMenu;
 class KMFolder;

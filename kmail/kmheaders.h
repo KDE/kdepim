@@ -26,10 +26,10 @@ class KMMsgBase;
 class KMCommand;
 class KMMainWidget;
 class KPopupMenu;
-class QPalette;
-class QPixmap;
-class QIconSet;
-class QDateTime;
+class TQPalette;
+class TQPixmap;
+class TQIconSet;
+class TQDateTime;
 
 typedef TQPtrList<KMMsgBase> KMMessageList;
 typedef TQValueList<Q_UINT32> SerNumList;

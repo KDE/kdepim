@@ -28,7 +28,7 @@
 #include "colourlist.h"
 
 class ColourCombo;
-class QPushButton;
+class TQPushButton;
 class CheckBox;
 
 

@@ -23,10 +23,10 @@
 
 #include <tqwidget.h>
 
-class QLabel;
-class QPushButton;
-class QRadioButton;
-class QTextEdit;
+class TQLabel;
+class TQPushButton;
+class TQRadioButton;
+class TQTextEdit;
 
 class OutOfOfficePage : public QWidget
 {

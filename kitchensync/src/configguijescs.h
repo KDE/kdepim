@@ -25,7 +25,7 @@
 #include "configgui.h"
 
 class KLineEdit;
-class QCheckBox;
+class TQCheckBox;
 
 class ConfigGuiJescs : public ConfigGui
 {

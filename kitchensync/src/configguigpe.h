@@ -24,7 +24,7 @@
 
 #include "configgui.h"
 
-class QSpinBox;
+class TQSpinBox;
 
 class KComboBox;
 class KLineEdit;

@@ -39,7 +39,7 @@
 class KConfig;
 class KXMLGUIClient;
 
-class QDropEvent;
+class TQDropEvent;
 
 namespace KAB { class Core; }
 namespace KABC { class AddressBook; }

@@ -37,8 +37,8 @@
 #include <tqvaluelist.h>
 #include <tqregexp.h>
 
-class QString;
-class QCString;
+class TQString;
+class TQCString;
 
 namespace KMail {
 

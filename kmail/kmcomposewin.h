@@ -42,14 +42,14 @@
 
 #include <kleo/enum.h>
 
-class QCloseEvent;
-class QComboBox;
-class QFrame;
-class QGridLayout;
-class QListView;
-class QPopupMenu;
-class QPushButton;
-class QCString;
+class TQCloseEvent;
+class TQComboBox;
+class TQFrame;
+class TQGridLayout;
+class TQListView;
+class TQPopupMenu;
+class TQPushButton;
+class TQCString;
 class KCompletion;
 class KMEdit;
 class KMComposeWin;

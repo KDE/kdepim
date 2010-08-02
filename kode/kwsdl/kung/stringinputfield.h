@@ -26,7 +26,7 @@
 
 #include "inputfield.h"
 
-class QLineEdit;
+class TQLineEdit;
 
 class StringInputField : public SimpleInputField
 {

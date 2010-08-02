@@ -25,7 +25,7 @@
 
 #include "delegatemanager.h"
 
-class QPushButton;
+class TQPushButton;
 class DelegateView;
 
 class DelegatePage : public QWidget

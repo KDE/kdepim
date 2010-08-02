@@ -108,7 +108,7 @@ void Image::getPixmap()
 	if (d->pixmapBuffer)
 		return;
 
-	d->pixmapBuffer = new QBuffer;
+	d->pixmapBuffer = new TQBuffer;
 	d->pixmapBuffer->open(IO_WriteOnly);
 
 	d->job = KIO::get(d->url, false, false);

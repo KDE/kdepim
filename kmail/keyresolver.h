@@ -46,7 +46,7 @@
 
 #include <vector>
 
-class QStringList;
+class TQStringList;
 
 namespace Kleo {
 

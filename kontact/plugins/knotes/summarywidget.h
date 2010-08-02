@@ -33,8 +33,8 @@
 #include <libkcal/resourcelocal.h>
 #include <libkcal/calendarresources.h>
 
-class QGridLayout;
-class QLabel;
+class TQGridLayout;
+class TQLabel;
 
 namespace Kontact {
     class Plugin;

@@ -34,10 +34,10 @@
 #include "contacteditorwidgetmanager.h"
 #include "extensionwidget.h"
 
-class QCheckBox;
-class QSpinBox;
-class QTabWidget;
-class QTextEdit;
+class TQCheckBox;
+class TQSpinBox;
+class TQTabWidget;
+class TQTextEdit;
 
 class KComboBox;
 class KDateEdit;

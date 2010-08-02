@@ -29,10 +29,10 @@ class KConfig;
 class KPopupMenu;
 class KProcess;
 
-class QColor;
-class QLabel;
-//template< class T > class QPtrList;
-class QString;
+class TQColor;
+class TQLabel;
+//template< class T > class TQPtrList;
+class TQString;
 
 /**
  * This class provide a base for an item. This item should be

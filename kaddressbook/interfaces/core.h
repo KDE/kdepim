@@ -42,7 +42,7 @@ class AddressBook;
 class Resource;
 }
 
-class QWidget;
+class TQWidget;
 
 class KActionCollection;
 class KConfig;

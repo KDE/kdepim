@@ -32,8 +32,8 @@
 
 class KJanusWidget;
 
-class QString;
-class QVBox;
+class TQString;
+class TQVBox;
 
 class ViewConfigureFieldsPage;
 class ViewConfigureFilterPage;

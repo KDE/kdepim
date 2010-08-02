@@ -23,7 +23,7 @@
 #include <tqglobal.h>
 #include <kdepimmacros.h>
 
-class QListViewItem;
+class TQListViewItem;
 
 class KURL;
 class KAccel;

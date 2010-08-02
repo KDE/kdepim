@@ -36,8 +36,8 @@
 
 class KURL;
 
-class QString;
-class QPoint;
+class TQString;
+class TQPoint;
 class KMReaderWin;
 
 namespace KMail {

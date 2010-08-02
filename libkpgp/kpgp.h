@@ -38,10 +38,10 @@
 #include "kpgpkey.h"
 #include <kdepimmacros.h>
 
-class QLineEdit;
-class QCursor;
-class QCheckBox;
-class QGridLayout;
+class TQLineEdit;
+class TQCursor;
+class TQCheckBox;
+class TQGridLayout;
 
 class KConfig;
 

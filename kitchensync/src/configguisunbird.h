@@ -25,12 +25,12 @@
 
 #include "configgui.h"
 
-class QWidget;
-class QSpinBox;
-class QCheckBox;
-class QVBoxLayout;
-class QSpacerItem;
-class QSignalMapper;
+class TQWidget;
+class TQSpinBox;
+class TQCheckBox;
+class TQVBoxLayout;
+class TQSpacerItem;
+class TQSignalMapper;
 
 class KURLRequester;
 class KPushButton;

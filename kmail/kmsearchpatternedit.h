@@ -14,13 +14,13 @@
 class KMSearchRule;
 class KMSearchPattern;
 
-template <typename T> class QPtrList;
-class QString;
-class QComboBox;
-class QLineEdit;
-class QRadioButton;
-class QWidgetStack;
-class QLabel;
+template <typename T> class TQPtrList;
+class TQString;
+class TQComboBox;
+class TQLineEdit;
+class TQRadioButton;
+class TQWidgetStack;
+class TQLabel;
 class KMSearchPatternEdit;
 
 /** A widget to edit a single KMSearchRule.

@@ -19,8 +19,8 @@
 
 #include <kdialogbase.h>
 
-class QCheckBox;
-class QComboBox;
+class TQCheckBox;
+class TQComboBox;
 
 class KLineEdit;
 

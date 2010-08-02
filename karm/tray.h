@@ -13,8 +13,8 @@
 
 class KarmPart;
 
-class QPopupMenu;
-class QTimer;
+class TQPopupMenu;
+class TQTimer;
 
 class KSystemTray;
 class MainWindow;

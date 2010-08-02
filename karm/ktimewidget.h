@@ -1,8 +1,8 @@
 #ifndef KARM_K_TIME_WIDGET_H
 #define KARM_K_TIME_WIDGET_H
 
-class QLineEdit;
-class QWidget;
+class TQLineEdit;
+class TQWidget;
 
 class KarmLineEdit;
 

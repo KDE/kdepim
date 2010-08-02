@@ -7,11 +7,11 @@
 #include <tqstring.h>
 #include <tqwidget.h>
 
-class QBoxLayout;
-class QButtonGroup;
-class QComboBox;
-class QGridLayout;
-class QLabel;
+class TQBoxLayout;
+class TQButtonGroup;
+class TQComboBox;
+class TQGridLayout;
+class TQLabel;
 
 class KURLLabel;
 

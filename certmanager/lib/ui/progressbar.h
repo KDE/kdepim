@@ -35,7 +35,7 @@
 
 #include <tqprogressbar.h>
 #include <kdepimmacros.h>
-class QTimer;
+class TQTimer;
 
 namespace Kleo {
 

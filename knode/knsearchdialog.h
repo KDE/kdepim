@@ -19,7 +19,7 @@
 
 #include <tqdialog.h>
 
-class QPushButton;
+class TQPushButton;
 
 class KNFilterConfigWidget;
 class KNArticleFilter;

@@ -29,7 +29,7 @@
 #include "filteredit_base.h"
 
 class FilterEdit;
-template<class type> class QPtrList;
+template<class type> class TQPtrList;
 
 namespace KPIM { class CategorySelectDialog; }
 namespace KCal { class CalFilter; }

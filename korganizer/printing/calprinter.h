@@ -38,12 +38,12 @@ class CoreHelper;
 }
 using namespace KCal;
 
-class QVButtonGroup;
-class QWidgetStack;
+class TQVButtonGroup;
+class TQWidgetStack;
 class CalPrintDialog;
 class KConfig;
-class QComboBox;
-class QLabel;
+class TQComboBox;
+class TQLabel;
 
 /**
   CalPrinter is a class for printing Calendars.  It can print in several

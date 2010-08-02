@@ -31,9 +31,9 @@
 #include "pilotComponent.h"
 
 class KPilotInstaller;
-class QListBox;
-class QComboBox;
-class QPushButton;
+class TQListBox;
+class TQComboBox;
+class TQPushButton;
 class KTextEdit;
 
 class PilotMemo;

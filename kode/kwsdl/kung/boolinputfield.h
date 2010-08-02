@@ -26,7 +26,7 @@
 
 #include "inputfield.h"
 
-class QCheckBox;
+class TQCheckBox;
 
 class BoolInputField : public SimpleInputField
 {

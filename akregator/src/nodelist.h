@@ -27,12 +27,12 @@
 
 #include <tqobject.h>
 
-class QDomDocument;
-class QDomNode;
-class QString;
+class TQDomDocument;
+class TQDomNode;
+class TQString;
 
-template <class K,class T> class QMap;
-template <class T> class QValueList;
+template <class K,class T> class TQMap;
+template <class T> class TQValueList;
 
 // hack for KDE 3.x series
 #ifdef signals

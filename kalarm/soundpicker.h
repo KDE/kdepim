@@ -25,7 +25,7 @@
 #include <tqstring.h>
 #include <kurl.h>
 
-class QHBox;
+class TQHBox;
 class ComboBox;
 class PushButton;
 

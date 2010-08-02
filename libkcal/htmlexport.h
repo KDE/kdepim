@@ -31,8 +31,8 @@
 
 #include "libkcal_export.h"
 
-class QFile;
-class QTextStream;
+class TQFile;
+class TQTextStream;
 
 namespace KCal {
 

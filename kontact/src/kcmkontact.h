@@ -29,9 +29,9 @@
 #include <kservice.h>
 #include "plugin.h"
 
-class QGroupBox;
-class QComboBox;
-class QListViewItem;
+class TQGroupBox;
+class TQComboBox;
+class TQListViewItem;
 
 class KAboutData;
 class KListView;

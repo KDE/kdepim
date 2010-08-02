@@ -32,13 +32,13 @@
 #include "doc-conduit.h"
 
 
-class QComboBox;
-class QGridLayout;
-class QGroupBox;
+class TQComboBox;
+class TQGridLayout;
+class TQGroupBox;
 
-class QLabel;
-class QPushButton;
-class QTimer;
+class TQLabel;
+class TQPushButton;
+class TQTimer;
 class KPilotLink;
 
 

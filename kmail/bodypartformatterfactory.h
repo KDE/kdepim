@@ -34,8 +34,8 @@
 #ifndef __KMAIL_BODYPARTFORMATTERFACTORY_H__
 #define __KMAIL_BODYPARTFORMATTERFACTORY_H__
 
-class QString;
-class QCString;
+class TQString;
+class TQCString;
 
 namespace KMail {
 

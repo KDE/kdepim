@@ -24,7 +24,7 @@
 #include "configgui.h"
 
 class KURLRequester;
-class QCheckBox;
+class TQCheckBox;
 
 class ConfigGuiFile : public ConfigGui
 {

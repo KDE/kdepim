@@ -28,7 +28,7 @@
 #include <kiconview.h>
 #include "kaddressbookview.h"
 
-class QIconViewItem;
+class TQIconViewItem;
 class KConfig;
 class AddresseeIconView;
 class AddresseeIconViewItem;

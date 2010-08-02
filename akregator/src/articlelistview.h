@@ -26,9 +26,9 @@
 
 #include <klistview.h>
 
-class QKeyEvent;
-class QDragObject;
-template <class T> class QValueList;
+class TQKeyEvent;
+class TQDragObject;
+template <class T> class TQValueList;
 
 namespace Akregator
 {

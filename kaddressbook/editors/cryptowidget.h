@@ -26,12 +26,12 @@
 
 #include "contacteditorwidget.h"
 
-class QComboBox;
+class TQComboBox;
 
 namespace Kleo {
   class KeyRequester;
 }
-class QCheckBox;
+class TQCheckBox;
 
 class CryptoWidget : public KAB::ContactEditorWidget
 {

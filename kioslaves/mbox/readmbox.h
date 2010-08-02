@@ -24,9 +24,9 @@
 class UrlInfo;
 class MBox;
 
-class QFile;
-class QString;
-class QTextStream;
+class TQFile;
+class TQString;
+class TQTextStream;
 
 struct utimbuf;
 

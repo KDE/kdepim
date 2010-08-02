@@ -13,16 +13,16 @@
 #include <tqvariant.h>
 #include <kdialogbase.h>
 
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
-class QSpacerItem;
-class QGroupBox;
-class QCheckBox;
-class QSpinBox;
-class QLabel;
-class QRadioButton;
-class QButtonGroup;
+class TQVBoxLayout;
+class TQHBoxLayout;
+class TQGridLayout;
+class TQSpacerItem;
+class TQGroupBox;
+class TQCheckBox;
+class TQSpinBox;
+class TQLabel;
+class TQRadioButton;
+class TQButtonGroup;
 class KMFolderTree;
 class KMFolder;
 

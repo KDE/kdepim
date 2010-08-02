@@ -27,7 +27,7 @@
 
 #include <tqhbox.h>
 
-class QString;
+class TQString;
 
 namespace Akregator
 {

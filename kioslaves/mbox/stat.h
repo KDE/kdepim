@@ -26,7 +26,7 @@ class UrlInfo;
 
 class KURL;
 
-class QString;
+class TQString;
 
 /**
  * This class is used to get the stats of a mbox-email or mbox-file.

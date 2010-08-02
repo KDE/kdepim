@@ -168,7 +168,7 @@ void ATCommand::setResultFields( TQString fieldsString )
   if ( ( fieldsString[ 0 ] == '(' ) && ( fieldsString[ fieldsString.length() - 1 ] == ')' ) )
     fieldsString = fieldsString.mid( 1, fieldsString.length() - 2 );
 
-  TQStringList *fields = new QStringList;
+  TQStringList *fields = new TQStringList;
   TQStringList TmpFields = TQStringList::split( ',', fieldsString );
   TQString TmpString = "";
   

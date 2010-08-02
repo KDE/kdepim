@@ -30,19 +30,19 @@
 #include "options.h"
 #include <kdialogbase.h>
 
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
+class TQVBoxLayout;
+class TQHBoxLayout;
+class TQGridLayout;
 
 namespace KHE {
 class BytesEditInterface;
 }
 using namespace KHE;
 
-class QButtonGroup;
-class QCheckBox;
-class QLabel;
-class QLineEdit;
+class TQButtonGroup;
+class TQCheckBox;
+class TQLabel;
+class TQLineEdit;
 
 class DBRecordEditorBase;
 class PilotRecord;

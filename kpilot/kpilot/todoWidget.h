@@ -30,9 +30,9 @@
 #ifndef _KPILOT_TODOWIDGET_H
 #define _KPILOT_TODOWIDGET_H
 
-class QComboBox;
-class QPushButton;
-class QTextView;
+class TQComboBox;
+class TQPushButton;
+class TQTextView;
 
 #include "pilotComponent.h"
 #include "pilotTodoEntry.h"

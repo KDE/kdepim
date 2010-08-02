@@ -27,7 +27,7 @@
 #include <dcopobject.h>
 #include <kurl.h>
 #include <tqstringlist.h>
-class QString;
+class TQString;
 
 /** KAlarmIface provides a DCOP interface for other applications to request
  *  KAlarm actions.

@@ -10,7 +10,7 @@
 
 #include <kaccel.h>
 
-class QPopupMenu;
+class TQPopupMenu;
 
 /**
  * Easy updating of menu accels when changing a KAccel object. 

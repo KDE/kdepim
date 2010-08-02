@@ -36,7 +36,7 @@
 #include <tqobject.h>
 #include <tqstring.h>
 
-class QWidget;
+class TQWidget;
 
 namespace Kleo {
 

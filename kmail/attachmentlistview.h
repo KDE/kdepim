@@ -18,9 +18,9 @@
 
 #include <klistview.h>
 
-class QDragEnterEvent;
-class QDragMoveEvent;
-class QDropEvent;
+class TQDragEnterEvent;
+class TQDragMoveEvent;
+class TQDropEvent;
 class KMComposeWin;
 
 namespace KMail {

@@ -25,7 +25,7 @@
 
 #include <tqstring.h>
 
-class QTextCodec;
+class TQTextCodec;
 
 /**
  * handler for various rfc/mime encodings

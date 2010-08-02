@@ -25,7 +25,7 @@
 #include <tqobject.h>
 #include <tqvaluelist.h>
 
-class QWidget;
+class TQWidget;
 class KAction;
 class KActionMenu;
 class KActionCollection;

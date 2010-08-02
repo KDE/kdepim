@@ -25,10 +25,10 @@
 
 class KDevProject;
 class SnippetPart;
-class QPushButton;
+class TQPushButton;
 class KListView;
-class QListViewItem;
-class QPoint;
+class TQListViewItem;
+class TQPoint;
 class SnippetDlg;
 class SnippetItem;
 class KTextEdit;

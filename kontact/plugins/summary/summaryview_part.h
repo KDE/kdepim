@@ -43,9 +43,9 @@ namespace KParts
   class PartActivateEvent;
 }
 
-class QFrame;
-class QLabel;
-class QGridLayout;
+class TQFrame;
+class TQLabel;
+class TQGridLayout;
 class KAction;
 class KCMultiDialog;
 

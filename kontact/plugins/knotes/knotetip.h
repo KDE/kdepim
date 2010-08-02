@@ -34,7 +34,7 @@
 
 #include <tqframe.h>
 
-class QTextEdit;
+class TQTextEdit;
 class KIconView;
 class KNotesIconViewItem;
 

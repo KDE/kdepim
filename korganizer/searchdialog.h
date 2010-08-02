@@ -36,9 +36,9 @@ namespace KCal {
 class Calendar;
 }
 class KDateEdit;
-class QCheckBox;
-class QLineEdit;
-class QLabel;
+class TQCheckBox;
+class TQLineEdit;
+class TQLabel;
 class KOListView;
 
 using namespace KCal;

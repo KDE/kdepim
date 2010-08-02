@@ -26,7 +26,7 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
-class QCheckBox;
+class TQCheckBox;
 class KLineEdit;
 class KPushButton;
 

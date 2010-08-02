@@ -28,7 +28,7 @@
 #include "mainwindowbase.h"
 #include "undo.h"
 
-class QListViewItem;
+class TQListViewItem;
 class KAction;
 class KToggleAction;
 class KToolBarPopupAction;

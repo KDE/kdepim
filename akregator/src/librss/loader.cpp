@@ -95,7 +95,7 @@ void FileRetriever::retrieveData(const KURL &url)
    if (d->buffer)
       return;
 
-   d->buffer = new QBuffer;
+   d->buffer = new TQBuffer;
    d->buffer->open(IO_WriteOnly);
 
    KURL u=url;
@@ -203,7 +203,7 @@ void OutputRetriever::retrieveData(const KURL &url)
    if (d->buffer || d->process)
       return;
 
-   d->buffer = new QBuffer;
+   d->buffer = new TQBuffer;
    d->buffer->open(IO_WriteOnly);
 
    d->process = new KShellProcess();

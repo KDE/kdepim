@@ -55,7 +55,7 @@ class KMAccount;
 class KMFolderDir;
 class KMMsgDict; // for the rDict manipulations
 class KMMsgDictREntry;
-class QTimer;
+class TQTimer;
 class KMSearchPattern;
 
 namespace KMail {

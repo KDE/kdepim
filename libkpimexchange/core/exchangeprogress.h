@@ -22,7 +22,7 @@
 
 #include <kprogress.h>
 
-class QComboBox;
+class TQComboBox;
 
 namespace KPIM {
 

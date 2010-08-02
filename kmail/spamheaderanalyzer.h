@@ -36,7 +36,7 @@
 
 #include <tqvaluelist.h>
 
-class QString;
+class TQString;
 class KMMessage;
 
 namespace KMail {

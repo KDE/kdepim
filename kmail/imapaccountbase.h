@@ -39,7 +39,7 @@ class KMMessagePart;
 class DwBodyPart;
 class DwMessage;
 class FolderStorage;
-template <typename T> class QValueVector;
+template <typename T> class TQValueVector;
 
 namespace KIO {
   class Job;

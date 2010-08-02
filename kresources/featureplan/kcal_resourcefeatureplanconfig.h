@@ -27,7 +27,7 @@
 
 class KLineEdit;
 class KURLRequester;
-class QCheckBox;
+class TQCheckBox;
 
 namespace KCal {
 

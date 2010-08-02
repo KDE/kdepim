@@ -30,7 +30,7 @@
 #include "options.h"
 #include <kdialogbase.h>
 
-class QWidget;
+class TQWidget;
 
 class DBAppInfoEditor : public KDialogBase
 {

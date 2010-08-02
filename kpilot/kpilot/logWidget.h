@@ -32,9 +32,9 @@
 #include "loggerDCOP.h"
 #include "pilotComponent.h"
 
-class QLabel;
-class QTextEdit;
-class QHBox;
+class TQLabel;
+class TQTextEdit;
+class TQHBox;
 class KProgress;
 
 class LogWidget : public PilotComponent , public LoggerDCOP

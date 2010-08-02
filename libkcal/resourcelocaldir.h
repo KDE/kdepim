@@ -29,7 +29,7 @@
 
 #include "libkcal_export.h"
 
-class QString;
+class TQString;
 class KConfig;
 
 namespace KCal {

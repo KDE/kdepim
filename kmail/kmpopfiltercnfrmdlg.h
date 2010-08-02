@@ -26,8 +26,8 @@
 #include <tqptrlist.h>
 #include <tqmap.h>
 
-class QWidget;
-class QString;
+class TQWidget;
+class TQString;
 
 class KMPopFilterCnfrmDlg;
 /**

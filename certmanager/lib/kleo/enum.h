@@ -35,8 +35,8 @@
 
 #include <kdepimmacros.h>
 
-class QString;
-class QStringList;
+class TQString;
+class TQStringList;
 
 namespace Kleo {
 

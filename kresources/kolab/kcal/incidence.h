@@ -36,7 +36,7 @@
 
 #include <kolabbase.h>
 
-class QDomElement;
+class TQDomElement;
 
 namespace KCal {
   class Incidence;

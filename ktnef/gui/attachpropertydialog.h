@@ -25,8 +25,8 @@
 class KTNEFAttach;
 class KTNEFProperty;
 class KTNEFPropertySet;
-class QListView;
-class QListViewItem;
+class TQListView;
+class TQListViewItem;
 
 class AttachPropertyDialog : public AttachPropertyDialogBase
 {

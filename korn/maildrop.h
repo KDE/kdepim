@@ -16,11 +16,11 @@ class Protocol;
 class KConfigBase;
 class KConfigGroup;
 class KDropCfgDialog;
-class QColor;
+class TQColor;
 class KornMailSubject;
 class KornMailId;
 
-template< class T, class R > class QMap;
+template< class T, class R > class TQMap;
 
 /**
 * Abstract base class for all mailbox monitors.

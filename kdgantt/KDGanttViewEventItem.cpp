@@ -166,7 +166,7 @@ void KDGanttViewEventItem::setStartTime( const TQDateTime& start )
 
 void KDGanttViewEventItem::setLeadTime( const TQDateTime& leadTimeStart )
 {
-  if (!myLeadTime) myLeadTime = new QDateTime;
+  if (!myLeadTime) myLeadTime = new TQDateTime;
   *myLeadTime =  leadTimeStart;
   if ( startTime() < leadTime() )
       setStartTime( leadTimeStart );

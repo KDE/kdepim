@@ -25,9 +25,9 @@
 
 #include <ktextedit.h>
 
-class QFont;
-class QColor;
-class QPushButton;
+class TQFont;
+class TQColor;
+class TQPushButton;
 class KAction;
 class KActionCollection;
 class KToggleAction;

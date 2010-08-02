@@ -28,7 +28,7 @@
 #include <kdepimmacros.h>
 
 class KLibrary;
-class QStringList;
+class TQStringList;
 
 namespace KPIM {
 

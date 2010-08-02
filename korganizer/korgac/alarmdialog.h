@@ -36,7 +36,7 @@
 using namespace KCal;
 
 class KOEventViewer;
-class QSpinBox;
+class TQSpinBox;
 class KComboBox;
 class KListView;
 class AlarmListItem;

@@ -26,7 +26,7 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
-class QSpinBox;
+class TQSpinBox;
 class KLineEdit;
 
 namespace KCal {

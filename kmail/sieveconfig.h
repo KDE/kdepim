@@ -19,8 +19,8 @@
 
 #include <kurl.h>
 
-class QCheckBox;
-class QLineEdit;
+class TQCheckBox;
+class TQLineEdit;
 class KIntSpinBox;
 class KConfigBase;
 

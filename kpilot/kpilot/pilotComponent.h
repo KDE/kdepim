@@ -35,8 +35,8 @@
 #include <tqwidget.h>
 
 struct CategoryAppInfo;
-class QComboBox;
-class QString;
+class TQComboBox;
+class TQString;
 
 class PilotComponent : public QWidget
 {

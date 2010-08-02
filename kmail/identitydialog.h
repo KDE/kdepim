@@ -35,11 +35,11 @@
 #include <kdialogbase.h>
 
 
-class QLineEdit;
-class QCheckBox;
-class QComboBox;
-class QString;
-class QStringList;
+class TQLineEdit;
+class TQCheckBox;
+class TQComboBox;
+class TQString;
+class TQStringList;
 class TemplatesConfiguration;
 class KPushButton;
 namespace Kleo {

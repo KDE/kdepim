@@ -22,10 +22,10 @@
 #include <kdialogbase.h>
 #include <kurl.h>
 
-class QString;
-class QStringList;
-class QTextEdit;
-template <typename T> class QValueList;
+class TQString;
+class TQStringList;
+class TQTextEdit;
+template <typename T> class TQValueList;
 
 class KMAccount;
 

@@ -24,16 +24,16 @@
 class KConfigGroup;
 class KURLRequester;
 
-class QVBoxLayout;
-class QHBoxLayout;
-class QLabel;
-class QString;
-class QWidget;
+class TQVBoxLayout;
+class TQHBoxLayout;
+class TQLabel;
+class TQString;
+class TQWidget;
 
 class AccountInput;
 
-template< class T > class QPtrList;
-template< class T > class QPtrVector;
+template< class T > class TQPtrList;
+template< class T > class TQPtrVector;
 
 class KornAccountCfgImpl : public KornAccountCfg
 { Q_OBJECT

@@ -27,8 +27,8 @@
 
 #include "folder.h"
 
-class QDomDocument;
-class QDomElement;
+class TQDomDocument;
+class TQDomElement;
 
 namespace Akregator {
 

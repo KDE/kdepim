@@ -28,8 +28,8 @@
 #include <tqdict.h>
 #include <tqstring.h>
 
-class QButtonGroup;
-class QLineEdit;
+class TQButtonGroup;
+class TQLineEdit;
 class ViewFactory;
 
 

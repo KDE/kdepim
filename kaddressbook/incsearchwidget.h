@@ -28,8 +28,8 @@
 
 #include <kabc/field.h>
 
-class QComboBox;
-class QTimer;
+class TQComboBox;
+class TQTimer;
 class KLineEdit;
 
 class IncSearchWidget : public QWidget

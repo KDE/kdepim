@@ -6,7 +6,7 @@
 #include <tqdatetime.h>
 #include <kdebug.h>
 
-class QTimer;
+class TQTimer;
 
 #ifdef HAVE_LIBXSS
  #include <X11/Xlib.h>

@@ -32,7 +32,7 @@ namespace KABC {
 class Addressee;
 }
 
-class QGridLayout;
+class TQGridLayout;
 
 class ContactEditorWidgetManager : public QObject
 {

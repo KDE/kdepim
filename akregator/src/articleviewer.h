@@ -35,7 +35,7 @@
 #include "articlefilter.h"
 #include "viewer.h"
 
-class QKeyEvent;
+class TQKeyEvent;
 
 namespace Akregator
 {

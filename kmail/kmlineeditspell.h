@@ -7,7 +7,7 @@
 
 #include <libkdepim/addresseelineedit.h>
 
-class QPopupMenu;
+class TQPopupMenu;
 
 class KMLineEdit : public KPIM::AddresseeLineEdit
 {

@@ -4,7 +4,7 @@
 #include <kdialogbase.h>
 class KListBox;
 class KLineEdit;
-class QLabel;
+class TQLabel;
 
 class ChiasmusKeySelector : public KDialogBase
 {

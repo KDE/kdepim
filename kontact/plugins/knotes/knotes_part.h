@@ -34,7 +34,7 @@
 #include "knotes/KNotesIface.h"
 
 class KIconView;
-class QIconViewItem;
+class TQIconViewItem;
 class KNotesIconViewItem;
 class KNoteTip;
 class KNoteEditDlg;

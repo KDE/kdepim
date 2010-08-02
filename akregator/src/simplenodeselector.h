@@ -29,7 +29,7 @@
 
 #include <kdialogbase.h>
 
-class QListViewItem;
+class TQListViewItem;
 
 namespace Akregator {
 

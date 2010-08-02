@@ -32,7 +32,7 @@
 #ifndef __KMAIL_HEADERSTYLE_H__
 #define __KMAIL_HEADERSTYLE_H__
 
-class QString;
+class TQString;
 class KMMessage;
 
 namespace KMail {

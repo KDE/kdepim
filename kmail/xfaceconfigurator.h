@@ -22,10 +22,10 @@
 
 class KURL;
 
-class QCheckBox;
-class QString;
-class QLabel;
-class QComboBox;
+class TQCheckBox;
+class TQString;
+class TQLabel;
+class TQComboBox;
 
 namespace KMail {
 

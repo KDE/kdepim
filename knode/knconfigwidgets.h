@@ -21,11 +21,11 @@
 #include "knwidgets.h"
 #include "smtpaccountwidget_base.h"
 
-class QButtonGroup;
-class QCheckBox;
-class QGroupBox;
-class QRadioButton;
-class QTextEdit;
+class TQButtonGroup;
+class TQCheckBox;
+class TQGroupBox;
+class TQRadioButton;
+class TQTextEdit;
 
 class KScoringEditorWidget;
 class KConfigBase;

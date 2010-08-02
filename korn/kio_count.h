@@ -34,12 +34,12 @@ class KKioDrop;
 class KornMailSubject;
 class SortedMailSubject;
 
-template<class T> class QValueList;
+template<class T> class TQValueList;
 namespace KIO { class Job; class ListJob; class MetaData; class Slave; }
 
 class KURL;
 
-class QString;
+class TQString;
 
 class KIO_Count : public QObject
 { Q_OBJECT

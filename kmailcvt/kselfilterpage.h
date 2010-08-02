@@ -21,7 +21,7 @@
 #include "kselfilterpagedlg.h"
 class Filter;
 
-template <class T> class QPtrList;
+template <class T> class TQPtrList;
 
 class KSelFilterPage : public KSelFilterPageDlg  {
 	Q_OBJECT

@@ -29,9 +29,9 @@
 
 class KComboBox;
 
-class QCheckBox;
-class QListView;
-class QPushButton;
+class TQCheckBox;
+class TQListView;
+class TQPushButton;
 
 namespace KPIM {
 

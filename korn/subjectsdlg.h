@@ -11,10 +11,10 @@ class KornMailSubject;
 class KornMailId;
 class KListView;
 class KornMailDlg;
-class QProgressDialog;
+class TQProgressDialog;
 class DoubleProgressDialog;
 
-template< class T > class QPtrList;
+template< class T > class TQPtrList;
 
 /**
  * KornSubjectsDlg loads all mail subjects and shows them in a list control.

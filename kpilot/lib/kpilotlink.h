@@ -40,7 +40,7 @@
 * changes are signalled.
 */
 
-class QThread;
+class TQThread;
 class KPilotUser;
 class KPilotSysInfo;
 class KPilotCard;

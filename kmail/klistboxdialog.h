@@ -3,8 +3,8 @@
 
 #include <kdialogbase.h>
 
-class QLabel;
-class QListBox;
+class TQLabel;
+class TQListBox;
 
 class KListBoxDialog : public KDialogBase
 {

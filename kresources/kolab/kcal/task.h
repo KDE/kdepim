@@ -38,7 +38,7 @@
 
 #include <libkcal/incidence.h>
 
-class QDomElement;
+class TQDomElement;
 
 namespace KCal {
   class Todo;

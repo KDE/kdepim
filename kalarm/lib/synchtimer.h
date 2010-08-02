@@ -27,7 +27,7 @@
 #include <tqvaluelist.h>
 #include <tqcstring.h>
 #include <tqdatetime.h>
-class QTimer;
+class TQTimer;
 
 /** SynchTimer is a virtual base class for application-wide timers synchronised
  *  to a time boundary.

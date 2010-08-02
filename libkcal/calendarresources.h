@@ -39,7 +39,7 @@
 
 #include <kresources/manager.h>
 
-class QWidget;
+class TQWidget;
 
 /**
    @namespace KCal

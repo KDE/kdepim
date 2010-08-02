@@ -26,14 +26,14 @@
 #ifndef AKREGATOR_ARTICLE_H
 #define AKREGATOR_ARTICLE_H
 
-class QDateTime;
-class QDomDocument;
-class QDomElement;
-class QString;
-class QStringList;
-class QWidget;
+class TQDateTime;
+class TQDomDocument;
+class TQDomElement;
+class TQString;
+class TQStringList;
+class TQWidget;
 
-template <class T> class QValueList;
+template <class T> class TQValueList;
 
 typedef unsigned int uint;
 

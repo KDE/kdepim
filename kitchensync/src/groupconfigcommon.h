@@ -28,7 +28,7 @@
 
 class KLineEdit;
 class SyncProcess;
-class QCheckBox;
+class TQCheckBox;
 
 class ObjectTypeSelector : public QWidget
 {

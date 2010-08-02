@@ -26,7 +26,7 @@
  * by a protocol.
  */
 
-class QString;
+class TQString;
 #include <kio/global.h>
 #include <klocale.h>
 #include <tqstringlist.h>

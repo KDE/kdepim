@@ -24,7 +24,7 @@
 
 #include <tqwidget.h>
 
-class QTextEdit;
+class TQTextEdit;
 class ConfigGui;
 
 class MemberConfig : public QWidget

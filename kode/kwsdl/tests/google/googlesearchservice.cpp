@@ -63,7 +63,7 @@ void GoogleSearchService::doGetCachedPageResponseSlot( const TQString &xml )
     return;
   }
   
-  TQByteArray* value = new QByteArray;
+  TQByteArray* value = new TQByteArray;
   TQDomElement envelope = doc.documentElement();
   TQDomElement body = envelope.firstChild().toElement();
   TQDomElement method = body.firstChild().toElement();
@@ -109,7 +109,7 @@ void GoogleSearchService::doSpellingSuggestionResponseSlot( const TQString &xml 
     return;
   }
   
-  TQString* value = new QString;
+  TQString* value = new TQString;
   TQDomElement envelope = doc.documentElement();
   TQDomElement body = envelope.firstChild().toElement();
   TQDomElement method = body.firstChild().toElement();

@@ -29,14 +29,14 @@
 
 #include <tqdict.h>
 
-class QLineEdit;
-class QLabel;
-class QSpinBox;
-class QComboBox;
+class TQLineEdit;
+class TQLabel;
+class TQSpinBox;
+class TQComboBox;
 class KColorButton;
 class KPushButton;
-class QColor;
-class QListView;
+class TQColor;
+class TQListView;
 
 class KDE_EXPORT KOPrefsDialogMain : public KPrefsModule
 {

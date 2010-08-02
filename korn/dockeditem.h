@@ -25,7 +25,7 @@ class SystemTray;
 
 class KConfig;
 
-class QPixmap;
+class TQPixmap;
 
 /**
  * This class is an implementation of a BoxContainerItem for the

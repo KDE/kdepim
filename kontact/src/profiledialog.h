@@ -30,10 +30,10 @@
 #include <tqmap.h>
 #include <tqstring.h>
 
-class QListViewItem;
+class TQListViewItem;
 
 class KListView;
-class QPushButton;
+class TQPushButton;
 
 namespace Kontact {
 

@@ -1,6 +1,6 @@
 #include <tqthread.h>
 
-class QString;
+class TQString;
 
 /** 
  * Attempt to open and lock a calendar resource in a seperate thread.

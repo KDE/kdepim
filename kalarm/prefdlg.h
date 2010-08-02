@@ -30,12 +30,12 @@
 #include "recurrenceedit.h"
 #include "soundpicker.h"
 
-class QButtonGroup;
-class QCheckBox;
-class QRadioButton;
-class QPushButton;
-class QComboBox;
-class QLineEdit;
+class TQButtonGroup;
+class TQCheckBox;
+class TQRadioButton;
+class TQPushButton;
+class TQComboBox;
+class TQLineEdit;
 class KColorCombo;
 class FontColourChooser;
 class ButtonGroup;

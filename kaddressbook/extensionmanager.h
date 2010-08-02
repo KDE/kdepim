@@ -31,8 +31,8 @@
 #include <tqptrlist.h>
 #include <tqstringlist.h>
 
-class QSignalMapper;
-class QWidgetStack;
+class TQSignalMapper;
+class TQWidgetStack;
 class KActionCollection;
 
 namespace KAB {

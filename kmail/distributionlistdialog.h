@@ -25,7 +25,7 @@
 
 #include "recipientseditor.h"
 
-class QLineEdit;
+class TQLineEdit;
 class KListView;
 
 class DistributionListDialog : public KDialogBase

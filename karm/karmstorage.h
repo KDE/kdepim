@@ -36,7 +36,7 @@
 #include "resourcecalendar.h"
 #include <kdepimmacros.h>
 
-class QDateTime;
+class TQDateTime;
 class Preferences;
 class Task;
 class TaskView;

@@ -32,9 +32,9 @@
 #include <kwizard.h>
 
 class KLineEdit;
-class QCheckBox;
-class QLabel;
-class QPushButton;
+class TQCheckBox;
+class TQLabel;
+class TQPushButton;
 
 class KMAccount;
 class KMKernel;

@@ -35,8 +35,8 @@
 #include "kmsearchpattern.h"
 #include <klistviewsearchline.h>
 #include <tqvaluevector.h>
-class QComboBox;
-class QLabel;
+class TQComboBox;
+class TQLabel;
 class KListView;
 class KActionCollection;
 

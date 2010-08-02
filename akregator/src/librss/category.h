@@ -27,9 +27,9 @@
 
 #include "global.h"
 
-class QDomDocument;
-class QDomElement;
-class QString;
+class TQDomDocument;
+class TQDomElement;
+class TQString;
 
 namespace RSS
 {

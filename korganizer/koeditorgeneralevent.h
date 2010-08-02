@@ -27,12 +27,12 @@
 #include "koeditorgeneral.h"
 #include <tqdatetime.h>
 
-class QLabel;
+class TQLabel;
 class KDateEdit;
 class KTimeEdit;
-class QCheckBox;
-class QComboBox;
-class QBoxLayout;
+class TQCheckBox;
+class TQComboBox;
+class TQBoxLayout;
 
 namespace KCal {
 class Event;

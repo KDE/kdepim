@@ -19,7 +19,7 @@
 #include <tqmutex.h>
 #include <tqvaluelist.h>
 
-class QSocketNotifier;
+class TQSocketNotifier;
 
 namespace KIO {
   class Job;

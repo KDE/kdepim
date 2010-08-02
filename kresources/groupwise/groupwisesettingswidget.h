@@ -24,7 +24,7 @@
 
 #include <tqmap.h>
 
-class QListViewItem;
+class TQListViewItem;
 
 #include "groupwisesettingswidgetbase.h"
 

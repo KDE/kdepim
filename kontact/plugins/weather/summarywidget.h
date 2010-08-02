@@ -37,9 +37,9 @@
 
 class KProcess;
 
-class QGridLayout;
-class QLabel;
-class QVBoxLayout;
+class TQGridLayout;
+class TQLabel;
+class TQVBoxLayout;
 
 class WeatherData
 {

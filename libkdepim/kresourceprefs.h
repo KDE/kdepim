@@ -25,7 +25,7 @@
 #include <kconfigskeleton.h>
 #include <kdepimmacros.h>
 
-class QString;
+class TQString;
 
 /**
   This is a base class for all KPrefs objects, where multiple instances want

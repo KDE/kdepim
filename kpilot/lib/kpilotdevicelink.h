@@ -31,7 +31,7 @@
 
 #include "kpilotlink.h"
 
-class QThread;
+class TQThread;
 
 class DeviceMap; ///< Globally tracks all devices that have a link assigned
 class Messages; ///< Tracks which messages have been printed

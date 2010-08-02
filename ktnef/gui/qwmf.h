@@ -28,8 +28,8 @@
 #include <tqimage.h>
 #include <tqrect.h>
 
-class QBuffer;
-class QString;
+class TQBuffer;
+class TQString;
 class WmfCmd;
 class WinObjHandle;
 class WinObjPenHandle;

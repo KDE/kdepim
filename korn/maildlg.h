@@ -7,8 +7,8 @@
 class KornMailSubject;
 class KMailDrop;
 
-class QProgressDialog;
-class QString;
+class TQProgressDialog;
+class TQString;
 
 /**
  * KornMailDlg shows the header and (if available) the body of a mail. 

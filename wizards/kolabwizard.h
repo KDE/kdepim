@@ -26,8 +26,8 @@
 #include <kdepimmacros.h>
 
 class KLineEdit;
-class QCheckBox;
-class QRadioButton;
+class TQCheckBox;
+class TQRadioButton;
 
 class KDE_EXPORT KolabWizard : public KConfigWizard
 {

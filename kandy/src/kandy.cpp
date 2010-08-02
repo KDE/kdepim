@@ -224,7 +224,7 @@ void Kandy::filePrint()
     // this slot is called whenever the File->Print menu is selected,
     // the Print shortcut is pressed (usually CTRL+P) or the Print toolbar
     // button is clicked
-    if (!mPrinter) mPrinter = new QPrinter;
+    if (!mPrinter) mPrinter = new TQPrinter;
     if (TQPrintDialog::getPrinterSetup(mPrinter))
     {
         // setup the printer.  with Qt, you always "print" to a

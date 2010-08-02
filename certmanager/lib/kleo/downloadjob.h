@@ -41,7 +41,7 @@ namespace GpgME {
   class Error;
 }
 
-class QStringList;
+class TQStringList;
 
 namespace Kleo {
 

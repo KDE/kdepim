@@ -26,15 +26,15 @@
 #include <libkcal/alarm.h>
 #include <tqlineedit.h>
 
-class QWidget;
-class QBoxLayout;
-class QLineEdit;
-class QLabel;
-class QCheckBox;
-class QWidgetStack;
-class QSpinBox;
-class QPushButton;
-class QComboBox;
+class TQWidget;
+class TQBoxLayout;
+class TQLineEdit;
+class TQLabel;
+class TQCheckBox;
+class TQWidgetStack;
+class TQSpinBox;
+class TQPushButton;
+class TQComboBox;
 class KTextEdit;
 class KSqueezedTextLabel;
 class KURL;

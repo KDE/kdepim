@@ -25,15 +25,15 @@
 #include <tqvaluelist.h>
 #include <tqbitarray.h>
 
-class QWidget;
-class QVBoxLayout;
+class TQWidget;
+class TQVBoxLayout;
 class ButtonGroup;
 class RadioButton;
 class ComboBox;
 class CheckBox;
 class SpinBox;
 class TimeSpinBox;
-class QString;
+class TQString;
 
 
 class NoRule : public QFrame

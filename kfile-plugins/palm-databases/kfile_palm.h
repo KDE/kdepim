@@ -24,7 +24,7 @@
 
 #include <kfilemetainfo.h>
 
-class QStringList;
+class TQStringList;
 
 class KPalmPlugin: public KFilePlugin
 {

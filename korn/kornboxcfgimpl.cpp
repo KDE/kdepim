@@ -44,10 +44,10 @@ KornBoxCfgImpl::KornBoxCfgImpl( TQWidget * parent, const char * name )
 	_base( 0 ),
 	_index( -1 )
 {
-	_fonts[ 0 ] = new QFont;
-	_fonts[ 1 ] = new QFont;
-	_anims[ 0 ] = new QString;
-	_anims[ 1 ] = new QString;
+	_fonts[ 0 ] = new TQFont;
+	_fonts[ 1 ] = new TQFont;
+	_anims[ 0 ] = new TQString;
+	_anims[ 1 ] = new TQString;
 
 	lbLeft->setText( i18n( "Left mousebutton", "Left" ) );
 	if( lbLeft->text() == "Left" )

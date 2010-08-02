@@ -20,12 +20,12 @@
 #include<libemailfunctions/email.h>
 
 template <typename T>
-class QValueList;
+class TQValueList;
 
-class QStringList;
-class QString;
-class QTextCodec;
-class QStrList;
+class TQStringList;
+class TQString;
+class TQTextCodec;
+class TQStrList;
 
 class KMFolder;
 class KMFolderIndex;

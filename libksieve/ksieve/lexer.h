@@ -33,7 +33,7 @@
 #ifndef __KSIEVE_LEXER_H__
 #define __KSIEVE_LEXER_H__
 
-class QString;
+class TQString;
 
 namespace KSieve {
 

@@ -38,9 +38,9 @@
 
 class KLineEdit;
 
-class QString;
-class QPushButton;
-class QDialog;
+class TQString;
+class TQPushButton;
+class TQDialog;
 
 namespace KMail {
 

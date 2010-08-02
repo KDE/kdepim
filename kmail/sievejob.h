@@ -24,7 +24,7 @@
 #include <kurl.h>
 #include <kio/global.h>
 
-class QTextDecoder;
+class TQTextDecoder;
 namespace KIO {
   class Job;
 }

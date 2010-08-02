@@ -37,7 +37,7 @@
 #include <tqfile.h>
 #include <tqtextstream.h>
 
-class QString;
+class TQString;
 
 namespace KMail {
 

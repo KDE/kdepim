@@ -15,7 +15,7 @@
 
 #include <tqobject.h>
 
-class QDomNode;
+class TQDomNode;
 
 namespace KIO
 {

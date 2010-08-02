@@ -34,7 +34,7 @@
 
 #include <kdialogbase.h>
 
-class QButtonGroup;
+class TQButtonGroup;
 class KDateEdit;
 class KTimeEdit;
 

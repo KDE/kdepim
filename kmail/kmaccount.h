@@ -29,7 +29,7 @@
 #include <tqmap.h>
 
 #include "kmmessage.h"
-class QTimer;
+class TQTimer;
 
 class KMFolder;
 class KMAcctFolder;

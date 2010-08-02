@@ -26,13 +26,13 @@
 
 #include <tqwidget.h>
 
-class QPainter;
-class QTextStream;
-class QDataStream;
-class QDomDocument;
-class QDomElement;
-class QTextEdit;
-class QListView;
+class TQPainter;
+class TQTextStream;
+class TQDataStream;
+class TQDomDocument;
+class TQDomElement;
+class TQTextEdit;
+class TQListView;
 
 class KURL;
 

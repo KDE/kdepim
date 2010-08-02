@@ -19,9 +19,9 @@
 
 #include <kurl.h>
 
-class QString;
-class QStringList;
-template <typename T> class QValueList;
+class TQString;
+class TQStringList;
+template <typename T> class TQValueList;
 namespace KMail {
   class SieveJob;
   class VacationDialog;

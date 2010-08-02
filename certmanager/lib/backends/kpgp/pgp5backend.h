@@ -36,7 +36,7 @@
 
 #include "kpgpbackendbase.h"
 
-class QString;
+class TQString;
 
 namespace Kleo {
 

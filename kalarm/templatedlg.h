@@ -22,7 +22,7 @@
 
 #include <kdialogbase.h>
 
-class QPushButton;
+class TQPushButton;
 class TemplateListView;
 class KAEvent;
 

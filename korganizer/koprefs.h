@@ -31,9 +31,9 @@
 #include "koprefs_base.h"
 
 class KConfig;
-class QFont;
-class QColor;
-class QStringList;
+class TQFont;
+class TQColor;
+class TQStringList;
 
 TQColor getTextColor(const TQColor &c);
 

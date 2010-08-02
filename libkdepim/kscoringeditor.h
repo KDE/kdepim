@@ -31,12 +31,12 @@ class KComboBox;
 class KLineEdit;
 class KIntSpinBox;
 class KListBox;
-class QFrame;
-class QLabel;
-class QListBoxItem;
-class QPushButton;
-class QCheckBox;
-class QRadioButton;
+class TQFrame;
+class TQLabel;
+class TQListBoxItem;
+class TQPushButton;
+class TQCheckBox;
+class TQRadioButton;
 
 class KScoringRule;
 class KScoringExpression;

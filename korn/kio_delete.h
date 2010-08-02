@@ -32,7 +32,7 @@ class KornMailId;
 class KURL;
 namespace KIO { class MetaData; class Job; class Slave; }
 
-template<class T> class QPtrList;
+template<class T> class TQPtrList;
 
 class KIO_Delete : public QObject
 { Q_OBJECT

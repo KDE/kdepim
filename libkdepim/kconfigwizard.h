@@ -25,7 +25,7 @@
 #include <kdepimmacros.h>
 #include <kdialogbase.h>
 
-class QListView;
+class TQListView;
 
 /**
   @short Configuration wizard base class

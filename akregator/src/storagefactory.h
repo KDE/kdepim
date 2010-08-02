@@ -27,9 +27,9 @@
 
 #include "akregator_export.h"
 
-class QString;
-class QStringList;
-class QWidget;
+class TQString;
+class TQStringList;
+class TQWidget;
 namespace Akregator {
 namespace Backend {
 

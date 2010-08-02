@@ -23,7 +23,7 @@
 class KConfigBase;
 namespace KWallet { class Wallet; }
 
-class QString;
+class TQString;
 
 /**
  * This class can be used to store and retrieve passwords.

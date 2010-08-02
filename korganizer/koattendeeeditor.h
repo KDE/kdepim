@@ -24,12 +24,12 @@
 #include <tqwidget.h>
 #include <libkcal/attendee.h>
 
-class QBoxLayout;
-class QComboBox;
-class QCheckBox;
-class QLabel;
-class QPushButton;
-class QHBox;
+class TQBoxLayout;
+class TQComboBox;
+class TQCheckBox;
+class TQLabel;
+class TQPushButton;
+class TQHBox;
 
 namespace KPIM {
   class AddresseeLineEdit;

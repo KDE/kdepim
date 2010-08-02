@@ -29,7 +29,7 @@
 #include <kabc/addresslineedit.h>
 #include <knodecomposeriface.h>
 
-class QGroupBox;
+class TQGroupBox;
 
 class KProcess;
 class KSpell;

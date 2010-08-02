@@ -26,7 +26,7 @@
 #include <kdepimmacros.h>
 
 //#include <tqstringlist.h>
-class QStringList;
+class TQStringList;
 
 #include "kpgp.h"
 

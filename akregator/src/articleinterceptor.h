@@ -3,7 +3,7 @@
 
 #include "akregator_export.h"
 
-template <class T> class QValueList;
+template <class T> class TQValueList;
 
 namespace Akregator {
 

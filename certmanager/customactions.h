@@ -37,7 +37,7 @@
 
 #include <tqstringlist.h>
 
-class QLineEdit;
+class TQLineEdit;
 
 class LabelAction : public KAction {
   Q_OBJECT

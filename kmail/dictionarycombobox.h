@@ -35,8 +35,8 @@
 #include <tqcombobox.h>
 
 class KSpellConfig;
-class QStringList;
-class QString;
+class TQStringList;
+class TQString;
 
 namespace KMail {
 

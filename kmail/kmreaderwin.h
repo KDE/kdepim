@@ -14,14 +14,14 @@
 #include "kmmimeparttree.h" // Needed for friend declaration.
 #include "interfaces/observer.h"
 
-class QFrame;
-class QSplitter;
-class QHBox;
-class QListViewItem;
-class QScrollBar;
-class QString;
-class QTabDialog;
-class QTextCodec;
+class TQFrame;
+class TQSplitter;
+class TQHBox;
+class TQListViewItem;
+class TQScrollBar;
+class TQString;
+class TQTabDialog;
+class TQTextCodec;
 
 class DwHeaders;
 class DwMediaType;

@@ -33,11 +33,11 @@
 // #include "conduitConfigDialog_base.h"
 #include "kcmodule.h"
 
-class QListView;
-class QListViewItem;
-class QPushButton;
-class QLabel;
-class QWidgetStack;
+class TQListView;
+class TQListViewItem;
+class TQPushButton;
+class TQLabel;
+class TQWidgetStack;
 class KProcess;
 class ConduitConfigBase;
 class ConduitConfig;

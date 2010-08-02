@@ -24,7 +24,7 @@
 
 #include "editor.h"
 
-class QTextEdit;
+class TQTextEdit;
 class KFontAction;
 class KFontSizeAction;
 class KToggleAction;

@@ -36,10 +36,10 @@
 #include "syncAction.h"
 #include "pilotDaemonDCOP.h"
 
-class QPixmap;
-class QTimer;
+class TQPixmap;
+class TQTimer;
 class KAboutApplication;
-class QPopupMenu;
+class TQPopupMenu;
 
 class PilotDaemon;
 class ActionQueue;

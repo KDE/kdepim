@@ -25,7 +25,7 @@
 #include <tqguardedptr.h>
 #include <tqstringlist.h>
 
-class QCheckBox;
+class TQCheckBox;
 class KFindDialog;
 class KFind;
 class KSeparator;

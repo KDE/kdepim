@@ -43,7 +43,7 @@
 * SyncAction
 */
 
-class QTimer;
+class TQTimer;
 class KPilotUser;
 class SyncAction;
 

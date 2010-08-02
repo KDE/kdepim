@@ -21,7 +21,7 @@
 #include <tqcombobox.h>
 #include <tqbitarray.h>
 
-class QCheckBox;
+class TQCheckBox;
 class KSimpleConfig;
 class KNRemoteArticle;
 

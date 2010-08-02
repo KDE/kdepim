@@ -28,8 +28,8 @@
 
 #include <tqlabel.h>
 
-class QPushButton;
-class QFrame;
+class TQPushButton;
+class TQFrame;
 
 class ActiveLabel : public QLabel
 {

@@ -35,11 +35,11 @@
 
 #include "../kmsearchpattern.h"
 
-class QWidget;
-class QWidgetStack;
-class QCString;
-class QString;
-class QObject;
+class TQWidget;
+class TQWidgetStack;
+class TQCString;
+class TQString;
+class TQObject;
 
 namespace KMail {
   /**

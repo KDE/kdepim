@@ -29,10 +29,10 @@
 #include "treenode.h"
 #include "librss/librss.h"
 
-class QDomElement;
-class QPixmap;
-class QString;
-class QStringList;
+class TQDomElement;
+class TQPixmap;
+class TQString;
+class TQStringList;
 class KURL;
 
 

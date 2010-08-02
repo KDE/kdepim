@@ -35,7 +35,7 @@
 #include <klistview.h>
 
 namespace KPIM { class Identity; }
-class QDropEvent;
+class TQDropEvent;
 class QDragEvent;
 
 namespace KMail {

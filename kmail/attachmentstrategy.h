@@ -32,7 +32,7 @@
 #ifndef __KMAIL_ATTACHMENTSTRATEGY_H__
 #define __KMAIL_ATTACHMENTSTRATEGY_H__
 
-class QString;
+class TQString;
 class partNode;
 
 namespace KMail {

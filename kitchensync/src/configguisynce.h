@@ -24,7 +24,7 @@
 
 #include "configgui.h"
 
-class QCheckBox;
+class TQCheckBox;
 
 class KLineEdit;
 

@@ -34,7 +34,7 @@ class Job;
 }
 class KToggleAction;
 
-class QPopupMenu;
+class TQPopupMenu;
 
 
 namespace KPIM {

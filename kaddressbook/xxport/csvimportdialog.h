@@ -30,13 +30,13 @@
 
 class KURLRequester;
 
-class QButtonGroup;
-class QComboBox;
-class QCheckBox;
-class QLineEdit;
-class QPushButton;
-class QRadioButton;
-class QTable;
+class TQButtonGroup;
+class TQComboBox;
+class TQCheckBox;
+class TQLineEdit;
+class TQPushButton;
+class TQRadioButton;
+class TQTable;
 
 class CSVImportDialog : public KDialogBase
 {

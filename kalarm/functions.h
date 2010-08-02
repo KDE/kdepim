@@ -28,9 +28,9 @@
 
 #include "alarmevent.h"
 
-class QObject;
-class QWidget;
-class QString;
+class TQObject;
+class TQWidget;
+class TQString;
 class KAction;
 class KActionCollection;
 namespace KCal { class Event; }

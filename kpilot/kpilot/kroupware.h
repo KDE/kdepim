@@ -32,7 +32,7 @@
 
 #include "syncAction.h"
 
-class QString;
+class TQString;
 
 class KroupwareSync : public SyncAction
 {

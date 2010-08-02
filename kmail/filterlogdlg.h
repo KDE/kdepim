@@ -31,10 +31,10 @@
 
 #include <kdialogbase.h>
 
-class QTextEdit;
-class QCheckBox;
-class QSpinBox;
-class QGroupBox;
+class TQTextEdit;
+class TQCheckBox;
+class TQSpinBox;
+class TQGroupBox;
 
 namespace KMail {
 

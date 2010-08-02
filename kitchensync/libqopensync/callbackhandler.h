@@ -34,7 +34,7 @@ class OSyncMappingUpdate;
 class OSyncEngineUpdate;
 class OSyncMemberUpdate;
 
-class QCustomEvent;
+class TQCustomEvent;
 
 namespace QSync {
 

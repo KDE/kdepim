@@ -28,7 +28,7 @@
 
 #include <kparts/part.h>
 
-class QTextEdit;
+class TQTextEdit;
 class KAddressBookIface_stub;
 
 class TestPart : public KParts::ReadOnlyPart

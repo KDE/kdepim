@@ -25,10 +25,10 @@
 
 #include "configgui.h"
 
-class QCheckBox;
-class QComboBox;
-class QGridLayout;
-class QSpinBox;
+class TQCheckBox;
+class TQComboBox;
+class TQGridLayout;
+class TQSpinBox;
 class KComboBox;
 class KLineEdit;
 

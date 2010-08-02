@@ -11,8 +11,8 @@
 class KAccel;
 class KAccelMenuWatch;
 class KarmTray;
-class QWidget;
-class QPainter;
+class TQWidget;
+class TQPainter;
 class KURL;
 
 class Preferences;

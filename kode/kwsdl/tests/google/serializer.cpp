@@ -443,7 +443,7 @@ void Serializer::demarshal( const TQDomElement &parent, GoogleSearchResult* valu
         value->setDocumentFiltering( item );
       }
       if ( element.tagName() == "searchComments" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setSearchComments( item );
       }
@@ -463,7 +463,7 @@ void Serializer::demarshal( const TQDomElement &parent, GoogleSearchResult* valu
         value->setResultElements( item );
       }
       if ( element.tagName() == "searchQuery" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setSearchQuery( item );
       }
@@ -478,7 +478,7 @@ void Serializer::demarshal( const TQDomElement &parent, GoogleSearchResult* valu
         value->setEndIndex( item );
       }
       if ( element.tagName() == "searchTips" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setSearchTips( item );
       }
@@ -518,12 +518,12 @@ void Serializer::demarshal( const TQDomElement &parent, DirectoryCategory* value
     TQDomElement element = node.toElement();
     if ( !element.isNull() ) {
       if ( element.tagName() == "fullViewableName" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setFullViewableName( item );
       }
       if ( element.tagName() == "specialEncoding" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setSpecialEncoding( item );
       }
@@ -574,27 +574,27 @@ void Serializer::demarshal( const TQDomElement &parent, ResultElement* value )
     TQDomElement element = node.toElement();
     if ( !element.isNull() ) {
       if ( element.tagName() == "summary" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setSummary( item );
       }
       if ( element.tagName() == "URL" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setURL( item );
       }
       if ( element.tagName() == "snippet" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setSnippet( item );
       }
       if ( element.tagName() == "title" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setTitle( item );
       }
       if ( element.tagName() == "cachedSize" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setCachedSize( item );
       }
@@ -604,7 +604,7 @@ void Serializer::demarshal( const TQDomElement &parent, ResultElement* value )
         value->setRelatedInformationPresent( item );
       }
       if ( element.tagName() == "hostName" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setHostName( item );
       }
@@ -614,7 +614,7 @@ void Serializer::demarshal( const TQDomElement &parent, ResultElement* value )
         value->setDirectoryCategory( item );
       }
       if ( element.tagName() == "directoryTitle" ) {
-        TQString* item = new QString;
+        TQString* item = new TQString;
         Serializer::demarshal( element, item );
         value->setDirectoryTitle( item );
       }

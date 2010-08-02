@@ -38,7 +38,7 @@
 #include <tqstringlist.h>
 #include <tqtimer.h>
 
-class QString;
+class TQString;
 class KHTMLPart;
 
 namespace KMail {

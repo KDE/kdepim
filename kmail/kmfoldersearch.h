@@ -42,7 +42,7 @@ class KMSearchPattern;
 class KMFolderImap;
 class KMFolderSearchJob;
 class KMIndexSearchTarget;
-class QTimer;
+class TQTimer;
 
 namespace KMail {
    class AttachmentStrategy;

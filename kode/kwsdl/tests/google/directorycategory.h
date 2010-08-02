@@ -24,7 +24,7 @@
 #ifndef DIRECTORYCATEGORY_H
 #define DIRECTORYCATEGORY_H
 
-class QString;
+class TQString;
 
 class DirectoryCategory
 {

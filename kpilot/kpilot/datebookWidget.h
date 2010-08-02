@@ -33,7 +33,7 @@
 #include "pilotComponent.h"
 
 class KDatePicker;
-class QPushButton;
+class TQPushButton;
 class KListView;
 
 class DatebookWidget : public PilotComponent

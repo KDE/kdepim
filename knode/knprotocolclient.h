@@ -23,7 +23,7 @@
 
 #include <knserverinfo.h>
 
-class QStrList;
+class TQStrList;
 class KNJobData;
 struct in_addr;
 

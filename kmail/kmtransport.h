@@ -22,12 +22,12 @@
 
 #include <kdialogbase.h>
 
-class QCheckBox;
-class QLabel;
-class QLineEdit;
-class QRadioButton;
+class TQCheckBox;
+class TQLabel;
+class TQLineEdit;
+class TQRadioButton;
 class KMServerTest;
-class QButtonGroup;
+class TQButtonGroup;
 
 class KMTransportInfo : public QObject
 {

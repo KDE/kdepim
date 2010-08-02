@@ -28,10 +28,10 @@
 #include <tqtimer.h>
 #include <tqheader.h>
 
-class QDropEvent;
-class QPixmap;
-class QPainter;
-class QPopupMenu;
+class TQDropEvent;
+class TQPixmap;
+class TQPainter;
+class TQPopupMenu;
 class KPopupMenu;
 class KMFolder;
 class KMFolderDir;
@@ -40,7 +40,7 @@ class KMFolderTree;
 class KMAccount;
 // duplication from kmcommands.h, to avoid the include
 typedef TQMap<int,KMFolder*> KMMenuToFolder;
-template <typename T> class QGuardedPtr;
+template <typename T> class TQGuardedPtr;
 
 class KDE_EXPORT KMFolderTreeItem : public TQObject, public KFolderTreeItem
 {

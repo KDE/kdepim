@@ -52,8 +52,8 @@
 
 class KDIntervalColorRectangle;
 class KDGanttViewTaskLink;
-class QPrinter;
-class QIODevice;
+class TQPrinter;
+class TQIODevice;
 class itemAttributeDialog;
 class KDListView;
 class KDGanttViewItem;

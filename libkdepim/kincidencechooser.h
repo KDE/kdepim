@@ -35,11 +35,11 @@
 #include "calendardiffalgo.h"
 
 
-class QRadioButton;
-class QButtonGroup;
-class QVBox;
-class QStringList;
-class QTextBrowser;
+class TQRadioButton;
+class TQButtonGroup;
+class TQVBox;
+class TQStringList;
+class TQTextBrowser;
 class KDialogBase;
 
 /** Dialog to change the korganizer configuration.

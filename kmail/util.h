@@ -49,7 +49,7 @@
 
 class DwString;
 class KURL;
-class QWidget;
+class TQWidget;
 
 namespace KMail
 {

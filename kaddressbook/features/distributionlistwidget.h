@@ -30,9 +30,9 @@
 
 #include "extensionwidget.h"
 
-class QButtonGroup;
-class QComboBox;
-class QListView;
+class TQButtonGroup;
+class TQComboBox;
+class TQListView;
 
 class DistributionListView;
 

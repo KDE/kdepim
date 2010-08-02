@@ -27,7 +27,7 @@
 
 #include <tqptrlist.h>
 
-class QString;
+class TQString;
 class KConfig;
 class KMMessage;
 class KMFilterAction;

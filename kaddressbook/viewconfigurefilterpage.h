@@ -26,7 +26,7 @@
 
 #include <tqwidget.h>
 
-class QButtonGroup;
+class TQButtonGroup;
 
 class KComboBox;
 class KConfig;

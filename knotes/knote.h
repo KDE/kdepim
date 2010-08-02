@@ -30,7 +30,7 @@
 #include <kconfig.h>
 #include <kxmlguiclient.h>
 
-class QLabel;
+class TQLabel;
 
 class KXMLGUIBuilder;
 

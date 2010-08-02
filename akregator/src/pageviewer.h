@@ -31,7 +31,7 @@
 
 class KAction;
 class KToolBarPopupAction;
-class QString;
+class TQString;
 
 namespace Akregator
 {

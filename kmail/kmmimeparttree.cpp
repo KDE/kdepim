@@ -131,7 +131,7 @@ void KMMimePartTree::itemRightClicked( TQListViewItem* item,
     else {
         kdDebug(5006) << "\n**\n** KMMimePartTree::itemRightClicked() **\n**" << endl;
 
-        TQPopupMenu* popup = new QPopupMenu;
+        TQPopupMenu* popup = new TQPopupMenu;
         if ( mCurrentContextMenuItem->node()->nodeId() > 2 &&
              mCurrentContextMenuItem->node()->typeString() != "Multipart" ) {
           popup->insertItem( SmallIcon("fileopen"), i18n("to open", "Open"), this, TQT_SLOT(slotOpen()) );

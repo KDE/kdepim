@@ -32,7 +32,7 @@
 
 #include "kdatepickerpopup.h"
 
-class QEvent;
+class TQEvent;
 
 /**
   A date editing widget that consists of an editable combo box.

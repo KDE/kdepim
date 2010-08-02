@@ -37,7 +37,7 @@
 
 #include <tqcstring.h>
 
-class QString;
+class TQString;
 
 namespace Kleo {
 

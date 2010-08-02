@@ -24,10 +24,10 @@
 #include "kngroupmanager.h"
 
 class KLineEdit;
-class QCheckBox;
-class QLayout;
-class QLabel;
-class QGridLayout;
+class TQCheckBox;
+class TQLayout;
+class TQLabel;
+class TQGridLayout;
 
 class KNNntpAccount;
 

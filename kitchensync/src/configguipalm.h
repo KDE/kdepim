@@ -26,9 +26,9 @@
 
 class KComboBox;
 class KLineEdit;
-class QCheckBox;
-class QRadioButton;
-class QSpinBox;
+class TQCheckBox;
+class TQRadioButton;
+class TQSpinBox;
 
 class ConfigGuiPalm : public ConfigGui
 {

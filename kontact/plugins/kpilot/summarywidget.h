@@ -38,8 +38,8 @@
 #include <tqwidget.h>
 #include <tqdatetime.h>
 
-class QGridLayout;
-class QLabel;
+class TQGridLayout;
+class TQLabel;
 class KURLLabel;
 
 class SummaryWidget : public Kontact::Summary, public DCOPObject

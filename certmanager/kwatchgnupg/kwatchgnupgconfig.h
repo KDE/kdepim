@@ -35,9 +35,9 @@
 
 #include <kdialogbase.h>
 
-class QCheckBox;
-class QComboBox;
-class QSpinBox;
+class TQCheckBox;
+class TQComboBox;
+class TQSpinBox;
 class KURLRequester;
 
 class KWatchGnuPGConfig : public KDialogBase {

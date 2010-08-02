@@ -19,10 +19,10 @@
 
 #include <tqgroupbox.h>
 
-class QLabel;
+class TQLabel;
 class KIntSpinBox;
-class QComboBox;
-class QCheckBox;
+class TQComboBox;
+class TQCheckBox;
 
 class KSimpleConfig;
 

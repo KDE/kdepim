@@ -45,7 +45,7 @@ TestPart::TestPart(TQObject *parent, const char *name) // ## parentWidget
   : KParts::ReadOnlyPart(parent, name)
 {
   setInstance( new KInstance("testpart") ); // ## memleak
-  m_edit = new QTextEdit;
+  m_edit = new TQTextEdit;
   setWidget(m_edit);
   setXMLFile("testpartui.rc");
   new KAction( "new contact (test)", 0, this, TQT_SLOT( newContact() ), actionCollection(), "test_deleteevent" );

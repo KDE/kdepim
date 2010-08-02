@@ -37,8 +37,8 @@
 
 #include "KDGanttSizingControl.h"
 #include <tqlayout.h>
-class QPushButton;
-class QBoxLayout;
+class TQPushButton;
+class TQBoxLayout;
 
 class KDGanttSemiSizingControl : public KDGanttSizingControl
 {

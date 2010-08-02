@@ -33,13 +33,13 @@
 #include <tqdialog.h>
 #include <kdialogbase.h>
 
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
-class QSpacerItem;
-class QLabel;
-class QLineEdit;
-class QComboBox;
+class TQVBoxLayout;
+class TQHBoxLayout;
+class TQGridLayout;
+class TQSpacerItem;
+class TQLabel;
+class TQLineEdit;
+class TQComboBox;
 class KMFolder;
 
 namespace KMail {

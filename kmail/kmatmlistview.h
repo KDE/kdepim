@@ -10,7 +10,7 @@
 
 class KMComposeWin;
 class MessageComposer;
-class QCheckBox;
+class TQCheckBox;
 
 class KMAtmListViewItem : public TQObject, public QListViewItem
 {

@@ -29,9 +29,9 @@ class KURL;
 namespace KIO { class MetaData; class Job; class TransferJob; class Slave; }
 class KIO_Protocol;
 
-class QString;
-template<class T> class QMemArray;
-typedef TQMemArray<char> QByteArray;
+class TQString;
+template<class T> class TQMemArray;
+typedef TQMemArray<char> TQByteArray;
 
 class KIO_Single_Subject : public QObject
 { Q_OBJECT

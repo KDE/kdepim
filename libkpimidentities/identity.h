@@ -22,7 +22,7 @@ namespace KPIM {
 }
 class KConfigBase;
 class IdentityList;
-class QDataStream;
+class TQDataStream;
 
 namespace KPIM {
 

@@ -23,11 +23,11 @@
 #include <tqmap.h>
 
 class KMSearchPatternEdit;
-class QListBox;
-class QPushButton;
-class QComboBox;
-class QWidgetStack;
-class QCheckBox;
+class TQListBox;
+class TQPushButton;
+class TQComboBox;
+class TQWidgetStack;
+class TQCheckBox;
 class KIconButton;
 class KKeyButton;
 class KListView;

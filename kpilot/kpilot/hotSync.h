@@ -34,7 +34,7 @@
 */
 
 
-class QTimer;
+class TQTimer;
 
 #include "syncAction.h"
 

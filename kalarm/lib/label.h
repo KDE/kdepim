@@ -22,7 +22,7 @@
 #define LABEL_H
 
 #include <tqlabel.h>
-class QRadioButton;
+class TQRadioButton;
 class LabelFocusWidget;
 
 /**

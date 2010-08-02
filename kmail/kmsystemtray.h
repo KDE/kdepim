@@ -30,9 +30,9 @@
 
 class KMFolder;
 class KMMainWidget;
-class QMouseEvent;
+class TQMouseEvent;
 class KPopupMenu;
-class QPoint;
+class TQPoint;
 
 /**
  * KMSystemTray extends KSystemTray and handles system

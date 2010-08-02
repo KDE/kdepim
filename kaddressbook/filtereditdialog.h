@@ -24,10 +24,10 @@
 #ifndef FILTEREDITDIALOG_H
 #define FILTEREDITDIALOG_H
 
-class QButtonGroup;
-class QString;
-class QToolButton;
-class QWidget;
+class TQButtonGroup;
+class TQString;
+class TQToolButton;
+class TQWidget;
 
 class KLineEdit;
 class KListBox;

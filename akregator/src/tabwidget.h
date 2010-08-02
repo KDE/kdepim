@@ -28,7 +28,7 @@
 #include <tqptrlist.h>
 #include <ktabwidget.h>
 
-class QString;
+class TQString;
 
 namespace Akregator
 {

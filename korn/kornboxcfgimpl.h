@@ -25,9 +25,9 @@ class KConfig;
 class KConfigGroup;
 class KDialogBase;
 
-class QFont;
-class QString;
-class QWidget;
+class TQFont;
+class TQString;
+class TQWidget;
 
 class KornBoxCfgImpl : public KornBoxCfg
 { Q_OBJECT

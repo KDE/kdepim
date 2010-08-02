@@ -35,7 +35,7 @@
 class KComboBox;
 class KLineEdit;
 class KListView;
-class QSignalMapper;
+class TQSignalMapper;
 
 namespace KPIM {
 

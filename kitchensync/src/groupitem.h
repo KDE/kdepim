@@ -33,9 +33,9 @@ class Engine;
 
 class MemberItem;
 class KURLLabel;
-class QLabel;
-class QProgressBar;
-class QVBox;
+class TQLabel;
+class TQProgressBar;
+class TQVBox;
 
 class GroupItem : public KWidgetListItem
 {

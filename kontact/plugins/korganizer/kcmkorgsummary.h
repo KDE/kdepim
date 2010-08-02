@@ -27,7 +27,7 @@
 #include <kcmodule.h>
 
 class QSpinxBox;
-class QButtonGroup;
+class TQButtonGroup;
 
 class KCMKOrgSummary : public KCModule
 {

@@ -33,7 +33,7 @@
 #ifndef __KSIEVE_INTERFACES_SCRIPTBUILDER_H__
 #define __KSIEVE_INTERFACES_SCRIPTBUILDER_H__
 
-class QString;
+class TQString;
 
 namespace KSieve {
 

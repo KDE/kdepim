@@ -42,7 +42,7 @@ class KProcess;
 class KMSendProc;
 class KMSendSendmail;
 class KMSendSMTP;
-class QStrList;
+class TQStrList;
 class KMTransportInfo;
 class KMPrecommand;
 

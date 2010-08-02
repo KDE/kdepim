@@ -27,9 +27,9 @@
 
 #include <kcmodule.h>
 
-class QButtonGroup;
-class QCheckBox;
-class QSpinBox;
+class TQButtonGroup;
+class TQCheckBox;
+class TQSpinBox;
 
 class KAboutData;
 

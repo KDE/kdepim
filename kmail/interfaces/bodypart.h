@@ -34,9 +34,9 @@
 #ifndef __KMAIL_INTERFACES_BODYPART_H__
 #define __KMAIL_INTERFACES_BODYPART_H__
 
-template <typename T> class QMemArray;
-typedef TQMemArray<char> QByteArray;
-class QString;
+template <typename T> class TQMemArray;
+typedef TQMemArray<char> TQByteArray;
+class TQString;
 
 namespace KMail {
   namespace Interface {

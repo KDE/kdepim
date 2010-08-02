@@ -39,7 +39,7 @@
 
 
 class KPrinter;
-class QVBoxLayout;
+class TQVBoxLayout;
 
 namespace KABPrinting {
 

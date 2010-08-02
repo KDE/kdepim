@@ -26,10 +26,10 @@
 
 #include <tqwidget.h>
 
-class QToolButton;
+class TQToolButton;
 class KListView;
-class QListViewItem;
-class QPushButton;
+class TQListViewItem;
+class TQPushButton;
 
 class LDAPOptionsWidget : public QWidget
 {

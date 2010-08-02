@@ -33,7 +33,7 @@
 #include <tqstring.h>
 #include <tqvaluelist.h>
 
-typedef class TQMemArray<char> QByteArray;
+typedef class TQMemArray<char> TQByteArray;
 
 namespace Akregator {
 

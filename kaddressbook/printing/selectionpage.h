@@ -26,11 +26,11 @@
 
 #include <tqwidget.h>
 
-class QButtonGroup;
-class QComboBox;
-class QListView;
-class QListViewItem;
-class QRadioButton;
+class TQButtonGroup;
+class TQComboBox;
+class TQListView;
+class TQListViewItem;
+class TQRadioButton;
 
 class SelectionPage : public QWidget
 {

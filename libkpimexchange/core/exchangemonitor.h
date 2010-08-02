@@ -31,9 +31,9 @@
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
 
-class QSocketDevice;
-class QSocketNotifier;
-class QTextStream;
+class TQSocketDevice;
+class TQSocketNotifier;
+class TQTextStream;
 
 namespace KPIM {
 

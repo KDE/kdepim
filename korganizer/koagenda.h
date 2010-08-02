@@ -30,9 +30,9 @@
 #include <libkcal/incidencebase.h>
 
 
-class QPopupMenu;
-class QTime;
-class QLabel;
+class TQPopupMenu;
+class TQTime;
+class TQLabel;
 class KConfig;
 class KOAgenda;
 class KOAgendaItem;

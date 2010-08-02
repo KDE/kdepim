@@ -22,7 +22,7 @@
 #include <kwallet.h>
 #include <kdebug.h>
 
-class QString;
+class TQString;
 
 namespace KCal {
 

@@ -36,9 +36,9 @@
 #include <tqptrlist.h>
 #include <kdepimmacros.h>
 
-class QPushButton;
-class QVBoxLayout;
-class QHBox;
+class TQPushButton;
+class TQVBoxLayout;
+class TQHBox;
 
 /** 
     @short Widget that manages a list of other widgets (incl. 'more', 'fewer' and 'clear' buttons).

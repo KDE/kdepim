@@ -26,10 +26,10 @@
 
 #include "viewconfigurewidget.h"
 
-class QString;
-class QWidget;
-class QRadioButton;
-class QCheckBox;
+class TQString;
+class TQWidget;
+class TQRadioButton;
+class TQCheckBox;
 class KURLRequester;
 class KConfig;
 

@@ -25,9 +25,9 @@
 #include "configgui.h"
 #include "kabc/ldapconfigwidget.h"
 
-class QCheckBox;
-class QLabel;
-class QSpinBox;
+class TQCheckBox;
+class TQLabel;
+class TQSpinBox;
 
 class KABC::LdapConfigWidget;
 class KComboBox;

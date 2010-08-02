@@ -24,7 +24,7 @@
 #include <tqframe.h>
 #include "timeperiod.h"
 
-class QLabel;
+class TQLabel;
 class CheckBox;
 
 

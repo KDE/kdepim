@@ -27,9 +27,9 @@
 #include <tqvaluelist.h>
 #include <tqpair.h>
 
-class QLabel;
-class QLineEdit;
-class QComboBox;
+class TQLabel;
+class TQLineEdit;
+class TQComboBox;
 
 class ConfigGuiGnokii : public ConfigGui
 {

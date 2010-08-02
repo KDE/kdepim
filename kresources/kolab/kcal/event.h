@@ -38,7 +38,7 @@
 
 #include <libkcal/event.h>
 
-class QDomElement;
+class TQDomElement;
 
 
 namespace Kolab {

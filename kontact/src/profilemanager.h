@@ -29,7 +29,7 @@
 #include <tqobject.h>
 #include <tqstring.h>
 
-template <class T> class QValueList;
+template <class T> class TQValueList;
 
 namespace KIO {
     class Job;

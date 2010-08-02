@@ -40,7 +40,7 @@
 
 class PrintCellItem;
 
-class QWidget;
+class TQWidget;
 
 using namespace KCal;
 

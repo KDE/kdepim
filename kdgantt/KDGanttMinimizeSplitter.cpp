@@ -323,7 +323,7 @@ void kdganttGeomCalc( TQMemArray<QLayoutStruct> &chain, int start, int count, in
   widget with minimize buttons.
 
   This class (and its documentation) is largely a copy of Qt's
-  QSplitter; the copying was necessary because TQSplitter is not
+  TQSplitter; the copying was necessary because TQSplitter is not
   extensible at all. TQSplitter and its documentation are licensed
   according to the GPL and the Qt Professional License (if you hold
   such a license) and are (C) Trolltech AS.

@@ -36,10 +36,10 @@
 #include "core.h"
 #include "kontactiface.h"
 
-class QHBox;
-class QSplitter;
-class QVBox;
-class QFrame;
+class TQHBox;
+class TQSplitter;
+class TQVBox;
+class TQFrame;
 
 class KAction;
 class KConfig;

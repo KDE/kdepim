@@ -27,10 +27,10 @@
 
 #include <tqobject.h>
 
-class QDomDocument;
-template <class K,class T> class QMap;
-class QString;
-class QStringList;
+class TQDomDocument;
+template <class K,class T> class TQMap;
+class TQString;
+class TQStringList;
 
 namespace Akregator {
 

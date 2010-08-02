@@ -31,7 +31,7 @@
 #include <tqtimer.h>
 
 class KDIntervalColorRectangle;
-class QLabel;
+class TQLabel;
 class KDGanttView;
 class KDGanttViewItem;
 class FreeBusyItem;

@@ -27,11 +27,11 @@
 #include <kabc/addressee.h>
 #include <kdialogbase.h>
 
-class QButtonGroup;
-class QCheckBox;
-class QListView;
-class QTextEdit;
-class QToolButton;
+class TQButtonGroup;
+class TQCheckBox;
+class TQListView;
+class TQTextEdit;
+class TQToolButton;
 
 class KComboBox;
 class KLineEdit;

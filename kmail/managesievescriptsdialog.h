@@ -5,8 +5,8 @@
 #include <kurl.h>
 #include <tqmap.h>
 
-class QListView;
-class QCheckListItem;
+class TQListView;
+class TQCheckListItem;
 
 namespace KMail {
 

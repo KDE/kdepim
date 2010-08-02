@@ -31,12 +31,12 @@
 #include "datetime.h"
 #include "soundpicker.h"
 
-class QButton;
-class QGroupBox;
-class QComboBox;
-class QTabWidget;
-class QVBox;
-class QHBox;
+class TQButton;
+class TQGroupBox;
+class TQComboBox;
+class TQTabWidget;
+class TQVBox;
+class TQHBox;
 class EmailIdCombo;
 class FontColourButton;
 class ColourCombo;

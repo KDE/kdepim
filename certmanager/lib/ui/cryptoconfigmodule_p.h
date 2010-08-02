@@ -40,8 +40,8 @@
 class KLineEdit;
 class KIntNumInput;
 class KURLRequester;
-class QPushButton;
-class QGridLayout;
+class TQPushButton;
+class TQGridLayout;
 
 namespace Kleo {
 

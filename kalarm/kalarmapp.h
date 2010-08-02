@@ -24,8 +24,8 @@
 /** @file kalarmapp.h - the KAlarm application object */
 
 #include <tqguardedptr.h>
-class QTimer;
-class QDateTime;
+class TQTimer;
+class TQDateTime;
 
 #include <kuniqueapplication.h>
 #include <kurl.h>

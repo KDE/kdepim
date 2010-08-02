@@ -7,7 +7,7 @@
 
 #include"maildrop.h"
 
-class QTimerEvent;
+class TQTimerEvent;
 
 /**
 * Superclass for all pollable maildrop monitors.

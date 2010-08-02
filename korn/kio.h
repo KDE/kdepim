@@ -25,7 +25,7 @@
 
 #include "polldrop.h"
 
-class QWidget;
+class TQWidget;
 class KDropDialog;
 class KornMailSubject;
 class KProcess;
@@ -36,8 +36,8 @@ class KIO_Read;
 class KIO_Delete;
 class KConfigGroup;
 class KURL;
-template<class> class QPtrList;
-template<class> class QValueList;
+template<class> class TQPtrList;
+template<class> class TQValueList;
 namespace KIO { class Job; class MetaData; class Slave; class TransferJob; }
 
 /**

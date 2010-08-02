@@ -23,10 +23,10 @@
 #include <tqvaluelist.h>
 #include <kdepimmacros.h>
 
-class QListBox;
-class QLabel;
-class QWidgetStack;
-class QCheckBox;
+class TQListBox;
+class TQLabel;
+class TQWidgetStack;
+class TQCheckBox;
 
 class KLineEdit;
 class KProcess;

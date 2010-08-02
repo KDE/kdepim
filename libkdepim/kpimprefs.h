@@ -26,7 +26,7 @@
 #include <kconfigskeleton.h>
 #include <kdepimmacros.h>
 
-class QString;
+class TQString;
 
 class KDE_EXPORT KPimPrefs : public KConfigSkeleton
 {

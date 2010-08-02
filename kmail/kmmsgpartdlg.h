@@ -24,12 +24,12 @@
 #include <kio/global.h>
 
 class KMMessagePart;
-class QPushButton;
+class TQPushButton;
 class KComboBox;
-class QComboBox;
-class QCheckBox;
-class QLabel;
-class QLineEdit;
+class TQComboBox;
+class TQCheckBox;
+class TQLabel;
+class TQLineEdit;
 
 #undef None
 

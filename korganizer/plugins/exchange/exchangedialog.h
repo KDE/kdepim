@@ -22,7 +22,7 @@
 #include <kdialogbase.h>
 #include <kdatewidget.h>
 
-class QComboBox;
+class TQComboBox;
 
 class ExchangeDialog : public KDialogBase
 {

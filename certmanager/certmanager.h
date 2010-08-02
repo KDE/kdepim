@@ -65,9 +65,9 @@ class LineEditAction;
 class ComboAction;
 
 class KURL;
-class QFile;
-class QStringList;
-class QLabel;
+class TQFile;
+class TQStringList;
+class TQLabel;
 
 namespace GpgME {
   class ImportResult;

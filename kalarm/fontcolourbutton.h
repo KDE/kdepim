@@ -26,7 +26,7 @@
 #include <tqframe.h>
 #include <kdialogbase.h>
 
-class QLineEdit;
+class TQLineEdit;
 class FontColourChooser;
 class PushButton;
 

@@ -40,11 +40,11 @@
 
 #include <kdepimmacros.h>
 
-class QDomNode;
-class QDomDocument;
-class QDomElement;
-class QTextStream;
-class QLabel;
+class TQDomNode;
+class TQDomDocument;
+class TQDomElement;
+class TQTextStream;
+class TQLabel;
 
 
 /**

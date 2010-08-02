@@ -40,7 +40,7 @@ namespace Kleo {
   class GnuPGProcessBase;
 }
 class KProcess;
-class QStringList;
+class TQStringList;
 
 class GnuPGViewer : public TQTextEdit {
   Q_OBJECT

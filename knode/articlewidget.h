@@ -24,8 +24,8 @@
 
 #include "knjobdata.h"
 
-class QStringList;
-class QTimer;
+class TQStringList;
+class TQTimer;
 
 class KAction;
 class KActionCollection;

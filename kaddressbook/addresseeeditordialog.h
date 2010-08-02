@@ -29,7 +29,7 @@
 #include <kabc/addressbook.h>
 
 class AddresseeEditorBase;
-class QWidget;
+class TQWidget;
 namespace KAB { class Core; }
 
 class AddresseeEditorDialog : public KDialogBase

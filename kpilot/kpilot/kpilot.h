@@ -32,8 +32,8 @@
 #include <kmainwindow.h>
 
 
-class QPopupMenu;
-class QComboBox;
+class TQPopupMenu;
+class TQComboBox;
 class KAction;
 class KProgress;
 class KJanusWidget;

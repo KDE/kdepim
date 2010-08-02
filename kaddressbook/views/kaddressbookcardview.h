@@ -31,7 +31,7 @@
 #include "kaddressbookview.h"
 
 class QDragEntryEvent;
-class QDropEvent;
+class TQDropEvent;
 class KConfig;
 class AddresseeCardView;
 

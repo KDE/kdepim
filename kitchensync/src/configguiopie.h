@@ -23,9 +23,9 @@
 
 #include "configgui.h"
 
-class QComboBox;
-class QLineEdit;
-class QSpinBox;
+class TQComboBox;
+class TQLineEdit;
+class TQSpinBox;
 
 class ConfigGuiOpie : public ConfigGui
 {

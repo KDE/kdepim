@@ -24,8 +24,8 @@ class KConfig;
 
 class KDialogBase;
 
-class QObject;
-class QString;
+class TQObject;
+class TQString;
 
 class KornCfgImpl : public KornCfgWidget
 { Q_OBJECT

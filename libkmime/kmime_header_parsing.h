@@ -40,8 +40,8 @@
 
 #include <kdepimmacros.h>
 
-template <typename K, typename V> class QMap;
-class QStringList;
+template <typename K, typename V> class TQMap;
+class TQStringList;
 
 namespace KMime {
 

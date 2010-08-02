@@ -25,7 +25,7 @@
 #include <tqobject.h>
 #include <kdepimmacros.h>
 
-class QWidget;
+class TQWidget;
 
 namespace KParts
 {

@@ -11,7 +11,7 @@
 #include <kabc/addressee.h>
 #include <kdepimmacros.h>
 
-class QWidget;
+class TQWidget;
 
 class KDE_EXPORT KAddrBookExternal {
 public:

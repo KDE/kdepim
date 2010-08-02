@@ -33,9 +33,9 @@
 #include "messageactions.h"
 #include <kaction.h>
 
-class QVBoxLayout;
-class QSplitter;
-class QSignalMapper;
+class TQVBoxLayout;
+class TQSplitter;
+class TQSignalMapper;
 
 class KActionMenu;
 class KActionCollection;
@@ -58,9 +58,9 @@ class KMAccount;
 class KMSystemTray;
 class KMHeaders;
 
-template <typename T> class QValueList;
-template <typename T, typename S> class QMap;
-template <typename T> class QGuardedPtr;
+template <typename T> class TQValueList;
+template <typename T, typename S> class TQMap;
+template <typename T> class TQGuardedPtr;
 
 namespace KIO {
   class Job;

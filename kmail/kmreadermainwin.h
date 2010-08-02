@@ -16,7 +16,7 @@ class KMFolderIndex;
 class KMFolder;
 class KFontAction;
 class KFontSizeAction;
-template <typename T, typename S> class QMap;
+template <typename T, typename S> class TQMap;
 
 namespace KMail {
 class MessageActions;

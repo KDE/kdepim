@@ -24,7 +24,7 @@
 
 #include "configgui.h"
 
-class QLineEdit;
+class TQLineEdit;
 
 class ConfigGuiGoogleCalendar : public ConfigGui
 {

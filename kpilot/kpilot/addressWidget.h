@@ -30,10 +30,10 @@
 #ifndef _KPILOT_ADDRESSWIDGET_H
 #define _KPILOT_ADDRESSWIDGET_H
 
-class QMultiLineEdit;
-class QListBox;
-class QComboBox;
-class QTextView;
+class TQMultiLineEdit;
+class TQListBox;
+class TQComboBox;
+class TQTextView;
 
 class PilotDatabase;
 

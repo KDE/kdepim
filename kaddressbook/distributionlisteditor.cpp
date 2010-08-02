@@ -164,7 +164,7 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     mainLayout->setMargin( KDialog::marginHint() );
     mainLayout->setSpacing( KDialog::spacingHint() );
 
-    TQHBoxLayout* nameLayout = new QHBoxLayout;
+    TQHBoxLayout* nameLayout = new TQHBoxLayout;
     nameLayout->setSpacing( KDialog::spacingHint() );
     d->nameLabel = new TQLabel( main );
     d->nameLabel->setText( i18n( "Name:" ) );
@@ -186,7 +186,7 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     d->memberListWidget = new TQWidget( d->scrollView->viewport() );
     d->memberListWidget->setSizePolicy( TQSizePolicy::MinimumExpanding, TQSizePolicy::MinimumExpanding );
     TQVBoxLayout* memberLayout = new TQVBoxLayout( d->memberListWidget );
-    d->addresseeLayout = new QVBoxLayout;
+    d->addresseeLayout = new TQVBoxLayout;
     d->addresseeLayout->setSpacing( KDialog::spacingHint() );
     memberLayout->addItem( d->addresseeLayout );
     memberLayout->addStretch();

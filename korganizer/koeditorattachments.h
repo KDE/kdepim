@@ -33,11 +33,11 @@ class Incidence;
 class Attachment;
 }
 
-class QIconViewItem;
+class TQIconViewItem;
 class AttachmentIconView;
-class QMimeSource;
-class QPushButton;
-class QPopupMenu;
+class TQMimeSource;
+class TQPushButton;
+class TQPopupMenu;
 class KAction;
 
 class KOEditorAttachments : public QWidget

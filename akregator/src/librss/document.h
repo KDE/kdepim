@@ -14,8 +14,8 @@
 #include "article.h"
 #include "global.h"
 
-class QDateTime;
-class QDomDocument;
+class TQDateTime;
+class TQDomDocument;
 
 namespace RSS
 {

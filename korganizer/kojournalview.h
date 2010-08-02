@@ -28,8 +28,8 @@
 #include "journalentry.h"
 
 class JournalEntry;
-class QScrollView;
-class QVBox;
+class TQScrollView;
+class TQVBox;
 
 /**
  * This class provides a journal view.

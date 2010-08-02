@@ -25,14 +25,14 @@ class KConfigGroup;
 class KIO_Protocol;
 class KMailDrop;
 
-class QGroupBox;
-class QObject;
-class QStringList;
-class QWidget;
+class TQGroupBox;
+class TQObject;
+class TQStringList;
+class TQWidget;
 
-template< class T> class QPtrList;
-template< class T> class QPtrVector;
-template< class T, class S> class QMap;
+template< class T> class TQPtrList;
+template< class T> class TQPtrVector;
+template< class T, class S> class TQMap;
 
 #include <tqstring.h>
 

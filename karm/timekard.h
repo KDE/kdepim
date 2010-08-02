@@ -30,8 +30,8 @@
 
 #include "karmstorage.h"
 
-class QString;
-class QDate;
+class TQString;
+class TQDate;
 
 class TaskView;
 

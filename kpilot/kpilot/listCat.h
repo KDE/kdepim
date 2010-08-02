@@ -35,7 +35,7 @@
 */
 
 #include <klistview.h>
-class QStringList;
+class TQStringList;
 
 /**
  * This Widget extends KListView for a particular purpose:

@@ -12,7 +12,7 @@
 
 class KMPopHeaders;
 class KMMessage;
-class QDataStream;
+class TQDataStream;
 namespace KIO {
   class MetaData;
   class Slave;

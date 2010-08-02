@@ -27,7 +27,7 @@
 
 class KComboBox;
 class KLineEdit;
-class QCheckBox;
+class TQCheckBox;
 
 class KDE_EXPORT ScalixWizard : public KConfigWizard
 {

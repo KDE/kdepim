@@ -26,11 +26,11 @@
 
 #include <tqwidget.h>
 
-class QCheckBox;
-class QLineEdit;
-class QListViewItem;
-class QPushButton;
-class QComboBox;
+class TQCheckBox;
+class TQLineEdit;
+class TQListViewItem;
+class TQPushButton;
+class TQComboBox;
 
 class KListView;
 

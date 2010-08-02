@@ -32,8 +32,8 @@
 #include <kdialogbase.h>
 
 class KMLineEdit;
-class QPushButton;
-class QLabel;
+class TQPushButton;
+class TQLabel;
 
 namespace KMail {
 

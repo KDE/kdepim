@@ -23,10 +23,10 @@
 //#include <tqvariant.h>
 #include <tqobject.h>
 
-class QDir;
-class QProcess;
-class QString;
-class QStringList;
+class TQDir;
+class TQProcess;
+class TQString;
+class TQStringList;
 
 class Script : public QObject
 {

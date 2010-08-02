@@ -5,8 +5,8 @@
 
 #include <tqmap.h>
 
-class QString;
-class QWidget;
+class TQString;
+class TQWidget;
 
 namespace Akregator {
 

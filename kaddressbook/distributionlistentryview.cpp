@@ -26,7 +26,7 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, TQWi
     m_mainLayout->setSpacing( KDialog::spacingHint() );
     m_mainLayout->setMargin( KDialog::marginHint() );
 
-    TQBoxLayout* headerLayout = new QHBoxLayout;
+    TQBoxLayout* headerLayout = new TQHBoxLayout;
     headerLayout->setSpacing( KDialog::spacingHint() * 3 );
 
     m_imageLabel = new TQLabel( this );
@@ -39,7 +39,7 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, TQWi
 
     m_mainLayout->addItem( headerLayout );
 
-    TQBoxLayout* distLayout = new QHBoxLayout;
+    TQBoxLayout* distLayout = new TQHBoxLayout;
     distLayout->setSpacing( KDialog::spacingHint() );
 
     TQLabel* distLabel = new TQLabel( this );
@@ -60,16 +60,16 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, TQWi
     emailLabel->setAlignment( Qt::SingleLine );
     m_mainLayout->addWidget( emailLabel );
 
-    TQBoxLayout* emailLayout = new QHBoxLayout;
+    TQBoxLayout* emailLayout = new TQHBoxLayout;
     emailLayout->setSpacing( KDialog::spacingHint() );
     emailLayout->addSpacing( 30 );
 
-    m_radioLayout = new QGridLayout;
+    m_radioLayout = new TQGridLayout;
     emailLayout->addItem( m_radioLayout );
     emailLayout->addStretch();
     m_mainLayout->addItem( emailLayout );
 
-    TQBoxLayout* resourceLayout = new QHBoxLayout;
+    TQBoxLayout* resourceLayout = new TQHBoxLayout;
     resourceLayout->setSpacing( KDialog::spacingHint() );
     m_resourceLabel = new TQLabel( this );
     resourceLayout->addWidget( m_resourceLabel );

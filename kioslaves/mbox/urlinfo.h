@@ -20,7 +20,7 @@
 #define URLINFO_H
 class KURL;
 
-class QString;
+class TQString;
 
 class UrlInfo
 {

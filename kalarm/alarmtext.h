@@ -22,7 +22,7 @@
 #define ALARMTEXT_H
 
 #include <tqstring.h>
-class QStringList;
+class TQStringList;
 class KAEvent;
 
 

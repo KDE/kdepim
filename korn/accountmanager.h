@@ -28,8 +28,8 @@ class KMailDrop;
 
 class KConfig;
 
-template< class T > class QPtrList;
-template< class T, class W > class QMap;
+template< class T > class TQPtrList;
+template< class T, class W > class TQMap;
 
 
 /**

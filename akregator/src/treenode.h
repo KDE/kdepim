@@ -28,11 +28,11 @@
 
 #include <tqobject.h>
 
-class QDomDocument;
-class QDomElement;
-class QString;
-class QStringList;
-template <class T> class QValueList;
+class TQDomDocument;
+class TQDomElement;
+class TQString;
+class TQStringList;
+template <class T> class TQValueList;
 
 namespace Akregator 
 {

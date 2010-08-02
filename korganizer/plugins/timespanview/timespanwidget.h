@@ -30,8 +30,8 @@ namespace KCal {
 class Event;
 }
 
-class QSplitter;
-class QListView;
+class TQSplitter;
+class TQListView;
 class LineView;
 class TimeLine;
 

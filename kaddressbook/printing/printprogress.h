@@ -26,9 +26,9 @@
 
 #include <tqwidget.h>
 
-class QProgressBar;
-class QString;
-class QTextBrowser;
+class TQProgressBar;
+class TQString;
+class TQTextBrowser;
 
 namespace KABPrinting {
 

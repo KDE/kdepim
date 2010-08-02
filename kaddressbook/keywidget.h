@@ -29,7 +29,7 @@
 
 class KComboBox;
 
-class QPushButton;
+class TQPushButton;
 
 class KeyWidget : public QWidget
 {

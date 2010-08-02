@@ -27,8 +27,8 @@
 
 #include <kactionclasses.h>
 
-class QString;
-class QWidget;
+class TQString;
+class TQWidget;
 
 namespace Akregator {
 

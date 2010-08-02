@@ -26,9 +26,9 @@
 #include <tqstring.h>
 #include <time.h>
 
-class QCString;
-class QStringList;
-class QTextCodec;
+class TQCString;
+class TQStringList;
+class TQTextCodec;
 class KMFolder;
 class KMFolderIndex;
 

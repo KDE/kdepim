@@ -34,7 +34,7 @@
 #include <tqdialog.h>
 #include <tqtooltip.h>
 
-class QComboBox;
+class TQComboBox;
 
 #ifdef KDEPIM_NEW_DISTRLISTS
 #include <libkdepim/distributionlist.h>

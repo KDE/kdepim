@@ -37,10 +37,10 @@ class GeoMapWidget;
 class KComboBox;
 class KDoubleSpinBox;
 
-class QCheckBox;
-class QLabel;
-class QSpinBox;
-class QPushButton;
+class TQCheckBox;
+class TQLabel;
+class TQSpinBox;
+class TQPushButton;
 
 typedef struct {
   double latitude;

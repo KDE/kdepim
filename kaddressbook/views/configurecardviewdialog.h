@@ -30,10 +30,10 @@
 #include <tqwidget.h>
 #include <tqfont.h>
 
-class QString;
-class QWidget;
-class QCheckBox;
-class QLabel;
+class TQString;
+class TQWidget;
+class TQCheckBox;
+class TQLabel;
 class KConfig;
 
 namespace KABC { class AddressBook; }

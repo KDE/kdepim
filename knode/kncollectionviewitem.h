@@ -19,8 +19,8 @@
 
 #include <kfoldertree.h>
 
-class QPainter;
-class QColorGroup;
+class TQPainter;
+class TQColorGroup;
 
 class KNCollection;
 

@@ -23,8 +23,8 @@
 #include <tqwidget.h>
 #include <tqvaluelist.h>
 
-class QFrame;
-class QLabel;
+class TQFrame;
+class TQLabel;
 class KJanusWidget;
 
 class GroupConfigCommon;

@@ -45,7 +45,7 @@ KIO_Single_Subject::KIO_Single_Subject( TQObject * parent, const char * name,
 	_protocol = protocol;
 	_name = new TQString( url );
 	_size = size;
-	_message = new QString;
+	_message = new TQString;
 	
 	init( slave );
 }

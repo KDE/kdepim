@@ -34,7 +34,7 @@
 
 #include "service.h"
 
-class QDomDocument; 
+class TQDomDocument; 
 class KTar;
 class KTempFile;
 

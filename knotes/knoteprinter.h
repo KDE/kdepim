@@ -5,9 +5,9 @@
 #include <tqpalette.h>
 #include <tqstring.h>
 
-class QMimeSourceFactory;
-class QStyleSheet;
-template <class T> class QValueList;
+class TQMimeSourceFactory;
+class TQStyleSheet;
+template <class T> class TQValueList;
 class KPrinter;
 
 namespace KCal {

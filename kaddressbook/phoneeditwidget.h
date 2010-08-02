@@ -29,9 +29,9 @@
 
 #include "addresseeconfig.h"
 
-class QButtonGroup;
-class QCheckBox;
-class QSignalMapper;
+class TQButtonGroup;
+class TQCheckBox;
+class TQSignalMapper;
 
 class KLineEdit;
 class KComboBox;

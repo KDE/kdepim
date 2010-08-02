@@ -31,10 +31,10 @@
 #include <tqscrollview.h>
 #include <tqstring.h>
 
-class QLabel;
-class QMouseEvent;
-class QPainter;
-class QResizeEvent;
+class TQLabel;
+class TQMouseEvent;
+class TQPainter;
+class TQResizeEvent;
 
 class CardView;
 class CardViewItemPrivate;

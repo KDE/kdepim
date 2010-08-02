@@ -30,7 +30,7 @@
 namespace KSettings {
   class Dialog;
 }
-class QWidgetStack;
+class TQWidgetStack;
 
 namespace Komposer
 {

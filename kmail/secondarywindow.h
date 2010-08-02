@@ -33,7 +33,7 @@
 
 #include <kmainwindow.h>
 
-class QCloseEvent;
+class TQCloseEvent;
 
 namespace KMail {
 

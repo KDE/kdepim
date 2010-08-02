@@ -27,9 +27,9 @@
 
 class KListView;
 
-class QLabel;
-class QListViewItem;
-class QPushButton;
+class TQLabel;
+class TQListViewItem;
+class TQPushButton;
 
 namespace KPIM {
 

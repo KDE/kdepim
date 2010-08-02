@@ -31,13 +31,13 @@
 #include "kdialogbase.h"
 
 class KPilotDeviceLink;
-class QLabel;
-class QGroupBox;
+class TQLabel;
+class TQGroupBox;
 class KProgress;
-class QTimer;
-class QGridLayout;
-template <class T> class QValueList;
-template<class Key, class T> class QMap;
+class TQTimer;
+class TQGridLayout;
+template <class T> class TQValueList;
+template<class Key, class T> class TQMap;
 
 typedef TQValueList<KPilotDeviceLink*> PilotLinkList;
 

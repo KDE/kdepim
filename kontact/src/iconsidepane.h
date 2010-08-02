@@ -29,7 +29,7 @@
 #include "prefs.h"
 
 
-class QSignalMapper;
+class TQSignalMapper;
 
 namespace KParts { class Part; }
 

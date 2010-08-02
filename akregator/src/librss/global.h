@@ -14,7 +14,7 @@
 #include <kdepimmacros.h>
 
 template <class>
-class QValueList;
+class TQValueList;
 
 namespace RSS
 {

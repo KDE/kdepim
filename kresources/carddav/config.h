@@ -21,8 +21,8 @@
 #include <kdemacros.h>
 #include <kresources/configwidget.h>
 
-class QLineEdit;
-class QCheckBox;
+class TQLineEdit;
+class TQCheckBox;
 
 namespace KABC {
 

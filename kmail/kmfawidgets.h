@@ -12,7 +12,7 @@
     @author Marc Mutz <mutz@kde.org>
 */
 
-class QPushButton;
+class TQPushButton;
 class KURLRequester;
 
 class KMFilterActionWithAddressWidget : public QWidget

@@ -40,9 +40,9 @@
 #include "overlaywidget.h"
 #include <kdepimmacros.h>
 
-class QProgressBar;
-class QScrollView;
-class QFrame;
+class TQProgressBar;
+class TQScrollView;
+class TQFrame;
 
 namespace KPIM {
 class ProgressItem;

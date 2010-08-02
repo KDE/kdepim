@@ -44,13 +44,13 @@
 #include <kdepimmacros.h>
 #include <vector>
 
-class QVBoxLayout;
-class QCheckBox;
-class QPixmap;
-class QTimer;
-class QListViewItem;
-class QRegExp;
-class QPoint;
+class TQVBoxLayout;
+class TQCheckBox;
+class TQPixmap;
+class TQTimer;
+class TQListViewItem;
+class TQRegExp;
+class TQPoint;
 
 namespace Kleo {
   class KeyListView;

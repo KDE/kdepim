@@ -16,15 +16,15 @@
 // TaskView is a subclass or QListView?)
 #include "taskview.h"
 
-class QFile;
-class QString;
+class TQFile;
+class TQString;
 class KarmStorage;
 
-class QTimer;
+class TQTimer;
 class KCal::Incidence;
 class KCal::Todo;
-class QObject;
-class QPixmap;
+class TQObject;
+class TQPixmap;
 
 /// \class Task
 /** \brief A class representing a task

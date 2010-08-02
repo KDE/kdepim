@@ -36,11 +36,11 @@
 
 
 class KColorButton;
-class QCheckBox;
-class QComboBox;
-class QLabel;
-class QSpinBox;
-class QButtonGroup;
+class TQCheckBox;
+class TQComboBox;
+class TQLabel;
+class TQSpinBox;
+class TQButtonGroup;
 class QTimeEdit;
 class KTimeEdit;
 class KDateEdit;

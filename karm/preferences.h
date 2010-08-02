@@ -3,10 +3,10 @@
 
 #include <kdialogbase.h>
 
-class QCheckBox;
-class QLabel;
-class QSpinBox;
-class QString;
+class TQCheckBox;
+class TQLabel;
+class TQSpinBox;
+class TQString;
 class KURLRequester;
 
 /**

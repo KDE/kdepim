@@ -34,7 +34,7 @@
 
 #include "pilotAddress.h"
 
-class QLineEdit;
+class TQLineEdit;
 
 class AddressEditor : public KDialogBase
 {

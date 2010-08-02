@@ -34,7 +34,7 @@
 
 class KMFilter;
 class KConfig;
-class QWidget;
+class TQWidget;
 
 namespace KMail
 {

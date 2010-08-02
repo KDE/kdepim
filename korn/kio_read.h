@@ -30,7 +30,7 @@ class KURL;
 namespace KIO { class MetaData; class Job; }
 class KIO_Protocol;
 
-class QString;
+class TQString;
 
 class KIO_Read : public QObject
 { Q_OBJECT

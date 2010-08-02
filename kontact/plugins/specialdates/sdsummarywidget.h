@@ -37,8 +37,8 @@ namespace Kontact {
   class Plugin;
 }
 
-class QGridLayout;
-class QLabel;
+class TQGridLayout;
+class TQLabel;
 
 class SDSummaryWidget : public Kontact::Summary
 {

@@ -35,12 +35,12 @@
 #include "akregator_run.h"
 #include "feed.h"
 
-class QSplitter;
-class QDomDocument;
-class QDomElement;
-class QHBox;
-class QToolButton;
-class QListViewItem;
+class TQSplitter;
+class TQDomDocument;
+class TQDomElement;
+class TQHBox;
+class TQToolButton;
+class TQListViewItem;
 class KComboBox;
 class KConfig;
 class KFileItem;

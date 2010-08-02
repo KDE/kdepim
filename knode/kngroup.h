@@ -21,7 +21,7 @@
 #include "knjobdata.h"
 #include "knarticle.h"
 
-class QStrList;
+class TQStrList;
 
 class KNProtocolClient;
 class KNNntpAccount;

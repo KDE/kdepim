@@ -36,8 +36,8 @@
 #include <tqobject.h>
 
 
-class QStringList;
-class QString;
+class TQStringList;
+class TQString;
 
 class FileInstaller : public QObject
 {

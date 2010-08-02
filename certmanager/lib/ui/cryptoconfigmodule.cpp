@@ -578,7 +578,7 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
 
   const int row = glay->numRows();
   glay->addWidget( new TQLabel( mPushButton, description(), widget ), row, 1 );
-  TQHBoxLayout * hlay = new QHBoxLayout;
+  TQHBoxLayout * hlay = new TQHBoxLayout;
   glay->addLayout( hlay, row, 2 );
   hlay->addWidget( mLabel, 1 );
   hlay->addWidget( mPushButton );

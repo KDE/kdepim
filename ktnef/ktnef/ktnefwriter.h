@@ -18,12 +18,12 @@
 #ifndef KTNEFWRITER_H
 #define KTNEFWRITER_H
 
-class QString;
-class QVariant;
-class QIODevice;
-class QDataStream;
-class QDateTime;
-class QStringList;
+class TQString;
+class TQVariant;
+class TQIODevice;
+class TQDataStream;
+class TQDateTime;
+class TQStringList;
 
 class KTNEFWriter {
 public:

@@ -17,8 +17,8 @@
 
 #include <tqsemimodal.h>
 
-class QProgressBar;
-class QLabel;
+class TQProgressBar;
+class TQLabel;
 
 class KNArticleCollection;
 class KNGroup;

@@ -37,7 +37,7 @@
 
 #include <kdepimmacros.h>
 
-class QCString;
+class TQCString;
 
 namespace KMime {
 

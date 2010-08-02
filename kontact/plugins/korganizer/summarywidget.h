@@ -31,8 +31,8 @@
 
 #include "summary.h"
 
-class QGridLayout;
-class QLabel;
+class TQGridLayout;
+class TQLabel;
 
 class KOrganizerPlugin;
 

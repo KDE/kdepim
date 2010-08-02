@@ -15,8 +15,8 @@
 
 class KURL;
 
-class QDomNode;
-class QString;
+class TQDomNode;
+class TQString;
 
 namespace RSS
 {

@@ -36,10 +36,10 @@
 #include <tqdialog.h>
 #include <tqstring.h>
 
-class QTextEdit;
-class QPushButton;
+class TQTextEdit;
+class TQPushButton;
 class KProcess;
-class QTimer;
+class TQTimer;
 
 class CRLView : public TQDialog {
   Q_OBJECT

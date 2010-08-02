@@ -38,10 +38,10 @@
 #include <gpgmepp/key.h>
 #include <kdepimmacros.h>
 
-class QPainter;
-class QColorGroup;
-class QFont;
-class QColor;
+class TQPainter;
+class TQColorGroup;
+class TQFont;
+class TQColor;
 
 namespace Kleo {
 

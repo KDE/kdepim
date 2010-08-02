@@ -24,7 +24,7 @@
 #include <kurl.h>
 #include <tqstring.h>
 
-class QWidget;
+class TQWidget;
 
 class KDE_EXPORT KPimURLRequesterDlg
 {

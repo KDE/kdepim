@@ -26,7 +26,7 @@
 
 #include <kcmodule.h>
 
-class QListViewItem;
+class TQListViewItem;
 class QSpinxBox;
 
 class KAboutData;

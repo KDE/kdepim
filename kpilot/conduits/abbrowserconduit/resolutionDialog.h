@@ -30,8 +30,8 @@
 
 #include <kdialogbase.h>
 class KPilotLink;
-class QTimer;
-class QListView;
+class TQTimer;
+class TQListView;
 class ResolutionDialogBase;
 
 

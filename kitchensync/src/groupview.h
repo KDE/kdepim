@@ -24,7 +24,7 @@
 
 class AboutPage;
 class SyncProcess;
-class QVBoxLayout;
+class TQVBoxLayout;
 
 class GroupView : public QWidget
 {

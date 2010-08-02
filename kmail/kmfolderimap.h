@@ -35,8 +35,8 @@
 
 #include <tqintdict.h>
 #include <tqdict.h>
-template< typename T> class QPtrList;
-template< typename T> class QValueList;
+template< typename T> class TQPtrList;
+template< typename T> class TQValueList;
 
 class KMFolderTreeItem;
 class KMFolderImap;

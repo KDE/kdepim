@@ -33,7 +33,7 @@
 
 #include <kabc/field.h>
 
-class QDropEvent;
+class TQDropEvent;
 class KAddressBookTableView;
 class ContactListView;
 class KIMProxy;

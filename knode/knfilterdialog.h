@@ -22,8 +22,8 @@
 class KNFilterConfigWidget;
 class KNArticleFilter;
 class KLineEdit;
-class QComboBox;
-class QCheckBox;
+class TQComboBox;
+class TQCheckBox;
 
 
 class KNFilterDialog : public KDialogBase {

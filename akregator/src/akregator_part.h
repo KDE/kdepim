@@ -34,8 +34,8 @@
 
 #include "akregator_partiface.h"
 
-class QDomDocument;
-class QTimer;
+class TQDomDocument;
+class TQTimer;
 
 class KAboutData;
 class KConfig;

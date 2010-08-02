@@ -34,8 +34,8 @@
 
 #include <tqlabel.h>
 
-class QString;
-class QColor;
+class TQString;
+class TQColor;
 
 namespace KMail {
 

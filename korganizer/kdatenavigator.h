@@ -30,8 +30,8 @@
 
 #include <libkcal/incidencebase.h>
 
-class QPushButton;
-class QLabel;
+class TQPushButton;
+class TQLabel;
 
 namespace KCal {
 class Calendar;

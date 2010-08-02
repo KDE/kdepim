@@ -33,10 +33,10 @@
 #include <kdialogbase.h> // include for the base class
 
 class KMFolder;
-class QCheckBox;
-class QComboBox;
-class QPushButton;
-class QLabel;
+class TQCheckBox;
+class TQComboBox;
+class TQPushButton;
+class TQLabel;
 class KEditListBox;
 
 namespace KMail

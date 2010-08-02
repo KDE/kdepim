@@ -42,7 +42,7 @@ namespace Kleo {
   class CryptoConfig;
 }
 class QGpgMECryptoConfig;
-class QString;
+class TQString;
 
 namespace Kleo {
 

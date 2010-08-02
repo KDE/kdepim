@@ -27,8 +27,8 @@
 
 #include "tagfolder.h"
 
-class QDomDocument;
-template <class T> class QValueList;
+class TQDomDocument;
+template <class T> class TQValueList;
 
 namespace Akregator {
 

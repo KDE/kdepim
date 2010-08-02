@@ -26,7 +26,7 @@
 
 #include "alarmevent.h"
 
-class QCheckBox;
+class TQCheckBox;
 class KListView;
 class CheckBox;
 class FontColourButton;

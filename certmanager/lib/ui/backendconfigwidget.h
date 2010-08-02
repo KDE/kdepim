@@ -41,7 +41,7 @@ namespace Kleo {
   class CryptoBackendFactory;
 }
 
-class QListViewItem;
+class TQListViewItem;
 
 namespace Kleo {
 

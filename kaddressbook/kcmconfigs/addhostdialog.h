@@ -29,8 +29,8 @@
 #include <libkdepim/ldapclient.h>
 
 class KLineEdit;
-class QPushButton;
-class QSpinBox;
+class TQPushButton;
+class TQSpinBox;
 
 class AddHostDialog : public KDialogBase
 {

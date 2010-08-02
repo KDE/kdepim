@@ -35,8 +35,8 @@
 
 #include <korganizer/calendarviewbase.h>
 
-class QWidgetStack;
-class QSplitter;
+class TQWidgetStack;
+class TQSplitter;
 
 class KOViewManager;
 class KODialogManager;

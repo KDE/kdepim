@@ -33,11 +33,11 @@
 #include <libkcal/todo.h>
 #include <korganizer/baseview.h>
 
-class QDragEnterEvent;
-class QDragMoveEvent;
-class QDragLeaveEvent;
-class QDropEvent;
-class QPopupMenu;
+class TQDragEnterEvent;
+class TQDragMoveEvent;
+class TQDragLeaveEvent;
+class TQDropEvent;
+class TQPopupMenu;
 
 class KOTodoListView;
 class KOTodoViewItem;

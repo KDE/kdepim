@@ -30,8 +30,8 @@
 
 #include <tqobject.h>
 
-class QPixmap;
-class QString;
+class TQPixmap;
+class TQString;
 
 class DCOPClient;
 class KURL;

@@ -27,7 +27,7 @@
 
 #include <tqobject.h>
 
-class QWidget;
+class TQWidget;
 
 class KAction;
 

@@ -24,7 +24,7 @@
 #include <tqhbox.h>
 #include <tqstring.h>
 
-class QWidgetStack;
+class TQWidgetStack;
 class ComboBox;
 class SpinBox;
 class TimeSpinBox;

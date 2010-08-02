@@ -29,9 +29,9 @@
 
 #include <tqdatetime.h>
 
-class QToolTipGroup;
-class QDragEnterEvent;
-class QDropEvent;
+class TQToolTipGroup;
+class TQDragEnterEvent;
+class TQDropEvent;
 
 namespace KCal {
 class Incidence;

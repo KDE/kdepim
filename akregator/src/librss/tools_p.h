@@ -15,9 +15,9 @@
 #include <time.h>
 
 
-class QDomNode;
-class QDomElement;
-class QString;
+class TQDomNode;
+class TQDomElement;
+class TQString;
 
 namespace RSS
 {

@@ -39,7 +39,7 @@
 #include "mailheader.h"
 
 class KURL;
-class QString;
+class TQString;
 class mailAddress;
 class mimeHeader;
 

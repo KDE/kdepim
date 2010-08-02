@@ -38,9 +38,9 @@
 
 #include "kaddressbookview.h"
 
-class QListViewItem;
-class QListBox;
-class QVBoxLayout;
+class TQListViewItem;
+class TQListBox;
+class TQVBoxLayout;
 class KConfig;
 class KIMProxy;
 

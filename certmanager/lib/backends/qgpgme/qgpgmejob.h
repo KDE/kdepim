@@ -58,8 +58,8 @@ namespace QGpgME {
   class QByteArrayDataProvider;
 }
 
-class QString;
-class QStringList;
+class TQString;
+class TQStringList;
 
 namespace Kleo {
 

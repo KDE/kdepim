@@ -20,7 +20,7 @@
 #include "knjobdata.h"
 #include "knarticle.h"
 
-class QListViewItem;
+class TQListViewItem;
 
 class KTempFile;
 

@@ -8,7 +8,7 @@
 #include "desktoplist.h"
 
 class Task;
-class QTimer;
+class TQTimer;
 
 typedef std::vector<Task *> TaskVector;
 const int maxDesktops = 20;

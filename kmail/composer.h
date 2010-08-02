@@ -16,7 +16,7 @@
 class KMMessage;
 class KMFolder;
 class KMMessagePart;
-class QListViewItem;
+class TQListViewItem;
 class MailComposerIface;
 
 namespace KIO {

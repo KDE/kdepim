@@ -29,7 +29,7 @@ class KMMessage;
 class KMMsgDictEntry;
 class KMMsgDictREntry;
 class KMDict;
-class QString;
+class TQString;
 class FolderStorage;
 
 /**

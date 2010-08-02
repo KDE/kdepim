@@ -38,7 +38,7 @@
 class KWatchGnuPGTray;
 class KWatchGnuPGConfig;
 class KProcIO;
-class QTextEdit;
+class TQTextEdit;
 
 class KWatchGnuPGMainWindow : public KMainWindow {
   Q_OBJECT

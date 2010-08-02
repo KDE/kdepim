@@ -32,11 +32,11 @@
 
 #include <libkcal/incidencebase.h>
 
-class QWidgetStack;
-class QSpinBox;
-class QRadioButton;
-class QGroupBox;
-class QCheckBox;
+class TQWidgetStack;
+class TQSpinBox;
+class TQRadioButton;
+class TQGroupBox;
+class TQCheckBox;
 
 class KDateEdit;
 namespace KCal {

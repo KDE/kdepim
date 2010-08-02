@@ -24,8 +24,8 @@
 #include <kprefsdialog.h>
 #include <kservice.h>
 #include <tqmap.h>
-class QGroupBox;
-class QListViewItem;
+class TQGroupBox;
+class TQListViewItem;
 
 class KAboutData;
 class KComboBox;

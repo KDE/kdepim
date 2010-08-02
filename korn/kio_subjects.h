@@ -30,9 +30,9 @@ class KornMailSubject;
 namespace KIO { class MetaData; class Slave; }
 class KURL;
 
-template<class T> class QPtrList;
-class QString;
-template<class T> class QValueList;
+template<class T> class TQPtrList;
+class TQString;
+template<class T> class TQValueList;
 
 class KIO_Subjects : public QObject
 { Q_OBJECT

@@ -23,7 +23,7 @@
 
 class BoxContainerItem;
 
-template< class T > class QPtrList;
+template< class T > class TQPtrList;
 
 class KConfig;
 

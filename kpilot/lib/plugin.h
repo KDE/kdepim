@@ -42,7 +42,7 @@
 */
 
 
-class QTabWidget;
+class TQTabWidget;
 class KAboutData;
 class KLibrary;
 

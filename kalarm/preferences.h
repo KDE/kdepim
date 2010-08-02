@@ -28,7 +28,7 @@
 #include <tqfont.h>
 #include <tqdatetime.h>
 #include <tqvaluelist.h>
-class QWidget;
+class TQWidget;
 
 #include "colourlist.h"
 #include "editdlg.h"

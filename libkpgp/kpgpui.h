@@ -31,15 +31,15 @@
 
 #include <kdepimmacros.h>
 
-class QString;
-class QRegExp;
-class QCString;
-class QCheckBox;            // needed by Config, KeySelectionDialog
-class QMultiLineEdit;       // needed by CipherTextDialog
-class QComboBox;            // needed by Config
-class QPixmap;              // needed by KeySelectionDialog
-class QPushButton;          // needed by KeyRequester
-class QTimer;               // needed by KeySelectionDialog
+class TQString;
+class TQRegExp;
+class TQCString;
+class TQCheckBox;            // needed by Config, KeySelectionDialog
+class TQMultiLineEdit;       // needed by CipherTextDialog
+class TQComboBox;            // needed by Config
+class TQPixmap;              // needed by KeySelectionDialog
+class TQPushButton;          // needed by KeyRequester
+class TQTimer;               // needed by KeySelectionDialog
 
 class KListView;            // needed by KeySelectionDialog
 class KPasswordEdit;        // needed by PassphraseDialog

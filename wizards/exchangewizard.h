@@ -24,8 +24,8 @@
 #include <kdepimmacros.h>
 
 class KLineEdit;
-class QCheckBox;
-class QSpinBox;
+class TQCheckBox;
+class TQSpinBox;
 
 class KDE_EXPORT ExchangeWizard : public KConfigWizard
 {

@@ -13,7 +13,7 @@
 
 #include <kdepimmacros.h>
 
-class QString;
+class TQString;
 
 namespace KPIM {
 

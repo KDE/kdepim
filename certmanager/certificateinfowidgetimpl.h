@@ -40,7 +40,7 @@
 #include <tqvaluelist.h>
 
 class KProcess;
-class QListViewItem;
+class TQListViewItem;
 
 namespace GpgME {
   class KeyListResult;

@@ -27,8 +27,8 @@
 #include "inputfield.h"
 
 class BinaryWidget;
-class QGridLayout;
-class QPushButton;
+class TQGridLayout;
+class TQPushButton;
 
 class BinaryInputField : public SimpleInputField
 {

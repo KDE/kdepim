@@ -24,7 +24,7 @@
 #include <libkcal/attendee.h>
 using namespace KCal;
 
-class QComboBox;
+class TQComboBox;
 
 class StatusDialog : public KDialog
 {

@@ -37,8 +37,8 @@ class RecipientsPicker;
 
 class KWindowPositioner;
 
-class QLabel;
-class QPushButton;
+class TQLabel;
+class TQPushButton;
 class SideWidget;
 
 class Recipient

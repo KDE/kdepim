@@ -38,7 +38,7 @@ KIO_Read::KIO_Read( TQObject * parent, const char * name )
 	_job( 0 ),
 	_message( 0 )
 {
-	_message = new QString;
+	_message = new TQString;
 }
 
 KIO_Read::~KIO_Read()

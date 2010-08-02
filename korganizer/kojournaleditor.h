@@ -30,7 +30,7 @@
 
 #include <tqdatetime.h>
 
-class QDateTime;
+class TQDateTime;
 namespace KCal {
 class Calendar;
 class Journal;

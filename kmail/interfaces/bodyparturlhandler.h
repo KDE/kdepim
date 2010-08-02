@@ -33,8 +33,8 @@
 #ifndef __KMAIL_INTERFACE_BODYPARTURLHANDLER_H__
 #define __KMAIL_INTERFACE_BODYPARTURLHANDLER_H__
 
-class QString;
-class QPoint;
+class TQString;
+class TQPoint;
 
 namespace KMail {
   class Callback;

@@ -24,8 +24,8 @@
 #include <tqwidget.h>
 #include <kdepimmacros.h>
 
-class QButtonGroup;
-class QSpinBox;
+class TQButtonGroup;
+class TQSpinBox;
 
 namespace KCal {
 

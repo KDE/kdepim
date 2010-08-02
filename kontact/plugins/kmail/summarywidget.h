@@ -35,8 +35,8 @@
 #include "plugin.h"
 #include "summary.h"
 
-class QGridLayout;
-class QString;
+class TQGridLayout;
+class TQString;
 
 class SummaryWidget : public Kontact::Summary, public DCOPObject
 {

@@ -36,7 +36,7 @@
 #include <kleo/cryptoconfig.h>
 #include <kdepimmacros.h>
 
-class QCheckBox;
+class TQCheckBox;
 class QTimeEdit;
 class KIntNumInput;
 namespace Kleo {

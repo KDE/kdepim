@@ -43,7 +43,7 @@ using KMail::MailingList;
 
 class KMMessage;
 class KMFolderDir;
-class QTimer;
+class TQTimer;
 class FolderStorage;
 class KMFolderTreeItem;
 class KMFolderJob;

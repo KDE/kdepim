@@ -25,7 +25,7 @@
 #ifndef AKREGATOR_UTILS_H
 #define AKREGATOR_UTILS_H
 
-class QString;
+class TQString;
 typedef unsigned int uint;
 
 namespace Akregator {

@@ -39,7 +39,7 @@ namespace Kleo {
   class DNAttributeMapper;
 }
 
-class QListViewItem;
+class TQListViewItem;
 
 namespace Kleo {
 

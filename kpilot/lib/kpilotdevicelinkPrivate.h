@@ -35,8 +35,8 @@
 #include "kpilotdevicelink.h"
 #include "options.h"
 
-class QTimer;
-class QSocketNotifier;
+class TQTimer;
+class TQSocketNotifier;
 
 // singleton helper class
 class DeviceMap

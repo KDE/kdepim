@@ -20,15 +20,15 @@
 #ifndef MK_ACCOUNT_INPUT
 #define MK_ACCOUNT_INPUT
 
-class QWidget;
-class QString;
-class QStringList;
+class TQWidget;
+class TQString;
+class TQStringList;
 
-class QLabel;
+class TQLabel;
 class KLineEdit;
 class KURLRequester;
-class QComboBox;
-class QCheckBox;
+class TQComboBox;
+class TQCheckBox;
 
 #include <tqmap.h>
 

@@ -18,7 +18,7 @@
 #ifndef LZFU_H
 #define LZFU_H
 
-class QIODevice;
+class TQIODevice;
 
 int lzfu_decompress( TQIODevice *input, TQIODevice *output );
 

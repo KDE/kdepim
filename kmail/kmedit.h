@@ -19,7 +19,7 @@ class KTempFile;
 class KDictSpellingHighlighter;
 class KDirWatch;
 class KProcess;
-class QPopupMenu;
+class TQPopupMenu;
 
 
 class KMEdit : public KEdit {

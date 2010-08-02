@@ -33,11 +33,11 @@
 #include "addresseeconfig.h"
 #include "typecombo.h"
 
-class QButtonGroup;
-class QCheckBox;
-class QListView;
-class QTextEdit;
-class QToolButton;
+class TQButtonGroup;
+class TQCheckBox;
+class TQListView;
+class TQTextEdit;
+class TQToolButton;
 
 class KActiveLabel;
 class KComboBox;

@@ -30,10 +30,10 @@
 #include <kabc/addressbook.h>
 
 class KComboBox;
-class QListBox;
-class QListBoxItem;
-class QPushButton;
-class QToolButton;
+class TQListBox;
+class TQListBoxItem;
+class TQPushButton;
+class TQToolButton;
 
 class ViewConfigureFieldsPage : public QWidget
 {

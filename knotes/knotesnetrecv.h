@@ -34,7 +34,7 @@
 
 #include <tqobject.h>
 
-class QTimer;
+class TQTimer;
 
 namespace KNetwork {
     class KBufferedSocket;

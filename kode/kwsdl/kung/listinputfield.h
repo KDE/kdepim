@@ -27,8 +27,8 @@
 #include "inputfield.h"
 
 class ListWidget;
-class QListBox;
-class QPushButton;
+class TQListBox;
+class TQPushButton;
 
 class ListInputField : public SimpleInputField
 {

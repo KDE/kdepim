@@ -36,11 +36,11 @@
 #include "configuredialog_p.h"
 #include <tqvaluevector.h>
 
-class QCheckBox;
-class QPushButton;
-class QLineEdit;
-class QListBox;
-class QComboBox;
+class TQCheckBox;
+class TQPushButton;
+class TQLineEdit;
+class TQListBox;
+class TQComboBox;
 class KMFolder;
 class KMFolderTreeItem;
 class KMFolderDir;
@@ -50,7 +50,7 @@ class KEditListBox;
 namespace KPIM { class IdentityCombo; }
 class KMFolderDialog;
 class KMFolderTree;
-template <typename T> class QGuardedPtr;
+template <typename T> class TQGuardedPtr;
 class TemplatesConfiguration;
 class KPushButton;
 

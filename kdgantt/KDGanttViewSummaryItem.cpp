@@ -141,7 +141,7 @@ void KDGanttViewSummaryItem::setMiddleTime( const TQDateTime& dateTime )
     qDebug("KDGanttViewSummaryItem::setMiddleTime():Invalid parameter-no time set");
     return;
   }
-  if (!myMiddleTime) myMiddleTime = new QDateTime;
+  if (!myMiddleTime) myMiddleTime = new TQDateTime;
   *myMiddleTime = dateTime;
   if ( myEndTime < middleTime() )
       setEndTime( middleTime() );
@@ -223,7 +223,7 @@ void KDGanttViewSummaryItem::setStartTime( const TQDateTime& start )
 */
 void KDGanttViewSummaryItem::setActualEndTime( const TQDateTime& end )
 {
-  if (!myActualEndTime) myActualEndTime = new QDateTime;
+  if (!myActualEndTime) myActualEndTime = new TQDateTime;
   *myActualEndTime =  end;
 
   updateCanvasItems();

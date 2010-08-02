@@ -10,9 +10,9 @@
 class KAccel;
 class KAccelMenuWatch;
 class KarmTray;
-class QListViewItem;
-class QPoint;
-class QString;
+class TQListViewItem;
+class TQPoint;
+class TQString;
 
 class Preferences;
 class PrintDialog;

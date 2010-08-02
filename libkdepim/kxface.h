@@ -514,8 +514,8 @@ static const Prob freqs[16] = {
 static const char HexDigits[] = "0123456789ABCDEF";
 
 
-class QImage;
-class QString;
+class TQImage;
+class TQString;
 
 namespace KPIM {
 

@@ -165,7 +165,7 @@ void KornAccountCfgImpl::slotCancel()
 void KornAccountCfgImpl::slotProtocolChanged( const TQString& proto )
 {
 	const Protocol *protocol = Protocols::getProto( proto );
-	TQStringList *groupBoxes = new QStringList;
+	TQStringList *groupBoxes = new TQStringList;
 	int counter = 1;
 
 	protocol->configFillGroupBoxes( groupBoxes );

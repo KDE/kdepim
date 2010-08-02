@@ -27,8 +27,8 @@
 
 #include "actionmanager.h"
 
-class QStringList;
-class QWidget;
+class TQStringList;
+class TQWidget;
 class KAction;
 class KActionMenu;
 class KActionCollection;

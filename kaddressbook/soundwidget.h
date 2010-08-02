@@ -30,8 +30,8 @@
 
 class KURLRequester;
 
-class QCheckBox;
-class QPushButton;
+class TQCheckBox;
+class TQPushButton;
 
 class SoundWidget : public KAB::ContactEditorWidget
 {

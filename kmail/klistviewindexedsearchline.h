@@ -38,8 +38,8 @@
 #include <vector>
 
 class KListView;
-class QListViewItem;
-class QToolButton;
+class TQListViewItem;
+class TQToolButton;
 class KListViewSearchLine;
 
 /**

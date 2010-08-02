@@ -27,9 +27,9 @@
 
 #include "nodelist.h"
 
-class QDomDocument;
-class QDomNode;
-class QString;
+class TQDomDocument;
+class TQDomNode;
+class TQString;
 
 namespace Akregator
 {

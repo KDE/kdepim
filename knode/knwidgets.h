@@ -23,8 +23,8 @@
 #include <kdockwidget.h>
 #include <kprogress.h>
 
-class QPainter;
-class QPixmap;
+class TQPainter;
+class TQPixmap;
 
 //====================================================================================
 

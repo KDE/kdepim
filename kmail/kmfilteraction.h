@@ -32,7 +32,7 @@
 
 class KMMsgBase;
 class KMMessage;
-class QWidget;
+class TQWidget;
 class KMFolder;
 class KTempFile;
 

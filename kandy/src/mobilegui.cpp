@@ -916,7 +916,7 @@ void MobileGui::writeKabc()
       
       if ( !equivalentEntryFound ) {
         KABC::Addressee entry;
-        TQStringList *fields = new QStringList;
+        TQStringList *fields = new TQStringList;
 
   
         *fields = TQStringList::split( ',', name );

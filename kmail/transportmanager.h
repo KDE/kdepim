@@ -16,7 +16,7 @@
 #ifndef _KMAIL_TRANSPORTMANAGER_H_
 #define _KMAIL_TRANSPORTMANAGER_H_
 
-class QStringList;
+class TQStringList;
 
 namespace KMail {
 

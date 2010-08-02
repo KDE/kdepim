@@ -108,7 +108,7 @@ namespace ThreadWeaver {
     void Job::triggerSPR ()
     {
         m_mutex->lock ();
-        m_wc = new QWaitCondition;
+        m_wc = new TQWaitCondition;
         m_mutex->unlock ();
 
         thread()->post (KPIM::ThreadWeaver::Event::JobSPR, this);
@@ -123,7 +123,7 @@ namespace ThreadWeaver {
     void Job::triggerAPR ()
     {
         m_mutex->lock ();
-        m_wc = new QWaitCondition;
+        m_wc = new TQWaitCondition;
         m_mutex->unlock ();
 
         thread()->post (KPIM::ThreadWeaver::Event::JobAPR, this);

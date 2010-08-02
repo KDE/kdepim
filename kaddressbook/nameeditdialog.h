@@ -29,7 +29,7 @@
 
 #include "addresseeconfig.h"
 
-class QCheckBox;
+class TQCheckBox;
 
 class KLineEdit;
 class KComboBox;

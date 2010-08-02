@@ -25,8 +25,8 @@
 
 #include <tqstring.h>
 
-class QTextCodec;
-class QTextDecoder;
+class TQTextCodec;
+class TQTextDecoder;
 class EncodingDetectorPrivate;
 
 /**

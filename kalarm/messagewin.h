@@ -28,10 +28,10 @@
 #include "mainwindowbase.h"
 #include "alarmevent.h"
 
-class QPushButton;
+class TQPushButton;
 class KPushButton;
-class QLabel;
-class QTimer;
+class TQLabel;
+class TQTimer;
 class KWinModule;
 class AlarmTimeWidget;
 class DeferAlarmDlg;

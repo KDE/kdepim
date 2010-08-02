@@ -27,9 +27,9 @@
 
 #include <tqwidget.h>
 
-class QIconSet;
-class QPixmap;
-class QString;
+class TQIconSet;
+class TQPixmap;
+class TQString;
 
 namespace Akregator {
 

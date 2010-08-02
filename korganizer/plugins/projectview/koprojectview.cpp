@@ -70,7 +70,7 @@ KOProjectView::KOProjectView(Calendar *calendar,TQWidget* parent,
 {
   TQBoxLayout *topLayout = new TQVBoxLayout(this);
 
-  TQBoxLayout *topBar = new QHBoxLayout;
+  TQBoxLayout *topBar = new TQHBoxLayout;
   topLayout->addLayout(topBar);
 
   TQLabel *title = new TQLabel(i18n("Project View"),this);

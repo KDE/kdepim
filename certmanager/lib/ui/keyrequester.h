@@ -65,10 +65,10 @@ namespace GpgME {
   class KeyListResult;
 }
 
-class QStringList;
-class QString;
-class QPushButton;
-class QLabel;
+class TQStringList;
+class TQString;
+class TQPushButton;
+class TQLabel;
 
 namespace Kleo {
 

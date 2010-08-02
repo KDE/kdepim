@@ -27,7 +27,7 @@
 #include <tqstring.h>
 #include <tqvaluelist.h>
 
-class QWidget;
+class TQWidget;
 
 namespace Schema {
 class SimpleType;

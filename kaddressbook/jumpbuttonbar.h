@@ -29,9 +29,9 @@
 #include <tqptrlist.h>
 #include <tqstringlist.h>
 
-class QButtonGroup;
-class QResizeEvent;
-class QPushButton;
+class TQButtonGroup;
+class TQResizeEvent;
+class TQPushButton;
 
 namespace KAB {
 class Core;

@@ -28,7 +28,7 @@
 #include <tqwidget.h>
 
 // class KListView;
-class QComboBox;
+class TQComboBox;
 class FolderListView;
 
 namespace KPIM {

@@ -52,9 +52,9 @@ class KStatusBar;
 class KToggleAction;
 class KXMLGUIClient;
 
-class QSplitter;
-class QHBoxLayout;
-class QWidgetStack;
+class TQSplitter;
+class TQHBoxLayout;
+class TQWidgetStack;
 
 class AddresseeEditorDialog;
 class ExtensionManager;

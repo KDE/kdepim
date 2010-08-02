@@ -26,8 +26,8 @@
 #define KOVIEWMANAGER_H
 
 #include <tqobject.h>
-class QWidget;
-class QTabWidget;
+class TQWidget;
+class TQTabWidget;
 
 class CalendarView;
 

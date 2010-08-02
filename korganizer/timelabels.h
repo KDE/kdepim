@@ -28,9 +28,9 @@
 #include <tqscrollview.h>
 #include <tqlabel.h>
 
-class QHBox;
-class QPushButton;
-class QBoxLayout;
+class TQHBox;
+class TQPushButton;
+class TQBoxLayout;
 
 class KOAgenda;
 class KOAgendaItem;

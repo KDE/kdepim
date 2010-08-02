@@ -17,10 +17,10 @@
 
 //#include "karmutility.h"
 
-class QListBox;
-class QString;
-class QTextStream;
-class QTimer;
+class TQListBox;
+class TQString;
+class TQTextStream;
+class TQTimer;
 
 class KMenuBar;
 class KToolBar;

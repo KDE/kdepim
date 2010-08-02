@@ -24,7 +24,7 @@
 #ifndef RESULTELEMENT_H
 #define RESULTELEMENT_H
 
-class QString;
+class TQString;
 class DirectoryCategory;
 
 class ResultElement

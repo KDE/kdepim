@@ -29,7 +29,7 @@
 
 #include "akregator_export.h"
 
-class QStringList;
+class TQStringList;
 
 
 namespace Akregator {

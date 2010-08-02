@@ -29,9 +29,9 @@
 class KComboBox;
 class KLineEdit;
 
-class QListBox;
-class QListBoxItem;
-class QPushButton;
+class TQListBox;
+class TQListBoxItem;
+class TQPushButton;
 
 class NamePartWidget : public QWidget
 {

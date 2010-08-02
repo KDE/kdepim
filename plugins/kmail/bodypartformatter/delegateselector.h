@@ -26,7 +26,7 @@ namespace KPIM {
   class AddresseeLineEdit;
 }
 
-class QCheckBox;
+class TQCheckBox;
 
 /**
   Selection dialog for a delegate.

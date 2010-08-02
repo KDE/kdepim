@@ -28,7 +28,7 @@
 #include <tqdom.h>
 #include <tqstring.h>
 
-class QString;
+class TQString;
 
 namespace RSS
 {

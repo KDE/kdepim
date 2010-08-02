@@ -45,7 +45,7 @@ namespace Kleo {
   class BackendConfigWidget;
 }
 
-class QString;
+class TQString;
 class KConfig;
 
 namespace Kleo {

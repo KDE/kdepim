@@ -29,7 +29,7 @@
 #include <tqpushbutton.h>
 #include <tqstring.h>
 
-class QToolButton;
+class TQToolButton;
 
 namespace KABC {
     class Addressee;

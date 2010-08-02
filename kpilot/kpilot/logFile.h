@@ -33,8 +33,8 @@
 #include "loggerDCOP.h"
 #include "tqobject.h"
 
-class QFile;
-class QTextStream;
+class TQFile;
+class TQTextStream;
 
 class LogFile : public TQObject, public LoggerDCOP
 {

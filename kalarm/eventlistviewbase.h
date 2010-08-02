@@ -28,7 +28,7 @@
 
 #include "alarmevent.h"
 
-class QPixmap;
+class TQPixmap;
 class EventListViewItemBase;
 class Find;
 
