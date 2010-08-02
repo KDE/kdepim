@@ -672,7 +672,11 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
 
 void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart )
 {
-  qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
+  MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( infoPart->transportId() );
+  if ( transport && transport->specifySenderOverwriteAddress() )
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( transport->senderOverwriteAddress() ) );
+  else
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
   // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
   //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
   if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
