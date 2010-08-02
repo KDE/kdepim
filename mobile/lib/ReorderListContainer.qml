@@ -25,7 +25,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 Rectangle {
   id : _topLevel
-  color : "blue"
+  color : "#00000000"
   property int actionItemHeight
   property int actionItemWidth
   property int actionItemSpacing : 0
@@ -46,14 +46,17 @@ Rectangle {
     anchors.fill : parent
   }
 
-  Rectangle {
+  ActionMenuContainer {
     id : actionColumn
-    color : "yellow"
-    width : 100
+    width : 200
     anchors.top : parent.top
     anchors.bottom : parent.bottom
     anchors.right : parent.right
-//     visible : false
+    actionItemWidth : width
+    actionItemHeight : 70
+    FakeAction { name : "move_up" }
+    FakeAction { name : "move_down" }
+    FakeAction { name : "delete" }
   }
 
   onActionItemSpacingChanged : {
