@@ -57,6 +57,7 @@ install(FILES
   ActionListItem.qml
   ActionMenuContainer.qml
   AttachmentList.qml
+  ApplicationGeneralActions.qml
   Button.qml
   Button2.qml
   CompletionSlider.qml
