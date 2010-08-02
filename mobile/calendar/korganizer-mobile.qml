@@ -34,18 +34,21 @@ KPIM.MainView {
   function showDate(date)
   {
     console.log("QML showDate called");
+    korganizerActions.showOnly("single_calendar")
     agenda.showRange( date, 0 /* "Day" */ );
   }
 
   function showEventView()
   {
     console.log("QML showEventView called");
+    korganizerActions.showOnly("event_viewer")
     mainWorkView.visible = false
     agendaView.visible = true
   }
 
   function backToAgendaView()
   {
+    korganizerActions.showOnly("single_calendar")
     eventView.visible = false;
     agendaView.visible = true;
   }
@@ -128,6 +131,7 @@ KPIM.MainView {
           onClicked : {
             agendaView.visible = false;
             mainWorkView.visible = true;
+            korganizerActions.showOnly("home")
           }
         }
       }
@@ -143,6 +147,7 @@ KPIM.MainView {
           eventView.itemId = selectedItemId;
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
+          korganizerActions.showOnly("event_viewer")
           eventView.visible = true;
           agendaView.visible = false;
           clearSelection();
@@ -200,6 +205,19 @@ KPIM.MainView {
                                        collectionView.numSelected,
                                        application.numSelectedAccounts,
                                        dummyItemView.count)
+
+      onNumBreadcrumbsChanged : {
+        if (numBreadcrumbs == 0)
+        {
+          korganizerActions.showOnly("home")
+        } else if (numBreadcrumbs == 1)
+        {
+          korganizerActions.showOnly("account")
+        } else {
+          korganizerActions.showOnly("single_calendar")
+        }
+      }
+
     }
 
     KPIM.Button2 {
@@ -345,6 +363,33 @@ KPIM.MainView {
         }
       }
     }
+  }
+
+  SlideoutPanelContainer {
+    visible : false
+    anchors.fill: parent
+
+    SlideoutPanel {
+      id: actionPanelNew
+      titleText: KDE.i18n( "Context Actions" )
+      handlePosition : 125
+      handleHeight: 150
+      contentWidth: 240
+      anchors.fill : parent
+
+      content : [
+        KorganizerActions {
+          id : korganizerActions
+          anchors.fill : parent
+
+          onTriggered : {
+            console.log("Triggered was: " + triggeredName)
+          }
+
+        }
+      ]
+    }
+
   }
 
   SlideoutPanelContainer {
