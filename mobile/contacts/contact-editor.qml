@@ -24,23 +24,17 @@ import org.kde.contacteditors 4.5 as ContactEditors
 
 KPIM.MainView {
   Flickable {
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
+    anchors.fill: parent
 
     anchors.topMargin: 40
     anchors.leftMargin: 40;
     anchors.rightMargin: 4;
 
-    width: parent.width;
-    height: parent.height;
     contentHeight: editorGeneral.height;
     clip: true;
     flickableDirection: "VerticalFlick"
 
     ContactEditors.ContactEditorGeneral {
-      anchors.fill: parent
       id: editorGeneral;
       width: parent.width;
     }
