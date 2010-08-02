@@ -1,15 +1,29 @@
 
+import Qt 4.7 as QML
 import org.kde.pim.mobileui 4.5
 
 ActionMenuContainer {
 
+  actionItemHeight : 70
+  actionItemWidth : 200
+  actionItemSpacing : 2
   ReorderList {
     category : "home"
     name : "Favorites"
+
+    delegate : QML.Component {
+      QML.Text { height : 20; text : model.display }
+    }
+    model : favoritesList
   }
   ReorderList {
     category : "home"
     name : "Accounts"
+
+    delegate : QML.Component {
+      QML.Text { height : 20; text : model.display }
+    }
+    model : allFoldersModel
   }
   ActionList {
     category : "home"
