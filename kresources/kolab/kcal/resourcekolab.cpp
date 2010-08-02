@@ -644,6 +644,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
   } else { /* KMail told us */
     const bool ourOwnUpdate = mUidsPendingUpdate.contains(  uid );
+    kdDebug( 5650 ) << "addIncidence: ourOwnUpdate " << ourOwnUpdate << endl;
     /* Check if we updated this one, which means kmail deleted and added it.
      * We know the new state, so lets just not do much at all. The old incidence
      * in the calendar remains valid, but the serial number changed, so we need to
@@ -661,7 +662,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( mUidMap.contains( uid ) ) {
         if ( mUidMap[ uid ].resource() == subResource ) {
           if ( (*map)[ subResource ].writable() ) {
-            kdDebug() << "DEBUG lets resolve the conflict " << endl;
+            kdDebug( 5650 ) << "lets resolve the conflict " << endl;
             resolveConflict( incidence, subResource, sernum );
           } else {
             kdWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
