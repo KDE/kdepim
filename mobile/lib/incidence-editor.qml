@@ -100,7 +100,7 @@ KPIM.MainView {
 
   Flickable {
     anchors.top: parent.top
-    anchors.bottom: cancelButton.top
+    anchors.bottom: collectionCombo.top
     anchors.left: parent.left
     anchors.right: parent.right
     
@@ -128,22 +128,20 @@ KPIM.MainView {
     height: parent.height / 6;
   }
 
-  KPIM.Button {
+  KPIM.Button2 {
     id: cancelButton
     anchors.bottom: parent.bottom;
     anchors.right: okButton.left;
     width: 100;
-    height: parent.height / 6;
     buttonText: KDE.i18n( "Cancel" );
     onClicked: window.cancel();
   }
 
-  KPIM.Button {
+  KPIM.Button2 {
     id: okButton;
     anchors.bottom: parent.bottom;
     anchors.right: parent.right;
     width: 100;
-    height: parent.height / 6;
     buttonText: KDE.i18n( "Ok" );
     onClicked: window.save();
   }

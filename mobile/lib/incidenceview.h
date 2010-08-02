@@ -69,8 +69,8 @@ class MOBILEUI_EXPORT IncidenceView : public KDeclarativeFullScreenView, public 
     void cancel(); /// Cancel clicked in the user interface
 
   private slots:
-    void slotSaveFinished();
-    void slotSaveFailed( const QString &message );
+    void slotSaveFinished(Akonadi::EditorItemManager::SaveAction action );
+    void slotSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message );
 
   private:
     QDate mActiveDate;

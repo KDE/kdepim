@@ -65,10 +65,10 @@ IncidenceView::IncidenceView( QWidget* parent )
   mItem.setPayload<KCal::Incidence::Ptr>( KCal::Incidence::Ptr( new KCal::Event ) );
   mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
 
-  connect( mItemManager, SIGNAL(itemSaveFinished()),
-           SLOT(slotSaveFinished() ) );
-  connect( mItemManager, SIGNAL(itemSaveFailed(QString)),
-           SLOT(slotSaveFailed(QString) ) );
+  connect( mItemManager, SIGNAL(itemSaveFinished(Akonadi::EditorItemManager::SaveAction)),
+           SLOT(slotSaveFinished(Akonadi::EditorItemManager::SaveAction) ) );
+  connect( mItemManager, SIGNAL(itemSaveFailed(Akonadi::EditorItemManager::SaveAction, QString)),
+           SLOT(slotSaveFailed(Akonadi::EditorItemManager::SaveAction, QString) ) );
 }
 
 IncidenceView::~IncidenceView()
@@ -216,12 +216,12 @@ void IncidenceView::save()
   mItemManager->save();
 }
 
-void IncidenceView::slotSaveFinished()
+void IncidenceView::slotSaveFinished( Akonadi::EditorItemManager::SaveAction action )
 {
   deleteLater();
 }
 
-void IncidenceView::slotSaveFailed( const QString &message )
+void IncidenceView::slotSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message )
 {
   QPointer<QMessageBox> dlg = new QMessageBox; //krazy:exclude=qclasses
   dlg->setIcon( QMessageBox::Warning );
