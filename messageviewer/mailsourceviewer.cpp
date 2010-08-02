@@ -150,12 +150,12 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
 
 #ifndef NDEBUG
-    mHtmlBrowser = new KTextBrowser();
-    addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
-    setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
-    mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
-    mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-    mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser );
+  mHtmlBrowser = new KTextBrowser();
+  addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
+  setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
+  mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
+  mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
+  mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser );
 #endif
 
   setCurrentIndex( 0 );
