@@ -21,7 +21,11 @@
 #ifndef SCHEDULINGDIALOG_H
 #define SCHEDULINGDIALOG_H
 
+#ifdef KDEPIM_MOBILE_UI
+#include "ui_mobileschedulingdialog.h"
+#else
 #include "ui_schedulingdialog.h"
+#endif
 
 #include <kcalcore/period.h>
 #include <KDialog>

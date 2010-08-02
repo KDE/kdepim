@@ -46,14 +46,14 @@
 #include "ui_eventortodomoremobile.h"
 #else
 #include "ui_eventortododesktop.h"
-#include "schedulingdialog.h"
 #endif
 
 #include "attendeeeditor.h"
 #include "attendeeline.h"
 #include "conflictresolver.h"
-#include "incidencedatetime.h"
 #include "freebusyitemmodel.h"
+#include "incidencedatetime.h"
+#include "schedulingdialog.h"
 #include "../editorconfig.h"
 
 using namespace IncidenceEditorsNG;
@@ -321,15 +321,13 @@ void IncidenceAttendee::slotSelectAddresses()
 
 void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 {
-#ifndef KDEPIM_MOBILE_UI
-    int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
-    QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget ) );
-    if( dialog->exec() == KDialog::Accepted ) {
-        kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
-        mDateTime->setStartDate( dialog->selectedStartDate() );
-        mDateTime->setStartTime( dialog->selectedStartTime() );
-    }
-#endif
+  int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
+  QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget ) );
+  if( dialog->exec() == KDialog::Accepted ) {
+    kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
+    mDateTime->setStartDate( dialog->selectedStartDate() );
+    mDateTime->setStartTime( dialog->selectedStartTime() );
+  }
 }
 
 void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr& oldAttendee,

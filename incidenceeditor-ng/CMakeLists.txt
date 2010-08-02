@@ -43,6 +43,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   freebusyganttproxymodel.cpp
   freeperiodmodel.cpp
   conflictresolver.cpp
+  schedulingdialog.cpp
 
   incidencedefaults.cpp
 
@@ -61,7 +62,6 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
   ../templatemanagementdialog.cpp
   eventortododialog.cpp
-  schedulingdialog.cpp
   visualfreebusywidget.cpp
 )
 
@@ -110,6 +110,7 @@ if (KDEPIM_MOBILE_UI)
     eventortodomoremobile.ui
     attachmenteditdialog.ui
     alarmdialog.ui
+    mobileschedulingdialog.ui
   )
 
   kde4_add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})

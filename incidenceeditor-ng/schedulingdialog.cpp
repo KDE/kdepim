@@ -50,11 +50,13 @@ SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startT
     Q_ASSERT( duration > 0 );
     mDuration = duration;
 
+#ifndef KDEPIM_MOBILE_UI
     mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8, this );
     QVBoxLayout *ganttlayout = new QVBoxLayout( mGanttTab );
 
     mGanttTab->setLayout( ganttlayout );
     ganttlayout->addWidget( mVisualWidget );
+#endif
 
     connect( mStartDate, SIGNAL( dateChanged( QDate ) ), mResolver, SLOT( setEarliestDate( QDate ) ) );
     connect( mStartTime, SIGNAL( timeChanged( QTime ) ), mResolver, SLOT( setEarliestTime( QTime ) ) );
