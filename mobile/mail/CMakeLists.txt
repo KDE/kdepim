@@ -36,6 +36,7 @@ target_link_libraries(kmail-mobile
     messagecomposer
     messagecore
     messageviewer
+    templateparser
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
