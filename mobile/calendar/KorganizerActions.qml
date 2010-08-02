@@ -1,5 +1,5 @@
 
-import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.pim.mobileui 4.5
 
 ActionMenuContainer {
 
@@ -141,8 +141,8 @@ ActionMenuContainer {
     ActionListItem { name : "publish_as_ical" }
     ActionListItem { name : "publish_as_vcal" }
   }
-  ApplicationGeneralActions {
+/*  ApplicationGeneralActions {
     category : "standard"
     name : "Korganizer"
-  }
+  } */
 }
