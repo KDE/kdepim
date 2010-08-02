@@ -50,7 +50,7 @@ Rectangle {
     function showOnlyCategory(category)
     {
       for ( var i = 0; i < children.length; ++i ) {
-        if ( children[i].category != undefined )
+        if ( children[i].category != undefined && children[i].category == "standard" )
           children[i].visible = (children[i].category == category);
       }
     }

@@ -34,21 +34,21 @@ KPIM.MainView {
   function showDate(date)
   {
     console.log("QML showDate called");
-    korganizerActions.showOnly("single_calendar")
+    korganizerActions.showOnlyCategory("single_calendar")
     agenda.showRange( date, 0 /* "Day" */ );
   }
 
   function showEventView()
   {
     console.log("QML showEventView called");
-    korganizerActions.showOnly("event_viewer")
+    korganizerActions.showOnlyCategory("event_viewer")
     mainWorkView.visible = false
     agendaView.visible = true
   }
 
   function backToAgendaView()
   {
-    korganizerActions.showOnly("single_calendar")
+    korganizerActions.showOnlyCategory("single_calendar")
     eventView.visible = false;
     agendaView.visible = true;
   }
@@ -131,7 +131,7 @@ KPIM.MainView {
           onClicked : {
             agendaView.visible = false;
             mainWorkView.visible = true;
-            korganizerActions.showOnly("home")
+            korganizerActions.showOnlyCategory("home")
           }
         }
       }
@@ -147,7 +147,7 @@ KPIM.MainView {
           eventView.itemId = selectedItemId;
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
-          korganizerActions.showOnly("event_viewer")
+          korganizerActions.showOnlyCategory("event_viewer")
           eventView.visible = true;
           agendaView.visible = false;
           clearSelection();
@@ -209,12 +209,25 @@ KPIM.MainView {
       onNumBreadcrumbsChanged : {
         if (numBreadcrumbs == 0)
         {
-          korganizerActions.showOnly("home")
+          korganizerActions.showOnlyCategory("home")
         } else if (numBreadcrumbs == 1)
         {
-          korganizerActions.showOnly("account")
+          korganizerActions.showOnlyCategory("account")
         } else {
-          korganizerActions.showOnly("single_calendar")
+          korganizerActions.showOnlyCategory("single_calendar")
+        }
+      }
+      onNumSelectedChanged : {
+        if (numSelected == 0)
+        {
+          korganizerActions.showOnlyCategory("home")
+          return;
+        }
+        if (numBreadcrumbs == 0)
+        {
+          korganizerActions.showOnlyCategory("account")
+        } else {
+          korganizerActions.showOnlyCategory("single_calendar")
         }
       }
 
