@@ -112,15 +112,15 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay( const KCalCore::Perio
         }
 
         KCalCore::Period tmpPeriod = period;
-        while( period.start().date() != period.end().date() ) {
-            const KDateTime midnight( period.start().date(), QTime( 23, 59, 59, 999 ), period.start().timeSpec() );
-            KCalCore::Period firstPeriod( period.start(), midnight );
-            KCalCore::Period secondPeriod( midnight.addMSecs( 1 ), period.end() );
+        while( tmpPeriod.start().date() != tmpPeriod.end().date() ) {
+            const KDateTime midnight( period.start().date(), QTime( 23, 59, 59, 999 ), tmpPeriod.start().timeSpec() );
+            KCalCore::Period firstPeriod( tmpPeriod.start(), midnight );
+            KCalCore::Period secondPeriod( midnight.addMSecs( 1 ), tmpPeriod.end() );
             if( firstPeriod.duration().asSeconds() >= 5*60 /*5 minutes*/ )
                 splitList << firstPeriod;
             tmpPeriod = secondPeriod;
         }
-        if( period.duration().asSeconds() >= 5*60 /*5 minutes*/ )
+        if( tmpPeriod.duration().asSeconds() >= 5*60 /*5 minutes*/ )
             splitList << tmpPeriod;
     }
 
