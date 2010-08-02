@@ -911,6 +911,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       OrgKdeKorganizerCalendarInterface *iface = new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar", QDBusConnection::sessionBus(), 0 );
       if (!iface->isValid()) {
         kDebug() << "Calendar interface is not valid! " << iface->lastError().message();
+	delete iface;
+	return;
       }
       iface->showEventView();
       iface->showDate( date );
