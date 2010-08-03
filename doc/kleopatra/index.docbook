@@ -1,13 +1,31 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kleopatra "<application>Kleopatra</application>">
+  <!ENTITY uiserver "UiServer">
   <!ENTITY kwatchgnupg "<application>KWatchGnuPG</application>">
   <!ENTITY gpgsm "<application>GpgSM</application>">
+  <!ENTITY gnupg "<application>GnuPG</application>">
   <!ENTITY gpg "<application>GPG</application>">
+  <!ENTITY gpgme "<application>GpgME</application>"> <!--### there's no <library>-->
   <!ENTITY gpgconf "<application>GpgConf</application>">
+  <!ENTITY gpgagent "<application>GpgAgent</application>">
+  <!ENTITY dirmngr "<application>DirMngr</application>">
+  <!ENTITY scdaemon "<application>SCDaemon</application>">
+  <!ENTITY pinentry "<application>PinEntry</application>">
   <!ENTITY kappname "&kleopatra;">
   <!ENTITY package "kdepim">
+  <!ENTITY ldap "<acronym>LDAP</acronym>">
+  <!ENTITY ldaps "<acronym>LDAPS</acronym>">
+  <!ENTITY http "<acronym>HTTP</acronym>">
   <!ENTITY smime "<acronym>S/MIME</acronym>">
+  <!ENTITY openpgp "<acronym>OpenPGP</acronym>">
+  <!ENTITY ascii "<acronym>ASCII</acronym>">
+  <!ENTITY der "<acronym>DER</acronym>">
+  <!ENTITY ssl "<acronym>SSL</acronym>">
+  <!ENTITY x509 "<acronym>X.509</acronym>">
+  <!ENTITY crl "<acronym>CRL</acronym>">
+  <!ENTITY ocsp "<acronym>OCSP</acronym>">
+  <!ENTITY NA "<acronym>N/A</acronym>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 
@@ -72,8 +90,8 @@
 
 <legalnotice>&GPLNotice;</legalnotice>
 
-<date>2009-02-19</date>
-<releaseinfo>2.0.5</releaseinfo>
+<date>2010-04-27</date>
+<releaseinfo>2.0.14</releaseinfo>
 
 <abstract>
 <para>
@@ -86,9 +104,12 @@
 <keyword>KDE</keyword>
 <keyword>Kapp</keyword>
 <keyword>X509</keyword>
+<keyword>OpenPGP</keyword>
+<keyword>PGP</keyword>
 <keyword>LDAP</keyword>
 <keyword>gpg</keyword>
 <keyword>gpgsm</keyword>
+<keyword>certificate</keyword>
 </keywordset>
 
 </bookinfo>
@@ -96,8 +117,8 @@
 <chapter id="introduction"> <title>Introduction</title> 
 
 <para>&kleopatra; is the &kde; tool for managing X.509 and OpenPGP certificates in
-the &gpgsm; keybox and for retrieving certificates from
-<acronym>LDAP</acronym> servers.</para>
+the &gpgsm; and &gpg; keyboxes and for retrieving certificates from
+&ldap; and other certificate servers.</para>
 
 <para>&kleopatra; can be started from &kmail;'s <menuchoice><guimenu>Tools</guimenu>
 <guimenuitem>Certificate Manager</guimenuitem></menuchoice>
@@ -152,23 +173,19 @@ the vendor of a product using certificates, but can be done by the
 user via &gpgsm;'s command line interface.</para>
 
 <para>To see which of the certificates are root certificates, you
-switch to the hierarchical keylist mode with <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></link>.</para>
+switch to the hierarchical keylist mode with <xref
+linkend="view-hierarchical-key-list"/>.</para>
 
 <para>You can see the details of any certificate by double-clicking it
-or using <link linkend="view-certificate-details"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Certificate Details</guimenuitem></menuchoice></link>. This opens a
+or using <xref linkend="view-certificate-details"/>. This opens a
 dialog that shows the most common properties of the certificate, its
 certificate chain (&ie; the chain of issuers up to the root-&ca;), and
 a dump of all information the backend is able to extract from the
 certificate.</para>
 
 <para>If you change the keybox without using &kleopatra; (&eg; using
-&gpgsm;'s command line interface), you can refresh the view with <link
-linkend="view-redisplay"><menuchoice><shortcut><keycombo action="simul">
-<keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu>
-<guimenuitem>Redisplay</guimenuitem></menuchoice></link>.</para>
+&gpgsm;'s command line interface), you can refresh the view with <xref
+linkend="view-redisplay"/>.</para>
 
 <!-- no longer in kde 4
 para>Since validating a key may take some time (&eg; CRLs might need
@@ -191,12 +208,13 @@ selected.</para-->
 signatures in emails, since certificates are embedded in the
 signatures made using them most of the time. However, if you need to
 send a mail to someone you have not yet had contact with, you need to
-fetch the certificate from an LDAP folder (although &gpgsm; can do
+fetch the certificate from an &ldap; folder (although &gpgsm; can do
 this automatically), or from a file. You also need to import your own
 certificate after receiving the &ca; answer to your certification
 request.</para>
 
-<para>To search for a certificate in an LDAP directory, select 
+<para>To search for a certificate in an &ldap; directory, select 
+<!--### xref-->
 <menuchoice><guimenu>File</guimenu><guimenuitem>Lookup Certificates on Server</guimenuitem></menuchoice>
 and enter some text (&eg; the name of the person
 you want the certificate for) into the line edit of the <guilabel>Keyserver 
@@ -213,13 +231,12 @@ button.</para>
 not found in 4.2
 -->
 
-<para>You can configure the list of LDAP servers to search in the
+<para>You can configure the list of &ldap; servers to search in the
 <link linkend="configuration-directory-services"><guilabel>Directory
 Services</guilabel></link> page of &kleopatra;'s configure dialog.</para>
 
-<para>If you received the certificate as a file, try <link
-linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>. &gpgsm; needs to understand the
+<para>If you received the certificate as a file, try <xref
+linkend="file-import-certificates"/>. &gpgsm; needs to understand the
 format of the certificate file; please refer to &gpgsm;'s manual for a
 list of supported file formats.</para>
 
@@ -230,17 +247,15 @@ the &ca;. You can do this on the command line with <link
 linkend="commandline-option-import-certificate"><userinput><command>kleopatra
 <option>--import-certificate</option>
 <filename>filename</filename></command></userinput></link> or from
-within &kleopatra; with <link
-linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>,
+within &kleopatra; with <xref
+linkend="file-import-certificates"/>,
 just as you would to for <quote>normal</quote> certificates.</para>
 
 </sect1>
 
 <sect1 id="functions-newkey"><title>Creating New Key Pairs</title>
 
-<para>The menu item <link linkend="file-new-key-pair"><menuchoice>
-<guimenu>File</guimenu><guimenuitem>New Certificate...</guimenuitem></menuchoice></link> starts the
+<para>The menu item <xref linkend="file-new-key-pair"/> starts the
 <guilabel>Certificate Creation Wizard</guilabel> which will guide you through a
 number of steps to create a certificate request.</para> 
 <para>Whenever you are done with a step in
@@ -267,7 +282,7 @@ optional a <guilabel>Comment</guilabel>.</para>
 <term><guilabel>Create a personal X.509 key pair and certification request</guilabel></term>
 <listitem>
 <para>X.509 key pairs are created locally, but certified centrally by a 
-certification authority (&ca;). CAs can certify other CAs, creating a central, 
+certification authority (&ca;). &ca;s can certify other &ca;s, creating a central, 
 hierarchical chain of trust.</para>
 <para>The next step in the wizard is to type in your personal data
 for the certificate. The fields to fill out are:
@@ -307,6 +322,7 @@ specify the filename or email address to send the certificate request to.
 </sect1>
 
 
+<!-- hopelessly outdated
 <sect1 id="functions-keybox-management"><title>Keybox Management</title>
 
 <para>In addition to <link linkend="functions-view">list and
@@ -317,23 +333,19 @@ has some less often used functions that help you manage your local
 keybox.</para>
 
 <para>These functions include deleting certificates from the local
-keybox with <link linkend="certificates-delete"><menuchoice><shortcut>
-<keycombo action="simul"><keycap>Del</keycap></keycombo></shortcut>
-<guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice></link>, as well 
-as manual handling of CRLs (<link linkend="certificates-refresh-crls">
-<menuchoice><guimenu>Tools</guimenu><guimenuitem>Refresh Certificates</guimenuitem> <!--???-->
-</menuchoice></link>, <link linkend="crls-clear-crl-cache"><menuchoice><guimenu>Tools</guimenu>
-<guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></link>, <link
-linkend="crls-dump-crl-cache"><menuchoice><guimenu>Tools</guimenu>
-<guimenuitem>Dump CRL Cache</guimenuitem></menuchoice></link>).</para>
+keybox with <xref linkend="certificates-delete"/>, as well 
+as manual handling of CRLs (<xref linkend="certificates-refresh-x509"/>,
+<xref linkend="crls-clear-crl-cache"/>, <xref linkend="crls-dump-crl-cache"/>).
+</para>
 
 </sect1>
+-->
 
 </chapter>
 
 <chapter id="menu"><title>Menu Reference</title>
 
-<sect1 id="menufile"><title><guimenu>File</guimenu> Menu</title>
+<sect1 id="menufile"><title>File Menu</title>
 
 <variablelist>
 
@@ -345,7 +357,7 @@ linkend="crls-dump-crl-cache"><menuchoice><guimenu>Tools</guimenu>
 <para><action>Creates a new key pair (public and private)</action> and
 allows to send the public part to a certification authority
 (&ca;) for signing. The resulting certificate is then
-sent back to you, or stored in an LDAP server for you to download into
+sent back to you, or stored in an &ldap; server for you to download into
 your local keybox, where you can use it to sign and decrypt
 mails.</para>
 
@@ -353,121 +365,258 @@ mails.</para>
 generation</quote>, since all keys are created locally. &kleopatra;
 (and &gpgsm;) do not support <quote>centralized key generation</quote>
 directly, but you can import the public/secret key bundle that you
-receive from the &ca; in PKCS#12 format via <menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice>.</para>
+receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certificates"/>.</para>
 </listitem>
 </varlistentry>
-<!-- missing menu item
-<varlistentry>
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>I</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Lookup Certificates on Server</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+
+        <varlistentry id="file-lookup-certificates">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>I</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Lookup Certificates on Server...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Searches for, and imports, certificates from
+              certificate servers into the local keybox.</action> See
+              <xref linkend="functions-search"/> for details.
+            </para>
+            <para>
+              You need to have key servers configured for this to
+              work. See
+              <xref linkend="configuration-directory-services"/> for
+              more details.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-import-certificates">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;<keycap>I</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Import Certificates...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Imports certificates and/or secret keys from
+              files into the local keybox.</action> See
+              <xref linkend="functions-search"/> for details.
+            </para>
+            <para>
+              The format of the certificate file must be supported by
+              &gpgsm;/&gpg;. Please refer to the &gpgsm; and &gpg;
+              manuals for a list of supported formats.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-export-certificates">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Export Certificates...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Exports the selected certificates to a
+              file.</action>
+            </para>
+            <para>
+              The filename extension you choose for the export file
+              name determines the format of the export file:
+            </para>
+            <itemizedlist>
+              <listitem>
+                <para>
+                  For OpenPGP certificates,
+                  <filename class="extension">gpg</filename> and
+                  <filename class="extension">pgp</filename> will result
+                  in a binary file, whereas
+                  <filename class="extension">asc</filename> will result
+                  in an &ascii;-armored file.
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  For &smime; certificates,
+                  <filename class="extension">der</filename> will result
+                  in a binary, &der;-encoded file, whereas
+                  <filename class="extension">pem</filename> will result
+                  in an &ascii;-armored file.
+                </para>
+              </listitem>
+            </itemizedlist>
+            <para>
+              Unless multiple certificates are selected, &kleopatra;
+              will propose
+              <filename><replaceable>fingerprint</replaceable>.{asc,pem}</filename>
+              as the export file name.
+            </para>
+            <para>
+              This function is only available when one or more
+              certificates have been selected.
+            </para>
+            <note>
+              <para>
+                This function exports only the public keys, even if
+                the secret key is available. Use
+                <xref linkend="file-export-secret-key"/> to export
+                both public and secret keys into a file, but note that
+                this is almost always a bad idea.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-export-secret-key">
+          <term>
+            <menuchoice>
+              <guimenu>File</guimenu><guimenuitem>Export Secret Certificate...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Exports both the public and the secret key to a
+              file.</action>
+            </para>
+            <para>
+              In the dialog that opens, you can choose an
+              <guilabel>Output file</guilabel> name, and whether to
+              create a binary or an &ascii;-armored export file
+              (<guilabel>ASCII armor</guilabel>). When exporting
+              &smime; secret keys, you can also choose the
+              <guilabel>Passphrase charset</guilabel>. See the
+              discussion of the
+              <option>--p12-charset&nbsp;<replaceable>charset</replaceable></option>
+              option in the &gpgsm; manual for more details.
+            </para>
+            <para>
+              This function is only available when exactly one
+              certificate has been selected, and the secret key for
+              that certificate is available.
+            </para>
+            <warning>
+              <para>
+                It should rarely be necessary to use this function,
+                and if it is, it should be carefully planned. Planning
+                the migration of a secret key involves choice of
+                transport media and secure deletion of the key data on
+                the old machine, as well as on the transport medium,
+                among other things.
+              </para>
+            </warning>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>E</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Export Certificates to Server...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Publish the selected certificates on a
+              keyserver</action> (&openpgp; only).
+            </para>
+            <para>
+              The certificate is sent to the certificate server
+              configured for &openpgp;
+              (cf.&nbsp;<xref linkend="configuration-directory-services"/>),
+              if that is set, otherwise to
+              <systemitem class="systemname">keys.gnupg.net</systemitem>.
+            </para>
+            <para>
+              This function is only available if at least one
+              &openpgp; (and no &smime;) certificates have been
+              selected.
+            </para>
+            <note>
+              <!-- also appears in message box in -->
+              <!-- commands/exportopenpgpcertificatestoserver.cpp -->
+              <para>
+                When OpenPGP certificates have been exported to a
+                public directory server, it is nearly impossible to
+                remove them again. Before exporting your certificate
+                to a public directory server, make sure that you have
+                created a revocation certificate so you can revoke the
+                certificate if needed later.
+              </para>
+            </note>
+            <note>
+              <para>
+                Most public &openpgp; certificate servers synchronize
+                certificates amongst each other, so there is little
+                point in sending to more than one.
+              </para>
+              <para>
+                It can happen that a search on a certificate server
+                turns up no results even though you just have sent
+                your certificate there. This is because most public
+                keyserver addresses use <acronym>DNS</acronym>
+                round-robin to balance the load over multiple
+                machines. These machines synchronize with each other,
+                but usually only every 24 hours or so.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>File</guimenu><guimenuitem>Decrypt/Verify Files...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Decrypts files and/or verifies
+              signatures</action> over files.
+            </para>
+<!--
+            <para>
+              See <xref linkend="function-decrypt-verify-files"/> for details.
+            </para>
 -->
-<varlistentry id="file-import-certificates">
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>I</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Import Certificates...</guimenuitem></menuchoice></term>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Imports certificates and/or secret keys from files into
-the local keybox.</action></para>
-
-<para>The format of the certificate file must be supported by
-&gpgsm;. Please refer to the &gpgsm; manual for a list of supported
-formats.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry id="file-export-certificates">
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Export Certificates...</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Exports the selected certificates</action> into a file.</para>
-
-<note><para>This exports only the public keys, even if the
-secret key is available. Use <menuchoice><guimenu>File</guimenu><guimenuitem>Export 
-Secret Key...</guimenuitem></menuchoice> to export both
-public and secret keys into a file, but note that this is almost
-always a bad idea.</para></note>
-</listitem>
-</varlistentry>
-
-
-<varlistentry id="file-export-secret-key">
-<term><menuchoice><guimenu>File</guimenu><guimenuitem>Export Secret Key...</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Exports both the public and the secret key to a
-(PKCS#12) file.</action></para>
-
-<warning><para>It should rarely be necessary to use this function, and
-if it is, it should be carefully planned. Planning the migration of a
-secret key involves choice of transport media and secure deletion of
-the key data on the old machine, as well as the transport medium,
-among other things.</para></warning>
-</listitem>
-</varlistentry>
-<!--missing menu items
-<varlistentry>
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>E</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Export Certificates to Server...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu><guimenuitem>Decrypt/Verify Files...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu><guimenuitem>Sign/Encrypt Files...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
-<guimenu>File</guimenu><guimenuitem>Close...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>File</guimenu><guimenuitem>Sign/Encrypt Files...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Signs and/or encrypts files.</action>
+            </para>
+<!--
+            <para>
+              See <xref linkend="function-sign-encrypt-files"/> for details.
+            </para>
 -->
-<!--not in 4.2
-<varlistentry id="file-import-crls">
-<term><menuchoice><guimenu>File</guimenu><guimenuitem>Import CRLs...</guimenuitem></menuchoice></term>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Lets you manually import CRLs from
-files.</action></para>
-
-<para>Normally, Certificate Revocation Lists (CRLs) are handled
-transparently by the backend, but it can sometimes be useful to
-import a CRL manually into the local CRL cache.</para>
-
-<note><para>For CRL import to work, the
-<application>dirmngr</application> tool must be in the search
-<varname>PATH</varname>. If this menu item is disabled, you should
-contact the system administrator and ask them to install
-<application>dirmngr</application>.</para></note>
-
-<para>You can view the contents of the local CRL cache from the menu
-item <menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache</guimenuitem>
-</menuchoice>. This will display a dialog with
-information about the CRLs in the cache and the fingerprints of the
-certificates in each CRL.
-</para>
-</listitem>
-</varlistentry>
--->
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
+              <guimenu>File</guimenu><guimenuitem>Close</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Closes &kleopatra;'s main window.</action> You
+              can restore it from the system tray icon at any time.
+            </para>
+          </listitem>
+        </varlistentry>
 
 <varlistentry id="file-quit">
 <term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></shortcut>
@@ -484,49 +633,63 @@ certificates in each CRL.
 
 
 
-<sect1 id="menuview"><title><guimenu>View</guimenu> Menu</title>
+<sect1 id="menuview"><title>View Menu</title>
 
-<variablelist>
+      <variablelist>
 
-<varlistentry id="view-redisplay">
-<term><menuchoice><shortcut><keycombo action="simul"><keycap>F5</keycap></keycombo>
-</shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Redisplays the selected certificates or refreshes the
-certificate list.</action></para>
-
-<para>If there are selected certificates, the refresh operation is
-restricted to those selected entries.</para>
-
-<para>If a query result (either remote or local) is currently
-displayed, the query is re-issued and the new results are displayed in
-place of the old ones.</para>
-
-<para>If no query has been performed, the whole keybox contents is
-re-fetched and re-displayed.</para>
-
-<para>You can use this if you have changed the contents of
-the keybox by other means than &kleopatra; (&eg; by using &gpgsm;'s
-command line interface).</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="view-redisplay">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul"><keycap>F5</keycap></keycombo></shortcut>
+              <guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Refreshes the certificate list.</action>
+            </para>
+            <para>
+              Using this function is usually not necessary, as
+              &kleopatra; monitors the filesystem for changes and
+              automatically refreshes the certificate list when
+              needed.
+            </para>
+          </listitem>
+        </varlistentry>
 
 
-<varlistentry id="view-stop-operation">
-<term><menuchoice><shortcut><keycombo action="simul">&Esc;</keycombo></shortcut>
-<guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Stops (cancels) all pending operations,</action> &eg; a
-search or a download.</para>
-
-<note><para>Depending on the server used, cancelling a remote search
-can block &kleopatra; for a few seconds while waiting for the backend
-to complete the procedure. This is normal and expected
-behavior.</para></note>
-</listitem>
-</varlistentry>
+        <varlistentry id="view-stop-operation">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul">&Esc;</keycombo></shortcut>
+              <guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Stops (cancels) all pending operations,</action>
+              &eg; a search, keylisting, or a download.
+            </para>
+            <para>
+              This function is only available if at least one
+              operation is active.
+            </para>
+            <note>
+              <para>
+                Due to backend limitations, sometimes operations will
+                hang in such a way that this function won't be able to
+                cancel them, right away, or at all.
+              </para>
+              <para>
+                In such cases, the only way to restore order is to
+                kill &scdaemon;, &dirmngr;, &gpgsm; and &gpg;
+                processes, in that order, via the operating system
+                tools (<command>top</command>, Windows Task-Manager,
+                &etc;), until the operation get unblocked.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
 
 
 <varlistentry id="view-certificate-details">
@@ -535,6 +698,9 @@ behavior.</para></note>
 <listitem>
 <para><action>Shows the details of the currently selected
 certificate.</action></para>
+
+<para>This function is only available if exactly one certificate is
+selected.</para>
 
 <para>This function is also available by double-clicking the
 corresponding item in the list view directly.</para>
@@ -548,12 +714,12 @@ corresponding item in the list view directly.</para>
 <term><menuchoice><guimenu>View</guimenu><guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></term>
 
 <listitem>
-<para><action> Toggles between hierarchical and flat keylist mode.
+<para><action> Toggles between hierarchical and flat certificate list mode.
 </action></para>
 
 <para>In hierarchical mode, certificates are arranged in
-issuer/subject relation, so it is easy to see to which certification
-hierarchy a given certificate belongs, but a given certificate is
+issuer/subject relation, so it is easy to see which certification
+hierarchy a given certificate belongs to, but a given certificate is
 harder to find initially (though you can of course use the
 <link linkend="functions-search">search bar</link>).</para>
 
@@ -561,6 +727,25 @@ harder to find initially (though you can of course use the
 sorted alphabetically. In this mode, a given certificate is easy to
 find, but it is not directly clear which root certificate it belongs
 to.</para>
+
+            <para>
+              This function toggles hierarchical mode per tab, &ie;
+              each tab has its own hierarchy state. This is so that
+              you can have both a flat and a hierarchical listing at
+              hand, each in its own tab.
+            </para>
+
+            <note>
+              <para>
+                Hierarchical display is currently only implemented for
+                &smime; certificates. There is disagreement amongst
+                the developers regarding the correct way to display
+                &openpgp; certificates hierarchically (basically,
+                <quote>parent &equals; signer</quote> or <quote>parent
+                &equals; signee</quote>).
+              </para>
+            </note>
+
 </listitem>
 </varlistentry>
 
@@ -570,10 +755,6 @@ to.</para>
 </keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice></term>
 
 <listitem>
-<para>(This function is only available when <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></link> is on.)</para>
-
 <para><action>Expands all list items in the certificate list
 view,</action> &ie; makes all items visible.</para>
 
@@ -582,6 +763,10 @@ mode.</para>
 
 <para>You can still expand and collapse each individual item by
 itself, of course.</para>
+
+<para>This function is only available when <xref
+linkend="view-hierarchical-key-list"/> is on.</para>
+
 </listitem>
 </varlistentry>
 
@@ -590,15 +775,14 @@ itself, of course.</para>
 </keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice></term>
 
 <listitem>
-<para>(This function is only available when <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Certificate List</guimenuitem></menuchoice></link> is on.)</para>
-
 <para><action>Collapses all list items in the certificate list
 view,</action> &ie; hides all but the top-level items.</para>
 
 <para>You can still expand and collapse each individual item by
 itself, of course.</para>
+
+<para>This function is only available when <xref
+linkend="view-hierarchical-key-list"/> is on.</para>
 </listitem>
 </varlistentry>
 
@@ -606,17 +790,145 @@ itself, of course.</para>
 
 </sect1>
 
-<sect1 id="menucertificates"><title><guimenu>Certificates</guimenu> Menu</title>
+<sect1 id="menucertificates"><title>Certificates Menu</title>
 
-<variablelist>
-<!-- missing menu item
-<varlistentry id="certificates-certify">
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Certify Certificate...</guimenuitem></menuchoice></term>
-<listitem>
-<para><action>???</action></para>
+      <variablelist>
 
-no longer in kde4
+        <varlistentry id="certificates-change-owner-trust">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Change Owner Trust...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Changes the Owner Trust of the selected
+              &openpgp; certificate.</action>
+<!--
+              See <xref linkend="functions-manage-wot"/> for details.
+-->
+            </para>
+            <para>
+              This function is only available when exactly one
+              &openpgp; certificate is selected.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="certificates-trust-root">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Trust Root Certificate</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Marks this (&smime;) root certificate as trusted.</action>
+            </para>
+            <para>
+              In some ways, this is the equivalent of <xref
+              linkend="certificates-change-owner-trust"/> for &smime;
+              root certificates. You can, however, only choose
+              between&mdash;in &openpgp;
+              terms&mdash;<quote>ultimate</quote> trust and
+              <quote>never trust</quote>.
+            </para>
+            <note>
+              <para>
+                The backend (by way of &gpgagent;) will ask at root
+                certificate import time whether to trust the imported
+                root certificate. However, that function must be
+                explicitly enabled in the backend configuration
+                (<option>allow-mark-trusted</option> in
+                <filename>gpg-agent.conf</filename>, or either
+                <menuchoice><guimenu>GnuPG&nbsp;System</guimenu>
+                <guisubmenu>GPG&nbsp;Agent</guisubmenu>
+                <guimenuitem>Allow clients to mark keys as
+                "trusted"</guimenuitem></menuchoice> or <link
+                linkend="configuration-smime-validation-allow-mark-trusted"><menuchoice><guimenu>S/MIME&nbsp;Validation</guimenu>
+                <guimenuitem>Allow to mark root certificates as
+                trusted</guimenuitem></menuchoice></link> under <xref
+                linkend="settings-configure-kleopatra"/>).
+              </para>
+              <para>
+                Enabling that functionality in the backend can lead to
+                popups from &pinentry; at inopportune times (&eg; when
+                verifying signatures), and can thus block unattended
+                email processing. For that reason, and because it is
+                desirable to be able to <emphasis>distrust</emphasis>
+                a trusted root certificate again, &kleopatra; allows
+                manual setting of trust.
+              </para>
+            </note>
+            <warning>
+              <para>
+                Due to lack of backend support for this function,
+                &kleopatra; needs to work directly on the &gpgsm;
+                trust database
+                (<filename>trustlist.txt</filename>). When using this
+                function, make sure no other crypto operations are in
+                progress that could race with &kleopatra; for
+                modifications to that database.
+              </para>
+            </warning>
+            <para>
+              This function is only available when exactly one &smime;
+              root certificate is selected, and that certificate is
+              not yet trusted.
+            </para>
+            <para>
+              Use <xref linkend="certificates-distrust-root"/> to undo
+              this function.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="certificates-distrust-root">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Distrust Root Certificate</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Marks this (&smime;) root certificate as not trusted.</action>
+            </para>
+            <para>
+              This function is only available when exactly one &smime;
+              root certificate is selected, and that certificate is
+              currently trusted.
+            </para>
+            <para>
+              Used to undo <xref
+              linkend="certificates-trust-root"/>. See there for
+              details.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="certificates-certify">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Certify Certificate...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows you to certify another &openpgp;
+              certificate.</action>
+<!-- ### xref
+              See <xref linkend="functions-manage-wot"/> for details.
+-->
+            </para>
+            <para>
+              This function is only available if exactly one &openpgp;
+              certificate is selected.
+            </para>
+          </listitem>
+        </varlistentry>
+
+
+<!--no longer in kde4
 <para>This is similar to <link
 linkend="view-redisplay"><menuchoice><shortcut><keycombo action="simul">
 <keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu>
@@ -625,7 +937,7 @@ performs a validation of the (selected) keys. Validation here means
 that all relevant CRLs are fetched, and the certificate chain is
 checked for correctness. As a result, invalid or expired keys will be
 marked according to your color and font preferences set in the <link
-linkend="configuration-appearance"><guilabel>Appearance</guilabel>
+linkend="configuration-appearance-certificate-filters"><guilabel>Appearance</guilabel>
 page</link> of &kleopatra;'s <link linkend="configuration">configure
 dialog</link>.</para>
 
@@ -664,71 +976,181 @@ uncommon).</para>
 <para>Use this function scarcely.</para></warning>
 </listitem>
 </varlistentry-->
-<!-- missing menu items
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Change Ownertrust...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Expire Date...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Change Expire Date...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows to change the expiry date of your &openpgp; certificate.</action>
+            </para>
+            <para>
+              Use this function to extend the lifetime of your
+              &openpgp; certificates as an alternative to either
+              creating a new one, or using unlimited lifetime
+              (<quote>never expires</quote>).
+            </para>
+            <para>
+              This function is only available if exactly one &openpgp;
+              certificate is selected, and the secret key is available
+              for that certificate.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Change Passphrase...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Change Passphrase...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows to change the passphrase of your secret key.</action>
+            </para>
+            <para>
+              This function is only available if exactly one
+              certificate is selected, and the secret key is available
+              for that certificate. It requires a very recent backend,
+              since we changed the implementation from direct calling
+              of &gpg; and &gpgsm; to a &gpgme;-based one.
+            </para>
+            <note>
+              <para>
+                For security reasons, both the old as well as the new
+                passphrase is asked for by &pinentry;, a separate
+                process. Depending on the platform you are running on
+                and on the quality of the &pinentry; implementation on
+                that platform, it may happen that the &pinentry;
+                window comes up in the background. So, if you select
+                this function and nothing happens, check the operating
+                system's task bar in case a &pinentry; window is open
+                in the background.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Certificates</guimenu><guimenuitem>Add User-ID...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
--->
-<varlistentry id="certificates-delete">
-<term><menuchoice><shortcut><keycombo action="simul"><keycap>Del</keycap></keycombo></shortcut>
-<guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice></term>
+        <varlistentry>
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Add User-ID...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Allows to add a new User-ID to your &openpgp; certificate.</action>
+            </para>
+            <para>
+              Use this to add new identities to an existing
+              certificate as an alternative to creating a new key
+              pair. An &openpgp; user-ID has the following form:
+            </para>
+            <programlisting><replaceable>Real&nbsp;Name</replaceable>&nbsp;<optional>(<replaceable>Comment</replaceable>)</optional>&nbsp;&lt;<replaceable>Email</replaceable>&gt;</programlisting>
+            <para>
+              In the dialog that comes up when you select this
+              function, &kleopatra; will ask you for each of the three
+              parameters (<replaceable>Real&nbsp;Name</replaceable>,
+              <replaceable>Comment</replaceable> and
+              <replaceable>Email</replaceable>) separately, and
+              display the result in a preview.
+            </para>
+            <note>
+              <para>
+                These parameters are subject to the
+                same Administrator restrictions as in new
+                certificates. See <xref linkend="functions-newkey"/>
+                and <xref linkend="admin-certificate-request-wizard"/>
+                for details.
+              </para>
+            </note>
+            <para>
+              This function is only available when exactly one
+              &openpgp; certificate is selected, and the secret key is
+              available for that certificate.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Deletes selected certificate(s)</action> from the local keyring.</para>
+        <varlistentry id="certificates-delete">
+          <term>
+            <menuchoice>
+              <shortcut><keycombo action="simul"><keycap>Del</keycap></keycombo></shortcut>
+              <guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Deletes the selected certificates</action> from
+              the local keyring.
+            </para>
+            <para>
+              Use this function to remove unused keys from your local
+              keybox. However, since certificates are typically
+              attached to signed emails, verifying an email might
+              result in the key just removed to pop back into the
+              local keybox. So it is probably best to avoid using this
+              function as much as possible. When you are lost, use the
+              <link linkend="functions-search">search bar</link> or
+              the <xref linkend="view-hierarchical-key-list"/>
+              function to regain control over the lot of
+              certificates.
+            </para>
+            <warning>
+              <para>
+                There is one exception to the above: When you delete
+                one of your own certificates, you delete the secret
+                key along with it. This implies that you will not be
+                able to read past communication encrypted to you using
+                this certificate, unless you have a backup somewhere.
+              </para>
+              <para>
+                &kleopatra; will warn you when you attempt to delete a
+                secret key.
+              </para>
+            </warning>
+            <para>
+              Due to the hierarchical nature of &smime; certificates,
+              if you delete an &smime; issuer certificate (&ca; certificate),
+              all subjects are deleted, too.<footnote><para>This is the same as a
+              filesystem: When you delete a folder, you delete all
+              files and folders in it, too.</para></footnote>
+            </para>
+            <para>
+              Naturally, this function is only available if you
+              selected at least one certificate.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<para>Use this function to remove unused keys from your local
-keybox. However, since certificates are typically attached to signed
-emails, verifying an email might result in the key just removed to pop
-back into the local keybox. So it is probably best to avoid using this
-function as much as possible. When you are lost, use the <link
-linkend="functions-search">search bar</link> or the <link
-linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hierarchical Key List</guimenuitem></menuchoice></link> function to regain control over
-the lot of certificates.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice><guimenu>Certificates</guimenu><guimenuitem>Dump Certificate</guimenuitem></menuchoice></term>
-<listitem>
-<para>Shows the detailed contents of the &gpgsm; CRL cache.</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="certificates-dump-certificate">
+          <term>
+            <menuchoice>
+              <guimenu>Certificates</guimenu><guimenuitem>Dump Certificate</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Shows all information that &gpgsm; has about the
+              selected (&smime;) certificate.</action>
+            </para>
+            <para>
+              See the discussion about
+              <option>--dump-key&nbsp;<replaceable>key</replaceable></option>
+              in the &gpgsm; manual for details about the output.
+            </para>
+          </listitem>
+        </varlistentry>
 
 <!--not in 4.2
 varlistentry id="certificates-download">
 <term><menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice></term>
 
 <listitem>
-<para><action>Downloads the selected certificate(s) from the LDAP to the local keybox.</action></para>
+<para><action>Downloads the selected certificate(s) from the &ldap; to the local keybox.</action></para>
 </listitem>
 </varlistentry-->
 
@@ -736,31 +1158,126 @@ varlistentry id="certificates-download">
 
 </sect1>
 
-<sect1 id="menutools"><title><guimenu>Tools</guimenu> Menu</title>
+<sect1 id="menutools"><title>Tools Menu</title>
 
 <variablelist>
 
-<varlistentry id="tools-gnupg-log-viewer">
-<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem></menuchoice></term>
+        <varlistentry id="tools-gnupg-log-viewer">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Starts <ulink
+              url="help:/kwatchgnupg/index.html">&kwatchgnupg;</ulink></action>,
+              a tool to present the debug output of &gnupg;
+              applications. If signing, encryption, or verification
+              mysteriously stop working, you might find out why by
+              looking at the log.
+            </para>
+            <para>
+              This function is not available on Windows, since the
+              underlying mechanisms are not implemented in the backend
+              on that platform.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Starts <ulink url="help:/kwatchgnupg/index.html">&kwatchgnupg;</ulink></action>, a tool to present the debug output of GnuPG application. If signing, encryption, or verification mysteriously stop working, you might find out why by looking at the log.</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="certificates-refresh-openpgp">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>Refresh OpenPGP Certificates</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Refreshes all &openpgp; certificates</action> by executing
 
-<varlistentry id="certificates-refresh-crls">
-<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Refresh X.509 or OpenPGP Certificates</guimenuitem></menuchoice></term>
+              <programlisting><command>gpg&nbsp;<option>--refresh-keys</option></command></programlisting>
 
-<listitem>
-<para>Refreshing X.509 or OpenPGP certificates implies downloading all certificates
-and CRLs, to check if any of them have been revoked in the meantime.</para>
-<para>This can put a severe strain on your own as well as other
-people's network connections, and can take up to an hour or more to
-complete, depending on your network connection, and the number of
-certificates to check.</para>
-</listitem>
-</varlistentry>
+              After successful completion of the command, your local
+              keystore will reflect the latest changes with respect to
+              validity of &openpgp; certificates.
+            </para>
+            <para>
+              See note under <xref
+              linkend="certificates-refresh-x509"/> for some caveats.
+            </para>
+          </listitem>
+        </varlistentry>
 
+        <varlistentry id="certificates-refresh-x509">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>Refresh X.509 Certificates</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Refreshes all &smime; certificates</action> by executing
+
+              <programlisting><!--
+                --><command>gpgsm&nbsp;<!--
+                  --><option>-k</option>&nbsp;<!--
+                  --><option>--with-validation</option>&nbsp;<!--
+                  --><option>--force-crl-refresh</option>&nbsp;<!--
+                  --><option>--enable-crl-checks</option><!--
+                  --></command></programlisting>
+
+              After successful completion of the command, your local
+              keystore will reflect the latest changes with respect to
+              validity of &smime; certificates.
+            </para>
+            <note>
+              <para>
+                Refreshing &x509; or &openpgp; certificates implies
+                downloading all certificates and &crl;s, to check if any
+                of them have been revoked in the meantime.
+              </para>
+              <para>
+                This can put a severe strain on your own as well as
+                other people's network connections, and can take up to
+                an hour or more to complete, depending on your network
+                connection, and the number of certificates to check.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="file-import-crls">
+          <term>
+            <menuchoice>
+              <guimenu>Tools</guimenu><guimenuitem>Import CRL From File...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Lets you manually import &crl;s from
+              files.</action>
+            </para>
+            <para>
+              Normally, Certificate Revocation Lists (&crl;s) are
+              handled transparently by the backend, but it can
+              sometimes be useful to import a &crl; manually into the
+              local &crl; cache.
+            </para>
+            <note>
+              <para>
+                For &crl; import to work, the &dirmngr; tool must be in
+                the search <envar>PATH</envar>. If this menu item is
+                disabled, you should contact the system administrator
+                and ask them to install &dirmngr;.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+<!-- no longer provided 
+that is wrong
+"Clear CRL Cache"+"Dump CRL Cache" are still in the gui of 4.5 + trunk
+-->
 <varlistentry id="crls-clear-crl-cache">
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></term>
 
@@ -768,8 +1285,7 @@ certificates to check.</para>
 <para><action>Clears the &gpgsm; CRL cache.</action></para>
 
 <para>You probably never need this. You can force a refresh of the CRL
-cache by selecting all certificates and using <link linkend="certificates-refresh-crls"><menuchoice>
-<guimenu>Tools</guimenu><guimenuitem>Refresh Certificates</guimenuitem></menuchoice></link> instead.</para>
+cache by selecting all certificates and using <xref linkend="certificates-refresh-x509"/> instead.</para>
 </listitem>
 </varlistentry>
 
@@ -781,7 +1297,7 @@ cache by selecting all certificates and using <link linkend="certificates-refres
 cache.</action></para>
 </listitem>
 </varlistentry>
-
+<!-- no longer provided
 <varlistentry id="settings-configure-gpgme-backend">
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Configure GnuPG Backend...</guimenuitem></menuchoice></term>
 
@@ -794,79 +1310,146 @@ cache.</action></para>
 updated.</para>
 </listitem>
 </varlistentry>
-
+-->
 
 </variablelist>
 
 </sect1>
 
-<sect1 id="menusettings"><title><guimenu>Settings</guimenu> Menu</title>
+<sect1 id="menusettings"><title>Settings Menu</title>
 
-<variablelist>
-<!-- missing items
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu><guimenuitem>Perform Selftest</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+      <variablelist>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu><guisubmenu>Toolbars</guisubmenu></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="settings-self-test">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Perform Self-Test</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Performs a set of self-tests and presents their result.</action>
+            </para>
+            <para>
+              This is the same set of tests that is run at startup by
+              default. If you disabled startup-time self-tests, you
+              can re-enable them here.
+            </para>
+<!-- ### xref
+            <para>
+              See <xref linkend="function-selftest"/> for details.
+            </para>
 -->
-<varlistentry id="settings-show-statusbar">
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem></menuchoice></term>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Toggles the visibility of the bottom status bar.</action></para>
-</listitem>
-</varlistentry>
-<!-- missing item
-<varlistentry>
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Toolbars...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
--->
-<varlistentry id="settings-configure-shortcuts">
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem></menuchoice></term>
+        <varlistentry id="settings-toolbars">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guisubmenu>Toolbars</guisubmenu></menuchoice></term>
+          <listitem>
+            <para>
+              <action>Shows/hides &kleopatra; toolbars.</action>
+            </para>
+            <para>
+              &kleopatra; has two toolbars:
+              <orderedlist>
+                <listitem>
+                  <para>
+                    <guilabel>Main Toolbar</guilabel>
+                  </para>
+                  <para>
+                    This toolbar carries a selection of common
+                    functions. You can configure which functions you
+                    would like to see here using
+                    <xref linkend="settings-configure-toolbars"/>.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    <guilabel>Search Toolbar</guilabel>
+                  </para>
+                  <para>
+                    This toolbar carries the search and filtering controls.
+                  </para>
+                </listitem>
+              </orderedlist>
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Opens the standard &kde; shortcut configuration dialog,
-where you can assign and re-assign keyboard shortcuts for all menu
-items.</action></para>
-</listitem>
-</varlistentry>
+        <varlistentry id="settings-show-statusbar">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Toggles the visibility of the bottom status
+              bar.</action>
+            </para>
+          </listitem>
+        </varlistentry>
 
-<varlistentry id="settings-configure-kleopatra">
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice></term>
+        <varlistentry id="settings-configure-shortcuts">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Opens the standard &kde; shortcut configuration
+              dialog, where you can assign and re-assign keyboard
+              shortcuts for all menu items.</action>
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Opens &kleopatra;'s configure dialog.</action></para>
+        <varlistentry id="settings-configure-toolbars">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Configure Toolbars...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Opens the standard &kde; toolbar configuration
+              dialog,</action> where you can choose which actions to
+              include in &kleopatra;s toolbars.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<para>See <xref linkend="configuration"/> for more details.</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="settings-configure-kleopatra">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem>
+          </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Opens &kleopatra;'s configure dialog.</action>
+            </para>
+            <para>
+              See <xref linkend="configuration"/> for details.
+            </para>
+          </listitem>
+        </varlistentry>
 
-</variablelist>
+      </variablelist>
 
-</sect1>
+    </sect1> <!-- Settings Menu -->
 
-<sect1 id="menuwindow"><title><guimenu>Window</guimenu> Menu</title>
+<sect1 id="menuwindow"><title>Window Menu</title>
 <para>The <guimenu>Window</guimenu> menu allows you to manage the tabs.
 Using the items in this menu you can rename a tab, add a new tab, duplicate the current tab, close the current tab, and move the current tab to the left or right.</para>
 
 <para>By clicking with the &RMB; click on a tab you open a context menu, where you can also select the same actions.</para>
 </sect1>
 
-<sect1 id="menuhelp"><title><guimenu>Help</guimenu> Menu</title>
+<sect1 id="menuhelp"><title>Help Menu</title>
 
 <para>The <guimenu>Help</guimenu> menu contains the standard &kde;
 help menu.</para>
@@ -913,9 +1496,8 @@ by issuing the command <userinput><command>kleopatra
 <para><action>Specifies a file or &URL; from which to import
 certificates (or secret keys) from.</action></para>
 
-<para>This is the command line equivalent of <link
-linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>.</para>
+<para>This is the command line equivalent of <xref
+linkend="file-import-certificates"/>.</para>
 </listitem>
 </varlistentry>
 
@@ -932,14 +1514,14 @@ linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
 <para>Sign file(s)</para>
 </listitem>
 </varlistentry>
-
+<!-- comment for 4.5
 <varlistentry>
-<term><option>-E</option> <option>--encrypt-sign</option></term>
+<term><option>-E</option> <option>- -encrypt-sign</option></term>
 <listitem>
-<para>Encrypt and/or sign file(s)</para>
+<para>Encrypt and/or sign file(s). Same as <option>- -sign-encrypt</option>, do not use</para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term><option>-d</option> <option>--decrypt</option></term>
 <listitem>
@@ -965,108 +1547,421 @@ linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
 
 </chapter>
 
-<chapter id="configuration"><title>Configuring &kleopatra;</title>
+  <chapter id="configuration">
+    <title>Configuring &kleopatra;</title>
 
-<para>&kleopatra;'s configure dialog can be accessed via <link
-linkend="settings-configure-kleopatra"><menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice></link>.</para>
+    <para>
+      &kleopatra;'s configure dialog can be accessed via
+      <xref linkend="settings-configure-kleopatra"/>.
+<!-- ### xref
+      or <xref linkend="systray-configure-kleopatra"/> or
+      via the UI-Server (see <ref linkend="uiserver-start-confdialog"/>).
+-->
+    </para>
+    <para>
+      Each of its pages is described in the sections below.
+    </para>
 
-<para>Each of its pages is described in the sections below.</para>
+    <sect1 id="configuration-directory-services">
+      <title>Configuring Directory Services</title>
 
-<sect1 id="configuration-directory-services"><title>Configuring <guilabel>Directory Services</guilabel></title>
-
-<para>On this page, you can configure which LDAP servers to use for
-certificate searches. You can also configure their order, as well as
-some selected LDAP-related settings from the dynamic backend
-configuration dialog, available via <link
-linkend="settings-configure-gpgme-backend"><menuchoice><guimenu>Tools</guimenu>
-<guimenuitem>Configure GnuPG Backend...</guimenuitem></menuchoice></link>.</para>
-
-<para>To add a new server, click on the <guilabel>New</guilabel> button. 
-Then you can set
-the <guilabel>Server Name</guilabel>, the <guilabel>Server Port</guilabel>
-(preset to the default LDAP port), the <guilabel>Base &dn;</guilabel>
-(sometimes referred to as the search root or search base), and the
-usual <guilabel>User Name</guilabel> and
-<guilabel>Password</guilabel>, both of which are only needed if the
-server requires authentication.</para>
-
-<para>To remove a server from the search list, select it in the list,
-then press the <guilabel>Delete</guilabel> button.</para>
-
+      <para>
+        On this page, you can configure which &ldap; servers to use
+        for &smime; certificate searches, and which key servers to use
+        for &openpgp; certificate searches.
+      </para>
+      <note>
+        <para>
+          This is simply a more user-friendly version of the same
+          settings you also find in <xref
+          linkend="configuration-gnupg-system"/>. Everything you can
+          configure here, you can configure there, too.
+        </para>
+      </note>
+      <note>
+        <title>A Note On Proxy Settings</title>
+        <para>
+          Proxy settings can be configured for &http; and &ldap; in
+          <xref linkend="configuration-smime-validation"/>, but only
+          for &gpgsm;. For &gpg;, due to the complexity of keyserver
+          options in &gpg; and lack of proper support for them in
+          &gpgconf;, you currently need to modify the config file
+          <filename>gpg.conf</filename> directly. Please refer to the
+          &gpg; manual for details. &kleopatra; will preserve such
+          settings, but does not yet allow to modify them in the &GUI;.
+        </para>
+      </note>
+      <para>
+        The <guilabel>Directory services</guilabel> table shows which
+        servers are currently configured. Double-click on a cell in
+        the table to change parameters of existing server entries.
+      </para>
+      <para>
+        The meaning of the columns in the table is as follows:
+      </para>
+      <variablelist>
+        <varlistentry id="configuration-directory-services-scheme">
+          <term><guilabel>Scheme</guilabel></term> <!-- linebreak here'd show up in xref text :/ -->
+          <listitem>
+            <para>
+              Determines the network protocol which is used to access
+              the server. Often-used schemes include
+              <guilabel>ldap</guilabel> (and its &ssl;-secured sibling
+              <guilabel>ldaps</guilabel>) for &ldap; servers (common
+              protocol for &smime;; the only one supported by
+              &gpgsm;), and <guilabel>hkp</guilabel>, the Horowitz
+              Keyserver Protocol, nowadays usually &http; Keyserver
+              Protocol, a &http;-based protocol that virtually all
+              public &openpgp; keyservers support.
+            </para>
+            <para>
+              Please refer to the &gpg; and &gpgsm; manuals for a list
+              of supported schemes.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-server-name">
+          <term><guilabel>Server Name</guilabel></term>
+          <listitem>
+            <para>
+              The domain name of the server, &eg; <systemitem
+              class="systemname">keys.gnupg.net</systemitem>.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-server-port">
+          <term><guilabel>Server Port</guilabel></term>
+          <listitem>
+            <para>
+              The network port the server is listening on.
+            </para>
+            <para>
+              This changes automatically to the default port when you
+              change the <xref
+              linkend="configuration-directory-services-scheme"/>,
+              unless it was set to some non-standard port to begin
+              with. If you changed the default port and cannot get it
+              back, try setting <xref
+              linkend="configuration-directory-services-scheme"/> to
+              <userinput>http</userinput> and <xref
+              linkend="configuration-directory-services-server-port"/>
+              to <userinput>80</userinput> (the default for &http;),
+              then take it from there.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-base-dn">
+          <term><guilabel>Base DN</guilabel></term>
+          <listitem>
+            <para>
+              The Base-&dn; (only for &ldap; and &ldaps;), &ie; the
+              root of the &ldap; hierarchy to start from. This is
+              often also called <quote>search root</quote> or
+              <quote>search base</quote>.
+            </para>
+            <para>
+              It usually looks like <userinput>c=de,o=Foo</userinput>,
+              given as part of the &ldap; &URL;.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-user-name">
+          <term><guilabel>User Name</guilabel></term>
+          <listitem>
+            <para>
+              The user name, if any, to use for logging into the
+              server.
+            </para>
+            <para>
+              This column is only shown if the option <guilabel>Show
+              user and password information</guilabel> (below the
+              table) is checked.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-password">
+          <term><guilabel>Password</guilabel></term>
+          <listitem>
+            <para>
+              The password, if any, to use for logging into the
+              server.
+            </para>
+            <para>
+              This column is only shown if the option <guilabel>Show
+              user and password information</guilabel> (below the
+              table) is checked.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-x509">
+          <term><guilabel>X.509</guilabel></term>
+          <listitem>
+            <para>
+              Check this column if this entry should be used for
+              &x509; (&smime;) certificate searches.
+            </para>
+            <para>
+              Only &ldap; (and &ldaps;) servers are supported for
+              &smime;.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry id="configuration-directory-services-openpgp">
+          <term><guilabel>OpenPGP</guilabel></term>
+          <listitem>
+            <para>
+              Check this column if this entry should be used for
+              &openpgp; certificate searches.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        You can configure as many &smime; (&x509;) servers as you
+        want, but only one &openpgp; server is allowed at any
+        time. The &GUI; will enforce this.
+      </para>
+      <para>
+        To add a new server, click on the <guibutton>New</guibutton>
+        button. This duplicates the selected entry, if any, or else
+        inserts a default &openpgp; server.  Then you can set the
+        <xref linkend="configuration-directory-services-server-name"/>, the
+        <xref linkend="configuration-directory-services-server-port"/>, the
+        <xref linkend="configuration-directory-services-base-dn"/>, and the
+        usual <xref linkend="configuration-directory-services-password"/> and
+        <xref linkend="configuration-directory-services-user-name"/>,
+        both of which are only needed if the server requires
+        authentication.
+      </para>
+      <para>
+        To directly insert an entry for &x509; certificates, use
+        <menuchoice><guimenu>New</guimenu><!--
+        --><guimenuitem>X.509</guimenuitem></menuchoice>; use
+        <menuchoice><guimenu>New</guimenu><!--
+        --><guimenuitem>OpenPGP</guimenuitem></menuchoice> for
+        &openpgp;.
+      </para>
+      <para>
+        To remove a server from the search list, select it in the
+        list, then press the <guibutton>Delete</guibutton> button.
+      </para>
 <!-- not in 4.2
 <para>To change the relative search order of servers, select one of
 them and move it up or down with the arrow buttons right next to the
 list.</para>
 -->
-<para>To set the LDAP timeout, &ie; the maximum time the backend will
-wait for a server to respond, simply use the corresponding input field
-labeled <guilabel>LDAP timeout (minutes:seconds)</guilabel>.</para>
+      <para>
+        To set the &ldap; timeout, &ie; the maximum time the backend
+        will wait for a server to respond, simply use the
+        corresponding input field labeled <guilabel>LDAP timeout
+        (minutes:seconds)</guilabel>.
+      </para>
+      <para>
+        If one of your servers has a large database, so that even
+        reasonable searches like <userinput>Smith</userinput> hit the
+        <guilabel>maximum number of items returned by
+        query</guilabel>, you might want to increase this limit. You
+        can find out easily if you hit the limit during a search,
+        since a dialog box will pop up in that case, telling you that
+        the results have been truncated.
+      </para>
+      <note>
+        <para>
+          Some servers may impose their own limits on the number of
+          items returned from a query. In this case, increasing the
+          limit here will not result in more returned
+          items.
+        </para>
+      </note>
+    </sect1>
 
-<para>If one of your servers has a large database, so that even
-reasonable searches like <userinput>Smith</userinput> hit the
-<guilabel>maximum number of items returned by query</guilabel>, you
-might want to increase this limit. You can find out easily if you hit
-the limit during a search, since a dialog box will pop up in that
-case, telling you that the results have been truncated.</para>
+    <sect1 id="configuration-appearance">
+      <title>Configuring Appearance</title>
 
-<note><para>Some servers may impose their own limits on the number of
-items returned from a query. In this case, increasing the limit here
-will not result in more returned items.</para></note>
+      <sect2 id="configuration-appearance-tooltips">
+          <title>Configuring <guilabel>Tooltips</guilabel></title>
 
-</sect1>
+        <para>
+          In the main certificate list, &kleopatra; can show details
+          about a certificate in a tooltip. The information displayed
+          is the same as in <!--link
+          linkend="dialog-certificate-details-overview"-->the
+          <guilabel>Overview</guilabel> tab of the
+          <guilabel>Certificate Details</guilabel>
+          dialog<!--/link-->. Tooltips, however, can be restricted to
+          show only a subset of information for a less verbose
+          experience.
+        </para>
+        <note>
+          <para>
+            The <guilabel>Key-ID</guilabel> is
+            <emphasis>always</emphasis> shown. This is to ensure that
+            tooltips for different certificates do, in fact, differ
+            (this is especially important if only <xref
+            linkend="tooltips-validity"/> has been selected).
+          </para>
+        </note>
+        <para>
+          You can independently enable or disable the following
+          information sets:
+        </para>
+        <variablelist>
+          <varlistentry id="tooltips-validity">
+            <term><guilabel>Show validity</guilabel></term>
+            <listitem>
+              <para>
+                Shows information about the validity of a certificate:
+                its current status, issuer-&dn; (&smime; only), expiry
+                dates (if any) and certificate usage flags.
+              </para>
+              <para>
+                Example:
+                <programlisting><!--
+                  -->This certificate is currently valid.
+<!--              -->Issuer:            CN=Test-ZS 7,O=Intevation GmbH,C=DE
+<!--              -->Validity:          from 25.08.2009 10:42 through 19.10.2010 10:42
+<!--              -->Certificate usage: Signing EMails and Files, Encrypting EMails and Files
+<!--              -->Key-ID:            DC9D9E43<!--
+                  --></programlisting>
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="tooltips-owner">
+            <term><guilabel>Show owner information</guilabel></term>
+            <listitem>
+              <para>
+                Shows information about the owner of the certificate:
+                subject-&dn; (&smime; only), user-IDs (including
+                emails addresses) and ownertrust (&openpgp; only).
+              </para>
+              <para>
+                &openpgp; example:
+                <programlisting><!--
+                  -->User-ID:           Gpg4winUserA &lt;gpg4winusera@test.hq&gt;
+<!--              -->Key-ID:            C6BF6664
+<!--              -->Ownertrust:        ultimate<!--
+                  --></programlisting>
+                &smime; example:
+                <programlisting><!--
+                  -->Subject:           CN=Gpg4winTestuserA,OU=Testlab,O=Gpg4win Project,C=DE
+<!--              -->a.k.a.:            Gpg4winUserA@test.hq
+<!--              -->Key-ID:            DC9D9E43<!--
+                  --></programlisting>
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="tooltips-details">
+            <term><guilabel>Show certificate details</guilabel></term>
+            <listitem>
+              <para>
+                Shows technical information about the certificate:
+                serial number (&smime; only), type, fingerprint and storage location.
+              </para>
+              <para>
+                Example:
+                <programlisting><!--
+                  -->Serial Number:     27
+<!--              -->Certificate type:  1,024-bit RSA (secret certificate available)
+<!--              -->Key-ID:            DC9D9E43
+<!--              -->Fingerprint:       854F62EEEBB41BFDD3BE05D124971E09DC9D9E43
+<!--              -->Stored:            on this computer<!--
+                  --></programlisting>
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
 
-<sect1 id="configuration-appearance"><title>Configuring visual <guilabel>Appearance</guilabel></title>
+      </sect2>
 
-<para>&kleopatra; allows you to customize the appearance of
-(validated) keys in the list view. This includes the foreground (text)
-and background colors, as well as the font.</para>
+      <sect2 id="configuration-appearance-certificate-filters">
+        <title>Configuring <guilabel>Certificate Filters</guilabel></title>
 
-<para>Each <guilabel>Key Category</guilabel> on the left is assigned a
-set of colors and a font in which keys belonging to that category are
-displayed. The category list also acts as a preview of the
-settings. Categories can be freely defined by the administrator or the
-power user, see <xref linkend="admin-key-filters"/> in <xref
-linkend="admin"/>.</para>
+        <para>
+          &kleopatra; allows you to customize the appearance of
+          certificates in the list view. This includes showing a small
+          icon, but you can also influence the foreground (text) and
+          background colors, as well as the font.
+        </para>
+        <para>
+          Each certificate category in the list is assigned a set of
+          colors, an icon (optional) and a font in which certificates
+          from that category are displayed. The category list also
+          acts as a preview of the settings. Categories can be freely
+          defined by the administrator or the power user, see <xref
+          linkend="admin-key-filters"/> in <xref linkend="admin"/>.
+        </para>
+        <para>
+          To set or change the icon of a category, select it in the
+          list, and press the <guibutton>Set Icon...</guibutton>
+          button. The standard &kde; icon selection dialog will appear
+          where you can select an existing icon from the &kde;
+          collection, or load a custom one.
+        </para>
+        <para>
+          To remove an icon again, you need to press the
+          <guibutton>Default Appearance</guibutton> button.
+        </para>
+        <para>
+          To change the text (&ie; foreground) color of a category,
+          select it in the list, and press the <guibutton>Set Text
+          Color...</guibutton> button. The standard &kde; color
+          selection dialog will appear where you can select an
+          existing color or create a new one.
+        </para>
+        <para>
+          Changing the background color is done in the same way, just press
+          <guibutton>Set Background Color...</guibutton> instead.
+        </para>
+        <para>
+          To change the font, you basically have two options:
+        </para>
+        <orderedlist>
+          <listitem>
+            <para>
+              Modify the standard font, used for all list views in
+              &kde;.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Use a custom font.
+            </para>
+          </listitem>
+        </orderedlist>
+        <para>
+          The first option has the advantage that the font will follow
+          whichever style you choose &kde;-wide, whereas the latter
+          gives you full control over the font to use. The choice is
+          yours.
+        </para>
+        <para>
+          To use the modified standard font, select the category in the
+          list, and check or uncheck the font modifiers
+          <guilabel>Italic</guilabel>, <guilabel>Bold</guilabel>, and/or
+          <guilabel>Strikeout</guilabel>. You can immediately see the effect on
+          the font in the category list.
+        </para>
+        <para>
+          To use a custom font, press the <guibutton>Set
+          Font...</guibutton> button. The standard &kde; font
+          selection dialog will appear where you can select the new
+          font.
+        </para>
+        <note>
+          <para>
+            You can still use the font modifiers to change the custom
+            font, just as for modifying the standard font.
+          </para>
+        </note>
+        <para>
+          To switch back to the standard font, you need to press the
+          <guibutton>Default Appearance</guibutton> button.
+        </para>
 
-<para>To change the text (foreground) color of a category, select it
-in the list, and press the <guilabel>Set Text Color...</guilabel>
-button. The standard &kde; color selection dialog will appear where
-you can select or create a new color.</para>
+      </sect2>
 
-<para>Changing the background color is done in the same way, just press
-<guilabel>Set Background Color...</guilabel> instead.</para>
-
-<para>To change the font, you basically have two options:</para>
-
-<orderedlist>
-<listitem><para>Modify the standard font, used for all list views in
-&kde;</para></listitem>
-<listitem><para>Use a custom font.</para></listitem>
-</orderedlist>
-
-<para>The first option has the advantage that the font will follow
-whichever style you choose &kde;-wide, whereas the latter gives you
-full control over the font to use. The choice is yours.</para>
-
-<para>To use the modified standard font, select the category in the
-list, and check or uncheck the font modifiers
-<guilabel>Italic</guilabel>, <guilabel>Bold</guilabel>, and/or
-<guilabel>Strikeout</guilabel>. You can immediately see the effect on
-the font in the category list.</para>
-
-<para>To use a custom font, press the <guilabel>Set Font...</guilabel>
-button. The standard &kde; font selection dialog will appear where you
-can select the new font. Note that you can still use the font
-modifiers to change the custom font, just as for modifying the
-standard font.</para>
-
-<para>To switch back to the standard font, you need to press the
-<guilabel>Default Appearance</guilabel> button.</para>
-
-</sect1>
-
-<sect1 id="configuration-dn-order"><title>Configuring the <guilabel>&dn; Attribute Order</guilabel></title>
+      <sect2 id="configuration-dn-order">
+        <title>Configuring <guilabel>DN-Attribute Order</guilabel></title>
 
 <para>Although &dn;s are hierarchical, the order of the individual
 components (called relative &dn;s (RDNs), or &dn; attributes) is not
@@ -1145,7 +2040,516 @@ button.</para>
 <guilabel>Move one up</guilabel> (<guilabel>Move one down</guilabel>)
 button.</para>
 
-</sect1>
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="configuration-crypto-operations">
+      <title>Configuring Crypto Operations</title>
+
+      <sect2 id="configuration-crypto-operations-email">
+        <title>Configuring <guilabel>EMail Operations</guilabel></title>
+
+        <para>
+          Here you can configure some aspects of the email operations
+          of &kleopatra;'s &uiserver;. Currently, you can only
+          configure whether to use <quote>Quick Mode</quote> for
+          signing and encrypting emails, respectively.
+        </para>
+        <para>
+          When <quote>Quick Mode</quote> is enabled, no dialog is
+          shown when signing (encrypting) emails, respectively, unless
+          there is a conflict that needs manual resolution.
+        </para>
+
+      </sect2>
+
+      <sect2 id="configuration-crypto-operations-file">
+        <title>Configuring <guilabel>Checksum Operations</guilabel></title>
+
+        <para>
+          Here you can configure some aspects of the file operations
+          of &kleopatra;'s &uiserver;. Currently, you can only choose
+          the checksum program to use for <!--link ### xref
+          linkend="uiserver-checksum-create-files"--><command>CHECKSUM_CREATE_FILES</command><!--/link-->.
+        </para>
+        <para>
+          Use <guilabel>Checksum program to use</guilabel> to choose
+          which of the configured checksum programs should be used
+          when creating checksum files.
+        </para>
+        <para>
+          When verifying checksums, the program to use is
+          automatically found, based on the names of the checksum files
+          found.
+        </para>
+        <note>
+          <para>
+            The administrator and power user can completely define
+            which checksum programs to make available to &kleopatra;
+            through so-called <quote>Checksum Definitions</quote> in
+            the config file. See <xref linkend="admin-checksum-definitions"/>
+            in <xref linkend="admin"/> for details.
+          </para>
+        </note>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="configuration-smime-validation">
+      <title>Configuring aspects of S/MIME Validation</title>
+
+      <para>
+        On this page, you can configure certain aspects of the
+        validation of &smime; certificates.
+      </para>
+      <note>
+        <para>
+          For the most part, this is simply a more user-friendly
+          version of the same settings you also find in
+          <xref linkend="configuration-gnupg-system"/>. Everything you
+          can configure here, you can configure there, too, with the
+          exception of
+          <xref linkend="configuration-smime-validation-refresh-interval"/>,
+          which is &kleopatra;-specific.
+        </para>
+      </note>
+      <para>
+        The meaning of the options is as follows:
+      </para>
+
+      <sect2 id="configuration-smime-validation-interval-checking">
+        <title>Configuring interval certificate checking</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-refresh-interval">
+            <term><guilabel>Check certificate validity every
+                <replaceable>N</replaceable> hours</guilabel></term>
+            <listitem>
+              <para>
+                This option enables interval checking of certificate
+                validity. You can also choose the checking interval (in
+                hours). The effect of interval checking is the same as
+                <xref linkend="view-redisplay"/>; there is no provision
+                for interval scheduling of <xref
+                  linkend="certificates-refresh-openpgp"/> or <xref
+                  linkend="certificates-refresh-x509"/>.
+              </para> 
+              <note>
+                <para>
+                  Validation is performed implicitly whenever significant
+                  files in <filename>~/.gnupg</filename> change. This
+                  option, just like <xref linkend="certificates-refresh-openpgp"/>
+                  and <xref linkend="certificates-refresh-x509"/>, therefore only
+                  affects external factors of certificate validity.
+                </para>
+              </note>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-method">
+        <title>Configuring validation method</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-use-crls">
+            <term><guilabel>Validate certificates using CRLs</guilabel></term>
+            <listitem>
+              <para>
+                If this option is selected, &smime; certificates are
+                validated using Certificate Revocation Lists (&crl;s).
+              </para>
+              <para>
+                See <xref linkend="configuration-smime-validation-use-ocsp"/>
+                for alternative method of certificate validity checking.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-use-ocsp">
+            <term><guilabel>Validate certificates online (OCSP)</guilabel></term>
+            <listitem>
+              <para>
+                If this option is selected, &smime; certificates are
+                validated online using the Online Certificates Status
+                Protocol (&ocsp;).
+              </para>
+              <warning>
+                <para>
+                  When choosing this method, a request is sent to the
+                  server of the &ca; more or less each time you send or
+                  receive a cryptographic message, thus theoretically
+                  allowing the certificate issuing agency to track whom
+                  you exchange (&eg;) mails with.
+                </para>
+              </warning>
+              <para>
+                To use this method, you need to enter the &URL; of the
+                &ocsp; responder into <xref linkend="configuration-smime-validation-ocsp-url"/>.
+              </para>
+              <para>
+                See <xref linkend="configuration-smime-validation-use-ocsp"/>
+                for a more traditional method of certificate validity
+                checking that does not leak information about whom you
+                exchange messages with.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ocsp-url">
+            <term><guilabel>OCSP responder URL</guilabel></term>
+            <listitem>
+              <para>
+                Enter here the address of the server for online
+                validation of certificates (&ocsp; responder). The &URL;
+                usually starts with <literal>http://</literal>.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ocsp-signature">
+            <term><guilabel>OCSP responder signature</guilabel></term>
+            <listitem>
+              <para>
+                Choose here the certificate with which the &ocsp; server
+                signs its replies.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ocsp-ignore-service-url">
+            <term><guilabel>Ignore service URL of certificates</guilabel></term>
+            <listitem>
+              <para>
+                Each &smime; certificate usually contains the &URL; of
+                its issuer's &ocsp; responder (<xref
+                  linkend="certificates-dump-certificate"/> will reveal
+                whether a given certificate contains it).
+              </para>
+              <para>
+                Checking this option makes &gpgsm; ignore those &URL;s
+                and only use the one configured above.
+              </para>
+              <para>
+                Use this to &eg; enforce use of a company-wide &ocsp;
+                proxy.
+              </para>
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-options">
+        <title>Configuring validation options</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-dont-check-cert-policy">
+            <term><guilabel>Do not check certificate policies</guilabel></term>
+            <listitem>
+              <para>
+                By default, &gpgsm; uses the file
+                <filename>~/.gnupg/policies.txt</filename> to check if a
+                certificate policy is allowed. If this option is
+                selected, policies are not checked.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-never-consult-crl">
+            <term><guilabel>Never consult a CRL</guilabel></term>
+            <listitem>
+              <para>
+                If this option is checked, Certificate Revocation Lists
+                are never used to validate &smime; certificates.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-allow-mark-trusted">
+            <term><guilabel>Allow to mark root certificates as trusted</guilabel></term>
+            <listitem>
+            <para>
+                If this option is checked while a root &ca; certificate is
+                being imported, you will be asked to confirm its
+                fingerprint and to state whether or not you consider this
+                root certificate to be trusted.
+              </para>
+              <para>
+                A root certificate needs to be trusted before the
+                certificates it certified become trusted, but lightly
+                allowing trusted root certificates into your certificate
+                store will undermine the security of the system.
+              </para>
+              <note>
+                <para>
+                  Enabling this functionality in the backend can lead to
+                  popups from &pinentry; at inopportune times (&eg; when
+                  verifying signatures), and can thus block unattended
+                  email processing. For that reason, and because it is
+                  desirable to be able to <emphasis>distrust</emphasis>
+                  a trusted root certificate again, &kleopatra; allows
+                  manual setting of trust using
+                  <xref linkend="certificates-trust-root"/> and
+                  <xref linkend="certificates-distrust-root"/>.
+                </para>
+                <para>
+                  This setting here does not influence the &kleopatra;
+                  function.
+                </para>
+              </note>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-fetch-missing-issuers">
+            <term><guilabel>Fetch missing issuer certificates</guilabel></term>
+            <listitem>
+              <para>
+                If this option is checked, missing issuer certificates
+                are fetched when necessary (this applies to both
+                validation methods, &crl;s and &ocsp;).
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-http-options">
+        <title>Configuring &http; request options</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-disable-http">
+            <term><guilabel>Do not perform any HTTP requests</guilabel></term>
+            <listitem>
+              <para>
+                Entirely disables the use of &http; for &smime;.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ignore-http-dp">
+            <term><guilabel>Ignore HTTP CRL distribution point of certificates</guilabel></term>
+            <listitem>
+              <para>
+                When looking for the location of a &crl;, the
+                to-be-tested certificate usually contains what are
+                known as <quote>&crl; Distribution Point</quote>
+                (<acronym>DP</acronym>) entries, which are &URL;s
+                describing the way to access the &crl;. The first-found
+                <acronym>DP</acronym> entry is used.
+              </para>
+              <para>
+                With this option, all entries using the &http; scheme
+                are ignored when looking for a suitable
+                <acronym>DP</acronym>.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-honor-http-proxy">
+            <term><guilabel>Use system HTTP proxy</guilabel></term>
+            <listitem>
+              <para>
+                If this option is selected, the value of the &http;
+                proxy shown on the right (which comes from the
+                environment variable <envar>http_proxy</envar>) will
+                be used for any &http; request.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-custom-http-proxy">
+            <term><guilabel>Use this proxy for HTTP requests</guilabel></term>
+            <listitem>
+              <para>
+                If no system proxy is set, or you need to use a
+                different proxy for &gpgsm;, you can enter its
+                location here.
+              </para>
+              <para>
+                It will be used for all HTTP requests relating to
+                S/MIME.
+              </para>
+              <para>
+                The syntax is
+                <userinput><replaceable>host</replaceable><literal>:</literal><replaceable>port</replaceable></userinput>,
+                &eg; <userinput>myproxy.nowhere.com:3128</userinput>.
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
+
+      <sect2 id="configuration-smime-validation-ldap-options">
+        <title>Configuring &ldap; request options</title>
+
+        <variablelist>
+          <varlistentry id="configuration-smime-validation-disable-ldap">
+            <term><guilabel>Do not perform any LDAP requests</guilabel></term>
+            <listitem>
+              <para>
+                Entirely disables the use of &ldap; for &smime;.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-ignore-ldap-dp">
+            <term><guilabel>Ignore LDAP CRL distribution point of certificates</guilabel></term>
+            <listitem>
+              <para>
+                When looking for the location of a &crl;, the
+                to-be-tested certificate usually contains what are
+                known as "&crl; Distribution Point"
+                (<acronym>DP</acronym>) entries, which are &URL;s
+                describing the way to access the &crl;. The first
+                found <acronym>DP</acronym> entry is used.
+              </para>
+              <para>
+                With this option, all entries using the &ldap; scheme
+                are ignored when looking for a suitable
+                <acronym>DP</acronym>.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="configuration-smime-validation-custom-ldap-proxy">
+            <term><guilabel>Primary host for LDAP requests</guilabel></term>
+            <listitem>
+              <para>
+                Entering an &ldap; server here will make all &ldap;
+                requests go to that server first. More precisely, this
+                setting overrides any specified
+                <replaceable>host</replaceable> and
+                <replaceable>port</replaceable> part in an &ldap;
+                &URL; and will also be used if
+                <replaceable>host</replaceable> and
+                <replaceable>port</replaceable> have been omitted from
+                the &URL;.
+              </para>
+              <para>
+                Other &ldap; servers will be used only if the
+                connection to the <quote>proxy</quote> failed. The
+                syntax is
+                <userinput><replaceable>host</replaceable></userinput>
+                or
+                <userinput><replaceable>host</replaceable><literal>:</literal><replaceable>port</replaceable></userinput>. If
+                <replaceable>port</replaceable> is omitted, port 389
+                (standard &ldap; port) is used.
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="configuration-gnupg-system">
+      <title>Configuring the GnuPG System</title>
+
+      <para>
+        This part of the dialog is auto-generated from the output of
+        <command>gpgconf <option>--list-components</option></command>
+        and, for each <replaceable>component</replaceable> that the
+        above command returns, the output of <command>gpgconf
+        <option>--list-options</option>
+        <replaceable>component</replaceable></command>.
+      </para>
+      <note>
+        <para>
+          The most useful of these options have been duplicated as
+          separate pages in the &kleopatra; config dialog. See <xref
+          linkend="configuration-directory-services"/> and <xref
+          linkend="configuration-smime-validation"/> for the two
+          dialog pages which contain selected options from this part
+          of the dialog.
+        </para>
+      </note>
+      <para>
+        The exact content of this part of the dialog depends on the
+        version of the &gnupg; backend you have installed and,
+        potentially, the platform you run on. Thus, we will only
+        discuss the general layout of the dialog, including the
+        mapping from &gpgconf; option to &kleopatra; &GUI; control.
+      </para>
+      <para>
+        &gpgconf; returns configuration information for multiple
+        components. Inside each component, individual options are
+        combined into groups.
+      </para>
+      <para>
+        &kleopatra; displays one tab per component reported by
+        &gpgconf;; groups are headed by a horizontal line displaying
+        the group name as returned from &gpgconf;.
+      </para>
+      <para>
+        Each &gpgconf; option has a type. Except for certain
+        well-known options which &kleopatra; backs with specialised
+        controls for a better user experience, the mapping between
+        &gpgconf; types and &kleopatra; controls is as follows:
+      </para>
+      <table id="table-gpgconf-types">
+	<title>Mapping From &gpgconf; Types To &GUI; Controls</title>
+	<tgroup cols="3">
+          <colspec colname="type"/>
+	  <colspec colname="lists" align="center"/>
+          <colspec colname="non-lists" align="center"/>
+	  <thead>
+	    <row>
+	      <entry morerows="1">&gpgconf; type</entry>
+              <entry namest="lists" nameend="non-lists">&kleopatra; control</entry>
+            </row>
+            <row>
+	      <entry>for lists</entry>
+	      <entry>for non-lists</entry>
+	    </row>
+	  </thead>
+	  <!--tfoot/-->
+	  <tbody>
+	    <row>
+	      <entry><literal>none</literal></entry>
+	      <entry>Spinbox (<quote>count</quote>-semantics)</entry>
+	      <entry>Checkbox</entry>
+	    </row>
+            <row>
+              <entry><literal>string</literal></entry>
+              <entry>&NA;</entry>
+              <entry>Lineedit</entry>
+            </row>
+            <row>
+              <entry><literal>int32</literal></entry>
+              <entry morerows="1">Lineedit (unformatted)</entry>
+              <entry morerows="1">Spinbox</entry>
+            </row>
+            <row>
+              <entry><literal>uint32</literal></entry>
+            </row>
+            <row>
+              <entry><literal>pathname</literal></entry>
+              <entry>&NA;</entry>
+              <entry>specialised control</entry>
+            </row>
+            <row>
+              <entry><literal>ldap server</literal></entry>
+              <entry>specialised control</entry>
+              <entry>&NA;</entry>
+            </row>
+            <row>
+              <entry><literal>key fingerprint</literal></entry>
+              <entry morerows="3" namest="lists" nameend="non-lists">&NA;</entry>
+            </row>
+            <row>
+              <entry><literal>pub key</literal></entry>
+            </row>
+            <row>
+              <entry><literal>sec key</literal></entry>
+            </row>
+            <row>
+              <entry><literal>alias list</literal></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para>
+        See the &gpgconf; manual for more information about what you
+        can configure here, and how.
+      </para>
+
+    </sect1>
 
 </chapter>
 
@@ -1218,9 +2622,7 @@ C=DE
 
       <sect2 id="admin-certificate-request-wizard-keys">
 
-        <title>
-          Restricting the Types of Keys a User is Allowed to Create
-        </title>
+        <title>Restricting the Types of Keys a User is Allowed to Create</title>
 
         <para>
           &kleopatra; also allows to restrict which type of
@@ -1231,9 +2633,7 @@ C=DE
 
         <sect3 id="admin-certificate-request-wizard-keys-type">
 
-          <title>
-            Public Key Algorithms
-          </title>
+          <title>Public Key Algorithms</title>
 
           <para>
             To restrict the public key algorithm to use, add the
@@ -1263,9 +2663,7 @@ C=DE
 
         <sect3 id="admin-certificate-request-wizard-keys-size">
 
-          <title>
-            Public Key Size
-          </title>
+          <title>Public Key Size</title>
 
           <para>
             To restrict the available keys sizes for a public
@@ -1335,13 +2733,11 @@ C=DE
 
     <sect1 id="admin-key-filters">
 
-      <title>
-	Creating and Editing Key Categories
-      </title>
+      <title>Creating and Editing Key Categories</title>
 
       <para>
 	&kleopatra; allows the user to configure the <link
-	linkend="configuration-appearance">visual appearance</link> of
+	linkend="configuration-appearance-certificate-filters">visual appearance</link> of
 	keys based on a concept called <guilabel>Key
 	Categories</guilabel>. <guilabel>Key Categories</guilabel> are
 	also used to filter the list of certificates. This section
@@ -1369,7 +2765,7 @@ C=DE
 	#<replaceable>n</replaceable></literal> group are
 	<varname>Name</varname>, containing the name of the category
 	as displayed in the <link
-	linkend="configuration-appearance">config dialog</link>, and
+	linkend="configuration-appearance-certificate-filters">config dialog</link>, and
 	<varname>id</varname>, which is used as a reference for the
 	filter in other configuration sections (such as <literal>View
 	#<replaceable>n</replaceable></literal>).
@@ -1379,7 +2775,7 @@ C=DE
 	<xref linkend="table-key-filters-appearance"/> lists all keys
 	that define the display properties of keys belonging to that
 	category (&ie; those keys that can be adjusted in the <link
-	linkend="configuration-appearance">config dialog</link>),
+	linkend="configuration-appearance-certificate-filters">config dialog</link>),
 	whereas <xref linkend="table-key-filters-criteria"/> lists all
 	keys that define the criteria the filter matches keys against.
       </para>
@@ -1707,9 +3103,7 @@ C=DE
       </para>
 
       <example>
-	<title>
-	  Examples of key filters
-	</title>
+	<title>Examples of key filters</title>
 	<para>
 	  To check for all expired, but non-revoked root certificates,
 	  you would use a key filter defined as follows:
@@ -1741,16 +3135,351 @@ is-at-least-ownertrust=marginal
 
     </sect1>
 
+    <sect1 id="admin-archive-definitions">
+
+      <title>Configuring Archivers for Use with Sign/Encrypt Files</title>
+
+      <para>
+        &kleopatra; allows the administrator (and power-user) to
+        configure the list of archivers that are presented in the
+        Sign/Encrypt Files dialog.
+      </para>
+
+      <para>
+        Each archiver is defined in
+        <filename>libkleopatrarc</filename> as a separate
+        <literal>Archive&nbsp;Definition&nbsp;#<replaceable>n</replaceable></literal>
+        group, with the following mandatory keys:
+      </para>
+
+      <variablelist>
+
+        <varlistentry id="archive-definition-extensions">
+          <term><literal>extensions</literal></term>
+          <listitem>
+            <para>
+              A comma-separated list of filename extensions that
+              usually indicate this archive format.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="archive-definition-id">
+          <term><literal>id</literal></term>
+          <listitem>
+            <para>
+              A unique ID used to identify this archiver
+              internally. If in doubt, use the name of the command.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="archive-definition-Name">
+          <term><literal>Name</literal> (translated)</term>
+          <listitem>
+            <para>
+              The user-visible name of this archiver, as shown in the
+              corresponding drop-down menu of the Sign/Encrypt Files
+              dialog.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="archive-definition-pack-command">
+          <term><literal>pack-command</literal></term>
+          <listitem>
+            <para>
+              The actual command to archive files. You can use any
+              command, as long as no shell is required to execute
+              it. The program file is looked up using the
+              <envar>PATH</envar> environment variable, unless you
+              use an absolute file path. Quoting is supported as if a
+              shell was used:
+              <programlisting>pack-command="/opt/ZIP v2.32/bin/zip" -r -</programlisting>
+            </para>
+          </listitem>
+        </varlistentry>
+
+      </variablelist>
+
+      <note id="backslashes-in-config-keys">
+        <para>
+          Since backslash (<literal>\</literal>) is an escape
+          character in KDE config files, you need to double them when
+          they appear in path names:
+          <programlisting>pack-command=C:\\Programs\\GNU\\tar\\gtar.exe&nbsp;...</programlisting>
+
+          However, for the command itself (as opposed to its
+          arguments), you may just use forward slashes
+          (<literal>/</literal>) as path separators on all platforms:
+          <programlisting>pack-command=C:/Programs/GNU/tar/gtar.exe&nbsp;...</programlisting>
+
+          This is not supported in arguments, as most Windows programs
+          use the forward slash for options. For example, the
+          following will not work, since
+          <literal>C:/myarchivescript.bat</literal> is an argument to
+          <command>cmd.exe</command>, and <literal>/</literal> is not
+          converted to <literal>\</literal> in arguments, only
+          commands:
+
+          <programlisting>pack-command=cmd.exe C:/myarchivescript.bat</programlisting>
+          This needs, instead, to be written as:
+          <programlisting>pack-command=cmd.exe C:\\myarchivescript.bat</programlisting>
+        </para>
+      </note>
+
+      <sect2 id="admin-archive-definitions-filename-passing">
+
+      <title>Input Filename Passing for <literal>pack-command</literal></title>
+
+      <para>
+        There are three ways to pass filenames to the pack
+        command. For each of these,
+        <literal>pack-command</literal> provides a particular syntax:
+      </para>
+
+      <orderedlist>
+
+        <listitem>
+          <para>As command-line arguments.</para>
+            <para>
+              Example (tar):
+              <programlisting>pack-command=tar cf -</programlisting>
+              Example (zip):
+              <programlisting>pack-command=zip -r - %f</programlisting>
+              In this case, filenames are passed on the command line,
+              just like you would when using the command
+              prompt. &kleopatra; does not use a shell to execute the
+              command. Therefore, this is a safe way of passing
+              filenames, but it might run into command line length
+              restrictions on some platforms.
+
+              A literal <literal>%f</literal>, if present, is replaced
+              by the names of the files to archive. Otherwise,
+              filenames are appended to the command line. Thus, the
+              zip Example above could equivalently be written like this:
+              <programlisting>pack-command=zip -r -</programlisting>
+            </para>
+        </listitem>
+
+        <listitem>
+          <para>Via standard-in, separated by newlines: prepend <literal>|</literal>.</para>
+            <para>
+              Example (GNU-tar):
+              <programlisting>pack-command=|gtar cf - -T-</programlisting>
+              Example (ZIP):
+              <programlisting>pack-command=|zip -@ -</programlisting>
+
+              In this case, filenames are passed to the archiver on
+              <acronym>stdin</acronym>, one per line. This avoids
+              problems on platforms which place a low limit on the
+              number of command line arguments that are allowed, but
+              fails when filenames, in fact, contain newlines.
+            </para>
+            <note>
+              <para>
+                &kleopatra; currently only supports
+                <acronym>LF</acronym> as a newline separator, not
+                <acronym>CRLF</acronym>. This might change in future
+                versions, based on user feedback.
+              </para>
+            </note>
+        </listitem>
+
+        <listitem>
+          <para>Via standard-in, separated by NUL-bytes: prepend <literal>0|</literal>.</para>
+            <para>
+              Example (GNU-tar):
+              <programlisting>pack-command=0|gtar cf - -T- --null</programlisting>
+              This is the same as above, except that NUL bytes are
+              used to separate filenames. Since NUL bytes are
+              forbidden in filenames, this is the most robust way of
+              passing filenames, but not all archivers support it.
+            </para>
+        </listitem>
+
+      </orderedlist>
+
+      </sect2> <!-- Input Filename Passing for pack-command -->
+
+    </sect1> <!-- Archive Definitions -->
+
+    <sect1 id="admin-checksum-definitions">
+
+      <title>Configuring Checksum Programs for Use with Create/Verify Checksums</title>
+
+      <para>
+        &kleopatra; allows the administrator (and power-user) to
+        configure the list of checksum programs that the user can
+        choose from in the config dialog and that &kleopatra; is able
+        to auto-detect when asked to verify a given file's checksum.
+      </para>
+
+      <note>
+        <para>
+          To be usable by &kleopatra;, output of checksum programs
+          (both the written checksum file, as well as the output on
+          <acronym>stdout</acronym> when verifying checksums) needs to
+          be compatible with <acronym>GNU</acronym>
+          <command>md5sum</command> and
+          <command>sha1sum</command>.
+        </para>
+
+        <para>
+          Specifically, the checksum file needs to be line-based with
+          each line having the following format:
+
+          <programlisting><replaceable>CHECKSUM</replaceable> ' ' ( ' ' | '*' ) <replaceable>FILENAME</replaceable></programlisting>
+
+          where <replaceable>CHECKSUM</replaceable> consists of
+          hex-characters only. If <replaceable>FILENAME</replaceable>
+          contains a newline character, the line must instead read:
+
+          <programlisting>\<replaceable>CHECKSUM</replaceable> ' ' ( ' ' | '*' ) <replaceable>ESCAPED-FILENAME</replaceable></programlisting>
+
+          where <replaceable>ESCAPED-FILENAME</replaceable> is the
+          filename with newlines replaced by <literal>\n</literal>s,
+          and backslashes doubled
+          (<literal>\</literal>&#x21A6;<literal>\\</literal>).
+        </para>
+
+        <para>
+          Similarly, the output of
+          <xref linkend="checksum-definition-verify-command"/> must be of the form
+
+          <programlisting><replaceable>FILENAME</replaceable> ( ': OK' | ': FAILED' )</programlisting>
+
+          separated by newlines. Newlines and other characters are
+          <emphasis>not</emphasis> escaped in the output.<!--
+          --><footnote>
+            <para>
+              Yes, these programs were not written with graphical
+              frontends in mind, and &kleopatra; will fail to
+              correctly parse pathological filenames that contain
+              ":&nbsp;OK" plus newline in them.
+            </para>
+          </footnote>
+        </para>
+      </note>
+
+      <para>
+        Each checksum program is defined in
+        <filename>libkleopatrarc</filename> as a separate
+        <literal>Checksum&nbsp;Definition&nbsp;#<replaceable>n</replaceable></literal>
+        group, with the following mandatory keys:
+      </para>
+
+      <variablelist>
+
+        <varlistentry id="checksum-definition-file-patterns">
+          <term><literal>file-patterns</literal></term>
+          <listitem>
+            <para>
+              A list of regular expressions that describe which files
+              should be considered checksum files for this checksum
+              program. The syntax is the one used for string lists in
+              KDE config files.
+              <note>
+                <para>
+                  Since regular expressions usually contain
+                  backslashes, care must be taken to properly escape
+                  them in the config file. The use of a config file
+                  editing tool is recommended.
+                </para>
+              </note>
+              The platform defines whether the patterns are treated
+              case-sensitive or case-insensitive.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-output-file">
+          <term><literal>output-file</literal></term>
+          <listitem>
+            <para>
+              The typical output filename for this checksum program
+              (should match one of the
+              <xref linkend="checksum-definition-file-patterns"/>, of
+              course). This is what &kleopatra; will use as the
+              output filename when creating checksum files of this
+              type.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-id">
+          <term><literal>id</literal></term>
+          <listitem>
+            <para>
+              A unique ID used to identify this checksum program
+              internally. If in doubt, use the name of the command.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-Name">
+          <term><literal>Name</literal> (translated)</term>
+          <listitem>
+            <para>
+              The user-visible name of this checksum program, as shown
+              in the drop-down menu in &kleopatra;'s config dialog.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-create-command">
+          <term><literal>create-command</literal></term>
+          <listitem>
+            <para>
+              The actual command with which to create checksum
+              files. The syntax, restrictions and argument passing
+              options are the same as described for
+              <xref linkend="archive-definition-pack-command"/> in
+              <xref linkend="admin-archive-definitions"/>.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-verify-command">
+          <term><literal>verify-command</literal></term>
+          <listitem>
+            <para>
+              Same as
+              <xref linkend="checksum-definition-create-command"/>,
+              but for checksum verification.
+            </para>
+          </listitem>
+        </varlistentry>
+
+      </variablelist>
+
+      <para>
+        Here is a complete example:
+        <programlisting>
+          [Checksum Definition #1]
+          file-patterns=sha1sum.txt
+          output-file=sha1sum.txt
+          id=sha1sum-gnu
+          Name=sha1sum (GNU)
+          Name[de]=sha1sum (GNU)
+          ...
+          create-command=sha1sum -- %f
+          verify-command=sha1sum -c -- %f
+        </programlisting>
+      </para>
+
+    </sect1> <!-- Checksum Definition -->
+
   </chapter> <!-- Administrator's Guide -->
 
 <chapter id="credits-and-license">
 <title>Credits and License</title>
 
 <para>&kleopatra; copyright 2002 &Steffen.Hansen;, &Matthias.Kalle.Dalheimer;
-and &Jesper.Pedersen;., copyright 2004 &Daniel.Molkentin;, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
+and &Jesper.Pedersen;., copyright 2004 &Daniel.Molkentin;, copyright 2004, 2007, 2008, 2009, 2010 Klar&auml;lvdalens Datakonsult AB</para>
 
 <para>Documentation copyright 2002 &Steffen.Hansen;, copyright 2004
-&Daniel.Molkentin;, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
+&Daniel.Molkentin;, copyright 2004, 2010 Klar&auml;lvdalens Datakonsult AB</para>
 
 <itemizedlist>
 <title>Contributors</title>
@@ -1787,8 +3516,8 @@ Local Variables:
 mode: sgml
 sgml-minimize-attributes:nil
 sgml-general-insert-case:lower
-sgml-indent-step:0
-sgml-indent-data:nil
+sgml-indent-step:2
+sgml-indent-data:t
 End:
 
 // vim:ts=2:sw=2:tw=78:noet
