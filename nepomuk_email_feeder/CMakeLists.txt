@@ -37,6 +37,7 @@ target_link_libraries(akonadi_nepomuk_email_feeder
   ${KDE4_KDEUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
+  ${QT_QTSCRIPT_LIBRARY}
   ${QT_QTCORE_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${QT_QT3SUPPORT_LIBRARY}
