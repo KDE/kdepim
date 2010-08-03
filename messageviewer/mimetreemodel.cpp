@@ -53,8 +53,9 @@ class MimeTreeModel::Private
 
     QString descriptionForContent( KMime::Content *content )
     {
-      if ( content->hasHeader( "Subject" ) )
-        return content->getHeaderByType( "Subject" )->asUnicodeString();
+      KMime::Message * const message = dynamic_cast<KMime::Message*>( content );
+      if ( message && message->subject( false ) )
+        return message->subject()->asUnicodeString();
       const QString name = NodeHelper::fileName( content );
       if ( !name.isEmpty() )
         return name;
