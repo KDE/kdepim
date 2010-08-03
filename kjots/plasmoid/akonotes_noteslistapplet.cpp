@@ -84,7 +84,7 @@ void AkonotesListApplet::init()
 
   if ( rootCollectionId < 0 )
   {
-    setConfigurationRequired( true, "This widget needs to be configured." );
+    setConfigurationRequired( true, i18n("This widget needs to be configured.") );
     return;
   }
 
