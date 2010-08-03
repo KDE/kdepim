@@ -491,4 +491,9 @@ KMime::Message::Ptr StorageModel::messageForRow( int row ) const
   return item.payload<KMime::Message::Ptr>();
 }
 
+void StorageModel::resetModelStorage()
+{
+  reset();
+}
+
 #include "storagemodel.moc"

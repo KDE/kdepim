@@ -353,6 +353,9 @@ public:
     MessageList::Core::PreSelectionMode preSelectionMode = MessageList::Core::PreSelectLastSelected,
     const QString &overrideLabel = QString()
     );
+
+  void resetModelStorage();
+
 public slots:
   /**
    * Selects all the items in the current folder.
