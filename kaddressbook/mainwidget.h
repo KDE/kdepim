@@ -63,6 +63,8 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void print();
 
   private Q_SLOTS:
+    void delayedInit();
+
     void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
     void itemSelectionChanged( const QModelIndex&, const QModelIndex& );
@@ -114,6 +116,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;
+    KXMLGUIClient *mXmlGuiClient;
 };
 
 #endif
