@@ -168,15 +168,14 @@ void AkonotesNoteApplet::defaultCreated( KJob *job )
 
   AgentInstance instance = agentJob->instance();
 
-  QDBusInterface *iface = new QDBusInterface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( instance.identifier() ),
+  QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( instance.identifier() ),
                                               QLatin1String("/Settings"), QString(), QDBusConnection::sessionBus(), this );
 
-  if ( !iface->isValid() ) {
+  if ( !iface.isValid() ) {
     kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
-    delete iface;
     return;
   }
-  iface->call( "setPath", KStandardDirs::locateLocal( "data", "unsortednotes/" ) );
+  iface.call( "setPath", KStandardDirs::locateLocal( "data", "unsortednotes/" ) );
   instance.reconfigure();
 
   ResourceSynchronizationJob *syncJob = new ResourceSynchronizationJob( instance );
