@@ -265,10 +265,14 @@ int Todo::percentComplete() const
   return mPercentComplete;
 }
 
-void Todo::setPercentComplete(int v)
+void Todo::setPercentComplete( int v )
 {
   mPercentComplete = v;
-  if ( v != 100 ) mHasCompletedDate = false;
+  if ( v != 100 ) {
+    mHasCompletedDate = false;
+    mCompleted = QDateTime();
+  }
+
   updated();
 }
 
