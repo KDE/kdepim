@@ -305,9 +305,9 @@ bool ResourceKolab::doSave()
       && kmailTriggerSync( kmailJournalContentsType );
   */
 }
-void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
+void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase )
 {
- const QString uid = incidencebase->uid();
+  const QString uid = incidencebase->uid();
   //kdDebug() << k_funcinfo << uid << endl;
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
@@ -319,6 +319,40 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
     return;
   }
 
+  { // start optimization
+    /**
+       KOrganizer and libkcal like calling two Incidence::updated()
+       for only one user change. That's because after a change,
+       IncidenceChanger calls incidence->setRevision( rev++ );
+       which also calls Incidence::updated().
+
+       Lets ignore the first updated() and only send to kmail
+       the second. This makes things faster.
+    */
+
+    //IncidenceBase doesn't have revision(), downcast needed.
+    Incidence *i = dynamic_cast<Incidence*>( incidencebase );
+
+    if ( i ) {
+      bool ignoreThisUpdate = false;
+
+      if ( !mLastKnownRevisions.contains( uid ) ) {
+        mLastKnownRevisions[uid] = i->revision();
+      }
+
+      // update the last known revision
+      if ( mLastKnownRevisions[uid] < i->revision() ) {
+        mLastKnownRevisions[uid] = i->revision();
+      } else {
+        ignoreThisUpdate = true;
+      }
+
+      if ( ignoreThisUpdate ) {
+        return;
+      }
+    }
+  } // end optimization
+
   QString subResource;
   Q_UINT32 sernum = 0;
   if ( mUidMap.contains( uid ) ) {
@@ -326,8 +360,8 @@ void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
     sernum = mUidMap[ uid ].serialNumber();
     mUidsPendingUpdate.append( uid );
   }
-  sendKMailUpdate( incidencebase, subResource, sernum );
 
+  sendKMailUpdate( incidencebase, subResource, sernum );
 }
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 {
@@ -525,7 +559,6 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
                                   Q_UINT32 sernum )
 {
   Q_ASSERT( incidence );
-
   if ( !incidence ) {
     return false;
   }

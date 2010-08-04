@@ -249,6 +249,18 @@ private:
 
   bool mBatchAddingInProgress;
   QMap<Kolab::ResourceType,QString> mLastUsedResources;
+
+  /**
+     Indexed by uid, it holds the last known revision of an incidence.
+     If we receive an update where the incidence still has the same
+     revision as the last known, we ignore it and don't send it to kmail,
+     because shortly after, IncidenceChanger will increment the revision
+     and that will trigger another update.
+
+     If we didn't discard the first update, kmail would have been updated twice.
+  */
+  QMap<QString,int> mLastKnownRevisions;
+
 };
 
 struct TemporarySilencer {
