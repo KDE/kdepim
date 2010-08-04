@@ -370,7 +370,7 @@ start.</para>
 <varlistentry>
 <term><guilabel>Use the browser cache (less network traffic)</guilabel></term>
 <listitem><para>When enabled, the &kde;-wide browser cache settings are used when
-updating feeds. You can configure the &kde;-wide browser cache either in
+updating feeds. You can configure the &kde;-wide browser cache 
 in &konqueror;'s configuration dialog.</para>
 <note><para>You should leave this option enabled whenever possible. Disabling
 this option leads to increased network traffic. The traffic caused by
