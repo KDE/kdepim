@@ -47,7 +47,7 @@ QVariant FreeBusyGanttProxyModel::data( const QModelIndex& index, int role ) con
 
 
     KDateTime::Spec timeSpec = KSystemTimeZones::local();
-    KCalCore::FreeBusyPeriod period  = sourceModel()->data( source_index, FreeBusyItemModel::FreeBusyPeriodRole ).value<KCalCore::Period>();
+    KCalCore::FreeBusyPeriod period  = sourceModel()->data( source_index, FreeBusyItemModel::FreeBusyPeriodRole ).value<KCalCore::FreeBusyPeriod>();
     switch ( role ) {
     case KDGantt::ItemTypeRole:
         return KDGantt::TypeTask;
@@ -60,8 +60,6 @@ QVariant FreeBusyGanttProxyModel::data( const QModelIndex& index, int role ) con
     case Qt::ToolTipRole:
         return tooltipify( period, timeSpec );
     case Qt::DisplayRole:
-        kDebug() << "OMG";
-        kDebug() << sourceModel()->data( source_index.parent(), Qt::DisplayRole ).toString();
         return sourceModel()->data( source_index.parent(), Qt::DisplayRole );
     default:
         return QVariant();
@@ -78,7 +76,7 @@ int FreeBusyGanttProxyModel::rowCount( const QModelIndex& parent ) const
 {
     int count = 0;
     for ( int i = 0; i < sourceModel()->rowCount(); ++i ) {
-        QModelIndex parent = sourceModel()->index( i, 1 );
+        QModelIndex parent = sourceModel()->index( i, 0 );
         count += sourceModel()->rowCount( parent );
     }
     return count;
@@ -94,12 +92,11 @@ QModelIndex FreeBusyGanttProxyModel::mapFromSource( const QModelIndex& sourceInd
 
     int count = 0;
     for ( int i = 0; i < sourceIndex.parent().row(); ++i ) {
-        QModelIndex parent = sourceModel()->index( i, 1 );
+        QModelIndex parent = sourceModel()->index( i, 0 );
         count += sourceModel()->rowCount( parent );
     }
     count += sourceIndex.row();
-
-    return index( count, 1 );
+    return index( count, 0 );
 }
 
 QModelIndex FreeBusyGanttProxyModel::mapToSource( const QModelIndex& proxyIndex ) const
@@ -108,10 +105,13 @@ QModelIndex FreeBusyGanttProxyModel::mapToSource( const QModelIndex& proxyIndex 
     int count = 0;
     QModelIndex parent;
     bool found = false;
+
+    //locate the parent index which contains proxy_row
     for ( int i = 0; i < sourceModel()->rowCount(); ++i ) {
-        parent = sourceModel()->index( i, 1 );
+        parent = sourceModel()->index( i, 0 );
         count += sourceModel()->rowCount( parent );
-        if ( count >= proxy_row ) {
+        if ( count > proxy_row ) {
+            count = sourceModel()->rowCount( parent );
             found = true;
             break;
         }
@@ -120,8 +120,8 @@ QModelIndex FreeBusyGanttProxyModel::mapToSource( const QModelIndex& proxyIndex 
         kDebug() << "source model parent not found";
         return QModelIndex();
     }
-//         kDebug() << "count - proxy_row" << count - proxy_row;
-    return sourceModel()->index( count - proxy_row, 1, parent );
+//     kDebug() << proxy_row <<"%" << count << "=" << proxy_row % count;
+    return sourceModel()->index( proxy_row % count, 0, parent );
 }
 
 QModelIndex FreeBusyGanttProxyModel::index( int row, int column, const QModelIndex& parent ) const
@@ -129,7 +129,7 @@ QModelIndex FreeBusyGanttProxyModel::index( int row, int column, const QModelInd
     if ( !hasIndex( row, column, parent ) )
         return QModelIndex();
 
-    return createIndex( row, 1 );
+    return createIndex( row, 0 );
 }
 
 QModelIndex FreeBusyGanttProxyModel::parent( const QModelIndex& child ) const
