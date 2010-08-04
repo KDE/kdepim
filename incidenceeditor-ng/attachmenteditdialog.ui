@@ -47,7 +47,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Unknown</string>
+      <string comment="@label File type of attachment is unknown">Unknown</string>
      </property>
     </widget>
    </item>

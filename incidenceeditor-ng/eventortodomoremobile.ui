@@ -86,7 +86,7 @@
     <item row="2" column="2">
      <widget class="QPushButton" name="mSelectCategoriesButton">
       <property name="text">
-       <string>Select</string>
+       <string comment="Opens a selection dialog for selecting categories of an event or task">Select</string>
       </property>
      </widget>
     </item>
@@ -218,7 +218,7 @@
       <item>
        <widget class="QPushButton" name="mSelectButton">
         <property name="text">
-         <string>Select...</string>
+         <string comment="Select attendees from addressbook">Select...</string>
         </property>
        </widget>
       </item>
@@ -287,7 +287,7 @@
     <item row="1" column="4">
      <widget class="QPushButton" name="mAlarmNewButton">
       <property name="text">
-       <string>New</string>
+       <string comment="@action:button Create a new reminder">New</string>
       </property>
      </widget>
     </item>
@@ -375,7 +375,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>every</string>
+         <string comment="@label Frequency of recurrence: every x [days|weeks|months|years]">every</string>
         </property>
        </widget>
       </item>
@@ -399,9 +399,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="text">
-         <string>day(s)</string>
         </property>
        </widget>
       </item>
