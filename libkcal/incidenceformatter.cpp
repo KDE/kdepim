@@ -337,7 +337,8 @@ static QString displayViewFormatAttachments( Incidence *incidence )
       }
       tmpStr += htmlAddLink( (*it)->uri(), name );
     } else {
-      tmpStr += (*it)->label();
+      tmpStr += htmlAddLink( "ATTACH:" + incidence->uid() + ':' + (*it)->label(),
+                             (*it)->label(), false );
     }
     if ( count < as.count() ) {
       tmpStr += "<br>";
