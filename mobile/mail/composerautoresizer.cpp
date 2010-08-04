@@ -19,18 +19,13 @@
 */
 
 #include "composerautoresizer.h"
-
-#ifdef Q_WS_MAEMO_5
-#include <QtGui/qabstractkineticscroller.h>
-#endif
-
-#include <QDebug>
-#include <KDebug>
+#include <QGraphicsProxyWidget>
 
 ComposerAutoResizer::ComposerAutoResizer(QWidget *parent)
     : QObject(parent),
-      composer(qobject_cast<QTextEdit *>(parent)),
-      edit(qobject_cast<QFrame *>(parent))
+      composer(qobject_cast<QTextEdit*>(parent)),
+      edit(qobject_cast<QFrame*>(parent)),
+      flickable(0)
 {
     Q_ASSERT(composer);
     // detect when the text changes
@@ -41,37 +36,53 @@ ComposerAutoResizer::ComposerAutoResizer(QWidget *parent)
     minimumHeight = edit->size().height();
 }
 
+QDeclarativeItem *ComposerAutoResizer::findFlickable(QGraphicsItem *parent)
+{
+    // looks for a QML Flickable Item based on the name of a property
+    // It's not optimal but it's the only way as
+    // QDeclarativeFlickable is not public
+    while (parent) {
+        QDeclarativeItem *di = qobject_cast<QDeclarativeItem*>(parent);
+        if (di) {
+            // this is the property that is present only in flickable
+            const QVariant property = di->property("flickableData");
+            if (property.isValid() && !property.isNull()) {
+                return di;
+                break;
+            }
+        }
+        parent = parent->parentItem();
+    }
+    return 0;
+}
+
 void ComposerAutoResizer::textEditChanged()
 {
     QTextDocument *doc = composer->document();
+    const QRect cursor = composer->cursorRect();
     const QSize s = doc->size().toSize();
     const QRect fr = edit->frameRect();
     const QRect cr = edit->contentsRect();
 
+    // sets the size of the widget dynamically
     edit->setMinimumHeight(qMax(minimumHeight, s.height() + (fr.height() - cr.height() - 1)));
     edit->setMaximumHeight(qMax(minimumHeight, s.height() + (fr.height() - cr.height() - 1)));
 
-#ifdef Q_WS_MAEMO_5
-    QRect cursor = composer->cursorRect();
+    //QWidget *pw = edit->parentWidget();
+    QGraphicsProxyWidget *proxy = edit->graphicsProxyWidget();
+    QGraphicsItem *pi = proxy->parentItem();
+
+    // position of the widget
+    const QPointF pos = proxy->pos();
 
     // make sure the cursor is visible so the user doesn't loose track of the kb focus
-    QPoint pos = edit->pos();
-    QWidget *pw = edit->parentWidget();
-    while (pw) {
-        if (pw->parentWidget()) {
-            if (QAbstractScrollArea *area =
-                qobject_cast<QAbstractScrollArea *>(pw->parentWidget()->parentWidget())) {
-                if (QAbstractKineticScroller * scroller=
-                    area->property("kineticScroller").value<QAbstractKineticScroller *>()) {
-                    scroller->ensureVisible(pos + cursor.center(), 10 + cursor.width(),
-                                            2 * cursor.height());
-                }
-                break;
-             }
+    if (flickable || (flickable = findFlickable(pi))) {
+        const int dy = cursor.center().y();
+        const int y = pos.y() + dy - minimumHeight;
+        if (y >= 0) {
+            flickable->setProperty("contentY", y);
+        } else {
+            flickable->setProperty("contentY", 0);
         }
-        pos = pw->mapToParent(pos);
-        pw = pw->parentWidget();
     }
-#endif
-
- }
+}
