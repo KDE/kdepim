@@ -453,6 +453,100 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
+    bool cancelPastInvites( Incidence *incidence, const QString &path ) const
+    {
+      QString warnStr;
+      QString typeStr;
+      QDateTime now = QDateTime::currentDateTime();
+      QDate today = now.date();
+      if ( incidence->type() == "Event" ) {
+        Event *event = static_cast<Event *>( incidence );
+        typeStr = i18n( "invitation" );
+        if ( !event->doesFloat() ) {
+          if ( event->dtEnd() < now ) {
+            warnStr = i18n( "\"%1\" occurred already." ).arg( event->summary() );
+          } else if ( event->dtStart() <= now && now <= event->dtEnd() ) {
+            warnStr = i18n( "\"%1\" is currently in-progress." ).arg( event->summary() );
+          }
+        } else {
+          if ( event->dtEnd().date() < today ) {
+            warnStr = i18n( "\"%1\" occurred already." ).arg( event->summary() );
+          } else if ( event->dtStart().date() <= today && today <= event->dtEnd().date() ) {
+            warnStr = i18n( "\"%1\", happening all day today, is currently in-progress." ).
+                      arg( event->summary() );
+          }
+        }
+      } else if ( incidence->type() == "Todo" ) {
+        Todo *todo = static_cast<Todo *>( incidence );
+        typeStr = i18n( "task" );
+        if ( !todo->doesFloat() ) {
+          if ( todo->hasDueDate() ) {
+            if ( todo->dtDue() < now ) {
+              warnStr = i18n( "\"%1\" is past due." ).arg( todo->summary() );
+            } else if ( todo->hasStartDate() && todo->dtStart() <= now && now <= todo->dtDue() ) {
+              warnStr = i18n( "\"%1\" is currently in-progress." ).arg( todo->summary() );
+            }
+          } else if ( todo->hasStartDate() ) {
+            if ( todo->dtStart() < now ) {
+              warnStr = i18n( "\"%1\" has already started." ).arg( todo->summary() );
+            }
+          }
+        } else {
+          if ( todo->hasDueDate() ) {
+            if ( todo->dtDue().date() < today) {
+              warnStr = i18n( "\"%1\" is past due." ).arg( todo->summary() );
+            } else if ( todo->hasStartDate() &&
+                        todo->dtStart().date() <= today && today <= todo->dtDue().date() ) {
+              warnStr = i18n( "\"%1\", happening all-day today, is currently in-progress." ).
+                        arg( todo->summary() );
+            }
+          } else if ( todo->hasStartDate() ) {
+            if ( todo->dtStart().date() < today ) {
+              warnStr = i18n( "\"%1\", happening all day, has already started." ).
+                        arg( todo->summary() );
+            }
+          }
+        }
+      }
+
+      if ( !warnStr.isEmpty() ) {
+        QString queryStr;
+        if ( path == "accept" ) {
+          queryStr = i18n( "Do you still want to accept the %1?" ).arg( typeStr );
+        } else if ( path == "accept_conditionally" ) {
+          queryStr = i18n( "Do you still want to send conditional acceptance of the %1?" ).
+                     arg( typeStr );
+        } else if ( path == "accept_counter" ) {
+          queryStr = i18n( "Do you still want to accept the counter proposal?" );
+        } else if ( path == "counter" ) {
+          queryStr = i18n( "Do you still want to send a counter proposal?" );
+        } else if ( path == "decline" ) {
+          queryStr = i18n( "Do you still want to send a decline response?" );
+        } else if ( path == "decline_counter" ) {
+          queryStr = i18n( "Do you still want to decline the counter proposal?" );
+        } else if ( path == "reply" ) {
+          queryStr = i18n( "Do you still want to record this reponse in your calendar?" );
+        } else if ( path == "delegate" ) {
+          queryStr = i18n( "Do you still want to delegate this %1?" ).arg( typeStr );
+        } else if ( path == "forward" ) {
+          queryStr = i18n( "Do you still want to forward this %1?" ).arg( typeStr );
+        } else if ( path == "check_calendar" ) {
+          queryStr = i18n( "Do you still want to check your calendar?" );
+        } else if ( path == "record" ) {
+          queryStr = i18n( "Do you still want to record this %1 in your calendar?" ).arg( typeStr );
+        } else {
+          queryStr = i18n( "%1?" ).arg( path );
+        }
+
+        if ( KMessageBox::warningYesNo(
+               0,
+               i18n( "%1\n%2" ).arg( warnStr ).arg( queryStr ) ) == KMessageBox::No ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     bool handleInvitation( const QString& iCal, Attendee::PartStat status,
                            KMail::Callback &callback ) const
     {
@@ -463,9 +557,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // Must be some error. Still return true though, since we did handle it
         return true;
 
-      // get comment for tentative acceptance
-      Incidence* incidence = icalToString( iCal );
+      Incidence *incidence = icalToString( iCal );
 
+      // get comment for tentative acceptance
       if ( callback.askForComment( status ) ) {
         bool ok = false;
         QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
@@ -730,20 +824,30 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return false;
       }
 
-      Incidence *incidence;
-      QString iCal;
-      QString summary;
 
-      /* If the bodypart does not have a charset specified, we need to fall back to
-         utf8, not the KMail fallback encoding, so get the contents as binary and decode
-         explicitly. */
+      // If the bodypart does not have a charset specified, we need to fall back to utf8,
+      // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
+      QString iCal;
       if ( part->contentTypeParameter( "charset").isEmpty() ) {
         const QByteArray &ba = part->asBinary();
         iCal = QString::fromUtf8(ba);
       } else {
         iCal = part->asText();
       }
+      Incidence *incidence = icalToString( iCal );
+      if ( !incidence ) {
+        KMessageBox::sorry(
+          0,
+          i18n( "The calendar invitation stored in this email message is broken in some way. "
+                "Unable to continue." ) );
+        return false;
+      }
+
       bool result = false;
+      if ( cancelPastInvites( incidence, path ) ) {
+        return result;
+      }
+
       if ( path == "accept" )
         result = handleInvitation( iCal, Attendee::Accepted, c );
       if ( path == "accept_conditionally" )
@@ -760,7 +864,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, c );
       if ( path == "forward" ) {
-        incidence = icalToString( iCal );
         AttendeeSelector dlg;
         if ( dlg.exec() == QDialog::Rejected )
           return true;
@@ -797,6 +900,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           KGuiItem( i18n( "Do Not Send" ) ),
           KGuiItem( i18n( "Send EMail" ) ) );
 
+        QString summary;
         switch( response ) {
         case KMessageBox::Cancel:
           break;
