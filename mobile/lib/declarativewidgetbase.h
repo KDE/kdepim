@@ -22,41 +22,28 @@
 
 #include "stylesheetloader.h"
 
-#include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsScene>
-#include <QGraphicsSceneResizeEvent>
+#include <QtDeclarative/QDeclarativeItem>
 
 
 template <typename WidgetT, typename ViewT, void (ViewT::*registerFunc)( WidgetT* )>
-class DeclarativeWidgetBase  : public QDeclarativeItem
+class DeclarativeWidgetBase : public QGraphicsProxyWidget
 {
   public:
-    explicit DeclarativeWidgetBase( QDeclarativeItem *parent = 0 ) :
-      QDeclarativeItem( parent ),
-      m_widget( new WidgetT ),
-      m_proxy( new QGraphicsProxyWidget( this ) )
+    explicit DeclarativeWidgetBase( QGraphicsItem *parent = 0 ) :
+      QGraphicsProxyWidget( parent ),
+      m_widget( new WidgetT )
     {
       init();
     }
 
     /** use this constructor if you inherit from this template to customize widget construction. */
-    DeclarativeWidgetBase( WidgetT *widget, QDeclarativeItem *parent ) :
-      QDeclarativeItem( parent ),
-      m_widget( widget ),
-      m_proxy( new QGraphicsProxyWidget( this ) ),
-      inside(false)
+    DeclarativeWidgetBase( WidgetT *widget, QGraphicsItem *parent ) :
+      QGraphicsProxyWidget( parent ),
+      m_widget( widget )
     {
       init();
-    }
-
-    virtual ~DeclarativeWidgetBase() { delete m_proxy; }
-
-    void geometryChanged( const QRectF &newGeometry, const QRectF &oldGeometry )
-    {
-      QDeclarativeItem::geometryChanged ( newGeometry, oldGeometry );
-      if (!inside)
-        m_proxy->resize( newGeometry.size() );
     }
 
   protected:
@@ -69,44 +56,23 @@ class DeclarativeWidgetBase  : public QDeclarativeItem
           (view->*(registerFunc))( m_widget );
         }
       }
-      return QDeclarativeItem::itemChange ( change, value );
-    }
-
-    bool eventFilter( QObject *obj, QEvent *event)
-    {
-        QGraphicsProxyWidget *proxy = qobject_cast<QGraphicsProxyWidget *>(obj);
-        if ((proxy == m_proxy) && (event->type() == QEvent::GraphicsSceneResize)) {
-            inside = true;
-            setWidth(proxy->size().width());
-            setHeight(proxy->size().height());
-            inside = false;
-        }
-        return QDeclarativeItem::eventFilter(obj, event);
+      return QGraphicsProxyWidget::itemChange ( change, value );
     }
 
   protected:
     WidgetT* m_widget;
-    QGraphicsProxyWidget *m_proxy;
-    bool inside;
 
   private:
     void init()
     {
       Q_ASSERT( m_widget );
-      Q_ASSERT( m_proxy );
-
-      m_proxy->installEventFilter(this);
 
       QPalette pal = m_widget->palette();
       pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
       m_widget->setPalette( pal );
       StyleSheetLoader::applyStyle( m_widget );
-      m_proxy->setWidget( m_widget );
-      setWidth( m_widget->width() );
-      setHeight( m_widget->height() );
-
-      setFocusProxy( m_proxy );
-      m_proxy->setFocusPolicy( Qt::StrongFocus );
+      setWidget( m_widget );
+      setFocusPolicy( Qt::StrongFocus );
     }
 };
 

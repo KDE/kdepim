@@ -42,7 +42,7 @@ class DCollectionCombo
 {
   Q_OBJECT
   public:
-    explicit DCollectionCombo( QDeclarativeItem *parent = 0 );
+    explicit DCollectionCombo( QGraphicsItem *parent = 0 );
 };
 
 class MobileIncidenceGeneral : public QWidget
@@ -64,7 +64,7 @@ class DIEGeneral
 {
   Q_OBJECT
   public:
-    explicit DIEGeneral( QDeclarativeItem *parent = 0 );
+    explicit DIEGeneral( QGraphicsItem *parent = 0 );
 
   private Q_SLOTS:
     void hack();
@@ -92,7 +92,7 @@ class DIEMore
   Q_PROPERTY( int currentIndex READ currentIndex WRITE setCurrentIndex )
 
   public:
-    explicit DIEMore( QDeclarativeItem *parent = 0 );
+    explicit DIEMore( QGraphicsItem *parent = 0 );
 
     int currentIndex() const;
 
