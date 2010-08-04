@@ -38,15 +38,14 @@ ComposerAutoResizer::ComposerAutoResizer(QWidget *parent)
 
 QDeclarativeItem *ComposerAutoResizer::findFlickable(QGraphicsItem *parent)
 {
-    // looks for a QML Flickable Item based on the name of a property
+    // looks for a QML Flickable Item based on the name of the class
     // It's not optimal but it's the only way as
     // QDeclarativeFlickable is not public
+    const QString flickableClassName("QDeclarativeFlickable");
     while (parent) {
         QDeclarativeItem *di = qobject_cast<QDeclarativeItem*>(parent);
         if (di) {
-            // this is the property that is present only in flickable
-            const QVariant property = di->property("flickableData");
-            if (property.isValid() && !property.isNull()) {
+            if (!flickableClassName.compare(di->metaObject()->className())) {
                 return di;
                 break;
             }
