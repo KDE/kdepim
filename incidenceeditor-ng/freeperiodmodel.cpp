@@ -82,7 +82,7 @@ int FreePeriodModel::rowCount( const QModelIndex& parent ) const
   return 0;
 }
 
-int FreePeriodModel::columnCount(const QModelIndex& parent) const
+int FreePeriodModel::columnCount(const QModelIndex& /* parent */ ) const
 {
     return 2;
 }

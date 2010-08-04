@@ -36,8 +36,8 @@ using namespace IncidenceEditorsNG;
 
 void FreePeriodModelTest::testModelValidity()
 {
-    FreePeriodModel * model = new FreePeriodModel();
-    ModelTest * modelTest = new ModelTest( model );
+    FreePeriodModel * model = new FreePeriodModel( this );
+    new ModelTest( model, this );
 
     const KDateTime dt1( QDate( 2010, 7, 24 ), QTime( 7, 0, 0 ), KDateTime::UTC );
     const KDateTime dt2( QDate( 2010, 7, 24 ), QTime( 10, 0, 0 ), KDateTime::UTC );
@@ -54,8 +54,8 @@ void FreePeriodModelTest::testModelValidity()
 
 void FreePeriodModelTest::testSplitByDay()
 {
-    FreePeriodModel * model = new FreePeriodModel();
-    ModelTest * modelTest = new ModelTest( model );
+    FreePeriodModel * model = new FreePeriodModel( this );
+    new ModelTest( model, this );
 
     const KDateTime startDt( QDate( 2010, 7, 24 ), QTime( 8, 0, 0 ), KDateTime::UTC );
     const KDateTime endDt( QDate( 2010, 7, 25 ), QTime( 8, 0, 0 ), KDateTime::UTC );

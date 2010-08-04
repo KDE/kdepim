@@ -130,7 +130,7 @@ int FreeBusyItemModel::rowCount( const QModelIndex& parent ) const
     return parentData->childCount();
 }
 
-int FreeBusyItemModel::columnCount( const QModelIndex& parent ) const
+int FreeBusyItemModel::columnCount( const QModelIndex& /* parent */ ) const
 {
   return 1;
 }

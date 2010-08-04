@@ -35,8 +35,8 @@ using namespace IncidenceEditorsNG;
 
 void FreeBusyItemModelTest::testModelValidity()
 {
-    FreeBusyItemModel * model = new FreeBusyItemModel();
-    ModelTest * modelTest = new ModelTest( model );
+    FreeBusyItemModel * model = new FreeBusyItemModel( this );
+    new ModelTest( model, this );
 
     QVERIFY( model->rowCount() == 0 );
 
@@ -86,8 +86,8 @@ void FreeBusyItemModelTest::testModelValidity()
 
 void FreeBusyItemModelTest::testModelValidity2()
 {
-    FreeBusyItemModel * model = new FreeBusyItemModel();
-    ModelTest * modelTest = new ModelTest( model );
+    FreeBusyItemModel * model = new FreeBusyItemModel( this );
+    new ModelTest( model, this );
 
     const KDateTime dt1( QDate( 2010, 7, 24 ), QTime( 7, 0, 0 ), KDateTime::UTC );
     const KDateTime dt2( QDate( 2010, 7, 24 ), QTime( 10, 0, 0 ), KDateTime::UTC );
@@ -185,8 +185,8 @@ void FreeBusyItemModelTest::testModelValidity2()
 
 void FreeBusyItemModelTest::testInsertFreeBusy()
 {
-    FreeBusyItemModel * model = new FreeBusyItemModel();
-    ModelTest * modelTest = new ModelTest( model );
+    FreeBusyItemModel * model = new FreeBusyItemModel( this );
+    new ModelTest( model, this );
 
     const KDateTime dt1( QDate( 2010, 7, 24 ), QTime( 7, 0, 0 ), KDateTime::UTC );
     const KDateTime dt2( QDate( 2010, 7, 24 ), QTime( 10, 0, 0 ), KDateTime::UTC );

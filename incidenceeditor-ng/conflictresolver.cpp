@@ -301,8 +301,8 @@ void ConflictResolver::findAllFreeSlots()
         for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
                 it != busyPeriods.end(); ++it ) {
             if ( it->end() >= begin && it->start() <= end ) {
-                int start_index;
-                int duration;
+                int start_index = -1; // Initialize it to an invalid value.
+                int duration = -1;    // Initialize it to an invalid value.
                 // case1: the period is completely in our timeframe
                 if( it->end() <= end && it->start() >= begin ) {
                   start_index = begin.secsTo( it->start() ) / mSlotResolutionSeconds;

@@ -66,13 +66,13 @@ QVariant FreeBusyGanttProxyModel::data( const QModelIndex& index, int role ) con
     }
 }
 
-int FreeBusyGanttProxyModel::columnCount( const QModelIndex& parent ) const
+int FreeBusyGanttProxyModel::columnCount( const QModelIndex& /* parent */ ) const
 {
     return 1;
 }
 
 
-int FreeBusyGanttProxyModel::rowCount( const QModelIndex& parent ) const
+int FreeBusyGanttProxyModel::rowCount( const QModelIndex& /* parent */ ) const
 {
     int count = 0;
     for ( int i = 0; i < sourceModel()->rowCount(); ++i ) {
@@ -132,7 +132,7 @@ QModelIndex FreeBusyGanttProxyModel::index( int row, int column, const QModelInd
     return createIndex( row, 0 );
 }
 
-QModelIndex FreeBusyGanttProxyModel::parent( const QModelIndex& child ) const
+QModelIndex FreeBusyGanttProxyModel::parent( const QModelIndex& /* child */ ) const
 {
     return QModelIndex();
 }
