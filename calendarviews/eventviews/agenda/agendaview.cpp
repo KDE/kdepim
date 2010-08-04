@@ -331,13 +331,6 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
 
   connectAgenda( d->mAgenda, d->mAllDayAgenda );
   connectAgenda( d->mAllDayAgenda, d->mAgenda );
-
-  connect( d->mAgenda,
-           SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
-           SLOT(newTimeSpanSelected(const QPoint &,const QPoint &)) );
-  connect( d->mAllDayAgenda,
-           SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
-           SLOT(newTimeSpanSelectedAllDay(const QPoint &,const QPoint &)) );
 }
 
 AgendaView::~AgendaView()
@@ -368,6 +361,10 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 
   connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
+
+  connect( agenda,
+           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
+           SLOT(newTimeSpanSelected(QPoint,QPoint)) );
 
   agenda->setCalendar( calendar() );
 
@@ -1613,6 +1610,10 @@ void AgendaView::updateEventIndicatorBottom( int newY )
 
 void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
 {
+  Q_UNUSED( items );
+  Q_UNUSED( gpos );
+  Q_UNUSED( allDay );
+
 #ifdef AKONADI_PORT_DISABLED // one item -> multiple items, Incidence* -> akonadi item url (we might have to fetch the items here first!)
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
     return;
