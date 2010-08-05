@@ -1,13 +1,17 @@
 #include "resourcerestorejob.h"
 
 #include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
+#include <akonadi/session.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kstandarddirs.h>
 #include <QtCore/QFile>
 #include <QtCore/QTimer>
+
+#include "collectionrestorejob.h"
 
 using namespace Akonadi;
 
@@ -19,13 +23,14 @@ ResourceRestoreJob::ResourceRestoreJob( const QDir &path, QObject *parent)  :
 void ResourceRestoreJob::start()
 {
   // check config file
-  QDir configFile( m_path.absoluteFilePath( "resourceinfo" ) );
-  if ( !configFile.exists() ) {
+  if ( !m_path.exists( "resourceinfo" ) ) {
     setError( 1 );
-    setErrorText( QString( "File %1 does not exist" ).arg( configFile.absolutePath() ) );
+    setErrorText( QString( "File %1 does not exist" ).arg( m_path.absoluteFilePath( "resourceinfo" ) ) );
+    emitResult();
+    return;
   }
 
-  KConfig config( configFile.absolutePath() );
+  KConfig config( m_path.absoluteFilePath( "resourceinfo" ) );
   KConfigGroup configGroup( &config, "General" );
   QString type = configGroup.readEntry( "type", QString() );
 
@@ -39,7 +44,9 @@ void ResourceRestoreJob::createResult( KJob *job )
   if ( job->error() ) {
     setError( job->error() );
     setErrorText( job->errorText() );
+    kError() << job->errorString();
     emitResult();
+    return;
   }
 
   const AgentInstanceCreateJob *createJob = static_cast< AgentInstanceCreateJob* >( job );
@@ -57,6 +64,7 @@ void ResourceRestoreJob::createResult( KJob *job )
       setError( 1 );
       setErrorText( QString( "Unable to copy file %1 to %2" ).arg( rcPath ).arg( dest ) );
       emitResult();
+      return;
     }
   }
 
@@ -67,6 +75,7 @@ void ResourceRestoreJob::createResult( KJob *job )
 
 void ResourceRestoreJob::restoreMainCollection()
 {
+  m_instance.synchronizeCollectionTree();
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel, this );
   job->fetchScope().setResource( m_instance.identifier() );
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( mainFetchResult( KJob* ) ) );
@@ -78,7 +87,9 @@ void ResourceRestoreJob::mainFetchResult( KJob *job )
   if ( job->error() ) {
     setError( job->error() );
     setErrorText( job->errorText() );
+    kError() << job->errorString();
     emitResult();
+    return;
   }
 
   const CollectionFetchJob *fetchJob = static_cast< CollectionFetchJob* >( job );
@@ -87,7 +98,42 @@ void ResourceRestoreJob::mainFetchResult( KJob *job )
     return;
   }
   else {
-    foreach ( const Collection &collection, fetchJob->collections() )
-      kError() << collection.id() << collection.name();
+      kError() << fetchJob->collections()[0].id() << " " << fetchJob->collections()[0].name();
+      CollectionDeleteJob *deleteJob = new CollectionDeleteJob( fetchJob->collections()[0], this );
+      connect( deleteJob, SIGNAL( result( KJob* ) ), this, SLOT( deleteResult( KJob* ) ) );
+      deleteJob->start();
   }
+}
+
+void ResourceRestoreJob::deleteResult( KJob *job )
+{
+  if ( job->error() ) {
+    setError( job->error() );
+    setErrorText( job->errorText() );
+    kError() << job->errorString();
+    emitResult();
+    return;
+  }
+
+  QStringList subcollections = m_path.entryList( QDir::Dirs | QDir::NoDotAndDotDot );
+  Session *session = new Session( m_instance.identifier().toLocal8Bit(), this );
+  CollectionRestoreJob *restoreJob = new CollectionRestoreJob( Collection::root(),
+                                                               m_path.absoluteFilePath( subcollections[0] ),
+                                                               session );
+  connect( restoreJob, SIGNAL( result( KJob* ) ), this, SLOT( restoreResult( KJob* ) ) );
+  restoreJob->start();
+}
+
+void ResourceRestoreJob::restoreResult( KJob *job )
+{
+  if ( job->error() ) {
+    setError( job->error() );
+    setErrorText( job->errorText() );
+    kError() << job->errorString();
+    emitResult();
+    return;
+  }
+
+  kError() << "Restored resource: " << m_instance.identifier();
+  emitResult();
 }

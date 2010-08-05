@@ -18,6 +18,8 @@ private slots:
   void createResult( KJob *job );
   void restoreMainCollection();
   void mainFetchResult( KJob *job );
+  void deleteResult( KJob *job );
+  void restoreResult( KJob *job );
 
 private:
   Akonadi::AgentInstance m_instance;
