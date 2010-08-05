@@ -438,6 +438,8 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   Q_D( EventOrTodoDialog );
 
   resize( QSize( 600, 500 ).expandedTo( minimumSizeHint() ) );
+  d->mUi->mTabWidget->setCurrentIndex( 0 );
+  d->mUi->mSummaryEdit->setFocus();
 
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
   setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
