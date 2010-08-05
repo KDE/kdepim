@@ -101,12 +101,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
       return inc.dynamicCast<IncidenceT>();
     }
 
-    template <typename IncidenceT>
-    QSharedPointer<const IncidenceT> incidence( KCalCore::Incidence::ConstPtr inc )
-    {
-      return inc.dynamicCast<const IncidenceT>();
-    }
-
   protected:
     KCalCore::Incidence::ConstPtr mLoadedIncidence;
     bool mWasDirty;
