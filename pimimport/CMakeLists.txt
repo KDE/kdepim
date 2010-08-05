@@ -4,9 +4,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set( pimimport_SRCS
   main.cpp
-  abstractdump.cpp
-  akonadidumper.cpp
-  resourcedump.cpp
+  dumprunner.cpp
   collectiondumpjob.cpp
   resourcedumpjob.cpp
   collectionrestorejob.cpp

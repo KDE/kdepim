@@ -1,27 +1,30 @@
 #ifndef AKONADIDUMPER_H
 #define AKONADIDUMPER_H
 
+#include <QtCore/QDir>
 #include <QtCore/QList>
+#include <QtCore/QObject>
 
-#include "abstractdump.h"
-
-class AkonadiDump : public AbstractDump
+class DumpRunner : public QObject
 {
   Q_OBJECT
 
 public:
-  explicit AkonadiDump( const QDir &path, QObject *parent = 0 );
+  DumpRunner( const QDir &path, QObject *parent = 0 );
 
 public slots:
-  virtual void dump();
-  virtual void restore();
+  void dump();
+  void restore();
 
 private slots:
   void resourceFinished();
 
+signals:
+  void finished();
+
 private:
-  QList<AbstractDump*> m_resources;
   int m_remainingResources;
+  QDir m_path;
 };
 
 #endif // AKONADIDUMPER_H
