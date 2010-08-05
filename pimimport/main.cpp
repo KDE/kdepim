@@ -1,14 +1,12 @@
 #include <akonadi/control.h>
-
 #include <KAboutData>
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KGlobal>
 #include <KDebug>
-
 #include <QtCore/QTimer>
 
-#include "akonadidumper.h"
+#include "dumprunner.h"
 
 int main( int argc, char *argv[] )
 {
@@ -36,22 +34,20 @@ int main( int argc, char *argv[] )
     KCmdLineArgs::usageError( i18n( "No dump directory specified" ) );
     return 1;
   }
-  AkonadiDump dumper( args->arg( 0 ) );
+
+  DumpRunner dumper( args->arg( 0 ) );
+  QObject::connect( &dumper, SIGNAL( finished() ), &app, SLOT( quit() ) );
 
   if ( args->isSet( "dump" ) ) {
     QTimer::singleShot( 0, &dumper, SLOT( dump() ) );
-//    QObject::connect( timer, SIGNAL( timeout() ), &dumper, SLOT( dump() ) );
   }
   else if ( args->isSet( "restore" ) ) {
     QTimer::singleShot( 0, &dumper, SLOT( restore() ) );
-//    QObject::connect( timer, SIGNAL( timeout() ), &dumper, SLOT( restore() ) );
   }
   else {
     KCmdLineArgs::usageError( i18n( "You have to specify either --dump or --restore") );
     return 1;
   }
-
-  QObject::connect( &dumper, SIGNAL( finished() ), &app, SLOT( quit() ) );
 
   if ( !Akonadi::Control::start( 0 ) )
     return 2;
