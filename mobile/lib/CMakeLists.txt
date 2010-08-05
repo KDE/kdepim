@@ -17,6 +17,7 @@ set(mobileui_SRCS
     kdeclarativemainview.cpp
     kdeclarativefullscreenview.cpp
     stylesheetloader.cpp
+    qmllistselectionmodel.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
