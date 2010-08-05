@@ -115,6 +115,10 @@ using KMail::TemplateParser;
 #include "calendarinterface.h"
 #include "interfaces/htmlwriter.h"
 
+#include <mailtransport/transportmanager.h>
+using MailTransport::TransportManager;
+
+
 #include "progressmanager.h"
 using KPIM::ProgressManager;
 using KPIM::ProgressItem;
@@ -1470,6 +1474,10 @@ KMCommand::Result KMRedirectCommand::execute()
   if ( dlg->exec() == QDialog::Rejected || !dlg ) {
     return Failed;
   }
+
+  if ( !TransportManager::self()->showTransportCreationDialog( parentWidget(), TransportManager::IfNoTransportExists ) )
+    return Failed;
+
 
   KMMessage *newMsg = msg->createRedirect( dlg->to() );
   KMFilterAction::sendMDN( msg, KMime::MDN::Dispatched );
