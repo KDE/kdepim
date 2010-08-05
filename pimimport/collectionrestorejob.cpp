@@ -19,14 +19,15 @@ CollectionRestoreJob::CollectionRestoreJob(const Akonadi::Collection &parentColl
 void CollectionRestoreJob::start()
 {
   // check config file
-  QDir configFile( m_path.absoluteFilePath( "collectioninfo" ) );
-  if ( !configFile.exists() ) {
+  if ( !m_path.exists( "collectioninfo" ) ) {
     setError( 1 );
-    setErrorText( QString( "File %1 does not exist" ).arg( configFile.absolutePath() ) );
+    setErrorText( QString( "File %1 does not exist" ).arg( m_path.absoluteFilePath( "collectioninfo" ) ) );
+    emitResult();
+    return;
   }
 
   // read config file
-  KConfig config( configFile.absolutePath() );
+  KConfig config( m_path.absoluteFilePath( "collectioninfo" ) );
   KConfigGroup configGroup( &config, "General" );
   Collection collection;
   collection.setName( configGroup.readEntry( "name", QString() ) );
@@ -49,7 +50,9 @@ void CollectionRestoreJob::createResult( KJob *job )
   if ( job->error() ) {
     setError( job->error() );
     setErrorText( job->errorText() );
+    kError() << job->errorString();
     emitResult();
+    return;
   }
 
   // restore subcollections or emit result if there are none
@@ -77,6 +80,7 @@ void CollectionRestoreJob::restoreResult( KJob *job )
     setError( job->error() );
     setErrorText( job->errorText() );
     emitResult();
+    return;
   }
 
   // check exit condition

@@ -18,6 +18,7 @@ void CollectionDumpJob::start()
     setError( 1 );
     setErrorText( QString( "Path %1 does not exist" ).arg(m_path.absolutePath() ) );
     emitResult();
+    return;
   }
 
   // record collection attributes
@@ -40,6 +41,7 @@ void CollectionDumpJob::fetchResult( KJob *job )
     setError( job->error() );
     setErrorText( job->errorText() );
     emitResult();
+    return;
   }
 
   const CollectionFetchJob *fetchJob = static_cast< CollectionFetchJob* >( job );
@@ -65,6 +67,7 @@ void CollectionDumpJob::dumpResult( KJob *job )
     setError( job->error() );
     setErrorText( job->errorText() );
     emitResult();
+    return;
   }
 
   if ( --m_subjobs == 0 )
