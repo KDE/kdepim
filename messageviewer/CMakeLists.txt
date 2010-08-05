@@ -10,6 +10,7 @@ add_subdirectory(tests)
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
 install(DIRECTORY htmlOTP DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
+install(FILES kmail_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 
 if(KDEPIM_MOBILE_UI)
   add_subdirectory(qml)
@@ -78,6 +79,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KTNEF_LIBRARY}
+  ${KDE4_KNEWSTUFF3_LIBS}
   ${QGPGME_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARY}
   ${KDE4_KDEWEBKIT_LIBRARY}

@@ -70,6 +70,9 @@
 
 #include <mailtransport/errorattribute.h>
 
+//Knewstuff
+#include <knewstuff3/downloaddialog.h>
+
 //Qt includes
 #include <QClipboard>
 #include <QDesktopWidget>
@@ -1514,12 +1517,12 @@ void ViewerPrivate::createActions()
   themeDirs.sort();
 
   // Set themes menu
-  mSelectThemeAction  = new KSelectAction(i18n("&Themes"), this);
+  mSelectThemeAction  = new KSelectAction( i18n("&Themes"), this );
   mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
   ac->addAction("view_themes", mSelectThemeAction );
   connect(mSelectThemeAction,SIGNAL( triggered(QAction*)),
           SLOT( slotSetTheme(QAction*) ));
-
+  
   foreach(const QString &dirName, themeDirs) {
     KAction* themeAction = new KAction(this);
 
@@ -1535,6 +1538,12 @@ void ViewerPrivate::createActions()
     themeAction->setData(dirName);
     mSelectThemeAction->addAction(themeAction);
   }
+
+  mDownloadThemesAction = new KAction( i18n( "Download new themes" ), this );
+  mDownloadThemesAction->setHelpText( i18n( "Allows you to download new themes from kde artists site." ) );
+  ac->addAction( "download_themes", mDownloadThemesAction );
+  connect( mDownloadThemesAction, SIGNAL(triggered(bool)),
+           this, SLOT(slotDownloadThemes()) );
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -2177,6 +2186,14 @@ void ViewerPrivate::slotSetTheme(QAction *themeAction)
 
   if( !mExternalWindow )
     writeConfig();
+}
+
+void ViewerPrivate::slotDownloadThemes()
+{
+  if (!m_newStuffDialog) {
+        m_newStuffDialog = new KNS3::DownloadDialog( "kmail_themes.knsrc" );
+  }
+  m_newStuffDialog.data()->show();
 }
 
 void ViewerPrivate::injectAttachments()

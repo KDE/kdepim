@@ -60,7 +60,12 @@
   <Menu noMerge="1" name="view">
    <text>&amp;View</text>
    <Action name="view_message_list"/>
-   <Action name="view_themes"/>
+   <Menu noMerge="1" name="themes">
+     <text>Themes</text>
+     <Action name="view_themes"/>
+     <Separator/>
+     <Action name="download_themes"/>
+   </Menu>
    <Action name="view_attachments"/>
    <Separator/>
    <Action name="view_unread"/>

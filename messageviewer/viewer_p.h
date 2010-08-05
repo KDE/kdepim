@@ -78,6 +78,10 @@ namespace MessageViewer {
   class MailWebView;
 }
 
+namespace KNS3 {
+    class DownloadDialog;
+}
+
 namespace MessageViewer {
 
 /**
@@ -510,6 +514,7 @@ public slots:
 
   void slotSetEncoding();
   void slotSetTheme(QAction *themeAction);
+  void slotDownloadThemes();
   void injectAttachments();
   void slotSettingsChanged();
   void slotMimeTreeContextMenuRequested( const QPoint& pos );
@@ -600,6 +605,7 @@ public:
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
       *mViewSourceAction, *mSaveMessageAction;
+  KAction *mDownloadThemesAction;    
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
   KSelectAction *mSelectThemeAction;
@@ -633,6 +639,7 @@ public:
   Akonadi::Monitor mMonitor;
   QString mAppName;
   QStringList themeDirNames;
+  QWeakPointer<KNS3::DownloadDialog> m_newStuffDialog;
 
 };
 
