@@ -87,6 +87,7 @@ KPIM.MainView {
       x: 0
       y: 0
       source: "notes-mobile-background.png"
+      visible: collectionView.visible
     }
 
     Akonadi.AkonadiBreadcrumbNavigationView {

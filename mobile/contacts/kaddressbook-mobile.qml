@@ -135,6 +135,7 @@ KPIM.MainView {
       x: 0
       y: 0
       source: "kaddressbook-mobile-background.png"
+      visible: collectionView.visible
     }
 
     Akonadi.AkonadiBreadcrumbNavigationView {

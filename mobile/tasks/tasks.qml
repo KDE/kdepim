@@ -99,6 +99,7 @@ KPIM.MainView {
       x: 0
       y: 0
       source: "tasks-mobile-background.png"
+      visible: collectionView.visible
     }
 
     Akonadi.AkonadiBreadcrumbNavigationView {
