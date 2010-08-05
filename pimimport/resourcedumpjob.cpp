@@ -21,6 +21,7 @@ void ResourceDumpJob::start()
     setError( 1 );
     setErrorText( QString( "Directory %1 does not exist" ).arg(m_path.absolutePath() ) );
     emitResult();
+    return;
   }
 
   // record resource data
@@ -40,6 +41,7 @@ void ResourceDumpJob::start()
       setError( 2 );
       setErrorText( QString( "Unable to copy %1 to %2" ).arg( file.fileName() ).arg( configDest ) );
       emitResult();
+      return;
     }
   }
 
@@ -56,6 +58,7 @@ void ResourceDumpJob::fetchResult( KJob *job )
     setError( job->error() );
     setErrorText( job->errorText() );
     emitResult();
+    return;
   }
 
   // dump all found collections, if any
@@ -82,6 +85,7 @@ void ResourceDumpJob::dumpResult( KJob *job )
     setError( job->error() );
     setErrorText( job->errorText() );
     emitResult();
+    return;
   }
 
   if ( --m_collectionsNo == 0 )
