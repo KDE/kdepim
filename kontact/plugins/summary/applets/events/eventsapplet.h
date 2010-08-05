@@ -21,11 +21,20 @@
 #ifndef EVENTSAPPLET_H
 #define EVENTSAPPLET_H
 
-#include <plasma/applet.h>
+class EventWidget;
 
-#include <akonadi/collection.h>
+#include <plasma/applet.h>
+#include <plasma/dataengine.h>
+
+namespace Plasma
+{
+    class ScrollWidget;
+} // namespace Plasma
 
 class KJob;
+
+class QTimer;
+class QGraphicsLinearLayout;
 
 class EventsApplet : public Plasma::Applet
 {
@@ -34,21 +43,23 @@ public:
     EventsApplet(  QObject* parent = 0, QVariantList args = QVariantList() );
 
     void init();
+    void ui();
 
 public slots:
     void configChanged();
-    void collectionFetchResult( KJob* job );
-
-protected:
-    void getCollectionFromKorg();
+    void updateUI();
+    void updateEvents();
+    void dataUpdated( QString source, Plasma::DataEngine::Data data );
 
 private:
-    int m_collectionJobsInProgress;
     QString m_incidenceType;
     int m_numDays;
-    QStringList m_collectionIds;
-    Akonadi::Collection::List m_collections;
     bool m_noCollections;
+    QTimer* m_timer;
+    QMap<QString,EventWidget*> m_incidences; // It's a map so that things are ordered magically
+    Plasma::ScrollWidget* m_scrollWidget;
+    QGraphicsWidget* m_scroller;
+    QGraphicsLinearLayout* m_scrollerLayout;
 };
 
 #endif
