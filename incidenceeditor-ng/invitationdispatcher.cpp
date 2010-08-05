@@ -44,8 +44,8 @@ class InvitationDispatcherPrivate
 
   public: /// Functions
     InvitationDispatcherPrivate( Akonadi::Calendar *calendar );
-    bool myAttendeeStatusChanged( const Incidence::ConstPtr &newInc,
-                                  const Incidence::ConstPtr &oldInc );
+    bool myAttendeeStatusChanged( const Incidence::Ptr &newInc,
+                                  const Incidence::Ptr &oldInc );
     void processItemSave( EditorItemManager::SaveAction action );
     void sentEventInvitationMessage();
     void sentEventModifiedMessage();
@@ -60,8 +60,8 @@ InvitationDispatcherPrivate::InvitationDispatcherPrivate( Akonadi::Calendar *cal
   , mIsCounterProposal( false )
 { }
 
-bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::ConstPtr &newInc,
-                                                           const Incidence::ConstPtr &oldInc )
+bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr &newInc,
+                                                           const Incidence::Ptr &oldInc )
 {
   Attendee::Ptr oldMe( oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
   Attendee::Ptr newMe( newInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
@@ -74,7 +74,7 @@ bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Cons
 
 void InvitationDispatcherPrivate::sentEventInvitationMessage()
 {
-  const Incidence::ConstPtr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
+  const Incidence::Ptr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
   const InvitationHandler::SendStatus status =
       mInvitationHandler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, newInc );
 
@@ -99,8 +99,8 @@ void InvitationDispatcherPrivate::sentEventInvitationMessage()
 
 void InvitationDispatcherPrivate::sentEventModifiedMessage()
 {
-  const Incidence::ConstPtr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
-  const Incidence::ConstPtr oldInc = Akonadi::incidence( mManager->item( EditorItemManager::BeforeSave ) );
+  const Incidence::Ptr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
+  const Incidence::Ptr oldInc = Akonadi::incidence( mManager->item( EditorItemManager::BeforeSave ) );
 
   InvitationHandler::SendStatus status = InvitationHandler::Success;
   if ( mIsCounterProposal ) {

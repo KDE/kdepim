@@ -45,7 +45,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      * Load the values of @param incidence into the editor widgets. The passed
      * incidence is kept for comparing with the current values of the editor.
      */
-    virtual void load( const KCalCore::Incidence::ConstPtr &incidence ) = 0;
+    virtual void load( const KCalCore::Incidence::Ptr &incidence ) = 0;
 
     /**
      * Store the current values of the editor into @param incidince.
@@ -72,9 +72,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 
     /** Convenience method to get a pointer for a specific const Incidence Type. */
     template <typename IncidenceT>
-    QSharedPointer<const IncidenceT> incidence() const
+    QSharedPointer<IncidenceT> incidence() const
     {
-      return mLoadedIncidence.dynamicCast<const IncidenceT>();
+      return mLoadedIncidence.dynamicCast<IncidenceT>();
     }
 
   signals:
@@ -102,7 +102,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     }
 
   protected:
-    KCalCore::Incidence::ConstPtr mLoadedIncidence;
+    KCalCore::Incidence::Ptr mLoadedIncidence;
     bool mWasDirty;
 };
 

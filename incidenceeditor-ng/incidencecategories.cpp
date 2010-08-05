@@ -58,7 +58,7 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
 #endif
 }
 
-void IncidenceCategories::load( const KCalCore::Incidence::ConstPtr &incidence )
+void IncidenceCategories::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence )

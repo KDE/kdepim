@@ -67,7 +67,7 @@ IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
   connect( mUi->mRemoveButton, SIGNAL(clicked()), SLOT(removeSelectedAttachments()) );
 }
 
-void IncidenceAttachment::load( const KCalCore::Incidence::ConstPtr &incidence )
+void IncidenceAttachment::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   mAttachmentView->clear();

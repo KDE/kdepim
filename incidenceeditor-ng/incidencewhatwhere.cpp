@@ -41,7 +41,7 @@ IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceWhatWhere::load( const KCalCore::Incidence::ConstPtr &incidence )
+void IncidenceWhatWhere::load( const KCalCore::Incidence::Ptr &incidence )
 {
   kDebug();
   mLoadedIncidence = incidence;

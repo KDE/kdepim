@@ -71,14 +71,14 @@ IncidenceDateTime::~IncidenceDateTime()
   delete mTimeZones;
 }
 
-void IncidenceDateTime::load( const KCalCore::Incidence::ConstPtr &incidence )
+void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
 
   // We can only handle events or todos.
-  if ( KCalCore::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
+  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>() ) {
     load( todo );
-  } else if ( KCalCore::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
+  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>() ) {
     load( event );
   } else {
     kDebug() << "Not an event or an todo.";
@@ -122,9 +122,9 @@ void IncidenceDateTime::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceDateTime::isDirty() const
 {
-  if ( KCalCore::Todo::ConstPtr todo = IncidenceDateTime::incidence<Todo>() ) {
+  if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<Todo>() ) {
     return isDirty( todo );
-  } else if ( KCalCore::Event::ConstPtr event = IncidenceDateTime::incidence<Event>() ) {
+  } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<Event>() ) {
     return isDirty( event );
   } else {
     Q_ASSERT_X( false, "IncidenceDateTimeEditor::isDirty", "Only implemented for todos and events" );
@@ -317,7 +317,7 @@ void IncidenceDateTime::enableTimeEdits()
 #endif
 }
 
-bool IncidenceDateTime::isDirty( KCalCore::Todo::ConstPtr todo ) const
+bool IncidenceDateTime::isDirty( KCalCore::Todo::Ptr todo ) const
 {
   Q_ASSERT( todo );
 
@@ -346,7 +346,7 @@ bool IncidenceDateTime::isDirty( KCalCore::Todo::ConstPtr todo ) const
 
 /// Event specific methods
 
-bool IncidenceDateTime::isDirty( KCalCore::Event::ConstPtr event ) const
+bool IncidenceDateTime::isDirty( KCalCore::Event::Ptr event ) const
 {
   // When the check box is checked, it has time associated and thus is not an all
   // day event. So the editor is dirty when the event is allDay and the checkbox
@@ -388,7 +388,7 @@ KDateTime IncidenceDateTime::currentEndDateTime() const
     mUi->mTimeZoneComboEnd->selectedTimeSpec() );
 }
 
-void IncidenceDateTime::load( KCalCore::Event::ConstPtr event )
+void IncidenceDateTime::load( KCalCore::Event::Ptr event )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( false );
@@ -468,7 +468,7 @@ void IncidenceDateTime::load( KCalCore::Event::ConstPtr event )
   }
 }
 
-void IncidenceDateTime::load( KCalCore::Todo::ConstPtr todo )
+void IncidenceDateTime::load( KCalCore::Todo::Ptr todo )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( true );

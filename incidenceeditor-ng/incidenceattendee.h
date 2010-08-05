@@ -58,7 +58,7 @@ public:
     IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
-    virtual void load( const KCalCore::Incidence::ConstPtr &incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 signals:

@@ -44,7 +44,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     IncidenceDateTime( Ui::EventOrTodoDesktop *ui = 0 );
     ~IncidenceDateTime();
 
-    virtual void load( const KCalCore::Incidence::ConstPtr &incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
@@ -84,14 +84,14 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
     void enableTimeEdits();
-    bool isDirty( KCalCore::Todo::ConstPtr todo ) const;
+    bool isDirty( KCalCore::Todo::Ptr todo ) const;
 
   private slots: /// Event specific
-    bool isDirty( KCalCore::Event::ConstPtr event ) const;
+    bool isDirty( KCalCore::Event::Ptr event ) const;
 
   private:
-    void load( KCalCore::Event::ConstPtr event );
-    void load( KCalCore::Todo::ConstPtr todo );
+    void load( KCalCore::Event::Ptr event );
+    void load( KCalCore::Todo::Ptr todo );
     void save( KCalCore::Event::Ptr event );
     void save( KCalCore::Todo::Ptr todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );

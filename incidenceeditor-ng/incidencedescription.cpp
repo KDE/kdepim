@@ -61,7 +61,7 @@ IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
            this, SLOT(checkDirtyStatus()) );
 }
 
-void IncidenceDescription::load( const KCalCore::Incidence::ConstPtr &incidence )
+void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( incidence ) {

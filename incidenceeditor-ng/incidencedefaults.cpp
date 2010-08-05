@@ -46,7 +46,7 @@ struct IncidenceDefaultsPrivate
 
   /// Methods
   Person::Ptr organizerAsPerson() const;
-  Attendee::Ptr organizerAsAttendee( const Person::ConstPtr &organizer ) const;
+  Attendee::Ptr organizerAsAttendee( const Person::Ptr &organizer ) const;
 
   void todoDefaults( const Todo::Ptr &todo ) const;
   void eventDefaults( const Event::Ptr &event ) const;
@@ -101,7 +101,7 @@ Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
   return organizer;
 }
 
-Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee( const Person::ConstPtr &organizer ) const
+Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee( const Person::Ptr &organizer ) const
 {
   Attendee::Ptr organizerAsAttendee( new Attendee( "", "" ) );
   // Really, the appropriate values (even the fall back values) should come from

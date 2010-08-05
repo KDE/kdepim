@@ -47,7 +47,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     IncidenceAttachment( Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
-    virtual void load( const KCalCore::Incidence::ConstPtr &incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 

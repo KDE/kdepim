@@ -123,7 +123,7 @@ KLocalizedString IncidenceRecurrence::subsOrdinal ( const KLocalizedString &text
     }
 }
 
-void IncidenceRecurrence::load( const KCalCore::Incidence::ConstPtr &incidence )
+void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
 

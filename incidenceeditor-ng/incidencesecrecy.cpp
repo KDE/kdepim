@@ -42,7 +42,7 @@ IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoDesktop *ui )
            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceSecrecy::load( const KCalCore::Incidence::ConstPtr &incidence )
+void IncidenceSecrecy::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
