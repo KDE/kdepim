@@ -18,13 +18,17 @@ public:
 
 private slots:
   void createResult( KJob *job );
-  void restoreResult( KJob *job );
+  void checkJobResult( KJob *job );
 
 private:
+  void restoreItems();
+  void decreaseSubjobs();
+
   Akonadi::Collection m_parent;
+  Akonadi::Collection m_collection;
   QDir m_path;
-  unsigned m_subcollectionsNo;
   Akonadi::Session *m_session;
+  unsigned m_subjobsNo;
 };
 
 #endif // COLLECTIONRESTOREJOB_H

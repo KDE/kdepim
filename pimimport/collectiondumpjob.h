@@ -3,7 +3,10 @@
 
 #include <kjob.h>
 #include <akonadi/collection.h>
+#include <ksharedconfig.h>
 #include <QtCore/QDir>
+
+class KConfigGroup;
 
 class CollectionDumpJob : public KJob
 {
@@ -17,13 +20,16 @@ public:
 private slots:
   void fetchResult( KJob* job );
   void dumpResult( KJob* job );
+  void itemFetchResult( KJob *job );
 
 private:
   void dumpSubCollections();
+  void dumpItems();
 
   Akonadi::Collection m_collection;
   QDir m_path;
   unsigned m_subjobs;
+  KSharedConfigPtr m_config;
 };
 
 #endif // COLLECTIONDUMPJOB_H
