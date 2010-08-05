@@ -3,16 +3,18 @@
 #include "kconfig.h"
 #include "kconfiggroup.h"
 #include <akonadi/collectioncreatejob.h>
+#include <akonadi/item.h>
+#include <akonadi/itemcreatejob.h>
 
 using namespace Akonadi;
 
 CollectionRestoreJob::CollectionRestoreJob(const Akonadi::Collection &parentCollection, const QDir &path, QObject *parent) :
-    KJob( parent ), m_parent( parentCollection ), m_path( path ), m_subcollectionsNo( 0 ), m_session( 0 )
+    KJob( parent ), m_parent( parentCollection ), m_path( path ), m_session( 0 ), m_subjobsNo( 1 )
 {
 }
 
 CollectionRestoreJob::CollectionRestoreJob(const Akonadi::Collection &parentCollection, const QDir &path, Session *session) :
-    KJob( session ), m_parent( parentCollection ), m_path( path ), m_subcollectionsNo( 0 ), m_session( session )
+    KJob( session ), m_parent( parentCollection ), m_path( path ), m_session( session ), m_subjobsNo( 1 )
 {
 }
 
@@ -55,35 +57,62 @@ void CollectionRestoreJob::createResult( KJob *job )
     return;
   }
 
-  // restore subcollections or emit result if there are none
   const CollectionCreateJob *createJob = static_cast< CollectionCreateJob* >( job );
+  m_collection = createJob->collection();
+
+  restoreItems();
+
+  // restore subcollections or emit result if there are none
   Collection collection = createJob->collection();
   QStringList subcollections = m_path.entryList( QDir::Dirs | QDir::NoDotAndDotDot );
-  m_subcollectionsNo = subcollections.size();
-  if ( m_subcollectionsNo > 0 ) {
-    foreach ( const QString &subcollection, subcollections ) {
-      CollectionRestoreJob *restoreJob = new CollectionRestoreJob( collection,
-                                                                   m_path.absoluteFilePath( subcollection ),
-                                                                   this );
-      connect( restoreJob, SIGNAL( result( KJob* ) ), this, SLOT( restoreResult( KJob* ) ) );
-      restoreJob->start();
-    }
+  m_subjobsNo += subcollections.size();
+  foreach ( const QString &subcollection, subcollections ) {
+    CollectionRestoreJob *restoreJob = new CollectionRestoreJob( collection,
+                                                                 m_path.absoluteFilePath( subcollection ),
+                                                                 this );
+    connect( restoreJob, SIGNAL( result( KJob* ) ), this, SLOT( checkJobResult( KJob* ) ) );
+    restoreJob->start();
   }
-  else {
-    emitResult();
-  }
+
+  decreaseSubjobs();
 }
 
-void CollectionRestoreJob::restoreResult( KJob *job )
+void CollectionRestoreJob::checkJobResult( KJob *job )
 {
   if ( job->error() ) {
     setError( job->error() );
     setErrorText( job->errorText() );
+    kError() << job->errorString();
     emitResult();
     return;
   }
 
-  // check exit condition
-  if ( --m_subcollectionsNo == 0 )
+  decreaseSubjobs();
+}
+
+void CollectionRestoreJob::restoreItems()
+{
+  KConfig config( m_path.absoluteFilePath( "collectioninfo" ), KConfig::SimpleConfig );
+  KConfigGroup itemsGroup( &config, "Items" );
+  m_subjobsNo += itemsGroup.groupList().size();
+  foreach ( const QString &id, itemsGroup.groupList() ) {
+    KConfigGroup itemGroup( &itemsGroup, id );
+    Item item;
+    QList< Item::Flag > flags = itemGroup.readEntry( "flags", QList< Item::Flag >() );
+    item.setFlags( Item::Flags::fromList( flags ) );
+    item.setMimeType( itemGroup.readEntry( "mimeType", QString() ) );
+    item.setModificationTime( itemGroup.readEntry( "modificationTime", QDateTime() ) );
+    item.setPayloadFromData( itemGroup.readEntry( "payloadData", QByteArray() ) );
+
+    ItemCreateJob *job = new ItemCreateJob( item, m_collection, this );
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( checkJobResult( KJob* ) ) );
+    job->start();
+  }
+}
+
+void CollectionRestoreJob::decreaseSubjobs()
+{
+  // decrease remaining subjobs
+  if ( --m_subjobsNo == 0 )
     emitResult();
 }
