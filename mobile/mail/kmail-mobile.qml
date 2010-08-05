@@ -91,6 +91,7 @@ KPIM.MainView {
       x: 0
       y: 0
       source: "kmail-mobile-background.png"
+      visible: collectionView.visible
     }
 
     Akonadi.AkonadiBreadcrumbNavigationView {
