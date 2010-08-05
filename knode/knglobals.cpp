@@ -32,6 +32,30 @@
 #include "knmainwidget.h"
 #include "knwidgets.h"
 
+KNGlobals::KNGlobals() :
+  mNetAccess( 0 ),
+  mCfgManager( 0 ),
+  mAccManager( 0 ),
+  mGrpManager( 0 ),
+  mArtManager( 0 ),
+  mFilManager( 0 ),
+  mFolManager( 0 ),
+  mMemManager( 0 )
+{
+}
+
+KNGlobals::~KNGlobals( )
+{
+  delete mNetAccess;
+  delete mCfgManager;
+  delete mAccManager;
+  delete mGrpManager;
+  delete mArtManager;
+  delete mFilManager;
+  delete mFolManager;
+  delete mMemManager;
+}
+
 KConfig* KNGlobals::config()
 {
   if (!c_onfig) {
