@@ -456,12 +456,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool cancelPastInvites( Incidence *incidence, const QString &path ) const
     {
       QString warnStr;
-      QString typeStr;
       QDateTime now = QDateTime::currentDateTime();
       QDate today = now.date();
+      Event * const event = dynamic_cast<Event *>( incidence );
+      Todo * const todo = dynamic_cast<Todo *>( incidence );
       if ( incidence->type() == "Event" ) {
-        Event *event = static_cast<Event *>( incidence );
-        typeStr = i18n( "invitation" );
+        Q_ASSERT( event );
         if ( !event->doesFloat() ) {
           if ( event->dtEnd() < now ) {
             warnStr = i18n( "\"%1\" occurred already." ).arg( event->summary() );
@@ -477,8 +477,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           }
         }
       } else if ( incidence->type() == "Todo" ) {
-        Todo *todo = static_cast<Todo *>( incidence );
-        typeStr = i18n( "task" );
+        Q_ASSERT( todo );
         if ( !todo->doesFloat() ) {
           if ( todo->hasDueDate() ) {
             if ( todo->dtDue() < now ) {
@@ -511,11 +510,19 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if ( !warnStr.isEmpty() ) {
         QString queryStr;
+        Q_ASSERT( event || todo );
         if ( path == "accept" ) {
-          queryStr = i18n( "Do you still want to accept the %1?" ).arg( typeStr );
+          if ( event ) {
+            queryStr = i18n( "Do you still want to accept the invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to accept the task?" );
+          }
         } else if ( path == "accept_conditionally" ) {
-          queryStr = i18n( "Do you still want to send conditional acceptance of the %1?" ).
-                     arg( typeStr );
+          if ( event ) {
+            queryStr = i18n( "Do you still want to send conditional acceptance of the invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to send conditional acceptance of the task?" );
+          }
         } else if ( path == "accept_counter" ) {
           queryStr = i18n( "Do you still want to accept the counter proposal?" );
         } else if ( path == "counter" ) {
@@ -527,13 +534,25 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         } else if ( path == "reply" ) {
           queryStr = i18n( "Do you still want to record this reponse in your calendar?" );
         } else if ( path == "delegate" ) {
-          queryStr = i18n( "Do you still want to delegate this %1?" ).arg( typeStr );
+          if ( event ) {
+            queryStr = i18n( "Do you still want to delegate this invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to delegate this task?" );
+          }
         } else if ( path == "forward" ) {
-          queryStr = i18n( "Do you still want to forward this %1?" ).arg( typeStr );
+          if ( event ) {
+            queryStr = i18n( "Do you still want to forward this invitation?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to forward this task?" );
+          }
         } else if ( path == "check_calendar" ) {
           queryStr = i18n( "Do you still want to check your calendar?" );
         } else if ( path == "record" ) {
-          queryStr = i18n( "Do you still want to record this %1 in your calendar?" ).arg( typeStr );
+          if ( event ) {
+            queryStr = i18n( "Do you still want to record this invitation in your calendar?" );
+          } else if ( todo ) {
+            queryStr = i18n( "Do you still want to record this task in your calendar?" );
+          }
         } else {
           queryStr = i18n( "%1?" ).arg( path );
         }
