@@ -42,7 +42,7 @@ Item {
   // ###: workaround until QDeclarativeMouseArea bug is fixed
   // the bug is related to replaying to one item the event instead of using
   // the scene for doing that.
-  MouseArea {
+  Item {
     anchors.fill: parent
     anchors.margins: 4
     id: itemSummary
