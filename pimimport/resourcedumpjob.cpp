@@ -24,7 +24,7 @@ void ResourceDumpJob::start()
   }
 
   // record resource data
-  KConfig config( QString( "%1/%2" ).arg( m_path.absolutePath() ).arg( "resurceinfo" ) );
+  KConfig config( QString( "%1/%2" ).arg( m_path.absolutePath() ).arg( "resourceinfo" ) );
   KConfigGroup configGroup( &config, "General" );
   configGroup.writeEntry( "type", m_instance.type().identifier() );
   configGroup.writeEntry( "name", m_instance.name() );
