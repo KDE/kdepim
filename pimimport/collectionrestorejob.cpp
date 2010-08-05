@@ -7,7 +7,12 @@
 using namespace Akonadi;
 
 CollectionRestoreJob::CollectionRestoreJob(const Akonadi::Collection &parentCollection, const QDir &path, QObject *parent) :
-    KJob( parent ), m_parent( parentCollection ), m_path( path ), m_subcollectionsNo( 0 )
+    KJob( parent ), m_parent( parentCollection ), m_path( path ), m_subcollectionsNo( 0 ), m_session( 0 )
+{
+}
+
+CollectionRestoreJob::CollectionRestoreJob(const Akonadi::Collection &parentCollection, const QDir &path, Session *session) :
+    KJob( session ), m_parent( parentCollection ), m_path( path ), m_subcollectionsNo( 0 ), m_session( session )
 {
 }
 
@@ -29,7 +34,12 @@ void CollectionRestoreJob::start()
   collection.setParentCollection( m_parent );
 
   // restore collection
-  CollectionCreateJob *job = new CollectionCreateJob( collection, this );
+  CollectionCreateJob *job;
+  if ( m_session )
+    job = new CollectionCreateJob( collection, m_session);
+  else
+    job = new CollectionCreateJob( collection, this);
+
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( createResult( KJob* ) ) );
   job->start();
 }
