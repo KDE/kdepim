@@ -54,6 +54,11 @@ public:
    */
   void load( const Akonadi::Item &item );
 
+  /**
+   * Sets the Collection combobox to @param collection.
+   */
+  void selectCollection( const Akonadi::Collection &collection );
+
 protected Q_SLOTS:
   virtual void slotButtonClicked( int button );
 

@@ -437,6 +437,8 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
 {
   Q_D( EventOrTodoDialog );
 
+  resize( QSize( 600, 500 ).expandedTo( minimumSizeHint() ) );
+
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
   setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
   setButtonToolTip( KDialog::Apply, i18nc( "@info:tooltip", "Save current changes" ) );
@@ -510,6 +512,12 @@ void EventOrTodoDialog::load( const Akonadi::Item &item )
         QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
     }
   }
+}
+
+void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection )
+{
+  Q_D( EventOrTodoDialog );
+  d->mCalSelector->setDefaultCollection( collection );
 }
 
 void EventOrTodoDialog::slotButtonClicked( int button )

@@ -110,7 +110,6 @@ int main( int argc, char **argv )
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
   EventOrTodoDialog dialog;
-  dialog.resize( QSize( 600, 500 ).expandedTo( dialog.minimumSizeHint() ) );
   dialog.load( item );
   dialog.show();
 
