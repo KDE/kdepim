@@ -25,6 +25,8 @@
 
 #include "incidenceeditors-ng_export.h"
 
+namespace IncidenceEditorsNG {
+
 class IncidenceDefaultsPrivate;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
@@ -88,5 +90,6 @@ private:
   Q_DISABLE_COPY( IncidenceDefaults )
 };
 
+}
 
 #endif // INCIDENCEDEFAULTS_H

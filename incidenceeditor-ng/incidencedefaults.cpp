@@ -29,6 +29,9 @@
 #include <KPIMUtils/Email>
 
 using namespace KCalCore;
+using namespace IncidenceEditorsNG;
+
+namespace IncidenceEditorsNG {
 
 struct IncidenceDefaultsPrivate
 {
@@ -43,6 +46,8 @@ struct IncidenceDefaultsPrivate
   void todoDefaults( const Todo::Ptr &todo ) const;
   void eventDefaults( const Event::Ptr &event ) const;
 };
+
+}
 
 Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
 {
