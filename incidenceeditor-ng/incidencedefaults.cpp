@@ -23,6 +23,7 @@
 #include <KDateTime>
 #include <KDebug>
 
+#include <KABC/Addressee>
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KLocalizedString>
@@ -36,10 +37,12 @@ namespace IncidenceEditorsNG {
 struct IncidenceDefaultsPrivate
 {
   /// Members
-  QStringList mEmails;
-  QString     mGroupWareDomain;
-  KDateTime   mStartDt;
-  KDateTime   mEndDt;
+  Attachment::List       mAttachments;
+  QVector<Attendee::Ptr> mAttendees;
+  QStringList            mEmails;
+  QString                mGroupWareDomain;
+  KDateTime              mStartDt;
+  KDateTime              mEndDt;
 
   /// Methods
   Person::Ptr organizerAsPerson() const;
@@ -143,6 +146,41 @@ IncidenceDefaults::~IncidenceDefaults()
   delete d_ptr;
 }
 
+void IncidenceDefaults::setAttachments( const QStringList &attachments,
+                                        const QStringList &attachmentMimetypes,
+                                        bool inlineAttachment )
+{
+  Q_D( IncidenceDefaults );
+  d->mAttachments.clear();
+
+  QStringList::ConstIterator it;
+  int i = 0;
+  for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it, ++i ) {
+    if ( !(*it).isEmpty() ) {
+      QString mimeType;
+      if ( attachmentMimetypes.count() > i )
+        mimeType = attachmentMimetypes[ i ];
+
+      Attachment::Ptr attachment( new Attachment( *it, mimeType ) );
+      attachment->setShowInline( inlineAttachment );
+      d->mAttachments << attachment;
+    }
+  }
+}
+
+void IncidenceDefaults::setAttendees( const QStringList &attendees )
+{
+  Q_D( IncidenceDefaults );
+  d->mAttendees.clear();
+  QStringList::ConstIterator it;
+  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    QString name, email;
+    KABC::Addressee::parseEmailAddress( *it, name, email );
+    d->mAttendees << Attendee::Ptr( new Attendee( name, email, true, Attendee::NeedsAction ) );
+  }
+}
+
+
 void IncidenceDefaults::setFullEmails( const QStringList &fullEmails )
 {
   Q_D( IncidenceDefaults );
@@ -192,6 +230,11 @@ void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
   const Person::Ptr organizerAsPerson = d->organizerAsPerson();
   incidence->setOrganizer( organizerAsPerson );
   incidence->addAttendee( d->organizerAsAttendee( organizerAsPerson ) );
+  foreach ( const Attendee::Ptr &attendee, d->mAttendees )
+    incidence->addAttendee( attendee );
+
+  foreach ( const Attachment::Ptr &attachment, d->mAttachments )
+    incidence->addAttachment( attachment );
 
   switch ( incidence->type() ) {
   case Incidence::TypeEvent:

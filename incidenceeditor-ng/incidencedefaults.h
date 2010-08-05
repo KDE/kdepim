@@ -36,6 +36,20 @@ public:
   ~IncidenceDefaults();
 
   /**
+    Sets the attachments that are added by default to incidences.
+   */
+  void setAttachments( const QStringList &attachments,
+                       const QStringList &attachmentMimetypes = QStringList(),
+                       bool inlineAttachment = false );
+
+  /**
+    Sets the attendees that are added by default to incidences.
+
+    @param attendees Expected to be of the form "name name <email>"
+   */
+  void setAttendees( const QStringList &attendees );
+
+  /**
     Sets the list of identities to be used for the user. The items in the list
     are expected to be of the form: "name [name] <email>".
 
