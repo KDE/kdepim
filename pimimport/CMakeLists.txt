@@ -10,6 +10,7 @@ set( pimimport_SRCS
   collectiondumpjob.cpp
   resourcedumpjob.cpp
   collectionrestorejob.cpp
+  resourcerestorejob.cpp
 )
 
 kde4_add_executable( pimimport ${pimimport_SRCS})
