@@ -34,7 +34,9 @@ using KABC::Addressee;
 #include <QtCore/QPointer>
 #include <QtCore/QString>
 
+#ifndef KABC_ADDRESSEE_METATYPE_DEFINED
 Q_DECLARE_METATYPE( KABC::Addressee )
+#endif
 
 using namespace MessageViewer;
 
