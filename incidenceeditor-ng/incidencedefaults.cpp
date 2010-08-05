@@ -38,6 +38,8 @@ struct IncidenceDefaultsPrivate
   /// Members
   QStringList mEmails;
   QString     mGroupWareDomain;
+  KDateTime   mStartDt;
+  KDateTime   mEndDt;
 
   /// Methods
   Person::Ptr organizerAsPerson() const;
@@ -112,9 +114,16 @@ Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee( const Person::Const
 
 void IncidenceDefaultsPrivate::eventDefaults( const Event::Ptr &event ) const
 {
-  const KDateTime currentDT = KDateTime::currentLocalDateTime();
-  event->setDtStart( currentDT );
-  event->setDtEnd( currentDT.addSecs( 3600 ) ); // Default event time: 1 hour
+  KDateTime startDT = KDateTime::currentLocalDateTime();
+  if ( mStartDt.isValid() )
+    startDT = mStartDt;
+
+  KDateTime endDT = startDT.addSecs( 3600 ); // Default event time: 1 hour
+  if ( mEndDt.isValid() )
+    endDT = mEndDt;
+
+  event->setDtStart( startDT );
+  event->setDtEnd( mEndDt );
   event->setTransparency( Event::Opaque );
 }
 
@@ -144,6 +153,18 @@ void IncidenceDefaults::setGroupWareDomain( const QString &domain )
 {
   Q_D( IncidenceDefaults );
   d->mGroupWareDomain = domain;
+}
+
+void IncidenceDefaults::setStartDateTime( const KDateTime &startDT )
+{
+  Q_D( IncidenceDefaults );
+  d->mStartDt = startDT;
+}
+
+void IncidenceDefaults::setEndDateTime( const KDateTime &endDT )
+{
+  Q_D( IncidenceDefaults );
+  d->mEndDt = endDT;
 }
 
 void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
