@@ -59,6 +59,11 @@ public:
    */
   void selectCollection( const Akonadi::Collection &collection );
 
+  /**
+    Returns the object that will receive all key events.
+   */
+  QObject *typeAheadReceiver() const;
+
 protected Q_SLOTS:
   virtual void slotButtonClicked( int button );
 

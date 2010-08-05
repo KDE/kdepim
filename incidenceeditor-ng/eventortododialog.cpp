@@ -522,6 +522,12 @@ void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection 
   d->mCalSelector->setDefaultCollection( collection );
 }
 
+QObject *EventOrTodoDialog::typeAheadReceiver() const
+{
+  Q_D( const EventOrTodoDialog );
+  return d->mUi->mSummaryEdit;
+}
+
 void EventOrTodoDialog::slotButtonClicked( int button )
 {
   Q_D( EventOrTodoDialog );
