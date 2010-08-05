@@ -38,7 +38,7 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
 {
   Q_OBJECT
 public:
-  EventOrTodoDialog();
+  EventOrTodoDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
   ~EventOrTodoDialog();
 
   /**

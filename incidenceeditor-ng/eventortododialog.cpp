@@ -431,8 +431,9 @@ void EventOrTodoDialogPrivate::reject( RejectReason /*reason*/, const QString &e
 
 /// EventOrTodoDialog
 
-EventOrTodoDialog::EventOrTodoDialog()
-  : d_ptr( new EventOrTodoDialogPrivate( this ) )
+EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
+  : KDialog( parent, flags )
+  , d_ptr( new EventOrTodoDialogPrivate( this ) )
 {
   Q_D( EventOrTodoDialog );
 
