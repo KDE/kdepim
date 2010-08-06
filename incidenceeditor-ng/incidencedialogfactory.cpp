@@ -24,15 +24,21 @@
 using namespace IncidenceEditorsNG;
 using namespace KCalCore;
 
-IncidenceDialog *IncidenceDialogFactory::create( KCalCore::Incidence::IncidenceType type )
+namespace IncidenceDialogFactory {
+
+IncidenceDialog *create( KCalCore::IncidenceBase::IncidenceType type,
+                         QWidget *parent,
+                         Qt::WFlags flags )
 {
   switch ( type ) {
-  case Incidence::TypeEvent: // Fall through
-  case Incidence::TypeTodo:
-    return new EventOrTodoDialog;
-//  case Incidence::TypeJournal: // TODO: Implement a IncidenceDialog based Journal dialog.
+  case IncidenceBase::TypeEvent: // Fall through
+  case IncidenceBase::TypeTodo:
+    return new EventOrTodoDialog( parent, flags );
+//  case IncidenceBase::TypeJournal: // TODO: Implement a IncidenceDialog based Journal dialog.
 //    return new JournalDialog;
   default:
     return 0;
   }
+}
+
 }
