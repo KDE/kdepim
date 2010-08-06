@@ -100,7 +100,7 @@ void KDeclarativeMainView::delayedInit()
   }
 
   d->mBnf = new Akonadi::BreadcrumbNavigationFactory(this);
-  d->mBnf->setModel(d->mEtm, this);
+  d->mBnf->createBreadcrumbContext(d->mEtm, this);
 
   if ( debugTiming ) {
     kWarning() << "BreadcrumbNavigation factory created" << t.elapsed() << &t;

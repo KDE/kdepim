@@ -6,7 +6,7 @@ include_directories(
 set(mobileui_SRCS
     listproxy.cpp
     breadcrumbnavigation.cpp
-    kbreadcrumbnavigationcomponentfactory.cpp
+    breadcrumbnavigationcontext.cpp
     akonadibreadcrumbnavigationfactory.cpp
     kresettingproxymodel.cpp
     declarativeakonadiitem.cpp

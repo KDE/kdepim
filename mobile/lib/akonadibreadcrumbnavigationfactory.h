@@ -22,11 +22,11 @@
 #ifndef AKONADI_BREADCRUMBNAVIGATIONFACTORY_H
 #define AKONADI_BREADCRUMBNAVIGATIONFACTORY_H
 
-#include "kbreadcrumbnavigationcomponentfactory.h"
+#include "breadcrumbnavigationcontext.h"
 
 namespace Akonadi
 {
-class BreadcrumbNavigationFactory : public KBreadcrumbNavigationComponentFactory
+class BreadcrumbNavigationFactory : public KBreadcrumbNavigationFactory
 {
   Q_OBJECT
 public:
