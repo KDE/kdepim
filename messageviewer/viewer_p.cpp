@@ -1501,11 +1501,15 @@ void ViewerPrivate::createActions()
   KToggleAction *raction = 0;
   QActionGroup *group = new QActionGroup( this );
 
-  QString themesPath ( KStandardDirs::locate("data","messageviewer/themes/") );
+  QStringList themesLocations ( KGlobal::dirs()->findDirs("data", "messageviewer/themes/") );
+  QDir systemThemes( themesLocations.at(0) );
+  QDir userThemes( themesLocations.at(1) );
 
-  QDir dirsPath( themesPath );
-  dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
-  themeDirNames = dirsPath.entryList();
+  foreach(const QString &themesPath, themesLocations) {
+    QDir dirsPath( themesPath );
+    dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
+    themeDirNames += dirsPath.entryList();
+  }  
 
   QSet<QString> themesSet;
 
@@ -1520,18 +1524,27 @@ void ViewerPrivate::createActions()
   mSelectThemeAction  = new KSelectAction( i18n("&Themes"), this );
   mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
   ac->addAction("view_themes", mSelectThemeAction );
-  connect(mSelectThemeAction,SIGNAL( triggered(QAction*)),
+  connect( mSelectThemeAction,SIGNAL( triggered(QAction*)),
           SLOT( slotSetTheme(QAction*) ));
+
+  QString absolutePath;
   
   foreach(const QString &dirName, themeDirs) {
-    KAction* themeAction = new KAction(this);
+    if ( !systemThemes.cd(dirName) ) {
+       absolutePath = userThemes.absolutePath();
+    } else {
+       absolutePath = systemThemes.absolutePath();
+    }
 
-    //Should write a method instead, just for testing.
-    QFile desktopFile(themesPath + dirName + "/theme-" + dirName +  ".desktop");
+    QFile desktopFile( absolutePath + dirName + "/theme-" + dirName +  ".desktop" );
+    //kDebug() << "Directory: " << dirName << " is coming from: " << absolutePath;
+
     if ( !desktopFile.exists() )
       continue;
 
     KDesktopFile* themeDesktop = new KDesktopFile( desktopFile.fileName() );
+    
+    KAction* themeAction = new KAction(this);
     themeAction->setData(dirName);
     themeAction->data().toString();
     themeAction->setText( themeDesktop->readName() );
