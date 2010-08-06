@@ -54,15 +54,15 @@ ActionMenuContainer {
   ActionList {
     category : "home"
     name : "Sources"
-    ActionListItem { name : "to_selection_screen" }
+    FakeAction { name : "to_selection_screen" }
   }
 
   ActionList {
     category : "account"
     name : "Account"
     ActionListItem { name : "edit_account" }
-    ActionListItem { name : "set_as_default" }
-    ActionListItem { name : "add_subfolder" }
+    FakeAction{ name : "set_as_default" }
+    FakeAction{ name : "add_subfolder" }
   }
   /*
   ActionList {
