@@ -126,6 +126,11 @@ void KDeclarativeMainView::delayedInit()
 
   context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
 
+  d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory(this);
+  d->mMultiBnf->createCheckableBreadcrumbContext( d->mEtm, this);
+
+  context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
+
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
   if ( d->mListProxy )

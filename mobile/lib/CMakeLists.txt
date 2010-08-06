@@ -54,6 +54,8 @@ install(FILES
   FakeAction.qml
   ActionList.qml
   ReorderList.qml
+  MultipleSelectionComponent.qml
+  MultipleSelectionScreen.qml
   ReorderListContainer.qml
   ActionListItem.qml
   ActionMenuContainer.qml

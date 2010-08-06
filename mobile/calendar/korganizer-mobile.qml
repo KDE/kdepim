@@ -156,7 +156,7 @@ KPIM.MainView {
     }
   }
 
-  FavoriteSelector {
+  KPIM.MultipleSelectionScreen {
     id : favoriteSelector
     anchors.fill : parent
     anchors.topMargin : 12
@@ -170,7 +170,6 @@ KPIM.MainView {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
     }
-    styleSheet: window.styleSheet
   }
 
   Item {
