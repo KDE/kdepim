@@ -93,6 +93,15 @@ namespace Kleo {
                         bool modal=true );
     KeySelectionDialog( const QString & title,
                         const QString & text,
+                        const QString & initialPattern,
+			const std::vector<GpgME::Key> & selectedKeys,
+                        unsigned int keyUsage=AllKeys,
+                        bool extendedSelection=false,
+			bool rememberChoice=false,
+                        QWidget * parent=0, const char * name=0,
+                        bool modal=true );
+    KeySelectionDialog( const QString & title,
+                        const QString & text,
 			const QString & initialPattern,
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
@@ -130,6 +139,9 @@ namespace Kleo {
   private slots:
     void slotRereadKeys();
     void slotStartCertificateManager( const QString &query = QString() );
+    void slotStartSearchForExternalCertificates() {
+      slotStartCertificateManager( mInitialQuery );
+    }
     void slotKeyListResult( const GpgME::KeyListResult & );
     void slotSelectionChanged();
     void slotCheckSelection() { slotCheckSelection( 0 ); }
@@ -170,6 +182,7 @@ namespace Kleo {
     QTimer * mStartSearchTimer;
     // cross-eventloop temporaries:
     QString mSearchText;
+    const QString mInitialQuery;
     Kleo::KeyListViewItem * mCurrentContextMenuItem;
     int mTruncated, mListJobCount, mSavedOffsetY;
   };

@@ -316,18 +316,41 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 
 Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      const QString & text,
+                                              const QString & initialQuery,
+					      const std::vector<GpgME::Key> & selectedKeys,
+					      unsigned int keyUsage,
+					      bool extendedSelection,
+					      bool rememberChoice,
+					      QWidget * parent, const char * name,
+					      bool modal )
+  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel|Help|User1, Ok ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
+    mRememberCB( 0 ),
+    mSelectedKeys( selectedKeys ),
+    mKeyUsage( keyUsage ),
+    mSearchText( initialQuery ),
+    mInitialQuery( initialQuery ),
+    mCurrentContextMenuItem( 0 )
+{
+  init( rememberChoice, extendedSelection, text, initialQuery );
+}
+
+Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
+					      const QString & text,
 					      const QString & initialQuery,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
 					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
-  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel|Help, Ok ),
+  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel|Help|User1, Ok ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
     mKeyUsage( keyUsage ),
     mSearchText( initialQuery ),
+    mInitialQuery( initialQuery ),
     mCurrentContextMenuItem( 0 )
 {
   init( rememberChoice, extendedSelection, text, initialQuery );
@@ -408,8 +431,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   setButtonText( KDialogBase::Default, i18n("&Reread Keys") );
   setButtonGuiItem( KDialogBase::Help, i18n("&Start Certificate Manager") );
+  setButtonGuiItem( KDialogBase::User1, i18n("Search for &External Certificates") );
   connect( this, SIGNAL(defaultClicked()), this, SLOT(slotRereadKeys()) );
   connect( this, SIGNAL(helpClicked()), this, SLOT(slotStartCertificateManager()) );
+  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotStartSearchForExternalCertificates()) );
 
   slotRereadKeys();
   mTopLayout->activate();
