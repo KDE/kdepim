@@ -112,6 +112,7 @@ void EventsApplet::updateEvents()
 void EventsApplet::updateUI()
 {
     setBusy( false );
+    kDebug() << "updateing ui";
 
     // Clear the current layout...
     for ( int i = 0; i < m_scrollerLayout->count(); i++ ) {
@@ -135,8 +136,8 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
             QVariantHash data = it.value().toHash();
             KDateTime sd = qVariantValue<KDateTime>( data[ "StartDate" ] );
 
-            m_incidences[ sd.toString() ] = new EventWidget( data );
-            kDebug() << sd;
+            m_incidences[ sd.toString() ] = new EventWidget( data, this );
+            // kDebug() << data;
         }
 
         // Wait for more data before updating UI. I like doing it
