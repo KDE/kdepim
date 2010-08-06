@@ -24,9 +24,8 @@
 using namespace IncidenceEditorsNG;
 using namespace KCalCore;
 
-namespace IncidenceDialogFactory {
 
-IncidenceDialog *create( KCalCore::IncidenceBase::IncidenceType type,
+IncidenceDialog *IncidenceDialogFactory::create( KCalCore::IncidenceBase::IncidenceType type,
                          QWidget *parent,
                          Qt::WFlags flags )
 {
@@ -39,6 +38,4 @@ IncidenceDialog *create( KCalCore::IncidenceBase::IncidenceType type,
   default:
     return 0;
   }
-}
-
 }
