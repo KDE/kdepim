@@ -392,11 +392,26 @@ KPIM.MainView {
           id : korganizerActions
           anchors.fill : parent
 
+          scriptActions : [
+            KPIM.ScriptActionItem {
+              name : "show_about_dialog"
+              script : {
+                actionPanelNew.collapse();
+                aboutDialog.visible = true
+              }
+            },
+            KPIM.ScriptActionItem {
+              name : "to_selection_screen"
+              script : {
+                actionPanelNew.collapse();
+                favoriteSelector.visible = true;
+                mainWorkView.visible = false;
+              }
+            }
+          ]
+
           onTriggered : {
             console.log("Triggered was: " + triggeredName)
-
-            if (triggeredName == "show_about_dialog")
-              aboutDialog.visible = true
           }
 
         }
