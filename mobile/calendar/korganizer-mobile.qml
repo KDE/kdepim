@@ -384,7 +384,7 @@ KPIM.MainView {
       titleText: KDE.i18n( "Context Actions" )
       handlePosition : 125
       handleHeight: 150
-      contentWidth: 240
+      contentWidth: parent.width - 20
       anchors.fill : parent
 
       content : [
@@ -394,6 +394,9 @@ KPIM.MainView {
 
           onTriggered : {
             console.log("Triggered was: " + triggeredName)
+
+            if (triggeredName == "show_about_dialog")
+              aboutDialog.visible = true
           }
 
         }
