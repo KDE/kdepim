@@ -233,8 +233,8 @@ namespace {
     class ArchiveFileNameRequester : public Kleo::FileNameRequester {
         Q_OBJECT
     public:
-        explicit ArchiveFileNameRequester( QWidget * parent=0 )
-            : FileNameRequester( QDir::Files, parent ), m_archiveDefinition()
+        explicit ArchiveFileNameRequester( Protocol protocol, QWidget * parent=0 )
+            : FileNameRequester( QDir::Files, parent ), m_protocol( protocol ), m_archiveDefinition()
         {
             setExistingOnly( false );
         }
@@ -243,21 +243,25 @@ namespace {
         void setArchiveDefinition( const boost::shared_ptr<const Kleo::ArchiveDefinition> & ad ) {
             if ( ad == m_archiveDefinition )
                 return;
+            const QString oldExt = m_archiveDefinition ? m_archiveDefinition->extensions( m_protocol ).front() : QString() ;
+            const QString newExt = ad                  ? ad->extensions( m_protocol ).front()                  : QString() ;
             QString fn = fileName();
-            if ( m_archiveDefinition && fn.endsWith( m_archiveDefinition->extensions().front() ) )
-                fn.chop( m_archiveDefinition->extensions().front().size() + 1 );
+            if ( fn.endsWith( oldExt ) )
+                fn.chop( oldExt.size() + 1 );
             m_archiveDefinition = ad;
             if ( ad )
-                fn += '.' + ad->extensions().front();
+                fn += '.' + newExt;
             FileNameRequester::setFileName( fn );
         }
         void setFileName( const QString & fn ) {
-            if ( m_archiveDefinition && !fn.endsWith( m_archiveDefinition->extensions().front() ) )
-                FileNameRequester::setFileName( fn + '.' + m_archiveDefinition->extensions().front() );
+            const QString ext = m_archiveDefinition ? m_archiveDefinition->extensions( m_protocol ).front() : QString() ;
+            if ( m_archiveDefinition && !fn.endsWith( ext ) )
+                FileNameRequester::setFileName( fn + '.' + ext );
             else
                 FileNameRequester::setFileName( fn );
         }
     private:
+        const Protocol m_protocol;
         shared_ptr<const ArchiveDefinition> m_archiveDefinition;
     };
 
@@ -277,8 +281,8 @@ namespace {
             return field("archive").toBool();
         }
 
-        QString archiveName() const {
-            return field("archive-name").toString();
+        QString archiveName( Protocol p ) const {
+            return field( p == OpenPGP ? "archive-name-pgp" : "archive-name-cms" ).toString();
         }
 
         bool isRemoveUnencryptedFilesEnabled() const {
@@ -344,8 +348,10 @@ namespace {
               m_objectsLabel( this ),
               m_archiveCB( i18n("Archive files with:"), this ),
               m_archive( this ),
-              m_archiveNameLB( i18n("Archive name:"), this ),
-              m_archiveName( this ),
+              m_archiveNamePgpLB( i18n("Archive name (OpenPGP):"), this ),
+              m_archiveNamePgp( OpenPGP, this ),
+              m_archiveNameCmsLB( i18n("Archive name (S/MIME):"), this ),
+              m_archiveNameCms( CMS, this ),
               m_signencrypt( i18n("Sign and Encrypt (OpenPGP only)"), this ),
               m_encrypt( i18n("Encrypt"), this ),
               m_sign( i18n("Sign"), this ),
@@ -367,16 +373,20 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_sign );
             KDAB_SET_OBJECT_NAME( m_archiveCB );
             KDAB_SET_OBJECT_NAME( m_archive );
-            KDAB_SET_OBJECT_NAME( m_archiveNameLB );
-            KDAB_SET_OBJECT_NAME( m_archiveName );
+            KDAB_SET_OBJECT_NAME( m_archiveNamePgpLB );
+            KDAB_SET_OBJECT_NAME( m_archiveNamePgp );
+            KDAB_SET_OBJECT_NAME( m_archiveNameCmsLB );
+            KDAB_SET_OBJECT_NAME( m_archiveNameCms );
             KDAB_SET_OBJECT_NAME( m_armor );
             KDAB_SET_OBJECT_NAME( m_removeSource );
 
             QGridLayout * glay = new QGridLayout;
-            glay->addWidget( &m_archiveCB,     0, 0 );
-            glay->addWidget( &m_archive,       0, 1 );
-            glay->addWidget( &m_archiveNameLB, 1, 0 );
-            glay->addWidget( &m_archiveName,   1, 1 );
+            glay->addWidget( &m_archiveCB,        0, 0 );
+            glay->addWidget( &m_archive,          0, 1 );
+            glay->addWidget( &m_archiveNamePgpLB, 1, 0 );
+            glay->addWidget( &m_archiveNamePgp,   1, 1 );
+            glay->addWidget( &m_archiveNameCmsLB, 2, 0 );
+            glay->addWidget( &m_archiveNameCms,   2, 1 );
 
             QVBoxLayout * vlay = new QVBoxLayout( this );
             vlay->addWidget( &m_objectsLabel );
@@ -388,13 +398,17 @@ namespace {
             vlay->addWidget( &m_armor );
             vlay->addWidget( &m_removeSource );
 
-            m_archiveNameLB.setAlignment( Qt::AlignRight );
-            m_archiveNameLB.setBuddy( &m_archiveName );
+            m_archiveNamePgpLB.setAlignment( Qt::AlignRight );
+            m_archiveNamePgpLB.setBuddy( &m_archiveNamePgp );
+            m_archiveNameCmsLB.setAlignment( Qt::AlignRight );
+            m_archiveNameCmsLB.setBuddy( &m_archiveNameCms );
 
             m_armor.setChecked( false );
             m_archive.setEnabled( false );
-            m_archiveNameLB.setEnabled( false );
-            m_archiveName.setEnabled( false );
+            m_archiveNamePgpLB.setEnabled( false );
+            m_archiveNamePgp.setEnabled( false );
+            m_archiveNameCmsLB.setEnabled( false );
+            m_archiveNameCms.setEnabled( false );
 
             Q_FOREACH( const shared_ptr<ArchiveDefinition> & ad, m_archiveDefinitions )
                 m_archive.addItem( ad->label(), qVariantFromValue( ad ) );
@@ -413,7 +427,8 @@ namespace {
 
             registerField( "archive", &m_archiveCB );
             registerField( "archive-id", &m_archive );
-            registerField( "archive-name", &m_archiveName, "fileName" );
+            registerField( "archive-name-pgp", &m_archiveNamePgp, "fileName" );
+            registerField( "archive-name-cms", &m_archiveNameCms, "fileName" );
 
             registerField( "signing-user-mutable", this, "signingUserMutable" );
             registerField( "encryption-user-mutable", this, "encryptionUserMutable" );
@@ -426,28 +441,36 @@ namespace {
             connect( &m_encrypt,     SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
             connect( &m_sign,        SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
             connect( &m_archiveCB,   SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
-            connect( &m_archiveName, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()) );
+            connect( &m_archiveNamePgp, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()) );
+            connect( &m_archiveNameCms, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()) );
 
             connect( &m_sign, SIGNAL(toggled(bool)),
                      &m_removeSource, SLOT(setDisabled(bool)) );
             connect( &m_archiveCB, SIGNAL(toggled(bool)),
                      &m_archive, SLOT(setEnabled(bool)) );
             connect( &m_archiveCB, SIGNAL(toggled(bool)),
-                     &m_archiveNameLB, SLOT(setEnabled(bool)) );
+                     &m_archiveNamePgpLB, SLOT(setEnabled(bool)) );
             connect( &m_archiveCB, SIGNAL(toggled(bool)),
-                     &m_archiveName, SLOT(setEnabled(bool)) );
+                     &m_archiveNamePgp, SLOT(setEnabled(bool)) );
+            connect( &m_archiveCB, SIGNAL(toggled(bool)),
+                     &m_archiveNameCmsLB, SLOT(setEnabled(bool)) );
+            connect( &m_archiveCB, SIGNAL(toggled(bool)),
+                     &m_archiveNameCms, SLOT(setEnabled(bool)) );
 
-            m_archiveName.setArchiveDefinition( archiveDefinition() );
+            const shared_ptr<ArchiveDefinition> ad = archiveDefinition();
+            m_archiveNamePgp.setArchiveDefinition( ad );
+            m_archiveNameCms.setArchiveDefinition( ad );
         }
 
         QStringList files() const { return m_objectsLabel.files(); }
         void setFiles( const QStringList & files ) {
             m_objectsLabel.setFiles( files );
-            if ( files.size() == 1 )
-                m_archiveName.setFileName( files.front() );
-            else
-                m_archiveName.setFileName( QDir( heuristicBaseDirectory( files ) )
-                                           .absoluteFilePath( i18nc("base name of an archive file, e.g. archive.zip or archive.tar.gz", "archive") ) );
+            const QString archiveName =
+                files.size() == 1 ? files.front() :
+                /* else */          QDir( heuristicBaseDirectory( files ) )
+                                           .absoluteFilePath( i18nc("base name of an archive file, e.g. archive.zip or archive.tar.gz", "archive") );
+            m_archiveNamePgp.setFileName( archiveName );
+            m_archiveNameCms.setFileName( archiveName );
         }
 
         bool isSigningPreset() const { return m_signingPreset; }
@@ -491,7 +514,7 @@ namespace {
         }
 
         /* reimp */ bool isComplete() const {
-            return ( !isArchiveRequested() || !archiveName().isEmpty() )
+            return ( !isArchiveRequested() || !archiveName( OpenPGP ).isEmpty() && !archiveName( CMS ).isEmpty() ) // ### make more permissive
                 && ( isSigningSelected() || isEncryptionSelected() ) ;
         }
 
@@ -536,7 +559,9 @@ namespace {
 
     private Q_SLOTS:
         void slotArchiveDefinitionChanged() {
-            m_archiveName.setArchiveDefinition( archiveDefinition() );
+            const shared_ptr<ArchiveDefinition> ad = archiveDefinition();
+            m_archiveNamePgp.setArchiveDefinition( ad );
+            m_archiveNameCms.setArchiveDefinition( ad );
         }
 
     private:
@@ -569,8 +594,10 @@ namespace {
         ObjectsLabel m_objectsLabel;
         QCheckBox m_archiveCB;
         QComboBox m_archive;
-        QLabel m_archiveNameLB;
-        ArchiveFileNameRequester m_archiveName;
+        QLabel m_archiveNamePgpLB;
+        ArchiveFileNameRequester m_archiveNamePgp;
+        QLabel m_archiveNameCmsLB;
+        ArchiveFileNameRequester m_archiveNameCms;
         QRadioButton m_signencrypt, m_encrypt, m_sign;
         QCheckBox m_armor, m_removeSource;
         bool m_signingUserMutable, m_encryptionUserMutable, m_archiveUserMutable;
@@ -1067,8 +1094,8 @@ shared_ptr<ArchiveDefinition> NewSignEncryptFilesWizard::selectedArchiveDefiniti
     return d->operationPage->archiveDefinition();
 }
 
-QString NewSignEncryptFilesWizard::archiveFileName() const {
-    return field("archive-name").toString();
+QString NewSignEncryptFilesWizard::archiveFileName( Protocol p ) const {
+    return d->/*any page*/operationPage->archiveName( p );
 }
 
 const std::vector<Key> & NewSignEncryptFilesWizard::resolvedRecipients() const {

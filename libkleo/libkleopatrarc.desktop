@@ -1,16 +1,21 @@
 [Archive Definition #0]
-extensions=tar
+extensions-openpgp=tar
+extensions-cms=tar.gz,tgz
 id=tar
 Name=TAR (PGP®-compatible)
 Name[de]=TAR (PGP®-kompatibel)
-pack-command=0|tar cf - -T- --null
+pack-command-openpgp=0|tar cf - -T- --null
+pack-command-cms=0|tar cfz - -T- --null
+unpack-command-openpgp=tar xf -
+unpack-command-cms=tar xfz -
 
-[Archive Definition #1]
-extensions=zip
-id=zip
-Name=ZIP
-Name[de]=ZIP
-pack-command=zip  -r - %f
+;[Archive Definition #1]
+;extensions=zip
+;id=zip
+;Name=ZIP
+;Name[de]=ZIP
+;pack-command=zip  -r - %f
+;unpack-command=<not supported>
 
 [Archive Definition #3]
 extensions=tar.bz2,tbz2
@@ -18,6 +23,7 @@ id=bzip2
 Name=TAR (with bzip2 compression)
 Name[de]=TAR (mit bzip2-Kompression)
 pack-command=0|tar cfj - -T- --null
+unpack-command=tar xfj -
 
 [Checksum Definition #1]
 file-patterns=sha1sum.txt

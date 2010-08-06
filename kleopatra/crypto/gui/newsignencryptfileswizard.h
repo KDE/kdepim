@@ -94,7 +94,7 @@ namespace Gui {
 
         bool isCreateArchiveSelected() const;
         boost::shared_ptr<ArchiveDefinition> selectedArchiveDefinition() const;
-        QString archiveFileName() const;
+        QString archiveFileName( GpgME::Protocol proto ) const;
 
         bool isSigningSelected() const;
         bool isEncryptionSelected() const;
