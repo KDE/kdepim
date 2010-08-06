@@ -46,6 +46,8 @@ KNGlobals::KNGlobals() :
 
 KNGlobals::~KNGlobals( )
 {
+#if 0
+// hmm.. something in here is causing an 'impossible' crash. let's ignore the cleanup then.
   delete mNetAccess;
   delete mCfgManager;
   delete mAccManager;
@@ -54,6 +56,7 @@ KNGlobals::~KNGlobals( )
   delete mFilManager;
   delete mFolManager;
   delete mMemManager;
+#endif
 }
 
 KConfig* KNGlobals::config()
