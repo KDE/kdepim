@@ -43,5 +43,12 @@ KPIM.ActionList {
   KPIM.FakeAction {
     name : "configure"
   }
+  QML.Component.onCompleted :
+  {
+    for (var i = 0; i < children.length; ++i )
+    {
+      children[i].triggered.connect(actions, triggered);
+    }
+  }
 }
 
