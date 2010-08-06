@@ -194,9 +194,8 @@ KPIM.MainView {
       anchors.bottom : selectButton.top
       anchors.left: parent.left
       anchors.right: parent.right
-      breadcrumbItemsModel : breadcrumbCollectionsModel
-      selectedItemModel : selectedCollectionModel
-      childItemsModel : childCollectionsModel
+
+      breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
       // It's not possible to get the number of items in a model. We have to
       // put the model in a view and count the items in the view.

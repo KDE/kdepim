@@ -59,6 +59,7 @@
 #include <QInputDialog>
 
 #include "kresettingproxymodel.h"
+#include "qmllistselectionmodel.h"
 
 using namespace Akonadi;
 
@@ -110,6 +111,8 @@ void KDeclarativeMainView::delayedInit()
   d->mItemFilter->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   d->mItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
+  // TODO: Figure out what the listProxy is and how to get rid of it.
+
   if ( d->mListProxy ) {
     d->mListProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
     d->mListProxy->setSourceModel( d->mItemFilter );
@@ -119,110 +122,29 @@ void KDeclarativeMainView::delayedInit()
     kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
   }
 
-  // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
-  engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
-  engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectedItemModel() ) ) );
+  QDeclarativeContext *context = engine()->rootContext();
 
-  // Temporary workaround for QML model bugs.
-  KResettingProxyModel *resettingModel = new KResettingProxyModel( this );
-  resettingModel->setSourceModel( d->mBnf->breadcrumbItemModel() );
+  context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
 
-  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( resettingModel ) ) );
-  engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->childItemModel() ) ) );
-  engine()->rootContext()->setContextProperty( "folderSelectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectionModel() ) ) );
+  context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
+
   if ( d->mListProxy )
-    engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
-  engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
+    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
 
-
-  if ( debugTiming ) {
-    kWarning() << "Core QML context done" << t.elapsed() << &t;
-  }
-
-  Akonadi::EntityMimeTypeFilterModel *allFoldersModel = new Akonadi::EntityMimeTypeFilterModel( this );
-  allFoldersModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  allFoldersModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  allFoldersModel->setSourceModel( d->mEtm );
-
-  d->mFavSelection = new QItemSelectionModel( d->mBnf->unfilteredChildItemModel(), this );
-
-  // Need to proxy the selection because the favSelection operates on collectionFilter, but the
-  // KSelectionProxyModel *favCollectionList and favSelectedChildren below operates on mEtm.
-  KLinkItemSelectionModel *selectionProxy = new KLinkItemSelectionModel( d->mEtm, d->mFavSelection, this );
-
-  // Show the list of currently selected items.
-  KSelectionProxyModel *favSelectedChildren = new KSelectionProxyModel(selectionProxy, this);
-  favSelectedChildren->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-  favSelectedChildren->setSourceModel( d->mEtm );
+  context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   // A list of available favorites
   QAbstractItemModel *favsList = d->getFavoritesListModel();
 
-  engine()->rootContext()->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
-  engine()->rootContext()->setContextProperty( "allFoldersModel", QVariant::fromValue( static_cast<QObject*>( allFoldersModel ) ) );
+  context->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
 
   d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
-
-
-  if ( debugTiming ) {
-    kWarning() << "Favorites QML context done" << t.elapsed() << &t;
-  }
 
   Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
   standardActionManager->setCollectionSelectionModel( regularSelectionModel() );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
   standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
-
-#if 0
-  QTreeView *etmView = new QTreeView;
-  etmView->setModel( d->mEtm );
-  etmView->show();
-  etmView->setWindowTitle( "ETM" );
-
-  // Show the list of currently selected items.
-  Akonadi::SelectionProxyModel *favCollectionList = new Akonadi::SelectionProxyModel( selectionProxy, this );
-  favCollectionList->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  favCollectionList->setSourceModel( d->mEtm );
-
-  // Make it possible to uncheck currently selected items in the list
-  CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel( this );
-  currentSelectionCheckableProxyModel->setSourceModel( favCollectionList );
-  KLinkItemSelectionModel *proxySelector = new KLinkItemSelectionModel( favCollectionList, d->mFavSelection );
-  currentSelectionCheckableProxyModel->setSelectionModel( proxySelector );
-
-  QListView *currentlyCheckedView = new QListView;
-  currentlyCheckedView->setModel( currentSelectionCheckableProxyModel );
-  currentlyCheckedView->show();
-  currentlyCheckedView->setWindowTitle( "Currently checked collections" );
-
-  QColumnView *columnView = new QColumnView;
-  columnView->setModel( favoriteSelectionModel );
-  columnView->show();
-  columnView->setWindowTitle( "All collections. Checkable" );
-
-  Akonadi::EntityMimeTypeFilterModel *favItemFilter = new Akonadi::EntityMimeTypeFilterModel( this );
-  favItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-  favItemFilter->setSourceModel( favSelectedChildren );
-
-  d->mFavSelectedChildItems = favItemFilter;
-
-  QListView *childItemsView = new QListView;
-  childItemsView->setModel( favItemFilter );
-  childItemsView->show();
-  childItemsView->setWindowTitle( "List of items in checked collections" );
-
-  QListView *favoritesView = new QListView;
-  favoritesView->setModel( favsList );
-  favoritesView->show();
-  favoritesView->setWindowTitle( "Available Favorites" );
-
-  QListView *itemListView = new QListView;
-  itemListView->setModel( listProxy ? static_cast<QAbstractItemModel *>( listProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ) );
-  itemListView->setSelectionModel( d->mItemSelectionModel );
-  itemListView->show();
-  itemListView->setWindowTitle( "ItemList view" );
-#endif
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
@@ -292,16 +214,6 @@ void KDeclarativeMainView::addMimeType( const QString &mimeType )
 QStringList KDeclarativeMainView::mimeTypes() const
 {
   return d->mChangeRecorder->mimeTypesMonitored();
-}
-
-void KDeclarativeMainView::setSelectedChildCollectionRow( int row )
-{
-  d->mBnf->selectChild( row );
-}
-
-void KDeclarativeMainView::setSelectedBreadcrumbCollectionRow( int row )
-{
-  d->mBnf->selectBreadcrumb( row );
 }
 
 void KDeclarativeMainView::setListSelectedRow( int row )

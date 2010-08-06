@@ -88,8 +88,6 @@ public:
 
 public slots:
   void setSelectedAccount( int row );
-  void setSelectedChildCollectionRow( int row );
-  void setSelectedBreadcrumbCollectionRow( int row );
   int selectedCollectionRow();
 
   // FIXME: make non-virtual again once mark-as-read logic is in messageviewer
