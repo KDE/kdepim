@@ -71,6 +71,12 @@ public:
   void setGroupWareDomain( const QString &domain );
 
   /**
+    Sets the incidence related to the incidence for which to set the defaults. For
+    example the parent todo of a new sub todo.
+   */
+  void setRelatedIncidence( const KCalCore::Incidence::Ptr &incidence );
+
+  /**
     Set the start date/time to use for passed incidences. This defaults to the
     current start date/time. The main purpose of this method is supporting
     defaults for new incidences that where created with a given time slot.

@@ -41,6 +41,7 @@ struct IncidenceDefaultsPrivate
   QVector<Attendee::Ptr> mAttendees;
   QStringList            mEmails;
   QString                mGroupWareDomain;
+  Incidence::Ptr         mRelatedIncidence;
   KDateTime              mStartDt;
   KDateTime              mEndDt;
 
@@ -132,12 +133,14 @@ void IncidenceDefaultsPrivate::eventDefaults( const Event::Ptr &event ) const
 
 void IncidenceDefaultsPrivate::todoDefaults( const Todo::Ptr &todo ) const
 {
-  Todo::Ptr relatedTodo; // = mRelatedIncidence.dynamicCast<Todo>();
+  Todo::Ptr relatedTodo = mRelatedIncidence.dynamicCast<Todo>();
   if ( relatedTodo )
     todo->setCategories( relatedTodo->categories() );
 
   if ( mEndDt.isValid() )
     todo->setDtDue( mEndDt );
+  else if ( relatedTodo && relatedTodo->hasDueDate() )
+    todo->setDtDue( relatedTodo->dtDue() );
   else
     todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
 
@@ -207,6 +210,12 @@ void IncidenceDefaults::setGroupWareDomain( const QString &domain )
 {
   Q_D( IncidenceDefaults );
   d->mGroupWareDomain = domain;
+}
+
+void IncidenceDefaults::setRelatedIncidence( const Incidence::Ptr &incidence )
+{
+  Q_D( IncidenceDefaults );
+  d->mRelatedIncidence = incidence;
 }
 
 void IncidenceDefaults::setStartDateTime( const KDateTime &startDT )
