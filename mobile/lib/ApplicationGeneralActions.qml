@@ -43,6 +43,10 @@ KPIM.ActionList {
   KPIM.FakeAction {
     name : "configure"
   }
+  KPIM.FakeAction {
+    name : "show_about_dialog"
+  }
+
   QML.Component.onCompleted :
   {
     for (var i = 0; i < children.length; ++i )
