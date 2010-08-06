@@ -201,11 +201,6 @@ QString KDeclarativeMainView::pathToItem( Entity::Id id )
   return path;
 }
 
-bool KDeclarativeMainView::childCollectionHasChildren( int row )
-{
-  return d->mBnf->childCollectionHasChildren( row );
-}
-
 ItemFetchScope& KDeclarativeMainView::itemFetchScope()
 {
   return d->mChangeRecorder->itemFetchScope();
