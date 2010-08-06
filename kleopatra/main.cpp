@@ -40,6 +40,7 @@
 #include <commands/selftestcommand.h>
 
 #include <utils/gnupg-helper.h>
+#include <utils/archivedefinition.h>
 
 #ifdef HAVE_USABLE_ASSUAN
 # include <uiserver/uiserver.h>
@@ -206,7 +207,9 @@ int main( int argc, char** argv )
 
   SplashScreen splash;
 
-  Kleo::ChecksumDefinition::setInstallPath( Kleo::gpg4winInstallPath() );
+  const QString installPath = Kleo::gpg4winInstallPath();
+  Kleo::ChecksumDefinition::setInstallPath( installPath );
+  Kleo::ArchiveDefinition::setInstallPath( installPath );
 
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
