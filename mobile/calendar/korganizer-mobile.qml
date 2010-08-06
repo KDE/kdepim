@@ -499,20 +499,6 @@ KPIM.MainView {
   }
 
   Connections {
-    target: collectionView
-    onChildCollectionSelected : {
-      application.setSelectedChildCollectionRow( row );
-    }
-  }
-
-  Connections {
-    target: collectionView
-    onBreadcrumbCollectionSelected : {
-      application.setSelectedBreadcrumbCollectionRow( row );
-    }
-  }
-
-  Connections {
     target: eventView
     onIncidenceRemoved : {
       backToAgendaView();

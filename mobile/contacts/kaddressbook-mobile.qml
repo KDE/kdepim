@@ -146,12 +146,12 @@ KPIM.MainView {
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
 
+      breadcrumbComponentFactory : _breadcrumbNavigationFactory
+
       multipleSelectionText : KDE.i18n("You have selected \n%1 addressbooks\nfrom %2 accounts\n%3 contacts", collectionView.numSelected,
                                                                                                         application.numSelectedAccounts,
                                                                                                         contactList.count)
-      breadcrumbItemsModel : breadcrumbCollectionsModel
-      selectedItemModel : selectedCollectionModel
-      childItemsModel : childCollectionsModel
+
     }
     KPIM.Button2 {
       id : selectButton
@@ -303,11 +303,11 @@ KPIM.MainView {
       }
     }
   }
-  Akonadi.FavoriteSelector {
+
+  KPIM.MultipleSelectionScreen {
     id : favoriteSelector
     anchors.fill : parent
     visible : false
-    styleSheet: window.styleSheet
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
@@ -408,16 +408,6 @@ KPIM.MainView {
       application.setSelectedAccount(row);
       // TODO: Figure out how to expand the slider programatically.
     }
-  }
-
-  QML.Connections {
-    target: collectionView
-    onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
-  }
-
-  QML.Connections {
-    target: collectionView
-    onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
 
   QML.Connections {

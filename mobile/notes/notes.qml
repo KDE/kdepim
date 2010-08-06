@@ -98,13 +98,12 @@ KPIM.MainView {
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
 
+      breadcrumbComponentFactory : _breadcrumbNavigationFactory
+
       multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 notes",
                                        collectionView.numSelected,
                                        application.numSelectedAccounts,
                                        headerList.count)
-      breadcrumbItemsModel : breadcrumbCollectionsModel
-      selectedItemModel : selectedCollectionModel
-      childItemsModel : childCollectionsModel
     }
     KPIM.Button2 {
       id : selectButton
@@ -379,14 +378,4 @@ KPIM.MainView {
       application.loadFavorite(favName);
     }
   }
-
-   QML.Connections {
-     target: collectionView
-     onChildCollectionSelected : { application.setSelectedChildCollectionRow( row ); }
-   }
-
-   QML.Connections {
-     target: collectionView
-     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
-   }
 }
