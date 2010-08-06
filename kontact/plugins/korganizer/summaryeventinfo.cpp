@@ -26,21 +26,18 @@
 
 #include "summaryeventinfo.h"
 
-#include <kcalcore/calendar.h>
-#include <kcalcore/event.h>
-
-#include <kcalutils/incidenceformatter.h>
-
+#include <KCal/Calendar>
+#include <KCal/IncidenceFormatter>
+#include <KCal/Event>
 #include <kglobal.h>
 #include <klocale.h>
+
+using namespace KCal;
 
 #include <KSystemTimeZones>
 
 #include <QDate>
 #include <QStringList>
-
-using namespace KCalCore;
-using namespace KCalUtils;
 
 bool SummaryEventInfo::mShowBirthdays = true;
 bool SummaryEventInfo::mShowAnniversaries = true;
@@ -52,7 +49,7 @@ void SummaryEventInfo::setShowSpecialEvents( bool showBirthdays,
   mShowAnniversaries = showAnniversaries;
 }
 
-bool SummaryEventInfo::skip( const KCalCore::Event::Ptr &event )
+bool SummaryEventInfo::skip( KCal::Event *event )
 {
   //simply check categories because the birthdays resource always adds
   //the appropriate category to the event.
@@ -105,12 +102,12 @@ SummaryEventInfo::SummaryEventInfo()
 }
 
 SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
-                                                        const KCalCore::Calendar::Ptr &calendar )
+                                                        KCal::Calendar *calendar )
 {
-  KCalCore::Event::Ptr ev;
+  KCal::Event *ev;
 
-  KCalCore::Event::List events = calendar->events( date, calendar->timeSpec() );
-  KCalCore::Event::List::ConstIterator it = events.constBegin();
+  KCal::Event::List events = calendar->events( date, calendar->timeSpec() );
+  KCal::Event::List::ConstIterator it = events.constBegin();
 
   KDateTime qdt;
   KDateTime::Spec spec = KSystemTimeZones::local();
@@ -118,13 +115,17 @@ SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
   QDate currentDate = currentDateTime.date();
 
   // sort the events for this date by summary
-  events = KCalCore::Calendar::sortEvents( events,
-                                           KCalCore::EventSortSummary,
-                                           KCalCore::SortDirectionAscending );
+  events = KCal::Calendar::sortEventsForDate( &events,
+                                              date,
+                                              spec,
+                                              KCal::EventSortSummary,
+                                              KCal::SortDirectionAscending );
   // sort the events for this date by start date
-  events = KCalCore::Calendar::sortEvents( events,
-                                           KCalCore::EventSortStartDate,
-                                           KCalCore::SortDirectionAscending );
+  events = KCal::Calendar::sortEventsForDate( &events,
+                                              date,
+                                              spec,
+                                              KCal::EventSortStartDate,
+                                              KCal::SortDirectionAscending );
 
   List eventInfoList;
 
@@ -257,8 +258,7 @@ SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
     }
     summaryEvent->summaryText = str;
     summaryEvent->summaryUrl = ev->uid();
-    QString tipText( KCalUtils::IncidenceFormatter::toolTipStr(
-                       KCalUtils::IncidenceFormatter::resourceString( calendar, ev ), ev, date, true, spec ) );
+    QString tipText( KCal::IncidenceFormatter::toolTipStr( calendar, ev, date, true, spec ) );
     if ( !tipText.isEmpty() ) {
       summaryEvent->summaryTooltip = tipText;
     }

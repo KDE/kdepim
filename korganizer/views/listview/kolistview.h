@@ -30,12 +30,12 @@
 
 #include <incidenceeditors/customlistviewitem.h>
 
-#include <kcalcore/incidence.h>
+#include <KCal/Incidence>
 
 #include <QHash>
 #include <QList>
 
-using namespace KCalCore;
+using namespace KCal;
 
 typedef IncidenceEditors::CustomListViewItem<Akonadi::Item::Id> KOListViewItem;
 
@@ -79,14 +79,10 @@ class KOListView : public KOEventView
 
     void showDates( bool show );
 
-    // Shows all incidences of the calendar
-    void showAll();
-
     void readSettings( KConfig *config );
     void writeSettings( KConfig *config );
 
     void clear();
-    QSize sizeHint() const;
     virtual KOrg::CalPrinterBase::PrintType printType();
 
   public slots:
@@ -113,7 +109,7 @@ class KOListView : public KOEventView
 
   private:
     KOListViewItem *getItemForIncidence( const Akonadi::Item & );
-    KCalCore::Incidence::Ptr incidenceForId( const Akonadi::Item::Id &id ) const;
+    KCal::Incidence::Ptr incidenceForId( const Akonadi::Item::Id &id ) const;
 
   private:
     class ListItemVisitor;

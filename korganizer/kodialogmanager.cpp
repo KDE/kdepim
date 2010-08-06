@@ -37,14 +37,11 @@
 
 #include <Akonadi/Item>
 
-#include <kcalcore/visitor.h>
-#include <kcalcore/incidencebase.h>
+#include <KCal/IncidenceBase>
 
+#include <incidenceeditors/eventeditor.h>
 #include <incidenceeditors/journaleditor.h>
 #include <incidenceeditors/todoeditor.h>
-
-#include <incidenceeditors/incidenceeditor-ng/incidencedialog.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencedialogfactory.h>
 
 #include <akonadi/kcal/utils.h>
 
@@ -55,20 +52,20 @@
 using namespace Akonadi;
 using namespace KOrg;
 using namespace KPIM;
-using namespace KCalCore;
+using namespace KCal;
 using namespace IncidenceEditors;
 
 // FIXME: Handle KOEventViewerDialogs in dialog manager.
 
-class KODialogManager::DialogManagerVisitor : public Visitor
+class KODialogManager::DialogManagerVisitor : public IncidenceBase::Visitor
 {
   public:
     DialogManagerVisitor() : mDialogManager( 0 ) {}
 
-    bool act( IncidenceBase::Ptr incidence, KODialogManager *manager )
+    bool act( IncidenceBase *incidence, KODialogManager *manager )
     {
       mDialogManager = manager;
-      return incidence->accept( *this, incidence );
+      return incidence->accept( *this );
     }
 
   protected:
@@ -83,23 +80,24 @@ class KODialogManager::EditorDialogVisitor :
     IncidenceEditor *editor() const { return mEditor; }
 
   protected:
-    bool visit( Event::Ptr )
+    bool visit( Event * )
     {
-      return false;
+      mEditor = mDialogManager->getEventEditor();
+      return mEditor;
     }
-    bool visit( Todo::Ptr )
+    bool visit( Todo * )
     {
       mEditor = mDialogManager->getTodoEditor();
       return mEditor;
     }
-    bool visit( Journal::Ptr )
+    bool visit( Journal * )
     {
       mEditor = mDialogManager->getJournalEditor();
       return mEditor;
     }
-    bool visit( FreeBusy::Ptr ) // to inhibit hidden virtual compile warning
+    bool visit( FreeBusy * ) // to inhibit hidden virtual compile warning
     {
-      return false;
+      return 0;
     }
 
     IncidenceEditor *mEditor;
@@ -210,19 +208,6 @@ void KODialogManager::showFilterEditDialog( QList<CalFilter*> *filters )
   mFilterEditDialog->raise();
 }
 
-IncidenceEditorsNG::IncidenceDialog *KODialogManager::createDialog( const Akonadi::Item& item )
-{
-  const Incidence::Ptr incidence = Akonadi::incidence( item );
-  if ( !incidence ) {
-    return 0;
-  }
-
-  IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
-//   connectEditor( dialog );
-  return dialog;
-}
-
-// TODO: Get rid of this when there is an IncidenceDialog based JournalDialog.
 IncidenceEditor *KODialogManager::getEditor( const Item &item )
 {
   const Incidence::Ptr incidence = Akonadi::incidence( item );
@@ -231,17 +216,24 @@ IncidenceEditor *KODialogManager::getEditor( const Item &item )
   }
 
   EditorDialogVisitor v;
-  if ( v.act( incidence, this ) ) {
+  if ( v.act( incidence.get(), this ) ) {
     return v.editor();
   } else {
     return 0;
   }
 }
 
-void KODialogManager::connectTypeAhead( IncidenceEditorsNG::IncidenceDialog *dialog, KOEventView *view )
+EventEditor *KODialogManager::getEventEditor()
 {
-  if ( dialog && view ) {
-    view->setTypeAheadReceiver( dialog->typeAheadReceiver() );
+  EventEditor *eventEditor = new EventEditor( mMainView );
+  connectEditor( eventEditor );
+  return eventEditor;
+}
+
+void KODialogManager::connectTypeAhead( EventEditor *editor, KOEventView *view )
+{
+  if ( editor && view ) {
+    view->setTypeAheadReceiver( editor->typeAheadReceiver() );
   }
 }
 

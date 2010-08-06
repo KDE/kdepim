@@ -31,7 +31,7 @@
 #include <akonadi/kcal/utils.h>
 #include <akonadi/kcal/incidencechanger.h>
 
-#include <kcalcore/event.h>
+#include <kcal/event.h>
 
 #include <QDate>
 #include <QMap>
@@ -39,7 +39,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-using namespace KCalCore;
+using namespace KCal;
 using namespace Akonadi;
 
 class TimeSpentWidget : public QWidget
@@ -88,7 +88,7 @@ class TimeSpentWidget : public QWidget
       int total = 0;
 
       foreach ( const Item &item, mEventList ) {
-        const Event::Ptr e = Akonadi::event( item );
+        const Event::ConstPtr e = Akonadi::event( item );
         Q_ASSERT( e );
         KDateTime selectedStart( mTimeSpentView->mStartDate,
                                  QTime( 0, 0 ),

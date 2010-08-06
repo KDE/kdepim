@@ -28,7 +28,7 @@
 #ifndef DATENAVIGATOR_H
 #define DATENAVIGATOR_H
 
-#include <kcalcore/incidencebase.h>
+#include <kcal/incidencebase.h>
 
 #include <QObject>
 
@@ -44,12 +44,12 @@ class DateNavigator : public QObject
     DateNavigator( QObject *parent = 0 );
     ~DateNavigator();
 
-    KCalCore::DateList selectedDates();
+    KCal::DateList selectedDates();
 
     int datesCount() const;
 
   public slots:
-    void selectDates( const KCalCore::DateList & );
+    void selectDates( const KCal::DateList & );
     void selectDate( const QDate & );
 
     void selectDates( int count );
@@ -86,7 +86,7 @@ class DateNavigator : public QObject
     /* preferredMonth is useful when the datelist crosses months,
        if valid, any month-like component should honour it
     */
-    void datesSelected( const KCalCore::DateList &, const QDate &preferredMonth );
+    void datesSelected( const KCal::DateList &, const QDate &preferredMonth );
 
   protected:
     void emitSelected( const QDate &preferredMonth = QDate() );
@@ -103,11 +103,7 @@ class DateNavigator : public QObject
                      const QDate &selectionUpperLimit,
                      int offset );
 
-    KCalCore::DateList mSelectedDates;
-
-    enum {
-      MAX_SELECTABLE_DAYS = 50
-    };
+    KCal::DateList mSelectedDates;
 };
 
 #endif

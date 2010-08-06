@@ -28,7 +28,7 @@
 
 #include <akonadi/kcal/incidencechanger.h>
 
-#include <kcalcore/event.h>
+#include <kcal/event.h>
 
 #include <Akonadi/Item>
 
@@ -43,7 +43,7 @@ namespace Akonadi {
 namespace KCal {
   class Event;
 }
-using namespace KCalCore;
+using namespace KCal;
 
 /**
  * This class handles expiring and archiving of events.
@@ -100,9 +100,7 @@ class EventArchiver : public QObject
      * @param limitDate
      * @param checkedUids used internaly to prevent infinit recursion due to invalid calendar files
      */
-    bool isSubTreeComplete( Akonadi::Calendar *calendar,
-                            const Todo::Ptr &todo,
-                            const QDate &limitDate, QStringList checkedUids = QStringList() ) const;
+    bool isSubTreeComplete( const Todo *todo, const QDate &limitDate, QStringList checkedUids = QStringList() ) const;
 };
 
 #endif /* EVENTARCHIVER_H */

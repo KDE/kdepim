@@ -29,7 +29,7 @@
 #include "categoryselectdialog.h"
 #include "koprefs.h"
 
-#include <kcalcore/calfilter.h>
+#include <KCal/CalFilter>
 
 #include <KMessageBox>
 

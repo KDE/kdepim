@@ -28,7 +28,8 @@
 //
 // Widget showing one Journal entry
 
-#include <kcalcore/journal.h>
+#include <kcal/journal.h>
+#include <kcal/listbase.h>
 #include <kvbox.h>
 
 #include <QDate>
@@ -48,13 +49,13 @@ namespace Akonadi {
   class IncidenceChanger;
 }
 
-using namespace KCalCore;
+using namespace KCal;
 
 class JournalView : public QWidget
 {
   Q_OBJECT
   public:
-    typedef QList<JournalView*> List;
+    typedef ListBase<JournalView> List;
 
     JournalView( const Akonadi::Item &journal, QWidget *parent );
     virtual ~JournalView();
@@ -109,7 +110,7 @@ class JournalDateView : public KVBox
 {
   Q_OBJECT
   public:
-    typedef QList<JournalDateView*> List;
+    typedef ListBase<JournalDateView> List;
 
     JournalDateView( Akonadi::Calendar *, QWidget *parent );
     virtual ~JournalDateView();

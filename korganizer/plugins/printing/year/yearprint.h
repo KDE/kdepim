@@ -29,7 +29,7 @@
 
 #include <klocale.h>
 
-using namespace KCalCore;
+using namespace KCal;
 using namespace KOrg;
 
 class CalPrintYear : public CalPrintPluginBase
