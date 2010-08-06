@@ -63,6 +63,7 @@ install(FILES
   ApplicationGeneralActions.qml
   Button.qml
   Button2.qml
+  AboutDialog.qml
   CompletionSlider.qml
   ItemListView.qml
   ItemListViewDelegate.qml

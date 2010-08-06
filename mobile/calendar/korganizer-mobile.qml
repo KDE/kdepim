@@ -377,7 +377,6 @@ KPIM.MainView {
   }
 
   SlideoutPanelContainer {
-    visible : false
     anchors.fill: parent
 
     SlideoutPanel {
@@ -503,5 +502,11 @@ KPIM.MainView {
     onIncidenceRemoved : {
       backToAgendaView();
     }
+  }
+
+  KPIM.AboutDialog {
+    id : aboutDialog
+    anchors.fill : parent
+    visible : false
   }
 }
