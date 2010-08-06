@@ -34,5 +34,11 @@ QML.Item {
     height : parent.height
     width : parent.width
     buttonText : name;
+
+    onClicked :
+    {
+      triggered(parent.name)
+    }
+
   }
 }
