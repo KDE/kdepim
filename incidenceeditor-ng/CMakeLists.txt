@@ -61,6 +61,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
   ../templatemanagementdialog.cpp
+  incidencedialog.cpp
   eventortododialog.cpp
   visualfreebusywidget.cpp
 )

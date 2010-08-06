@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+    Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,27 +18,27 @@
     02110-1301, USA.
 */
 
-#ifndef EVENTORTODODIALOGNG_H
-#define EVENTORTODODIALOGNG_H
+#ifndef INCIDENCEDIALOG_H
+#define INCIDENCEDIALOG_H
 
-#include "editoritemmanager.h"
-#include "incidencedialog.h"
+#include <KDialog>
+
 #include "incidenceeditors-ng_export.h"
 
 namespace Akonadi {
+class Collection;
 class Item;
 }
 
 namespace IncidenceEditorsNG {
 
-class EventOrTodoDialogPrivate;
-
-class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public IncidenceDialog
+class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
 {
   Q_OBJECT
+
 public:
-  EventOrTodoDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
-  ~EventOrTodoDialog();
+  IncidenceDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
+  virtual ~IncidenceDialog();
 
   /**
    * Loads the @param item into the dialog.
@@ -51,38 +51,19 @@ public:
    * When the item has is valid this method will fetch the payload when this is
    * not already set.
    */
-  void load( const Akonadi::Item &item );
+  virtual void load( const Akonadi::Item &item ) = 0;
 
   /**
    * Sets the Collection combobox to @param collection.
    */
-  void selectCollection( const Akonadi::Collection &collection );
+  virtual void selectCollection( const Akonadi::Collection &collection ) = 0;
 
   /**
     Returns the object that will receive all key events.
    */
-  QObject *typeAheadReceiver() const;
-
-protected Q_SLOTS:
-  virtual void slotButtonClicked( int button );
-
-private:
-  EventOrTodoDialogPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( EventOrTodoDialog )
-  Q_DISABLE_COPY( EventOrTodoDialog )
-
-  Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int))
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(Akonadi::EditorItemManager::SaveAction))
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString))
-  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(int))
-  Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
-  Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))
-  Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))
-  Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int))
-  Q_PRIVATE_SLOT(d_ptr, void updateAttendeeCount(int))
-  Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
+  virtual QObject *typeAheadReceiver() const = 0;
 };
 
 }
 
-#endif // EVENTORTODODIALOGNG_H
+#endif // INCIDENCEDIALOG_H
