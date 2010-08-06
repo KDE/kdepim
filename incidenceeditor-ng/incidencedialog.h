@@ -25,6 +25,8 @@
 
 #include "incidenceeditors-ng_export.h"
 
+class QDate;
+
 namespace Akonadi {
 class Collection;
 class Item;
@@ -50,8 +52,11 @@ public:
    *
    * When the item has is valid this method will fetch the payload when this is
    * not already set.
+   *
+   * @param activeDate Sets the active date to use for loaded incidences. This
+   * is used in particular for recurring incidences.
    */
-  virtual void load( const Akonadi::Item &item ) = 0;
+  virtual void load( const Akonadi::Item &item, const QDate &activeDate = QDate() ) = 0;
 
   /**
    * Sets the Collection combobox to @param collection.

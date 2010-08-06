@@ -51,7 +51,7 @@ public:
    * When the item has is valid this method will fetch the payload when this is
    * not already set.
    */
-  void load( const Akonadi::Item &item );
+  virtual void load( const Akonadi::Item &item, const QDate &activeDate = QDate() );
 
   /**
    * Sets the Collection combobox to @param collection.

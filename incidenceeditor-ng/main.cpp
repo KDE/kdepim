@@ -110,8 +110,7 @@ int main( int argc, char **argv )
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
   EventOrTodoDialog dialog;
-  dialog.load( item );
-  dialog.show();
+  dialog.load( item ); // The dialog will show up once the item is loaded.
 
   return app.exec();
 }

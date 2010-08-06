@@ -391,6 +391,8 @@ bool EventOrTodoDialogPrivate::isValid()
 
 void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 {
+  Q_Q( EventOrTodoDialog );
+
   Q_ASSERT( hasSupportedPayload( item ) );
   mEditor->load( Akonadi::incidence( item ) );
 
@@ -401,6 +403,8 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
     mCalSelector->setMimeTypeFilter(
       QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
   }
+
+  q->show();
 }
 
 Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
@@ -483,9 +487,10 @@ EventOrTodoDialog::~EventOrTodoDialog()
 }
 
 
-void EventOrTodoDialog::load( const Akonadi::Item &item )
+void EventOrTodoDialog::load( const Akonadi::Item &item, const QDate &activeDate )
 {
   Q_D( EventOrTodoDialog );
+  d->mIeDateTime->setActiveDate( activeDate );
 
   if ( item.isValid() ) {
     d->mItemManager->load( item );
