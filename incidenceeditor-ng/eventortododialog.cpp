@@ -526,7 +526,10 @@ void EventOrTodoDialog::load( const Akonadi::Item &item, const QDate &activeDate
 void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection )
 {
   Q_D( EventOrTodoDialog );
-  d->mCalSelector->setDefaultCollection( collection );
+  if ( collection.isValid() )
+    d->mCalSelector->setDefaultCollection( collection );
+  else
+    d->mCalSelector->setCurrentIndex( 0 );
 }
 
 QObject *EventOrTodoDialog::typeAheadReceiver() const

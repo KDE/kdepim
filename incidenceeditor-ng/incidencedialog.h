@@ -59,7 +59,8 @@ public:
   virtual void load( const Akonadi::Item &item, const QDate &activeDate = QDate() ) = 0;
 
   /**
-   * Sets the Collection combobox to @param collection.
+   * Sets the Collection combobox to @param collection. Selects the first collection
+   * when @param collection is invalid.
    */
   virtual void selectCollection( const Akonadi::Collection &collection ) = 0;
 
