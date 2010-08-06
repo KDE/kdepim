@@ -32,9 +32,27 @@ Rectangle {
   property int bottomMargin
   anchors.bottomMargin : bottomMargin
 
+  property alias scriptActions : myScriptActions.data
+
   default property alias content : myColumn.children
 
   signal triggered(string triggeredName)
+
+  Item {
+    id : myScriptActions
+
+    function trigger(name)
+    {
+      for (var i = 0; i < children.length; ++i )
+      {
+        if (children[i].name == name)
+        {
+          children[i].trigger();
+          return;
+        }
+      }
+    }
+  }
 
   function showOnlyCategory(category)
   {
@@ -56,6 +74,7 @@ Rectangle {
     }
 
     function triggered(triggeredName) {
+      myScriptActions.trigger(triggeredName)
       _topLevel.triggered(triggeredName)
 
       for ( var i = 0; i < children.length; ++i ) {
