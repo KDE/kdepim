@@ -518,6 +518,8 @@ void EventOrTodoDialog::load( const Akonadi::Item &item, const QDate &activeDate
       d->mCalSelector->setMimeTypeFilter(
         QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
     }
+
+    show();
   }
 }
 
