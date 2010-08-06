@@ -132,7 +132,23 @@ void IncidenceDefaultsPrivate::eventDefaults( const Event::Ptr &event ) const
 
 void IncidenceDefaultsPrivate::todoDefaults( const Todo::Ptr &todo ) const
 {
-  Q_UNUSED( todo );
+  Todo::Ptr relatedTodo; // = mRelatedIncidence.dynamicCast<Todo>();
+  if ( relatedTodo )
+    todo->setCategories( relatedTodo->categories() );
+
+  if ( mEndDt.isValid() )
+    todo->setDtDue( mEndDt );
+  else
+    todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
+
+  if ( !mEndDt.isValid() || ( KDateTime::currentLocalDateTime() < mEndDt ) )
+    todo->setDtStart( KDateTime::currentLocalDateTime() );
+  else
+    todo->setDtStart( mEndDt.addDays( -1 ) );
+
+  todo->setCompleted( false );
+  todo->setPercentComplete( 0 );
+  todo->setPriority( 5 );
 }
 
 /// IncidenceDefaults
@@ -215,6 +231,7 @@ void IncidenceDefaults::setDefaults( const Incidence::Ptr &incidence ) const
   incidence->setCategories( QStringList() );
   incidence->setSecrecy( Incidence::SecrecyPublic );
   incidence->setStatus( Incidence::StatusNone );
+  incidence->setAllDay( false );
   incidence->setCustomStatus( QString() );
   incidence->setResources( QStringList() );
   incidence->setPriority( 0 );
