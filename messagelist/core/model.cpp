@@ -37,7 +37,6 @@
 //   kmheaders.cpp / kmheaders.h, headeritem.cpp / headeritem.h
 //   Copyright: (c) 2004 Till Adam < adam at kde dot org >
 //
-#include "model.h"
 #include <config-messagelist.h>
 #include "core/model.h"
 #include "core/model_p.h"
@@ -4203,7 +4202,7 @@ void ModelPrivate::slotStorageModelRowsInserted( const QModelIndex &parent, int 
         // The change is completely above the job, the job is not affected
       } else if( from > job->currentIndex() ) // and from <= job->endIndex()
       {
-        // The change starts in the middle of the job in a way that it must be splitted in two.
+        // The change starts in the middle of the job in a way that it must be split in two.
         // The first part is unaffected by the shift and ranges from job->currentIndex() to from - 1.
         // We use the existing job for this.
         job->setEndIndex( from - 1 );
@@ -4357,7 +4356,7 @@ void ModelPrivate::slotStorageModelRowsRemoved( const QModelIndex &parent, int f
           // could be still dangling pointers. So we just move the current index of the job
           // after the end (so storage model scan terminates) and let it complete spontaneously.
           job->setCurrentIndex( job->endIndex() + 1 );
-          
+
         } else if ( to >= job->currentIndex() )
         {
           // The change partially covers the job. Only a part of it can be completed
@@ -4524,7 +4523,7 @@ Qt::ItemFlags Model::flags( const QModelIndex &index ) const
 QMimeData* MessageList::Core::Model::mimeData( const QModelIndexList& indexes ) const
 {
   QList< MessageItem* > msgs;
-  foreach( const QModelIndex idx, indexes ) {
+  foreach( const QModelIndex &idx, indexes ) {
       if( idx.isValid() ) {
         Item* item = static_cast< Item* >( idx.internalPointer() );
         if( item->type() == MessageList::Core::Item::Message ) {

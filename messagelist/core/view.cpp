@@ -18,9 +18,7 @@
  *
  *******************************************************************************/
 
-#include "view.h"
 #include "core/view.h"
-
 #include "core/aggregation.h"
 #include "core/delegate.h"
 #include "core/groupheaderitem.h"
@@ -2289,12 +2287,12 @@ bool View::event( QEvent *e )
       tip += htmlCodeForStandardRow.arg( i18n( "Size" ) ).arg( mi->formattedSize() );
 
       if ( mi->hasAnnotation() ) {
-        tip += htmlCodeForStandardRow.arg( i18n( "Note" ) ).arg( mi->annotation().replace( "\n", "<br>" ) );
+        tip += htmlCodeForStandardRow.arg( i18n( "Note" ) ).arg( mi->annotation().replace( '\n', "<br>" ) );
       }
 
       QString content = mi->contentSummary();
       if ( !content.isEmpty() ) {
-        tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( "\n", "<br>" ) );
+        tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( '\n', "<br>" ) );
       }
 
       tip += QString::fromLatin1(
@@ -2314,7 +2312,7 @@ bool View::event( QEvent *e )
 
         statsText = i18np( "<b>%1</b> reply", "<b>%1</b> replies", mi->childItemCount() );
         statsText += QLatin1String( ", " );
-        
+
         statsText += i18np(
             "<b>%1</b> message in subtree (<b>%2</b> unread)",
             "<b>%1</b> messages in subtree (<b>%2</b> unread)",

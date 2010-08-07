@@ -18,7 +18,6 @@
  *
  *******************************************************************************/
 
-#include "item.h"
 #include "core/item.h"
 #include "core/item_p.h"
 #include "core/model.h"

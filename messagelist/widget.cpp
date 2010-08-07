@@ -268,6 +268,8 @@ void Widget::viewSelectionChanged()
 void Widget::viewMessageListContextPopupRequest( const QList< MessageList::Core::MessageItem * > &selectedItems,
                                                  const QPoint &globalPos )
 {
+  Q_UNUSED( selectedItems );
+
   if ( !d->mXmlGuiClient )
     return;
 
@@ -419,7 +421,7 @@ void Widget::viewStartDragRequest()
 
   bool readOnly = false;
 
-  foreach ( const Collection c, collections ) {
+  foreach ( const Collection &c, collections ) {
     // We won't be able to remove items from this collection
     if ( ( c.rights() & Collection::CanDeleteItem ) == 0 ) {
       // So the drag will be read-only
@@ -428,7 +430,7 @@ void Widget::viewStartDragRequest()
   }
 
   KUrl::List urls;
-  foreach ( const Item i, items ) {
+  foreach ( const Item &i, items ) {
     urls << i.url( Item::UrlWithMimeType );
   }
 

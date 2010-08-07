@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef MESSAGELIST_CORE_SUBJECTUTILS_H
-#define MESSAGELIST_CORE_SUBJECTUTILS_H
+#ifndef MESSAGELIST_CORE_SUBJECTUTILS_P_H
+#define MESSAGELIST_CORE_SUBJECTUTILS_P_H
 
 #include <QString>
 
