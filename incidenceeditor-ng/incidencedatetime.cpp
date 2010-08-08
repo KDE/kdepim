@@ -537,7 +537,7 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
 void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
 {
-  if ( mUi->mWholeDayCheck->isChecked() ) { // Timed event
+  if ( mUi->mWholeDayCheck->isChecked() ) { // All day event
     event->setAllDay( true );
 
     // need to change this.
@@ -545,7 +545,7 @@ void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
     eventDT.setDateOnly( true );
     event->setDtStart( eventDT );
     event->setDtEnd( eventDT );
-  } else { // All day event
+  } else { // Timed Event
     event->setAllDay( false );
 
     // set date/time end
