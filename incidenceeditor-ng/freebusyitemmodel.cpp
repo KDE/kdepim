@@ -52,7 +52,7 @@ private:
     ItemPrivateData *parentItem;
 };
 
-FreeBusyItemModel::FreeBusyItemModel( QObject* parent ): QAbstractItemModel( parent )
+FreeBusyItemModel::FreeBusyItemModel( QObject* parent ): QAbstractItemModel( parent ), mForceDownload( false )
 {
     qRegisterMetaType<KCalCore::Attendee::Ptr>("KCalCore::Attendee::Ptr");
     qRegisterMetaType<KCalCore::FreeBusy::Ptr>("KCalCore::FreeBusy::Ptr");
