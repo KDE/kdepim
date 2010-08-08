@@ -20,8 +20,8 @@
 
 #include "incidencedatetime.h"
 
-#include <kcalcore/icaltimezones.h>
-#include <kcalutils/incidenceformatter.h>
+#include <KCalCore/ICalTimeZones>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <KDebug>
 #include <KSystemTimeZones>
@@ -388,7 +388,7 @@ KDateTime IncidenceDateTime::currentEndDateTime() const
     mUi->mTimeZoneComboEnd->selectedTimeSpec() );
 }
 
-void IncidenceDateTime::load( KCalCore::Event::Ptr event )
+void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( false );
@@ -468,7 +468,7 @@ void IncidenceDateTime::load( KCalCore::Event::Ptr event )
   }
 }
 
-void IncidenceDateTime::load( KCalCore::Todo::Ptr todo )
+void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( true );
@@ -535,7 +535,7 @@ void IncidenceDateTime::load( KCalCore::Todo::Ptr todo )
   setDateTimes( startDT, endDT );
 }
 
-void IncidenceDateTime::save( KCalCore::Event::Ptr event )
+void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
 {
   if ( mUi->mWholeDayCheck->isChecked() ) { // Timed event
     event->setAllDay( true );
@@ -558,7 +558,7 @@ void IncidenceDateTime::save( KCalCore::Event::Ptr event )
   event->setTransparency( mUi->mFreeBusyCheck->isChecked() ? Event::Opaque : Event::Transparent );
 }
 
-void IncidenceDateTime::save( KCalCore::Todo::Ptr todo )
+void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
 {
   if ( mUi->mWholeDayCheck->isChecked() ) { // All day todo
     todo->setAllDay( true );
