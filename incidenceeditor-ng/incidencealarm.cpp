@@ -180,7 +180,7 @@ void IncidenceAlarm::handleDateTimeToggle()
   mUi->mAlarmAddPresetButton->setEnabled( mDateTime->endDateTimeEnabled() );
 
   #ifndef KDEPIM_MOBILE_UI
-    mUi->label_6->setEnabled( mDateTime->endDateTimeEnabled() );
+    mUi->mQuickAddReminderLabel->setEnabled( mDateTime->endDateTimeEnabled() );
   #endif
 }
 
