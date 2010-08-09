@@ -45,6 +45,7 @@
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
+#include <utils/archivedefinition.h>
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -132,8 +133,18 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
         const unsigned int classification = classify( fileName );
         kDebug() << "classified" << fileName << "as" << printableClassification( classification );
 
+        const shared_ptr<ArchiveDefinition> ad = w->selectedArchiveDefinition();
+
+        const Protocol proto =
+            isOpenPGP( classification ) ? OpenPGP :
+            isCMS( classification )     ? CMS :
+            ad /* _needs_ the info */   ? throw Exception( gpg_error( GPG_ERR_CONFLICT ), i18n("Cannot determine whether input data is OpenPGP or CMS") ) :
+            /* else we don't care */      UnknownProtocol ;
+
         const shared_ptr<Input> input = Input::createFromFile( fileName );
-        const shared_ptr<Output> output = Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy );
+        const shared_ptr<Output> output =
+            ad       ? ad->createOutputFromUnpackCommand( proto, fileName, outDir ) :
+            /*else*/   Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy );
 
         if ( mayBeCipherText( classification ) ) {
             kDebug() << "creating a DecryptVerifyTask";
@@ -252,6 +263,8 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
 {
     ensureWizardCreated();
 
+    const std::vector< shared_ptr<ArchiveDefinition> > archiveDefinitions = ArchiveDefinition::getArchiveDefinitions();
+
     QStringList fileNames;
     unsigned int counter = 0;
     Q_FOREACH( const QString & fname, m_passedFiles ) {
@@ -264,6 +277,8 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
 
             DecryptVerifyOperationWidget * const op = m_wizard->operationWidget( counter++ );
             kleo_assert( op != 0 );
+
+            op->setArchiveDefinitions( archiveDefinitions );
 
             const QString signedDataFileName = findSignedData( fname );
 
@@ -296,6 +311,7 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
                 // classify() and/or classifyContent()
                 DecryptVerifyOperationWidget * const op = m_wizard->operationWidget( counter++ );
                 kleo_assert( op != 0 );
+                op->setArchiveDefinitions( archiveDefinitions );
                 op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
                 op->setInputFileName( fname );
                 fileNames.push_back( fname );
@@ -305,6 +321,7 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
                     DecryptVerifyOperationWidget * op = m_wizard->operationWidget( counter++ );
                     kleo_assert( op != 0 );
 
+                    op->setArchiveDefinitions( archiveDefinitions );
                     op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
                     op->setInputFileName( s );
                     op->setSignedDataFileName( fname );
