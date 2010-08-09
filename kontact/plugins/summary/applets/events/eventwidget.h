@@ -46,19 +46,22 @@ public slots:
     void updateFullUI();
     void toggleMoreInfo();
 
+    void mouseEnterEvent( QMouseEvent* ev );
+    void mouseLeaveEvent( QMouseEvent* ev );
+
     void setMoreInfoVisible(bool visible = true );
     bool moreInfoVisible();
 
 private:
-    KDateTime m_date;
+    QGraphicsWidget* m_parent;
+
+    KDateTime m_startDate;
+    KDateTime m_endDate;
     QString m_summary;
     bool m_allDay;
     QString m_type;
     bool m_moreInfoVisible;
-    QString m_date;
     QString m_description;
-
-    QGraphicsWidget* m_parent;
 
     Plasma::IconWidget* m_icon;
     QGraphicsLinearLayout* m_masterLayout;
@@ -67,7 +70,7 @@ private:
     Plasma::Label* m_summaryLabel;
     GradientProgressWidget* m_timetil;
     Plasma::IconWidget* m_moreInfoIcon;
-    Plasma::Label* m_dateLabel;
+    Plasma::Label* m_startDateLabel;
     Plasma::Label* m_descriptionLabel;
 };
 
