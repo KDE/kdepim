@@ -222,6 +222,35 @@ bool IncidenceAttendee::isDirty() const
   return false;
 }
 
+void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
+{
+  const IncidenceEditors::EditorConfig *config = IncidenceEditors::EditorConfig::instance();
+
+  AttendeeData::List attendees = mAttendeeEditor->attendees();
+  mAttendeeEditor->clear();
+
+  foreach ( const AttendeeData::Ptr &attendee, attendees ) {
+    if ( config->thatIsMe( attendee->email() )
+      && mLoadedIncidence->organizer()->email() == attendee->email() ) {
+      attendee->setStatus( stat );
+    }
+    mAttendeeEditor->addAttendee( attendee );
+  }
+
+  checkDirtyStatus();
+}
+
+void IncidenceAttendee::acceptForMe()
+{
+  changeStatusForMe( KCalCore::Attendee::Accepted );
+}
+
+void IncidenceAttendee::declineForMe()
+{
+  changeStatusForMe( KCalCore::Attendee::Declined );
+}
+
+
 void IncidenceAttendee::fillOrganizerCombo()
 {
   mUi->mOrganizerCombo->clear();

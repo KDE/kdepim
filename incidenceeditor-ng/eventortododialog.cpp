@@ -72,6 +72,7 @@ public:
 
   CombinedIncidenceEditor *mEditor;
   IncidenceDateTime *mIeDateTime;
+  IncidenceAttendee *mIeAttendee;
 
 public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
@@ -164,8 +165,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
-  IncidenceAttendee *ieAttendee= new IncidenceAttendee( qq, mIeDateTime, mUi );
-  mEditor->combine( ieAttendee );
+  mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
+  mEditor->combine( mIeAttendee );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
@@ -179,7 +180,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleRecurrenceChange(int)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
-  q->connect( ieAttendee, SIGNAL(attendeeCountChanged(int)),
+  q->connect( mIeAttendee, SIGNAL(attendeeCountChanged(int)),
               SLOT(updateAttendeeCount(int)) );
 }
 
@@ -399,6 +400,7 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   const KCalCore::Incidence::Ptr incidence = Akonadi::incidence( item );
   const QStringList allEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
   KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
+
   if ( incidence->attendeeCount() > 1 &&
        me && ( me->status() == KCalCore::Attendee::NeedsAction ||
                me->status() == KCalCore::Attendee::Tentative ||
@@ -490,12 +492,12 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   showButtonSeparator( false );
 
   // TODO: Implement these.
-//  connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
-//           SIGNAL(acceptInvitation()) );
+  connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+           d->mIeAttendee, SLOT(acceptForMe()) );
   connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
            d->mUi->mInvitationBar, SLOT(hide()) );
-//  connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
-//           SIGNAL(declineInvitation()) );
+  connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+           d->mIeAttendee, SLOT(declineForMe()) );
   connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
            d->mUi->mInvitationBar, SLOT(hide()) );
 }

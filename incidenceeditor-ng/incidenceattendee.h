@@ -64,6 +64,12 @@ public:
 signals:
     void attendeeCountChanged( int );
 
+public slots:
+    /// If the user is attendee of the loaded event, one of the following slots
+    /// can be used to change the status.
+    void acceptForMe();
+    void declineForMe();
+
 private slots:
     void checkIfExpansionIsNeeded( KPIM::MultiplyingLine* );
     void expandResult( KJob *job );
@@ -77,6 +83,7 @@ private slots:
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
 private:
+    void changeStatusForMe( KCalCore::Attendee::PartStat );
     /** Returns if I was the organizer of the loaded event */
     bool iAmOrganizer() const;
     /** Reads values from a KABC::Addressee and inserts a new Attendee
