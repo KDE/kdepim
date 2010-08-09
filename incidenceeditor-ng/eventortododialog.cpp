@@ -153,7 +153,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceDescription *ieDescription = new IncidenceDescription( mUi );
   mEditor->combine( ieDescription );
 
-  IncidenceAlarm *ieAlarm = new IncidenceAlarm( mUi );
+  IncidenceAlarm *ieAlarm = new IncidenceAlarm( mIeDateTime, mUi );
   mEditor->combine( ieAlarm );
 
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );

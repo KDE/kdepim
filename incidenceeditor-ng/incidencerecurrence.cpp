@@ -61,6 +61,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   toggleRecurrenceWidgets( false );
   fillCombos();
 
+  connect( mDateTime, SIGNAL(endDateTimeToggled(bool)),
+           SLOT( handleDateTimeToggle() ) );
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
            SLOT(fillCombos()) );
   connect( mDateTime, SIGNAL(startDateChanged(QDate)),
@@ -193,6 +195,7 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
   }
 
   setExceptionDates( mLoadedIncidence->recurrence()->exDates() );
+  handleDateTimeToggle();
 }
 
 void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
@@ -407,6 +410,13 @@ void IncidenceRecurrence::fillCombos()
                       startDate.dayOfYear() ).toString();
   mUi->mYearlyCombo->addItem( item );
   mUi->mYearlyCombo->setCurrentIndex( currentYearlyIndex == -1 ? 0 : currentYearlyIndex );
+}
+
+void IncidenceRecurrence::handleDateTimeToggle()
+{
+  QWidget *parent = mUi->mRepeatStack->parentWidget(); // Take the parent of a toplevel widget;
+  if ( parent )
+    parent->setEnabled( mDateTime->endDateTimeEnabled() );
 }
 
 void IncidenceRecurrence::handleEndAfterOccurrencesChange( int currentValue )

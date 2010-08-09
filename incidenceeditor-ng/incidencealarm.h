@@ -30,14 +30,16 @@ class EventOrTodoMore;
 
 namespace IncidenceEditorsNG {
 
+class IncidenceDateTime;
+
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 {
   Q_OBJECT
   public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAlarm( Ui::EventOrTodoMore *ui = 0 );
+    IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
 #else
-    IncidenceAlarm( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
 #endif
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
@@ -49,6 +51,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 
   private Q_SLOTS:
     void editCurrentAlarm();
+    void handleDateTimeToggle();
     void newAlarm();
     void newAlarmFromPreset();
     void removeCurrentAlarm();
@@ -67,6 +70,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 #endif
 
     KCalCore::Alarm::List mAlarms;
+    IncidenceDateTime *mDateTime;
     int mEnabledAlarmCount;
     bool mIsTodo;
 };

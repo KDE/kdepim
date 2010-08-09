@@ -26,6 +26,7 @@
 
 #include "alarmdialog.h"
 #include "alarmpresets.h"
+#include "incidencedatetime.h"
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
@@ -36,11 +37,12 @@
 using namespace IncidenceEditorsNG;
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoMore *ui )
+IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
 #else
-IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
+IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui )
 #endif
   : mUi( ui )
+  , mDateTime( dateTime )
   , mEnabledAlarmCount( 0 )
   , mIsTodo( false )
 {
@@ -48,6 +50,10 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
   mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
   updateButtons();
 
+  connect( mDateTime, SIGNAL(startDateTimeToggled(bool)),
+           SLOT( handleDateTimeToggle() ) );
+  connect( mDateTime, SIGNAL(endDateTimeToggled(bool)),
+           SLOT( handleDateTimeToggle() ) );
   connect( mUi->mAlarmAddPresetButton, SIGNAL(clicked()),
            SLOT(newAlarmFromPreset()) );
   connect( mUi->mAlarmList, SIGNAL(itemSelectionChanged ()),
@@ -65,6 +71,10 @@ IncidenceAlarm::IncidenceAlarm( Ui::EventOrTodoDesktop *ui )
 void IncidenceAlarm::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
+  // We must be sure that the date/time in mDateTime is the correct date time.
+  // So don't depend on CombinedIncidenceEditor or whatever external factor to
+  // load the date/time before loading the recurrence
+  mDateTime->load( incidence );
 
   foreach ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() )
     mAlarms.append( KCalCore::Alarm::Ptr( new KCalCore::Alarm( *alarm.data() ) ) );
@@ -79,6 +89,7 @@ void IncidenceAlarm::load( const KCalCore::Incidence::Ptr &incidence )
   }
   mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
 
+  handleDateTimeToggle();
   mWasDirty = false;
 }
 
@@ -157,31 +168,39 @@ void IncidenceAlarm::editCurrentAlarm()
 #endif
 }
 
+void IncidenceAlarm::handleDateTimeToggle()
+{
+  QWidget *parent = mUi->mAlarmPresetCombo->parentWidget();  // Take the parent of a toplevel widget;
+  if ( parent )
+    parent->setEnabled( mDateTime->startDateTimeEnabled()
+                        || mDateTime->endDateTimeEnabled() );
+
+  mUi->mAlarmPresetCombo->setEnabled( mDateTime->endDateTimeEnabled() );
+  mUi->mAlarmAddPresetButton->setEnabled( mDateTime->endDateTimeEnabled() );
+}
+
 void IncidenceAlarm::newAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
 
-  QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
-  dialog.data()->setIsTodoReminder( mIsTodo );
-  dialog.data()->setOffset( 15 );
-  dialog.data()->setUnit( AlarmDialog::Minutes );
-  if ( mIsTodo )
-    dialog.data()->setWhen( AlarmDialog::BeforeEnd );
+  QPointer<AlarmDialog> dialog( new AlarmDialog );
+  dialog->setIsTodoReminder( mIsTodo );
+  dialog->setOffset( 15 );
+  dialog->setUnit( AlarmDialog::Minutes );
+  if ( mIsTodo && mDateTime->endDateTimeEnabled() )
+    dialog->setWhen( AlarmDialog::BeforeEnd );
   else
-    dialog.data()->setWhen( AlarmDialog::BeforeStart );
+    dialog->setWhen( AlarmDialog::BeforeStart );
 
-  if ( dialog.data()->exec() == KDialog::Accepted ) {
-    AlarmDialog *dialogPtr = dialog.data();
-    if ( dialogPtr ) {
-      KCalCore::Alarm::Ptr newAlarm( new KCalCore::Alarm( 0 ) );
-      dialogPtr->save( newAlarm );
-      newAlarm->setEnabled( true );
-      mAlarms.append( newAlarm );
-      updateAlarmList();
-      checkDirtyStatus();
-    } else {
-      kDebug() << "dialog already deleted";
-    }
+  dialog->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
+
+  if ( dialog->exec() == KDialog::Accepted ) {
+    KCalCore::Alarm::Ptr newAlarm( new KCalCore::Alarm( 0 ) );
+    dialog->save( newAlarm );
+    newAlarm->setEnabled( true );
+    mAlarms.append( newAlarm );
+    updateAlarmList();
+    checkDirtyStatus();
   }
 
 #endif

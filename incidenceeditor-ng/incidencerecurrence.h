@@ -54,6 +54,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void addException();
     void fillCombos();
+    void handleDateTimeToggle();
     void handleEndAfterOccurrencesChange( int currentValue );
     void handleExceptionDateChange( const QDate &currentDate );
     void handleFrequencyChange();
@@ -63,7 +64,7 @@ private Q_SLOTS:
     void updateWeekDays( const QDate &newStartDate );
 
 private:
-    KLocalizedString subsOrdinal (const KLocalizedString &text, int number) const;
+    KLocalizedString subsOrdinal( const KLocalizedString &text, int number ) const;
     /**
      * Return the day in the month/year on which the event recurs, starting at the
      * beginning/end. Both return a positive number.
