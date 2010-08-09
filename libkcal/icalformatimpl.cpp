@@ -2153,7 +2153,6 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
         if ( !cal->addJournal(journal) ) {
           cal->endBatchAdding();
           return false;
-          break;
         }
       } else {
         delete journal;
