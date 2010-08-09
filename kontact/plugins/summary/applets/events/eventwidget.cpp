@@ -37,7 +37,8 @@ EventWidget::EventWidget( QVariantHash args, QGraphicsWidget* parent )
 {
     setData( args );
     initUI();
-    updateUI();
+    updateSummaryUI();
+    updateFullUI();
 }
 
 void EventWidget::setData( QVariantHash args )
@@ -145,6 +146,11 @@ void EventWidget::updateUI()
     m_timetil->setCurrent( difference );
 
     kDebug() << "update ui" << icon << m_summary << difference;
+}
+
+void EventWidget::updateFullUI()
+{
+    // do magick!
 }
 
 void EventWidget::toggleMoreInfo()

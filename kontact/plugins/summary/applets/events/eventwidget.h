@@ -42,7 +42,8 @@ public:
 public slots:
     void setData( QVariantHash data );
     void initUI();
-    void updateUI();
+    void updateSummaryUI();
+    void updateFullUI();
     void toggleMoreInfo();
 
     void setMoreInfoVisible(bool visible = true );
