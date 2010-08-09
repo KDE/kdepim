@@ -40,6 +40,8 @@
 
 #include <vector>
 
+class QDir;
+
 namespace boost {
     template <typename T> class shared_ptr;
 }
@@ -73,7 +75,7 @@ namespace Kleo {
         boost::shared_ptr<Input> createInputFromPackCommand( GpgME::Protocol p, const QStringList & files ) const;
         ArgumentPassingMethod packCommandArgumentPassingMethod( GpgME::Protocol p ) const { checkProtocol(p); return m_packCommandMethod[p]; }
 
-        boost::shared_ptr<Output> createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file ) const;
+        boost::shared_ptr<Output> createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file, const QDir & wd ) const;
         // unpack-command must use CommandLine ArgumentPassingMethod
 
         static QString installPath();
