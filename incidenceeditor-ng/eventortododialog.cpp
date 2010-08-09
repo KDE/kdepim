@@ -409,6 +409,7 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   }
 
   mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() );
+  mCalSelector->setDefaultCollection( item.parentCollection() );
 
   q->show();
 }
