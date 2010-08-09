@@ -8,7 +8,7 @@ Name[de]=TAR (PGP®-kompatibel)
 ;pack-command-openpgp=0|%I/gpgtar --openpgp --skip-crypto --output - --encrypt -T- --null --
 ;pack-command-cms=0|%I/gpgtar --cms --skip-crypto --output - --encrypt -T- --null --
 pack-command-openpgp=%I/gpgtar --skip-crypto --output - --encrypt -- %f
-pack-command-openpgp=%I/gpgtar --skip-crypto --output - --encrypt -- %f
+pack-command-cms=%I/gpgtar --skip-crypto --output - --encrypt -- %f
 ; the following is not yet supported in Kleopatra:
 ; here should --openpgp/--cms be added, once supported by gpgtar:
 unpack-command-openpgp=%I/gpgtar --openpgp --skip-crypto --set-filename %f --decrypt -- -
