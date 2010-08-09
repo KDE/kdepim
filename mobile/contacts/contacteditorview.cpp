@@ -229,7 +229,6 @@ ContactEditorView::~ContactEditorView()
 
 void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
 {
-  kDebug() << editor;
   d->mEditorGeneral = editor;
 
   if ( d->mEditorGeneral != 0 ) {
@@ -280,7 +279,12 @@ void ContactEditorView::setEditorMore( EditorMore *editor )
 
 void ContactEditorView::loadContact( const Item &item )
 {
-  d->mItemManager->load( item );
+  if ( !d->mEditorGeneral ) {
+    // the editor is not fully loaded yet, so try later again
+    QMetaObject::invokeMethod( this, "loadContact", Qt::QueuedConnection, Q_ARG( Akonadi::Item, item ) );
+  } else {
+    d->mItemManager->load( item );
+  }
 }
 
 void ContactEditorView::save()
