@@ -283,7 +283,7 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
     }
     // fall through
   case PerfectThreadingOnly:
-    mi->setMessageIdMD5( md5Encode( mail->messageID()->asUnicodeString() ) );
+    mi->setMessageIdMD5( md5Encode( mail->messageID()->identifier() ) );
     if ( !mail->inReplyTo()->identifiers().isEmpty() ) {
       mi->setInReplyToIdMD5( md5Encode( mail->inReplyTo()->identifiers().first() ) );
     }
