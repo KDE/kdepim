@@ -73,6 +73,7 @@ install(FILES
   contact-editor.qml
   contactgroup-editor.qml
   kaddressbook-mobile.qml
+  KAddressBookActions.qml
   kaddressbook-mobile-background.png
   ContactListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile

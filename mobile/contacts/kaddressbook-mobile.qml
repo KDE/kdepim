@@ -119,6 +119,7 @@ KPIM.MainView {
     icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
     onClicked: {
       goBackToListing();
+      kaddressbookActions.showOnlyCategory("home")
     }
   }
 
@@ -152,7 +153,32 @@ KPIM.MainView {
                                                                                                         application.numSelectedAccounts,
                                                                                                         contactList.count)
 
+      onNumBreadcrumbsChanged : {
+        if (numBreadcrumbs == 0)
+        {
+          kaddressbookActions.showOnlyCategory("home")
+        } else if (numBreadcrumbs == 1)
+        {
+          kaddressbookActions.showOnlyCategory("addressbook")
+        } else {
+          kaddressbookActions.showOnlyCategory("single_folder")
+        }
+      }
+      onNumSelectedChanged : {
+        if (numSelected == 0)
+        {
+          kaddressbookActions.showOnlyCategory("home")
+          return;
+        }
+        if (numBreadcrumbs == 0)
+        {
+          kaddressbookActions.showOnlyCategory("addressbook")
+        } else {
+          kaddressbookActions.showOnlyCategory("single_folder")
+        }
+      }
     }
+
     KPIM.Button2 {
       id : selectButton
       anchors.left: collectionView.left
@@ -288,6 +314,7 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            kaddressbookActions.showOnlyCategory("contact_viewer")
           }
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
             contactGroupView.itemId = contactList.currentItemId;
@@ -298,6 +325,7 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            kaddressbookActions.showOnlyCategory("contact_viewer")
           }
         }
       }
@@ -320,6 +348,48 @@ KPIM.MainView {
     }
   }
 
+  SlideoutPanelContainer {
+    anchors.fill: parent
+
+    SlideoutPanel {
+      id: actionPanelNew
+      titleText: KDE.i18n( "Context Actions" )
+      handlePosition : 125
+      handleHeight: 150
+      contentWidth: parent.width - 20
+      anchors.fill : parent
+
+      content : [
+        KAddressBookActions {
+          id : kaddressbookActions
+          anchors.fill : parent
+
+          scriptActions : [
+            KPIM.ScriptActionItem {
+              name : "show_about_dialog"
+              script : {
+                actionPanelNew.collapse();
+                aboutDialog.visible = true
+              }
+            },
+            KPIM.ScriptActionItem {
+              name : "to_selection_screen"
+              script : {
+                actionPanelNew.collapse();
+                favoriteSelector.visible = true;
+                mainWorkView.visible = false;
+              }
+            }
+          ]
+
+          onTriggered : {
+            console.log("Triggered was: " + triggeredName)
+          }
+        }
+      ]
+    }
+  }
+/*
   SlideoutPanelContainer {
     anchors.fill: parent
 
@@ -401,7 +471,7 @@ KPIM.MainView {
       ]
     }
   }
-
+*/
   QML.Connections {
     target: startPage
     onAccountSelected : {
