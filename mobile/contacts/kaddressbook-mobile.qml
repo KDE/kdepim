@@ -344,7 +344,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: actionPanelNew
-      titleText: KDE.i18n( "Context Actions" )
+      titleText: KDE.i18n( "Actions" )
       handlePosition : 125
       handleHeight: 150
       contentWidth: parent.width - 20

@@ -23,9 +23,8 @@ import Qt 4.7
 
 import org.kde.pim.mobileui 4.5 as KPIM
 
-Rectangle {
+Item {
   id : _topLevel
-  color : "lightsteelblue"
   property int actionItemHeight
   property int actionItemWidth
   property int actionItemSpacing : 0
