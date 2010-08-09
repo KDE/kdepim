@@ -68,8 +68,13 @@ if (Grantlee_FOUND)
   set( kaddressbook_LIB_SRCS ${kaddressbook_LIB_SRCS}
        grantleecontactformatter.cpp
        grantleecontactgroupformatter.cpp
+       grantlee/theme.cpp
+       grantlee/themecombobox.cpp
+       grantlee/thememanager.cpp
+       grantlee/thememodel.cpp
      )
   add_definitions(-DGRANTLEE_FOUND)
+  add_subdirectory(grantlee)
 endif (Grantlee_FOUND)
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
