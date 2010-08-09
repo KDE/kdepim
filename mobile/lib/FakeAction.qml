@@ -23,9 +23,10 @@ import Qt 4.7 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
 
 
-QML.Item {
+QML.Rectangle {
   height : parent.height
   width : parent.width
+  color : "red"
   property string name
 
   signal triggered(string triggeredName)
