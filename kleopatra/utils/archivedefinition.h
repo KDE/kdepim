@@ -73,8 +73,8 @@ namespace Kleo {
         boost::shared_ptr<Input> createInputFromPackCommand( GpgME::Protocol p, const QStringList & files ) const;
         ArgumentPassingMethod packCommandArgumentPassingMethod( GpgME::Protocol p ) const { checkProtocol(p); return m_packCommandMethod[p]; }
 
-        boost::shared_ptr<Output> createOutputFromUnpackCommand( GpgME::Protocol p, const QStringList & files ) const;
-        ArgumentPassingMethod unpackCommandArgumentPassingMethod( GpgME::Protocol p ) const { checkProtocol(p); return m_unpackCommandMethod[p]; }
+        boost::shared_ptr<Output> createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file ) const;
+        // unpack-command must use CommandLine ArgumentPassingMethod
 
         static QString installPath();
         static void setInstallPath( const QString & ip );
@@ -84,7 +84,6 @@ namespace Kleo {
 
     protected:
         void setPackCommandArgumentPassingMethod( GpgME::Protocol p, ArgumentPassingMethod method ) { checkProtocol(p); m_packCommandMethod[p] = method; }
-        void setUnpackCommandArgumentPassingMethod( GpgME::Protocol p, ArgumentPassingMethod method ) { checkProtocol(p); m_unpackCommandMethod[p] = method; }
         void setExtensions( GpgME::Protocol p, const QStringList & extensions ) { checkProtocol(p); m_extensions[p] = extensions; }
 
         void checkProtocol( GpgME::Protocol p ) const;
@@ -93,13 +92,13 @@ namespace Kleo {
         virtual QString doGetPackCommand( GpgME::Protocol p ) const = 0;
         virtual QString doGetUnpackCommand( GpgME::Protocol p ) const = 0;
         virtual QStringList doGetPackArguments( GpgME::Protocol p, const QStringList & files ) const = 0;
-        virtual QStringList doGetUnpackArguments( GpgME::Protocol p, const QStringList & files ) const = 0;
+        virtual QStringList doGetUnpackArguments( GpgME::Protocol p, const QString & file ) const = 0;
     private:
         const QString m_id;
         const QString m_label;
         /*const*/ QStringList m_extensions[2];
         ArgumentPassingMethod m_packCommandMethod[2];
-        ArgumentPassingMethod m_unpackCommandMethod[2];
+        // m_unpackCommandMethod[2] <- must always be CommandLine
     };
         
 }

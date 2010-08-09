@@ -256,7 +256,6 @@ namespace {
                                &m_unpackCommand[OpenPGP], &m_unpackPrefixArguments[OpenPGP], &m_unpackPostfixArguments[OpenPGP], &method );
             if ( method != CommandLine )
                 throw ArchiveDefinitionError( id(), i18n("cannot use argument passing on standard input for unpack-command") );
-            setUnpackCommandArgumentPassingMethod( OpenPGP, method );
 
             // unpack-command(-cms)
             if ( group.hasKey( UNPACK_COMMAND_CMS_ENTRY ) )
@@ -267,7 +266,6 @@ namespace {
                                &m_unpackCommand[CMS], &m_unpackPrefixArguments[CMS], &m_unpackPostfixArguments[CMS], &method );
             if ( method != CommandLine )
                 throw ArchiveDefinitionError( id(), i18n("cannot use argument passing on standard input for unpack-command") );
-            setUnpackCommandArgumentPassingMethod( CMS, method );
         }
 
     private:
@@ -276,8 +274,8 @@ namespace {
         /* reimp */ QStringList doGetPackArguments( Protocol p, const QStringList & files ) const {
             return m_packPrefixArguments[p] + files + m_packPostfixArguments[p];
         }
-        /* reimp */ QStringList doGetUnpackArguments( Protocol p, const QStringList & files ) const {
-            return m_unpackPrefixArguments[p] + files + m_packPostfixArguments[p];
+        /* reimp */ QStringList doGetUnpackArguments( Protocol p, const QString & file ) const {
+            return m_unpackPrefixArguments[p] + QStringList( file ) + m_packPostfixArguments[p];
         }
 
     private:
@@ -293,7 +291,6 @@ ArchiveDefinition::ArchiveDefinition( const QString & id, const QString & label 
       m_label( label )
 {
     m_packCommandMethod[OpenPGP]   = m_packCommandMethod[CMS] = CommandLine;
-    m_unpackCommandMethod[OpenPGP] = m_packCommandMethod[CMS] = CommandLine;
 }
 
 ArchiveDefinition::~ArchiveDefinition() {}
@@ -333,7 +330,7 @@ shared_ptr<Input> ArchiveDefinition::createInputFromPackCommand( GpgME::Protocol
     return shared_ptr<Input>(); // make compiler happy
 }
 
-shared_ptr<Output> ArchiveDefinition::createOutputFromUnpackCommand( GpgME::Protocol p, const QStringList & files ) const {
+shared_ptr<Output> ArchiveDefinition::createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file ) const {
     notImplemented();
 }
 
