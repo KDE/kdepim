@@ -396,6 +396,18 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   Q_ASSERT( hasSupportedPayload( item ) );
   mEditor->load( Akonadi::incidence( item ) );
 
+  const KCalCore::Incidence::Ptr incidence = Akonadi::incidence( item );
+  const QStringList allEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
+  KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
+  if ( incidence->attendeeCount() > 1 &&
+       me && ( me->status() == KCalCore::Attendee::NeedsAction ||
+               me->status() == KCalCore::Attendee::Tentative ||
+               me->status() == KCalCore::Attendee::InProcess ) ) {
+    mUi->mInvitationBar->show();
+  } else {
+    mUi->mInvitationBar->hide();
+  }
+
   if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
     mCalSelector->setMimeTypeFilter(
       QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
@@ -508,29 +520,7 @@ void EventOrTodoDialog::load( const Akonadi::Item &item, const QDate &activeDate
     d->mItemManager->load( item );
   } else {
     Q_ASSERT( d->hasSupportedPayload( item ) );
-
-    d->mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
-
-    const KCalCore::Incidence::Ptr incidence = Akonadi::incidence( item );
-    const QStringList allEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
-    KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
-    if ( incidence->attendeeCount() > 1 &&
-         me && ( me->status() == KCalCore::Attendee::NeedsAction ||
-                 me->status() == KCalCore::Attendee::Tentative ||
-                 me->status() == KCalCore::Attendee::InProcess ) ) {
-      d->mUi->mInvitationBar->show();
-    } else {
-      d->mUi->mInvitationBar->hide();
-    }
-
-    if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
-      d->mCalSelector->setMimeTypeFilter(
-        QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-    } else {
-      d->mCalSelector->setMimeTypeFilter(
-        QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
-    }
-
+    d->load( item );
     show();
   }
 }
