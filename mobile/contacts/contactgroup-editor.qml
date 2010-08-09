@@ -34,9 +34,12 @@ KPIM.MainView {
     clip: true;
     flickableDirection: "VerticalFlick"
 
-    ContactEditors.ContactGroupEditor {
-      id: editor;
-      width: parent.width;
+    Item {
+      anchors.fill: parent
+      ContactEditors.ContactGroupEditor {
+        id: editor;
+        width: parent.width;
+      }
     }
   }
 }
