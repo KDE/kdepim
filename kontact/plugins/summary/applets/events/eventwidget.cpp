@@ -106,9 +106,9 @@ void EventWidget::initUI()
     layout->addItem(m_timetil);
 
     // Create the more info button
-    m_moreInfoIcon = new Plasma::IconWidget( KIcon("arrow-down-double") );
+    m_moreInfoIcon = new Plasma::IconWidget( "arrow-down-double" );
     m_moreInfoIcon->setMaximumWidth(16);
-    m_moreInfoIcon->setMaximumHieght(16);
+    m_moreInfoIcon->setMaximumHeight(16);
     m_moreInfoIcon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     layout->addItem(m_moreInfoIcon);
     layout->setAlignment(m_moreInfoIcon, Qt::AlignBottom|Qt::AlignHCenter);
@@ -130,7 +130,7 @@ void EventWidget::initUI()
     layout->addItem(m_startDateLabel);
 
     m_fullViewWidget->setLayout(layout);
-    m_masterLayout->addItem(m_fullViewWidget)
+    m_masterLayout->addItem(m_fullViewWidget);
     setLayout(m_masterLayout);
 }
 
@@ -161,9 +161,10 @@ void EventWidget::updateSummaryUI()
     m_summaryLabel->setText( m_summary );
 
     // Set the time-'til
+    int numDays = 31;
     if (m_parent) {
         KConfigGroup config = qobject_cast<Plasma::Applet*>(m_parent)->config();
-        int numDays = config.readEntry("numDays",31);
+        numDays = config.readEntry("numDays",31);
     }
 
     int difference = m_startDate.daysTo( KDateTime( QDateTime::currentDateTime() ) );
@@ -194,7 +195,7 @@ void EventWidget::updateFullUI()
     }
 
     // .. and set the text!
-    m_startDateLabel->setText( m_startDate );
+    m_startDateLabel->setText( text );
 
 }
 
@@ -207,13 +208,13 @@ void EventWidget::toggleMoreInfo()
     }
 }
 
-void setMoreInfoVisible( bool visible )
+void EventWidget::setMoreInfoVisible( bool visible )
 {
     m_fullViewWidget->setVisible(visible);
     m_moreInfoVisible = visible;
 }
 
-bool moreInfoVisible()
+bool EventWidget::moreInfoVisible()
 {
     return m_moreInfoVisible;
 }
