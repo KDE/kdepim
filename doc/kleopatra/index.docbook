@@ -1346,7 +1346,7 @@ updated.</para>
         <varlistentry id="settings-toolbars">
           <term>
             <menuchoice>
-              <guimenu>Settings</guimenu><guisubmenu>Toolbars</guisubmenu></menuchoice></term>
+              <guimenu>Settings</guimenu><guisubmenu>Toolbars Shown</guisubmenu></menuchoice></term>
           <listitem>
             <para>
               <action>Shows/hides &kleopatra; toolbars.</action>
