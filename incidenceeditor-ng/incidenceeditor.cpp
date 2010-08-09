@@ -44,7 +44,7 @@ bool IncidenceEditor::isValid()
   return true;
 }
 
-QString IncidenceEditor::type()
+QString IncidenceEditor::type() const
 {
   if ( mLoadedIncidence == 0 )
     return QString();
