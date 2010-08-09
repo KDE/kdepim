@@ -3,12 +3,10 @@ Friday, August 5th 2010
 Problems addressed
 ------------------
 
-* kolab/issue4203: A reminder can contain non-existing events (rt#6051)
-* kolab/issue3908: Mail view and print layout problem if description of attachment is to long (#5872)
-* kolab/issue4405: The reminder should be in the foreground.
+* kolab/issue4203(mainly): A reminder can contain non-existing events (rt#6051)
 * kolab/issue4335: D'n'D a mail attachment with the icon is not working (rt#6126)
 * kolab/issue3932: Kontact should show a warning, if a user tries to accept an invitation of a past event (rt#5833)
-* kolab/issue4005: Attachments should open in read-only folders (rt#5915)
+* kolab/issue4005(improved): Attachments should open in read-only folders (rt#5915)
 * Speed up changing Kolab incidences in KOrganizer by only sending one change instead of two
   to the server (see kolab/issue2109)
 
