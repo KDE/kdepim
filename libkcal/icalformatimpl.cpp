@@ -2114,7 +2114,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
       if (!cal->todo(todo->uid())) {
         if ( !cal->addTodo( todo ) ) {
           cal->endBatchAdding();
-          return false;
+          // If the user pressed cancel, return true, it's not an error.
+          return cal->exception() && cal->exception()->errorCode() == ErrorFormat::UserCancel;
         }
       } else {
         delete todo;
@@ -2133,7 +2134,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
       if (!cal->event(event->uid())) {
         if ( !cal->addEvent( event ) ) {
           cal->endBatchAdding();
-          return false;
+          // If the user pressed cancel, return true, it's not an error.
+          return cal->exception() && cal->exception()->errorCode() == ErrorFormat::UserCancel;
         }
       } else {
         delete event;
@@ -2152,7 +2154,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
       if (!cal->journal(journal->uid())) {
         if ( !cal->addJournal(journal) ) {
           cal->endBatchAdding();
-          return false;
+          // If the user pressed cancel, return true, it's not an error.
+          return cal->exception() && cal->exception()->errorCode() == ErrorFormat::UserCancel;
         }
       } else {
         delete journal;
