@@ -49,21 +49,20 @@ void EventWidget::setData( QVariantHash args )
         m_startDate = qVariantValue<KDateTime>( var );
 
         // make the date reference this year
-        // FIXME fugly.
-        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
+        QDate date = m_startDate.date();
+        date = QDate( QDate::currentDate().year(), date.month(), date.day() );
+        m_startDate = KDateTime( date, m_startDate.time() );
 
-        m_startDate = KDateTime( day );
     }
 
     var = args[ "EndDate" ];
     if ( var.isValid() ) {
-        m_startDate = qVariantValue<KDateTime>( var );
+        m_endDate = qVariantValue<KDateTime>( var );
 
         // make the date reference this year
-        // FIXME fugly.
-        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
-
-        m_endDate = KDateTime( day );
+        QDate date = m_endDate.date();
+        date = QDate( QDate::currentDate().year(), date.month(), date.day() );
+        m_endDate = KDateTime( date, m_startDate.time() );
     }
 
     var = args[ "Summary" ];
@@ -169,9 +168,9 @@ void EventWidget::updateSummaryUI()
 
     int difference = m_startDate.daysTo( KDateTime( QDateTime::currentDateTime() ) );
     m_timetil->setEnd( numDays );
-    m_timetil->setCurrent( difference );
+    m_timetil->setCurrent( numDays - difference );
 
-    kDebug() << "update ui" << icon << m_summary << difference;
+    // kDebug() << "update ui" << icon << m_summary << difference;
 }
 
 void EventWidget::updateFullUI()
@@ -183,13 +182,13 @@ void EventWidget::updateFullUI()
     QString text;
     if ( m_endDate.isValid() && m_startDate.isValid() ) {
         text = i18n( "%1 to %2");
-        text = text.arg( m_startDate.toString(), m_endDate.toString() );
+        text = text.arg( m_startDate.toString(KDateTime::ISODate), m_endDate.toString(KDateTime::ISODate) );
     } else if ( m_startDate.isValid() ) {
         text = i18n("%1");
-        text = text.arg( m_startDate.toString() );
+        text = text.arg( m_startDate.toString(KDateTime::ISODate) );
     } else if ( m_endDate.isValid() ) {
         text = i18n("Ends on %1");
-        text = text.arg( m_endDate.toString() );
+        text = text.arg( m_endDate.toString(KDateTime::ISODate));
     } else {
         text = "";
     }
@@ -217,4 +216,9 @@ void EventWidget::setMoreInfoVisible( bool visible )
 bool EventWidget::moreInfoVisible()
 {
     return m_moreInfoVisible;
+}
+
+QString EventWidget::summary()
+{
+    return m_summary;
 }

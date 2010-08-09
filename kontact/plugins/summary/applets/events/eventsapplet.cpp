@@ -92,7 +92,7 @@ void EventsApplet::configChanged()
 
     // This can be either "Todo", "Events" or "Agenda" (merged of both)
     m_incidenceType = cg.readEntry( "incidenceType", "Agenda" );
-    m_numDays = cg.readEntry( "numDays", 7 );
+    m_numDays = cg.readEntry( "numDays", 31 );
 }
 
 void EventsApplet::updateEvents()
@@ -121,8 +121,9 @@ void EventsApplet::updateUI()
 
     // ... and repopulate it.
     QMapIterator<QString,EventWidget*> it( m_incidences );
-    while ( it.hasNext() ) {
-        it.next();
+    it.toBack();
+    while ( it.hasPrevious() ) {
+        it.previous();
         m_scrollerLayout->addItem( it.value() );
     }
 }
@@ -130,26 +131,48 @@ void EventsApplet::updateUI()
 void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
 {
     if ( source.startsWith( "events" ) ) { // ++insurance
+        // Start by purging old data
+        m_incidences.clear();
+
         QHashIterator<QString,QVariant> it( data );
         while ( it.hasNext() ) {
             it.next();
             QVariantHash data = it.value().toHash();
+
+            EventWidget* widget = new EventWidget( data );
             KDateTime sd = qVariantValue<KDateTime>( data[ "StartDate" ] );
 
-            QString key = sd.toString();
-            if (m_incidences[ key ]) { // XXX maybe, need to validate this
-                int i = 0;
-                while ( i <= 255 ) { // XXX try moar?
-                    i++;
-                    key = key + "~";
+            QDate date = sd.date();
+            date = QDate( QDate::currentDate().year(), date.month(), date.day() );
+            sd = KDateTime( date, sd.time() );
 
-                    if (m_incidences[ key ]) { // XXX need to validate this works too
-                        i = 255;
+            // Since it seems like the calendar dataengine is broken and returning ALL data, let's
+            // filter it a little bit by hand... FIXME
+            int difference = sd.daysTo( KDateTime( QDateTime::currentDateTime() ) ) % 365; // XXX different locales with different calendars?
+            kDebug() << difference << m_numDays;
+            if ( difference <= m_numDays && difference >= 0 ) {
+                QString key = sd.toString();
+                if (m_incidences[ key ]) {
+                    int i = 0;
+                    while ( i <= 255 ) {
+                        if ( m_incidences[ key ]->summary() == data[ "Summary" ] ) { // Event already exists with same summary, 
+                                                                                     // assume it's the same event
+                            break;
+                        }
+
+                        i++;
+                        key = sd.toString()+QString( i );
+
+                        if (!m_incidences[ key ]) { // Found a unique ID, use it.
+                            break;
+                        }
                     }
                 }
+                kDebug() << "Adding" << data[ "Summary" ] << key;
+                m_incidences[ key ] = widget;
+            } else {
+                delete widget;
             }
-
-            m_incidences[ key ] = new EventWidget( data, this );
             // kDebug() << data;
         }
 
