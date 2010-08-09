@@ -53,6 +53,19 @@ KPIM.MainView {
     agendaView.visible = true;
   }
 
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      korganizerActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      korganizerActions.showOnlyCategory("account")
+    } else { // something else is selected
+      korganizerActions.showOnlyCategory("single_calendar")
+    }
+  }
+
   KCal.IncidenceView {
     id: eventView
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
@@ -204,31 +217,9 @@ KPIM.MainView {
                                        application.numSelectedAccounts,
                                        dummyItemView.count)
 
-      onNumBreadcrumbsChanged : {
-        if (numBreadcrumbs == 0)
-        {
-          korganizerActions.showOnlyCategory("home")
-        } else if (numBreadcrumbs == 1)
-        {
-          korganizerActions.showOnlyCategory("account")
-        } else {
-          korganizerActions.showOnlyCategory("single_calendar")
-        }
-      }
-      onNumSelectedChanged : {
-        if (numSelected == 0)
-        {
-          korganizerActions.showOnlyCategory("home")
-          return;
-        }
-        if (numBreadcrumbs == 0)
-        {
-          korganizerActions.showOnlyCategory("account")
-        } else {
-          korganizerActions.showOnlyCategory("single_calendar")
-        }
-      }
-
+      Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
     }
 
     KPIM.Button2 {
