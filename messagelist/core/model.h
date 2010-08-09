@@ -67,8 +67,8 @@ class ModelPrivate;
  * The keypoint in this class is that it has to be non-blocking in manipulating the tree:
  * fill, cleanup and update operations are performed in timed chunks. Perfect non-blocking
  * behaviour is not possible since there are some small operations that basically can't be
- * splitted in chunks. However, these exceptions apply to a minority of tasks and
- * in the average case the user will not notice.
+ * split in chunks. However, these exceptions apply to a minority of tasks and in the
+ * average case the user will not notice.
  *
  * The data for building the tree is obtained from a subclass of StorageModel. The
  * StorageModel must offer a consistent rappresentation of a "flat" folder containing
@@ -224,7 +224,7 @@ public:
 
   /// Called when user initiates a drag from the messagelist
   virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
-  
+
 Q_SIGNALS:
   /**
    * Notify the outside when updating the status bar with a message

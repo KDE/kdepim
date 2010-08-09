@@ -237,8 +237,12 @@ KOTimelineView::KOTimelineView( QWidget *parent )
   mGantt->setContextMenuPolicy( Qt::CustomContextMenu );
   connect( mGantt, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenuRequested(QPoint)) );
 
+#if 0  
   connect( mGantt, SIGNAL(dateTimeDoubleClicked(const QDateTime &)),
            SLOT(newEventWithHint(const QDateTime &)) );
+#else
+  kDebug() << "Disabled code, port to KDGantt2";
+#endif  
 }
 
 KOTimelineView::~KOTimelineView()

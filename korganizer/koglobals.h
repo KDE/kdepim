@@ -56,7 +56,15 @@ class KORGANIZERPRIVATE_EXPORT KOGlobals
     QPixmap smallIcon( const QString &name ) const;
 
     QStringList holiday( const QDate &qd ) const;
+
     bool isWorkDay( const QDate &qd ) const;
+
+
+    /**
+       Returns a list containing work days between @p start and @end.
+    */
+    QList<QDate> workDays( const QDate &start, const QDate &end ) const;
+
     int getWorkWeekMask();
 
     /**

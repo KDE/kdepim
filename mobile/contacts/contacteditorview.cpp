@@ -20,7 +20,12 @@
 #include "contacteditorview.h"
 
 #include "contactmetadata_p.h"
-#include "declarativeeditors.h"
+#include "editorgeneral.h"
+#include "editorbusiness.h"
+#include "editorlocation.h"
+#include "editorcrypto.h"
+#include "editormore.h"
+#include "declarativewidgetbase.h"
 
 #include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
 
@@ -31,6 +36,12 @@
 #include <KABC/Addressee>
 
 using namespace Akonadi;
+
+typedef DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral> DeclarativeEditorGeneral;
+typedef DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness> DeclarativeEditorBusiness;
+typedef DeclarativeWidgetBase<EditorLocation, ContactEditorView, &ContactEditorView::setEditorLocation> DeclarativeEditorLocation;
+typedef DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorView::setEditorCrypto> DeclarativeEditorCrypto;
+typedef DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore> DeclarativeEditorMore;
 
 class ContactEditorView::Private : public Akonadi::ItemEditorUi
 {
@@ -52,7 +63,7 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
   public: // slots
     void saveFinished();
-    void saveFailed( const QString &errorMessage );
+    void saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage );
     void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorGeneralUi interface
@@ -115,7 +126,7 @@ void ContactEditorView::Private::saveFinished()
   q->deleteLater();
 }
 
-void ContactEditorView::Private::saveFailed( const QString &errorMessage )
+void ContactEditorView::Private::saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   kError() << errorMessage;
 }
@@ -192,6 +203,13 @@ ContactEditorView::ContactEditorView( QWidget *parent )
   : KDeclarativeFullScreenView( QLatin1String( "contact-editor" ), parent ),
     d( new Private( this ) )
 {
+  setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ContactEditorView::delayedInit()
+{
+  KDeclarativeFullScreenView::delayedInit();
+
   qmlRegisterType<DeclarativeEditorGeneral>( "org.kde.contacteditors", 4, 5, "ContactEditorGeneral" );
   qmlRegisterType<DeclarativeEditorBusiness>( "org.kde.contacteditors", 4, 5, "ContactEditorBusiness" );
   qmlRegisterType<DeclarativeEditorLocation>( "org.kde.contacteditors", 4, 5, "ContactEditorLocation" );
@@ -201,7 +219,7 @@ ContactEditorView::ContactEditorView( QWidget *parent )
   connect( d->mItemManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
            SLOT( saveFinished() ) );
   connect( d->mItemManager, SIGNAL( itemSaveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ),
-           SLOT( saveFailed( QString ) ) );
+           SLOT( saveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ) );
 }
 
 ContactEditorView::~ContactEditorView()
@@ -261,7 +279,12 @@ void ContactEditorView::setEditorMore( EditorMore *editor )
 
 void ContactEditorView::loadContact( const Item &item )
 {
-  d->mItemManager->load( item );
+  if ( !d->mEditorGeneral ) {
+    // the editor is not fully loaded yet, so try later again
+    QMetaObject::invokeMethod( this, "loadContact", Qt::QueuedConnection, Q_ARG( Akonadi::Item, item ) );
+  } else {
+    d->mItemManager->load( item );
+  }
 }
 
 void ContactEditorView::save()

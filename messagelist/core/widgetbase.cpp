@@ -18,7 +18,6 @@
  *
  *******************************************************************************/
 
-#include "widgetbase.h"
 #include "core/widgetbase.h"
 
 #include "core/aggregation.h"

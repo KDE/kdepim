@@ -38,6 +38,9 @@
 #include "messageviewer/mailwebview.h"
 #include "messageviewer/globalsettings.h"
 
+#include <Akonadi/ItemModifyJob>
+
+
 #include "messageviewer/csshelper.h"
 using MessageViewer::CSSHelper;
 #include "util.h"
@@ -296,7 +299,6 @@ void KMReaderWin::displayBusyPage()
 
   displaySplashPage( info );
 }
-#include <Akonadi/ItemModifyJob>
 
 void KMReaderWin::displayOfflinePage()
 {
@@ -648,7 +650,6 @@ void KMReaderWin::update( bool force )
 
 void KMReaderWin::slotUrlClicked( const Akonadi::Item & item, const KUrl & url )
 {
-  KMMainWidget *mainWidget = dynamic_cast<KMMainWidget*>( mMainWindow );
   uint identity = 0;
   if ( item.isValid() && item.parentCollection().isValid() ) {
     QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection() );

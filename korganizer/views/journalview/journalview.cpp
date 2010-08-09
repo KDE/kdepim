@@ -303,7 +303,9 @@ void JournalView::readJournal( const Item &j )
     mBrowser->insertPlainText( description );
   }
 
-  mEditButton->setEnabled( mCalendar->hasChangeRights( j ) );
-  mDeleteButton->setEnabled( mCalendar->hasDeleteRights( j ) );
+  if( mCalendar ) {
+    mEditButton->setEnabled( mCalendar->hasChangeRights( j ) );
+    mDeleteButton->setEnabled( mCalendar->hasDeleteRights( j ) );
+  }
 
 }

@@ -25,6 +25,7 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
+#include <akonadi/etmviewstatesaver.h>
 
 #include <QtGui/QWidget>
 
@@ -36,6 +37,9 @@ class KJob;
 class KXmlGuiWindow;
 
 class AkonadiBrowserModel;
+
+template <typename T> class KViewStateMaintainer;
+
 
 namespace Akonadi {
 class EntityTreeView;
@@ -68,9 +72,6 @@ class BrowserWidget: public QWidget
     void dumpToXmlResult( KJob *job );
     void clear();
 
-    void saveState();
-    void restoreState();
-
   private:
     AkonadiBrowserModel *mBrowserModel;
     Akonadi::EntityTreeView *mCollectionView;
@@ -82,6 +83,7 @@ class BrowserWidget: public QWidget
     QStandardItemModel *mNepomukModel;
     Akonadi::StandardActionManager *mStdActionManager;
     Akonadi::Monitor *mMonitor;
+    KViewStateMaintainer<Akonadi::ETMViewStateSaver> *m_stateMaintainer;
 };
 
 #endif

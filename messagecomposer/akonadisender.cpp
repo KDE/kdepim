@@ -75,7 +75,6 @@ static void extractSenderToCCAndBcc( const KMime::Message::Ptr &aMsg, QString &s
 
 
 AkonadiSender::AkonadiSender()
-  : mProgressItem( 0 )
 {
 }
 
@@ -96,7 +95,7 @@ bool AkonadiSender::doSendQueued( const QString &customTransport )
 {
   kDebug() << "Sending queued message with custom transport:" << customTransport;
   mCustomTransport = customTransport;
-  
+
   DispatcherInterface *dispatcher = new DispatcherInterface();
   if( mCustomTransport.isEmpty() ) {
     dispatcher->dispatchManually();

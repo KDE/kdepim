@@ -1346,7 +1346,7 @@ updated.</para>
         <varlistentry id="settings-toolbars">
           <term>
             <menuchoice>
-              <guimenu>Settings</guimenu><guisubmenu>Toolbars</guisubmenu></menuchoice></term>
+              <guimenu>Settings</guimenu><guisubmenu>Toolbars Shown</guisubmenu></menuchoice></term>
           <listitem>
             <para>
               <action>Shows/hides &kleopatra; toolbars.</action>
@@ -2646,7 +2646,7 @@ C=DE
           </para>
 
           <para>
-            The allowed values as <literal>RSA</literal> for
+            The allowed values are <literal>RSA</literal> for
             <acronym>RSA</acronym> keys, <literal>DAS</literal> for
             <acronym>DSA</acronym> (sign-only) keys, and
             <literal>DSA+ELG</literal> for a <acronym>DSA</acronym>

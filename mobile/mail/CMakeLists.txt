@@ -25,7 +25,6 @@ kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 
 target_link_libraries(kmail-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
-    ${QT_QTOPENGL_LIBRARY}
     ${KDE4_KCMUTILS_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
     ${KDEPIMLIBS_KMIME_LIBRARY}
@@ -37,6 +36,7 @@ target_link_libraries(kmail-mobile
     messagecomposer
     messagecore
     messageviewer
+    templateparser
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -49,6 +49,7 @@ install(FILES
   EditorView.qml
   kmail-composer.qml
   kmail-mobile.qml
+  kmail-mobile-background.png
   kmail-mobile.notifyrc
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )

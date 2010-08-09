@@ -209,9 +209,7 @@ bool SDSummaryWidget::initHolidays()
   KConfigGroup hconfig( &_hconfig, "Time & Date" );
   QString location = hconfig.readEntry( "Holidays" );
   if ( !location.isEmpty() ) {
-    if ( mHolidays ) {
-      delete mHolidays;
-    }
+    delete mHolidays;
     mHolidays = new HolidayRegion( location );
     return true;
   }

@@ -28,7 +28,12 @@
 #include "kocore.h"
 #include "korganizer_interface.h"
 
-#include <kcalprefs.h>
+#include <akonadi/kcal/kcalprefs.h>
+#include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/incidenceviewer.h>
+#include <akonadi/kcal/mailclient.h>
+#include <akonadi/kcal/utils.h>
+
 #include <KCal/Event>
 #include <KCal/Incidence>
 #include <KCal/IncidenceFormatter>
@@ -36,11 +41,6 @@
 
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
-
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/incidenceviewer.h>
-#include <akonadi/kcal/mailclient.h>
-#include <akonadi/kcal/utils.h>
 
 #include <Akonadi/Item>
 
@@ -57,11 +57,11 @@
 #include <KToolInvocation>
 #include <KWindowSystem>
 
+#include <phonon/mediaobject.h>
 #include <QLabel>
 #include <QSpinBox>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-#include <phonon/mediaobject.h>
 
 using namespace KPIMIdentities;
 using namespace KCal;
@@ -581,10 +581,16 @@ void AlarmDialog::show()
   mIncidenceTree->resizeColumnToContents( 1 );
   mIncidenceTree->resizeColumnToContents( 2 );
   mIncidenceTree->sortItems( 1, Qt::AscendingOrder );
-  mIncidenceTree->setCurrentItem( mIncidenceTree->topLevelItem( 0 ) );
 
-  // make sure no items are selected so pressing <enter> cannot do anything.
-  mIncidenceTree->setItemSelected( mIncidenceTree->topLevelItem( 0 ), false );
+  // select the first item that hasn't already been notified
+  QTreeWidgetItemIterator it( mIncidenceTree );
+  while ( *it ) {
+    ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+    if ( !item->mNotified ) {
+      (*it)->setSelected( true );
+      break;
+    }
+  }
 
   // reset the default suspend time
   mSuspendSpin->setValue( defSuspendVal );
@@ -821,7 +827,9 @@ void AlarmDialog::toggleDetails( QTreeWidgetItem *item, int column )
 
 void AlarmDialog::showDetails()
 {
-  ReminderListItem *item = dynamic_cast<ReminderListItem *>( mIncidenceTree->currentItem() );
+  ReminderListItem *item =
+    dynamic_cast<ReminderListItem *>( mIncidenceTree->selectedItems().first() );
+
   if ( !item ) {
     mDetailView->setIncidence( Akonadi::Item() );
   } else {

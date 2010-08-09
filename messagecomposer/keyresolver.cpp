@@ -146,7 +146,7 @@ static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
       if ( it->isRevoked() )
         kWarning() <<"a userid is revoked";
       else
-        kWarning() <<"bad validity" << it->validity();
+        kWarning() <<"bad validity" << int( it->validity() );
 #endif
   }
   return false;
@@ -1109,7 +1109,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
     it->pref = pref.encryptionPreference;
     it->signPref = pref.signingPreference;
     it->format = pref.cryptoMessageFormat;
-    kDebug() << "set key data:" << it->pref << it->signPref << it->format;
+    kDebug() << "set key data:" << int( it->pref ) << int( it->signPref ) << int( it->format );
   }
 
   for ( std::vector<Item>::iterator it = d->mSecondaryEncryptionKeys.begin() ; it != d->mSecondaryEncryptionKeys.end() ; ++it ) {
@@ -1155,7 +1155,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
       break;
     }
   }
-  kDebug() << "got commonFormat for primary recipients:" << commonFormat;
+  kDebug() << "got commonFormat for primary recipients:" << int( commonFormat );
   if ( commonFormat != AutoFormat )
     addKeys( d->mPrimaryEncryptionKeys, commonFormat );
   else
@@ -1594,7 +1594,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   const bool x509 = containsSMIME( mCryptoMessageFormats );
 
   Kleo::KeySelectionDialog dlg( i18n("Encryption Key Selection"),
-				msg, selectedKeys,
+				msg, KPIMUtils::extractEmailAddress( person ), selectedKeys,
                                 Kleo::KeySelectionDialog::ValidEncryptionKeys
                                 & ~(opgp ? 0 : Kleo::KeySelectionDialog::OpenPGPKeys)
                                 & ~(x509 ? 0 : Kleo::KeySelectionDialog::SMIMEKeys),

@@ -665,6 +665,15 @@ QItemSelectionModel* Pane::currentItemSelectionModel()
   return 0;
 }
 
+void Pane::resetModelStorage()
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w ) {
+    MessageList::StorageModel *m = static_cast<MessageList::StorageModel*>( w->storageModel() );
+    if ( m )
+      m->resetModelStorage();
+  }
+}
 
 
 

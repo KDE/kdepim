@@ -879,6 +879,7 @@ void KAEvent::readAlarm(const Alarm* alarm, AlarmData& data, bool audioMain, boo
     data.alarm           = alarm;
     data.displayingFlags = 0;
     data.isEmailText     = false;
+    data.speak           = false;
     data.nextRepeat      = 0;
     if (alarm->repeatCount())
     {
@@ -1151,10 +1152,10 @@ void KAEvent::setEmail(uint from, const EmailAddressList& addresses, const QStri
     d->mEmailAttachments  = attachments;
 }
 
-void KAEvent::Private::setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds)
+void KAEvent::Private::setAudioFile(const QString& filename, float volume, float fadeVolume, int fadeSeconds, bool allowEmptyFile)
 {
     mAudioFile = filename;
-    mSoundVolume = filename.isEmpty() ? -1 : volume;
+    mSoundVolume = (!allowEmptyFile && filename.isEmpty()) ? -1 : volume;
     if (mSoundVolume >= 0)
     {
         mFadeVolume  = (fadeSeconds > 0) ? fadeVolume : -1;
@@ -1273,7 +1274,7 @@ void KAEvent::Private::calcTriggerTimes() const
     if (mChangeCount)
     {
         mChanged = true;   // note that changes have actually occurred
-    return;
+        return;
     }
     mChanged = false;
     if (mCategory == KAlarm::CalEvent::ARCHIVED  ||  !mTemplateName.isEmpty())
@@ -2365,7 +2366,7 @@ Alarm* KAEvent::Private::initKCalAlarm(Event* event, int startOffsetSecs, const 
 void KAEvent::Private::setAudioAlarm(Alarm* alarm) const
 {
     alarm->setAudioAlarm(mAudioFile);  // empty for a beep or for speaking
-    if (!mAudioFile.isEmpty()  &&  mSoundVolume >= 0)
+    if (mSoundVolume >= 0)
         alarm->setCustomProperty(KAlarm::Calendar::APPNAME, VOLUME_PROPERTY,
                       QString::fromLatin1("%1;%2;%3").arg(QString::number(mSoundVolume, 'f', 2))
                                                      .arg(QString::number(mFadeVolume, 'f', 2))

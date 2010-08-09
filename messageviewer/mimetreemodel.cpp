@@ -19,6 +19,8 @@
 
 #include "mimetreemodel.h"
 
+#include "nodehelper.h"
+
 #include <kmime/kmime_content.h>
 #include <KMime/Message>
 
@@ -51,23 +53,16 @@ class MimeTreeModel::Private
 
     QString descriptionForContent( KMime::Content *content )
     {
-      if ( content->hasHeader( "Subject" ) )
-        return content->getHeaderByType( "Subject" )->asUnicodeString();
+      KMime::Message * const message = dynamic_cast<KMime::Message*>( content );
+      if ( message && message->subject( false ) )
+        return message->subject()->asUnicodeString();
+      const QString name = NodeHelper::fileName( content );
+      if ( !name.isEmpty() )
+        return name;
       if ( content->contentDescription( false ) ) {
         const QString desc = content->contentDescription()->asUnicodeString();
         if ( !desc.isEmpty() )
           return desc;
-      }
-      if ( content->contentType( false ) ) {
-        const QString name = content->contentType()->name();
-        if ( !name.isEmpty() )
-          return name;
-      }
-      if ( content->contentDisposition( false ) )
-      {
-        const QString name = content->contentDisposition()->filename();
-        if ( !name.isEmpty() )
-          return name;
       }
       return i18n( "body part" );
     }

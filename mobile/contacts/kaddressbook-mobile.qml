@@ -38,6 +38,21 @@ KPIM.MainView {
     contactListPage.visible = true;
     contactView.itemId = -1;
     contactGroupView.itemId = -1;
+
+    updateContextActionsStates();
+  }
+
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      kaddressbookActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      kaddressbookActions.showOnlyCategory("resource")
+    } else { // something else is selected
+      kaddressbookActions.showOnlyCategory("single_folder")
+    }
   }
 
   Akonadi.ContactView {
@@ -130,6 +145,14 @@ KPIM.MainView {
     anchors.left: parent.left
     anchors.right : parent.right
 
+    QML.Image {
+      id: backgroundImage
+      x: 0
+      y: 0
+      source: "kaddressbook-mobile-background.png"
+      visible: collectionView.visible
+    }
+
     Akonadi.AkonadiBreadcrumbNavigationView {
       id : collectionView
       anchors.top: parent.top
@@ -138,13 +161,16 @@ KPIM.MainView {
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
 
+      breadcrumbComponentFactory : _breadcrumbNavigationFactory
+
       multipleSelectionText : KDE.i18n("You have selected \n%1 addressbooks\nfrom %2 accounts\n%3 contacts", collectionView.numSelected,
                                                                                                         application.numSelectedAccounts,
                                                                                                         contactList.count)
-      breadcrumbItemsModel : breadcrumbCollectionsModel
-      selectedItemModel : selectedCollectionModel
-      childItemsModel : childCollectionsModel
+      QML.Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
     }
+
     KPIM.Button2 {
       id : selectButton
       anchors.left: collectionView.left
@@ -248,7 +274,7 @@ KPIM.MainView {
       opacity : (collectionView.hasBreadcrumbs && contactList.count == 0 ) ? 1 : 0
       // TODO: content
       QML.Text {
-        text : KDE.i18n("No contacts in this addressbook");
+        text : KDE.i18n("No contacts in this address book");
         height : 20;
         font.italic : true
         horizontalAlignment : QML.Text.AlignHCenter
@@ -280,6 +306,7 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            kaddressbookActions.showOnlyCategory("contact_viewer")
           }
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
             contactGroupView.itemId = contactList.currentItemId;
@@ -290,16 +317,17 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            kaddressbookActions.showOnlyCategory("contact_viewer")
           }
         }
       }
     }
   }
-  Akonadi.FavoriteSelector {
+
+  KPIM.MultipleSelectionScreen {
     id : favoriteSelector
     anchors.fill : parent
     visible : false
-    styleSheet: window.styleSheet
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
@@ -316,80 +344,39 @@ KPIM.MainView {
     anchors.fill: parent
 
     SlideoutPanel {
-      anchors.fill: parent
-      id: actionPanel
+      id: actionPanelNew
       titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
       handleHeight: 150
-      handlePosition: 125
-      contentWidth: 240
-      content: [
-          KPIM.Action {
-            id: syncButton
-            anchors.top: parent.top;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("akonadi_collection_sync")
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Action {
-            id: deleteButton
-            anchors.top: syncButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            action : application.getAction("akonadi_item_delete")
-            onTriggered: actionPanel.collapse();
-          },
-          KPIM.Button {
-            id : saveFavoriteButton
-            anchors.top: deleteButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            buttonText: KDE.i18n( "Save Favorite" )
-            width: parent.width - 10
-            height: collectionView.hasSelection ? parent.height / 6 : 0
-            visible : collectionView.hasSelection
-            onClicked : {
-              application.saveFavorite();
-              actionPanel.collapse();
+      anchors.fill : parent
+
+      content : [
+        KAddressBookActions {
+          id : kaddressbookActions
+          anchors.fill : parent
+
+          scriptActions : [
+            KPIM.ScriptActionItem {
+              name : "show_about_dialog"
+              script : {
+                actionPanelNew.collapse();
+                aboutDialog.visible = true
+              }
+            },
+            KPIM.ScriptActionItem {
+              name : "to_selection_screen"
+              script : {
+                actionPanelNew.collapse();
+                favoriteSelector.visible = true;
+                mainWorkView.visible = false;
+              }
             }
-          },
-          KPIM.Button {
-            id : newContactButton2
-            anchors.top: saveFavoriteButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "New Contact" )
-            onClicked : {
-              application.newContact();
-              actionPanel.collapse();
-            }
-          },
-          KPIM.Button {
-            id : newContactGroupButton
-            anchors.top: newContactButton2.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "New Group" )
-            onClicked : {
-              application.newContactGroup();
-              actionPanel.collapse();
-            }
-          },
-          KPIM.Button {
-            visible : !collectionView.hasSelection
-            anchors.top: newContactGroupButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "New Address Book" )
-            onClicked : {
-              application.launchAccountWizard();
-              actionPanel.collapse();
-            }
+          ]
+
+          onTriggered : {
+            console.log("Triggered was: " + triggeredName)
           }
+        }
       ]
     }
   }
@@ -400,16 +387,6 @@ KPIM.MainView {
       application.setSelectedAccount(row);
       // TODO: Figure out how to expand the slider programatically.
     }
-  }
-
-  QML.Connections {
-    target: collectionView
-    onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
-  }
-
-  QML.Connections {
-    target: collectionView
-    onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
 
   QML.Connections {

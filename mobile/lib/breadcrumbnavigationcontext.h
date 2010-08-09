@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef BREADCRUMBNAVIGATIONCOMPONENTFACTORY_H
-#define BREADCRUMBNAVIGATIONCOMPONENTFACTORY_H
+#ifndef BREADCRUMBNAVIGATIONFACTORY_H
+#define BREADCRUMBNAVIGATIONFACTORY_H
 
 #include <QObject>
 
@@ -29,16 +29,16 @@ class QItemSelectionModel;
 class QDeclarativeContext;
 
 
-class KBreadcrumbNavigationComponentFactoryPrivate;
+class KBreadcrumbNavigationFactoryPrivate;
 
-class KBreadcrumbNavigationComponentFactory : public QObject
+class KBreadcrumbNavigationFactory : public QObject
 {
   Q_OBJECT
 public:
-  KBreadcrumbNavigationComponentFactory(QObject* parent = 0);
-  ~KBreadcrumbNavigationComponentFactory();
+  KBreadcrumbNavigationFactory(QObject* parent = 0);
 
-  void setModel(QAbstractItemModel *model, QObject* parent = 0);
+  void createBreadcrumbContext(QAbstractItemModel *model, QObject* parent = 0);
+  void createCheckableBreadcrumbContext(QAbstractItemModel *model, QObject* parent = 0);
 
   void setBreadcrumbDepth(int depth);
   int breadcrumbDepth() const;
@@ -52,7 +52,25 @@ public:
   QAbstractItemModel *unfilteredChildItemModel() const;
   QAbstractItemModel *childItemModel() const;
 
+  QItemSelectionModel *checkModel() const;
+  QAbstractItemModel *checkedItemsModel() const;
+  QItemSelectionModel *checkedItemsCheckModel() const;
+
 public slots:
+  QObject* qmlBreadcrumbSelectionModel() const;
+  QObject* qmlSelectionModel() const;
+  QObject* qmlChildSelectionModel() const;
+
+  QObject* qmlBreadcrumbCheckModel() const;
+  QObject* qmlSelectedItemCheckModel() const;
+  QObject* qmlChildCheckModel() const;
+  QObject* qmlCheckedItemsModel() const;
+  QObject* qmlCheckedItemsCheckModel() const;
+
+  QObject* qmlBreadcrumbsModel() const;
+  QObject* qmlSelectedItemModel() const;
+  QObject* qmlChildItemsModel() const;
+
   void selectBreadcrumb( int row );
   void selectChild( int row );
 
@@ -63,8 +81,8 @@ protected:
   virtual QAbstractItemModel* getChildItemsModel(QAbstractItemModel *model);
 
 private:
-  Q_DECLARE_PRIVATE(KBreadcrumbNavigationComponentFactory)
-  KBreadcrumbNavigationComponentFactoryPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE(KBreadcrumbNavigationFactory)
+  KBreadcrumbNavigationFactoryPrivate * const d_ptr;
 
 };
 

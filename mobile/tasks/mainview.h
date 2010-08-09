@@ -34,6 +34,9 @@ public slots:
     void newTask();
     void setPercentComplete(int row, int percentComplete);
     void editIncidence( const Akonadi::Item &item );
+
+protected slots:
+    virtual void delayedInit();
 };
 
 #endif // MAINVIEW_H

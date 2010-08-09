@@ -47,6 +47,7 @@ public: /// members
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
+  Akonadi::BreadcrumbNavigationFactory *mMultiBnf;
   QItemSelectionModel                *mItemSelectionModel;
   QHash<QString, QStringList>        mPersistedSelections;
 

@@ -6,7 +6,7 @@ include_directories(
 set(mobileui_SRCS
     listproxy.cpp
     breadcrumbnavigation.cpp
-    kbreadcrumbnavigationcomponentfactory.cpp
+    breadcrumbnavigationcontext.cpp
     akonadibreadcrumbnavigationfactory.cpp
     kresettingproxymodel.cpp
     declarativeakonadiitem.cpp
@@ -17,6 +17,7 @@ set(mobileui_SRCS
     kdeclarativemainview.cpp
     kdeclarativefullscreenview.cpp
     stylesheetloader.cpp
+    qmllistselectionmodel.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -31,6 +32,7 @@ set_target_properties(kdepimmobileui PROPERTIES VERSION ${GENERIC_LIB_VERSION} S
 
 target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
+  ${QT_QTOPENGL_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   akonadi-kcal_next
@@ -51,15 +53,22 @@ install(FILES
   Action.qml
   FakeAction.qml
   ActionList.qml
+  ReorderList.qml
+  MultipleSelectionComponent.qml
+  MultipleSelectionScreen.qml
+  ReorderListContainer.qml
   ActionListItem.qml
   ActionMenuContainer.qml
   AttachmentList.qml
+  ApplicationGeneralActions.qml
   Button.qml
   Button2.qml
+  AboutDialog.qml
   CompletionSlider.qml
   ItemListView.qml
   ItemListViewDelegate.qml
   MainView.qml
+  ScriptActionItem.qml
   StartCanvas.qml
   Spinner.qml
   WindowBar.qml

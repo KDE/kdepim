@@ -8,4 +8,4 @@ if [ "$?" -ne "0"  ]; then
 	export LD_LIBRARY_PATH=$QT_DIR:$LD_LIBRARY_PATH
 fi
 
-${BIN_INSTALL_DIR}/kaddressbook-mobile
+${BIN_INSTALL_DIR}/kaddressbook-mobile --graphicssystem raster

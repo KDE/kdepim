@@ -34,12 +34,14 @@ KPIM.MainView {
   function showDate(date)
   {
     console.log("QML showDate called");
+    korganizerActions.showOnlyCategory("single_calendar")
     agenda.showRange( date, 0 /* "Day" */ );
   }
 
   function showEventView()
   {
     console.log("QML showEventView called");
+    korganizerActions.showOnlyCategory("event_viewer")
     mainWorkView.visible = false
     agendaView.visible = true
   }
@@ -48,6 +50,20 @@ KPIM.MainView {
   {
     eventView.visible = false;
     agendaView.visible = true;
+    updateContextActionsStates();
+  }
+
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      korganizerActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      korganizerActions.showOnlyCategory("account")
+    } else { // something else is selected
+      korganizerActions.showOnlyCategory("single_calendar")
+    }
   }
 
   KCal.IncidenceView {
@@ -128,6 +144,7 @@ KPIM.MainView {
           onClicked : {
             agendaView.visible = false;
             mainWorkView.visible = true;
+            korganizerActions.showOnlyCategory("home")
           }
         }
       }
@@ -143,6 +160,7 @@ KPIM.MainView {
           eventView.itemId = selectedItemId;
           eventView.activeDate = activeDate;
           application.setCurrentEventItemId(selectedItemId);
+          korganizerActions.showOnlyCategory("event_viewer")
           eventView.visible = true;
           agendaView.visible = false;
           clearSelection();
@@ -151,7 +169,7 @@ KPIM.MainView {
     }
   }
 
-  FavoriteSelector {
+  KPIM.MultipleSelectionScreen {
     id : favoriteSelector
     anchors.fill : parent
     anchors.topMargin : 12
@@ -165,7 +183,6 @@ KPIM.MainView {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
     }
-    styleSheet: window.styleSheet
   }
 
   Item {
@@ -176,15 +193,21 @@ KPIM.MainView {
     anchors.left: parent.left
     width: 1/3 * parent.width
 
+    Image {
+      id: backgroundImage
+      x: 0
+      y: 0
+      source: "korganizer-mobile-background.png"
+    }
+
     AkonadiBreadcrumbNavigationView {
       id : collectionView
       anchors.top: parent.top
       anchors.bottom : selectButton.top
       anchors.left: parent.left
       anchors.right: parent.right
-      breadcrumbItemsModel : breadcrumbCollectionsModel
-      selectedItemModel : selectedCollectionModel
-      childItemsModel : childCollectionsModel
+
+      breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
       // It's not possible to get the number of items in a model. We have to
       // put the model in a view and count the items in the view.
@@ -193,6 +216,10 @@ KPIM.MainView {
                                        collectionView.numSelected,
                                        application.numSelectedAccounts,
                                        dummyItemView.count)
+
+      Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
     }
 
     KPIM.Button2 {
@@ -342,6 +369,49 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
+
+    SlideoutPanel {
+      id: actionPanelNew
+      titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
+      handleHeight: 150
+      anchors.fill : parent
+
+      content : [
+        KorganizerActions {
+          id : korganizerActions
+          anchors.fill : parent
+
+          scriptActions : [
+            KPIM.ScriptActionItem {
+              name : "show_about_dialog"
+              script : {
+                actionPanelNew.collapse();
+                aboutDialog.visible = true
+              }
+            },
+            KPIM.ScriptActionItem {
+              name : "to_selection_screen"
+              script : {
+                actionPanelNew.collapse();
+                favoriteSelector.visible = true;
+                mainWorkView.visible = false;
+              }
+            }
+          ]
+
+          onTriggered : {
+            console.log("Triggered was: " + triggeredName)
+          }
+
+        }
+      ]
+    }
+
+  }
+
+  SlideoutPanelContainer {
+    anchors.fill: parent
     visible: agendaView.visible || eventView.visible
 
     SlideoutPanel {
@@ -436,23 +506,15 @@ KPIM.MainView {
   }
 
   Connections {
-    target: collectionView
-    onChildCollectionSelected : {
-      application.setSelectedChildCollectionRow( row );
-    }
-  }
-
-  Connections {
-    target: collectionView
-    onBreadcrumbCollectionSelected : {
-      application.setSelectedBreadcrumbCollectionRow( row );
-    }
-  }
-
-  Connections {
     target: eventView
     onIncidenceRemoved : {
       backToAgendaView();
     }
+  }
+
+  KPIM.AboutDialog {
+    id : aboutDialog
+    anchors.fill : parent
+    visible : false
   }
 }

@@ -150,12 +150,16 @@ void TodoPlugin::slotNewTodo()
 
 void TodoPlugin::slotSyncTodos()
 {
+#if 0
   QDBusMessage message =
       QDBusMessage::createMethodCall( "org.kde.kmail", "/Groupware",
                                       "org.kde.kmail.groupware",
                                       "triggerSync" );
   message << QString( "Todo" );
   QDBusConnection::sessionBus().send( message );
+#else
+  kWarning()<<" TodoPlugin::slotSyncTodos : need to port to Akonadi";
+#endif
 }
 
 bool TodoPlugin::createDBUSInterface( const QString &serviceType )

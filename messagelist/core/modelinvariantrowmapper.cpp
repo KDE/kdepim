@@ -18,7 +18,6 @@
  *
  *******************************************************************************/
 
-#include "modelinvariantrowmapper.h"
 #include "core/modelinvariantrowmapper.h"
 #include "core/modelinvariantrowmapper_p.h"
 #include "core/modelinvariantindex_p.h"

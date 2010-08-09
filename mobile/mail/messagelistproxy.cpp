@@ -22,7 +22,7 @@
 #include <akonadi/item.h>
 #include <KMime/Message>
 
-#include <messagecore/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include <KLocale>
 #include <KGlobal>

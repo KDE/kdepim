@@ -19,7 +19,8 @@
 
 #include "contactgroupeditorview.h"
 
-#include "declarativeeditors.h"
+#include "editorcontactgroup.h"
+#include "declarativewidgetbase.h"
 
 #include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
 
@@ -29,6 +30,8 @@
 #include <KABC/ContactGroup>
 
 using namespace Akonadi;
+
+typedef DeclarativeWidgetBase<EditorContactGroup, ContactGroupEditorView, &ContactGroupEditorView::setEditor> DeclarativeEditorContactGroup;
 
 class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
 {
@@ -44,8 +47,6 @@ class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
     {
       delete mItemManager;
     }
-
-    void addDetailEditor( EditorBase *editor );
 
   public: // slots
     void saveFinished();
@@ -158,11 +159,18 @@ ContactGroupEditorView::ContactGroupEditorView( QWidget *parent )
   : KDeclarativeFullScreenView( QLatin1String( "contactgroup-editor" ), parent ),
     d( new Private( this ) )
 {
+  setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ContactGroupEditorView::delayedInit()
+{
+  KDeclarativeFullScreenView::delayedInit();
+
   qmlRegisterType<DeclarativeEditorContactGroup>( "org.kde.contacteditors", 4, 5, "ContactGroupEditor" );
-  
+
   connect( d->mItemManager, SIGNAL( itemSaveFinished() ), SLOT( saveFinished() ) );
   connect( d->mItemManager, SIGNAL( itemSaveFailed( QString ) ), SLOT( saveFailed( QString ) ) );
-}    
+}
 
 ContactGroupEditorView::~ContactGroupEditorView()
 {

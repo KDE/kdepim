@@ -38,13 +38,19 @@
 #include <KCalendarSystem>
 #include <KDateTime>
 #include <KConfigGroup>
-#include <ksystemtimezone.h>
+#include <KSystemTimeZones>
 
 #include <QDateTime>
 #include <QPainter>
 #include <QPrinter>
 
 using namespace Akonadi;
+
+static QString cleanStr( const QString &instr )
+{
+  QString ret = instr;
+  return ret.replace( '\n', ' ' );
+}
 
 /**************************************************************
  *           Print Incidence
@@ -409,10 +415,13 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
                         box.width(), box.height() / 9 );
     QRect attachmentsBox( box.left(), attendeesBox.top() - padding() - box.height() / 9,
                           box.width() * 3 / 4 - padding(), box.height() / 9 );
-    QRect optionsBox( isJournal ? box.left() :  attachmentsBox.right() + padding(), attachmentsBox.top(), 0, 0 );
+    QRect optionsBox( isJournal ? box.left() :  attachmentsBox.right() + padding(),
+                      attachmentsBox.top(), 0, 0 );
     optionsBox.setRight( box.right() );
     optionsBox.setBottom( attachmentsBox.bottom() );
-    QRect notesBox( optionsBox.left(), isJournal ? ( timesBox.bottom() + padding() ) : ( locationBox.bottom() + padding() ),
+    QRect notesBox( optionsBox.left(),
+                    isJournal ? ( timesBox.bottom() + padding() ) :
+                                ( locationBox.bottom() + padding() ),
                     optionsBox.width(), 0 );
     notesBox.setBottom( optionsBox.top() - padding() );
     QRect descriptionBox( notesBox );
@@ -824,18 +833,76 @@ void CalPrintDay::print( QPainter &p, int width, int height )
                                                Akonadi::EventSortStartDate,
                                                Akonadi::SortDirectionAscending );
 
-    p.setFont( QFont( "sans-serif", 12 ) );
+    // split out the all day events as they will be printed in a separate box
+    Item::List alldayEvents, timedEvents;
+    Item::List::ConstIterator it;
+    for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
+      Event::Ptr event = Akonadi::event( *it );
+      if ( event->allDay() ) {
+        alldayEvents.append( *it );
+      } else {
+        timedEvents.append( *it );
+      }
+    }
 
-    // TODO: Find a good way to determine the height of the all-day box
+    int fontSize = 11;
+    QFont textFont( "sans-serif", fontSize, QFont::Normal );
+    p.setFont( textFont );
+    int lineSpacing = p.fontMetrics().lineSpacing();
+
+    int maxAllDayEvents = 8; // the max we allow to be printed, sorry.
+    int allDayHeight = qMin( alldayEvents.count(), maxAllDayEvents ) * lineSpacing;
+    allDayHeight = qMax( allDayHeight, ( 5 * lineSpacing ) ) + ( 2 * padding() );
     QRect allDayBox( TIMELINE_WIDTH + padding(), headerBox.bottom() + padding(),
-        0, height - headerBox.bottom() - padding() );
-    allDayBox.setRight( width );
+                     width - TIMELINE_WIDTH - padding(), allDayHeight );
+    if ( alldayEvents.count() > 0 ) {
+      // draw the side bar for all-day events
+      QFont oldFont( p.font() );
+      p.setFont( QFont( "sans-serif", 9, QFont::Normal ) );
+      drawVerticalBox( p,
+                       BOX_BORDER_WIDTH,
+                       QRect( 0, headerBox.bottom() + padding(), TIMELINE_WIDTH, allDayHeight ),
+                       i18n( "Today's Events" ),
+                       Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak );
+      p.setFont( oldFont );
+
+      // now draw at most maxAllDayEvents in the all-day box
+      drawBox( p, BOX_BORDER_WIDTH, allDayBox );
+
+      Item::List::ConstIterator it;
+      QRect eventBox( allDayBox );
+      eventBox.setLeft( TIMELINE_WIDTH + ( 2 * padding() ) );
+      eventBox.setTop( eventBox.top() + padding() );
+      eventBox.setBottom( eventBox.top() + lineSpacing );
+      int count = 0;
+      for ( it = alldayEvents.constBegin(); it != alldayEvents.constEnd(); ++it ) {
+        Event::Ptr event = Akonadi::event( *it );
+        if ( count == maxAllDayEvents ) {
+          break;
+        }
+        count++;
+        QString str;
+        if ( event->location().isEmpty() ) {
+          str = cleanStr( event->summary() );
+        } else {
+          str = i18nc( "summary, location", "%1, %2",
+                       cleanStr( event->summary() ), cleanStr( event->location() ) );
+        }
+        printEventString( p, eventBox, str );
+        eventBox.setTop( eventBox.bottom() );
+        eventBox.setBottom( eventBox.top() + lineSpacing );
+      }
+    } else {
+      allDayBox.setBottom( headerBox.bottom() );
+    }
 
     QRect dayBox( allDayBox );
-    drawAgendaDayBox( p, eventList, curDay, mIncludeAllEvents,
-                        curStartTime, curEndTime, dayBox,
-                        mIncludeDescription, mExcludeTime,
-                        mExcludeConfidential, mExcludePrivate );
+    dayBox.setTop( allDayBox.bottom() + padding() );
+    dayBox.setBottom( height );
+    drawAgendaDayBox( p, timedEvents, curDay, mIncludeAllEvents,
+                      curStartTime, curEndTime, dayBox,
+                      mIncludeDescription, mExcludeTime,
+                      mExcludeConfidential, mExcludePrivate );
 
     QRect tlBox( dayBox );
     tlBox.setLeft( 0 );
@@ -1331,11 +1398,11 @@ void CalPrintTodos::setSettingsWidget()
 
     if ( mTodoSortField != TodoFieldUnset ) {
       // do not insert if already done so.
-      cfg->mSortField->addItem( i18n( "Title" ) );
-      cfg->mSortField->addItem( i18n( "Start Date" ) );
-      cfg->mSortField->addItem( i18n( "Due Date" ) );
-      cfg->mSortField->addItem( i18n( "Priority" ) );
-      cfg->mSortField->addItem( i18n( "Percent Complete" ) );
+      cfg->mSortField->addItem( i18nc( "@option sort by title", "Title" ) );
+      cfg->mSortField->addItem( i18nc( "@option sort by start date/time", "Start Date" ) );
+      cfg->mSortField->addItem( i18nc( "@option sort by due date/time", "Due Date" ) );
+      cfg->mSortField->addItem( i18nc( "@option sort by priority", "Priority" ) );
+      cfg->mSortField->addItem( i18nc( "@option sort by percent completed", "Percent Complete" ) );
       cfg->mSortField->setCurrentIndex( mTodoSortField );
     }
 
@@ -1419,7 +1486,7 @@ void CalPrintTodos::print( QPainter &p, int width, int height )
   }
 
   outStr.truncate( 0 );
-  outStr += i18n( "Title" );
+  outStr += i18nc( "@label to-do summary", "Title" );
   p.drawText( possummary, mCurrentLinePos - 2, outStr );
 
   if ( mIncludePercentComplete ) {

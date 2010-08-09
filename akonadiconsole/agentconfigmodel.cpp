@@ -75,7 +75,7 @@ void AgentConfigModel::reload()
 int AgentConfigModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED( parent );
-  return 2;
+  return 3;
 }
 
 int AgentConfigModel::rowCount(const QModelIndex& parent) const
@@ -94,6 +94,8 @@ QVariant AgentConfigModel::data(const QModelIndex& index, int role) const
       return setting.first;
     else if ( index.column() == 1 )
       return setting.second;
+    else if ( index.column() == 2 )
+      return setting.second.typeName();
   }
   return QVariant();
 }
@@ -117,6 +119,8 @@ QVariant AgentConfigModel::headerData(int section, Qt::Orientation orientation, 
       return i18n( "Setting" );
     else if ( section == 1 )
       return i18n( "Value" );
+    else if ( section == 2 )
+      return i18n( "Type" );
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }

@@ -37,7 +37,7 @@ AboutData::AboutData()
 #endif
                 ki18n( "KDE note taking utility" ),
                 KAboutData::License_GPL,
-                ki18n("Copyright © 1997–2008 KJots authors" ),
+                ki18n("Copyright © 1997–2010 KJots authors" ),
                 KLocalizedString() )
 {
 
@@ -47,5 +47,5 @@ AboutData::AboutData()
     addAuthor(ki18n("Aaron J. Seigo"), KLocalizedString(), "aseigo@kde.org");
     addAuthor(ki18n("Stanislav Kljuhhin"), KLocalizedString(), "crz@starman.ee");
     addAuthor(ki18n("Christoph Neerfeld"), ki18n("Original author"), "chris@kde.org");
-
+    addAuthor(ki18n("Laurent Montel"), KLocalizedString(), "montel@kde.org");
 }

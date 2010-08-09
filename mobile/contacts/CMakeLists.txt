@@ -20,7 +20,6 @@ set(kab_mobile_srcs
   customfieldeditwidget.cpp
   customfieldmanager.cpp
   customfields.cpp
-  declarativeeditors.cpp
   displaynameeditwidget.cpp
   editorbase.cpp
   editorbusiness.cpp
@@ -73,6 +72,8 @@ install(FILES
   contact-editor.qml
   contactgroup-editor.qml
   kaddressbook-mobile.qml
+  KAddressBookActions.qml
+  kaddressbook-mobile-background.png
   ContactListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
 )

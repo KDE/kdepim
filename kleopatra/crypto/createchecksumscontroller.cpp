@@ -81,7 +81,7 @@ namespace {
             : QDialog( parent, f ),
               createdLB( created.empty()
                          ? i18nc("@info","No checksum files have been created.")
-                         : i18nc("@info","These checksum files have been successfull created:"), this ),
+                         : i18nc("@info","These checksum files have been successfully created:"), this ),
               createdLW( this ),
               errorsLB( errors.empty()
                         ? i18nc("@info","There were no errors.")

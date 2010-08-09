@@ -458,7 +458,7 @@ KMComposeWin::~KMComposeWin()
   if ( mFolder.isValid() && mMsg ) {
     Akonadi::Item item;
     item.setPayload( mMsg );
-    item.setMimeType( "message/rfc822" );
+    item.setMimeType( KMime::Message::mimeType() );
     MessageStatus status;
     status.setRead();
     item.setFlags( status.statusFlags() );
@@ -466,8 +466,6 @@ KMComposeWin::~KMComposeWin()
     // FIXME: listen to the result signal. The whole thing needs to be moved
     //        out of the destructor for this
   }
-
-  //deleteAll( mComposedMessages );
 
   foreach ( KTempDir *const dir, mTempDirs ) {
     delete dir;
@@ -1925,13 +1923,6 @@ Kleo::CryptoMessageFormat KMComposeWin::cryptoMessageFormat() const
     return Kleo::AutoFormat;
   }
   return cb2format( mCryptoModuleAction->currentItem() );
-}
-
-bool KMComposeWin::encryptToSelf() const
-{
-//  return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
-  KConfigGroup group( KMKernel::config(), "Composer" );
-  return group.readEntry( "crypto-encrypt-to-self", true );
 }
 
 bool KMComposeWin::queryExit ()

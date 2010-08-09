@@ -45,7 +45,6 @@ using namespace KCal;
 MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
   m_calendar = 0;
-  QTimer::singleShot(0, this, SLOT(delayedInit()));
 }
 
 MainView::~MainView()
@@ -55,13 +54,15 @@ MainView::~MainView()
 
 void MainView::delayedInit()
 {
+  KDeclarativeMainView::delayedInit();
+
   addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
   addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 
   m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
-  
+
   QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
   CalendarInterface* calendarIface = new CalendarInterface();
   new CalendarAdaptor(calendarIface);

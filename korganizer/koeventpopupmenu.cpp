@@ -103,7 +103,8 @@ void KOEventPopupMenu::showIncidencePopup( const Akonadi::Item &item, const QDat
     return;
   }
 
-
+  if( !mEventview->calendar() )  //TODO fix it
+      return;
   const bool hasChangeRights = mEventview->calendar()->hasChangeRights( mCurrentIncidence );
 
   Incidence::Ptr incidence = Akonadi::incidence( mCurrentIncidence );

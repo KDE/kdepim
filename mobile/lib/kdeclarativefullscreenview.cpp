@@ -32,6 +32,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
+#include <QtGui/QLabel>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDeclarative/QDeclarativeContext>
@@ -43,15 +44,19 @@
 
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
-  QDeclarativeView( parent )
+  QDeclarativeView( parent ),
+  m_qmlFileName( qmlFileName )
 {
-  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
-
-  QTime t;
-  if ( debugTiming ) {
-    t.start();
-    kWarning() << "Start KDeclarativeFullScreenView ctor" << &t << " - " << QDateTime::currentDateTime();
-  }
+#ifndef Q_OS_WINCE
+  // make MainView use OpenGL ES2 backend for better performance
+  // right now, the best performance can be achieved with a GLWidget
+  // and the use of the raster graphicssystem.
+  QGLFormat format = QGLFormat::defaultFormat();
+  format.setSampleBuffers(false);
+  glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
+  glWidget->setAutoFillBackground(false);
+  setViewport(glWidget);
+#endif
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #ifdef Q_WS_MAEMO_5
@@ -60,6 +65,19 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
 #endif
 
+  m_splashScreen = new QLabel( this );
+  QPixmap splashBackground;
+  splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
+  m_splashScreen->setPixmap( splashBackground );
+
+  QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+}
+
+void KDeclarativeFullScreenView::delayedInit()
+{
+  kDebug();
+  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+  QTime t;
   if ( debugTiming ) {
     kWarning() << "Applying style" << t.elapsed() << &t;
   }
@@ -78,14 +96,14 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   }
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
     engine()->addImportPath( importPath );
-  QString qmlPath = KStandardDirs::locate( "appdata", qmlFileName + ".qml" );
+  QString qmlPath = KStandardDirs::locate( "appdata", m_qmlFileName + ".qml" );
 
   if ( debugTiming ) {
     kWarning() << "Applying style done" << t.elapsed() << &t;
   }
 
   if ( qmlPath.isEmpty() ) // Try harder
-    qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + qmlFileName + ".qml" );
+    qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + ".qml" );
 
   // call setSource() only once our derived classes have set up everything
   QMetaObject::invokeMethod( this, "setQmlFile", Qt::QueuedConnection, Q_ARG( QString, qmlPath ) );
@@ -97,6 +115,14 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
     kWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
   }
 }
+
+KDeclarativeFullScreenView::~KDeclarativeFullScreenView()
+{
+#ifndef Q_OS_WINCE
+  delete glWidget;
+#endif
+}
+
 void KDeclarativeFullScreenView::setQmlFile(const QString& source)
 {
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
@@ -130,6 +156,9 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
     KMessageBox::error( this, i18n( "Application loading failed: %1", errorMessages.join( QLatin1String( "\n" ) ) ) );
     QCoreApplication::instance()->exit( 1 );
   }
+
+  if ( status == QDeclarativeView::Ready )
+    m_splashScreen->deleteLater();
 }
 
 KActionCollection* KDeclarativeFullScreenView::actionCollection() const
@@ -141,6 +170,5 @@ QObject* KDeclarativeFullScreenView::getAction( const QString &name ) const
 {
   return mActionCollection->action( name );
 }
-
 
 #include "kdeclarativefullscreenview.moc"

@@ -326,6 +326,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      const QString & text,
 					      const QString & initialQuery,
+                                              const std::vector<GpgME::Key> & selectedKeys,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
 					      bool rememberChoice,
@@ -335,12 +336,38 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
+    mSelectedKeys( selectedKeys ),
     mKeyUsage( keyUsage ),
     mSearchText( initialQuery ),
+    mInitialQuery( initialQuery ),
     mCurrentContextMenuItem( 0 )
 {
   setCaption( title );
-  setButtons( Default|Ok|Cancel|Help );
+  setButtons( Default|Ok|Cancel|Help|User1 );
+  setDefaultButton( Ok );
+  setModal( modal );
+  init( rememberChoice, extendedSelection, text, initialQuery );
+}
+
+Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
+                                              const QString & text,
+                                              const QString & initialQuery,
+                                              unsigned int keyUsage,
+                                              bool extendedSelection,
+                                              bool rememberChoice,
+                                              QWidget * parent,
+                                              bool modal )
+  : KDialog( parent ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
+    mRememberCB( 0 ),
+    mKeyUsage( keyUsage ),
+    mSearchText( initialQuery ),
+    mInitialQuery( initialQuery ),
+    mCurrentContextMenuItem( 0 )
+{
+  setCaption( title );
+  setButtons( Default|Ok|Cancel|Help|User1 );
   setDefaultButton( Ok );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
@@ -432,8 +459,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   setButtonText( KDialog::Default, i18n("&Reread Keys") );
   setButtonText( KDialog::Help, i18n("&Start Certificate Manager") );
+  setButtonText( KDialog::User1, i18n("Search for &External Certificates") );
   connect( this, SIGNAL(defaultClicked()), this, SLOT(slotRereadKeys()) );
   connect( this, SIGNAL(helpClicked()), this, SLOT(slotStartCertificateManager()) );
+  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotStartSearchForExternalCertificates()) );
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
   connect( this, SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   slotRereadKeys();

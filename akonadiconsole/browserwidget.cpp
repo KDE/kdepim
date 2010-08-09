@@ -45,6 +45,7 @@
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadi/statisticsproxymodel.h>
+#include <akonadi_next/kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -145,10 +146,6 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   selectionProxyModel->setSourceModel( mBrowserModel );
   selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
-  connect( selectionProxyModel, SIGNAL(modelAboutToBeReset()), SLOT(slotBrowserModelAboutToBeReset()) );
-  // Use a Queued connection here so that all proxies get a chance to process the reset before trying to restore the state.
-  connect( selectionProxyModel, SIGNAL(modelReset()), SLOT(slotBrowserModelReset()), Qt::QueuedConnection );
-
   EntityMimeTypeFilterModel *itemFilter = new EntityMimeTypeFilterModel( this );
   itemFilter->setSourceModel( selectionProxyModel );
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
@@ -203,12 +200,15 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   Nepomuk::ResourceManager::instance()->init();
 
-  restoreState();
+  m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config(), "CollectionViewState", this );
+  m_stateMaintainer->setView( mCollectionView );
+
+  m_stateMaintainer->restoreState();
 }
 
 BrowserWidget::~BrowserWidget()
 {
-  saveState();
+  m_stateMaintainer->saveState();
 }
 
 void BrowserWidget::clear()
@@ -449,23 +449,5 @@ void BrowserWidget::dumpToXmlResult( KJob* job )
   if ( job->error() )
     KMessageBox::error( this, job->errorString() );
 }
-
-void BrowserWidget::saveState()
-{
-  ETMViewStateSaver saver;
-  saver.setView( mCollectionView );
-  KConfigGroup cfg( KGlobal::config(), "CollectionViewState" );
-  saver.saveState( cfg );
-  cfg.sync();
-}
-
-void BrowserWidget::restoreState()
-{
-  ETMViewStateSaver *saver = new ETMViewStateSaver;
-  saver->setView( mCollectionView );
-  const KConfigGroup cfg( KGlobal::config(), "CollectionViewState" );
-  saver->restoreState( cfg );
-}
-
 
 #include "browserwidget.moc"

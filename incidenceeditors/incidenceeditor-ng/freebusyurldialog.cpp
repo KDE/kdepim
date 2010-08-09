@@ -76,6 +76,7 @@ FreeBusyUrlWidget::FreeBusyUrlWidget( AttendeeData::Ptr attendee, QWidget *paren
   topLayout->addWidget( label );
 
   mUrlEdit = new KLineEdit( this );
+  mUrlEdit->setFocus();
   topLayout->addWidget( mUrlEdit );
 }
 

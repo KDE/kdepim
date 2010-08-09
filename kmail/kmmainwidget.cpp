@@ -285,7 +285,7 @@ void KMMainWidget::restoreCollectionFolderViewConfig()
 {
   ETMViewStateSaver *saver = new ETMViewStateSaver;
   saver->setView( mFolderTreeWidget->folderTreeView() );
-  const KConfigGroup cfg( KGlobal::config(), "CollectionFolderView" );
+  const KConfigGroup cfg( KMKernel::config(), "CollectionFolderView" );
   mFolderTreeWidget->folderTreeView()->header()->restoreState( cfg.readEntry( "HeaderState", QByteArray() ) );
   saver->restoreState( cfg );
 
@@ -373,7 +373,6 @@ void KMMainWidget::slotEndCheckMail()
   // update folder menus in case some mail got filtered to trash/current folder
   // and we can enable "empty trash/move all to trash" action etc.
   updateFolderMenu();
-
 
   if ( !showNotification ) {
     return;
@@ -997,12 +996,14 @@ void KMMainWidget::createWidgets()
                                 KMKernel::self()->entityTreeModel(),
                                 KMKernel::config()->group( "FavoriteCollections" ), this );
 
+#if 0
     // ... with statistics...
     Akonadi::StatisticsProxyModel* statisticsFilterModel = new Akonadi::StatisticsProxyModel( this );
     statisticsFilterModel->setSourceModel( mFavoritesModel );
 
     statisticsFilterModel->setToolTipEnabled( true );
-    mFavoriteCollectionsView->setModel( statisticsFilterModel );
+#endif
+    mFavoriteCollectionsView->setModel( /*statisticsFilterModel*/ mFavoritesModel );
 
     mAkonadiStandardActionManager->setFavoriteCollectionsModel( mFavoritesModel );
     mAkonadiStandardActionManager->setFavoriteSelectionModel( mFavoriteCollectionsView->selectionModel() );
@@ -1099,20 +1100,35 @@ void KMMainWidget::createWidgets()
            SLOT(slotItemRemoved( const Akonadi::Item & ) ) );
   connect( kmkernel->monitor(), SIGNAL( itemMoved( Akonadi::Item,Akonadi::Collection, Akonadi::Collection ) ),
            SLOT( slotItemMoved( Akonadi::Item, Akonadi::Collection, Akonadi::Collection ) ) );
+  connect( kmkernel->monitor(), SIGNAL( collectionChanged( const Akonadi::Collection &, const QSet<QByteArray> &) ), SLOT( slotCollectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
+  connect( kmkernel->monitor(), SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection &) ), SLOT( slotCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
+
+
 }
 
-void KMMainWidget::slotItemAdded( const Akonadi::Item &item, const Akonadi::Collection& col)
+void KMMainWidget::slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination )
+{
+  //TODO add undo/redo move collection
+}
+
+void KMMainWidget::slotCollectionChanged( const Akonadi::Collection&collection, const QSet<QByteArray>&set )
+{
+  if ( mCurrentFolder
+       && ( collection == mCurrentFolder->collection() )
+       && set.contains( "MESSAGEFOLDER" ) ) {
+    mMessagePane->resetModelStorage();
+  }
+}
+
+
+void KMMainWidget::slotItemAdded( const Akonadi::Item &msg, const Akonadi::Collection& col)
 {
   if ( col.isValid() && ( col == kmkernel->outboxCollectionFolder() ) ) {
     startUpdateMessageActionsTimer();
   }
-
-  const QString fullCollectionPath( KMail::Util::fullCollectionPath( col ) );
-  if ( mCheckMail.contains( fullCollectionPath ) ) {
-    mCheckMail[fullCollectionPath].nbMail++;
-  } else {
-    collectionInfo info( col, 1 );
-    mCheckMail.insert( fullCollectionPath, info );
+  const int resultFilter = slotFilterMsg( msg );
+  if ( resultFilter == 1 ) {
+    addInfoInNotification( col );
   }
 }
 
@@ -1125,10 +1141,23 @@ void KMMainWidget::slotItemRemoved( const Akonadi::Item & item)
 
 void KMMainWidget::slotItemMoved( Akonadi::Item item, Akonadi::Collection from, Akonadi::Collection to )
 {
+  kDebug()<<" slotItemMoved from :"<<from.id()<<" to "<<to.id();
   if( item.isValid() && ( ( from.id() == kmkernel->outboxCollectionFolder().id() )
                           || to.id() == kmkernel->outboxCollectionFolder().id() ) )
   {
     startUpdateMessageActionsTimer();
+  }
+  addInfoInNotification( to );
+}
+
+void KMMainWidget::addInfoInNotification( const Akonadi::Collection&col )
+{
+  const QString fullCollectionPath( KMail::Util::fullCollectionPath( col ) );
+  if ( mCheckMail.contains( fullCollectionPath ) ) {
+    mCheckMail[fullCollectionPath].nbMail++;
+  } else {
+    collectionInfo info( col, 1 );
+    mCheckMail.insert( fullCollectionPath, info );
   }
 }
 
@@ -2018,7 +2047,7 @@ void KMMainWidget::slotCustomReplyToMsg( const QString &tmpl )
   if ( !msg.isValid() )
     return;
 
-  QString text = mMsgView ? mMsgView->copyText() : "";
+  const QString text = mMsgView ? mMsgView->copyText() : "";
 
   kDebug() << "Reply with template:" << tmpl;
 
@@ -4165,7 +4194,7 @@ QString KMMainWidget::overrideEncoding() const
 
 void KMMainWidget::slotCreateTodo()
 {
-  Akonadi::Item msg = mMessagePane->currentItem();
+  const Akonadi::Item msg = mMessagePane->currentItem();
   if ( !msg.isValid() )
     return;
   KMCommand *command = new CreateTodoCommand( this, msg );
@@ -4253,7 +4282,7 @@ void KMMainWidget::itemsReceived(const Akonadi::Item::List &list )
   if ( mMessagePane )
     mMessagePane->show();
 
-  Item item = list.first();
+  const Item item = list.first();
 
   mMsgView->setMessage( item );
   // reset HTML override to the folder setting

@@ -46,6 +46,7 @@ Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfiles
 
 [Desktop Action kleoencryptsignfiles]
 Name=Sign & Encrypt File
+Name[en_GB]=Sign & Encrypt File
 Name[es]=Firmar y cifrar archivo
 Name[nds]=Datei ünnerschrieven un verslöteln
 Name[pt]=Assinar & Cifrar o Ficheiro

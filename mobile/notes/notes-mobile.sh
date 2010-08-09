@@ -8,4 +8,4 @@ if [ "$?" -ne "0"  ]; then
 	export LD_LIBRARY_PATH=$QT_DIR:$LD_LIBRARY_PATH
 fi
 
-/usr/bin/notes-mobile
+/usr/bin/notes-mobile --graphicssystem raster

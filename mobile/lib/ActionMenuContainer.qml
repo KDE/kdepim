@@ -23,18 +23,40 @@ import Qt 4.7
 
 import org.kde.pim.mobileui 4.5 as KPIM
 
-Rectangle {
+Item {
   id : _topLevel
-  color : "lightsteelblue"
   property int actionItemHeight
   property int actionItemWidth
   property int actionItemSpacing : 0
   property int bottomMargin
   anchors.bottomMargin : bottomMargin
 
+  property alias scriptActions : myScriptActions.data
+
   default property alias content : myColumn.children
 
   signal triggered(string triggeredName)
+
+  Item {
+    id : myScriptActions
+
+    function trigger(name)
+    {
+      for (var i = 0; i < children.length; ++i )
+      {
+        if (children[i].name == name)
+        {
+          children[i].trigger();
+          return;
+        }
+      }
+    }
+  }
+
+  function showOnlyCategory(category)
+  {
+    myColumn.showOnlyCategory(category)
+  }
 
   Column {
     height : parent.height
@@ -42,7 +64,17 @@ Rectangle {
     id : myColumn
     spacing : actionItemSpacing
 
+    function showOnlyCategory(category)
+    {
+      for ( var i = 0; i < children.length; ++i ) {
+        if ( children[i].category != undefined && children[i].category != "standard" )
+          children[i].visible = (children[i].category == category);
+      }
+      refresh();
+    }
+
     function triggered(triggeredName) {
+      myScriptActions.trigger(triggeredName)
       _topLevel.triggered(triggeredName)
 
       for ( var i = 0; i < children.length; ++i ) {
@@ -53,14 +85,18 @@ Rectangle {
     }
 
     function refresh() {
+      var _depth = -myColumn.height;
       for ( var i = 0; i < children.length; ++i ) {
         children[i].height = actionItemHeight
         if (children[i].columnHeight != undefined)
           children[i].columnHeight = myColumn.height
         if (children[i].totalWidth != undefined)
           children[i].totalWidth = _topLevel.width - actionItemWidth
-        if (children[i].depth != undefined)
-          children[i].depth = i * ( actionItemHeight + actionItemSpacing )
+        if (children[i].depth != undefined) {
+          children[i].depth = _depth
+          if ( children[i].visible )
+            _depth += actionItemHeight + actionItemSpacing;
+        }
         if (children[i].actionItemSpacing != undefined)
           children[i].actionItemSpacing = actionItemSpacing
         if (children[i].actionItemHeight != undefined)
@@ -69,6 +105,10 @@ Rectangle {
         children[i].triggered.connect( myColumn, triggered )
         // children[i].width = parent.actionItemWidth
       }
+    }
+
+    onHeightChanged : {
+      refresh()
     }
 
     onChildrenChanged : {

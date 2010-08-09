@@ -427,7 +427,7 @@ QColor MessageItem::backgroundColor() const
 
 QFont MessageItem::font() const
 {
-  // for preformance reasons we don't want font retrieval to trigger
+  // for performance reasons we don't want font retrieval to trigger
   // full tags loading, as the font is used for geometry calculation
   // and thus this method called for each item
   if ( d->tagListInitialized() ) {

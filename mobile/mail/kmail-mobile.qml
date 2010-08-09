@@ -86,6 +86,14 @@ KPIM.MainView {
     anchors.left: parent.left
     anchors.right : parent.right
 
+    QML.Image {
+      id: backgroundImage
+      x: 0
+      y: 0
+      source: "kmail-mobile-background.png"
+      visible: collectionView.visible
+    }
+
     Akonadi.AkonadiBreadcrumbNavigationView {
       id : collectionView
       anchors.top: parent.top
@@ -95,13 +103,13 @@ KPIM.MainView {
       //height : parent.height - ( collectionView.hasSelection ? 0 : selectButton.height)
       anchors.left: parent.left
 
-        multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 emails",
-                                         collectionView.numSelected,
-                                         application.numSelectedAccounts,
-                                         headerList.count)
-      breadcrumbItemsModel : breadcrumbCollectionsModel
-      selectedItemModel : selectedCollectionModel
-      childItemsModel : childCollectionsModel
+      breadcrumbComponentFactory : _breadcrumbNavigationFactory
+
+      multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 emails",
+                                        collectionView.numSelected,
+                                        application.numSelectedAccounts,
+                                        headerList.count)
+
     }
     KPIM.Button2 {
       id : selectButton
@@ -244,11 +252,10 @@ KPIM.MainView {
       }
     }
   }
-  Akonadi.FavoriteSelector {
+  KPIM.MultipleSelectionScreen {
     id : favoriteSelector
     anchors.fill : parent
     visible : false
-    styleSheet: window.styleSheet
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
@@ -418,16 +425,6 @@ KPIM.MainView {
     onFavoriteSelected : {
       application.loadFavorite(favName);
     }
-  }
-
-  QML.Connections {
-    target: collectionView
-    onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
-  }
-
-  QML.Connections {
-    target: collectionView
-    onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
 
   QML.Connections {

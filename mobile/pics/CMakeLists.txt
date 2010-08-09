@@ -3,5 +3,6 @@ install(FILES
         delete-button.png
         edit-button.png
         top.png
+        splashscreenstatic.png
         DESTINATION ${DATA_INSTALL_DIR}/mobileui)
 

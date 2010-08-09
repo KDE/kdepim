@@ -173,6 +173,7 @@ EventOrTodoDialogPrivate::~EventOrTodoDialogPrivate()
 {
   delete mItemManager;
   delete mEditor;
+  delete mUi;
 }
 
 void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )

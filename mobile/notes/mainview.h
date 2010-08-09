@@ -43,7 +43,10 @@ class MainView : public KDeclarativeMainView
     void startComposer();
     void onSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
-private:
+  protected slots:
+    virtual void delayedInit();
+
+  private:
     Akonadi::Collection suitableContainerCollection(const QModelIndex &parent = QModelIndex());
 };
 

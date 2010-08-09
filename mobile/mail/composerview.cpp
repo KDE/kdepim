@@ -71,9 +71,19 @@ ComposerView::ComposerView(QWidget* parent) :
   m_jobCount( 0 ),
   m_sign( false ),
   m_encrypt( false ),
-  m_busy(false)
+  m_busy( false ),
+  m_draft( false ),
+  m_urgent( false ),
+  m_mdnrequested( false )
 {
   setSubject( QString() );
+  setAttribute(Qt::WA_DeleteOnClose);
+}
+
+void ComposerView::delayedInit()
+{
+  kDebug();
+  KDeclarativeFullScreenView::delayedInit();
 
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
@@ -139,6 +149,16 @@ ComposerView::ComposerView(QWidget* parent) :
   action->setText( i18n( "Save as Draft" ) );
   action->setIcon( KIcon( "document-save" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
+
+  action = actionCollection()->addAction("urgent");
+  action->setText( i18n( "Urgent" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(urgentEmail(bool)));
+
+  action = actionCollection()->addAction("options_request_mdn");
+  action->setText( i18n( "Request Notification" ) );
+  action->setCheckable(true);
+  connect(action, SIGNAL(triggered(bool)), SLOT(mdnRequestEmail(bool)));
 }
 
 void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
@@ -194,10 +214,10 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
 
   m_composerBase->setCryptoOptions( m_sign, m_encrypt, Kleo::AutoFormat );
 
-  /* Default till UI exists
-  m_composerBase->setCharsets( );
-  m_composerBase->setUrgent( );
-  m_composerBase->setMDNRequested( ); */
+  // Default till UI exists
+  //  m_composerBase->setCharsets( );
+  m_composerBase->setUrgent( m_urgent );
+  m_composerBase->setMDNRequested( m_mdnrequested );
 
   m_composerBase->send( method, saveIn );
 }
@@ -267,6 +287,11 @@ void ComposerView::addAttachment()
 
 void ComposerView::success()
 {
+  if (m_draft) {
+    m_draft = false;
+    return;
+  }
+
   QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
   KNotification *notify = new KNotification("emailsent");
   notify->setComponentData(KComponentData("kmail-mobile"));
@@ -308,16 +333,20 @@ void ComposerView::closeEvent( QCloseEvent * event )
     saveDraft();
   } else if (rc == KMessageBox::Cancel ) {
     event->ignore();
+    return;
   } else {
     // remove autosaves if the message was discarded
     m_composerBase->cleanupAutoSave();
   }
+
+  event->accept();
 }
 
 void ComposerView::saveDraft()
 {
   const MessageSender::SendMethod method = MessageSender::SendLater;
   const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
+  m_draft = true;
   send ( method, saveIn );
 }
 

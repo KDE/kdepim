@@ -382,7 +382,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
     KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
     msgPart->contentType()->setMimeType( "message/rfc822" );
 
-    msgPart->contentDisposition()->setParameter( QLatin1String( "name" ), i18n( "forwarded message" ) );
+    msgPart->contentDisposition()->setParameter( QLatin1String( "filename" ), i18n( "forwarded message" ) );
     msgPart->contentDisposition()->setDisposition( KMime::Headers::CDinline );
     msgPart->contentDescription()->fromUnicodeString( fwdMsg->from()->asUnicodeString() + QLatin1String( ": " ) + fwdMsg->subject()->asUnicodeString(), "utf-8" );
     msgPart->setBody( fwdMsg->encodedContent() );

@@ -627,12 +627,18 @@ void KJotsWidget::updateMenu()
     QModelIndex idx = selection.at( 0 );
 
     Collection col = idx.data( KJotsModel::CollectionRole ).value<Collection>();
-
     if ( col.isValid() ) {
       foreach ( QAction* action, pageActions )
         action->setEnabled(false);
-      foreach ( QAction* action, bookActions )
-        action->setEnabled(true);
+      const bool colIsRootCollection = ( col.parentCollection() == Collection::root() );
+      foreach ( QAction* action, bookActions ) {
+        if (action->objectName() == "del_folder" && colIsRootCollection ) {
+          action->setEnabled( false );
+        } else {
+          action->setEnabled( true );
+        }
+
+      }
 
       editor->setActionsEnabled( false );
     } else {

@@ -22,9 +22,15 @@
 
 #include <QtDeclarative/QDeclarativeView>
 
+#ifndef Q_OS_WINCE
+#include <QGLWidget>
+#endif
+
+
 #include "mobileui_export.h"
 
 class KActionCollection;
+class QLabel;
 
 /**
  * Full screen view for mobile applications. This class is just to share code and therefore
@@ -40,6 +46,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     * @param qmlFileName is used to find the QML file in ${APP_DATA_DIR}/qmlFileName.qml
     */
     KDeclarativeFullScreenView( const QString &qmlFileName, QWidget *parent = 0 );
+    virtual ~KDeclarativeFullScreenView();
 
   public slots:
     /** Triggers de-fullscreen/task switcher */
@@ -48,12 +55,23 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     QObject* getAction( const QString &name ) const;
     KActionCollection* actionCollection() const;
 
+  protected slots:
+    /** Most initialization work should be done here instead of the ctor.
+     * @note: Remember to call the base class implementation when overwriting this.
+     */
+    virtual void delayedInit();
+
   private slots:
     void setQmlFile( const QString &source );
     void slotStatusChanged ( QDeclarativeView::Status );
 
   private:
     KActionCollection *mActionCollection;
+#ifndef Q_OS_WINCE
+    QGLWidget *glWidget;
+#endif
+    QString m_qmlFileName;
+    QLabel *m_splashScreen;
 };
 
 #endif

@@ -27,7 +27,7 @@
 #include "messagecore/stringutil.h"
 
 // See the MessageList::ItemPrivate::insertChildItem() function below for an explaination of this macro.
-#if __GNUC__ >= 3
+#if __GNUC__ >= 3  //krazy:exclude=cpp
   #define GCC_DONT_INLINE_THIS __attribute__((noinline))
 #else
   #define GCC_DONT_INLINE_THIS

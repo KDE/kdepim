@@ -224,7 +224,7 @@ KTimeEdit::KTimeEdit( QWidget *parent, const QTime &time )
   setFocusPolicy( Qt::StrongFocus );
 
   connect( this, SIGNAL( activated( int ) ), this, SLOT( slotActivated( int ) ) );
-  connect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotTextChanged() ) );
+  connect( this, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( slotTextChanged() ) );
 }
 
 KTimeEdit::~KTimeEdit()

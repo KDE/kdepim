@@ -456,6 +456,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotItemMoved( Akonadi::Item item, Akonadi::Collection from, Akonadi::Collection to );
 
     void slotAkonadiStandardActionUpdated();
+    void slotCollectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& );
+    void slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
   private:
     /** Get override character encoding. */
     QString overrideEncoding() const;
@@ -507,6 +509,9 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
      * jumping to folders, or adding them as favourites. All folders are listed.
      */
     FolderSelectionDialog* selectFromAllFoldersDialog();
+
+
+    void addInfoInNotification( const Akonadi::Collection&col );
 
   private slots:
     /**
@@ -591,9 +596,6 @@ private:
     //  QPopupMenu *mMessageMenu;
     KMail::SearchWindow *mSearchWin;
 
-    FolderSelectionDialog* mMoveOrCopyToDialog;
-    FolderSelectionDialog* mSelectFromAllFoldersDialog;
-
     KAction *mRemoveFolderAction,
       *mExpireFolderAction,
       *mEmptyFolderAction, *mMarkAllAsReadAction, *mFolderMailingListPropertiesAction,
@@ -658,6 +660,8 @@ private:
     QMap<QString, collectionInfo> mCheckMail;
 
     bool mCheckMailInProgress;
+    FolderSelectionDialog* mMoveOrCopyToDialog;
+    FolderSelectionDialog* mSelectFromAllFoldersDialog;
 };
 
 #endif

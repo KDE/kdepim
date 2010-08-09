@@ -60,7 +60,7 @@ KPIM.MainView {
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handleHeight: 150
-      handlePosition: 110
+      handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
       contentWidth: 240
       content: [
         KPIM.Action {
@@ -124,7 +124,7 @@ KPIM.MainView {
       anchors.fill: parent
       id: attachmentPanel
       handleHeight: 100
-      handlePosition: 180
+      handlePosition: actionPanel.handlePosition + actionPanel.handleHeight
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       contentWidth: attachmentView.requestedWidth
       content: [

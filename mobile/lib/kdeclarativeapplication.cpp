@@ -73,6 +73,9 @@ KDeclarativeApplication::KDeclarativeApplication()
 
 void KDeclarativeApplication::initCmdLine()
 {
+  // doesn't really belong here, but needs to be called before the ctor
+  QApplication::setGraphicsSystem( "raster" );
+
   KCmdLineOptions options;
   options.add("timeit", ki18n("start timers for various parts of the application startup"));
   KCmdLineArgs::addCmdLineOptions(options);

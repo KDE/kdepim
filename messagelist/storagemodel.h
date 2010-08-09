@@ -83,6 +83,8 @@ public:
   Akonadi::Item itemForRow( int row ) const;
   KMime::Message::Ptr messageForRow( int row ) const;
 
+  void resetModelStorage();
+
 private:
   Q_PRIVATE_SLOT(d, void onSourceDataChanged( const QModelIndex&, const QModelIndex& ))
   Q_PRIVATE_SLOT(d, void onSelectionChanged())

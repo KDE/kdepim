@@ -80,6 +80,9 @@ class ComposerView : public KDeclarativeFullScreenView
     void changed();
     void busyChanged();
 
+  protected slots:
+    void delayedInit();
+
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
     void addAttachment();
@@ -88,6 +91,9 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void signEmail( bool sign ) { m_sign = sign; }
     void encryptEmail( bool encrypt ) { m_encrypt = encrypt; }
+    void urgentEmail ( bool urgent ) { m_urgent = urgent; }
+    void mdnRequestEmail ( bool request ) { m_mdnrequested = request; }
+
     void saveDraft();
 
  protected:
@@ -101,6 +107,9 @@ class ComposerView : public KDeclarativeFullScreenView
     bool m_sign;
     bool m_encrypt;
     bool m_busy;
+    bool m_draft;
+    bool m_urgent;
+    bool m_mdnrequested;
 };
 
 #endif

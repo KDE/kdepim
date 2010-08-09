@@ -24,7 +24,7 @@
 #include "ui_eventortodomobile.h"
 #include "ui_eventortodomoremobile.h"
 
-DCollectionCombo::DCollectionCombo( QDeclarativeItem *parent )
+DCollectionCombo::DCollectionCombo( QGraphicsItem *parent )
   : DeclarativeWidgetBase<Akonadi::CollectionComboBox,
                           IncidenceView,
                           &IncidenceView::setCollectionCombo>( parent )
@@ -41,7 +41,7 @@ MobileIncidenceGeneral::~MobileIncidenceGeneral()
   delete mUi;
 }
 
-DIEGeneral::DIEGeneral( QDeclarativeItem *parent )
+DIEGeneral::DIEGeneral( QGraphicsItem *parent )
   : DeclarativeWidgetBase<MobileIncidenceGeneral,
                           IncidenceView,
                           &IncidenceView::setGeneralEditor>( parent )
@@ -70,7 +70,7 @@ MobileIncidenceMore::~MobileIncidenceMore()
   delete mUi;
 }
 
-DIEMore::DIEMore( QDeclarativeItem *parent )
+DIEMore::DIEMore( QGraphicsItem *parent )
   : DeclarativeWidgetBase<MobileIncidenceMore,
                           IncidenceView,
                           &IncidenceView::setMoreEditor>( parent )

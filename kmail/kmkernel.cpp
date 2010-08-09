@@ -120,6 +120,7 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
   mIdentityManager(0), mConfigureDialog(0), mMailService(0)
 {
   Akonadi::AttributeFactory::registerAttribute<Akonadi::SearchDescriptionAttribute>();
+  QDBusConnection::sessionBus().registerService("org.kde.kmail");
   migrateFromKMail1();
   kDebug() << "Starting up...";
 
@@ -456,12 +457,12 @@ void KMKernel::checkMail () //might create a new reader but won't show!!
     if ( group.readEntry( "IncludeInManualChecks", true ) ) {
       if ( !type.isOnline() )
         type.setIsOnline( true );
-      if ( mResoucesBeingChecked.isEmpty() ) {
+      if ( mResourcesBeingChecked.isEmpty() ) {
         kDebug() << "Starting manual mail check";
         emit startCheckMail();
       }
 
-      mResoucesBeingChecked.append( type.identifier() );
+      mResourcesBeingChecked.append( type.identifier() );
       type.synchronize();
     }
   }
@@ -1176,6 +1177,8 @@ void KMKernel::init()
   }
 
   connect( Akonadi::ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ), this, SLOT( akonadiStateChanged( Akonadi::ServerManager::State ) ) );
+  connect( monitor(), SIGNAL( itemRemoved( const Akonadi::Item &) ), the_undoStack, SLOT( msgDestroyed( const Akonadi::Item& ) ) );
+
 
 }
 
@@ -1184,7 +1187,7 @@ void KMKernel::readConfig()
   mWrapCol = MessageComposer::MessageComposerSettings::self()->lineWrapWidth();
   if ((mWrapCol == 0) || (mWrapCol > 78))
     mWrapCol = 78;
-  if (mWrapCol < 30)
+  else if (mWrapCol < 30)
     mWrapCol = 30;
 }
 
@@ -1700,18 +1703,6 @@ void KMKernel::expireAllFoldersNow() // called by the GUI
   mFolderCollectionMonitor->expireAllFolders( true /*immediate*/ );
 }
 
-Akonadi::Collection KMKernel::findFolderCollectionById( const QString& idString )
-{
-  int id = idString.toInt();
-  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection(id), Akonadi::CollectionFetchJob::Base, this );
-  if ( job->exec() ) {
-    Akonadi::Collection::List lst = job->collections();
-    if ( lst.count() == 1 )
-      return lst.at( 0 );
-  }
-  delete job;
-  return Akonadi::Collection();
-}
 
 Akonadi::Collection KMKernel::collectionFromId( const QString &idString ) const
 {
@@ -1836,13 +1827,13 @@ void KMKernel::instanceStatusChanged( Akonadi::AgentInstance instance )
   if ( KMail::Util::agentInstances().contains( instance ) ) {
     if ( instance.status() == Akonadi::AgentInstance::Running ) {
 
-      if ( mResoucesBeingChecked.isEmpty() ) {
+      if ( mResourcesBeingChecked.isEmpty() ) {
         kDebug() << "A Resource started to syncronize, starting a mail check.";
         emit startCheckMail();
       }
 
-      if ( !mResoucesBeingChecked.contains( instance.identifier() ) ) {
-        mResoucesBeingChecked.append( instance.identifier() );
+      if ( !mResourcesBeingChecked.contains( instance.identifier() ) ) {
+        mResourcesBeingChecked.append( instance.identifier() );
       }
 
       // Creating a progress item twice is ok, it will simply return the already existing
@@ -1860,8 +1851,8 @@ void KMKernel::slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item )
   const QString identifier = item->property( "AgentIdentifier" ).toString();
   const Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance( identifier );
   if ( agent.isValid() ) {
-    mResoucesBeingChecked.removeAll( identifier );
-    if ( mResoucesBeingChecked.isEmpty() ) {
+    mResourcesBeingChecked.removeAll( identifier );
+    if ( mResourcesBeingChecked.isEmpty() ) {
       kDebug() << "Last resource finished syncing, mail check done";
       emit endCheckMail();
     }

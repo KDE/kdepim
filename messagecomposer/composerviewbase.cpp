@@ -48,6 +48,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimutils/email.h>
 
+#include <kdeversion.h>
 #include <KSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -671,7 +672,11 @@ void Message::ComposerViewBase::slotQueueResult( KJob *job )
 
 void Message::ComposerViewBase::fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const Message::InfoPart* infoPart )
 {
-  qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
+  MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById( infoPart->transportId() );
+  if ( transport && transport->specifySenderOverwriteAddress() )
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( transport->senderOverwriteAddress() ) );
+  else
+    qjob->addressAttribute().setFrom( KPIMUtils::extractEmailAddress( infoPart->from() ) );
   // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
   //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
   if( message->hasHeader( "X-KMail-EncBccRecipients" ) ) {
@@ -929,16 +934,20 @@ void Message::ComposerViewBase::addAttachmentPart ( KMime::Content* partToAttach
   if ( partToAttach->contentDescription( false ) ) {
     part->setDescription( partToAttach->contentDescription()->asUnicodeString() );
   }
+  if ( partToAttach->contentType( false ) ) {
+    if ( partToAttach->contentType()->hasParameter( QLatin1String( "name" ) ) ) {
+      part->setName( partToAttach->contentType()->parameter( QLatin1String( "name" ) ) );
+    }
+  }
   if ( partToAttach->contentDisposition( false ) ) {
     part->setFileName( partToAttach->contentDisposition()->filename() );
-    part->setName( partToAttach->contentType()->parameter( QLatin1String( "name" ) ) );
     part->setInline( partToAttach->contentDisposition()->disposition() == KMime::Headers::CDinline );
-    if ( part->name().isEmpty() && !part->fileName().isEmpty() ) {
-      part->setName( part->fileName() );
-    }
-    if ( part->fileName().isEmpty() && !part->name().isEmpty() ) {
-      part->setFileName( part->name() );
-    }
+  }
+  if ( part->name().isEmpty() && !part->fileName().isEmpty() ) {
+    part->setName( part->fileName() );
+  }
+  if ( part->fileName().isEmpty() && !part->name().isEmpty() ) {
+    part->setFileName( part->name() );
   }
   m_attachmentController->addAttachment( part );
 }
@@ -1080,10 +1089,12 @@ void Message::ComposerViewBase::setEditor ( Message::KMeditor* editor )
 
   m_editor->setRichTextSupport( KRichTextWidget::FullTextFormattingSupport |
                                KRichTextWidget::FullListSupport |
+#if KDE_IS_VERSION(4, 5, 60)
+                               KRichTextWidget::SupportDirection |
+#endif
                                KRichTextWidget::SupportAlignment |
                                KRichTextWidget::SupportRuleLine |
-                               KRichTextWidget::SupportHyperlinks |
-                               KRichTextWidget::SupportAlignment );
+                               KRichTextWidget::SupportHyperlinks );
   m_editor->enableImageActions();
 
   m_editor->document()->setModified( false );

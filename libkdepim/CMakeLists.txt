@@ -22,6 +22,7 @@ set(kdepim_LIB_SRCS
    maillistdrag.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
+   kdescendantsproxymodel.cpp
    kcheckcombobox.cpp
    kweekdaycheckcombo.cpp
    ktimezonecombobox.cpp
@@ -45,12 +46,6 @@ set(kdepim_LIB_SRCS
    multiplyinglineeditor.cpp
    multiplyinglineview_p.cpp
 )
-
-if (NOT WINCE)
-  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
-    kdescendantsproxymodel.cpp
-  )
-endif (NOT WINCE)
 
 if (KDEPIMLIBS_KRESOURCES_LIBRARY)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}

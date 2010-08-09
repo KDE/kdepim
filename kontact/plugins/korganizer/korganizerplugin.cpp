@@ -148,12 +148,16 @@ void KOrganizerPlugin::slotNewEvent()
 
 void KOrganizerPlugin::slotSyncEvents()
 {
+#if 0
   QDBusMessage message =
       QDBusMessage::createMethodCall( "org.kde.kmail", "/Groupware",
                                       "org.kde.kmail.groupware",
                                       "triggerSync" );
   message << QString( "Calendar" );
   QDBusConnection::sessionBus().send( message );
+#else
+  kWarning()<<" KOrganizerPlugin::slotSyncEvents : need to port to Akonadi";
+#endif
 }
 
 bool KOrganizerPlugin::createDBUSInterface( const QString &serviceType )

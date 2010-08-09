@@ -39,7 +39,6 @@
 #include <KCal/CalFilter>
 #include <KCal/CalFormat>
 
-#include <QStyle>
 #include <KCalendarSystem>
 #include <KGlobalSettings>
 #include <KGlobal>
@@ -51,6 +50,7 @@
 #include <KMessageBox>
 #include <KWordWrap>
 
+#include <QStyle>
 #include <QApplication>
 #include <QScrollBar>
 #include <QScrollArea>
@@ -149,7 +149,8 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
         mAllowAgendaUpdate( true ),
         mUpdateItem( 0 ),
         mCollectionId( -1 ),
-        mIsSideBySide( isSideBySide )
+        mIsSideBySide( isSideBySide ),
+        mDummyAllDayLeft( 0 )
     {
     }
 
@@ -196,6 +197,8 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
     Akonadi::Collection::Id mCollectionId;
 
     bool mIsSideBySide;
+
+    QWidget *mDummyAllDayLeft;
 
   protected:
     /* reimplemented from KCal::Calendar::CalendarObserver */
@@ -258,7 +261,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   d->mTimeBarHeaderFrame = new KHBox( d->mAllDayFrame );
 
   // The widget itself
-  QWidget *dummyAllDayLeft = new QWidget( d->mAllDayFrame );
+  d->mDummyAllDayLeft = new QWidget( d->mAllDayFrame );
   AgendaScrollArea *allDayScrollArea = new AgendaScrollArea( true, this, d->mAllDayFrame );
   d->mAllDayAgenda = allDayScrollArea->agenda();
 
@@ -320,23 +323,14 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   }
 
   updateTimeBarWidth();
-  // resize dummy widget so the allday agenda lines up with the hourly agenda
-  dummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->timeLabelsWidth() -
-                                  d->mTimeBarHeaderFrame->width() );
 
-  createDayLabels( true );
+  // Don't call it now, bottom agenda isn't fully up yet
+  QMetaObject::invokeMethod( this, "alignAgendas", Qt::QueuedConnection );
 
   /* Connect the agendas */
 
   connectAgenda( d->mAgenda, d->mAllDayAgenda );
   connectAgenda( d->mAllDayAgenda, d->mAgenda );
-
-  connect( d->mAgenda,
-           SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
-           SLOT(newTimeSpanSelected(const QPoint &,const QPoint &)) );
-  connect( d->mAllDayAgenda,
-           SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
-           SLOT(newTimeSpanSelectedAllDay(const QPoint &,const QPoint &)) );
 }
 
 AgendaView::~AgendaView()
@@ -367,6 +361,10 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 
   connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
+
+  connect( agenda,
+           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
+           SLOT(newTimeSpanSelected(QPoint,QPoint)) );
 
   agenda->setCalendar( calendar() );
 
@@ -584,7 +582,7 @@ void AgendaView::createDayLabels( bool force )
   d->mLayoutTopDayLabels->setMargin( 0 );
   // this spacer moves the day labels over to line up with the day columns
   QSpacerItem *spacer =
-    new QSpacerItem( d->mTimeLabelsZone->timeLabelsWidth(), 1, QSizePolicy::Fixed );
+    new QSpacerItem( d->mTimeLabelsZone->width(), 1, QSizePolicy::Fixed );
   d->mLayoutTopDayLabels->addSpacerItem( spacer );
   KVBox *topWeekLabelBox = new KVBox( d->mTopDayLabels );
   d->mLayoutTopDayLabels->addWidget( topWeekLabelBox );
@@ -1612,6 +1610,9 @@ void AgendaView::updateEventIndicatorBottom( int newY )
 
 void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
 {
+  Q_UNUSED( items );
+  Q_UNUSED( gpos );
+  Q_UNUSED( allDay );
 
 #ifdef AKONADI_PORT_DISABLED // one item -> multiple items, Incidence* -> akonadi item url (we might have to fetch the items here first!)
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
@@ -1893,6 +1894,15 @@ bool AgendaView::filterByCollectionSelection( const Item &incidence )
   } else {
     return d->mCollectionId == incidence.storageCollectionId();
   }
+}
+
+void AgendaView::alignAgendas()
+{
+  // resize dummy widget so the allday agenda lines up with the hourly agenda
+  d->mDummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->width() -
+                                      d->mTimeBarHeaderFrame->width() );
+
+  createDayLabels( true );
 }
 
 #include "agendaview.moc"
