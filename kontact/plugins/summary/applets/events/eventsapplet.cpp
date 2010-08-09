@@ -136,7 +136,20 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
             QVariantHash data = it.value().toHash();
             KDateTime sd = qVariantValue<KDateTime>( data[ "StartDate" ] );
 
-            m_incidences[ sd.toString() ] = new EventWidget( data, this );
+            QString key = sd.toString();
+            if (m_incidences[ key ]) { // XXX maybe, need to validate this
+                int i = 0;
+                while ( i <= 255 ) { // XXX try moar?
+                    i++;
+                    key = key + "~";
+
+                    if (m_incidences[ key ]) { // XXX need to validate this works too
+                        i = 255;
+                    }
+                }
+            }
+
+            m_incidences[ key ] = new EventWidget( data, this );
             // kDebug() << data;
         }
 
