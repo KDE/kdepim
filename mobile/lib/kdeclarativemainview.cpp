@@ -154,6 +154,7 @@ void KDeclarativeMainView::delayedInit()
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
   standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
+  standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
