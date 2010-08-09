@@ -1,6 +1,12 @@
+project(summary_applet)
+
+find_package(KDE4 REQUIRED)
+include(KDE4Defaults)
+include(MacroLibrary)
 
 include_directories(${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces)
 include_directories( ${Boost_INCLUDE_DIRS} )
+include_directories( /usr/include /usr/include/kde4 )
 
 ########### next target ###############
 
