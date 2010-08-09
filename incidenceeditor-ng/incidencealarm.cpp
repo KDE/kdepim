@@ -178,6 +178,10 @@ void IncidenceAlarm::handleDateTimeToggle()
 
   mUi->mAlarmPresetCombo->setEnabled( mDateTime->endDateTimeEnabled() );
   mUi->mAlarmAddPresetButton->setEnabled( mDateTime->endDateTimeEnabled() );
+
+  #ifndef KDEPIM_MOBILE_UI
+    mUi->label_6->setEnabled( mDateTime->endDateTimeEnabled() );
+  #endif
 }
 
 void IncidenceAlarm::newAlarm()
