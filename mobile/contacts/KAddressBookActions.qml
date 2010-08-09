@@ -27,6 +27,7 @@ ActionMenuContainer {
   actionItemHeight : 70
   actionItemWidth : 200
   actionItemSpacing : 2
+
   ReorderList {
     category : "home"
     name : "Favorites"
@@ -39,18 +40,20 @@ ActionMenuContainer {
     deleteAction : "fav_delete"
     model : favoritesList
   }
+
   ReorderList {
     category : "home"
-    name : "Addressbooks"
+    name : "Address Books"
 
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
     }
-    upAction : "addressbook_up"
-    downAction : "addressbook_down"
-    deleteAction : "addressbook_delete"
+    upAction : "resource_up"
+    downAction : "resource_down"
+    deleteAction : "resource_delete"
     model : allFoldersModel
   }
+
   ActionList {
     category : "home"
     name : "View"
@@ -58,43 +61,45 @@ ActionMenuContainer {
   }
 
   ActionList {
-    category : "addressbook"
-    name : "Addressbook"
-    ActionListItem { name : "edit_addressbook" }
-    FakeAction{ name : "add_subfolder" }
+    category : "resource"
+    name : "Address Book"
+    FakeAction { name : "edit_resource" }
+    FakeAction { name : "add_subfolder" }
   }
 
   ActionList {
     category : "single_folder"
     name : "Folder"
-    ActionListItem { name : "edit_folder" }
-    ActionListItem { name : "delete_folder" }
-    ActionListItem { name : "add_subfolder" }
+    FakeAction { name : "edit_folder" }
+    FakeAction { name : "delete_folder" }
+    FakeAction { name : "add_subfolder" }
   }
+
   ActionList {
     category : "single_folder"
     name : "View"
-    ActionListItem { name : "save_view_as_favorite" }
-    ActionListItem { name : "start_maintenance" }
-    ActionListItem { name : "filter_view" }
-    ActionListItem { name : "view_options" }
+    FakeAction { name : "save_view_as_favorite" }
+    FakeAction { name : "start_maintenance" }
+    FakeAction { name : "filter_view" }
+    FakeAction { name : "view_options" }
   }
 
   ActionList {
     category : "multiple_folder"
     name : "View"
-    ActionListItem { name : "save_view_as_favorite" }
-    ActionListItem { name : "start_maintenance" }
+    FakeAction { name : "save_view_as_favorite" }
+    FakeAction { name : "start_maintenance" }
   }
 
   ActionList {
     category : "contact_viewer"
     name : "Contact"
-    ActionListItem { name : "copy_to_addressbook" }
-    ActionListItem { name : "move_to_addressbook" }
-    ActionListItem { name : "delete" }
-    ActionListItem { name : "edit" }
+    FakeAction { name : "copy_to_addressbook" }
+    FakeAction { name : "move_to_addressbook" }
+    FakeAction { name : "delete" }
+    FakeAction { name : "edit" }
   }
+
   ApplicationGeneralActions {
     category : "standard"
     name : "KAddressBook"

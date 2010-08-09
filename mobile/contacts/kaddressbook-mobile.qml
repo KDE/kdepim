@@ -119,7 +119,7 @@ KPIM.MainView {
     icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
     onClicked: {
       goBackToListing();
-      kaddressbookActions.showOnlyCategory("home")
+      kaddressbookActions.showOnlyCategory("resource")
     }
   }
 
@@ -154,26 +154,24 @@ KPIM.MainView {
                                                                                                         contactList.count)
 
       onNumBreadcrumbsChanged : {
-        if (numBreadcrumbs == 0)
+        if (numBreadcrumbs == 0 && numSelected == 0) // root is selected
         {
           kaddressbookActions.showOnlyCategory("home")
-        } else if (numBreadcrumbs == 1)
+        } else if (numBreadcrumbs == 0 && numSelected != 0) // top-level is selected
         {
-          kaddressbookActions.showOnlyCategory("addressbook")
-        } else {
+          kaddressbookActions.showOnlyCategory("resource")
+        } else { // something else is selected
           kaddressbookActions.showOnlyCategory("single_folder")
         }
       }
       onNumSelectedChanged : {
-        if (numSelected == 0)
+        if (numBreadcrumbs == 0 && numSelected == 0) // root is selected
         {
           kaddressbookActions.showOnlyCategory("home")
-          return;
-        }
-        if (numBreadcrumbs == 0)
+        } else if (numBreadcrumbs == 0 && numSelected != 0) // top-level is selected
         {
-          kaddressbookActions.showOnlyCategory("addressbook")
-        } else {
+          kaddressbookActions.showOnlyCategory("resource")
+        } else { // something else is selected
           kaddressbookActions.showOnlyCategory("single_folder")
         }
       }
