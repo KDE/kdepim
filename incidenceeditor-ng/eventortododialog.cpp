@@ -35,7 +35,6 @@
 #include <akonadi/kcal/utils.h>
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
-#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
@@ -424,16 +423,16 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
   KCalCore::Incidence::Ptr newIncidence;
 
   Akonadi::Item result = item;
-  if ( incidenceInEditor.dynamicCast<KCalCore::Event>() ) {
+  if ( incidenceInEditor->type() == KCalCore::Incidence::TypeEvent ) {
     newIncidence = KCalCore::Event::Ptr( new KCalCore::Event );
-    result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  } else {
-    Q_ASSERT( incidenceInEditor.dynamicCast<KCalCore::Todo>() );
+  } else if ( incidenceInEditor->type() == KCalCore::Incidence::TypeTodo ) {
     newIncidence = KCalCore::Todo::Ptr( new KCalCore::Todo );
-    result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  } else {
+    Q_ASSERT_X( false, "save", "Invalid Incidence type" );
   }
 
-  Q_ASSERT( newIncidence );
+  result.setMimeType( newIncidence->mimeType() );
+
   mEditor->save( newIncidence );
 
   // Make sure that we don't loose uid for existing incidence
