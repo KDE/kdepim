@@ -160,10 +160,25 @@ IncidenceDefaults::IncidenceDefaults()
   : d_ptr( new IncidenceDefaultsPrivate )
 { }
 
+IncidenceDefaults::IncidenceDefaults( const IncidenceDefaults& other )
+  : d_ptr( new IncidenceDefaultsPrivate )
+{
+  *d_ptr = *other.d_ptr;
+}
+
 IncidenceDefaults::~IncidenceDefaults()
 {
   delete d_ptr;
 }
+
+IncidenceDefaults &IncidenceDefaults::operator=( const IncidenceDefaults& other )
+{
+  if ( &other != this )
+    *d_ptr = *other.d_ptr;
+
+  return *this;
+}
+
 
 void IncidenceDefaults::setAttachments( const QStringList &attachments,
                                         const QStringList &attachmentMimetypes,

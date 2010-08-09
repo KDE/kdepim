@@ -33,7 +33,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
 {
 public:
   IncidenceDefaults();
+  IncidenceDefaults( const IncidenceDefaults &other );
   ~IncidenceDefaults();
+
+  IncidenceDefaults& operator=( const IncidenceDefaults& other );
 
   /**
     Sets the attachments that are added by default to incidences.
@@ -107,7 +110,6 @@ public:
 private:
   IncidenceDefaultsPrivate * const d_ptr;
   Q_DECLARE_PRIVATE( IncidenceDefaults )
-  Q_DISABLE_COPY( IncidenceDefaults )
 };
 
 }
