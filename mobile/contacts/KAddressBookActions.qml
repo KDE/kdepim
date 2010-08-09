@@ -64,13 +64,13 @@ ActionMenuContainer {
     category : "resource"
     name : "Address Book"
     FakeAction { name : "edit_resource" }
-    FakeAction { name : "add_subfolder" }
+    ActionListItem { name : "akonadi_collection_create" }
   }
 
   ActionList {
     category : "single_folder"
     name : "Folder"
-    FakeAction { name : "edit_folder" }
+    ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "akonadi_collection_delete" }
@@ -98,7 +98,7 @@ ActionMenuContainer {
     FakeAction { name : "copy_to_addressbook" }
     FakeAction { name : "move_to_addressbook" }
     ActionListItem { name : "akonadi_item_delete" }
-    FakeAction { name : "edit" }
+    ActionListItem { name : "kab_mobile_edit_contact" }
   }
 
   ApplicationGeneralActions {

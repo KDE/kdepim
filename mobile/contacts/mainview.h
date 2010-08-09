@@ -36,9 +36,11 @@ class MainView : public KDeclarativeMainView
 
   public Q_SLOTS:
     void newContact();
+    void editContact();
     void editContact( const Akonadi::Item &item );
 
     void newContactGroup();
+    void editContactGroup();
     void editContactGroup( const Akonadi::Item &item );
 
   protected slots:

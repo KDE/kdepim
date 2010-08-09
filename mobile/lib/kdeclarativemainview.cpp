@@ -153,6 +153,7 @@ void KDeclarativeMainView::delayedInit()
   standardActionManager->setCollectionSelectionModel( regularSelectionModel() );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
   standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
+  standardActionManager->createAction( Akonadi::StandardActionManager::CollectionProperties );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
   standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
 
