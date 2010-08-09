@@ -75,8 +75,9 @@ ActionMenuContainer {
     category : "single_folder"
     name : "Folder"
     ActionListItem { name : "edit_folder" }
-    ActionListItem { name : "delete_folder" }
     ActionListItem { name : "add_subfolder" }
+    ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "akonadi_collection_delete" }
   }
   ActionList {
     category : "single_folder"
