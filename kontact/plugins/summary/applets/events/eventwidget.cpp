@@ -104,8 +104,8 @@ void EventWidget::initUI()
     connect(m_moreInfoIcon, SIGNAL(clicked()), this, SLOT(toggleMoreInfo()));
 
     // XXX Create full view widget
-    // do magick
-    // m_masterLayout->addItem(foobar)
+    // do magick to m_fullViewWidget
+    // m_masterLayout->addItem(m_fullViewWidget)
 
     setLayout(m_masterLayout);
 }
@@ -158,7 +158,7 @@ void EventWidget::toggleMoreInfo()
 
 void setMoreInfoVisible( bool visible )
 {
-    m_moreInfoLayout->setVisible(visible);
+    m_fullViewWidget->setVisible(visible);
     m_moreInfoVisible = visible;
 }
 
