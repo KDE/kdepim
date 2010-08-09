@@ -2035,7 +2035,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent(Calendar *cal)
 // take a raw vcalendar (i.e. from a file on disk, clipboard, etc. etc.
 // and break it down from its tree-like format into the dictionary format
 // that is used internally in the ICalFormatImpl.
-bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
+bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
 {
   // this function will populate the caldict dictionary and other event
   // lists. It turns vevents into Events and then inserts them.
@@ -2106,12 +2106,16 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   // Iterate through all todos
   c = icalcomponent_get_first_component(calendar,ICAL_VTODO_COMPONENT);
   cal->beginBatchAdding();
+
   while (c) {
 //    kdDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c);
     if (todo) {
       if (!cal->todo(todo->uid())) {
-        cal->addTodo(todo);
+        if ( !cal->addTodo( todo ) ) {
+          cal->endBatchAdding();
+          return false;
+        }
       } else {
         delete todo;
         mTodosRelate.remove( todo );
@@ -2127,7 +2131,10 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     Event *event = readEvent(c, ctz);
     if (event) {
       if (!cal->event(event->uid())) {
-        cal->addEvent(event);
+        if ( !cal->addEvent( event ) ) {
+          cal->endBatchAdding();
+          return false;
+        }
       } else {
         delete event;
         mEventsRelate.remove( event );
@@ -2143,7 +2150,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     Journal *journal = readJournal(c);
     if (journal) {
       if (!cal->journal(journal->uid())) {
-        cal->addJournal(journal);
+        if ( !cal->addJournal(journal) ) {
+          cal->endBatchAdding();
+          return false;
+          break;
+        }
       } else {
         delete journal;
       }
