@@ -52,6 +52,8 @@ public slots:
     void setMoreInfoVisible(bool visible = true );
     bool moreInfoVisible();
 
+    QString summary();
+
 private:
     QGraphicsWidget* m_parent;
 
