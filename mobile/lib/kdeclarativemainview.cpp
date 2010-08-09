@@ -145,6 +145,9 @@ void KDeclarativeMainView::delayedInit()
 
   d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
+  KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
+  actionCollection()->addAction( QLatin1String( "quit" ), action );
+
   Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
   standardActionManager->setCollectionSelectionModel( regularSelectionModel() );

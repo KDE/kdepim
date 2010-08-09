@@ -28,7 +28,7 @@ KPIM.ActionList {
 
   property string type
 
-  KPIM.FakeAction {
+  KPIM.ActionListItem {
     name : "quit"
   }
   KPIM.FakeAction {
