@@ -46,6 +46,7 @@ IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesk
   , mEnabledAlarmCount( 0 )
   , mIsTodo( false )
 {
+  setObjectName( "IncidenceAlarm" );
   mUi->mAlarmPresetCombo->insertItems( 0, AlarmPresets::availablePresets() );
   mUi->mAlarmPresetCombo->setCurrentIndex( 2 );
   updateButtons();
@@ -192,6 +193,7 @@ void IncidenceAlarm::newAlarm()
   else
     dialog->setWhen( AlarmDialog::BeforeStart );
 
+  dialog->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
   dialog->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
 
   if ( dialog->exec() == KDialog::Accepted ) {

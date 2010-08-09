@@ -32,7 +32,9 @@ using namespace KCalCore;
 
 AlarmDialog::AlarmDialog()
   : mUi( new Ui::AlarmDialog )
+  , mAllowBeginReminders( true )
   , mAllowEndReminders( true )
+  , mIsTodo( false )
 {
   setWindowTitle( i18n( "Create a new alarm" ) );
   mUi->setupUi( mainWidget() );
@@ -155,12 +157,32 @@ void AlarmDialog::save( const Alarm::Ptr &alarm ) const
     offset *= 7; // weeks
   }
 
-  int beforeafterpos = mUi->mBeforeAfter->currentIndex();
+  const int beforeafterpos = mUi->mBeforeAfter->currentIndex();
   if ( beforeafterpos % 2 == 0 ) { // before -> negative
     offset = -offset;
   }
 
+  // Note: if this triggers, fix the logic at the place causing it. It really makes
+  // no sense to have both disabled.
+  Q_ASSERT( mAllowBeginReminders || mAllowEndReminders );
+
   // TODO: Add possibility to specify a given time for the reminder
+  if ( mAllowBeginReminders && beforeafterpos == 0 ) // before start
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( mAllowBeginReminders && beforeafterpos == 1 ) // after start
+    alarm->setStartOffset( Duration( offset ) );
+
+  // We assume that if mAllowBeginReminders is not set, that mAllowBeginReminders
+  // is set.
+  if ( !mAllowBeginReminders && beforeafterpos == 0 ) // before end
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( !mAllowBeginReminders && beforeafterpos == 1 ) // after end
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( beforeafterpos == 2 ) // before end
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( beforeafterpos == 3 ) // after end
+    alarm->setStartOffset( Duration( offset ) );
+
   if ( beforeafterpos / 2 == 0 ) { // start offset
     alarm->setStartOffset( Duration( offset ) );
   } else {
@@ -193,33 +215,48 @@ void AlarmDialog::save( const Alarm::Ptr &alarm ) const
   }
 }
 
-void AlarmDialog::setAllowEndReminders( bool allowEndReminders )
+void AlarmDialog::fillCombo()
 {
-  mAllowEndReminders = allowEndReminders;
-  if ( !allowEndReminders ) {
-    mUi->mBeforeAfter->removeItem( 3 );
-    mUi->mBeforeAfter->removeItem( 2 );
+  QStringList items;
+
+  if ( mIsTodo ) {
+    mUi->mBeforeAfter->clear();
+
+    if ( mAllowBeginReminders )
+      items << i18n( "Before the task starts" ) << i18n( "After the task starts" );
+
+    if ( mAllowEndReminders )
+      items << i18n( "Before the task is due" ) << i18n( "After the task is due" );
+
+  } else {
+
+    if ( mAllowEndReminders )
+      items << i18n( "Before the event starts" ) << i18n( "After the event starts" );
+
+    if ( mAllowEndReminders )
+      items << i18n( "Before the event ends" ) << i18n( "After the event ends" );
   }
+
+  mUi->mBeforeAfter->clear();
+  mUi->mBeforeAfter->addItems( items );
+}
+
+void AlarmDialog::setAllowBeginReminders( bool allow )
+{
+  mAllowBeginReminders = allow;
+  fillCombo();
+}
+
+void AlarmDialog::setAllowEndReminders( bool allow )
+{
+  mAllowEndReminders = allow;
+  fillCombo();
 }
 
 void AlarmDialog::setIsTodoReminder( bool isTodo )
 {
-  if ( isTodo ) {
-    mUi->mBeforeAfter->clear();
-    mUi->mBeforeAfter->addItems( QStringList()
-                                 << i18n( "Before the task starts" )
-                                 << i18n( "After the task starts" )
-                                 << i18n( "Before the task is due" )
-                                 << i18n( "After the task is due" ) );
-  } else {
-    mUi->mBeforeAfter->clear();
-    mUi->mBeforeAfter->addItems( QStringList()
-                                 << i18n( "Before the event starts" )
-                                 << i18n( "After the event starts" )
-                                 << i18n( "Before the event ends" )
-                                 << i18n( "After the event ends" ) );
-  }
-  setAllowEndReminders( mAllowEndReminders );
+  mIsTodo = isTodo;
+  fillCombo();
 }
 
 void AlarmDialog::setOffset( int offset )
@@ -235,6 +272,7 @@ void AlarmDialog::setUnit( Unit unit )
 
 void AlarmDialog::setWhen( When when )
 {
+  Q_ASSERT( static_cast<int>( when ) <= mUi->mBeforeAfter->count() );
   mUi->mBeforeAfter->setCurrentIndex( when );
 }
 
