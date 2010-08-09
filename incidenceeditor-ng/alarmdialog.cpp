@@ -32,9 +32,9 @@ using namespace KCalCore;
 
 AlarmDialog::AlarmDialog()
   : mUi( new Ui::AlarmDialog )
+  , mIsTodo( false )
   , mAllowBeginReminders( true )
   , mAllowEndReminders( true )
-  , mIsTodo( false )
 {
   setWindowTitle( i18n( "Create a new alarm" ) );
   mUi->setupUi( mainWidget() );
