@@ -47,12 +47,13 @@ bool IncidenceEditor::isValid()
   return true;
 }
 
-QString IncidenceEditor::type() const
+KCalCore::IncidenceBase::IncidenceType IncidenceEditor::type() const
 {
-  if ( mLoadedIncidence == 0 )
-    return QString();
-
-  return mLoadedIncidence->typeStr();
+  if ( mLoadedIncidence) {
+    return mLoadedIncidence->type();
+  } else {
+    return KCalCore::IncidenceBase::TypeUnknown;
+  }
 }
 
 #include "moc_incidenceeditor-ng.cpp"

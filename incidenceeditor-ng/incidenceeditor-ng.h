@@ -23,7 +23,7 @@
 
 #include <QtGui/QWidget>
 
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include "incidenceeditors-ng_export.h"
 
@@ -66,9 +66,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     virtual bool isValid();
 
     /**
-     * Returns a string representation of the Inicdince that is currently loaded.
+     * Returns the type of the Inicdince that is currently loaded.
      */
-    QString type() const;
+    KCalCore::IncidenceBase::IncidenceType type() const;
 
     /** Convenience method to get a pointer for a specific const Incidence Type. */
     template <typename IncidenceT>
