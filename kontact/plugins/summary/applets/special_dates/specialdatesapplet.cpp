@@ -120,7 +120,7 @@ void SpecialDatesApplet::updateSpecialDates()
         while( it.hasNext() )
         {
             QHash<QString,QVariant> data = it.next().toHash();
-            QDate date = QDate::fromString( data["date"].toString(), "yyyy-MM-dd" );
+            QDate date = data["date"].toDate();
         
             QString text = data["name"].toString();
         
