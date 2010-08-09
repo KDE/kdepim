@@ -35,6 +35,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QMetaType>
 
 #include <gpgme++/global.h> // GpgME::Protocol
 
@@ -104,6 +105,9 @@ namespace Kleo {
     };
         
 }
+
+Q_DECLARE_METATYPE( boost::shared_ptr<Kleo::ArchiveDefinition> )
+
 
 #endif /* __KLEOPATRA_UTILS_ARCHIVEDEFINITION_H__ */
 
