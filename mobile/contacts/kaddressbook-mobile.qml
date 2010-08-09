@@ -40,6 +40,19 @@ KPIM.MainView {
     contactGroupView.itemId = -1;
   }
 
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      kaddressbookActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      kaddressbookActions.showOnlyCategory("resource")
+    } else { // something else is selected
+      kaddressbookActions.showOnlyCategory("single_folder")
+    }
+  }
+
   Akonadi.ContactView {
     id: contactView
     z: 0
@@ -152,29 +165,9 @@ KPIM.MainView {
       multipleSelectionText : KDE.i18n("You have selected \n%1 addressbooks\nfrom %2 accounts\n%3 contacts", collectionView.numSelected,
                                                                                                         application.numSelectedAccounts,
                                                                                                         contactList.count)
-
-      onNumBreadcrumbsChanged : {
-        if (numBreadcrumbs == 0 && numSelected == 0) // root is selected
-        {
-          kaddressbookActions.showOnlyCategory("home")
-        } else if (numBreadcrumbs == 0 && numSelected != 0) // top-level is selected
-        {
-          kaddressbookActions.showOnlyCategory("resource")
-        } else { // something else is selected
-          kaddressbookActions.showOnlyCategory("single_folder")
-        }
-      }
-      onNumSelectedChanged : {
-        if (numBreadcrumbs == 0 && numSelected == 0) // root is selected
-        {
-          kaddressbookActions.showOnlyCategory("home")
-        } else if (numBreadcrumbs == 0 && numSelected != 0) // top-level is selected
-        {
-          kaddressbookActions.showOnlyCategory("resource")
-        } else { // something else is selected
-          kaddressbookActions.showOnlyCategory("single_folder")
-        }
-      }
+      QML.Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
     }
 
     KPIM.Button2 {
