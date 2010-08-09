@@ -125,8 +125,20 @@ void SpecialDatesApplet::updateSpecialDates()
             QString text = data["name"].toString();
         
             kDebug() << date << text;
-        
-            m_specialDates[data["date"].toString()] = new SpecialDateWidget(this,text,"view-calendar-holiday",KUrl(),date);
+
+            QString key = data[ "date" ].toString();
+            if (m_specialDates[ key ]) { // XXX maybe, need to validate this
+                int i = 0;
+                while ( i <= 255 ) { // XXX try moar?
+                    i++;
+                    key = key + "~";
+
+                    if (m_specialDates[ key ]) { // XXX need to validate this works too
+                        i = 255;
+                    }
+                }
+            }
+            m_specialDates[ key ] = new SpecialDateWidget(this,text,"view-calendar-holiday",KUrl(),date);
         }
     }
     else
@@ -208,9 +220,22 @@ void SpecialDatesApplet::dataUpdated(const QString& sourceName, const Plasma::Da
                 QString text = "%1's Birthday";
                 text = text.arg( data["Name"].toString() );
                 QString uri = "uid:%1";
-                uri = uri.arg( data["Id"].toString() );
+                uri = uri.arg( data["Id"].toString( ) );
+ 
+                QString key = birthday2.toString(Qt::ISODate);
+                if (m_specialDates[ key ]) { // XXX maybe, need to validate this
+                    int i = 0;
+                    while ( i <= 255 ) { // XXX try moar?
+                        i++;
+                        key = key + "~";
 
-                m_specialDates[birthday2.toString("yyyy-MM-dd")] = new SpecialDateWidget(this,text, "view-calendar-birthday", uri, birthday2);
+                        if (m_specialDates[ key ]) { // XXX need to validate this works too
+                            i = 255;
+                        }
+                    }
+                }
+
+                m_specialDates[ key ] = new SpecialDateWidget(this,text, "view-calendar-birthday", uri, birthday2);
                 
                 m_updateTimer->start(1000);
             }
