@@ -46,12 +46,24 @@ void EventWidget::setData( QVariantHash args )
     QVariant var;
     var = args[ "StartDate" ];
     if ( var.isValid() ) {
-        m_date = qVariantValue<KDateTime>( var );
+        m_startDate = qVariantValue<KDateTime>( var );
 
-        // make the date reference this year.
-        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_date.date().month(), m_date.date().day() ) );
+        // make the date reference this year
+        // FIXME fugly.
+        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
 
-        m_date = KDateTime( day );
+        m_startDate = KDateTime( day );
+    }
+
+    var = args[ "EndDate" ];
+    if ( var.isValid() ) {
+        m_startDate = qVariantValue<KDateTime>( var );
+
+        // make the date reference this year
+        // FIXME fugly.
+        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
+
+        m_endDate = KDateTime( day );
     }
 
     var = args[ "Summary" ];
@@ -114,8 +126,8 @@ void EventWidget::initUI()
     layout->addItem(m_descriptionLabel);
 
     // Add date
-    m_dateLabel = new Plasma::Label();
-    layout->addItem(m_dateLabel);
+    m_startDateLabel = new Plasma::Label();
+    layout->addItem(m_startDateLabel);
 
     m_fullViewWidget->setLayout(layout);
     m_masterLayout->addItem(m_fullViewWidget)
@@ -154,7 +166,7 @@ void EventWidget::updateSummaryUI()
         int numDays = config.readEntry("numDays",31);
     }
 
-    int difference = m_date.daysTo( KDateTime( QDateTime::currentDateTime() ) );
+    int difference = m_startDate.daysTo( KDateTime( QDateTime::currentDateTime() ) );
     m_timetil->setEnd( numDays );
     m_timetil->setCurrent( difference );
 
@@ -166,8 +178,23 @@ void EventWidget::updateFullUI()
     // Set the description
     m_descriptionLabel->setText( m_description );
 
-    // and the date
-    m_dateLabel->setText( m_date );
+    // convert the date to a QString...
+    QString text;
+    if ( m_endDate.isValid() && m_startDate.isValid() ) {
+        text = i18nc("Between two dates","%1 to %2"); // XXX is this right syntax?
+        text = text.arg( m_startDate.toString(), m_endDate.toString() );
+    } else if ( m_startDate.isValid() ) {
+        text = i18n("%1");
+        text = text.arg( m_startDate.toString() );
+    } else if ( m_endDate.isValid() ) {
+        text = i18n("Ends on %1");
+        text = text.arg( m_endDate.toString() );
+    } else {
+        text = "";
+    }
+
+    // .. and set the text!
+    m_startDateLabel->setText( m_startDate );
 
 }
 
