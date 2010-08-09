@@ -129,7 +129,7 @@ static QString try_extensions( const QString & path ) {
 }
 
 static void parse_command( QString cmdline, const QString & id, const QString & whichCommand,
-                           QString * command, QStringList * prefix, QStringList * suffix, ArchiveDefinition::ArgumentPassingMethod * method )
+                           QString * command, QStringList * prefix, QStringList * suffix, ArchiveDefinition::ArgumentPassingMethod * method, bool parseFilePlaceholder )
 {
     assert( prefix );
     assert( suffix );
@@ -169,13 +169,17 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
         *command = KStandardDirs::findExe( fi1.fileName() );
     if ( command->isEmpty() )
         throw ArchiveDefinitionError( id, i18n("'%1' empty or not found", whichCommand) );
-    const int idx1 = l.indexOf( FILE_PLACEHOLDER );
-    if ( idx1 < 0 ) {
-        // none -> append
-        *prefix = l.mid( 1 );
+    if ( parseFilePlaceholder ) {
+        const int idx1 = l.indexOf( FILE_PLACEHOLDER );
+        if ( idx1 < 0 ) {
+            // none -> append
+            *prefix = l.mid( 1 );
+        } else {
+            *prefix = l.mid( 1, idx1-1 );
+            *suffix = l.mid( idx1+1 );
+        }
     } else {
-        *prefix = l.mid( 1, idx1-1 );
-        *suffix = l.mid( idx1+1 );
+        *prefix = l.mid( 1 );
     }
     switch ( *method ) {
     case ArchiveDefinition::CommandLine:
@@ -232,38 +236,40 @@ namespace {
             // pack-command(-openpgp)
             if ( group.hasKey( PACK_COMMAND_OPENPGP_ENTRY ) )
                 parse_command( group.readEntry( PACK_COMMAND_OPENPGP_ENTRY ), id(), PACK_COMMAND_OPENPGP_ENTRY,
-                               &m_packCommand[OpenPGP], &m_packPrefixArguments[OpenPGP], &m_packPostfixArguments[OpenPGP], &method );
+                               &m_packCommand[OpenPGP], &m_packPrefixArguments[OpenPGP], &m_packPostfixArguments[OpenPGP], &method, true );
             else
                 parse_command( group.readEntry( PACK_COMMAND_ENTRY ), id(), PACK_COMMAND_ENTRY,
-                               &m_packCommand[OpenPGP], &m_packPrefixArguments[OpenPGP], &m_packPostfixArguments[OpenPGP], &method );
+                               &m_packCommand[OpenPGP], &m_packPrefixArguments[OpenPGP], &m_packPostfixArguments[OpenPGP], &method, true );
             setPackCommandArgumentPassingMethod( OpenPGP, method );
 
             // pack-command(-cms)
             if ( group.hasKey( PACK_COMMAND_CMS_ENTRY ) )
                 parse_command( group.readEntry( PACK_COMMAND_CMS_ENTRY ), id(), PACK_COMMAND_CMS_ENTRY,
-                               &m_packCommand[CMS], &m_packPrefixArguments[CMS], &m_packPostfixArguments[CMS], &method );
+                               &m_packCommand[CMS], &m_packPrefixArguments[CMS], &m_packPostfixArguments[CMS], &method, true );
             else
                 parse_command( group.readEntry( PACK_COMMAND_ENTRY ), id(), PACK_COMMAND_ENTRY,
-                               &m_packCommand[OpenPGP], &m_packPrefixArguments[OpenPGP], &m_packPostfixArguments[OpenPGP], &method );
+                               &m_packCommand[OpenPGP], &m_packPrefixArguments[OpenPGP], &m_packPostfixArguments[OpenPGP], &method, true );
             setPackCommandArgumentPassingMethod( CMS, method );
+
+            QStringList dummy;
 
             // unpack-command(-openpgp)
             if ( group.hasKey( UNPACK_COMMAND_OPENPGP_ENTRY ) )
                 parse_command( group.readEntry( UNPACK_COMMAND_OPENPGP_ENTRY ), id(), UNPACK_COMMAND_OPENPGP_ENTRY,
-                               &m_unpackCommand[OpenPGP], &m_unpackPrefixArguments[OpenPGP], &m_unpackPostfixArguments[OpenPGP], &method );
+                               &m_unpackCommand[OpenPGP], &m_unpackArguments[OpenPGP], &dummy, &method, false );
             else
                 parse_command( group.readEntry( UNPACK_COMMAND_ENTRY ), id(), UNPACK_COMMAND_ENTRY,
-                               &m_unpackCommand[OpenPGP], &m_unpackPrefixArguments[OpenPGP], &m_unpackPostfixArguments[OpenPGP], &method );
+                               &m_unpackCommand[OpenPGP], &m_unpackArguments[OpenPGP], &dummy, &method, false );
             if ( method != CommandLine )
                 throw ArchiveDefinitionError( id(), i18n("cannot use argument passing on standard input for unpack-command") );
 
             // unpack-command(-cms)
             if ( group.hasKey( UNPACK_COMMAND_CMS_ENTRY ) )
                 parse_command( group.readEntry( UNPACK_COMMAND_CMS_ENTRY ), id(), UNPACK_COMMAND_CMS_ENTRY,
-                               &m_unpackCommand[CMS], &m_unpackPrefixArguments[CMS], &m_unpackPostfixArguments[CMS], &method );
+                               &m_unpackCommand[CMS], &m_unpackArguments[CMS], &dummy, &method, false );
             else
                 parse_command( group.readEntry( UNPACK_COMMAND_ENTRY ), id(), UNPACK_COMMAND_ENTRY,
-                               &m_unpackCommand[CMS], &m_unpackPrefixArguments[CMS], &m_unpackPostfixArguments[CMS], &method );
+                               &m_unpackCommand[CMS], &m_unpackArguments[CMS], &dummy, &method, false );
             if ( method != CommandLine )
                 throw ArchiveDefinitionError( id(), i18n("cannot use argument passing on standard input for unpack-command") );
         }
@@ -275,13 +281,15 @@ namespace {
             return m_packPrefixArguments[p] + files + m_packPostfixArguments[p];
         }
         /* reimp */ QStringList doGetUnpackArguments( Protocol p, const QString & file ) const {
-            return m_unpackPrefixArguments[p] + QStringList( file ) + m_packPostfixArguments[p];
+            QStringList copy = m_unpackArguments[p];
+            copy.replaceInStrings( FILE_PLACEHOLDER, file );
+            return copy;
         }
 
     private:
         QString m_packCommand[2], m_unpackCommand[2];
         QStringList m_packPrefixArguments[2], m_packPostfixArguments[2];
-        QStringList m_unpackPrefixArguments[2], m_unpackPostfixArguments[2];
+        QStringList m_unpackArguments[2];
     };
 
 }
