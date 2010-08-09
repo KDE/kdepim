@@ -482,12 +482,13 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
   // Connect to the right logic
   connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
+  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SIGNAL(startDateTimeToggled(bool)) );
   connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(updateStartTime(QTime)) );
   connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
 
   connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
-  //   connect( mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
+  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SIGNAL(endDateTimeToggled(bool)) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SLOT(checkDirtyStatus()) );
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL( endDateChanged( QDate ) ) );
@@ -640,6 +641,16 @@ void IncidenceDateTime::setStartTime( const QTime& newTime )
 {
   mUi->mStartTimeEdit->setTime( newTime );
   updateStartTime( newTime );
+}
+
+bool IncidenceDateTime::startDateTimeEnabled() const
+{
+  return mUi->mStartCheck->isChecked();
+}
+
+bool IncidenceDateTime::endDateTimeEnabled() const
+{
+  return mUi->mEndCheck->isChecked();
 }
 
 
