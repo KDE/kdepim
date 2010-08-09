@@ -32,6 +32,7 @@ using namespace KCalCore;
 
 AlarmDialog::AlarmDialog()
   : mUi( new Ui::AlarmDialog )
+  , mAllowEndReminders( true )
 {
   setWindowTitle( i18n( "Create a new alarm" ) );
   mUi->setupUi( mainWidget() );
@@ -192,6 +193,15 @@ void AlarmDialog::save( const Alarm::Ptr &alarm ) const
   }
 }
 
+void AlarmDialog::setAllowEndReminders( bool allowEndReminders )
+{
+  mAllowEndReminders = allowEndReminders;
+  if ( !allowEndReminders ) {
+    mUi->mBeforeAfter->removeItem( 3 );
+    mUi->mBeforeAfter->removeItem( 2 );
+  }
+}
+
 void AlarmDialog::setIsTodoReminder( bool isTodo )
 {
   if ( isTodo ) {
@@ -209,6 +219,7 @@ void AlarmDialog::setIsTodoReminder( bool isTodo )
                                  << i18n( "Before the event ends" )
                                  << i18n( "After the event ends" ) );
   }
+  setAllowEndReminders( mAllowEndReminders );
 }
 
 void AlarmDialog::setOffset( int offset )

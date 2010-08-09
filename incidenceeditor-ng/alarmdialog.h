@@ -52,6 +52,7 @@ class AlarmDialog : public KDialog
 
     void load( const KCalCore::Alarm::Ptr &alarm );
     void save( const KCalCore::Alarm::Ptr &alarm ) const;
+    void setAllowEndReminders( bool allowEndReminders );
     void setIsTodoReminder( bool isTodo );
     void setOffset( int offset );
     void setUnit( Unit unit );
@@ -59,6 +60,7 @@ class AlarmDialog : public KDialog
 
   private:
     Ui::AlarmDialog *mUi;
+    bool mAllowEndReminders;
 };
 
 }
