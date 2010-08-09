@@ -910,13 +910,13 @@ bool CalendarResources::endChange( Incidence *incidence,
 
 void CalendarResources::beginAddingIncidences()
 {
-  kdDebug(5800) << "CalendarResources: beginAddingIncidences() ";
+  kdDebug(5800) << "CalendarResources: beginAddingIncidences() " << endl;
   d->mBatchAddingInProgress = true;
 }
 
 void CalendarResources::endAddingIncidences()
 {
-  kdDebug(5800) << "CalendarResources: endAddingIncidences() ";
+  kdDebug(5800) << "CalendarResources: endAddingIncidences() " << endl;
   d->mBatchAddingInProgress = false;
 
   if ( d->mLastUsedResource ) {
