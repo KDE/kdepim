@@ -37,6 +37,17 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
+namespace Kleo {
+    class ArchiveDefinition;
+}
+
+namespace boost {
+    template <typename T>
+    class shared_ptr;
+}
+
 namespace Kleo {
 namespace Crypto {
 namespace Gui {
@@ -65,9 +76,13 @@ namespace Gui {
         void setSignedDataFileName( const QString & name );
         QString signedDataFileName() const;
 
+        void setArchiveDefinitions( const std::vector< boost::shared_ptr<ArchiveDefinition> > & ads );
+        boost::shared_ptr<ArchiveDefinition> selectedArchiveDefinition() const;
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void enableDisableWidgets() )
     };
 
 }
