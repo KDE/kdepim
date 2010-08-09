@@ -55,6 +55,7 @@ private:
     QGraphicsLinearLayout* m_layout;
     Plasma::Label* m_text;
     GradientProgressWidget* m_timetil;
+    Plasma::IconWidget* m_moreInfoIcon;
 };
 
 

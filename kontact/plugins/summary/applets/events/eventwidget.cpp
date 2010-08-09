@@ -46,7 +46,7 @@ void EventWidget::setData( QVariantHash args )
     var = args[ "StartDate" ];
     if ( var.isValid() ) {
         m_date = qVariantValue<KDateTime>( var );
-        
+
         // make the date reference this year.
         QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_date.date().month(), m_date.date().day() ) );
 
@@ -76,12 +76,24 @@ void EventWidget::initUI()
 
     // Create the icon
     m_icon = new Plasma::IconWidget( 0 );
+    m_layout->addItem(m_icon);
 
     // Create the text
     m_text = new Plasma::Label();
+    m_layout->addItem(m_text);
 
     // Create the time-'til
     m_timetil = new GradientProgressWidget( );
+    m_layout->addItem(m_timetil);
+
+    // Create the more info button
+    m_moreInfoIcon = new Plasma::IconWidget( KIcon("arrow-down-double") );
+    m_moreInfoIcon->setMaximumWidth(16);
+    m_moreInfoIcon->setMaximumHieght(16);
+    m_moreInfoIcon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    m_layout->addItem(m_moreInfoIcon);
+    m_layout->setAlignment(m_moreInfoIcon, Qt::AlignBottom|Qt::AlignHCenter);
+    m_moreInfoIcon->setVisible(0);
 }
 
 void EventWidget::updateUI()
