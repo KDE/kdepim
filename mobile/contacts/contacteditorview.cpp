@@ -20,7 +20,12 @@
 #include "contacteditorview.h"
 
 #include "contactmetadata_p.h"
-#include "declarativeeditors.h"
+#include "editorgeneral.h"
+#include "editorbusiness.h"
+#include "editorlocation.h"
+#include "editorcrypto.h"
+#include "editormore.h"
+#include "declarativewidgetbase.h"
 
 #include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
 
@@ -31,6 +36,12 @@
 #include <KABC/Addressee>
 
 using namespace Akonadi;
+
+typedef DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral> DeclarativeEditorGeneral;
+typedef DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness> DeclarativeEditorBusiness;
+typedef DeclarativeWidgetBase<EditorLocation, ContactEditorView, &ContactEditorView::setEditorLocation> DeclarativeEditorLocation;
+typedef DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorView::setEditorCrypto> DeclarativeEditorCrypto;
+typedef DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore> DeclarativeEditorMore;
 
 class ContactEditorView::Private : public Akonadi::ItemEditorUi
 {
@@ -218,6 +229,7 @@ ContactEditorView::~ContactEditorView()
 
 void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
 {
+  kDebug() << editor;
   d->mEditorGeneral = editor;
 
   if ( d->mEditorGeneral != 0 ) {

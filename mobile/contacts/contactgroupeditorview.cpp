@@ -19,7 +19,8 @@
 
 #include "contactgroupeditorview.h"
 
-#include "declarativeeditors.h"
+#include "editorcontactgroup.h"
+#include "declarativewidgetbase.h"
 
 #include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>
 
@@ -29,6 +30,8 @@
 #include <KABC/ContactGroup>
 
 using namespace Akonadi;
+
+typedef DeclarativeWidgetBase<EditorContactGroup, ContactGroupEditorView, &ContactGroupEditorView::setEditor> DeclarativeEditorContactGroup;
 
 class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
 {
@@ -44,8 +47,6 @@ class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
     {
       delete mItemManager;
     }
-
-    void addDetailEditor( EditorBase *editor );
 
   public: // slots
     void saveFinished();

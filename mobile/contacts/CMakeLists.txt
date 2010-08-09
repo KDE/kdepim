@@ -20,7 +20,6 @@ set(kab_mobile_srcs
   customfieldeditwidget.cpp
   customfieldmanager.cpp
   customfields.cpp
-  declarativeeditors.cpp
   displaynameeditwidget.cpp
   editorbase.cpp
   editorbusiness.cpp
