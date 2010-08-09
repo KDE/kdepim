@@ -50,6 +50,7 @@ Calendar::Calendar( const QString &timeZoneId )
 
 void Calendar::init()
 {
+  mException = 0;
   mNewObserver = false;
   mObserversEnabled = true;
 
@@ -66,7 +67,25 @@ void Calendar::init()
 
 Calendar::~Calendar()
 {
+  clearException();
   delete mDefaultFilter;
+}
+
+void Calendar::clearException()
+{
+  delete mException;
+  mException = 0;
+}
+
+ErrorFormat *Calendar::exception() const
+{
+  return mException;
+}
+
+void Calendar::setException( ErrorFormat *e )
+{
+  delete mException;
+  mException = e;
 }
 
 const Person &Calendar::getOwner() const

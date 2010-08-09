@@ -31,19 +31,21 @@
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
 
-#include <qobject.h>
-#include <qstring.h>
-#include <qdatetime.h>
-#include <qptrlist.h>
-#include <qdict.h>
-#include <kdepimmacros.h>
-
+#include "exceptions.h"
 #include "customproperties.h"
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
 #include "kcalversion.h"
 #include "person.h"
+
+#include <kdepimmacros.h>
+
+#include <qobject.h>
+#include <qstring.h>
+#include <qdatetime.h>
+#include <qptrlist.h>
+#include <qdict.h>
 
 /**
    @namespace KCal
@@ -205,6 +207,17 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the string containing the Product ID
     */
     QString productId();
+
+    /**
+      Clears the exception status.
+    */
+    void clearException();
+
+    /**
+      Returns an exception, if there is any, containing information about the
+      last error that occurred.
+    */
+    ErrorFormat *exception() const;
 
     /**
        Set the owner of the Calendar.
@@ -918,6 +931,12 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
   protected:
     /**
+       Sets information about the last error occurred.
+       The previous exception is freed.
+     */
+    void setException( ErrorFormat *e );
+
+    /**
        The Observer interface. So far not implemented.
 
        @param incidenceBase is a pointer an IncidenceBase object.
@@ -978,6 +997,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     //      returning static Alarm::List
 
   private:
+
     /**
        Intialize a Calendar object with starting values.
     */
@@ -1001,6 +1021,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     QDict<Incidence> mOrphans;
     QDict<Incidence> mOrphanUids;
 
+    ErrorFormat *mException;
     class Private;
     Private *d;
   };

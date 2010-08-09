@@ -129,7 +129,6 @@ void CalendarResources::init( const QString &family )
   mStandardPolicy = new StandardDestinationPolicy( mManager );
   mAskPolicy = new AskDestinationPolicy( mManager );
   mDestinationPolicy = mStandardPolicy;
-  mException = 0;
   mPendingDeleteFromResourceMap = false;
 
   connect( this, SIGNAL(batchAddingBegins()), this, SLOT(beginAddingIncidences()) );
@@ -139,21 +138,9 @@ void CalendarResources::init( const QString &family )
 CalendarResources::~CalendarResources()
 {
   close();
-  clearException();
   delete mManager;
   delete mStandardPolicy;
   delete mAskPolicy;
-}
-
-void CalendarResources::clearException()
-{
-  delete mException;
-  mException = 0;
-}
-
-ErrorFormat *CalendarResources::exception()
-{
-  return mException;
 }
 
 void CalendarResources::readConfig( KConfig *config )
@@ -361,7 +348,7 @@ bool CalendarResources::addIncidence( Incidence *incidence )
       return true;
     } else {
       if ( resource->exception() ) {
-        mException = new ErrorFormat( resource->exception()->errorCode() );
+        setException( new ErrorFormat( resource->exception()->errorCode() ) );
       }
 
       // the incidence isn't going to be added, do cleanup:
@@ -370,7 +357,7 @@ bool CalendarResources::addIncidence( Incidence *incidence )
       d->mLastUsedResource = 0;
     }
   } else {
-    mException = new ErrorFormat( ErrorFormat::UserCancel );
+    setException( new ErrorFormat( ErrorFormat::UserCancel ) );
   }
 
   return false;
