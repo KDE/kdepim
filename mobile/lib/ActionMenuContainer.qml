@@ -70,6 +70,7 @@ Item {
         if ( children[i].category != undefined && children[i].category != "standard" )
           children[i].visible = (children[i].category == category);
       }
+      refresh();
     }
 
     function triggered(triggeredName) {
@@ -84,14 +85,18 @@ Item {
     }
 
     function refresh() {
+      var _depth = -myColumn.height;
       for ( var i = 0; i < children.length; ++i ) {
         children[i].height = actionItemHeight
         if (children[i].columnHeight != undefined)
           children[i].columnHeight = myColumn.height
         if (children[i].totalWidth != undefined)
           children[i].totalWidth = _topLevel.width - actionItemWidth
-        if (children[i].depth != undefined)
-          children[i].depth = - myColumn.height + ( (i) * ( actionItemHeight + actionItemSpacing ) )
+        if (children[i].depth != undefined) {
+          children[i].depth = _depth
+          if ( children[i].visible )
+            _depth += actionItemHeight + actionItemSpacing;
+        }
         if (children[i].actionItemSpacing != undefined)
           children[i].actionItemSpacing = actionItemSpacing
         if (children[i].actionItemHeight != undefined)
