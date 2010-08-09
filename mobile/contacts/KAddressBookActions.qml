@@ -96,7 +96,7 @@ ActionMenuContainer {
     name : "Contact"
     FakeAction { name : "copy_to_addressbook" }
     FakeAction { name : "move_to_addressbook" }
-    FakeAction { name : "delete" }
+    ActionListItem { name : "akonadi_item_delete" }
     FakeAction { name : "edit" }
   }
 

@@ -156,6 +156,7 @@ ActionMenuContainer {
     name : "Event"
     ActionListItem { name : "copy_to_calendar" }
     ActionListItem { name : "move_to_calendar" }
+    ActionListItem { name : "akonadi_item_delete" }
   }
   ActionList {
     category : "event_viewer"
