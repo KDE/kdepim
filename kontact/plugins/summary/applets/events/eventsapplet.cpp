@@ -97,7 +97,7 @@ void EventsApplet::configChanged()
 
 void EventsApplet::updateEvents()
 {
-    QString source = "events:%2:%3";
+    QString source = "events:%1:%2";
     QDate currentDate = QDate::currentDate();
     QDate endDate = currentDate.addDays( m_numDays );
 
