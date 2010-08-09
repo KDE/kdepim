@@ -182,7 +182,7 @@ void EventWidget::updateFullUI()
     // convert the date to a QString...
     QString text;
     if ( m_endDate.isValid() && m_startDate.isValid() ) {
-        text = i18nc("Between two dates","%1 to %2"); // XXX is this right syntax?
+        text = i18n( "%1 to %2");
         text = text.arg( m_startDate.toString(), m_endDate.toString() );
     } else if ( m_startDate.isValid() ) {
         text = i18n("%1");
