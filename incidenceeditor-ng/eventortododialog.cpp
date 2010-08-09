@@ -408,13 +408,7 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
     mUi->mInvitationBar->hide();
   }
 
-  if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
-    mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  } else {
-    mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
-  }
+  mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() );
 
   q->show();
 }
