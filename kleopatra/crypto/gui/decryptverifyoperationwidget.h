@@ -67,6 +67,7 @@ namespace Gui {
             VerifyDetachedWithSignedData,
             DecryptVerifyOpaque
         };
+        void setMode( Mode mode, const boost::shared_ptr<ArchiveDefinition> & ad );
         void setMode( Mode mode );
         Mode mode() const;
 
