@@ -48,9 +48,9 @@ KPIM.MainView {
 
   function backToAgendaView()
   {
-    korganizerActions.showOnlyCategory("single_calendar")
     eventView.visible = false;
     agendaView.visible = true;
+    updateContextActionsStates();
   }
 
   function updateContextActionsStates()

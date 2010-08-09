@@ -38,6 +38,8 @@ KPIM.MainView {
     contactListPage.visible = true;
     contactView.itemId = -1;
     contactGroupView.itemId = -1;
+
+    updateContextActionsStates();
   }
 
   function updateContextActionsStates()
@@ -132,7 +134,6 @@ KPIM.MainView {
     icon: KDE.locate( "data", "mobileui/back-to-list-button.png" );
     onClicked: {
       goBackToListing();
-      kaddressbookActions.showOnlyCategory("resource")
     }
   }
 
@@ -380,89 +381,7 @@ KPIM.MainView {
       ]
     }
   }
-/*
-  SlideoutPanelContainer {
-    anchors.fill: parent
 
-    SlideoutPanel {
-      anchors.fill: parent
-      id: actionPanel
-      titleText: KDE.i18n( "Actions" )
-      handleHeight: 150
-      handlePosition: 125
-      contentWidth: 240
-      content: [
-          KPIM.Action {
-            id: syncButton
-            anchors.top: parent.top;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("akonadi_collection_sync")
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Action {
-            id: deleteButton
-            anchors.top: syncButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            action : application.getAction("akonadi_item_delete")
-            onTriggered: actionPanel.collapse();
-          },
-          KPIM.Button {
-            id : saveFavoriteButton
-            anchors.top: deleteButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            buttonText: KDE.i18n( "Save Favorite" )
-            width: parent.width - 10
-            height: collectionView.hasSelection ? parent.height / 6 : 0
-            visible : collectionView.hasSelection
-            onClicked : {
-              application.saveFavorite();
-              actionPanel.collapse();
-            }
-          },
-          KPIM.Button {
-            id : newContactButton2
-            anchors.top: saveFavoriteButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "New Contact" )
-            onClicked : {
-              application.newContact();
-              actionPanel.collapse();
-            }
-          },
-          KPIM.Button {
-            id : newContactGroupButton
-            anchors.top: newContactButton2.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "New Group" )
-            onClicked : {
-              application.newContactGroup();
-              actionPanel.collapse();
-            }
-          },
-          KPIM.Button {
-            visible : !collectionView.hasSelection
-            anchors.top: newContactGroupButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "New Address Book" )
-            onClicked : {
-              application.launchAccountWizard();
-              actionPanel.collapse();
-            }
-          }
-      ]
-    }
-  }
-*/
   QML.Connections {
     target: startPage
     onAccountSelected : {
