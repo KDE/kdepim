@@ -32,6 +32,9 @@ IncidenceEditor::~IncidenceEditor()
 
 void IncidenceEditor::checkDirtyStatus()
 {
+  if ( !mLoadedIncidence )
+    return;
+
   const bool dirty = isDirty();
   if ( mWasDirty != dirty ) {
     mWasDirty = dirty;
