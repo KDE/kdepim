@@ -43,16 +43,24 @@ public slots:
     void setData( QVariantHash data );
     void initUI();
     void updateUI();
+    void toggleMoreInfo();
+
+    void setMoreInfoVisible(bool visible = true );
+    bool moreInfoVisible();
 
 private:
     KDateTime m_date;
     QString m_summary;
     bool m_allDay;
     QString m_type;
+    bool m_moreInfoVisible;
+
     QGraphicsWidget* m_parent;
 
     Plasma::IconWidget* m_icon;
-    QGraphicsLinearLayout* m_layout;
+    QGraphicsLinearLayout* m_masterLayout;
+    QGraphicsWidget* m_summaryWidget;
+    QGraphicsWidget* m_fullViewWidget;
     Plasma::Label* m_text;
     GradientProgressWidget* m_timetil;
     Plasma::IconWidget* m_moreInfoIcon;

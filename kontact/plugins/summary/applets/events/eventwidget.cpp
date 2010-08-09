@@ -71,28 +71,54 @@ void EventWidget::setData( QVariantHash args )
 
 void EventWidget::initUI()
 {
-    // Create the layout
-    m_layout = new QGraphicsLinearLayout( Qt::Horizontal );
+    // Create the master layout
+    m_masterLayout = new QGraphicsLinearLayout( Qt::Vertical );
+
+    // Create the layout where the summary resides
+    m_summaryWidget = new QGraphicsWidget( this );
+    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout( Qt::Horizontal );
+    m_summaryWidget->setLayout(layout);
+    m_masterLayout->addItem(m_summaryWidget);
 
     // Create the icon
     m_icon = new Plasma::IconWidget( 0 );
-    m_layout->addItem(m_icon);
+    layout->addItem(m_icon);
 
     // Create the text
     m_text = new Plasma::Label();
-    m_layout->addItem(m_text);
+    layout->addItem(m_text);
 
     // Create the time-'til
     m_timetil = new GradientProgressWidget( );
-    m_layout->addItem(m_timetil);
+    layout->addItem(m_timetil);
 
     // Create the more info button
     m_moreInfoIcon = new Plasma::IconWidget( KIcon("arrow-down-double") );
     m_moreInfoIcon->setMaximumWidth(16);
     m_moreInfoIcon->setMaximumHieght(16);
     m_moreInfoIcon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    m_layout->addItem(m_moreInfoIcon);
-    m_layout->setAlignment(m_moreInfoIcon, Qt::AlignBottom|Qt::AlignHCenter);
+    layout->addItem(m_moreInfoIcon);
+    layout->setAlignment(m_moreInfoIcon, Qt::AlignBottom|Qt::AlignHCenter);
+    m_moreInfoIcon->setVisible(0); // Only shown when user mouses in.
+
+    connect(m_moreInfoIcon, SIGNAL(clicked()), this, SLOT(toggleMoreInfo()));
+
+    // XXX Create full view widget
+    // do magick
+    // m_masterLayout->addItem(foobar)
+
+    setLayout(m_masterLayout);
+}
+
+void EventWidget::mouseEnterEvent(QMouseEvent* event)
+{
+    Q_UNUSED(event);
+    m_moreInfoIcon->setVisible(1);
+}
+
+void EventWidget::mouseLeaveEvent(QMouseEvent* event)
+{
+    Q_UNUSED(event);
     m_moreInfoIcon->setVisible(0);
 }
 
@@ -121,3 +147,22 @@ void EventWidget::updateUI()
     kDebug() << "update ui" << icon << m_summary << difference;
 }
 
+void EventWidget::toggleMoreInfo()
+{
+    if ( moreInfoVisible() ) {
+        setMoreInfoVisible(false);
+    } else {
+        setMoreInfoVisible(true);
+    }
+}
+
+void setMoreInfoVisible( bool visible )
+{
+    m_moreInfoLayout->setVisible(visible);
+    m_moreInfoVisible = visible;
+}
+
+bool moreInfoVisible()
+{
+    return m_moreInfoVisible;
+}
