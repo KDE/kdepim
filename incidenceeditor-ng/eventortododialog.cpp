@@ -409,15 +409,27 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 
 Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 {
-  KCalCore::Event::Ptr event( new KCalCore::Event );
-  // Make sure that we don't loose uid for existing incidence
-  if ( mEditor->incidence<KCalCore::Incidence>() )
-    event->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
-  mEditor->save( event );
+  Q_ASSERT( mEditor->incidence<KCalCore::Incidence>() );
+
+  KCalCore::Incidence::Ptr incidenceInEditor = mEditor->incidence<KCalCore::Incidence>();
+  KCalCore::Incidence::Ptr newIncidence;
 
   Akonadi::Item result = item;
-  result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  result.setPayload<KCalCore::Event::Ptr>( event );
+  if ( incidenceInEditor.dynamicCast<KCalCore::Event>() ) {
+    newIncidence = KCalCore::Event::Ptr( new KCalCore::Event );
+    result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  } else {
+    Q_ASSERT( incidenceInEditor.dynamicCast<KCalCore::Todo>() );
+    newIncidence = KCalCore::Todo::Ptr( new KCalCore::Todo );
+    result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  }
+
+  Q_ASSERT( newIncidence );
+  mEditor->save( newIncidence );
+
+  // Make sure that we don't loose uid for existing incidence
+  newIncidence->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
+  result.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
   return result;
 }
 
