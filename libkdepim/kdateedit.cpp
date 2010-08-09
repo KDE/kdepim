@@ -235,7 +235,7 @@ KDateEdit::KDateEdit( QWidget *parent )
 
   connect( lineEdit(), SIGNAL( returnPressed() ),
            this, SLOT( lineEnterPressed() ) );
-  connect( this, SIGNAL( textChanged( const QString& ) ),
+  connect( this, SIGNAL( editTextChanged( const QString& ) ),
            SLOT( slotTextChanged( const QString& ) ) );
 
 #ifndef KDEPIM_MOBILE_UI
