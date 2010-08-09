@@ -518,6 +518,8 @@ void EventOrTodoDialog::load( const Akonadi::Item &item, const QDate &activeDate
 
   if ( item.isValid() ) {
     d->mItemManager->load( item );
+    // TODO: Remove this once we support moving of events/todo's
+    d->mCalSelector->setEnabled( false );
   } else {
     Q_ASSERT( d->hasSupportedPayload( item ) );
     d->load( item );
