@@ -55,6 +55,8 @@ private:
     bool m_allDay;
     QString m_type;
     bool m_moreInfoVisible;
+    QString m_date;
+    QString m_description;
 
     QGraphicsWidget* m_parent;
 
@@ -62,9 +64,11 @@ private:
     QGraphicsLinearLayout* m_masterLayout;
     QGraphicsWidget* m_summaryWidget;
     QGraphicsWidget* m_fullViewWidget;
-    Plasma::Label* m_text;
+    Plasma::Label* m_summaryLabel;
     GradientProgressWidget* m_timetil;
     Plasma::IconWidget* m_moreInfoIcon;
+    Plasma::Label* m_dateLabel;
+    Plasma::Label* m_descriptionLabel;
 };
 
 

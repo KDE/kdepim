@@ -86,8 +86,8 @@ void EventWidget::initUI()
     layout->addItem(m_icon);
 
     // Create the text
-    m_text = new Plasma::Label();
-    layout->addItem(m_text);
+    m_summaryLabel = new Plasma::Label();
+    layout->addItem(m_summaryLabel);
 
     // Create the time-'til
     m_timetil = new GradientProgressWidget( );
@@ -105,9 +105,20 @@ void EventWidget::initUI()
     connect(m_moreInfoIcon, SIGNAL(clicked()), this, SLOT(toggleMoreInfo()));
 
     // XXX Create full view widget
-    // do magick to m_fullViewWidget
-    // m_masterLayout->addItem(m_fullViewWidget)
+    // Start with a layout
+    m_fullViewWidget = new QGraphicsWidget( this );
+    layout = new QGraphicsLinearLayout(Qt::Vertical);
 
+    // Add description
+    m_descriptionLabel = new Plasma::Label();
+    layout->addItem(m_descriptionLabel);
+
+    // Add date
+    m_dateLabel = new Plasma::Label();
+    layout->addItem(m_dateLabel);
+
+    m_fullViewWidget->setLayout(layout);
+    m_masterLayout->addItem(m_fullViewWidget)
     setLayout(m_masterLayout);
 }
 
@@ -123,7 +134,7 @@ void EventWidget::mouseLeaveEvent(QMouseEvent* event)
     m_moreInfoIcon->setVisible(0);
 }
 
-void EventWidget::updateUI()
+void EventWidget::updateSummaryUI()
 {
     // Set the icon
     KIcon icon;
@@ -135,11 +146,13 @@ void EventWidget::updateUI()
     m_icon->setIcon( icon );
 
     // Set the text
-    m_text->setText( m_summary );
+    m_summaryLabel->setText( m_summary );
 
     // Set the time-'til
-    KConfigGroup config = qobject_cast<Plasma::Applet*>(m_parent)->config();
-    int numDays = config.readEntry("numDays",31);
+    if (m_parent) {
+        KConfigGroup config = qobject_cast<Plasma::Applet*>(m_parent)->config();
+        int numDays = config.readEntry("numDays",31);
+    }
 
     int difference = m_date.daysTo( KDateTime( QDateTime::currentDateTime() ) );
     m_timetil->setEnd( numDays );
@@ -150,7 +163,12 @@ void EventWidget::updateUI()
 
 void EventWidget::updateFullUI()
 {
-    // do magick!
+    // Set the description
+    m_descriptionLabel->setText( m_description );
+
+    // and the date
+    m_dateLabel->setText( m_date );
+
 }
 
 void EventWidget::toggleMoreInfo()
