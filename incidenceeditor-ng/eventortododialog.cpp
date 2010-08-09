@@ -237,8 +237,11 @@ void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
   Q_Q( EventOrTodoDialog );
 
   KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
-  QString fileName = KStandardDirs::locateLocal( "data",
-                       "korganizer/templates/" + mEditor->type() + '/' + templateName );
+
+  QStringList typeStrings;
+  typeStrings << "Event" << "Todo" << "Journal";
+  const QString fileName = KStandardDirs::locateLocal( "data",
+                                                       "korganizer/templates/" + typeStrings[mEditor->type()] + '/' + templateName );
 
   if ( fileName.isEmpty() ) {
     KMessageBox::error( q, i18nc( "@info", "Unable to find template '%1'.", fileName ) );
