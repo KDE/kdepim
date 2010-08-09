@@ -52,7 +52,7 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
   public: // slots
     void saveFinished();
-    void saveFailed( const QString &errorMessage );
+    void saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage );
     void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorGeneralUi interface
@@ -115,7 +115,7 @@ void ContactEditorView::Private::saveFinished()
   q->deleteLater();
 }
 
-void ContactEditorView::Private::saveFailed( const QString &errorMessage )
+void ContactEditorView::Private::saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   kError() << errorMessage;
 }
@@ -208,7 +208,7 @@ void ContactEditorView::delayedInit()
   connect( d->mItemManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
            SLOT( saveFinished() ) );
   connect( d->mItemManager, SIGNAL( itemSaveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ),
-           SLOT( saveFailed( QString ) ) );
+           SLOT( saveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ) );
 }
 
 ContactEditorView::~ContactEditorView()
