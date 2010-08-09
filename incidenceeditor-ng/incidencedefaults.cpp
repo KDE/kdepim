@@ -144,7 +144,9 @@ void IncidenceDefaultsPrivate::todoDefaults( const Todo::Ptr &todo ) const
   else
     todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
 
-  if ( !mEndDt.isValid() || ( KDateTime::currentLocalDateTime() < mEndDt ) )
+  if ( mStartDt.isValid() )
+    todo->setDtStart( mStartDt );
+  else if ( !mEndDt.isValid() || ( KDateTime::currentLocalDateTime() < mEndDt ) )
     todo->setDtStart( KDateTime::currentLocalDateTime() );
   else
     todo->setDtStart( mEndDt.addDays( -1 ) );
