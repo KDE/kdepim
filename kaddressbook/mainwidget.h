@@ -65,7 +65,6 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
   private Q_SLOTS:
     void delayedInit();
 
-    void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
     void itemSelectionChanged( const QModelIndex&, const QModelIndex& );
     void selectFirstItem();
@@ -82,9 +81,6 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
   private:
     void setupGui();
     void setupActions( KActionCollection* );
-
-    void editContact( const Akonadi::Item& );
-    void editGroup( const Akonadi::Item& );
 
     QAbstractItemModel* allContactsModel();
 
