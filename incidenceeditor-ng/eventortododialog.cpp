@@ -469,7 +469,6 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   d->mUi->mSummaryEdit->setFocus();
 
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
-  setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
   setButtonToolTip( KDialog::Apply, i18nc( "@info:tooltip", "Save current changes" ) );
   setButtonToolTip( KDialog::Ok, i18nc( "@action:button", "Save changes and close dialog" ) );
   setButtonToolTip( KDialog::Cancel, i18nc( "@action:button", "Discard changes and close dialog" ) );
