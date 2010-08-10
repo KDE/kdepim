@@ -21,6 +21,7 @@
 #include "contacteditorview.h"
 #include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
+#include "standardcontactactionmanager.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 
@@ -42,26 +43,6 @@ void MainView::delayedInit()
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();
-
-  KAction *action = new KAction( i18n( "New Contact" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( newContact() ) );
-  actionCollection()->addAction( "kab_mobile_new_contact", action );
-
-  action = new KAction( i18n( "Edit Contact" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( editContact() ) );
-  actionCollection()->addAction( "kab_mobile_edit_contact", action );
-
-  action = new KAction( i18n( "New Contact Group" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( newContactGroup() ) );
-  actionCollection()->addAction( "kab_mobile_new_contactgroup", action );
-
-  action = new KAction( i18n( "Edit Contact Group" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( editContactGroup() ) );
-  actionCollection()->addAction( "kab_mobile_edit_contactgroup", action );
-
-  action = new KAction( i18n( "New Address Book" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( launchAccountWizard() ) );
-  actionCollection()->addAction( "kab_mobile_new_addressbook", action );
 }
 
 void MainView::newContact()
@@ -71,21 +52,15 @@ void MainView::newContact()
   editor->show();
 }
 
-void MainView::editContact()
+void MainView::editItem( const Akonadi::Item &item )
 {
-  if ( !itemSelectionModel() )
+  if ( !item.isValid() )
     return;
 
-  const QModelIndexList indexes = itemSelectionModel()->selectedIndexes();
-  if ( indexes.isEmpty() )
-    return;
-
-  const QModelIndex index = indexes.first();
-  if ( !index.isValid() )
-    return;
-
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  editContact( item );
+  if ( item.hasPayload<KABC::Addressee>() )
+    editContact( item );
+  else if ( item.hasPayload<KABC::ContactGroup>() )
+    editContactGroup( item );
 }
 
 void MainView::editContact( const Akonadi::Item &item )
@@ -103,29 +78,29 @@ void MainView::newContactGroup()
   editor->show();
 }
 
-void MainView::editContactGroup()
-{
-  if ( !itemSelectionModel() )
-    return;
-
-  const QModelIndexList indexes = itemSelectionModel()->selectedIndexes();
-  if ( indexes.isEmpty() )
-    return;
-
-  const QModelIndex index = indexes.first();
-  if ( !index.isValid() )
-    return;
-
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  editContactGroup( item );
-}
-
 void MainView::editContactGroup( const Akonadi::Item &item )
 {
   ContactGroupEditorView *editor = new ContactGroupEditorView;
   connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContactGroup( item );
   editor->show();
+}
+
+void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel )
+{
+  Akonadi::StandardContactActionManager *manager = new Akonadi::StandardContactActionManager( actionCollection(), this );
+  manager->setCollectionSelectionModel( collectionSelectionModel );
+  manager->setItemSelectionModel( itemSelectionModel );
+
+  manager->createAllActions();
+
+  connect( manager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newContact() ) );
+  connect( manager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newContactGroup() ) );
+  connect( manager, SIGNAL( editItem( const Akonadi::Item& ) ),
+           this, SLOT( editItem( const Akonadi::Item& ) ) );
 }
 
 #include "mainview.moc"

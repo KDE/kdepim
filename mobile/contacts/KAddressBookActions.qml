@@ -63,7 +63,7 @@ ActionMenuContainer {
   ActionList {
     category : "resource"
     name : "Address Book"
-    FakeAction { name : "edit_resource" }
+    ActionListItem { name : "akonadi_addressbook_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
 
@@ -98,7 +98,7 @@ ActionMenuContainer {
     FakeAction { name : "copy_to_addressbook" }
     FakeAction { name : "move_to_addressbook" }
     ActionListItem { name : "akonadi_item_delete" }
-    ActionListItem { name : "kab_mobile_edit_contact" }
+    ActionListItem { name : "akonadi_contact_item_edit" }
   }
 
   ApplicationGeneralActions {
