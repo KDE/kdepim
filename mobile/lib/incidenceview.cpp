@@ -54,6 +54,7 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mCollectionCombo( 0 )
   , mEditor( new CombinedIncidenceEditor( parent ) )
   , mEditorDateTime( 0 )
+  , mIncidenceMore( 0 )
 {
   setAttribute(Qt::WA_DeleteOnClose);
 }
@@ -117,41 +118,51 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
   editor = new IncidenceEditorsNG::IncidenceCompletionPriority( editorWidget->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
+
+  if ( mIncidenceMore != 0 ) // IncidenceMore was set *before* general.
+    initIncidenceMore();
 }
 
-void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
+void IncidenceView::initIncidenceMore()
 {
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
   const Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
 
-  IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( editorWidget->mUi );
+  IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( mIncidenceMore->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceDescription( editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceDescription( mIncidenceMore->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAttendee( 0, mEditorDateTime, editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceAttendee( 0, mEditorDateTime, mIncidenceMore->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAlarm( mEditorDateTime, editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceAlarm( mEditorDateTime, mIncidenceMore->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
   Q_ASSERT( mEditorDateTime != 0 );
-  editor = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, mIncidenceMore->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceSecrecy( editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceSecrecy( mIncidenceMore->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAttachment( editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceAttachment( mIncidenceMore->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
+}
+
+void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
+{
+  mIncidenceMore = editorWidget;
+  if ( mEditorDateTime != 0 ) // IncidenceGeneral was not set yet.
+    initIncidenceMore();
 }
 
 /// ItemEditorUi methods

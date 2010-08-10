@@ -76,12 +76,18 @@ class MOBILEUI_EXPORT IncidenceView : public KDeclarativeFullScreenView, public 
     void slotSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message );
 
   private:
+    void initIncidenceMore();
+
+  private:
     QDate mActiveDate;
     Akonadi::Item mItem;
     Akonadi::EditorItemManager *mItemManager;
     Akonadi::CollectionComboBox *mCollectionCombo;
     IncidenceEditorsNG::CombinedIncidenceEditor *mEditor;
     IncidenceEditorsNG::IncidenceDateTime *mEditorDateTime;
+
+    /// We need this because we can't rely on the order in which those two are added.
+    MobileIncidenceMore *mIncidenceMore;
 };
 
 #endif // INCIDENCEVIEW_H
