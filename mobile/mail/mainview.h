@@ -67,6 +67,7 @@ class MainView : public KDeclarativeMainView
   private:
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
+    void recoverAutoSavedMessages();
 };
 
 #endif

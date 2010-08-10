@@ -66,6 +66,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     bool busy() const;
     void setBusy(bool busy);
+    void setAutoSaveFileName(const QString &fileName);
 
   public slots:
     QObject* getAction( const QString &name ) const;
@@ -115,6 +116,7 @@ class ComposerView : public KDeclarativeFullScreenView
     bool m_draft;
     bool m_urgent;
     bool m_mdnrequested;
+    QString m_fileName;
 };
 
 #endif

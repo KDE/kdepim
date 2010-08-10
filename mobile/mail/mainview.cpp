@@ -30,6 +30,7 @@
 #include <KCmdLineArgs>
 #include <kselectionproxymodel.h>
 #include <klocalizedstring.h>
+#include <kstandarddirs.h>
 
 #include <KMime/Message>
 #include <akonadi/kmime/messageparts.h>
@@ -45,6 +46,7 @@
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 
 #include <QTimer>
+#include <QDir>
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
@@ -78,8 +80,46 @@ void MainView::delayedInit()
   // lazy load of the default single folders
   QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
 
+  // Is there messages to recover? Do it if needed.
+  //  recoverAutoSavedMessages();
+
   if ( debugTiming ) {
     kWarning() << "Finished MainView ctor: " << t.elapsed() << " - "<< &t;
+  }
+}
+
+void MainView::recoverAutoSavedMessages()
+{
+  kDebug() << "Any message to recover?";
+  QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/") ) + QLatin1String( "autosave" ) );
+  //### move directory creation to here
+
+  const QFileInfoList savedMessages = autoSaveDir.entryInfoList( QDir::Files );
+
+  if ( savedMessages.empty() ) {
+    kDebug() << "No messages to recover";
+    return;
+  }
+
+  foreach ( const QFileInfo savedMessage, savedMessages ) {
+    QFile file( savedMessage.absoluteFilePath() );
+
+    if ( file.open( QIODevice::ReadOnly ) ) {
+      const KMime::Message::Ptr savedMessage ( new KMime::Message() );
+      savedMessage->setContent( file.readAll() );
+      savedMessage->parse();
+
+      // load the autosaved message in a new composer
+      ComposerView *composer = new ComposerView;
+      composer->setMessage( savedMessage );
+      composer->setAutoSaveFileName( file.fileName() );
+      composer->show();
+
+      file.close();
+    } else {
+      //### TODO: error message
+      kDebug() << "error!!";
+    }
   }
 }
 

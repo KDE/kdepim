@@ -74,7 +74,8 @@ ComposerView::ComposerView(QWidget* parent) :
   m_busy( false ),
   m_draft( false ),
   m_urgent( false ),
-  m_mdnrequested( false )
+  m_mdnrequested( false ),
+  m_fileName ( QString() )
 {
   setSubject( QString() );
   setAttribute(Qt::WA_DeleteOnClose);
@@ -372,6 +373,12 @@ void ComposerView::disableHtml( Message::ComposerViewBase::Confirmation confirma
 
   m_composerBase->editor()->switchToPlainText();
   m_composerBase->editor()->setActionsEnabled( false );
+}
+
+void ComposerView::setAutoSaveFileName(const QString &fileName)
+{
+  m_fileName = fileName;
+  //m_composerBase->setAutoSaveFileName( fileName );
 }
 
 #include "composerview.moc"
