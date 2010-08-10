@@ -67,6 +67,16 @@ protected:
    */
   bool isLoadingSelected();
 
+  /**
+   * Initializes the standard action manager that will be used by the application.
+   * This is a point of extension to use a custom action manager.
+   *
+   * @param collectionSelectionModel The selection model for the collections.
+   * @param itemSelectionModel The selection model for the items.
+   */
+  virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel );
+
 protected slots:
   void delayedInit();
 

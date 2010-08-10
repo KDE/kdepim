@@ -148,14 +148,7 @@ void KDeclarativeMainView::delayedInit()
   KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
 
-  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
-  standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
-  standardActionManager->setCollectionSelectionModel( regularSelectionModel() );
-  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
-  standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CollectionProperties );
-  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
+  setupStandardActionManager( regularSelectionModel(), d->mItemSelectionModel );
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
@@ -413,3 +406,15 @@ bool KDeclarativeMainView::isLoadingSelected()
   return fetchState == EntityTreeModel::FetchingState;
 }
 
+void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                                       QItemSelectionModel *itemSelectionModel )
+{
+  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
+  standardActionManager->setItemSelectionModel( itemSelectionModel );
+  standardActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
+  standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
+  standardActionManager->createAction( Akonadi::StandardActionManager::CollectionProperties );
+  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
+  standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
+}
