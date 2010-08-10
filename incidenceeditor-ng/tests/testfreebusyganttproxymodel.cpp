@@ -69,62 +69,41 @@ void FreeBusyGanttProxyModelTest::testModelValidity()
     fbModel->addItem( item1 );
     fbModel->addItem( item2 );
 
-    QCOMPARE( ganttModel->rowCount(), 4 );
+    QCOMPARE( ganttModel->rowCount(), 2 );
 
-    QModelIndex i0 = ganttModel->index( 0, 0 );
-    QModelIndex i1 = ganttModel->index( 1, 0 );
-    QModelIndex i2 = ganttModel->index( 2, 0 );
-    QModelIndex i3 = ganttModel->index( 3, 0 );
-    QModelIndex i4 = ganttModel->index( 4, 0 );
-
-    QVERIFY( i0.isValid() );
-    QVERIFY( i1.isValid() );
-    QVERIFY( i2.isValid() );
-    QVERIFY( i3.isValid() );
-    QVERIFY( i4.isValid() == false );
-
-    QModelIndex parent0 = fbModel->index( 0 );
-    QModelIndex child0_0 = fbModel->index( 0, 0, parent0 );
-    QModelIndex child0_1 = fbModel->index( 1, 0, parent0 );
-
-    QModelIndex parent1 = fbModel->index( 1 );
-    QModelIndex child1_0 = fbModel->index( 0, 0, parent1 );
-    QModelIndex child1_1 = fbModel->index( 1, 0, parent1 );
-
+    QModelIndex parent0 = ganttModel->index( 0, 0 );
+    QModelIndex parent1 = ganttModel->index( 1, 0 );
+    QModelIndex parent2 = ganttModel->index( 2, 0 );
     QVERIFY( parent0.isValid() );
+    QVERIFY( parent1.isValid() );
+    QVERIFY( parent2.isValid() == false );
+
+    QModelIndex source_parent0 = fbModel->index( 0, 0 );
+    QCOMPARE( parent0.data(), source_parent0.data() );
+    QCOMPARE( parent0.data( KDGantt::ItemTypeRole ).toInt(), (int) KDGantt::TypeMulti );
+
+    QModelIndex source_parent1 = fbModel->index( 1, 0 );
+    QCOMPARE( parent1.data(), source_parent1.data() );
+    QCOMPARE( parent1.data( KDGantt::ItemTypeRole ).toInt(), (int) KDGantt::TypeMulti );
+
+    QModelIndex child0_0 = ganttModel->index( 0, 0, parent0 );
+    QModelIndex child0_1 = ganttModel->index( 1, 0, parent0 );
     QVERIFY( child0_0.isValid() );
     QVERIFY( child0_1.isValid() );
-    QVERIFY( parent1.isValid() );
+
+    QCOMPARE( child0_0.data( KDGantt::ItemTypeRole ).toInt(), (int) KDGantt::TypeTask );
+    QCOMPARE( child0_0.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt1.dateTime() );
+    QCOMPARE( child0_1.data( KDGantt::ItemTypeRole ).toInt(), (int) KDGantt::TypeTask );
+    QCOMPARE( child0_1.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt2.dateTime() );
+
+    QModelIndex child1_0 = ganttModel->index( 0, 0, parent1 );
+    QModelIndex child1_1 = ganttModel->index( 1, 0, parent1 );
     QVERIFY( child1_0.isValid() );
     QVERIFY( child1_1.isValid() );
 
-    QModelIndex childFromProxy0_0 = ganttModel->mapToSource( i0 );
-    QVERIFY( childFromProxy0_0 == child0_0 );
-    QModelIndex childFromProxy0_1 = ganttModel->mapToSource( i1 );
-    QVERIFY( childFromProxy0_1 == child0_1 );
-    QModelIndex childFromProxy1_0 = ganttModel->mapToSource( i2 );
-    QVERIFY( childFromProxy1_0 == child1_0 );
-    QModelIndex childFromProxy1_1 = ganttModel->mapToSource( i3 );
-    QVERIFY( childFromProxy1_1 == child1_1 );
-
-    QModelIndex childToProxy0_0 = ganttModel->mapFromSource( child0_0 );
-    QVERIFY( childToProxy0_0 == i0 );
-    QModelIndex childToProxy0_1 = ganttModel->mapFromSource( child0_1 );
-    QVERIFY( childToProxy0_1 == i1 );
-    QModelIndex childToProxy1_0 = ganttModel->mapFromSource( child1_0 );
-    QVERIFY( childToProxy1_0 == i2 );
-    QModelIndex childToProxy1_1 = ganttModel->mapFromSource( child1_1 );
-    QVERIFY( childToProxy1_1 == i3 );
-
-    QVERIFY( i0.data( KDGantt::ItemTypeRole ).toInt() == (int) KDGantt::TypeTask );
-    QVERIFY( i1.data( KDGantt::ItemTypeRole ).toInt() == (int) KDGantt::TypeTask );
-    QVERIFY( i2.data( KDGantt::ItemTypeRole ).toInt() == (int) KDGantt::TypeTask );
-    QVERIFY( i3.data( KDGantt::ItemTypeRole ).toInt() == (int) KDGantt::TypeTask );
-
-    QCOMPARE( i0.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt1.dateTime() );
-    QCOMPARE( i1.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt2.dateTime() );
-    QCOMPARE( i2.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt3.dateTime() );
-    QCOMPARE( i3.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt4.dateTime() );
-
+    QCOMPARE( child1_0.data( KDGantt::ItemTypeRole ).toInt(), (int) KDGantt::TypeTask );
+    QCOMPARE( child1_0.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt3.dateTime() );
+    QCOMPARE( child1_1.data( KDGantt::ItemTypeRole ).toInt(), (int) KDGantt::TypeTask );
+    QCOMPARE( child1_1.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt4.dateTime() );
 
 }

@@ -25,7 +25,7 @@
 
 #include <kcalcore/freebusy.h>
 
-#include <QAbstractProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace IncidenceEditorsNG
 {
@@ -39,17 +39,11 @@ namespace IncidenceEditorsNG
  * @see FreeBusyItemMode
  * @see FreeBusyItem
  */
-class INCIDENCEEDITORS_NG_EXPORT FreeBusyGanttProxyModel : public QAbstractProxyModel
+class INCIDENCEEDITORS_NG_EXPORT FreeBusyGanttProxyModel : public QSortFilterProxyModel
 {
 public:
     FreeBusyGanttProxyModel( QObject* parent = 0 );
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-    int columnCount( const QModelIndex& parent = QModelIndex() ) const;
-    int rowCount( const QModelIndex& parent = QModelIndex() ) const;
-    QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
-    QModelIndex parent( const QModelIndex& child ) const;
-    QModelIndex mapFromSource( const QModelIndex& sourceIndex ) const;
-    QModelIndex mapToSource( const QModelIndex& proxyIndex ) const;
     QString tooltipify( const KCalCore::FreeBusyPeriod &period, const KDateTime::Spec &timeSpec ) const;
 };
 }
