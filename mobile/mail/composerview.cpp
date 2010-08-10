@@ -312,7 +312,8 @@ void ComposerView::failed( const QString &errorMessage )
   notify->sendEvent();
 }
 
-void ComposerView::setEditor( Message::KMeditor* editor ) {
+void ComposerView::setEditor( Message::KMeditor* editor )
+{
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
 }
