@@ -37,6 +37,9 @@
 
 #include "incidenceview.h"
 
+#include <KAction>
+#include <KActionCollection>
+
 #include <QGraphicsItem>
 #include <QTimer>
 #include <QDBusConnection>
@@ -69,6 +72,13 @@ void MainView::delayedInit()
   CalendarInterface* calendarIface = new CalendarInterface();
   new CalendarAdaptor(calendarIface);
   QDBusConnection::sessionBus().registerObject("/Calendar", calendarIface);
+
+  KAction *action = new KAction( i18n( "New Appointment" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(newEvent()) );
+  actionCollection()->addAction( QLatin1String( "add_new_event" ), action );
+  action = new KAction( i18n( "New Todo" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(newTodo()) );
+  actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
 
   //connect Qt signals to QML slots
   connect(calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));

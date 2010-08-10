@@ -34,7 +34,7 @@ KPIM.ActionList {
   KPIM.ActionListItem {
     name : "wm_task_switch"
   }
-  KPIM.FakeAction {
+  KPIM.ActionListItem {
     name : "add_new_" + type
   }
   KPIM.FakeAction {
