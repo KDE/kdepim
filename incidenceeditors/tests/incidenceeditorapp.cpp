@@ -1,0 +1,342 @@
+/*
+  This file is part of KOrganizer.
+
+  Copyright (c) 2009-2010 Sebastian Sauer <sebsauer@kdab.com>
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
+*/
+
+#include <qheaderview.h>
+#include <qsplitter.h>
+#include <QHBoxLayout>
+#include <kapplication.h>
+#include <kmainwindow.h>
+#include <kcmdlineargs.h>
+#include <kaboutdata.h>
+#include <kurl.h>
+#include <ksystemtimezone.h>
+#include <KLineEdit>
+
+#include <akonadi/changerecorder.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectionview.h>
+#include <akonadi/collectionfilterproxymodel.h>
+#include <akonadi/collectionmodel.h>
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/itemmodel.h>
+#include <akonadi/itemview.h>
+#include <akonadi/standardactionmanager.h>
+#include <akonadi/agenttypedialog.h>
+#include <akonadi/agentinstancewidget.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/agentfilterproxymodel.h>
+#include <akonadi/control.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/calendarmodel.h>
+#include <akonadi/kcal/incidencechanger.h>
+#include <akonadi/kcal/incidencemimetypevisitor.h>
+
+#include <kcalcore/incidence.h>
+
+#include "todoeditor.h"
+#include "eventeditor.h"
+#include "journaleditor.h"
+#include "groupwareintegration.h"
+
+using namespace Akonadi;
+using namespace IncidenceEditors;
+using namespace KCalCore;
+
+class CalItemModel : public Akonadi::ItemModel
+{
+  public:
+    explicit CalItemModel( QObject *parent = 0 ) : Akonadi::ItemModel( parent )
+    {
+      fetchScope().fetchFullPayload();
+    }
+
+    virtual ~CalItemModel() {}
+
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const
+    {
+      return ItemModel::rowCount( parent );
+    }
+
+    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const
+    {
+      Q_UNUSED( parent );
+      return 4;
+    }
+
+    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const
+    {
+      if ( role == Qt::DisplayRole ) {
+        const Akonadi::Item item = itemForIndex( index );
+        const Incidence::Ptr incidence = item.hasPayload<Incidence::Ptr>() ?
+                                         item.payload<Incidence::Ptr>() :
+                                         Incidence::Ptr();
+        if ( !incidence ) {
+          return QVariant();
+        }
+        switch( index.column() ) {
+        case 0:
+          return incidence->type();
+          break;
+        case 1:
+          return incidence->dtStart().toString();
+          break;
+        case 2:
+          return incidence->dateTime( Incidence::RoleEnd ).toString();
+          break;
+        case 3:
+          return incidence->summary();
+          break;
+        }
+      }
+      return Akonadi::ItemModel::data( index, role );
+    }
+
+    virtual QVariant headerData( int section, Qt::Orientation orientation,
+                                 int role = Qt::DisplayRole ) const
+    {
+      if ( role == Qt::DisplayRole ) {
+        switch( section ) {
+        case 0:
+          return QLatin1String( "Type" );
+          break;
+        case 1:
+          return QLatin1String( "Start" );
+          break;
+        case 2:
+          return QLatin1String( "End" );
+          break;
+        case 3:
+          return QLatin1String( "Summary" );
+          break;
+        }
+      }
+      return Akonadi::ItemModel::headerData( section, orientation, role );
+    }
+    virtual QStringList mimeTypes() const
+    {
+      return QStringList()
+        << QLatin1String( "text/uri-list" )
+        << QLatin1String( "application/x-vnd.akonadi.calendar.event" )
+        << QLatin1String( "application/x-vnd.akonadi.calendar.todo" )
+        << QLatin1String( "application/x-vnd.akonadi.calendar.journal" )
+        << QLatin1String( "application/x-vnd.akonadi.calendar.freebusy" );
+    }
+};
+
+class MainWidget : public QWidget
+{
+  Q_OBJECT
+  public:
+    explicit MainWidget( QWidget *parent )
+      : QWidget(parent),
+        m_collectionmodel( new Akonadi::CollectionModel( this ) ),
+        m_collectionproxymodel( new Akonadi::CollectionFilterProxyModel( this ) ),
+        m_itemmodel( new CalItemModel( this ) )
+    {
+      if ( !GroupwareIntegration::isActive() ) {
+        GroupwareIntegration::activate();
+      }
+
+      m_collectionproxymodel->setSourceModel(m_collectionmodel);
+      m_collectionproxymodel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
+
+      Akonadi::ItemFetchScope fetchscope;
+      fetchscope.fetchFullPayload( true );
+      m_itemmodel->setFetchScope( fetchscope );
+
+      QLayout *layout = new QVBoxLayout( this );
+      layout->setMargin( 0 );
+      layout->setSpacing( 0 );
+      this->setLayout( layout );
+
+      QSplitter *splitter = new QSplitter( this );
+      layout->addWidget( splitter );
+      m_collectionview = new Akonadi::CollectionView( splitter );
+      m_collectionview->header()->hide();
+      m_collectionview->setModel( m_collectionproxymodel );
+      m_collectionview->setRootIsDecorated( true );
+
+      QWidget *mainwidget = new QWidget( splitter );
+      QLayout *mainlayout = new QVBoxLayout( mainwidget );
+      mainlayout->setMargin( 0 );
+      mainlayout->setSpacing( 0 );
+      mainwidget->setLayout( mainlayout );
+
+      KLineEdit *edit = new KLineEdit( this );
+      connect( edit, SIGNAL(textChanged(QString)),
+               this, SLOT(filterChanged(QString)) );
+      mainlayout->addWidget( edit );
+
+      m_itemview = new Akonadi::ItemView( mainwidget );
+      mainlayout->addWidget( m_itemview );
+      m_itemproxymodel = new QSortFilterProxyModel( m_itemview );
+      m_itemproxymodel->setFilterKeyColumn( 3 );
+      m_itemproxymodel->setSourceModel( m_itemmodel );
+      m_itemview->setModel( m_itemproxymodel );
+
+      splitter->setStretchFactor( 1, 1 );
+      selectionChanged();
+      connect( m_collectionview->selectionModel(),
+               SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+               this, SLOT(selectionChanged()) );
+      connect( m_itemview, SIGNAL(activated(QModelIndex)),
+               this, SLOT(itemActivated()) );
+
+      ChangeRecorder *changeRecorder = new ChangeRecorder( this );
+      changeRecorder->setCollectionMonitored( Collection::root(), true );
+
+      ItemFetchScope scope;
+      scope.fetchFullPayload( true );
+      //scope.fetchAttribute<EntityDisplayAttribute>();
+
+      changeRecorder->fetchCollection( true );
+      changeRecorder->setItemFetchScope( scope );
+
+      changeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::eventMimeType(), true );
+      changeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::todoMimeType(), true );
+      changeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::journalMimeType(), true );
+
+      CalendarModel* calendarModel = new CalendarModel( changeRecorder, this );
+
+      // no collections, just items
+      calendarModel->setCollectionFetchStrategy( EntityTreeModel::InvisibleCollectionFetch );
+
+      EntityMimeTypeFilterModel *filterModel = new EntityMimeTypeFilterModel( this );
+      filterModel->setHeaderGroup( EntityTreeModel::ItemListHeaders );
+      filterModel->setSourceModel( calendarModel );
+      filterModel->setSortRole( CalendarModel::SortRole );
+
+      Akonadi::Calendar *calendar = new Akonadi::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
+
+      m_changer = new IncidenceChanger( calendar, this, Collection().id() );
+    }
+    virtual ~MainWidget() {}
+
+  private Q_SLOTS:
+
+    void filterChanged( const QString &text )
+    {
+      m_itemproxymodel->setFilterWildcard( text );
+    }
+
+    void selectionChanged()
+    {
+      if ( m_collectionview->selectionModel()->hasSelection() ) {
+        QModelIndex index = m_collectionview->selectionModel()->currentIndex();
+        Q_ASSERT( index.isValid() );
+        Akonadi::Collection collection =
+          index.model()->data(
+            index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+        Q_ASSERT( collection.isValid() );
+        m_itemmodel->setCollection( collection );
+      } else {
+        m_itemmodel->setCollection( Akonadi::Collection::root() );
+      }
+    }
+
+    void itemActivated()
+    {
+      QModelIndex index = m_itemview->selectionModel()->currentIndex();
+      Q_ASSERT( index.isValid() );
+      Akonadi::Item item =
+        index.model()->data(
+          index, Akonadi::ItemModel::ItemRole ).value<Akonadi::Item>();
+      //const Akonadi::Item::Id uid = item.id();
+      Q_ASSERT( item.isValid() );
+      Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
+      const KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+      kDebug() << "Add akonadi id=" << item.id() << "uid=" << incidence->uid()
+               << "summary=" << incidence->summary() << "type=" << incidence->type();
+
+      if ( incidence->type() == Incidence::TypeEvent ) {
+        EventEditor *editor = new EventEditor( this );
+        editor->setIncidenceChanger( m_changer );
+        editor->editIncidence( item, QDate() );
+        editor->show();
+      } else if( incidence->type() == Incidence::TypeTodo ) {
+        TodoEditor *editor = new TodoEditor( this );
+        /*
+        createCategoryEditor();
+        connect( editor, SIGNAL(deleteIncidenceSignal(const Incidence::Ptr Incidence *)),
+                 mMainView, SLOT(deleteIncidence(const Incidence::Ptr Incidence *)) );
+        connect( mCategoryEditDialog, SIGNAL(categoryConfigChanged()),
+                 editor, SIGNAL(updateCategoryConfig()) );
+        connect( editor, SIGNAL(editCategories()),
+                 mCategoryEditDialog, SLOT(show()) );
+        connect( editor, SIGNAL(dialogClose(const Incidence::Ptr Incidence *)),
+                 mMainView, SLOT(dialogClosing(const Incidence::Ptr Incidence *)) );
+        connect( mMainView, SIGNAL(closingDown()), editor, SLOT(reject()) );
+        connect( editor, SIGNAL(deleteAttendee(const Incidence::Ptr Incidence *)),
+                 mMainView, SIGNAL(cancelAttendees(const Incidence::Ptr Incidence *)) );
+        */
+        editor->setIncidenceChanger( m_changer );
+        editor->editIncidence( item, QDate() );
+        editor->show();
+
+      } else if( incidence->type() == Incidence::TypeJournal ) {
+        JournalEditor *editor = new JournalEditor( this );
+        editor->setIncidenceChanger( m_changer );
+        editor->editIncidence( item, QDate() );
+        editor->show();
+      } else {
+        Q_ASSERT( false );
+      }
+    }
+
+  private:
+    Akonadi::CollectionModel *m_collectionmodel;
+    Akonadi::CollectionFilterProxyModel *m_collectionproxymodel;
+    Akonadi::CollectionView *m_collectionview;
+    CalItemModel *m_itemmodel;
+    QSortFilterProxyModel *m_itemproxymodel;
+    Akonadi::ItemView *m_itemview;
+    IncidenceChanger *m_changer;
+};
+
+int main( int argc, char **argv )
+{
+  KAboutData about( "incidenceeditorapp",
+                    "korganizer",
+                    ki18n( "IncidenceEditorApp" ),
+                    "0.1",
+                    ki18n( "KDE application to run the KOrganizer incidenceeditor." ),
+                    KAboutData::License_LGPL,
+                    ki18n( "(C) 2009 Sebastian Sauer" ),
+                    ki18n( "Run the KOrganizer incidenceeditor." ),
+                    "http://kdepim.kde.org",
+                    "kdepim@kde.org" );
+  about.addAuthor( ki18n( "Sebastian Sauer" ), ki18n( "Author" ), "sebsauer@kdab.net" );
+  KCmdLineArgs::init( argc, argv, &about );
+  KApplication app;
+  KMainWindow *mainwindow = new KMainWindow();
+  mainwindow->setCentralWidget( new MainWidget( mainwindow ) );
+  mainwindow->resize( QSize( 800, 600 ).expandedTo( mainwindow->minimumSizeHint() ) );
+  mainwindow->show();
+  return app.exec();
+}
+
+#include "main.moc"
