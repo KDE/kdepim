@@ -70,6 +70,8 @@ void MultiplyingLineEditor::removeData( const MultiplyingLineData::Ptr &data )
 
 void MultiplyingLineEditor::clear()
 {
+  foreach ( MultiplyingLine *line, mView->lines() )
+    line->slotPropagateDeletion();
 }
 
 bool MultiplyingLineEditor::isModified()

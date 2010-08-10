@@ -21,7 +21,7 @@
 #define INCIDENCEVIEW_H
 
 #include <Akonadi/Item>
-#include <KCal/Incidence>
+#include <kcalcore/incidence.h>
 
 #include <incidenceeditors/incidenceeditor-ng/combinedincidenceeditor.h>
 #include <incidenceeditors/incidenceeditor-ng/editoritemmanager.h>

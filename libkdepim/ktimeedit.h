@@ -74,6 +74,42 @@ class KDEPIM_EXPORT KTimeEdit : public QComboBox
      */
     QSizePolicy sizePolicy() const;
 
+    /**
+     * Sets the maximum time of the time edit.
+     * When setting this property, the minimumTime is adjusted if necessary to
+     * ensure that the range remains valid.
+     * If the time is not a valid QTime object, this function does nothing.
+     * By default, this property contains a time of 23:59:59 and 999 milliseconds.
+     */
+    void setMaximumTime( const QTime &max );
+    /**
+     * Retrieves the maximum time of the time edit
+     * By default, this property contains a time of 23:59:59 and 999 milliseconds.
+     */
+    QTime maximumTime () const;
+    /**
+     * Sets the minimum time of the time edit.
+     * When setting this property the maximumTime is adjusted if necessary,
+     * to ensure that the range remains valid.
+     * If the time is not a valid QTime object, this function does nothing.
+     * By default, the min time is set to a value of 00:00:00 and 0 milliseconds.
+     */
+    void setMinimumTime( const QTime &min );
+    /**
+     * Retrieves the minimum time of the time edit
+     * By default, the min time is set to a value of 00:00:00 and 0 milliseconds.
+     */
+    QTime minimumTime() const;
+
+    /**
+     * Convenience function to set minimum and maximum time with one function call.
+     * is analogous to:
+     * setMinimumTime(min);
+     * setMaximumTime(max);
+     * If either min or max are not valid, this function does nothing.
+     */
+    void setTimeRange( const QTime &min, const QTime &max );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the time has been changed.

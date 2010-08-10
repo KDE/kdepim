@@ -25,7 +25,6 @@ set(kdepim_LIB_SRCS
    kdescendantsproxymodel.cpp
    kcheckcombobox.cpp
    kweekdaycheckcombo.cpp
-   ktimezonecombobox.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp
    overlaywidget.cpp
@@ -58,7 +57,6 @@ kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 target_link_libraries(kdepim
   ${KDEPIMLIBS_KRESOURCES_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KCAL_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
@@ -74,7 +72,6 @@ target_link_libraries(kdepim
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KRESOURCES_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KCAL_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}

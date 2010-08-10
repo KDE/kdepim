@@ -23,7 +23,7 @@
 
 #include <QtDeclarative/QDeclarativeEngine>
 
-#include <KCal/Todo>
+#include <kcalcore/todo.h>
 #include <KDebug>
 #include <KGlobal>
 #include <KStandardDirs>
@@ -54,13 +54,13 @@ void MainView::newTask()
   IncidenceView *editor = new IncidenceView;
   Item item;
   item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
-  KCal::Todo::Ptr todo( new KCal::Todo );
+  KCalCore::Todo::Ptr todo( new KCalCore::Todo );
 
   // make it due one day from now
   todo->setDtStart( KDateTime::currentLocalDateTime() );
   todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
 
-  item.setPayload<KCal::Todo::Ptr>( todo );
+  item.setPayload<KCalCore::Todo::Ptr>( todo );
   editor->load( item );
   editor->show();
 }

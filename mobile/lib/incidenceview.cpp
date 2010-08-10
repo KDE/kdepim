@@ -27,7 +27,6 @@
 
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
-#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include <akonadi/kcal/utils.h>
 
@@ -40,14 +39,14 @@
 #include <incidenceeditors/incidenceeditor-ng/incidencecompletionpriority.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedatetime.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedescription.h>
-#include <incidenceeditors/incidenceeditor-ng/incidencegeneral.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencewhatwhere.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencerecurrence.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencesecrecy.h>
 
 
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
-using namespace KCal;
+using namespace KCalCore;
 
 IncidenceView::IncidenceView( QWidget* parent )
   : KDeclarativeFullScreenView( QLatin1String( "incidence-editor" ), parent )
@@ -66,8 +65,8 @@ void IncidenceView::delayedInit()
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
 
-  mItem.setPayload<KCal::Incidence::Ptr>( KCal::Incidence::Ptr( new KCal::Event ) );
-  mItem.setMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
+  mItem.setPayload<KCalCore::Incidence::Ptr>( KCalCore::Incidence::Ptr( new KCalCore::Event ) );
+  mItem.setMimeType( KCalCore::Event::eventMimeType() );
 
   connect( mItemManager, SIGNAL(itemSaveFinished(Akonadi::EditorItemManager::SaveAction)),
            SLOT(slotSaveFinished(Akonadi::EditorItemManager::SaveAction) ) );
@@ -95,15 +94,15 @@ void IncidenceView::load( const Akonadi::Item &item, const QDate &date )
 void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 {
   mCollectionCombo = combo;
-  mCollectionCombo->setMimeTypeFilter( QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  mCollectionCombo->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType() );
   mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
 
 void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 {
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
-  const Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
-  
+  Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
+
   IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceWhatWhere( editorWidget->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
@@ -124,7 +123,7 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
 {
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
   const Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
-  
+
   IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( editorWidget->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
@@ -137,7 +136,7 @@ void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
-  editor = new IncidenceEditorsNG::IncidenceAlarm( editorWidget->mUi );
+  editor = new IncidenceEditorsNG::IncidenceAlarm( mEditorDateTime, editorWidget->mUi );
   editor->load( incidencePtr );
   mEditor->combine( editor );
 
@@ -164,8 +163,8 @@ bool IncidenceView::containsPayloadIdentifiers( const QSet<QByteArray> &partIden
 
 bool IncidenceView::hasSupportedPayload( const Akonadi::Item &item ) const
 {
-  return item.hasPayload() && item.hasPayload<KCal::Incidence::Ptr>()
-    && ( item.hasPayload<KCal::Event::Ptr>() || item.hasPayload<KCal::Todo::Ptr>() );
+  return item.hasPayload() && item.hasPayload<KCalCore::Incidence::Ptr>()
+    && ( item.hasPayload<KCalCore::Event::Ptr>() || item.hasPayload<KCalCore::Todo::Ptr>() );
 }
 
 bool IncidenceView::isDirty() const
@@ -190,14 +189,14 @@ Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
   if ( !hasSupportedPayload( mItem ) ) {
     kWarning() << "Item id=" << mItem.id() << "remoteId=" << mItem.remoteId()
                << "mime=" << mItem.mimeType() << "does not have a supported MIME type";
-    return item;           
+    return item;
   }
- 
-  KCal::Incidence::Ptr incidence = Akonadi::incidence( mItem ); 
+
+  KCalCore::Incidence::Ptr incidence = Akonadi::incidence( mItem );
   mEditor->save( incidence );
 
   Akonadi::Item result = item;
-  result.setPayload<KCal::Incidence::Ptr>( incidence );
+  result.setPayload<KCalCore::Incidence::Ptr>( incidence );
   result.setMimeType( mItem.mimeType() );
   return result;
 }

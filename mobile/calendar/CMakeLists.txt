@@ -2,6 +2,9 @@ project(korganizer-mobile)
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
+  # This is probably not the correct way to get KCalPrefs in.
+  ${CMAKE_SOURCE_DIR}/akonadi/kcal/
+  ${CMAKE_BINARY_DIR}/akonadi/kcal/
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
@@ -22,11 +25,13 @@ target_link_libraries(korganizer-mobile
   ${KDE4_KDECORE_LIBRARY}
   ${KDE4_KDEUI_LIBRARY}
   ${KDEPIMLIBS_KCAL_LIBRARY}
+  ${KDEPIMLIBS_KCALCORE_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   kdepimmobileui
   akonadi-kcal_next
   incidenceeditors
+  incidenceeditorsng
 )
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

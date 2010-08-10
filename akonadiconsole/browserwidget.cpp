@@ -49,7 +49,7 @@
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kcal/incidence.h>
+#include <kcalcore/incidence.h>
 
 #include <kdebug.h>
 #include <kconfig.h>
@@ -261,7 +261,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   } else if ( item.hasPayload<KABC::ContactGroup>() ) {
     contentUi.contactGroupView->setItem( item );
     contentUi.stack->setCurrentWidget( contentUi.contactGroupViewPage );
-  } else if ( item.hasPayload<KCal::Incidence::Ptr>() ) {
+  } else if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
     contentUi.incidenceView->setItem( item );
     contentUi.stack->setCurrentWidget( contentUi.incidenceViewPage );
   } else if ( item.mimeType() == "message/rfc822"

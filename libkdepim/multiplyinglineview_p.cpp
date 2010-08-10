@@ -149,7 +149,7 @@ void MultiplyingLineView::slotDecideLineDeletion( MultiplyingLine *line )
     line->clear();
   } else if ( mLines.indexOf( line ) != mLines.count() - 1 ) {
     mCurDelLine = line;
-    QTimer::singleShot( 0, this, SLOT( slotDeleteLine( ) ) );
+    slotDeleteLine();
   }
 }
 

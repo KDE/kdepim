@@ -120,12 +120,14 @@ class KTimeEdit::Private
     void addTime( const QTime& );
     void subTime( const QTime& );
     void updateText();
-
+    void populateList();
     void slotActivated( int );
     void slotTextChanged();
 
     KTimeEdit *q;
     QTime mTime;
+    QTime mMinumum;
+    QTime mMaximum;
 };
 
 void KTimeEdit::Private::addTime( const QTime &time )
@@ -180,11 +182,7 @@ void KTimeEdit::Private::updateText()
 
 void KTimeEdit::Private::slotActivated( int index )
 {
-  // The last entry, 23:59, is a special case
-  if ( index == q->count() - 1 )
-    mTime = QTime( 23, 59, 0 );
-  else
-    mTime = QTime( 0, 0, 0 ).addSecs( index * 15 * 60 );
+  mTime = mMinumum.addSecs( index * 15 * 60 );
 
   emit q->timeChanged( mTime );
 }
@@ -197,6 +195,21 @@ void KTimeEdit::Private::slotTextChanged()
   }
 }
 
+void KTimeEdit::Private::populateList()
+{
+  q->clear();
+  // Fill combo box with selection of times in localized format.
+  Q_ASSERT( mMinumum <= mMaximum );
+  QTime timeEntry = mMinumum;
+  const int interval_minutes = 15;
+  const int number_entries = ( mMinumum.secsTo( mMaximum ) / ( 60 * interval_minutes ) ) + 1;
+  for( int i = 0; i < number_entries; ++i) {
+    q->addItem( KGlobal::locale()->formatTime( timeEntry ) );
+    timeEntry = timeEntry.addSecs( 60 * interval_minutes );
+  }
+}
+
+
 // KTimeWidget/QTimeEdit provide nicer editing, but don't provide a combobox.
 // Difficult to get all in one...
 // But Qt-3.2 will offer QLineEdit::setMask, so a "99:99" mask would help.
@@ -208,17 +221,10 @@ KTimeEdit::KTimeEdit( QWidget *parent, const QTime &time )
   setValidator( new KOTimeValidator( this ) );
 
   d->mTime = time;
+  d->mMinumum = QTime( 0, 0, 0, 0);
+  d->mMaximum = QTime( 23, 59, 59, 999 );
 
-  // Fill combo box with selection of times in localized format.
-  QTime timeEntry( 0, 0, 0 );
-  const QTime endEntry = timeEntry;
-  do {
-    addItem( KGlobal::locale()->formatTime( timeEntry ) );
-    timeEntry = timeEntry.addSecs( 60 * 15 );
-  } while ( timeEntry != endEntry );
-
-  // Add end of day.
-  addItem( KGlobal::locale()->formatTime( QTime( 23, 59, 59 ) ) );
+  d->populateList();
 
   d->updateText();
   setFocusPolicy( Qt::StrongFocus );
@@ -292,5 +298,44 @@ bool KTimeEdit::inputIsValid() const
 
   return validator()->validate( str, cursorPos ) == QValidator::Acceptable;
 }
+
+QTime KTimeEdit::maximumTime() const
+{
+  return d->mMaximum;
+}
+
+QTime KTimeEdit::minimumTime() const
+{
+  return d->mMinumum;
+}
+
+void KTimeEdit::setMaximumTime( const QTime& max )
+{
+    if( max.isValid() ) {
+      d->mMaximum = max;
+        if( d->mMinumum > max )
+          d->mMinumum = max;
+      d->populateList();
+    }
+}
+
+void KTimeEdit::setMinimumTime( const QTime& min )
+{
+    if( min.isValid() ) {
+      d->mMinumum = min;
+      if( d->mMaximum < min )
+        d->mMaximum = min;
+      d->populateList();
+    }
+}
+
+void KTimeEdit::setTimeRange( const QTime& min, const QTime& max )
+{
+  if( min.isValid() && max.isValid() ) {
+    setMinimumTime( min );
+    setMaximumTime( max );
+  }
+}
+
 
 #include "ktimeedit.moc"

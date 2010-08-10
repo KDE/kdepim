@@ -91,7 +91,7 @@ void CalendarInterface::openTodoEditor(const QString& summary, const QString& de
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::openTodoEditor(const QString& summary, const QString& description, const QString& uri, const QString& file, const QStringList& attendees, const QString& attachmentMimetype, bool isTask)
+void CalendarInterface::openTodoEditor(const QString& summary, const QString& description, const QString& uri, const QString& file, const QStringList& attendees, const QString& attachmentMimetype )
 {
   kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }

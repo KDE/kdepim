@@ -27,6 +27,8 @@
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/kcal/incidencemimetypevisitor.h>
 #include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/kcalprefs.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencedefaults.h>
 
 #include <ksystemtimezone.h>
 
@@ -92,13 +94,23 @@ void MainView::newEvent()
   IncidenceView *editor = new IncidenceView;
   Item item;
   item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  KCal::Event::Ptr event( new KCal::Event );
+  KCalCore::Event::Ptr event( new KCalCore::Event );
 
-  // make it take one hour from now
-  event->setDtStart( KDateTime::currentLocalDateTime() );
-  event->setDtEnd( KDateTime::currentLocalDateTime().addSecs( 3600 ) );
+  IncidenceEditorsNG::IncidenceDefaults defaults;
+  // Set the full emails manually here, to avoid that we get dependencies on
+  // KCalPrefs all over the place.
+  defaults.setFullEmails( KCalPrefs::instance()->fullEmails() );
+  // NOTE: At some point this should be generalized. That is, we now use the
+  //       freebusy url as a hack, but this assumes that the user has only one
+  //       groupware account. Which doesn't have to be the case necessarily.
+  //       This method should somehow depend on the calendar selected to which
+  //       the incidence is added.
+  if ( KCalPrefs::instance()->useGroupwareCommunication() )
+    defaults.setGroupWareDomain( KUrl( KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
 
-  item.setPayload<KCal::Event::Ptr>( event );
+  defaults.setDefaults( event );
+
+  item.setPayload<KCalCore::Event::Ptr>( event );
   editor->load( item );
   editor->show();
 }
@@ -108,13 +120,13 @@ void MainView::newTodo()
   IncidenceView *editor = new IncidenceView;
   Item item;
   item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
-  KCal::Todo::Ptr todo( new KCal::Todo );
+  KCalCore::Todo::Ptr todo( new KCalCore::Todo );
 
   // make it due one day from now
   todo->setDtStart( KDateTime::currentLocalDateTime() );
   todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
 
-  item.setPayload<KCal::Todo::Ptr>( todo );
+  item.setPayload<KCalCore::Todo::Ptr>( todo );
   editor->load( item );
   editor->show();
 }

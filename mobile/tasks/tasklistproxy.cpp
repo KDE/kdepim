@@ -18,7 +18,7 @@
 */
 #include "tasklistproxy.h"
 
-#include <kcal/todo.h>
+#include <kcalcore/todo.h>
 
 #include <akonadi/entitytreemodel.h>
 
@@ -32,8 +32,8 @@ QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
 {
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
-  if ( item.isValid() && item.hasPayload<KCal::Todo::Ptr>() ) {
-    const KCal::Todo::Ptr incidence = item.payload<KCal::Todo::Ptr>();
+  if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
+    const KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
     switch ( role ) {
     case Summary:
       return incidence->summary();
@@ -53,8 +53,8 @@ bool TaskListProxy::setData(const QModelIndex& index, const QVariant& value, int
   {
     Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
-    if ( item.isValid() && item.hasPayload<KCal::Todo::Ptr>() ) {
-      KCal::Todo::Ptr incidence = item.payload<KCal::Todo::Ptr>();
+    if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
+      KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
       incidence->setPercentComplete(value.toInt());
       item.setPayload(incidence);
       return QSortFilterProxyModel::setData(index, QVariant::fromValue(item), EntityTreeModel::ItemRole);
