@@ -352,6 +352,7 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 {
   int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
   QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget ) );
+  dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(), mDateTime->currentEndDateTime() );
   if( dialog->exec() == KDialog::Accepted ) {
     kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
     mDateTime->setStartDate( dialog->selectedStartDate() );
