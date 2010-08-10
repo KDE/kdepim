@@ -53,10 +53,10 @@ ThemeModel::~ThemeModel()
 
 void ThemeModel::setThemesPath( const QString &path )
 {
-  modelAboutToBeReset();
+  beginResetModel();
   d->mManager->setThemesPath( path );
   d->mThemes = d->mManager->themes();
-  modelReset();
+  endResetModel();
 }
 
 QString ThemeModel::themesPath() const
