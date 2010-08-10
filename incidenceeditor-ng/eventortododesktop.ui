@@ -294,25 +294,6 @@
    <item row="7" column="1" colspan="2">
     <widget class="KSeparator" name="mTaskSeparator"/>
    </item>
-   <item row="8" column="1">
-    <widget class="QLabel" name="label_8">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string comment="@label line containig event specific info.">Event:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
    <item row="8" column="2">
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
