@@ -50,6 +50,8 @@ EventsApplet::EventsApplet( QObject* parent, QVariantList args )
 
 void EventsApplet::init()
 {
+    setBusy( true );
+
     ui();
     configChanged();
     updateEvents();
@@ -59,8 +61,6 @@ void EventsApplet::init()
     m_timer->setSingleShot(true);
     m_timer->setInterval(1000);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(updateUI()));
-
-    setBusy( true );
 }
 
 void EventsApplet::ui()
@@ -121,10 +121,10 @@ void EventsApplet::updateUI()
 
     // ... and repopulate it.
     QMapIterator<QString,EventWidget*> it( m_incidences );
-    it.toBack();
-    while ( it.hasPrevious() ) {
-        it.previous();
+    while ( it.hasNext() ) {
+        it.next();
         m_scrollerLayout->addItem( it.value() );
+        kDebug() << "adding" << it.value()->summary() << it.key();
     }
 }
 
@@ -132,14 +132,13 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
 {
     if ( source.startsWith( "events" ) ) { // ++insurance
         // Start by purging old data
-        m_incidences.clear();
+        // m_incidences.clear();
 
         QHashIterator<QString,QVariant> it( data );
         while ( it.hasNext() ) {
             it.next();
             QVariantHash data = it.value().toHash();
 
-            EventWidget* widget = new EventWidget( data );
             KDateTime sd = qVariantValue<KDateTime>( data[ "StartDate" ] );
 
             QDate date = sd.date();
@@ -148,8 +147,7 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
 
             // Since it seems like the calendar dataengine is broken and returning ALL data, let's
             // filter it a little bit by hand... FIXME
-            int difference = sd.daysTo( KDateTime( QDateTime::currentDateTime() ) ) % 365; // XXX different locales with different calendars?
-            kDebug() << difference << m_numDays;
+            int difference = KDateTime::currentDateTime( sd.timeSpec() ).daysTo( sd ) % 365 ; // XXX different locales with different calendars?
             if ( difference <= m_numDays && difference >= 0 ) {
                 QString key = sd.toString();
                 if (m_incidences[ key ]) {
@@ -169,10 +167,9 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
                     }
                 }
                 kDebug() << "Adding" << data[ "Summary" ] << key;
+                EventWidget* widget = new EventWidget( data );
                 m_incidences[ key ] = widget;
-            } else {
-                delete widget;
-            }
+            } 
             // kDebug() << data;
         }
 

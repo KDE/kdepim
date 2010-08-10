@@ -33,6 +33,7 @@ namespace Plasma
 
 class QGraphicsLinearLayout;
 class GradientProgressWidget;
+class QGraphicsSceneHoverEvent;
 
 class EventWidget : public Plasma::Frame
 {
@@ -46,8 +47,8 @@ public slots:
     void updateFullUI();
     void toggleMoreInfo();
 
-    void mouseEnterEvent( QMouseEvent* ev );
-    void mouseLeaveEvent( QMouseEvent* ev );
+    void hoverEnterEvent( QGraphicsSceneHoverEvent * event );
+    void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
 
     void setMoreInfoVisible(bool visible = true );
     bool moreInfoVisible();

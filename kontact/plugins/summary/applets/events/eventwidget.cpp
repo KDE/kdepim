@@ -30,7 +30,6 @@
 
 #include <qgraphicslinearlayout.h>
 
-
 EventWidget::EventWidget( QVariantHash args, QGraphicsWidget* parent )
     : Plasma::Frame( parent ),
       m_parent( parent )
@@ -49,20 +48,21 @@ void EventWidget::setData( QVariantHash args )
         m_startDate = qVariantValue<KDateTime>( var );
 
         // make the date reference this year
-        QDate date = m_startDate.date();
-        date = QDate( QDate::currentDate().year(), date.month(), date.day() );
-        m_startDate = KDateTime( date, m_startDate.time() );
+        // FIXME fugly.
+        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
 
+        m_startDate = KDateTime( day );
     }
 
     var = args[ "EndDate" ];
     if ( var.isValid() ) {
-        m_endDate = qVariantValue<KDateTime>( var );
+        m_startDate = qVariantValue<KDateTime>( var );
 
         // make the date reference this year
-        QDate date = m_endDate.date();
-        date = QDate( QDate::currentDate().year(), date.month(), date.day() );
-        m_endDate = KDateTime( date, m_startDate.time() );
+        // FIXME fugly.
+        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_endDate.date().month(), m_endDate.date().day() ) );
+
+        m_endDate = KDateTime( day );
     }
 
     var = args[ "Summary" ];
@@ -83,6 +83,7 @@ void EventWidget::setData( QVariantHash args )
 
 void EventWidget::initUI()
 {
+    setAcceptHoverEvents( true );
     // Create the master layout
     m_masterLayout = new QGraphicsLinearLayout( Qt::Vertical );
 
@@ -94,6 +95,9 @@ void EventWidget::initUI()
 
     // Create the icon
     m_icon = new Plasma::IconWidget( 0 );
+    m_icon->setMaximumWidth(48);
+    m_icon->setMaximumHeight(48);
+    m_icon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     layout->addItem(m_icon);
 
     // Create the text
@@ -102,6 +106,9 @@ void EventWidget::initUI()
 
     // Create the time-'til
     m_timetil = new GradientProgressWidget( );
+    m_timetil->setMaximumWidth(48);
+    m_timetil->setMaximumHeight(48);
+    m_timetil->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     layout->addItem(m_timetil);
 
     // Create the more info button
@@ -129,20 +136,28 @@ void EventWidget::initUI()
     layout->addItem(m_startDateLabel);
 
     m_fullViewWidget->setLayout(layout);
+    m_fullViewWidget->setVisible( 0 );
     m_masterLayout->addItem(m_fullViewWidget);
     setLayout(m_masterLayout);
 }
 
-void EventWidget::mouseEnterEvent(QMouseEvent* event)
+void EventWidget::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
 {
     Q_UNUSED(event);
+    kDebug() << "Enter";
     m_moreInfoIcon->setVisible(1);
 }
 
-void EventWidget::mouseLeaveEvent(QMouseEvent* event)
+void EventWidget::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
 {
     Q_UNUSED(event);
+    kDebug() << "Leave";
     m_moreInfoIcon->setVisible(0);
+}
+
+QString EventWidget::summary()
+{
+    return m_summary;
 }
 
 void EventWidget::updateSummaryUI()
@@ -166,11 +181,11 @@ void EventWidget::updateSummaryUI()
         numDays = config.readEntry("numDays",31);
     }
 
-    int difference = m_startDate.daysTo( KDateTime( QDateTime::currentDateTime() ) );
+    int difference = KDateTime::currentDateTime( m_startDate.timeSpec() ).daysTo( m_startDate ) % 365;
+    difference = difference+365; // we're going to pretend I dont have to do this
     m_timetil->setEnd( numDays );
     m_timetil->setCurrent( numDays - difference );
-
-    // kDebug() << "update ui" << icon << m_summary << difference;
+    kDebug() << difference;
 }
 
 void EventWidget::updateFullUI()
@@ -180,15 +195,28 @@ void EventWidget::updateFullUI()
 
     // convert the date to a QString...
     QString text;
-    if ( m_endDate.isValid() && m_startDate.isValid() ) {
+
+    if ( m_endDate.isNull() && m_startDate.isNull() ) {
         text = i18n( "%1 to %2");
-        text = text.arg( m_startDate.toString(KDateTime::ISODate), m_endDate.toString(KDateTime::ISODate) );
-    } else if ( m_startDate.isValid() ) {
+        if ( !m_allDay ) {
+            text = text.arg( m_startDate.toString(), m_endDate.toString() );
+        } else {
+            text = text.arg( m_startDate.date().toString(), m_endDate.date().toString() );
+        }
+    } else if ( m_startDate.isNull() ) {
         text = i18n("%1");
-        text = text.arg( m_startDate.toString(KDateTime::ISODate) );
-    } else if ( m_endDate.isValid() ) {
+        if ( !m_allDay ) {
+            text = text.arg( m_startDate.toString() );
+        } else {
+            text = text.arg( m_startDate.date().toString() );
+        }
+    } else if ( m_endDate.isNull() ) {
         text = i18n("Ends on %1");
-        text = text.arg( m_endDate.toString(KDateTime::ISODate));
+        if ( !m_allDay ) {
+            text = text.arg( m_endDate.toString() );
+        } else {
+            text = text.arg( m_endDate.date().toString() );
+        }
     } else {
         text = "";
     }
@@ -216,9 +244,4 @@ void EventWidget::setMoreInfoVisible( bool visible )
 bool EventWidget::moreInfoVisible()
 {
     return m_moreInfoVisible;
-}
-
-QString EventWidget::summary()
-{
-    return m_summary;
 }
