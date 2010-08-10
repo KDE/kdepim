@@ -47,23 +47,28 @@ void EventWidget::setData( QVariantHash args )
     if ( var.isValid() ) {
         m_startDate = qVariantValue<KDateTime>( var );
 
-        // make the date reference this year
-        // FIXME fugly.
-        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
+        if ( !m_startDate.isNull() ) {
+            // make the date reference this year
+            // FIXME fugly.
+            QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_startDate.date().month(), m_startDate.date().day() ) );
 
-        m_startDate = KDateTime( day );
+            m_startDate = KDateTime( day );
+        }
     }
 
     var = args[ "EndDate" ];
     if ( var.isValid() ) {
-        m_startDate = qVariantValue<KDateTime>( var );
+        m_endDate = qVariantValue<KDateTime>( var );
 
-        // make the date reference this year
-        // FIXME fugly.
-        QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_endDate.date().month(), m_endDate.date().day() ) );
+        if ( !m_endDate.isNull() ) {
+            // make the date reference this year
+            // FIXME fugly.
+            QDateTime day = QDateTime(QDate( QDate::currentDate().year(), m_endDate.date().month(), m_endDate.date().day() ) );
 
-        m_endDate = KDateTime( day );
+            m_endDate = KDateTime( day );
+        }
     }
+
 
     var = args[ "Summary" ];
     if ( var.isValid() ) {
@@ -97,22 +102,24 @@ void EventWidget::initUI()
     m_icon = new Plasma::IconWidget( 0 );
     m_icon->setMaximumWidth(48);
     m_icon->setMaximumHeight(48);
-    m_icon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    m_icon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     layout->addItem(m_icon);
 
     // Create the text
     m_summaryLabel = new Plasma::Label();
+    m_summaryLabel->setMinimumWidth(48);
+    m_summaryLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     layout->addItem(m_summaryLabel);
 
     // Create the time-'til
     m_timetil = new GradientProgressWidget( );
     m_timetil->setMaximumWidth(48);
     m_timetil->setMaximumHeight(48);
-    m_timetil->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    m_timetil->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     layout->addItem(m_timetil);
 
     // Create the more info button
-    m_moreInfoIcon = new Plasma::IconWidget( "arrow-down-double" );
+    m_moreInfoIcon = new Plasma::IconWidget( KIcon( "arrow-down-double" ), "" );
     m_moreInfoIcon->setMaximumWidth(16);
     m_moreInfoIcon->setMaximumHeight(16);
     m_moreInfoIcon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
@@ -122,7 +129,7 @@ void EventWidget::initUI()
 
     connect(m_moreInfoIcon, SIGNAL(clicked()), this, SLOT(toggleMoreInfo()));
 
-    // XXX Create full view widget
+    // Create full view widget
     // Start with a layout
     m_fullViewWidget = new QGraphicsWidget( this );
     layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -136,22 +143,19 @@ void EventWidget::initUI()
     layout->addItem(m_startDateLabel);
 
     m_fullViewWidget->setLayout(layout);
-    m_fullViewWidget->setVisible( 0 );
-    m_masterLayout->addItem(m_fullViewWidget);
+    setMoreInfoVisible( false );
     setLayout(m_masterLayout);
 }
 
 void EventWidget::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
 {
     Q_UNUSED(event);
-    kDebug() << "Enter";
     m_moreInfoIcon->setVisible(1);
 }
 
 void EventWidget::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
 {
     Q_UNUSED(event);
-    kDebug() << "Leave";
     m_moreInfoIcon->setVisible(0);
 }
 
@@ -167,7 +171,7 @@ void EventWidget::updateSummaryUI()
     if ( m_type == "Event" ) {
         icon = KIcon( "view-calendar" );
     } else if ( m_type == "Todo" ) {
-        icon = KIcon( "view-calendar-tasks" );
+        icon = KIcon( "view-calendar-tasks" ); // Make it a checkbox instead?
     }
     m_icon->setIcon( icon );
 
@@ -182,7 +186,6 @@ void EventWidget::updateSummaryUI()
     }
 
     int difference = KDateTime::currentDateTime( m_startDate.timeSpec() ).daysTo( m_startDate ) % 365;
-    difference = difference+365; // we're going to pretend I dont have to do this
     m_timetil->setEnd( numDays );
     m_timetil->setCurrent( numDays - difference );
     kDebug() << difference;
@@ -196,21 +199,21 @@ void EventWidget::updateFullUI()
     // convert the date to a QString...
     QString text;
 
-    if ( m_endDate.isNull() && m_startDate.isNull() ) {
+    if ( !m_endDate.isNull() && !m_startDate.isNull() ) {
         text = i18n( "%1 to %2");
         if ( !m_allDay ) {
             text = text.arg( m_startDate.toString(), m_endDate.toString() );
         } else {
             text = text.arg( m_startDate.date().toString(), m_endDate.date().toString() );
         }
-    } else if ( m_startDate.isNull() ) {
+    } else if ( !m_startDate.isNull() ) {
         text = i18n("%1");
         if ( !m_allDay ) {
             text = text.arg( m_startDate.toString() );
         } else {
             text = text.arg( m_startDate.date().toString() );
         }
-    } else if ( m_endDate.isNull() ) {
+    } else if ( !m_endDate.isNull() ) {
         text = i18n("Ends on %1");
         if ( !m_allDay ) {
             text = text.arg( m_endDate.toString() );
@@ -237,7 +240,16 @@ void EventWidget::toggleMoreInfo()
 
 void EventWidget::setMoreInfoVisible( bool visible )
 {
-    m_fullViewWidget->setVisible(visible);
+    if ( visible ) {
+        m_masterLayout->removeItem( m_fullViewWidget );
+        m_fullViewWidget->setVisible( 0 );
+        m_moreInfoIcon->setIcon( KIcon( "arrow-down-double" ) );
+    } else {
+        m_masterLayout->addItem( m_fullViewWidget );
+        m_fullViewWidget->setVisible( 1 );
+        m_moreInfoIcon->setIcon( KIcon( "arrow-up-double" ) );
+    }
+    m_parent->layout()->invalidate();
     m_moreInfoVisible = visible;
 }
 
