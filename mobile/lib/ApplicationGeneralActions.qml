@@ -31,7 +31,7 @@ KPIM.ActionList {
   KPIM.ActionListItem {
     name : "quit"
   }
-  KPIM.FakeAction {
+  KPIM.ActionListItem {
     name : "wm_task_switch"
   }
   KPIM.FakeAction {
