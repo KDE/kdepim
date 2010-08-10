@@ -1,4 +1,6 @@
 [Desktop Entry]
 Name=Test
+Name[x-test]=xxTestxx
 Description=An Test theme
+Description[x-test]=xxAn Test themexx
 FileName=default.html
