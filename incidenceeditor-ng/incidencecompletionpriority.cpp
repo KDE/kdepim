@@ -64,7 +64,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
 {
   Q_ASSERT( ui != 0 );
   setObjectName( "IncidenceCompletionPriority" );
- 
+
   d->mUi = ui;
 
   d->sliderValueChanged( d->mUi->mCompletionSlider->value() );
@@ -106,11 +106,11 @@ void IncidenceCompletionPriority::load( const KCalCore::Incidence::Ptr &incidenc
   d->mUi->mCompletionSlider->setValue( todo->percentComplete() );
   d->sliderValueChanged( d->mUi->mCompletionSlider->value() );
   d->mUi->mCompletionSlider->blockSignals( false );
-  
+
   d->mUi->mPriorityCombo->blockSignals( true );
   d->mUi->mPriorityCombo->setCurrentIndex( todo->priority() );
   d->mUi->mPriorityCombo->blockSignals( false );
-  
+
   mWasDirty = false;
 }
 
@@ -136,6 +136,10 @@ void IncidenceCompletionPriority::save( const KCalCore::Incidence::Ptr &incidenc
 bool IncidenceCompletionPriority::isDirty() const
 {
   KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
+
+  if ( !todo ) {
+    return false;
+  }
 
   if ( d->mUi->mCompletionSlider->value() != todo->percentComplete() )
     return true;
