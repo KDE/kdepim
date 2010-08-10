@@ -61,9 +61,9 @@ ActionMenuContainer {
   ActionList {
     category : "account"
     name : KDE.i18n( "Account" )
-    ActionListItem { name : "edit_account" }
+    ActionListItem { name : "configure_account" }
     FakeAction{ name : "set_as_default" }
-    FakeAction{ name : "add_subfolder" }
+    ActionListItem { name : "akonadi_collection_create" }
   }
   /*
   ActionList {

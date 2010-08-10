@@ -147,6 +147,9 @@ void KDeclarativeMainView::delayedInit()
 
   KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
+  action = new KAction( i18n( "Configure Account" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(configureCurrentAccount()) );
+  actionCollection()->addAction( QLatin1String( "configure_account" ), action );
 
   setupStandardActionManager( regularSelectionModel(), d->mItemSelectionModel );
 
