@@ -20,6 +20,7 @@
 */
 
 import Qt 4.7 as QML
+import org.kde 4.5
 import org.kde.pim.mobileui 4.5
 
 ActionMenuContainer {
@@ -30,7 +31,7 @@ ActionMenuContainer {
 
   ReorderList {
     category : "home"
-    name : "Favorites"
+    name : KDE.i18n( "Favorites" )
 
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
@@ -43,7 +44,7 @@ ActionMenuContainer {
 
   ReorderList {
     category : "home"
-    name : "Address Books"
+    name : KDE.i18n( "Address Books" )
 
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
@@ -56,20 +57,20 @@ ActionMenuContainer {
 
   ActionList {
     category : "home"
-    name : "View"
+    name : KDE.i18n( "View" )
     FakeAction { name : "select_multiple_folders" }
   }
 
   ActionList {
     category : "resource"
-    name : "Address Book"
+    name : KDE.i18n( "Address Book" )
     ActionListItem { name : "akonadi_addressbook_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
 
   ActionList {
     category : "single_folder"
-    name : "Folder"
+    name : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_sync" }
@@ -78,7 +79,7 @@ ActionMenuContainer {
 
   ActionList {
     category : "single_folder"
-    name : "View"
+    name : KDE.i18n( "View" )
     FakeAction { name : "save_view_as_favorite" }
     FakeAction { name : "start_maintenance" }
     FakeAction { name : "filter_view" }
@@ -87,14 +88,14 @@ ActionMenuContainer {
 
   ActionList {
     category : "multiple_folder"
-    name : "View"
+    name : KDE.i18n( "View" )
     FakeAction { name : "save_view_as_favorite" }
     FakeAction { name : "start_maintenance" }
   }
 
   ActionList {
     category : "contact_viewer"
-    name : "Contact"
+    name : KDE.i18n( "Contact" )
     FakeAction { name : "copy_to_addressbook" }
     FakeAction { name : "move_to_addressbook" }
     ActionListItem { name : "akonadi_item_delete" }
@@ -103,7 +104,7 @@ ActionMenuContainer {
 
   ApplicationGeneralActions {
     category : "standard"
-    name : "KAddressBook"
+    name : KDE.i18n( "KAddressBook" )
     type : "contacts"
   }
 }
