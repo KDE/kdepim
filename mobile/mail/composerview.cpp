@@ -116,14 +116,13 @@ void ComposerView::delayedInit()
   fcc->hide();
   m_composerBase->setFccCombo( fcc );
   */
-  /*
+
+
   connect( m_composerBase, SIGNAL( disableHtml( Message::ComposerViewBase::Confirmation ) ),
            this, SLOT( disableHtml( Message::ComposerViewBase::Confirmation ) ) );
+  connect( m_composerBase, SIGNAL( enableHtml() ),this, SLOT( enableHtml() ) );
 
-  connect( m_composerBase, SIGNAL( enableHtml() ),
-  this, SLOT( enableHtml() ) ); */
-
-  connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( slotSendSuccessful() ) );
+  connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( sendSuccessful() ) );
   connect( m_composerBase, SIGNAL( failed(const QString&) ), this, SLOT( failed(const QString&) ) );
   connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( success() ) );
 
@@ -264,7 +263,7 @@ void ComposerView::configureIdentity()
 
 }
 
-void ComposerView::slotSendSuccessful()
+void ComposerView::sendSuccessful()
 {
   // Removed successfully sent messages from autosave
   m_composerBase->cleanupAutoSave();
@@ -349,6 +348,30 @@ void ComposerView::saveDraft()
   const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
   m_draft = true;
   send ( method, saveIn );
+}
+
+void ComposerView::enableHtml()
+{
+  m_composerBase->editor()->enableRichTextMode();
+  m_composerBase->editor()->updateActionStates();
+  m_composerBase->editor()->setActionsEnabled( true );
+}
+
+void ComposerView::disableHtml( Message::ComposerViewBase::Confirmation confirmation )
+{
+  if ( confirmation == Message::ComposerViewBase::LetUserConfirm && m_composerBase->editor()->isFormattingUsed() ) {
+    int choice = KMessageBox::warningContinueCancel( this, i18n( "Turning HTML mode off "
+        "will cause the text to lose the formatting. Are you sure?" ),
+        i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KStandardGuiItem::cancel(),
+              "LoseFormattingWarning" );
+    if ( choice != KMessageBox::Continue ) {
+      enableHtml();
+      return;
+    }
+  }
+
+  m_composerBase->editor()->switchToPlainText();
+  m_composerBase->editor()->setActionsEnabled( false );
 }
 
 #include "composerview.moc"

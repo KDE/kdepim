@@ -55,26 +55,31 @@ class ComposerView : public KDeclarativeFullScreenView
   public:
     explicit ComposerView(QWidget* parent = 0);
 
+    void setMessage( const KMime::Message::Ptr &msg );
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_composerBase->setIdentityCombo( combo ); }
+
     void setEditor( Message::KMeditor* editor );
     void setRecipientsEditor( MessageComposer::RecipientsEditor *editor ) { m_composerBase->setRecipientsEditor( editor ); }
 
     QString subject() const;
     void setSubject( const QString &subject );
 
-    void setMessage( const KMime::Message::Ptr &msg );
-
     bool busy() const;
     void setBusy(bool busy);
 
   public slots:
+    QObject* getAction( const QString &name ) const;
+
     /// Send clicked in the user interface
     void send( MessageSender::SendMethod method = MessageSender::SendDefault,
                MessageSender::SaveIn saveIn = MessageSender::SaveInNone );
-    QObject* getAction( const QString &name ) const;
+
     void configureIdentity();
     void configureTransport();
-    void slotSendSuccessful();
+    void sendSuccessful();
+
+    void enableHtml();
+    void disableHtml( Message::ComposerViewBase::Confirmation confirmation );
 
   signals:
     void changed();
