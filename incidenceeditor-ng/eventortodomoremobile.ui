@@ -129,7 +129,7 @@
     <item row="0" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>Meeting Organizer:</string>
+       <string>Organizer:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -792,11 +792,6 @@
    <header>libkdepim/kcheckcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::KWeekdayCheckCombo</class>
-   <extends>KPIM::KCheckComboBox</extends>
-   <header>libkdepim/kweekdaycheckcombo.h</header>
-  </customwidget>
-  <customwidget>
    <class>KRichTextEdit</class>
    <extends>KTextEdit</extends>
    <header>krichtextedit.h</header>
@@ -820,6 +815,11 @@
    <class>KRichTextWidget</class>
    <extends>KRichTextEdit</extends>
    <header>krichtextwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KWeekdayCheckCombo</class>
+   <extends>KPIM::KCheckComboBox</extends>
+   <header>libkdepim/kweekdaycheckcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
