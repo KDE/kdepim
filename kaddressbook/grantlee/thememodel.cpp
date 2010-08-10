@@ -49,6 +49,7 @@ ThemeModel::ThemeModel( const QString &themesPath, QObject *parent )
 
 ThemeModel::~ThemeModel()
 {
+  delete d;
 }
 
 void ThemeModel::setThemesPath( const QString &path )
