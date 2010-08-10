@@ -112,7 +112,6 @@ void EventsApplet::updateEvents()
 void EventsApplet::updateUI()
 {
     setBusy( false );
-    kDebug() << "updateing ui";
 
     // Clear the current layout...
     for ( int i = 0; i < m_scrollerLayout->count(); i++ ) {
@@ -139,36 +138,39 @@ void EventsApplet::dataUpdated( QString source, Plasma::DataEngine::Data data )
             it.next();
             QVariantHash data = it.value().toHash();
 
-            KDateTime sd = qVariantValue<KDateTime>( data[ "StartDate" ] );
+            // Start by making sure it's a type we are looking for
+            if ( data[ "Type" ].toString() == m_incidenceType || m_incidenceType == "Agenda" ) {
+                KDateTime sd = qVariantValue<KDateTime>( data[ "StartDate" ] );
 
-            QDate date = sd.date();
-            date = QDate( QDate::currentDate().year(), date.month(), date.day() );
-            sd = KDateTime( date, sd.time() );
+                QDate date = sd.date();
+                date = QDate( QDate::currentDate().year(), date.month(), date.day() );
+                sd = KDateTime( date, sd.time() );
 
-            // Since it seems like the calendar dataengine is broken and returning ALL data, let's
-            // filter it a little bit by hand... FIXME
-            int difference = KDateTime::currentDateTime( sd.timeSpec() ).daysTo( sd ) % 365 ; // XXX different locales with different calendars?
-            if ( difference <= m_numDays && difference >= 0 ) {
-                QString key = sd.toString();
-                if (m_incidences[ key ]) {
-                    int i = 0;
-                    while ( i <= 255 ) {
-                        if ( m_incidences[ key ]->summary() == data[ "Summary" ] ) { // Event already exists with same summary, 
-                                                                                     // assume it's the same event
-                            break;
-                        }
+                // Since it seems like the calendar dataengine is broken and returning ALL data, let's
+                // filter it a little bit by hand... FIXME
+                int difference = KDateTime::currentDateTime( sd.timeSpec() ).daysTo( sd ) % 365 ; // XXX different locales with different calendars?
+                if ( difference <= m_numDays && difference >= 0 ) {
+                    QString key = sd.toString();
+                    if (m_incidences[ key ]) {
+                        int i = 0;
+                        while ( i <= 255 ) {
+                            if ( m_incidences[ key ]->summary() == data[ "Summary" ] ) { // Event already exists with same summary, 
+                                                                                         // assume it's the same event
+                                break;
+                            }
 
-                        i++;
-                        key = sd.toString()+QString( i );
+                            i++;
+                            key = sd.toString()+QString( i );
 
-                        if (!m_incidences[ key ]) { // Found a unique ID, use it.
-                            break;
+                            if (!m_incidences[ key ]) { // Found a unique ID, use it.
+                                break;
+                            }
                         }
                     }
+                    kDebug() << "Adding" << data[ "Summary" ] << key;
+                    EventWidget* widget = new EventWidget( data, this );
+                    m_incidences[ key ] = widget;
                 }
-                kDebug() << "Adding" << data[ "Summary" ] << key;
-                EventWidget* widget = new EventWidget( data );
-                m_incidences[ key ] = widget;
             } 
             // kDebug() << data;
         }
