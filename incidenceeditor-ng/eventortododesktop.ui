@@ -842,7 +842,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string comment="@label">Quick add a reminder:</string>
+          <string comment="@label">Add default reminder:</string>
          </property>
         </widget>
        </item>
