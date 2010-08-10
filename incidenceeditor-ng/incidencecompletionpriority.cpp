@@ -35,19 +35,17 @@ class IncidenceCompletionPriority::Private
   IncidenceCompletionPriority *const q;
   public:
     explicit Private( IncidenceCompletionPriority *parent )
-      : q( parent ), mUi( 0 ), mDirty( false ), mOrigPercentCompleted( -1 )
+      : q( parent ), mUi( 0 ), mOrigPercentCompleted( -1 )
     {
     }
 
   public:
     Ui::EventOrTodoDesktop *mUi;
 
-    bool mDirty;
     int mOrigPercentCompleted;
 
   public: // slots
     void sliderValueChanged( int );
-    void slotSetDirty();
 };
 
 void IncidenceCompletionPriority::Private::sliderValueChanged( int value )
@@ -57,16 +55,8 @@ void IncidenceCompletionPriority::Private::sliderValueChanged( int value )
   }
 
   mUi->mCompletedLabel->setText( i18nc( "@label:slider Sets the current completion percentage of a task","%1% completed", value ) );
-
-  slotSetDirty();
+  q->checkDirtyStatus();
 }
-
-void IncidenceCompletionPriority::Private::slotSetDirty()
-{
-    mDirty = true;
-    q->checkDirtyStatus();
-}
-
 
 IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor()
@@ -85,7 +75,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
 #endif
 
   connect( d->mUi->mCompletionSlider, SIGNAL( valueChanged( int ) ), SLOT( sliderValueChanged( int ) ) );
-  connect( d->mUi->mPriorityCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( slotSetDirty() ) );
+  connect( d->mUi->mPriorityCombo, SIGNAL( currentIndexChanged( int ) ), SLOT( checkDirtyStatus()) );
 }
 
 IncidenceCompletionPriority::~IncidenceCompletionPriority()
@@ -101,7 +91,7 @@ void IncidenceCompletionPriority::load( const KCalCore::Incidence::Ptr &incidenc
   // only for Todos
   KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
   if ( todo == 0 ) {
-    d->mDirty = false;
+    mWasDirty = false;
     return;
   }
 
@@ -121,7 +111,6 @@ void IncidenceCompletionPriority::load( const KCalCore::Incidence::Ptr &incidenc
   d->mUi->mPriorityCombo->setCurrentIndex( todo->priority() );
   d->mUi->mPriorityCombo->blockSignals( false );
   
-  d->mDirty = false;
   mWasDirty = false;
 }
 
@@ -142,13 +131,19 @@ void IncidenceCompletionPriority::save( const KCalCore::Incidence::Ptr &incidenc
     todo->setPercentComplete( d->mUi->mCompletionSlider->value() );
   }
   todo->setPriority( d->mUi->mPriorityCombo->currentIndex() );
-
-  // TODO reset dirty?
 }
 
 bool IncidenceCompletionPriority::isDirty() const
 {
-  return d->mDirty;
+  KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
+
+  if ( d->mUi->mCompletionSlider->value() != todo->percentComplete() )
+    return true;
+
+  if ( d->mUi->mPriorityCombo->currentIndex() != todo->priority() )
+    return true;
+
+  return false;
 }
 
 #include "incidencecompletionpriority.moc"
