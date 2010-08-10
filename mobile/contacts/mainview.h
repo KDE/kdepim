@@ -26,6 +26,7 @@
 namespace Akonadi
 {
   class Item;
+  class StandardContactActionManager;
 }
 
 class MainView : public KDeclarativeMainView
@@ -38,7 +39,7 @@ class MainView : public KDeclarativeMainView
     void newContact();
     void newContactGroup();
 
-    void editItem( const Akonadi::Item &item );
+    void editItem();
     void editContact( const Akonadi::Item &item );
     void editContactGroup( const Akonadi::Item &item );
 
@@ -48,6 +49,9 @@ class MainView : public KDeclarativeMainView
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
+
+  private:
+    Akonadi::StandardContactActionManager *mActionManager;
 };
 
 #endif // MAINVIEW_H

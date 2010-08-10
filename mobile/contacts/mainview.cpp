@@ -52,10 +52,20 @@ void MainView::newContact()
   editor->show();
 }
 
-void MainView::editItem( const Akonadi::Item &item )
+void MainView::newContactGroup()
 {
-  if ( !item.isValid() )
+  ContactGroupEditorView *editor = new ContactGroupEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  editor->show();
+}
+
+void MainView::editItem()
+{
+  const Akonadi::Item::List items = mActionManager->selectedItems();
+  if ( items.isEmpty() )
     return;
+
+  const Akonadi::Item item = items.first();
 
   if ( item.hasPayload<KABC::Addressee>() )
     editContact( item );
@@ -71,13 +81,6 @@ void MainView::editContact( const Akonadi::Item &item )
   editor->show();
 }
 
-void MainView::newContactGroup()
-{
-  ContactGroupEditorView *editor = new ContactGroupEditorView;
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
-  editor->show();
-}
-
 void MainView::editContactGroup( const Akonadi::Item &item )
 {
   ContactGroupEditorView *editor = new ContactGroupEditorView;
@@ -89,18 +92,24 @@ void MainView::editContactGroup( const Akonadi::Item &item )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  Akonadi::StandardContactActionManager *manager = new Akonadi::StandardContactActionManager( actionCollection(), this );
-  manager->setCollectionSelectionModel( collectionSelectionModel );
-  manager->setItemSelectionModel( itemSelectionModel );
+  mActionManager = new Akonadi::StandardContactActionManager( actionCollection(), this );
+  mActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  mActionManager->setItemSelectionModel( itemSelectionModel );
 
-  manager->createAllActions();
+  mActionManager->createAllActions();
+  mActionManager->interceptAction( Akonadi::StandardContactActionManager::CreateContact );
+  mActionManager->interceptAction( Akonadi::StandardContactActionManager::CreateContactGroup );
+  mActionManager->interceptAction( Akonadi::StandardContactActionManager::EditItem );
+  mActionManager->interceptAction( Akonadi::StandardContactActionManager::CreateAddressBook );
 
-  connect( manager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
            this, SLOT( newContact() ) );
-  connect( manager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
            this, SLOT( newContactGroup() ) );
-  connect( manager, SIGNAL( editItem( const Akonadi::Item& ) ),
-           this, SLOT( editItem( const Akonadi::Item& ) ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SIGNAL( triggered( bool ) ),
+           this, SLOT( editItem() ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateAddressBook ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
 }
 
 #include "mainview.moc"
