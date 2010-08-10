@@ -49,6 +49,7 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 )
   , mTimeZones( new ICalTimeZones )
   , mUi( ui )
+  , mTimezoneCombosWhereVisibile( false )
 {
   setTimeZonesVisibility( false );
   setObjectName( "IncidenceDateTime" );
@@ -62,6 +63,7 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
            SLOT(toggleTimeZoneVisibility()) );
 #endif
 
+  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()));
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)),
            SLOT(checkDirtyStatus()) );
 }
@@ -312,8 +314,9 @@ void IncidenceDateTime::enableTimeEdits()
   }
 
 #ifndef KDEPIM_MOBILE_UI
-  setTimeZonesVisibility( !wholeDayChecked &&
-                          mUi->mTimeZoneLabel->text().startsWith( QLatin1String( "<<" ) ) );
+  const bool currentlyVisible = mUi->mTimeZoneLabel->text().contains( "&lt;&lt;" );
+  setTimeZonesVisibility( !wholeDayChecked && mTimezoneCombosWhereVisibile );
+  mTimezoneCombosWhereVisibile = currentlyVisible;
 #endif
 }
 
@@ -388,9 +391,6 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   mUi->mEndCheck->setVisible( false );
   mUi->mEndCheck->setChecked( true ); // Set to checked so we can reuse enableTimeEdits.
 
-  // All day
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)),
-           SLOT(enableTimeEdits()) );
   // Start time
   connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
            SLOT(updateStartTime(QTime)) );
@@ -495,8 +495,6 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
   connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL( endDateChanged( QDate ) ) );
   connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL( endTimeChanged( QTime ) ) );
   connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
-
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()));
 
   //TODO: do something with tmpl, note: this wasn't used in the old code either.
 //   Q_UNUSED( tmpl );

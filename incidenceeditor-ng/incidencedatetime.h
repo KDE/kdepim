@@ -120,6 +120,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
      * time appropriate when the start time changes.
      */
     KDateTime mCurrentStartDateTime;
+
+    /// Remembers state when switching between takes whole day and timed event/task.
+    bool mTimezoneCombosWhereVisibile;
 };
 
 } // IncidenceEditorsNG
