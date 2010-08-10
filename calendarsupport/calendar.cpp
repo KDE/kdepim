@@ -150,7 +150,7 @@ void Calendar::Private::readFromModel()
 
 void Calendar::Private::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
 {
-  kDebug();
+  // kDebug();
   Q_ASSERT( topLeft.row() <= bottomRight.row() );
   const int endRow = bottomRight.row();
   QModelIndex i( topLeft );
