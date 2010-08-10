@@ -34,7 +34,6 @@ set(kab_mobile_srcs
   namepartseditwidget.cpp
   mobilelineedit.cpp
   phonetypecombo.cpp
-  standardcontactactionmanager.cpp
 )
 
 kde4_add_ui_files(kab_mobile_srcs

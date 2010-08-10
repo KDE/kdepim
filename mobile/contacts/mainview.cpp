@@ -21,10 +21,10 @@
 #include "contacteditorview.h"
 #include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
-#include "standardcontactactionmanager.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 
+#include <akonadi/contact/standardcontactactionmanager.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kaction.h>
