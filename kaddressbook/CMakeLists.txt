@@ -58,7 +58,6 @@ set( kaddressbook_LIB_SRCS
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
   recursiveitemfetchjob.cpp
-  standardcontactactionmanager.cpp
   xxportmanager.cpp
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}

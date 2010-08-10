@@ -27,7 +27,6 @@
 #include "printing/printingwizard.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
-#include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
 
 #ifdef GRANTLEE_FOUND
@@ -46,6 +45,7 @@
 #include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/contact/contactviewer.h>
+#include <akonadi/contact/standardcontactactionmanager.h>
 #include <akonadi/control.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreeview.h>
