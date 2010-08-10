@@ -318,6 +318,7 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
 
   QString label;
   QIcon icon = KIcon( "folder" );
+  QString toolTip;
   foreach ( const QModelIndex &index, s->selectedRows() ) {
     label+= index.data( Qt::DisplayRole ).toString()+", ";
   }
@@ -328,11 +329,18 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
     icon = QIcon();
   } else if ( s->selectedRows().size()==1 ) {
     icon = s->selectedRows().first().data( Qt::DecorationRole ).value<QIcon>();
+    QModelIndex idx = s->selectedRows().first().parent();
+    toolTip = label;
+    while ( idx != QModelIndex() ) {
+      toolTip = idx.data().toString() + '/' + toolTip;
+      idx = idx.parent();
+    }
   }
 
   int index = q->indexOf( w );
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
+  q->setTabToolTip( index, toolTip);
 }
 
 void Pane::Private::onNewTabClicked()
