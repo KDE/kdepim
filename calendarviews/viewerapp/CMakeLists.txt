@@ -24,7 +24,6 @@ target_link_libraries(viewerapp
     ${KDE4_KDECORE_LIBS}
     ${KDE4_AKONADI_LIBS}
     ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
-    ${KDEPIMLIBS_KCAL_LIBS}
     ${QT_QTGUI_LIBS}
     akonadi-kcal_next
 )

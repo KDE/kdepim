@@ -6,7 +6,6 @@ kde4_add_executable(incidenceeditorapp ${incidenceeditorapp_SRCS})
 target_link_libraries(incidenceeditorapp
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCAL_LIBS}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   incidenceeditors
   akonadi-kcal_next
