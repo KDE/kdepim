@@ -114,6 +114,8 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
            SLOT( slotAttendeeChanged( KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr ) ) );
 }
 
+IncidenceAttendee::~IncidenceAttendee() {}
+
 void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
