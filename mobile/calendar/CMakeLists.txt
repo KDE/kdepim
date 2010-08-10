@@ -30,6 +30,7 @@ target_link_libraries(korganizer-mobile
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   kdepimmobileui
   akonadi-kcal_next
+  incidenceeditorsngmobile
 )
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
