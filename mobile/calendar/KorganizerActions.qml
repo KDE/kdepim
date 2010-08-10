@@ -75,7 +75,7 @@ ActionMenuContainer {
   ActionList {
     category : "single_folder"
     name : KDE.i18n( "Folder" )
-    ActionListItem { name : "edit_folder" }
+    ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "akonadi_collection_delete" }

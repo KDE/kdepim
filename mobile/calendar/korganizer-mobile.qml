@@ -62,7 +62,7 @@ KPIM.MainView {
     {
       korganizerActions.showOnlyCategory("account")
     } else { // something else is selected
-      korganizerActions.showOnlyCategory("single_calendar")
+      korganizerActions.showOnlyCategory("single_folder")
     }
   }
 
@@ -407,80 +407,13 @@ KPIM.MainView {
         }
       ]
     }
-
-  }
-
-  SlideoutPanelContainer {
-    anchors.fill: parent
-    visible: agendaView.visible || eventView.visible
-
-    SlideoutPanel {
-      id: actionPanel
-      titleText: KDE.i18n( "Actions" )
-      handlePosition : 125
-      handleHeight: 150
-      contentWidth: 240
-      anchors.fill : parent
-      content: [
-          KPIM.Button {
-            id: newButton
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "New Appointment" )
-            onClicked: { application.newEvent(); actionPanel.collapse() }
-          },
-          KPIM.Action {
-            id: syncButton
-            anchors.top: newButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("akonadi_collection_sync")
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Action {
-             id: deleteButton
-             anchors.top: syncButton.bottom;
-             anchors.horizontalCenter: parent.horizontalCenter;
-             width: parent.width - 10
-             height: parent.height / 6
-             action : application.getAction("akonadi_item_delete")
-             onTriggered : actionPanel.collapse();
-           },
-           KPIM.Button {
-             id: previousButton
-             anchors.top: deleteButton.bottom;
-             anchors.horizontalCenter: parent.horizontalCenter;
-             width: parent.width - 10
-             height: parent.height / 6
-             buttonText: KDE.i18n( "Previous" )
-             onClicked: {
-               agenda.gotoPrevious();
-               actionPanel.collapse()
-             }
-           },
-           KPIM.Button {
-             anchors.top: previousButton.bottom;
-             anchors.horizontalCenter: parent.horizontalCenter;
-             width: parent.width - 10
-             height: parent.height / 6
-             buttonText: KDE.i18n( "Next" )
-             onClicked: {
-               agenda.gotoNext();
-               actionPanel.collapse();
-             }
-           }
-      ]
-    }
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition : 150
+      handlePosition : actionPanelNew.handlePosition + actionPanel.handleHeight
       id: attachmentPanel
       visible: eventView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handleHeight: parent.height - actionPanelNew.handlePosition - actionPanelNew.handleHeight - anchors.topMargin - anchors.bottomMargin
       content: [
         KPIM.AttachmentList {
           id: attachmentView
