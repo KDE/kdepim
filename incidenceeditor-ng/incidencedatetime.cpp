@@ -467,6 +467,7 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
   mUi->mStartTimeEdit->setEnabled( todo->hasStartDate() );
   mUi->mTimeZoneComboStart->setEnabled( todo->hasStartDate() );
 
+  mUi->mEndLabel->setText( i18nc( "The due date/time of a task", "Due:" ) );
   mUi->mEndCheck->setVisible( true );
   mUi->mEndCheck->setChecked( todo->hasDueDate() );
   mUi->mEndDateEdit->setEnabled( todo->hasDueDate() );
