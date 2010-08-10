@@ -20,6 +20,7 @@
 */
 
 import Qt 4.7 as QML
+import org.kde 4.5
 import org.kde.pim.mobileui 4.5
 
 ActionMenuContainer {
@@ -29,7 +30,7 @@ ActionMenuContainer {
   actionItemSpacing : 2
   ReorderList {
     category : "home"
-    name : "Favorites"
+    name : KDE.i18n( "Favorites" )
 
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
@@ -41,7 +42,7 @@ ActionMenuContainer {
   }
   ReorderList {
     category : "home"
-    name : "Accounts"
+    name : KDE.i18n( "Accounts" )
 
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
@@ -53,13 +54,13 @@ ActionMenuContainer {
   }
   ActionList {
     category : "home"
-    name : "Sources"
+    name : KDE.i18n( "Sources" )
     FakeAction { name : "to_selection_screen" }
   }
 
   ActionList {
     category : "account"
-    name : "Account"
+    name : KDE.i18n( "Account" )
     ActionListItem { name : "edit_account" }
     FakeAction{ name : "set_as_default" }
     FakeAction{ name : "add_subfolder" }
@@ -73,7 +74,7 @@ ActionMenuContainer {
 
   ActionList {
     category : "single_folder"
-    name : "Folder"
+    name : KDE.i18n( "Folder" )
     ActionListItem { name : "edit_folder" }
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_sync" }
@@ -81,45 +82,45 @@ ActionMenuContainer {
   }
   ActionList {
     category : "single_folder"
-    name : "Events"
+    name : KDE.i18n( "Events" )
     ActionListItem { name : "start_maintenance" }
   }
 
   ActionList {
     category : "multiple_folder"
-    name : "Sources"
+    name : KDE.i18n( "Sources" )
 
     //
     ActionListItem { name : "change_folder_selection" }
   }
   ActionList {
     category : "multiple_folder"
-    name : "Events"
+    name : KDE.i18n( "Events" )
     ActionListItem { name : "start_maintenance" }
   }
 
   ActionList {
     category : "single_calendar"
-    name : "Favorite"
+    name : KDE.i18n( "Favorite" )
     ActionListItem { name : "single_add_as_favorite" }
     ActionListItem { name : "single_remove_from_favorites" }
   }
   ActionList {
     category : "single_calendar"
-    name : "View"
+    name : KDE.i18n( "View" )
     ActionListItem { name : "view_day" }
     ActionListItem { name : "view_week" }
     ActionListItem { name : "view_month" }
   }
   ActionList {
     category : "single_calendar"
-    name : "Date"
+    name : KDE.i18n( "Date" )
     ActionListItem { name : "goto_today" }
     ActionListItem { name : "select_date" }
   }
   ActionList {
     category : "single_calendar"
-    name : "Publish"
+    name : KDE.i18n( "Publish" )
     ActionListItem { name : "publish_as_webpage" }
     ActionListItem { name : "publish_as_ical" }
     ActionListItem { name : "publish_as_vcal" }
@@ -127,26 +128,26 @@ ActionMenuContainer {
 
   ActionList {
     category : "multiple_calendar"
-    name : "Favorite"
+    name : KDE.i18n( "Favorite" )
     ActionListItem { name : "mult_add_as_favorite" }
     ActionListItem { name : "mult_remove_from_favorites" }
   }
   ActionList {
     category : "multiple_calendar"
-    name : "View"
+    name : KDE.i18n( "View" )
     ActionListItem { name : "view_day" }
     ActionListItem { name : "view_week" }
     ActionListItem { name : "view_month" }
   }
   ActionList {
     category : "multiple_calendar"
-    name : "Date"
+    name : KDE.i18n( "Date" )
     ActionListItem { name : "goto_today" }
     ActionListItem { name : "select_date" }
   }
   ActionList {
     category : "multiple_calendar"
-    name : "Publish"
+    name : KDE.i18n( "Publish" )
     ActionListItem { name : "publish_as_webpage" }
     ActionListItem { name : "publish_as_ical" }
     ActionListItem { name : "publish_as_vcal" }
@@ -154,14 +155,14 @@ ActionMenuContainer {
 
   ActionList {
     category : "event_viewer"
-    name : "Event"
+    name : KDE.i18n( "Event" )
     ActionListItem { name : "copy_to_calendar" }
     ActionListItem { name : "move_to_calendar" }
     ActionListItem { name : "akonadi_item_delete" }
   }
   ActionList {
     category : "event_viewer"
-    name : "Schedule"
+    name : KDE.i18n( "Schedule" )
     ActionListItem { name : "publish_item_information" }
     ActionListItem { name : "send_information_to_attendees" }
     ActionListItem { name : "send_cancellation_requests" }
@@ -173,19 +174,14 @@ ActionMenuContainer {
   }
   ActionList {
     category : "event_viewer"
-    name : "Flag"
-    ActionListItem { name : "toggle_read_unread" }
-  }
-  ActionList {
-    category : "event_viewer"
-    name : "Publish"
+    name : KDE.i18n( "Publish" )
     ActionListItem { name : "publish_as_webpage" }
     ActionListItem { name : "publish_as_ical" }
     ActionListItem { name : "publish_as_vcal" }
   }
   ApplicationGeneralActions {
     category : "standard"
-    name : "Korganizer"
+    name : KDE.i18n( "KOrganizer" )
     type : "events"
   }
 }
