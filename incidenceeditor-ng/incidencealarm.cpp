@@ -77,6 +77,7 @@ void IncidenceAlarm::load( const KCalCore::Incidence::Ptr &incidence )
   // load the date/time before loading the recurrence
   mDateTime->load( incidence );
 
+  mAlarms.clear();
   foreach ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() )
     mAlarms.append( KCalCore::Alarm::Ptr( new KCalCore::Alarm( *alarm.data() ) ) );
 
