@@ -49,6 +49,12 @@ Rectangle {
     value : { action.text.replace("&", ""); }
   }
 
+  Binding {
+    target: parent
+    property: "enabled"
+    value: action.enabled
+  }
+
   height : (!hidable || action.enabled) ? hardcoded_height : 0
   visible : (!hidable || action.enabled)
   Connections {
@@ -75,6 +81,7 @@ Rectangle {
     id : buttonText
     anchors.horizontalCenter : parent.horizontalCenter
     anchors.verticalCenter : parent.verticalCenter
+    color: parent.enabled ? "black" : "gray"
   }
 
   MouseArea {
