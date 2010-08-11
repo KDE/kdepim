@@ -47,17 +47,15 @@ ActionMenuContainer {
     ]
   }
 
-  ReorderList {
+  AgentInstanceList {
     category : "home"
     name : KDE.i18n( "Address Books" )
 
     delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
+      QML.Text { height : 30; text : model.display }
     }
-    upAction : "resource_up"
-    downAction : "resource_down"
-    deleteAction : "resource_delete"
-    model : allFoldersModel
+
+    model : agentInstanceList
 
     customActions : [
       FakeAction { name : "delete_selected_addressbook" },

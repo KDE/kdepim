@@ -20,3 +20,5 @@ ApplicationGeneralActions 4.5 ApplicationGeneralActions.qml
 MultipleSelectionComponent 4.5 MultipleSelectionComponent.qml
 MultipleSelectionScreen 4.5 MultipleSelectionScreen.qml
 ScriptActionItem 4.5 ScriptActionItem.qml
+AgentInstanceList 4.5 AgentInstanceList.qml
+AgentInstanceListContainer 4.5 AgentInstanceListContainer.qml

@@ -39,6 +39,7 @@
 
 #include <kselectionproxymodel.h>
 
+#include <akonadi/agentinstancemodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/itemfetchscope.h>
@@ -143,6 +144,13 @@ void KDeclarativeMainView::delayedInit()
 
   context->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
 
+  // A list of agent instances
+  Akonadi::AgentInstanceModel *agentInstanceModel = new Akonadi::AgentInstanceModel( this );
+  d->mAgentInstanceFilterModel = new Akonadi::AgentFilterProxyModel( this );
+  d->mAgentInstanceFilterModel->setSourceModel( agentInstanceModel );
+
+  context->setContextProperty( "agentInstanceList", QVariant::fromValue( static_cast<QObject*>( d->mAgentInstanceFilterModel ) ) );
+
   d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
   KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
@@ -211,6 +219,7 @@ ItemFetchScope& KDeclarativeMainView::itemFetchScope()
 void KDeclarativeMainView::addMimeType( const QString &mimeType )
 {
   d->mChangeRecorder->setMimeTypeMonitored( mimeType );
+  d->mAgentInstanceFilterModel->addMimeTypeFilter( mimeType );
 }
 
 QStringList KDeclarativeMainView::mimeTypes() const

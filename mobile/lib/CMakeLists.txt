@@ -61,6 +61,8 @@ install(FILES
   ReorderListContainer.qml
   ActionListItem.qml
   ActionMenuContainer.qml
+  AgentInstanceList.qml
+  AgentInstanceListContainer.qml
   AttachmentList.qml
   ApplicationGeneralActions.qml
   Button.qml
