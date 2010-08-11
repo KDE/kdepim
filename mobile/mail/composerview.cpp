@@ -198,10 +198,9 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg)
   m_composerBase->setMessage( msg );
 
   //###: See comment in setAutoSaveFileName
-  if ( !m_fileName.isEmpty() ) {
-    kDebug() << "FILE NAME: "<< m_fileName;
+  if ( !m_fileName.isEmpty() )
     m_composerBase->setAutoSaveFileName( m_fileName );
-  }
+
   emit changed();
 }
 
