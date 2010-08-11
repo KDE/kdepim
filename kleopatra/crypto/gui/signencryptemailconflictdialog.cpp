@@ -380,6 +380,27 @@ create_signing_certificate_selection_dialog( QWidget * parent, Protocol proto, c
     return dlg;
 }
 
+static QString make_top_label_conflict_text( bool sign, bool enc ) {
+    return 
+        sign && enc ? i18n("Kleopatra cannot unambiguously determine matching certificates "
+                           "for all recipients/senders of the message.\n"
+                           "Please select the correct certificates for each recipient:") :
+        sign        ? i18n("Kleopatra cannot unambiguously determine matching certificates "
+                           "for the sender of the message.\n"
+                           "Please select the correct certificates for the sender:") :
+        enc         ? i18n("Kleopatra cannot unambiguously determine matching certificates "
+                           "for all recipients of the message.\n"
+                           "Please select the correct certificates for each recipient:" ) :
+        /* else */    kleo_assert_fail( sign || enc ) ;
+}
+
+static QString make_top_label_quickmode_text( bool sign, bool enc ) {
+    return
+        enc    ? i18n("Please verify that correct certificates have been selected for each recipient:") :
+        sign   ? i18n("Please verify that the correct certificate has been selected for the sender:") :
+        /*else*/ kleo_assert_fail( sign || enc ) ;
+}
+
 class SignEncryptEMailConflictDialog::Private {
     friend class ::Kleo::Crypto::Gui::SignEncryptEMailConflictDialog;
     SignEncryptEMailConflictDialog * const q;
@@ -397,6 +418,11 @@ public:
     }
 
 private:
+    void updateTopLabelText() {
+        ui.conflictTopLB.setText( make_top_label_conflict_text( sign, encrypt ) );
+        ui.quickModeTopLB.setText( make_top_label_quickmode_text( sign, encrypt ) );
+    }
+
     void showHideWidgets() {
         const Protocol proto = q->selectedProtocol();
         const bool quickMode = q->isQuickMode();
@@ -552,11 +578,8 @@ private:
         }
 
         explicit Ui( SignEncryptEMailConflictDialog * q )
-            : conflictTopLB( i18n("Kleopatra cannot unambiguously determine matching certificates "
-                          "for all recipients/senders of the message.\n"
-                          "Please select the correct certificates for each recipient:"),
-                     q ),
-              quickModeTopLB( i18n("Please verify that correct certificates have been selected for each recipient:"), q ),
+            : conflictTopLB( make_top_label_conflict_text( true, true ), q ),
+              quickModeTopLB( make_top_label_quickmode_text( true, true ), q ),
               showAllRecipientsCB( i18n("Show all recipients"), q ),
               pgpRB( i18n("OpenPGP"), q ),
               cmsRB( i18n("S/MIME"), q ),
@@ -700,6 +723,7 @@ void SignEncryptEMailConflictDialog::setSign( bool sign ) {
     if ( sign == d->sign )
         return;
     d->sign = sign;
+    d->updateTopLabelText();
     d->showHideWidgets();
     d->enableDisableOkButton();
 }
@@ -708,6 +732,7 @@ void SignEncryptEMailConflictDialog::setEncrypt( bool encrypt ) {
     if ( encrypt == d->encrypt )
         return;
     d->encrypt = encrypt;
+    d->updateTopLabelText();
     d->showHideWidgets();
     d->enableDisableOkButton();
 }
