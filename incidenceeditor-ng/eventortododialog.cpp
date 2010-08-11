@@ -331,7 +331,6 @@ void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
 {
   Q_Q( EventOrTodoDialog );
   q->enableButton( KDialog::Apply, isDirty );
-  q->enableButton( KDialog::Ok, isDirty );
 }
 
 
@@ -370,7 +369,6 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish( Akonadi::EditorItemManager:
 
     // Set the buttons to a reasonable state as well (ok and apply should be
     // disabled at this point).
-    q->enableButtonOk( mEditor->isDirty() );
     q->enableButtonCancel( true );
     q->enableButtonApply( mEditor->isDirty() );
   }
@@ -480,7 +478,6 @@ EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
   setButtonToolTip( KDialog::Ok, i18nc( "@action:button", "Save changes and close dialog" ) );
   setButtonToolTip( KDialog::Cancel, i18nc( "@action:button", "Discard changes and close dialog" ) );
   setDefaultButton( Ok );
-  enableButton( Ok, false );
   enableButton( Apply, false );
 
   setButtonText( Default, i18nc( "@action:button", "Manage &Templates..." ) );
@@ -560,11 +557,15 @@ void EventOrTodoDialog::slotButtonClicked( int button )
   switch( button ) {
   case KDialog::Ok:
   {
-    enableButtonOk( false );
-    enableButtonCancel( false );
-    enableButtonApply( false );
-    d->mCloseOnSave = true;
-    d->mItemManager->save();
+    if ( d->mEditor->isDirty() ) {
+      enableButtonOk( false );
+      enableButtonCancel( false );
+      enableButtonApply( false );
+      d->mCloseOnSave = true;
+      d->mItemManager->save();
+    } else {
+      close();
+    }
     break;
   }
   case KDialog::Apply:
