@@ -55,6 +55,7 @@ public:
   IncidenceAttachmentModel( const QPersistentModelIndex &modelIndex, QObject* parent = 0);
   IncidenceAttachmentModel( const Akonadi::Item &item, QObject* parent = 0);
   IncidenceAttachmentModel( QObject* parent = 0);
+  ~IncidenceAttachmentModel();
 
   KCalCore::Incidence::Ptr incidence() const;
 

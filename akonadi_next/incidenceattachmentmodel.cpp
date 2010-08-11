@@ -122,6 +122,11 @@ IncidenceAttachmentModel::IncidenceAttachmentModel( QObject* parent )
 
 }
 
+IncidenceAttachmentModel::~IncidenceAttachmentModel()
+{
+  delete d_ptr;
+}
+
 KCalCore::Incidence::Ptr IncidenceAttachmentModel::incidence() const
 {
   Q_D( const IncidenceAttachmentModel );
