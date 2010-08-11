@@ -798,3 +798,8 @@ int IncidenceRecurrence::weekdayCountForMonth( const QDate &date ) const
 
   return count;
 }
+
+int IncidenceRecurrence::currentRecurrenceType() const
+{
+  return mUi->mRecurrenceTypeCombo->currentIndex();
+}

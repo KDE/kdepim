@@ -72,6 +72,7 @@ public:
   CombinedIncidenceEditor *mEditor;
   IncidenceDateTime *mIeDateTime;
   IncidenceAttendee *mIeAttendee;
+  IncidenceRecurrence *mIeRecurrence;
 
 public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
@@ -158,8 +159,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
 
-  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( mIeDateTime, mUi );
-  mEditor->combine( ieRecurrence );
+  mIeRecurrence = new IncidenceRecurrence( mIeDateTime, mUi );
+  mEditor->combine( mIeRecurrence );
 
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
@@ -175,7 +176,7 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
-  q->connect( ieRecurrence, SIGNAL(recurrenceChanged(int)),
+  q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(int)),
               SLOT(handleRecurrenceChange(int)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
@@ -311,9 +312,11 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo", "Attac&hments (%1)", newCount ) );
+    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo",
+                                           "Attac&hments (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo", "Attac&hments" ) );
+    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo",
+                                           "Attac&hments" ) );
   }
 }
 
@@ -421,6 +424,10 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
     q->setWindowIcon( SmallIcon( "view-calendar-day" ) );
   }
 
+  // Initialize tab's titles
+  updateAttachmentCount( incidence->attachments().size() );
+  handleRecurrenceChange( mIeRecurrence->currentRecurrenceType() );
+  handleAlarmCountChange( incidence->alarms().count() );
 
   q->show();
 }

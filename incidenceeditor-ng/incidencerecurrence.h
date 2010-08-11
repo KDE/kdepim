@@ -48,6 +48,8 @@ public:
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
+    int currentRecurrenceType() const;
+
 Q_SIGNALS:
     void recurrenceChanged( int type );
 
