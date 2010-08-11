@@ -415,6 +415,12 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() );
   mCalSelector->setDefaultCollection( item.parentCollection() );
 
+  if ( mEditor->type() == KCalCore::Incidence::TypeTodo ) {
+    q->setWindowIcon( SmallIcon( "view-calendar-tasks" ) );
+  } else if ( mEditor->type() == KCalCore::Incidence::TypeEvent ) {
+    q->setWindowIcon( SmallIcon( "view-calendar-day" ) );
+  }
+
   q->show();
 }
 
