@@ -36,6 +36,7 @@ class AKONADI_NEXT_EXPORT CheckableItemProxyModel : public QSortFilterProxyModel
   Q_OBJECT
 public:
   CheckableItemProxyModel(QObject* parent = 0);
+  ~CheckableItemProxyModel();
 
   void setSelectionModel(QItemSelectionModel *itemSelectionModel);
 

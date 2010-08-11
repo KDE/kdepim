@@ -48,6 +48,11 @@ CheckableItemProxyModel::CheckableItemProxyModel(QObject* parent)
 
 }
 
+CheckableItemProxyModel::~CheckableItemProxyModel()
+{
+  delete d_ptr;
+}
+
 void CheckableItemProxyModel::setSelectionModel(QItemSelectionModel* itemSelectionModel)
 {
   Q_D(CheckableItemProxyModel);
