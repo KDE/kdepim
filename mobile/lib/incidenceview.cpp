@@ -102,22 +102,19 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 {
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
-  Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
+  Incidence::Ptr incidencePtr = Akonadi::incidence( mItem );
 
   IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceWhatWhere( editorWidget->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
 
   Q_ASSERT( mEditorDateTime == 0 );
   mEditorDateTime = new IncidenceEditorsNG::IncidenceDateTime( editorWidget->mUi );
   mEditorDateTime->setActiveDate( mActiveDate );
-  editor = mEditorDateTime;
-  editor->load( incidencePtr );
-  mEditor->combine( editor );
+  mEditor->combine( mEditorDateTime );
 
   editor = new IncidenceEditorsNG::IncidenceCompletionPriority( editorWidget->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
+  mEditor->load( incidencePtr );
 
   if ( mIncidenceMore != 0 ) // IncidenceMore was set *before* general.
     initIncidenceMore();
@@ -126,36 +123,30 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 void IncidenceView::initIncidenceMore()
 {
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
-  const Incidence::Ptr incidencePtr = mItem.payload<Incidence::Ptr>();
+  const Incidence::Ptr incidencePtr = Akonadi::incidence( mItem );
 
   IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( mIncidenceMore->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
 
   editor = new IncidenceEditorsNG::IncidenceDescription( mIncidenceMore->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
 
   editor = new IncidenceEditorsNG::IncidenceAttendee( 0, mEditorDateTime, mIncidenceMore->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
 
   editor = new IncidenceEditorsNG::IncidenceAlarm( mEditorDateTime, mIncidenceMore->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
 
   Q_ASSERT( mEditorDateTime != 0 );
   editor = new IncidenceEditorsNG::IncidenceRecurrence( mEditorDateTime, mIncidenceMore->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
 
   editor = new IncidenceEditorsNG::IncidenceSecrecy( mIncidenceMore->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
 
   editor = new IncidenceEditorsNG::IncidenceAttachment( mIncidenceMore->mUi );
-  editor->load( incidencePtr );
   mEditor->combine( editor );
+  mEditor->load( incidencePtr );
 }
 
 void IncidenceView::setMoreEditor( MobileIncidenceMore *editorWidget )
@@ -191,8 +182,9 @@ bool IncidenceView::isValid()
 void IncidenceView::load( const Akonadi::Item &item )
 {
   Q_ASSERT( hasSupportedPayload( item ) );
+
   mItem = item;
-  mEditor->load( mItem.payload<Incidence::Ptr>() );
+  mEditor->load( Akonadi::incidence( item ) );
 }
 
 Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
