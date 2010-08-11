@@ -553,6 +553,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           } else if ( todo ) {
             queryStr = i18n( "Do you still want to record this task in your calendar?" );
           }
+        } else if ( path.startsWith( "ATTACH:" ) ) {
+          return false;
         } else {
           queryStr = i18n( "%1?" ).arg( path );
         }
