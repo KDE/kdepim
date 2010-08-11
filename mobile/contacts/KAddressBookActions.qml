@@ -64,7 +64,7 @@ ActionMenuContainer {
   ActionList {
     category : "resource"
     name : KDE.i18n( "Address Book" )
-    ActionListItem { name : "akonadi_addressbook_properties" }
+    ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
 
