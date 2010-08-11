@@ -17,7 +17,7 @@
 */
 
 #include "kjotsconfigdlg.h"
-
+#include <QDebug>
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )
 {
@@ -44,19 +44,35 @@ KJotsConfigMisc::KJotsConfigMisc( const KComponentData &inst, QWidget *parent )
     :KCModule( inst, parent )
 {
     QHBoxLayout *lay = new QHBoxLayout( this );
-    QWidget * w = new confPageMisc( 0 );
-    lay->addWidget( w );
+    miscPage = new confPageMisc( 0 );
+    lay->addWidget( miscPage );
+    connect( miscPage->autoSaveInterval, SIGNAL(valueChanged(int)), this, SLOT( modified() ) );
+    connect( miscPage->autoSave, SIGNAL(stateChanged(int)), this, SLOT( modified() ) );
     load();
+}
+
+void KJotsConfigMisc::modified()
+{
+  emit changed( true );
 }
 
 void KJotsConfigMisc::load()
 {
-    KCModule::load();
+    KConfig config( "kjotsrc" );
+    KConfigGroup group = config.group( "kjots" );
+    miscPage->autoSaveInterval->setValue( group.readEntry( "AutoSaveInterval", 5 ) );
+    miscPage->autoSave->setChecked( group.readEntry( "AutoSave", true ) );
+    emit changed( false );
 }
 
 void KJotsConfigMisc::save()
 {
-    KCModule::save();
+    KConfig config( "kjotsrc" );
+    KConfigGroup group = config.group( "kjots" );
+    group.writeEntry( "AutoSaveInterval", miscPage->autoSaveInterval->value() );
+    group.writeEntry( "AutoSave", miscPage->autoSave->isChecked() );
+    group.sync();
+    emit changed( false );
 }
 
 #include "kjotsconfigdlg.moc"

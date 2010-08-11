@@ -44,6 +44,10 @@ class KJotsConfigMisc : public KCModule
 
     /** Reimplemented form KCModule. */
     virtual void save();
+  private slots:
+    void modified();
+  private:
+    confPageMisc *miscPage;
 };
 
 class KJotsConfigDlg : public KCMultiDialog
