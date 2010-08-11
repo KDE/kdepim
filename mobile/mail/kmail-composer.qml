@@ -52,18 +52,23 @@ KPIM.MainView {
               id: flickablerecipients
               anchors.fill: parent
               flickableDirection: Flickable.VerticalFlick
-              contentHeight: recipientswrapper.height;
+              contentHeight: recipientsEditor.height;
               clip: true;
 
               Item {
                   id: recipientswrapper
-                  anchors.fill: parent
+                  anchors.top: parent.top
+                  anchors.left: parent.left
+                  anchors.right: parent.right
+
                   width: folderPanel.width
                   height: folderPanel.height
 
                   MessageComposer.RecipientsEditor {
-                      id: recipientsEditorf
-                      anchors.fill: parent
+                      id: recipientsEditor
+                      anchors.top: parent.top
+                      anchors.left: parent.left
+                      anchors.right: parent.right
                   }
               }
           }

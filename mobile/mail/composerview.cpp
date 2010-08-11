@@ -182,6 +182,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   m_composerBase->setSignatureController( signatureController );
 
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
+  m_composerBase->recipientsEditor()->setAutoResizeView( true );
 
   if ( m_message )
     setMessage( m_message );
