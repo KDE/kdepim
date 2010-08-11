@@ -88,6 +88,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 MessageAnalyzer::~MessageAnalyzer()
 {
   delete m_otp;
+  delete m_nodeHelper;
 }
 
 
