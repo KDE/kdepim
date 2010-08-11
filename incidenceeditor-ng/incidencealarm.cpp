@@ -92,6 +92,8 @@ void IncidenceAlarm::load( const KCalCore::Incidence::Ptr &incidence )
 
   handleDateTimeToggle();
   mWasDirty = false;
+
+  updateAlarmList();
 }
 
 void IncidenceAlarm::save( const KCalCore::Incidence::Ptr &incidence )
@@ -250,7 +252,7 @@ void IncidenceAlarm::toggleCurrentAlarm()
 
 void IncidenceAlarm::updateAlarmList()
 {
-  int prevEnabledAlarmCount = mEnabledAlarmCount;
+  const int prevEnabledAlarmCount = mEnabledAlarmCount;
   mEnabledAlarmCount = 0;
 
   const QModelIndex currentIndex = mUi->mAlarmList->currentIndex();
