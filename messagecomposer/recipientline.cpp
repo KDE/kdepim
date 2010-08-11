@@ -80,10 +80,13 @@ RecipientLineNG::RecipientLineNG( QWidget* parent )
   mCombo->addItems( recipientTypes );
   topLayout->addWidget( mCombo );
   mCombo->setToolTip( i18nc("@label:listbox","Select type of recipient") );
-  
   mEdit = new RecipientLineEdit( this );
   mEdit->setToolTip( i18n( "Set the list of email addresses to receive this message" ) );
   mEdit->setClearButtonShown( true );
+#ifdef KDEPIM_MOBILE_UI
+  //###:It should be enough to avoid the autocapitalization when running on Maemo5
+  mEdit->setInputMethodHints( Qt::ImhNoAutoUppercase );
+#endif
   topLayout->addWidget( mEdit );
 
   connect( mEdit, SIGNAL( returnPressed() ), SLOT( slotReturnPressed() ) );
