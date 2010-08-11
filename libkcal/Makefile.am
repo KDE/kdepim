@@ -40,7 +40,8 @@ libkcal_la_SOURCES = \
 	qtopiaformat.cpp \
 	htmlexportsettings.kcfgc htmlexport.cpp calendarnull.cpp \
 	freebusyurlstore.cpp \
-	confirmsavedialog.cpp
+	confirmsavedialog.cpp \
+	attachmenthandler.cpp
 
 libkcalincludedir = $(includedir)/libkcal
 libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
@@ -52,7 +53,7 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
   resourcelocal.h scheduler.h libkcal_export.h \
-  todo.h vcaldrag.h vcalformat.h
+  todo.h vcaldrag.h vcalformat.h attachmenthandler.h
 
 kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la 
 
