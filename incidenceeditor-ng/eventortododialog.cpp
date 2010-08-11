@@ -421,6 +421,7 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
     q->setWindowIcon( SmallIcon( "view-calendar-day" ) );
   }
 
+
   q->show();
 }
 
@@ -538,6 +539,12 @@ void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection 
     d->mCalSelector->setDefaultCollection( collection );
   else
     d->mCalSelector->setCurrentIndex( 0 );
+}
+
+void EventOrTodoDialog::setIsCounterProposal( bool isCounterProposal )
+{
+  Q_D( EventOrTodoDialog );
+  d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
 }
 
 QObject *EventOrTodoDialog::typeAheadReceiver() const

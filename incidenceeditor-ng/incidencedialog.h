@@ -65,6 +65,13 @@ public:
   virtual void selectCollection( const Akonadi::Collection &collection ) = 0;
 
   /**
+   * Indicates wether or not the loaded incidence must be treated as a counter
+   * proposal. By default incidences are <em>not</em> treated as counter
+   * proposals.
+   */
+  virtual void setIsCounterProposal( bool isCounterProposal ) = 0;
+
+  /**
     Returns the object that will receive all key events.
    */
   virtual QObject *typeAheadReceiver() const = 0;

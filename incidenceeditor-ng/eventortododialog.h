@@ -56,7 +56,9 @@ public:
   /**
    * Sets the Collection combobox to @param collection.
    */
-  void selectCollection( const Akonadi::Collection &collection );
+  virtual void selectCollection( const Akonadi::Collection &collection );
+
+  virtual void setIsCounterProposal( bool isCounterProposal );
 
   /**
     Returns the object that will receive all key events.
