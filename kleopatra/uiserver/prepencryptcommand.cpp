@@ -111,8 +111,7 @@ int PrepEncryptCommand::doStart() {
         // --protocol is optional for PREP_ENCRYPT
         d->controller->setProtocol( checkProtocol( EMail ) );
 
-    if ( hasOption( "expect-sign" ) )
-        d->controller->setSigning( true );
+    d->controller->setSigning( hasOption( "expect-sign" ) );
 
     QObject::connect( d->controller.get(), SIGNAL(certificatesResolved()), d.get(), SLOT(slotRecipientsResolved()) );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
