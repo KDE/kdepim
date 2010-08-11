@@ -63,6 +63,7 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
            SLOT(toggleTimeZoneVisibility()) );
 #endif
 
+  connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()));
   connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)),
            SLOT(checkDirtyStatus()) );
@@ -352,6 +353,12 @@ bool IncidenceDateTime::isDirty( KCalCore::Todo::Ptr todo ) const
 bool IncidenceDateTime::isDirty( KCalCore::Event::Ptr event ) const
 {
   if ( event->allDay() != mUi->mWholeDayCheck->isChecked() )
+    return true;
+
+  if ( mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Opaque )
+    return true;
+
+  if ( !mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Transparent )
     return true;
 
   if ( !event->allDay() ) {
