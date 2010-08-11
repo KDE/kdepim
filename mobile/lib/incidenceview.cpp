@@ -66,9 +66,6 @@ void IncidenceView::delayedInit()
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
 
-  mItem.setPayload<KCalCore::Incidence::Ptr>( KCalCore::Incidence::Ptr( new KCalCore::Event ) );
-  mItem.setMimeType( KCalCore::Event::eventMimeType() );
-
   connect( mItemManager, SIGNAL(itemSaveFinished(Akonadi::EditorItemManager::SaveAction)),
            SLOT(slotSaveFinished(Akonadi::EditorItemManager::SaveAction) ) );
   connect( mItemManager, SIGNAL(itemSaveFailed(Akonadi::EditorItemManager::SaveAction, QString)),
