@@ -111,17 +111,20 @@ void IncidenceAlarm::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceAlarm::isDirty() const
 {
-  if ( !mLoadedIncidence->isAlarmEnabled() && mAlarms.count() > 0 )
+  if ( !mLoadedIncidence->isAlarmEnabled() && mAlarms.count() > 0 ) {
     return true;
+  }
 
-  if ( mLoadedIncidence->isAlarmEnabled() && mAlarms.count() == 0 )
+  if ( mLoadedIncidence->isAlarmEnabled() && mAlarms.count() == 0 ) {
     return true;
+  }
 
   if ( mLoadedIncidence->isAlarmEnabled() ) {
     const KCalCore::Alarm::List initialAlarms = mLoadedIncidence->alarms();
 
-    if ( initialAlarms.count() != mAlarms.count() )
+    if ( initialAlarms.count() != mAlarms.count() ) {
       return true; // The number of alarms has changed
+    }
 
     // Note: Not the most efficient algorithm but I'm assuming that we're only
     //       dealing with a couple, at most tens of alarms. The idea is we check
