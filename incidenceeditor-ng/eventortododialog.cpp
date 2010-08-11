@@ -350,7 +350,6 @@ void EventOrTodoDialogPrivate::handleItemSaveFail( Akonadi::EditorItemManager::S
     updateButtonStatus( mEditor->isDirty() );
     q->enableButtonOk( true );
     q->enableButtonCancel( true );
-    q->enableButtonOk( true );
   }
 }
 
@@ -373,7 +372,6 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish( Akonadi::EditorItemManager:
     // disabled at this point).
     q->enableButtonOk( true );
     q->enableButtonCancel( true );
-    q->enableButtonOk( true );
     q->enableButtonApply( mEditor->isDirty() );
   }
 }
