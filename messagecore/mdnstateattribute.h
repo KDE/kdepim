@@ -23,6 +23,8 @@
 #ifndef MESSAGECORE_MDNSTATE_ATTRIBUTE_H
 #define MESSAGECORE_MDNSTATE_ATTRIBUTE_H
 
+#include "messagecore_export.h"
+
 #include <akonadi/attribute.h>
 
 namespace Akonadi {
@@ -39,7 +41,7 @@ namespace Akonadi {
    * @see Akonadi::Attribute
    * @since 4.6
    */
-  class AKONADI_EXPORT MDNStateAttribute : public Attribute
+  class MESSAGECORE_EXPORT MDNStateAttribute : public Attribute
   {
   public:
     /** Flags for the "MDN sent" state. */
