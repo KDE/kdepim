@@ -234,7 +234,7 @@
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string comment="@label:listbox priority of a task">Priority</string>
+         <string comment="@label:listbox priority of a task">Priority:</string>
         </property>
        </widget>
       </item>
