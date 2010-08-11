@@ -61,10 +61,12 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
 void IncidenceCategories::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
-  if ( mLoadedIncidence )
+  if ( mLoadedIncidence ) {
     setCategories( mLoadedIncidence->categories() );
-  else
+    mUi->mCategoryCombo->setCheckedItems( mSelectedCategories );
+  } else {
     mSelectedCategories.clear();
+  }
 
   mWasDirty = false;
 }
