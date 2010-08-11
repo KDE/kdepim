@@ -10,6 +10,9 @@ Problems addressed
 * Speed up changing Kolab incidences in KOrganizer by only sending one change instead of two
   to the server (see kolab/issue2109)
 
+kk4:
+* kolab/issue4469: (Kontact loses shared calendar folders (type changed)(rt#6174)
+
 
 Friday, July 30th 2010
 
