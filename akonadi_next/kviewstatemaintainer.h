@@ -38,6 +38,7 @@ class AKONADI_NEXT_EXPORT KViewStateMaintainerBase : public QObject
   Q_OBJECT
 public:
   KViewStateMaintainerBase(KSharedConfigPtr configPtr, const QString &name, QObject* parent = 0);
+  ~KViewStateMaintainerBase();
 
   void setSelectionModel(QItemSelectionModel *selectionModel);
   QItemSelectionModel *selectionModel() const;

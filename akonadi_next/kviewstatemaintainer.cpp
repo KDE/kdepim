@@ -60,6 +60,11 @@ KViewStateMaintainerBase::KViewStateMaintainerBase(KSharedConfigPtr configPtr, c
 
 }
 
+KViewStateMaintainerBase::~KViewStateMaintainerBase()
+{
+  delete d_ptr;
+}
+
 KConfigGroup KViewStateMaintainerBase::configGroup() const
 {
   Q_D(const KViewStateMaintainerBase);
