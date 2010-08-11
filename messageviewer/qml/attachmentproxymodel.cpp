@@ -31,6 +31,11 @@ AttachmentProxyModel::AttachmentProxyModel(QObject* parent) :
   connect( this, SIGNAL(modelReset()), SLOT(slotModelReset()) );
 }
 
+AttachmentProxyModel::~AttachmentProxyModel()
+{
+  delete m_nodeHelper;
+}
+
 bool AttachmentProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
   const QModelIndex sourceIndex = sourceModel()->index( source_row, 0, source_parent );

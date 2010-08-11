@@ -39,6 +39,7 @@ class AttachmentProxyModel : public QSortFilterProxyModel
     };
 
     explicit AttachmentProxyModel(QObject* parent = 0);
+    ~AttachmentProxyModel();
 
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
     void setSourceModel(QAbstractItemModel* sourceModel);
