@@ -88,7 +88,7 @@ QByteArray selectCharset( const QStringList &charsets, const QString &text )
 }
 
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
-  mMode( amode ), mFolder( 0 ), mIdentity( 0 ),
+  mMode( amode ), mIdentity( 0 ),
   mAllowDecryption( false ),
   mDebug( false ), mQuoteString( "> " ), mOrigRoot( 0 ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
 {
