@@ -18,9 +18,9 @@
 
 #include "groupwareintegration.h"
 #include "editorconfig.h"
-#include "eventeditor.h"
+#include "incidenceeditor-ng/incidencedialog.h"
+#include "incidenceeditor-ng/incidencedialogfactory.h"
 #include "journaleditor.h"
-#include "todoeditor.h"
 
 #include <kcalcore/visitor.h>
 
@@ -46,19 +46,20 @@ using namespace IncidenceEditors;
 class EditorDialogVisitor : public Visitor
 {
   public:
-    EditorDialogVisitor() : Visitor(), mEditor( 0 ) {}
+    EditorDialogVisitor() : Visitor(), mEditor( 0 ), mDialog( 0 ) {}
     IncidenceEditor *editor() const { return mEditor; }
+
+    // TODO: Once the JournalEditor is ported, we can just use the factory method
+    //       and get rid of this visitor.
 
   protected:
     bool visit( Event::Ptr  )
     {
-      mEditor = new EventEditor( 0 );
-      return mEditor;
+      return true;
     }
     bool visit( Todo::Ptr  )
     {
-      mEditor = new TodoEditor( 0 );
-      return mEditor;
+      return true;
     }
     bool visit( Journal::Ptr  )
     {
@@ -71,6 +72,7 @@ class EditorDialogVisitor : public Visitor
     }
 
     IncidenceEditor *mEditor;
+    IncidenceEditorsNG::IncidenceDialog *mDialog;
 };
 
 class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
@@ -112,11 +114,18 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
         return;
       }
 
-      IncidenceEditor *editor = v.editor();
-      editor->editIncidence( item, QDate::currentDate() );
-      editor->selectInvitationCounterProposal( true );
-      editor->setIncidenceChanger( new Akonadi::IncidenceChanger( mCalendar, this, -1 ) );
-      editor->show();
+      if ( v.editor() ) {
+        // TODO: Get rid of this as soon as the JournalEditor is ported as well.
+        IncidenceEditor *editor = v.editor();
+        editor->editIncidence( item, QDate::currentDate() );
+        editor->selectInvitationCounterProposal( true );
+        editor->setIncidenceChanger( new Akonadi::IncidenceChanger( mCalendar, this, -1 ) );
+        editor->show();
+      } else {
+        IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
+        //editor->selectInvitationCounterProposal( true );
+        dialog->load( item, QDate::currentDate() );
+      }
     }
 
     Akonadi::Calendar *mCalendar;

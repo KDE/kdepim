@@ -30,20 +30,15 @@ set( incidenceeditors_LIB_SRCS
     editorattachments.cpp
     editorconfig.cpp
     editorgeneral.cpp
-    editorgeneralevent.cpp
     editorgeneraljournal.cpp
-    editorgeneraltodo.cpp
-    editorrecurrence.cpp
     embeddedurlpage.cpp
-    eventeditor.cpp
     freebusyurldialog.cpp
     groupwareintegration.cpp
     incidenceeditor.cpp
     journaleditor.cpp
     korganizereditorconfig.cpp
-    ktimezonecombobox.cpp
+#    ktimezonecombobox.cpp
     templatemanagementdialog.cpp
-    todoeditor.cpp
 )
 
 if (QT_QT3SUPPORT_FOUND)
@@ -68,27 +63,23 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 target_link_libraries(incidenceeditors
    ${ZLIB_LIBRARY}
-   ${QT_QT3SUPPORT_LIBRARY}
-   ${QT_QTCORE_LIBRARY}
-   ${QT_QTGUI_LIBRARY}
    ${QT_QTUITOOLS_LIBRARY}
-   ${KDE4_KDEUI_LIBS}
-   ${KDE4_KPARTS_LIBS}
-   ${KDE4_KMIME_LIBRARY}
-   ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
    ${KDEPIMLIBS_KCALCORE_LIBS}
    ${KDEPIMLIBS_KCALUTILS_LIBS}
    kdepim
    kdepimdbusinterfaces
    akonadi-kcal_next
+   incidenceeditorsng
 )
 
 if (QT_QT3SUPPORT_FOUND)
   target_link_libraries(incidenceeditors ${KDE4_KDE3SUPPORT_LIBRARY})
 endif ()
 
-set_target_properties(incidenceeditors PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(incidenceeditors
+                      PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+                      SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( incidenceeditor-ng )
