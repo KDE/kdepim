@@ -62,9 +62,8 @@ void IncidenceCategories::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
-#ifdef KDEPIM_MOBILE_UI
     setCategories( mLoadedIncidence->categories() );
-#else
+#ifndef KDEPIM_MOBILE_UI
     mUi->mCategoryCombo->setCheckedItems( mSelectedCategories );
 #endif
   } else {
