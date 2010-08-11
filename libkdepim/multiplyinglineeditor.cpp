@@ -141,7 +141,14 @@ void MultiplyingLineEditor::setFrameStyle( int shape )
   mView->setFrameStyle( shape );
 }
 
+void MultiplyingLineEditor::setAutoResizeView( bool resize )
+{
+  mView->setAutoResize( resize );
+}
 
-
+bool MultiplyingLineEditor::autoResizeView()
+{
+  return mView->autoResize();
+}
 
 #include "multiplyinglineeditor.moc"
