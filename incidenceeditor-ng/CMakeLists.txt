@@ -15,6 +15,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   alarmpresets.cpp
   alarmdialog.cpp
 
+  ktimezonecombobox.cpp
+
   # TODO: Move the next two to akonadi libs when finished
   editoritemmanager.cpp
   invitationdispatcher.cpp
@@ -53,7 +55,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   ../categoryselectdialog.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
-  ../ktimezonecombobox.cpp
 )
 
 ### Build the desktop version

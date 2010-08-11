@@ -37,7 +37,6 @@ set( incidenceeditors_LIB_SRCS
     incidenceeditor.cpp
     journaleditor.cpp
     korganizereditorconfig.cpp
-#    ktimezonecombobox.cpp
     templatemanagementdialog.cpp
 )
 
@@ -83,4 +82,3 @@ set_target_properties(incidenceeditors
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( incidenceeditor-ng )
-add_subdirectory( tests )
