@@ -81,7 +81,7 @@ namespace Gui {
 
         // To wrap up inputs:
         void pickProtocol();
-        void adjustLabel();
+        void setConflict( bool conflict );
 
         // Intermediate
 

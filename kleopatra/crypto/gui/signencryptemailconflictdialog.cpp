@@ -572,11 +572,6 @@ private:
             return buttonBox.button( QDialogButtonBox::Ok )->setEnabled( enable );
         }
 
-        void setConflict( bool on ) {
-            conflictTopLB.setVisible( on );
-            quickModeTopLB.setVisible( !on );
-        }
-
         explicit Ui( SignEncryptEMailConflictDialog * q )
             : conflictTopLB( make_top_label_conflict_text( true, true ), q ),
               quickModeTopLB( make_top_label_quickmode_text( true, true ), q ),
@@ -809,8 +804,9 @@ bool SignEncryptEMailConflictDialog::isQuickMode() const {
     return d->ui.quickModeCB.isChecked();
 }
 
-void SignEncryptEMailConflictDialog::adjustLabel() {
-    d->ui.setConflict( !isComplete() );
+void SignEncryptEMailConflictDialog::setConflict( bool conflict ) {
+    d->ui.conflictTopLB.setVisible( conflict );
+    d->ui.quickModeTopLB.setVisible( !conflict );
 }
 
 #include "moc_signencryptemailconflictdialog.cpp"
