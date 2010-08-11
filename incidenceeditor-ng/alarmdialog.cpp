@@ -19,20 +19,17 @@
 */
 
 #include "alarmdialog.h"
-
-#include <kcalcore/alarm.h>
-#include <KPIMUtils/Email>
-
 #include "editorconfig.h"
-
 #include "ui_alarmdialog.h"
+
+#include <KPIMUtils/Email>
 
 using namespace IncidenceEditorsNG;
 using namespace KCalCore;
 
-AlarmDialog::AlarmDialog()
+AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType )
   : mUi( new Ui::AlarmDialog )
-  , mIsTodo( false )
+  , mIncidenceType( incidenceType )
   , mAllowBeginReminders( true )
   , mAllowEndReminders( true )
 {
@@ -50,14 +47,17 @@ AlarmDialog::AlarmDialog()
 
   if ( IncidenceEditors::EditorConfig::instance()->defaultAudioFileReminders() )
     mUi->mSoundFile->setUrl( IncidenceEditors::EditorConfig::instance()->audioFilePath() );
+
+  fillCombo();
 }
 
 void AlarmDialog::load( const Alarm::Ptr &alarm )
 {
-  setWindowTitle( i18n( "Edit existing alarm" ) );
   if ( !alarm ) {
     return;
   }
+
+  setWindowTitle( i18n( "Edit existing alarm" ) );
 
   // Offsets
   int offset;
@@ -219,7 +219,7 @@ void AlarmDialog::fillCombo()
 {
   QStringList items;
 
-  if ( mIsTodo ) {
+  if ( mIncidenceType == Incidence::TypeTodo ) {
     mUi->mBeforeAfter->clear();
 
     if ( mAllowBeginReminders )
@@ -253,12 +253,6 @@ void AlarmDialog::setAllowEndReminders( bool allow )
   fillCombo();
 }
 
-void AlarmDialog::setIsTodoReminder( bool isTodo )
-{
-  mIsTodo = isTodo;
-  fillCombo();
-}
-
 void AlarmDialog::setOffset( int offset )
 {
   Q_ASSERT( offset > 0 );
@@ -272,7 +266,7 @@ void AlarmDialog::setUnit( Unit unit )
 
 void AlarmDialog::setWhen( When when )
 {
-  Q_ASSERT( static_cast<int>( when ) <= mUi->mBeforeAfter->count() );
+  Q_ASSERT( when <= mUi->mBeforeAfter->count() );
   mUi->mBeforeAfter->setCurrentIndex( when );
 }
 

@@ -20,7 +20,7 @@
 
 #include "incidencealarm.h"
 
-#include <kcalcore/todo.h>
+#include <KCalCore/Todo>
 
 #include <KDebug>
 
@@ -158,7 +158,7 @@ void IncidenceAlarm::editCurrentAlarm()
 
   KCalCore::Alarm::Ptr currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
-  QWeakPointer<AlarmDialog> dialog( new AlarmDialog );
+  QWeakPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type() ) );
   dialog.data()->load( currentAlarm );
 
   if ( dialog.data()->exec() == KDialog::Accepted ) {
@@ -194,8 +194,7 @@ void IncidenceAlarm::newAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
 
-  QPointer<AlarmDialog> dialog( new AlarmDialog );
-  dialog->setIsTodoReminder( mIsTodo );
+  QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type() ) );
   dialog->setOffset( 15 );
   dialog->setUnit( AlarmDialog::Minutes );
   if ( mIsTodo && mDateTime->endDateTimeEnabled() )
