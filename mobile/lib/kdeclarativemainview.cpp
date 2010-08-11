@@ -420,4 +420,5 @@ void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *coll
   standardActionManager->createAction( Akonadi::StandardActionManager::CollectionProperties );
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
   standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
+  standardActionManager->createAction( Akonadi::StandardActionManager::ResourceProperties );
 }

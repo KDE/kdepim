@@ -61,8 +61,7 @@ ActionMenuContainer {
   ActionList {
     category : "account"
     name : KDE.i18n( "Account" )
-    ActionListItem { name : "configure_account" }
-    FakeAction{ name : "set_as_default" }
+    ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
   /*
