@@ -25,6 +25,8 @@
 
 #include "kcheckcombobox.h"
 
+#include <KDebug>
+
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QLineEdit>
@@ -98,7 +100,7 @@ void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
   Q_UNUSED( topLeft );
   Q_UNUSED( bottomRight );
 
-  QStringList items = q->checkedItems();
+  const QStringList items = q->checkedItems();
   QString text;
   if ( items.isEmpty() ) {
     text = mDefaultText;
@@ -184,14 +186,15 @@ QStringList KCheckComboBox::checkedItems() const
 {
   QStringList items;
   if ( model() ) {
-    QModelIndex index = model()->index( 0, modelColumn(), rootModelIndex() );
-    QModelIndexList indexes = model()->match( index, Qt::CheckStateRole,
-                                              Qt::Checked, -1, Qt::MatchExactly );
+    const QModelIndex index = model()->index( 0, modelColumn(), rootModelIndex() );
+    const QModelIndexList indexes = model()->match( index, Qt::CheckStateRole,
+                                                    Qt::Checked, -1, Qt::MatchExactly );
     foreach ( const QModelIndex &index, indexes ) {
-      if ( index.data( Qt::UserRole ).isNull() )
+      if ( index.data( Qt::UserRole ).isNull() ) {
         items += index.data( Qt::DisplayRole ).toString();
-      else
-      items += index.data( Qt::UserRole ).toString();
+      } else {
+        items += index.data( Qt::UserRole ).toString();
+      }
     }
   }
   return items;
