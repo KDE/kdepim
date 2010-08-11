@@ -34,6 +34,16 @@ namespace IncidenceEditorsNG {
 
 class IncidenceDateTime;
 
+/// Keep this in sync with the values in mUi->mRecurrenceTypeCombo
+enum RecurrenceType {
+    RecurrenceTypeNone = 0,
+    RecurrenceTypeDaily,
+    RecurrenceTypeWeekly,
+    RecurrenceTypeMonthly,
+    RecurrenceTypeYearly,
+    RecurrenceTypeUnknown // keep this one at the end always
+ };
+
 class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
 {
     Q_OBJECT
@@ -48,10 +58,10 @@ public:
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
-    int currentRecurrenceType() const;
+    RecurrenceType currentRecurrenceType() const;
 
 Q_SIGNALS:
-    void recurrenceChanged( int type );
+    void recurrenceChanged( IncidenceEditorsNG::RecurrenceType type );
 
 private Q_SLOTS:
     void addException();

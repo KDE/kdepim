@@ -80,7 +80,7 @@ public:
 
   /// General methods
   void handleAlarmCountChange( int newCount );
-  void handleRecurrenceChange( int type );
+  void handleRecurrenceChange( IncidenceEditorsNG::RecurrenceType type );
   void loadTemplate( const QString &templateName );
   void manageTemplates();
   void saveTemplate( const QString &templateName );
@@ -101,13 +101,6 @@ public:
   virtual Akonadi::Collection selectedCollection() const;
   void slotButtonClicked( int button );
 
-  enum RecurrenceType {
-    None = 0,
-    Daily,
-    Weekly,
-    Monthly,
-    Yearly
-  };
   virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 };
 
@@ -176,8 +169,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
               SLOT(handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
-  q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(int)),
-              SLOT(handleRecurrenceChange(int)) );
+  q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(IncidenceEditorsNG::RecurrenceType)),
+              SLOT(handleRecurrenceChange(IncidenceEditorsNG::RecurrenceType)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
   q->connect( mIeAttendee, SIGNAL(attendeeCountChanged(int)),
@@ -204,7 +197,7 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
   mUi->mTabWidget->setTabText( 2, tabText );
 }
 
-void EventOrTodoDialogPrivate::handleRecurrenceChange( int type )
+void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorsNG::RecurrenceType type )
 {
   QString tabText = i18nc( "@title:tab Tab to configure the recurrence of an event or todo",
                            "Rec&urrence" );
@@ -214,20 +207,22 @@ void EventOrTodoDialogPrivate::handleRecurrenceChange( int type )
   // Qt not play nice with namespaced enums in signal/slot connections.
   // Anyways, I don't expect these values to change.
   switch ( type ) {
-  case 0: // None
+  case RecurrenceTypeNone:
     break;
-  case 1: // Daily
+  case RecurrenceTypeDaily:
     tabText += i18nc( "@title:tab Daily recurring event, capital first letter only", " (D)" );
     break;
-  case 2: // Weekly
+  case RecurrenceTypeWeekly:
     tabText += i18nc( "@title:tab Weekly recurring event, capital first letter only", " (W)" );
     break;
-  case 3: // Monthly
+  case RecurrenceTypeMonthly:
     tabText += i18nc( "@title:tab Monthly recurring event, capital first letter only", " (M)" );
     break;
-  case 4: // Yearly
+  case RecurrenceTypeYearly:
     tabText += i18nc( "@title:tab Yearly recurring event, capital first letter only", " (Y)" );
     break;
+  default:
+    Q_ASSERT_X( false, "handleRecurrenceChange", "Fix your program" );
   }
 
   mUi->mTabWidget->setTabText( 3, tabText );
