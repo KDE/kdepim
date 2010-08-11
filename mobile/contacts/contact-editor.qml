@@ -34,11 +34,14 @@ KPIM.MainView {
     clip: true;
     flickableDirection: "VerticalFlick"
 
-    ContactEditors.ContactEditorGeneral {
-      id: editorGeneral;
-      width: parent.width;
+    Item {
+      anchors.fill: parent
+      ContactEditors.ContactEditorGeneral {
+        id: editorGeneral;
+        width: parent.width;
+      }
     }
-  }
+ }
 
   SlideoutPanelContainer {
     anchors.fill: parent
