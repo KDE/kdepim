@@ -312,10 +312,10 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo",
+    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachments of an event or todo",
                                            "Attac&hments (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachements of an event or todo",
+    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachments of an event or todo",
                                            "Attac&hments" ) );
   }
 }

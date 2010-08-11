@@ -126,7 +126,7 @@ bool IncidenceAttachment::isDirty() const
     }
 
     // All attachments are removed from the list, meaning, the items in mAttachmentView
-    // are equal to the attachements set on mLoadedIncidence.
+    // are equal to the attachments set on mLoadedIncidence.
     return !origAttachments.isEmpty();
 
 
