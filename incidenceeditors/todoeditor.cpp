@@ -288,8 +288,8 @@ bool TodoEditor::read( const Item &todoItem, const QDate &date, bool tmpl )
 
   mGeneral->readTodo( todo, date, tmpl );
   //mNewGeneral->load( todo ); //, date, tmpl );
-#ifdef HAVE_QT3SUPPORT
   Incidence::Ptr inc = todo.staticCast<Incidence>();
+#ifdef HAVE_QT3SUPPORT
   mDetails->readIncidence( inc );
 #endif
   mRecurrence->readIncidence( inc);
