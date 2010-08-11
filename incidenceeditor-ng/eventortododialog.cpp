@@ -56,6 +56,14 @@ using namespace IncidenceEditorsNG;
 
 namespace IncidenceEditorsNG {
 
+enum Tabs {
+  GeneralTab = 0,
+  AttendeesTab,
+  AlarmsTab,
+  RecurrenceTab,
+  AttachmentsTab,
+};
+
 class EventOrTodoDialogPrivate : public Akonadi::ItemEditorUi
 {
   EventOrTodoDialog *q_ptr;
@@ -194,7 +202,7 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
     tabText = i18nc( "@title:tab Tab to configure the reminders of an event or todo", "Reminder" );
   }
 
-  mUi->mTabWidget->setTabText( 2, tabText );
+  mUi->mTabWidget->setTabText( AlarmsTab, tabText );
 }
 
 void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorsNG::RecurrenceType type )
@@ -225,7 +233,7 @@ void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorsNG::Recur
     Q_ASSERT_X( false, "handleRecurrenceChange", "Fix your program" );
   }
 
-  mUi->mTabWidget->setTabText( 3, tabText );
+  mUi->mTabWidget->setTabText( RecurrenceTab, tabText );
 }
 
 void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
@@ -307,10 +315,10 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachments of an event or todo",
+    mUi->mTabWidget->setTabText( AttachmentsTab, i18nc( "@title:tab Tab to modify attachments of an event or todo",
                                            "Attac&hments (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 4, i18nc( "@title:tab Tab to modify attachments of an event or todo",
+    mUi->mTabWidget->setTabText( AttachmentsTab, i18nc( "@title:tab Tab to modify attachments of an event or todo",
                                            "Attac&hments" ) );
   }
 }
@@ -318,9 +326,9 @@ void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 void EventOrTodoDialogPrivate::updateAttendeeCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 1, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees (%1)", newCount ) );
+    mUi->mTabWidget->setTabText( AttendeesTab, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 1, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees" ) );
+    mUi->mTabWidget->setTabText( AttendeesTab, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees" ) );
   }
 }
 
