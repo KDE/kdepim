@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=Test
+Name[pt]=Teste
+Name[sv]=Prov
+Name[uk]=Тест
 Name[x-test]=xxTestxx
 Description=An Test theme
+Description[pt]=Um tema de testes
+Description[sv]=Ett provtema
+Description[uk]=Тестова тема
 Description[x-test]=xxAn Test themexx
 FileName=default.html
