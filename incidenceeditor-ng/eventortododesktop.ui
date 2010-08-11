@@ -1397,7 +1397,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="mAttachementsTab">
+     <widget class="QWidget" name="mAttachmentsTab">
       <attribute name="title">
        <string comment="@title:tab configure attachments of an event or todo">Attachments</string>
       </attribute>
