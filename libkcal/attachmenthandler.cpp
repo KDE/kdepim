@@ -32,6 +32,7 @@
 #include "attachment.h"
 #include "calendarresources.h"
 #include "incidence.h"
+#include "scheduler.h"
 
 #include <kapplication.h>
 #include <kfiledialog.h>
@@ -46,18 +47,10 @@
 
 namespace KCal {
 
-Attachment *AttachmentHandler::find( QWidget *parent,
-                                     const QString &attachmentName, const QString &uid )
+Attachment *AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
+                                     Incidence *incidence )
 {
-  CalendarResources *cal = new CalendarResources( "UTC" );
-  cal->readConfig();
-  cal->load();
-  Incidence *incidence = cal->incidence( uid );
   if ( !incidence ) {
-    KMessageBox::error(
-      parent,
-      i18n( "The incidence that owns the attachment named \"%1\" could not be found. "
-            "Perhaps it was removed from your calendar?" ).arg( attachmentName ) );
     return 0;
   }
 
@@ -93,47 +86,124 @@ Attachment *AttachmentHandler::find( QWidget *parent,
   return a;
 }
 
-bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName, const QString &uid )
+Attachment *AttachmentHandler::find( QWidget *parent,
+                                     const QString &attachmentName, const QString &uid )
 {
-  Attachment *a = find( parent, attachmentName, uid );
-  if ( !a ) {
+  if ( uid.isEmpty() ) {
+    return 0;
+  }
+
+  CalendarResources *cal = new CalendarResources( "UTC" );
+  cal->readConfig();
+  cal->load();
+  Incidence *incidence = cal->incidence( uid );
+  if ( !incidence ) {
+    KMessageBox::error(
+      parent,
+      i18n( "The incidence that owns the attachment named \"%1\" could not be found. "
+            "Perhaps it was removed from your calendar?" ).arg( attachmentName ) );
+    return 0;
+  }
+
+  return find( parent, attachmentName, incidence );
+}
+
+Attachment *AttachmentHandler::find( QWidget *parent, const QString &attachmentName,
+                                     ScheduleMessage *message )
+{
+  if ( !message ) {
+    return 0;
+  }
+
+  Incidence *incidence = dynamic_cast<Incidence*>( message->event() );
+  if ( !incidence ) {
+    KMessageBox::error(
+      parent,
+      i18n( "The calendar invitation stored in this email message is broken in some way. "
+            "Unable to continue." ) );
+    return 0;
+  }
+
+  return find( parent, attachmentName, incidence );
+}
+
+static KTempFile *s_tempFile = 0;
+
+static KURL tempFileForAttachment( Attachment *attachment )
+{
+  KURL url;
+  QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
+  if ( !patterns.empty() ) {
+    s_tempFile = new KTempFile( QString::null,
+                                QString( patterns.first() ).remove( '*' ), 0600 );
+  } else {
+    s_tempFile = new KTempFile( QString::null, QString::null, 0600 );
+  }
+
+  QFile *qfile = s_tempFile->file();
+  qfile->open( IO_WriteOnly );
+  QTextStream stream( qfile );
+  stream.writeRawBytes( attachment->decodedData().data(), attachment->size() );
+  s_tempFile->close();
+  QFile tf( s_tempFile->name() );
+  if ( tf.size() != attachment->size() ) {
+    //whoops. failed to write the entire attachment. return an invalid URL.
+    delete s_tempFile;
+    s_tempFile = 0;
+    return url;
+  }
+
+  url.setPath( s_tempFile->name() );
+  return url;
+}
+
+bool AttachmentHandler::view( QWidget *parent, Attachment *attachment )
+{
+  if ( !attachment ) {
     return false;
   }
 
   bool stat = true;
-  if ( a->isUri() ) {
-    kapp->invokeBrowser( a->uri() );
+  if ( attachment->isUri() ) {
+    kapp->invokeBrowser( attachment->uri() );
   } else {
     // put the attachment in a temporary file and launch it
-    KTempFile *file;
-    QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-    if ( !patterns.empty() ) {
-      file = new KTempFile( QString::null,
-                            QString( patterns.first() ).remove( '*' ), 0600 );
+    KURL tempUrl = tempFileForAttachment( attachment );
+    if ( tempUrl.isValid() ) {
+      stat = KRun::runURL( tempUrl, attachment->mimeType(), false, true );
     } else {
-      file = new KTempFile( QString::null, QString::null, 0600 );
+      stat = false;
+      KMessageBox::error(
+        parent,
+        i18n( "Unable to create a temporary file for the attachment." ) );
     }
-    file->file()->open( IO_WriteOnly );
-    QTextStream stream( file->file() );
-    stream.writeRawBytes( a->decodedData().data(), a->size() );
-    file->close();
-
-    stat = KRun::runURL( KURL( file->name() ), a->mimeType(), 0, true );
-    delete file;
+    delete s_tempFile;
+    s_tempFile = 0;
   }
   return stat;
 }
 
-bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName, const QString &uid )
+bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName, Incidence *incidence )
 {
-  Attachment *a = find( parent, attachmentName, uid );
-  if ( !a ) {
-    return false;
-  }
+  return view( parent, find( parent, attachmentName, incidence ) );
+}
 
+bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName, const QString &uid )
+{
+  return view( parent, find( parent, attachmentName, uid ) );
+}
+
+bool AttachmentHandler::view( QWidget *parent, const QString &attachmentName,
+                              ScheduleMessage *message )
+{
+  return view( parent, find( parent, attachmentName, message ) );
+}
+
+bool AttachmentHandler::saveAs( QWidget *parent, Attachment *attachment )
+{
   // get the saveas file name
-  QString saveAsFile =
-    KFileDialog::getSaveFileName( attachmentName, QString::null, parent, i18n( "Save Attachment" ) );
+  QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString::null, parent,
+                                                     i18n( "Save Attachment" ) );
   if ( saveAsFile.isEmpty() ||
        ( QFile( saveAsFile ).exists() &&
          ( KMessageBox::warningYesNo(
@@ -144,28 +214,41 @@ bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName, 
   }
 
   bool stat = false;
-  if ( a->isUri() ) {
+  if ( attachment->isUri() ) {
     // save the attachment url
-    stat = KIO::NetAccess::file_copy( a->uri(), KURL( saveAsFile ), -1, true );
+    stat = KIO::NetAccess::file_copy( attachment->uri(), KURL( saveAsFile ), -1, true );
   } else {
     // put the attachment in a temporary file and save it
-    KTempFile *file;
-    QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-    if ( !patterns.empty() ) {
-      file = new KTempFile( QString::null,
-                            QString( patterns.first() ).remove( '*' ), 0600 );
+    KURL tempUrl = tempFileForAttachment( attachment );
+    if ( tempUrl.isValid() ) {
+      stat = KIO::NetAccess::file_copy( tempUrl, KURL( saveAsFile ), -1, true );
     } else {
-      file = new KTempFile( QString::null, QString::null, 0600 );
+      stat = false;
+      KMessageBox::error(
+        parent,
+        i18n( "Unable to create a temporary file for the attachment." ) );
     }
-    file->file()->open( IO_WriteOnly );
-    QTextStream stream( file->file() );
-    stream.writeRawBytes( a->decodedData().data(), a->size() );
-    file->close();
-
-    stat = KIO::NetAccess::file_copy( KURL( file->name() ), KURL( saveAsFile ), -1, true );
-    delete file;
+    delete s_tempFile;
+    s_tempFile = 0;
   }
   return stat;
+}
+
+bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName,
+                                Incidence *incidence )
+{
+  return saveAs( parent, find( parent, attachmentName, incidence ) );
+}
+
+bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName, const QString &uid )
+{
+  return saveAs( parent, find( parent, attachmentName, uid ) );
+}
+
+bool AttachmentHandler::saveAs( QWidget *parent, const QString &attachmentName,
+                                ScheduleMessage *message )
+{
+  return saveAs( parent, find( parent, attachmentName, message ) );
 }
 
 }

@@ -35,6 +35,8 @@ class QWidget;
 namespace KCal {
 
 class Attachment;
+class Incidence;
+class ScheduleMessage;
 
 /**
   @brief
@@ -45,7 +47,30 @@ class Attachment;
 namespace AttachmentHandler {
 
   /**
-    Finds the attachment in the user's calendar, by @p attachmentName and @uid.
+    Finds the attachment in the user's calendar, by @p attachmentName and @p incidence.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachmentName is the name of the attachment
+    @param incidence is a pointer to a valid Incidence object containing the attachment.
+
+    @return a pointer to the Attachment object located; 0 if no such attachment could be found.
+  */
+  Attachment *find( QWidget *parent, const QString &attachmentName, Incidence *incidence );
+
+  /**
+    Finds the attachment in the user's calendar, by @p attachmentName and a scheduler message;
+    in other words, this function is intended to retrieve attachments from calendar invitations.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachmentName is the name of the attachment
+    @param message is a pointer to a valid ScheduleMessage object containing the attachment.
+
+    @return a pointer to the Attachment object located; 0 if no such attachment could be found.
+  */
+  Attachment *find( QWidget *parent, const QString &attachmentName, ScheduleMessage *message );
+
+  /**
+    Finds the attachment in the user's calendar, by @p attachmentName and @p uid.
 
     @param parent is the parent widget for the dialogs used in this function.
     @param attachmentName is the name of the attachment
@@ -54,6 +79,28 @@ namespace AttachmentHandler {
     @return a pointer to the Attachment object located; 0 if no such attachment could be found.
   */
   Attachment *find( QWidget *parent, const QString &attachmentName, const QString &uid );
+
+  /**
+    Launches a viewer on the specified attachment.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachment is a pointer to a valid Attachment object.
+
+    @return true if the viewer program successfully launched; false otherwise.
+  */
+  bool view( QWidget *parent, Attachment *attachment );
+
+  /**
+    Launches a viewer on the specified attachment.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachmentName is the name of the attachment
+    @param incidence is a pointer to a valid Incidence object containing the attachment.
+
+    @return true if the attachment could be found and the viewer program successfully launched;
+    false otherwise.
+  */
+  bool view( QWidget *parent, const QString &attachmentName, Incidence *incidence );
 
   /**
     Launches a viewer on the specified attachment.
@@ -68,6 +115,40 @@ namespace AttachmentHandler {
   bool view( QWidget *parent, const QString &attachmentName, const QString &uid );
 
   /**
+    Launches a viewer on the specified attachment.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachmentName is the name of the attachment
+    @param message is a pointer to a valid ScheduleMessage object containing the attachment.
+
+    @return true if the attachment could be found and the viewer program successfully launched;
+    false otherwise.
+  */
+  bool view( QWidget *parent, const QString &attachmentName, ScheduleMessage *message );
+
+  /**
+    Saves the specified attachment to a file of the user's choice.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachment is a pointer to a valid Attachment object.
+
+    @return true if the save operation was successful; false otherwise.
+  */
+  bool saveAs( QWidget *parent, Attachment *attachment );
+
+  /**
+    Saves the specified attachment to a file of the user's choice.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachmentName is the name of the attachment
+    @param incidence is a pointer to a valid Incidence object containing the attachment.
+
+    @return true if the attachment could be found and the save operation was successful;
+    false otherwise.
+  */
+  bool saveAs( QWidget *parent, const QString &attachmentName, Incidence *incidence );
+
+  /**
     Saves the specified attachment to a file of the user's choice.
 
     @param parent is the parent widget for the dialogs used in this function.
@@ -79,6 +160,17 @@ namespace AttachmentHandler {
   */
   bool saveAs( QWidget *parent, const QString &attachmentName, const QString &uid );
 
+  /**
+    Saves the specified attachment to a file of the user's choice.
+
+    @param parent is the parent widget for the dialogs used in this function.
+    @param attachmentName is the name of the attachment
+    @param message is a pointer to a valid ScheduleMessage object containing the attachment.
+
+    @return true if the attachment could be found and the save operation was successful;
+    false otherwise.
+  */
+  bool saveAs( QWidget *parent, const QString &attachmentName, ScheduleMessage *message );
 }
 
 }

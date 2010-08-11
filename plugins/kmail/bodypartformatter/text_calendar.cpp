@@ -45,6 +45,7 @@
 #include <libkcal/calhelper.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/attendee.h>
+#include <libkcal/attachmenthandler.h>
 #include <libkcal/incidence.h>
 #include <libkcal/incidenceformatter.h>
 
@@ -95,10 +96,10 @@ class CalendarManager
   public:
     CalendarManager();
     ~CalendarManager();
-    static KCal::Calendar* calendar();
+    static Calendar* calendar();
 
   private:
-    KCal::CalendarResources* mCalendar;
+    CalendarResources* mCalendar;
     static CalendarManager* mSelf;
 };
 
@@ -139,7 +140,7 @@ CalendarManager::~CalendarManager()
   mSelf = 0;
 }
 
-KCal::Calendar* CalendarManager::calendar()
+Calendar* CalendarManager::calendar()
 {
   if ( !mSelf ) {
     sCalendarDeleter.setObject( mSelf, new CalendarManager() );
@@ -148,12 +149,12 @@ KCal::Calendar* CalendarManager::calendar()
 }
 
 
-class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
+class KMInvitationFormatterHelper : public InvitationFormatterHelper
 {
   public:
     KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
-    KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
+    Calendar* calendar() const { return CalendarManager::calendar(); }
   private:
     KMail::Interface::BodyPart *mBodyPart;
 };
@@ -211,7 +212,7 @@ static QString directoryForStatus( Attendee::PartStat status )
   return dir;
 }
 
-static Incidence *icalToString( const QString& iCal )
+static Incidence *icalToString( const QString &iCal )
 {
   CalendarLocal calendar( KPimPrefs::timezone() ) ;
   ICalFormat format;
@@ -221,6 +222,13 @@ static Incidence *icalToString( const QString& iCal )
     //TODO: Error message?
     return 0;
   return dynamic_cast<Incidence*>( message->event() );
+}
+
+static ScheduleMessage *icalToMessage( const QString &iCal )
+{
+  CalendarLocal calendar( KPimPrefs::timezone() ) ;
+  ICalFormat format;
+  return format.parseScheduleMessage( &calendar, iCal );
 }
 
 class UrlHandler : public KMail::Interface::BodyPartURLHandler
@@ -285,44 +293,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       return role;
 
-    }
-
-    static Attachment *findAttachment( const QString &name, const QString &iCal )
-    {
-      Incidence *incidence = icalToString( iCal );
-
-      // get the attachment by name from the incidence
-      Attachment::List as = incidence->attachments();
-      Attachment *a = 0;
-      if ( as.count() > 0 ) {
-        Attachment::List::ConstIterator it;
-        for ( it = as.begin(); it != as.end(); ++it ) {
-          if ( (*it)->label() == name ) {
-            a = *it;
-            break;
-          }
-        }
-      }
-
-      if ( !a ) {
-        KMessageBox::error(
-          0,
-          i18n("No attachment named \"%1\" found in the invitation.").arg( name ) );
-        return 0;
-      }
-
-      if ( a->isUri() ) {
-        if ( !KIO::NetAccess::exists( a->uri(), true, 0 ) ) {
-          KMessageBox::information(
-            0,
-            i18n( "The invitation attachment \"%1\" is a web link that "
-                  "is inaccessible from this computer. Please ask the event "
-                  "organizer to resend the invitation with this attachment "
-                  "stored inline instead of a link." ).arg( KURL::decode_string( a->uri() ) ) );
-          return 0;
-        }
-      }
-      return a;
     }
 
     Attendee* setStatusOnMyself( Incidence* incidence, Attendee* myself,
@@ -697,84 +667,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return ok;
     }
 
-    bool openAttachment( const QString &name, const QString &iCal ) const
-    {
-      Attachment *a = findAttachment( name, iCal );
-      if ( !a ) {
-        return false;
-      }
-
-      if ( a->isUri() ) {
-        kapp->invokeBrowser( a->uri() );
-      } else {
-        // put the attachment in a temporary file and launch it
-        KTempFile *file;
-        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-        if ( !patterns.empty() ) {
-          file = new KTempFile( QString::null,
-                                QString( patterns.first() ).remove( '*' ),0600 );
-        } else {
-          file = new KTempFile( QString::null, QString::null, 0600 );
-        }
-        file->file()->open( IO_WriteOnly );
-        QTextStream stream( file->file() );
-        stream.writeRawBytes( a->decodedData().data(), a->size() );
-        file->close();
-
-        bool stat = KRun::runURL( KURL( file->name() ), a->mimeType(), 0, true );
-        delete file;
-        return stat;
-      }
-      return true;
-    }
-
-    bool saveAsAttachment( const QString &name, const QString &iCal ) const
-    {
-      Attachment *a = findAttachment( name, iCal );
-      if ( !a ) {
-        return false;
-      }
-
-      // get the saveas file name
-      QString saveAsFile =
-        KFileDialog::getSaveFileName( name,
-                                      QString::null, 0,
-                                      i18n( "Save Invitation Attachment" ));
-      if ( saveAsFile.isEmpty() ||
-           ( QFile( saveAsFile ).exists() &&
-             ( KMessageBox::warningYesNo(
-               0,
-               i18n( "%1 already exists. Do you want to overwrite it?").
-               arg( saveAsFile ) ) == KMessageBox::No ) ) ) {
-        return false;
-      }
-
-      bool stat = false;
-      if ( a->isUri() ) {
-        // save the attachment url
-        stat = KIO::NetAccess::file_copy( a->uri(), KURL( saveAsFile ), -1, true );
-      } else {
-        // put the attachment in a temporary file and save it
-        KTempFile *file;
-        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-        if ( !patterns.empty() ) {
-          file = new KTempFile( QString::null,
-                                QString( patterns.first() ).remove( '*' ),0600 );
-        } else {
-          file = new KTempFile( QString::null, QString::null, 0600 );
-        }
-        file->file()->open( IO_WriteOnly );
-        QTextStream stream( file->file() );
-        stream.writeRawBytes( a->decodedData().data(), a->size() );
-        file->close();
-
-        stat = KIO::NetAccess::file_copy( KURL( file->name() ), KURL( saveAsFile ), -1, true );
-
-        delete file;
-      }
-      return stat;
-    }
-
     void showCalendar( const QDate &date ) const
     {
       ensureKorganizerRunning( true );
@@ -953,7 +845,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path.startsWith( "ATTACH:" ) ) {
         QString name = path;
         name.remove( QRegExp( "^ATTACH:" ) );
-        result = openAttachment( name, iCal );
+        result = AttachmentHandler::view( 0, name, icalToMessage( iCal ) );
       }
 
       if ( result ) {
@@ -990,10 +882,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       switch( menu->exec( point, 0 ) ) {
       case 0: // open
-        openAttachment( name, iCal );
+        AttachmentHandler::view( 0, name, icalToMessage( iCal ) );
         break;
       case 1: // save as
-        saveAsAttachment( name, iCal );
+        AttachmentHandler::saveAs( 0, name, icalToMessage( iCal ) );
         break;
       default:
         break;
