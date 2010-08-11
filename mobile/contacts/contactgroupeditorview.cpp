@@ -58,21 +58,21 @@ class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
     {
       return partIdentifiers.contains( Item::FullPayload );
     }
-    
+
     bool hasSupportedPayload( const Item &item ) const
     {
       return item.hasPayload<KABC::ContactGroup>();
     }
-    
+
     bool isDirty() const
     {
       return true;
     }
-  
+
     bool isValid()
     {
       return true;
-    }    
+    }
 
     void load( const Item &item );
     Item save( const Item &item );
@@ -102,12 +102,12 @@ void ContactGroupEditorView::Private::saveFailed( const QString &errorMessage )
 void ContactGroupEditorView::Private::load( const Item &item )
 {
   Q_ASSERT( item.hasPayload<KABC::ContactGroup>() );
- 
+
   mItem = item;
   mCollection = item.parentCollection();
 
   const KABC::ContactGroup contactGroup = mItem.payload<KABC::ContactGroup>();
-  
+
   if ( mEditor != 0 ) {
     mEditor->setDefaultCollection( mCollection );
     mEditor->loadContactGroup( contactGroup );
@@ -124,7 +124,7 @@ Item ContactGroupEditorView::Private::save( const Item &item )
   if ( mEditor != 0 ) {
     mEditor->saveContactGroup( contactGroup );
   }
- 
+
   result.setPayload<KABC::ContactGroup>( contactGroup );
 
   return result;
@@ -151,7 +151,7 @@ void ContactGroupEditorView::Private::reject( RejectReason reason, const QString
       kWarning() << "Item has Invalid Payload:" << errorMessage;
       break;
   }
-  
+
   q->deleteLater();
 }
 
