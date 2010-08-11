@@ -123,7 +123,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
         editor->show();
       } else {
         IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
-        //editor->selectInvitationCounterProposal( true );
+        dialog->setIsCounterProposal( true );
         dialog->load( item, QDate::currentDate() );
       }
     }
