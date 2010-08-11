@@ -321,7 +321,7 @@ void IncidenceDateTime::enableTimeEdits()
 #endif
 }
 
-bool IncidenceDateTime::isDirty( KCalCore::Todo::Ptr todo ) const
+bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
 {
   Q_ASSERT( todo );
 
@@ -350,7 +350,7 @@ bool IncidenceDateTime::isDirty( KCalCore::Todo::Ptr todo ) const
 
 /// Event specific methods
 
-bool IncidenceDateTime::isDirty( KCalCore::Event::Ptr event ) const
+bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
 {
   if ( event->allDay() != mUi->mWholeDayCheck->isChecked() )
     return true;

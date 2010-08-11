@@ -89,10 +89,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
     void enableTimeEdits();
-    bool isDirty( KCalCore::Todo::Ptr todo ) const;
+    bool isDirty( const KCalCore::Todo::Ptr &todo ) const;
 
   private slots: /// Event specific
-    bool isDirty( KCalCore::Event::Ptr event ) const;
+    bool isDirty( const KCalCore::Event::Ptr &event ) const;
 
   private:
     void load( const KCalCore::Event::Ptr &event );
