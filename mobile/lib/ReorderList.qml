@@ -39,6 +39,7 @@ QML.Item {
   property alias upAction : _listContent.upAction
   property alias downAction : _listContent.downAction
   property alias deleteAction : _listContent.deleteAction
+  property alias customActions : _listContent.customActions
 
   /*
   property alias actionItemSpacing : _listContent.actionItemSpacing

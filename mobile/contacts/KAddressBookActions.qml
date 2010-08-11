@@ -40,6 +40,11 @@ ActionMenuContainer {
     downAction : "fav_down"
     deleteAction : "fav_delete"
     model : favoritesList
+
+    customActions : [
+      FakeAction { name : "delete_favorite" },
+      FakeAction { name : "un_mark_as_default" }
+    ]
   }
 
   ReorderList {
@@ -53,6 +58,12 @@ ActionMenuContainer {
     downAction : "resource_down"
     deleteAction : "resource_delete"
     model : allFoldersModel
+
+    customActions : [
+      FakeAction { name : "delete_selected_addressbook" },
+      FakeAction { name : "configure_selected_addressbook" },
+      ActionListItem { name : "akonadi_addressbook_create" }
+    ]
   }
 
   ActionList {
@@ -96,8 +107,8 @@ ActionMenuContainer {
   ActionList {
     category : "contact_viewer"
     name : KDE.i18n( "Contact" )
-    FakeAction { name : "copy_to_addressbook" }
-    FakeAction { name : "move_to_addressbook" }
+    ActionListItem { name : "akonadi_item_copy_to_menu" }
+    ActionListItem { name : "akonadi_item_move_to_menu" }
     ActionListItem { name : "akonadi_item_delete" }
     ActionListItem { name : "akonadi_contact_item_edit" }
   }
