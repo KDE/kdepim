@@ -41,9 +41,9 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
 
     void setEditor( EditorContactGroup *editor );
 
+  public Q_SLOTS:
     void loadContactGroup( const Akonadi::Item &item );
 
-  public Q_SLOTS:
     void save();
     void cancel();
 
@@ -61,7 +61,7 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void saveFinished() );
-    Q_PRIVATE_SLOT( d, void saveFailed( const QString& ) );
+    Q_PRIVATE_SLOT( d, void saveFailed( Akonadi::EditorItemManager::SaveAction, const QString& ) );
     Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection& ) )
 };
 

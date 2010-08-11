@@ -50,7 +50,7 @@ class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
 
   public: // slots
     void saveFinished();
-    void saveFailed( const QString &errorMessage );
+    void saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage );
     void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorUi interface
@@ -94,7 +94,7 @@ void ContactGroupEditorView::Private::saveFinished()
   q->deleteLater();
 }
 
-void ContactGroupEditorView::Private::saveFailed( const QString &errorMessage )
+void ContactGroupEditorView::Private::saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   kError() << errorMessage;
 }
@@ -168,8 +168,10 @@ void ContactGroupEditorView::delayedInit()
 
   qmlRegisterType<DeclarativeEditorContactGroup>( "org.kde.contacteditors", 4, 5, "ContactGroupEditor" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished() ), SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( QString ) ), SLOT( saveFailed( QString ) ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
+           SLOT( saveFinished() ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ),
+           SLOT( saveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ) );
 }
 
 ContactGroupEditorView::~ContactGroupEditorView()
@@ -195,7 +197,12 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
 
 void ContactGroupEditorView::loadContactGroup( const Item &item )
 {
-  d->mItemManager->load( item );
+  if ( !d->mEditor ) {
+    // the editor is not fully loaded yet, so try later again
+    QMetaObject::invokeMethod( this, "loadContactGroup", Qt::QueuedConnection, Q_ARG( Akonadi::Item, item ) );
+  } else {
+    d->mItemManager->load( item );
+  }
 }
 
 void ContactGroupEditorView::save()
