@@ -196,6 +196,12 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 
   m_subject = msg->subject()->asUnicodeString();
   m_composerBase->setMessage( msg );
+
+  //###: See comment in setAutoSaveFileName
+  if ( !m_fileName.isEmpty() ) {
+    kDebug() << "FILE NAME: "<< m_fileName;
+    m_composerBase->setAutoSaveFileName( m_fileName );
+  }
   emit changed();
 }
 
@@ -379,6 +385,8 @@ void ComposerView::disableHtml( Message::ComposerViewBase::Confirmation confirma
 void ComposerView::setAutoSaveFileName(const QString &fileName)
 {
   m_fileName = fileName;
+  //###: the idea is to set the filename directly in ComposerViewBase,
+  // but it is not working as expected yet.
   //m_composerBase->setAutoSaveFileName( fileName );
 }
 

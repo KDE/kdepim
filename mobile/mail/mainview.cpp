@@ -81,7 +81,7 @@ void MainView::delayedInit()
   QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
 
   // Is there messages to recover? Do it if needed.
-  //  recoverAutoSavedMessages();
+  recoverAutoSavedMessages();
 
   if ( debugTiming ) {
     kWarning() << "Finished MainView ctor: " << t.elapsed() << " - "<< &t;
@@ -105,14 +105,14 @@ void MainView::recoverAutoSavedMessages()
     QFile file( savedMessage.absoluteFilePath() );
 
     if ( file.open( QIODevice::ReadOnly ) ) {
-      const KMime::Message::Ptr savedMessage ( new KMime::Message() );
-      savedMessage->setContent( file.readAll() );
-      savedMessage->parse();
+      const KMime::Message::Ptr messagePtr ( new KMime::Message() );
+      messagePtr->setContent( file.readAll() );
+      messagePtr->parse();
 
       // load the autosaved message in a new composer
       ComposerView *composer = new ComposerView;
-      composer->setMessage( savedMessage );
-      composer->setAutoSaveFileName( file.fileName() );
+      composer->setMessage( messagePtr );
+      composer->setAutoSaveFileName( savedMessage.fileName() );
       composer->show();
 
       file.close();
