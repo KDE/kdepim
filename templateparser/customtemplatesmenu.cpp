@@ -57,9 +57,6 @@ CustomTemplatesMenu::CustomTemplatesMenu( QWidget *owner, KActionCollection *ac 
   connect( mCustomReplyAllMapper, SIGNAL(mapped(int)),
            this, SLOT(slotReplyAllSelected(int)) );
 
-  // TODO(leo) connect from kmail side
-  //connect( kmkernel, SIGNAL(customTemplatesChanged()), this, SLOT(update()) );
-
   update();
 }
 
