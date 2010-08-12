@@ -264,8 +264,10 @@ bool IncidenceRecurrence::isDirty() const
   const KCalCore::Recurrence *recurrence = mLoadedIncidence->recurrence();
   switch ( recurrence->recurrenceType() ) {
   case KCalCore::Recurrence::rDaily:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 1 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 1 ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
 
     break;
   case KCalCore::Recurrence::rWeekly:
