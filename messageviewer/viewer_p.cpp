@@ -1696,7 +1696,7 @@ void ViewerPrivate::loadThemesMenu()
        absolutePath = userThemes.absolutePath();
     }
 
-    QFile desktopFile( absolutePath + "/" + dirName + "/theme-" + dirName +  ".desktop" );
+    QFile desktopFile( absolutePath + "/" + dirName + "/default.desktop" );
     // kDebug() << "Directory: " << dirName << " is coming from: " << absolutePath;
 
     if ( !desktopFile.exists() )
