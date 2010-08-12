@@ -101,7 +101,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndDurationEdit, SIGNAL(valueChanged(int)),
            SLOT(checkDirtyStatus()) );
-  connect( mUi->mRecurrenceEndDate, SLOT(dateChanged(QDate)),
+  connect( mUi->mRecurrenceEndDate, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
 }
 
@@ -319,9 +319,9 @@ bool IncidenceRecurrence::isDirty() const
          recurrence->endDate() != mUi->mRecurrenceEndDate->date() ) {
       return true;
     }
-  } else if ( recurrence->duration() > 0 &&
-              mUi->mEndDurationEdit->value() != recurrence->duration() ) {
-    return true;
+  } else if ( recurrence->duration() > 0 ) {
+    return mUi->mEndDurationEdit->value() != recurrence->duration() ||
+           mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndAfter;
   }
 
   // Exceptions
