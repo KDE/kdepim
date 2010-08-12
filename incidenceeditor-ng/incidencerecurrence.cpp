@@ -24,6 +24,7 @@
 #include <QtGui/QListWidgetItem>
 
 #include <KCalendarSystem>
+#include <KDebug>
 
 #include "incidencedatetime.h"
 
@@ -196,6 +197,7 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
 
   setExceptionDates( mLoadedIncidence->recurrence()->exDates() );
   handleDateTimeToggle();
+  mWasDirty = false;
 }
 
 void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
