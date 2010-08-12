@@ -51,9 +51,9 @@ ActionMenuContainer {
     model : agentInstanceList
 
     customActions : [
-      FakeAction { name : "delete_selected_resource" },
-      FakeAction { name : "configure_selected_resource" },
-      ActionListItem { name : "launch_account_wizard" }
+      ActionListItem { name : "akonadi_agentinstance_delete" },
+      ActionListItem { name : "akonadi_agentinstance_configure" },
+      ActionListItem { name : "akonadi_agentinstance_create" }
     ]
   }
   ActionList {
