@@ -54,6 +54,9 @@ Rectangle {
     anchors.fill : parent
     focus: true
     highlight: highlightBar
+    onCurrentIndexChanged : {
+      application.setAgentInstanceListSelectedRow( currentIndex )
+    }
   }
 
   ActionMenuContainer {

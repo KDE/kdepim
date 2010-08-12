@@ -48,6 +48,7 @@ public: /// members
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
   Akonadi::AgentFilterProxyModel     *mAgentInstanceFilterModel;
+  QItemSelectionModel                *mAgentInstanceSelectionModel;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
   Akonadi::BreadcrumbNavigationFactory *mMultiBnf;
   QItemSelectionModel                *mItemSelectionModel;

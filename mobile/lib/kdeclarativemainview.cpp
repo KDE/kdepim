@@ -39,13 +39,14 @@
 
 #include <kselectionproxymodel.h>
 
+#include <akonadi/agentactionmanager.h>
 #include <akonadi/agentinstancemodel.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/selectionproxymodel.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/agentmanager.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
@@ -150,6 +151,9 @@ void KDeclarativeMainView::delayedInit()
   d->mAgentInstanceFilterModel->setSourceModel( agentInstanceModel );
 
   context->setContextProperty( "agentInstanceList", QVariant::fromValue( static_cast<QObject*>( d->mAgentInstanceFilterModel ) ) );
+  d->mAgentInstanceSelectionModel = new QItemSelectionModel( d->mAgentInstanceFilterModel, this );
+
+  setupAgentActionManager( d->mAgentInstanceSelectionModel );
 
   d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
@@ -235,6 +239,13 @@ void KDeclarativeMainView::setListSelectedRow( int row )
   static const int column = 0;
   const QModelIndex idx = d->mItemSelectionModel->model()->index( row, column );
   d->mItemSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+}
+
+void KDeclarativeMainView::setAgentInstanceListSelectedRow( int row )
+{
+  static const int column = 0;
+  const QModelIndex idx = d->mAgentInstanceSelectionModel->model()->index( row, column );
+  d->mAgentInstanceSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
 }
 
 void KDeclarativeMainView::setSelectedAccount( int row )
@@ -435,4 +446,11 @@ void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *coll
   standardActionManager->createAction( Akonadi::StandardActionManager::ResourceProperties );
   standardActionManager->createAction( Akonadi::StandardActionManager::CopyItemToMenu );
   standardActionManager->createAction( Akonadi::StandardActionManager::MoveItemToMenu );
+}
+
+void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( selectionModel );
+  manager->createAllActions();
 }
