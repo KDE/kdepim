@@ -414,11 +414,11 @@ void MainView::deleteItemResult( KJob *job )
 void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                            QItemSelectionModel *itemSelectionModel )
 {
-  mActionManager = new Akonadi::StandardMailActionManager( actionCollection(), this );
-  mActionManager->setCollectionSelectionModel( collectionSelectionModel );
-  mActionManager->setItemSelectionModel( itemSelectionModel );
+  Akonadi::StandardMailActionManager *manager = new Akonadi::StandardMailActionManager( actionCollection(), this );
+  manager->setCollectionSelectionModel( collectionSelectionModel );
+  manager->setItemSelectionModel( itemSelectionModel );
 
-  mActionManager->createAllActions();
+  manager->createAllActions();
 }
 
 // #############################################################

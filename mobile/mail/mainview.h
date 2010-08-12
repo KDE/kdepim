@@ -56,6 +56,9 @@ class MainView : public KDeclarativeMainView
   protected slots:
     void delayedInit();
 
+  protected:
+    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                             QItemSelectionModel *itemSelectionModel );
   private slots:
     void replyFetchResult( KJob *job );
     void forwardInlineFetchResult( KJob *job );
