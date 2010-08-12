@@ -279,10 +279,10 @@ bool IncidenceRecurrence::isDirty() const
     break;
   case KCalCore::Recurrence::rWeekly:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeWeekly ||
-         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mWeekDayCombo->days() != recurrence->days() ) {
       return true;
     }
-    // TODO: Check weekdays
     break;
   case KCalCore::Recurrence::rMonthlyDay:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly ||
