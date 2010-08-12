@@ -39,7 +39,6 @@
 #else
 #include "ui_eventortododesktop.h"
 #endif
-#include "../editoralarms.h"
 
 using namespace IncidenceEditorsNG;
 using namespace KCalCore;
