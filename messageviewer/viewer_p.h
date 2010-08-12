@@ -367,6 +367,7 @@ public:
   void saveSplitterSizes() const;
   void createWidgets();
   void createActions();
+  void loadThemesMenu();
 
   void showContextMenu( KMime::Content* content, const QPoint& point);
 
@@ -470,6 +471,8 @@ private slots:
   void slotMimePartDestroyed();
 
   void slotClear();
+
+  void slotNewStuffFinished();
 
 public slots:
   /** An URL has been activate with a click. */

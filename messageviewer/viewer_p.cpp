@@ -243,6 +243,7 @@ ViewerPrivate::~ViewerPrivate()
   delete mCSSHelper;
   mNodeHelper->removeTempFiles();
   delete mNodeHelper;
+  delete m_newStuffDialog.data();
 }
 
 //-----------------------------------------------------------------------------
@@ -1501,56 +1502,13 @@ void ViewerPrivate::createActions()
   KToggleAction *raction = 0;
   QActionGroup *group = new QActionGroup( this );
 
-  QStringList themesLocations ( KGlobal::dirs()->findDirs("data", "messageviewer/themes/") );
-  QDir systemThemes( themesLocations.at(0) );
-  QDir userThemes( themesLocations.at(1) );
-
-  foreach(const QString &themesPath, themesLocations) {
-    QDir dirsPath( themesPath );
-    dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
-    themeDirNames += dirsPath.entryList();
-  }  
-
-  QSet<QString> themesSet;
-
-  foreach(const QString &dirname, themeDirNames) {
-    QDir dir(dirname);
-    themesSet.insert(dir.dirName());
-  }
-  QStringList themeDirs = themesSet.toList();
-  themeDirs.sort();
-
-  // Set themes menu
   mSelectThemeAction  = new KSelectAction( i18n("&Themes"), this );
   mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
   ac->addAction("view_themes", mSelectThemeAction );
   connect( mSelectThemeAction,SIGNAL( triggered(QAction*)),
           SLOT( slotSetTheme(QAction*) ));
 
-  QString absolutePath;
-  
-  foreach(const QString &dirName, themeDirs) {
-    if ( !systemThemes.cd(dirName) ) {
-       absolutePath = userThemes.absolutePath();
-    } else {
-       absolutePath = systemThemes.absolutePath();
-    }
-
-    QFile desktopFile( absolutePath + dirName + "/theme-" + dirName +  ".desktop" );
-    //kDebug() << "Directory: " << dirName << " is coming from: " << absolutePath;
-
-    if ( !desktopFile.exists() )
-      continue;
-
-    KDesktopFile* themeDesktop = new KDesktopFile( desktopFile.fileName() );
-    
-    KAction* themeAction = new KAction(this);
-    themeAction->setData(dirName);
-    themeAction->data().toString();
-    themeAction->setText( themeDesktop->readName() );
-    themeAction->setData(dirName);
-    mSelectThemeAction->addAction(themeAction);
-  }
+  loadThemesMenu();
 
   mDownloadThemesAction = new KAction( i18n( "Download new themes" ), this );
   mDownloadThemesAction->setHelpText( i18n( "Allows you to download new themes from kde artists site." ) );
@@ -1703,6 +1661,56 @@ void ViewerPrivate::createActions()
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
 }
 
+void ViewerPrivate::loadThemesMenu()
+{
+  if ( mSelectThemeAction->items().size() > 0  )
+    mSelectThemeAction->clear();
+
+  QStringList themesLocations( KGlobal::dirs()->findDirs("data", "messageviewer/themes/") );
+  QDir systemThemes( themesLocations.at(1) );
+  QDir userThemes( themesLocations.at(0) );
+  // kDebug() << "Themes locations: " << themesLocations;
+
+  foreach(const QString &themesPath, themesLocations) {
+    QDir dirsPath( themesPath );
+    dirsPath.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot );
+    themeDirNames += dirsPath.entryList();
+  }
+
+  QSet<QString> themesSet;
+
+  foreach(const QString &dirname, themeDirNames) {
+    QDir dir(dirname);
+    themesSet.insert(dir.dirName());
+  }
+  QStringList themeDirs = themesSet.toList();
+  themeDirs.sort();
+  // kDebug() << "Themes dirs: " << themeDirs;
+
+  QString absolutePath;
+
+  foreach(const QString &dirName, themeDirs) {
+    if ( systemThemes.exists( dirName ) ) {
+       absolutePath = systemThemes.absolutePath();
+    } else {
+       absolutePath = userThemes.absolutePath();
+    }
+
+    QFile desktopFile( absolutePath + "/" + dirName + "/theme-" + dirName +  ".desktop" );
+    // kDebug() << "Directory: " << dirName << " is coming from: " << absolutePath;
+
+    if ( !desktopFile.exists() )
+      continue;
+
+    KDesktopFile* themeDesktop = new KDesktopFile( desktopFile.fileName() );
+    KAction* themeAction = new KAction(this);
+    themeAction->setData(dirName);
+    themeAction->data().toString();
+    themeAction->setText( themeDesktop->readName() );
+    themeAction->setData(dirName);
+    mSelectThemeAction->addAction(themeAction);
+  }
+}
 
 void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
 {
@@ -2205,8 +2213,16 @@ void ViewerPrivate::slotDownloadThemes()
 {
   if (!m_newStuffDialog) {
         m_newStuffDialog = new KNS3::DownloadDialog( "kmail_themes.knsrc" );
+        connect(m_newStuffDialog.data(), SIGNAL(accepted()), SLOT(slotNewStuffFinished()));
   }
   m_newStuffDialog.data()->show();
+}
+
+void ViewerPrivate::slotNewStuffFinished()
+{
+  if ( !m_newStuffDialog || m_newStuffDialog.data()->changedEntries().size() > 0 ) {
+      loadThemesMenu();
+  }
 }
 
 void ViewerPrivate::injectAttachments()
