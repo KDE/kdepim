@@ -38,6 +38,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <akonadi/kmime/messagestatus.h>
 #include "messagecore/messagehelpers.h"
+#include <akonadi/mail/standardmailactionmanager.h>
 
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemFetchJob>
@@ -74,6 +75,7 @@ void MainView::delayedInit()
 
   connect(actionCollection()->action("mark_message_important"), SIGNAL(triggered(bool)), SLOT(markImportant(bool)));
   connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
+  connect(actionCollection()->action("write_new_email"), SIGNAL(triggered(bool)), SLOT(startComposer()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -407,6 +409,16 @@ void MainView::deleteItemResult( KJob *job )
   if ( job->error() ) {
       kDebug() << "Error trying to delete item";
   }
+}
+
+void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel )
+{
+  mActionManager = new Akonadi::StandardMailActionManager( actionCollection(), this );
+  mActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  mActionManager->setItemSelectionModel( itemSelectionModel );
+
+  mActionManager->createAllActions();
 }
 
 // #############################################################

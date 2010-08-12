@@ -43,6 +43,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setText( i18n( "Action Item" ) );
   action->setIcon( KIcon( "mail-mark-task" ) );
   action->setCheckable(true);
+
+  action = actionCollection->addAction("write_new_email");
+  action->setText( i18n("Write New Email") );  
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

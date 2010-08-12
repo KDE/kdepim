@@ -34,6 +34,21 @@ KPIM.MainView {
     collectionView.visible = true;
     emailListPage.visible = true;
     messageView.itemId = -1;
+
+    updateContextActionsStates();
+ }
+
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      kmailActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      kmailActions.showOnlyCategory("resource")
+    } else { // something else is selected
+      kmailActions.showOnlyCategory("single_folder")
+    }
   }
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
@@ -110,7 +125,10 @@ KPIM.MainView {
                                         application.numSelectedAccounts,
                                         headerList.count)
 
-    }
+      QML.Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
+   }
     KPIM.Button2 {
       id : selectButton
       anchors.left: collectionView.left
@@ -270,16 +288,54 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
-    visible : !favoriteSelector.visible
+//     visible : !favoriteSelector.visible
     SlideoutPanel {
-
-      anchors.fill: parent
       id: actionPanel
-      titleText: KDE.i18n( "Actions" )
-      handlePosition : 125
+      titleText: KDE.i18n( "NewActions" )
+      handlePosition : 75
       handleHeight: 150
+      anchors.fill: parent
+//       contentWidth: 240
+      content: [
+      
+          KMailActions {
+            id : kmailActions
+            anchors.fill : parent
+
+            scriptActions : [
+              KPIM.ScriptActionItem {
+                name : "show_about_dialog"
+                script : {
+                  actionPanel.collapse();
+                  aboutDialog.visible = true
+                }
+              },
+              KPIM.ScriptActionItem {
+                name : "to_selection_screen"
+                script : {
+                  actionPanel.collapse();
+                  favoriteSelector.visible = true;
+                  mainWorkView.visible = false;
+                }
+              }
+            ]
+
+            onTriggered : {
+              console.log("Triggered was: " + triggeredName)
+            }
+          }
+      ]
+    }
+
+    SlideoutPanel {
+      id: actionPanel2
+      titleText: KDE.i18n( "Actions" )
+      handlePosition : 225
+      handleHeight: 150
+      anchors.fill: parent
       contentWidth: 240
       content: [
+
           KPIM.Button {
             id: replyButton
             anchors.top: parent.top;
@@ -390,11 +446,11 @@ KPIM.MainView {
               application.launchAccountWizard();
               actionPanel.collapse();
             }
-          }
+          }          
       ]
     }
 
-    SlideoutPanel {
+  SlideoutPanel {
       anchors.fill: parent
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1 && messageView.visible
