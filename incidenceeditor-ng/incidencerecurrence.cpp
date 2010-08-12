@@ -35,6 +35,13 @@
 
 using namespace IncidenceEditorsNG;
 
+enum {
+  // Keep in sync with mRecurrenceEndCombo
+  RecurrenceEndNever = 0,
+  RecurrenceEndOn,
+  RecurrenceEndAfter
+};
+
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
 #else
@@ -46,7 +53,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   setObjectName( "IncidenceRecurrence" );
   // Set some sane defaults
   mUi->mRecurrenceTypeCombo->setCurrentIndex( 0 );
-  mUi->mRecurrenceEndCombo->setCurrentIndex( 0 );
+  mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
   mUi->mRecurrenceEndStack->setCurrentIndex( 0 );
   mUi->mRepeatStack->setCurrentIndex( 0 );
   mUi->mEndDurationEdit->setValue( 1 );
@@ -303,10 +310,10 @@ bool IncidenceRecurrence::isDirty() const
   }
 
   // Recurrence end
-  if ( recurrence->duration() == -1 && mUi->mRecurrenceEndCombo->currentIndex() != 0 )
+  if ( recurrence->duration() == -1 && mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndNever )
     return true;
   else if ( recurrence->duration() == 0 ) {
-    if ( mUi->mRecurrenceEndCombo->currentIndex() != 1 )
+    if ( mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndOn )
       return true;
 
     if ( recurrence->endDate() != mUi->mRecurrenceEndDate->date() )
@@ -318,7 +325,7 @@ bool IncidenceRecurrence::isDirty() const
   // Exceptions
   const KCalCore::DateList origExDates = recurrence->exDates();
   foreach ( const QDate &origExDate, origExDates ) {
-    if ( !mExceptionDates.contains( origExDate) )
+    if ( !mExceptionDates.contains( origExDate ) )
       return true;
   }
 
@@ -527,9 +534,9 @@ short IncidenceRecurrence::dayOfYearFromStart() const
 
 int IncidenceRecurrence::duration() const
 {
-  if ( mUi->mRecurrenceEndCombo->currentIndex() == 0 ) {
+  if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndNever ) {
     return -1;
-  } else if ( mUi->mRecurrenceEndCombo->currentIndex() == 1 ) {
+  } else if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndOn ) {
     return mUi->mEndDurationEdit->value();
   } else {
     return 0;
@@ -687,7 +694,7 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
 
 void IncidenceRecurrence::setDefaults()
 {
-  mUi->mRecurrenceEndCombo->setCurrentIndex( 0 ); // Ends never
+  mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
   mUi->mRecurrenceEndDate->setDate( mDateTime->startDate() );
   mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeNone );
 
@@ -708,13 +715,13 @@ void IncidenceRecurrence::setDefaults()
 void IncidenceRecurrence::setDuration( int duration )
 {
   if ( duration == -1 ) { // No end date
-    mUi->mRecurrenceEndCombo->setCurrentIndex( 0 );
+    mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
     mUi->mRecurrenceEndStack->setCurrentIndex( 0 );
   } else if ( duration == 0 ) {
-    mUi->mRecurrenceEndCombo->setCurrentIndex( 1 );
+    mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndOn );
     mUi->mRecurrenceEndStack->setCurrentIndex( 1 );
   } else {
-    mUi->mRecurrenceEndCombo->setCurrentIndex( 2 );
+    mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndAfter );
     mUi->mRecurrenceEndStack->setCurrentIndex( 2 );
     mUi->mEndDurationEdit->setValue( duration );
   }
