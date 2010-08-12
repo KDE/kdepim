@@ -58,9 +58,9 @@ ActionMenuContainer {
     model : agentInstanceList
 
     customActions : [
-      FakeAction { name : "delete_selected_addressbook" },
-      FakeAction { name : "configure_selected_addressbook" },
-      ActionListItem { name : "akonadi_addressbook_create" }
+      ActionListItem { name : "akonadi_agentinstance_delete" },
+      ActionListItem { name : "akonadi_agentinstance_configure" },
+      ActionListItem { name : "akonadi_agentinstance_create" }
     ]
   }
 

@@ -24,6 +24,7 @@
 
 #include <QtDeclarative/QDeclarativeEngine>
 
+#include <akonadi/agentactionmanager.h>
 #include <akonadi/contact/standardcontactactionmanager.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -110,6 +111,30 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT( editItem() ) );
   connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateAddressBook ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
+}
+
+void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( selectionModel );
+  manager->createAllActions();
+
+  manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
+
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
+                           i18nc( "@title:window", "New Address Book" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
+                           i18n( "Could not create address book: %1" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
+                           i18n( "Address Book creation failed" ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
+                           i18nc( "@title:window", "Delete Address Book?" ) );
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+                           i18n( "Do you really want to delete the selected address book?" ) );
 }
 
 #include "mainview.moc"
