@@ -121,7 +121,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
      */
     KDateTime mCurrentStartDateTime;
 
-    /// Remembers state when switching between takes whole day and timed event/task.
+    /// Remembers state when switching between takes whole day and timed event/to-do.
     bool mTimezoneCombosWhereVisibile;
 };
 

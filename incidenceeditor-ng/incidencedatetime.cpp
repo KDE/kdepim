@@ -473,7 +473,7 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
   mUi->mStartTimeEdit->setEnabled( todo->hasStartDate() );
   mUi->mTimeZoneComboStart->setEnabled( todo->hasStartDate() );
 
-  mUi->mEndLabel->setText( i18nc( "The due date/time of a task", "Due:" ) );
+  mUi->mEndLabel->setText( i18nc( "The due date/time of a to-do", "Due:" ) );
   mUi->mEndCheck->setVisible( true );
   mUi->mEndCheck->setChecked( todo->hasDueDate() );
   mUi->mEndDateEdit->setEnabled( todo->hasDueDate() );
@@ -482,7 +482,7 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
   // These fields where not enabled in the old code either:
   mUi->mFreeBusyCheck->setVisible( false );
-  // kolab tasks that "float" have a due time of 00:00, so make sure to check
+  // kolab to-dos that "float" have a due time of 00:00, so make sure to check
   // that also when deciding if the time associated box should be checked
   // when reading in the Todo.
   mUi->mWholeDayCheck->setChecked( todo->allDay() || todo->dtDue().time() == QTime( 0, 0 ) );

@@ -223,10 +223,10 @@ void AlarmDialog::fillCombo()
     mUi->mBeforeAfter->clear();
 
     if ( mAllowBeginReminders )
-      items << i18n( "Before the task starts" ) << i18n( "After the task starts" );
+      items << i18n( "Before the to-do starts" ) << i18n( "After the to-do starts" );
 
     if ( mAllowEndReminders )
-      items << i18n( "Before the task is due" ) << i18n( "After the task is due" );
+      items << i18n( "Before the to-do is due" ) << i18n( "After the to-do is due" );
 
   } else {
 

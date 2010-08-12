@@ -183,7 +183,7 @@
    <item row="5" column="0">
     <widget class="QLabel" name="mTaskLabel">
      <property name="text">
-      <string comment="@label line containing task specific ui controls">Completion:</string>
+      <string comment="@label line containing to-do specific ui controls">Completion:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -227,14 +227,14 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string comment="@label:slider Showed after the task percentage completed slider">completed</string>
+         <string comment="@label:slider Showed after the to-do percentage completed slider">completed</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string comment="@label:listbox priority of a task">Priority:</string>
+         <string comment="@label:listbox priority of a to-do">Priority:</string>
         </property>
        </widget>
       </item>
@@ -245,52 +245,52 @@
         </property>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">unspecified</string>
+          <string comment="@item:inlistbox Priority of a to-do">unspecified</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">1 (highest)</string>
+          <string comment="@item:inlistbox Priority of a to-do">1 (highest)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">2</string>
+          <string comment="@item:inlistbox Priority of a to-do">2</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">3</string>
+          <string comment="@item:inlistbox Priority of a to-do">3</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">4</string>
+          <string comment="@item:inlistbox Priority of a to-do">4</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">5 (medium)</string>
+          <string comment="@item:inlistbox Priority of a to-do">5 (medium)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">6</string>
+          <string comment="@item:inlistbox Priority of a to-do">6</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">7</string>
+          <string comment="@item:inlistbox Priority of a to-do">7</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">8</string>
+          <string comment="@item:inlistbox Priority of a to-do">8</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">9 (lowest)</string>
+          <string comment="@item:inlistbox Priority of a to-do">9 (lowest)</string>
          </property>
         </item>
        </widget>
@@ -487,7 +487,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string comment="@label end date/time for an event or task">&amp;End:</string>
+      <string comment="@label end date/time for an event or to-do">&amp;End:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -580,7 +580,7 @@
      </property>
      <widget class="QWidget" name="mGeneralTab">
       <attribute name="title">
-       <string comment="@title:tab General settings for an event or task">General</string>
+       <string comment="@title:tab General settings for an event or to-do">General</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_9">
        <item row="0" column="0" colspan="4">
@@ -670,7 +670,7 @@
           <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
          </property>
          <property name="text">
-          <string comment="@label:listbox sets the privacy option of hte event or task">Access:</string>
+          <string comment="@label:listbox sets the privacy option of the event or to-do">Access:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -691,7 +691,7 @@
      </widget>
      <widget class="QWidget" name="mAttendeesTab">
       <attribute name="title">
-       <string comment="@title:tab attendees of this task or event">Attendees</string>
+       <string comment="@title:tab attendees of this event or to-do">Attendees</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_15">
        <item row="1" column="0" colspan="2">
@@ -707,7 +707,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string comment="@label participants of this event or task">Participants:</string>
+          <string comment="@label participants of this event or to-do">Participants:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -834,7 +834,7 @@
      </widget>
      <widget class="QWidget" name="mReminderTab">
       <attribute name="title">
-       <string comment="@title:tab Tab to configure reminders for events or tasks">Reminder</string>
+       <string comment="@title:tab Tab to configure reminders for events or to-do">Reminder</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_17">
        <item row="0" column="0">
@@ -950,7 +950,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string comment="@label whether or not this event or task repeats">Repeat:</string>
+          <string comment="@label whether or not this event or to-do repeats">Repeat:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
