@@ -60,7 +60,7 @@ public:
      * @param disableDays if not empty, the corresponding days will be disabled, all others enabled (bit 0 = Monday, value 1 = disable).
      * @see days()
      */
-    void setDays( const QBitArray &days,  const QBitArray &disableDays = QBitArray() );
+    void setDays( const QBitArray &days, const QBitArray &disableDays = QBitArray() );
 
     /**
      * Returns the index of the weekday represented by the
