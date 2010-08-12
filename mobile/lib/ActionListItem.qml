@@ -27,6 +27,8 @@ QML.Item {
   height : parent.height
   width : parent.width
   property string name
+  property string argument : ""
+  property string title : ""
 
   property string category
 
@@ -35,9 +37,13 @@ QML.Item {
   KPIM.Action {
     height : parent.height
     width : parent.width
-    action : application.getAction(name);
+    action : {
+      application.setActionTitle(name, title)
+      application.getAction(name, argument);
+    }
     hidable : false
   }
+
 /*
   QML.Rectangle {
     height : parent.height

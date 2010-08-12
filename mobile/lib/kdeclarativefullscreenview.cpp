@@ -172,9 +172,19 @@ KActionCollection* KDeclarativeFullScreenView::actionCollection() const
   return mActionCollection;
 }
 
-QObject* KDeclarativeFullScreenView::getAction( const QString &name ) const
+QObject* KDeclarativeFullScreenView::getAction( const QString& name, const QString& argument ) const
 {
-  return mActionCollection->action( name );
+  QAction * action = mActionCollection->action( name );
+  if ( !argument.isEmpty() && action )
+    action->setData( argument );
+  return action;
+}
+
+void KDeclarativeFullScreenView::setActionTitle(const QString& name, const QString& title)
+{
+  QAction * action = mActionCollection->action( name );
+  if ( !title.isEmpty() && action )
+    action->setText( title );
 }
 
 #include "kdeclarativefullscreenview.moc"
