@@ -266,8 +266,9 @@ void ComposerView::configureIdentity()
 {
   KCMultiDialog dlg;
   dlg.addModule( "kcm_kpimidentities" );
+  dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
+  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-
 }
 
 void ComposerView::sendSuccessful()
@@ -281,6 +282,8 @@ void ComposerView::configureTransport()
 {
   KCMultiDialog dlg;
   dlg.addModule( "kcm_mailtransport" );
+  dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
+  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
 }
 
