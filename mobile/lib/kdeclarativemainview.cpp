@@ -155,16 +155,11 @@ void KDeclarativeMainView::delayedInit()
 
   setupAgentActionManager( d->mAgentInstanceSelectionModel );
 
-  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
+  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy )
+                                                                  : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
-  KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
+  KAction *action = KStandardAction::quit( qApp, SLOT( quit() ), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
-  action = new KAction( i18n( "Configure Account" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(configureCurrentAccount()) );
-  actionCollection()->addAction( QLatin1String( "configure_account" ), action );
-  action = new KAction( i18n( "New Account" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(launchAccountWizard()) );
-  actionCollection()->addAction( QLatin1String( "launch_account_wizard" ), action );
 
   setupStandardActionManager( regularSelectionModel(), d->mItemSelectionModel );
 
@@ -346,24 +341,6 @@ Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
 QItemSelectionModel* KDeclarativeMainView::itemSelectionModel() const
 {
   return d->mItemSelectionModel;
-}
-
-void KDeclarativeMainView::configureCurrentAccount()
-{
-  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
-  if (list.size() != 1)
-    return;
-
-  const Collection col = list.first().data(EntityTreeModel::CollectionRole).value<Collection>();
-  if (!col.isValid())
-    return;
-
-  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
-  AgentInstance agent = manager->instance(col.resource());
-  if (!agent.isValid())
-    return;
-
-  agent.configure();
 }
 
 void KDeclarativeMainView::persistCurrentSelection(const QString& key)

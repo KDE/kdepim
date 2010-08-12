@@ -120,8 +120,6 @@ public slots:
   void saveFavorite();
   void loadFavorite( const QString &name );
 
-  void configureCurrentAccount();
-
   void persistCurrentSelection(const QString &key);
   void clearPersistedSelection(const QString &key);
   void restorePersistedSelection(const QString &key);
