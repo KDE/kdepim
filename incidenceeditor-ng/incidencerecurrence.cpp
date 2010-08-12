@@ -285,28 +285,38 @@ bool IncidenceRecurrence::isDirty() const
     // TODO: Check weekdays
     break;
   case KCalCore::Recurrence::rMonthlyDay:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rMonthlyPos:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyDay:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyMonth:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyPos:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
     // TODO: Check values
     break;
   }
