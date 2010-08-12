@@ -27,10 +27,6 @@
 #include <Akonadi/KMime/SpecialMailCollections>
 
 class KJob;
-namespace Akonadi
-{
-  class StandardMailActionManager;
-}
 
 /** The new KMMainWidget ;-) */
 class MainView : public KDeclarativeMainView
@@ -57,10 +53,6 @@ class MainView : public KDeclarativeMainView
     // HACK until mark-as-read logic is in messageviewer
     virtual void setListSelectedRow(int row);
 
-  protected:
-    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                             QItemSelectionModel *itemSelectionModel );
-
   protected slots:
     void delayedInit();
 
@@ -79,8 +71,6 @@ class MainView : public KDeclarativeMainView
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();
-
-    Akonadi::StandardMailActionManager *mActionManager;
 };
 
 #endif
