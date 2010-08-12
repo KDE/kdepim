@@ -257,7 +257,7 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceRecurrence::isDirty() const
 {
-  if ( mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() == 0 )
+  if ( mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() == RecurrenceTypeNone )
     return true;
 
   if ( !mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() > 0 )
@@ -265,45 +265,47 @@ bool IncidenceRecurrence::isDirty() const
 
   // The incidence is not recurring and that hasn't changed, so don't check the
   // other values.
-  if ( mUi->mRecurrenceTypeCombo->currentIndex() == 0 )
+  if ( mUi->mRecurrenceTypeCombo->currentIndex() == RecurrenceTypeNone )
     return false;
 
   const KCalCore::Recurrence *recurrence = mLoadedIncidence->recurrence();
   switch ( recurrence->recurrenceType() ) {
   case KCalCore::Recurrence::rDaily:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 1 ||
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeDaily ||
          mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
     }
 
     break;
   case KCalCore::Recurrence::rWeekly:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 2 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeWeekly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
     // TODO: Check weekdays
     break;
   case KCalCore::Recurrence::rMonthlyDay:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 3 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly )
       return true;
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rMonthlyPos:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 3 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly )
       return true;
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyDay:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly )
       return true;
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyMonth:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly )
       return true;
     // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyPos:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly )
       return true;
     // TODO: Check values
     break;
