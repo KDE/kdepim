@@ -222,6 +222,9 @@ bool AttachmentHandler::saveAs( QWidget *parent, Attachment *attachment )
     KURL tempUrl = tempFileForAttachment( attachment );
     if ( tempUrl.isValid() ) {
       stat = KIO::NetAccess::file_copy( tempUrl, KURL( saveAsFile ), -1, true );
+      if ( !stat && KIO::NetAccess::lastError() ) {
+        KMessageBox::error( parent, KIO::NetAccess::lastErrorString() );
+      }
     } else {
       stat = false;
       KMessageBox::error(
