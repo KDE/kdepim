@@ -37,7 +37,6 @@
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/EntityDisplayAttribute>
 #include <akonadi/entitytreemodel.h>
-//#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include <KIconLoader>
 #include <KUrl>
