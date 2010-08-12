@@ -25,7 +25,6 @@
 
 #include <akonadi/entitytreemodel.h>
 #include <Akonadi/ItemFetchScope>
-#include <akonadi/kcal/incidencemimetypevisitor.h>
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/kcalprefs.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedefaults.h>
@@ -45,7 +44,6 @@
 #include <QDBusConnection>
 
 using namespace Akonadi;
-using namespace KCal;
 
 MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
@@ -61,8 +59,8 @@ void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
 
-  addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
-  addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
+  addMimeType( KCalCore::Event::eventMimeType() );
+  addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 
   m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
@@ -103,7 +101,7 @@ void MainView::newEvent()
 {
   IncidenceView *editor = new IncidenceView;
   Item item;
-  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  item.setMimeType( KCalCore::Event::eventMimeType() );
   KCalCore::Event::Ptr event( new KCalCore::Event );
 
   IncidenceEditorsNG::IncidenceDefaults defaults;
@@ -129,7 +127,7 @@ void MainView::newTodo()
 {
   IncidenceView *editor = new IncidenceView;
   Item item;
-  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  item.setMimeType( KCalCore::Todo::todoMimeType() );
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
 
   // make it due one day from now

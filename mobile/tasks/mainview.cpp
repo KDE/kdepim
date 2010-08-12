@@ -28,7 +28,6 @@
 #include <KGlobal>
 #include <KStandardDirs>
 
-#include <akonadi/kcal/incidencemimetypevisitor.h>
 #include <akonadi/entitytreemodel.h>
 #include <Akonadi/ItemFetchScope>
 
@@ -45,7 +44,7 @@ void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
 
-  addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
+  addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 }
 
@@ -53,7 +52,7 @@ void MainView::newTask()
 {
   IncidenceView *editor = new IncidenceView;
   Item item;
-  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+  item.setMimeType( KCalCore::Todo::todoMimeType() );
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
 
   // make it due one day from now

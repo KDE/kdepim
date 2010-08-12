@@ -7,7 +7,7 @@ include_directories(
 MACRO(IE_UNIT_TESTS)
   FOREACH(_testname ${ARGN})
     kde4_add_unit_test(${_testname} NOGUI ${_testname}.cpp modeltest.cpp)
-    target_link_libraries(${_testname} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY} kdgantt2 ${KDEPIMLIBS_KCALUTILS_LIBS} ${KDEPIMLIBS_KCALCORE_LIBS} incidenceeditorsng akonadi-kcal_next kdepimdbusinterfaces)
+    target_link_libraries(${_testname} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}  kdgantt2 ${KDEPIMLIBS_KCALUTILS_LIBS} ${KDEPIMLIBS_KCALCORE_LIBS} incidenceeditorsng akonadi-kcal_next kdepimdbusinterfaces)
   ENDFOREACH(_testname)
 ENDMACRO(IE_UNIT_TESTS)
 

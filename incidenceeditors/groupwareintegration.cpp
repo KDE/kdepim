@@ -34,7 +34,6 @@
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
-#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include <KSystemTimeZones>
 
@@ -90,9 +89,9 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
       monitor->setCollectionMonitored( Akonadi::Collection::root() );
       monitor->fetchCollection( true );
       monitor->setItemFetchScope( scope );
-      monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), true );
-      monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::todoMimeType(), true );
-      monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::journalMimeType(), true );
+      monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
+      monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
+      monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
 
       Akonadi::CalendarModel *calendarModel = new Akonadi::CalendarModel( monitor, this );
 

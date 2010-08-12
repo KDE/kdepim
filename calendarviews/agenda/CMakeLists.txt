@@ -44,7 +44,6 @@ target_link_libraries(eventviews
                       ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
                       ${KDE4_KIO_LIBS}
                       ${KDEPIMLIBS_AKONADI_LIBS}
-                      ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
                       ${KDEPIMLIBS_KHOLIDAYS_LIBS}
                       kdepim
                       akonadi-kcal_next

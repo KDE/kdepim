@@ -28,7 +28,6 @@
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendarmodel.h>
 #include <akonadi/kcal/incidencechanger.h>
-#include <akonadi/kcal/incidencemimetypevisitor.h>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
@@ -107,7 +106,7 @@ void MainWindow::delayedInit()
   mChangeRecorder->fetchCollection( true );
   mChangeRecorder->setItemFetchScope( scope );
 
-  mChangeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::eventMimeType(), true );
+  mChangeRecorder->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
 
   CalendarModel* calendarModel = new CalendarModel( mChangeRecorder, this );
 

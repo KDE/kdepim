@@ -35,7 +35,6 @@ target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
   ${QT_QTOPENGL_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   akonadi-kcal_next
   akonadi_next

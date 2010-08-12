@@ -35,7 +35,6 @@
 #include <akonadi/kcal/incidencechanger.h>
 
 #include <Akonadi/CollectionComboBox>
-#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include <KLocale>
 
@@ -48,7 +47,7 @@ using namespace IncidenceEditors;
 
 JournalEditor::JournalEditor( QWidget *parent )
   : IncidenceEditor( QString(),
-                     QStringList() << Akonadi::IncidenceMimeTypeVisitor::journalMimeType(),
+                     QStringList() << KCalCore::Journal::journalMimeType(),
                      parent )
 {
   mInitialJournal = Journal::Ptr( new Journal() );
