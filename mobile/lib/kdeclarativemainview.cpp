@@ -158,6 +158,9 @@ void KDeclarativeMainView::delayedInit()
   action = new KAction( i18n( "Configure Account" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(configureCurrentAccount()) );
   actionCollection()->addAction( QLatin1String( "configure_account" ), action );
+  action = new KAction( i18n( "New Account" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(launchAccountWizard()) );
+  actionCollection()->addAction( QLatin1String( "launch_account_wizard" ), action );
 
   setupStandardActionManager( regularSelectionModel(), d->mItemSelectionModel );
 
@@ -430,4 +433,6 @@ void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *coll
   standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
   standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
   standardActionManager->createAction( Akonadi::StandardActionManager::ResourceProperties );
+  standardActionManager->createAction( Akonadi::StandardActionManager::CopyItemToMenu );
+  standardActionManager->createAction( Akonadi::StandardActionManager::MoveItemToMenu );
 }
