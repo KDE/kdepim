@@ -37,7 +37,6 @@ QML.Item {
   property alias customActions : _listContent.customActions
 
   property alias model : _listContent.model
-  property alias delegate : _listContent.delegate
 
   property alias showChildren : _listContent.visible
   signal triggered(string triggeredName)

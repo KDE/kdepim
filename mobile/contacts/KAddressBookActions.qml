@@ -51,10 +51,6 @@ ActionMenuContainer {
     category : "home"
     name : KDE.i18n( "Address Books" )
 
-    delegate : QML.Component {
-      QML.Text { height : 30; text : model.display }
-    }
-
     model : agentInstanceList
 
     customActions : [

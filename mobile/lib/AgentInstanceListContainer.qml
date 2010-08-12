@@ -19,29 +19,28 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
 
 import org.kde.pim.mobileui 4.5 as KPIM
 
-Rectangle {
+QML.Rectangle {
   id : _topLevel
   color : "#00000000"
-  property int actionItemHeight
-  property int actionItemWidth
+  property int actionItemHeight : 70
+  property int actionItemWidth : 200
   property int actionItemSpacing : 0
   property int bottomMargin
   anchors.bottomMargin : bottomMargin
 
   property alias model : myList.model
-  property alias delegate : myList.delegate
 
   property alias customActions : actionColumn.content
 
   signal triggered(string triggeredName)
 
-  Component {
+  QML.Component {
     id: highlightBar
-    Rectangle {
+    QML.Rectangle {
       width: myList.width
       height: 30
       color: "#FFFF88"
@@ -49,11 +48,33 @@ Rectangle {
     }
   }
 
-  ListView {
+  QML.ListView {
     id : myList
-    anchors.fill : parent
+    anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
+    width: parent.width - actionColumn.width
     focus: true
+    clip: true
     highlight: highlightBar
+    delegate : QML.Component {
+      QML.Item {
+        id: _delegateTopLevel
+        height: _topLevel.actionItemHeight
+        width: myList.width
+
+        QML.Text {
+          anchors.fill: parent
+          text : model.display
+          horizontalAlignment: QML.Text.AlignHCenter
+          verticalAlignment: QML.Text.AlignVCenter
+        }
+
+        QML.MouseArea {
+          anchors.fill: parent
+          onClicked: { _delegateTopLevel.QML.ListView.view.currentIndex = model.index; }
+        }
+      }
+    }
+
     onCurrentIndexChanged : {
       application.setAgentInstanceListSelectedRow( currentIndex )
     }
@@ -61,12 +82,12 @@ Rectangle {
 
   ActionMenuContainer {
     id : actionColumn
-    width : 200
+    width : _topLevel.actionItemWidth
     anchors.top : parent.top
     anchors.bottom : parent.bottom
     anchors.right : parent.right
     actionItemWidth : width
-    actionItemHeight : 70
+    actionItemHeight : _topLevel.actionItemHeight
   }
 
   onActionItemSpacingChanged : {
