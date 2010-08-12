@@ -334,8 +334,10 @@ bool IncidenceRecurrence::isDirty() const
       return true;
     }
   } else if ( recurrence->duration() > 0 ) {
-    return mUi->mEndDurationEdit->value() != recurrence->duration() ||
-           mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndAfter;
+    if ( mUi->mEndDurationEdit->value() != recurrence->duration() ||
+         mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndAfter ) {
+      return true;
+    }
   }
 
   // Exceptions
