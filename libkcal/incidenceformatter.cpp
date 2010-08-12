@@ -333,7 +333,11 @@ static QString displayViewFormatAttachments( Incidence *incidence )
       if ( (*it)->uri().startsWith( "kmail:" ) ) {
         name = i18n( "Show mail" );
       } else {
-        name = (*it)->label();
+        if ( (*it)->label().isEmpty() ) {
+          name = (*it)->uri();
+        } else {
+          name = (*it)->label();
+        }
       }
       tmpStr += htmlAddLink( (*it)->uri(), name );
     } else {
