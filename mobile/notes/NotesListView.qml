@@ -75,7 +75,7 @@ KPIM.ItemListView {
           anchors.right : parent.right;
           width: imageWidth
           height : imageHeight
-          action : application.getAction("akonadi_item_delete")
+          action : application.getAction("akonadi_item_delete", "")
           hidable : false
           showText : false
           opacity : 0.6

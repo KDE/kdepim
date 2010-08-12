@@ -332,7 +332,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             hardcoded_height: parent.height / 6
-            action : application.getAction("akonadi_collection_sync")
+            action : application.getAction("akonadi_collection_sync", "")
             onTriggered : actionPanel.collapse();
           },
           KPIM.Action {
@@ -341,7 +341,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             action : application.getAction("akonadi_item_delete")
+             action : application.getAction("akonadi_item_delete", "")
              onTriggered : actionPanel.collapse();
            },
            KPIM.Button {
