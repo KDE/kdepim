@@ -538,9 +538,10 @@ int IncidenceRecurrence::duration() const
 {
   if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndNever ) {
     return -1;
-  } else if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndOn ) {
+  } else if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndAfter ) {
     return mUi->mEndDurationEdit->value();
   } else {
+    // 0 means "end date set"
     return 0;
   }
 }
