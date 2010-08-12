@@ -950,7 +950,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string comment="@label whether or not this event or to-do repeats">Repeat:</string>
+          <string comment="@label whether or not this event or to-do repeats">Repeats:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
