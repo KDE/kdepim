@@ -772,6 +772,7 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
   mUi->mFrequencyEdit->setVisible( enable );
   mUi->mRecurrenceRuleLabel->setVisible( enable );
   mUi->mRepeatStack->setVisible( enable && mUi->mRecurrenceTypeCombo->currentIndex() > 1 );
+  mUi->mRepeatStack->setCurrentIndex( mUi->mRecurrenceTypeCombo->currentIndex() );
   mUi->mRecurrenceEndCombo->setVisible( enable );
   mUi->mEndDurationEdit->setVisible( enable );
   mUi->mRecurrenceEndStack->setVisible( enable );
