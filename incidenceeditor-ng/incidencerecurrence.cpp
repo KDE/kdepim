@@ -341,10 +341,8 @@ bool IncidenceRecurrence::isDirty() const
   }
 
   // Exceptions
-  const KCalCore::DateList origExDates = recurrence->exDates();
-  foreach ( const QDate &origExDate, origExDates ) {
-    if ( !mExceptionDates.contains( origExDate ) )
-      return true;
+  if ( mExceptionDates != recurrence->exDates() ) {
+    return true;
   }
 
   return false;
