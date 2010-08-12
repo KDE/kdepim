@@ -310,17 +310,19 @@ bool IncidenceRecurrence::isDirty() const
   }
 
   // Recurrence end
-  if ( recurrence->duration() == -1 && mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndNever )
+  // -1 means "recurs forever"
+  if ( recurrence->duration() == -1 && mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndNever ) {
     return true;
-  else if ( recurrence->duration() == 0 ) {
-    if ( mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndOn )
+  } else if ( recurrence->duration() == 0 ) {
+    // 0 means "end date is set"
+    if ( mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndOn ||
+         recurrence->endDate() != mUi->mRecurrenceEndDate->date() ) {
       return true;
-
-    if ( recurrence->endDate() != mUi->mRecurrenceEndDate->date() )
-      return true;
+    }
   } else if ( recurrence->duration() > 0 &&
-              mUi->mEndDurationEdit->value() != recurrence->duration() )
+              mUi->mEndDurationEdit->value() != recurrence->duration() ) {
     return true;
+  }
 
   // Exceptions
   const KCalCore::DateList origExDates = recurrence->exDates();
