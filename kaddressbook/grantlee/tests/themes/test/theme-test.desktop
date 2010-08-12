@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=Test
 Name[pt]=Teste
+Name[pt_BR]=Teste
 Name[sv]=Prov
 Name[uk]=Тест
 Name[x-test]=xxTestxx
 Description=An Test theme
 Description[pt]=Um tema de testes
+Description[pt_BR]=Um tema de testes
 Description[sv]=Ett provtema
 Description[uk]=Тестова тема
 Description[x-test]=xxAn Test themexx
