@@ -63,7 +63,7 @@ public:
     void setDays( const QBitArray &days,  const QBitArray &disableDays = QBitArray() );
 
     /**
-     * Returns the index of the weekday reprsented by the 
+     * Returns the index of the weekday represented by the
      * QDate object.
      */
     int weekdayIndex( const QDate &date ) const;
