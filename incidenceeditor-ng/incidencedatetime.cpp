@@ -659,4 +659,13 @@ bool IncidenceDateTime::endDateTimeEnabled() const
 }
 
 
+bool IncidenceDateTime::isValid()
+{
+  if ( startDateTimeEnabled() && endDateTimeEnabled() ) {
+    return currentStartDateTime() <= currentEndDateTime();
+  } else {
+    return true;
+  }
+}
+
 #include "moc_incidencedatetime.cpp"

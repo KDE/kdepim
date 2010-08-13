@@ -70,6 +70,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool startDateTimeEnabled() const;
     bool endDateTimeEnabled() const;
 
+    bool isValid();
+
   signals:
     void startDateTimeToggled( bool enabled );
     void startDateChanged( const QDate &newDate );
