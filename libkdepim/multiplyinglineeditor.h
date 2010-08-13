@@ -75,7 +75,10 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
   Q_PROPERTY( bool autoResizeView READ autoResizeView WRITE setAutoResizeView )
 
   public:
+
+    // We take ownership of factory
     explicit MultiplyingLineEditor( MultiplyingLineFactory* factory, QWidget *parent = 0 );
+
     virtual ~MultiplyingLineEditor();
 
     /** Get the current line factory for this instance of the widget.

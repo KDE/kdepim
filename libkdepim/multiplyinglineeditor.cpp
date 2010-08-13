@@ -52,6 +52,7 @@ MultiplyingLineEditor::MultiplyingLineEditor( MultiplyingLineFactory* factory, Q
 
 MultiplyingLineEditor::~MultiplyingLineEditor()
 {
+  delete mMultiplyingLineFactory;
 }
 
 void MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
