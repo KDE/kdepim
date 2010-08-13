@@ -448,11 +448,11 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   QString label;
 
   if(!mimeData->formats().isEmpty() && !probablyWeHaveUris) {
-    data=mimeData->data( mimeData->formats().first() );
     mimeType = mimeData->formats().first();
-    if( KMimeType::mimeType( mimeData->formats().first() ) )
-       label = KMimeType::mimeType( mimeData->formats().first() )->name();
-
+    data = mimeData->data( mimeType );
+    KMimeType::Ptr mime = KMimeType::mimeType( mimeType );
+    if ( mime )
+        label = mime->comment();
   }
 
   QAction *ret = menu.exec( QCursor::pos() );
