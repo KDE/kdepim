@@ -30,7 +30,6 @@ target_link_libraries(kmail-mobile
     ${KDEPIMLIBS_KMIME_LIBRARY}
     ${KDEPIMLIBS_AKONADI_LIBRARY}
     ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-    akonadi-mail
     akonadi_next
     kdepim
     kdepimmobileui
