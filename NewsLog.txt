@@ -1,3 +1,17 @@
+Friday, August 13th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4479: Change used kontact plugins crash (Kontact::MainWindow::addPlugin at mainwindow.cpp:719) (rt#6193)
+* kolab/issue4484: Send S/MIME encrypted mail to address without certificate, search for external certificate button (rt#5659)
+* kolab/issue4404: Reminder: the event entries of the events which triggered an alarm should be selected
+* kolab/issue3971: Users dislike the "Cannot edit attachment" error message (rt#5908)
+* kolab/issue4405: The reminder should be in the foreground
+* kolab/issue4005: Attachments should open in read-only folders (rt#5915)
+* kolab/issue3932: Kontact should show a warning, if a user tries to accept an invitation of a past event (rt#5833)
+
+
 Friday, August 5th 2010
 
 Problems addressed
