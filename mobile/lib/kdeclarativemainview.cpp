@@ -148,6 +148,7 @@ void KDeclarativeMainView::delayedInit()
   // A list of agent instances
   Akonadi::AgentInstanceModel *agentInstanceModel = new Akonadi::AgentInstanceModel( this );
   d->mAgentInstanceFilterModel = new Akonadi::AgentFilterProxyModel( this );
+  d->mAgentInstanceFilterModel->addCapabilityFilter( QLatin1String( "Resource" ) );
   d->mAgentInstanceFilterModel->setSourceModel( agentInstanceModel );
 
   context->setContextProperty( "agentInstanceList", QVariant::fromValue( static_cast<QObject*>( d->mAgentInstanceFilterModel ) ) );

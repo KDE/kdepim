@@ -119,6 +119,10 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setSelectionModel( selectionModel );
   manager->createAllActions();
 
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add Address Book" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete Address Book" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Configure Address Book" ) );
+
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
   connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
