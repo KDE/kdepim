@@ -25,7 +25,7 @@ import org.kde.pim.mobileui 4.5
 
 ActionMenuContainer {
 
-  actionItemHeight : 70
+  actionItemHeight : height / 6 - actionItemSpacing
   actionItemWidth : 200
   actionItemSpacing : 2
   ReorderList {
