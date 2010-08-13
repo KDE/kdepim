@@ -328,6 +328,12 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
   if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() )
     return true;
 
+  if ( todo->allDay() != mUi->mWholeDayCheck->isChecked() )
+    return true;
+
+  if ( todo->hasDueDate() != mUi->mEndCheck->isChecked() )
+    return true;
+
   if ( mUi->mStartCheck->isChecked() ) {
     // Use mActiveStartTime. This is the KDateTime::Spec selected on load coming from
     // the combobox. We use this one as it can slightly differ (e.g. missing
@@ -336,8 +342,6 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
       return true;
   }
 
-  if ( todo->hasDueDate() != mUi->mEndCheck->isChecked() )
-    return true;
 
   if ( mUi->mEndCheck->isChecked() ) {
     if ( currentEndDateTime() != mInitialEndDT )
