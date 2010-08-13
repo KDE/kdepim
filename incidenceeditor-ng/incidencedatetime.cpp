@@ -253,7 +253,7 @@ void IncidenceDateTime::enableStartEdit( bool enable )
 {
   mUi->mStartDateEdit->setEnabled( enable );
 
-  if( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
+  if ( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
     mUi->mWholeDayCheck->setEnabled( true );
   } else {
     mUi->mWholeDayCheck->setEnabled( false );
@@ -324,11 +324,13 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
 {
   Q_ASSERT( todo );
 
+  const bool hasDateTimes = mUi->mStartCheck->isChecked() || mUi->mEndCheck->isChecked();
+
   // First check the start time/date of the todo
   if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() )
     return true;
 
-  if ( todo->allDay() != mUi->mWholeDayCheck->isChecked() )
+  if ( ( hasDateTimes && todo->allDay() ) != mUi->mWholeDayCheck->isChecked() )
     return true;
 
   if ( todo->hasDueDate() != mUi->mEndCheck->isChecked() )
@@ -489,7 +491,13 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
   // kolab to-dos that "float" have a due time of 00:00, so make sure to check
   // that also when deciding if the time associated box should be checked
   // when reading in the Todo.
-  mUi->mWholeDayCheck->setChecked( todo->allDay() || todo->dtDue().time() == QTime( 0, 0 ) );
+
+
+  const bool hasDateTimes = mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked();
+  mUi->mWholeDayCheck->setChecked( hasDateTimes &&
+                                   ( todo->allDay() || todo->dtDue().time() == QTime( 0, 0 ) ) );
+
+  mUi->mWholeDayCheck->setEnabled( hasDateTimes );
 
   // Connect to the right logic
   connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
