@@ -153,6 +153,10 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setSelectionModel( selectionModel );
   manager->createAllActions();
 
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add Calendar" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete Calendar" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Configure Calendar" ) );
+
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
   connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
