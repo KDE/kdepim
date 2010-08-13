@@ -47,7 +47,7 @@ KPIM.MainView {
       kmailActions.showOnlyCategory("home")
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
     {
-      kmailActions.showOnlyCategory("resource")
+      kmailActions.showOnlyCategory("account")
     } else { // something else is selected
       kmailActions.showOnlyCategory("single_folder")
     }
