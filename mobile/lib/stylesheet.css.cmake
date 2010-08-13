@@ -76,12 +76,17 @@ QLineEdit,
 QTextEdit,
 QSpinBox
 {
-  background-color: white;
   border: 2px;
   border-color: grey;
   border-radius: 8px;
   border-style: inset;
   padding: 4px;
+}
+
+QLineEdit,
+QTextEdit
+{
+  background-color: white;
 }
 
 
