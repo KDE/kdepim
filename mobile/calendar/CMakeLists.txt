@@ -24,8 +24,8 @@ target_link_libraries(korganizer-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDE4_KDECORE_LIBRARY}
   ${KDE4_KDEUI_LIBRARY}
-  ${KDEPIMLIBS_KCALCORE_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_LIBRARY}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   kdepimmobileui
   akonadi-kcal_next
   incidenceeditorsngmobile

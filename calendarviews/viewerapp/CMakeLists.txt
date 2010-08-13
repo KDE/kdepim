@@ -22,7 +22,7 @@ kde4_add_executable(viewerapp ${viewerapp_SRCS})
 target_link_libraries(viewerapp
     eventviews
     ${KDE4_KDECORE_LIBS}
-    ${KDE4_AKONADI_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
     ${QT_QTGUI_LIBS}
     ${KDEPIMLIBS_KCALCORE_LIBS}
     akonadi-kcal_next

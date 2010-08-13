@@ -32,7 +32,7 @@ kde4_add_ui_files(templateparser_LIB_SRCS
 
 
 kde4_add_library( templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS} )
-target_link_libraries( templateparser messageviewer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+target_link_libraries( templateparser messageviewer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore kleo kpgp ${QGPGME_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} )
 set_target_properties( templateparser PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 

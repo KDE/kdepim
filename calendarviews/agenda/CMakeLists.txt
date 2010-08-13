@@ -38,10 +38,10 @@ target_link_libraries(eventviews
                       ${QT_QTGUI_LIBRARY}
                       ${QT_QTUITOOLS_LIBRARY}
                       ${KDE4_KDEUI_LIBS}
-                      ${KDE4_KMIME_LIBRARY}
+                      ${KDEPIMLIBS_KMIME_LIBS}
                       ${KDE4_KCMUTILS_LIBS}
                       ${ZLIB_LIBRARY}
-                      ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
+                      ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDEPIMLIBS_AKONADI_LIBS}
                       ${KDEPIMLIBS_KHOLIDAYS_LIBS}

@@ -50,7 +50,7 @@ kde4_add_executable(etm_usage ${etm_usage_SRCS} )
 
 target_link_libraries(etm_usage messageviewer messagelist kdepim kpgp kleo akonadi-kde messagecore
                       akonadi-kmime akonadi_next ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}
-                      ${KDEPIMLIBS_KTNEF_LIBRARY} ${QGPGME_LIBRARIES}
+                      ${KDEPIMLIBS_KTNEF_LIBS} ${QGPGME_LIBRARIES}
                       ${KDEPIMLIBS_AKONADI_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDEPIMLIBS_KABC_LIBS}

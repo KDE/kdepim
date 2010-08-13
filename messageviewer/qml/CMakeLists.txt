@@ -11,8 +11,8 @@ kde4_add_plugin( messageviewerqmlplugin WITH_PREFIX
 target_link_libraries(messageviewerqmlplugin messageviewer
   ${KDE4_KDECORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
-  ${KDEPIMLIBS_KMIME_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_LIBRARY}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   ${QT_QTDECLARATIVE_LIBRARY}
   kdepim
   kdepimmobileui

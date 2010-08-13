@@ -174,9 +174,9 @@ add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
 
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
 
-if (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
+if (NOT KDEPIMLIBS_KRESOURCES_LIBS)
   add_definitions( -DKDEPIM_NO_KRESOURCES )
-endif (NOT KDEPIMLIBS_KRESOURCES_LIBRARY)
+endif (NOT KDEPIMLIBS_KRESOURCES_LIBS)
 
 if(WINCE)
   set(LIBRARY_TYPE STATIC)
@@ -264,9 +264,9 @@ set(libkdgantt1_SRCS
     if (Boost_TOPOLOGICAL_SORT_DIR)
       macro_optional_add_subdirectory(kleopatra)
     endif(Boost_TOPOLOGICAL_SORT_DIR)
-    if (QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+    if (QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBS)
       macro_optional_add_subdirectory(wizards)
-    endif (QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+    endif (QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBS)
     # The following components depend on QGpgME.
     set(MESSAGEVIEWER_SUPPORTED TRUE)
     add_subdirectory(messageviewer)
@@ -295,9 +295,9 @@ set(libkdgantt1_SRCS
     endif ()
   endif(QGPGME_FOUND)
 
-  if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBS)
     macro_optional_add_subdirectory(knode)
-  endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBS)
 
   if (QT_QT3SUPPORT_FOUND)
     macro_optional_add_subdirectory(akregator)
@@ -305,16 +305,16 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(akonadiconsole)
   macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
-  if (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW)
+  if (KDEPIMLIBS_KRESOURCES_LIBS AND NOT MINGW)
     macro_optional_add_subdirectory(kalarm)
-  endif (KDEPIMLIBS_KRESOURCES_LIBRARY AND NOT MINGW)
+  endif (KDEPIMLIBS_KRESOURCES_LIBS AND NOT MINGW)
 
   if (Grantlee_FOUND)
     macro_optional_add_subdirectory(kjots)
   endif (Grantlee_FOUND)
-  if (KDEPIMLIBS_KRESOURCES_LIBRARY)
+  if (KDEPIMLIBS_KRESOURCES_LIBS)
     macro_optional_add_subdirectory(knotes)
-  endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
+  endif (KDEPIMLIBS_KRESOURCES_LIBS)
   macro_optional_add_subdirectory(strigi-analyzer)
 
   if(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
@@ -326,18 +326,18 @@ set(libkdgantt1_SRCS
   endif (BUILD_runtime)
 
   macro_optional_add_subdirectory(kaddressbook)
-  if(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  if(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBS)
     macro_optional_add_subdirectory(ktimetracker)
-  endif(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBRARY)
+  endif(Q_WS_X11 AND KDEPIMLIBS_KRESOURCES_LIBS)
 
   if (QT_QT3SUPPORT_FOUND)
     macro_optional_add_subdirectory(kontact) # must be the last one.
   endif (QT_QT3SUPPORT_FOUND)
 
   # These targets depend on optional applications
-  if (KDEPIMLIBS_KRESOURCES_LIBRARY)
+  if (KDEPIMLIBS_KRESOURCES_LIBS)
     add_subdirectory(kresources) # Must be after KAddressbook
-  endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
+  endif (KDEPIMLIBS_KRESOURCES_LIBS)
   add_subdirectory(plugins) # Must be after KMail
 
 endif (KDEPIM_ONLY_KLEO)

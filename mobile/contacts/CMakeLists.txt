@@ -54,8 +54,8 @@ kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 target_link_libraries(kaddressbook-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDEPIMLIBS_AKONADI_CONTACTS_LIBRARY}
-    ${KDEPIMLIBS_KABC_LIBRARY}
-    ${KDEPIMLIBS_AKONADI_LIBRARY}
+    ${KDEPIMLIBS_KABC_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
     akonadi_next
     kdepim
     kdepimmobileui

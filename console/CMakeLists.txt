@@ -1,7 +1,7 @@
 project(console)
 
-if (KDEPIMLIBS_KRESOURCES_LIBRARY)
+if (KDEPIMLIBS_KRESOURCES_LIBS)
   add_subdirectory(konsolekalendar)
   add_subdirectory(kabcclient)
-endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
+endif (KDEPIMLIBS_KRESOURCES_LIBS)
 

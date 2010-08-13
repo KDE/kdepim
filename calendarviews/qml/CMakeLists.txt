@@ -12,7 +12,7 @@ target_link_libraries( calendarviewerqmlplugin
   eventviews
   ${KDE4_KDECORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   ${QT_QTDECLARATIVE_LIBRARY}
   kdepimmobileui
   akonadi-kcal_next

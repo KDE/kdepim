@@ -19,8 +19,8 @@ set(notes_mobile_SRCS
 kde4_add_executable(notes-mobile ${notes_mobile_SRCS} )
 target_link_libraries(notes-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
-  ${KDEPIMLIBS_KMIME_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
   kdepimmobileui
   kdepim
   akonadi_next

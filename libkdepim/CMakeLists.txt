@@ -46,11 +46,11 @@ set(kdepim_LIB_SRCS
    multiplyinglineview_p.cpp
 )
 
-if (KDEPIMLIBS_KRESOURCES_LIBRARY)
+if (KDEPIMLIBS_KRESOURCES_LIBS)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
     kresourceprefs.cpp
   )
-endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
+endif (KDEPIMLIBS_KRESOURCES_LIBS)
 
 kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 
@@ -62,7 +62,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KPARTS_LIBS}
   ${KDE4_KCMUTILS_LIBS}
-  ${KDE4_KMIME_LIBRARY}
+  ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}

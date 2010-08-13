@@ -9,7 +9,7 @@ include_directories(
 )
 
 target_link_libraries( akonadicontactqmlplugin
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${QT_QTDECLARATIVE_LIBRARY}
   kdepimmobileui
 )

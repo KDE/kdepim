@@ -18,10 +18,10 @@ set(mobile_tasks_SRCS
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 target_link_libraries(tasks-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDEPIMLIBS_KCALCORE_LIBRARY}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
   kdepimmobileui
-#    ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
-#    ${KDEPIMLIBS_AKONADI_LIBRARY}
+#    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+#    ${KDEPIMLIBS_AKONADI_LIBS}
 #    akonadi_next
     kdepim
     incidenceeditors
