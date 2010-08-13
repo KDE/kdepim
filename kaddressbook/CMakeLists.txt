@@ -103,7 +103,7 @@ kde4_add_app_icon(kaddressbook_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-pim-
 
 kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
 
-target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS}
+target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim
                               ${KDE4_KIO_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_PHONON_LIBS})
 target_link_libraries(kaddressbook ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} kaddressbookprivate)
 
