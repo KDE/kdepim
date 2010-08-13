@@ -54,13 +54,13 @@ KPIM.MainView {
 
   function updateContextActionsStates()
   {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
-    {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
       korganizerActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
-    {
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       korganizerActions.showOnlyCategory("account")
-    } else { // something else is selected
+    } else if ( collectionView.numSelected > 0 ) { // something else is selected
+      korganizerActions.showOnlyCategory( "multiple_folder" );
+    } else {
       korganizerActions.showOnlyCategory("single_folder")
     }
   }
