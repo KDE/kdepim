@@ -54,13 +54,9 @@ ActionMenuContainer {
     ]
   }
 
-  ActionList {
+  ActionListItem {
     category : "home"
-    name : KDE.i18n( "Identities" )
-    FakeAction { name : "add_identity" }
-    FakeAction { name : "modify_identity" }
-    FakeAction { name : "delete_identity" }
-    FakeAction { name : "mark_default_identity" }
+    name : "kmail_mobile_identities"
   }
 
   ActionList {

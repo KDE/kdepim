@@ -28,6 +28,7 @@
 #include <KActionCollection>
 #include <KAction>
 #include <KCmdLineArgs>
+#include <KCMultiDialog>
 #include <kselectionproxymodel.h>
 #include <klocalizedstring.h>
 #include <kstandarddirs.h>
@@ -83,6 +84,10 @@ void MainView::delayedInit()
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
+
+  KAction *action = new KAction( i18n( "Identities" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( configureIdentity() ) );
+  actionCollection()->addAction( "kmail_mobile_identities", action );
 
   // lazy load of the default single folders
   QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
@@ -354,6 +359,15 @@ void MainView::setListSelectedRow(int row)
     item.setFlags(status.statusFlags());
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
   }
+}
+
+void MainView::configureIdentity()
+{
+  KCMultiDialog dlg;
+  dlg.addModule( "kcm_kpimidentities" );
+  dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
+  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
+  dlg.exec();
 }
 
 bool MainView::isDraft( int row )
