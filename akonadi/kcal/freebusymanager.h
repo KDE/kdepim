@@ -37,8 +37,9 @@
 
 #include "akonadi-kcal_next_export.h"
 
-#include <kcal/icalformat.h>
-#include <kcal/freebusycache.h>
+#include <kcalcore/icalformat.h>
+#include <kcalcore/freebusycache.h>
+#include <kcalcore/freebusy.h>
 
 #include <KUrl>
 
@@ -53,16 +54,14 @@ class QTimerEvent;
 namespace KIO {
   class Job;
 }
-namespace KCal {
-  class FreeBusy;
-}
+
 namespace Akonadi {
 
 class Calendar;
 class FreeBusyManagerPrivate;
 class FreeBusyManagerStatic;
 
-class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::FreeBusyCache
+class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCalCore::FreeBusyCache
 {
   Q_OBJECT
   public:
@@ -119,28 +118,30 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
       information 0 is returned. In that case the information should be retrieved
       again by calling retrieveFreeBusy.
 
-      Implements KCal::FreeBusyCache::loadFreeBusy
+      Implements KCalCore::FreeBusyCache::loadFreeBusy
 
       @param email is a QString containing a email string in the
       "FirstName LastName <emailaddress>" format.
     */
-    virtual KCal::FreeBusy *loadFreeBusy( const QString &email );
+    virtual KCalCore::FreeBusy::Ptr loadFreeBusy( const QString &email );
 
     /**
       Save freebusy information belonging to an email.
 
-      Implements KCal::FreeBusyCache::saveFreeBusy
+      Implements KCalCore::FreeBusyCache::saveFreeBusy
 
       @param freebusy is a pointer to a valid FreeBusy instance.
       @param person is a valid Person instance.
     */
-    virtual bool saveFreeBusy( KCal::FreeBusy *freebusy, const KCal::Person &person );
+    virtual bool saveFreeBusy( const KCalCore::FreeBusy::Ptr &freebusy,
+                               const KCalCore::Person::Ptr &person );
 
   signals:
     /**
       This signal is emitted to return results of free/busy requests.
     */
-    void freeBusyRetrieved( KCal::FreeBusy *, const QString &email );
+    void freeBusyRetrieved( const KCalCore::FreeBusy::Ptr &,
+                            const QString &email );
 
   protected:
     /** React on timer events, used for delayed freebusy list uploading */

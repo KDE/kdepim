@@ -41,6 +41,8 @@ class InvitationDispatcher : public QObject
     explicit InvitationDispatcher( Akonadi::Calendar *calendar, QObject *parent = 0 );
     ~InvitationDispatcher();
 
+    void setIsCounterProposal( bool isCounterProposal );
+
     /**
       Sets the manager to which this dispatcher listens for the itemSaveFinished
       signal.

@@ -114,6 +114,8 @@ IncidenceAttendee::IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTi
            SLOT( slotAttendeeChanged( KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr ) ) );
 }
 
+IncidenceAttendee::~IncidenceAttendee() {}
+
 void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
@@ -352,6 +354,7 @@ void IncidenceEditorsNG::IncidenceAttendee::slotSolveConflictPressed()
 {
   int duration = mDateTime->startTime().secsTo( mDateTime->endTime() );
   QScopedPointer<SchedulingDialog> dialog( new SchedulingDialog( mDateTime->startDate(), mDateTime->startTime(), duration, mConflictResolver, mParentWidget ) );
+  dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(), mDateTime->currentEndDateTime() );
   if( dialog->exec() == KDialog::Accepted ) {
     kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
     mDateTime->setStartDate( dialog->selectedStartDate() );

@@ -115,9 +115,9 @@ CalendarSearch::Private::Private( CalendarSearch* qq )
     monitor->setCollectionMonitored( Collection::root() );
     monitor->fetchCollection( true );
     monitor->setItemFetchScope( scope );
-    monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), true );
-    monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::todoMimeType(), true );
-    monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::journalMimeType(), true );
+    monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
+    monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
+    monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
 
     calendarModel = new CalendarModel( monitor, q );
     connect( calendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)), q, SLOT(rowsInserted(QModelIndex,int,int)) );
@@ -340,8 +340,8 @@ void CalendarSearch::Private::rowsInserted( const QModelIndex &parent, int start
 
     if ( item.isValid() ) {
       const Collection::Rights rights = item.parentCollection().rights();
-      KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
-      if ( incidence && 
+      KCalCore::Incidence::Ptr incidence = Akonadi::incidence( item );
+      if ( incidence &&
            !( rights & Collection::CanDeleteItem ) &&
            !( rights & Collection::CanChangeItem ) &&
            !incidence->isReadOnly() ) {
@@ -379,7 +379,7 @@ void CalendarSearch::setSelectionModel( QItemSelectionModel *selectionModel )
   }
 }
 
-void CalendarSearch::setFilter( KCal::CalFilter *filter )
+void CalendarSearch::setFilter( KCalCore::CalFilter *filter )
 {
   d->kcalFilterProxyModel->setFilter( filter );
 }

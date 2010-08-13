@@ -26,11 +26,12 @@
 
 #include "akonadi-kcal_next_export.h"
 
-#include <QMap>
-#include <KCal/Incidence>
-#include <KCal/Scheduler>
+#include <kcalcore/incidence.h>
+#include <kcalcore/schedulemessage.h>
 
-namespace KCal {
+#include <QMap>
+
+namespace KCalCore {
   class ICalFormat;
   class ScheduleMessage;
 }
@@ -48,20 +49,23 @@ namespace Akonadi {
       explicit MailScheduler( Calendar *calendar );
       virtual ~MailScheduler();
 
-      bool publish ( KCal::IncidenceBase *incidence, const QString &recipients );
+      bool publish ( const KCalCore::IncidenceBase::Ptr &incidence,
+                     const QString &recipients );
 
-      bool performTransaction( const KCal::Incidence::Ptr &incidence, KCal::iTIPMethod method );
+      bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                               KCalCore::iTIPMethod method );
 
-      bool performTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method );
-      bool performTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method, const QString &recipients );
+      bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                               KCalCore::iTIPMethod method,
+                               const QString &recipients );
 #if 0
-      QList<KCal::ScheduleMessage*> retrieveTransactions();
+      QList<KCalCore::ScheduleMessage*> retrieveTransactions();
 
-      bool deleteTransaction( KCal::IncidenceBase *incidence );
+      bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
 #endif
 
       /** Returns the directory where the free-busy information is stored */
-      virtual QString freeBusyDir();
+      virtual QString freeBusyDir() const;
 
       /**
         Accepts the transaction. The incidence argument specifies the iCal
@@ -75,16 +79,19 @@ namespace Akonadi {
         @param email the email address of the person for whom this
         transaction is to be performed.
       */
-      bool acceptTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method, KCal::ScheduleMessage::Status status, const QString &email );
+      bool acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                              KCalCore::iTIPMethod method,
+                              KCalCore::ScheduleMessage::Status status,
+                              const QString &email );
 
       /** Accepts a counter proposal */
-      bool acceptCounterProposal( KCal::Incidence *incidence );
+      bool acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
     private:
       Calendar *mCalendar;
-      KCal::ICalFormat *mFormat;
+      KCalCore::ICalFormat *mFormat;
     #if 0
-      QMap<KCal::IncidenceBase *, QString> mEventMap;
+      QMap<KCalCore::IncidenceBase::Ptr , QString> mEventMap;
     #endif
   };
 

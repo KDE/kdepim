@@ -23,7 +23,7 @@
 
 class QWidget;
 
-#include <KCal/ICalFormat>
+#include <kcalcore/icalformat.h>
 
 #include "akonadi-kcal_next_export.h"
 
@@ -82,38 +82,39 @@ public:
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    SendStatus sendIncidenceCreatedMessage( KCal::iTIPMethod method,
-                                            const KCal::Incidence::Ptr &incidence );
+    SendStatus sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
+                                            const KCalCore::Incidence::Ptr &incidence );
 
     /**
       Handles sending of invitations for modified incidences.
       @param incidence The modified incidence.
       @param attendeeSatusChanged ????
      */
-    SendStatus sendIncidenceModifiedMessage( KCal::iTIPMethod method,
-                                             const KCal::Incidence::Ptr &incidence,
+    SendStatus sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
+                                             const KCalCore::Incidence::Ptr &incidence,
                                              bool attendeeStatusChanged );
 
     /**
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    SendStatus sendIncidenceDeletedMessage( KCal::iTIPMethod method,
-                                            const KCal::Incidence::Ptr &incidence );
+    SendStatus sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
+                                            const KCalCore::Incidence::Ptr &incidence );
 
     /**
       Send counter proposal message.
       @param oldEvent The original event provided in the invitations.
       @param newEvent The new event as edited by the user.
     */
-    SendStatus sendCounterProposal( const KCal::Event::Ptr &oldEvent, const KCal::Event::Ptr &newEvent ) const;
+    SendStatus sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
+                                    const KCalCore::Incidence::Ptr &newIncidence ) const;
 
 Q_SIGNALS:
     /**
       This signal is emitted when an invitation for a counter proposal is sent.
       @param incidence The incidence for which the counter proposal must be specified.
      */
-    void editorRequested( const KCal::Incidence::Ptr &incidence );
+    void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
 private:
     struct Private;

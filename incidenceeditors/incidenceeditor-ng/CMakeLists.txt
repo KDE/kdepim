@@ -15,6 +15,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   alarmpresets.cpp
   alarmdialog.cpp
 
+  ktimezonecombobox.cpp
+
   # TODO: Move the next two to akonadi libs when finished
   editoritemmanager.cpp
   invitationdispatcher.cpp
@@ -53,7 +55,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   ../categoryselectdialog.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
-  ../ktimezonecombobox.cpp
 )
 
 ### Build the desktop version
@@ -68,6 +69,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
+  ../categoryselectdialog_base.ui
   ../template_management_dialog_base.ui
   eventortododesktop.ui
   alarmdialog.ui
@@ -81,7 +83,6 @@ target_link_libraries(incidenceeditorsng
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
   kdepim               # For KPIM::K{Date|Time}Edit
@@ -121,7 +122,6 @@ if (KDEPIM_MOBILE_UI)
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
-    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
     kdepim            # For KPIM::K{Date|Time}Edit
     akonadi-kcal_next # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
@@ -150,7 +150,6 @@ target_link_libraries(keventeditor
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   incidenceeditorsng
   akonadi-kcal_next
   kdepimdbusinterfaces

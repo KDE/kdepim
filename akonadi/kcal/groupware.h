@@ -39,10 +39,10 @@
 #include "incidencechanger.h"
 
 #include "akonadi-kcal_next_export.h"
-#include <KCal/ICalFormat>
+#include <kcalcore/icalformat.h>
 
 
-namespace KCal {
+namespace KCalCore {
   class Event;
   class Incidence;
 }
@@ -76,8 +76,8 @@ class AKONADI_KCAL_NEXT_EXPORT Groupware : public QObject
          Returns false if the user cancels the dialog, and true if the
          user presses Yes or No.
     */
-    bool sendICalMessage( QWidget *parent, KCal::iTIPMethod method,
-                          KCal::Incidence *incidence,
+    bool sendICalMessage( QWidget *parent, KCalCore::iTIPMethod method,
+                          const KCalCore::Incidence::Ptr &incidence,
                           IncidenceChanger::HowChanged action,
                           bool attendeeStatusChanged );
 
@@ -86,7 +86,7 @@ class AKONADI_KCAL_NEXT_EXPORT Groupware : public QObject
       @param oldEvent The original event provided in the invitations.
       @param newEvent The new event as edited by the user.
     */
-    void sendCounterProposal( KCal::Event *oldEvent, KCal::Event *newEvent ) const;
+    void sendCounterProposal( KCalCore::Event::Ptr oldEvent, KCalCore::Event::Ptr newEvent ) const;
 
     // DoNotNotify is a flag indicating that the user does not want
     // updates sent back to the organizer.
@@ -101,7 +101,7 @@ class AKONADI_KCAL_NEXT_EXPORT Groupware : public QObject
 
   private:
     static Groupware *mInstance;
-    KCal::ICalFormat mFormat;
+    KCalCore::ICalFormat mFormat;
     Akonadi::Calendar *mCalendar;
     GroupwareUiDelegate *mDelegate;
     bool mDoNotNotify;

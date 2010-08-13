@@ -57,6 +57,7 @@ public:
 #else
     IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
 #endif
+    ~IncidenceAttendee();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );

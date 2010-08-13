@@ -166,6 +166,12 @@ InvitationDispatcher::~InvitationDispatcher()
   delete d_ptr;
 }
 
+void InvitationDispatcher::setIsCounterProposal( bool isCounterProposal )
+{
+  Q_D( InvitationDispatcher );
+  d->mIsCounterProposal = isCounterProposal;
+}
+
 void InvitationDispatcher::setItemManager( EditorItemManager *manager )
 {
   Q_D( InvitationDispatcher );

@@ -88,7 +88,7 @@ void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
     editor->blockSignals( false );
     if ( editor->isDirty() ) {
       qDebug() << editor->objectName();
-      Q_ASSERT( !editor->isDirty() );
+      Q_ASSERT_X( false, "load", "editor shouldn't be dirty" );
     }
   }
 
