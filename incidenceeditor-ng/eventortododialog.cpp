@@ -455,6 +455,9 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 
   mEditor->save( newIncidence );
 
+  // TODO: Remove this once we support moving of events/todo's
+ mCalSelector->setEnabled( false );
+
   // Make sure that we don't loose uid for existing incidence
   newIncidence->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
   result.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
