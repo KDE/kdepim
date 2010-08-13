@@ -56,7 +56,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
 if (NOT WINCE)
   set(incidenceeditors_ng_shared_LIB_SRCS ${incidenceeditors_ng_shared_LIB_SRCS}
-    // pending: replace QTreeWidget with QListWidget
+    # pending: replace QTreeWidget with QListWidget
     editorfreebusy.cpp
   ../autochecktreewidget.cpp
   ../categoryselectdialog.cpp
