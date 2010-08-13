@@ -97,8 +97,8 @@ ActionMenuContainer {
   ActionList {
     category : "single_calendar"
     name : KDE.i18n( "Favorite" )
-    ActionListItem { name : "single_add_as_favorite" }
-    ActionListItem { name : "single_remove_from_favorites" }
+    FakeAction { name : "single_add_as_favorite" }
+    FakeAction { name : "single_remove_from_favorites" }
   }
   ActionList {
     category : "single_calendar"

@@ -168,8 +168,12 @@ KPIM.MainView {
     }
 
     onVisibleChanged : {
-      if ( visible )
-        korganizerActions.showOnlyCategory("single_calendar")
+      if ( visible ) {
+        if ( collectionView.numSelected > 1 )
+          korganizerActions.showOnlyCategory("multiple_calendar")
+        else
+          korganizerActions.showOnlyCategory("single_calendar")
+      }
     }
   }
 
