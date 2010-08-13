@@ -31,11 +31,16 @@ set( kcalakonadi_LIB_SRC
      mailscheduler.cpp
      freebusydownloadjob.cpp
      freebusymanager.cpp
-     dndfactory.cpp
      incidencechanger.cpp
      kcalmodel.cpp
      invitations/invitationhandler.cpp
 )
+
+if (NOT WINCE)
+  set( kcalakonadi_LIB_SRC ${kcalakonadi_LIB_SRC}
+    dndfactory.cpp
+  )
+endif (NOT WINCE)
 
 kde4_add_kcfg_files(kcalakonadi_LIB_SRC kcalprefs_base.kcfgc )
 

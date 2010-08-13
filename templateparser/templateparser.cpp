@@ -19,10 +19,12 @@
  */
 
 #include "templateparser.h"
-#include "templatesconfiguration.h"
-#include "templatesconfiguration_kfg.h"
+#ifndef Q_OS_WINCE
 #include "customtemplates_kfg.h"
 #include "globalsettings_base.h"
+#include "templatesconfiguration_kfg.h"
+#include "templatesconfiguration.h"
+#endif
 
 
 #include "messagecore/stringutil.h"
@@ -108,7 +110,11 @@ void TemplateParser::setAllowDecryption( const bool allowDecryption )
 bool TemplateParser::shouldStripSignature() const
 {
   // Only strip the signature when replying, it should be preserved when forwarding
-  return ( mMode == Reply || mMode == ReplyAll ) && GlobalSettings::self()->stripSignature();
+  return ( mMode == Reply || mMode == ReplyAll )
+#ifndef Q_OS_WINCE
+  && GlobalSettings::self()->stripSignature()
+#endif
+  ;
 }
 
 void TemplateParser::setIdentityManager( KPIMIdentities::IdentityManager* ident)
@@ -1068,6 +1074,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &body )
 
 QString TemplateParser::findCustomTemplate( const QString &tmplName )
 {
+#ifndef Q_OS_WINCE
   CTemplates t( tmplName );
   mTo = t.to();
   mCC = t.cC();
@@ -1077,6 +1084,9 @@ QString TemplateParser::findCustomTemplate( const QString &tmplName )
   } else {
     return findTemplate();
   }
+#else
+    return findTemplate();
+#endif
 }
 
 QString TemplateParser::findTemplate()
@@ -1084,6 +1094,9 @@ QString TemplateParser::findTemplate()
   // kDebug() << "Trying to find template for mode" << mode;
 
   QString tmpl;
+
+#ifndef Q_OS_WINCE
+
 #if 0
   if ( !mFolder.isValid() ) { // find folder message belongs to
     mFolder = mMsg->parentCollection();
@@ -1196,6 +1209,7 @@ QString TemplateParser::findTemplate()
   }
 
   mQuoteString = TemplatesConfiguration::defaultQuoteString();
+#endif
   return tmpl;
 }
 
@@ -1390,8 +1404,10 @@ QString TemplateParser::asQuotedString( const KMime::Message::Ptr &msg, const QS
 
   const QString indentStr = MessageCore::StringUtil::formatString( aIndentStr,
                                                                    msg->from()->asUnicodeString() );
+#ifndef Q_OS_WINCE
   if ( GlobalSettings::self()->smartQuote() && mWrap)
     content = MessageCore::StringUtil::smartQuote( content, mColWrap - indentStr.length() );
+#endif
   content.replace( '\n', '\n' + indentStr );
   content.prepend( indentStr );
   content += '\n';

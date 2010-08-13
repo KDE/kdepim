@@ -22,7 +22,7 @@
 
 #include <QtDeclarative/QDeclarativeView>
 
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
 #include <QGLWidget>
 #endif
 
@@ -73,7 +73,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 
   private:
     KActionCollection *mActionCollection;
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
     QGLWidget *glWidget;
 #endif
     QString m_qmlFileName;

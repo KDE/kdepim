@@ -41,7 +41,9 @@
 #include <kpimidentities/identitycombo.h>
 #include <messagecore/attachmentcollector.h>
 #include <messagecore/nodehelper.h>
+#ifndef QT_NO_CURSOR
 #include <messageviewer/kcursorsaver.h>
+#endif
 #include <mailtransport/transportmanager.h>
 #include <messagecomposer/recipientseditor.h>
 #include <akonadi/collectioncombobox.h>
@@ -214,7 +216,9 @@ void Message::ComposerViewBase::send ( MessageSender::SendMethod method, Message
   mSendMethod = method;
   mSaveIn = saveIn;
 
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
 
   m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), m_transport->currentText(), "utf-8" ) );
 

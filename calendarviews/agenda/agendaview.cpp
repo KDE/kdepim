@@ -1703,9 +1703,11 @@ void AgendaView::startDrag( const Item &incidence )
     kError() << "No Calendar set";
     return;
   }
+#ifndef KORG_NODND
   if ( QDrag *drag = Akonadi::createDrag( incidence, calendar()->timeSpec(), this ) ) {
     drag->exec();
   }
+#endif
 }
 
 void AgendaView::readSettings()

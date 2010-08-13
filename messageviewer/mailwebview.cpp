@@ -26,14 +26,22 @@
 using namespace MessageViewer;
 
 MailWebView::MailWebView( QWidget *parent )
+#ifdef Q_OS_WINCE
+  : QWebView( parent )
+#else
   : KWebView( parent )
+#endif
 {
 }
 
 bool MailWebView::event( QEvent *event )
 {
   if ( event->type() != QEvent::ContextMenu )
+#ifdef Q_OS_WINCE
+    return QWebView::event( event );
+#else
     return KWebView::event( event );
+#endif
   else {
     // Don't call KWebView::event() here, it will do silly things like selecting the text
     // under the mouse cursor, which we don't want.

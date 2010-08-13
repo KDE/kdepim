@@ -583,7 +583,9 @@ public:
   QSplitter * mSplitter;
   KHBox *mBox;
   HtmlStatusBar *mColorBar;
+#ifndef QT_NO_TREEVIEW
   QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
+#endif
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
   FindBar *mFindBar;

@@ -166,7 +166,9 @@ void IncidenceAttachment::addAttachment()
 
 void IncidenceAttachment::copyToClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   QApplication::clipboard()->setMimeData( mAttachmentView->mimeData(), QClipboard::Clipboard );
+#endif
 }
 
 void IncidenceAttachment::openURL( const KUrl &url )
@@ -177,7 +179,9 @@ void IncidenceAttachment::openURL( const KUrl &url )
 
 void IncidenceAttachment::pasteFromClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   handlePasteOrDrop( QApplication::clipboard()->mimeData() );
+#endif
 }
 
 void IncidenceAttachment::removeSelectedAttachments()
@@ -310,8 +314,10 @@ void IncidenceAttachment::showContextMenu( const QPoint &pos )
   mOpenAction->setEnabled( enable );
   //TODO: support saving multiple attachments into a directory
   mSaveAsAction->setEnabled( enable && numSelected == 1 );
+#ifndef QT_NO_CLIPBOARD
   mCopyAction->setEnabled( enable && numSelected == 1 );
   mCutAction->setEnabled( enable && numSelected == 1 );
+#endif
   mDeleteAction->setEnabled( enable );
   mEditAction->setEnabled( enable );
   mPopupMenu->exec( mAttachmentView->mapToGlobal( pos ) );
@@ -328,8 +334,10 @@ void IncidenceAttachment::showSelectedAttachments()
 
 void IncidenceAttachment::cutToClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   copyToClipboard();
   removeSelectedAttachments();
+#endif
 }
 
 void IncidenceAttachment::editSelectedAttachments()
@@ -485,6 +493,7 @@ void IncidenceAttachment::setupActions()
   mPopupMenu->addAction( mSaveAsAction );
   mPopupMenu->addSeparator();
 
+#ifndef QT_NO_CLIPBOARD
   mCopyAction = KStandardAction::copy( this, SLOT(copyToClipboard()), ac );
   mPopupMenu->addAction( mCopyAction );
 
@@ -494,6 +503,7 @@ void IncidenceAttachment::setupActions()
   KAction *action = KStandardAction::paste( this, SLOT(pasteFromClipboard()), ac );
   mPopupMenu->addAction( action );
   mPopupMenu->addSeparator();
+#endif
 
   mDeleteAction = new KAction( i18nc( "@action:inmenu remove the attachment",
                                       "&Remove" ), this );

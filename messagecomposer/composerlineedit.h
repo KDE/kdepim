@@ -54,7 +54,9 @@ class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
     void groupDropExpandResult( KJob* );
 
   private:
+#ifndef QT_NO_DRAGANDDROP
     void dropEvent( QDropEvent *event );
+#endif
     void insertEmails( const QStringList & emails );
 
   private:

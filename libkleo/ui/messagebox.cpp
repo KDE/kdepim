@@ -140,9 +140,11 @@ void AuditLogViewer::slotUser1() {
 }
 
 void AuditLogViewer::slotUser2() {
+#ifndef QT_NO_CLIPBOARD
     m_textEdit->selectAll();
     m_textEdit->copy();
     m_textEdit->textCursor().clearSelection();
+#endif
 }
 
 // static

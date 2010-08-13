@@ -163,7 +163,9 @@ void FindBar::setFoundMatch( bool match )
                  .arg(bgBrush.brush(m_search).color().name());
   }
 
+#ifndef QT_NO_STYLE_STYLESHEET
   m_search->setStyleSheet(styleSheet);
+#endif
 
 }
 

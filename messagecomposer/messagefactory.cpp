@@ -23,8 +23,9 @@
 #include "util.h"
 
 #include <akonadi/item.h>
+#ifndef QT_NO_CURSOR
 #include <messageviewer/kcursorsaver.h>
-#include <messageviewer/objecttreeparser.h>
+#endif
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 
@@ -372,7 +373,9 @@ QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAtt
   }
 
   MessageHelper::setAutomaticFields( msg, true );
+#ifndef QT_NO_CURSOR
   MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
   // iterate through all the messages to be forwarded
   foreach ( const KMime::Message::Ptr& fwdMsg, msgs ) {
     // remove headers that shouldn't be forwarded

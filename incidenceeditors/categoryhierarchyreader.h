@@ -65,6 +65,7 @@ class INCIDENCEEDITORS_EXPORT CategoryHierarchyReaderQComboBox : public Category
     int mCurrentDepth;
 };
 
+#ifndef QT_NO_TREEWIDGET
 class INCIDENCEEDITORS_EXPORT CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
 {
   public:
@@ -83,6 +84,7 @@ class INCIDENCEEDITORS_EXPORT CategoryHierarchyReaderQTreeWidget : public Catego
     QTreeWidgetItem *mItem;
     int mCurrentDepth;
 };
+#endif
 
 } // namespace IncidenceEditors;
 

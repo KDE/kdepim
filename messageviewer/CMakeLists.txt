@@ -77,8 +77,12 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KTNEF_LIBS}
   ${QGPGME_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_KDEWEBKIT_LIBRARY}
 )
+
+if (NOT WINCE)
+  target_link_libraries(messageviewer ${KDE4_KDEWEBKIT_LIBRARY})
+endif(NOT WINCE)
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIR}

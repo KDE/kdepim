@@ -47,7 +47,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   QDeclarativeView( parent ),
   m_qmlFileName( qmlFileName )
 {
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
   // make MainView use OpenGL ES2 backend for better performance
   // right now, the best performance can be achieved with a GLWidget
   // and the use of the raster graphicssystem.
@@ -124,7 +124,7 @@ void KDeclarativeFullScreenView::delayedInit()
 
 KDeclarativeFullScreenView::~KDeclarativeFullScreenView()
 {
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
   delete glWidget;
 #endif
 }

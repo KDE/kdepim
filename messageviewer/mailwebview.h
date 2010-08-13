@@ -16,14 +16,23 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifdef Q_OS_WINCE
+#include <QWebView>
+#else
 #include <KWebView>
+#endif
 
 class QContextMenuEventF;
 
 namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
+#ifdef Q_OS_WINCE
+class MailWebView : public QWebView
+#else
 class MailWebView : public KWebView
+#endif
 {
   Q_OBJECT
   public:

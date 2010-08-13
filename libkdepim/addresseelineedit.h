@@ -145,10 +145,12 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      */
     virtual void mouseReleaseEvent( QMouseEvent * );
 
+#ifndef QT_NO_CLIPBOARD
     /**
      * Reimplemented for smart insertion of dragged email addresses.
      */
     virtual void dropEvent( QDropEvent * );
+#endif
 
     /**
      * Reimplemented for internal reasons.

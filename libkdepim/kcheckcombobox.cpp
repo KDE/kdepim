@@ -292,11 +292,13 @@ void KCheckComboBox::keyPressEvent( QKeyEvent *event )
   // don't call base class implementation, we don't need all that stuff in there
 }
 
+#ifndef QT_NO_WHEELEVENT
 void KCheckComboBox::wheelEvent( QWheelEvent *event )
 {
   // discard mouse wheel events on the combo box
   event->accept();
 }
+#endif
 
 void KCheckComboBox::resizeEvent( QResizeEvent * event )
 {

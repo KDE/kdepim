@@ -36,7 +36,6 @@
 
 #include <akonadi/entity.h>
 #include <akonadi/collection.h>
-#include <akonadi/collectionview.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectiondialog.h>

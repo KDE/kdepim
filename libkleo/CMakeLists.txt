@@ -70,13 +70,8 @@ set(libkleo_core_SRCS
    kleo/keyfiltermanager.cpp
    )
 
-set(libkleo_ui_SRCS    # make this a separate lib.
-   ui/keylistview.cpp
-   ui/keyselectiondialog.cpp
-   ui/keyrequester.cpp
-   ui/keyapprovaldialog.cpp
-)
 set(libkleo_ui_common_SRCS
+   ui/dnattributeorderconfigwidget.cpp
    ui/kdhorizontalline.cpp
    ui/filenamerequester.cpp
    ui/messagebox.cpp
@@ -86,8 +81,20 @@ set(libkleo_ui_common_SRCS
    ui/cryptoconfigdialog.cpp
    ui/directoryserviceswidget.cpp
    ui/adddirectoryservicedialogimpl.cpp
-   ui/dnattributeorderconfigwidget.cpp
 )
+
+
+if (NOT WINCE)
+  set(libkleo_ui_SRCS    # make this a separate lib.
+    ui/keylistview.cpp
+    ui/keyselectiondialog.cpp
+    ui/keyrequester.cpp
+    ui/keyapprovaldialog.cpp
+  )
+else (NOT WINCE)
+  # disabled due to no QTreeWidget
+  set(libkleo_ui_SRCS )
+endif (NOT WINCE)
 
 kde4_add_ui_files(libkleo_ui_common_SRCS
     ui/adddirectoryservicedialog.ui

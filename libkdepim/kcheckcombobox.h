@@ -160,7 +160,9 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     virtual bool eventFilter( QObject *receiver, QEvent *event );
     virtual void keyPressEvent( QKeyEvent *event );
     virtual void resizeEvent( QResizeEvent * event );
+#ifndef QT_NO_WHEELEVENT
     virtual void wheelEvent( QWheelEvent *event );
+#endif
 
   private:
     //@cond PRIVATE

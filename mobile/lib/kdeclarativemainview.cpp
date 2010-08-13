@@ -58,7 +58,7 @@
 #include <akonadi/standardactionmanager.h>
 #include <KAction>
 #include <KCmdLineArgs>
-#include <QInputDialog>
+#include <KInputDialog>
 
 #include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
@@ -288,8 +288,8 @@ void KDeclarativeMainView::launchAccountWizard()
 void KDeclarativeMainView::saveFavorite()
 {
   bool ok;
-  QString name = QInputDialog::getText(this, i18n("Select name for favorite"),
-                                      i18n("Favorite name"), QLineEdit::Normal, QString(), &ok);
+  QString name = KInputDialog::getText(i18n("Select name for favorite"), i18n("Favorite name"),
+                                       QString(), &ok, this);
 
   if (!ok || name.isEmpty())
     return;

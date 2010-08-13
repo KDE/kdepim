@@ -176,8 +176,10 @@ AttachmentIconView::AttachmentIconView( QWidget *parent )
   setIconSize( QSize( KIconLoader::SizeLarge, KIconLoader::SizeLarge ) );
   setFlow( LeftToRight );
   setWrapping( true );
+#ifndef QT_NO_DRAGANDDROP
   setDragDropMode( DragDrop );
   setDragEnabled( true );
+#endif
   setEditTriggers( EditKeyPressed );
   setContextMenuPolicy( Qt::CustomContextMenu );
 }
@@ -245,6 +247,7 @@ QMimeData* AttachmentIconView::mimeData() const
 void AttachmentIconView::startDrag( Qt::DropActions supportedActions )
 {
   Q_UNUSED( supportedActions );
+#ifndef QT_NO_DRAGANDDROP
   QPixmap pixmap;
   if ( selectedItems().size() > 1 ) {
     pixmap = KIconLoader::global()->loadIcon( "mail-attachment", KIconLoader::Desktop );
@@ -261,6 +264,7 @@ void AttachmentIconView::startDrag( Qt::DropActions supportedActions )
   drag->setPixmap( pixmap );
   drag->setHotSpot( hotspot );
   drag->exec( Qt::CopyAction );
+#endif
 }
 
 void AttachmentIconView::keyPressEvent(QKeyEvent* event)

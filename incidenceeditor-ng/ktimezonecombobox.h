@@ -26,7 +26,7 @@
 #ifndef KDEPIM_KTIMEZONECOMBOBOX_H
 #define KDEPIM_KTIMEZONECOMBOBOX_H
 
-#include "kdepim_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include <KComboBox>
 #include <KDateTime>
@@ -43,7 +43,7 @@ namespace KPIM {
  * KDateTime::Spec or to retrieve the KDateTime::Spec associated with the
  * selected item.
  */
-class KDEPIM_EXPORT KTimeZoneComboBox : public KComboBox
+class INCIDENCEEDITORS_NG_EXPORT KTimeZoneComboBox : public KComboBox
 {
   Q_OBJECT
   public:

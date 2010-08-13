@@ -43,6 +43,7 @@
 
 #include <cassert>
 #include <memory>
+#include <string>
 
 using namespace Kleo;
 using namespace GpgME;
@@ -59,7 +60,11 @@ QGpgMEChangeExpiryJob::~QGpgMEChangeExpiryJob() {}
 static QGpgMEChangeExpiryJob::result_type change_expiry( Context * ctx, const Key & key, const QDateTime & expiry ) {
   std::auto_ptr<EditInteractor>
       ei( expiry.isValid()
+#ifndef QT_NO_STL
           ? new GpgSetExpiryTimeEditInteractor( expiry.date().toString( Qt::ISODate ).toStdString() )
+#else
+          ? new GpgSetExpiryTimeEditInteractor( std::string( expiry.date().toString( Qt::ISODate ).toAscii().constData() ) )
+#endif
           : new GpgSetExpiryTimeEditInteractor() );
 
   QGpgME::QByteArrayDataProvider dp;

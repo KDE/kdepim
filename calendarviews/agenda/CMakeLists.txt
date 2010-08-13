@@ -5,6 +5,10 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/calendarviews/agenda
 )
 
+if (KDEPIM_MOBILE_UI)
+  add_definitions( -DKORG_NODND )
+endif (KDEPIM_MOBILE_UI)
+
 ########### next target ###############
 
 set( eventviews_LIB_SRCS

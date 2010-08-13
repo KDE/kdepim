@@ -42,7 +42,11 @@
 #include <QByteArray>
 #include <QMap>
 
+#ifdef Q_OS_WINCE
+class QWebView;
+#else
 class KWebView;
+#endif
 
 namespace MessageViewer {
 
@@ -51,7 +55,11 @@ class WebKitPartHtmlWriter : public QObject, public HtmlWriter {
 public:
   // Key is Content-Id, value is URL
   typedef QMap<QString, QString> EmbeddedPartMap;
+#ifdef Q_OS_WINCE
+  explicit WebKitPartHtmlWriter( QWebView *view,
+#else
   explicit WebKitPartHtmlWriter( KWebView *view,
+#endif
                                 QObject * parent=0, const char * name = 0 );
   virtual ~WebKitPartHtmlWriter();
 
@@ -73,7 +81,11 @@ private:
   void resolveCidUrls();
 
 private:
+#ifdef Q_OS_WINCE
+  QWebView *mHtmlView;
+#else
   KWebView *mHtmlView;
+#endif
   QStringList mHtmlQueue;
   QString mHtml;
   QString mCss;

@@ -96,8 +96,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     KMenu *mPopupMenu;
     KAction *mOpenAction;
     KAction *mSaveAsAction;
+#ifndef QT_NO_CLIPBOARD
     KAction *mCopyAction;
     KAction *mCutAction;
+#endif
     KAction *mDeleteAction;
     KAction *mEditAction;
 };

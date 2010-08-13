@@ -146,10 +146,12 @@ QMimeData* Akonadi::createMimeData( const Item &item, const KDateTime::Spec &tim
   return createMimeData( Item::List() << item, timeSpec );
 }
 
+#ifndef QT_NO_DRAGANDDROP
 QDrag* Akonadi::createDrag( const Item &item, const KDateTime::Spec &timeSpec, QWidget* parent )
 {
   return createDrag( Item::List() << item, timeSpec, parent );
 }
+#endif
 
 static QByteArray findMostCommonType( const Item::List &items ) {
   QByteArray prev;
@@ -170,6 +172,7 @@ static QByteArray findMostCommonType( const Item::List &items ) {
   return prev;
 }
 
+#ifndef QT_NO_DRAGANDDROP
 QDrag* Akonadi::createDrag( const Item::List &items, const KDateTime::Spec &timeSpec, QWidget* parent )
 {
   std::auto_ptr<QDrag> drag( new QDrag( parent ) );
@@ -184,6 +187,7 @@ QDrag* Akonadi::createDrag( const Item::List &items, const KDateTime::Spec &time
 
   return drag.release();
 }
+#endif
 
 static bool itemMatches( const Item& item, const CalFilter* filter )
 {
@@ -269,14 +273,16 @@ bool Akonadi::mimeDataHasTodo( const QMimeData* mimeData )
 
 QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spec &spec )
 {
-  KCalCore::Calendar::Ptr cal( KCalUtils::DndFactory::createDropCalendar( mimeData, spec ) );
-  if ( !cal ) {
-    return QList<Todo::Ptr>();
-  }
   QList<Todo::Ptr> todos;
-  Q_FOREACH( const Todo::Ptr &i, cal->todos() ) {
-      todos.push_back( Todo::Ptr( i->clone() ) );
+
+#ifndef QT_NO_DRAGANDDROP
+  KCalCore::Calendar::Ptr cal( KCalUtils::DndFactory::createDropCalendar( mimeData, spec ) );
+  if ( cal ) {
+      Q_FOREACH( const Todo::Ptr &i, cal->todos() ) {
+          todos.push_back( Todo::Ptr( i->clone() ) );
+      }
   }
+#endif
 
   return todos;
 }

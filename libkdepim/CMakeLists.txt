@@ -33,17 +33,16 @@ set(kdepim_LIB_SRCS
    progressdialog.cpp
    statusbarprogresswidget.cpp
    ssllabel.cpp
-   completionordereditor.cpp
    broadcaststatus.cpp
    kwidgetlister.cpp
    recentaddresses.cpp
    sendsmsdialog.cpp
    kmailcompletion.cpp
-   uistatesaver.cpp
    pimmessagebox.cpp
    multiplyingline.cpp
    multiplyinglineeditor.cpp
    multiplyinglineview_p.cpp
+   uistatesaver.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBS)
@@ -51,6 +50,13 @@ if (KDEPIMLIBS_KRESOURCES_LIBS)
     kresourceprefs.cpp
   )
 endif (KDEPIMLIBS_KRESOURCES_LIBS)
+
+if (NOT WINCE)
+  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
+    # pending: restore when QTreeWidget is replaced with QListWidget
+    completionordereditor.cpp
+  )
+endif (NOT WINCE)
 
 kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 
@@ -60,7 +66,6 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDE4_KPARTS_LIBS}
   ${KDE4_KCMUTILS_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
@@ -75,7 +80,6 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}

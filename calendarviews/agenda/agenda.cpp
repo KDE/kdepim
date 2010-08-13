@@ -518,9 +518,11 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
     return eventFilter_key( object, static_cast<QKeyEvent *>( event ) );
 
   case ( QEvent::Leave ):
+#ifndef QT_NO_CURSOR
     if ( !d->mActionItem ) {
       setCursor( Qt::ArrowCursor );
     }
+#endif
 
     if ( object == this ) {
       // so timelabels hide the mouse cursor
@@ -532,6 +534,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
     emit enterAgenda();
     return QWidget::eventFilter( object, event );
 
+#ifndef QT_NO_DRAGANDDROP
 #ifndef KORG_NODND
   case QEvent::DragEnter:
   case QEvent::DragMove:
@@ -539,6 +542,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
   case QEvent::Drop:
 //  case QEvent::DragResponse:
     return eventFilter_drag( object, static_cast<QDropEvent*>( event ) );
+#endif
 #endif
 
   default:
@@ -548,6 +552,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
 
 bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
 {
+#ifndef QT_NO_DRAGANDDROP
   // FIXME: Implement dropping of events!
   QPoint viewportPos;
   if ( object != this ) {
@@ -609,6 +614,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
   default:
     break;
   }
+#endif
   return false;
 }
 
@@ -704,7 +710,9 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
       } else {
         selectItem( 0 );
         d->mActionItem = 0;
+#ifndef QT_NO_CURSOR
         setCursor( Qt::ArrowCursor );
+#endif
         startSelectAction( viewportPos );
       }
     }
@@ -955,7 +963,9 @@ void Agenda::performItemAction( const QPoint &pos )
       d->mActionItem->resetMove();
       placeSubCells( d->mActionItem );
       emit startDragSignal( d->mActionItem->incidence() );
+#ifndef QT_NO_CURSOR
       setCursor( Qt::ArrowCursor );
+#endif
       if ( d->mChanger ) {
 //        d->mChanger->cancelChange( d->mActionItem->incidence() );
       }
@@ -991,7 +1001,9 @@ void Agenda::performItemAction( const QPoint &pos )
         d->mScrollDownTimer.stop();
         d->mActionItem->resetMove();
         placeSubCells( d->mActionItem );
+#ifndef QT_NO_CURSOR
         setCursor( Qt::ArrowCursor );
+#endif
         d->mActionItem = 0;
         d->mActionType = NOP;
         d->mItemMoved = false;
@@ -1139,7 +1151,9 @@ void Agenda::endItemAction()
   d->mActionType = NOP;
   d->mScrollUpTimer.stop();
   d->mScrollDownTimer.stop();
+#ifndef QT_NO_CURSOR
   setCursor( Qt::ArrowCursor );
+#endif
   bool multiModify = false;
   // FIXME: do the cloning here...
   Akonadi::Item inc = d->mActionItem->incidence();
@@ -1297,6 +1311,7 @@ void Agenda::endItemAction()
 
 void Agenda::setActionCursor( int actionType, bool acting )
 {
+#ifndef QT_NO_CURSOR
   switch ( actionType ) {
     case MOVE:
       if ( acting ) {
@@ -1316,6 +1331,7 @@ void Agenda::setActionCursor( int actionType, bool acting )
     default:
       setCursor( Qt::ArrowCursor );
   }
+#endif
 }
 
 void Agenda::setNoActionCursor( AgendaItem *moveItem, const QPoint &pos )

@@ -400,17 +400,22 @@ bool IncidenceChanger::cutIncidences( const Item::List &list, QWidget *parent )
       }
     }
    }
+
+#ifndef QT_NO_DRAGANDDROP
   CalendarAdaptor::Ptr cal( new CalendarAdaptor( d->mCalendar, parent ) );
   Akonadi::DndFactory factory( cal, true /*delete calendarAdaptor*/ );
 
   if ( factory.cutIncidences( itemsToCut ) ) {
+#endif
     for ( it = itemsToCut.constBegin(); it != itemsToCut.constEnd(); ++it ) {
       emit incidenceDeleteFinished( *it, true );
     }
     return !itemsToCut.isEmpty();
+#ifndef QT_NO_DRAGANDDROP
   } else {
     return false;
   }
+#endif
 }
 
 bool IncidenceChanger::cutIncidence( const Item &item, QWidget *parent )

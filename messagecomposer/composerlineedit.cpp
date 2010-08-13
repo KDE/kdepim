@@ -107,6 +107,7 @@ void ComposerLineEdit::insertEmails( const QStringList & emails )
   setText( contents + KGlobal::locale()->removeAcceleratorMarker( result->text() ) );
 }
 
+#ifndef QT_NO_DRAGANDDROP
 void ComposerLineEdit::dropEvent(QDropEvent *event)
 {
   const QMimeData *md = event->mimeData();
@@ -182,6 +183,7 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
     KPIM::AddresseeLineEdit::dropEvent( event );
   }
 }
+#endif
 
 void ComposerLineEdit::groupDropExpandResult( KJob* job )
 {

@@ -48,7 +48,6 @@ set( messagecomposer_src
      inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
-     distributionlistdialog.cpp
      recipientspicker.cpp
      recipient.cpp
      recipientline.cpp
@@ -61,6 +60,13 @@ set( messagecomposer_src
 
      keyresolver.cpp
 )
+
+if (NOT WINCE)
+  # disabled due to no QTreeWidget
+  set( messagecomposer_src ${messagecomposer_src}
+     distributionlistdialog.cpp
+  )
+endif (NOT WINCE)
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)

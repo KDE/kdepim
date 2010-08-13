@@ -151,6 +151,7 @@ void IncidenceDescription::toggleRichTextDescription()
 
 void IncidenceDescription::setupToolBar()
 {
+#ifndef QT_NO_TOOLBAR
   KActionCollection *collection = new KActionCollection( this ); //krazy:exclude=tipsandthis
   mUi->mDescriptionEdit->createActions( collection );
 
@@ -176,6 +177,7 @@ void IncidenceDescription::setupToolBar()
 
   QGridLayout *layout = new QGridLayout( mUi->mEditToolBarPlaceHolder );
   layout->addWidget( mEditToolBar );
+#endif
 
   // By default we don't show the rich text toolbar.
   mUi->mEditToolBarPlaceHolder->setVisible( false );

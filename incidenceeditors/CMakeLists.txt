@@ -20,6 +20,8 @@ endif ()
 
 ########### next target ###############
 
+if (NOT WINCE)
+
 set( incidenceeditors_LIB_SRCS
     autochecktreewidget.cpp
     categoryconfig.cpp
@@ -79,5 +81,7 @@ set_target_properties(incidenceeditors
                       PROPERTIES VERSION ${GENERIC_LIB_VERSION}
                       SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+endif (NOT WINCE)
 
 add_subdirectory( incidenceeditor-ng )

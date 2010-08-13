@@ -146,6 +146,7 @@ namespace Akonadi
   */
   AKONADI_KCAL_NEXT_EXPORT QMimeData* createMimeData( const Akonadi::Item::List &items, const KDateTime::Spec &timeSpec );
 
+#ifndef QT_NO_DRAGANDDROP
   /**
   * creates a drag object for dragging an akonadi item containing an incidence
   */
@@ -155,7 +156,7 @@ namespace Akonadi
   * creates a drag object for dragging akonadi items containing an incidence
   */
   AKONADI_KCAL_NEXT_EXPORT QDrag* createDrag( const Akonadi::Item::List &items, const KDateTime::Spec &timeSpec, QWidget* parent );
-
+#endif
   /**
   * applies a filter to a list of items containing incidences. Items not containing incidences or not matching the filter are removed.
   * Helper method anologous to KCalCore::CalFilter::apply()

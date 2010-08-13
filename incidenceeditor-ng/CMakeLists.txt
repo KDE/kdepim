@@ -22,7 +22,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   invitationdispatcher.cpp
 
   freebusyurldialog.cpp
-  editorfreebusy.cpp
 
   # Shared incidence editors code
   incidenceeditor.cpp
@@ -49,15 +48,24 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   incidencedefaults.cpp
 
-  ../autochecktreewidget.cpp
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
-  ../categoryselectdialog.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
 )
 
+if (NOT WINCE)
+  set(incidenceeditors_ng_shared_LIB_SRCS ${incidenceeditors_ng_shared_LIB_SRCS}
+    // pending: replace QTreeWidget with QListWidget
+    editorfreebusy.cpp
+  ../autochecktreewidget.cpp
+  ../categoryselectdialog.cpp
+  )
+endif (NOT WINCE)
+
 ### Build the desktop version
+
+if (NOT WINCE)
 
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
@@ -97,6 +105,8 @@ set_target_properties(incidenceeditorsng
 )
 
 install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+endif(NOT WINCE)
 
 ### Build the mobile version if needed
 
@@ -142,6 +152,8 @@ endif (KDEPIM_MOBILE_UI)
 
 ### Build the test app TODO: Make optional
 
+if (NOT WINCE)
+
 set(testincidenceeditor_SRCS main.cpp)
 
 kde4_add_executable(keventeditor ${testincidenceeditor_SRCS})
@@ -158,3 +170,5 @@ target_link_libraries(keventeditor
 install(TARGETS keventeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( tests )
+
+endif(NOT WINCE)

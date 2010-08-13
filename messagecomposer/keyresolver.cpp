@@ -36,7 +36,9 @@
 
 #include "keyresolver.h"
 
+#ifndef QT_NO_CURSOR
 #include "messageviewer/kcursorsaver.h"
+#endif
 #include "kleo_util.h"
 
 #include <kpimutils/email.h>
@@ -1465,8 +1467,11 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
   std::copy( d->mSMIMEEncryptToSelfKeys.begin(), d->mSMIMEEncryptToSelfKeys.end(),
 	     std::back_inserter( senderKeys ) );
 
+#ifndef QT_NO_CURSOR
   const MessageViewer::KCursorSaver idle( MessageViewer::KBusyPtr::idle() );
+#endif
 
+#ifndef Q_OS_WINCE
   Kleo::KeyApprovalDialog dlg( items, senderKeys );
 
   if ( dlg.exec() == QDialog::Rejected )
@@ -1494,6 +1499,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
       saveContactPreference( items[i].address, pref );
     }
   }
+#endif
 
   // show a warning if the user didn't select an encryption key for
   // herself:
@@ -1538,7 +1544,9 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
                   : i18n("You did not select encryption keys for some of "
                          "the recipients: these persons will not be able to "
                          "decrypt the message if you encrypt it." );
+#ifndef QT_NO_CURSOR
     MessageViewer::KCursorSaver idle( MessageViewer::KBusyPtr::idle() );
+#endif
     if ( KMessageBox::warningContinueCancel( 0, msg,
                                              i18n("Missing Key Warning"),
                                              KGuiItem(i18n("&Encrypt")) )
@@ -1593,6 +1601,8 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   const bool opgp = containsOpenPGP( mCryptoMessageFormats );
   const bool x509 = containsSMIME( mCryptoMessageFormats );
 
+// FIXME restore when KeySelectionDialog doesn't depend on QTreeWidget anymore
+#ifndef Q_OS_WINCE
   Kleo::KeySelectionDialog dlg( i18n("Encryption Key Selection"),
 				msg, KPIMUtils::extractEmailAddress( person ), selectedKeys,
                                 Kleo::KeySelectionDialog::ValidEncryptionKeys
@@ -1609,6 +1619,9 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys( const QString & person, c
   if ( !keys.empty() && dlg.rememberSelection() )
     setKeysForAddress( person, dlg.pgpKeyFingerprints(), dlg.smimeFingerprints() );
   return keys;
+#else
+    return std::vector<GpgME::Key>();
+#endif
 }
 
 

@@ -35,7 +35,6 @@
 #include <KActionMenu>
 #include <kascii.h>
 #include <KCharsets>
-#include <kcursorsaver.h>
 #include <KFileDialog>
 #include <KGuiItem>
 #include <QWebView>
@@ -718,6 +717,7 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
 KMime::Content::List ViewerPrivate::selectedContents()
 {
   KMime::Content::List contents;
+#ifndef QT_NO_TREEVIEW
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
@@ -727,6 +727,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
      if ( content )
        contents.append( content );
   }
+#endif
 
   return contents;
 }
@@ -1395,6 +1396,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
 
 void ViewerPrivate::showHideMimeTree( )
 {
+#ifndef QT_NO_TREEVIEW
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always )
     mMimePartTree->show();
   else {
@@ -1404,6 +1406,7 @@ void ViewerPrivate::showHideMimeTree( )
   }
   if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != mMimePartTree->isVisible() ) )
     mToggleMimePartTreeAction->setChecked( mMimePartTree->isVisible() );
+#endif
 }
 
 
@@ -1415,6 +1418,7 @@ void ViewerPrivate::atmViewMsg( KMime::Message::Ptr message )
 
 void ViewerPrivate::adjustLayout()
 {
+#ifndef QT_NO_TREEVIEW
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitter->addWidget( mMimePartTree );
   else
@@ -1426,6 +1430,7 @@ void ViewerPrivate::adjustLayout()
     mMimePartTree->show();
   else
     mMimePartTree->hide();
+#endif
 
   if (  GlobalSettings::self()->showColorBar() && mMsgDisplay )
     mColorBar->show();
@@ -1436,6 +1441,7 @@ void ViewerPrivate::adjustLayout()
 
 void ViewerPrivate::saveSplitterSizes() const
 {
+#ifndef QT_NO_TREEVIEW
   if ( !mSplitter || !mMimePartTree )
     return;
   if ( mMimePartTree->isHidden() )
@@ -1444,6 +1450,7 @@ void ViewerPrivate::saveSplitterSizes() const
   const bool mimeTreeAtBottom = GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom;
   GlobalSettings::self()->setMimePaneHeight( mSplitter->sizes()[ mimeTreeAtBottom ? 1 : 0 ] );
   GlobalSettings::self()->setMessagePaneHeight( mSplitter->sizes()[ mimeTreeAtBottom ? 0 : 1 ] );
+#endif
 }
 
 void ViewerPrivate::createWidgets() {
@@ -1455,6 +1462,7 @@ void ViewerPrivate::createWidgets() {
   mSplitter->setObjectName( "mSplitter" );
   mSplitter->setChildrenCollapsible( false );
   vlay->addWidget( mSplitter );
+#ifndef QT_NO_TREEVIEW
   mMimePartTree = new QTreeView( mSplitter );
   mMimePartTree->setObjectName( "mMimePartTree" );
   mMimePartModel = new MimeTreeModel( mMimePartTree );
@@ -1466,6 +1474,7 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
+#endif
   mBox = new KHBox( mSplitter );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
@@ -1480,14 +1489,18 @@ void ViewerPrivate::createWidgets() {
 #endif
 
   mFindBar = new FindBar( mViewer, readerBox );
+#ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
+#endif
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 }
 
 void ViewerPrivate::slotMimePartDestroyed()
 {
+#ifndef QT_NO_TREEVIEW
   //root is either null or a modified tree that we need to clean up
   delete mMimePartModel->root();
+#endif
 }
 
 void ViewerPrivate::createActions()
@@ -1742,7 +1755,9 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( !content->isTopLevel() )
       popup.addAction( i18n( "Properties" ), this, SLOT( slotAttachmentProperties() ) );
   }
+#ifndef QT_NO_TREEVIEW
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
+#endif
 
 }
 
@@ -2033,7 +2048,11 @@ void ViewerPrivate::slotShowMessageSource()
   // Update: (GS) I'm not going to make this code behave according to Xinerama
   //         configuration because this is quite the hack.
   if ( QApplication::desktop()->isVirtualDesktop() ) {
+#ifndef QT_NO_CURSOR
     int scnum = QApplication::desktop()->screenNumber( QCursor::pos() );
+#else
+    int scnum = 0;
+#endif
     viewer->resize( QApplication::desktop()->screenGeometry( scnum ).width()/2,
                     2 * QApplication::desktop()->screenGeometry( scnum ).height()/3);
   } else {
@@ -2063,7 +2082,10 @@ void ViewerPrivate::updateReaderWin()
   }
   mRecursionCountForDisplayMessage++;
 
+  // FIXME on WinCE we use a simple QWebView, check if there's an alternative API for it
+#ifndef Q_OS_WINCE
   mViewer->setAllowExternalContent( htmlLoadExternal() );
+#endif
 
   htmlWriter()->reset();
   //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
@@ -2077,8 +2099,10 @@ void ViewerPrivate::updateReaderWin()
     displayMessage();
   } else {
     mColorBar->hide();
+#ifndef QT_NO_TREEVIEW
     mMimePartTree->hide();
   //FIXME(Andras)  mMimePartTree->clearAndResetSortOrder();
+#endif
     htmlWriter()->begin( QString() );
     htmlWriter()->write( mCSSHelper->htmlHead( mUseFixedFont ) + "</body></html>" );
     htmlWriter()->end();
@@ -2332,15 +2356,18 @@ void ViewerPrivate::slotSettingsChanged()
 
 void ViewerPrivate::slotMimeTreeContextMenuRequested( const QPoint& pos )
 {
+#ifndef QT_NO_TREEVIEW
   QModelIndex index = mMimePartTree->indexAt( pos );
   if ( index.isValid() ) {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      showContextMenu( content, pos );
   }
+#endif
 }
 
 void ViewerPrivate::slotAttachmentOpenWith()
 {
+#ifndef QT_NO_TREEVIEW
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
@@ -2349,11 +2376,12 @@ void ViewerPrivate::slotAttachmentOpenWith()
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      attachmentOpenWith( content );
  }
+#endif
 }
 
 void ViewerPrivate::slotAttachmentOpen()
 {
-
+#ifndef QT_NO_TREEVIEW
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
@@ -2362,6 +2390,7 @@ void ViewerPrivate::slotAttachmentOpen()
     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
     attachmentOpen( content );
   }
+#endif
 }
 
 void ViewerPrivate::slotAttachmentSaveAs()
@@ -2443,9 +2472,11 @@ void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
   if ( urls.isEmpty() )
     return;
 
+#ifndef QT_NO_CLIPBOARD
   QMimeData *mimeData = new QMimeData;
   mimeData->setUrls( urls );
   QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
+#endif
 }
 
 
@@ -2539,9 +2570,11 @@ void ViewerPrivate::slotHandleAttachment( int choice )
 
 void ViewerPrivate::slotCopySelectedText()
 {
+#ifndef QT_NO_CLIPBOARD
   QString selection = mViewer->selectedText();
   selection.replace( QChar::Nbsp, ' ' );
   QApplication::clipboard()->setText( selection );
+#endif
 }
 
 void ViewerPrivate::viewerSelectionChanged()
@@ -2562,6 +2595,7 @@ void ViewerPrivate::selectAll()
 
 void ViewerPrivate::slotUrlCopy()
 {
+#ifndef QT_NO_CLIPBOARD
   QClipboard* clip = QApplication::clipboard();
   if ( mClickedUrl.protocol() == "mailto" ) {
     // put the url into the mouse selection and the clipboard
@@ -2575,6 +2609,7 @@ void ViewerPrivate::slotUrlCopy()
     clip->setText( mClickedUrl.url(), QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "URL copied to clipboard." ));
   }
+#endif
 }
 
 void ViewerPrivate::slotSaveMessage()

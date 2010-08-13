@@ -719,6 +719,7 @@ namespace {
 
   bool AttachmentURLHandler::handleDrag( const KUrl &url, ViewerPrivate *window ) const
   {
+#ifndef QT_NO_DRAGANDDROP
     KMime::Content *node = nodeForUrl( url, window );
     if ( !node )
       return false;
@@ -736,6 +737,7 @@ namespace {
       return true;
     }
     else
+#endif
       return false;
   }
 

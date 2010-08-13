@@ -25,7 +25,10 @@
 */
 
 #include "addresseelineedit.h"
+
+#ifndef Q_OS_WINCE
 #include "completionordereditor.h"
+#endif
 
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
@@ -39,6 +42,7 @@
 
 #include <KMime/Util>
 
+#include <KConfigGroup>
 #include <KCompletionBox>
 #include <KDebug>
 #include <KLocale>
@@ -708,8 +712,10 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
 void AddresseeLineEdit::Private::slotEditCompletionOrder()
 {
   init(); // for s_static->ldapSearch
+#ifndef Q_OS_WINCE
   CompletionOrderEditor editor( s_static->ldapSearch, q );
   editor.exec();
+#endif
   if ( m_useCompletion ) {
     updateLDAPWeights();
   }
@@ -977,24 +983,29 @@ void AddresseeLineEdit::paste()
     d->m_smartPaste = true;
   }
 
+#ifndef QT_NO_CLIPBOARD
   KLineEdit::paste();
+#endif
   d->m_smartPaste = false;
 }
 
 void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *event )
 {
   // reimplemented from QLineEdit::mouseReleaseEvent()
+#ifndef QT_NO_CLIPBOARD
   if ( d->m_useCompletion &&
        QApplication::clipboard()->supportsSelection() &&
        !isReadOnly() &&
        event->button() == Qt::MidButton ) {
     d->m_smartPaste = true;
   }
+#endif
 
   KLineEdit::mouseReleaseEvent( event );
   d->m_smartPaste = false;
 }
 
+#ifndef QT_NO_CLIPBOARD
 void AddresseeLineEdit::dropEvent( QDropEvent *event )
 {
   if ( !isReadOnly() ) {
@@ -1050,6 +1061,7 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
   QLineEdit::dropEvent( event );
   d->m_smartPaste = false;
 }
+#endif
 
 void AddresseeLineEdit::cursorAtEnd()
 {

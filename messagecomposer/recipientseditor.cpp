@@ -29,7 +29,9 @@
 #include "recipientseditorsidewidget.h"
 
 #include "messagecomposersettings.h"
+#ifndef Q_OS_WINCE
 #include <messagecomposer/distributionlistdialog.h>
+#endif
 #include "messageviewer/autoqpointer.h"
 
 #include <KDebug>
@@ -152,9 +154,12 @@ void RecipientsEditor::removeRecipient(const QString& recipient, Recipient::Type
 
 void RecipientsEditor::saveDistributionList()
 {
+// disabled due to no QTreeWidget
+#ifndef Q_OS_WINCE
   MessageViewer::AutoQPointer<MessageComposer::DistributionListDialog> dlg( new MessageComposer::DistributionListDialog( this ) );
   dlg->setRecipients( recipients() );
   dlg->exec();
+#endif
 }
 
 void RecipientsEditor::selectRecipients()

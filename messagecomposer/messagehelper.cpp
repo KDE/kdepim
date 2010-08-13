@@ -19,17 +19,11 @@
 
 #include "messagehelper.h"
 #include "kdepim-version.h"
-#include "templateparser/templateparser.h"
-#include "messagecore/mailinglist-magic.h"
 #include "util.h"
 #include "messagecomposersettings.h"
 
-#include <messageviewer/objecttreeparser.h>
-#include <messageviewer/kcursorsaver.h>
 #include "messagecore/stringutil.h"
 #include "messagecore/mailinglist-magic.h"
-
-#include "templateparser/templateparser.h"
 
 #include <KDateTime>
 #include <KProtocolManager>
