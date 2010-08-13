@@ -141,7 +141,7 @@ void AgendaItem::updateIcons()
   Q_ASSERT( incidence );
   mIconReadonly = incidence->isReadOnly();
   mIconRecur = incidence->recurs();
-  mIconAlarm = incidence->isAlarmEnabled();
+  mIconAlarm = incidence->hasEnabledAlarms();
   if ( incidence->attendeeCount() > 1 ) {
     if ( mEventView->preferences()->thatIsMe( incidence->organizer()->email() ) ) {
       mIconReply = false;

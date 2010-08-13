@@ -112,15 +112,15 @@ void IncidenceAlarm::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceAlarm::isDirty() const
 {
-  if ( !mLoadedIncidence->isAlarmEnabled() && mAlarms.count() > 0 ) {
+  if ( !mLoadedIncidence->hasEnabledAlarms() && mAlarms.count() > 0 ) {
     return true;
   }
 
-  if ( mLoadedIncidence->isAlarmEnabled() && mAlarms.count() == 0 ) {
+  if ( mLoadedIncidence->hasEnabledAlarms() && mAlarms.count() == 0 ) {
     return true;
   }
 
-  if ( mLoadedIncidence->isAlarmEnabled() ) {
+  if ( mLoadedIncidence->hasEnabledAlarms() ) {
     const KCalCore::Alarm::List initialAlarms = mLoadedIncidence->alarms();
 
     if ( initialAlarms.count() != mAlarms.count() ) {
