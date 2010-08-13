@@ -348,13 +348,13 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 after the to-do is due %4", action, useoffset, offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 after the event ended %4", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the event ends %4", action, useoffset, offsetUnit, repeatStr );
       }
     } else if ( useoffset < 0 && alarm->hasEndOffset() ) {
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 before the to-do is due %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 before the event ended %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the event ends %4", action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
     }
   } else {
@@ -375,13 +375,13 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 after the to-do is due %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 after the event ended %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 after the event ends %4 (Disabled)", action, useoffset, offsetUnit, repeatStr );
       }
     } else if ( useoffset < 0 && alarm->hasEndOffset() ) {
       if ( mIsTodo ) {
         return i18n( "%1 %2 %3 before the to-do is due %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
       } else {
-        return i18n( "%1 %2 %3 before the event ended %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
+        return i18n( "%1 %2 %3 before the event ends %4 (Disabled)", action, qAbs( useoffset ), offsetUnit, repeatStr );
       }
     }
   }
