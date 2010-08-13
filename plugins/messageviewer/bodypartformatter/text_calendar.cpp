@@ -134,6 +134,7 @@ static bool hasMyWritableEventsFolders( const QString &family )
 #endif
 }
 
+#if 0
 #ifndef KDEPIM_NO_KRESOURCES
 // Double negation, this is enabled when the old resource based code is build.
 class CalendarManager
@@ -185,6 +186,7 @@ KCal::CalendarResources * CalendarManager::calendar()
   K_GLOBAL_STATIC(CalendarManager, _self);
   return _self->mCalendar;
 }
+#endif
 #endif
 
 
