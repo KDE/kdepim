@@ -167,6 +167,7 @@ void IncidenceAlarm::editCurrentAlarm()
     if ( dialogPtr ) {
       dialogPtr->save( currentAlarm );
       updateAlarmList();
+      checkDirtyStatus();
     } else {
       kDebug() << "dialog was already deleted";
     }
