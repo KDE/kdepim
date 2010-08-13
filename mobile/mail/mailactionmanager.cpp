@@ -55,6 +55,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
 
   action = actionCollection->addAction("forward_message");
   action->setText( i18n("Forward") );
+
+  action = actionCollection->addAction("save_favorite");
+  action->setText( i18n("Save Favorite") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

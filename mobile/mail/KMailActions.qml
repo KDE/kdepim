@@ -81,6 +81,7 @@ ActionMenuContainer {
     ActionListItem { name : "message_reply" }
     ActionListItem { name : "message_reply_to_all" }
     ActionListItem { name : "forward_message" }
+    ActionListItem { name : "save_favorite" }
     ActionListItem { name : "write_new_email" }
   }
 
