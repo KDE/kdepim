@@ -71,6 +71,8 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "akonadi_collection_move_to_menu" }
+    ActionListItem { name : "akonadi_collection_copy_to_menu" }
     ActionListItem { name : "akonadi_collection_delete" }
   }
   ActionList {

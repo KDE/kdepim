@@ -423,6 +423,8 @@ void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *coll
   standardActionManager->createAction( Akonadi::StandardActionManager::ResourceProperties );
   standardActionManager->createAction( Akonadi::StandardActionManager::CopyItemToMenu );
   standardActionManager->createAction( Akonadi::StandardActionManager::MoveItemToMenu );
+  standardActionManager->createAction( Akonadi::StandardActionManager::CopyCollectionToMenu );
+  standardActionManager->createAction( Akonadi::StandardActionManager::MoveCollectionToMenu );
 }
 
 void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
