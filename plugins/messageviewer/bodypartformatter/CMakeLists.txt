@@ -37,14 +37,15 @@ kde4_add_plugin(messageviewer_bodypartformatter_text_calendar ${messageviewer_bo
 target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDE4_KDECORE_LIBS}
-  ${KDEPIMLIBS_KCAL_LIBS}
-  kdepim
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_KCALUTILS_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   akonadi-kcal_next
   incidenceeditors
+  kdepim
   messageviewer
 )
 

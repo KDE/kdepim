@@ -40,15 +40,10 @@
 #include <messageviewer/globalsettings.h>
 #include <messageviewer/viewer.h>
 
-#include <kcal/calendarlocal.h>
-#ifndef KDEPIM_NO_KRESOURCES
-#include <kcal/calendarresources.h>
-#include <kcal/calhelper.h>
-#endif
-#include <kcal/icalformat.h>
-#include <kcal/attendee.h>
-#include <kcal/incidence.h>
-#include <kcal/incidenceformatter.h>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/Attendee>
+#include <KCalCore/Incidence>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <akonadi/kcal/groupware.h>
 #include <incidenceeditors/groupwareintegration.h>
@@ -89,7 +84,7 @@
 #include <kdemacros.h>
 #include "calendarinterface.h"
 
-using namespace KCal;
+using namespace KCalCore;
 
 namespace {
 
@@ -140,6 +135,7 @@ static bool hasMyWritableEventsFolders( const QString &family )
 }
 
 #ifndef KDEPIM_NO_KRESOURCES
+// Double negation, this is enabled when the old resource based code is build.
 class CalendarManager
 {
   public:
@@ -192,15 +188,19 @@ KCal::CalendarResources * CalendarManager::calendar()
 #endif
 
 
-class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
+class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 {
   public:
     KMInvitationFormatterHelper( MessageViewer::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
-#ifndef KDEPIM_NO_KRESOURCES
-    KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
+#ifdef KDEPIM_NO_KRESOURCES
+    KCalCore::Calendar::Ptr calendar() const { return KCalCore::Calendar::Ptr(); }
 #else
-    KCal::Calendar* calendar() const { return 0; }
+    // NOTE: This breaks the build when build *with* the old resources. Will be
+    //       fixed after I finished the KCal -> KCalCore port *and* the
+    //       resources -> Akonadi port.
+    //       Temporary solutions: Don't build with the old resources =:)
+//    KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
 #endif
   private:
     MessageViewer::Interface::BodyPart *mBodyPart;
@@ -222,7 +222,6 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         return Failed;
       }
 
-      CalendarLocal cl( KSystemTimeZones::local() );
       KMInvitationFormatterHelper helper( bodyPart );
       QString source;
       /* If the bodypart does not have a charset specified, we need to fall
@@ -234,8 +233,12 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       } else {
         source = bodyPart->asText();
       }
-      const QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper,
-                                                             message->sender()->asUnicodeString() );
+
+      MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
+      const QString html
+          = KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml( source, cl,
+                                                                       &helper,
+                                                                       message->sender()->asUnicodeString() );
 
       if ( html.isEmpty() )
         return AsIcon;
@@ -267,16 +270,17 @@ static QString directoryForStatus( Attendee::PartStat status )
   return dir;
 }
 
-static Incidence *icalToString( const QString& iCal )
+static Incidence::Ptr icalToString( const QString& iCal )
 {
-  CalendarLocal calendar( KSystemTimeZones::local() ) ;
+  MemoryCalendar::Ptr calendar( new MemoryCalendar( KSystemTimeZones::local() ) ) ;
   ICalFormat format;
-  ScheduleMessage *message =
-    format.parseScheduleMessage( &calendar, iCal );
-  if ( !message )
+  ScheduleMessage *message = format.parseScheduleMessage( calendar, iCal );
+  if ( !message ) {
     //TODO: Error message?
-    return 0;
-  return dynamic_cast<Incidence*>( message->event() );
+    return Incidence::Ptr();
+  }
+
+  return message->event().dynamicCast<Incidence>();
 }
 
 class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
@@ -287,11 +291,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       kDebug() <<"UrlHandler() (iCalendar)";
     }
 
-    Attendee *findMyself( Incidence* incidence, const QString& receiver ) const
+    Attendee::Ptr findMyself( const Incidence::Ptr &incidence, const QString& receiver ) const
     {
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
-      Attendee* myself = 0;
+      Attendee::Ptr myself;
       // Find myself. There will always be all attendees listed, even if
       // only I need to answer it.
       for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
@@ -306,7 +310,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return myself;
     }
 
-    static bool heuristicalRSVP( Incidence *incidence )
+    static bool heuristicalRSVP( const Incidence::Ptr &incidence )
     {
       bool rsvp = true; // better send superfluously than not at all
       Attendee::List attendees = incidence->attendees();
@@ -324,7 +328,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return rsvp;
     }
 
-    static Attendee::Role heuristicalRole( Incidence *incidence )
+    static Attendee::Role heuristicalRole( const Incidence::Ptr &incidence )
     {
       Attendee::Role role = Attendee::OptParticipant;
       Attendee::List attendees = incidence->attendees();
@@ -343,43 +347,43 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     }
 
-    static Attachment *findAttachment( const QString &name, const QString &iCal )
+    static Attachment::Ptr findAttachment( const QString &name, const QString &iCal )
     {
-      Incidence *incidence = icalToString( iCal );
+      Incidence::Ptr incidence = icalToString( iCal );
 
       // get the attachment by name from the incidence
-      Attachment::List as = incidence->attachments();
-      Attachment *a = 0;
-      if ( as.count() > 0 ) {
+      Attachment::List attachments = incidence->attachments();
+      Attachment::Ptr attachment;
+      if ( attachments.count() > 0 ) {
         Attachment::List::ConstIterator it;
-        for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
+        for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
           if ( (*it)->label() == name ) {
-            a = *it;
+            attachment = *it;
             break;
           }
         }
       }
 
-      if ( !a ) {
+      if ( !attachment ) {
         KMessageBox::error(
           0,
           i18n("No attachment named \"%1\" found in the invitation.", name ) );
-        return 0;
+        return Attachment::Ptr();
       }
 
-      if ( a->isUri() ) {
-        if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, 0 ) ) {
+      if ( attachment->isUri() ) {
+        if ( !KIO::NetAccess::exists( attachment->uri(), KIO::NetAccess::SourceSide, 0 ) ) {
           KMessageBox::information(
             0,
             i18n( "The invitation attachment \"%1\" is a web link that "
                   "is inaccessible from this computer. Please ask the event "
                   "organizer to resend the invitation with this attachment "
                   "stored inline instead of a link.",
-                  KUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
-          return 0;
+                  KUrl::fromPercentEncoding( attachment->uri().toLatin1() ) ) );
+          return Attachment::Ptr();
         }
       }
-      return a;
+      return attachment;
     }
 
     static QString findReceiver( KMime::Content *node )
@@ -451,22 +455,22 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return receiver;
     }
 
-    Attendee* setStatusOnMyself( Incidence* incidence, Attendee* myself,
-                            Attendee::PartStat status, const QString &receiver ) const
+    Attendee::Ptr setStatusOnMyself( const Incidence::Ptr &incidence,
+                                     const Attendee::Ptr &myself,
+                                     Attendee::PartStat status,
+                                     const QString &receiver ) const
     {
-      Attendee* newMyself = 0;
       QString name;
       QString email;
       KPIMUtils::extractEmailAddressAndName( receiver, email, name );
       if ( name.isEmpty() && myself ) name = myself->name();
       if ( email.isEmpty()&& myself ) email = myself->email();
       Q_ASSERT( !email.isEmpty() ); // delivery must be possible
-      newMyself = new Attendee( name,
-                                email,
-                                true, // RSVP, otherwise we would not be here
-                                status,
-                                myself ? myself->role() : heuristicalRole( incidence ),
-                                myself ? myself->uid() : QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+
+      Attendee::Ptr newMyself( new Attendee( name, email, true, // RSVP, otherwise we would not be here
+                                             status,
+                                             myself ? myself->role() : heuristicalRole( incidence ),
+                                             myself ? myself->uid() : QString::null ) ); //krazy:exclude=nullstrassign for old broken gcc
       if ( myself ) {
         newMyself->setDelegate( myself->delegate() );
         newMyself->setDelegator( myself->delegator() );
@@ -619,8 +623,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool mail( MessageViewer::Viewer *viewerInstance, Incidence* incidence, const QString &status,
-               iTIPMethod method = iTIPReply, const QString &receiver = QString(), const QString &to = QString(),
+    bool mail( MessageViewer::Viewer *viewerInstance,
+               const Incidence::Ptr &incidence,
+               const QString &status,
+               iTIPMethod method = iTIPReply,
+               const QString &receiver = QString(),
+               const QString &to = QString(),
                MailType type = Answer ) const
     {
       //status is accepted/tentative/declined
@@ -647,16 +655,16 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
       // Set the organizer to the sender, if the ORGANIZER hasn't been set.
-      if ( incidence->organizer().isEmpty() ) {
+      if ( incidence->organizer()->isEmpty() ) {
         QString tname, temail;
         KMime::Message::Ptr message = viewerInstance->message();
         KPIMUtils::extractEmailAddressAndName( message->sender()->asUnicodeString(), temail, tname );
-        incidence->setOrganizer( Person( tname, temail ) );
+        incidence->setOrganizer( Person::Ptr( new Person( tname, temail ) ) );
       }
 
       QString recv = to;
       if ( recv.isEmpty() )
-        recv = incidence->organizer().fullName();
+        recv = incidence->organizer()->fullName();
       return mailICal( receiver, recv, msg, subject, status, type != Forward, viewerInstance );
     }
 
@@ -710,7 +718,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         return true;
 
       // get comment for tentative acceptance
-      Incidence* incidence = icalToString( iCal );
+      Incidence::Ptr incidence = icalToString( iCal );
 
       if ( askForComment( status ) ) {
         bool ok = false;
@@ -747,14 +755,16 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         delegatorRSVP = dlg.rsvp();
         if ( delegateString.isEmpty() )
           return true;
-        if ( KPIMUtils::compareEmail( delegateString, incidence->organizer().email(), false ) ) {
+        if ( KPIMUtils::compareEmail( delegateString, incidence->organizer()->email(), false ) ) {
           KMessageBox::sorry( 0, i18n("Delegation to organizer is not possible.") );
           return true;
         }
       }
 
-      if( !incidence ) return false;
-      Attendee *myself = findMyself( incidence, receiver );
+      if( !incidence )
+        return false;
+
+      Attendee::Ptr myself = findMyself( incidence, receiver );
 
       // find our delegator, we need to inform him as well
       QString delegator;
@@ -770,7 +780,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
       if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
-        Attendee* newMyself = setStatusOnMyself( incidence, myself, status, receiver );
+        Attendee::Ptr newMyself = setStatusOnMyself( incidence, myself, status, receiver );
         if ( newMyself && status == Attendee::Delegated ) {
           newMyself->setDelegate( delegateString );
           newMyself->setRSVP( delegatorRSVP );
@@ -785,17 +795,14 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       } else if ( !myself && (status != Attendee::Declined) ) {
         // forwarded invitation
-        Attendee* newMyself = 0;
         QString name;
         QString email;
         KPIMUtils::extractEmailAddressAndName( receiver, email, name );
         if ( !email.isEmpty() ) {
-          newMyself = new Attendee( name,
-                                    email,
-                                    true, // RSVP, otherwise we would not be here
-                                    status,
-                                    heuristicalRole( incidence ),
-                                    QString() );
+          Attendee::Ptr newMyself( new Attendee( name, email, true, // RSVP, otherwise we would not be here
+                                                 status,
+                                                 heuristicalRole( incidence ),
+                                                 QString() ) );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
           ok = mail( viewerInstance, incidence, dir, iTIPReply, receiver );
@@ -804,7 +811,6 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
           viewerInstance->deleteMessage();
       }
-      delete incidence;
 
       // create invitation for the delegate (same as the original invitation
       // with the delegate as additional attendee), we also use that for updating
@@ -816,7 +822,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         myself->setDelegate( delegateString );
         QString name, email;
         KPIMUtils::extractEmailAddressAndName( delegateString, email, name );
-        Attendee *delegate = new Attendee( name, email, true );
+        Attendee::Ptr delegate( new Attendee( name, email, true ) );
         delegate->setDelegator( receiver );
         incidence->addAttendee( delegate );
 
@@ -832,27 +838,27 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool openAttachment( const QString &name, const QString &iCal ) const
     {
-      Attachment *a = findAttachment( name, iCal );
-      if ( !a ) {
+      Attachment::Ptr attachment( findAttachment( name, iCal ) );
+      if ( !attachment ) {
         return false;
       }
 
-      if ( a->isUri() ) {
-        KToolInvocation::invokeBrowser( a->uri() );
+      if ( attachment->isUri() ) {
+        KToolInvocation::invokeBrowser( attachment->uri() );
       } else {
         // put the attachment in a temporary file and launch it
         KTemporaryFile *file = new KTemporaryFile();
         file->setAutoRemove( false );
-        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+        QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
         if ( !patterns.empty() ) {
           file->setSuffix( QString( patterns.first() ).remove( '*' ) );
         }
         file->open();
         file->setPermissions( QFile::ReadUser );
-        file->write( QByteArray::fromBase64( a->data() ) );
+        file->write( QByteArray::fromBase64( attachment->data() ) );
         file->close();
 
-        bool stat = KRun::runUrl( KUrl( file->fileName() ), a->mimeType(), 0, true );
+        bool stat = KRun::runUrl( KUrl( file->fileName() ), attachment->mimeType(), 0, true );
         delete file;
         return stat;
       }
@@ -861,7 +867,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool saveAsAttachment( const QString &name, const QString &iCal ) const
     {
-      Attachment *a = findAttachment( name, iCal );
+      Attachment::Ptr a( findAttachment( name, iCal ) );
       if ( !a ) {
         return false;
       }
@@ -934,14 +940,14 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool handleDeclineCounter( const QString &iCal, MessageViewer::Interface::BodyPart* part, MessageViewer::Viewer *viewerInstance ) const
     {
-      const QString receiver = findReceiver( part->content() );
+      const QString receiver( findReceiver( part->content() ) );
       if ( receiver.isEmpty() )
         return true;
-      Incidence* incidence = icalToString( iCal );
+      Incidence::Ptr incidence( icalToString( iCal ) );
       if ( askForComment( Attendee::Declined ) ) {
         bool ok = false;
-        QString comment = KInputDialog::getMultiLineText( i18n("Decline Counter Proposal"),
-            i18n("Comment:"), QString(), &ok );
+        const QString comment( KInputDialog::getMultiLineText( i18n("Decline Counter Proposal") ,
+                                                               i18n("Comment:"), QString(), &ok ) );
         if ( !ok )
           return true;
         if ( !comment.isEmpty() ) {
@@ -952,7 +958,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           }
         }
       }
-      return mail( viewerInstance, incidence, "declinecounter", KCal::iTIPDeclineCounter,
+      return mail( viewerInstance, incidence, "declinecounter", KCalCore::iTIPDeclineCounter,
                    receiver, QString(), DeclineCounter );
     }
 
@@ -979,9 +985,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         return false;
       }
 
-      Incidence *incidence;
       QString iCal;
-      QString summary;
       /* If the bodypart does not have a charset specified, we need to fall back
          to utf8, not the KMail fallback encoding, so get the contents as binary
          and decode explicitly. */
@@ -991,6 +995,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       } else {
         iCal = part->asText();
       }
+
       bool result = false;
       if ( path == "accept" )
         result = handleInvitation( iCal, Attendee::Accepted, part, viewerInstance );
@@ -1007,6 +1012,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, part, viewerInstance );
+
+      Incidence::Ptr incidence;
       if ( path == "forward" ) {
         const QString receiver = findReceiver( part->content() );
         incidence = icalToString( iCal );
@@ -1032,6 +1039,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           result = true;
         }
       }
+
+      QString summary;
       if ( path == "record" ) {
         incidence = icalToString( iCal );
 
@@ -1056,7 +1065,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
             summary = i18n( "Re: %1", summary );
           }
 
-          KToolInvocation::invokeMailer( incidence->organizer().email(), summary );
+          KToolInvocation::invokeMailer( incidence->organizer()->email(), summary );
           //fall through
         case KMessageBox::Yes: // means "do not send"
           if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
@@ -1171,9 +1180,9 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return QString();
     }
 
-    bool askForComment( KCal::Attendee::PartStat status ) const
+    bool askForComment( Attendee::PartStat status ) const
     {
-      if ( ( status != KCal::Attendee::Accepted
+      if ( ( status != Attendee::Accepted
               && MessageViewer::GlobalSettings::self()->askForCommentWhenReactingToInvitation()
               == MessageViewer::GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance )
           || MessageViewer::GlobalSettings::self()->askForCommentWhenReactingToInvitation()
