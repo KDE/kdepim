@@ -106,19 +106,13 @@ ActionMenuContainer {
     FakeAction { name : "view_day" }
     FakeAction { name : "view_week" }
     FakeAction { name : "view_month" }
+    FakeAction { name : "back_to_folder_selection" }
   }
   ActionList {
     category : "single_calendar"
     name : KDE.i18n( "Date" )
     FakeAction { name : "goto_today" }
     FakeAction { name : "select_date" }
-  }
-  ActionList {
-    category : "single_calendar"
-    name : KDE.i18n( "Publish" )
-    FakeAction { name : "publish_as_webpage" }
-    FakeAction { name : "publish_as_ical" }
-    FakeAction { name : "publish_as_vcal" }
   }
 
   ActionList {
@@ -133,19 +127,13 @@ ActionMenuContainer {
     FakeAction { name : "view_day" }
     FakeAction { name : "view_week" }
     FakeAction { name : "view_month" }
+    FakeAction { name : "back_to_folder_selection" }
   }
   ActionList {
     category : "multiple_calendar"
     name : KDE.i18n( "Date" )
     FakeAction { name : "goto_today" }
     FakeAction { name : "select_date" }
-  }
-  ActionList {
-    category : "multiple_calendar"
-    name : KDE.i18n( "Publish" )
-    FakeAction { name : "publish_as_webpage" }
-    FakeAction { name : "publish_as_ical" }
-    FakeAction { name : "publish_as_vcal" }
   }
 
   ActionList {
@@ -154,6 +142,8 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_item_copy_to_menu" }
     ActionListItem { name : "akonadi_item_move_to_menu" }
     ActionListItem { name : "akonadi_item_delete" }
+    FakeAction { name : "akonadi_edit_event" }
+    FakeAction { name : "detach_recurring_event" } // is this even available on the desktop?
   }
   ActionList {
     category : "event_viewer"
@@ -167,6 +157,12 @@ ActionMenuContainer {
     FakeAction { name : "mail_free_busy" }
     FakeAction { name : "upload_free_busy" }
   }
+  ActionList {
+    category : "event_viewer"
+    name : KDE.i18n( "Attachments" )
+    FakeAction { name : "save_all" }
+  }
+
   ApplicationGeneralActions {
     category : "standard"
     name : KDE.i18n( "KOrganizer" )

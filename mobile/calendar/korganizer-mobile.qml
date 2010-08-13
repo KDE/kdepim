@@ -50,7 +50,6 @@ KPIM.MainView {
   {
     eventView.visible = false;
     agendaView.visible = true;
-    updateContextActionsStates();
   }
 
   function updateContextActionsStates()
@@ -166,6 +165,11 @@ KPIM.MainView {
           clearSelection();
         }
       }
+    }
+
+    onVisibleChanged : {
+      if ( visible )
+        korganizerActions.showOnlyCategory("single_calendar")
     }
   }
 
