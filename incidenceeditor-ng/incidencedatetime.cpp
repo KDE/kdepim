@@ -366,12 +366,16 @@ bool IncidenceDateTime::isDirty( const KCalCore::Event::Ptr &event ) const
   if ( !mUi->mFreeBusyCheck->isChecked() && event->transparency() != Event::Transparent )
     return true;
 
-  if ( !event->allDay() ) {
-    if ( currentStartDateTime() != mInitialStartDT )
+  if ( event->allDay() ) {
+    if ( mUi->mStartDateEdit->date() != mInitialStartDT.date() ||
+         mUi->mEndDateEdit->date() != mInitialEndDT.date() ) {
       return true;
-
-    if ( currentEndDateTime() != mInitialEndDT )
+    }
+  } else {
+    if ( currentStartDateTime() != mInitialStartDT ||
+         currentEndDateTime() != mInitialEndDT ) {
       return true;
+    }
   }
 
   return false;
