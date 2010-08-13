@@ -255,9 +255,10 @@ void IncidenceDateTime::enableStartEdit( bool enable )
 
   if ( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
     mUi->mWholeDayCheck->setEnabled( true );
+    mUi->mWholeDayCheck->setChecked( mLoadedIncidence->allDay() );
   } else {
     mUi->mWholeDayCheck->setEnabled( false );
-    mUi->mWholeDayCheck->setChecked( true );
+    mUi->mWholeDayCheck->setChecked( false );
   }
 
   if ( enable ) {
@@ -278,8 +279,10 @@ void IncidenceDateTime::enableEndEdit( bool enable )
 
   if( mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
     mUi->mWholeDayCheck->setEnabled( true );
+    mUi->mWholeDayCheck->setChecked( mLoadedIncidence->allDay() );
   } else {
     mUi->mWholeDayCheck->setEnabled( false );
+    mUi->mWholeDayCheck->setChecked( false );
   }
 
   if ( enable ) {
@@ -327,14 +330,17 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
   const bool hasDateTimes = mUi->mStartCheck->isChecked() || mUi->mEndCheck->isChecked();
 
   // First check the start time/date of the todo
-  if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() )
+  if ( todo->hasStartDate() != mUi->mStartCheck->isChecked() ) {
     return true;
+  }
 
-  if ( ( hasDateTimes && todo->allDay() ) != mUi->mWholeDayCheck->isChecked() )
+  if ( ( hasDateTimes && todo->allDay() ) != mUi->mWholeDayCheck->isChecked() ) {
     return true;
+  }
 
-  if ( todo->hasDueDate() != mUi->mEndCheck->isChecked() )
+  if ( todo->hasDueDate() != mUi->mEndCheck->isChecked() ) {
     return true;
+  }
 
   if ( mUi->mStartCheck->isChecked() ) {
     // Use mActiveStartTime. This is the KDateTime::Spec selected on load coming from
@@ -344,9 +350,7 @@ bool IncidenceDateTime::isDirty( const KCalCore::Todo::Ptr &todo ) const
       return true;
   }
 
-
-  if ( mUi->mEndCheck->isChecked() ) {
-    if ( currentEndDateTime() != mInitialEndDT )
+  if ( mUi->mEndCheck->isChecked() && currentEndDateTime() != mInitialEndDT ) {
       return true;
   }
 
@@ -492,15 +496,9 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
   // These fields where not enabled in the old code either:
   mUi->mFreeBusyCheck->setVisible( false );
-  // kolab to-dos that "float" have a due time of 00:00, so make sure to check
-  // that also when deciding if the time associated box should be checked
-  // when reading in the Todo.
-
 
   const bool hasDateTimes = mUi->mEndCheck->isChecked() || mUi->mStartCheck->isChecked();
-  mUi->mWholeDayCheck->setChecked( hasDateTimes &&
-                                   ( todo->allDay() || todo->dtDue().time() == QTime( 0, 0 ) ) );
-
+  mUi->mWholeDayCheck->setChecked( hasDateTimes && todo->allDay() );
   mUi->mWholeDayCheck->setEnabled( hasDateTimes );
 
   // Connect to the right logic
