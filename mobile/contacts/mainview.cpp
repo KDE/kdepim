@@ -101,6 +101,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->interceptAction( Akonadi::StandardContactActionManager::CreateContact );
   mActionManager->interceptAction( Akonadi::StandardContactActionManager::CreateContactGroup );
   mActionManager->interceptAction( Akonadi::StandardContactActionManager::EditItem );
+  mActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
 
   connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
            this, SLOT( newContact() ) );
@@ -108,6 +109,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT( newContactGroup() ) );
   connect( mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SIGNAL( triggered( bool ) ),
            this, SLOT( editItem() ) );
+  connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
