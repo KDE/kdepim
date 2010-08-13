@@ -58,6 +58,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
 
   action = actionCollection->addAction("save_favorite");
   action->setText( i18n("Save Favorite") );
+
+  action = actionCollection->addAction("new_account");
+  action->setText( i18n("New Account") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

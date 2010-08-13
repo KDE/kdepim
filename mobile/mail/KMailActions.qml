@@ -114,6 +114,7 @@ ActionMenuContainer {
 ActionList {
     category: "standard"
     name: KDE.i18n("Settings")
+    ActionListItem { name : "new_account" }
     FakeAction { name : "work_offline" }
     FakeAction { name : "configure_kmail" }
     FakeAction { name : "configure_notifications" }

@@ -1,6 +1,8 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
     Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+    Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Copyright (c) 2010 Andras Mantia <amantia@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -295,8 +297,8 @@ KPIM.MainView {
 //     visible : !favoriteSelector.visible
     SlideoutPanel {
       id: actionPanel
-      titleText: KDE.i18n( "NewActions" )
-      handlePosition : 75
+      titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
       handleHeight: 150
       anchors.fill: parent
 //       contentWidth: 240
@@ -330,7 +332,7 @@ KPIM.MainView {
           }
       ]
     }
-
+/*
     SlideoutPanel {
       id: actionPanel2
       titleText: KDE.i18n( "Actions" )
@@ -453,7 +455,7 @@ KPIM.MainView {
           }          
       ]
     }
-
+*/
   SlideoutPanel {
       anchors.fill: parent
       id: attachmentPanel

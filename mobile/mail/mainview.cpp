@@ -80,6 +80,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
   connect(actionCollection()->action("forward_message"), SIGNAL(triggered(bool)), SLOT(forwardMessage()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
+  connect(actionCollection()->action("new_account"), SIGNAL(triggered(bool)), SLOT(launchAccountWizard()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
