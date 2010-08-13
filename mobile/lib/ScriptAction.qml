@@ -19,42 +19,26 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
-import org.kde 4.5
-import org.kde.pim.mobileui 4.5 as KPIM
+import Qt 4.7
 
+Item {
+  property string name
+  property alias script : myAction.script
 
-KPIM.ActionList {
-  id : actions
-
-  property string type
-
-  KPIM.ActionListItem {
-    name : "quit"
-  }
-  KPIM.ActionListItem {
-    name : "wm_task_switch"
-  }
-  KPIM.ActionListItem {
-    name : "add_new_" + type
-  }
-  KPIM.FakeAction {
-    name : "search_" + type
-  }
-  KPIM.FakeAction {
-    name : "configure"
-  }
-  KPIM.ScriptActionItem  {
-    name : "show_about_dialog"
-    title : KDE.i18n( "About" )
-  }
-
-  QML.Component.onCompleted :
+  function trigger()
   {
-    for (var i = 0; i < children.length; ++i )
-    {
-      children[i].triggered.connect(actions, triggered);
+    state = "execute";
+    state = "";
+  }
+
+  states : State {
+    name : "execute"
+  }
+
+  transitions : Transition {
+    from : ""; to : "execute"
+    ScriptAction {
+      id : myAction
     }
   }
 }
-

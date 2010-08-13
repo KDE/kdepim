@@ -55,7 +55,7 @@ ActionMenuContainer {
   ActionList {
     category : "home"
     name : KDE.i18n( "Sources" )
-    FakeAction { name : "to_selection_screen" }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select..." ) }
   }
 
   ActionList {

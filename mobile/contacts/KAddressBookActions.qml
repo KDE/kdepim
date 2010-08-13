@@ -63,7 +63,7 @@ ActionMenuContainer {
   ActionList {
     category : "home"
     name : KDE.i18n( "View" )
-    FakeAction { name : "select_multiple_folders" }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select..." ) }
   }
 
   ActionList {

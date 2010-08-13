@@ -19,26 +19,24 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import Qt 4.7 as QML
+import org.kde.pim.mobileui 4.5 as KPIM
 
-Item {
+
+QML.Item {
+  height : parent.height
+  width : parent.width
   property string name
-  property alias script : myAction.script
+  property string title
 
-  function trigger()
-  {
-    state = "execute";
-    state = "";
-  }
+  property string category
 
-  states : State {
-    name : "execute"
-  }
+  signal triggered(string triggeredName)
 
-  transitions : Transition {
-    from : ""; to : "execute"
-    ScriptAction {
-      id : myAction
-    }
+  KPIM.Button {
+    height : parent.height
+    width : parent.width
+    buttonText: parent.title
+    onClicked: parent.triggered( parent.name )
   }
 }

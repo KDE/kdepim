@@ -71,6 +71,7 @@ install(FILES
   ItemListView.qml
   ItemListViewDelegate.qml
   MainView.qml
+  ScriptAction.qml
   ScriptActionItem.qml
   StartCanvas.qml
   Spinner.qml

@@ -391,14 +391,14 @@ KPIM.MainView {
           anchors.fill : parent
 
           scriptActions : [
-            KPIM.ScriptActionItem {
+            KPIM.ScriptAction {
               name : "show_about_dialog"
               script : {
                 actionPanelNew.collapse();
                 aboutDialog.visible = true
               }
             },
-            KPIM.ScriptActionItem {
+            KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();
