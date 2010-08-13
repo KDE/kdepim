@@ -78,6 +78,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("write_new_email"), SIGNAL(triggered(bool)), SLOT(startComposer()));
   connect(actionCollection()->action("message_reply"), SIGNAL(triggered(bool)), SLOT(replyToMessage()));
   connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
+  connect(actionCollection()->action("forward_message"), SIGNAL(triggered(bool)), SLOT(forwardMessage()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -288,6 +289,15 @@ void MainView::replyToAll()
     return;
 
   replyToAll( item.id() );
+}
+
+void MainView::forwardMessage()
+{
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  forwardInline( item.id() );
 }
 
 Akonadi::Item MainView::currentItem()

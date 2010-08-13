@@ -52,6 +52,9 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   
   action = actionCollection->addAction("message_reply_to_all");
   action->setText( i18n("Reply To All") );
+
+  action = actionCollection->addAction("forward_message");
+  action->setText( i18n("Forward") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

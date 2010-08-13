@@ -67,11 +67,21 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_collection_create" }
   }
 */
+
+ ActionList {
+    category: "home"
+    name: KDE.i18n("Message")
+    ActionListItem { name : "write_new_email" }
+    FakeAction { name : "find_message" }
+  }
+
   ActionList {
     category: "mail_viewer"
     name: KDE.i18n( "Message" )
     ActionListItem { name : "message_reply" }
     ActionListItem { name : "message_reply_to_all" }
+    ActionListItem { name : "forward_message" }
+    ActionListItem { name : "write_new_email" }
   }
 
   ActionList {
@@ -94,8 +104,8 @@ ActionMenuContainer {
   }
 
  ActionList {
-    category: "standard"
-    name: KDE.i18n("Mail")
+    category: "single_folder"
+    name: KDE.i18n("Message")
     ActionListItem { name : "write_new_email" }
     FakeAction { name : "find_message" }
   }

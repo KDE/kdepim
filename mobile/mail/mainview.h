@@ -57,6 +57,7 @@ class MainView : public KDeclarativeMainView
     void delayedInit();
     void replyToMessage();
     void replyToAll();
+    void forwardMessage();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
