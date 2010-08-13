@@ -45,7 +45,13 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setCheckable(true);
 
   action = actionCollection->addAction("write_new_email");
-  action->setText( i18n("Write New Email") );  
+  action->setText( i18n("Write New Email") );
+
+  action = actionCollection->addAction("message_reply");
+  action->setText( i18n("Reply") );
+  
+  action = actionCollection->addAction("message_reply_to_all");
+  action->setText( i18n("Reply To All") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

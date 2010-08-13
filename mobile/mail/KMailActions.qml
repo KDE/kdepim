@@ -68,6 +68,13 @@ ActionMenuContainer {
   }
 */
   ActionList {
+    category: "mail_viewer"
+    name: KDE.i18n( "Message" )
+    ActionListItem { name : "message_reply" }
+    ActionListItem { name : "message_reply_to_all" }
+  }
+
+  ActionList {
     category : "single_folder"
     name : KDE.i18n( "Emails" )
     ActionListItem { name : "akonadi_collection_sync" }
@@ -85,32 +92,6 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_delete" }
   }
-/*
-  ActionList {
-    category : "single_folder"
-    name : KDE.i18n( "View" )
-    FakeAction { name : "save_view_as_favorite" }
-    FakeAction { name : "start_maintenance" }
-    FakeAction { name : "filter_view" }
-    FakeAction { name : "view_options" }
-  }
-
-  ActionList {
-    category : "multiple_folder"
-    name : KDE.i18n( "View" )
-    FakeAction { name : "save_view_as_favorite" }
-    FakeAction { name : "start_maintenance" }
-  }
-
-  ActionList {
-    category : "contact_viewer"
-    name : KDE.i18n( "Contact" )
-    FakeAction { name : "copy_to_addressbook" }
-    FakeAction { name : "move_to_addressbook" }
-    ActionListItem { name : "akonadi_item_delete" }
-    ActionListItem { name : "akonadi_contact_item_edit" }
-  }
-*/
 
  ActionList {
     category: "standard"

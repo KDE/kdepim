@@ -66,12 +66,14 @@ KPIM.MainView {
       // Only go to the next message when currently a valid item is set.
       if ( messageView.itemId >= 0 )
         headerList.nextItem();
-    }
+      kmailActions.showOnlyCategory("mail_viewer")
+   }
 
     onPreviousItemRequest: {
       // Only go to the previous message when currently a valid item is set.
       if ( messageView.itemId >= 0 )
         headerList.previousItem();
+      kmailActions.showOnlyCategory("mail_viewer")
     }
   }
 
@@ -262,8 +264,10 @@ KPIM.MainView {
               backToMessageListButton.visible = true;
               collectionView.visible = false;
               emailListPage.visible = false;
+              kmailActions.showOnlyCategory("mail_viewer")
             } else {
               application.restoreDraft(headerList.currentItemId);
+              updateContextActionsStates()
             }
           }
         }

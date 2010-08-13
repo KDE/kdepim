@@ -55,6 +55,8 @@ class MainView : public KDeclarativeMainView
 
   protected slots:
     void delayedInit();
+    void replyToMessage();
+    void replyToAll();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -71,6 +73,7 @@ class MainView : public KDeclarativeMainView
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();
+    Akonadi::Item currentItem();
 };
 
 #endif

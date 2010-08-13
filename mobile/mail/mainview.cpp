@@ -76,6 +76,8 @@ void MainView::delayedInit()
   connect(actionCollection()->action("mark_message_important"), SIGNAL(triggered(bool)), SLOT(markImportant(bool)));
   connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
   connect(actionCollection()->action("write_new_email"), SIGNAL(triggered(bool)), SLOT(startComposer()));
+  connect(actionCollection()->action("message_reply"), SIGNAL(triggered(bool)), SLOT(replyToMessage()));
+  connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -232,12 +234,8 @@ void MainView::forwardInlineFetchResult( KJob* job )
 
 void MainView::markImportant(bool checked)
 {
-  const QModelIndexList list = itemSelectionModel()->selectedRows();
-  if (list.size() != 1)
-    return;
-  const QModelIndex idx = list.first();
-  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if (!item.hasPayload<KMime::Message::Ptr>())
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
     return;
 
   Akonadi::MessageStatus status;
@@ -256,12 +254,8 @@ void MainView::markImportant(bool checked)
 
 void MainView::markMailTask(bool checked)
 {
-  const QModelIndexList list = itemSelectionModel()->selectedRows();
-  if (list.size() != 1)
-    return;
-  const QModelIndex idx = list.first();
-  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if (!item.hasPayload<KMime::Message::Ptr>())
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
     return;
 
   Akonadi::MessageStatus status;
@@ -278,6 +272,38 @@ void MainView::markMailTask(bool checked)
   connect(job, SIGNAL(result(KJob *)), SLOT(modifyDone(KJob *)));
 }
 
+void MainView::replyToMessage()
+{
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  reply( item.id() );
+}
+
+void MainView::replyToAll()
+{
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  replyToAll( item.id() );
+}
+
+Akonadi::Item MainView::currentItem()
+{
+  const QModelIndexList list = itemSelectionModel()->selectedRows();
+  if (list.size() != 1)
+    return Akonadi::Item();
+  const QModelIndex idx = list.first();
+  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  if (!item.hasPayload<KMime::Message::Ptr>())
+    return Akonadi::Item();
+
+  return item;
+}
+
+
 void MainView::modifyDone(KJob *job)
 {
   if (job->error())
@@ -289,12 +315,8 @@ void MainView::modifyDone(KJob *job)
 
 void MainView::dataChanged()
 {
-  const QModelIndexList list = itemSelectionModel()->selectedRows();
-  if (list.size() != 1)
-    return;
-  const QModelIndex idx = list.first();
-  Akonadi::Item item = idx.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if (!item.hasPayload<KMime::Message::Ptr>())
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
     return;
 
   Akonadi::MessageStatus status;
