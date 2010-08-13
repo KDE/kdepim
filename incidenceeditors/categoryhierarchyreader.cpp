@@ -23,6 +23,7 @@
 #include "categoryconfig.h"
 
 #include <QComboBox>
+#include <QTreeWidget>
 #include <QStringList>
 
 using namespace IncidenceEditors;

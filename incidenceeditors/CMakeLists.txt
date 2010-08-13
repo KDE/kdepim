@@ -67,6 +67,7 @@ target_link_libraries(incidenceeditors
    ${QT_QTUITOOLS_LIBRARY}
    ${KDEPIMLIBS_KCALCORE_LIBS}
    ${KDEPIMLIBS_KCALUTILS_LIBS}
+   ${KDE4_KPARTS_LIBRARY}
    kdepim
    kdepimdbusinterfaces
    akonadi-kcal_next
