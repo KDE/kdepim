@@ -69,8 +69,8 @@ Manager::Manager()
   mPixmapMessageSent = new QPixmap( SmallIcon( "mail-sent" ) );
   mPixmapMessageForwarded = new QPixmap( SmallIcon( "mail-forwarded" ) );
   mPixmapMessageImportant = new QPixmap( SmallIcon( "emblem-important" ) ); // "flag"
-  mPixmapMessageWatched = new QPixmap( UserIcon( "mail-thread-watch.png" ) );
-  mPixmapMessageIgnored = new QPixmap( UserIcon( "mail-thread-ignored.png" ) );
+  mPixmapMessageWatched = new QPixmap( SmallIcon( "mail-thread-watch" ) );
+  mPixmapMessageIgnored = new QPixmap( SmallIcon( "mail-thread-ignored" ) );
   mPixmapMessageSpam = new QPixmap( SmallIcon( "mail-mark-junk" ) );
   mPixmapMessageHam = new QPixmap( SmallIcon( "mail-mark-notjunk" ) );
   mPixmapMessageFullySigned = new QPixmap( SmallIcon( "mail-signed-verified" ) );
