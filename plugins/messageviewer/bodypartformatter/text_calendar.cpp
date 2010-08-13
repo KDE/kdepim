@@ -93,8 +93,6 @@ using namespace KCal;
 
 namespace {
 
-#ifndef KDEPIM_NO_KRESOURCES
-
 static bool hasMyWritableEventsFolders( const QString &family )
 {
   QString myfamily = family;
@@ -102,6 +100,8 @@ static bool hasMyWritableEventsFolders( const QString &family )
     myfamily = "calendar";
   }
 
+#if 0 // TODO port to Akonadi
+#ifndef KDEPIM_NO_KRESOURCES
   CalendarResourceManager manager( myfamily );
   manager.readConfig();
 
@@ -132,8 +132,14 @@ static bool hasMyWritableEventsFolders( const QString &family )
     }
   }
   return false;
+#endif
+#else
+  kDebug() << "Disabled code, port to Akonadi";
+  return true;
+#endif
 }
 
+#ifndef KDEPIM_NO_KRESOURCES
 class CalendarManager
 {
   public:
@@ -964,7 +970,6 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     bool handleClick( MessageViewer::Viewer *viewerInstance, MessageViewer::Interface::BodyPart *part,
                       const QString &path ) const
     {
-#ifndef KDEPIM_NO_KRESOURCES
       if ( !hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
@@ -973,7 +978,6 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                 "Please create at least 1 writable events calendar and re-sync." ) );
         return false;
       }
-#endif
 
       Incidence *incidence;
       QString iCal;
