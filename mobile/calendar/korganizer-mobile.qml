@@ -58,7 +58,7 @@ KPIM.MainView {
       korganizerActions.showOnlyCategory("home")
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       korganizerActions.showOnlyCategory("account")
-    } else if ( collectionView.numSelected > 0 ) { // something else is selected
+    } else if ( collectionView.numSelected > 1 ) { // something else is selected
       korganizerActions.showOnlyCategory( "multiple_folder" );
     } else {
       korganizerActions.showOnlyCategory("single_folder")
