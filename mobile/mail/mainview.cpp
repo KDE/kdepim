@@ -33,6 +33,7 @@
 #include <kstandarddirs.h>
 
 #include <KMime/Message>
+#include <akonadi/agentactionmanager.h>
 #include <akonadi/kmime/messageparts.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
@@ -80,7 +81,6 @@ void MainView::delayedInit()
   connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
   connect(actionCollection()->action("forward_message"), SIGNAL(triggered(bool)), SLOT(forwardMessage()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
-  connect(actionCollection()->action("new_account"), SIGNAL(triggered(bool)), SLOT(launchAccountWizard()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
 
@@ -453,6 +453,34 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->setItemSelectionModel( itemSelectionModel );
 
   manager->createAllActions();
+}
+
+void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( selectionModel );
+  manager->createAllActions();
+
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add Account" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete Account" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Configure Account" ) );
+
+  manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
+
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
+                           i18nc( "@title:window", "New Account" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
+                           i18n( "Could not create account: %1" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
+                           i18n( "Account creation failed" ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
+                           i18nc( "@title:window", "Delete Account?" ) );
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+                           i18n( "Do you really want to delete the selected account?" ) );
 }
 
 // #############################################################

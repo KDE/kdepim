@@ -27,7 +27,7 @@ ActionMenuContainer {
   actionItemHeight : 70
   actionItemWidth : 200
   actionItemSpacing : 2
-/*
+
   ReorderList {
     category : "home"
     name : KDE.i18n( "Favorites" )
@@ -41,32 +41,27 @@ ActionMenuContainer {
     model : favoritesList
   }
 
-  ReorderList {
+  AgentInstanceList {
     category : "home"
-    name : KDE.i18n( "Address Books" )
+    name : KDE.i18n( "Accounts" )
 
-    delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
-    }
-    upAction : "resource_up"
-    downAction : "resource_down"
-    deleteAction : "resource_delete"
-    model : allFoldersModel
+    model : agentInstanceList
+
+    customActions : [
+      ActionListItem { name : "akonadi_agentinstance_delete" },
+      ActionListItem { name : "akonadi_agentinstance_configure" },
+      ActionListItem { name : "akonadi_agentinstance_create" }
+    ]
   }
 
   ActionList {
     category : "home"
-    name : KDE.i18n( "View" )
-    FakeAction { name : "select_multiple_folders" }
+    name : KDE.i18n( "Identities" )
+    FakeAction { name : "add_identity" }
+    FakeAction { name : "modify_identity" }
+    FakeAction { name : "delete_identity" }
+    FakeAction { name : "mark_default_identity" }
   }
-
-  ActionList {
-    category : "resource"
-    name : KDE.i18n( "Address Book" )
-    ActionListItem { name : "akonadi_addressbook_properties" }
-    ActionListItem { name : "akonadi_collection_create" }
-  }
-*/
 
  ActionList {
     category: "home"
@@ -114,12 +109,11 @@ ActionMenuContainer {
 ActionList {
     category: "standard"
     name: KDE.i18n("Settings")
-    ActionListItem { name : "new_account" }
     FakeAction { name : "work_offline" }
     FakeAction { name : "configure_kmail" }
     FakeAction { name : "configure_notifications" }
   }
-  
+
   ApplicationGeneralActions {
     category : "standard"
     name : KDE.i18n( "Application" )

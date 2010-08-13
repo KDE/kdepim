@@ -62,6 +62,9 @@ class MainView : public KDeclarativeMainView
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
                                              QItemSelectionModel *itemSelectionModel );
+
+    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+
   private slots:
     void replyFetchResult( KJob *job );
     void forwardInlineFetchResult( KJob *job );
