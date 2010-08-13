@@ -38,7 +38,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <akonadi/kmime/messagestatus.h>
 #include "messagecore/messagehelpers.h"
-#include <akonadi/mail/standardmailactionmanager.h>
+#include <akonadi/kmime/standardmailactionmanager.h>
 
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemFetchJob>
