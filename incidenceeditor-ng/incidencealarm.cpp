@@ -158,7 +158,7 @@ void IncidenceAlarm::editCurrentAlarm()
 
   KCalCore::Alarm::Ptr currentAlarm = mAlarms.at( mUi->mAlarmList->currentRow() );
 
-  QWeakPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type() ) );
+  QWeakPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type(), mUi->mTabWidget ) );
   dialog.data()->load( currentAlarm );
 
   dialog.data()->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
@@ -198,7 +198,7 @@ void IncidenceAlarm::newAlarm()
 {
 #ifndef KDEPIM_MOBILE_UI
 
-  QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type() ) );
+  QPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type(), mUi->mTabWidget ) );
   dialog->setOffset( 15 );
   dialog->setUnit( AlarmDialog::Minutes );
   if ( mIsTodo && mDateTime->endDateTimeEnabled() )

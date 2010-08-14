@@ -53,7 +53,7 @@ class AlarmDialog : public KDialog
        Constructs a new alarm dialog.
        @p incidenceType will influence i18n strings, that will be different for to-dos.
      */
-    AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType );
+    AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent = 0 );
 
     void load( const KCalCore::Alarm::Ptr &alarm );
     void save( const KCalCore::Alarm::Ptr &alarm ) const;

@@ -27,8 +27,9 @@
 using namespace IncidenceEditorsNG;
 using namespace KCalCore;
 
-AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType )
-  : mUi( new Ui::AlarmDialog )
+AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent )
+  : KDialog( parent )
+  ,  mUi( new Ui::AlarmDialog )
   , mIncidenceType( incidenceType )
   , mAllowBeginReminders( true )
   , mAllowEndReminders( true )
