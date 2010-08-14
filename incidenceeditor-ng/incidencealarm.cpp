@@ -161,6 +161,9 @@ void IncidenceAlarm::editCurrentAlarm()
   QWeakPointer<AlarmDialog> dialog( new AlarmDialog( mLoadedIncidence->type() ) );
   dialog.data()->load( currentAlarm );
 
+  dialog.data()->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
+  dialog.data()->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
+
   if ( dialog.data()->exec() == KDialog::Accepted ) {
     AlarmDialog *dialogPtr = dialog.data();
 
