@@ -167,6 +167,8 @@ void IncidenceAlarm::editCurrentAlarm()
   if ( dialog.data()->exec() == KDialog::Accepted ) {
     AlarmDialog *dialogPtr = dialog.data();
 
+    // If it was deleted it wouldn't have returned Accepted
+    // is this check needed?
     if ( dialogPtr ) {
       dialogPtr->save( currentAlarm );
       updateAlarmList();
