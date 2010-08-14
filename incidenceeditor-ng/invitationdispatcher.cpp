@@ -184,8 +184,10 @@ void InvitationDispatcher::setItemManager( EditorItemManager *manager )
 
   d->mManager = manager;
   connect( manager, SIGNAL( destroyed() ), SLOT( resetManager() ) );
+
+  qRegisterMetaType<Akonadi::EditorItemManager::SaveAction>( "Akonadi::EditorItemManager::SaveAction" );
   connect( manager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
-           SLOT( processItemSave( Akonadi::EditorItemManager::SaveAction ) ) );
+           SLOT( processItemSave( Akonadi::EditorItemManager::SaveAction ) ), Qt::QueuedConnection );
 }
 
 #include "invitationdispatcher.moc"
