@@ -87,7 +87,7 @@ set(akregatorpart_PART_SRCS
    importitemsjob.cpp
    migratefeedscommand.cpp
    tabwidget.cpp
-   progressmanager.cpp
+#   progressmanager.cpp
    kernel.cpp
    akregator_part.cpp
    mainwidget.cpp

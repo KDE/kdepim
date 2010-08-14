@@ -43,7 +43,9 @@
 #include "migratefeedscommand.h"
 #include "notificationmanager.h"
 #include "openurlrequest.h"
+#ifdef WITH_LIBKDEPIM
 #include "progressmanager.h"
+#endif
 #include "searchbar.h"
 #include "selectioncontroller.h"
 #include "speechclient.h"
@@ -110,8 +112,10 @@ public:
     explicit Private( MainWidget* qq ) : q( qq ) {}
     void setUpAndStart( Command* cmd ) {
         cmd->setParentWidget( q );
+#ifdef WITH_LIBKDEPIM
         if ( cmd->isUserVisible() )
             ProgressManager::self()->addJob( cmd );
+#endif
         cmd->start();
     }
 };
@@ -439,7 +443,9 @@ void Akregator::MainWidget::setFeedList( const shared_ptr<KRss::FeedList>& list 
     m_articleViewer->setFeedList( m_feedList );
     Kernel::self()->setFeedList( m_feedList );
     NotificationManager::self()->setFeedList( m_feedList );
+#ifdef WITH_LIBKDEPIM
     ProgressManager::self()->setFeedList( m_feedList );
+#endif
     m_selectionController->setFeedList( m_feedList );
 
     if ( oldList )
@@ -707,7 +713,9 @@ void Akregator::MainWidget::slotMarkAllFeedsRead()
 
     job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread << KRss::Item::New );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
+#ifdef WITH_LIBKDEPIM
     ProgressManager::self()->addJob( job );
+#endif
     job->start();
 }
 
@@ -722,7 +730,9 @@ void Akregator::MainWidget::slotMarkFeedRead()
     KRss::StatusModifyJob * const job = visitor.statusModifyJob();
     job->clearFlags( QList<KRss::Item::StatusFlag>() << KRss::Item::Unread << KRss::Item::New );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotJobFinished( KJob* ) ) );
+#ifdef WITH_LIBKDEPIM
     ProgressManager::self()->addJob( job );
+#endif
     job->start();
 }
 

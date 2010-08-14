@@ -278,7 +278,9 @@ void Akregator::SelectionController::selectedSubscriptionChanged( const QModelIn
     connect( job, SIGNAL(finished(KJob*)),
              this, SLOT(articleHeadersAvailable(KJob*)) );
     m_listJob = job;
+#ifdef WITH_LIBKDEPIM
     ProgressManager::self()->addJob( job );
+#endif
     m_listJob->start();
     m_time.start();
 }

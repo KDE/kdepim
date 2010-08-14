@@ -82,7 +82,7 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUD
 
 
 add_subdirectory( ontologies ) # must be the first one.
-add_subdirectory(libkdepim)
+# add_subdirectory(libkdepim)
 #  add_subdirectory(libkdepimdbusinterfaces)
 add_subdirectory(krss)
 add_subdirectory(akregator)

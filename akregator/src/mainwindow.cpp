@@ -29,7 +29,9 @@
 #include "statusbarprogresswidget.h"
 #include "trayicon.h"
 
+#ifdef WITH_LIBKDEPIM
 #include <libkdepim/broadcaststatus.h>
+#endif
 
 #include <KAction>
 #include <KActionCollection>
@@ -88,8 +90,10 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags f )
     createStandardStatusBarAction();
     autoReadProperties();
 
+#ifdef WITH_LIBKDEPIM
     connect( KPIM::BroadcastStatus::instance(), SIGNAL( statusMsg( const QString& ) ),
              this, SLOT( slotSetStatusBarText(const QString&) ) );
+#endif
 }
 
 bool MainWindow::loadPart()

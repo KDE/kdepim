@@ -702,7 +702,9 @@ void ArticleViewer::showNode( const shared_ptr<KRss::FeedList>& feedList, const 
     job->setFetchScope( scope );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotArticlesListed(KJob*)));
     m_listJob = job;
+#ifdef WITH_LIBKDEPIM
     ProgressManager::self()->addJob( job );
+#endif
     job->start();
 
     slotUpdateCombinedView();
