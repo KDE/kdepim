@@ -57,6 +57,7 @@ private slots:
   void foldersChanged();
   void selectedAccount(int);
   void updateNewMessages();
+  void tray_quit();
 
 protected:
   void mousePressEvent(TQMouseEvent *);

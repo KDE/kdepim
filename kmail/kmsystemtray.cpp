@@ -102,6 +102,8 @@ KMSystemTray::KMSystemTray(TQWidget *parent, const char *name)
 
   connect( kmkernel->acctMgr(), TQT_SIGNAL( checkedMail( bool, bool, const TQMap<TQString, int> & ) ),
            TQT_SLOT( updateNewMessages() ) );
+
+  connect( this, TQT_SIGNAL( quitSelected() ), TQT_SLOT( tray_quit() ) );
 }
 
 void KMSystemTray::buildPopupMenu()
@@ -133,9 +135,13 @@ void KMSystemTray::buildPopupMenu()
   mPopupMenu->insertSeparator();
 
   KMainWindow *mainWin = ::qt_cast<KMainWindow*>(kmkernel->getKMMainWidget()->topLevelWidget());
-  if(mainWin)
-    if ( ( action=mainWin->actionCollection()->action("file_quit") ) )
-      action->plug( mPopupMenu );
+  mPopupMenu->insertItem( SmallIcon("exit"), i18n("&Quit"), this, TQT_SLOT(maybeQuit()) );
+}
+
+void KMSystemTray::tray_quit()
+{
+  // Quit all of KMail
+  kapp->quit();
 }
 
 KMSystemTray::~KMSystemTray()
