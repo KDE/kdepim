@@ -218,6 +218,8 @@ void IncidenceAlarm::newAlarm()
     checkDirtyStatus();
   }
 
+  delete dialog;
+
 #endif
 }
 
