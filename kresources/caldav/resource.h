@@ -95,13 +95,8 @@ protected:
     };
 
 
-//     virtual bool doLoad( bool syncCache );
-//     virtual bool doSave( bool syncCache );
-
     virtual bool doLoad();
 //    virtual bool doSave();
-
-    virtual bool doSave( bool syncCache, Incidence *incidence );
 
     virtual KABC::Lock* lock();
 

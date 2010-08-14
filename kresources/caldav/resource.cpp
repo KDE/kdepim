@@ -207,11 +207,6 @@ bool ResourceCalDav::doSave() {
 }
 
 
-bool ResourceCalDav::doSave( bool syncCache, Incidence *incidence ) {
-    // To suppress warning about doSave(bool) method hides ResourceCached::doSave(bool, Incidence)
-    return ResourceCached::doSave();
-}
-
 KABC::Lock* ResourceCalDav::lock() {
     log("lock()");
     return &mLock;
