@@ -44,10 +44,14 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   akonadi-kcal_next
-  incidenceeditors
   kdepim
   messageviewer
 )
+
+# remove eventually?
+if (NOT WINCE)
+  target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditors)
+endif (NOT WINCE)
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
 

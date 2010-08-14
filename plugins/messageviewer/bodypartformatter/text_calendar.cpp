@@ -702,9 +702,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     bool saveFile( const QString& receiver, const QString& iCal,
                    const QString& type ) const
     {
+    // FIXME no IncidenceEditors on WinCE, anyway we don't want to depend on it just for that 
+#ifndef Q_OS_WINCE
       if ( !IncidenceEditors::GroupwareIntegration::isActive() ) {
         IncidenceEditors::GroupwareIntegration::activate();
       }
+#endif
       return Akonadi::Groupware::instance()->handleInvitation( receiver, iCal, type );
     }
 

@@ -24,8 +24,12 @@ target_link_libraries(tasks-mobile
 #    ${KDEPIMLIBS_AKONADI_LIBS}
 #    akonadi_next
     kdepim
-    incidenceeditors
 )
+
+# not built under WinCE, should be going away eventually anyway
+if (NOT WINCE)
+  target_link_libraries(tasks-mobile incidenceeditors)
+endif (NOT WINCE)
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES tasks-mobile.sh DESTINATION ${BIN_INSTALL_DIR})

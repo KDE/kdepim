@@ -40,7 +40,9 @@ using namespace Akonadi;
 typedef DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral> DeclarativeEditorGeneral;
 typedef DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness> DeclarativeEditorBusiness;
 typedef DeclarativeWidgetBase<EditorLocation, ContactEditorView, &ContactEditorView::setEditorLocation> DeclarativeEditorLocation;
+#ifndef Q_OS_WINCE
 typedef DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorView::setEditorCrypto> DeclarativeEditorCrypto;
+#endif
 typedef DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore> DeclarativeEditorMore;
 
 class ContactEditorView::Private : public Akonadi::ItemEditorUi
@@ -213,7 +215,9 @@ void ContactEditorView::delayedInit()
   qmlRegisterType<DeclarativeEditorGeneral>( "org.kde.contacteditors", 4, 5, "ContactEditorGeneral" );
   qmlRegisterType<DeclarativeEditorBusiness>( "org.kde.contacteditors", 4, 5, "ContactEditorBusiness" );
   qmlRegisterType<DeclarativeEditorLocation>( "org.kde.contacteditors", 4, 5, "ContactEditorLocation" );
+#ifndef Q_OS_WINCE
   qmlRegisterType<DeclarativeEditorCrypto>( "org.kde.contacteditors", 4, 5, "ContactEditorCrypto" );
+#endif
   qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
 
   connect( d->mItemManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
@@ -256,7 +260,9 @@ void ContactEditorView::setEditorLocation( EditorLocation *editor )
 
 void ContactEditorView::setEditorCrypto( EditorCrypto *editor )
 {
+#ifndef Q_OS_WINCE
   d->addDetailEditor( editor );
+#endif
 }
 
 void ContactEditorView::setEditorMore( EditorMore *editor )
