@@ -109,6 +109,8 @@ int InvitationHandler::Private::askUser( const QString &question,
                                          const KGuiItem &buttonYes,
                                          const KGuiItem &buttonNo ) const
 {
+  Q_ASSERT_X( question.isEmpty(), "InvitationHandler::askUser", "ask what?" );
+
   return KMessageBox::questionYesNo( mParent, question, i18n( "Group Scheduling Email" ), buttonYes, buttonNo );
 }
 
@@ -294,6 +296,7 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( K
 
     if ( d->weNeedToSendMailFor( incidence ) ) {
       QString question;
+      //TODO_BERTJAN, if it's a to-do it's showing an empty question.
       if ( incidence->type() == Incidence::TypeEvent ) {
         question = i18n( "You changed the invitation \"%1\".\n"
                          "Do you want to email the attendees an update message?",
