@@ -25,6 +25,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 
+#include "calhelper.h"
 #include "event.h"
 #include "todo.h"
 #include "freebusy.h"
@@ -415,9 +416,20 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
                 << " incidences with schedulingID " << inc->schedulingID()
                 << endl;
 
-  bool ret = false;
+  // Remove existing incidences that aren't stored in my calendar as we
+  // will never attempt to remove those -- even if we have write-access.
+  Incidence::List myExistingIncidences;
   Incidence::List::ConstIterator incit = existingIncidences.begin();
   for ( ; incit != existingIncidences.end() ; ++incit ) {
+    Incidence *i = *incit;
+    if ( CalHelper::isMyCalendarIncidence( mCalendar, i ) ) {
+      myExistingIncidences.append( i );
+    }
+  }
+
+  bool ret = false;
+  incit = myExistingIncidences.begin();
+  for ( ; incit != myExistingIncidences.end() ; ++incit ) {
     Incidence *i = *incit;
     kdDebug(5800) << "Considering this found event ("
                   << ( i->isReadOnly() ? "readonly" : "readwrite" )
@@ -469,7 +481,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   }
 
   // in case we didn't find the to-be-removed incidence
-  if ( existingIncidences.count() > 0 && inc->revision() > 0 ) {
+  if ( myExistingIncidences.count() > 0 && inc->revision() > 0 ) {
     KMessageBox::information(
       0,
       i18n( "The event or task could not be removed from your calendar. "
