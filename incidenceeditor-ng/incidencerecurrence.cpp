@@ -43,6 +43,7 @@ enum {
   RecurrenceEndAfter
 };
 
+
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
 #else
@@ -50,6 +51,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 #endif
   : mUi( ui )
   , mDateTime( dateTime )
+  , mMonthlyInitialType( 0 )
+  , mYearlyInitialType( 0 )
 {
   setObjectName( "IncidenceRecurrence" );
   // Set some sane defaults
@@ -231,6 +234,8 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
     else // Every (last - i)th last weekday
       r->addMonthlyPos( -monthWeekFromEnd(), weekday() );
 
+    mMonthlyInitialType = mUi->mMonthlyCombo->currentIndex();
+
   } else if ( recurrenceType == RecurrenceTypeYearly ) {
     r->setYearly( mUi->mFrequencyEdit->value() );
 
@@ -255,6 +260,8 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
     r->setEndDate( endDate );
 
   r->setExDates( mExceptionDates );
+
+  mYearlyInitialType = mUi->mYearlyCombo->currentIndex();
 }
 
 bool IncidenceRecurrence::isDirty() const
@@ -288,38 +295,38 @@ bool IncidenceRecurrence::isDirty() const
     break;
   case KCalCore::Recurrence::rMonthlyDay:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly ||
-         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mMonthlyCombo->currentIndex() != mMonthlyInitialType ) {
       return true;
     }
-    // TODO: Check values
     break;
   case KCalCore::Recurrence::rMonthlyPos:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly ||
-         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mMonthlyCombo->currentIndex() != mMonthlyInitialType ) {
       return true;
     }
-    // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyDay:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
-         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mYearlyCombo->currentIndex() != mYearlyInitialType ) {
       return true;
     }
-    // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyMonth:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
-         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mYearlyCombo->currentIndex() != mYearlyInitialType ) {
       return true;
     }
-    // TODO: Check values
     break;
   case KCalCore::Recurrence::rYearlyPos:
     if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
-         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mYearlyCombo->currentIndex() != mYearlyInitialType ) {
       return true;
     }
-    // TODO: Check values
     break;
   }
 
@@ -613,7 +620,8 @@ QString IncidenceRecurrence::numberToString( int number ) const
 
 void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType )
 {
-  Q_ASSERT( recurenceType == KCalCore::Recurrence::rMonthlyPos || recurenceType == KCalCore::Recurrence::rMonthlyDay );
+  Q_ASSERT( recurenceType == KCalCore::Recurrence::rMonthlyPos ||
+            recurenceType == KCalCore::Recurrence::rMonthlyDay );
 
   if ( recurenceType == KCalCore::Recurrence::rMonthlyPos ) {
     QList<KCalCore::RecurrenceRule::WDayPos> rmp = recurrence->monthPositions();
@@ -649,6 +657,9 @@ void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence, u
       mUi->mMonthlyCombo->setCurrentIndex( 3 );
     }
   }
+
+  // So we can easily detect if the user changed the type, without going through this logic ^
+  mMonthlyInitialType = mUi->mMonthlyCombo->currentIndex();
 }
 
 void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType )
@@ -707,6 +718,8 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
       mUi->mYearlyCombo->setCurrentIndex( 3 );
   }
 
+  // So we can easily detect if the user changed the type, without going through this logic ^
+  mYearlyInitialType = mUi->mYearlyCombo->currentIndex();
 }
 
 void IncidenceRecurrence::setDefaults()

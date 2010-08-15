@@ -118,6 +118,11 @@ private:
     QDate mCurrentDate;
     IncidenceDateTime *mDateTime;
     KCalCore::DateList mExceptionDates;
+
+    // So we can easily detect if the user changed the type,
+    // without going through complicated recurrence logic:
+    int mMonthlyInitialType;
+    int mYearlyInitialType;
 };
 
 }
