@@ -940,7 +940,7 @@
       <attribute name="title">
        <string comment="@title:tab">Recurrence</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_19">
+      <layout class="QGridLayout" name="gridLayout_19" columnstretch="0,1,0">
        <item row="0" column="0">
         <widget class="QLabel" name="label_13">
          <property name="sizePolicy">
