@@ -625,7 +625,7 @@ void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence, u
 
   if ( recurenceType == KCalCore::Recurrence::rMonthlyPos ) {
     QList<KCalCore::RecurrenceRule::WDayPos> rmp = recurrence->monthPositions();
-    if ( !rmp.isEmpty() )
+    if ( rmp.isEmpty() )
       return; // Use the default values. Probably marks the editor as dirty
 
     if ( rmp.first().pos() > 0 ) { // nth day
