@@ -44,6 +44,24 @@ enum {
 };
 
 
+/**
+
+Description of available recurrence types:
+
+0 - None
+1 -
+2 -
+3 - rDaily
+4 - rWeekly
+5 - rMonthlyPos  - 3rd Saturday of month, last Wednesday of month...
+6 - rMonthlyDay  - 17th day of month
+7 - rYearlyMonth - 10th of July
+8 - rYearlyDay   - on the 117th day of the year
+9 - rYearlyPos   - 1st Wednesday of July
+
+*/
+
+
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
 #else
