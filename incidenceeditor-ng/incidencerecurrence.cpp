@@ -708,10 +708,11 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
     // TODO check month and day to be correct values with respect to what is
     //      presented in the combo box.
 
-    if ( day < 0 )
+    if ( day > 0 ) {
       mUi->mYearlyCombo->setCurrentIndex( 0 );
-    else
+    } else {
       mUi->mYearlyCombo->setCurrentIndex( 1 );
+    }
 
   } else { //KCalCore::Recurrence::rYearlyPos
 
