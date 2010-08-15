@@ -76,6 +76,8 @@ void IncidenceAttachment::load( const KCalCore::Incidence::Ptr &incidence )
   KCalCore::Attachment::List::ConstIterator it;
   for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it )
     new AttachmentIconItem( (*it), mAttachmentView );
+
+  mWasDirty = false;
 }
 
 void IncidenceAttachment::save( const KCalCore::Incidence::Ptr &incidence )
