@@ -419,7 +419,9 @@ void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
   }
 
   mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() );
-  mCalSelector->setDefaultCollection( item.parentCollection() );
+  if ( item.parentCollection().isValid() ) {
+    mCalSelector->setDefaultCollection( item.parentCollection() );
+  }
 
   if ( mEditor->type() == KCalCore::Incidence::TypeTodo ) {
     q->setWindowIcon( SmallIcon( "view-calendar-tasks" ) );
@@ -456,7 +458,7 @@ Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
   mEditor->save( newIncidence );
 
   // TODO: Remove this once we support moving of events/todo's
- mCalSelector->setEnabled( false );
+  mCalSelector->setEnabled( false );
 
   // Make sure that we don't loose uid for existing incidence
   newIncidence->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
