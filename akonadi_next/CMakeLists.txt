@@ -26,7 +26,6 @@ set( akonadi_next_SRCS
   entityrightsfiltermodel.cpp
   collectionchildorderattribute.cpp
   collectionselectionproxymodel.cpp
-  modeltest.cpp
   quotacolorproxymodel.cpp
   checkableitemproxymodel.cpp
   incidenceattachmentmodel.cpp
