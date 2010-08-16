@@ -715,12 +715,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const
     {
       QString warnStr;
-      QString typeStr;
       KDateTime now = KDateTime::currentDateTime( KSystemTimeZones::local() );
       QDate today = now.date();
+      Incidence::IncidenceType type = Incidence::TypeUnknown;
       if ( incidence->type() == Incidence::TypeEvent ) {
+        type = Incidence::TypeEvent;
         Event::Ptr event = incidence.staticCast<Event>();
-        typeStr = i18n( "invitation" );
         if ( !event->allDay() ) {
           if ( event->dtEnd() < now ) {
             warnStr = i18n( "\"%1\" occurred already.", event->summary() );
@@ -736,8 +736,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           }
         }
       } else if ( incidence->type() == Incidence::TypeTodo ) {
+        type = Incidence::TypeTodo;
         Todo::Ptr todo = incidence.staticCast<Todo>();
-        typeStr = i18n( "task" );
         if ( !todo->allDay() ) {
           if ( todo->hasDueDate() ) {
             if ( todo->dtDue() < now ) {
@@ -770,9 +770,17 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( !warnStr.isEmpty() ) {
         QString queryStr;
         if ( path == "accept" ) {
-          queryStr = i18n( "Do you still want to accept the %1?", typeStr );
+          if ( type == Incidence::TypeTodo ) {
+            queryStr = i18n( "Do you still want to accept the task?" );
+          } else {
+            queryStr = i18n( "Do you still want to accept the invitation?" );
+          }
         } else if ( path == "accept_conditionally" ) {
-          queryStr = i18n( "Do you still want to send conditional acceptance of the %1?", typeStr );
+          if ( type == Incidence::TypeTodo ) {
+            queryStr = i18n( "Do you still want to send conditional acceptance of the invitation?" );
+          } else {
+            queryStr = i18n( "Do you still want to send conditional acceptance of the task?" );
+          }
         } else if ( path == "accept_counter" ) {
           queryStr = i18n( "Do you still want to accept the counter proposal?" );
         } else if ( path == "counter" ) {
@@ -784,13 +792,25 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         } else if ( path == "reply" ) {
           queryStr = i18n( "Do you still want to record this reponse in your calendar?" );
         } else if ( path == "delegate" ) {
-          queryStr = i18n( "Do you still want to delegate this %1?", typeStr );
+          if ( type == Incidence::TypeTodo ) {
+            queryStr = i18n( "Do you still want to delegate this task?" );
+          } else {
+            queryStr = i18n( "Do you still want to delegate this invitation?" );
+          }
         } else if ( path == "forward" ) {
-          queryStr = i18n( "Do you still want to forward this %1?", typeStr );
+          if ( type == Incidence::TypeTodo ) {
+            queryStr = i18n( "Do you still want to forward this task?" );
+          } else {
+            queryStr = i18n( "Do you still want to forward this invitation?" );
+          }
         } else if ( path == "check_calendar" ) {
           queryStr = i18n( "Do you still want to check your calendar?" );
         } else if ( path == "record" ) {
-          queryStr = i18n( "Do you still want to record this %1 in your calendar?", typeStr );
+          if ( type == Incidence::TypeTodo ) {
+            queryStr = i18n( "Do you still want to record this task in your calendar?" );
+          } else {
+            queryStr = i18n( "Do you still want to record this invitation in your calendar?" );
+         }
         } else {
           queryStr = i18n( "%1?", path );
         }
