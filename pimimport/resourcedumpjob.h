@@ -21,6 +21,7 @@ private slots:
 private:
   Akonadi::AgentInstance m_instance;
   QDir m_path;
+  unsigned m_remainingJobs;
   unsigned m_collectionsNo;
 };
 
