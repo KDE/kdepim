@@ -31,6 +31,7 @@ install(FILES notes-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES notes-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   notes.qml
+  NoteActions.qml
   NoteView.qml
   NotesListView.qml
   notes-mobile-background.png

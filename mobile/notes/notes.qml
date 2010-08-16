@@ -49,6 +49,18 @@ KPIM.MainView {
     }
   }
 
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      noteActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      noteActions.showOnlyCategory("account")
+    } else { // something else is selected
+      noteActions.showOnlyCategory("single_folder")
+    }
+  }
 
   QML.Rectangle {
     id : backToMessageListButton
@@ -104,6 +116,10 @@ KPIM.MainView {
                                        collectionView.numSelected,
                                        application.numSelectedAccounts,
                                        headerList.count)
+
+      QML.Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
     }
     KPIM.Button2 {
       id : selectButton
@@ -189,6 +205,7 @@ KPIM.MainView {
             noteView.currentNoteRow = headerList.currentIndex;
 
             noteView.visible = true;
+            noteActions.showOnlyCategory("note_viewer")
             backToMessageListButton.visible = true;
             collectionView.visible = false;
             notesListPage.visible = false;
@@ -201,173 +218,40 @@ KPIM.MainView {
   SlideoutPanelContainer {
     anchors.fill: parent
 
-/*
     SlideoutPanel {
-      anchors.fill: parent
-      id: startPanel
-      titleIcon: KDE.iconPath( "view-pim-notes", 48 )
-      handlePosition: 30
-      handleHeight: 78
-      content: [
-        KPIM.StartCanvas {
-          id : startPage
+      id: actionPanelNew
+      titleText: KDE.i18n( "Actions" )
+      handlePosition : 125
+      handleHeight: 150
+      anchors.fill : parent
+
+      content : [
+        NoteActions {
+          id : noteActions
           anchors.fill : parent
-          anchors.leftMargin : 50
-          startText: KDE.i18n( "Notes start page" )
 
-          contextActions : [
-            KPIM.Button {
-              id : start_newNoteButton
-              height : 20
-              width : 200
-              anchors.top : parent.top
-              buttonText : KDE.i18n( "New Note" )
-              onClicked : {
-                console.log( "New Note clicked" );
+          scriptActions : [
+            KPIM.ScriptAction {
+              name : "show_about_dialog"
+              script : {
+                actionPanelNew.collapse();
+                aboutDialog.visible = true
               }
-
             },
-            KPIM.Button {
-              id : start_newNotebookButton
-              anchors.top : start_newNoteButton.bottom
-              height : 20
-              width : 200
-              buttonText : KDE.i18n( "Add Notebook" )
-              onClicked : {
-                console.log( "Add Notebook clicked" );
-//                 application.launchAccountWizard();
+            KPIM.ScriptAction {
+              name : "to_selection_screen"
+              script : {
+                actionPanelNew.collapse();
+                favoriteSelector.visible = true;
+                mainWorkView.visible = false;
               }
             }
           ]
-        }
-      ]
-    }
-    SlideoutPanel {
-      id: folderPanel
-      titleText: KDE.i18n( "Notebooks" )
-      handleHeight: 150
-      anchors.fill : parent
-      content: [
-        QML.Item {
-          anchors.fill: parent
 
-           AkonadiBreadcrumbNavigationView {
-             id : collectionView
-             width: 1/3 * folderPanel.contentWidth
-             anchors.top: parent.top
-             anchors.bottom: parent.bottom
-             anchors.left: parent.left
-             anchors.rightMargin: 4
-             breadcrumbItemsModel : breadcrumbCollectionsModel
-             selectedItemModel : selectedCollectionModel
-             childItemsModel : childCollectionsModel
-           }
-
-           KPIM.ItemListView {
-             id: headerList
-             delegate: [
-               KPIM.ItemListViewDelegate {
-                 height : itemListView.height / 7
-                 summaryContent: [
-                  QML.Column {
-                    anchors.fill: parent
-                    QML.Text {
-                      text: KDE.i18n( "Title: %1", model.title )
-                    }
-                    QML.Text {
-                      text: KDE.i18n( "Content: %1", model.plainContent )
-                    }
-                  }
-                 ]
-               }
-             ]
-
-             model: itemModel
-             anchors.top: parent.top
-             anchors.bottom: parent.bottom
-             anchors.right: parent.right
-             anchors.left: collectionView.right
-             onItemSelected: {
-               // Prevent reloading of the message, perhaps this should be done
-               // in messageview itself.
-               if ( noteView.noteId != headerList.currentItemId )
-               {
-                 noteView.noteId = headerList.currentItemId;
-                 noteView.currentNoteRow = -1;
-                 noteView.currentNoteRow = headerList.currentIndex;
-               }
-               folderPanel.collapse()
-             }
-           }
-        }
-      ]
-    }
-*/
-    SlideoutPanel {
-      id: actionPanel
-      titleText: KDE.i18n( "Actions" )
-      handleHeight: 150
-      anchors.fill : parent
-      collapsedPosition : 20
-      contentWidth: 240
-      content: [
-        KPIM.Button {
-          id : createNoteAction
-          anchors.top : parent.top
-          anchors.horizontalCenter: parent.horizontalCenter;
-          width: parent.width - 10
-          height: parent.height / 6
-          buttonText: KDE.i18n("New Note")
-          onClicked: {
-            application.startComposer();
-            actionPanel.collapse();
+          onTriggered : {
+            console.log("Triggered was: " + triggeredName)
           }
         }
-//           Button {
-//             id: moveButton
-//             anchors.top: actionLabel.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Move"
-//             onClicked: actionPanel.collapse();
-//           },
-//           Button {
-//             id: deleteButton
-//             anchors.top: moveButton.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Delete"
-//             onClicked: actionPanel.collapse();
-//           },
-//           Button {
-//             id: previousButton
-//             anchors.top: deleteButton.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Previous"
-//             onClicked: {
-// //               if ( messageView.messageItemId >= 0 )
-// //                 headerList.previousMessage();
-//
-//               actionPanel.collapse();
-//             }
-//           },
-//           Button {
-//             anchors.top: previousButton.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Next"
-//             onClicked: {
-// //               if ( messageView.messageItemId >= 0 )
-// //                 headerList.nextMessage();
-//
-//               actionPanel.collapse();
-//             }
-//           }
       ]
     }
   }
