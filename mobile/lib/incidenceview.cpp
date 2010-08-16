@@ -93,6 +93,7 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 {
   mCollectionCombo = combo;
   mCollectionCombo->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType() );
+  mCollectionCombo->setAccessRightsFilter( Collection::CanCreateItem );
   mCollectionCombo->setDefaultCollection( mItem.parentCollection() );
 }
 
