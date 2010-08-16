@@ -37,6 +37,7 @@ install(FILES tasks-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   tasks.qml
   tasks-mobile-background.png
+  TaskActions.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )
