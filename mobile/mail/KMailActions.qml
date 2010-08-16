@@ -28,6 +28,16 @@ ActionMenuContainer {
   actionItemWidth : 200
   actionItemSpacing : 2
 
+  ActionList {
+    category : "home"
+    name : KDE.i18n( "Home" )
+    FakeAction { name : "sync_all_emails" }
+    FakeAction { name : "check_emails" }
+    FakeAction { name : "send_queued_emails" }
+    FakeAction { name : "select_multiple_folders" }
+    FakeAction { name : "empty_all_trash_folders" }
+  }
+
   ReorderList {
     category : "home"
     name : KDE.i18n( "Favorites" )
@@ -48,8 +58,8 @@ ActionMenuContainer {
     model : agentInstanceList
 
     customActions : [
-      ActionListItem { name : "akonadi_agentinstance_delete" },
       ActionListItem { name : "akonadi_agentinstance_configure" },
+      ActionListItem { name : "akonadi_agentinstance_delete" },
       ActionListItem { name : "akonadi_agentinstance_create" }
     ]
   }
@@ -62,16 +72,16 @@ ActionMenuContainer {
   ActionList {
     category : "account"
     name : KDE.i18n( "Account" )
-    FakeAction { name : "check_mail" }
+    FakeAction { name : "check_mail_in_account" }
     FakeAction { name : "srv_side_subsrcp" }
     FakeAction { name : "local_subsrcp" }
-    ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_resource_properties" }
+    ActionListItem { name : "akonadi_collection_create" }
   }
 
   ActionList {
     category : "single_folder"
-    name : KDE.i18n( "Emails" )
+    name : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "akonadi_mark_all_as"
                      argument : "R"
@@ -79,11 +89,6 @@ ActionMenuContainer {
                    }
     ActionListItem { name : "akonadi_move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
-  }
-
-  ActionList {
-    category : "single_folder"
-    name : KDE.i18n( "Folder" )
     FakeAction { name : "archive_folder" }
     FakeAction { name : "expire_rule" }
     FakeAction { name : "ml_management" }
@@ -95,9 +100,9 @@ ActionMenuContainer {
     name : KDE.i18n( "Edit" )
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
-    ActionListItem { name : "akonadi_collection_delete" }
     ActionListItem { name : "akonadi_collection_move_to_menu" }
     ActionListItem { name : "akonadi_collection_copy_to_menu" }
+    ActionListItem { name : "akonadi_collection_delete" }
   }
 
   ActionList {
@@ -111,16 +116,11 @@ ActionMenuContainer {
 
   ActionList {
     category : "multiple_folder"
-    name : KDE.i18n( "Emails" )
+    name : KDE.i18n( "Folders" )
     FakeAction { name : "check_mail_in_sel_folder" }
     FakeAction { name : "mark_all_msg_as_read" }
     FakeAction { name : "move_all_msg_to_trash" }
     FakeAction { name : "remove_dupl_msgs" }
-  }
-
-  ActionList {
-    category : "multiple_folder"
-    name : KDE.i18n( "Folder" )
     FakeAction { name : "archive_selected_folders" }
   }
 
@@ -148,17 +148,29 @@ ActionMenuContainer {
 
   ActionList {
     category: "mail_viewer"
-    name: KDE.i18n( "Edit" )
-    ActionListItem { name : "akonadi_item_copy_to_menu" }
-    ActionListItem { name : "akonadi_item_move_to_menu" }
-    ActionListItem { name : "akonadi_item_delete" }
-    FakeAction { name : "edit_message" }
+    name: KDE.i18n( "Email" )
+    FakeAction { name : "reply" }
+    FakeAction { name : "forward" }
+    FakeAction { name : "mark_email_as" }
+    FakeAction { name : "send_again" }
+    FakeAction { name : "create_todo_reminder" }
+    FakeAction { name : "find_in_email" }
+    FakeAction { name : "save_as" }
   }
 
   ActionList {
     category: "mail_viewer"
     name: KDE.i18n( "Attachments" )
     FakeAction { name : "save_all" }
+  }
+
+  ActionList {
+    category: "mail_viewer"
+    name: KDE.i18n( "Edit" )
+    FakeAction { name : "edit_email" }
+    ActionListItem { name : "akonadi_item_copy_to_menu" }
+    ActionListItem { name : "akonadi_item_move_to_menu" }
+    ActionListItem { name : "akonadi_item_delete" }
   }
 
   ActionList {

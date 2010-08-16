@@ -49,7 +49,7 @@ KPIM.MainView {
       kaddressbookActions.showOnlyCategory("home")
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
     {
-      kaddressbookActions.showOnlyCategory("resource")
+      kaddressbookActions.showOnlyCategory("account")
     } else { // something else is selected
       kaddressbookActions.showOnlyCategory("single_folder")
     }

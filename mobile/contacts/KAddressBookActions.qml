@@ -29,6 +29,13 @@ ActionMenuContainer {
   actionItemWidth : 200
   actionItemSpacing : 2
 
+  ActionList {
+    category : "home"
+    name : KDE.i18n( "Home" )
+    FakeAction { name : "sync_all_contacts" }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
+  }
+
   ReorderList {
     category : "home"
     name : KDE.i18n( "Favorites" )
@@ -42,8 +49,8 @@ ActionMenuContainer {
     model : favoritesList
 
     customActions : [
-      FakeAction { name : "delete_favorite" },
-      FakeAction { name : "un_mark_as_default" }
+      FakeAction { name : "un_mark_as_default" },
+      FakeAction { name : "delete_favorite" }
     ]
   }
 
@@ -54,21 +61,15 @@ ActionMenuContainer {
     model : agentInstanceList
 
     customActions : [
-      ActionListItem { name : "akonadi_agentinstance_delete" },
       ActionListItem { name : "akonadi_agentinstance_configure" },
+      ActionListItem { name : "akonadi_agentinstance_delete" },
       ActionListItem { name : "akonadi_agentinstance_create" }
     ]
   }
 
   ActionList {
-    category : "home"
-    name : KDE.i18n( "View" )
-    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select..." ) }
-  }
-
-  ActionList {
-    category : "resource"
-    name : KDE.i18n( "Address Book" )
+    category : "account"
+    name : KDE.i18n( "Account" )
     ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
@@ -95,24 +96,34 @@ ActionMenuContainer {
     name : KDE.i18n( "View" )
     FakeAction { name : "save_view_as_favorite" }
     FakeAction { name : "start_maintenance" }
-    FakeAction { name : "filter_view" }
-    FakeAction { name : "view_options" }
+  }
+
+  ActionList {
+    category : "multiple_folder"
+    name : KDE.i18n( "Folders" )
+    ActionListItem { name : "akonadi_collection_sync" }
   }
 
   ActionList {
     category : "multiple_folder"
     name : KDE.i18n( "View" )
     FakeAction { name : "save_view_as_favorite" }
+    FakeAction { name : "change_folder_selection" }
     FakeAction { name : "start_maintenance" }
   }
 
   ActionList {
     category : "contact_viewer"
     name : KDE.i18n( "Contact" )
+  }
+
+  ActionList {
+    category : "contact_viewer"
+    name : KDE.i18n( "Edit" )
+    ActionListItem { name : "akonadi_contact_item_edit" }
     ActionListItem { name : "akonadi_item_copy_to_menu" }
     ActionListItem { name : "akonadi_item_move_to_menu" }
     ActionListItem { name : "akonadi_item_delete" }
-    ActionListItem { name : "akonadi_contact_item_edit" }
   }
 
   ApplicationGeneralActions {
