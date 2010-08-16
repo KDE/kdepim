@@ -1725,6 +1725,8 @@ void ViewerPrivate::loadThemesMenu()
 
     mThemeActionMenu->menu()->addAction( themeAction );
     themesAction.append( themeAction );
+
+    delete themeDesktop;
   }
 
   mGUIClient->plugActionList( "themes_action_list" , themesAction );
