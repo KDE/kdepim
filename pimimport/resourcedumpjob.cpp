@@ -11,7 +11,7 @@
 using namespace Akonadi;
 
 ResourceDumpJob::ResourceDumpJob( const AgentInstance &instance, const QDir &dumpPath, QObject *parent) :
-    KJob( parent ), m_instance( instance ), m_path( dumpPath ), m_collectionsNo( 0 )
+    KJob( parent ), m_instance( instance ), m_path( dumpPath ), m_remainingJobs( 0 ), m_collectionsNo( 0 )
 {
 }
 
@@ -64,7 +64,8 @@ void ResourceDumpJob::fetchResult( KJob *job )
   // dump all found collections, if any
   const CollectionFetchJob *fetchJob = static_cast< CollectionFetchJob* >( job );
   m_collectionsNo = fetchJob->collections().size();
-  if ( m_collectionsNo > 0 ) {
+  m_remainingJobs = m_collectionsNo;
+  if ( m_remainingJobs > 0 ) {
     foreach ( const Collection& collection, fetchJob->collections() ) {
       QString name = QString::number( collection.id() );
       m_path.mkdir( name ); // will be checked later
@@ -88,6 +89,9 @@ void ResourceDumpJob::dumpResult( KJob *job )
     return;
   }
 
-  if ( --m_collectionsNo == 0 )
+  --m_remainingJobs;
+  emitPercent( m_collectionsNo - m_remainingJobs, m_collectionsNo );
+
+  if ( m_remainingJobs == 0 )
     emitResult();
 }

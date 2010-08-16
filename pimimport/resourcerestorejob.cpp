@@ -88,6 +88,8 @@ void ResourceRestoreJob::restoreResult( KJob *job )
     }
   }
 
+  emitPercent( 1, 1 ); // there's always one root collection
+
   // restart resource and emit result
   kError() << "Restored resource: " << m_instance.identifier();
   m_instance.restart();
