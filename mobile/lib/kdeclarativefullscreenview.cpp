@@ -20,6 +20,8 @@
 #include "kdeclarativefullscreenview.h"
 #include "stylesheetloader.h"
 
+#include <akonadi/control.h>
+
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KStandardDirs>
@@ -56,6 +58,9 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
   glWidget->setAutoFillBackground(false);
   setViewport(glWidget);
+  Akonadi::Control::widgetNeedsAkonadi( glWidget );
+#else
+  Akonadi::Control::widgetNeedsAkonadi( this );
 #endif
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
