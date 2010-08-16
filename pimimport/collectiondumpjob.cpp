@@ -30,7 +30,6 @@ void CollectionDumpJob::start()
   m_config = KSharedConfig::openConfig( m_path.absoluteFilePath( "collectioninfo" ), KSharedConfig::SimpleConfig );
   KConfigGroup configGroup( m_config, "General" );
   configGroup.writeEntry( "name", m_collection.name() );
-  configGroup.writeEntry( "contentMimeTypes", m_collection.contentMimeTypes() );
   m_config->sync();
 
   dumpItems();
