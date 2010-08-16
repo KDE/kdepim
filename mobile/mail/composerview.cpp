@@ -211,6 +211,22 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
   if ( !m_composerBase->editor()->checkExternalEditorFinished() )
     return;
 
+  if ( m_composerBase->recipientsEditor()->recipients().isEmpty() ) {
+      KMessageBox::sorry( this,
+                          i18n("You should specify at least one recipient for this message."),
+                          i18n("No recipients found"));
+      return;
+  }
+
+  if ( m_subject.isEmpty() ) {
+      const int rc = KMessageBox::questionYesNo( this,
+                                                 i18n("You did not specify a subject. Do you want to send the message without specifying one?"),
+                                                 i18n("No subject"));
+      if ( rc == KMessageBox::No) {
+          return;
+      }
+  }
+
   setBusy(true);
 
   const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
