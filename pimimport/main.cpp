@@ -7,6 +7,7 @@
 #include <QtCore/QTimer>
 
 #include "dumprunner.h"
+#include "akonadidumpassistant.h"
 
 int main( int argc, char *argv[] )
 {
@@ -21,7 +22,7 @@ int main( int argc, char *argv[] )
   KCmdLineOptions options;
   options.add( "dump", ki18n( "Dump akonadi resources" ) );
   options.add( "restore", ki18n( "Restore akonadi resources " ) );
-  options.add( "+dir", ki18n( "Dump directory" ) );
+//  options.add( "+dir", ki18n( "Dump directory" ) );
   KCmdLineArgs::addCmdLineOptions( options );
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -30,19 +31,23 @@ int main( int argc, char *argv[] )
 
   KGlobal::setAllowQuit( true );
 
-  if ( args->count() < 1 ) {
-    KCmdLineArgs::usageError( i18n( "No dump directory specified" ) );
-    return 1;
-  }
+//  if ( args->count() < 1 ) {
+//    KCmdLineArgs::usageError( i18n( "No dump directory specified" ) );
+//    return 1;
+//  }
 
-  DumpRunner dumper( args->arg( 0 ) );
-  QObject::connect( &dumper, SIGNAL( finished() ), &app, SLOT( quit() ) );
+  AkonadiDumpAssistant *dialog = 0;
+
+//  DumpRunner dumper( args->arg( 0 ) );
+//  QObject::connect( &dumper, SIGNAL( finished() ), &app, SLOT( quit() ) );
 
   if ( args->isSet( "dump" ) ) {
-    QTimer::singleShot( 0, &dumper, SLOT( dump() ) );
+//    QTimer::singleShot( 0, &dumper, SLOT( dump() ) );
+    dialog = new AkonadiDumpAssistant( AkonadiDumpAssistant::AkonadiDump );
   }
   else if ( args->isSet( "restore" ) ) {
-    QTimer::singleShot( 0, &dumper, SLOT( restore() ) );
+//    QTimer::singleShot( 0, &dumper, SLOT( restore() ) );
+    dialog = new AkonadiDumpAssistant( AkonadiDumpAssistant::AkonadiRestore );
   }
   else {
     KCmdLineArgs::usageError( i18n( "You have to specify either --dump or --restore") );
@@ -52,5 +57,10 @@ int main( int argc, char *argv[] )
   if ( !Akonadi::Control::start( 0 ) )
     return 2;
 
-  return app.exec();
+  dialog->show();
+
+  app.setQuitOnLastWindowClosed( true );
+  int ret = app.exec();
+
+  delete dialog;
 }
