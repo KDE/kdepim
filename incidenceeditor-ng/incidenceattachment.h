@@ -42,9 +42,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
   Q_OBJECT
   public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAttachment( Ui::EventOrTodoMore *ui = 0 );
+    IncidenceAttachment( Ui::EventOrTodoMore *ui );
 #else
-    IncidenceAttachment( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAttachment( Ui::EventOrTodoDesktop *ui );
 #endif
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );

@@ -37,9 +37,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
   Q_OBJECT
   public:
 #ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
+    IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
 #else
-    explicit IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
 #endif
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
