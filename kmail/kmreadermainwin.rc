@@ -18,9 +18,9 @@
   </Menu>
   <Menu noMerge="1" name="view">
    <text>&amp;View</text>
-   <Menu noMerge="1" name="themes">
+   <Menu name="theme_actions">
      <text>Themes</text>
-     <Action name="view_themes"/>
+     <ActionList name="themes_action_list"/>
      <Separator/>
      <Action name="download_themes"/>
    </Menu>

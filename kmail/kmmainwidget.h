@@ -68,6 +68,11 @@ namespace KIO {
   class Job;
 }
 
+namespace MessageViewer {
+  class Viewer;
+  class ViewerPrivate;
+}
+
 namespace KMail {
   class Vacation;
   class SieveDebugDialog;
@@ -662,6 +667,9 @@ private:
     bool mCheckMailInProgress;
     FolderSelectionDialog* mMoveOrCopyToDialog;
     FolderSelectionDialog* mSelectFromAllFoldersDialog;
+    MessageViewer::Viewer *m_Viewer;
+    MessageViewer::ViewerPrivate *mViewerPrivate;
+    
 };
 
 #endif

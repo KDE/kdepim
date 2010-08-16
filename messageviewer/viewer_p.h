@@ -44,8 +44,10 @@ namespace KIO { class Job; }
 namespace Kleo { class SpecialJob; }
 
 class KAction;
+class KActionMenu;
 class KActionCollection;
 class KSelectAction;
+class KXMLGUIClient;
 class KToggleAction;
 class KHBox;
 
@@ -368,6 +370,9 @@ public:
   void createWidgets();
   void createActions();
   void loadThemesMenu();
+  
+  KXMLGUIClient* guiClient() const { return mGUIClient; }
+  void setXmlGuiClient( KXMLGUIClient *guiClient );
 
   void showContextMenu( KMime::Content* content, const QPoint& point);
 
@@ -604,6 +609,7 @@ public:
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;
+  KActionCollection *ac;
   KAction *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
@@ -611,7 +617,8 @@ public:
   KAction *mDownloadThemesAction;    
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
-  KSelectAction *mSelectThemeAction;
+  KActionMenu *mThemeActionMenu;
+  KXMLGUIClient *mGUIClient;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mHoveredUrl;

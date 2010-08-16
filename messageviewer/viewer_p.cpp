@@ -54,6 +54,7 @@
 #include <KTemporaryFile>
 #include <KToggleAction>
 #include <KDesktopFile>
+#include <KXMLGUIClient>
 
 #include <KIO/NetAccess>
 #include <KABC/Addressee>
@@ -100,6 +101,8 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <kleo/specialjob.h>
+
+#include <kglobal.h>
 
 #include "chiasmuskeyselector.h"
 #include "autoqpointer.h"
@@ -170,7 +173,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mScrollDownMoreAction( 0 ),
     mHeaderOnlyAttachmentsAction( 0 ),
     mSelectEncodingAction( 0 ),
-    mSelectThemeAction( 0 ),
+    mThemeActionMenu( 0 ),
     mToggleFixFontAction( 0 ),
     mToggleDisplayModeAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
@@ -200,6 +203,8 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mSplitterSizes << 180 << 100;
   mPrinting = false;
   mThemeName = GlobalSettings::self()->headerTheme();
+
+  mGUIClient = guiClient();
 
   createWidgets();
   createActions();
@@ -1492,9 +1497,14 @@ void ViewerPrivate::slotMimePartDestroyed()
   delete mMimePartModel->root();
 }
 
+void ViewerPrivate::setXmlGuiClient( KXMLGUIClient *guiClient )
+{
+  mGUIClient = guiClient;
+}
+
 void ViewerPrivate::createActions()
 {
-  KActionCollection *ac = mActionCollection;
+  ac = mActionCollection;
   if ( !ac ) {
     return;
   }
@@ -1502,11 +1512,8 @@ void ViewerPrivate::createActions()
   KToggleAction *raction = 0;
   QActionGroup *group = new QActionGroup( this );
 
-  mSelectThemeAction  = new KSelectAction( i18n("&Themes"), this );
-  mSelectThemeAction->setToolBarMode( KSelectAction::MenuMode );
-  ac->addAction("view_themes", mSelectThemeAction );
-  connect( mSelectThemeAction,SIGNAL( triggered(QAction*)),
-          SLOT( slotSetTheme(QAction*) ));
+  mThemeActionMenu  = new KActionMenu( i18n("&Themes"), this );
+  ac->addAction( "theme_actions" , mThemeActionMenu  );
 
   loadThemesMenu();
 
@@ -1663,9 +1670,9 @@ void ViewerPrivate::createActions()
 
 void ViewerPrivate::loadThemesMenu()
 {
-  if ( mSelectThemeAction->items().size() > 0  )
-    mSelectThemeAction->clear();
-
+  if ( !mThemeActionMenu->menu()->isEmpty() )
+      mThemeActionMenu->menu()->clear();
+  
   QStringList themesLocations( KGlobal::dirs()->findDirs("data", "messageviewer/themes/") );
   QDir systemThemes( themesLocations.at(1) );
   QDir userThemes( themesLocations.at(0) );
@@ -1688,6 +1695,9 @@ void ViewerPrivate::loadThemesMenu()
   // kDebug() << "Themes dirs: " << themeDirs;
 
   QString absolutePath;
+  QList<QAction*> themesAction;
+
+  mGUIClient->unplugActionList( "themes_action_list" );
 
   foreach(const QString &dirName, themeDirs) {
     if ( systemThemes.exists( dirName ) ) {
@@ -1708,8 +1718,16 @@ void ViewerPrivate::loadThemesMenu()
     themeAction->data().toString();
     themeAction->setText( themeDesktop->readName() );
     themeAction->setData(dirName);
-    mSelectThemeAction->addAction(themeAction);
+    connect( themeAction , SIGNAL( triggered(QAction*)),
+          SLOT( slotSetTheme(QAction*) ));
+
+    ac->addAction( themeDesktop->readName() , themeAction );
+
+    mThemeActionMenu->menu()->addAction( themeAction );
+    themesAction.append( themeAction );
   }
+
+  mGUIClient->plugActionList( "themes_action_list" , themesAction );
 }
 
 void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
@@ -1767,7 +1785,7 @@ KToggleAction *ViewerPrivate::actionForHeaderTheme() {
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
-  actionName = "view_themes";
+  actionName = "theme_actions";
   if ( actionName )
     return static_cast<KToggleAction*>(mActionCollection->action(actionName));
   else

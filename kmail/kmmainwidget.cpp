@@ -64,6 +64,7 @@
 #include "messageviewer/autoqpointer.h"
 #include "messageviewer/globalsettings.h"
 #include "messageviewer/viewer.h"
+#include "messageviewer/viewer_p.h"
 #include "messageviewer/attachmentstrategy.h"
 #include "messageviewer/headertheme.h"
 #include "messageviewer/kcursorsaver.h"
@@ -224,6 +225,14 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
   mCustomTemplateMenus = 0;
   mFolderTreeWidget = 0;
 
+  m_Viewer = new MessageViewer::Viewer( 0 );
+
+  // FIXME Please: Comment out these 2 lines and provide some feedback 
+  // on why there is a linker problems with the ViewerPrivate if the headerFile and namespace were added.
+  
+  //mViewerPrivate = new MessageViewer::ViewerPrivate( m_Viewer, this, mActionCollection );
+  //mViewerPrivate->setXmlGuiClient( mGUIClient );
+
   Akonadi::Control::widgetNeedsAkonadi( this );
 
   CollectionPropertiesDialog::useDefaultPage( false );
@@ -320,6 +329,8 @@ void KMMainWidget::destruct()
   mSystemTray = 0;
   mCustomTemplateMenus = 0;
   mDestructed = true;
+  delete m_Viewer;
+  // delete mViewerPrivate;
 }
 
 
