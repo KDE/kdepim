@@ -343,7 +343,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mCurrentContextMenuItem( 0 )
 {
   setCaption( title );
-  setButtons( Default|Ok|Cancel|Help|User1 );
+  setButtons( Default|Ok|Cancel|Help );
   setDefaultButton( Ok );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
@@ -367,7 +367,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mCurrentContextMenuItem( 0 )
 {
   setCaption( title );
-  setButtons( Default|Ok|Cancel|Help|User1 );
+  setButtons( Default|Ok|Cancel|Help );
   setDefaultButton( Ok );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
@@ -400,6 +400,15 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
     connect( textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager(QString)) );
     mTopLayout->addWidget( textLabel );
 #endif
+  }
+
+  QPushButton * const searchExternalPB =
+    new QPushButton( i18n( "Search for &External Certificates" ), page );
+  mTopLayout->addWidget( searchExternalPB, 0, Qt::AlignRight );
+  connect( searchExternalPB, SIGNAL(clicked()),
+           this, SLOT(slotStartSearchForExternalCertificates()) );
+  if ( initialQuery.isEmpty() ) {
+    searchExternalPB->hide();
   }
 
   QHBoxLayout * hlay = new QHBoxLayout();
@@ -459,10 +468,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   setButtonText( KDialog::Default, i18n("&Reread Keys") );
   setButtonText( KDialog::Help, i18n("&Start Certificate Manager") );
-  setButtonText( KDialog::User1, i18n("Search for &External Certificates") );
   connect( this, SIGNAL(defaultClicked()), this, SLOT(slotRereadKeys()) );
   connect( this, SIGNAL(helpClicked()), this, SLOT(slotStartCertificateManager()) );
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotStartSearchForExternalCertificates()) );
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
   connect( this, SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   slotRereadKeys();
