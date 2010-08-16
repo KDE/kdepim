@@ -1,33 +1,34 @@
 /*
-    This file is part of kdepim.
+  This file is part of kdepim.
 
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+  Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-    In addition, as a special exception, the copyright holders give
-    permission to link the code of this program with any edition of
-    the Qt library by Trolltech AS, Norway (or with modified versions
-    of Qt that use the same license as Qt), and distribute linked
-    combinations including the two.  You must obey the GNU General
-    Public License in all respects for all of the code used other than
-    Qt.  If you modify this file, you may extend this exception to
-    your version of the file, but you are not obligated to do so.  If
-    you do not wish to do so, delete this exception statement from
-    your version.
+  In addition, as a special exception, the copyright holders give
+  permission to link the code of this program with any edition of
+  the Qt library by Trolltech AS, Norway (or with modified versions
+  of Qt that use the same license as Qt), and distribute linked
+  combinations including the two.  You must obey the GNU General
+  Public License in all respects for all of the code used other than
+  Qt.  If you modify this file, you may extend this exception to
+  your version of the file, but you are not obligated to do so.  If
+  you do not wish to do so, delete this exception statement from
+  your version.
 */
 
 #include "attendeeselector.h"
@@ -39,6 +40,7 @@
 #include <messageviewer/webkitparthtmlwriter.h>
 #include <messageviewer/globalsettings.h>
 #include <messageviewer/viewer.h>
+using namespace MessageViewer;
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/Attendee>
@@ -143,10 +145,10 @@ class CalendarManager
   public:
     CalendarManager();
     ~CalendarManager();
-    static KCal::CalendarResources* calendar();
+    static KCal::CalendarResources *calendar();
 
   private:
-    KCal::CalendarResources* mCalendar;
+    KCal::CalendarResources *mCalendar;
 };
 
 CalendarManager::CalendarManager()
@@ -156,18 +158,22 @@ CalendarManager::CalendarManager()
   mCalendar->load();
   bool multipleKolabResources = false;
   CalendarResourceManager *mgr = mCalendar->resourceManager();
-  for ( CalendarResourceManager::ActiveIterator it = mgr->activeBegin(); it != mgr->activeEnd(); ++it ) {
+  for ( CalendarResourceManager::ActiveIterator it = mgr->activeBegin();
+        it != mgr->activeEnd(); ++it ) {
     if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
       const QStringList subResources = (*it)->subresources();
       QSet<QString> prefixSet;
-      for ( QStringList::ConstIterator subIt = subResources.constBegin(); subIt != subResources.constEnd(); ++subIt ) {
-        if ( !(*subIt).contains( "/.INBOX.directory/" ) )
+      for ( QStringList::ConstIterator subIt = subResources.constBegin();
+            subIt != subResources.constEnd(); ++subIt ) {
+        if ( !(*subIt).contains( "/.INBOX.directory/" ) ) {
           // we don't care about shared folders
           continue;
+        }
         prefixSet.insert( (*subIt).left( (*subIt).indexOf( "/.INBOX.directory/" ) ) );
       }
-      if ( prefixSet.count() > 1 )
+      if ( prefixSet.count() > 1 ) {
         multipleKolabResources = true;
+      }
     }
   }
   if ( multipleKolabResources ) {
@@ -184,17 +190,17 @@ CalendarManager::~CalendarManager()
 
 KCal::CalendarResources * CalendarManager::calendar()
 {
-  K_GLOBAL_STATIC(CalendarManager, _self);
+  K_GLOBAL_STATIC( CalendarManager, _self );
   return _self->mCalendar;
 }
 #endif
 #endif
 
-
 class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 {
   public:
-    KMInvitationFormatterHelper( MessageViewer::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
+    KMInvitationFormatterHelper( Interface::BodyPart *bodyPart )
+      : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
 #ifdef KDEPIM_NO_KRESOURCES
     KCalCore::Calendar::Ptr calendar() const { return KCalCore::Calendar::Ptr(); }
@@ -206,31 +212,31 @@ class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 //    KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
 #endif
   private:
-    MessageViewer::Interface::BodyPart *mBodyPart;
+    Interface::BodyPart *mBodyPart;
 };
 
-class Formatter : public MessageViewer::Interface::BodyPartFormatter
+class Formatter : public Interface::BodyPartFormatter
 {
   public:
-    Result format( MessageViewer::Interface::BodyPart *bodyPart,
-                   MessageViewer::HtmlWriter *writer ) const
+    Result format( Interface::BodyPart *bodyPart,
+                   HtmlWriter *writer ) const
     {
-      if ( !writer )
+      if ( !writer ) {
         // Guard against crashes in createReply()
         return Ok;
+      }
 
-      KMime::Message * const message = dynamic_cast<KMime::Message*>( bodyPart->topLevelContent() );
+      KMime::Message *const message = dynamic_cast<KMime::Message*>( bodyPart->topLevelContent() );
       if ( !message ) {
-        kWarning() << "Huh, the top-level content is not a message? Can't handle the invitation then!";
+        kWarning() << "The top-level content is not a message. Cannot handle the invitation then.";
         return Failed;
       }
 
       KMInvitationFormatterHelper helper( bodyPart );
       QString source;
-      /* If the bodypart does not have a charset specified, we need to fall
-         back to utf8, not the KMail fallback encoding, so get the contents
-         as binary and decode explicitly. */
-      if ( bodyPart->contentTypeParameter( "charset").isEmpty() ) {
+      // If the bodypart does not have a charset specified, we need to fall back to utf8,
+      // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
+      if ( bodyPart->contentTypeParameter( "charset" ).isEmpty() ) {
         const QByteArray &ba = bodyPart->asBinary();
         source = QString::fromUtf8(ba);
       } else {
@@ -238,13 +244,13 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       }
 
       MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
-      const QString html
-          = KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml( source, cl,
-                                                                       &helper,
-                                                                       message->sender()->asUnicodeString() );
+      const QString html =
+        KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
+          source, cl, &helper, message->sender()->asUnicodeString() );
 
-      if ( html.isEmpty() )
+      if ( html.isEmpty() ) {
         return AsIcon;
+      }
       writer->queue( html );
 
       return Ok;
@@ -273,7 +279,7 @@ static QString directoryForStatus( Attendee::PartStat status )
   return dir;
 }
 
-static Incidence::Ptr icalToString( const QString& iCal )
+static Incidence::Ptr icalToString( const QString &iCal )
 {
   MemoryCalendar::Ptr calendar( new MemoryCalendar( KSystemTimeZones::local() ) ) ;
   ICalFormat format;
@@ -286,15 +292,15 @@ static Incidence::Ptr icalToString( const QString& iCal )
   return message->event().dynamicCast<Incidence>();
 }
 
-class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
+class UrlHandler : public Interface::BodyPartURLHandler
 {
   public:
     UrlHandler()
     {
-      kDebug() <<"UrlHandler() (iCalendar)";
+      kDebug() << "UrlHandler() (iCalendar)";
     }
 
-    Attendee::Ptr findMyself( const Incidence::Ptr &incidence, const QString& receiver ) const
+    Attendee::Ptr findMyself( const Incidence::Ptr &incidence, const QString &receiver ) const
     {
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
@@ -370,7 +376,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( !attachment ) {
         KMessageBox::error(
           0,
-          i18n("No attachment named \"%1\" found in the invitation.", name ) );
+          i18n( "No attachment named \"%1\" found in the invitation.", name ) );
         return Attachment::Ptr();
       }
 
@@ -391,17 +397,20 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     static QString findReceiver( KMime::Content *node )
     {
-      if ( !node || !node->topLevel() )
+      if ( !node || !node->topLevel() ) {
         return QString();
+      }
 
       QString receiver;
-      KPIMIdentities::IdentityManager* im = new KPIMIdentities::IdentityManager( true );
+      KPIMIdentities::IdentityManager *im = new KPIMIdentities::IdentityManager( true );
 
       KMime::Types::Mailbox::List addrs;
-      if ( node->topLevel()->header<KMime::Headers::To>() )
+      if ( node->topLevel()->header<KMime::Headers::To>() ) {
         addrs = node->topLevel()->header<KMime::Headers::To>()->mailboxes();
+      }
       int found = 0;
-      for ( QList< KMime::Types::Mailbox >::const_iterator it = addrs.constBegin(); it != addrs.constEnd(); ++it ) {
+      for ( QList< KMime::Types::Mailbox >::const_iterator it = addrs.constBegin();
+            it != addrs.constEnd(); ++it ) {
         if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
           // Ok, this could be us
           ++found;
@@ -410,9 +419,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
       KMime::Types::Mailbox::List ccaddrs;
-      if ( node->topLevel()->header<KMime::Headers::Cc>() )
+      if ( node->topLevel()->header<KMime::Headers::Cc>() ) {
         ccaddrs = node->topLevel()->header<KMime::Headers::Cc>()->mailboxes();
-      for ( QList< KMime::Types::Mailbox >::const_iterator it = ccaddrs.constBegin(); it != ccaddrs.constEnd(); ++it ) {
+      }
+      for ( QList< KMime::Types::Mailbox >::const_iterator it = ccaddrs.constBegin();
+            it != ccaddrs.constEnd(); ++it ) {
         if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
           // Ok, this could be us
           ++found;
@@ -425,21 +436,21 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         bool ok;
         QString selectMessage;
         if ( found == 0 ) {
-          selectMessage = i18n("<qt>None of your identities match the "
-                              "receiver of this message,<br />please "
-                              "choose which of the following addresses "
-                              "is yours, if any, or select one of your "
-                              "identities to use in the reply:</qt>");
+          selectMessage =
+            i18n( "<qt>None of your identities match the receiver of this message,<br/>"
+                  "please choose which of the following addresses is yours, if any, "
+                  "or select one of your identities to use in the reply:</qt>" );
           possibleAddrs += im->allEmails();
         } else {
-          selectMessage = i18n("<qt>Several of your identities match the "
-                              "receiver of this message,<br />please "
-                              "choose which of the following addresses "
-                              "is yours:</qt>");
-          foreach ( const KMime::Types::Mailbox &mbx, addrs )
+          selectMessage =
+            i18n( "<qt>Several of your identities match the receiver of this message,<br/>"
+                  "please choose which of the following addresses is yours:</qt>" );
+          foreach ( const KMime::Types::Mailbox &mbx, addrs ) {
             possibleAddrs.append( mbx.address() );
-          foreach ( const KMime::Types::Mailbox &mbx, ccaddrs )
+          }
+          foreach ( const KMime::Types::Mailbox &mbx, ccaddrs ) {
             possibleAddrs.append( mbx.address() );
+          }
         }
 
         // select default identity by default
@@ -447,9 +458,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         const int defaultIndex = qMax( 0, possibleAddrs.indexOf( defaultAddr ) );
 
         receiver = KInputDialog::getItem(
-          i18n( "Select Address" ),
-          selectMessage,
-          possibleAddrs, defaultIndex, false, &ok, 0 );
+          i18n( "Select Address" ), selectMessage, possibleAddrs, defaultIndex, false, &ok, 0 );
+
         if ( !ok ) {
           receiver.clear();
         }
@@ -466,14 +476,19 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       QString name;
       QString email;
       KPIMUtils::extractEmailAddressAndName( receiver, email, name );
-      if ( name.isEmpty() && myself ) name = myself->name();
-      if ( email.isEmpty()&& myself ) email = myself->email();
+      if ( name.isEmpty() && myself ) {
+        name = myself->name();
+      }
+      if ( email.isEmpty() && myself ) {
+        email = myself->email();
+      }
       Q_ASSERT( !email.isEmpty() ); // delivery must be possible
 
-      Attendee::Ptr newMyself( new Attendee( name, email, true, // RSVP, otherwise we would not be here
-                                             status,
-                                             myself ? myself->role() : heuristicalRole( incidence ),
-                                             myself ? myself->uid() : QString::null ) ); //krazy:exclude=nullstrassign for old broken gcc
+      Attendee::Ptr newMyself(
+        new Attendee( name, email, true, // RSVP, otherwise we would not be here
+                      status,
+                      myself ? myself->role() : heuristicalRole( incidence ),
+                      myself ? myself->uid() : QString() ) );
       if ( myself ) {
         newMyself->setDelegate( myself->delegate() );
         newMyself->setDelegator( myself->delegator() );
@@ -481,8 +496,9 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       // Make sure only ourselves is in the event
       incidence->clearAttendees();
-      if( newMyself )
+      if( newMyself ) {
         incidence->addAttendee( newMyself );
+      }
       return newMyself;
     }
 
@@ -495,21 +511,24 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool mailICal( const QString &receiver, const QString &to, const QString &iCal,
                    const QString &subject, const QString &status,
-                   bool delMessage, MessageViewer::Viewer *viewerInstance ) const
+                   bool delMessage, Viewer *viewerInstance ) const
     {
       kDebug() << "Mailing message:" << iCal;
 
       KMime::Message::Ptr msg( new KMime::Message );
-      if ( MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+      if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msg->subject()->fromUnicodeString( status, "utf-8" );
         QString tsubject = subject;
         tsubject.remove( i18n( "Answer: " ) );
         if ( status == QLatin1String( "cancel" ) ) {
-          msg->subject()->fromUnicodeString( i18nc( "Not able to attend.", "Declined: %1", tsubject ), "utf-8" );
-        } else if ( status == QLatin1String("tentative") ) {
-          msg->subject()->fromUnicodeString( i18nc( "Unsure if it is possible to attend.", "Tentative: %1", tsubject ), "utf-8" );
-        } else if ( status == QLatin1String("accepted") ) {
-          msg->subject()->fromUnicodeString( i18nc( "Accepted the invitation.", "Accepted: %1", tsubject ), "utf-8" );
+          msg->subject()->fromUnicodeString(
+            i18nc( "Not able to attend.", "Declined: %1", tsubject ), "utf-8" );
+        } else if ( status == QLatin1String( "tentative" ) ) {
+          msg->subject()->fromUnicodeString(
+            i18nc( "Unsure if it is possible to attend.", "Tentative: %1", tsubject ), "utf-8" );
+        } else if ( status == QLatin1String( "accepted" ) ) {
+          msg->subject()->fromUnicodeString(
+            i18nc( "Accepted the invitation.", "Accepted: %1", tsubject ), "utf-8" );
         } else {
           msg->subject()->fromUnicodeString( subject, "utf-8" );
         }
@@ -519,14 +538,14 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
 
-      if ( !MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+      if ( !GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
         msg->setBody( iCal.toUtf8() );
       } else {
         KMime::Content *text = new KMime::Content;
         text->contentType()->from7BitString( "text/plain; charset=\"us-ascii\"" );
         text->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
-        text->setBody("");
+        text->setBody( "" );
         msg->addContent( text );
         KMime::Content *body = new KMime::Content;
         body->contentType()->from7BitString( "text/calendar; name=\"cal.ics\";method=\"reply\"" );
@@ -539,52 +558,57 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // Setting the identity here is important, as that is used to select the correct
       // transport later
       const KPIMIdentities::Identity identity =
-         KPIMIdentities::IdentityManager().identityForAddress( findReceiver( viewerInstance->message().get() ) );
+        KPIMIdentities::IdentityManager().identityForAddress(
+          findReceiver( viewerInstance->message().get() ) );
+
       kDebug() << "Full email: " << identity.fullEmailAddr();
+
       const bool nullIdentity = ( identity == KPIMIdentities::Identity::null() );
+
       if ( !nullIdentity ) {
-        KMime::Headers::Generic *x_header = new KMime::Headers::Generic(
-          "X-KMail-Identity", msg.get(), QByteArray::number( identity.uoid() )
-        );
+        KMime::Headers::Generic *x_header =
+          new KMime::Headers::Generic(
+            "X-KMail-Identity", msg.get(), QByteArray::number( identity.uoid() ) );
         msg->setHeader( x_header );
       }
 
 #if 0 //TODO: Review // Shouldn't be necessary anymore
       const bool identityHasTransport = !identity.transport().isEmpty();
-      if ( !nullIdentity && identityHasTransport )
+      if ( !nullIdentity && identityHasTransport ) {
         msg->setHeaderField( "X-KMail-Transport", identity.transport() );
-      else if ( !nullIdentity && identity.isDefault() )
-        msg->setHeaderField( "X-KMail-Transport", TransportManager::self()->defaultTransportName() );
-      else {
+      } else if ( !nullIdentity && identity.isDefault() ) {
+        msg->setHeaderField( "X-KMail-Transport",
+                             TransportManager::self()->defaultTransportName() );
+      } else {
         const QString transport = askForTransport( nullIdentity );
-        if ( transport.isEmpty() )
+        if ( transport.isEmpty() ) {
           return false; // user canceled transport selection dialog
+        }
         msg->setHeaderField( "X-KMail-Transport", transport );
       }
 #else
-  kDebug() << "AKONADI PORT: Disabled code in " << Q_FUNC_INFO;
+      kDebug() << "AKONADI PORT: Disabled code in " << Q_FUNC_INFO;
 #endif
 
       // Outlook will only understand the reply if the From: header is the
       // same as the To: header of the invitation message.
-      if ( !MessageViewer::GlobalSettings::self()->legacyMangleFromToHeaders() ) {
+      if ( !GlobalSettings::self()->legacyMangleFromToHeaders() ) {
         if ( identity != KPIMIdentities::Identity::null() ) {
           msg->from()->fromUnicodeString( identity.fullEmailAddr(), "utf-8" );
         }
-        // Remove BCC from identity on ical invitations (https://intevation.de/roundup/kolab/issue474)
-        msg->bcc()->clear();;
+        // Remove BCC from identity on ical invitations (kolab/issue474)
+        msg->bcc()->clear();
       }
 
 #if 0 // For now assume automatic sending
       KMail::Composer *cWin = KMail::makeComposer();
       cWin->ignoreStickyFields();
-      cWin->setMsg( msg, false /* mayAutoSign */ );
+      cWin->setMsg( msg, false /* mayAutoSign */);
       // cWin->setCharset( "", true );
       cWin->disableWordWrap();
       cWin->setSigningAndEncryptionDisabled( true );
       if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
-        // For Exchange, send ical as attachment, with proper
-        // parameters
+        // For Exchange, send ical as attachment, with proper parameters
         msg->setSubject( status );
         msg->setCharset( "utf-8" );
         KMMessagePart *msgPart = new KMMessagePart;
@@ -612,13 +636,15 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
       job->setMessage( msg );
       job->addressAttribute().setTo( QStringList() << to );
-      job->transportAttribute().setTransportId( MailTransport::TransportManager::self()->defaultTransportId() );
+      job->transportAttribute().setTransportId(
+        MailTransport::TransportManager::self()->defaultTransportId() );
       if( ! job->exec() ) {
         kWarning() << "Error queuing message in outbox:" << job->errorText();
         return false;
       }
-      //we have no notification about when was a mail sent, so treat it as sent when it is queued for sending
-      if ( delMessage &&  MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
+      // We are not notified when mail was sent, so assume it was sent when queued.
+      if ( delMessage &&
+           GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
         viewerInstance->deleteMessage();
       }
 #endif
@@ -626,7 +652,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool mail( MessageViewer::Viewer *viewerInstance,
+    bool mail( Viewer *viewerInstance,
                const Incidence::Ptr &incidence,
                const QString &status,
                iTIPMethod method = iTIPReply,
@@ -639,35 +665,38 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       format.setTimeSpec( KSystemTimeZones::local() );
       QString msg = format.createScheduleMessage( incidence, method );
       QString summary = incidence->summary();
-      if ( summary.isEmpty() )
+      if ( summary.isEmpty() ) {
         summary = i18n( "Incidence with no summary" );
+      }
       QString subject;
       switch ( type ) {
-        case Answer:
-          subject = i18n( "Answer: %1" , summary );
-          break;
-        case Delegation:
-          subject = i18n( "Delegated: %1", summary );
-          break;
-        case Forward:
-          subject = i18n( "Forwarded: %1", summary );
-          break;
-        case DeclineCounter:
-          subject = i18n( "Declined Counter Proposal: %1", summary );
-          break;
+      case Answer:
+        subject = i18n( "Answer: %1", summary );
+        break;
+      case Delegation:
+        subject = i18n( "Delegated: %1", summary );
+        break;
+      case Forward:
+        subject = i18n( "Forwarded: %1", summary );
+        break;
+      case DeclineCounter:
+        subject = i18n( "Declined Counter Proposal: %1", summary );
+        break;
       }
 
       // Set the organizer to the sender, if the ORGANIZER hasn't been set.
       if ( incidence->organizer()->isEmpty() ) {
         QString tname, temail;
         KMime::Message::Ptr message = viewerInstance->message();
-        KPIMUtils::extractEmailAddressAndName( message->sender()->asUnicodeString(), temail, tname );
+        KPIMUtils::extractEmailAddressAndName( message->sender()->asUnicodeString(),
+                                               temail, tname );
         incidence->setOrganizer( Person::Ptr( new Person( tname, temail ) ) );
       }
 
       QString recv = to;
-      if ( recv.isEmpty() )
+      if ( recv.isEmpty() ) {
         recv = incidence->organizer()->fullName();
+      }
       return mailICal( receiver, recv, msg, subject, status, type != Forward, viewerInstance );
     }
 
@@ -675,16 +704,18 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     {
       QString error;
       QString dbusService;
-      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString(), &error, &dbusService );
+      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString(),
+                                                                &error, &dbusService );
       if ( result == 0 ) {
-        // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
-        // [that's not the case when kontact was already running, but korganizer not loaded into it...]
-        QDBusInterface iface( "org.kde.korganizer", "/MainApplication", "org.kde.KUniqueApplication" );
+        // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
+        QDBusInterface iface( "org.kde.korganizer", "/MainApplication",
+                              "org.kde.KUniqueApplication" );
         if ( iface.isValid() ) {
           if ( switchTo ) {
             iface.call( "newInstance" ); // activate korganizer window
           }
-          QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication", "org.kde.KUniqueApplication" );
+          QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
+                                   "org.kde.KUniqueApplication" );
           QDBusReply<bool> r = pimIface.call( "load" );
           if ( !r.isValid() || !r.value() ) {
             kWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
@@ -695,13 +726,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
+      } else {
+        kWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
       }
-      else
-        kWarning() <<"Couldn't start DBUS/Organizer:" << dbusService << error;
     }
 
-    bool saveFile( const QString& receiver, const QString& iCal,
-                   const QString& type ) const
+    bool saveFile( const QString &receiver, const QString &iCal, const QString &type ) const
     {
     // FIXME no IncidenceEditors on WinCE, anyway we don't want to depend on it just for that
 #ifndef Q_OS_WINCE
@@ -752,7 +782,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           }
         } else {
           if ( todo->hasDueDate() ) {
-            if ( todo->dtDue().date() < today) {
+            if ( todo->dtDue().date() < today ) {
               warnStr = i18n( "\"%1\" is past due.", todo->summary() );
             } else if ( todo->hasStartDate() &&
                         todo->dtStart().date() <= today && today <= todo->dtDue().date() ) {
@@ -777,7 +807,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           }
         } else if ( path == "accept_conditionally" ) {
           if ( type == Incidence::TypeTodo ) {
-            queryStr = i18n( "Do you still want to send conditional acceptance of the invitation?" );
+            queryStr =
+              i18n( "Do you still want to send conditional acceptance of the invitation?" );
           } else {
             queryStr = i18n( "Do you still want to send conditional acceptance of the task?" );
           }
@@ -826,28 +857,31 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return false;
     }
 
-    bool handleInvitation( const QString& iCal, Attendee::PartStat status,
-                           MessageViewer::Interface::BodyPart *part, MessageViewer::Viewer *viewerInstance ) const
+    bool handleInvitation( const QString &iCal, Attendee::PartStat status,
+                           Interface::BodyPart *part,
+                           Viewer *viewerInstance ) const
     {
       bool ok = true;
       const QString receiver = findReceiver( part->content() );
       kDebug() << receiver;
 
-      if ( receiver.isEmpty() )
+      if ( receiver.isEmpty() ) {
         // Must be some error. Still return true though, since we did handle it
         return true;
+      }
 
       Incidence::Ptr incidence = icalToString( iCal );
 
       // get comment for tentative acceptance
       if ( askForComment( status ) ) {
         bool ok = false;
-        QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
-            i18n("Comment:"), QString(), &ok );
-        if ( !ok )
+        QString comment = KInputDialog::getMultiLineText(
+          i18n( "Reaction to Invitation" ), i18n( "Comment:" ), QString(), &ok );
+        if ( !ok ) {
           return true;
+        }
         if ( !comment.isEmpty() ) {
-          if ( MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
+          if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
@@ -869,20 +903,23 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       bool delegatorRSVP = false;
       if ( status == Attendee::Delegated ) {
         DelegateSelector dlg;
-        if ( dlg.exec() == QDialog::Rejected )
+        if ( dlg.exec() == QDialog::Rejected ) {
           return true;
+        }
         delegateString = dlg.delegate();
         delegatorRSVP = dlg.rsvp();
-        if ( delegateString.isEmpty() )
+        if ( delegateString.isEmpty() ) {
           return true;
+        }
         if ( KPIMUtils::compareEmail( delegateString, incidence->organizer()->email(), false ) ) {
-          KMessageBox::sorry( 0, i18n("Delegation to organizer is not possible.") );
+          KMessageBox::sorry( 0, i18n( "Delegation to organizer is not possible." ) );
           return true;
         }
       }
 
-      if( !incidence )
+      if( !incidence ) {
         return false;
+      }
 
       Attendee::Ptr myself = findMyself( incidence, receiver );
 
@@ -890,8 +927,10 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       QString delegator;
       if ( myself && !myself->delegator().isEmpty() ) {
         Attendee::List attendees = incidence->attendees();
-        for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-          if( KPIMUtils::compareEmail( (*it)->fullName(), myself->delegator(), false ) && (*it)->status() == Attendee::Delegated ) {
+        for ( Attendee::List::ConstIterator it = attendees.constBegin();
+              it != attendees.constEnd(); ++it ) {
+          if( KPIMUtils::compareEmail( (*it)->fullName(), myself->delegator(), false ) &&
+              (*it)->status() == Attendee::Delegated ) {
             delegator = (*it)->fullName();
             delegatorRSVP = (*it)->RSVP();
             break;
@@ -908,28 +947,32 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         ok =  mail( viewerInstance, incidence, dir, iTIPReply, receiver );
 
         // check if we need to inform our delegator about this as well
-        if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
-          if ( delegatorRSVP || status == Attendee::Declined )
+        if ( newMyself &&
+             ( status == Attendee::Accepted || status == Attendee::Declined ) &&
+             !delegator.isEmpty() ) {
+          if ( delegatorRSVP || status == Attendee::Declined ) {
             ok = mail( viewerInstance, incidence, dir, iTIPReply, receiver, delegator );
+          }
         }
-
-      } else if ( !myself && (status != Attendee::Declined) ) {
+      } else if ( !myself && ( status != Attendee::Declined ) ) {
         // forwarded invitation
         QString name;
         QString email;
         KPIMUtils::extractEmailAddressAndName( receiver, email, name );
         if ( !email.isEmpty() ) {
-          Attendee::Ptr newMyself( new Attendee( name, email, true, // RSVP, otherwise we would not be here
-                                                 status,
-                                                 heuristicalRole( incidence ),
-                                                 QString() ) );
+          Attendee::Ptr newMyself(
+            new Attendee( name, email, true, // RSVP, otherwise we would not be here
+                          status,
+                          heuristicalRole( incidence ),
+                          QString() ) );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
           ok = mail( viewerInstance, incidence, dir, iTIPReply, receiver );
         }
       } else {
-        if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
+        if ( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
           viewerInstance->deleteMessage();
+        }
       }
 
       // create invitation for the delegate (same as the original invitation
@@ -951,7 +994,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok = mail( viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
+        ok =
+          mail( viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
       }
       return ok;
     }
@@ -994,17 +1038,15 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       // get the saveas file name
       QString saveAsFile =
-        KFileDialog::getSaveFileName( name,
-                                      QString(), 0,
-                                      i18n( "Save Invitation Attachment" ));
+        KFileDialog::getSaveFileName( name, QString(), 0, i18n( "Save Invitation Attachment" ) );
 
       if ( saveAsFile.isEmpty() ||
            ( QFile( saveAsFile ).exists() &&
              ( KMessageBox::warningContinueCancel(
-               0,
-               i18nc( "@info",
-                      "File <filename>%1</filename> exists.<nl/> Do you want to replace it?",
-                      saveAsFile ) ) != KMessageBox::Continue ) ) ) {
+                 0,
+                 i18nc( "@info",
+                        "File <filename>%1</filename> exists.<nl/> Do you want to replace it?",
+                        saveAsFile ) ) != KMessageBox::Continue ) ) ) {
         return false;
       }
 
@@ -1035,43 +1077,52 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     void showCalendar( const QDate &date ) const
     {
       ensureKorganizerRunning( true );
-      QDBusInterface *kontact = new QDBusInterface( "org.kde.kontact", "/KontactInterface", "org.kde.kontact.KontactInterface", QDBusConnection::sessionBus() );
-      if ( kontact->isValid() )
+      QDBusInterface *kontact =
+        new QDBusInterface( "org.kde.kontact", "/KontactInterface",
+                            "org.kde.kontact.KontactInterface", QDBusConnection::sessionBus() );
+      if ( kontact->isValid() ) {
         kontact->call( "selectPlugin", "kontact_korganizerplugin" );
+      }
       delete kontact;
 
-      OrgKdeKorganizerCalendarInterface *iface = new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar", QDBusConnection::sessionBus(), 0 );
-      if (!iface->isValid()) {
+      OrgKdeKorganizerCalendarInterface *iface =
+        new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
+                                               QDBusConnection::sessionBus(), 0 );
+      if ( !iface->isValid() ) {
         kDebug() << "Calendar interface is not valid! " << iface->lastError().message();
-	delete iface;
-	return;
+        delete iface;
+        return;
       }
       iface->showEventView();
       iface->showDate( date );
       delete iface;
     }
 
-    bool handleIgnore( MessageViewer::Viewer* viewerInstance ) const
+    bool handleIgnore( Viewer *viewerInstance ) const
     {
       // simply move the message to trash
       viewerInstance->deleteMessage();
       return true;
     }
 
-    bool handleDeclineCounter( const QString &iCal, MessageViewer::Interface::BodyPart* part, MessageViewer::Viewer *viewerInstance ) const
+    bool handleDeclineCounter( const QString &iCal, Interface::BodyPart *part,
+                               Viewer *viewerInstance ) const
     {
       const QString receiver( findReceiver( part->content() ) );
-      if ( receiver.isEmpty() )
+      if ( receiver.isEmpty() ) {
         return true;
+      }
       Incidence::Ptr incidence( icalToString( iCal ) );
       if ( askForComment( Attendee::Declined ) ) {
         bool ok = false;
-        const QString comment( KInputDialog::getMultiLineText( i18n("Decline Counter Proposal") ,
-                                                               i18n("Comment:"), QString(), &ok ) );
-        if ( !ok )
+        const QString comment(
+          KInputDialog::getMultiLineText(
+            i18n( "Decline Counter Proposal" ), i18n( "Comment:" ), QString(), &ok ) );
+        if ( !ok ) {
           return true;
+        }
         if ( !comment.isEmpty() ) {
-          if ( MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
+          if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
@@ -1082,18 +1133,20 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                    receiver, QString(), DeclineCounter );
     }
 
-    bool counterProposal( const QString &iCal, MessageViewer::Interface::BodyPart* part ) const
+    bool counterProposal( const QString &iCal, Interface::BodyPart *part ) const
     {
       const QString receiver = findReceiver( part->content() );
-      if ( receiver.isEmpty() )
+      if ( receiver.isEmpty() ) {
         return true;
+      }
       saveFile( receiver, iCal, "counter" );
       // Don't delete the invitation here in any case, if the counter proposal
       // is declined you might need it again.
       return true;
     }
 
-    bool handleClick( MessageViewer::Viewer *viewerInstance, MessageViewer::Interface::BodyPart *part,
+    bool handleClick( Viewer *viewerInstance,
+                      Interface::BodyPart *part,
                       const QString &path ) const
     {
       if ( !hasMyWritableEventsFolders( "calendar" ) ) {
@@ -1108,9 +1161,9 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // If the bodypart does not have a charset specified, we need to fall back to utf8,
       // not the KMail fallback encoding, so get the contents as binary and decode explicitly.
       QString iCal;
-      if ( part->contentTypeParameter( "charset").isEmpty() ) {
+      if ( part->contentTypeParameter( "charset" ).isEmpty() ) {
         const QByteArray &ba = part->asBinary();
-        iCal = QString::fromUtf8(ba);
+        iCal = QString::fromUtf8( ba );
       } else {
         iCal = part->asText();
       }
@@ -1129,31 +1182,40 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         return result;
       }
 
-      if ( path == "accept" )
+      if ( path == "accept" ) {
         result = handleInvitation( iCal, Attendee::Accepted, part, viewerInstance );
-      if ( path == "accept_conditionally" )
+      }
+      if ( path == "accept_conditionally" ) {
         result = handleInvitation( iCal, Attendee::Tentative, part, viewerInstance );
-      if ( path == "counter" )
+      }
+      if ( path == "counter" ) {
         result = counterProposal( iCal, part );
-      if ( path == "ignore" )
+      }
+      if ( path == "ignore" ) {
         result = handleIgnore( viewerInstance );
-      if ( path == "decline" )
+      }
+      if ( path == "decline" ) {
         result = handleInvitation( iCal, Attendee::Declined, part, viewerInstance );
+      }
       if ( path == "decline_counter" ) {
         result = handleDeclineCounter( iCal, part, viewerInstance );
       }
-      if ( path == "delegate" )
+      if ( path == "delegate" ) {
         result = handleInvitation( iCal, Attendee::Delegated, part, viewerInstance );
+      }
 
       if ( path == "forward" ) {
         AttendeeSelector dlg;
-        if ( dlg.exec() == QDialog::Rejected )
+        if ( dlg.exec() == QDialog::Rejected ) {
           return true;
+        }
         QString fwdTo = dlg.attendees().join( ", " );
-        if ( fwdTo.isEmpty() )
+        if ( fwdTo.isEmpty() ) {
           return true;
+        }
         const QString receiver = findReceiver( part->content() );
-        result = mail( viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
+        result =
+          mail( viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
         incidence = icalToString( iCal );
@@ -1162,10 +1224,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       if ( path == "reply" || path == "cancel" || path == "accept_counter" ) {
         // These should just be saved with their type as the dir
-        const QString p = (path == "accept_counter" ? QString("reply") : path);
+        const QString p = ( path == "accept_counter" ? QString( "reply" ) : path );
         if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
-          if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
+          if ( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
             viewerInstance->deleteMessage();
+          }
           result = true;
         }
       }
@@ -1176,15 +1239,15 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
         int response =
           KMessageBox::questionYesNoCancel(
-          0,
-          i18nc( "@info",
-                 "The organizer is not expecting a reply to this invitation "
-                 "but you can send them an email message if you desire.\n\n"
-                 "Would you like to send the organizer a message regarding this invitation?\n"
-                 "Press the [Cancel] button to cancel the recording operation." ),
-          i18nc( "@title:window", "Send Email to Organizer" ),
-          KGuiItem( i18n( "Do Not Send" ) ),
-          KGuiItem( i18n( "Send EMail" ) ) );
+            0,
+            i18nc( "@info",
+                   "The organizer is not expecting a reply to this invitation "
+                   "but you can send them an email message if you desire.\n\n"
+                   "Would you like to send the organizer a message regarding this invitation?\n"
+                   "Press the [Cancel] button to cancel the recording operation." ),
+            i18nc( "@title:window", "Send Email to Organizer" ),
+            KGuiItem( i18n( "Do Not Send" ) ),
+            KGuiItem( i18n( "Send EMail" ) ) );
 
         switch( response ) {
         case KMessageBox::Cancel:
@@ -1199,7 +1262,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           //fall through
         case KMessageBox::Yes: // means "do not send"
           if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
-            if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
+            if ( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
               viewerInstance->deleteMessage();
               result = true;
             }
@@ -1233,7 +1296,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return result;
     }
 
-    bool handleContextMenuRequest( MessageViewer::Interface::BodyPart *part,
+    bool handleContextMenuRequest( Interface::BodyPart *part,
                                    const QString &path,
                                    const QPoint &point ) const
     {
@@ -1245,7 +1308,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
       QString iCal;
-      if ( part->contentTypeParameter( "charset").isEmpty() ) {
+      if ( part->contentTypeParameter( "charset" ).isEmpty() ) {
         const QByteArray &ba = part->asBinary();
         iCal = QString::fromUtf8( ba );
       } else {
@@ -1268,42 +1331,55 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return true;
     }
 
-    QString statusBarMessage( MessageViewer::Interface::BodyPart *,
+    QString statusBarMessage( Interface::BodyPart *,
                               const QString &path ) const
     {
       if ( !path.isEmpty() ) {
-        if ( path == "accept" )
-          return i18n("Accept invitation");
-        if ( path == "accept_conditionally" )
+        if ( path == "accept" ) {
+          return i18n( "Accept invitation" );
+        }
+        if ( path == "accept_conditionally" ) {
           return i18n( "Accept invitation conditionally" );
-        if ( path == "accept_counter" )
+        }
+        if ( path == "accept_counter" ) {
           return i18n( "Accept counter proposal" );
-        if ( path == "counter" )
+        }
+        if ( path == "counter" ) {
           return i18n( "Create a counter proposal..." );
-        if ( path == "ignore" )
+        }
+        if ( path == "ignore" ) {
           return i18n( "Throw mail away" );
-        if ( path == "decline" )
+        }
+        if ( path == "decline" ) {
           return i18n( "Decline invitation" );
-        if ( path == "decline_counter" )
+        }
+        if ( path == "decline_counter" ) {
           return i18n( "Decline counter proposal" );
-        if ( path == "check_calendar" )
-          return i18n("Check my calendar..." );
-        if ( path == "reply" )
+        }
+        if ( path == "check_calendar" ) {
+          return i18n( "Check my calendar..." );
+        }
+        if ( path == "reply" ) {
           return i18n( "Record response into my calendar" );
-        if ( path == "record" )
+        }
+        if ( path == "record" ) {
           return i18n( "Record invitation into my calendar" );
-        if ( path == "delete" )
+        }
+        if ( path == "delete" ) {
           return i18n( "Move this invitation to my trash folder" );
-        if ( path == "delegate" )
+        }
+        if ( path == "delegate" ) {
           return i18n( "Delegate invitation" );
-        if ( path == "forward" )
+        }
+        if ( path == "forward" ) {
           return i18n( "Forward invitation" );
-        if ( path == "cancel" )
+        }
+        if ( path == "cancel" ) {
           return i18n( "Remove invitation from my calendar" );
+        }
         if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
           QString name = path;
-          return i18n( "Open attachment \"%1\"",
-                       name.remove( QRegExp( "^ATTACH:" ) ) );
+          return i18n( "Open attachment \"%1\"", name.remove( QRegExp( "^ATTACH:" ) ) );
         }
       }
 
@@ -1312,50 +1388,64 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool askForComment( Attendee::PartStat status ) const
     {
-      if ( ( status != Attendee::Accepted
-              && MessageViewer::GlobalSettings::self()->askForCommentWhenReactingToInvitation()
-              == MessageViewer::GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance )
-          || MessageViewer::GlobalSettings::self()->askForCommentWhenReactingToInvitation()
-          == MessageViewer::GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk )
-          return true;
+      if ( ( status != Attendee::Accepted &&
+             GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
+             GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance ) ||
+           ( GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
+             GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk ) ) {
+        return true;
+      }
       return false;
     }
 
 };
 
-class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
+class Plugin : public Interface::BodyPartFormatterPlugin
 {
   public:
-    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter( int idx ) const
+    const Interface::BodyPartFormatter *bodyPartFormatter( int idx ) const
     {
-      if ( idx == 0 || idx == 1 ) return new Formatter();
-      else return 0;
+      if ( idx == 0 || idx == 1 ) {
+        return new Formatter();
+      } else {
+        return 0;
+      }
     }
 
     const char *type( int idx ) const
     {
-      if ( idx == 0 || idx == 1 ) return "text";
-      else return 0;
+      if ( idx == 0 || idx == 1 ) {
+        return "text";
+      } else {
+        return 0;
+      }
     }
 
     const char *subtype( int idx ) const
     {
-      if ( idx == 0 ) return "calendar";
-      if ( idx == 1 ) return "x-vcalendar";
-      else return 0;
+      if ( idx == 0 ) {
+        return "calendar";
+      } else if ( idx == 1 ) {
+        return "x-vcalendar";
+      } else {
+        return 0;
+      }
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int idx ) const
+    const Interface::BodyPartURLHandler *urlHandler( int idx ) const
     {
-      if ( idx == 0 ) return new UrlHandler();
-      else return 0;
+      if ( idx == 0 ) {
+        return new UrlHandler();
+      } else {
+        return 0;
+      }
     }
 };
 
 }
 
 extern "C"
-KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
+KDE_EXPORT Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
   KGlobal::locale()->insertCatalog( "messageviewer_text_calendar_plugin" );
