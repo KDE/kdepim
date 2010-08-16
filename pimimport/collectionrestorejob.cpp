@@ -2,6 +2,7 @@
 
 #include "kconfig.h"
 #include "kconfiggroup.h"
+#include <akonadi/cachepolicy.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
@@ -34,6 +35,15 @@ void CollectionRestoreJob::start()
   Collection collection;
   collection.setName( configGroup.readEntry( "name", QString() ) );
   collection.setParentCollection( m_parent );
+
+  // restore cache policy
+  KConfigGroup cacheGroup( &configGroup, "CachePolicy" );
+  CachePolicy policy;
+  policy.setInheritFromParent( cacheGroup.readEntry( "inheritFromParent", true ) );
+  policy.setCacheTimeout( cacheGroup.readEntry( "cacheTimeout", policy.cacheTimeout() ) );
+  policy.setIntervalCheckTime( cacheGroup.readEntry( "intervalCheckTime", policy.intervalCheckTime() ) );
+  policy.setLocalParts( cacheGroup.readEntry( "localParts", policy.localParts() ) );
+  policy.setSyncOnDemand( cacheGroup.readEntry( "syncOnDemand", policy.syncOnDemand() ) );
 
   // restore collection
   CollectionCreateJob *job;

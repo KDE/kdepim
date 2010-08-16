@@ -2,6 +2,7 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
+#include <akonadi/cachepolicy.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchjob.h>
@@ -30,6 +31,15 @@ void CollectionDumpJob::start()
   m_config = KSharedConfig::openConfig( m_path.absoluteFilePath( "collectioninfo" ), KSharedConfig::SimpleConfig );
   KConfigGroup configGroup( m_config, "General" );
   configGroup.writeEntry( "name", m_collection.name() );
+
+  // record cache policy
+  KConfigGroup cacheGroup( &configGroup, "CachePolicy" );
+  CachePolicy cachePolicy = m_collection.cachePolicy();
+  cacheGroup.writeEntry( "inheritFromParent", cachePolicy.inheritFromParent() );
+  cacheGroup.writeEntry( "cacheTimeout", cachePolicy.cacheTimeout() );
+  cacheGroup.writeEntry( "intervalCheckTime", cachePolicy.intervalCheckTime() );
+  cacheGroup.writeEntry( "localParts", cachePolicy.localParts() );
+  cacheGroup.writeEntry( "syncOnDemand", cachePolicy.syncOnDemand() );
   m_config->sync();
 
   dumpItems();
