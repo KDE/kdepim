@@ -9,6 +9,7 @@ set( pimimport_SRCS
   resourcedumpjob.cpp
   collectionrestorejob.cpp
   resourcerestorejob.cpp
+  akonadidumpassistant.cpp
 )
 
 kde4_add_executable( pimimport ${pimimport_SRCS})
