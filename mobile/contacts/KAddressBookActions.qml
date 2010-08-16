@@ -69,6 +69,7 @@ ActionMenuContainer {
   ActionList {
     category : "resource"
     name : KDE.i18n( "Address Book" )
+    ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
@@ -76,11 +77,16 @@ ActionMenuContainer {
   ActionList {
     category : "single_folder"
     name : KDE.i18n( "Folder" )
+    ActionListItem { name : "akonadi_collection_sync" }
+  }
+
+  ActionList {
+    category : "single_folder"
+    name : KDE.i18n( "Edit" )
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
-    ActionListItem { name : "akonadi_collection_copy_to_menu" }
     ActionListItem { name : "akonadi_collection_move_to_menu" }
-    ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "akonadi_collection_copy_to_menu" }
     ActionListItem { name : "akonadi_collection_delete" }
   }
 
