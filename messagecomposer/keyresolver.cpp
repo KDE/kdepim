@@ -1694,22 +1694,21 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
   // FIXME: let user get the key from keyserver
   return trustedOrConfirmed( selectKeys( person,
           matchingKeys.empty()
-          ? i18nc("if in your language something like "
-              "'key(s)' is not possible please "
-              "use the plural in the translation",
-              "<qt>No valid and trusted encryption key was "
-              "found for \"%1\".<br/><br/>"
-              "Select the key(s) which should "
-              "be used for this recipient. If there is no suitable key in the list "
-              "you can also <a href=\"%2\">search for external keys</a>.</qt>",
-              Qt::escape( person ),
-              QLatin1String( QUrl::toPercentEncoding( KPIMUtils::extractEmailAddress( person) ) ) )
-          : i18nc("if in your language something like "
-              "'key(s)' is not possible please "
-              "use the plural in the translation",
-              "More than one key matches \"%1\".\n\n"
-              "Select the key(s) which should "
-              "be used for this recipient.", person),
+          ? i18nc( "if in your language something like "
+                   "'certificate(s)' is not possible please "
+                   "use the plural in the translation",
+                   "<qt>No valid and trusted encryption certificate was "
+                   "found for \"%1\".<br/><br/>"
+                   "Select the certificate(s) which should "
+                   "be used for this recipient. If there is no suitable certificate in the list "
+                   "you can also search for external certificates by clicking this button:</qt>",
+                   Qt::escape( person ) )
+          : i18nc( "if in your language something like "
+                   "'certificate(s)' is not possible please "
+                   "use the plural in the translation",
+                   "More than one certificate matches \"%1\".\n\n"
+                   "Select the certificate(s) which should "
+                   "be used for this recipient.", Qt::escape( person ) ),
           matchingKeys ), address, canceled );
   // we can ignore 'canceled' here, since trustedOrConfirmed() returns
   // an empty vector when canceled == true, and we'd just do the same
