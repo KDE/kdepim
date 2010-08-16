@@ -31,7 +31,9 @@
 
 #include <KABC/Addressee>
 
+#ifndef Q_OS_WINCE
 #include <phonon/mediaobject.h>
+#endif
 
 #include <QtCore/QBuffer>
 #include <QtCore/QSignalMapper>
