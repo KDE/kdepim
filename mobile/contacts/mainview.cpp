@@ -39,6 +39,10 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobi
 
 void MainView::delayedInit()
 {
+  ContactImageProvider *provider = new ContactImageProvider;
+  provider->setModel( itemModel() );
+  engine()->addImageProvider( QLatin1String( "contact_images" ), provider );
+
   KDeclarativeMainView::delayedInit();
 
   addMimeType( KABC::Addressee::mimeType() );

@@ -29,6 +29,8 @@ namespace Akonadi
   class StandardContactActionManager;
 }
 
+class ContactListProxy;
+
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
@@ -54,6 +56,7 @@ class MainView : public KDeclarativeMainView
 
   private:
     Akonadi::StandardContactActionManager *mActionManager;
+    ContactListProxy *mContactListProxy;
 };
 
 #endif // MAINVIEW_H
