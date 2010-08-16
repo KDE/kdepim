@@ -33,7 +33,6 @@
 #include <akonadi_next/entityrightsfiltermodel.h>
 #include <libkdepim/kdescendantsproxymodel_p.h>
 
-#include <akonadi_next/modeltest.h>
 #include <QTimer>
 
 DescTabWidget::DescTabWidget(QWidget* parent, Qt::WindowFlags f)

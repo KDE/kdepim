@@ -70,8 +70,6 @@
 #include <QStandardItemModel>
 #include <QTimer>
 
-#include <akonadi_next/modeltest.h>
-
 using namespace Akonadi;
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionAttributePageFactory, CollectionAttributePage)

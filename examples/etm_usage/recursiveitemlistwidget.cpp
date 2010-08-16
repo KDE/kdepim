@@ -30,7 +30,6 @@
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/changerecorder.h>
 
-#include "akonadi_next/modeltest.h"
 #include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/entitylistview.h>
 #include <akonadi/entitytreeview.h>
