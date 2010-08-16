@@ -800,6 +800,10 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
 #ifndef KDEPIM_MOBILE_UI
   mUi->mRecurrenceEndLabel->setVisible( enable );
   mUi->mOnLabel->setVisible( enable && mUi->mRepeatStack->currentIndex() > 0 );
+  if ( !enable ) {
+    // So we can hide the exceptions labels and not trigger column resizing.
+    mUi->mRepeatLabel->setMinimumSize( mUi->mExceptionsLabel->sizeHint() );
+  }
 #endif
 
   mUi->mFrequencyLabel->setVisible( enable );
