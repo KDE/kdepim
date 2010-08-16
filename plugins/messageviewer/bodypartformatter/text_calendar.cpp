@@ -811,6 +811,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           } else {
             queryStr = i18n( "Do you still want to record this invitation in your calendar?" );
          }
+        } else if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
+          return false;
         } else {
           queryStr = i18n( "%1?", path );
         }
