@@ -135,19 +135,6 @@ ActionMenuContainer {
 
   ActionList {
     category: "mail_viewer"
-    name: KDE.i18n( "Message" )
-    ActionListItem { name : "message_reply" }
-    ActionListItem { name : "message_reply_to_all" }
-    ActionListItem { name : "forward_message" }
-    FakeAction { name : "mark_message" }
-    FakeAction { name : "send_again" }
-    FakeAction { name : "create_reminder" }
-    FakeAction { name : "find_in_msg" }
-    FakeAction { name : "save_msg_as" }
-  }
-
-  ActionList {
-    category: "mail_viewer"
     name: KDE.i18n( "Email" )
     FakeAction { name : "reply" }
     FakeAction { name : "forward" }

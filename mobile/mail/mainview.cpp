@@ -467,6 +467,23 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->setItemSelectionModel( itemSelectionModel );
 
   manager->createAllActions();
+
+  manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+
+  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize emails\nin account" ) );
+  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
+  manager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize emails\nin folder" ) );
+  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete email" ) );
+  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move email\nto folder" ) );
+  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy email\nto folder" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
@@ -475,9 +492,9 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setSelectionModel( selectionModel );
   manager->createAllActions();
 
-  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add Account" ) );
-  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete Account" ) );
-  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Configure Account" ) );
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
 
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 

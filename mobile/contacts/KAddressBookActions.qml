@@ -56,7 +56,7 @@ ActionMenuContainer {
 
   AgentInstanceList {
     category : "home"
-    name : KDE.i18n( "Address Books" )
+    name : KDE.i18n( "Accounts" )
 
     model : agentInstanceList
 

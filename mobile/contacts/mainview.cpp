@@ -115,6 +115,18 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT( editItem() ) );
   connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
            this, SLOT( launchAccountWizard() ) );
+
+  mActionManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize contacts\nin account" ) );
+  mActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize contacts\nin folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  mActionManager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete contact" ) );
+  mActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move contact\nto folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy contact\nto folder" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
@@ -123,9 +135,9 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setSelectionModel( selectionModel );
   manager->createAllActions();
 
-  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add Address Book" ) );
-  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete Address Book" ) );
-  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Configure Address Book" ) );
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
 
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
@@ -133,16 +145,16 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
            this, SLOT( launchAccountWizard() ) );
 
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
-                           i18nc( "@title:window", "New Address Book" ) );
+                           i18nc( "@title:window", "New Account" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
-                           i18n( "Could not create address book: %1" ) );
+                           i18n( "Could not create account: %1" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
-                           i18n( "Address Book creation failed" ) );
+                           i18n( "Account creation failed" ) );
 
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
-                           i18nc( "@title:window", "Delete Address Book?" ) );
+                           i18nc( "@title:window", "Delete Account?" ) );
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
-                           i18n( "Do you really want to delete the selected address book?" ) );
+                           i18n( "Do you really want to delete the selected account?" ) );
 }
 
 #include "mainview.moc"

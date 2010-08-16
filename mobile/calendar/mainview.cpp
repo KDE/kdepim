@@ -28,6 +28,7 @@
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/kcalprefs.h>
+#include <akonadi/standardactionmanager.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedefaults.h>
 
 #include <ksystemtimezone.h>
@@ -147,15 +148,41 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   editor->show();
 }
 
+void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel )
+{
+  Akonadi::StandardActionManager *manager = new Akonadi::StandardActionManager( actionCollection(), this );
+  manager->setCollectionSelectionModel( collectionSelectionModel );
+  manager->setItemSelectionModel( itemSelectionModel );
+
+  manager->createAllActions();
+  manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+
+  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize events\nin account" ) );
+  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
+  manager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize events\nin folder" ) );
+  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete event" ) );
+  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move event\nto folder" ) );
+  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy event\nto folder" ) );
+}
+
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 {
   Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
   manager->setSelectionModel( selectionModel );
   manager->createAllActions();
 
-  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add Calendar" ) );
-  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete Calendar" ) );
-  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Configure Calendar" ) );
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
 
   manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
 
@@ -163,16 +190,16 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
            this, SLOT( launchAccountWizard() ) );
 
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
-                           i18nc( "@title:window", "New Calendar" ) );
+                           i18nc( "@title:window", "New Account" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
-                           i18n( "Could not create calendar: %1" ) );
+                           i18n( "Could not create account: %1" ) );
   manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
-                           i18n( "Calendar creation failed" ) );
+                           i18n( "Account creation failed" ) );
 
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
-                           i18nc( "@title:window", "Delete Calendar?" ) );
+                           i18nc( "@title:window", "Delete Account?" ) );
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
-                           i18n( "Do you really want to delete the selected calendar?" ) );
+                           i18n( "Do you really want to delete the selected account?" ) );
 }
 
 #include "mainview.moc"
