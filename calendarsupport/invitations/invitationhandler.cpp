@@ -109,7 +109,7 @@ int InvitationHandler::Private::askUser( const QString &question,
                                          const KGuiItem &buttonYes,
                                          const KGuiItem &buttonNo ) const
 {
-  Q_ASSERT_X( question.isEmpty(), "InvitationHandler::askUser", "ask what?" );
+  Q_ASSERT_X( !question.isEmpty(), "InvitationHandler::askUser", "ask what?" );
 
   return KMessageBox::questionYesNo( mParent, question, i18n( "Group Scheduling Email" ), buttonYes, buttonNo );
 }
