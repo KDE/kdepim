@@ -46,12 +46,6 @@ class NepomukEMailFeeder : public NepomukFeederAgent<NepomukFast::Mailbox>, publ
 
   protected:
     ItemFetchScope fetchScopeForCollection(const Akonadi::Collection& collection);
-
-  private:
-    bool needsReIndexing() const;
-
-  private slots:
-    void slotFullyIndexed();
 };
 
 }
