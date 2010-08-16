@@ -279,7 +279,23 @@ KABC::Resource *KABCore::requestResource( QWidget *parent )
   KABC::Resource *resource;
   while ( ( resource = resIt.current() ) != 0 ) {
     ++resIt;
-    if ( !resource->readOnly() ) {
+    bool writable = false;
+    if ( resource->inherits( "KPIM::ResourceABC" ) ) {
+      KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( resource );
+      const QStringList subresources = resAbc->subresources();
+      for ( QStringList::ConstIterator it = subresources.begin(); it != subresources.end(); ++it ) {
+        if ( resAbc->subresourceActive(*it) && resAbc->subresourceWritable(*it) ) {
+          writable = true;
+          break;
+        }
+      }
+    } else {
+      if ( !resource->readOnly() ) {
+        writable = true;
+      }
+    }
+
+    if ( writable ) {
       KRES::Resource *res = resource; // downcast
       kresResources.append( res );
     }
