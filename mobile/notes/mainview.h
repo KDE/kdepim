@@ -46,6 +46,12 @@ class MainView : public KDeclarativeMainView
   protected slots:
     virtual void delayedInit();
 
+  protected:
+    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                             QItemSelectionModel *itemSelectionModel );
+
+    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+
   private:
     Akonadi::Collection suitableContainerCollection(const QModelIndex &parent = QModelIndex());
 };

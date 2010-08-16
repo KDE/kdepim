@@ -23,12 +23,17 @@
 
 #include <QtDeclarative/QDeclarativeEngine>
 
+#include <KAction>
+#include <KActionCollection>
 #include <KDebug>
 #include <KGlobal>
+#include <KLocale>
 #include <KStandardDirs>
 
+#include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <Akonadi/ItemFetchScope>
+#include <akonadi/standardactionmanager.h>
 
 #include "notelistproxy.h"
 #include <QDeclarativeContext>
@@ -234,6 +239,7 @@ Collection MainView::suitableContainerCollection(const QModelIndex &parent)
       return descendantCollection;
   }
 
+  return Collection();
 }
 
 void MainView::startComposer()
@@ -283,5 +289,61 @@ void MainView::onSelectionChanged(const QItemSelection& selected, const QItemSel
 
   const QModelIndex idx = list.first();
   selectedItemChanged(idx.row(), idx.data(EntityTreeModel::ItemIdRole).toLongLong());
+}
+
+void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel )
+{
+  Akonadi::StandardActionManager *manager = new Akonadi::StandardActionManager( actionCollection(), this );
+  manager->setCollectionSelectionModel( collectionSelectionModel );
+  manager->setItemSelectionModel( itemSelectionModel );
+
+  manager->createAllActions();
+  manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+
+  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize notes\nin account" ) );
+  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
+  manager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize notes\nin folder" ) );
+  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete note" ) );
+  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move note\nto folder" ) );
+  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy note\nto folder" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall notes" ) );
+}
+
+void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( selectionModel );
+  manager->createAllActions();
+
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
+
+  manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
+
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
+                           i18nc( "@title:window", "New Account" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
+                           i18n( "Could not create account: %1" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
+                           i18n( "Account creation failed" ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
+                           i18nc( "@title:window", "Delete Account?" ) );
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+                           i18n( "Do you really want to delete the selected account?" ) );
 }
 
