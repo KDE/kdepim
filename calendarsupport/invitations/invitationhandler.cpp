@@ -295,13 +295,9 @@ InvitationHandler::SendStatus InvitationHandler::sendIncidenceModifiedMessage( K
   if ( d->weAreOrganizerOf( incidence ) ) {
 
     if ( d->weNeedToSendMailFor( incidence ) ) {
-      QString question;
-      //TODO_BERTJAN, if it's a to-do it's showing an empty question.
-      if ( incidence->type() == Incidence::TypeEvent ) {
-        question = i18n( "You changed the invitation \"%1\".\n"
-                         "Do you want to email the attendees an update message?",
-                         incidence->summary() );
-      }
+      QString question = i18n( "You changed the invitation \"%1\".\n"
+                               "Do you want to email the attendees an update message?",
+                               incidence->summary() );
 
       const int messageBoxReturnCode = d->askUser( question, KGuiItem( i18n( "Send Update" ) ) );
       return d->sentInvitation( messageBoxReturnCode, incidence, method );
