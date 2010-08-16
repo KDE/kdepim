@@ -33,7 +33,6 @@ void CollectionRestoreJob::start()
   KConfigGroup configGroup( &config, "General" );
   Collection collection;
   collection.setName( configGroup.readEntry( "name", QString() ) );
-  collection.setContentMimeTypes( configGroup.readEntry( "contentMimeTypes", QStringList() ) );
   collection.setParentCollection( m_parent );
 
   // restore collection

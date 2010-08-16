@@ -23,7 +23,6 @@ private slots:
   void itemFetchResult( KJob *job );
 
 private:
-  void dumpSubCollections();
   void dumpItems();
 
   Akonadi::Collection m_collection;
