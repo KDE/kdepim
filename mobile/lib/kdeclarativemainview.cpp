@@ -416,16 +416,7 @@ void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *coll
   Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
   standardActionManager->setItemSelectionModel( itemSelectionModel );
   standardActionManager->setCollectionSelectionModel( collectionSelectionModel );
-  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
-  standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CollectionProperties );
-  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
-  standardActionManager->createAction( Akonadi::StandardActionManager::ResourceProperties );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CopyItemToMenu );
-  standardActionManager->createAction( Akonadi::StandardActionManager::MoveItemToMenu );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CopyCollectionToMenu );
-  standardActionManager->createAction( Akonadi::StandardActionManager::MoveCollectionToMenu );
+  standardActionManager->createAllActions();
 }
 
 void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
