@@ -39,34 +39,58 @@ class ContactMetaData
     /**
      * Creates a contact meta data object.
      */
+#ifdef KDEPIM_STATIC_LIBS
+    ContactMetaData();
+#else
     ContactMetaData() {}
+#endif
 
     /**
      * Destroys the contact meta data object.
      */
+#ifdef KDEPIM_STATIC_LIBS
+    ~ContactMetaData();
+#else
     ~ContactMetaData() {}
+#endif
 
     /**
      * Loads the meta data for the given @p contact.
      */
+#ifdef KDEPIM_STATIC_LIBS
+    void load( const Akonadi::Item &contact );
+#else
     void load( const Akonadi::Item &contact ) {}
+#endif
 
     /**
      * Stores the meta data to the given @p contact.
      */
+#ifdef KDEPIM_STATIC_LIBS
+    void store( Akonadi::Item &contact );
+#else
     void store( Akonadi::Item &contact ) {}
+#endif
 
     /**
      * Sets the mode that is used for the display
      * name of that contact.
      */
+#ifdef KDEPIM_STATIC_LIBS
+    void setDisplayNameMode( int mode );
+#else
     void setDisplayNameMode( int mode ) {}
+#endif
 
     /**
      * Returns the mode that is used for the display
      * name of that contact.
      */
+#ifdef KDEPIM_STATIC_LIBS
+    int displayNameMode() const;
+#else
     int displayNameMode() const { return 0; }
+#endif
 
     /**
      * Sets the @p descriptions of the custom fields of that contact.
@@ -84,12 +108,20 @@ class ContactMetaData
      *       - time
      *       - datetime
      */
+#ifdef KDEPIM_STATIC_LIBS
+    void setCustomFieldDescriptions( const QVariantList &descriptions );
+#else
     void setCustomFieldDescriptions( const QVariantList &descriptions ) {}
+#endif
 
     /**
      * Returns the descriptions of the custom fields of the contact.
      */
+#ifdef KDEPIM_STATIC_LIBS
+    QVariantList customFieldDescriptions() const;
+#else
     QVariantList customFieldDescriptions() const { return QVariantList(); }
+#endif
 };
 
 }
