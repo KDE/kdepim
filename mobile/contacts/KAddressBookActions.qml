@@ -32,7 +32,7 @@ ActionMenuContainer {
   ActionList {
     category : "home"
     name : KDE.i18n( "Home" )
-    FakeAction { name : "sync_all_contacts" }
+    ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
   }
 

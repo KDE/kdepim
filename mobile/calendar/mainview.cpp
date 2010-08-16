@@ -172,6 +172,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete event" ) );
   manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move event\nto folder" ) );
   manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy event\nto folder" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall events" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

@@ -116,6 +116,7 @@ public slots:
   QString pathToItem( qint64 id );
 
   void launchAccountWizard();
+  void synchronizeAllItems();
 
   void saveFavorite();
   void loadFavorite( const QString &name );

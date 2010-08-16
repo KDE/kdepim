@@ -31,7 +31,7 @@ ActionMenuContainer {
   ActionList {
     category : "home"
     name : KDE.i18n( "Home" )
-    FakeAction { name : "sync_all_emails" }
+    ActionListItem { name : "synchronize_all_items" }
     FakeAction { name : "check_emails" }
     FakeAction { name : "send_queued_emails" }
     FakeAction { name : "select_multiple_folders" }

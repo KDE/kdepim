@@ -127,6 +127,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete contact" ) );
   mActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move contact\nto folder" ) );
   mActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy contact\nto folder" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall contacts" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )

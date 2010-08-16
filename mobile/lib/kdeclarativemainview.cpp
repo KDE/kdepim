@@ -162,6 +162,10 @@ void KDeclarativeMainView::delayedInit()
   KAction *action = KStandardAction::quit( qApp, SLOT( quit() ), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
 
+  action = new KAction( i18n( "Synchronize all" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( synchronizeAllItems() ) );
+  actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
+
   setupStandardActionManager( regularSelectionModel(), d->mItemSelectionModel );
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
@@ -282,6 +286,24 @@ void KDeclarativeMainView::launchAccountWizard()
   {
     // Handle error
     kDebug() << "error creating accountwizard";
+  }
+}
+
+void KDeclarativeMainView::synchronizeAllItems()
+{
+  if ( !d->mAgentInstanceFilterModel )
+    return;
+
+  for ( int row = 0; row < d->mAgentInstanceFilterModel->rowCount(); ++row ) {
+    const QModelIndex index = d->mAgentInstanceFilterModel->index( row, 0 );
+    if ( !index.isValid() )
+      continue;
+
+    Akonadi::AgentInstance instance = index.data( Akonadi::AgentInstanceModel::InstanceRole ).value<Akonadi::AgentInstance>();
+    if ( !instance.isValid() )
+      continue;
+
+    instance.synchronize();
   }
 }
 
