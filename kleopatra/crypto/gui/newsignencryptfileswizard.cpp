@@ -83,8 +83,6 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 
-Q_DECLARE_METATYPE( boost::shared_ptr<Kleo::ArchiveDefinition> )
-
 enum Page {
     OperationPageId,
     RecipientsPageId,
