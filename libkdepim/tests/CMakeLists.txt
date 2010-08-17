@@ -11,8 +11,15 @@ target_link_libraries(testaddresseelineedit  kdepim ${KDE4_KDEUI_LIBS})
 
 ########### next target ###############
 
-set(testdateedit_SRCS testdateedit.cpp )
+set(kcheckcomboboxtest_gui_SRCS kcheckcomboboxtest_gui.cpp )
 
+kde4_add_executable(kcheckcomboboxtest_gui TEST ${kcheckcomboboxtest_gui_SRCS})
+
+target_link_libraries(kcheckcomboboxtest_gui kdepim ${KDE4_KDEUI_LIBS})
+
+########### next target ###############
+
+set(testdateedit_SRCS testdateedit.cpp )
 
 kde4_add_executable(testdateedit TEST ${testdateedit_SRCS})
 

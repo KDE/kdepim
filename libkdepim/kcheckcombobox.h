@@ -36,7 +36,7 @@ namespace KPIM {
 /**
  * A combobox that shows its items in such a way that they can be checked in the
  * drop menu. It provides methods to set the default text when no items are selected
- * and the seperator that is used to show the items that are selected in the line
+ * and the separator that is used to show the items that are selected in the line
  * edit.
  */
 class KDEPIM_EXPORT KCheckComboBox : public KComboBox

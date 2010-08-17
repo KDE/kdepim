@@ -25,6 +25,7 @@
 
 #include "kcheckcombobox.h"
 
+#include <KLineEdit>
 #include <KDebug>
 
 #include <QtGui/QAbstractItemView>
@@ -72,24 +73,29 @@ void KCheckComboBox::Private::makeInsertedItemsCheckable(const QModelIndex &pare
 {
   Q_UNUSED( parent );
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>( q->model() );
-  Q_ASSERT( model );
-  for ( int r = start; r <= end; ++r ) {
-    QStandardItem *item = model->item( r, 0 );
-    item->setCheckable( true );
+  if ( model ) {
+    for ( int r = start; r <= end; ++r ) {
+      QStandardItem *item = model->item( r, 0 );
+      item->setCheckable( true );
+    }
+  } else {
+    kWarning() << "KCheckComboBox: model is not a QStandardItemModel but a" << q->model() << ". Cannot proceed.";
   }
 }
 
 QString KCheckComboBox::Private::squeeze( const QString &text )
 {
   QFontMetrics fm( q->fontMetrics() );
-  // NOTE: the 25 substracted is to take in account the space taken by the drop
-  //       image. It quite ugly and probably differs per style, but I don't know
-  //       better way to do this.
-  int labelWidth = q->lineEdit()->width() - 25;
-
-  int lineWidth = fm.width( text );
-  if ( lineWidth > labelWidth )
-    return fm.elidedText( text, Qt::ElideMiddle, labelWidth );
+  // The 4 pixels is 2 * horizontalMargin from QLineEdit.
+  // The rest is code from QLineEdit::paintEvent, where it determines whether to scroll the text
+  // (on my machine minLB=2 and minRB=2, so this removes 8 pixels in total)
+  const int minLB = qMax(0, -fm.minLeftBearing());
+  const int minRB = qMax(0, -fm.minRightBearing());
+  const int lineEditWidth = q->lineEdit()->width() - 4 - minLB - minRB;
+  const int textWidth = fm.width( text );
+  if ( textWidth > lineEditWidth ) {
+    return fm.elidedText( text, Qt::ElideMiddle, lineEditWidth );
+  }
 
   return text;
 }
@@ -148,7 +154,9 @@ KCheckComboBox::KCheckComboBox( QWidget *parent )
   // read-only contents
   setEditable( true );
   lineEdit()->setAlignment( Qt::AlignLeft );
-  lineEdit()->setReadOnly( true );
+  // The cast is a workaround for the fact that QLineEdit::setReadOnly isn't virtual.
+  // KLineEdit copes with this case since kdelibs-4.6 though.
+  qobject_cast<KLineEdit *>(lineEdit())->setReadOnly( true );
   setInsertPolicy( KComboBox::NoInsert );
 
   view()->installEventFilter( this );
@@ -182,6 +190,7 @@ void KCheckComboBox::setItemCheckState( int index, Qt::CheckState state )
   setItemData( index, state, Qt::CheckStateRole );
 }
 
+// TODO (BIC) pass the role as parameter to this method
 QStringList KCheckComboBox::checkedItems() const
 {
   QStringList items;
