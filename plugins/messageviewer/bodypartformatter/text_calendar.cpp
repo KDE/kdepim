@@ -30,64 +30,49 @@
   you do not wish to do so, delete this exception statement from
   your version.
 */
-
 #include "attendeeselector.h"
+#include "calendarinterface.h"
 #include "delegateselector.h"
 
-#include <messageviewer/interfaces/bodypartformatter.h>
-#include <messageviewer/interfaces/bodypart.h>
-#include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/webkitparthtmlwriter.h>
+#include <akonadi/kcal/groupware.h>
+
+#include <incidenceeditors/groupwareintegration.h>
+
 #include <messageviewer/globalsettings.h>
 #include <messageviewer/viewer.h>
+#include <messageviewer/interfaces/bodypart.h>
+#include <messageviewer/interfaces/bodypartformatter.h>
+#include <messageviewer/interfaces/bodyparturlhandler.h>
+#include <messageviewer/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
 #include <KCalCore/ICalFormat>
-#include <KCalCore/Attendee>
-#include <KCalCore/Incidence>
+using namespace KCalCore;
+
 #include <KCalUtils/IncidenceFormatter>
 
-#include <akonadi/kcal/groupware.h>
-#include <incidenceeditors/groupwareintegration.h>
-#include <kmail/kmcommands.h>
+#include <KMime/Message>
 
-#include <kpimutils/email.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 
-#include <kmime/kmime_content.h>
-#include <kmime/kmime_message.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transportmanager.h>
+#include <KPIMUtils/Email>
 
-#include <KDateTime>
-#include <kglobal.h>
-#include <kfiledialog.h>
-#include <kinputdialog.h>
-#include <klocale.h>
-#include <kstringhandler.h>
-#include <kglobalsettings.h>
-#include <kiconloader.h>
-#include <kdebug.h>
-#include <kdbusservicestarter.h>
-#include <kmessagebox.h>
-#include <kstandarddirs.h>
-#include <ksystemtimezone.h>
-#include <ktemporaryfile.h>
-#include <kmimetype.h>
-#include <kmenu.h>
-#include <krun.h>
-#include <ktoolinvocation.h>
-#include <kio/netaccess.h>
+#include <Mailtransport/MessageQueueJob>
+#include <Mailtransport/TransportManager>
 
-#include <QUrl>
-#include <QDir>
-#include <QTextStream>
-
-#include <kdemacros.h>
-#include "calendarinterface.h"
-
-using namespace KCalCore;
+#include <KDBusServiceStarter>
+#include <KDebug>
+#include <KFileDialog>
+#include <KInputDialog>
+#include <KMenu>
+#include <KMessageBox>
+#include <KMimeType>
+#include <KRun>
+#include <KSystemTimeZone>
+#include <KTemporaryFile>
+#include <KToolInvocation>
+#include <KIO/NetAccess>
 
 namespace {
 
