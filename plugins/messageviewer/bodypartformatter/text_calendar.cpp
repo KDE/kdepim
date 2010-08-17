@@ -821,7 +821,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         } else if ( path == "decline_counter" ) {
           queryStr = i18n( "Do you still want to decline the counter proposal?" );
         } else if ( path == "reply" ) {
-          queryStr = i18n( "Do you still want to record this reponse in your calendar?" );
+          queryStr = i18n( "Do you still want to record this response in your calendar?" );
         } else if ( path == "delegate" ) {
           if ( type == Incidence::TypeTodo ) {
             queryStr = i18n( "Do you still want to delegate this task?" );
