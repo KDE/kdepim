@@ -110,7 +110,6 @@
 #include "headerstrategy.h"
 #include "htmlstatusbar.h"
 #include "webkitparthtmlwriter.h"
-#include <kparts/browserextension.h>
 #include "mailsourceviewer.h"
 #include "mimetreemodel.h"
 #include "nodehelper.h"

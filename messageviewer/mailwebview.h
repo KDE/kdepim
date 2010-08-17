@@ -23,6 +23,7 @@
 #ifdef MESSAGEVIEWER_NO_WEBKIT
 # include <QTextBrowser>
 #else
+#include <qglobal.h> // make sure we have Q_OS_WINCE defined
 # ifdef Q_OS_WINCE
 #  include <QWebView>
 # else
