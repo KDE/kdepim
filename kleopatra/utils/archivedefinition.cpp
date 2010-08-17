@@ -35,6 +35,7 @@
 #include "archivedefinition.h"
 
 #include <utils/input.h>
+#include <utils/output.h>
 #include <utils/path-helper.h>
 #include <utils/kleo_assert.h>
 
@@ -340,7 +341,12 @@ shared_ptr<Input> ArchiveDefinition::createInputFromPackCommand( GpgME::Protocol
 }
 
 shared_ptr<Output> ArchiveDefinition::createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file ) const {
-    notImplemented();
+    checkProtocol( p );
+    const QFileInfo fi( file );
+    kleo_assert( fi.isAbsolute() );
+    return Output::createFromProcessStdIn( doGetUnpackCommand( p ),
+                                           doGetUnpackArguments( p, file ),
+                                           fi.dir() );
 }
 
 // static
