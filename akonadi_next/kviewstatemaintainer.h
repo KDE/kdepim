@@ -31,6 +31,9 @@
 #include <KSharedConfig>
 #include <KSharedConfigPtr>
 
+namespace Future
+{
+
 class KViewStateMaintainerBasePrivate;
 
 class AKONADI_NEXT_EXPORT KViewStateMaintainerBase : public QObject
@@ -103,5 +106,7 @@ public:
   }
 
 };
+
+}
 
 #endif

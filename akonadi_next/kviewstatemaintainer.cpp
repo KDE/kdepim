@@ -21,6 +21,9 @@
 
 #include "kviewstatemaintainer.h"
 
+namespace Future
+{
+
 class KViewStateMaintainerBasePrivate
 {
   KViewStateMaintainerBasePrivate(KSharedConfigPtr configPtr, const QString &name, KViewStateMaintainerBase *qq)
@@ -41,6 +44,10 @@ class KViewStateMaintainerBasePrivate
   const KSharedConfigPtr m_configPtr;
   const QString m_name;
 };
+
+}
+
+using namespace Future;
 
 void KViewStateMaintainerBasePrivate::_k_modelAboutToBeReset()
 {

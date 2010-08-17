@@ -38,8 +38,9 @@ class KXmlGuiWindow;
 
 class AkonadiBrowserModel;
 
+namespace Future {
 template <typename T> class KViewStateMaintainer;
-
+}
 
 namespace Akonadi {
 class EntityTreeView;
@@ -83,7 +84,7 @@ class BrowserWidget: public QWidget
     QStandardItemModel *mNepomukModel;
     Akonadi::StandardActionManager *mStdActionManager;
     Akonadi::Monitor *mMonitor;
-    KViewStateMaintainer<Akonadi::ETMViewStateSaver> *m_stateMaintainer;
+    Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver> *m_stateMaintainer;
 };
 
 #endif
