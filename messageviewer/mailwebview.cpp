@@ -23,26 +23,26 @@
 #include <QContextMenuEvent>
 #include <QWebFrame>
 
+#include <limits>
+
+#ifdef Q_OS_WINCE
+typedef QWebView SuperClass;
+#else
+typedef KWebView SuperClass;
+#endif
+
 using namespace MessageViewer;
 
 MailWebView::MailWebView( QWidget *parent )
-#ifdef Q_OS_WINCE
-  : QWebView( parent )
-#else
-  : KWebView( parent )
-#endif
+  : SuperClass( parent )
 {
 }
 
+MailWebView::~MailWebView() {}
+
 bool MailWebView::event( QEvent *event )
 {
-  if ( event->type() != QEvent::ContextMenu )
-#ifdef Q_OS_WINCE
-    return QWebView::event( event );
-#else
-    return KWebView::event( event );
-#endif
-  else {
+  if ( event->type() == QEvent::ContextMenu ) {
     // Don't call KWebView::event() here, it will do silly things like selecting the text
     // under the mouse cursor, which we don't want.
 
@@ -54,4 +54,47 @@ bool MailWebView::event( QEvent *event )
     event->accept();
     return true;
   }
+  return SuperClass::event( event );
 }
+
+void MailWebView::scrollDown( int pixels )
+{
+  QPoint point = page()->mainFrame()->scrollPosition();
+  point.ry() += pixels;
+  page()->mainFrame()->setScrollPosition( point );
+}
+
+void MailWebView::scrollUp( int pixels )
+{
+  scrollDown( -pixels );
+}
+
+bool MailWebView::isScrolledToBottom() const
+{
+  const int pos = page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  const int max = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+  return pos == max;
+}
+
+void MailWebView::scrollPageDown( int percent )
+{
+  const qint64 height =  page()->viewportSize().height();
+  const qint64 current = page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  // do arithmetic in higher precision, and check for overflow:
+  const qint64 newPosition = current + height * percent / 100;
+  if ( newPosition > std::numeric_limits<int>::max() )
+      kWarning() << "new position" << newPosition << "exceeds range of 'int'!";
+  page()->mainFrame()->setScrollBarValue( Qt::Vertical, newPosition );
+}
+
+void MailWebView::scrollPageUp( int percent )
+{
+  scrollPageDown( -percent );
+}
+
+QString MailWebView::selectedText() const
+{
+    return SuperClass::selectedText();
+}
+
+#include "moc_mailwebview.cpp"

@@ -17,27 +17,46 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef Q_OS_WINCE
-#include <QWebView>
+#ifndef MESSAGEVIEWER_MAILWEBVIEW_H__
+#define MESSAGEVIEWER_MAILWEBVIEW_H__
+
+#ifdef MESSAGEVIEWER_NO_WEBKIT
+# include <QTextBrowser>
 #else
-#include <KWebView>
+# ifdef Q_OS_WINCE
+#  include <QWebView>
+# else
+#  include <KWebView>
+# endif
 #endif
 
-class QContextMenuEventF;
 
 namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
-#ifdef Q_OS_WINCE
-class MailWebView : public QWebView
+#ifdef MESSAGEVIEWER_NO_WEBKIT
+class MailWebView : public QTextBrowser
 #else
+# ifdef Q_OS_WINCE
+class MailWebView : public QWebView
+# else
 class MailWebView : public KWebView
+# endif
 #endif
 {
   Q_OBJECT
   public:
 
-    MailWebView( QWidget *parent );
+    explicit MailWebView( QWidget *parent=0 );
+    ~MailWebView();
+
+    void scrollUp( int pixels );
+    void scrollDown( int pixels );
+    bool isScrolledToBottom() const;
+    void scrollPageDown( int percent );
+    void scrollPageUp( int percent );
+
+    QString selectedText() const;
 
   signals:
 
@@ -55,3 +74,5 @@ class MailWebView : public KWebView
 };
 
 }
+
+#endif /* MESSAGEVIEWER_MAILWEBVIEW_H__ */
