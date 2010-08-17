@@ -46,7 +46,6 @@ class KCheckComboBox::Private
   public:
     Private( KCheckComboBox *qq )
       : q( qq )
-      , mLineEditIsReceiver( false )
       , mSeparator( QLatin1String( "," ) )
       , mSqueezeText( false )
       , mIgnoreHide( false )
@@ -56,11 +55,9 @@ class KCheckComboBox::Private
     QString squeeze( const QString &text );
     void updateCheckedItems( const QModelIndex &topLeft = QModelIndex(),
                              const QModelIndex &bottomRight = QModelIndex() );
-    void toggleCheckState( int pos );
-    void toggleCheckState( const QModelIndex &index );
+    void toggleCheckState();
 
   public:
-    bool mLineEditIsReceiver;
     QString mSeparator;
     QString mDefaultText;
     bool mSqueezeText;
@@ -122,21 +119,17 @@ void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
   emit q->checkedItemsChanged( items );
 }
 
-void KCheckComboBox::Private::toggleCheckState( const QModelIndex &index )
+void KCheckComboBox::Private::toggleCheckState()
 {
-  QVariant value = index.data( Qt::CheckStateRole );
-  if ( value.isValid() ) {
-    Qt::CheckState state = static_cast<Qt::CheckState>( value.toInt() );
-    q->model()->setData( index, state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked,
-                         Qt::CheckStateRole );
+  if (q->view()->isVisible()) {
+    const QModelIndex index = q->view()->currentIndex();
+    QVariant value = index.data( Qt::CheckStateRole );
+    if ( value.isValid() ) {
+      Qt::CheckState state = static_cast<Qt::CheckState>( value.toInt() );
+      q->model()->setData( index, state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked,
+                           Qt::CheckStateRole );
+    }
   }
-}
-
-void KCheckComboBox::Private::toggleCheckState( int pos )
-{
-  Q_UNUSED( pos );
-  if ( !mLineEditIsReceiver )
-    toggleCheckState( q->view()->currentIndex() );
 }
 
 /// Class KCheckComboBox
@@ -145,7 +138,7 @@ KCheckComboBox::KCheckComboBox( QWidget *parent )
   : KComboBox( parent )
   , d( new KCheckComboBox::Private( this ) )
 {
-  connect( this, SIGNAL(activated(int)), this, SLOT(toggleCheckState(int)) );
+  connect( this, SIGNAL(activated(int)), this, SLOT(toggleCheckState()) );
   connect( model(), SIGNAL(rowsInserted (const QModelIndex &, int, int)),
            SLOT(makeInsertedItemsCheckable(const QModelIndex &, int, int)) );
   connect( model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
@@ -325,11 +318,11 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
     {
       switch ( static_cast<QKeyEvent *>( event )->key() ) {
         case Qt::Key_Space:
-          if ( event->type() == QEvent::KeyPress ) {
-            d->toggleCheckState( view()->currentIndex() );
-            return true;
+          if ( event->type() == QEvent::KeyPress && view()->isVisible() ) {
+            d->toggleCheckState();
           }
-          break;
+          // Always eat the event: don't let QItemDelegate toggle the current index when the view is hidden.
+          return true;
         case Qt::Key_Return:
         case Qt::Key_Enter:
         case Qt::Key_Escape:
@@ -345,14 +338,10 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
       d->mIgnoreHide = true;
-
       if ( receiver == lineEdit() ) {
-        d->mLineEditIsReceiver = true;
         showPopup();
         return true;
-      } else
-        d->mLineEditIsReceiver = false;
-
+      }
       break;
     default:
       break;
