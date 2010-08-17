@@ -338,12 +338,14 @@ createArchiveSignEncryptTaskForFiles( const QStringList & files, const QString &
 
     kleo_assert( ad );
 
+    const Protocol proto = pgp ? OpenPGP : CMS ;
+
     task->setInputFileNames( files );
-    task->setInput( ad->createInput( files ) );
+    task->setInput( ad->createInputFromPackCommand( proto, files ) );
 
     const char * const ext = extension( pgp, sign, encrypt, ascii, false );
     kleo_assert( ext );
-    kleo_assert( !ad->extensions().empty() );
+    kleo_assert( !ad->extensions( proto ).empty() );
 
     task->setOutputFileName( outputFileBaseName + '.' + ext );
 
@@ -373,7 +375,7 @@ createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt
 }
 
 static std::vector< shared_ptr<SignEncryptFilesTask> >
-createArchiveSignEncryptTasksForFiles( const QStringList & files, const QString & outputFileBaseName, const shared_ptr<ArchiveDefinition> & ad, bool sign, bool encrypt, bool ascii, bool removeUnencrypted, const std::vector<Key> & pgpRecipients, const std::vector<Key> & pgpSigners, const std::vector<Key> & cmsRecipients, const std::vector<Key> & cmsSigners ) {
+createArchiveSignEncryptTasksForFiles( const QStringList & files, const QString & pgpOutputFileBaseName, const QString & cmsOutputFileBaseName, const shared_ptr<ArchiveDefinition> & ad, bool sign, bool encrypt, bool ascii, bool removeUnencrypted, const std::vector<Key> & pgpRecipients, const std::vector<Key> & pgpSigners, const std::vector<Key> & cmsRecipients, const std::vector<Key> & cmsSigners ) {
     std::vector< shared_ptr<SignEncryptFilesTask> > result;
 
     const bool shallPgpSign = sign && !pgpSigners.empty();
@@ -387,9 +389,9 @@ createArchiveSignEncryptTasksForFiles( const QStringList & files, const QString 
     result.reserve( pgp + cms );
 
     if ( pgp )
-        result.push_back( createArchiveSignEncryptTaskForFiles( files, outputFileBaseName, ad, true,  sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners ) );
+        result.push_back( createArchiveSignEncryptTaskForFiles( files, pgpOutputFileBaseName, ad, true,  sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners ) );
     if ( cms )
-        result.push_back( createArchiveSignEncryptTaskForFiles( files, outputFileBaseName, ad, false, sign, encrypt, ascii, removeUnencrypted, cmsRecipients, cmsSigners ) );
+        result.push_back( createArchiveSignEncryptTaskForFiles( files, cmsOutputFileBaseName, ad, false, sign, encrypt, ascii, removeUnencrypted, cmsRecipients, cmsSigners ) );
 
     return result;
 }
@@ -437,7 +439,8 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
 
         if ( archive )
             tasks = createArchiveSignEncryptTasksForFiles( files,
-                                                           wizard->archiveFileName(),
+                                                           wizard->archiveFileName( OpenPGP ),
+                                                           wizard->archiveFileName( CMS ),
                                                            wizard->selectedArchiveDefinition(),
                                                            sign, encrypt, ascii, removeUnencrypted,
                                                            pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );

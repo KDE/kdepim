@@ -36,6 +36,8 @@
 #include <QString>
 #include <QStringList>
 
+#include <gpgme++/global.h> // GpgME::Protocol
+
 #include <vector>
 
 namespace boost {
@@ -44,13 +46,14 @@ namespace boost {
 
 namespace Kleo {
     class Input;
+    class Output;
 }
 
 namespace Kleo {
 
     class ArchiveDefinition {
     protected:
-        ArchiveDefinition( const QString & id, const QString & label, const QStringList & extensions );
+        ArchiveDefinition( const QString & id, const QString & label );
     public:
         virtual ~ArchiveDefinition();
 
@@ -62,28 +65,41 @@ namespace Kleo {
             NumArgumentPassingMethods
         };
 
-        ArgumentPassingMethod argumentPassingMethod() const { return m_method; }
         QString id() const { return m_id; }
         QString label() const { return m_label; }
 
-        const QStringList & extensions() const { return m_extensions; }
+        const QStringList & extensions( GpgME::Protocol p ) const { checkProtocol(p); return m_extensions[p]; }
 
-        boost::shared_ptr<Input> createInput( const QStringList & files ) const;
+        boost::shared_ptr<Input> createInputFromPackCommand( GpgME::Protocol p, const QStringList & files ) const;
+        ArgumentPassingMethod packCommandArgumentPassingMethod( GpgME::Protocol p ) const { checkProtocol(p); return m_packCommandMethod[p]; }
+
+        boost::shared_ptr<Output> createOutputFromUnpackCommand( GpgME::Protocol p, const QStringList & files ) const;
+        ArgumentPassingMethod unpackCommandArgumentPassingMethod( GpgME::Protocol p ) const { checkProtocol(p); return m_unpackCommandMethod[p]; }
+
+        static QString installPath();
+        static void setInstallPath( const QString & ip );
 
         static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions();
         static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions( QStringList & errors );
 
     protected:
-        void setArgumentPassingMethod( ArgumentPassingMethod method ) { m_method = method; }
+        void setPackCommandArgumentPassingMethod( GpgME::Protocol p, ArgumentPassingMethod method ) { checkProtocol(p); m_packCommandMethod[p] = method; }
+        void setUnpackCommandArgumentPassingMethod( GpgME::Protocol p, ArgumentPassingMethod method ) { checkProtocol(p); m_unpackCommandMethod[p] = method; }
+        void setExtensions( GpgME::Protocol p, const QStringList & extensions ) { checkProtocol(p); m_extensions[p] = extensions; }
+
+        void checkProtocol( GpgME::Protocol p ) const;
 
     private:
-        virtual QString doGetCommand() const = 0;
-        virtual QStringList doGetArguments( const QStringList & files ) const = 0;
+        virtual QString doGetPackCommand( GpgME::Protocol p ) const = 0;
+        virtual QString doGetUnpackCommand( GpgME::Protocol p ) const = 0;
+        virtual QStringList doGetPackArguments( GpgME::Protocol p, const QStringList & files ) const = 0;
+        virtual QStringList doGetUnpackArguments( GpgME::Protocol p, const QStringList & files ) const = 0;
     private:
         const QString m_id;
         const QString m_label;
-        const QStringList m_extensions;
-        ArgumentPassingMethod m_method;
+        /*const*/ QStringList m_extensions[2];
+        ArgumentPassingMethod m_packCommandMethod[2];
+        ArgumentPassingMethod m_unpackCommandMethod[2];
     };
         
 }
