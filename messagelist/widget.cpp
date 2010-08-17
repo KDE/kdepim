@@ -644,3 +644,11 @@ MessageList::Core::MessageItemSetReference Widget::currentThreadAsPersistentSet(
   }
   return view()->createPersistentSet( lstMi );
 }
+
+Akonadi::Collection Widget::currentCollection() const
+{
+  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
+  if ( collections.size()!=1 )
+    return Akonadi::Collection(); // no folder here or too many (in case we can't decide where the drop will end)
+  return collections.first();
+}

@@ -45,7 +45,7 @@ class Pane::Private
 {
 public:
   Private( Pane *owner )
-    : q( owner ), mXmlGuiClient( 0 ), mActionMenu( 0 ) { }
+    : q( owner ), mXmlGuiClient( 0 ), mActionMenu( 0 ), mPreferEmptyTab( false ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
@@ -70,7 +70,7 @@ public:
 
   QToolButton *mNewTabButton;
   QToolButton *mCloseTabButton;
-
+  bool mPreferEmptyTab;
 };
 
 } // namespace MessageList
@@ -311,6 +311,12 @@ void Pane::focusQuickSearch()
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
   Widget *w = static_cast<Widget*>( q->currentWidget() );
+
+  if (  mPreferEmptyTab ) {
+    q->createNewTab();
+    w = static_cast<Widget*>( q->currentWidget() );
+  }
+
   QItemSelectionModel *s = mWidgetSelectionHash[w];
 
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
@@ -428,7 +434,6 @@ MessageList::StorageModel *Pane::createStorageModel( QAbstractItemModel *model, 
 void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-
   if ( w ) {
     QItemSelectionModel *s = d->mWidgetSelectionHash[w];
     MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
@@ -683,6 +688,9 @@ void Pane::resetModelStorage()
   }
 }
 
-
+void Pane::setPreferEmptyTab( bool emptyTab )
+{
+  d->mPreferEmptyTab = emptyTab;
+}
 
 #include "pane.moc"

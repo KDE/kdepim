@@ -356,6 +356,9 @@ public:
 
   void resetModelStorage();
 
+  void setPreferEmptyTab( bool emptyTab );
+
+
 public slots:
   /**
    * Selects all the items in the current folder.
