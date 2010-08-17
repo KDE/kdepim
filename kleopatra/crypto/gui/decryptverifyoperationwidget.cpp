@@ -34,6 +34,8 @@
 
 #include "decryptverifyoperationwidget.h"
 
+#include <utils/archivedefinition.h>
+
 #include "libkleo/ui/filenamerequester.h"
 
 #include <KLocale>
@@ -44,9 +46,13 @@
 #include <QCheckBox>
 #include <QToolButton>
 #include <QStackedLayout>
+#include <QComboBox>
+
+#include <boost/shared_ptr.hpp>
 
 using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
+using namespace boost;
 
 class DecryptVerifyOperationWidget::Private {
     friend class ::Kleo::Crypto::Gui::DecryptVerifyOperationWidget;
@@ -55,6 +61,12 @@ public:
     explicit Private( DecryptVerifyOperationWidget * qq );
     ~Private();
 
+    void enableDisableWidgets() {
+        const bool detached = ui.verifyDetachedCB.isChecked();
+        const bool archive  = ui.archiveCB.isChecked();
+        ui.archiveCB.setEnabled( !detached );
+        ui.archivesCB.setEnabled( archive && !detached );
+    }
 private:
     struct UI {
         QGridLayout   glay;
@@ -69,6 +81,9 @@ private:
         QStackedLayout signedDataStack;
         QLabel            signedDataFileNameLB;
         FileNameRequester signedDataFileNameRQ;
+        //------
+        QCheckBox      archiveCB;
+        QComboBox      archivesCB;
 
         explicit UI( DecryptVerifyOperationWidget * q );
     } ui;
@@ -84,7 +99,9 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
       signedDataLB( i18n("&Signed data:"), q ),
       signedDataStack(),
       signedDataFileNameLB( q ),
-      signedDataFileNameRQ( q )
+      signedDataFileNameRQ( q ),
+      archiveCB( i18n("&Input file is an archive; unpack with:"), q ),
+      archivesCB( q )
 {
     KDAB_SET_OBJECT_NAME( glay );
     KDAB_SET_OBJECT_NAME( inputLB );
@@ -96,6 +113,8 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
     KDAB_SET_OBJECT_NAME( signedDataStack );
     KDAB_SET_OBJECT_NAME( signedDataFileNameLB );
     KDAB_SET_OBJECT_NAME( signedDataFileNameRQ );
+    KDAB_SET_OBJECT_NAME( archiveCB );
+    KDAB_SET_OBJECT_NAME( archivesCB );
 
     inputStack.setMargin( 0 );
     signedDataStack.setMargin( 0 );
@@ -103,6 +122,7 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
     signedDataLB.setEnabled( false );
     signedDataFileNameLB.setEnabled( false );
     signedDataFileNameRQ.setEnabled( false );
+    archivesCB.setEnabled( false );
 
     glay.setMargin( 0 );
     glay.addWidget( &inputLB, 0, 0 );
@@ -117,12 +137,19 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
     signedDataStack.addWidget( &signedDataFileNameLB );
     signedDataStack.addWidget( &signedDataFileNameRQ );
 
+    glay.addWidget( &archiveCB,  3, 0 );
+    glay.addWidget( &archivesCB, 3, 1 );
+
     connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
              &signedDataLB, SLOT(setEnabled(bool)) );
     connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
              &signedDataFileNameLB, SLOT(setEnabled(bool)) );
     connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
              &signedDataFileNameRQ, SLOT(setEnabled(bool)) );
+    connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
+             q, SLOT(enableDisableWidgets()) );
+    connect( &archiveCB, SIGNAL(toggled(bool)),
+             q, SLOT(enableDisableWidgets()) );
 }
 
 
@@ -142,6 +169,12 @@ DecryptVerifyOperationWidget::DecryptVerifyOperationWidget( QWidget * p )
 }
 
 DecryptVerifyOperationWidget::~DecryptVerifyOperationWidget() {}
+
+void DecryptVerifyOperationWidget::setArchiveDefinitions( const std::vector< shared_ptr<ArchiveDefinition> > & archiveDefinitions ) {
+    d->ui.archivesCB.clear();
+    Q_FOREACH( const shared_ptr<ArchiveDefinition> & ad, archiveDefinitions )
+        d->ui.archivesCB.addItem( ad->label(), qVariantFromValue( ad ) );
+}
 
 static const int Mutable = 1;
 static const int Const   = 0;
@@ -198,6 +231,13 @@ QString DecryptVerifyOperationWidget::signedDataFileName() const {
         return d->ui.signedDataFileNameLB.text();
     else
         return d->ui.signedDataFileNameRQ.fileName();
+}
+
+shared_ptr<ArchiveDefinition> DecryptVerifyOperationWidget::selectedArchiveDefinition() const {
+    if ( mode() == DecryptVerifyOpaque && d->ui.archiveCB.isChecked() )
+        return d->ui.archivesCB.itemData( d->ui.archivesCB.currentIndex() ).value< shared_ptr<ArchiveDefinition> >();
+    else
+        return shared_ptr<ArchiveDefinition>();
 }
 
 #include "moc_decryptverifyoperationwidget.cpp"
