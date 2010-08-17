@@ -48,6 +48,7 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
 
 AgendaViewItem::~AgendaViewItem()
 {
+  delete m_view;
 }
 
 QDate AgendaViewItem::startDate() const
