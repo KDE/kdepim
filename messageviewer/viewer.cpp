@@ -71,6 +71,17 @@ Viewer::~Viewer()
   //the d_ptr is automatically deleted
 }
 
+void Viewer::setXmlGuiClient( KXMLGUIClient *guiClient )
+{
+  Q_D(Viewer);
+  d->setXmlGuiClient( guiClient );
+}
+
+void Viewer::loadActionLists()
+{
+  Q_D(Viewer);
+  d->loadActionLists();
+}
 
 void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 {

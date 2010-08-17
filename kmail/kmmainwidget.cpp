@@ -63,8 +63,6 @@
 // Other PIM includes
 #include "messageviewer/autoqpointer.h"
 #include "messageviewer/globalsettings.h"
-#include "messageviewer/viewer.h"
-#include "messageviewer/viewer_p.h"
 #include "messageviewer/attachmentstrategy.h"
 #include "messageviewer/headertheme.h"
 #include "messageviewer/kcursorsaver.h"
@@ -225,13 +223,6 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
   mCustomTemplateMenus = 0;
   mFolderTreeWidget = 0;
 
-  m_Viewer = new MessageViewer::Viewer( 0 );
-
-  // FIXME Please: Comment out these 2 lines and provide some feedback 
-  // on why there is a linker problems with the ViewerPrivate if the headerFile and namespace were added.
-  
-  //mViewerPrivate = new MessageViewer::ViewerPrivate( m_Viewer, this, mActionCollection );
-  //mViewerPrivate->setXmlGuiClient( mGUIClient );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
@@ -329,8 +320,6 @@ void KMMainWidget::destruct()
   mSystemTray = 0;
   mCustomTemplateMenus = 0;
   mDestructed = true;
-  delete m_Viewer;
-  // delete mViewerPrivate;
 }
 
 
@@ -973,6 +962,10 @@ void KMMainWidget::createWidgets()
              this, SLOT( slotMessagePopup(const Akonadi::Item&,const KUrl&,const QPoint&) ) );
   }
 
+  // Send the mGUIClient to the MessageViewer Viewer
+  if ( mMsgView )
+    mMsgView->viewer()->setXmlGuiClient( mGUIClient );
+  
   //
   // Create the folder tree
   // the "folder tree" consists of a quicksearch input field and the tree itself
@@ -3937,6 +3930,7 @@ void KMMainWidget::slotShowStartupFolder()
   mFolderShortcutActionManager->createActions();
   mTagActionManager->createActions();
   messageActions()->setupForwardingActionsList( mGUIClient );
+  mMsgView->viewer()->loadActionLists();
 
   QString newFeaturesMD5 = KMReaderWin::newFeaturesMD5();
   if ( kmkernel->firstStart() ||

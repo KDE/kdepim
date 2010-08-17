@@ -173,7 +173,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mScrollDownMoreAction( 0 ),
     mHeaderOnlyAttachmentsAction( 0 ),
     mSelectEncodingAction( 0 ),
-    mThemeActionMenu( 0 ),
+    mGUIClient( 0 ),
     mToggleFixFontAction( 0 ),
     mToggleDisplayModeAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
@@ -203,8 +203,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
   mSplitterSizes << 180 << 100;
   mPrinting = false;
   mThemeName = GlobalSettings::self()->headerTheme();
-
-  mGUIClient = guiClient();
 
   createWidgets();
   createActions();
@@ -1512,11 +1510,6 @@ void ViewerPrivate::createActions()
   KToggleAction *raction = 0;
   QActionGroup *group = new QActionGroup( this );
 
-  mThemeActionMenu  = new KActionMenu( i18n("&Themes"), this );
-  ac->addAction( "theme_actions" , mThemeActionMenu  );
-
-  loadThemesMenu();
-
   mDownloadThemesAction = new KAction( i18n( "Download new themes" ), this );
   mDownloadThemesAction->setHelpText( i18n( "Allows you to download new themes from kde artists site." ) );
   ac->addAction( "download_themes", mDownloadThemesAction );
@@ -1668,10 +1661,13 @@ void ViewerPrivate::createActions()
   mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
 }
 
-void ViewerPrivate::loadThemesMenu()
+void ViewerPrivate::loadActionLists()
 {
-  if ( !mThemeActionMenu->menu()->isEmpty() )
-      mThemeActionMenu->menu()->clear();
+  QList<QAction*> themesActionList;
+
+  if ( !themesActionList.isEmpty() )
+      mGUIClient->unplugActionList( "themes_action_list" );
+  themesActionList.clear();
   
   QStringList themesLocations( KGlobal::dirs()->findDirs("data", "messageviewer/themes/") );
   QDir systemThemes( themesLocations.at(1) );
@@ -1695,9 +1691,6 @@ void ViewerPrivate::loadThemesMenu()
   // kDebug() << "Themes dirs: " << themeDirs;
 
   QString absolutePath;
-  QList<QAction*> themesAction;
-
-  mGUIClient->unplugActionList( "themes_action_list" );
 
   foreach(const QString &dirName, themeDirs) {
     if ( systemThemes.exists( dirName ) ) {
@@ -1722,14 +1715,14 @@ void ViewerPrivate::loadThemesMenu()
           SLOT( slotSetTheme(QAction*) ));
 
     ac->addAction( themeDesktop->readName() , themeAction );
-
-    mThemeActionMenu->menu()->addAction( themeAction );
-    themesAction.append( themeAction );
+    themesActionList.append( themeAction );
 
     delete themeDesktop;
   }
 
-  mGUIClient->plugActionList( "themes_action_list" , themesAction );
+  if ( !themesActionList.isEmpty() )
+    mGUIClient->plugActionList( "themes_action_list" , themesActionList );
+  
 }
 
 void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
@@ -2241,7 +2234,7 @@ void ViewerPrivate::slotDownloadThemes()
 void ViewerPrivate::slotNewStuffFinished()
 {
   if ( !m_newStuffDialog || m_newStuffDialog.data()->changedEntries().size() > 0 ) {
-      loadThemesMenu();
+      loadActionLists();
   }
 }
 

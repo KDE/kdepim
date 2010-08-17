@@ -57,6 +57,7 @@ class KToggleAction;
 class KToggleAction;
 class KUrl;
 class KConfigSkeleton;
+class KXMLGUIClient;
 
 namespace Akonadi {
   class ItemFetchJob;
@@ -220,6 +221,12 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   /** Enforce message decryption. */
   void setDecryptMessageOverwrite( bool overwrite = true );
+
+  /** Set the guiClient in the ViewerPrivate */
+  void setXmlGuiClient( KXMLGUIClient *guiClient );
+
+  /** Load the themes menu actions list  */
+  void loadActionLists();
 
   /**
    * Get an instance for the configuration widget. The caller has the ownership and must delete the widget. See also configObject();

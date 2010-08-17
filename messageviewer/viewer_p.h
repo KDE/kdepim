@@ -315,6 +315,9 @@ public:
 
   void setHeaderTheme( HeaderTheme * theme );
 
+   /** Set the guiClient coming from the Viewer */
+  void setXmlGuiClient( KXMLGUIClient *guiClient );
+
   /** Get/set the message attachment strategy. */
   const AttachmentStrategy * attachmentStrategy() const {
     return mAttachmentStrategy;
@@ -369,10 +372,7 @@ public:
   void saveSplitterSizes() const;
   void createWidgets();
   void createActions();
-  void loadThemesMenu();
-  
-  KXMLGUIClient* guiClient() const { return mGUIClient; }
-  void setXmlGuiClient( KXMLGUIClient *guiClient );
+  void loadActionLists();
 
   void showContextMenu( KMime::Content* content, const QPoint& point);
 
@@ -617,7 +617,6 @@ public:
   KAction *mDownloadThemesAction;    
   KToggleAction *mHeaderOnlyAttachmentsAction;
   KSelectAction *mSelectEncodingAction;
-  KActionMenu *mThemeActionMenu;
   KXMLGUIClient *mGUIClient;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;
