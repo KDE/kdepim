@@ -303,6 +303,7 @@ static QByteArray make_input( const QStringList & files, char sep ) {
 }
 
 shared_ptr<Input> ArchiveDefinition::createInputFromPackCommand( GpgME::Protocol p, const QStringList & files ) const {
+    checkProtocol( p );
     const QString base = heuristicBaseDirectory( files );
     if ( base.isEmpty() )
         throw Kleo::Exception( GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join( "\n" ) ) );
