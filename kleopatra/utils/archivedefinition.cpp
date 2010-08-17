@@ -342,13 +342,12 @@ shared_ptr<Input> ArchiveDefinition::createInputFromPackCommand( GpgME::Protocol
     return shared_ptr<Input>(); // make compiler happy
 }
 
-shared_ptr<Output> ArchiveDefinition::createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file ) const {
+shared_ptr<Output> ArchiveDefinition::createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file, const QDir & wd ) const {
     checkProtocol( p );
     const QFileInfo fi( file );
-    kleo_assert( fi.isAbsolute() );
     return Output::createFromProcessStdIn( doGetUnpackCommand( p ),
-                                           doGetUnpackArguments( p, file ),
-                                           fi.dir() );
+                                           doGetUnpackArguments( p, fi.absoluteFilePath() ),
+                                           wd );
 }
 
 // static
