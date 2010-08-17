@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Copyright (C) 2010 Andras Mantia <andras@kdab.net>
+  Copyright (C) 2010 Andras Mantia <andras@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -72,7 +72,7 @@ ActionMenuContainer {
   ActionList {
     category : "account"
     name : KDE.i18n( "Account" )
-    FakeAction { name : "check_mail_in_account" }
+    ActionListItem { name : "akonadi_resource_synchronize" }
     FakeAction { name : "srv_side_subsrcp" }
     FakeAction { name : "local_subsrcp" }
     ActionListItem { name : "akonadi_resource_properties" }
