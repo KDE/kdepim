@@ -73,6 +73,109 @@ using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;
 
+//
+// BEGIN Conflict Detection
+//
+
+/*
+  This code implements the following conflict detection algortihm:
+
+  1. There is no conflict if and only if we have a Perfect Match.
+  2. A Perfect Match is defined as:
+    a. either a Perfect OpenPGP-Match and not even a Partial S/MIME Match
+    b. or a Perfect S/MIME-Match and not even a Partial OpenPGP-Match
+    c. or a Perfect OpenPGP-Match and preselected protocol=OpenPGP
+    d. or a Perfect S/MIME-Match and preselected protocol=S/MIME
+  3. For Protocol \in {OpenPGP,S/MIME}, a Perfect Protocol-Match is defined as:
+    a. If signing, \foreach Sender, there is exactly one
+         Matching Protocol-Certificate with
+     i. can-sign=true
+     ii. has-secret=true
+    b. and, if encrypting, \foreach Recipient, there is exactly one
+         Matching Protocol-Certificate with
+     i. can-encrypt=true
+     ii. (validity is not considered, cf. msg 24059)
+  4. For Protocol \in {OpenPGP,S/MIME}, a Partial Protocol-Match is defined as:
+    a. If signing, \foreach Sender, there is at least one
+         Matching Protocol-Certificate with
+     i. can-sign=true
+     ii. has-secret=true
+    b. and, if encrypting, \foreach Recipient, there is at least
+     one Matching Protocol-Certificate with
+     i. can-encrypt=true
+     ii. (validity is not considered, cf. msg 24059)
+  5. For Protocol \in {OpenPGP,S/MIME}, a Matching Protocol-Certificate is
+     defined as matching by email-address. A revoked, disabled, or expired
+     certificate is not considered a match.
+  6. Sender is defined as those mailboxes that have been set with the SENDER
+     command.
+  7. Recipient is defined as those mailboxes that have been set with either the
+     SENDER or the RECIPIENT commands.
+*/
+
+namespace {
+
+    struct count_signing_certificates {
+        typedef size_t result_type;
+        const Protocol proto;
+        explicit count_signing_certificates( Protocol proto ) : proto( proto ) {}
+        size_t operator()( const Sender & sender ) const {
+            return sender.signingCertificateCandidates( proto ).size();
+        }
+    };
+
+    struct count_encrypt_certificates {
+        typedef size_t result_type;
+        const Protocol proto;
+        explicit count_encrypt_certificates( Protocol proto ) : proto( proto ) {}
+        size_t operator()( const Sender & sender ) const {
+            return sender.encryptToSelfCertificateCandidates( proto ).size();
+        }
+
+        size_t operator()( const Recipient & recipient ) const {
+            return recipient.encryptionCertificateCandidates( proto ).size();
+        }
+    };
+
+}
+
+static bool has_perfect_match( bool sign, bool encrypt, Protocol proto, const std::vector<Sender> & senders, const std::vector<Recipient> & recipients ) {
+    if ( sign )
+        if ( !kdtools::all( senders,    bind( count_signing_certificates( proto ), _1 ) == 1 ) )
+            return false;
+    if ( encrypt )
+        if ( !kdtools::all( senders,    bind( count_encrypt_certificates( proto ), _1 ) == 1 ) ||
+             !kdtools::all( recipients, bind( count_encrypt_certificates( proto ), _1 ) == 1 ) )
+            return false;
+    return true;
+}
+
+static bool has_partial_match( bool sign, bool encrypt, Protocol proto, const std::vector<Sender> & senders, const std::vector<Recipient> & recipients ) {
+    if ( sign )
+        if ( !kdtools::all( senders,    bind( count_signing_certificates( proto ), _1 ) >= 1 ) )
+            return false;
+    if ( encrypt )
+        if ( !kdtools::all( senders,    bind( count_encrypt_certificates( proto ), _1 ) >= 1 ) ||
+             !kdtools::all( recipients, bind( count_encrypt_certificates( proto ), _1 ) >= 1 ) )
+            return false;
+    return true;
+}
+
+static bool has_perfect_overall_match( bool sign, bool encrypt, const std::vector<Sender> & senders, const std::vector<Recipient> & recipients, Protocol presetProtocol ) {
+    return presetProtocol == OpenPGP   &&   has_perfect_match( sign, encrypt, OpenPGP, senders, recipients )
+        || presetProtocol == CMS       &&   has_perfect_match( sign, encrypt, CMS,     senders, recipients )
+        || has_perfect_match( sign, encrypt, OpenPGP, senders, recipients )   &&   !has_partial_match( sign, encrypt, CMS,     senders, recipients )
+        || has_perfect_match( sign, encrypt, CMS,     senders, recipients )   &&   !has_partial_match( sign, encrypt, OpenPGP, senders, recipients ) ;
+}
+
+static bool has_conflict( bool sign, bool encrypt, const std::vector<Sender> & senders, const std::vector<Recipient> & recipients, Protocol presetProtocol ) {
+    return !has_perfect_overall_match( sign, encrypt, senders, recipients, presetProtocol );
+}
+
+//
+// END Conflict Detection
+//
+
 static std::vector<Sender> mailbox2sender( const std::vector<Mailbox> & mbs ) {
     std::vector<Sender> senders;
     senders.reserve( mbs.size() );
@@ -115,6 +218,7 @@ private:
     bool resolvingInProgress : 1;
     bool certificatesResolved : 1;
     bool detached : 1;
+    Protocol presetProtocol;
     std::vector<Key> signers, recipients;
     std::vector< shared_ptr<Task> > runnable, completed;
     shared_ptr<Task> cms, openpgp;
@@ -128,6 +232,7 @@ NewSignEncryptEMailController::Private::Private( NewSignEncryptEMailController *
       resolvingInProgress( false ),
       certificatesResolved( false ),
       detached( false ),
+      presetProtocol( UnknownProtocol ),
       signers(),
       recipients(),
       runnable(),
@@ -162,6 +267,7 @@ void NewSignEncryptEMailController::setSubject( const QString & subject ) {
 }
 
 void NewSignEncryptEMailController::setProtocol( Protocol proto ) {
+    d->presetProtocol = proto;
     d->dialog->setPresetProtocol( proto );
 }
 
@@ -232,13 +338,15 @@ void NewSignEncryptEMailController::startResolveCertificates( const std::vector<
     const std::vector<Recipient> recipients = mailbox2recipient( r );
     const bool quickMode = is_dialog_quick_mode( d->sign, d->encrypt );
 
+    const bool conflict = quickMode && has_conflict( d->sign, d->encrypt, senders, recipients, d->presetProtocol );
+
     d->dialog->setQuickMode( quickMode );
     d->dialog->setSenders( senders );
     d->dialog->setRecipients( recipients );
     d->dialog->pickProtocol();
     d->dialog->adjustLabel();
 
-    if ( quickMode && d->dialog->isComplete() )
+    if ( quickMode && !conflict )
         QMetaObject::invokeMethod( this, "slotDialogAccepted", Qt::QueuedConnection );
     else
         d->ensureDialogVisible();
