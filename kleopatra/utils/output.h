@@ -41,6 +41,8 @@
 
 class QIODevice;
 class QString;
+class QStringList;
+class QDir;
 class QWidget;
 
 namespace Kleo {
@@ -80,6 +82,9 @@ namespace Kleo {
         static boost::shared_ptr<Output> createFromFile( const QString & fileName, const boost::shared_ptr<OverwritePolicy> & );
         static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool forceOverwrite );
         static boost::shared_ptr<Output> createFromPipeDevice( assuan_fd_t fd, const QString & label );
+        static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command );
+        static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command, const QStringList & args );
+        static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command, const QStringList & args, const QDir & workingDirectory );
         static boost::shared_ptr<Output> createFromClipboard();
     };
 }

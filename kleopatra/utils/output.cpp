@@ -53,6 +53,11 @@
 #include <QBuffer>
 #include <QPointer>
 #include <QWidget>
+#include <QDir>
+#include <QFileInfo>
+#include <QProcess>
+#include <QDebug>
+#include <QTimer>
 
 #ifdef Q_OS_WIN
 # include <windows.h>
@@ -63,6 +68,9 @@
 using namespace Kleo;
 using namespace Kleo::_detail;
 using namespace boost;
+
+static const int PROCESS_MAX_RUNTIME_TIMEOUT = -1;     // no timeout
+static const int PROCESS_TERMINATE_TIMEOUT   = 5*1000; // 5s
 
 class OverwritePolicy::Private {
 public:
@@ -132,7 +140,18 @@ namespace {
         void reallyClose() { T_IODevice::close(); }
     };
 
+    template <typename T_IODevice>
+    struct redirect_close : T_IODevice {
+        explicit redirect_close() : T_IODevice(), m_closed( false ) {}
+        template <typename T1>
+        explicit redirect_close( T1 & t1 ) : T_IODevice( t1 ), m_closed( false ) {}
 
+        /* reimp */ void close() { this->closeWriteChannel(); m_closed = true; }
+
+        bool isClosed() const { return m_closed; }
+    private:
+        bool m_closed;
+    };
 
 
     class OutputImplBase : public Output {
@@ -200,6 +219,29 @@ namespace {
         /* reimp */ void doCancel() { doFinalize(); }
     private:
         shared_ptr< inhibit_close<KDPipeIODevice> > m_io;
+    };
+
+
+    class ProcessStdInOutput : public OutputImplBase {
+    public:
+        explicit ProcessStdInOutput( const QString & cmd, const QStringList & args, const QDir & wd );
+
+        /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_proc; }
+        /* reimp */ void doFinalize() {
+            if ( !m_proc->isClosed() )
+                m_proc->close();
+            m_proc->waitForFinished( PROCESS_MAX_RUNTIME_TIMEOUT );
+        }
+        /* reimp */ void doCancel() {
+            m_proc->terminate();
+            QTimer::singleShot( PROCESS_TERMINATE_TIMEOUT, m_proc.get(), SLOT(kill()) );
+        }
+        /* reimp */ QString label() const;
+
+    private:
+        const QString m_command;
+        const QStringList m_arguments;
+        const shared_ptr< redirect_close<QProcess> > m_proc;
     };
 
 
@@ -343,6 +385,46 @@ void FileOutput::doFinalize() {
     throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                      i18n( "Could not rename file \"%1\" to \"%2\"",
                            tmpFileName, m_fileName ) );
+}
+
+
+shared_ptr<Output> Output::createFromProcessStdIn( const QString & command ) {
+    return shared_ptr<Output>( new ProcessStdInOutput( command, QStringList(), QDir::current() ) );
+}
+
+shared_ptr<Output> Output::createFromProcessStdIn( const QString & command, const QStringList & args ) {
+    return shared_ptr<Output>( new ProcessStdInOutput( command, args, QDir::current() ) );
+}
+
+shared_ptr<Output> Output::createFromProcessStdIn( const QString & command, const QStringList & args, const QDir & wd ) {
+    return shared_ptr<Output>( new ProcessStdInOutput( command, args, wd ) );
+}
+
+ProcessStdInOutput::ProcessStdInOutput( const QString & cmd, const QStringList & args, const QDir & wd )
+    : OutputImplBase(),
+      m_command( cmd ),
+      m_arguments( args ),
+      m_proc( new redirect_close<QProcess> )
+{
+    qDebug() << "ProcessStdInOutput:" << "\n"
+        "cd" << wd.absolutePath() << "\n" <<
+        cmd << args;
+    m_proc->setWorkingDirectory( wd.absolutePath() );
+    m_proc->start( cmd, args, QIODevice::WriteOnly );
+    if ( !m_proc->waitForStarted() )
+        throw Exception( gpg_error( GPG_ERR_EIO ),
+                         i18n( "Could not start %1 process: %2", cmd, m_proc->errorString() ) );
+}
+
+QString ProcessStdInOutput::label() const {
+    if ( !m_proc )
+        return OutputImplBase::label();
+    // output max. 3 arguments
+    const QString cmdline = ( QStringList( m_command ) + m_arguments.mid(0,3) ).join( " " );
+    if ( m_arguments.size() > 3 )
+        return i18nc( "e.g. \"Input to tar xf - file1 ...\"", "Input to %1 ...", cmdline );
+    else
+        return i18nc( "e.g. \"Input to tar xf - file\"",      "Input to %1",     cmdline );
 }
 
 shared_ptr<Output> Output::createFromClipboard() {
