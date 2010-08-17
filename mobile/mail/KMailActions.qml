@@ -74,7 +74,7 @@ ActionMenuContainer {
     name : KDE.i18n( "Account" )
     ActionListItem { name : "akonadi_resource_synchronize" }
     FakeAction { name : "srv_side_subsrcp" }
-    FakeAction { name : "local_subsrcp" }
+    ActionListItem { name : "akonadi_manage_local_subscriptions" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
