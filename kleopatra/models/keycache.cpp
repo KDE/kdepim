@@ -418,18 +418,45 @@ std::vector<Key> KeyCache::findEncryptionKeysByMailbox( const Mailbox & mb ) con
 }
 
 namespace {
+#define DO( op, meth, meth2 ) if ( op key.meth() ) {} else { qDebug( "rejecting for signing: %s: %s", #meth2, key.primaryFingerprint() ); return false; }
+#define ACCEPT( meth ) DO( !!, meth, !meth )
+#define REJECT( meth ) DO( !, meth, meth )
     struct ready_for_signing : std::unary_function<Key,bool> {
         bool operator()( const Key & key ) const {
+#if 1
+            ACCEPT( hasSecret );
+            ACCEPT( canReallySign );
+            REJECT( isRevoked );
+            REJECT( isExpired );
+            REJECT( isDisabled );
+            REJECT( isInvalid );
+            return true;
+#else
             return key.hasSecret() &&
                 key.canReallySign() && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
+#endif
+#undef DO
         }
     };
 
     struct ready_for_encryption : std::unary_function<Key,bool> {
+#define DO( op, meth, meth2 ) if ( op key.meth() ) {} else { qDebug( "rejecting for encrypting: %s: %s", #meth2, key.primaryFingerprint() ); return false; }
         bool operator()( const Key & key ) const {
+#if 1
+            ACCEPT( canEncrypt );
+            REJECT( isRevoked );
+            REJECT( isExpired );
+            REJECT( isDisabled );
+            REJECT( isInvalid );
+            return true;
+#else
             return                       
                 key.canEncrypt()    && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
+#endif
         }
+#undef DO
+#undef ACCEPT
+#undef REJECT
     };
 }
 
