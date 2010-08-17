@@ -48,7 +48,7 @@
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/interfaces/bodyparturlhandler.h"
 #include "messageviewer/webkitparthtmlwriter.h"
-#include <kimproxy.h>
+//#include <kimproxy.h>
 
 #include <kabc/vcardconverter.h>
 #include <kabc/addressee.h>
