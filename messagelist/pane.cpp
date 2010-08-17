@@ -318,8 +318,8 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
 
   if ( mPreferEmptyTab ) {
     q->createNewTab();
-    updateTabControls();
     w = static_cast<Widget*>( q->currentWidget() );
+    s = mWidgetSelectionHash[w];
   }
 
   QString label;
@@ -352,7 +352,6 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
 void Pane::Private::onNewTabClicked()
 {
   q->createNewTab();
-  updateTabControls();
 }
 
 void Pane::Private::onCloseTabClicked()
