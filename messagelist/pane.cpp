@@ -431,7 +431,7 @@ MessageList::StorageModel *Pane::createStorageModel( QAbstractItemModel *model, 
   return new MessageList::StorageModel( model, selectionModel, parent );
 }
 
-void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
+void Pane::setCurrentFolder( const Akonadi::Collection &, bool, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
   if ( w ) {
