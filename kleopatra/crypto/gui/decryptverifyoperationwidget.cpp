@@ -180,6 +180,10 @@ static const int Mutable = 1;
 static const int Const   = 0;
 
 void DecryptVerifyOperationWidget::setMode( Mode mode ) {
+    setMode( mode, shared_ptr<ArchiveDefinition>() );
+}
+
+void DecryptVerifyOperationWidget::setMode( Mode mode, const shared_ptr<ArchiveDefinition> & ad  ) {
     d->ui.verifyDetachedCB.setChecked( mode != DecryptVerifyOpaque );
 
     QWidget * inputWidget;
@@ -197,6 +201,13 @@ void DecryptVerifyOperationWidget::setMode( Mode mode ) {
 
     d->ui.inputLB.setBuddy( inputWidget );
     d->ui.signedDataLB.setBuddy( signedDataWidget );
+
+    d->ui.archiveCB.setChecked( ad );
+    for ( int i = 0, end = d->ui.archivesCB.count() ; i != end ; ++i )
+        if ( ad == d->ui.archivesCB.itemData( i ).value< shared_ptr<ArchiveDefinition> >() ) {
+            d->ui.archivesCB.setCurrentIndex( i );
+            return;
+        }
 }
 
 DecryptVerifyOperationWidget::Mode DecryptVerifyOperationWidget::mode() const {
