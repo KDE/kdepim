@@ -24,6 +24,9 @@
 #include <kabc/resource.h>
 #include <kdepimmacros.h>
 
+#include <tqdatetime.h>
+#include <tqtimer.h>
+
 #include "libemailfunctions/idmapper.h"
 
 namespace KABC {
@@ -33,11 +36,86 @@ class KDE_EXPORT ResourceCached : public Resource
   Q_OBJECT
 
   public:
+    /**
+      Reload policy.
+
+      @see setReloadPolicy(), reloadPolicy()
+    */
+    enum { ReloadNever, ReloadOnStartup, ReloadInterval };
+    /**
+      Save policy.
+
+      @see setSavePolicy(), savePolicy()
+    */
+    enum { SaveNever, SaveOnExit, SaveInterval, SaveDelayed, SaveAlways };
+
     ResourceCached( const KConfig* );
     ~ResourceCached();
 
     /**
-      Writes the resource specific config to file.
+      Set reload policy. This controls when the cache is refreshed.
+
+      ReloadNever     never reload
+      ReloadOnStartup reload when resource is started
+      ReloadInterval  reload regularly after given interval
+    */
+    void setReloadPolicy( int policy );
+    /**
+      Return reload policy.
+
+      @see setReloadPolicy()
+    */
+    int reloadPolicy() const;
+
+    /**
+      Set reload interval in minutes which is used when reload policy is
+      ReloadInterval.
+    */
+    void setReloadInterval( int minutes );
+
+    /**
+      Return reload interval in minutes.
+    */
+    int reloadInterval() const;
+
+    /**
+      Set save policy. This controls when the cache is refreshed.
+
+      SaveNever     never save
+      SaveOnExit    save when resource is exited
+      SaveInterval  save regularly after given interval
+      SaveDelayed   save after small delay
+      SaveAlways    save on every change
+    */
+    void setSavePolicy( int policy );
+    /**
+      Return save policy.
+
+      @see setsavePolicy()
+    */
+    int savePolicy() const;
+
+    /**
+      Set save interval in minutes which is used when save policy is
+      SaveInterval.
+    */
+    void setSaveInterval( int minutes );
+
+    /**
+      Return save interval in minutes.
+    */
+    int saveInterval() const;
+
+    void setupSaveTimer();
+    void setupReloadTimer();
+
+   /**
+     Reads the resource specific config from disk.
+    */
+   virtual void readConfig( KConfig *config );
+
+    /**
+      Writes the resource specific config to disk.
      */
     virtual void writeConfig( KConfig *config );
 
@@ -85,14 +163,30 @@ class KDE_EXPORT ResourceCached : public Resource
     void setIdMapperIdentifier();
 
   private:
-    KPIM::IdMapper mIdMapper;
-
     TQMap<TQString, KABC::Addressee> mAddedAddressees;
     TQMap<TQString, KABC::Addressee> mChangedAddressees;
     TQMap<TQString, KABC::Addressee> mDeletedAddressees;
 
+    KPIM::IdMapper mIdMapper;
+
     class ResourceCachedPrivate;
     ResourceCachedPrivate *d;
+
+    int mReloadPolicy;
+    int mReloadInterval;
+    TQTimer mKABCReloadTimer;
+    bool mReloaded;
+
+    int mSavePolicy;
+    int mSaveInterval;
+    TQTimer mKABCSaveTimer;
+
+    TQDateTime mLastLoad;
+    TQDateTime mLastSave;
+
+  protected slots:
+    void slotKABCReload();
+    void slotKABCSave();
 };
 
 }

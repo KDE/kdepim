@@ -67,6 +67,8 @@ class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
 
     virtual void loadProfile( const TQString& path ) = 0;
     virtual void saveToProfile( const TQString& path ) const = 0;
+
+    virtual void syncAllResources() = 0;
 };
 
 #endif

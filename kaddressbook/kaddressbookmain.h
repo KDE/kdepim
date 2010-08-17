@@ -61,6 +61,7 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
     virtual void save();
     virtual void exit();
     virtual bool handleCommandLine();
+    virtual void syncAllResources();
 
   protected:
     void initActions();

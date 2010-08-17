@@ -60,6 +60,12 @@ void KOrganizerIfaceImpl::closeURL()
   return mActionManager->closeURL();
 }
 
+void KOrganizerIfaceImpl::syncAllResources()
+{
+  mActionManager->saveResourceCalendar();
+  mActionManager->loadResourceCalendar();
+}
+
 bool KOrganizerIfaceImpl::saveURL()
 {
   return mActionManager->saveURL();

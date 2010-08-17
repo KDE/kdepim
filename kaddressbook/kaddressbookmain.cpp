@@ -129,6 +129,12 @@ bool KAddressBookMain::handleCommandLine()
   return mCore->handleCommandLine( this );
 }
 
+void KAddressBookMain::syncAllResources()
+{
+  mCore->save();
+  mCore->load();
+}
+
 void KAddressBookMain::saveProperties( KConfig* )
 {
 }

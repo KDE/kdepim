@@ -59,6 +59,7 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
     virtual void exit();
     virtual bool openURL( const KURL &url );
     virtual bool handleCommandLine();
+    virtual void syncAllResources();
 
   protected:
     virtual bool openFile();

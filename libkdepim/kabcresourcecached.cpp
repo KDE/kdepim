@@ -30,17 +30,137 @@
 using namespace KABC;
 
 ResourceCached::ResourceCached( const KConfig *config )
-  : KABC::Resource( config ), mIdMapper( "kabc/uidmaps/" )
+  : KABC::Resource( config ), mIdMapper( "kabc/uidmaps/" ),
+    mReloadPolicy( ReloadInterval ),  mReloadInterval( 10 ),
+    mKABCReloadTimer( 0, "mKABCReloadTimer" ), mReloaded( false ),
+    mSavePolicy( SaveDelayed ), mSaveInterval( 10 ),
+    mKABCSaveTimer( 0, "mKABCSaveTimer" )
 {
+  connect( &mKABCReloadTimer, TQT_SIGNAL( timeout() ), TQT_SLOT( slotKABCReload() ) );
+  connect( &mKABCSaveTimer, TQT_SIGNAL( timeout() ), TQT_SLOT( slotKABCSave() ) );
+
+  if (config)
+    this->readConfig(const_cast<KConfig *>(config));
 }
 
 ResourceCached::~ResourceCached()
 {
 }
 
+void ResourceCached::setReloadPolicy( int i )
+{
+  mReloadPolicy = i;
+
+  setupReloadTimer();
+}
+
+int ResourceCached::reloadPolicy() const
+{
+  return mReloadPolicy;
+}
+
+void ResourceCached::setReloadInterval( int minutes )
+{
+  mReloadInterval = minutes;
+}
+
+int ResourceCached::reloadInterval() const
+{
+  return mReloadInterval;
+}
+
+void ResourceCached::setSavePolicy( int i )
+{
+  mSavePolicy = i;
+
+  setupSaveTimer();
+}
+
+int ResourceCached::savePolicy() const
+{
+  return mSavePolicy;
+}
+
+void ResourceCached::setSaveInterval( int minutes )
+{
+  mSaveInterval = minutes;
+}
+
+int ResourceCached::saveInterval() const
+{
+  return mSaveInterval;
+}
+
 void ResourceCached::writeConfig( KConfig *config )
 {
+  config->writeEntry( "ReloadPolicy", mReloadPolicy );
+  config->writeEntry( "ReloadInterval", mReloadInterval );
+
+  config->writeEntry( "SavePolicy", mSavePolicy );
+  config->writeEntry( "SaveInterval", mSaveInterval );
+
+  config->writeEntry( "LastLoad", mLastLoad );
+  config->writeEntry( "LastSave", mLastSave );
+
   KABC::Resource::writeConfig( config );
+}
+
+void ResourceCached::readConfig( KConfig *config )
+{
+  mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
+  mReloadInterval = config->readNumEntry( "ReloadInterval", 10 );
+
+  mSaveInterval = config->readNumEntry( "SaveInterval", 10 );
+  mSavePolicy = config->readNumEntry( "SavePolicy", SaveNever );
+
+  mLastLoad = config->readDateTimeEntry( "LastLoad" );
+  mLastSave = config->readDateTimeEntry( "LastSave" );
+
+  setupSaveTimer();
+  setupReloadTimer();
+}
+
+void ResourceCached::setupSaveTimer()
+{
+  if ( mSavePolicy == SaveInterval ) {
+    kdDebug(5800) << "ResourceCached::setSavePolicy(): start save timer (interval "
+              << mSaveInterval << " minutes)." << endl;
+    mKABCSaveTimer.start( mSaveInterval * 60 * 1000 ); // n minutes
+  } else {
+    mKABCSaveTimer.stop();
+  }
+}
+
+void ResourceCached::setupReloadTimer()
+{
+  if ( mReloadPolicy == ReloadInterval ) {
+    kdDebug(5800) << "ResourceCached::setSavePolicy(): start reload timer "
+                 "(interval " << mReloadInterval << " minutes)" << endl;
+    mKABCReloadTimer.start( mReloadInterval * 60 * 1000 ); // n minutes
+  } else {
+    mKABCReloadTimer.stop();
+  }
+}
+
+void ResourceCached::slotKABCReload()
+{
+  if ( !isActive() ) return;
+
+  kdDebug(5800) << "ResourceCached::slotKABCReload()" << endl;
+
+  load();
+}
+
+void ResourceCached::slotKABCSave()
+{
+  if ( !isActive() ) return;
+
+  kdDebug(5800) << "ResourceCached::slotKABCSave()" << endl;
+
+  KABC::Ticket *ticket = requestSaveTicket();
+  if ( ticket ) {
+    save( ticket );
+  }
 }
 
 void ResourceCached::insertAddressee( const Addressee &addr )

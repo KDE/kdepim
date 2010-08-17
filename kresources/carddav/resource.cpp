@@ -54,8 +54,8 @@ const int ResourceCardDav::CACHE_DAYS = 90;
 
 const int ResourceCardDav::DEFAULT_RELOAD_INTERVAL   = 10;
 const int ResourceCardDav::DEFAULT_SAVE_INTERVAL     = 10;
-//const int ResourceCardDav::DEFAULT_RELOAD_POLICY     = ResourceCached::ReloadInterval;
-//const int ResourceCardDav::DEFAULT_SAVE_POLICY       = ResourceCached::SaveDelayed;
+const int ResourceCardDav::DEFAULT_RELOAD_POLICY     = ResourceCached::ReloadInterval;
+const int ResourceCardDav::DEFAULT_SAVE_POLICY       = ResourceCached::SaveDelayed;
 
 /*=========================================================================
 | UTILITY
@@ -237,7 +237,7 @@ CardDavPrefs* ResourceCardDav::createPrefs() const {
 }
 
 void ResourceCardDav::init() {
-    // default settings
+//     // default settings
 //     setReloadInterval(DEFAULT_RELOAD_INTERVAL);
 //     setReloadPolicy(DEFAULT_RELOAD_POLICY);
 //     setSaveInterval(DEFAULT_SAVE_INTERVAL);
@@ -337,10 +337,6 @@ void ResourceCardDav::loadingQueuePop() {
     mLoader->setParent(this);
     mLoader->setType(0);
     mLoader->setUseURI(mPrefs->getUseURI());
-
-    //TQDateTime dt(TQDate::currentDate());
-    //mLoader->setRange(dt.addDays(-CACHE_DAYS), dt.addDays(CACHE_DAYS));
-    //mLoader->setGetAll();
 
     mLoadingQueueReady = false;
 

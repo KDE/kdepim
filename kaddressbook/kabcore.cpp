@@ -877,6 +877,16 @@ void KABCore::save()
   }
 }
 
+void KABCore::load()
+{
+  TQPtrList<KABC::Resource> resources = mAddressBook->resources();
+  TQPtrListIterator<KABC::Resource> it( resources );
+  while ( it.current() ) {
+    mAddressBook->load();
+    ++it;
+  }
+}
+
 void KABCore::setJumpButtonBarVisible( bool visible )
 {
   if ( visible ) {

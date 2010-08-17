@@ -1860,6 +1860,17 @@ bool ActionManager::saveResourceCalendar()
   return true;
 }
 
+void ActionManager::loadResourceCalendar()
+{
+  if ( !mCalendarResources ) return;
+  CalendarResourceManager *m = mCalendarResources->resourceManager();
+
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = m->activeBegin(); it != m->activeEnd(); ++it ) {
+    (*it)->load();
+  }
+}
+
 void ActionManager::importCalendar( const KURL &url )
 {
   if ( !url.isValid() ) {

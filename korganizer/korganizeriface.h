@@ -36,6 +36,7 @@ class KOrganizerIface : virtual public DCOPObject
     virtual TQString getCurrentURLasString() const = 0;
     virtual bool editIncidence(const TQString &uid) = 0;
     virtual bool deleteIncidence(const TQString &uid) = 0;
+    virtual void syncAllResources() = 0;
     /**
       Delete the incidence with the given unique ID from the active calendar.
       @param uid The incidence's unique ID.

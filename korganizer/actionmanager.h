@@ -106,6 +106,11 @@ class KDE_EXPORT ActionManager : public TQObject, public KCalendarIface
     */
     bool saveResourceCalendar();
 
+    /**
+      Load the resource based calendar.
+    */
+    void loadResourceCalendar();
+
   public slots:
     /** Add a new resource */
     bool addResource( const KURL &mUrl );

@@ -120,8 +120,8 @@ void KAddressbookPlugin::slotNewDistributionList()
 
 void KAddressbookPlugin::slotSyncContacts()
 {
-  DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", TQString("Contact") );
+  DCOPRef ref( "kaddressbook", "KAddressBookIface" );
+  ref.send( "syncAllResources" );
 }
 
 bool KAddressbookPlugin::createDCOPInterface( const TQString& serviceType )

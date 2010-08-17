@@ -332,6 +332,11 @@ class KDE_EXPORT KABCore : public KAB::Core
     void save();
 
     /**
+      Loads the contents of the AddressBook from disk.
+     */
+    void load();
+
+    /**
       Shows the edit dialog for the given uid. If the uid is TQString::null,
       the method will try to find a selected addressee in the view.
      */

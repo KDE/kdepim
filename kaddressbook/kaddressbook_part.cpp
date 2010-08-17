@@ -154,6 +154,12 @@ bool KAddressbookPart::handleCommandLine()
   return mCore->handleCommandLine( this );
 }
 
+void KAddressbookPart::syncAllResources()
+{
+  mCore->save();
+  mCore->load();
+}
+
 void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
 {
   kdDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;

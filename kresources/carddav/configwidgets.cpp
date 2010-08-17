@@ -119,9 +119,6 @@ CardDavReloadConfig::CardDavReloadConfig( TQWidget *parent )
   vbox->addWidget(automaticReloadOnStartup);
   vbox->addWidget(noAutomaticReload);
   vbox->addStretch(1);
-
-  // FIXME KABC
-  groupBox->hide();
 }
 
 CardDavReloadConfig::~CardDavReloadConfig()
@@ -131,16 +128,14 @@ CardDavReloadConfig::~CardDavReloadConfig()
 
 void CardDavReloadConfig::loadSettings( ResourceCached *resource )
 {
-  // FIXME KABC
-  //d->mIntervalSpin->setValue( resource->reloadInterval() );
-  //d->mGroup->setButton( resource->reloadPolicy() );
+  d->mIntervalSpin->setValue( resource->reloadInterval() );
+  d->mGroup->setButton( resource->reloadPolicy() );
 }
 
 void CardDavReloadConfig::saveSettings( ResourceCached *resource )
 {
-  // FIXME KABC
-  //resource->setReloadInterval( d->mIntervalSpin->value() );
-  //resource->setReloadPolicy( d->mGroup->selectedId() );
+  resource->setReloadInterval( d->mIntervalSpin->value() );
+  resource->setReloadPolicy( d->mGroup->selectedId() );
 }
 
 void CardDavReloadConfig::slotIntervalToggled( bool checked )
@@ -219,9 +214,6 @@ CardDavSaveConfig::CardDavSaveConfig( TQWidget *parent )
   vbox->addWidget(onExit);
   vbox->addWidget(never);
   vbox->addStretch(1);
-
-  // FIXME KABC
-  groupBox->hide();
 }
 
 CardDavSaveConfig::~CardDavSaveConfig()
@@ -231,16 +223,14 @@ CardDavSaveConfig::~CardDavSaveConfig()
 
 void CardDavSaveConfig::loadSettings( ResourceCached *resource )
 {
-  // FIXME KABC
-  //d->mIntervalSpin->setValue( resource->saveInterval() );
-  //d->mGroup->setButton( resource->savePolicy() );
+  d->mIntervalSpin->setValue( resource->saveInterval() );
+  d->mGroup->setButton( resource->savePolicy() );
 }
 
 void CardDavSaveConfig::saveSettings( ResourceCached *resource )
 {
-  // FIXME KABC
-  //resource->setSaveInterval( d->mIntervalSpin->value() );
-  //resource->setSavePolicy( d->mGroup->selectedId() );
+  resource->setSaveInterval( d->mIntervalSpin->value() );
+  resource->setSavePolicy( d->mGroup->selectedId() );
 }
 
 void CardDavSaveConfig::slotIntervalToggled( bool checked )

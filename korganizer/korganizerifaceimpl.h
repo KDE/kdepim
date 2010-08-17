@@ -52,6 +52,7 @@ public:
   bool canQueryClose();
   bool saveAsURL( const TQString &url );
   TQString getCurrentURLasString() const;
+  void syncAllResources();
 
   bool editIncidence( const TQString &uid );
   /** @reimp from KOrganizerIface::deleteIncidence() */

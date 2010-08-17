@@ -132,8 +132,8 @@ void KOrganizerPlugin::slotNewEvent()
 
 void KOrganizerPlugin::slotSyncEvents()
 {
-  DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", TQString("Calendar") );
+  DCOPRef ref( "korganizer", "KOrganizerIface" );
+  ref.send( "syncAllResources" );
 }
 
 bool KOrganizerPlugin::createDCOPInterface( const TQString& serviceType )
