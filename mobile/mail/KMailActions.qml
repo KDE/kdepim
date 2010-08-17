@@ -73,7 +73,7 @@ ActionMenuContainer {
     category : "account"
     name : KDE.i18n( "Account" )
     ActionListItem { name : "akonadi_resource_synchronize" }
-    FakeAction { name : "srv_side_subsrcp" }
+  //  FakeAction { name : "srv_side_subsrcp" }
     ActionListItem { name : "akonadi_manage_local_subscriptions" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
@@ -83,10 +83,7 @@ ActionMenuContainer {
     category : "single_folder"
     name : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
-    ActionListItem { name : "akonadi_mark_all_as"
-                     argument : "R"
-                     title : KDE.i18n("Mark All As Read")
-                   }
+    ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "akonadi_move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
     FakeAction { name : "archive_folder" }
@@ -145,6 +142,15 @@ ActionMenuContainer {
     FakeAction { name : "save_as" }
   }
 
+//TODO: Make it a submenu of the above ActionList somehow...
+  ActionList {
+    category: "mail_viewer"
+    name: KDE.i18n( "Mark As" )
+    ActionListItem { name : "akonadi_mark_as_read" }
+    ActionListItem { name : "akonadi_mark_as_unread" }
+    ActionListItem { name : "akonadi_mark_as_important" }
+    ActionListItem { name : "akonadi_mark_as_action_item" }
+  }
   ActionList {
     category: "mail_viewer"
     name: KDE.i18n( "Attachments" )
