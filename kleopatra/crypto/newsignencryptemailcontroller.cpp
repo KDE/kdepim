@@ -356,7 +356,7 @@ void NewSignEncryptEMailController::startResolveCertificates( const std::vector<
     d->dialog->setSenders( senders );
     d->dialog->setRecipients( recipients );
     d->dialog->pickProtocol();
-    d->dialog->adjustLabel();
+    d->dialog->setConflict( conflict );
 
     if ( quickMode && !conflict )
         QMetaObject::invokeMethod( this, "slotDialogAccepted", Qt::QueuedConnection );
