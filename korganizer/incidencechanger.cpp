@@ -118,8 +118,8 @@ kdDebug(5850)<<"IncidenceChanger::deleteIncidence for incidence \""<<incidence->
           scheduler.performTransaction( tmp, Scheduler::Reply );
       }
     }
-    emit incidenceDeleted( incidence );
   }
+  emit incidenceDeleted( incidence );
   return doDelete;
 }
 
@@ -298,12 +298,13 @@ kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->sum
                                                   KCal::Scheduler::Request,
                                                   newinc, false, statusChanged ) ) {
       // Accept the event changes
-      if ( action<0 ) {
-        emit incidenceChanged( oldinc, newinc );
-      } else {
-        emit incidenceChanged( oldinc, newinc, action );
-      }
       revert = false;
+    }
+
+    if ( action<0 ) {
+      emit incidenceChanged( oldinc, newinc );
+    } else {
+      emit incidenceChanged( oldinc, newinc, action );
     }
 
     if ( revert ) {

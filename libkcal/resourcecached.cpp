@@ -19,6 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
+// TODO [FIXME] IMPORTANT
+// If a cached resource initiates a reload while an event editor is active, or an event is locked for editing,
+// a big fat crash will ensue.  The reload subroutine must ABORT if ANY korganizer events are locked for editing!!!
+
 #include <tqdatastream.h>
 #include <tqdatetime.h>
 #include <tqfile.h>

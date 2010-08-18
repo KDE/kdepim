@@ -832,6 +832,7 @@ void CalendarView::updateView()
 void CalendarView::updateUnmanagedViews()
 {
   mDateNavigator->updateDayMatrix();
+  updateView();
 }
 
 int CalendarView::msgItemDelete( Incidence *incidence )
@@ -2062,7 +2063,15 @@ void CalendarView::deleteIncidence(Incidence *incidence, bool force)
           Incidence *oldIncidence = incidence->clone();
           if (incidence->recurrence()->startDate() == itemDate) {
               // Moving the first in a series...don't bother with the nonstandard exclusion list
-              incidence->recurrence()->setStartDateTime( incidence->recurrence()->getNextDateTime( incidence->recurrence()->startDateTime() ) );
+              Recurrence *recur = incidence->recurrence();
+              Event* thisevent = static_cast<Event*>(incidence);
+              QDateTime newEnd;
+              QDateTime newRecurEnd;
+              newRecurEnd = recur->endDateTime();
+              newEnd.setTime_t( incidence->dtEnd().toTime_t() + ( recur->getNextDateTime( recur->startDateTime() ).toTime_t() - recur->startDateTime().toTime_t()  ) );
+              thisevent->setDtEnd( newEnd  );
+              incidence->setDtStart( recur->getNextDateTime( recur->startDateTime() ) );
+              recur->setEndDateTime(newRecurEnd);
           }
           else {
               // No choice but to use the exclusion list
@@ -2094,6 +2103,8 @@ void CalendarView::deleteIncidence(Incidence *incidence, bool force)
       processIncidenceSelection( 0 );
     }
   }
+
+  updateView();
 }
 
 void CalendarView::connectIncidenceEditor( KOIncidenceEditor *editor )
