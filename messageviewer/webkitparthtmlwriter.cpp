@@ -33,13 +33,10 @@
 
 #include "webkitparthtmlwriter.h"
 
+#include "mailwebview.h"
+
 #include <KDebug>
 #include <KUrl>
-#ifdef Q_OS_WINCE
-#include <QWebView>
-#else
-#include <KWebView>
-#endif
 
 #include <cassert>
 #include <QByteArray>
@@ -50,16 +47,10 @@
 
 using namespace MessageViewer;
 
-#ifdef Q_OS_WINCE
-WebKitPartHtmlWriter::WebKitPartHtmlWriter( QWebView *view,
-#else
-WebKitPartHtmlWriter::WebKitPartHtmlWriter( KWebView *view,
-#endif
-                                          QObject * parent, const char * name )
+WebKitPartHtmlWriter::WebKitPartHtmlWriter( MailWebView * view, QObject * parent )
   : QObject( parent ), HtmlWriter(),
     mHtmlView( view ), mState( Ended )
 {
-  setObjectName( name );
   assert( view );
   mHtmlTimer.setSingleShot( true );
   connect( &mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()) );
