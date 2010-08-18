@@ -82,7 +82,7 @@ bool IncidenceChanger::endChange( Incidence *incidence )
   // FIXME: if that's a groupware incidence, and the incidence was
   // never locked, we can't unlock it with endChange().
   if ( !incidence ) return false;
-kdDebug(5850)<<"IncidenceChanger::endChange for incidence \""<<incidence->summary()<<"\""<<endl;
+  // kdDebug(5850)<<"IncidenceChanger::endChange for incidence \""<<incidence->summary()<<"\""<<endl;
   return mCalendar->endChange( incidence );
 }
 
@@ -289,7 +289,7 @@ kdDebug(5850)<<"IncidenceChanger::changeIncidence for incidence \""<<newinc->sum
     int revision = newinc->revision();
     newinc->setRevision( revision + 1 );
     // FIXME: Use a generic method for this! Ideally, have an interface class
-    //        for group cheduling. Each implementation could then just do what
+    //        for group scheduling. Each implementation could then just do what
     //        it wants with the event. If no groupware is used,use the null
     //        pattern...
     bool revert = KOPrefs::instance()->mUseGroupwareCommunication;

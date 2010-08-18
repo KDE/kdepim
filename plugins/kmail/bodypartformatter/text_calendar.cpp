@@ -336,9 +336,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           subject = i18n( "Forwarded: %1" ).arg( summary );
           break;
         case DeclineCounter:
-          // ### string freeze
-          //subject = i18n( "Declined Counter Proposal: %1" ).arg( summary );
-          subject = i18n( "Answer: %1" ).arg( summary );
+          subject = i18n( "Declined Counter Proposal: %1" ).arg( summary );
           break;
       }
 

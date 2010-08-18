@@ -2060,7 +2060,14 @@ void CalendarView::deleteIncidence(Incidence *incidence, bool force)
       case KMessageBox::Yes: // just this one
         if ( mChanger->beginChange( incidence ) ) {
           Incidence *oldIncidence = incidence->clone();
-          incidence->recurrence()->addExDate( itemDate );
+          if (incidence->recurrence()->startDate() == itemDate) {
+              // Moving the first in a series...don't bother with the nonstandard exclusion list
+              incidence->recurrence()->setStartDateTime( incidence->recurrence()->getNextDateTime( incidence->recurrence()->startDateTime() ) );
+          }
+          else {
+              // No choice but to use the exclusion list
+              incidence->recurrence()->addExDate( itemDate );
+          }
           mChanger->changeIncidence( oldIncidence, incidence );
           mChanger->endChange( incidence );
           delete oldIncidence;
