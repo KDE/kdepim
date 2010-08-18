@@ -22,6 +22,7 @@
 
 #include <QContextMenuEvent>
 #include <QWebFrame>
+#include <QWebElement>
 
 #include <limits>
 
@@ -36,6 +37,12 @@ using namespace MessageViewer;
 MailWebView::MailWebView( QWidget *parent )
   : SuperClass( parent )
 {
+  page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
+  settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+  settings()->setAttribute( QWebSettings::JavaEnabled, false );
+  settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+  connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
+           this,   SIGNAL(linkHovered(QString,QString,QString)) );
 }
 
 MailWebView::~MailWebView() {}
@@ -94,7 +101,39 @@ void MailWebView::scrollPageUp( int percent )
 
 QString MailWebView::selectedText() const
 {
-    return SuperClass::selectedText();
+  return SuperClass::selectedText();
+}
+
+bool MailWebView::hasVerticalScrollBar() const
+{
+  return page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
+}
+
+// Checks if the given node has a child node that is a DIV which has an ID attribute
+// with the value specified here
+static bool has_parent_div_with_id( const QWebElement & start, const QString & id )
+{
+  if ( start.isNull() )
+    return false;
+
+  if ( start.tagName().toLower() == "div" ) {
+    if ( start.attribute( "id", "" ) == id )
+      return true;
+  }
+
+  return has_parent_div_with_id( start.parent(), id );
+}
+
+bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
+{
+  const QPoint local = page()->view()->mapFromGlobal( global );
+  const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
+  return has_parent_div_with_id( hit.enclosingBlockElement(), "attachmentInjectionPoint" );
+}
+
+void MailWebView::setHtml( const QString & html, const QUrl & base )
+{
+    SuperClass::setHtml( html, base );
 }
 
 #include "moc_mailwebview.cpp"

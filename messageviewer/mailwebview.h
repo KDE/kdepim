@@ -20,10 +20,11 @@
 #ifndef MESSAGEVIEWER_MAILWEBVIEW_H__
 #define MESSAGEVIEWER_MAILWEBVIEW_H__
 
+#include <qglobal.h> // make sure we have Q_OS_WINCE defined
+
 #ifdef MESSAGEVIEWER_NO_WEBKIT
 # include <QTextBrowser>
 #else
-#include <qglobal.h> // make sure we have Q_OS_WINCE defined
 # ifdef Q_OS_WINCE
 #  include <QWebView>
 # else
@@ -46,7 +47,7 @@ class MailWebView : public KWebView
 #endif
 {
   Q_OBJECT
-  public:
+public:
 
     explicit MailWebView( QWidget *parent=0 );
     ~MailWebView();
@@ -54,19 +55,27 @@ class MailWebView : public KWebView
     void scrollUp( int pixels );
     void scrollDown( int pixels );
     bool isScrolledToBottom() const;
+    bool hasVerticalScrollBar() const;
     void scrollPageDown( int percent );
     void scrollPageUp( int percent );
 
     QString selectedText() const;
+    bool isAttachmentInjectionPoint( const QPoint & globalPos ) const;
+    void setHtml( const QString & html, const QUrl & baseUrl );
 
-  signals:
+Q_SIGNALS:
 
     /// Emitted when the user right-clicks somewhere
     /// @param url if an URL was under the cursor, this parameter contains it. Otherwise empty
     /// @param point position where the click happened, in local coordinates
     void popupMenu( const QString &url, const QPoint &point );
 
-  protected:
+    void linkHovered( const QString & link, const QString & title, const QString & textContent );
+#ifdef MESSAGEVIEWER_NO_WEBKIT
+    void linkClicked( const QUrl & link );
+#endif
+
+protected:
 #ifdef KDEPIM_MOBILE_UI
     friend class MessageViewItem;
 #endif

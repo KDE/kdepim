@@ -49,7 +49,6 @@ class KSelectAction;
 class KToggleAction;
 class KHBox;
 
-class QWebElement;
 class QPoint;
 class QSplitter;
 class QStyle;
@@ -287,9 +286,11 @@ public:
   /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
 
+private:
   /** HTML initialization. */
-  virtual void initHtmlWidget(void);
+  void initHtmlWidget();
 
+public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
 

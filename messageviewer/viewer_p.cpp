@@ -422,24 +422,7 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
-// Checks if the given node has a child node that is a DIV which has an ID attribute
-// with the value specified here
-static bool hasParentDivWithId( const QWebElement &start, const QString &id )
-{
-  if ( start.isNull() )
-    return false;
-
-  if ( start.tagName().toLower() == "div" ) {
-    if ( start.attribute( "id", "" ) == id )
-      return true;
-  }
-
-  if ( !start.parent().isNull() )
-    return hasParentDivWithId( start.parent(), id );
-  else return false;
-}
-
-void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint &p )
+void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & globalPos )
 {
   prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
@@ -461,11 +444,8 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, Viewer::View );
 
-  const QPoint local = mViewer->page()->view()->mapFromGlobal( p );
-  const QWebHitTestResult hit = mViewer->page()->currentFrame()->hitTestContent( local );
-  const bool attachmentInHeader = hasParentDivWithId(
-      hit.enclosingBlockElement(), "attachmentInjectionPoint" );
-  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
+  const bool attachmentInHeader = mViewer->isAttachmentInjectionPoint( globalPos );
+  const bool hasScrollbar = mViewer->hasVerticalScrollBar();
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
@@ -507,7 +487,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   action = menu->addAction(i18n("Properties") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, Viewer::Properties );
-  menu->exec( p );
+  menu->exec( globalPos );
   delete menu;
 }
 
@@ -1077,13 +1057,8 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 }
 
 
-void ViewerPrivate::initHtmlWidget(void)
+void ViewerPrivate::initHtmlWidget()
 {
-  mViewer->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-  mViewer->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-  mViewer->settings()->setAttribute(QWebSettings::JavaEnabled, false);
-  mViewer->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-
   mViewer->setFocusPolicy( Qt::WheelFocus );
   mViewer->page()->view()->installEventFilter( this );
   mViewer->installEventFilter( this );
@@ -1118,11 +1093,12 @@ void ViewerPrivate::initHtmlWidget(void)
     metaTypesRegistered = true;
   }
 #endif
-  connect(mViewer->page(), SIGNAL( linkHovered( const QString &, const QString &, const QString & ) ),
-          this, SLOT( slotUrlOn(const QString &, const QString &, const QString & )));
-  connect(mViewer->page(), SIGNAL( linkClicked( const QUrl & ) ),this, SLOT( slotUrlOpen( const QUrl & ) ), Qt::QueuedConnection);
-  connect( mViewer, SIGNAL(popupMenu(const QString &, const QPoint &) ),
-           SLOT(slotUrlPopup(const QString &, const QPoint &)) );
+  connect( mViewer, SIGNAL(linkHovered(QString,QString,QString)),
+           this, SLOT(slotUrlOn(QString,QString,QString)) );
+  connect( mViewer, SIGNAL(linkClicked(QUrl)),
+           this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
+  connect( mViewer, SIGNAL(popupMenu(QString,QPoint) ),
+           SLOT(slotUrlPopup(QString,QPoint)) );
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
