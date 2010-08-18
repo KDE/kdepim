@@ -32,6 +32,7 @@
 # endif
 #endif
 
+#include <boost/function.hpp>
 
 namespace MessageViewer {
 
@@ -61,7 +62,10 @@ public:
 
     QString selectedText() const;
     bool isAttachmentInjectionPoint( const QPoint & globalPos ) const;
+    void injectAttachments( const boost::function<QString()> & delayedHtml );
     void setHtml( const QString & html, const QUrl & baseUrl );
+    void selectAll();
+    double relativePosition() const;
 
 Q_SIGNALS:
 

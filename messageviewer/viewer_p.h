@@ -383,7 +383,7 @@ public:
   const QTextCodec * overrideCodec() const;
 
 
-  QString renderAttachments( KMime::Content *node, const QColor &bgColor );
+  QString renderAttachments( KMime::Content *node, const QColor &bgColor ) const;
 
   KMime::Content* findContentByType(KMime::Content *content, const QByteArray &type); //TODO(Andras) move to NodeHelper
 
@@ -574,6 +574,9 @@ signals:
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
+
+private:
+  QString attachmentInjectionHtml() const;
 
 public:
   NodeHelper* mNodeHelper;

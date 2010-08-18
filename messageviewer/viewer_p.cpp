@@ -135,6 +135,9 @@
 #include <Akonadi/CollectionFetchJob>
 #include <akonadi/collectionfetchscope.h>
 
+#include <boost/bind.hpp>
+
+using namespace boost;
 using namespace MailTransport;
 using namespace MessageViewer;
 using namespace MessageCore;
@@ -1810,7 +1813,7 @@ static QColor nextColor( const QColor & c )
   return QColor::fromHsv( (h + 50) % 360, qMax(s, 64), v );
 }
 
-QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &bgColor )
+QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &bgColor ) const
 {
 
   if ( !node )
@@ -2280,17 +2283,8 @@ void ViewerPrivate::slotSetEncoding()
   update( Viewer::Force );
 }
 
-void ViewerPrivate::injectAttachments()
+QString ViewerPrivate::attachmentInjectionHtml() const
 {
-  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT( injectAttachments() ) );
-  // inject attachments in header view
-  // we have to do that after the otp has run so we also see encrypted parts
-
-  QWebElement doc = mViewer->page()->currentFrame()->documentElement();
-  QWebElement injectionPoint = doc.findFirst( "div#attachmentInjectionPoint" );
-  if( injectionPoint.isNull() )
-    return;
-
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
   QString urlHandle;
   QString imgSrc;
@@ -2308,7 +2302,7 @@ void ViewerPrivate::injectAttachments()
     html += renderAttachments( node, background );
   }
   if ( html.isEmpty() )
-    return;
+    return QString();
 
   QString link("");
   if ( headerStyle() == HeaderStyle::fancy() ) {
@@ -2320,8 +2314,16 @@ void ViewerPrivate::injectAttachments()
     html.prepend( link );
   }
 
-  assert( injectionPoint.tagName().toLower() == "div" );
-  injectionPoint.setInnerXml( html );
+  return html;
+}
+
+void ViewerPrivate::injectAttachments()
+{
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT( injectAttachments() ) );
+  // inject attachments in header view
+  // we have to do that after the otp has run so we also see encrypted parts
+
+  mViewer->injectAttachments( bind( &ViewerPrivate::attachmentInjectionHtml, this ) );
 }
 
 void ViewerPrivate::slotSettingsChanged()
@@ -2565,7 +2567,7 @@ void ViewerPrivate::viewerSelectionChanged()
 
 void ViewerPrivate::selectAll()
 {
-  mViewer->page()->triggerAction(QWebPage::SelectAll);
+  mViewer->selectAll();
 }
 
 void ViewerPrivate::slotUrlCopy()
@@ -2604,15 +2606,7 @@ void ViewerPrivate::slotSaveMessage()
 
 void ViewerPrivate::saveRelativePosition()
 {
-  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
-  if ( hasScrollbar ) {
-    const float pos = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
-    const float height = mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-    mSavedRelativePosition = pos / height;
-  }
-  else {
-    mSavedRelativePosition = 0;
-  }
+  mSavedRelativePosition = mViewer->relativePosition();
 }
 
 //TODO(Andras) inline them

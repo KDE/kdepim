@@ -25,6 +25,7 @@
 #include <QWebElement>
 
 #include <limits>
+#include <cassert>
 
 #ifdef Q_OS_WINCE
 typedef QWebView SuperClass;
@@ -32,6 +33,7 @@ typedef QWebView SuperClass;
 typedef KWebView SuperClass;
 #endif
 
+using namespace boost;
 using namespace MessageViewer;
 
 MailWebView::MailWebView( QWidget *parent )
@@ -109,6 +111,22 @@ bool MailWebView::hasVerticalScrollBar() const
   return page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
 }
 
+double MailWebView::relativePosition() const
+{
+  if ( hasVerticalScrollBar() ) {
+    const double pos = page()->mainFrame()->scrollBarValue( Qt::Vertical );
+    const int height = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+    return height ? pos / height : 0.0 ;
+  } else {
+    return 0.0;
+  }
+}
+
+void MailWebView::selectAll()
+{
+  page()->triggerAction( QWebPage::SelectAll );
+}
+
 // Checks if the given node has a child node that is a DIV which has an ID attribute
 // with the value specified here
 static bool has_parent_div_with_id( const QWebElement & start, const QString & id )
@@ -126,14 +144,32 @@ static bool has_parent_div_with_id( const QWebElement & start, const QString & i
 
 bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
 {
+  // for QTextBrowser, can be implemented as 'return false'
   const QPoint local = page()->view()->mapFromGlobal( global );
   const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
   return has_parent_div_with_id( hit.enclosingBlockElement(), "attachmentInjectionPoint" );
 }
 
+void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
+{
+  // for QTextBrowser, can be implemented empty
+  QWebElement doc = page()->currentFrame()->documentElement();
+  QWebElement injectionPoint = doc.findFirst( "div#attachmentInjectionPoint" );
+  if( injectionPoint.isNull() )
+    return;
+
+  const QString html = delayedHtml();
+  if ( html.isEmpty() )
+    return;
+
+  assert( injectionPoint.tagName().toLower() == "div" );
+  injectionPoint.setInnerXml( html );
+}
+
+
 void MailWebView::setHtml( const QString & html, const QUrl & base )
 {
-    SuperClass::setHtml( html, base );
+  SuperClass::setHtml( html, base );
 }
 
 #include "moc_mailwebview.cpp"

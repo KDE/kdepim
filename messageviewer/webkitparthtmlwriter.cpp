@@ -69,10 +69,7 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
 
   // clear the widget:
   mHtmlView->setUpdatesEnabled( false );
-  QPoint point = mHtmlView->page()->mainFrame()->scrollPosition();
-  point -= QPoint(0, 10);
-  mHtmlView->page()->mainFrame()->setScrollPosition( point );
-
+  mHtmlView->scrollUp( 10 );
   mHtmlView->load( QUrl() );
   mState = Begun;
 }
@@ -125,6 +122,9 @@ void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
 
 void WebKitPartHtmlWriter::resolveCidUrls()
 {
+  // FIXME: instead of patching around in the HTML source, this should
+  // be replaced by a custom QNetworkAccessManager (for QWebView), or
+  // virtual loadResource() (for QTextBrowser)
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
   QWebElementCollection images = root.findAll( "img" );
   QWebElement image;
