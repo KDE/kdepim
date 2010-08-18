@@ -131,7 +131,6 @@ void KJotsEntry::setId(quint64 id)
     all_ids << id;
     m_id = id;
     setText(1, QString::number(id));
-    return;
 }
 
 /*!
@@ -162,7 +161,6 @@ void KJotsEntry::generateXml( QDomDocument &doc, QDomElement &parent )
         parent.appendChild( color );
     }
 
-    return;
 }
 
 /*!
@@ -197,7 +195,6 @@ void KJotsEntry::parseXml( QDomElement &e, bool )
         }
     }
 
-    return;
 }
 
 
@@ -474,7 +471,6 @@ void KJotsBook::generateXml( QDomDocument &doc, QDomElement &parent )
         deleteBook();
     }
 
-    return;
 }
 
 /*!
@@ -511,7 +507,6 @@ void KJotsBook::parseXml( QDomElement &me, bool oldBook )
         }
     }
 
-    return;
 }
 
 /*!
@@ -573,7 +568,6 @@ void KJotsBook::generateHtml( KJotsEntry* top, bool diskMode, QTextCursor *curso
         entry->generateHtml ( top, diskMode, cursorOut );
     }
 
-    return;
 }
 
 /*!
@@ -617,7 +611,6 @@ void KJotsBook::generatePrintData ( QTextCursor *cursor )
         entry->generatePrintData ( cursor );
     }
 
-    return;
 }
 
 /*!
@@ -739,7 +732,6 @@ void KJotsPage::documentModified(bool modified)
         topLevelBook()->setDirty(true);
     }
 
-    return;
 }
 
 /*!
@@ -777,7 +769,6 @@ void KJotsPage::rename()
     text.appendChild( doc.createCDATASection( saveText ));
     page.appendChild( text );
 
-    return;
 }
 
 /*!
@@ -820,7 +811,6 @@ void KJotsPage::parseXml( QDomElement &me, bool oldBook )
         }
     }
 
-    return;
 }
 
 /*!
@@ -880,8 +870,6 @@ void KJotsPage::generateHtml( KJotsEntry *top, bool diskMode, QTextCursor *curso
     }
 
     cursorOut->insertFragment(QTextDocumentFragment::fromHtml(html));
-
-    return;
 }
 
 /*!
@@ -925,8 +913,6 @@ void KJotsPage::generatePrintData ( QTextCursor *cursor )
     QTextCursor allCursor ( &document );
     allCursor.select( QTextCursor::Document );
     cursor->insertFragment(allCursor.selection());
-
-    return;
 }
 
 void KJotsPage::setEditable(bool editable)
