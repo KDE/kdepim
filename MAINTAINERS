@@ -3,24 +3,21 @@ blogilo           Mehrdad Momeny <mehrdad.momeny@gmail.com>
 kabcclient        Kevin Krammer <kevin.krammer@gmx.at>
 kalarm            David Jarvie <djarvie@kde.org>
 kaddressbook      Tobias Koenig <tokoe@kde.org>
-kdgantt           Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>
-                  Lutz Rogowski <lutz@klaralvdalens-datakonsult.se>
+kdgantt           KDAB
 kjots             Stephen Kelly <steveire@gmail.com>
 kleopatra         Marc Mutz <mutz@kde.org>
-                  Steffen Hansen <hansen@kde.org>
 kmail             ?
 kmailcvt          Danny Kukawka <danny.kukawka@web.de>
 knode             Volker Krause <vkrause@kde.org>
-knotes            Guillermo Antonio Amaral Bastidas <me@guillermoamaral.com>
+knotes            (this project is deprecated)
 konsolekalendar   Allen Winter <winter@kde.org>
 kontact           ?
 korganizer        Allen Winter <winter@kde.org>
-kresources        ?
+kresources        (this project is deprecated)
 ksendemail        ?
 ktimetracker      Thorsten Staerk <dev@staerk.de>
-libkdepim         Marc Mutz <mutz@kde.org>
-                  Tobias Koenig <tokoe@kde.org> (addresseeview, kvcarddrag)
-libkpgp           Ingo Klöcker <kloecker@kde.org>
+libkdepim         ? 
+libkpgp           (this project is deprecated)
 libksieve         Marc Mutz <mutz@kde.org>
 plugins           ?
 qpgpme            Marc Mutz <mutz@kde.org>
