@@ -37,8 +37,6 @@
 #include <QObject>
 
 #include <QString>
-#include <QStringList>
-#include <QTimer>
 #include <QByteArray>
 #include <QMap>
 
@@ -65,18 +63,13 @@ public:
 signals:
   void finished();
 
-private slots:
-  void slotWriteNextHtmlChunk();
-
 private:
   void resolveCidUrls();
 
 private:
   MailWebView * mHtmlView;
-  QStringList mHtmlQueue;
   QString mHtml;
   QString mCss;
-  QTimer mHtmlTimer;
   enum State {
     Begun,
     Queued,

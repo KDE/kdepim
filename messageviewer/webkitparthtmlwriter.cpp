@@ -52,8 +52,6 @@ WebKitPartHtmlWriter::WebKitPartHtmlWriter( MailWebView * view, QObject * parent
     mHtmlView( view ), mState( Ended )
 {
   assert( view );
-  mHtmlTimer.setSingleShot( true );
-  connect( &mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()) );
 }
 
 WebKitPartHtmlWriter::~WebKitPartHtmlWriter() {
@@ -97,8 +95,6 @@ void WebKitPartHtmlWriter::end() {
 
 void WebKitPartHtmlWriter::reset() {
   if ( mState != Ended ) {
-    mHtmlTimer.stop();
-    mHtmlQueue.clear();
     mHtml.clear();
     mState = Begun; // don't run into end()'s warning
     end();
@@ -114,28 +110,12 @@ void WebKitPartHtmlWriter::write( const QString & str ) {
 }
 
 void WebKitPartHtmlWriter::queue( const QString & str ) {
-  if ( mState != Begun && mState != Queued ) {
-    kWarning() << "queue() called in Ended state!";
-  }
-  static const uint chunksize = 16384;
-  for ( int pos = 0 ; pos < str.length() ; pos += chunksize )
-    mHtmlQueue.push_back( str.mid( pos, chunksize ) );
-  mState = Queued;
+  write( str );
 }
 
 void WebKitPartHtmlWriter::flush() {
-  slotWriteNextHtmlChunk();
-}
-
-void WebKitPartHtmlWriter::slotWriteNextHtmlChunk() {
-  if ( mHtmlQueue.empty() ) {
-    mState = Begun; // don't run into end()'s warning
-    end();
-  } else {
-    mHtml.append( mHtmlQueue.front() );
-    mHtmlQueue.pop_front();
-    mHtmlTimer.start( 0 );
-  }
+  mState = Begun; // don't run into end()'s warning
+  end();
 }
 
 void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
