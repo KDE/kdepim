@@ -64,7 +64,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #endif
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
-#ifdef Q_WS_MAEMO_5
+#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
   setWindowState( Qt::WindowFullScreen );
   // use the oxygen black on whilte palette instead of the native white on black maemo5 one
   setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
