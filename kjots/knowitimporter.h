@@ -54,19 +54,19 @@ public:
   /**
   Create a KJotsBook from the knowit file at @p url.
   */
-  void importFromUrl( KUrl url );
+  void importFromUrl( const KUrl& url );
 
   private:
     /**
     Builds several trees with roots at m_notes.
     @param url The url of the knowit file.
     */
-    void buildNoteTree( KUrl url );
+    void buildNoteTree( const KUrl& url );
 
     /**
     Add a representation of note @p n to m_domDoc. If @p n has child notes, it will create a book, otherwise a page.
     */
-    QDomElement addNote( KnowItNote n );
+    QDomElement addNote( const KnowItNote& n );
 
     /**
     Build a domDocument from the notes rooted at m_notes.
