@@ -37,6 +37,7 @@ class ExtendedContactGroupViewer : public ContactGroupViewer
 
   public:
     ExtendedContactGroupViewer( QWidget *parent = 0 );
+    ~ExtendedContactGroupViewer();
 
   Q_SIGNALS:
     void contactGroupRemoved();

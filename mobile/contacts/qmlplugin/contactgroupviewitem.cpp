@@ -44,6 +44,11 @@ ContactGroupViewItem::ContactGroupViewItem(QDeclarativeItem* parent)
   setWidget( m_viewer );
 }
 
+ContactGroupViewItem::~ContactGroupViewItem()
+{
+  delete m_viewer;
+}
+
 qint64 ContactGroupViewItem::itemId() const
 {
   return m_viewer->contactGroup().id();
