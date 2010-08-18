@@ -113,7 +113,7 @@ void MainView::recoverAutoSavedMessages()
     return;
   }
 
-  foreach ( const QFileInfo savedMessage, savedMessages ) {
+  foreach ( const QFileInfo& savedMessage, savedMessages ) {
     QFile file( savedMessage.absoluteFilePath() );
 
     if ( file.open( QIODevice::ReadOnly ) ) {
