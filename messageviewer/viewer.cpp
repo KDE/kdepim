@@ -124,9 +124,7 @@ void Viewer::printMessage( const Akonadi::Item &msg )
 void Viewer::print()
 {
   Q_D(Viewer);
-  if ( !message() )
-    return;
-  d->mViewer->print( false );
+  d->slotPrintMsg();
 }
 
 void Viewer::resizeEvent( QResizeEvent * )
