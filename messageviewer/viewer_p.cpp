@@ -2261,15 +2261,13 @@ void ViewerPrivate::slotPrintMsg()
   if ( !mMessage ) return;
 
 // wince does not support printing
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
   QPrinter printer;
 
-  QPointer<QPrintDialog> dlg = new QPrintDialog( &printer, mViewer );
+  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer, mViewer ) );
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
-    mViewer->page()->mainFrame()->print( &printer );
+    mViewer->print( &printer );
   }
-
-  delete dlg;
 #endif
 }
 
@@ -2761,11 +2759,10 @@ void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
     KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
     return;
   }
-  AutoQPointer<ChiasmusKeySelector> selectorDlg;
-  selectorDlg = new ChiasmusKeySelector( mMainWindow,
-                                         i18n( "Chiasmus Decryption Key Selection" ),
-                                         keys, GlobalSettings::chiasmusDecryptionKey(),
-                                         GlobalSettings::chiasmusDecryptionOptions() );
+  AutoQPointer<ChiasmusKeySelector> selectorDlg( new ChiasmusKeySelector( mMainWindow,
+                                                                          i18n( "Chiasmus Decryption Key Selection" ),
+                                                                          keys, GlobalSettings::chiasmusDecryptionKey(),
+                                                                          GlobalSettings::chiasmusDecryptionOptions() ) );
   if ( selectorDlg->exec() != QDialog::Accepted || !selectorDlg ) {
     return;
   }

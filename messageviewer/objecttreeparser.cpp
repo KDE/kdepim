@@ -1950,10 +1950,9 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
     return false;
   }
 
-  AutoQPointer<ChiasmusKeySelector> selectorDlg;
-  selectorDlg = new ChiasmusKeySelector( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
-                                         keys, GlobalSettings::chiasmusDecryptionKey(),
-                                         GlobalSettings::chiasmusDecryptionOptions() );
+  AutoQPointer<ChiasmusKeySelector> selectorDlg( new ChiasmusKeySelector( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
+                                                                          keys, GlobalSettings::chiasmusDecryptionKey(),
+                                                                          GlobalSettings::chiasmusDecryptionOptions() ) );
 
   if ( selectorDlg->exec() != KDialog::Accepted || !selectorDlg ) {
     return false;
