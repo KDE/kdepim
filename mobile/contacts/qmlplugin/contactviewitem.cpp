@@ -47,6 +47,11 @@ ContactViewItem::ContactViewItem(QDeclarativeItem* parent)
   setWidget( m_viewer );
 }
 
+ContactViewItem::~ContactViewItem()
+{
+  delete m_viewer;
+}
+
 qint64 ContactViewItem::itemId() const
 {
   return m_viewer->contact().id();

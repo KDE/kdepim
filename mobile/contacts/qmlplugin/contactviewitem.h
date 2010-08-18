@@ -37,6 +37,7 @@ class ExtendedContactViewer : public ContactViewer
 
   public:
     ExtendedContactViewer( QWidget *parent = 0 );
+    ~ExtendedContactViewer();
 
   Q_SIGNALS:
     void contactRemoved();
