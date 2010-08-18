@@ -133,24 +133,21 @@ ActionMenuContainer {
   ActionList {
     category: "mail_viewer"
     name: KDE.i18n( "Email" )
-    FakeAction { name : "reply" }
-    FakeAction { name : "forward" }
-    FakeAction { name : "mark_email_as" }
+    ActionListItem { name : "message_reply" }
+    ActionListItem { name : "message_forward" }
+    ActionList {
+      name: KDE.i18n( "Mark As" )
+      ActionListItem { name : "akonadi_mark_as_read" }
+      ActionListItem { name : "akonadi_mark_as_unread" }
+      ActionListItem { name : "akonadi_mark_as_important" }
+      ActionListItem { name : "akonadi_mark_as_action_item" }
+    }
     FakeAction { name : "send_again" }
     FakeAction { name : "create_todo_reminder" }
     FakeAction { name : "find_in_email" }
     FakeAction { name : "save_as" }
   }
 
-//TODO: Make it a submenu of the above ActionList somehow...
-  ActionList {
-    category: "mail_viewer"
-    name: KDE.i18n( "Mark As" )
-    ActionListItem { name : "akonadi_mark_as_read" }
-    ActionListItem { name : "akonadi_mark_as_unread" }
-    ActionListItem { name : "akonadi_mark_as_important" }
-    ActionListItem { name : "akonadi_mark_as_action_item" }
-  }
   ActionList {
     category: "mail_viewer"
     name: KDE.i18n( "Attachments" )

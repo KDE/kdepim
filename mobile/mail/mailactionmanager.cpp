@@ -53,7 +53,7 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action = actionCollection->addAction("message_reply_to_all");
   action->setText( i18n("Reply To All") );
 
-  action = actionCollection->addAction("forward_message");
+  action = actionCollection->addAction("message_forward");
   action->setText( i18n("Forward") );
 
   action = actionCollection->addAction("save_favorite");
