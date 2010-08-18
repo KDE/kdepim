@@ -37,7 +37,6 @@ class ExtendedContactGroupViewer : public ContactGroupViewer
 
   public:
     ExtendedContactGroupViewer( QWidget *parent = 0 );
-    ~ExtendedContactGroupViewer();
 
   Q_SIGNALS:
     void contactGroupRemoved();
@@ -52,6 +51,7 @@ class ContactGroupViewItem : public DeclarativeAkonadiItem
 
   public:
     explicit ContactGroupViewItem( QDeclarativeItem *parent = 0 );
+    ~ContactGroupViewItem();
 
     qint64 itemId() const;
     void setItemId( qint64 id );
