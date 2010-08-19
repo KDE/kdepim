@@ -55,6 +55,8 @@ public:
 #else
     // unsafe - use explicit .get()
     KDE_DEPRECATED operator T*() const { return get(); }
+    // unsafe - only provided to prevent the above warning in bool contexts
+    operator bool() const { return get(); }
 #endif
     
 };
