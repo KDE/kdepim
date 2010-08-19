@@ -36,6 +36,7 @@ Rectangle {
   property alias imageHeight : image.height
 
   signal triggered()
+  signal longPressed()
 
   Binding {
     target : image
@@ -94,6 +95,9 @@ Rectangle {
     }
     onClicked : {
       triggered(); action.trigger();
+    }
+    onPressAndHold : {
+      longPressed()
     }
   }
 

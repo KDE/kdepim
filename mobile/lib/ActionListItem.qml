@@ -33,6 +33,7 @@ QML.Item {
   property string category
 
   signal triggered(string triggeredName)
+  signal pressAndHold()
 
   KPIM.Action {
     height : parent.height
@@ -42,7 +43,12 @@ QML.Item {
       application.getAction(name, argument);
     }
     hidable : false
-  }
+
+    onLongPressed: {
+      pressAndHold();
+    }
+    }
+     
 
 /*
   QML.Rectangle {
