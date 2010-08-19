@@ -18,6 +18,8 @@
 */
 
 #include "mainview.h"
+#include "contactviewitem.h"
+#include "contactgroupviewitem.h"
 #include "contacteditorview.h"
 #include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
@@ -33,12 +35,18 @@
 #include <klocale.h>
 #include <Akonadi/ItemFetchScope>
 
+QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
+QML_DECLARE_TYPE( Akonadi::Contact::ContactGroupViewItem )
+
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
 {
 }
 
 void MainView::delayedInit()
 {
+  qmlRegisterType<Akonadi::Contact::ContactViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactView" );
+  qmlRegisterType<Akonadi::Contact::ContactGroupViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactGroupView" );
+
   ContactImageProvider *provider = new ContactImageProvider;
   provider->setModel( itemModel() );
   engine()->addImageProvider( QLatin1String( "contact_images" ), provider );
