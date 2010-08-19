@@ -25,13 +25,11 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/changerecorder.h>
 
-#include "akonadi_next_export.h"
-
 using namespace Akonadi;
 
 class MailModelPrivate;
 
-class AKONADI_NEXT_EXPORT MailModel : public EntityTreeModel
+class MailModel : public EntityTreeModel
 {
   Q_OBJECT
 public:

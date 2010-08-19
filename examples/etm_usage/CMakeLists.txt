@@ -23,6 +23,7 @@ include_directories( ${KDE4_INCLUDES}
 
 set(etm_usage_SRCS
     main.cpp
+    mailmodel.cpp
     mainwindow.cpp
     entitytreewidget.cpp
     entityfindingwidget.cpp

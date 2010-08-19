@@ -38,7 +38,7 @@
 #include <akonadi/etmviewstatesaver.h>
 
 #include <akonadi_next/checkableitemproxymodel.h>
-#include <akonadi_next/mailmodel.h>
+#include "mailmodel.h"
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
