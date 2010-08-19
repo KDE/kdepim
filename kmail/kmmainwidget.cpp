@@ -3930,7 +3930,9 @@ void KMMainWidget::slotShowStartupFolder()
   mFolderShortcutActionManager->createActions();
   mTagActionManager->createActions();
   messageActions()->setupForwardingActionsList( mGUIClient );
-  mMsgView->viewer()->loadActionLists();
+
+  if ( mMsgView )
+    mMsgView->viewer()->loadActionLists();
 
   QString newFeaturesMD5 = KMReaderWin::newFeaturesMD5();
   if ( kmkernel->firstStart() ||
