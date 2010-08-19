@@ -68,12 +68,19 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   setWindowState( Qt::WindowFullScreen );
   // use the oxygen black on whilte palette instead of the native white on black maemo5 one
   setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
+#else
+  // on the desktop start with a nice size
+  resize(800, 480);
 #endif
 
-  m_splashScreen = new QLabel( this );
-  QPixmap splashBackground;
-  splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
-  m_splashScreen->setPixmap( splashBackground );
+  const QString splashPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" )
+                                                    + QDir::separator()
+                                                    + QLatin1String( "splashscreenstatic.png" ) );
+
+  // set the background brush instead of using a QLabel for that
+  QPixmap splashBackground(splashPath);
+  setBackgroundBrush( splashBackground );
+  setAutoFillBackground( true );
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
 }
@@ -167,9 +174,6 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
     KMessageBox::error( this, i18n( "Application loading failed: %1", errorMessages.join( QLatin1String( "\n" ) ) ) );
     QCoreApplication::instance()->exit( 1 );
   }
-
-  if ( status == QDeclarativeView::Ready )
-    m_splashScreen->deleteLater();
 }
 
 KActionCollection* KDeclarativeFullScreenView::actionCollection() const
