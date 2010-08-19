@@ -1063,6 +1063,7 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 void ViewerPrivate::initHtmlWidget()
 {
   mViewer->setFocusPolicy( Qt::WheelFocus );
+  //PENDING(marc) move next two lines to MailWebView:
   mViewer->page()->view()->installEventFilter( this );
   mViewer->installEventFilter( this );
 
@@ -1106,6 +1107,7 @@ void ViewerPrivate::initHtmlWidget()
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
 {
+  // PENDING(marc): move to MailWebView
   if ( e->type() == QEvent::MouseButtonPress ) {
     QMouseEvent* me = static_cast<QMouseEvent*>(e);
     if ( me->button() == Qt::LeftButton && ( me->modifiers() & Qt::ShiftModifier ) ) {
@@ -1461,11 +1463,6 @@ void ViewerPrivate::createWidgets() {
   mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
 
-#ifdef KDEPIM_MOBILE_UI
-  mViewer->page()->mainFrame()->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
-  mViewer->page()->mainFrame()->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
-#endif
-
   mFindBar = new FindBar( mViewer, readerBox );
 #ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
@@ -1604,8 +1601,8 @@ void ViewerPrivate::createActions()
   mCopyAction = ac->addAction( KStandardAction::Copy, "kmail_copy", this,
                                SLOT(slotCopySelectedText()) );
 
-  connect( mViewer->page(), SIGNAL( selectionChanged() ), this,
-                      SLOT( viewerSelectionChanged() ) );
+  connect( mViewer, SIGNAL(selectionChanged()),
+           this, SLOT(viewerSelectionChanged()) );
   viewerSelectionChanged();
 
   // copy all text to clipboard
@@ -2012,7 +2009,7 @@ void ViewerPrivate::slotShowMessageSource()
 {
   mNodeHelper->messageWithExtraContent( mMessage.get() );
   const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
-  const QString htmlSource = mViewer->page()->mainFrame()->documentElement().toOuterXml();
+  const QString htmlSource = mViewer->htmlSource();
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
   viewer->setWindowTitle( i18n("Message as Plain Text") );
@@ -2060,10 +2057,7 @@ void ViewerPrivate::updateReaderWin()
   }
   mRecursionCountForDisplayMessage++;
 
-  // FIXME on WinCE we use a simple QWebView, check if there's an alternative API for it
-#ifndef Q_OS_WINCE
   mViewer->setAllowExternalContent( htmlLoadExternal() );
-#endif
 
   htmlWriter()->reset();
   //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
@@ -2087,10 +2081,7 @@ void ViewerPrivate::updateReaderWin()
   }
 
   if ( mSavedRelativePosition ) {
-    // FIXME: This doesn't work, Qt resets the scrollbar value somewhere in the event handler.
-    //        Using a singleshot timer wouldn't work either, since that introduces visible scrolling.
-    const float max = mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-    mViewer->page()->currentFrame()->setScrollBarValue( Qt::Vertical, max * mSavedRelativePosition );
+    mViewer->scrollToRelativePosition( mSavedRelativePosition );
     mSavedRelativePosition = 0;
   }
   mRecursionCountForDisplayMessage--;
@@ -2670,26 +2661,15 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 
 void ViewerPrivate::scrollToAttachment( KMime::Content *node )
 {
-  QWebElement doc = mViewer->page()->mainFrame()->documentElement();
-
+  const QString indexStr = node->index().toString();
   // The anchors for this are created in ObjectTreeParser::parseObjectTree()
-  QWebElement link = doc.findFirst( QString::fromLatin1( "a#att%1" ).arg( node->index().toString() ) );
-  if( link.isNull() ) {
-    return;
-  }
-
-  int linkPos = link.geometry().bottom();
-  int viewerPos  = mViewer->page()->mainFrame()->scrollPosition().y();
-  link.setFocus();
-  mViewer->page()->mainFrame()->scroll(0, linkPos - viewerPos );
+  mViewer->scrollToAnchor( "att" + indexStr );
 
   // Remove any old color markings which might be there
   const KMime::Content *root = node->topLevel();
-  int totalChildCount = Util::allContents( root ).size();
-  for ( int i = 0; i <= totalChildCount + 1; i++ ) {
-    QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( i + 1 ) );
-    if ( !attachmentDiv.isNull() )
-      attachmentDiv.removeAttribute( "style" );
+  const int totalChildCount = Util::allContents( root ).size();
+  for ( int i = 0 ; i < totalChildCount + 1 ; ++i ) {
+    mViewer->removeAttachmentMarking( QString::fromLatin1( "attachmentDiv%1" ).arg( i + 1 ) );
   }
 
   // Don't mark hidden nodes, that would just produce a strange yellow line
@@ -2700,12 +2680,7 @@ void ViewerPrivate::scrollToAttachment( KMime::Content *node )
   // Now, color the div of the attachment in yellow, so that the user sees what happened.
   // We created a special marked div for this in writeAttachmentMarkHeader() in ObjectTreeParser,
   // find and modify that now.
-
-  QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( node->index().toString() ) );
-  if ( attachmentDiv.isNull() ) {
-    return;
-  }
-  attachmentDiv.setAttribute( "style", QString( "border:2px solid %1" ).arg( cssHelper()->pgpWarnColor().name() ) );
+  mViewer->markAttachment( "attachmentDiv" + indexStr, QString::fromLatin1( "border:2px solid %1" ).arg( cssHelper()->pgpWarnColor().name() ) );
 }
 
 void ViewerPrivate::setUseFixedFont( bool useFixedFont )

@@ -59,13 +59,20 @@ public:
     bool hasVerticalScrollBar() const;
     void scrollPageDown( int percent );
     void scrollPageUp( int percent );
+    void scrollToAnchor( const QString & anchor );
 
     QString selectedText() const;
     bool isAttachmentInjectionPoint( const QPoint & globalPos ) const;
     void injectAttachments( const boost::function<QString()> & delayedHtml );
+    bool removeAttachmentMarking( const QString & id );
+    void markAttachment( const QString & id, const QString & style );
     void setHtml( const QString & html, const QUrl & baseUrl );
+    QString htmlSource() const;
     void selectAll();
+    void scrollToRelativePosition( double pos );
     double relativePosition() const;
+
+    void setAllowExternalContent( bool allow );
 
 Q_SIGNALS:
 

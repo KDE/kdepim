@@ -263,7 +263,7 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
 
     KMime::ContentIndex contentIndex = node->index();
     if ( htmlWriter() /*&& contentIndex.isValid()*/ )
-      htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"></a>").arg( contentIndex.toString() ) );
+      htmlWriter()->queue( QString::fromLatin1("<a name=\"att%1\"></a>").arg( contentIndex.toString() ) );
 
     QByteArray mediaType( "text" );
     QByteArray subType( "plain" );

@@ -43,8 +43,19 @@ MailWebView::MailWebView( QWidget *parent )
   settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   settings()->setAttribute( QWebSettings::JavaEnabled, false );
   settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+#ifdef KDEPIM_MOBILE_UI
+  page()->mainFrame()->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
+  page()->mainFrame()->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
+#endif
   connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
            this,   SIGNAL(linkHovered(QString,QString,QString)) );
+#if QT_VERSION < 0x040800
+  // workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
+  connect( page(), SIGNAL(selectionChanged()),
+           this,   SIGNAL(selectionChanged()) );
+#else
+# error Check QWebPage::selectionChanged() is connected to QWebView::selectionChanged() in this Qt version now.
+#endif
 }
 
 MailWebView::~MailWebView() {}
@@ -122,6 +133,14 @@ double MailWebView::relativePosition() const
   }
 }
 
+void MailWebView::scrollToRelativePosition( double pos )
+{
+  // FIXME: This doesn't work, Qt resets the scrollbar value somewhere in the event handler.
+  //        Using a singleshot timer wouldn't work either, since that introduces visible scrolling.
+  const int max = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+  page()->currentFrame()->setScrollBarValue( Qt::Vertical, max * pos );
+}
+
 void MailWebView::selectAll()
 {
   page()->triggerAction( QWebPage::SelectAll );
@@ -154,7 +173,7 @@ void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
 {
   // for QTextBrowser, can be implemented empty
   QWebElement doc = page()->currentFrame()->documentElement();
-  QWebElement injectionPoint = doc.findFirst( "div#attachmentInjectionPoint" );
+  QWebElement injectionPoint = doc.findFirst( "*#attachmentInjectionPoint" );
   if( injectionPoint.isNull() )
     return;
 
@@ -166,10 +185,57 @@ void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
   injectionPoint.setInnerXml( html );
 }
 
+void MailWebView::scrollToAnchor( const QString & anchor )
+{
+  QWebElement doc = page()->mainFrame()->documentElement();
+  QWebElement link = doc.findFirst( "a[name=" + anchor +']' );
+  if ( link.isNull() ) {
+    return;
+  }
+
+  const int linkPos = link.geometry().bottom();
+  const int viewerPos  = page()->mainFrame()->scrollPosition().y();
+  link.setFocus();
+  page()->mainFrame()->scroll(0, linkPos - viewerPos );
+
+}
+
+bool MailWebView::removeAttachmentMarking( const QString & id )
+{
+  QWebElement doc = page()->mainFrame()->documentElement();
+  QWebElement attachmentDiv = doc.findFirst( "*#" + id );
+  if ( attachmentDiv.isNull() )
+    return false;
+  attachmentDiv.removeAttribute( "style" );
+  return true;
+}
+
+void MailWebView::markAttachment( const QString & id, const QString & style )
+{
+  QWebElement doc = page()->mainFrame()->documentElement();
+  QWebElement attachmentDiv = doc.findFirst( "*#" + id );
+  if ( !attachmentDiv.isNull() ) {
+    attachmentDiv.setAttribute( "style", style );
+  }
+}
 
 void MailWebView::setHtml( const QString & html, const QUrl & base )
 {
   SuperClass::setHtml( html, base );
+}
+
+QString MailWebView::htmlSource() const
+{
+  return page()->mainFrame()->documentElement().toOuterXml();
+}
+
+void MailWebView::setAllowExternalContent( bool allow )
+{
+  // FIXME on WinCE we use a simple QWebView, check if there's an alternative API for it
+#ifndef Q_OS_WINCE
+    SuperClass::setAllowExternalContent( allow );
+#endif
+
 }
 
 #include "moc_mailwebview.cpp"
