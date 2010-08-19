@@ -20,10 +20,8 @@ target_link_libraries(tasks-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   kdepimmobileui
-#    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-#    ${KDEPIMLIBS_AKONADI_LIBS}
-#    akonadi_next
-    kdepim
+  kdepimmobileuicalendar
+  kdepim
 )
 
 # not built under WinCE, should be going away eventually anyway

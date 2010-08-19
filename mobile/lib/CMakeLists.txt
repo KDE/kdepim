@@ -4,14 +4,14 @@ include_directories(
     ${Boost_INCLUDE_DIR}
 )
 
+add_subdirectory( calendar )
+
 set(mobileui_SRCS
     listproxy.cpp
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
     akonadibreadcrumbnavigationfactory.cpp
     declarativeakonadiitem.cpp
-    declarativeeditors.cpp
-    incidenceview.cpp
     kdeclarativeapplication.cpp
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
@@ -22,11 +22,6 @@ set(mobileui_SRCS
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_ui_files(mobileui_SRCS
-  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomobile.ui
-  ${CMAKE_SOURCE_DIR}/incidenceeditors/incidenceeditor-ng/eventortodomoremobile.ui
-)
-
 kde4_add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
 set_target_properties(kdepimmobileui PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
@@ -34,12 +29,8 @@ target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
   ${QT_QTOPENGL_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  akonadi-kcal_next
   akonadi_next
-  incidenceeditorsngmobile
   kdepim
-  messagecore
 )
 
 set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
@@ -78,5 +69,4 @@ install(FILES
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
-  incidence-editor.qml
   DESTINATION ${DATA_INSTALL_DIR}/mobileui)

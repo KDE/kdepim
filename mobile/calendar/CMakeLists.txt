@@ -29,6 +29,7 @@ target_link_libraries(korganizer-mobile
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   kdepimmobileui
+  kdepimmobileuicalendar
   akonadi-kcal_next
   incidenceeditorsngmobile
   eventviews
