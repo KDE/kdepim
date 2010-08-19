@@ -23,6 +23,7 @@
 #include "messagelistproxy.h"
 #include "mailactionmanager.h"
 #include "global.h"
+#include "messageviewitem.h"
 
 #include <KDE/KDebug>
 #include <KActionCollection>
@@ -52,6 +53,7 @@
 #include <QDir>
 
 Q_DECLARE_METATYPE(KMime::Content*)
+QML_DECLARE_TYPE(MessageViewer::MessageViewItem)
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
@@ -70,6 +72,8 @@ void MainView::delayedInit()
     t.start();
     kWarning() << "Start MainView ctor" << &t << " - " << QDateTime::currentDateTime();
   }
+
+  qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
 
   addMimeType( KMime::Message::mimeType() );
   itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );

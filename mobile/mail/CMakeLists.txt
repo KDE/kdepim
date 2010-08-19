@@ -11,6 +11,7 @@ include_directories(
 )
 
 set(kmail_mobile_srcs
+  attachmentproxymodel.cpp
   global.cpp
   composerautoresizer.cpp
   composerview.cpp
@@ -19,6 +20,7 @@ set(kmail_mobile_srcs
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
+  messageviewitem.cpp
 )
 
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
