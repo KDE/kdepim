@@ -55,7 +55,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
 
-#include "akonadi_next/entityorderproxymodel.h"
+#include "akonadi/entityorderproxymodel.h"
 #include "akonadi_next/note.h"
 #include "akonadi_next/notecreatorandselector.h"
 
