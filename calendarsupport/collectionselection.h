@@ -33,7 +33,7 @@
 class QItemSelection;
 class QItemSelectionModel;
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class CALENDARSUPPORT_EXPORT CollectionSelection : public QObject
 {

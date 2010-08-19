@@ -81,6 +81,6 @@ class CALENDARSUPPORT_EXPORT MailClient : public QObject
                const QString &mailTransport = QString() );
 };
 
-} // namespace Akonadi
+}
 
 #endif

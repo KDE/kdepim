@@ -28,7 +28,7 @@
 
 using namespace CalendarSupport;
 
-class Akonadi::CollectionSelection::Private
+class CollectionSelection::Private
 {
   public:
     explicit Private( QItemSelectionModel *model_ ) : model( model_ )
@@ -38,40 +38,39 @@ class Akonadi::CollectionSelection::Private
     QItemSelectionModel *model;
 };
 
-Akonadi::CollectionSelection::CollectionSelection( QItemSelectionModel *selectionModel,
-                                                   QObject *parent )
+CollectionSelection::CollectionSelection( QItemSelectionModel *selectionModel, QObject *parent )
   : QObject( parent ), d( new Private ( selectionModel ) )
 {
   connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
 }
 
-Akonadi::CollectionSelection::~CollectionSelection()
+CollectionSelection::~CollectionSelection()
 {
   delete d;
 }
 
-QItemSelectionModel *Akonadi::CollectionSelection::model() const
+QItemSelectionModel *CollectionSelection::model() const
 {
   return d->model;
 }
 
-bool Akonadi::CollectionSelection::hasSelection() const
+bool CollectionSelection::hasSelection() const
 {
   return d->model->hasSelection();
 }
 
-bool Akonadi::CollectionSelection::contains( const Collection &c ) const
+bool CollectionSelection::contains( const Akonadi::Collection &c ) const
 {
   return selectedCollectionIds().contains( c.id() );
 }
 
-bool Akonadi::CollectionSelection::contains( const Akonadi::Collection::Id &id ) const
+bool CollectionSelection::contains( const Akonadi::Collection::Id &id ) const
 {
   return selectedCollectionIds().contains( id );
 }
 
-Akonadi::Collection::List Akonadi::CollectionSelection::selectedCollections() const
+Akonadi::Collection::List CollectionSelection::selectedCollections() const
 {
   Akonadi::Collection::List selected;
   Q_FOREACH ( const QModelIndex &idx, d->model->selectedIndexes() ) {
@@ -80,7 +79,8 @@ Akonadi::Collection::List Akonadi::CollectionSelection::selectedCollections() co
   return selected;
 }
 
-QList<Akonadi::Collection::Id> Akonadi::CollectionSelection::selectedCollectionIds() const {
+QList<Akonadi::Collection::Id> CollectionSelection::selectedCollectionIds() const
+{
   QList<Akonadi::Collection::Id> selected;
   Q_FOREACH ( const QModelIndex &idx, d->model->selectedIndexes() ) {
     selected.append( collectionIdFromIndex( idx ) );
@@ -88,17 +88,17 @@ QList<Akonadi::Collection::Id> Akonadi::CollectionSelection::selectedCollectionI
   return selected;
 }
 
-void Akonadi::CollectionSelection::slotSelectionChanged( const QItemSelection &selectedIndexes,
-                                                         const QItemSelection &deselIndexes )
+void CollectionSelection::slotSelectionChanged( const QItemSelection &selectedIndexes,
+                                                const QItemSelection &deselIndexes )
 {
   const Akonadi::Collection::List selected = collectionsFromIndexes( selectedIndexes.indexes() );
   const Akonadi::Collection::List deselected = collectionsFromIndexes( deselIndexes.indexes() );
 
   emit selectionChanged( selected, deselected );
-  Q_FOREACH ( const Collection &c, deselected ) {
+  Q_FOREACH ( const Akonadi::Collection &c, deselected ) {
     emit collectionDeselected( c );
   }
-  Q_FOREACH ( const Collection &c, selected ) {
+  Q_FOREACH ( const Akonadi::Collection &c, selected ) {
     emit collectionSelected( c );
   }
 }
