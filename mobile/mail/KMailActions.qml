@@ -105,10 +105,15 @@ ActionMenuContainer {
   ActionList {
     category : "single_folder"
     name : KDE.i18n( "View" )
-    FakeAction { name : "save_as_favorite" }
+    FakeAction { name : "save_favorite" }
     FakeAction { name : "start_maintaince" }
     FakeAction { name : "prefer_html_to_plain" }
     FakeAction { name : "load_external_ref" }
+  }
+
+  ActionListItem {
+    category: "single_folder"
+    ActionListItem { name : "write_new_email" }
   }
 
   ActionList {
@@ -133,8 +138,37 @@ ActionMenuContainer {
   ActionList {
     category: "mail_viewer"
     name: KDE.i18n( "Email" )
-    ActionListItem { name : "message_reply" }
-    ActionListItem { name : "message_forward" }
+    /*
+    ActionListItem {
+      name : "message_reply"
+      onPressAndHold: {
+          console.log("TODO: Show the possible reply actions")
+      }
+    }*/
+    //TODO: Show this above onPressAndHold
+    ActionList {
+      category: "mail_viewer"
+      name: KDE.i18n( "Reply ..." )
+      ActionListItem { name: "message_reply" }
+      ActionListItem { name: "message_reply_to_author" }
+      ActionListItem { name: "message_reply_to_all" }
+      ActionListItem { name: "message_reply_to_list" }
+   }
+/*
+    ActionListItem {
+      name : "message_forward"
+      onPressAndHold: {
+          console.log("TODO: Show the possible forward actions")
+      }      
+    }*/
+    //TODO: Show this above onPressAndHold
+    ActionList {
+      category: "mail_viewer"
+      name: KDE.i18n( "Forward ..." )
+      ActionListItem { name: "message_forward" }
+      ActionListItem { name: "message_forward_as_attachment" }
+      ActionListItem { name: "message_redirect" }
+   }
     ActionList {
       name: KDE.i18n( "Mark As" )
       ActionListItem { name : "akonadi_mark_as_read" }
@@ -147,6 +181,7 @@ ActionMenuContainer {
     FakeAction { name : "find_in_email" }
     FakeAction { name : "save_as" }
   }
+
 
   ActionList {
     category: "mail_viewer"

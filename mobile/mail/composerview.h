@@ -55,7 +55,6 @@ class ComposerView : public KDeclarativeFullScreenView
   public:
     explicit ComposerView(QWidget* parent = 0);
 
-    void setMessage( const KMime::Message::Ptr &msg );
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_composerBase->setIdentityCombo( combo ); }
 
     void setEditor( Message::KMeditor* editor );
@@ -68,7 +67,9 @@ class ComposerView : public KDeclarativeFullScreenView
     void setBusy(bool busy);
     void setAutoSaveFileName(const QString &fileName);
 
+
   public slots:
+    void setMessage( const KMime::Message::Ptr &msg );
     QObject* getAction( const QString &name ) const;
 
     /// Send clicked in the user interface
@@ -81,6 +82,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void enableHtml();
     void disableHtml( Message::ComposerViewBase::Confirmation confirmation );
+    void addAttachment( KMime::Content* part );
 
   signals:
     void changed();

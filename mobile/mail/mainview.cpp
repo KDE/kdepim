@@ -51,9 +51,12 @@
 #include <QTimer>
 #include <QDir>
 
+Q_DECLARE_METATYPE(KMime::Content*)
+
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
+  qRegisterMetaType<KMime::Content*>();
 }
 
 void MainView::delayedInit()
@@ -79,8 +82,13 @@ void MainView::delayedInit()
   connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
   connect(actionCollection()->action("write_new_email"), SIGNAL(triggered(bool)), SLOT(startComposer()));
   connect(actionCollection()->action("message_reply"), SIGNAL(triggered(bool)), SLOT(replyToMessage()));
+  connect(actionCollection()->action("message_reply_variants"), SIGNAL(triggered(bool)), SLOT(replyVariants()));
   connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
-  connect(actionCollection()->action("forward_message"), SIGNAL(triggered(bool)), SLOT(forwardMessage()));
+  connect(actionCollection()->action("message_reply_to_author"), SIGNAL(triggered(bool)), SLOT(replyToAuthor()));
+  connect(actionCollection()->action("message_reply_to_list"), SIGNAL(triggered(bool)), SLOT(replyToMailingList()));
+  connect(actionCollection()->action("message_forward"), SIGNAL(triggered(bool)), SLOT(forwardMessage()));
+  connect(actionCollection()->action("message_forward_as_attachment"), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()));
+  connect(actionCollection()->action("message_redirect"), SIGNAL(triggered(bool)), SLOT(redirect()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
@@ -180,14 +188,23 @@ void MainView::composeFetchResult( KJob *job )
   composer->show();
 }
 
-void MainView::reply( quint64 id )
+
+void MainView::replyToAuthor()
 {
-  reply( id, MessageComposer::ReplySmart );
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  reply( item.id(), MessageComposer::ReplyAuthor );
 }
 
-void MainView::replyToAll(quint64 id)
+void MainView::replyToMailingList()
 {
-  reply( id, MessageComposer::ReplyAll );
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  reply( item.id(), MessageComposer::ReplyList );
 }
 
 void MainView::reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy)
@@ -216,14 +233,15 @@ void MainView::replyFetchResult(KJob* job)
   composer->show();
 }
 
-void MainView::forwardInline(quint64 id)
+void MainView::forward(quint64 id, ForwardMode mode)
 {
   Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( id ), this );
   fetch->fetchScope().fetchFullPayload();
-  connect( fetch, SIGNAL(result(KJob*)), SLOT(forwardInlineFetchResult(KJob*)) );
+  fetch->setProperty( "forwardMode", QVariant::fromValue( mode ) );
+  connect( fetch, SIGNAL(result(KJob*)), SLOT(forwardFetchResult(KJob*)) );
 }
 
-void MainView::forwardInlineFetchResult( KJob* job )
+void MainView::forwardFetchResult( KJob* job )
 {
   Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
   if ( job->error() || fetch->items().isEmpty() )
@@ -236,7 +254,23 @@ void MainView::forwardInlineFetchResult( KJob* job )
   factory.setIdentityManager( Global::identityManager() );
 
   ComposerView *composer = new ComposerView;
-  composer->setMessage( factory.createForward() );
+  ForwardMode mode = fetch->property( "forwardMode" ).value<ForwardMode>();
+  switch (mode) {
+    case InLine:
+      composer->setMessage( factory.createForward() );
+      break;
+    case AsAttachment: {
+      QPair< KMime::Message::Ptr, QList< KMime::Content* > > fwdMsg = factory.createAttachedForward( QList< KMime::Message::Ptr >() << item.payload<KMime::Message::Ptr>());
+      //the invokeMethods are there to be sure setMessage and addAttachment is called after composer->delayedInit
+      QMetaObject::invokeMethod( composer, "setMessage", Qt::QueuedConnection, Q_ARG(KMime::Message::Ptr,  fwdMsg.first) );
+      foreach( KMime::Content* attach, fwdMsg.second )
+        QMetaObject::invokeMethod( composer, "addAttachment", Qt::QueuedConnection, Q_ARG(KMime::Content*,  attach ) );
+      break;
+    }
+    case Redirect:
+      composer->setMessage( factory.createRedirect("") );
+      break;
+  }
   composer->show();
 }
 
@@ -286,7 +320,7 @@ void MainView::replyToMessage()
   if ( !item.isValid() )
     return;
 
-  reply( item.id() );
+  reply( item.id(), MessageComposer::ReplySmart );
 }
 
 void MainView::replyToAll()
@@ -295,7 +329,7 @@ void MainView::replyToAll()
   if ( !item.isValid() )
     return;
 
-  replyToAll( item.id() );
+  reply( item.id(), MessageComposer::ReplyAll );
 }
 
 void MainView::forwardMessage()
@@ -304,8 +338,28 @@ void MainView::forwardMessage()
   if ( !item.isValid() )
     return;
 
-  forwardInline( item.id() );
+  forward( item.id(), InLine );
 }
+
+void MainView::forwardAsAttachment()
+{
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  forward( item.id(), AsAttachment );
+}
+
+
+void MainView::redirect()
+{
+  Akonadi::Item item = currentItem();
+  if ( !item.isValid() )
+    return;
+
+  forward( item.id(), Redirect );
+}
+
 
 Akonadi::Item MainView::currentItem()
 {
@@ -515,6 +569,12 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
 }
+
+void MainView::replyVariants()
+{
+  qDebug() << Q_FUNC_INFO;
+}
+
 
 // #############################################################
 

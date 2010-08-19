@@ -35,12 +35,15 @@ class MainView : public KDeclarativeMainView
   public:
     explicit MainView(QWidget* parent = 0);
 
+    enum ForwardMode {
+      InLine = 0,
+      AsAttachment,
+      Redirect
+    };
+
   public slots:
     void startComposer();
     void restoreDraft( quint64 id );
-    void reply( quint64 id );
-    void replyToAll( quint64 id );
-    void forwardInline( quint64 id );
 
     void markImportant(bool checked);
     void markMailTask(bool checked);
@@ -55,11 +58,17 @@ class MainView : public KDeclarativeMainView
 
     void configureIdentity();
 
+
   protected slots:
     void delayedInit();
     void replyToMessage();
     void replyToAll();
+    void replyToAuthor();
+    void replyToMailingList();
     void forwardMessage();
+    void forwardAsAttachment();
+    void redirect();
+    void replyVariants();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -69,17 +78,22 @@ class MainView : public KDeclarativeMainView
 
   private slots:
     void replyFetchResult( KJob *job );
-    void forwardInlineFetchResult( KJob *job );
+    void forwardFetchResult( KJob *job );
     void composeFetchResult( KJob *job );
     void initDefaultFolders();
     void createDefaultCollectionDone( KJob *job);
     void deleteItemResult( KJob *job );
 
   private:
+    
     void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy );
+    void forward(quint64 id, ForwardMode mode);
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
     void recoverAutoSavedMessages();
     Akonadi::Item currentItem();
+
 };
+
+Q_DECLARE_METATYPE(MainView::ForwardMode)
 
 #endif
