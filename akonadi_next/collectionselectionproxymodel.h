@@ -35,8 +35,9 @@ namespace Akonadi {
 
 /**
  * @short A proxy model that allows selecting collections with checkboxes.
+ * Deprecated. Use CheckableItemProxyModel instead.
  */
-class AKONADI_NEXT_EXPORT CollectionSelectionProxyModel : public QSortFilterProxyModel
+class AKONADI_NEXT_EXPORT_DEPRECATED CollectionSelectionProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 

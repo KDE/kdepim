@@ -25,7 +25,10 @@
 
 namespace Akonadi {
     
-    class AKONADI_NEXT_EXPORT EntityModelStateSaver : public ModelStateSaver
+    /**
+      Deprecated. Use KViewStateMaintainer<ETMViewStateSaver> instead.
+    */
+    class AKONADI_NEXT_EXPORT_DEPRECATED EntityModelStateSaver : public ModelStateSaver
     {
         Q_OBJECT
     public:

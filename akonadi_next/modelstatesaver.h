@@ -34,7 +34,10 @@ class QString;
 class KConfigGroup;
 
 namespace Akonadi {
-    class AKONADI_NEXT_EXPORT ModelStateSaver : public QObject {
+    /**
+      Deprecated. Use KViewStateMaintainer instead.
+    */
+    class AKONADI_NEXT_EXPORT_DEPRECATED ModelStateSaver : public QObject {
         Q_OBJECT
     public:
         explicit ModelStateSaver( QAbstractItemModel* model, QObject* parent=0 );
