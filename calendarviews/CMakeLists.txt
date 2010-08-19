@@ -1,9 +1,6 @@
 add_subdirectory( agenda )
 
-if (NOT WINCE)
+if (KDEPIM_BUILD_EXAMPLES)
 add_subdirectory( viewerapp )
-endif (NOT WINCE)
+endif (KDEPIM_BUILD_EXAMPLES)
 
-if ( KDEPIM_MOBILE_UI AND QT_QTDECLARATIVE_FOUND )
-  add_subdirectory(qml)
-endif ()

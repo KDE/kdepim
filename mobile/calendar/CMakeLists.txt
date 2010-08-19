@@ -12,7 +12,9 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-set(korganizer_mobile_SRCS calendarinterface.cpp
+set(korganizer_mobile_SRCS
+  agendaviewitem.cpp
+  calendarinterface.cpp
   mainview.cpp
   main.cpp
 )
@@ -29,6 +31,7 @@ target_link_libraries(korganizer-mobile
   kdepimmobileui
   akonadi-kcal_next
   incidenceeditorsngmobile
+  eventviews
 )
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -36,6 +36,7 @@
 #include <qdeclarativeengine.h>
 #include <qdeclarativecontext.h>
 
+#include "agendaviewitem.h"
 #include "incidenceview.h"
 
 #include <KAction>
@@ -46,6 +47,8 @@
 #include <QDBusConnection>
 
 using namespace Akonadi;
+
+QML_DECLARE_TYPE( EventViews::AgendaView )
 
 MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
@@ -64,6 +67,8 @@ void MainView::delayedInit()
   addMimeType( KCalCore::Event::eventMimeType() );
   addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
+
+  qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
 
   m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
