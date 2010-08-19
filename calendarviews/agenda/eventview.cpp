@@ -36,8 +36,8 @@
 #include <akonadi/kcal/collectionselection.h>
 #include <akonadi/kcal/incidencechanger.h>
 #include <akonadi/kcal/utils.h>
-#include <akonadi/akonadi_next/collectionselectionproxymodel.h>
-#include <akonadi/akonadi_next/entitymodelstatesaver.h>
+#include <akonadi/kcal/collectionselectionproxymodel.h>
+#include <akonadi/kcal/entitymodelstatesaver.h>
 
 #include <kholidays/holidayregion.h>
 

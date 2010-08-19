@@ -23,12 +23,14 @@
 
 #include "modelstatesaver.h"
 
+#include "akonadi-kcal_next_export.h"
+
 namespace Akonadi {
-    
+
     /**
       Deprecated. Use KViewStateMaintainer<ETMViewStateSaver> instead.
     */
-    class AKONADI_NEXT_EXPORT_DEPRECATED EntityModelStateSaver : public ModelStateSaver
+    class AKONADI_KCAL_NEXT_EXPORT_DEPRECATED EntityModelStateSaver : public ModelStateSaver
     {
         Q_OBJECT
     public:

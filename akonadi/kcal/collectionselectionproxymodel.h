@@ -25,7 +25,7 @@
 #ifndef AKONADI_COLLECTIONSELECTIONPROXYMODEL_H
 #define AKONADI_COLLECTIONSELECTIONPROXYMODEL_H
 
-#include "akonadi_next_export.h"
+#include "akonadi-kcal_next_export.h"
 
 #include <QtGui/QSortFilterProxyModel>
 
@@ -37,7 +37,7 @@ namespace Akonadi {
  * @short A proxy model that allows selecting collections with checkboxes.
  * Deprecated. Use CheckableItemProxyModel instead.
  */
-class AKONADI_NEXT_EXPORT_DEPRECATED CollectionSelectionProxyModel : public QSortFilterProxyModel
+class AKONADI_KCAL_NEXT_EXPORT_DEPRECATED CollectionSelectionProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 

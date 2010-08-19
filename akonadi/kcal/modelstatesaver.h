@@ -21,7 +21,7 @@
 #ifndef AKONADI_MODELSTATESAVER_H
 #define AKONADI_MODELSTATESAVER_H
 
-#include "akonadi_next_export.h"
+#include "akonadi-kcal_next_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
@@ -37,7 +37,7 @@ namespace Akonadi {
     /**
       Deprecated. Use KViewStateMaintainer instead.
     */
-    class AKONADI_NEXT_EXPORT_DEPRECATED ModelStateSaver : public QObject {
+    class AKONADI_KCAL_NEXT_EXPORT_DEPRECATED ModelStateSaver : public QObject {
         Q_OBJECT
     public:
         explicit ModelStateSaver( QAbstractItemModel* model, QObject* parent=0 );

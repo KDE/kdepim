@@ -25,15 +25,12 @@ set( akonadi_next_SRCS
   entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
   collectionchildorderattribute.cpp
-  collectionselectionproxymodel.cpp
   quotacolorproxymodel.cpp
   checkableitemproxymodel.cpp
   incidenceattachmentmodel.cpp
   kviewstatemaintainer.cpp
   amazingcompleter.cpp
   amazingdelegate.cpp
-  modelstatesaver.cpp
-  entitymodelstatesaver.cpp
 )
 
 kde4_add_library(akonadi_next ${LIBRARY_TYPE} ${akonadi_next_SRCS} )
