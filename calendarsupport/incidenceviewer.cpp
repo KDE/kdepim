@@ -23,10 +23,10 @@
 #include "utils.h"
 
 #include "libkdepimdbusinterfaces/urihandler.h"
+#include "akonadi_next/incidenceattachmentmodel.h"
 
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/ItemFetchScope>
-#include <akonadi_next/incidenceattachmentmodel.h>
 
 #include <KCalUtils/IncidenceFormatter>
 
