@@ -244,16 +244,15 @@ set(libkdgantt1_SRCS
 
   # These targets will always be built before anything else.
 
-  add_subdirectory( ontologies ) # must be the first one.
+  add_subdirectory(ontologies) # must be the first one.
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(calendarviews)
-  add_subdirectory( incidenceeditors )
+  add_subdirectory(incidenceeditors)
   add_subdirectory(libkdepimdbusinterfaces)
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
   add_subdirectory(libksieve)
-  #add_subdirectory(libstickynotes)
   add_subdirectory(kdgantt1)
   add_subdirectory(kdgantt2)
   add_subdirectory(icons)

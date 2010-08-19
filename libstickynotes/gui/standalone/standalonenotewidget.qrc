@@ -1,5 +1,0 @@
-<RCC>
-  <qresource prefix="/" >
-    <file>data/standalonenotewidget/background.svg</file>
-  </qresource>
-</RCC>
