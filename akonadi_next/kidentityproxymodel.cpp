@@ -126,7 +126,7 @@ using namespace Future;
     Constructs an identity model with the given \a parent.
 */
 KIdentityProxyModel::KIdentityProxyModel(QObject* parent)
-  : QAbstractProxyModel(parent), d_ptr(new KIdentityProxyModelPrivate(this))
+  : QAbstractProxyModel(parent), d_ptr(new Future::KIdentityProxyModelPrivate(this))
 {
 
 }

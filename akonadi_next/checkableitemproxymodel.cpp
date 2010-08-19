@@ -43,7 +43,7 @@ class CheckableItemProxyModelPrivate
 };
 
 CheckableItemProxyModel::CheckableItemProxyModel(QObject* parent)
-  : QSortFilterProxyModel(parent), d_ptr(new CheckableItemProxyModelPrivate(this))
+  : Future::KIdentityProxyModel(parent), d_ptr(new CheckableItemProxyModelPrivate(this))
 {
 
 }
@@ -63,7 +63,7 @@ void CheckableItemProxyModel::setSelectionModel(QItemSelectionModel* itemSelecti
 
 Qt::ItemFlags CheckableItemProxyModel::flags(const QModelIndex& index) const
 {
-  return QSortFilterProxyModel::flags(index) | Qt::ItemIsUserCheckable;
+  return Future::KIdentityProxyModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
 QVariant CheckableItemProxyModel::data(const QModelIndex& index, int role) const
@@ -77,7 +77,7 @@ QVariant CheckableItemProxyModel::data(const QModelIndex& index, int role) const
 
     return d->m_itemSelectionModel->selection().contains(mapToSource(index)) ? Qt::Checked : Qt::Unchecked;
   }
-  return QSortFilterProxyModel::data(index, role);
+  return Future::KIdentityProxyModel::data(index, role);
 }
 
 bool CheckableItemProxyModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -94,12 +94,12 @@ bool CheckableItemProxyModel::setData(const QModelIndex& index, const QVariant& 
     emit dataChanged(srcIndex, srcIndex);
     return result;
   }
-  return QSortFilterProxyModel::setData(index, value, role);
+  return Future::KIdentityProxyModel::setData(index, value, role);
 }
 
 void CheckableItemProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
-  QSortFilterProxyModel::setSourceModel(sourceModel);
+  Future::KIdentityProxyModel::setSourceModel(sourceModel);
   Q_ASSERT(d_ptr->m_itemSelectionModel ? d_ptr->m_itemSelectionModel->model() == sourceModel : true);
 }
 

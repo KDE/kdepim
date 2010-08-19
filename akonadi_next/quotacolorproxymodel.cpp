@@ -45,10 +45,9 @@ class QuotaColorProxyModel::Private
 };
 
 QuotaColorProxyModel::QuotaColorProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent ),
+  : Future::KIdentityProxyModel( parent ),
     d( new Private( this ) )
 {
-  setDynamicSortFilter( true );
 }
 
 QuotaColorProxyModel::~QuotaColorProxyModel()
@@ -96,7 +95,7 @@ QVariant QuotaColorProxyModel::data( const QModelIndex & index, int role) const
     }
   }
 
-  return QSortFilterProxyModel::data( index, role );
+  return Future::KIdentityProxyModel::data( index, role );
 }
 
 #include "quotacolorproxymodel.moc"

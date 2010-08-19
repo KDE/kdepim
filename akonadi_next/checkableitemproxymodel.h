@@ -22,16 +22,15 @@
 #ifndef CHECKABLEITEMPROXYMODEL_H
 #define CHECKABLEITEMPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
+#include "kidentityproxymodel.h"
 
 #include "akonadi_next_export.h"
-#include <QItemSelection>
 
-class QItemSelectionModel;
+#include <QItemSelection>
 
 class CheckableItemProxyModelPrivate;
 
-class AKONADI_NEXT_EXPORT CheckableItemProxyModel : public QSortFilterProxyModel
+class AKONADI_NEXT_EXPORT CheckableItemProxyModel : public Future::KIdentityProxyModel
 {
   Q_OBJECT
 public:

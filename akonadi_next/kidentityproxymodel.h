@@ -26,10 +26,9 @@
 
 #include "akonadi_next_export.h"
 
-class KIdentityProxyModelPrivate;
-
 namespace Future
 {
+class KIdentityProxyModelPrivate;
 
 class AKONADI_NEXT_EXPORT KIdentityProxyModel : public QAbstractProxyModel
 {
