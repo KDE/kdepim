@@ -12,27 +12,30 @@ endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS
-  collectionselection.cpp
   calendar.cpp
   calendaradaptor.cpp
   calendarmodel.cpp
   calendarsearch.cpp
   calfilterproxymodel.cpp
+  collectionselection.cpp
+  collectionselectionproxymodel.cpp
   daterangefilterproxymodel.cpp
-  incidencefilterproxymodel.cpp
-  kcalmodel.cpp
-  incidenceviewer.cpp
-  utils.cpp
-  groupware.cpp
-  identitymanager.cpp
-  mailclient.cpp
-  kcalprefs.cpp
-  mailscheduler.cpp
+  entitymodelstatesaver.cpp
   freebusydownloadjob.cpp
   freebusymanager.cpp
+  groupware.cpp
+  identitymanager.cpp
   incidencechanger.cpp
-  kcalmodel.cpp
+  incidencefilterproxymodel.cpp
+  incidenceviewer.cpp
   invitationhandler.cpp
+  kcalmodel.cpp
+  kcalmodel.cpp
+  kcalprefs.cpp
+  mailclient.cpp
+  mailscheduler.cpp
+  modelstatesaver.cpp
+  utils.cpp
 )
 
 if (NOT WINCE)
@@ -48,6 +51,8 @@ qt4_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.
 kde4_add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
 
 target_link_libraries(calendarsupport
+  akonadi_next
+  kdepimdbusinterfaces
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
