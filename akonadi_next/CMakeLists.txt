@@ -24,7 +24,6 @@ set( akonadi_next_SRCS
   notecreatorandselector.cpp
   entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
-  collectionchildorderattribute.cpp
   quotacolorproxymodel.cpp
   checkableitemproxymodel.cpp
   incidenceattachmentmodel.cpp
