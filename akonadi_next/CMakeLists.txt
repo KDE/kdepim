@@ -29,6 +29,7 @@ set( akonadi_next_SRCS
   checkableitemproxymodel.cpp
   incidenceattachmentmodel.cpp
   kviewstatemaintainer.cpp
+  kidentityproxymodel.cpp
   amazingcompleter.cpp
   amazingdelegate.cpp
 )
