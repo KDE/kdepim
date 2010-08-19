@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1998 Barry D Benowitz <b.benowitz@telesciences.com>
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2009 Allen Winter <winter@kde.org>
@@ -27,67 +25,45 @@
 #include "mailclient.h"
 #include "kdepim-version.h"
 
-#include <kcalcore/attendee.h>
-#include <kcalcore/incidence.h>
-#include <kcalcore/incidencebase.h>
-#include <kcalutils/incidenceformatter.h>
+#include <Akonadi/Collection>
 
-#include <KPIMUtils/Email>
+#include <KCalCore/Attendee>
+#include <KCalCore/Incidence>
+#include <KCalCore/IncidenceBase>
+
+#include <KCalUtils/IncidenceFormatter>
+
+#include <KMime/Message>
 
 #include <KPIMIdentities/Identity>
 
-#include <kmime/kmime_content.h>
-#include <kmime/kmime_message.h>
+#include <KPIMUtils/Email>
 
-#include <mailtransport/transport.h>
-#include <mailtransport/transporttype.h>
-#include <mailtransport/transportmanager.h>
-#include <mailtransport/smtpjob.h>
-#include <mailtransport/sendmailjob.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/sentbehaviourattribute.h>
+#include <Mailtransport/MessageQueueJob>
+#include <Mailtransport/Transport>
+#include <Mailtransport/TransportManager>
 
-#include <Akonadi/Item>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/AgentManager>
-#include <Akonadi/AgentInstance>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
-
-#include <KApplication>
 #include <KDebug>
 #include <KLocale>
-#include <KMessageBox>
-#include <KShell>
-#include <KStandardDirs>
-#include <KSystemTimeZone>
-#include <KToolInvocation>
 #include <KProtocolManager>
+#include <KSystemTimeZone>
 
-using namespace KCalCore;
-using namespace KPIMIdentities;
+using namespace CalendarSupport;
 
-
-Akonadi::MailClient::MailClient() : QObject()
+MailClient::MailClient() : QObject()
 {
 }
 
-Akonadi::MailClient::~MailClient()
+MailClient::~MailClient()
 {
 }
 
-bool Akonadi::MailClient::mailAttendees( const IncidenceBase::Ptr &incidence,
-                                         const Identity &identity,
-                                         bool bccMe, const QString &attachment,
-                                         const QString &mailTransport )
+bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
+                                const KPIMIdentities::Identity &identity,
+                                bool bccMe, const QString &attachment,
+                                const QString &mailTransport )
 {
-  Attendee::List attendees = incidence->attendees();
+  KCalCore::Attendee::List attendees = incidence->attendees();
   if ( attendees.count() == 0 ) {
     return false;
   }
@@ -98,7 +74,7 @@ bool Akonadi::MailClient::mailAttendees( const IncidenceBase::Ptr &incidence,
   QStringList toList;
   QStringList ccList;
   for ( int i=0; i<attendees.count(); ++i ) {
-    Attendee::Ptr a = attendees.at(i);
+    KCalCore::Attendee::Ptr a = attendees.at(i);
 
     const QString email = a->email();
     if ( email.isEmpty() ) {
@@ -121,8 +97,8 @@ bool Akonadi::MailClient::mailAttendees( const IncidenceBase::Ptr &incidence,
     tname += QLatin1String( " <" ) + email + QLatin1Char( '>' );
 
     // Optional Participants and Non-Participants are copied on the email
-    if ( a->role() == Attendee::OptParticipant ||
-         a->role() == Attendee::NonParticipant ) {
+    if ( a->role() == KCalCore::Attendee::OptParticipant ||
+         a->role() == KCalCore::Attendee::NonParticipant ) {
       ccList << tname;
     } else {
       toList << tname;
@@ -142,8 +118,8 @@ bool Akonadi::MailClient::mailAttendees( const IncidenceBase::Ptr &incidence,
   }
 
   QString subject;
-  if ( incidence->type() != Incidence::TypeFreeBusy ) {
-    Incidence::Ptr inc = incidence.staticCast<Incidence>();
+  if ( incidence->type() != KCalCore::Incidence::TypeFreeBusy ) {
+    KCalCore::Incidence::Ptr inc = incidence.staticCast<KCalCore::Incidence>();
     subject = inc->summary();
   } else {
     subject = i18n( "Free Busy Object" );
@@ -155,18 +131,18 @@ bool Akonadi::MailClient::mailAttendees( const IncidenceBase::Ptr &incidence,
                bccMe, attachment, mailTransport );
 }
 
-bool Akonadi::MailClient::mailOrganizer( const IncidenceBase::Ptr &incidence,
-                                  const Identity &identity,
-                                  const QString &from, bool bccMe,
-                                  const QString &attachment,
-                                  const QString &sub, const QString &mailTransport )
+bool MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
+                                const KPIMIdentities::Identity &identity,
+                                const QString &from, bool bccMe,
+                                const QString &attachment,
+                                const QString &sub, const QString &mailTransport )
 {
   QString to = incidence->organizer()->fullName();
 
   QString subject = sub;
 
-  if ( incidence->type() != Incidence::TypeFreeBusy ) {
-    Incidence::Ptr inc = incidence.staticCast<Incidence>();
+  if ( incidence->type() != KCalCore::Incidence::TypeFreeBusy ) {
+    KCalCore::Incidence::Ptr inc = incidence.staticCast<KCalCore::Incidence>();
     if ( subject.isEmpty() ) {
       subject = inc->summary();
     }
@@ -180,15 +156,16 @@ bool Akonadi::MailClient::mailOrganizer( const IncidenceBase::Ptr &incidence,
                bccMe, attachment, mailTransport );
 }
 
-bool Akonadi::MailClient::mailTo( const IncidenceBase::Ptr &incidence, const Identity &identity,
-                           const QString &from, bool bccMe,
-                           const QString &recipients, const QString &attachment,
-                           const QString &mailTransport )
+bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
+                         const KPIMIdentities::Identity &identity,
+                         const QString &from, bool bccMe,
+                         const QString &recipients, const QString &attachment,
+                         const QString &mailTransport )
 {
   QString subject;
 
-  if ( incidence->type() != Incidence::TypeFreeBusy ) {
-    Incidence::Ptr inc = incidence.staticCast<Incidence>() ;
+  if ( incidence->type() != KCalCore::Incidence::TypeFreeBusy ) {
+    KCalCore::Incidence::Ptr inc = incidence.staticCast<KCalCore::Incidence>() ;
     subject = inc->summary();
   } else {
     subject = i18n( "Free Busy Message" );
@@ -199,12 +176,15 @@ bool Akonadi::MailClient::mailTo( const IncidenceBase::Ptr &incidence, const Ide
                bccMe, attachment, mailTransport );
 }
 
-bool Akonadi::MailClient::send( const Identity &identity,
-                         const QString &from, const QString &_to,
-                         const QString &cc, const QString &subject,
-                         const QString &body, bool hidden, bool bccMe,
-                         const QString &attachment, const QString &mailTransport )
+bool MailClient::send( const KPIMIdentities::Identity &identity,
+                       const QString &from, const QString &_to,
+                       const QString &cc, const QString &subject,
+                       const QString &body, bool hidden, bool bccMe,
+                       const QString &attachment, const QString &mailTransport )
 {
+  Q_UNUSED( identity );
+  Q_UNUSED( hidden );
+
   // We must have a recipients list for most MUAs. Thus, if the 'to' list
   // is empty simply use the 'from' address as the recipient.
   QString to = _to;
@@ -220,10 +200,13 @@ bool Akonadi::MailClient::send( const Identity &identity,
   QTime timer;
   timer.start();
 
-  MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportByName( mailTransport );
+  MailTransport::Transport *transport =
+    MailTransport::TransportManager::self()->transportByName( mailTransport );
+
   if( ! transport ) {
-    transport = MailTransport::TransportManager::self()->transportByName(
-                  MailTransport::TransportManager::self()->defaultTransportName() );
+    transport =
+      MailTransport::TransportManager::self()->transportByName(
+        MailTransport::TransportManager::self()->defaultTransportName() );
   }
   if( ! transport ) {
     kWarning() << "Error fetching transport";
@@ -247,12 +230,15 @@ bool Akonadi::MailClient::send( const Identity &identity,
   message->contentTransferEncoding()->clear();  // 7Bit, decoded.
 
   // Set the headers
-  message->userAgent()->fromUnicodeString( KProtocolManager::userAgentForApplication( QLatin1String( "KOrganizer" ), QLatin1String( KDEPIM_VERSION ) ), "utf-8" );
+  message->userAgent()->fromUnicodeString(
+    KProtocolManager::userAgentForApplication(
+      QLatin1String( "KOrganizer" ), QLatin1String( KDEPIM_VERSION ) ), "utf-8" );
   message->from()->fromUnicodeString( from, "utf-8" );
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
-  if( bccMe )
+  if( bccMe ) {
     message->bcc()->fromUnicodeString( from, "utf-8" ); //from==me, right?
+  }
   message->date()->setDateTime( KDateTime::currentLocalDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
@@ -264,7 +250,8 @@ bool Akonadi::MailClient::send( const Identity &identity,
   // Set the sedcond multipart, the attachment.
   if ( !attachment.isEmpty() ) {
     KMime::Content *attachMessage = new KMime::Content;
-    KMime::Headers::ContentDisposition *attachDisposition = new KMime::Headers::ContentDisposition( attachMessage );
+    KMime::Headers::ContentDisposition *attachDisposition =
+      new KMime::Headers::ContentDisposition( attachMessage );
     attachDisposition->setFilename( QLatin1String( "cal.ics" ) );
     attachDisposition->setDisposition( KMime::Headers::CDattachment );
     attachMessage->contentType()->setMimeType( "text/calendar" );
@@ -286,8 +273,9 @@ bool Akonadi::MailClient::send( const Identity &identity,
   qjob->addressAttribute().setFrom( from );
   qjob->addressAttribute().setTo( KPIMUtils::splitAddressList( to ) );
   qjob->addressAttribute().setCc( KPIMUtils::splitAddressList( cc ) );
-  if( bccMe )
+  if( bccMe ) {
     qjob->addressAttribute().setBcc( KPIMUtils::splitAddressList( from ) );
+  }
   qjob->setMessage( message );
   if( ! qjob->exec() ) {
     kWarning() << "Error queuing message in outbox:" << qjob->errorText();

@@ -1,33 +1,36 @@
 /*
-    Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
-    Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (C) 2010 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#ifndef INVITATIONSENDER_H
-#define INVITATIONSENDER_H
+#ifndef CALENDARSUPPORT_INVITATIONHANDLER_H
+#define CALENDARSUPPORT_INVITATIONHANDLER_H
+
+#include "calendarsupport_export.h"
+
+#include <KCalCore/Incidence>
+#include <KCalCore/ScheduleMessage>
+
+#include <QObject>
 
 class QWidget;
 
-#include <kcalcore/icalformat.h>
-
-#include "akonadi-kcal_next_export.h"
-
-namespace Akonadi {
+namespace CalendarSupport {
 
 class Calendar;
 
@@ -50,24 +53,26 @@ class Calendar;
   NOTE: Currently only events and todos are support, meaning Incidence::type()
         should either return "Event" or "Todo"
  */
-class AKONADI_KCAL_NEXT_EXPORT InvitationHandler : public QObject
+class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
 {
-    Q_OBJECT
-public:
-    InvitationHandler( Akonadi::Calendar *cal );
+  Q_OBJECT
+  public:
+    InvitationHandler( CalendarSupport::Calendar *cal );
     ~InvitationHandler();
 
     enum SendStatus {
-      Canceled,        ///> Sending was canceled by the user, meaning there are local changes of which other attendees are not aware.
-      FailKeepUpdate,  ///> Sending failed, the changes to the incidence must be kept.
-      FailAbortUpdate, ///> Sending failed, the changes to the incidence must be undone.
-      NoSendingNeeded, ///> In some cases it is not needed to send an invitation (e.g. when we are the only attendee)
-      Success          ///> The invitation was sent to all attendees.
+      Canceled,        /**< Sending was canceled by the user, meaning there are
+                          local changes of which other attendees are not aware. */
+      FailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
+      FailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
+      NoSendingNeeded, /**< In some cases it is not needed to send an invitation
+                          (e.g. when we are the only attendee) */
+      Success          /**< The invitation was sent to all attendees. */
     };
 
-    bool receiveInvitation( const QString& receiver,
-                            const QString& iCal,
-                            const QString& type );
+    bool receiveInvitation( const QString &receiver,
+                            const QString &iCal,
+                            const QString &type );
 
     /**
       Before an invitation is sent the user is asked for confirmation by means of
@@ -109,16 +114,16 @@ public:
     SendStatus sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
                                     const KCalCore::Incidence::Ptr &newIncidence ) const;
 
-Q_SIGNALS:
+  Q_SIGNALS:
     /**
       This signal is emitted when an invitation for a counter proposal is sent.
       @param incidence The incidence for which the counter proposal must be specified.
      */
     void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
-private:
+  private:
     struct Private;
-    Private * const d;
+    Private *const d;
     Q_DISABLE_COPY( InvitationHandler )
 };
 

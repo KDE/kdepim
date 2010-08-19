@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,30 +19,30 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef INCIDENCECHANGER_H
-#define INCIDENCECHANGER_H
+#ifndef CALENDARSUPPORT_INCIDENCECHANGER_H
+#define CALENDARSUPPORT_INCIDENCECHANGER_H
 
-#include "akonadi-kcal_next_export.h"
+#include "calendarsupport_export.h"
 
-#include "utils.h"
+#include <Akonadi/Item>
 
-#include <kcalcore/incidence.h>
-#include <kcalcore/schedulemessage.h>
+#include <KCalCore/Incidence>
+#include <KCalCore/ScheduleMessage>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class KJob;
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class Groupware;
 class Calendar;
 
-class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
+class CALENDARSUPPORT_EXPORT IncidenceChanger : public QObject
 {
   Q_OBJECT
   public:
-    IncidenceChanger( Akonadi::Calendar *cal,
+    IncidenceChanger( CalendarSupport::Calendar *cal,
                       QObject *parent,
                       Akonadi::Entity::Id defaultCollectionId = -1 );
     ~IncidenceChanger();
@@ -120,7 +118,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
        Sets the akonadi calendar.
        @param calendar the calendar.
     */
-    void setCalendar( Akonadi::Calendar *calendar );
+    void setCalendar( CalendarSupport::Calendar *calendar );
 
     /*
      * Returns false if the item is being deleted by a job
@@ -140,22 +138,21 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 
     void incidenceChangeFinished( const Akonadi::Item &oldinc,
                                   const Akonadi::Item &newInc,
-                                  Akonadi::IncidenceChanger::WhatChanged,
+                                  CalendarSupport::IncidenceChanger::WhatChanged,
                                   bool );
 
     void incidenceDeleteFinished( const Akonadi::Item &, bool );
-
 
     void incidenceToBeDeleted( const Akonadi::Item & );
     void schedule( KCalCore::iTIPMethod method, const Akonadi::Item &incidence );
 
   private Q_SLOTS:
-    void addIncidenceFinished( KJob* job );
-    void deleteIncidenceFinished( KJob* job );
+    void addIncidenceFinished( KJob *job );
+    void deleteIncidenceFinished( KJob *job );
 
   private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 }
 

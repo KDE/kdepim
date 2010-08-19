@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,79 +19,78 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef MAILSCHEDULER_H
-#define MAILSCHEDULER_H
+#ifndef CALENDARSUPPORT_MAILSCHEDULER_H
+#define CALENDARSUPPORT_MAILSCHEDULER_H
 
-#include "akonadi-kcal_next_export.h"
+#include "calendarsupport_export.h"
 
-#include <kcalcore/incidence.h>
-#include <kcalcore/schedulemessage.h>
-
-#include <QMap>
+#include <KCalCore/Incidence>
+#include <KCalCore/IncidenceBase>
+#include <KCalCore/ScheduleMessage>
 
 namespace KCalCore {
   class ICalFormat;
-  class ScheduleMessage;
 }
 
-namespace Akonadi {
-  class Calendar;
+namespace CalendarSupport {
 
-  /*
-    This class implements the iTIP interface using the email interface specified
-    as Mail.
-  */
-  class AKONADI_KCAL_NEXT_EXPORT MailScheduler //: public Scheduler
-  {
-    public:
-      explicit MailScheduler( Calendar *calendar );
-      virtual ~MailScheduler();
+class Calendar;
 
-      bool publish ( const KCalCore::IncidenceBase::Ptr &incidence,
-                     const QString &recipients );
+/*
+  This class implements the iTIP interface using the email interface specified
+  as Mail.
+*/
+class  MailScheduler //: public Scheduler
+{
+  public:
+    explicit MailScheduler( Calendar *calendar );
+    virtual ~MailScheduler();
 
-      bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                               KCalCore::iTIPMethod method );
+    bool publish ( const KCalCore::IncidenceBase::Ptr &incidence,
+                   const QString &recipients );
 
-      bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                               KCalCore::iTIPMethod method,
-                               const QString &recipients );
+    bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                             KCalCore::iTIPMethod method );
+
+    bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                             KCalCore::iTIPMethod method,
+                             const QString &recipients );
 #if 0
-      QList<KCalCore::ScheduleMessage*> retrieveTransactions();
+    QList<KCalCore::ScheduleMessage*> retrieveTransactions();
 
-      bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
+    bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
 #endif
 
-      /** Returns the directory where the free-busy information is stored */
-      virtual QString freeBusyDir() const;
+    /** Returns the directory where the free-busy information is stored */
+    virtual QString freeBusyDir() const;
 
-      /**
-        Accepts the transaction. The incidence argument specifies the iCal
-        component on which the transaction acts. The status is the result of
-        processing a iTIP message with the current calendar and specifies the
-        action to be taken for this incidence.
+    /**
+      Accepts the transaction. The incidence argument specifies the iCal
+      component on which the transaction acts. The status is the result of
+      processing a iTIP message with the current calendar and specifies the
+      action to be taken for this incidence.
 
-        @param incidence the incidence for the transaction.
-        @param method iTIP transaction method to check.
-        @param status scheduling status.
-        @param email the email address of the person for whom this
-        transaction is to be performed.
-      */
-      bool acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                              KCalCore::iTIPMethod method,
-                              KCalCore::ScheduleMessage::Status status,
-                              const QString &email );
+      @param incidence the incidence for the transaction.
+      @param method iTIP transaction method to check.
+      @param status scheduling status.
+      @param email the email address of the person for whom this
+      transaction is to be performed.
+    */
+    bool acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                            KCalCore::iTIPMethod method,
+                            KCalCore::ScheduleMessage::Status status,
+                            const QString &email );
 
-      /** Accepts a counter proposal */
-      bool acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
+    /** Accepts a counter proposal */
+    bool acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
-    private:
-      Calendar *mCalendar;
-      KCalCore::ICalFormat *mFormat;
-    #if 0
-      QMap<KCalCore::IncidenceBase::Ptr , QString> mEventMap;
-    #endif
-  };
+  private:
+    Calendar *mCalendar;
+    KCalCore::ICalFormat *mFormat;
+#if 0
+    QMap<KCalCore::IncidenceBase::Ptr, QString> mEventMap;
+#endif
+};
 
 }
 

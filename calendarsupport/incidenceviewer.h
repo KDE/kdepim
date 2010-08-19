@@ -1,37 +1,37 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company
 
-    Author: Tobias Koenig <tokoe@kde.org>
+  Author: Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#ifndef AKONADI_INCIDENCEVIEWER_H
-#define AKONADI_INCIDENCEVIEWER_H
+#ifndef CALENDARSUPPORT_INCIDENCEVIEWER_H
+#define CALENDARSUPPORT_INCIDENCEVIEWER_H
 
-#include "akonadi-kcal_next_export.h"
+#include "calendarsupport_export.h"
 
-#include <akonadi/itemmonitor.h>
+#include <Akonadi/ItemMonitor>
 
-#include <QtCore/QDate>
-#include <QtGui/QWidget>
+#include <QDate>
+#include <QWidget>
 
 class QAbstractItemModel;
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 /**
  * @short A viewer component for incidences in Akonadi.
@@ -43,7 +43,7 @@ namespace Akonadi {
  *
  * @code
  *
- * using namespace Akonadi;
+ * using namespace CalendarSupport;
  *
  * const Item item = ...
  *
@@ -55,7 +55,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
-class AKONADI_KCAL_NEXT_EXPORT IncidenceViewer : public QWidget, public Akonadi::ItemMonitor
+class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::ItemMonitor
 {
   Q_OBJECT
 
@@ -81,7 +81,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceViewer : public QWidget, public Akonadi:
      * Returns the active date used for the currently displayed incidence
      */
     QDate activeDate() const;
-    
+
     /**
      * Returns the attachment model for the currently displayed incidence.
      */
@@ -116,7 +116,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceViewer : public QWidget, public Akonadi:
     /**
      * This method is called whenever the displayed contact @p group has been changed.
      */
-    virtual void itemChanged( const Item &group );
+    virtual void itemChanged( const Akonadi::Item &group );
 
     /**
      * This method is called whenever the displayed contact group has been
@@ -127,9 +127,9 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceViewer : public QWidget, public Akonadi:
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotParentCollectionFetched( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotParentCollectionFetched( KJob * ) )
     //@endcond
 };
 

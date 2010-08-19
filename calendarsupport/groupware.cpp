@@ -1,6 +1,4 @@
 /*
-  This file is part of the Groupware/Akonadianizer integration.
-
   Requires the Qt and KDE widget libraries, available at no cost at
   http://www.trolltech.com and http://www.kde.org respectively
 
@@ -35,26 +33,17 @@
 */
 
 #include "groupware.h"
+#include "calendaradaptor.h"
 #include "kcalprefs.h"
 #include "mailscheduler.h"
-#include "calendar.h"
-#include "calendaradaptor.h"
 
-#include <kcalutils/incidenceformatter.h>
-#include <kcalutils/stringify.h>
+#include <KCalUtils/IncidenceFormatter>
+#include <KCalUtils/Stringify>
 
-#include <KPIMUtils/Email>
-
-#include <KDirWatch>
+#include <KLocale>
 #include <KMessageBox>
-#include <KStandardDirs>
 
-#include <QDir>
-#include <QFile>
-#include <QTimer>
-
-using namespace KCalCore;
-using namespace Akonadi;
+using namespace CalendarSupport;
 
 Groupware *Groupware::mInstance = 0;
 
@@ -62,7 +51,7 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
 
-Groupware *Groupware::create( Akonadi::Calendar *calendar, GroupwareUiDelegate *delegate )
+Groupware *Groupware::create( CalendarSupport::Calendar *calendar, GroupwareUiDelegate *delegate )
 {
   if ( !mInstance ) {
     mInstance = new Groupware( calendar, delegate );
@@ -77,35 +66,37 @@ Groupware *Groupware::instance()
   return mInstance;
 }
 
-Groupware::Groupware( Akonadi::Calendar *cal, GroupwareUiDelegate *delegate )
+Groupware::Groupware( CalendarSupport::Calendar *cal, GroupwareUiDelegate *delegate )
   : QObject( 0 ), mCalendar( cal ), mDelegate( delegate ), mDoNotNotify( false )
 {
   setObjectName( QLatin1String( "kmgroupware_instance" ) );
 }
 
-bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,
-                                  const QString& type )
+bool Groupware::handleInvitation( const QString &receiver, const QString &iCal,
+                                  const QString &type )
 {
   const QString action = type;
 
   CalendarAdaptor::Ptr adaptor( new CalendarAdaptor( mCalendar, 0 ) );
-  ScheduleMessage *message = mFormat.parseScheduleMessage( adaptor, iCal );
+  KCalCore::ScheduleMessage *message = mFormat.parseScheduleMessage( adaptor, iCal );
   if ( !message ) {
     QString errorMessage;
     if ( mFormat.exception() ) {
-      errorMessage = i18n( "Error message: %1", KCalUtils::Stringify::errorMessage( *mFormat.exception() ) );
+      errorMessage =
+        i18n( "Error message: %1", KCalUtils::Stringify::errorMessage( *mFormat.exception() ) );
     }
     kDebug() << "Error parsing" << errorMessage;
-    KMessageBox::detailedError( 0,
-                                i18n( "Error while processing an invitation or update." ),
-                                errorMessage );
+    KMessageBox::detailedError(
+      0,
+      i18n( "Error while processing an invitation or update." ),
+      errorMessage );
     return false;
   }
 
   KCalCore::iTIPMethod method = static_cast<KCalCore::iTIPMethod>( message->method() );
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().staticCast<KCalCore::Incidence>();
-  if( !incidence ) {
+  if ( !incidence ) {
     delete message;
     return false;
   }
@@ -141,14 +132,14 @@ bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,
     // Delete the old incidence, if one is present
     scheduler.acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
-    if ( method != iTIPCounter ) {
+    if ( method != KCalCore::iTIPCounter ) {
       scheduler.acceptTransaction( incidence, method, status, QString() );
     } else {
       // accept counter proposal
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
-      sendICalMessage( 0, iTIPRequest, incidence, IncidenceChanger::INCIDENCEEDITED,
-                       false );
+      sendICalMessage( 0, KCalCore::iTIPRequest, incidence,
+                       IncidenceChanger::INCIDENCEEDITED, false );
     }
   } else {
     kError() << "Unknown incoming action" << action;
@@ -156,7 +147,7 @@ bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,
 
   if ( mDelegate && action.startsWith( QLatin1String( "counter" ) ) ) {
     Akonadi::Item item;
-    item.setPayload( Incidence::Ptr( incidence->clone() ) );
+    item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
     mDelegate->requestIncidenceEditor( item );
   }
   delete message;
@@ -180,7 +171,7 @@ class KOInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
  */
 bool Groupware::sendICalMessage( QWidget *parent,
                                  KCalCore::iTIPMethod method,
-                                 const Incidence::Ptr &incidence,
+                                 const KCalCore::Incidence::Ptr &incidence,
                                  IncidenceChanger::HowChanged action,
                                  bool attendeeStatusChanged )
 {
@@ -220,23 +211,24 @@ bool Groupware::sendICalMessage( QWidget *parent,
                     incidence->summary() );
         break;
       case IncidenceChanger::INCIDENCEDELETED:
-        Q_ASSERT( incidence->type() == IncidenceBase::TypeEvent || incidence->type() == IncidenceBase::TypeTodo );
-        if ( incidence->type() == IncidenceBase::TypeEvent ) {
+        Q_ASSERT( incidence->type() == KCalCore::IncidenceBase::TypeEvent ||
+                  incidence->type() == KCalCore::IncidenceBase::TypeTodo );
+        if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
           txt = i18n( "You removed the invitation \"%1\".\n"
                       "Do you want to email the attendees that the event is canceled?",
                       incidence->summary() );
-        } else if ( incidence->type() == IncidenceBase::TypeTodo ) {
+        } else if ( incidence->type() == KCalCore::IncidenceBase::TypeTodo ) {
           txt = i18n( "You removed the invitation \"%1\".\n"
                       "Do you want to email the attendees that the todo is canceled?",
                       incidence->summary() );
         }
         break;
       case IncidenceChanger::INCIDENCEADDED:
-        if ( incidence->type() == IncidenceBase::TypeEvent ) {
+        if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
           txt = i18n( "The event \"%1\" includes other people.\n"
                       "Do you want to email the invitation to the attendees?",
                       incidence->summary() );
-        } else if ( incidence->type() == IncidenceBase::TypeTodo ) {
+        } else if ( incidence->type() == KCalCore::IncidenceBase::TypeTodo ) {
           txt = i18n( "The todo \"%1\" includes other people.\n"
                       "Do you want to email the invitation to the attendees?",
                       incidence->summary() );
@@ -256,10 +248,10 @@ bool Groupware::sendICalMessage( QWidget *parent,
     } else {
       return true;
     }
-  } else if ( incidence->type() == IncidenceBase::TypeTodo ) {
-    if ( method == iTIPRequest ) {
+  } else if ( incidence->type() == KCalCore::IncidenceBase::TypeTodo ) {
+    if ( method == KCalCore::iTIPRequest ) {
       // This is an update to be sent to the organizer
-      method = iTIPReply;
+      method = KCalCore::iTIPReply;
     }
     // Ask if the user wants to tell the organizer about the current status
     QString txt = i18n( "Do you want to send a status update to the "
@@ -267,12 +259,12 @@ bool Groupware::sendICalMessage( QWidget *parent,
     rc = KMessageBox::questionYesNo(
            parent, txt, QString(),
            KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
-  } else if ( incidence->type() == IncidenceBase::TypeEvent ) {
+  } else if ( incidence->type() == KCalCore::IncidenceBase::TypeEvent ) {
     QString txt;
-    if ( attendeeStatusChanged && method == iTIPRequest ) {
+    if ( attendeeStatusChanged && method == KCalCore::iTIPRequest ) {
       txt = i18n( "Your status as an attendee of this event changed. "
                   "Do you want to send a status update to the event organizer?" );
-      method = iTIPReply;
+      method = KCalCore::iTIPReply;
       rc = KMessageBox::questionYesNo(
              parent, txt, QString(),
              KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
@@ -282,7 +274,7 @@ bool Groupware::sendICalMessage( QWidget *parent,
         bool askConfirmation = false;
         for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
           QString email = *it;
-          Attendee::Ptr me = incidence->attendeeByMail(email);
+          KCalCore::Attendee::Ptr me = incidence->attendeeByMail(email);
           if ( me &&
                ( me->status() == KCalCore::Attendee::Accepted ||
                  me->status() == KCalCore::Attendee::Delegated ) ) {
@@ -327,10 +319,13 @@ bool Groupware::sendICalMessage( QWidget *parent,
     }
     // Send the mail
     MailScheduler scheduler( mCalendar );
-    if( scheduler.performTransaction( incidence, method ) )
+    if ( scheduler.performTransaction( incidence, method ) ) {
       return true;
+    }
     rc = KMessageBox::questionYesNo(
-           parent, i18n( "Sending group scheduling email failed." ), i18n( "Group Scheduling Email" ),
+           parent,
+           i18n( "Sending group scheduling email failed." ),
+           i18n( "Group Scheduling Email" ),
            KGuiItem( i18n( "Abort Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
     return rc == KMessageBox::No;
   } else if ( rc == KMessageBox::No ) {
@@ -340,14 +335,15 @@ bool Groupware::sendICalMessage( QWidget *parent,
   }
 }
 
-void Groupware::sendCounterProposal( KCalCore::Event::Ptr oldEvent, KCalCore::Event::Ptr newEvent ) const
+void Groupware::sendCounterProposal( KCalCore::Event::Ptr oldEvent,
+                                     KCalCore::Event::Ptr newEvent ) const
 {
   if ( !oldEvent || !newEvent || *oldEvent == *newEvent ||
        !KCalPrefs::instance()->mUseGroupwareCommunication ) {
     return;
   }
   if ( KCalPrefs::instance()->outlookCompatCounterProposals() ) {
-    Incidence::Ptr tmp = Incidence::Ptr( oldEvent->clone() );
+    KCalCore::Incidence::Ptr tmp = KCalCore::Incidence::Ptr( oldEvent->clone() );
     tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );
     tmp->addComment( i18n( "Proposed new meeting time: %1 - %2",
@@ -357,7 +353,7 @@ void Groupware::sendCounterProposal( KCalCore::Event::Ptr oldEvent, KCalCore::Ev
     scheduler.performTransaction( tmp, KCalCore::iTIPReply );
   } else {
     MailScheduler scheduler( mCalendar );
-    scheduler.performTransaction( newEvent, iTIPCounter );
+    scheduler.performTransaction( newEvent, KCalCore::iTIPCounter );
   }
 }
 

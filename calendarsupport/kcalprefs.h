@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,20 +19,19 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KCALPREFS_H
-#define KCALPREFS_H
+#ifndef CALENDARSUPPORT_KCALPREFS_H
+#define CALENDARSUPPORT_KCALPREFS_H
 
+#include "calendarsupport_export.h"
 #include "kcalprefs_base.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/entity.h>
+#include <Akonadi/Entity>
 
-#include <kdatetime.h>
+#include <KDateTime>
 
-class QStringList;
+namespace CalendarSupport {
 
-// TODO: comeup with a better name, this is not libkcal, and add a namespace to it
-class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
+class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
 {
   public:
     /** Constructor disabled for public. Use instance() to create a KCalPrefs
@@ -91,5 +88,7 @@ class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
 
     Akonadi::Entity::Id mDefaultCalendarId;
 };
+
+}
 
 #endif

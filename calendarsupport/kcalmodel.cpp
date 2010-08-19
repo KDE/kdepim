@@ -19,25 +19,21 @@
 
 #include "kcalmodel.h"
 
-#include <akonadi/kcal/incidencemimetypevisitor.h>
-
-#include <akonadi/item.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
+#include <Akonadi/Item>
+#include <Akonadi/ItemFetchScope>
 
 #include <KCalCore/FreeBusy>
 #include <KCalCore/Event>
 #include <KCalCore/Journal>
 #include <KCalCore/Todo>
 
-#include <klocale.h>
-#include <kiconloader.h>
+#include <KIconLoader>
+#include <KLocale>
 
-#include <QtGui/QPixmap>
+#include <QPixmap>
 
-using namespace Akonadi;
-using namespace KCalCore;
+using namespace CalendarSupport;
 
 class KCalModel::Private
 {
@@ -50,26 +46,28 @@ class KCalModel::Private
     static QStringList allMimeTypes()
     {
         QStringList types;
-        types << Event::eventMimeType()
-              << Todo::todoMimeType()
-              << Journal::journalMimeType()
-              << FreeBusy::freeBusyMimeType();
+        types << KCalCore::Event::eventMimeType()
+              << KCalCore::Todo::todoMimeType()
+              << KCalCore::Journal::journalMimeType()
+              << KCalCore::FreeBusy::freeBusyMimeType();
         return types;
     }
     bool collectionMatchesMimeTypes() const
     {
       Q_FOREACH( const QString &type, allMimeTypes() ) {
-      if ( q->collection().contentMimeTypes().contains( type ) )
-        return true;
+        if ( q->collection().contentMimeTypes().contains( type ) ) {
+          return true;
+        }
       }
       return false;
     }
 
     bool collectionIsValid()
     {
-      return !q->collection().isValid()
-          || collectionMatchesMimeTypes()
-          || q->collection().contentMimeTypes() == QStringList( QLatin1String("inode/directory") );
+      return
+        !q->collection().isValid() ||
+        collectionMatchesMimeTypes() ||
+        q->collection().contentMimeTypes() == QStringList( QLatin1String( "inode/directory" ) );
     }
 
   private:
@@ -77,8 +75,7 @@ class KCalModel::Private
 };
 
 KCalModel::KCalModel( QObject *parent )
-  : ItemModel( parent ),
-    d( new Private( this ) )
+  : ItemModel( parent ), d( new Private( this ) )
 {
   fetchScope().fetchFullPayload();
 }
@@ -90,60 +87,68 @@ KCalModel::~KCalModel()
 
 QStringList KCalModel::mimeTypes() const
 {
-  return QStringList()
-      << QLatin1String("text/uri-list")
-      << d->allMimeTypes();
+  return
+    QStringList()
+    << QLatin1String( "text/uri-list" )
+    << d->allMimeTypes();
 }
 
-int KCalModel::columnCount( const QModelIndex& ) const
+int KCalModel::columnCount( const QModelIndex & ) const
 {
-  if ( d->collectionIsValid() )
+  if ( d->collectionIsValid() ) {
     return 4;
-  else
+  } else {
     return 1;
+  }
 }
 
-int KCalModel::rowCount( const QModelIndex& ) const
+int KCalModel::rowCount( const QModelIndex & ) const
 {
-  if ( d->collectionIsValid() )
+  if ( d->collectionIsValid() ) {
     return ItemModel::rowCount();
-  else
+  } else {
     return 1;
+  }
 }
 
-QVariant KCalModel::data( const QModelIndex &index,  int role ) const
+QVariant KCalModel::data( const QModelIndex &index, int role ) const
 {
-  if ( role == ItemModel::IdRole )
+  if ( role == ItemModel::IdRole ) {
     return ItemModel::data( index, role );
+  }
 
-  if ( !index.isValid() || index.row() >= rowCount() )
-    return QVariant();
-
-  // guard against use with collections that do not have the right contents
-  if ( !d->collectionIsValid() ) {
-    if ( role == Qt::DisplayRole )
-      // FIXME: i18n when strings unfreeze for 4.4
-      return QString::fromLatin1( "This model can only handle event, task, journal or free-busy list folders. The current collection holds mimetypes: %1").arg(
-                 collection().contentMimeTypes().join( QLatin1String(",") ) );
+  if ( !index.isValid() || index.row() >= rowCount() ) {
     return QVariant();
   }
 
-  const Item item = itemForIndex( index );
-
-  if ( !item.hasPayload<Incidence::Ptr>() )
+  // guard against use with collections that do not have the right contents
+  if ( !d->collectionIsValid() ) {
+    if ( role == Qt::DisplayRole ) {
+      return i18nc( "@info",
+                    "This model can only handle event, task, journal or free-busy list folders. "
+                    "The current collection holds mimetypes: %1",
+                    collection().contentMimeTypes().join( QLatin1String( "," ) ) );
+    }
     return QVariant();
+  }
 
-  const Incidence::Ptr incidence = item.payload<Incidence::Ptr>();
+  const Akonadi::Item item = itemForIndex( index );
+
+  if ( !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+    return QVariant();
+  }
+
+  const KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
 
   // Icon for the model entry
   switch( role ) {
   case Qt::DecorationRole:
     if ( index.column() == 0 ) {
-      if ( incidence->type() == Incidence::TypeTodo ) {
+      if ( incidence->type() == KCalCore::Incidence::TypeTodo ) {
         return SmallIcon( QLatin1String( "view-pim-tasks" ) );
-      } else if ( incidence->type() == Incidence::TypeJournal ) {
+      } else if ( incidence->type() == KCalCore::Incidence::TypeJournal ) {
         return SmallIcon( QLatin1String( "view-pim-journal" ) );
-      } else if ( incidence->type() == Incidence::TypeEvent ) {
+      } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
         return SmallIcon( QLatin1String( "view-calendar" ) );
       } else {
         return SmallIcon( QLatin1String( "network-wired" ) );
@@ -159,7 +164,7 @@ QVariant KCalModel::data( const QModelIndex &index,  int role ) const
       return incidence->dtStart().toString();
       break;
     case DateTimeEnd:
-      return incidence->dateTime( Incidence::RoleEnd ).toString();
+      return incidence->dateTime( KCalCore::Incidence::RoleEnd ).toString();
       break;
     case Type:
       return incidence->type();
@@ -178,8 +183,9 @@ QVariant KCalModel::data( const QModelIndex &index,  int role ) const
 
 QVariant KCalModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( !d->collectionIsValid() )
+  if ( !d->collectionIsValid() ) {
     return QVariant();
+  }
 
   if ( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
     switch( section ) {
@@ -196,5 +202,5 @@ QVariant KCalModel::headerData( int section, Qt::Orientation orientation, int ro
     }
   }
 
-  return ItemModel::headerData( section, orientation, role );
+  return Akonadi::ItemModel::headerData( section, orientation, role );
 }

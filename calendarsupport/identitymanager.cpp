@@ -1,6 +1,4 @@
 /*
-  This file is part of Akonadianizer.
-
   Copyright (c) 2004 David Faure <faure@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -25,18 +23,20 @@
 #include "identitymanager.h"
 #include "kcalprefs.h"
 
+using namespace CalendarSupport;
+
 // This is called to create a default identity in case emailidentities has none
 // (i.e. the user never used KMail before)
 // We provide the values from KCalPrefs, since those are configurable in korganizer.
-void Akonadi::IdentityManager::createDefaultIdentity( QString &fullName, QString &emailAddress )
+void IdentityManager::createDefaultIdentity( QString &fullName, QString &emailAddress )
 {
   fullName = KCalPrefs::instance()->fullName();
   emailAddress = KCalPrefs::instance()->email();
 }
 
-K_GLOBAL_STATIC( Akonadi::IdentityManager, globalIdentityManager )
+K_GLOBAL_STATIC( CalendarSupport::IdentityManager, globalIdentityManager )
 
-KPIMIdentities::IdentityManager *Akonadi::identityManager()
+KPIMIdentities::IdentityManager *CalendarSupport::identityManager()
 {
   return globalIdentityManager;
 }

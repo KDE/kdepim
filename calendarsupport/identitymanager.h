@@ -1,6 +1,4 @@
 /*
-  This file is part of Akonadianizer.
-
   Copyright (c) 2004 David Faure <faure@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -22,12 +20,12 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef AKONADI_KCAL_IDENTITYMANAGER_H
-#define AKONADI_KCAL_IDENTITYMANAGER_H
+#ifndef CALENDARSUPPORT_IDENTITYMANAGER_H
+#define CALENDARSUPPORT_IDENTITYMANAGER_H
 
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/IdentityManager>
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class IdentityManager : public KPIMIdentities::IdentityManager
 {
@@ -43,5 +41,5 @@ KPIMIdentities::IdentityManager *identityManager();
 
 }
 
-#endif /* AKONADI_KCAL_IDENTITYMANAGER_H */
+#endif
 

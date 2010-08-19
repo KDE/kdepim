@@ -1,43 +1,42 @@
 /*
-    Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company
 
-    Author: Tobias Koenig <tokoe@kde.org>
+  Author: Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "incidenceviewer.h"
-
 #include "utils.h"
+
 #include "libkdepimdbusinterfaces/urihandler.h"
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/item.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/ItemFetchScope>
 #include <akonadi_next/incidenceattachmentmodel.h>
-#include <kcalcore/incidence.h>
-#include <kcalutils/incidenceformatter.h>
-#include <klocale.h>
-#include <ktextbrowser.h>
-#include <ksystemtimezone.h>
 
-#include <QtGui/QVBoxLayout>
+#include <KCalUtils/IncidenceFormatter>
 
-using namespace Akonadi;
+#include <KJob>
+#include <KSystemTimeZone>
+#include <KTextBrowser>
+
+#include <QVBoxLayout>
+
+using namespace CalendarSupport;
 
 class TextBrowser : public KTextBrowser
 {
@@ -79,15 +78,17 @@ class IncidenceViewer::Private
       QString text;
 
       if ( mCurrentItem.isValid() ) {
-        text = KCalUtils::IncidenceFormatter::extensiveDisplayStr( Akonadi::displayName( mParentCollection ),
-                                                                   Akonadi::incidence( mCurrentItem ),
-                                                                   mDate, KSystemTimeZones::local() );
+        text = KCalUtils::IncidenceFormatter::extensiveDisplayStr(
+          CalendarSupport::displayName( mParentCollection ),
+          CalendarSupport::incidence( mCurrentItem ),
+          mDate, KSystemTimeZones::local() );
         text.prepend( mHeaderText );
         mBrowser->setHtml( text );
       } else {
         text = mDefaultText;
-        if ( !mDelayedClear )
+        if ( !mDelayedClear ) {
           mBrowser->setHtml( text );
+        }
       }
 
     }
@@ -98,7 +99,7 @@ class IncidenceViewer::Private
       mParentCollection = Akonadi::Collection();
 
       if ( !job->error() ) {
-        CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
+        Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
         if ( !fetchJob->collections().isEmpty() ) {
           mParentCollection = fetchJob->collections().first();
         }
@@ -109,14 +110,14 @@ class IncidenceViewer::Private
 
     IncidenceViewer *mParent;
     TextBrowser *mBrowser;
-    Item mCurrentItem;
+    Akonadi::Item mCurrentItem;
     QDate mDate;
     QString mHeaderText;
     QString mDefaultText;
     bool mDelayedClear;
-    Collection mParentCollection;
-    CollectionFetchJob *mParentCollectionFetchJob;
-    IncidenceAttachmentModel *mAttachmentModel;
+    Akonadi::Collection mParentCollection;
+    Akonadi::CollectionFetchJob *mParentCollectionFetchJob;
+    Akonadi::IncidenceAttachmentModel *mAttachmentModel;
 };
 
 IncidenceViewer::IncidenceViewer( QWidget *parent )
@@ -132,7 +133,7 @@ IncidenceViewer::IncidenceViewer( QWidget *parent )
 
   // always fetch full payload for incidences
   fetchScope().fetchFullPayload();
-  fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
+  fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
   d->updateView();
 }
@@ -152,11 +153,12 @@ QDate IncidenceViewer::activeDate() const
   return d->mDate;
 }
 
-QAbstractItemModel* IncidenceViewer::attachmentModel() const
+QAbstractItemModel *IncidenceViewer::attachmentModel() const
 {
-  if ( !d->mAttachmentModel )
-    d->mAttachmentModel = new IncidenceAttachmentModel( const_cast<IncidenceViewer*>( this ) );
-
+  if ( !d->mAttachmentModel ) {
+    d->mAttachmentModel =
+      new Akonadi::IncidenceAttachmentModel( const_cast<IncidenceViewer*>( this ) );
+  }
   return d->mAttachmentModel;
 }
 
@@ -183,25 +185,30 @@ void IncidenceViewer::setIncidence( const Akonadi::Item &incidence, const QDate 
   d->updateView();
 }
 
-void IncidenceViewer::itemChanged( const Item &item )
+void IncidenceViewer::itemChanged( const Akonadi::Item &item )
 {
-  if ( !item.hasPayload<KCalCore::Incidence::Ptr>() )
+  if ( !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
     return;
+  }
 
   d->mCurrentItem = item;
 
-  if ( d->mAttachmentModel )
+  if ( d->mAttachmentModel ) {
     d->mAttachmentModel->setItem( d->mCurrentItem );
+  }
 
   if ( d->mParentCollectionFetchJob ) {
-    disconnect( d->mParentCollectionFetchJob, SIGNAL( result( KJob* ) ),
-                this, SLOT( slotParentCollectionFetched( KJob* ) ) );
+    disconnect( d->mParentCollectionFetchJob, SIGNAL(result(KJob *)),
+                this, SLOT(slotParentCollectionFetched(KJob *)) );
     delete d->mParentCollectionFetchJob;
   }
 
-  d->mParentCollectionFetchJob = new CollectionFetchJob( d->mCurrentItem.parentCollection(), CollectionFetchJob::Base, this );
-  connect( d->mParentCollectionFetchJob, SIGNAL( result( KJob* ) ),
-           this, SLOT( slotParentCollectionFetched( KJob* ) ) );
+  d->mParentCollectionFetchJob =
+    new Akonadi::CollectionFetchJob( d->mCurrentItem.parentCollection(),
+                                     Akonadi::CollectionFetchJob::Base, this );
+
+  connect( d->mParentCollectionFetchJob, SIGNAL(result(KJob *)),
+           this, SLOT(slotParentCollectionFetched(KJob *)) );
 }
 
 void IncidenceViewer::itemRemoved()

@@ -1,6 +1,4 @@
 /*
-  This file is part of the Groupware/KOrganizer integration.
-
   Requires the Qt and KDE widget libraries, available at no cost at
   http://www.trolltech.com and http://www.kde.org respectively
 
@@ -32,36 +30,20 @@
   you do not wish to do so, delete this exception statement from
   your version.
 */
-#ifndef FREEBUSYMANAGER_H
-#define FREEBUSYMANAGER_H
+#ifndef CALENDARSUPPORT_FREEBUSYMANAGER_H
+#define CALENDARSUPPORT_FREEBUSYMANAGER_H
 
-#include "akonadi-kcal_next_export.h"
+#include "calendarsupport_export.h"
 
-#include <kcalcore/icalformat.h>
-#include <kcalcore/freebusycache.h>
-#include <kcalcore/freebusy.h>
+#include <KCalCore/FreeBusyCache>
 
-#include <KUrl>
-
-#include <QPointer>
-#include <QByteArray>
-#include <QObject>
-#include <QString>
-
-class KJob;
-class QTimerEvent;
-
-namespace KIO {
-  class Job;
-}
-
-namespace Akonadi {
+namespace CalendarSupport {
 
 class Calendar;
 class FreeBusyManagerPrivate;
 class FreeBusyManagerStatic;
 
-class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCalCore::FreeBusyCache
+class CALENDARSUPPORT_EXPORT FreeBusyManager : public QObject, public KCalCore::FreeBusyCache
 {
   Q_OBJECT
   public:
@@ -70,7 +52,7 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCalCore
      */
     static FreeBusyManager *self();
 
-    void setCalendar( Akonadi::Calendar * );
+    void setCalendar( CalendarSupport::Calendar * );
 
     /**
       Publishes the owners freebusy information from the current calendar
@@ -110,7 +92,6 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCalCore
       @see retrieveFreeBusy
      */
     void cancelRetrieval();
-
 
     /**
       Load freebusy information belonging to an email. The information is loaded

@@ -1,31 +1,31 @@
 /*
-    Copyright (c) 2008 Bruno Virlet <bvirlet@kdemail.net>
+  Copyright (c) 2008 Bruno Virlet <bvirlet@kdemail.net>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#ifndef KCALMODEL_H
-#define KCALMODEL_H
+#ifndef CALENDARSUPPORT_KCALMODEL_H
+#define CALENDARSUPPORT_KCALMODEL_H
 
-#include "akonadi-kcal_next_export.h"
-#include <akonadi/itemmodel.h>
+#include "calendarsupport_export.h"
+#include <Akonadi/ItemModel>
 
-namespace Akonadi {
+namespace CalendarSupport {
 
-class AKONADI_KCAL_NEXT_EXPORT KCalModel : public ItemModel
+class CALENDARSUPPORT_EXPORT KCalModel : public Akonadi::ItemModel
 {
   public:
     enum Column {
@@ -42,14 +42,16 @@ class AKONADI_KCAL_NEXT_EXPORT KCalModel : public ItemModel
     virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData( int section, Qt::Orientation orientation,
+                                 int role = Qt::DisplayRole ) const;
     /**
       Reimplemented from QAbstractItemModel.
-     */
+    */
     virtual QStringList mimeTypes() const;
+
   private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 }

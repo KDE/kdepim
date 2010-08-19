@@ -1,42 +1,46 @@
 /*
-    Copyright (c) 2009 KDAB
-    Author: Frank Osterfeld <osterfeld@kde.org>
+  Copyright (c) 2009 KDAB
+  Author: Frank Osterfeld <osterfeld@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#include "calendarmodel.h"
 #include "daterangefilterproxymodel.h"
+#include "calendarmodel.h"
 
 #include <KDateTime>
 
-#include <QVariant>
+using namespace CalendarSupport;
 
-using namespace Akonadi;
-
-class DateRangeFilterProxyModel::Private {
+class DateRangeFilterProxyModel::Private
+{
   public:
-  explicit Private() : mStartColumn( CalendarModel::PrimaryDate ), mEndColumn( CalendarModel::DateTimeEnd ) {}
+    explicit Private() :
+      mStartColumn( CalendarModel::PrimaryDate ), mEndColumn( CalendarModel::DateTimeEnd )
+    {
+    }
+
     int mStartColumn;
     int mEndColumn;
     KDateTime mStart;
     KDateTime mEnd;
 };
 
-DateRangeFilterProxyModel::DateRangeFilterProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), d( new Private )
+DateRangeFilterProxyModel::DateRangeFilterProxyModel( QObject *parent )
+  : QSortFilterProxyModel( parent ), d( new Private )
 {
   setFilterRole( CalendarModel::SortRole );
 }
@@ -72,7 +76,7 @@ void DateRangeFilterProxyModel::setEndDate( const KDateTime &date )
 
   invalidateFilter();
 }
-  
+
 int DateRangeFilterProxyModel::startDateColumn() const
 {
   return d->mStartColumn;
@@ -80,8 +84,9 @@ int DateRangeFilterProxyModel::startDateColumn() const
 
 void DateRangeFilterProxyModel::setStartDateColumn( int column )
 {
-  if ( column == d->mStartColumn )
+  if ( column == d->mStartColumn ) {
     return;
+  }
   d->mStartColumn = column;
   invalidateFilter();
 }
@@ -93,17 +98,20 @@ int DateRangeFilterProxyModel::endDateColumn() const
 
 void DateRangeFilterProxyModel::setEndDateColumn( int column )
 {
-  if ( column == d->mEndColumn )
+  if ( column == d->mEndColumn ) {
     return;
+  }
   d->mEndColumn = column;
   invalidateFilter();
 }
 
-bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const
+bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row,
+                                                  const QModelIndex &source_parent ) const
 {
 
-  const Collection collection = sourceModel()->index( source_row, 0, source_parent ).data(
-                                EntityTreeModel::CollectionRole ).value<Collection>();
+  const Akonadi::Collection collection =
+    sourceModel()->index( source_row, 0, source_parent ).data(
+      Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
   if ( collection.isValid() ) {
     return true;
@@ -118,7 +126,8 @@ bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row, const QModelIn
     }
   }
 
-  const bool recurs = sourceModel()->index( source_row, 0, source_parent ).data( CalendarModel::RecursRole ).toBool();
+  const bool recurs =
+    sourceModel()->index( source_row, 0, source_parent ).data( CalendarModel::RecursRole ).toBool();
 
   if ( recurs ) {// that's fuzzy and might return events not actually recurring in the range
     return true;
@@ -132,6 +141,5 @@ bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row, const QModelIn
       return false;
     }
   }
-
   return true;
 }

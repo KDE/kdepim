@@ -20,137 +20,141 @@
 #include "calendarsearch.h"
 #include "calendarmodel.h"
 #include "calendarsearchinterface.h"
+#include "calfilterproxymodel.h"
 #include "daterangefilterproxymodel.h"
 #include "incidencefilterproxymodel.h"
-#include "calfilterproxymodel.h"
 #include "utils.h"
 
+#include <Akonadi/ChangeRecorder>
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
-#include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityDisplayAttribute>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
 
-#include <akonadi/kcal/incidencemimetypevisitor.h>
-
-
 #include <KDateTime>
-#include <KDebug>
-#include <KLocalizedString>
+#include <KJob>
 #include <KRandom>
-#include <kselectionproxymodel.h>
+#include <KSelectionProxyModel>
 
 #include <QItemSelection>
 #include <QItemSelectionModel>
-#include <QSet>
 #include <QTimer>
-#include <QtDBus/QDBusConnection>
+#include <QVariantMap>
 
-using namespace Akonadi;
+using namespace CalendarSupport;
 
 /*
-static QString dateToString( const KDateTime& dt ) {
+static QString dateToString( const KDateTime &dt )
+{
   return dt.isValid() ? dt.toString() : QString();
 }
 */
 
-class CalendarSearch::Private {
-    CalendarSearch* const q;
-public:
-    explicit Private( CalendarSearch* qq );
+class CalendarSearch::Private
+{
+  CalendarSearch *const q;
+
+  public:
+    explicit Private( CalendarSearch *qq );
     ~Private() {
-        //TODO delete created search collection
+      //TODO delete created search collection
     }
 
     void updateSearch();
     void triggerDelayedUpdate();
-    void searchCreated( const QVariantMap& result );
+    void searchCreated( const QVariantMap &result );
     void collectionSelectionChanged( const QItemSelection &, const QItemSelection & );
-    void collectionFetched( KJob* job );
-    void rowsInserted( const QModelIndex&, int, int );
+    void collectionFetched( KJob *job );
+    void rowsInserted( const QModelIndex &, int, int );
 
-    Collection createdCollection;
+    Akonadi::Collection createdCollection;
     KDateTime startDate;
     KDateTime endDate;
     QTimer updateTimer;
-    OrgFreedesktopAkonadiCalendarSearchAgentInterface* interface;
+    OrgFreedesktopAkonadiCalendarSearchAgentInterface *interface;
     QString errorString;
     CalendarSearch::Error error;
-    CalendarModel* calendarModel;
-    EntityMimeTypeFilterModel* filterProxy;
-    KSelectionProxyModel* selectionProxyModel;
-    DateRangeFilterProxyModel* dateRangeProxyModel;
-    IncidenceFilterProxyModel* incidenceFilterProxyModel;
+    CalendarModel *calendarModel;
+    Akonadi::EntityMimeTypeFilterModel *filterProxy;
+    KSelectionProxyModel *selectionProxyModel;
+    DateRangeFilterProxyModel *dateRangeProxyModel;
+    IncidenceFilterProxyModel *incidenceFilterProxyModel;
     CalFilterProxyModel *kcalFilterProxyModel; // support for libkcal filters
-    QItemSelectionModel* selectionModel;
-    ChangeRecorder *monitor;
+    QItemSelectionModel *selectionModel;
+    Akonadi::ChangeRecorder *monitor;
     CalendarSearch::IncidenceTypes incidenceTypes;
-    QList<Collection::Id> preselectedCollections;
+    QList<Akonadi::Collection::Id> preselectedCollections;
 };
 
-CalendarSearch::Private::Private( CalendarSearch* qq )
-  : q( qq )
-  , interface( new OrgFreedesktopAkonadiCalendarSearchAgentInterface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_calendarsearch_agent"),
-                 QLatin1String("/CalendarSearchAgent"),
+CalendarSearch::Private::Private( CalendarSearch *qq )
+  : q( qq ),
+    interface( new OrgFreedesktopAkonadiCalendarSearchAgentInterface(
+                 QLatin1String( "org.freedesktop.Akonadi.Agent.akonadi_calendarsearch_agent" ),
+                 QLatin1String( "/CalendarSearchAgent" ),
                  QDBusConnection::sessionBus(),
-                 q ) )
-  , error( CalendarSearch::NoError )
-  , selectionProxyModel( 0 )
-  , selectionModel( 0 )
-  , incidenceTypes( CalendarSearch::Events|CalendarSearch::Todos|CalendarSearch::Journals ) {
-    updateTimer.setSingleShot( true );
-    updateTimer.setInterval( 0 );
-    q->connect( &updateTimer, SIGNAL(timeout()), q, SLOT(updateSearch()) );
+                 q ) ),
+    error( CalendarSearch::NoError ),
+    selectionProxyModel( 0 ),
+    selectionModel( 0 ),
+    incidenceTypes( CalendarSearch::Events|CalendarSearch::Todos|CalendarSearch::Journals )
+{
+  updateTimer.setSingleShot( true );
+  updateTimer.setInterval( 0 );
+  q->connect( &updateTimer, SIGNAL(timeout()), q, SLOT(updateSearch()) );
 
-    Session *session = new Session( "CalendarSearch-" + KRandom::randomString( 8 ).toLatin1(), q );
-    monitor = new ChangeRecorder( q );
-    monitor->setSession( session );
+  Akonadi::Session *session =
+    new Akonadi::Session( "CalendarSearch-" + KRandom::randomString( 8 ).toLatin1(), q );
+  monitor = new Akonadi::ChangeRecorder( q );
+  monitor->setSession( session );
 
-    ItemFetchScope scope;
-    scope.fetchFullPayload( true );
-    scope.fetchAttribute<EntityDisplayAttribute>();
+  Akonadi::ItemFetchScope scope;
+  scope.fetchFullPayload( true );
+  scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
-    monitor->setCollectionMonitored( Collection::root() );
-    monitor->fetchCollection( true );
-    monitor->setItemFetchScope( scope );
-    monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-    monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
-    monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
+  monitor->setCollectionMonitored( Akonadi::Collection::root() );
+  monitor->fetchCollection( true );
+  monitor->setItemFetchScope( scope );
+  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
+  monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
+  monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
 
-    calendarModel = new CalendarModel( monitor, q );
-    connect( calendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)), q, SLOT(rowsInserted(QModelIndex,int,int)) );
+  calendarModel = new CalendarModel( monitor, q );
+  connect( calendarModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           q, SLOT(rowsInserted(QModelIndex,int,int)) );
 
-    selectionModel = new QItemSelectionModel( calendarModel );
-    selectionProxyModel = new KSelectionProxyModel( selectionModel, q );
-    selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-    selectionProxyModel->setSourceModel( calendarModel );
+  selectionModel = new QItemSelectionModel( calendarModel );
+  selectionProxyModel = new KSelectionProxyModel( selectionModel, q );
+  selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+  selectionProxyModel->setSourceModel( calendarModel );
 
-    incidenceFilterProxyModel = new IncidenceFilterProxyModel( q );
-    incidenceFilterProxyModel->setDynamicSortFilter( true );
-    incidenceFilterProxyModel->setSourceModel( selectionProxyModel );
-    incidenceFilterProxyModel->showAll();
+  incidenceFilterProxyModel = new IncidenceFilterProxyModel( q );
+  incidenceFilterProxyModel->setDynamicSortFilter( true );
+  incidenceFilterProxyModel->setSourceModel( selectionProxyModel );
+  incidenceFilterProxyModel->showAll();
 
-    kcalFilterProxyModel = new CalFilterProxyModel( q );
-    kcalFilterProxyModel->setSourceModel( incidenceFilterProxyModel );
-    kcalFilterProxyModel->setDynamicSortFilter( true );
+  kcalFilterProxyModel = new CalFilterProxyModel( q );
+  kcalFilterProxyModel->setSourceModel( incidenceFilterProxyModel );
+  kcalFilterProxyModel->setDynamicSortFilter( true );
 
-    dateRangeProxyModel = new DateRangeFilterProxyModel;
-    dateRangeProxyModel->setDynamicSortFilter( true );
-    dateRangeProxyModel->setSourceModel( kcalFilterProxyModel );
+  dateRangeProxyModel = new DateRangeFilterProxyModel;
+  dateRangeProxyModel->setDynamicSortFilter( true );
+  dateRangeProxyModel->setSourceModel( kcalFilterProxyModel );
 }
 
 void CalendarSearch::Private::updateSearch()
 {
 #if 0
-    const QString startStr = dateToString( startDate );
-    const QString endStr = dateToString( endDate );
-    if ( !interface->callWithCallback( QLatin1String("createSearch"), QList<QVariant>() << startStr << endStr, q, SLOT(searchCreated(QVariantMap)) ) ) {
-        error = CalendarSearch::SomeError;
-        errorString = i18n( "Could not create search." );
-        emit q->errorOccurredceived();
-    }
+  const QString startStr = dateToString( startDate );
+  const QString endStr = dateToString( endDate );
+  if ( !interface->callWithCallback( QLatin1String( "createSearch" ),
+                                     QList<QVariant>() << startStr << endStr, q,
+                                     SLOT(searchCreated(QVariantMap)) ) ) {
+    error = CalendarSearch::SomeError;
+    errorString = i18n( "Could not create search." );
+    emit q->errorOccurredceived();
+  }
 #endif
 }
 
@@ -162,50 +166,54 @@ void CalendarSearch::Private::triggerDelayedUpdate()
 }
 
 #if 0
-void CalendarSearch::Private::searchCreated( const QVariantMap& result ) {
-    kDebug() << "search created";
-    bool ok = false;
-    const int errorCode = result.value( QLatin1String("error") ).toInt();
-    if ( errorCode ) {
-        error = CalendarSearch::SomeError;
-        errorString = result.value( QLatin1String("errorString") ).toString();
-        emit q->errorOccurredceived();
-        return;
-    }
-    const int id = result.value( QLatin1String("Collection") ).toInt( &ok );
-    if ( !ok || id < 0 ) {
-        error = CalendarSearch::SomeError;
-        errorString = i18n("Could not parse the collection ID");
-        emit q->errorOccurredceived();
-        return;
-    }
+void CalendarSearch::Private::searchCreated( const QVariantMap &result )
+{
+  kDebug() << "search created";
+  bool ok = false;
+  const int errorCode = result.value( QLatin1String( "error" ) ).toInt();
+  if ( errorCode ) {
+    error = CalendarSearch::SomeError;
+    errorString = result.value( QLatin1String( "errorString" ) ).toString();
+    emit q->errorOccurredceived();
+    return;
+  }
+  const int id = result.value( QLatin1String( "Collection" ) ).toInt( &ok );
+  if ( !ok || id < 0 ) {
+    error = CalendarSearch::SomeError;
+    errorString = i18n( "Could not parse the collection ID" );
+    emit q->errorOccurredceived();
+    return;
+  }
 
-    Collection col;
-    col.setId( id );
-    CollectionFetchJob* job = new CollectionFetchJob( col );
-    connect( job, SIGNAL(finished(KJob*)), q, SLOT(collectionFetched(KJob*)) );
+  Collection col;
+  col.setId( id );
+  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( col );
+  connect( job, SIGNAL(finished(KJob *)), q, SLOT(collectionFetched(KJob *)) );
 }
 
-void CalendarSearch::Private::collectionFetched( KJob* j ) {
-    const CollectionFetchJob* const job = qobject_cast<const CollectionFetchJob* const>( j );
-    Q_ASSERT( job );
-    if ( job->error() ) {
-        error = CalendarSearch::SomeError;
-        errorString = job->errorString();
-        emit q->errorOccurredceived();
-        return;
-    }
-    if ( !job->collections().isEmpty() )
-      createdCollection = job->collections().first();
+void CalendarSearch::Private::collectionFetched( KJob *j )
+{
+  const CollectionFetchJob *const job = qobject_cast<const CollectionFetchJob * const>( j );
+  Q_ASSERT( job );
+  if ( job->error() ) {
+    error = CalendarSearch::SomeError;
+    errorString = job->errorString();
+    emit q->errorOccurredceived();
+    return;
+  }
+  if ( !job->collections().isEmpty() ) {
+    createdCollection = job->collections().first();
+  }
 }
 
 #endif
 
-CalendarSearch::CalendarSearch( QObject * parent ) : QObject( parent ), d( new Private( this ) )
+CalendarSearch::CalendarSearch( QObject *parent )
+  : QObject( parent ), d( new Private( this ) )
 {
 }
 
-QAbstractItemModel* CalendarSearch::model() const
+QAbstractItemModel *CalendarSearch::model() const
 {
   return d->dateRangeProxyModel;
 }
@@ -258,12 +266,13 @@ void CalendarSearch::setEndDate( const KDateTime &endDate )
   }
 }
 
-static QModelIndex findIndex( QAbstractItemModel *m, const QModelIndex &parent, const Collection::Id &cid )
+static QModelIndex findIndex( QAbstractItemModel *m, const QModelIndex &parent,
+                              const Akonadi::Collection::Id &cid )
 {
   const int rows = m->rowCount( parent );
   for ( int i=0; i < rows; ++i ) {
     const QModelIndex idx = m->index( i, 0, parent );
-    const Collection::Id found = Akonadi::collectionIdFromIndex( idx );
+    const Akonadi::Collection::Id found = collectionIdFromIndex( idx );
 
     if ( found < 0 ) {
       return QModelIndex(); // we only care about collections
@@ -282,19 +291,20 @@ static QModelIndex findIndex( QAbstractItemModel *m, const QModelIndex &parent, 
   return QModelIndex();
 }
 
-void CalendarSearch::Private::collectionSelectionChanged( const QItemSelection &newSelection, const QItemSelection &oldSelection )
+void CalendarSearch::Private::collectionSelectionChanged( const QItemSelection &newSelection,
+                                                          const QItemSelection &oldSelection )
 {
   QSet<QModelIndex> oldIndexes = oldSelection.indexes().toSet();
   QSet<QModelIndex> newIndexes = newSelection.indexes().toSet();
-  Q_FOREACH( const QModelIndex& i, oldIndexes - newIndexes ) {
-    const QModelIndex idx = findIndex( calendarModel, QModelIndex(), Akonadi::collectionIdFromIndex( i ) );
+  Q_FOREACH( const QModelIndex &i, oldIndexes - newIndexes ) {
+    const QModelIndex idx = findIndex( calendarModel, QModelIndex(), collectionIdFromIndex( i ) );
     if ( idx.isValid() ) {
       selectionModel->select( idx, QItemSelectionModel::Deselect );
     }
   }
 
-  Q_FOREACH( const QModelIndex& i, newIndexes ) {
-    const Collection::Id id = Akonadi::collectionIdFromIndex( i );
+  Q_FOREACH( const QModelIndex &i, newIndexes ) {
+    const Akonadi::Collection::Id id = collectionIdFromIndex( i );
     const QModelIndex idx = findIndex( calendarModel, QModelIndex(), id );
     if ( idx.isValid() ) {
       selectionModel->select( idx, QItemSelectionModel::Select );
@@ -304,7 +314,7 @@ void CalendarSearch::Private::collectionSelectionChanged( const QItemSelection &
   }
 }
 
-QItemSelectionModel* CalendarSearch::selectionModel() const
+QItemSelectionModel *CalendarSearch::selectionModel() const
 {
   return d->selectionModel;
 }
@@ -331,19 +341,18 @@ void CalendarSearch::setIncidenceTypes( IncidenceTypes types )
 
 void CalendarSearch::Private::rowsInserted( const QModelIndex &parent, int start, int end )
 {
-
   for ( int i = start; i <= end; ++i ) {
     const QModelIndex idx = calendarModel->index( i, 0, parent );
-    const Collection::Id id = Akonadi::collectionIdFromIndex( idx );
+    const Akonadi::Collection::Id id = collectionIdFromIndex( idx );
 
-    const Item item = Akonadi::itemFromIndex( idx );
+    const Akonadi::Item item = itemFromIndex( idx );
 
     if ( item.isValid() ) {
-      const Collection::Rights rights = item.parentCollection().rights();
-      KCalCore::Incidence::Ptr incidence = Akonadi::incidence( item );
+      const Akonadi::Collection::Rights rights = item.parentCollection().rights();
+      KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
       if ( incidence &&
-           !( rights & Collection::CanDeleteItem ) &&
-           !( rights & Collection::CanChangeItem ) &&
+           !( rights & Akonadi::Collection::CanDeleteItem ) &&
+           !( rights & Akonadi::Collection::CanChangeItem ) &&
            !incidence->isReadOnly() ) {
         incidence->setReadOnly( true );
       }
@@ -368,7 +377,7 @@ void CalendarSearch::setSelectionModel( QItemSelectionModel *selectionModel )
            this, SLOT(collectionSelectionChanged(QItemSelection,QItemSelection)) );
 
   Q_FOREACH( const QModelIndex &i, selectionModel->selectedIndexes() ) {
-    const Collection::Id cid = Akonadi::collectionIdFromIndex( i );
+    const Akonadi::Collection::Id cid = collectionIdFromIndex( i );
     kDebug() << cid;
     const QModelIndex idx = findIndex( d->calendarModel, QModelIndex(), cid );
     if ( idx.isValid() ) {

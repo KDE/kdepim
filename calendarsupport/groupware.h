@@ -1,6 +1,4 @@
 /*
-  This file is part of the Groupware/Akonadianizer integration.
-
   Requires the Qt and KDE widget libraries, available at no cost at
   http://www.trolltech.com and http://www.kde.org respectively
 
@@ -33,43 +31,33 @@
   your version.
 */
 
-#ifndef AKONADI_KCAL_GROUPWARE_H
-#define AKONADI_KCAL_GROUPWARE_H
+#ifndef CALENDARSUPPORT_GROUPWARE_H
+#define CALENDARSUPPORT_GROUPWARE_H
 
+#include "calendarsupport_export.h"
 #include "incidencechanger.h"
 
-#include "akonadi-kcal_next_export.h"
-#include <kcalcore/icalformat.h>
-
-
-namespace KCalCore {
-  class Event;
-  class Incidence;
-}
-
-class QString;
+#include <KCalCore/ICalFormat>
 
 namespace Akonadi {
-  class CalendarViewBase;
-  class Calendar;
-  class Calendar;
-  class FreeBusyManager;
   class Item;
+}
 
-class AKONADI_KCAL_NEXT_EXPORT GroupwareUiDelegate
+namespace CalendarSupport {
+
+class CALENDARSUPPORT_EXPORT GroupwareUiDelegate
 {
-public:
-  virtual ~GroupwareUiDelegate();
-
-  virtual void requestIncidenceEditor( const Akonadi::Item &item ) = 0;
+  public:
+    virtual ~GroupwareUiDelegate();
+    virtual void requestIncidenceEditor( const Akonadi::Item &item ) = 0;
 };
 
-class AKONADI_KCAL_NEXT_EXPORT Groupware : public QObject
+class CALENDARSUPPORT_EXPORT Groupware : public QObject
 {
   Q_OBJECT
   public:
 
-    static Groupware *create( Akonadi::Calendar *, GroupwareUiDelegate * );
+    static Groupware *create( CalendarSupport::Calendar *, GroupwareUiDelegate * );
     static Groupware *instance();
 
     /** Send iCal messages after asking the user
@@ -93,16 +81,15 @@ class AKONADI_KCAL_NEXT_EXPORT Groupware : public QObject
     void setDoNotNotify( bool notify ) { mDoNotNotify = notify; }
     bool doNotNotify() { return mDoNotNotify; }
 
-    bool handleInvitation( const QString& receiver, const QString& iCal,
-                           const QString& type );
+    bool handleInvitation( const QString &receiver, const QString &iCal, const QString &type );
 
   protected:
-    Groupware( Akonadi::Calendar *, GroupwareUiDelegate * );
+    Groupware( CalendarSupport::Calendar *, GroupwareUiDelegate * );
 
   private:
     static Groupware *mInstance;
     KCalCore::ICalFormat mFormat;
-    Akonadi::Calendar *mCalendar;
+    Calendar *mCalendar;
     GroupwareUiDelegate *mDelegate;
     bool mDoNotNotify;
 };

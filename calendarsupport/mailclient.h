@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1998 Barry D Benowitz <b.benowitz@telesciences.com>
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2009 Allen Winter <winter@kde.org>
@@ -23,38 +21,40 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef AKONADI_KCAL_MAILCLIENT_H
-#define AKONADI_KCAL_MAILCLIENT_H
+#ifndef CALENDARSUPPORT_MAILCLIENT_H
+#define CALENDARSUPPORT_MAILCLIENT_H
 
-#include "akonadi-kcal_next_export.h"
+#include "calendarsupport_export.h"
 
-#include <kcalcore/incidencebase.h>
+#include <KCalCore/IncidenceBase>
 
-#include <QString>
 #include <QObject>
 
 namespace KPIMIdentities {
   class Identity;
 }
 
-namespace Akonadi
-{
+namespace CalendarSupport {
 
-class AKONADI_KCAL_NEXT_EXPORT MailClient : public QObject
+class CALENDARSUPPORT_EXPORT MailClient : public QObject
 {
   public:
     MailClient();
     virtual ~MailClient();
 
-    bool mailAttendees( const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
+    bool mailAttendees( const KCalCore::IncidenceBase::Ptr &,
+                        const KPIMIdentities::Identity &identity,
                         bool bccMe, const QString &attachment=QString(),
                         const QString &mailTransport = QString() );
-    bool mailOrganizer( const KCalCore::IncidenceBase::Ptr & , const KPIMIdentities::Identity &identity,
+
+    bool mailOrganizer( const KCalCore::IncidenceBase::Ptr &,
+                        const KPIMIdentities::Identity &identity,
                         const QString &from, bool bccMe,
                         const QString &attachment=QString(),
                         const QString &sub=QString(),
                         const QString &mailTransport = QString() );
-    bool mailTo( const KCalCore::IncidenceBase::Ptr & , const KPIMIdentities::Identity &identity,
+
+    bool mailTo( const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
                  const QString &from, bool bccMe, const QString &recipients,
                  const QString &attachment=QString(), const QString &mailTransport = QString() );
 

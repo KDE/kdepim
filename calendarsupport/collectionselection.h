@@ -1,8 +1,6 @@
 /*
-  This file is part of Akonadi.
-
-    Copyright (c) 2009 KDAB
-    Author: Frank Osterfeld <frank@kdab.net>
+  Copyright (c) 2009 KDAB
+  Author: Frank Osterfeld <frank@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,10 +21,10 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef AKONADI_KCAL_COLLECTIONSELECTION_H
-#define AKONADI_KCAL_COLLECTIONSELECTION_H
+#ifndef CALENDARSUPPORT_COLLECTIONSELECTION_H
+#define CALENDARSUPPORT_COLLECTIONSELECTION_H
 
-#include "akonadi-kcal_next_export.h"
+#include "calendarsupport_export.h"
 
 #include <QObject>
 
@@ -36,15 +34,15 @@ class QItemSelection;
 class QItemSelectionModel;
 
 namespace Akonadi {
-  
-  class AKONADI_KCAL_NEXT_EXPORT CollectionSelection : public QObject
-  {
-    Q_OBJECT
+
+class CALENDARSUPPORT_EXPORT CollectionSelection : public QObject
+{
+  Q_OBJECT
   public:
     explicit CollectionSelection( QItemSelectionModel *selectionModel, QObject *parent = 0 );
     ~CollectionSelection();
 
-    QItemSelectionModel* model() const;
+    QItemSelectionModel *model() const;
     Akonadi::Collection::List selectedCollections() const;
     QList<Akonadi::Collection::Id> selectedCollectionIds() const;
     bool contains( const Akonadi::Collection &c ) const;
@@ -53,9 +51,10 @@ namespace Akonadi {
     bool hasSelection() const;
 
   Q_SIGNALS:
-    void selectionChanged( const Akonadi::Collection::List &selected, const Akonadi::Collection::List &deselected );
-    void collectionDeselected( const Akonadi::Collection& );
-    void collectionSelected( const Akonadi::Collection& );
+    void selectionChanged( const Akonadi::Collection::List &selected,
+                           const Akonadi::Collection::List &deselected );
+    void collectionDeselected( const Akonadi::Collection & );
+    void collectionSelected( const Akonadi::Collection & );
 
   private Q_SLOTS:
     void slotSelectionChanged( const QItemSelection &, const QItemSelection & );
@@ -63,7 +62,8 @@ namespace Akonadi {
   private:
     class Private;
     Private *const d;
-  };
+};
+
 }
 
-#endif // AKONADI_KCAL_COLLECTIONSELECTION_H
+#endif

@@ -1,8 +1,6 @@
 /*
-  This file is part of Akonadi.
-
-    Copyright (c) 2009 KDAB
-    Author: Frank Osterfeld <frank@kdab.net>
+  Copyright (c) 2009 KDAB
+  Author: Frank Osterfeld <frank@kdab.net>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,71 +26,79 @@
 
 #include <QItemSelectionModel>
 
-using namespace Akonadi;
+using namespace CalendarSupport;
 
 class Akonadi::CollectionSelection::Private
 {
-public:
-  explicit Private( QItemSelectionModel* model_ ) : model( model_ ) {
+  public:
+    explicit Private( QItemSelectionModel *model_ ) : model( model_ )
+    {
+    }
 
-  }
-
-  QItemSelectionModel* model;
+    QItemSelectionModel *model;
 };
 
-CollectionSelection::CollectionSelection( QItemSelectionModel *selectionModel, QObject *parent ) : QObject( parent ), d( new Private ( selectionModel ) )
+Akonadi::CollectionSelection::CollectionSelection( QItemSelectionModel *selectionModel,
+                                                   QObject *parent )
+  : QObject( parent ), d( new Private ( selectionModel ) )
 {
-  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
+  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
 }
 
-CollectionSelection::~CollectionSelection()
+Akonadi::CollectionSelection::~CollectionSelection()
 {
   delete d;
 }
 
-QItemSelectionModel* CollectionSelection::model() const
+QItemSelectionModel *Akonadi::CollectionSelection::model() const
 {
   return d->model;
 }
 
-bool CollectionSelection::hasSelection() const
+bool Akonadi::CollectionSelection::hasSelection() const
 {
   return d->model->hasSelection();
 }
 
-bool CollectionSelection::contains( const Collection &c ) const
+bool Akonadi::CollectionSelection::contains( const Collection &c ) const
 {
   return selectedCollectionIds().contains( c.id() );
 }
 
-bool CollectionSelection::contains( const Collection::Id &id ) const
+bool Akonadi::CollectionSelection::contains( const Akonadi::Collection::Id &id ) const
 {
   return selectedCollectionIds().contains( id );
 }
 
-Collection::List CollectionSelection::selectedCollections() const
+Akonadi::Collection::List Akonadi::CollectionSelection::selectedCollections() const
 {
-  Collection::List selected;
-  Q_FOREACH ( const QModelIndex &idx, d->model->selectedIndexes() )
+  Akonadi::Collection::List selected;
+  Q_FOREACH ( const QModelIndex &idx, d->model->selectedIndexes() ) {
     selected.append( collectionFromIndex( idx ) );
+  }
   return selected;
 }
 
-QList<Collection::Id> CollectionSelection::selectedCollectionIds() const {
-  QList<Collection::Id> selected;
-  Q_FOREACH ( const QModelIndex &idx, d->model->selectedIndexes() )
+QList<Akonadi::Collection::Id> Akonadi::CollectionSelection::selectedCollectionIds() const {
+  QList<Akonadi::Collection::Id> selected;
+  Q_FOREACH ( const QModelIndex &idx, d->model->selectedIndexes() ) {
     selected.append( collectionIdFromIndex( idx ) );
+  }
   return selected;
 }
 
-void CollectionSelection::slotSelectionChanged( const QItemSelection &selectedIndexes, const QItemSelection &deselectedIndexes )
+void Akonadi::CollectionSelection::slotSelectionChanged( const QItemSelection &selectedIndexes,
+                                                         const QItemSelection &deselIndexes )
 {
-  const Collection::List selected = collectionsFromIndexes( selectedIndexes.indexes() );
-  const Collection::List deselected = collectionsFromIndexes( deselectedIndexes.indexes() );
+  const Akonadi::Collection::List selected = collectionsFromIndexes( selectedIndexes.indexes() );
+  const Akonadi::Collection::List deselected = collectionsFromIndexes( deselIndexes.indexes() );
 
   emit selectionChanged( selected, deselected );
-  Q_FOREACH ( const Collection &c, deselected )
+  Q_FOREACH ( const Collection &c, deselected ) {
     emit collectionDeselected( c );
-  Q_FOREACH ( const Collection &c, selected )
+  }
+  Q_FOREACH ( const Collection &c, selected ) {
     emit collectionSelected( c );
+  }
 }

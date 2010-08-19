@@ -1,6 +1,4 @@
 /*
-  This file is part of the kcal library.
-
   Copyright (c) 1998 Preston Brown <pbrown@kde.org>
   Copyright (c) 2001,2002 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -26,47 +24,25 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-/**
-  @file
-  This file is part of the API for handling calendar data and
-  defines the DndFactory class.
-
-  @brief
-  vCalendar/iCalendar Drag-and-Drop object factory.
-
-  @author Preston Brown \<pbrown@kde.org\>
-  @author Cornelius Schumacher \<schumacher@kde.org\>
-  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
-*/
-
 #include "dndfactory.h"
+#include "utils.h"
+
+#include <KCalCore/MemoryCalendar>
 
 #include <KCalUtils/VCalDrag>
 #include <KCalUtils/ICalDrag>
 
-#include <kiconloader.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <kurl.h>
-
-#include <QtGui/QApplication>
-#include <QtGui/QClipboard>
-#include <QtGui/QDropEvent>
-#include <QtGui/QPixmap>
-
-using namespace KCalUtils;
-using namespace KCalCore;
-using namespace Akonadi;
+using namespace CalendarSupport;
 
 /**
   Private class that helps to provide binary compatibility between releases.
   @internal
 */
 //@cond PRIVATE
-class Akonadi::DndFactory::Private
+class CalendarSupport::DndFactory::Private
 {
   public:
-  Private( const Akonadi::CalendarAdaptor::Ptr &cal, bool deleteCalendar )
+  Private( const CalendarSupport::CalendarAdaptor::Ptr &cal, bool deleteCalendar )
     : mDeleteCalendar( deleteCalendar ), mCalendar( cal ),
       mDndFactory( new KCalUtils::DndFactory( cal ) )
     {}
@@ -81,9 +57,9 @@ class Akonadi::DndFactory::Private
 
 };
 //@endcond
-namespace Akonadi {
-DndFactory::DndFactory( const Akonadi::CalendarAdaptor::Ptr &cal, bool deleteCalendarHere )
-  : d( new Akonadi::DndFactory::Private ( cal, deleteCalendarHere ) )
+namespace CalendarSupport {
+DndFactory::DndFactory( const CalendarSupport::CalendarAdaptor::Ptr &cal, bool deleteCalendarHere )
+  : d( new CalendarSupport::DndFactory::Private ( cal, deleteCalendarHere ) )
 {
 }
 
@@ -102,12 +78,12 @@ QDrag *DndFactory::createDrag( QWidget *owner )
   return d->mDndFactory->createDrag( owner );
 }
 
-QMimeData *DndFactory::createMimeData( const Incidence::Ptr &incidence )
+QMimeData *DndFactory::createMimeData( const KCalCore::Incidence::Ptr &incidence )
 {
   return d->mDndFactory->createMimeData( incidence );
 }
 
-QDrag *DndFactory::createDrag( const Incidence::Ptr &incidence, QWidget *owner )
+QDrag *DndFactory::createDrag( const KCalCore::Incidence::Ptr &incidence, QWidget *owner )
 {
   return d->mDndFactory->createDrag( incidence, owner );
 }
@@ -118,7 +94,8 @@ KCalCore::MemoryCalendar::Ptr DndFactory::createDropCalendar( const QMimeData *m
 }
 
 /* static */
-KCalCore::MemoryCalendar::Ptr DndFactory::createDropCalendar( const QMimeData *md, const KDateTime::Spec &timeSpec )
+KCalCore::MemoryCalendar::Ptr DndFactory::createDropCalendar( const QMimeData *md,
+                                                              const KDateTime::Spec &timeSpec )
 {
  KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( timeSpec ) );
 
@@ -127,7 +104,7 @@ KCalCore::MemoryCalendar::Ptr DndFactory::createDropCalendar( const QMimeData *m
    return cal;
  }
 
- return MemoryCalendar::Ptr();
+ return KCalCore::MemoryCalendar::Ptr();
 }
 
 KCalCore::MemoryCalendar::Ptr DndFactory::createDropCalendar( QDropEvent *de )
@@ -166,38 +143,38 @@ void DndFactory::cutIncidence( const Akonadi::Item &selectedInc )
 
 bool DndFactory::copyIncidence( const Akonadi::Item &item )
 {
-  if ( Akonadi::hasIncidence( item ) ) {
-    return d->mDndFactory->copyIncidence( Akonadi::incidence( item ) );
+  if ( CalendarSupport::hasIncidence( item ) ) {
+    return d->mDndFactory->copyIncidence( CalendarSupport::incidence( item ) );
   } else {
     return false;
   }
 }
 
-Incidence::Ptr DndFactory::pasteIncidence( const KDateTime &newDateTime,
-                                           const KCalUtils::DndFactory::PasteFlags &pasteFlags )
+KCalCore::Incidence::Ptr DndFactory::pasteIncidence(
+  const KDateTime &newDateTime, const KCalUtils::DndFactory::PasteFlags &pasteFlags )
 {
   return d->mDndFactory->pasteIncidence( newDateTime, pasteFlags );
 }
 
-bool DndFactory::copyIncidences( const Item::List &items )
+bool DndFactory::copyIncidences( const Akonadi::Item::List &items )
 {
-  Incidence::List incList;
-  Q_FOREACH ( const Item &item, items ) {
-    if ( Akonadi::hasIncidence( item ) ) {
-      incList.append( Akonadi::incidence( item ) );
+  KCalCore::Incidence::List incList;
+  Q_FOREACH ( const Akonadi::Item &item, items ) {
+    if ( CalendarSupport::hasIncidence( item ) ) {
+      incList.append( CalendarSupport::incidence( item ) );
     }
   }
 
   return d->mDndFactory->copyIncidences( incList );
 }
 
-bool DndFactory::cutIncidences( const Item::List &items )
+bool DndFactory::cutIncidences( const Akonadi::Item::List &items )
 {
   if ( copyIncidences( items ) ) {
-    Item::List::ConstIterator it;
+    Akonadi::Item::List::ConstIterator it;
     for ( it = items.constBegin(); it != items.constEnd(); ++it ) {
       // Don't call the kcal's version, call deleteIncidence( Item, )
-      // which creates a ItemDeleteJob.
+      // which creates a Akonadi::ItemDeleteJob.
       d->mCalendar->deleteIncidence( *it );
     }
     return true;
@@ -206,8 +183,8 @@ bool DndFactory::cutIncidences( const Item::List &items )
   }
 }
 
-KCalCore::Incidence::List DndFactory::pasteIncidences( const KDateTime &newDateTime,
-                                                       const KCalUtils::DndFactory::PasteFlags &pasteFlags )
+KCalCore::Incidence::List DndFactory::pasteIncidences(
+  const KDateTime &newDateTime, const KCalUtils::DndFactory::PasteFlags &pasteFlags )
 {
   return d->mDndFactory->pasteIncidences( newDateTime, pasteFlags );
 }

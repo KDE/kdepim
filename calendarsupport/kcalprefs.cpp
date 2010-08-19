@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -26,30 +24,17 @@
 #include "kcalprefs.h"
 #include "identitymanager.h"
 
-#include <kmime/kmime_header_parsing.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
-#include <kpimutils/email.h>
+#include <KMime/HeaderParsing>
 
-#include <kglobalsettings.h>
-#include <kglobal.h>
-#include <kconfig.h>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kemailsettings.h>
-#include <kstringhandler.h>
-#include <ksystemtimezone.h>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 
-#include <QDir>
-#include <QString>
-#include <QColor>
-#include <QMap>
-#include <QStringList>
+#include <KPIMUtils/Email>
 
-#include <time.h>
-#include <unistd.h>
+#include <KEMailSettings>
+#include <KSystemTimeZone>
 
-using namespace KPIMIdentities;
+using namespace CalendarSupport;
 
 K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 
@@ -109,7 +94,6 @@ Akonadi::Entity::Id KCalPrefs::defaultCalendarId() const
 {
   return mDefaultCalendarId;
 }
-
 
 void KCalPrefs::setDefaultCalendarId( const Akonadi::Entity::Id id )
 {
@@ -171,8 +155,9 @@ void KCalPrefs::usrReadConfig()
 void KCalPrefs::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
-  if( ! mMailTransport.isNull() )
+  if ( !mMailTransport.isNull() ) {
     generalConfig.writeEntry( "MailTransport", mMailTransport );
+  }
 
   if ( !mFreeBusyPublishSavePassword ) {
     KConfigSkeleton::ItemPassword *i = freeBusyPublishPasswordItem();
@@ -233,7 +218,7 @@ QString KCalPrefs::email()
 QStringList KCalPrefs::allEmails()
 {
   // Grab emails from the email identities
-  QStringList lst = Akonadi::identityManager()->allEmails();
+  QStringList lst = CalendarSupport::identityManager()->allEmails();
   // Add emails configured in korganizer
   lst += mAdditionalMails;
   // Add the email entered as the userEmail here
@@ -251,7 +236,7 @@ QStringList KCalPrefs::fullEmails()
 
   QStringList::Iterator it;
   // Grab emails from the email identities
-  KPIMIdentities::IdentityManager *idmanager = Akonadi::identityManager();
+  KPIMIdentities::IdentityManager *idmanager = CalendarSupport::identityManager();
   QStringList lst = idmanager->identities();
   KPIMIdentities::IdentityManager::ConstIterator it1;
   for ( it1 = idmanager->begin(); it1 != idmanager->end(); ++it1 ) {
@@ -295,8 +280,9 @@ bool KCalPrefs::thatIsMe( const QString &_email )
     return true;
   }
 
-  for ( Akonadi::IdentityManager::ConstIterator it = Akonadi::identityManager()->begin();
-        it != Akonadi::identityManager()->end(); ++it ) {
+  CalendarSupport::IdentityManager::ConstIterator it;
+  for ( it = CalendarSupport::identityManager()->begin();
+        it != CalendarSupport::identityManager()->end(); ++it ) {
     if ( (*it).matchesEmailAddress( email ) ) {
       return true;
     }

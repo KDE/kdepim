@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
@@ -24,80 +22,84 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef INCIDENCECHANGER_P_H
-#define INCIDENCECHANGER_P_H
+#ifndef CALENDARSUPPORT_INCIDENCECHANGER_P_H
+#define CALENDARSUPPORT_INCIDENCECHANGER_P_H
 
 #include "incidencechanger.h"
 
-#include <kcalcore/incidence.h>
-
 #include <Akonadi/Item>
+
+#include <KCalCore/Incidence>
 
 #include <QObject>
 
-namespace Akonadi {
+namespace CalendarSupport {
 
-class IncidenceChanger::Private : public QObject {
+class IncidenceChanger::Private : public QObject
+{
   Q_OBJECT
-public:
+  public:
 
-  struct Change {
-    KCalCore::Incidence::Ptr oldInc;
-    Akonadi::Item newItem;
-    IncidenceChanger::WhatChanged action;
-    QWidget *parent;
-  };
+    struct Change {
+      KCalCore::Incidence::Ptr oldInc;
+      Akonadi::Item newItem;
+      IncidenceChanger::WhatChanged action;
+      QWidget *parent;
+    };
 
-  Private( Entity::Id defaultCollectionId, Calendar *calendar ) :
-           mDefaultCollectionId( defaultCollectionId ),
-           mGroupware( 0 ),
-           mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ),
-           mCalendar( calendar )
-           { }
+    Private( Akonadi::Entity::Id defaultCollectionId, Calendar *calendar ) :
+      mDefaultCollectionId( defaultCollectionId ),
+      mGroupware( 0 ),
+      mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ),
+      mCalendar( calendar )
+    {
+    }
 
-  ~Private() {}
-  void queueChange( Change * );
-  bool performChange( Change * );
+    ~Private()
+    {
+    }
+    void queueChange( Change * );
+    bool performChange( Change * );
 
-  /*
-   * Called when deleting an incidence, queued changes are canceled.
-   * */
-  void cancelChanges( Item::Id id );
+    /*
+     * Called when deleting an incidence, queued changes are canceled.
+     */
+    void cancelChanges( Akonadi::Item::Id id );
 
-  bool myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &newInc,
-                                const KCalCore::Incidence::Ptr &oldInc );
+    bool myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &newInc,
+                                  const KCalCore::Incidence::Ptr &oldInc );
 
-  Entity::Id mDefaultCollectionId;
+    Akonadi::Entity::Id mDefaultCollectionId;
 
-  Groupware *mGroupware;
-  DestinationPolicy mDestinationPolicy;
+    Groupware *mGroupware;
+    DestinationPolicy mDestinationPolicy;
 
-  // Changes waiting for a job on the same item.id() to end
-  QHash<Item::Id,Change*> mQueuedChanges;
+    // Changes waiting for a job on the same item.id() to end
+    QHash<Akonadi::Item::Id,Change*> mQueuedChanges;
 
-  // Current changes with modify jobs still running
-  QHash<Item::Id, Change*> mCurrentChanges;
+    // Current changes with modify jobs still running
+    QHash<Akonadi::Item::Id, Change*> mCurrentChanges;
 
-  QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
+    QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
 
+    QList<Akonadi::Item::Id> mDeletedItemIds;
 
-  QList<Akonadi::Item::Id> mDeletedItemIds;
+    Calendar *mCalendar;
 
-  Calendar *mCalendar;
+  public slots:
+    void performNextChange( Akonadi::Item::Id );
 
-public slots:
-  void performNextChange( Akonadi::Item::Id );
+  private slots:
+    void changeIncidenceFinished( KJob *job );
 
-private slots:
-  void changeIncidenceFinished( KJob* job );
-
-signals:
-  void incidenceChangeFinished( const Akonadi::Item &oldinc,
-                                const Akonadi::Item &newInc,
-                                Akonadi::IncidenceChanger::WhatChanged,
-                                bool );
+  signals:
+    void incidenceChangeFinished( const Akonadi::Item &oldinc,
+                                  const Akonadi::Item &newInc,
+                                  CalendarSupport::IncidenceChanger::WhatChanged,
+                                  bool );
 
 };
 
-} // namespace
+}
+
 #endif

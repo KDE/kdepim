@@ -1,6 +1,4 @@
 /*
-  This file is part of the Groupware/KOrganizer integration.
-
   Requires the Qt and KDE widget libraries, available at no cost at
   http://www.trolltech.com and http://www.kde.org respectively
 
@@ -36,41 +34,35 @@
 */
 
 #include "freebusymanager.h"
+#include "calendar.h"
 #include "freebusydownloadjob.h"
 #include "kcalprefs.h"
-#include "calendar.h"
 
-#include <akonadi/contact/contactsearchjob.h>
+#include <Akonadi/Contact/ContactSearchJob>
 
-#include <kcalcore/calendar.h>
-#include <kcalcore/incidencebase.h>
-#include <kcalcore/attendee.h>
-#include <kcalcore/journal.h>
-#include <kcalcore/icalformat.h>
+#include <KCalCore/Event>
+#include <KCalCore/FreeBusy>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/Person>
 
-#include <kio/job.h>
-#include <kio/jobuidelegate.h>
-#include <kio/netaccess.h>
-#include <kdebug.h>
-#include <kmessagebox.h>
-#include <ktemporaryfile.h>
-#include <kapplication.h>
-#include <kconfig.h>
-#include <klocale.h>
-#include <kstandarddirs.h>
+#include <KDebug>
+#include <KMessageBox>
+#include <KStandardDirs>
+#include <KTemporaryFile>
+#include <KUrl>
+#include <KIO/Job>
+#include <KIO/JobUiDelegate>
+#include <KIO/NetAccess>
 
-#include <QtCore/QBuffer>
-#include <QtCore/QByteArray>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QRegExp>
-#include <QtCore/QTextStream>
-#include <QtCore/QTimer>
-#include <QtCore/QTimerEvent>
-#include <QtGui/QApplication>
+#include <QDir>
+#include <QFile>
+#include <QPointer>
+#include <QRegExp>
+#include <QTextStream>
+#include <QTimer>
+#include <QTimerEvent>
 
-using namespace KCalCore;
-using namespace Akonadi;
+using namespace CalendarSupport;
 
 /// Free helper functions
 
@@ -115,54 +107,55 @@ bool fbExists( const KUrl &url )
 
 /// FreeBusyManagerPrivate
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class FreeBusyManagerPrivate
 {
-  FreeBusyManager * const q_ptr;
+  FreeBusyManager *const q_ptr;
   Q_DECLARE_PUBLIC( FreeBusyManager )
 
-public: /// Members
-  Akonadi::Calendar *mCalendar;
-  KCalCore::ICalFormat mFormat;
+  public: /// Members
+    CalendarSupport::Calendar *mCalendar;
+    KCalCore::ICalFormat mFormat;
 
-  QStringList mRetrieveQueue;
-  QMap<KUrl, QString> mFreeBusyUrlEmailMap;
+    QStringList mRetrieveQueue;
+    QMap<KUrl, QString> mFreeBusyUrlEmailMap;
 
-  // Free/Busy uploading
-  QDateTime mNextUploadTime;
-  int mTimerID;
-  bool mUploadingFreeBusy;
-  bool mBrokenUrl;
+    // Free/Busy uploading
+    QDateTime mNextUploadTime;
+    int mTimerID;
+    bool mUploadingFreeBusy;
+    bool mBrokenUrl;
 
-  // the parentWidget to use while doing our "recursive" retrieval
-  QPointer<QWidget>  mParentWidgetForRetrieval;
+    // the parentWidget to use while doing our "recursive" retrieval
+    QPointer<QWidget>  mParentWidgetForRetrieval;
 
-public: /// Functions
-  FreeBusyManagerPrivate( FreeBusyManager *q );
-  void checkFreeBusyUrl();
-  QString freeBusyDir() const;
-  KUrl freeBusyUrl( const QString &email ) const;
-  QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
-  FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
-  FreeBusy::Ptr ownerFreeBusy();
-  QString ownerFreeBusyAsString();
-  void processFreeBusyDownloadResult( KJob *_job );
-  void processFreeBusyUploadResult( KJob *_job );
-  bool processRetrieveQueue();
-  void uploadFreeBusy();
+  public: /// Functions
+    FreeBusyManagerPrivate( FreeBusyManager *q );
+    void checkFreeBusyUrl();
+    QString freeBusyDir() const;
+    KUrl freeBusyUrl( const QString &email ) const;
+    QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
+    KCalCore::FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
+    KCalCore::FreeBusy::Ptr ownerFreeBusy();
+    QString ownerFreeBusyAsString();
+    void processFreeBusyDownloadResult( KJob *_job );
+    void processFreeBusyUploadResult( KJob *_job );
+    bool processRetrieveQueue();
+    void uploadFreeBusy();
 };
 
 }
 
 FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
-  : q_ptr( q )
-  , mCalendar( 0 )
-  , mTimerID( 0 )
-  , mUploadingFreeBusy( false )
-  , mBrokenUrl( false )
-  , mParentWidgetForRetrieval( 0 )
-{ }
+  : q_ptr( q ),
+    mCalendar( 0 ),
+    mTimerID( 0 ),
+    mUploadingFreeBusy( false ),
+    mBrokenUrl( false ),
+    mParentWidgetForRetrieval( 0 )
+{
+}
 
 void FreeBusyManagerPrivate::checkFreeBusyUrl()
 {
@@ -178,7 +171,8 @@ QString FreeBusyManagerPrivate::freeBusyDir() const
 KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
 {
   // First check if there is a specific FB url for this email
-  QString configFile = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusyurls" ) );
+  QString configFile = KStandardDirs::locateLocal( "data",
+                                                   QLatin1String( "korganizer/freebusyurls" ) );
   KConfig cfg( configFile );
   KConfigGroup group = cfg.group( email );
   QString url = group.readEntry( QLatin1String( "url" ) );
@@ -194,8 +188,9 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
   // Try with the url configurated by preferred email in kcontactmanager
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
   job->setQuery( Akonadi::ContactSearchJob::Email, email );
-  if ( !job->exec() )
+  if ( !job->exec() ) {
     return KUrl();
+  }
 
   QString pref;
   const KABC::Addressee::List contacts = job->contacts();
@@ -241,7 +236,8 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
     }
   }
 
-  if ( KCalPrefs::instance()->mFreeBusyRetrieveUrl.contains( QRegExp( "\\.[xiv]fb$" ) ) ) { // user specified a fullpath
+  if ( KCalPrefs::instance()->mFreeBusyRetrieveUrl.contains( QRegExp( "\\.[xiv]fb$" ) ) ) {
+    // user specified a fullpath
     // do variable string replacements to the URL (MS Outlook style)
     const KUrl sourceUrl( KCalPrefs::instance()->mFreeBusyRetrieveUrl );
     KUrl fullpathURL = replaceVariablesUrl( sourceUrl, email );
@@ -285,10 +281,10 @@ KUrl FreeBusyManagerPrivate::freeBusyUrl( const QString &email ) const
 
 QString FreeBusyManagerPrivate::freeBusyToIcal( const KCalCore::FreeBusy::Ptr &freebusy )
 {
-  return mFormat.createScheduleMessage( freebusy, iTIPPublish );
+  return mFormat.createScheduleMessage( freebusy, KCalCore::iTIPPublish );
 }
 
-FreeBusy::Ptr FreeBusyManagerPrivate::iCalToFreeBusy( const QByteArray &freeBusyData )
+KCalCore::FreeBusy::Ptr FreeBusyManagerPrivate::iCalToFreeBusy( const QByteArray &freeBusyData )
 {
   const QString freeBusyVCal( QString::fromUtf8( freeBusyData ) );
   KCalCore::FreeBusy::Ptr fb = mFormat.parseFreeBusy( freeBusyVCal );
@@ -306,14 +302,17 @@ KCalCore::FreeBusy::Ptr FreeBusyManagerPrivate::ownerFreeBusy()
   KDateTime start = KDateTime::currentUtcDateTime();
   KDateTime end = start.addDays( KCalPrefs::instance()->mFreeBusyPublishDays );
 
-  Event::List events;
-  Akonadi::Item::List items = mCalendar ? mCalendar->rawEvents( start.date(), end.date() ) : Akonadi::Item::List();
-  foreach( const Akonadi::Item &item, items ) {
-    events << item.payload<Event::Ptr>();
+  KCalCore::Event::List events;
+  Akonadi::Item::List items = mCalendar ?
+                              mCalendar->rawEvents( start.date(), end.date() ) :
+                              Akonadi::Item::List();
+  foreach ( const Akonadi::Item &item, items ) {
+    events << item.payload<KCalCore::Event::Ptr>();
   }
-  FreeBusy::Ptr freebusy ( new FreeBusy( events, start, end ) );
-  freebusy->setOrganizer( Person::Ptr( new Person( KCalPrefs::instance()->fullName(),
-                                                   KCalPrefs::instance()->email() ) ) );
+  KCalCore::FreeBusy::Ptr freebusy ( new KCalCore::FreeBusy( events, start, end ) );
+  freebusy->setOrganizer( KCalCore::Person::Ptr(
+                            new KCalCore::Person( KCalPrefs::instance()->fullName(),
+                                                  KCalPrefs::instance()->email() ) ) );
   return freebusy;
 }
 
@@ -329,9 +328,11 @@ void FreeBusyManagerPrivate::processFreeBusyDownloadResult( KJob *_job )
 
   FreeBusyDownloadJob *job = static_cast<FreeBusyDownloadJob *>( _job );
   if ( job->error() ) {
-    KMessageBox::sorry( mParentWidgetForRetrieval,
-                        i18n( "Failed to download free/busy data from: %1\nReason: %2", job->url().prettyUrl(), job->errorText() ),
-                        i18n( "Free/busy retrieval error") );
+    KMessageBox::sorry(
+      mParentWidgetForRetrieval,
+      i18n( "Failed to download free/busy data from: %1\nReason: %2",
+            job->url().prettyUrl(), job->errorText() ),
+      i18n( "Free/busy retrieval error" ) );
 
     // TODO: Ask for a retry? (i.e. queue  the email again when the user wants it).
 
@@ -344,15 +345,17 @@ void FreeBusyManagerPrivate::processFreeBusyDownloadResult( KJob *_job )
     const QString email = mFreeBusyUrlEmailMap.take( job->url() );
 
     if ( fb ) {
-      Person::Ptr p = fb->organizer();
+      KCalCore::Person::Ptr p = fb->organizer();
       p->setEmail( email );
       q->saveFreeBusy( fb, p );
 
       emit q->freeBusyRetrieved( fb, email );
     } else {
-      KMessageBox::sorry( mParentWidgetForRetrieval,
-                          i18n( "Failed to parse free/busy information that was retrieved from: %1", job->url().prettyUrl() ),
-                          i18n( "Free/busy retrieval error" ) );
+      KMessageBox::sorry(
+        mParentWidgetForRetrieval,
+        i18n( "Failed to parse free/busy information that was retrieved from: %1",
+              job->url().prettyUrl() ),
+        i18n( "Free/busy retrieval error" ) );
     }
   }
 
@@ -400,19 +403,19 @@ bool FreeBusyManagerPrivate::processRetrieveQueue()
     return false;
   }
 
-  if ( mFreeBusyUrlEmailMap.contains( freeBusyUrlForEmail ) )
+  if ( mFreeBusyUrlEmailMap.contains( freeBusyUrlForEmail ) ) {
     return true; // Already in progress.
+  }
 
   mFreeBusyUrlEmailMap.insert( freeBusyUrlForEmail, email );
 
-  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail, mParentWidgetForRetrieval );
-  q->connect( job, SIGNAL(result(KJob*)), SLOT(processFreeBusyDownloadResult(KJob*)) );
+  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail,
+                                                      mParentWidgetForRetrieval );
+  q->connect( job, SIGNAL(result(KJob *)), SLOT(processFreeBusyDownloadResult(KJob *)) );
   job->start();
 
   return true;
 }
-
-
 
 void FreeBusyManagerPrivate::uploadFreeBusy()
 {
@@ -466,7 +469,7 @@ void FreeBusyManagerPrivate::uploadFreeBusy()
 
 /// FreeBusyManager::Singleton
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 struct FreeBusyManagerStatic
 {
@@ -497,13 +500,13 @@ FreeBusyManager *FreeBusyManager::self()
   return &sManagerInstance->instance;
 }
 
-
-void FreeBusyManager::setCalendar( Akonadi::Calendar *c )
+void FreeBusyManager::setCalendar( CalendarSupport::Calendar *c )
 {
   Q_D( FreeBusyManager );
 
-  if ( d->mCalendar )
+  if ( d->mCalendar ) {
     disconnect( d->mCalendar, SIGNAL(calendarChanged()) );
+  }
 
   d->mCalendar = c;
   if ( d->mCalendar ) {
@@ -525,13 +528,15 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 {
   Q_D( FreeBusyManager );
   // Already uploading? Skip this one then.
-  if ( d->mUploadingFreeBusy )
+  if ( d->mUploadingFreeBusy ) {
     return;
+  }
 
   // No calendar set yet? Don't upload to prevent losing published information that
   // might still be valid.
-  if ( !d->mCalendar )
+  if ( !d->mCalendar ) {
     return;
+  }
 
   KUrl targetURL( KCalPrefs::instance()->freeBusyPublishUrl() );
   if ( targetURL.isEmpty() )  {
@@ -572,14 +577,16 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
   // Save the time of the next free/busy uploading
   d->mNextUploadTime = QDateTime::currentDateTime();
   if ( KCalPrefs::instance()->mFreeBusyPublishDelay > 0 ) {
-    d->mNextUploadTime = d->mNextUploadTime.addSecs( KCalPrefs::instance()->mFreeBusyPublishDelay * 60 );
+    d->mNextUploadTime =
+      d->mNextUploadTime.addSecs( KCalPrefs::instance()->mFreeBusyPublishDelay * 60 );
   }
 
   QString messageText = d->ownerFreeBusyAsString();
 
   // We need to massage the list a bit so that Outlook understands
   // it.
-  messageText = messageText.replace( QRegExp( QLatin1String( "ORGANIZER\\s*:MAILTO:" ) ), QLatin1String( "ORGANIZER:" ) );
+  messageText = messageText.replace( QRegExp( QLatin1String( "ORGANIZER\\s*:MAILTO:" ) ),
+                                     QLatin1String( "ORGANIZER:" ) );
 
   // Create a local temp file and save the message to it
   KTemporaryFile tempFile;
@@ -683,7 +690,7 @@ void FreeBusyManager::cancelRetrieval()
   d->mRetrieveQueue.clear();
 }
 
-FreeBusy::Ptr FreeBusyManager::loadFreeBusy( const QString &email )
+KCalCore::FreeBusy::Ptr FreeBusyManager::loadFreeBusy( const QString &email )
 {
   Q_D( FreeBusyManager );
   const QString fbd = d->freeBusyDir();
@@ -691,12 +698,12 @@ FreeBusy::Ptr FreeBusyManager::loadFreeBusy( const QString &email )
   QFile f( fbd + QLatin1Char( '/' ) + email + QLatin1String( ".ifb" ) );
   if ( !f.exists() ) {
     kDebug() << f.fileName() << "doesn't exist.";
-    return FreeBusy::Ptr();
+    return KCalCore::FreeBusy::Ptr();
   }
 
   if ( !f.open( QIODevice::ReadOnly ) ) {
     kDebug() << "Unable to open file" << f.fileName();
-    return FreeBusy::Ptr();
+    return KCalCore::FreeBusy::Ptr();
   }
 
   QTextStream ts( &f );
@@ -705,8 +712,8 @@ FreeBusy::Ptr FreeBusyManager::loadFreeBusy( const QString &email )
   return d->iCalToFreeBusy( str.toUtf8() );
 }
 
-bool FreeBusyManager::saveFreeBusy( const FreeBusy::Ptr &freebusy,
-                                    const Person::Ptr &person )
+bool FreeBusyManager::saveFreeBusy( const KCalCore::FreeBusy::Ptr &freebusy,
+                                    const KCalCore::Person::Ptr &person )
 {
   Q_D( FreeBusyManager );
   Q_ASSERT( person );
@@ -736,7 +743,7 @@ bool FreeBusyManager::saveFreeBusy( const FreeBusy::Ptr &freebusy,
   freebusy->clearAttendees();
   freebusy->setOrganizer( person );
 
-  QString messageText = d->mFormat.createScheduleMessage( freebusy, iTIPPublish );
+  QString messageText = d->mFormat.createScheduleMessage( freebusy, KCalCore::iTIPPublish );
 
   if ( !f.open( QIODevice::ReadWrite ) ) {
     kDebug() << "acceptFreeBusy: Can't open:" << filename << "for writing";
