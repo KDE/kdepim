@@ -25,7 +25,6 @@
 #include "kjotspart.h"
 
 #include "kjotspart.moc"
-#include "kjotscomponent.h"
 #include "aboutdata.h"
 
 #include <kdebug.h>
