@@ -34,7 +34,7 @@
 #include "grantleecontactgroupformatter.h"
 #endif
 
-#include <akonadi/akonadi_next/collectionselectionproxymodel.h>
+#include <akonadi/akonadi_next/checkableitemproxymodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
@@ -134,21 +134,20 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    */
 
   mCollectionTree = new Akonadi::EntityMimeTypeFilterModel( this );
+  mCollectionTree->setDynamicSortFilter( true );
+  mCollectionTree->setSortCaseSensitivity( Qt::CaseInsensitive );
   mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
   mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
   mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
-  Akonadi::CollectionSelectionProxyModel *proxyModel = new Akonadi::CollectionSelectionProxyModel( this );
-  proxyModel->setDynamicSortFilter( true );
-  proxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-
-  mCollectionSelectionModel = new QItemSelectionModel( proxyModel );
-  proxyModel->setSelectionModel( mCollectionSelectionModel );
-  proxyModel->setSourceModel( mCollectionTree );
+  mCollectionSelectionModel = new QItemSelectionModel( mCollectionTree );
+  CheckableItemProxyModel *checkableProxyModel = new CheckableItemProxyModel( this );
+  checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
+  checkableProxyModel->setSourceModel( mCollectionTree );
 
   mXXPortManager->setItemModel( allContactsModel() );
 
-  mCollectionView->setModel( proxyModel );
+  mCollectionView->setModel( checkableProxyModel );
   mCollectionView->setXmlGuiClient( guiClient );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
