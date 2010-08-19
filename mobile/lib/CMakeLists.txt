@@ -9,7 +9,6 @@ set(mobileui_SRCS
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
     akonadibreadcrumbnavigationfactory.cpp
-    kresettingproxymodel.cpp
     declarativeakonadiitem.cpp
     declarativeeditors.cpp
     incidenceview.cpp

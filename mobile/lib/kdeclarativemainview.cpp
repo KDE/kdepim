@@ -60,7 +60,6 @@
 #include <KCmdLineArgs>
 #include <KInputDialog>
 
-#include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
 
 using namespace Akonadi;
