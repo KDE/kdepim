@@ -54,6 +54,9 @@
         * - <a href="messageviewer/html/index.html"><b>messageviewer</b></a>
         *   (<a href="messageviewer/html/classes.html">classes</a>)\n
         *   <i>A widget that can show a KMime::Message in a nice way.</i>
+        * - <a href="messagelist/html/index.html"><b>message list</b></a>
+        *   (<a href="messagelist/html/classes.html">classes</a>)\n
+        *   <i>A widget that can show a list of message (KMime::Message, Akonadi::Item).
         * </td>
         *
 	* <td valign="top">

@@ -1,0 +1,30 @@
+
+/**
+@mainpage The MessageList library
+
+  The MessageList library provides a widget to display messages sorted/filtered by various means.
+
+
+@section akonadi Displaying content of Akonadi collections
+
+  The following class should be used to display the content of Akonadi::Collection:
+  @li MessageList::Widget
+  @li MessageList::StorageModel
+
+
+@section moreInfo More detailed informations
+
+  The documentation of classes from the MessageList::Core namespace also
+  worth a read to get more information on the usage of this library.
+
+*/
+
+
+
+/**
+@namespace MessageList::Core
+  The implementation independent part of the MessageList library.
+*/
+
+
+// DOXYGEN_NAME=messagelist
