@@ -1670,8 +1670,6 @@ void ViewerPrivate::loadActionLists()
   themesActionList.clear();
   
   QStringList themesLocations( KGlobal::dirs()->findDirs("data", "messageviewer/themes/") );
-  QDir systemThemes( themesLocations.at(1) );
-  QDir userThemes( themesLocations.at(0) );
   // kDebug() << "Themes locations: " << themesLocations;
 
   foreach(const QString &themesPath, themesLocations) {
@@ -1690,17 +1688,13 @@ void ViewerPrivate::loadActionLists()
   themeDirs.sort();
   // kDebug() << "Themes dirs: " << themeDirs;
 
-  QString absolutePath;
+  QString absoluteFilePath;
 
   foreach(const QString &dirName, themeDirs) {
-    if ( systemThemes.exists( dirName ) ) {
-       absolutePath = systemThemes.absolutePath();
-    } else {
-       absolutePath = userThemes.absolutePath();
-    }
+    absoluteFilePath = KStandardDirs::locate( "data" , "messageviewer/themes/" + dirName + "/default.desktop" );
 
-    QFile desktopFile( absolutePath + "/" + dirName + "/default.desktop" );
-    // kDebug() << "Directory: " << dirName << " is coming from: " << absolutePath;
+    QFile desktopFile( absoluteFilePath );
+    // kDebug() << "Directory: " << dirName << " is coming from: " << absoluteFilePath;
 
     if ( !desktopFile.exists() )
       continue;
