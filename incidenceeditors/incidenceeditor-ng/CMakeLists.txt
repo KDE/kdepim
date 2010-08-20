@@ -15,12 +15,13 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   alarmpresets.cpp
   alarmdialog.cpp
 
+  ktimezonecombobox.cpp
+
   # TODO: Move the next two to akonadi libs when finished
   editoritemmanager.cpp
   invitationdispatcher.cpp
 
   freebusyurldialog.cpp
-  editorfreebusy.cpp
 
   # Shared incidence editors code
   incidenceeditor.cpp
@@ -47,16 +48,24 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   incidencedefaults.cpp
 
-  ../autochecktreewidget.cpp
   ../categoryconfig.cpp
   ../categoryhierarchyreader.cpp
-  ../categoryselectdialog.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
-  ../ktimezonecombobox.cpp
 )
 
+if (NOT WINCE)
+  set(incidenceeditors_ng_shared_LIB_SRCS ${incidenceeditors_ng_shared_LIB_SRCS}
+    # pending: replace QTreeWidget with QListWidget
+    editorfreebusy.cpp
+  ../autochecktreewidget.cpp
+  ../categoryselectdialog.cpp
+  )
+endif (NOT WINCE)
+
 ### Build the desktop version
+
+if (NOT WINCE)
 
 set( incidenceeditors_ng_desktop_LIB_SRCS
   ${incidenceeditors_ng_shared_LIB_SRCS}
@@ -68,6 +77,7 @@ set( incidenceeditors_ng_desktop_LIB_SRCS
 )
 
 kde4_add_ui_files( incidenceeditors_ng_desktop_LIB_SRCS
+  ../categoryselectdialog_base.ui
   ../template_management_dialog_base.ui
   eventortododesktop.ui
   alarmdialog.ui
@@ -81,12 +91,11 @@ target_link_libraries(incidenceeditorsng
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
   kdepim               # For KPIM::K{Date|Time}Edit
   kdepimdbusinterfaces # For UriHandler
-  akonadi-kcal_next    # For KCalPrefs
+  calendarsupport      # For KCalPrefs
   kdgantt2             # For FreeBusy Editor
 )
 
@@ -96,6 +105,8 @@ set_target_properties(incidenceeditorsng
 )
 
 install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+endif(NOT WINCE)
 
 ### Build the mobile version if needed
 
@@ -121,9 +132,8 @@ if (KDEPIM_MOBILE_UI)
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
-    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
-    kdepim            # For KPIM::K{Date|Time}Edit
-    akonadi-kcal_next # For KCalPrefs
+    kdepim               # For KPIM::K{Date|Time}Edit
+    calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
     kdgantt2
     ${KDEPIMLIBS_KCALUTILS_LIBS}
@@ -142,6 +152,8 @@ endif (KDEPIM_MOBILE_UI)
 
 ### Build the test app TODO: Make optional
 
+if (NOT WINCE)
+
 set(testincidenceeditor_SRCS main.cpp)
 
 kde4_add_executable(keventeditor ${testincidenceeditor_SRCS})
@@ -150,12 +162,13 @@ target_link_libraries(keventeditor
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   incidenceeditorsng
-  akonadi-kcal_next
+  calendarsupport
   kdepimdbusinterfaces
 )
 
 install(TARGETS keventeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( tests )
+
+endif(NOT WINCE)

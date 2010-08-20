@@ -14,7 +14,7 @@
    <property name="margin">
     <number>0</number>
    </property>
-   <item row="0" column="1">
+   <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -33,10 +33,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="0" column="1">
     <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
    </item>
-   <item row="1" column="2">
+   <item row="1" column="1">
     <widget class="QWidget" name="mInvitationBar" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_10">
       <property name="margin">
@@ -85,7 +85,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="0">
     <widget class="QLabel" name="label_2">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -119,7 +119,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="1">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -135,7 +135,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="3" column="0">
     <widget class="QLabel" name="label_4">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -157,7 +157,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
+   <item row="3" column="1">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -173,17 +173,24 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
+   <item row="4" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="QLabel" name="mTaskLabel">
      <property name="text">
-      <string comment="@label line containing task specific ui controls">Task:</string>
+      <string comment="@label line containing to-do specific ui controls">Completion:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="6" column="2">
+   <item row="5" column="1">
     <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_8">
       <property name="margin">
@@ -220,14 +227,14 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string comment="@label:slider Showed after the task percentage completed slider">completed</string>
+         <string comment="@label:slider Showed after the to-do percentage completed slider">completed</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string comment="@label:listbox priority of a task">Priority</string>
+         <string comment="@label:listbox priority of a to-do">Priority:</string>
         </property>
        </widget>
       </item>
@@ -238,52 +245,52 @@
         </property>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">unspecified</string>
+          <string comment="@item:inlistbox Priority of a to-do">unspecified</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">1 (highest)</string>
+          <string comment="@item:inlistbox Priority of a to-do">1 (highest)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">2</string>
+          <string comment="@item:inlistbox Priority of a to-do">2</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">3</string>
+          <string comment="@item:inlistbox Priority of a to-do">3</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">4</string>
+          <string comment="@item:inlistbox Priority of a to-do">4</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">5 (medium)</string>
+          <string comment="@item:inlistbox Priority of a to-do">5 (medium)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">6</string>
+          <string comment="@item:inlistbox Priority of a to-do">6</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">7</string>
+          <string comment="@item:inlistbox Priority of a to-do">7</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">8</string>
+          <string comment="@item:inlistbox Priority of a to-do">8</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string comment="@item:inlistbox Priority of a task">9 (lowest)</string>
+          <string comment="@item:inlistbox Priority of a to-do">9 (lowest)</string>
          </property>
         </item>
        </widget>
@@ -291,29 +298,7 @@
      </layout>
     </widget>
    </item>
-   <item row="7" column="1" colspan="2">
-    <widget class="KSeparator" name="mTaskSeparator"/>
-   </item>
    <item row="8" column="1">
-    <widget class="QLabel" name="label_8">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string comment="@label line containig event specific info.">Event:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="2">
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
       <widget class="QCheckBox" name="mWholeDayCheck">
@@ -372,7 +357,7 @@
      </item>
     </layout>
    </item>
-   <item row="9" column="1">
+   <item row="9" column="0">
     <widget class="QLabel" name="mStartLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -394,7 +379,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="2">
+   <item row="9" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QCheckBox" name="mStartCheck">
@@ -490,7 +475,7 @@
      </item>
     </layout>
    </item>
-   <item row="10" column="1">
+   <item row="10" column="0">
     <widget class="QLabel" name="mEndLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -502,7 +487,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string comment="@label end date/time for an event or task">&amp;End:</string>
+      <string comment="@label end date/time for an event or to-do">&amp;End:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -512,7 +497,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="2">
+   <item row="10" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QCheckBox" name="mEndCheck">
@@ -581,21 +566,21 @@
      </item>
     </layout>
    </item>
-   <item row="11" column="1" colspan="2">
+   <item row="11" column="0" colspan="2">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="12" column="1" colspan="2">
+   <item row="12" column="0" colspan="2">
     <widget class="KTabWidget" name="mTabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
      <widget class="QWidget" name="mGeneralTab">
       <attribute name="title">
-       <string comment="@title:tab General settings for an event or task">General</string>
+       <string comment="@title:tab General settings for an event or to-do">General</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_9">
        <item row="0" column="0" colspan="4">
@@ -685,7 +670,7 @@
           <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
          </property>
          <property name="text">
-          <string comment="@label:listbox sets the privacy option of hte event or task">Access:</string>
+          <string comment="@label:listbox sets the privacy option of the event or to-do">Access:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -706,7 +691,7 @@
      </widget>
      <widget class="QWidget" name="mAttendeesTab">
       <attribute name="title">
-       <string comment="@title:tab attendees of this task or event">Attendees</string>
+       <string comment="@title:tab attendees of this event or to-do">Attendees</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_15">
        <item row="1" column="0" colspan="2">
@@ -722,7 +707,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string comment="@label participants of this event or task">Participants:</string>
+          <string comment="@label participants of this event or to-do">Participants:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -849,7 +834,7 @@
      </widget>
      <widget class="QWidget" name="mReminderTab">
       <attribute name="title">
-       <string comment="@title:tab Tab to configure reminders for events or tasks">Reminder</string>
+       <string comment="@title:tab Tab to configure reminders for events or to-do">Reminder</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_17">
        <item row="0" column="0">
@@ -861,7 +846,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string comment="@label">Quick add a reminder:</string>
+          <string comment="@label">Add default reminder:</string>
          </property>
         </widget>
        </item>
@@ -955,9 +940,9 @@
       <attribute name="title">
        <string comment="@title:tab">Recurrence</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_19">
+      <layout class="QGridLayout" name="gridLayout_19" columnstretch="0,1,0">
        <item row="0" column="0">
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="mRepeatLabel">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -965,7 +950,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string comment="@label whether or not this event or task repeats">Repeat:</string>
+          <string comment="@label whether or not this event or to-do repeats">Repeats:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1412,7 +1397,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="mAttachementsTab">
+     <widget class="QWidget" name="mAttachmentsTab">
       <attribute name="title">
        <string comment="@title:tab configure attachments of an event or todo">Attachments</string>
       </attribute>
@@ -1485,12 +1470,8 @@
      </widget>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
+   <item row="6" column="0" colspan="2">
+    <widget class="KSeparator" name="mTaskSeparator"/>
    </item>
   </layout>
  </widget>

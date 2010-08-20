@@ -21,19 +21,22 @@
 #ifndef EDITORITEMMANAGER_H
 #define EDITORITEMMANAGER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "incidenceeditors-ng_export.h"
 
 class KJob;
 
 namespace Akonadi {
+  class Collection;
+  class Item;
+  class ItemFetchScope;
+}
 
-class Collection;
-class Item;
-class ItemEditorPrivate;
+namespace CalendarSupport {
+
 class ItemEditorUi;
-class ItemFetchScope;
+class ItemEditorPrivate;
 
 /**
  * Helper class for creating dialogs that let the user create and edit the payload
@@ -96,7 +99,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      *
      * @see fetchScope()
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope( const Akonadi::ItemFetchScope &fetchScope );
 
     /**
      * Returns the item fetch scope.
@@ -110,7 +113,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      *
      * @see setFetchScope() for replacing the current item fetch scope
      */
-    ItemFetchScope &fetchScope();
+    Akonadi::ItemFetchScope &fetchScope();
 
     enum SaveAction {
       Create, /**< A new item was created */
@@ -119,13 +122,16 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     };
 
   Q_SIGNALS:
-    void itemSaveFinished( Akonadi::EditorItemManager::SaveAction action );
-    void itemSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message );
+    void itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction action );
+
+    void itemSaveFailed( CalendarSupport::EditorItemManager::SaveAction action,
+                         const QString &message );
+
     void revertFinished();
     void revertFailed( const QString &message );
 
   private:
-    ItemEditorPrivate * const d_ptr;
+    ItemEditorPrivate *const d_ptr;
     Q_DECLARE_PRIVATE( ItemEditor )
     Q_DISABLE_COPY( EditorItemManager )
 

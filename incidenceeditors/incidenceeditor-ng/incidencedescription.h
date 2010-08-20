@@ -30,6 +30,8 @@ namespace Ui {
 
 namespace IncidenceEditorsNG {
 
+class IncidenceDescriptionPrivate;
+
 /**
  * The IncidenceDescriptionEditor keeps track of the following Incidence parts:
  * - description
@@ -43,6 +45,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
 #else
     IncidenceDescription( Ui::EventOrTodoDesktop *ui );
 #endif
+
+    ~IncidenceDescription();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
@@ -61,7 +65,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
 #else
     Ui::EventOrTodoDesktop *mUi;
 #endif
-
+    //@cond PRIVATE
+    Q_DECLARE_PRIVATE( IncidenceDescription );
+    IncidenceDescriptionPrivate * const d;
+    //@endcond
 };
 
 } // IncidenceEditorsNG

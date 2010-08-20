@@ -24,6 +24,7 @@
 #include <QtGui/QListWidgetItem>
 
 #include <KCalendarSystem>
+#include <KDebug>
 
 #include "incidencedatetime.h"
 
@@ -35,12 +36,31 @@
 
 using namespace IncidenceEditorsNG;
 
-/// Keep this in sync with the values in mUi->mRecurrenceTypeCombo
-static const int sRecurrenceNeverIndex = 0;
-static const int sRecurrenceDailyIndex = 1;
-static const int sRecurrenceWeeklyIndex = 2;
-static const int sRecurrenceMonthlyIndex = 3;
-static const int sRecurrenceYearlyIndex = 3;
+enum {
+  // Keep in sync with mRecurrenceEndCombo
+  RecurrenceEndNever = 0,
+  RecurrenceEndOn,
+  RecurrenceEndAfter
+};
+
+
+/**
+
+Description of available recurrence types:
+
+0 - None
+1 -
+2 -
+3 - rDaily
+4 - rWeekly
+5 - rMonthlyPos  - 3rd Saturday of month, last Wednesday of month...
+6 - rMonthlyDay  - 17th day of month
+7 - rYearlyMonth - 10th of July
+8 - rYearlyDay   - on the 117th day of the year
+9 - rYearlyPos   - 1st Wednesday of July
+
+*/
+
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui )
@@ -49,11 +69,13 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
 #endif
   : mUi( ui )
   , mDateTime( dateTime )
+  , mMonthlyInitialType( 0 )
+  , mYearlyInitialType( 0 )
 {
   setObjectName( "IncidenceRecurrence" );
   // Set some sane defaults
   mUi->mRecurrenceTypeCombo->setCurrentIndex( 0 );
-  mUi->mRecurrenceEndCombo->setCurrentIndex( 0 );
+  mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
   mUi->mRecurrenceEndStack->setCurrentIndex( 0 );
   mUi->mRepeatStack->setCurrentIndex( 0 );
   mUi->mEndDurationEdit->setValue( 1 );
@@ -101,7 +123,7 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
            SLOT(checkDirtyStatus()) );
   connect( mUi->mEndDurationEdit, SIGNAL(valueChanged(int)),
            SLOT(checkDirtyStatus()) );
-  connect( mUi->mRecurrenceEndDate, SLOT(dateChanged(QDate)),
+  connect( mUi->mRecurrenceEndDate, SIGNAL(dateChanged(QDate)),
            SLOT(checkDirtyStatus()) );
 }
 
@@ -147,18 +169,18 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
 
   switch ( mLoadedIncidence->recurrenceType() ) {
   case KCalCore::Recurrence::rNone:
-    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceNeverIndex );
-    handleRecurrenceTypeChange( sRecurrenceNeverIndex );
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeNone );
+    handleRecurrenceTypeChange( RecurrenceTypeNone );
     break;
   case KCalCore::Recurrence::rDaily:
-    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceDailyIndex );
-    handleRecurrenceTypeChange( sRecurrenceDailyIndex );
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeDaily );
+    handleRecurrenceTypeChange( RecurrenceTypeDaily );
     setFrequency( f );
     break;
   case KCalCore::Recurrence::rWeekly:
   {
-    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceWeeklyIndex );
-    handleRecurrenceTypeChange( sRecurrenceWeeklyIndex );
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeWeekly );
+    handleRecurrenceTypeChange( RecurrenceTypeWeekly );
     QBitArray disableDays( 7, 0 );
     disableDays.setBit( mDateTime->startDate().dayOfWeek(), 1 );
     mUi->mWeekDayCombo->setDays( r->days(), disableDays );
@@ -168,8 +190,8 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
   case KCalCore::Recurrence::rMonthlyPos: // Fall through
   case KCalCore::Recurrence::rMonthlyDay:
   {
-    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceMonthlyIndex );
-    handleRecurrenceTypeChange( sRecurrenceMonthlyIndex );
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeMonthly );
+    handleRecurrenceTypeChange( RecurrenceTypeMonthly );
     selectMonthlyItem( r, mLoadedIncidence->recurrenceType() );
     setFrequency( f );
     break;
@@ -178,8 +200,8 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
   case KCalCore::Recurrence::rYearlyPos:   // Fall through
   case KCalCore::Recurrence::rYearlyDay:
   {
-    mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceYearlyIndex );
-    handleRecurrenceTypeChange( sRecurrenceYearlyIndex );
+    mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeYearly );
+    handleRecurrenceTypeChange( RecurrenceTypeYearly );
     selectYearlyItem( r, mLoadedIncidence->recurrenceType() );
     setFrequency( f );
     break;
@@ -196,6 +218,7 @@ void IncidenceRecurrence::load( const KCalCore::Incidence::Ptr &incidence )
 
   setExceptionDates( mLoadedIncidence->recurrence()->exDates() );
   handleDateTimeToggle();
+  mWasDirty = false;
 }
 
 void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
@@ -204,7 +227,7 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
   KCalCore::Recurrence *r = incidence->recurrence();
   r->unsetRecurs(); // Why not clear() ?
 
-  if ( mUi->mRecurrenceTypeCombo->currentIndex() == sRecurrenceNeverIndex )
+  if ( mUi->mRecurrenceTypeCombo->currentIndex() == RecurrenceTypeNone )
     return;
 
   const int lDuration = duration();
@@ -213,11 +236,11 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
     endDate = mUi->mRecurrenceEndDate->date();
 
   int recurrenceType = mUi->mRecurrenceTypeCombo->currentIndex();
-  if ( recurrenceType == sRecurrenceDailyIndex ) {
+  if ( recurrenceType == RecurrenceTypeDaily ) {
     r->setDaily( mUi->mFrequencyEdit->value() );
-  } else if ( recurrenceType == sRecurrenceWeeklyIndex ) {
+  } else if ( recurrenceType == RecurrenceTypeWeekly ) {
     r->setWeekly( mUi->mFrequencyEdit->value(), mUi->mWeekDayCombo->days() );
-  } else if ( recurrenceType == sRecurrenceMonthlyIndex ) {
+  } else if ( recurrenceType == RecurrenceTypeMonthly ) {
     r->setMonthly( mUi->mFrequencyEdit->value() );
 
     if ( mUi->mMonthlyCombo->currentIndex() == 0 )      // Every nth
@@ -229,7 +252,9 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
     else // Every (last - i)th last weekday
       r->addMonthlyPos( -monthWeekFromEnd(), weekday() );
 
-  } else if ( recurrenceType == sRecurrenceYearlyIndex ) {
+    mMonthlyInitialType = mUi->mMonthlyCombo->currentIndex();
+
+  } else if ( recurrenceType == RecurrenceTypeYearly ) {
     r->setYearly( mUi->mFrequencyEdit->value() );
 
     if ( mUi->mYearlyCombo->currentIndex() == 0 ) {        // Every nth of month
@@ -253,11 +278,13 @@ void IncidenceRecurrence::save( const KCalCore::Incidence::Ptr &incidence )
     r->setEndDate( endDate );
 
   r->setExDates( mExceptionDates );
+
+  mYearlyInitialType = mUi->mYearlyCombo->currentIndex();
 }
 
 bool IncidenceRecurrence::isDirty() const
 {
-  if ( mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() == 0 )
+  if ( mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() == RecurrenceTypeNone )
     return true;
 
   if ( !mLoadedIncidence->recurs() && mUi->mRecurrenceTypeCombo->currentIndex() > 0 )
@@ -265,66 +292,82 @@ bool IncidenceRecurrence::isDirty() const
 
   // The incidence is not recurring and that hasn't changed, so don't check the
   // other values.
-  if ( mUi->mRecurrenceTypeCombo->currentIndex() == 0 )
+  if ( mUi->mRecurrenceTypeCombo->currentIndex() == RecurrenceTypeNone )
     return false;
 
   const KCalCore::Recurrence *recurrence = mLoadedIncidence->recurrence();
   switch ( recurrence->recurrenceType() ) {
   case KCalCore::Recurrence::rDaily:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 1 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeDaily ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ) {
       return true;
+    }
 
     break;
   case KCalCore::Recurrence::rWeekly:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 2 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeWeekly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mWeekDayCombo->days() != recurrence->days() ) {
       return true;
-    // TODO: Check weekdays
+    }
     break;
   case KCalCore::Recurrence::rMonthlyDay:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 3 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mMonthlyCombo->currentIndex() != mMonthlyInitialType ) {
       return true;
-    // TODO: Check values
+    }
     break;
   case KCalCore::Recurrence::rMonthlyPos:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 3 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeMonthly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mMonthlyCombo->currentIndex() != mMonthlyInitialType ) {
       return true;
-    // TODO: Check values
+    }
     break;
   case KCalCore::Recurrence::rYearlyDay:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mYearlyCombo->currentIndex() != mYearlyInitialType ) {
       return true;
-    // TODO: Check values
+    }
     break;
   case KCalCore::Recurrence::rYearlyMonth:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mYearlyCombo->currentIndex() != mYearlyInitialType ) {
       return true;
-    // TODO: Check values
+    }
     break;
   case KCalCore::Recurrence::rYearlyPos:
-    if ( mUi->mRecurrenceTypeCombo->currentIndex() != 4 )
+    if ( mUi->mRecurrenceTypeCombo->currentIndex() != RecurrenceTypeYearly ||
+         mUi->mFrequencyEdit->value() != recurrence->frequency() ||
+         mUi->mYearlyCombo->currentIndex() != mYearlyInitialType ) {
       return true;
-    // TODO: Check values
+    }
     break;
   }
 
   // Recurrence end
-  if ( recurrence->duration() == -1 && mUi->mRecurrenceEndCombo->currentIndex() != 0 )
+  // -1 means "recurs forever"
+  if ( recurrence->duration() == -1 && mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndNever ) {
     return true;
-  else if ( recurrence->duration() == 0 ) {
-    if ( mUi->mRecurrenceEndCombo->currentIndex() != 1 )
+  } else if ( recurrence->duration() == 0 ) {
+    // 0 means "end date is set"
+    if ( mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndOn ||
+         recurrence->endDate() != mUi->mRecurrenceEndDate->date() ) {
       return true;
-
-    if ( recurrence->endDate() != mUi->mRecurrenceEndDate->date() )
+    }
+  } else if ( recurrence->duration() > 0 ) {
+    if ( mUi->mEndDurationEdit->value() != recurrence->duration() ||
+         mUi->mRecurrenceEndCombo->currentIndex() != RecurrenceEndAfter ) {
       return true;
-  } else if ( recurrence->duration() > 0 &&
-              mUi->mEndDurationEdit->value() != recurrence->duration() )
-    return true;
+    }
+  }
 
   // Exceptions
-  const KCalCore::DateList origExDates = recurrence->exDates();
-  foreach ( const QDate &origExDate, origExDates ) {
-    if ( !mExceptionDates.contains( origExDate) )
-      return true;
+  if ( mExceptionDates != recurrence->exDates() ) {
+    return true;
   }
 
   return false;
@@ -476,7 +519,7 @@ void IncidenceRecurrence::handleRecurrenceTypeChange( int currentIndex )
   mUi->mOnLabel->setVisible( currentIndex > 1 );
 #endif
 
-  emit recurrenceChanged( currentIndex );
+  emit recurrenceChanged( static_cast<RecurrenceType>( currentIndex ) );
 }
 
 void IncidenceRecurrence::removeExceptions()
@@ -532,11 +575,12 @@ short IncidenceRecurrence::dayOfYearFromStart() const
 
 int IncidenceRecurrence::duration() const
 {
-  if ( mUi->mRecurrenceEndCombo->currentIndex() == 0 ) {
+  if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndNever ) {
     return -1;
-  } else if ( mUi->mRecurrenceEndCombo->currentIndex() == 1 ) {
+  } else if ( mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndAfter ) {
     return mUi->mEndDurationEdit->value();
   } else {
+    // 0 means "end date set"
     return 0;
   }
 }
@@ -594,11 +638,12 @@ QString IncidenceRecurrence::numberToString( int number ) const
 
 void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType )
 {
-  Q_ASSERT( recurenceType == KCalCore::Recurrence::rMonthlyPos || recurenceType == KCalCore::Recurrence::rMonthlyDay );
+  Q_ASSERT( recurenceType == KCalCore::Recurrence::rMonthlyPos ||
+            recurenceType == KCalCore::Recurrence::rMonthlyDay );
 
   if ( recurenceType == KCalCore::Recurrence::rMonthlyPos ) {
     QList<KCalCore::RecurrenceRule::WDayPos> rmp = recurrence->monthPositions();
-    if ( !rmp.isEmpty() )
+    if ( rmp.isEmpty() )
       return; // Use the default values. Probably marks the editor as dirty
 
     if ( rmp.first().pos() > 0 ) { // nth day
@@ -630,6 +675,9 @@ void IncidenceRecurrence::selectMonthlyItem( KCalCore::Recurrence *recurrence, u
       mUi->mMonthlyCombo->setCurrentIndex( 3 );
     }
   }
+
+  // So we can easily detect if the user changed the type, without going through this logic ^
+  mMonthlyInitialType = mUi->mMonthlyCombo->currentIndex();
 }
 
 void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType )
@@ -660,10 +708,11 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
     // TODO check month and day to be correct values with respect to what is
     //      presented in the combo box.
 
-    if ( day < 0 )
+    if ( day > 0 ) {
       mUi->mYearlyCombo->setCurrentIndex( 0 );
-    else
+    } else {
       mUi->mYearlyCombo->setCurrentIndex( 1 );
+    }
 
   } else { //KCalCore::Recurrence::rYearlyPos
 
@@ -688,13 +737,15 @@ void IncidenceRecurrence::selectYearlyItem( KCalCore::Recurrence *recurrence, us
       mUi->mYearlyCombo->setCurrentIndex( 3 );
   }
 
+  // So we can easily detect if the user changed the type, without going through this logic ^
+  mYearlyInitialType = mUi->mYearlyCombo->currentIndex();
 }
 
 void IncidenceRecurrence::setDefaults()
 {
-  mUi->mRecurrenceEndCombo->setCurrentIndex( 0 ); // Ends never
+  mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
   mUi->mRecurrenceEndDate->setDate( mDateTime->startDate() );
-  mUi->mRecurrenceTypeCombo->setCurrentIndex( sRecurrenceNeverIndex );
+  mUi->mRecurrenceTypeCombo->setCurrentIndex( RecurrenceTypeNone );
 
   setFrequency( 1 );
 
@@ -713,13 +764,13 @@ void IncidenceRecurrence::setDefaults()
 void IncidenceRecurrence::setDuration( int duration )
 {
   if ( duration == -1 ) { // No end date
-    mUi->mRecurrenceEndCombo->setCurrentIndex( 0 );
+    mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndNever );
     mUi->mRecurrenceEndStack->setCurrentIndex( 0 );
   } else if ( duration == 0 ) {
-    mUi->mRecurrenceEndCombo->setCurrentIndex( 1 );
+    mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndOn );
     mUi->mRecurrenceEndStack->setCurrentIndex( 1 );
   } else {
-    mUi->mRecurrenceEndCombo->setCurrentIndex( 2 );
+    mUi->mRecurrenceEndCombo->setCurrentIndex( RecurrenceEndAfter );
     mUi->mRecurrenceEndStack->setCurrentIndex( 2 );
     mUi->mEndDurationEdit->setValue( duration );
   }
@@ -749,12 +800,17 @@ void IncidenceRecurrence::toggleRecurrenceWidgets( bool enable )
 #ifndef KDEPIM_MOBILE_UI
   mUi->mRecurrenceEndLabel->setVisible( enable );
   mUi->mOnLabel->setVisible( enable && mUi->mRepeatStack->currentIndex() > 0 );
+  if ( !enable ) {
+    // So we can hide the exceptions labels and not trigger column resizing.
+    mUi->mRepeatLabel->setMinimumSize( mUi->mExceptionsLabel->sizeHint() );
+  }
 #endif
 
   mUi->mFrequencyLabel->setVisible( enable );
   mUi->mFrequencyEdit->setVisible( enable );
   mUi->mRecurrenceRuleLabel->setVisible( enable );
   mUi->mRepeatStack->setVisible( enable && mUi->mRecurrenceTypeCombo->currentIndex() > 1 );
+  mUi->mRepeatStack->setCurrentIndex( mUi->mRecurrenceTypeCombo->currentIndex() );
   mUi->mRecurrenceEndCombo->setVisible( enable );
   mUi->mEndDurationEdit->setVisible( enable );
   mUi->mRecurrenceEndStack->setVisible( enable );
@@ -797,4 +853,12 @@ int IncidenceRecurrence::weekdayCountForMonth( const QDate &date ) const
   }
 
   return count;
+}
+
+RecurrenceType IncidenceRecurrence::currentRecurrenceType() const
+{
+  const int currentIndex = mUi->mRecurrenceTypeCombo->currentIndex();
+  Q_ASSERT_X( currentIndex >= 0 && currentIndex < RecurrenceTypeUnknown, "currentRecurrenceType",
+                                                  "Keep the combo-box values in sync with the enum" );
+  return static_cast<RecurrenceType>( currentIndex );
 }

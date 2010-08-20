@@ -29,8 +29,6 @@
 #include <kcalcore/freebusy.h>
 #include <KDebug>
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-
 #include "attendeedata.h"
 #include "freebusyitemmodel.h"
 

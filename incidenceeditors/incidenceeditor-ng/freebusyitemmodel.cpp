@@ -28,7 +28,7 @@
 #include <KGlobal>
 #include <KDebug>
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/freebusymanager.h>
 
 using namespace IncidenceEditorsNG;
 
@@ -58,7 +58,7 @@ FreeBusyItemModel::FreeBusyItemModel( QObject* parent ): QAbstractItemModel( par
     qRegisterMetaType<KCalCore::FreeBusy::Ptr>("KCalCore::FreeBusy::Ptr");
     qRegisterMetaType<KCalCore::Period>("KCalCore::Period");
 
-    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+    CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
     connect( m, SIGNAL( freeBusyRetrieved( KCalCore::FreeBusy::Ptr , const QString & ) ),
                  SLOT( slotInsertFreeBusy( KCalCore::FreeBusy::Ptr , const QString & ) ) );
 

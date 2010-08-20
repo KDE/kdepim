@@ -258,7 +258,6 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel* model, int spacin
 
 VisualFreeBusyWidget::~VisualFreeBusyWidget()
 {
-
 }
 
 void VisualFreeBusyWidget::showAttendeeStatusMenu()
@@ -370,7 +369,7 @@ void VisualFreeBusyWidget::slotScaleChanged( int newScale )
     mGanttGrid->setScale(( KDGantt::DateTimeGrid::Scale ) value );
 }
 
-void VisualFreeBusyWidget::slotUpdateGanttView( const KDateTime& dtFrom, const KDateTime& dtTo )
+void VisualFreeBusyWidget::slotUpdateIncidenceStartEnd( const KDateTime& dtFrom, const KDateTime& dtTo )
 {
     mDtStart = dtFrom;
     mDtEnd = dtTo;

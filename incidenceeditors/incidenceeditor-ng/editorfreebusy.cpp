@@ -31,7 +31,7 @@
 
 #include "attendeedata.h"
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/freebusymanager.h>
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -172,7 +172,7 @@ class FreeBusyItem
 
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
-      Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+      CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
       if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
                                  mParentWidget ) ) {
         mIsDownloading = false;
@@ -449,7 +449,7 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(showAttendeeStatusMenu()) );
 
-  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
   connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy *,const QString &)),
            SLOT(slotInsertFreeBusy(KCalCore::FreeBusy *,const QString &)) );
 

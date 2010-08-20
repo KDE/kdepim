@@ -25,6 +25,8 @@
 #include <KDE/KActionCollection>
 #include <KDE/KToolBar>
 
+#include <KDebug>
+
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
 #else
@@ -33,6 +35,22 @@
 
 using namespace IncidenceEditorsNG;
 
+
+namespace IncidenceEditorsNG {
+
+class IncidenceDescriptionPrivate
+{
+  public:
+    IncidenceDescriptionPrivate() : mRichTextEnabled( false )
+    {
+    }
+
+    bool mRichTextEnabled;
+};
+
+}
+
+
 #ifdef KDEPIM_MOBILE_UI
 IncidenceDescription::IncidenceDescription( Ui::EventOrTodoMore *ui )
 #else
@@ -40,6 +58,7 @@ IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
 #endif
   : IncidenceEditor( 0 )
   , mUi( ui )
+  , d( new IncidenceDescriptionPrivate() )
 {
   setObjectName( "IncidenceDescription" );
   mUi->mDescriptionEdit->setRichTextSupport( KRichTextWidget::SupportBold |
@@ -61,6 +80,11 @@ IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
            this, SLOT(checkDirtyStatus()) );
 }
 
+IncidenceDescription::~IncidenceDescription()
+{
+  delete d;
+}
+
 void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
@@ -80,7 +104,7 @@ void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
 
 void IncidenceDescription::save( const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( mUi->mEditToolBarPlaceHolder->isVisible() ) {
+  if ( d->mRichTextEnabled ) {
     incidence->setDescription( mUi->mDescriptionEdit->toHtml(), true );
   } else {
     incidence->setDescription( mUi->mDescriptionEdit->toPlainText(), false );
@@ -89,7 +113,7 @@ void IncidenceDescription::save( const KCalCore::Incidence::Ptr &incidence )
 
 bool IncidenceDescription::isDirty() const
 {
-  if ( mUi->mEditToolBarPlaceHolder->isVisible() ) {
+  if ( d->mRichTextEnabled ) {
     return !mLoadedIncidence->descriptionIsRich() ||
       mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml();
   } else {
@@ -100,9 +124,11 @@ bool IncidenceDescription::isDirty() const
 
 void IncidenceDescription::enableRichTextDescription( bool enable )
 {
+  d->mRichTextEnabled = enable;
+
   QString rt( i18nc( "@action Enable or disable rich text editting", "Enable rich text" ) );
   QString placeholder( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
-  
+
   if ( enable ) {
     rt = i18nc( "@action Enable or disable rich text editting", "Disable rich text" );
     placeholder = QString( "<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>" );
@@ -120,11 +146,12 @@ void IncidenceDescription::enableRichTextDescription( bool enable )
 
 void IncidenceDescription::toggleRichTextDescription()
 {
-  enableRichTextDescription( !mUi->mEditToolBarPlaceHolder->isVisible() );
+  enableRichTextDescription( !d->mRichTextEnabled );
 }
 
 void IncidenceDescription::setupToolBar()
 {
+#ifndef QT_NO_TOOLBAR
   KActionCollection *collection = new KActionCollection( this ); //krazy:exclude=tipsandthis
   mUi->mDescriptionEdit->createActions( collection );
 
@@ -150,9 +177,11 @@ void IncidenceDescription::setupToolBar()
 
   QGridLayout *layout = new QGridLayout( mUi->mEditToolBarPlaceHolder );
   layout->addWidget( mEditToolBar );
+#endif
 
   // By default we don't show the rich text toolbar.
   mUi->mEditToolBarPlaceHolder->setVisible( false );
+  d->mRichTextEnabled = false;
 }
 
 #include "moc_incidencedescription.cpp"
