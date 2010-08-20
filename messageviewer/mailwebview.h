@@ -98,7 +98,7 @@ Q_SIGNALS:
     /// @param point position where the click happened, in local coordinates
     void popupMenu( const QString &url, const QPoint &point );
 
-    void linkHovered( const QString & link, const QString & title, const QString & textContent );
+    void linkHovered( const QString & link, const QString & title=QString(), const QString & textContent=QString() );
 #ifdef MESSAGEVIEWER_NO_WEBKIT
     void linkClicked( const QUrl & link );
 #endif

@@ -23,46 +23,35 @@
 #include <KDebug>
 
 #include <QContextMenuEvent>
-#include <QWebFrame>
-#include <QWebElement>
+#include <QTextCursor>
+#include <QTextCharFormat>
+#include <QScrollBar>
 
 #include <limits>
 #include <cassert>
-
-#ifdef Q_OS_WINCE
-typedef QWebView SuperClass;
-#else
-typedef KWebView SuperClass;
-#endif
 
 using namespace boost;
 using namespace MessageViewer;
 
 MailWebView::MailWebView( QWidget *parent )
-  : SuperClass( parent )
+  : QTextBrowser( parent )
 {
-  page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-  settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
-  settings()->setAttribute( QWebSettings::JavaEnabled, false );
-  settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+  setOpenLinks( false );
 #ifdef KDEPIM_MOBILE_UI
-  page()->mainFrame()->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
-  page()->mainFrame()->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
+  setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  setVeritcalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 #endif
-  connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
-           this,   SIGNAL(linkHovered(QString,QString,QString)) );
-  // workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
-  disconnect( page(), SIGNAL(selectionChanged()),
-              this,   SIGNAL(selectionChanged()) );
-  connect( page(), SIGNAL(selectionChanged()),
-           this,   SIGNAL(selectionChanged()) );
-  // end workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
+  connect( this, SIGNAL(highlighted(QString)),
+           this, SIGNAL(linkHovered(QString)) );
+  connect( this, SIGNAL(anchorClicked(QUrl)),
+           this, SIGNAL(linkClicked(QUrl)) );
 }
 
 MailWebView::~MailWebView() {}
 
 bool MailWebView::event( QEvent *event )
 {
+#ifdef TEMPORARILY_REMOVED
   if ( event->type() == QEvent::ContextMenu ) {
     // Don't call SuperClass::event() here, it will do silly things like selecting the text
     // under the mouse cursor, which we don't want.
@@ -75,14 +64,14 @@ bool MailWebView::event( QEvent *event )
     event->accept();
     return true;
   }
-  return SuperClass::event( event );
+#endif
+  return QTextBrowser::event( event );
 }
 
 void MailWebView::scrollDown( int pixels )
 {
-  QPoint point = page()->mainFrame()->scrollPosition();
-  point.ry() += pixels;
-  page()->mainFrame()->setScrollPosition( point );
+  if ( QScrollBar * const vsb = verticalScrollBar() )
+    vsb->setValue( vsb->value() + pixels );
 }
 
 void MailWebView::scrollUp( int pixels )
@@ -92,20 +81,21 @@ void MailWebView::scrollUp( int pixels )
 
 bool MailWebView::isScrolledToBottom() const
 {
-  const int pos = page()->mainFrame()->scrollBarValue( Qt::Vertical );
-  const int max = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-  return pos == max;
+  const QScrollBar * const vsb = verticalScrollBar();
+  return !vsb || vsb->value() == vsb->maximum();
 }
 
 void MailWebView::scrollPageDown( int percent )
 {
-  const qint64 height =  page()->viewportSize().height();
-  const qint64 current = page()->mainFrame()->scrollBarValue( Qt::Vertical );
-  // do arithmetic in higher precision, and check for overflow:
-  const qint64 newPosition = current + height * percent / 100;
-  if ( newPosition > std::numeric_limits<int>::max() )
-      kWarning() << "new position" << newPosition << "exceeds range of 'int'!";
-  page()->mainFrame()->setScrollBarValue( Qt::Vertical, newPosition );
+  if ( QScrollBar * const vsb = verticalScrollBar() ) {
+      const qint64 height =  vsb->pageStep();
+      const qint64 current = vsb->value();
+      // do arithmetic in higher precision, and check for overflow:
+      const qint64 newPosition = current + height * percent / 100;
+      if ( newPosition > std::numeric_limits<int>::max() )
+          kWarning() << "new position" << newPosition << "exceeds range of 'int'!";
+      vsb->setValue( newPosition );
+  }
 }
 
 void MailWebView::scrollPageUp( int percent )
@@ -115,19 +105,22 @@ void MailWebView::scrollPageUp( int percent )
 
 QString MailWebView::selectedText() const
 {
-  return SuperClass::selectedText();
+  return textCursor().selectedText().replace( QChar::ParagraphSeparator, QLatin1Char('\n') );
 }
 
 bool MailWebView::hasVerticalScrollBar() const
 {
-  return page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
+  if ( const QScrollBar * const vsb = verticalScrollBar() )
+    return vsb->isVisible();
+  else
+    return false;
 }
 
 double MailWebView::relativePosition() const
 {
-  if ( hasVerticalScrollBar() ) {
-    const double pos = page()->mainFrame()->scrollBarValue( Qt::Vertical );
-    const int height = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+  if ( const QScrollBar * const vsb = verticalScrollBar() ) {
+    const double pos = vsb->value();
+    const int height = vsb->maximum();
     return height ? pos / height : 0.0 ;
   } else {
     return 0.0;
@@ -138,132 +131,101 @@ void MailWebView::scrollToRelativePosition( double pos )
 {
   // FIXME: This doesn't work, Qt resets the scrollbar value somewhere in the event handler.
   //        Using a singleshot timer wouldn't work either, since that introduces visible scrolling.
-  const int max = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-  page()->currentFrame()->setScrollBarValue( Qt::Vertical, max * pos );
+  if ( QScrollBar * const vsb = verticalScrollBar() )
+    vsb->setValue( vsb->maximum() * pos );
 }
 
 void MailWebView::selectAll()
 {
-  page()->triggerAction( QWebPage::SelectAll );
-}
-
-// Checks if the given node has a child node that is a DIV which has an ID attribute
-// with the value specified here
-static bool has_parent_div_with_id( const QWebElement & start, const QString & id )
-{
-  if ( start.isNull() )
-    return false;
-
-  if ( start.tagName().toLower() == "div" ) {
-    if ( start.attribute( "id", "" ) == id )
-      return true;
-  }
-
-  return has_parent_div_with_id( start.parent(), id );
+  QTextBrowser::selectAll();
 }
 
 bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
 {
-  // for QTextBrowser, can be implemented as 'return false'
-  const QPoint local = page()->view()->mapFromGlobal( global );
-  const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
-  return has_parent_div_with_id( hit.enclosingBlockElement(), "attachmentInjectionPoint" );
+  // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
+  kDebug() << "sorry, not implemented";
+  Q_UNUSED( global );
+  return false;
 }
 
 void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
 {
-  // for QTextBrowser, can be implemented empty
-  QWebElement doc = page()->currentFrame()->documentElement();
-  QWebElement injectionPoint = doc.findFirst( "*#attachmentInjectionPoint" );
-  if( injectionPoint.isNull() )
-    return;
-
-  const QString html = delayedHtml();
-  if ( html.isEmpty() )
-    return;
-
-  assert( injectionPoint.tagName().toLower() == "div" );
-  injectionPoint.setInnerXml( html );
+  // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
+  kDebug() << "sorry, not implemented";
+  Q_UNUSED( delayedHtml );
 }
 
 void MailWebView::scrollToAnchor( const QString & anchor )
 {
-  QWebElement doc = page()->mainFrame()->documentElement();
-  QWebElement link = doc.findFirst( "a[name=" + anchor +']' );
-  if ( link.isNull() ) {
-    return;
-  }
-
-  const int linkPos = link.geometry().bottom();
-  const int viewerPos  = page()->mainFrame()->scrollPosition().y();
-  link.setFocus();
-  page()->mainFrame()->scroll(0, linkPos - viewerPos );
-
+  QTextBrowser::scrollToAnchor( anchor );
 }
 
 bool MailWebView::removeAttachmentMarking( const QString & id )
 {
-  QWebElement doc = page()->mainFrame()->documentElement();
-  QWebElement attachmentDiv = doc.findFirst( "*#" + id );
-  if ( attachmentDiv.isNull() )
-    return false;
-  attachmentDiv.removeAttribute( "style" );
+  // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
+  kDebug() << "sorry, not implemented";
+  Q_UNUSED( id );
   return true;
 }
 
 void MailWebView::markAttachment( const QString & id, const QString & style )
 {
-  QWebElement doc = page()->mainFrame()->documentElement();
-  QWebElement attachmentDiv = doc.findFirst( "*#" + id );
-  if ( !attachmentDiv.isNull() ) {
-    attachmentDiv.setAttribute( "style", style );
-  }
+  // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
+  kDebug() << "sorry, not implemented";
+  Q_UNUSED( id );
+  Q_UNUSED( style );
 }
 
 void MailWebView::setHtml( const QString & html, const QUrl & base )
 {
-  SuperClass::setHtml( html, base );
+  // PENDING(marc) does that make sense?
+  setSource( base );
+  QTextBrowser::setHtml( html );
 }
 
 QString MailWebView::htmlSource() const
 {
-  return page()->mainFrame()->documentElement().toOuterXml();
+  return toHtml();
 }
 
 void MailWebView::setAllowExternalContent( bool allow )
 {
+#ifdef TEMPORARILY_REMOVED
   // FIXME on WinCE we use a simple QWebView, check if there's an alternative API for it
 #ifndef Q_OS_WINCE
     SuperClass::setAllowExternalContent( allow );
+#endif
 #endif
 }
 
 QUrl MailWebView::linkOrImageUrlAt( const QPoint & global ) const
 {
-  const QPoint local = page()->view()->mapFromGlobal( global );
-  const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
-  if ( !hit.linkUrl().isEmpty() )
-    return hit.linkUrl();
-  else if ( !hit.imageUrl().isEmpty() )
-    return hit.imageUrl();
+  const QTextCursor c = cursorForPosition( viewport()->mapFromGlobal( global ) );
+  const QTextCharFormat f = c.charFormat();
+  const QString ahref = f.anchorHref();
+  if ( ahref.isEmpty() )
+      return f.toImageFormat().name();
   else
-    return QUrl();
+      return ahref;
 }
 
 
 bool MailWebView::replaceInnerHtml( const QString & id, const function<QString()> & delayedHtml )
 {
+#ifdef TEMPORARILY_REMOVED
   QWebElement doc = page()->currentFrame()->documentElement();
   QWebElement tag = doc.findFirst( "*#" + id );
   if ( tag.isNull() ) {
     return false;
   }
   tag.setInnerXml( delayedHtml() );
+#endif
   return true;
 }
 
 void MailWebView::setElementByIdVisible( const QString & id, bool visible )
 {
+#ifdef TEMPORARILY_REMOVED
   QWebElement doc = page()->currentFrame()->documentElement();
   QWebElement e = doc.findFirst( "*#" + id );
   Q_ASSERT( !e.isNull() );
@@ -273,7 +235,35 @@ void MailWebView::setElementByIdVisible( const QString & id, bool visible )
   } else {
     e.setStyleProperty( "display", "none" );
   }
+#endif
 }
 
+static QTextDocument::FindFlags convert_flags( MailWebView::FindFlags f )
+{
+    QTextDocument::FindFlags result;
+#ifdef TEMPORARILY_REMOVED
+    if ( f & MailWebView::FindWrapsAroundDocument )
+        result |= QTextDocument::FindWrapsAroundDocument;
+#endif
+    if ( f & MailWebView::FindBackward )
+        result |= QTextDocument::FindBackward;
+    if ( f & MailWebView::FindCaseSensitively )
+        result |= QTextDocument::FindCaseSensitively;
+#ifdef TEMPORARILY_REMOVED
+    if ( f & MailWebView::HighlightAllOccurrences )
+        result |= QTextDocument::HighlightAllOccurrences;
+#endif
+    return result;
+}
+
+bool MailWebView::findText( const QString & text, FindFlags flags )
+{
+  return find( text, convert_flags( flags ) );
+}
+
+void MailWebView::clearFindSelection()
+{
+  // not supported
+}
 
 #include "moc_mailwebview.cpp"
