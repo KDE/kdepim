@@ -185,7 +185,10 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mRecursionCountForDisplayMessage( 0 ),
     mCurrentContent( 0 ),
     mJob( 0 ),
-    q( aParent )
+    q( aParent ),
+    mShowFullToAddressList( true ),
+    mShowFullCcAddressList( true )
+
 {
   if ( !mainWindow )
     mainWindow = aParent;
