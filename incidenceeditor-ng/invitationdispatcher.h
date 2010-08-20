@@ -47,14 +47,14 @@ class InvitationDispatcher : public QObject
       Sets the manager to which this dispatcher listens for the itemSaveFinished
       signal.
      */
-    void setItemManager( EditorItemManager *manager );
+    void setItemManager( CalendarSupport::EditorItemManager *manager );
 
   private:
     InvitationDispatcherPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( InvitationDispatcher );
     Q_DISABLE_COPY( InvitationDispatcher );
 
-    Q_PRIVATE_SLOT( d_ptr, void processItemSave( EditorItemManager::SaveAction ) );
+    Q_PRIVATE_SLOT( d_ptr, void processItemSave( CalendarSupport::EditorItemManager::SaveAction ) );
     Q_PRIVATE_SLOT( d_ptr, void resetManager() );
 };
 
