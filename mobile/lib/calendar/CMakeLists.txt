@@ -21,7 +21,6 @@ kde4_add_library(kdepimmobileuicalendar STATIC ${mobileui_calendar_SRCS})
 target_link_libraries(kdepimmobileuicalendar
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
-  akonadi-kcal_next
   akonadi_next
   incidenceeditorsngmobile
   calendarsupport
