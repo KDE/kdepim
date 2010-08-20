@@ -275,5 +275,30 @@ void MailWebView::setElementByIdVisible( const QString & id, bool visible )
   }
 }
 
+static QWebPage::FindFlags convert_flags( MailWebView::FindFlags f )
+{
+  QWebPage::FindFlags result;
+  if ( f & MailWebView::FindWrapsAroundDocument )
+    result |= QWebPage::FindWrapsAroundDocument;
+  if ( f & MailWebView::FindBackward )
+    result |= QWebPage::FindBackward;
+  if ( f & MailWebView::FindCaseSensitively )
+    result |= QWebPage::FindCaseSensitively;
+  if ( f & MailWebView::HighlightAllOccurrences )
+    result |= QWebPage::HighlightAllOccurrences;
+  return result;
+}
+
+bool MailWebView::findText( const QString & text, FindFlags flags )
+{
+  return SuperClass::findText( text, convert_flags( flags ) );
+}
+
+void MailWebView::clearFindSelection()
+{
+  //WEBKIT: TODO: Find a way to unselect last selection
+  // http://bugreports.qt.nokia.com/browse/QTWEBKIT-80
+  SuperClass::findText( QString(), QWebPage::HighlightAllOccurrences );
+}
 
 #include "moc_mailwebview.cpp"

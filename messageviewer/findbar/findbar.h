@@ -17,17 +17,24 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef __findbar_h__
-#define __findbar_h__
+#ifndef MESSAGEVIEWER_FINDBAR_FINDBAR_H__
+#define MESSAGEVIEWER_FINDBAR_FINDBAR_H__
 
 #include <QtGui/QWidget>
-#include <QtWebKit/QWebPage>
 
 class QAction;
 class QWebView;
 class KLineEdit;
 class SearchLineWidget;
 class QPushButton;
+
+#ifdef MESSAGEVIEWER_NO_WEBKIT
+# define MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
+#endif
+
+namespace MessageViewer {
+  class MailWebView;
+}
 
 namespace MessageViewer
 {
@@ -36,7 +43,7 @@ class FindBar : public QWidget
   Q_OBJECT
 
   public:
-    explicit FindBar( QWebView * view, QWidget * parent = 0 );
+    explicit FindBar( MailWebView * view, QWidget * parent = 0 );
     virtual ~FindBar();
 
     QString text() const;
@@ -64,13 +71,17 @@ class FindBar : public QWidget
     void closeBar();
     void slotClearSearch();
   private:
-    QWebView * m_view;
+    MailWebView * m_view;
     KLineEdit * m_search;
     QAction * m_caseSensitiveAct;
+#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
     QAction * m_highlightAll;
+#endif
     QString mLastSearchStr;
     QPushButton *m_findPrevBtn;
     QPushButton *m_findNextBtn;
 };
-};
+
+}
+
 #endif

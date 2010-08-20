@@ -53,6 +53,19 @@ public:
     explicit MailWebView( QWidget *parent=0 );
     ~MailWebView();
 
+    enum FindFlag {
+        FindWrapsAroundDocument,
+        FindBackward,
+        FindCaseSensitively,
+        HighlightAllOccurrences,
+
+        NumFindFlags
+    };
+    Q_DECLARE_FLAGS( FindFlags, FindFlag )
+
+    bool findText( const QString & test, FindFlags flags );
+    void clearFindSelection();
+
     void scrollUp( int pixels );
     void scrollDown( int pixels );
     bool isScrolledToBottom() const;
@@ -99,5 +112,7 @@ protected:
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( MessageViewer::MailWebView::FindFlags )
 
 #endif /* MESSAGEVIEWER_MAILWEBVIEW_H__ */
