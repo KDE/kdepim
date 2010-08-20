@@ -80,8 +80,6 @@ void RecipientsEditor::addRecipient( const QString& recipient, Recipient::Type t
 
 void RecipientsEditor::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, Recipient::Type type )
 {
-  clear();
-
   int count = 1;
 
   foreach( const KMime::Types::Mailbox &mailbox, mailboxes ) {

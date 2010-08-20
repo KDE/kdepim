@@ -134,7 +134,7 @@ void Message::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
     m_attachmentModel->removeAttachment( attachment );
 
   m_msg = msg;
-
+  m_recipientsEditor->clear();
   m_recipientsEditor->setRecipientString( m_msg->to()->mailboxes(), MessageComposer::Recipient::To );
   m_recipientsEditor->setRecipientString( m_msg->cc()->mailboxes(), MessageComposer::Recipient::Cc );
   m_recipientsEditor->setRecipientString( m_msg->bcc()->mailboxes(), MessageComposer::Recipient::Bcc );
