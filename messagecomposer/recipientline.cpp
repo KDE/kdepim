@@ -136,6 +136,7 @@ void RecipientLineNG::setData( const MultiplyingLineData::Ptr &data )
   Recipient::Ptr rec = qSharedPointerDynamicCast<Recipient>( data );
   if( !rec )
     return;
+  //TODO laurent: mem leak ????? mData(new Recipient) in constructor, never deleted.
   mData = rec;
   fieldsFromData();
 }
