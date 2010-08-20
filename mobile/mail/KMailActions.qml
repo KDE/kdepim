@@ -105,7 +105,7 @@ ActionMenuContainer {
   ActionList {
     category : "single_folder"
     name : KDE.i18n( "View" )
-    FakeAction { name : "save_favorite" }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintaince" }
     FakeAction { name : "prefer_html_to_plain" }
     FakeAction { name : "load_external_ref" }
@@ -129,7 +129,7 @@ ActionMenuContainer {
   ActionList {
     category : "multiple_folder"
     name : KDE.i18n( "View" )
-    FakeAction { name : "save_as_favorite" }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintaince" }
     FakeAction { name : "prefer_html_to_plain" }
     FakeAction { name : "load_external_ref" }
