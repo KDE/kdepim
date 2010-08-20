@@ -24,6 +24,7 @@ target_link_libraries(kdepimmobileuicalendar
   akonadi-kcal_next
   akonadi_next
   incidenceeditorsngmobile
+  calendarsupport
 )
 
 install(FILES
