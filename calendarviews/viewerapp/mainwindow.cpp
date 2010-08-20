@@ -119,7 +119,7 @@ void MainWindow::delayedInit()
   filterModel->setSourceModel( calendarModel );
   filterModel->setSortRole( CalendarModel::SortRole );
 
-  mCalendar = new Akonadi::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
+  mCalendar = new CalendarSupport::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
 
   mIncidenceChanger = new IncidenceChanger( mCalendar, this, Collection().id() );
 
