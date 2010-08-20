@@ -48,6 +48,7 @@
 using namespace Akonadi;
 using namespace IncidenceEditorsNG;
 using namespace KCalCore;
+using namespace CalendarSupport;
 
 IncidenceView::IncidenceView( QWidget* parent )
   : KDeclarativeFullScreenView( QLatin1String( "incidence-editor" ), parent )
@@ -67,10 +68,10 @@ void IncidenceView::delayedInit()
   qmlRegisterType<DIEGeneral>( "org.kde.incidenceeditors", 4, 5, "GeneralEditor" );
   qmlRegisterType<DIEMore>( "org.kde.incidenceeditors", 4, 5, "MoreEditor" );
 
-  connect( mItemManager, SIGNAL(itemSaveFinished(Akonadi::EditorItemManager::SaveAction)),
-           SLOT(slotSaveFinished(Akonadi::EditorItemManager::SaveAction) ) );
-  connect( mItemManager, SIGNAL(itemSaveFailed(Akonadi::EditorItemManager::SaveAction, QString)),
-           SLOT(slotSaveFailed(Akonadi::EditorItemManager::SaveAction, QString) ) );
+  connect( mItemManager, SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)),
+           SLOT(slotSaveFinished(CalendarSupport::EditorItemManager::SaveAction) ) );
+  connect( mItemManager, SIGNAL(itemSaveFailed(CalendarSupport::EditorItemManager::SaveAction, QString)),
+           SLOT(slotSaveFailed(CalendarSupport::EditorItemManager::SaveAction, QString) ) );
 }
 
 IncidenceView::~IncidenceView()
@@ -221,12 +222,12 @@ void IncidenceView::save()
   mItemManager->save();
 }
 
-void IncidenceView::slotSaveFinished( Akonadi::EditorItemManager::SaveAction action )
+void IncidenceView::slotSaveFinished( CalendarSupport::EditorItemManager::SaveAction action )
 {
   deleteLater();
 }
 
-void IncidenceView::slotSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message )
+void IncidenceView::slotSaveFailed( CalendarSupport::EditorItemManager::SaveAction action, const QString &message )
 {
   QPointer<QMessageBox> dlg = new QMessageBox; //krazy:exclude=qclasses
   dlg->setIcon( QMessageBox::Warning );
