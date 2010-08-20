@@ -30,6 +30,8 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "csshelper.h"
 #include "globalsettings.h"
 

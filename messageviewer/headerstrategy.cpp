@@ -30,6 +30,8 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "headerstrategy.h"
 
 #include "globalsettings.h"

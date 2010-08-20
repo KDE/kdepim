@@ -19,6 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <config-messageviewer.h>
+
 #include "findbar.h"
 
 // qt/kde includes

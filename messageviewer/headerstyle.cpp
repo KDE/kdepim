@@ -29,6 +29,8 @@
     your version.
 */
 
+#include <config-messageviewer.h>
+
 #include "headerstyle.h"
 
 #include "headerstrategy.h"

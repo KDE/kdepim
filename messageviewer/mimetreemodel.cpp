@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include <config-messageviewer.h>
+
 #include "mimetreemodel.h"
 
 #include "nodehelper.h"

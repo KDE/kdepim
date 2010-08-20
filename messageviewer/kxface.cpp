@@ -23,6 +23,8 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include <config-messageviewer.h>
+
 #include "kxface.h"
 
 #include <KDebug>

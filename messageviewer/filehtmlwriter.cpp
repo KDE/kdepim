@@ -29,6 +29,8 @@
     your version.
 */
 
+#include <config-messageviewer.h>
+
 #include "filehtmlwriter.h"
 
 #include <kdebug.h>

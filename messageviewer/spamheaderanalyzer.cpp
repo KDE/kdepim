@@ -32,6 +32,8 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "spamheaderanalyzer.h"
 
 #include "antispamconfig.h"

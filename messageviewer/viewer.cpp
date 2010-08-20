@@ -22,6 +22,8 @@
 // define this to copy all html that is written to the readerwindow to
 // filehtmlwriter.out in the current working directory
 //#define KMAIL_READER_HTML_DEBUG 1
+#include <config-messageviewer.h>
+
 #include "viewer.h"
 #include "viewer_p.h"
 #include "configurewidget.h"
