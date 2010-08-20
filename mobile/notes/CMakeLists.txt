@@ -1,7 +1,6 @@
 # project(notes-mobile)
 
 include_directories(
-  ${PROJECT_SOURCE_DIR}/../lib
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
