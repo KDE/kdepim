@@ -60,6 +60,7 @@ MailScheduler::MailScheduler( CalendarSupport::Calendar *calendar )
 
 MailScheduler::~MailScheduler()
 {
+  delete mFormat;
 }
 
 bool MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
