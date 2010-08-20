@@ -26,7 +26,7 @@
 class CalendarInterface;
 class QDate;
 
-namespace Akonadi
+namespace CalendarSupport
 {
 class Calendar;
 }
@@ -59,7 +59,7 @@ class MainView : public KDeclarativeMainView
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
   private:
-    Akonadi::Calendar *m_calendar;
+    CalendarSupport::Calendar *m_calendar;
 };
 
 #endif // MAINVIEW_H

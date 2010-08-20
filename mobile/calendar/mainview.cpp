@@ -23,6 +23,8 @@
 #include "calendarinterface.h"
 #include "calendaradaptor.h"
 
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/kcalprefs.h>
 
@@ -38,7 +40,7 @@
 #include <qdeclarativecontext.h>
 
 #include "agendaviewitem.h"
-#include "incidenceview.h"
+#include "calendar/incidenceview.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -48,6 +50,7 @@
 #include <QDBusConnection>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 
 QML_DECLARE_TYPE( EventViews::AgendaView )
 
@@ -115,7 +118,7 @@ void MainView::newEvent()
   IncidenceEditorsNG::IncidenceDefaults defaults;
   // Set the full emails manually here, to avoid that we get dependencies on
   // KCalPrefs all over the place.
-  defaults.setFullEmails( KCalPrefs::instance()->fullEmails() );
+  defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );
   // NOTE: At some point this should be generalized. That is, we now use the
   //       freebusy url as a hack, but this assumes that the user has only one
   //       groupware account. Which doesn't have to be the case necessarily.
@@ -206,7 +209,7 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
                            i18nc( "@title:window", "Delete Account?" ) );
-  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadin::AgentActionManager::MessageBoxText,
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
 }
 
