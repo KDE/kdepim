@@ -40,7 +40,7 @@ class Calendar;
   This class implements the iTIP interface using the email interface specified
   as Mail.
 */
-class  MailScheduler //: public Scheduler
+class CALENDARSUPPORT_EXPORT MailScheduler //: public Scheduler
 {
   public:
     explicit MailScheduler( Calendar *calendar );
