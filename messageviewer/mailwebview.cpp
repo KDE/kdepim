@@ -49,13 +49,12 @@ MailWebView::MailWebView( QWidget *parent )
 #endif
   connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
            this,   SIGNAL(linkHovered(QString,QString,QString)) );
-#if QT_VERSION < 0x040800
   // workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
+  disconnect( page(), SIGNAL(selectionChanged()),
+              this,   SIGNAL(selectionChanged()) );
   connect( page(), SIGNAL(selectionChanged()),
            this,   SIGNAL(selectionChanged()) );
-#else
-# error Check QWebPage::selectionChanged() is connected to QWebView::selectionChanged() in this Qt version now.
-#endif
+  // end workaround for https://bugs.webkit.org/show_bug.cgi?id=44252
 }
 
 MailWebView::~MailWebView() {}
@@ -63,7 +62,7 @@ MailWebView::~MailWebView() {}
 bool MailWebView::event( QEvent *event )
 {
   if ( event->type() == QEvent::ContextMenu ) {
-    // Don't call KWebView::event() here, it will do silly things like selecting the text
+    // Don't call SuperClass::event() here, it will do silly things like selecting the text
     // under the mouse cursor, which we don't want.
 
     QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent*>( event );
@@ -235,7 +234,44 @@ void MailWebView::setAllowExternalContent( bool allow )
 #ifndef Q_OS_WINCE
     SuperClass::setAllowExternalContent( allow );
 #endif
-
 }
+
+QUrl MailWebView::linkOrImageUrlAt( const QPoint & global ) const
+{
+  const QPoint local = page()->view()->mapFromGlobal( global );
+  const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
+  if ( !hit.linkUrl().isEmpty() )
+    return hit.linkUrl();
+  else if ( !hit.imageUrl().isEmpty() )
+    return hit.imageUrl();
+  else
+    return QUrl();
+}
+
+
+bool MailWebView::replaceInnerHtml( const QString & id, const function<QString()> & delayedHtml )
+{
+  QWebElement doc = page()->currentFrame()->documentElement();
+  QWebElement tag = doc.findFirst( "*#" + id );
+  if ( tag.isNull() ) {
+    return false;
+  }
+  tag.setInnerXml( delayedHtml() );
+  return true;
+}
+
+void MailWebView::setElementByIdVisible( const QString & id, bool visible )
+{
+  QWebElement doc = page()->currentFrame()->documentElement();
+  QWebElement e = doc.findFirst( "*#" + id );
+  Q_ASSERT( !e.isNull() );
+
+  if ( visible ) {
+    e.removeAttribute( "display" );
+  } else {
+    e.setStyleProperty( "display", "none" );
+  }
+}
+
 
 #include "moc_mailwebview.cpp"

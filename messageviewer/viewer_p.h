@@ -577,6 +577,7 @@ signals:
 
 private:
   QString attachmentInjectionHtml() const;
+  QString attachmentQuickListLinkHtml( bool, const QString & ) const;
 
 public:
   NodeHelper* mNodeHelper;

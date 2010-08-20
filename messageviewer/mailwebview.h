@@ -66,6 +66,8 @@ public:
     void injectAttachments( const boost::function<QString()> & delayedHtml );
     bool removeAttachmentMarking( const QString & id );
     void markAttachment( const QString & id, const QString & style );
+    bool replaceInnerHtml( const QString & id, const boost::function<QString()> & delayedHtml );
+    void setElementByIdVisible( const QString & id, bool visible );
     void setHtml( const QString & html, const QUrl & baseUrl );
     QString htmlSource() const;
     void selectAll();
@@ -73,6 +75,8 @@ public:
     double relativePosition() const;
 
     void setAllowExternalContent( bool allow );
+
+    QUrl linkOrImageUrlAt( const QPoint & global ) const;
 
 Q_SIGNALS:
 

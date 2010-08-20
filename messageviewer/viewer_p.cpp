@@ -1063,8 +1063,12 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 void ViewerPrivate::initHtmlWidget()
 {
   mViewer->setFocusPolicy( Qt::WheelFocus );
-  //PENDING(marc) move next two lines to MailWebView:
+#if 0
+  // (marc) I guess this is not needed? All events go through the
+  // Viewer, since the Page is just a QObject, and we're only
+  // interested in mouse events...
   mViewer->page()->view()->installEventFilter( this );
+#endif
   mViewer->installEventFilter( this );
 
   if ( !htmlWriter() ) {
@@ -1107,7 +1111,6 @@ void ViewerPrivate::initHtmlWidget()
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
 {
-  // PENDING(marc): move to MailWebView
   if ( e->type() == QEvent::MouseButtonPress ) {
     QMouseEvent* me = static_cast<QMouseEvent*>(e);
     if ( me->button() == Qt::LeftButton && ( me->modifiers() & Qt::ShiftModifier ) ) {
@@ -1130,17 +1133,7 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
     QMouseEvent* me = static_cast<QMouseEvent*>( e );
 
     // First, update the hovered URL
-    const QPoint local = mViewer->page()->view()->mapFromGlobal( me->globalPos() );
-    const QWebHitTestResult hit = mViewer->page()->currentFrame()->hitTestContent( local );
-    if ( !hit.linkUrl().isEmpty() || !hit.imageUrl().isEmpty() ) {
-      if ( !hit.linkUrl().isEmpty() ) {
-        mHoveredUrl = hit.linkUrl();
-      } else {
-        mHoveredUrl = hit.imageUrl();
-      }
-    } else {
-      mHoveredUrl.clear();
-    }
+    mHoveredUrl = mViewer->linkOrImageUrlAt( me->globalPos() );
 
     // If we are potentially handling a drag, deal with that.
     if ( mCanStartDrag && me->buttons() & Qt::LeftButton ) {
@@ -2851,20 +2844,12 @@ void ViewerPrivate::toggleFullAddressList()
   toggleFullAddressList( "Cc" );
 }
 
-void ViewerPrivate::toggleFullAddressList( const QString &field )
+QString ViewerPrivate::attachmentQuickListLinkHtml( bool doShow, const QString & field ) const
 {
-  QWebElement doc = mViewer->page()->currentFrame()->documentElement();
-  // First inject the correct icon
-  QWebElement tag = doc.findFirst( QString( "span#iconFull%1AddressList" ).arg( field ) );
-  if ( tag.isNull() ) {
-    return;
-  }
-
   QString imgpath( KStandardDirs::locate( "data","libmessageviewer/pics/" ) );
   QString urlHandle;
   QString imgSrc;
   QString altText;
-  bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
   if ( doShow ) {
     urlHandle.append( "kmail:hideFull" + field + "AddressList" );
     imgSrc.append( "quicklistOpened.png" );
@@ -2875,23 +2860,20 @@ void ViewerPrivate::toggleFullAddressList( const QString &field )
     altText = i18n("Show full address list");
   }
 
-  QString link = "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
+  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
                  "alt=\"" + altText + "\" /></a></span>";
-  tag.setInnerXml( link );
+}
 
-  // Then show/hide the full address list
-  QWebElement dotsTag = doc.findFirst( QString( "span#dotsFull%1AddressList" ).arg( field ) );
-  Q_ASSERT( !dotsTag.isNull() );
-
-  tag = doc.findFirst( QString( "span#hiddenFull%1AddressList" ).arg( field ) );
-  Q_ASSERT( !tag.isNull() );
-
-  if ( doShow ) {
-    dotsTag.setStyleProperty( "display", "none" );
-    tag.removeAttribute( "display" );
-  } else {
-    tag.setStyleProperty( "display", "none" );
-    dotsTag.removeAttribute( "display" );
+void ViewerPrivate::toggleFullAddressList( const QString &field )
+{
+  const bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
+  // First inject the correct icon
+  if ( mViewer->replaceInnerHtml( "iconFull" + field + "AddressList",
+                                  bind( &ViewerPrivate::attachmentQuickListLinkHtml, this, doShow, field ) ) )
+  {
+    // Then show/hide the full address list
+    mViewer->setElementByIdVisible( "dotsFull"   + field + "AddressList", !doShow );
+    mViewer->setElementByIdVisible( "hiddenFull" + field + "AddressList",  doShow );
   }
 }
 
