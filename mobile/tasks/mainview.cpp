@@ -36,7 +36,7 @@
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/standardactionmanager.h>
 
-#include "incidenceview.h"
+#include "calendar/incidenceview.h"
 #include "tasklistproxy.h"
 
 using namespace Akonadi;
