@@ -48,7 +48,7 @@ MainWidget::MainWidget( MainWindow* parent )
     splitter->addWidget( mIncidenceList );
 
     // Event view
-    mIncidenceViewer = new Akonadi::IncidenceViewer( this );
+    mIncidenceViewer = new CalendarSupport::IncidenceViewer( this );
     topSplitter->addWidget( mIncidenceViewer );
 
 
@@ -68,7 +68,7 @@ MainWidget::MainWidget( MainWindow* parent )
     sortModel->setSourceModel( mCollectionProxyModel );
 
     // Calendar view (list of incidences)
-    mIncidenceModel = new Akonadi::KCalModel( this );
+    mIncidenceModel = new CalendarSupport::KCalModel( this );
 
     /*
      * Connexion between views and models
