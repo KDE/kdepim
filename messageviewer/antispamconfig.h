@@ -96,7 +96,7 @@ private:
   AntiSpamConfig();
 
 public:
-  ~AntiSpamConfig() {}
+  ~AntiSpamConfig();
 
   static AntiSpamConfig * instance();
 
