@@ -55,6 +55,7 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
   Q_PROPERTY( QDate activeDate WRITE setActiveDate READ activeDate )
   public:
     explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
+    virtual ~KCalItemBrowserItem();
 
     virtual Akonadi::Item item() const;
     virtual qint64 itemId() const;

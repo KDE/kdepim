@@ -43,6 +43,11 @@ KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : Declarative
   setWidget( m_viewer );
 }
 
+KCalItemBrowserItem::~KCalItemBrowserItem()
+{
+  delete m_viewer;
+}
+
 Akonadi::Item KCalItemBrowserItem::item() const
 {
   return m_viewer->item();
