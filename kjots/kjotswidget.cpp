@@ -131,7 +131,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   QHBoxLayout *layout = new QHBoxLayout( this );
 
   KStandardDirs KStd;
-  m_templateEngine = new Engine();
+  m_templateEngine = new Engine(this);
   m_templateEngine->setPluginPaths( KStd.findDirs( "lib", QString() ) );
 
   m_loader = FileSystemTemplateLoader::Ptr( new FileSystemTemplateLoader() );
