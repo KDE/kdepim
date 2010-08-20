@@ -1,3 +1,16 @@
+Friday, August 20th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4332: event update mail which really is an invitation (rt#6125)
+* kolab/issue4484: Send S/MIME encrypted mail to address without certificate, search for external certificate button (rt#5659)
+* kolab/issue4485: Try to create a contact without writable folder; edit dialog is closed
+* kolab/issue4479: Change used kontact plugins crash (Kontact::MainWindow::addPlugin at mainwindow.cpp:719) (rt#6193)
+* kolab/issue4333: Renaming of a shared calendar folder failed (rt#6121)
+* Add more debug output to help finding the cause of kolab/issue4498
+
+
 Friday, August 13th 2010
 
 Problems addressed
