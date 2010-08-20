@@ -17,6 +17,7 @@ kde4_add_executable( pimimport ${pimimport_SRCS})
 target_link_libraries( pimimport
 	${KDEPIMLIBS_AKONADI_LIBS}
 	${KDE4_KDECORE_LIBS}
+	${KDE4_KIO_LIBS}
 	${QT_QTCORE_LIBRARY}
 )
 
