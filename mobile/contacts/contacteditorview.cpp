@@ -36,6 +36,7 @@
 #include <KABC/Addressee>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 
 typedef DeclarativeWidgetBase<EditorGeneral, ContactEditorView, &ContactEditorView::setEditorGeneral> DeclarativeEditorGeneral;
 typedef DeclarativeWidgetBase<EditorBusiness, ContactEditorView, &ContactEditorView::setEditorBusiness> DeclarativeEditorBusiness;
@@ -45,7 +46,7 @@ typedef DeclarativeWidgetBase<EditorCrypto, ContactEditorView, &ContactEditorVie
 #endif
 typedef DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView::setEditorMore> DeclarativeEditorMore;
 
-class ContactEditorView::Private : public Akonadi::ItemEditorUi
+class ContactEditorView::Private : public CalendarSupport::ItemEditorUi
 {
   ContactEditorView *const q;
 
@@ -65,7 +66,7 @@ class ContactEditorView::Private : public Akonadi::ItemEditorUi
 
   public: // slots
     void saveFinished();
-    void saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage );
+    void saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage );
     void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorGeneralUi interface
@@ -128,7 +129,7 @@ void ContactEditorView::Private::saveFinished()
   q->deleteLater();
 }
 
-void ContactEditorView::Private::saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage )
+void ContactEditorView::Private::saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   kError() << errorMessage;
 }
@@ -220,10 +221,10 @@ void ContactEditorView::delayedInit()
 #endif
   qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
+  connect( d->mItemManager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ),
            SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ),
-           SLOT( saveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ),
+           SLOT( saveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ) );
 }
 
 ContactEditorView::~ContactEditorView()

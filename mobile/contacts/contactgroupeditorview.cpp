@@ -30,10 +30,11 @@
 #include <KABC/ContactGroup>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 
 typedef DeclarativeWidgetBase<EditorContactGroup, ContactGroupEditorView, &ContactGroupEditorView::setEditor> DeclarativeEditorContactGroup;
 
-class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
+class ContactGroupEditorView::Private : public CalendarSupport::ItemEditorUi
 {
   ContactGroupEditorView *const q;
 
@@ -50,7 +51,7 @@ class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
 
   public: // slots
     void saveFinished();
-    void saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage );
+    void saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage );
     void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorUi interface
@@ -94,7 +95,7 @@ void ContactGroupEditorView::Private::saveFinished()
   q->deleteLater();
 }
 
-void ContactGroupEditorView::Private::saveFailed( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage )
+void ContactGroupEditorView::Private::saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   kError() << errorMessage;
 }
@@ -168,10 +169,10 @@ void ContactGroupEditorView::delayedInit()
 
   qmlRegisterType<DeclarativeEditorContactGroup>( "org.kde.contacteditors", 4, 5, "ContactGroupEditor" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
+  connect( d->mItemManager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ),
            SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ),
-           SLOT( saveFailed( Akonadi::EditorItemManager::SaveAction, QString ) ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ),
+           SLOT( saveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ) );
 }
 
 ContactGroupEditorView::~ContactGroupEditorView()
