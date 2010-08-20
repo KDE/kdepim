@@ -32,6 +32,8 @@ target_link_libraries(korganizer-mobile
   calendarsupport
   incidenceeditorsngmobile
   eventviews
+  calendarsupport
+  kdepim
 )
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
