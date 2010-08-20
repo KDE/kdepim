@@ -44,7 +44,7 @@
 using namespace MessageComposer;
 using namespace KPIM;
 
-RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent )
+RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent ), mRecentAddressConfig( 0 )
 {
   factory()->setParent( this ); // HACK: can't use 'this' above since it's not yet constructed at that point
   mSideWidget = new RecipientsEditorSideWidget( this, this );
