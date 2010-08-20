@@ -20,6 +20,7 @@ kde4_add_ui_files(viewerapp_SRCS
 kde4_add_executable(viewerapp ${viewerapp_SRCS})
 
 target_link_libraries(viewerapp
+    calendarsupport
     eventviews
     ${KDE4_KDECORE_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
