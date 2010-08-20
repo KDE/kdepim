@@ -1,7 +1,6 @@
 project(task-mobile)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}

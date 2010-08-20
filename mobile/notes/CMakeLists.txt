@@ -1,7 +1,6 @@
 # project(notes-mobile)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
   ${PROJECT_SOURCE_DIR}/../lib
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}

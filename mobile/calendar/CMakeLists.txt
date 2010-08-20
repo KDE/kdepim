@@ -1,7 +1,6 @@
 project(korganizer-mobile)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
   # This is probably not the correct way to get KCalPrefs in.
   ${CMAKE_SOURCE_DIR}/calendarsupport/
   ${CMAKE_BINARY_DIR}/calendarsupport/

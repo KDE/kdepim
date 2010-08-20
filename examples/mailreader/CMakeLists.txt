@@ -7,7 +7,6 @@ set(mailreader_SRCS
  )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/akonadi
     ${CMAKE_SOURCE_DIR}/messageviewer
     ${Boost_INCLUDE_DIRS}
 )
