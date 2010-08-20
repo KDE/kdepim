@@ -22,9 +22,6 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QApplication>
-#include <QtGui/QColumnView>
-#include <QtGui/QTreeView>
-#include <QtGui/QListView>
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusmessage.h>
 
