@@ -7,6 +7,7 @@ configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-m
 add_subdirectory(tests)
 add_subdirectory(pics)
 
+option(MESSAGEVIEWER_NO_WEBKIT "Use QTextBrowser instead of WebKit for the message viewer" FALSE)
 if(MESSAGEVIEWER_NO_WEBKIT)
   add_definitions( -DMESSAGEVIEWER_NO_WEBKIT=1 )
   set(_mailwebview_cpp mailwebview_textbrowser.cpp )
