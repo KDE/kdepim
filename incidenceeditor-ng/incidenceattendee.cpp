@@ -190,14 +190,16 @@ bool IncidenceAttendee::isDirty() const
     tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
 
     if ( *mLoadedIncidence->organizer() != *tmp.organizer() ) {
-      kDebug() << "Organizer changed.";
+      kDebug() << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
+               << mLoadedIncidence->organizer()->email() << "; new is " << tmp.organizer()->name()
+               << tmp.organizer()->email();
       return true;
     }
   }
 
   const KCalCore::Attendee::List origList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
-  
+
   // The lists sizes *must* be the same. When the organizer is attending the
   // event as well, he should be in the attendees list as well.
   if ( origList.size() != newList.size() )
