@@ -26,7 +26,6 @@
 #include <KActionCollection>
 #include <KMime/Message>
 
-class KJob;
 
 namespace KPIMIdentities
 {
@@ -36,8 +35,6 @@ namespace KPIMIdentities
 namespace Message
 {
   class KMeditor;
-  class AttachmentModel;
-  class AttachmentControllerBase;
 }
 
 namespace MessageComposer
