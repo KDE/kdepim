@@ -36,7 +36,7 @@
 #include <KDateTime>
 #include <KJob>
 #include <KRandom>
-#include <KSelectionProxyModel>
+#include <kselectionproxymodel.h>
 
 #include <QItemSelection>
 #include <QItemSelectionModel>
