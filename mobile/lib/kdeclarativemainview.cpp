@@ -337,6 +337,15 @@ void KDeclarativeMainView::loadFavorite(const QString& name)
   saver->restoreState( cfg );
 }
 
+void KDeclarativeMainView::multipleSelectionFinished()
+{
+  QModelIndexList list = d->mMultiBnf->checkModel()->selectedRows();
+  QItemSelection selection;
+  foreach(const QModelIndex &idx, list)
+    selection.select(idx, idx);
+  d->mBnf->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+}
+
 QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
 {
   return d->mBnf->selectionModel();

@@ -186,6 +186,7 @@ KPIM.MainView {
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
+      application.multipleSelectionFinished();
     }
     onCanceled : {
       favoriteSelector.visible = false;
