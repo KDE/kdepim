@@ -136,8 +136,8 @@ ActionMenuContainer {
   ActionList {
     category : "multiple_calendar"
     name : KDE.i18n( "View" )
-    FakeAction { name : "add_as_favorite" }
-    FakeAction { name : "back_to_folder_selection" }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
   }
 
   ActionList {
