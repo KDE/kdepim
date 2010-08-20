@@ -50,7 +50,7 @@ target_link_libraries(eventviews
                       ${KDEPIMLIBS_AKONADI_LIBS}
                       ${KDEPIMLIBS_KHOLIDAYS_LIBS}
                       kdepim
-                      akonadi-kcal_next
+                      calendarsupport
                       akonadi_next
                       ${KDEPIMLIBS_KCALCORE_LIBS}
                       ${KDEPIMLIBS_KCALUTILS_LIBS}

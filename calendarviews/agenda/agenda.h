@@ -45,7 +45,7 @@ class QScrollBar;
 class QTime;
 class QWheelEvent;
 
-namespace Akonadi
+namespace CalendarSupport
 {
   class Calendar;
   class IncidenceChanger;
@@ -162,9 +162,9 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setDateList( const KCalCore::DateList &selectedDates );
     KCalCore::DateList dateList() const;
 
-    void setCalendar( Akonadi::Calendar *cal );
+    void setCalendar( CalendarSupport::Calendar *cal );
 
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
     QList<AgendaItem*> agendaItems( const Akonadi::Item &item ) const;
 

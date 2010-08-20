@@ -25,9 +25,9 @@
 #include "agendaview.h"
 #include "prefs.h"
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/calendarmodel.h>
-#include <akonadi/kcal/incidencechanger.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/incidencechanger.h>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
@@ -39,6 +39,7 @@
 #include <KSystemTimeZones>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 using namespace EventViews;
 
 MainWindow::MainWindow( const QStringList &viewNames )

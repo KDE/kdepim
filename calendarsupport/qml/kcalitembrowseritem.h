@@ -22,10 +22,10 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include <akonadi/kcal/incidenceviewer.h>
+#include "../incidenceviewer.h"
 #include <mobile/lib/declarativeakonadiitem.h>
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class Item;
 

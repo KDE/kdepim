@@ -43,7 +43,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  akonadi-kcal_next
+  calendarsupport
   kdepim
   messageviewer
 )

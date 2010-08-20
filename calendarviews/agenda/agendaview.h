@@ -122,7 +122,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     bool selectedIsSingleCell() const;
 
     /* reimp from EventView */
-    virtual void setCalendar( Akonadi::Calendar *cal );
+    virtual void setCalendar( CalendarSupport::Calendar *cal );
 
     /** Show only incidences from the given collection selection. */
 //    void setCollectionSelection( CollectionSelection* selection );
@@ -163,7 +163,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void slotTodosDropped( const QList<KUrl>& todos, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
     void zoomInHorizontally( const QDate &date=QDate() );
     void zoomOutHorizontally( const QDate &date=QDate() );

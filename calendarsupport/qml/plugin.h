@@ -23,7 +23,7 @@
 #include <qdeclarativeextensionplugin.h>
 #include <kglobal.h>
 
-namespace Akonadi {
+namespace CalendarSupport {
 namespace KCal {
 
 class KDE_EXPORT Plugin : public QDeclarativeExtensionPlugin

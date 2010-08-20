@@ -3,8 +3,8 @@ project(korganizer-mobile)
 include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
   # This is probably not the correct way to get KCalPrefs in.
-  ${CMAKE_SOURCE_DIR}/akonadi/kcal/
-  ${CMAKE_BINARY_DIR}/akonadi/kcal/
+  ${CMAKE_SOURCE_DIR}/calendarsupport/
+  ${CMAKE_BINARY_DIR}/calendarsupport/
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
@@ -30,7 +30,7 @@ target_link_libraries(korganizer-mobile
   ${KDEPIMLIBS_AKONADI_LIBS}
   kdepimmobileui
   kdepimmobileuicalendar
-  akonadi-kcal_next
+  calendarsupport
   incidenceeditorsngmobile
   eventviews
 )

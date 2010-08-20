@@ -21,8 +21,8 @@
 
 #include <akonadi/item.h>
 
-using namespace Akonadi;
-using namespace Akonadi::KCal;
+using namespace CalendarSupport;
+using namespace CalendarSupport::KCal;
 
 ExtendedIncidenceViewer::ExtendedIncidenceViewer( QWidget *parent )
   : IncidenceViewer( parent )

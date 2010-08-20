@@ -6,7 +6,7 @@ target_link_libraries(kcalqmlplugin
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDE4_KDECORE_LIBRARY}
   ${QT_QTDECLARATIVE_LIBRARY}
-  akonadi-kcal_next
+  calendarsupport
   kdepimmobileui
 )
 

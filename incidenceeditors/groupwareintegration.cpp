@@ -26,10 +26,10 @@
 
 #include <kcalprefs.h>
 
-#include <akonadi/kcal/calendar.h>  //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/calendarmodel.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/utils.h>     //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/groupware.h>
+#include <calendarsupport/utils.h>
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
@@ -74,7 +74,7 @@ class EditorDialogVisitor : public Visitor
     IncidenceEditorsNG::IncidenceDialog *mDialog;
 };
 
-class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
+class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
 {
   public:
     GroupwareUiDelegate()
@@ -93,17 +93,17 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
       monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
       monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
 
-      Akonadi::CalendarModel *calendarModel = new Akonadi::CalendarModel( monitor, this );
+      CalendarSupport::CalendarModel *calendarModel = new CalendarSupport::CalendarModel( monitor, this );
 
-      mCalendar = new Akonadi::Calendar( calendarModel, calendarModel,
-                                         KSystemTimeZones::local() );
-      mCalendar->setOwner( Person( KCalPrefs::instance()->fullName(),
-                                   KCalPrefs::instance()->email() ) );
+      mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
+                                                 KSystemTimeZones::local() );
+      mCalendar->setOwner( Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                   CalendarSupport::KCalPrefs::instance()->email() ) );
     }
 
     void requestIncidenceEditor( const Akonadi::Item &item )
     {
-      const Incidence::Ptr incidence = Akonadi::incidence( item );
+      const Incidence::Ptr incidence = CalendarSupport::incidence( item );
       if ( !incidence ) {
         return;
       }
@@ -118,7 +118,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
         IncidenceEditor *editor = v.editor();
         editor->editIncidence( item, QDate::currentDate() );
         editor->selectInvitationCounterProposal( true );
-        editor->setIncidenceChanger( new Akonadi::IncidenceChanger( mCalendar, this, -1 ) );
+        editor->setIncidenceChanger( new CalendarSupport::IncidenceChanger( mCalendar, this, -1 ) );
         editor->show();
       } else {
         IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
@@ -127,7 +127,7 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
       }
     }
 
-    Akonadi::Calendar *mCalendar;
+    CalendarSupport::Calendar *mCalendar;
 };
 
 K_GLOBAL_STATIC( GroupwareUiDelegate, globalDelegate )
@@ -142,7 +142,7 @@ bool GroupwareIntegration::isActive()
 void GroupwareIntegration::activate()
 {
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-  Akonadi::Groupware::create( globalDelegate->mCalendar, &*globalDelegate );
+  CalendarSupport::Groupware::create( globalDelegate->mCalendar, &*globalDelegate );
   sActivated = true;
 }
 

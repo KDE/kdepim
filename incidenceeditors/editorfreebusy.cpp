@@ -26,8 +26,7 @@
 #include "editorconfig.h"
 #include "freebusyurldialog.h"
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/freebusymanager.h>
 
 #include <kdgantt1/KDGanttView.h>
 #include <kdgantt1/KDGanttViewSubwidgets.h>
@@ -115,7 +114,7 @@ class FreeBusyItem : public KDGanttViewTaskItem
 
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
-      Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+      CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
       if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
                                  mParentWidget ) ) {
         mIsDownloading = false;
@@ -378,7 +377,7 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mGanttView, SIGNAL(lvMouseButtonClicked(int, KDGanttViewItem*, const QPoint&, int)),
            this, SLOT(listViewClicked(int, KDGanttViewItem*)) );
 
-  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
   connect( m, SIGNAL(freeBusyRetrieved(const KCalCore::FreeBusy::Ptr & ,const QString &)),
            SLOT(slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr & ,const QString &)) );
 

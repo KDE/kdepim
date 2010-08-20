@@ -31,8 +31,7 @@
 #include "embeddedurlpage.h"
 #include "templatemanagementdialog.h"
 
-#include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/kcalprefs.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/utils.h>
 
 #include <libkdepimdbusinterfaces/urihandler.h>
 
@@ -57,7 +56,6 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
-using namespace Akonadi;
 using namespace KCalCore;
 using namespace IncidenceEditors;
 
@@ -148,7 +146,7 @@ void IncidenceEditor::readIncidence( const Akonadi::Item &item, const QDate &dat
 
 void IncidenceEditor::editIncidence( const Akonadi::Item &item, const QDate &date )
 {
-  Incidence::Ptr incidence = Akonadi::incidence( item );
+  Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Q_ASSERT( incidence );
   Q_ASSERT( incidence->type() == type() );
 
@@ -262,7 +260,7 @@ void IncidenceEditor::closeEvent( QCloseEvent *event )
 
 void IncidenceEditor::cancelRemovedAttendees( const Akonadi::Item &item )
 {
-  const Incidence::Ptr incidence = Akonadi::incidence( item );
+  const Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence ) {
     return;
   }
@@ -461,9 +459,9 @@ class KCalStorage : public DesignerFields::Storage
     Incidence::Ptr mIncidence;
 };
 
-void IncidenceEditor::readDesignerFields( const Item &i )
+void IncidenceEditor::readDesignerFields( const Akonadi::Item &i )
 {
-  KCalStorage storage( Akonadi::incidence( i ) );
+  KCalStorage storage( CalendarSupport::incidence( i ) );
   foreach ( DesignerFields *fields, mDesignerFields ) {
     if ( fields ) {
       fields->load( &storage );
@@ -482,8 +480,8 @@ void IncidenceEditor::writeDesignerFields( Incidence::Ptr &i )
 }
 
 void IncidenceEditor::setupEmbeddedURLPage( const QString &label,
-                                              const QString &url,
-                                              const QString &mimetype )
+                                            const QString &url,
+                                            const QString &mimetype )
 {
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, label );

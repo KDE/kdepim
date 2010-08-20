@@ -22,7 +22,7 @@
 #include <KGlobal>
 #include <KGlobalSettings>
 
-#include <akonadi/kcal/calendar.h>
+#include <calendarsupport/calendar.h>
 #include <calendarviews/agenda/agendaview.h>
 
 using namespace EventViews;
@@ -34,7 +34,7 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
   m_view->setPalette( pal );
-  
+
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
            SIGNAL(itemSelected()) );
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item, QDate)),
@@ -82,7 +82,7 @@ QObject* AgendaViewItem::calendar() const
 
 void AgendaViewItem::setCalendar(QObject* calendarObj)
 {
-  Akonadi::Calendar* cal = qobject_cast<Akonadi::Calendar*>( calendarObj );
+  CalendarSupport::Calendar* cal = qobject_cast<CalendarSupport::Calendar*>( calendarObj );
   kDebug() << calendarObj << cal;
   if ( cal ) {
     m_view->setCalendar( cal );

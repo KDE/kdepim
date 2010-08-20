@@ -31,13 +31,13 @@
 
 #include "recurrenceactions.h"
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/calendarsearch.h>
-#include <akonadi/kcal/collectionselection.h>
-#include <akonadi/kcal/incidencechanger.h>
-#include <akonadi/kcal/utils.h>
-#include <akonadi/kcal/collectionselectionproxymodel.h>
-#include <akonadi/kcal/entitymodelstatesaver.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarsearch.h>
+#include <calendarsupport/collectionselection.h>
+#include <calendarsupport/incidencechanger.h>
+#include <calendarsupport/utils.h>
+#include <calendarsupport/collectionselectionproxymodel.h>
+#include <calendarsupport/entitymodelstatesaver.h>
 
 #include <kholidays/holidayregion.h>
 
@@ -52,7 +52,6 @@
 #include <QKeyEvent>
 
 using namespace KCalCore;
-using namespace Akonadi;
 using namespace EventViews;
 
 class EventView::Private
@@ -76,7 +75,7 @@ class EventView::Private
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
       identifier = cname + "_" + KRandom::randomString( 8 ).toLatin1();
-      calendarSearch = new CalendarSearch( q );
+      calendarSearch = new CalendarSupport::CalendarSearch( q );
       connect( calendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
                q, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
       connect( calendarSearch->model(), SIGNAL( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ),
@@ -95,11 +94,11 @@ class EventView::Private
     void reconnectCollectionSelection();
 
   public:
-    Akonadi::Calendar *calendar;
-    CalendarSearch *calendarSearch;
-    CollectionSelection *customCollectionSelection;
-    CollectionSelectionProxyModel* collectionSelectionModel;
-    EntityModelStateSaver* stateSaver;
+    CalendarSupport::Calendar *calendar;
+    CalendarSupport::CalendarSearch *calendarSearch;
+    CalendarSupport::CollectionSelection *customCollectionSelection;
+    CalendarSupport::CollectionSelectionProxyModel* collectionSelectionModel;
+    CalendarSupport::EntityModelStateSaver* stateSaver;
     QByteArray identifier;
     KDateTime startDateTime;
     KDateTime endDateTime;
@@ -115,19 +114,19 @@ class EventView::Private
     bool mTypeAhead;
     QObject *mTypeAheadReceiver;
     QList<QEvent*> mTypeAheadEvents;
-    static Akonadi::CollectionSelection* sGlobalCollectionSelection;
+    static CalendarSupport::CollectionSelection* sGlobalCollectionSelection;
 
     KHolidays::HolidayRegionPtr mHolidayRegion;
     PrefsPtr mPrefs;
 
-    IncidenceChanger *mChanger;
+    CalendarSupport::IncidenceChanger *mChanger;
     bool mPendingChanges;
 };
 
-CollectionSelection* EventView::Private::sGlobalCollectionSelection = 0;
+CalendarSupport::CollectionSelection* EventView::Private::sGlobalCollectionSelection = 0;
 
 /* static */
-void EventView::setGlobalCollectionSelection( CollectionSelection* s )
+void EventView::setGlobalCollectionSelection( CalendarSupport::CollectionSelection* s )
 {
   Private::sGlobalCollectionSelection = s;
 }
@@ -139,8 +138,8 @@ void EventView::Private::setUpModels()
   delete customCollectionSelection;
   customCollectionSelection = 0;
   if ( collectionSelectionModel ) {
-    customCollectionSelection = new CollectionSelection( collectionSelectionModel->selectionModel() );
-    stateSaver = new EntityModelStateSaver( collectionSelectionModel, q );
+    customCollectionSelection = new CalendarSupport::CollectionSelection( collectionSelectionModel->selectionModel() );
+    stateSaver = new CalendarSupport::EntityModelStateSaver( collectionSelectionModel, q );
     stateSaver->addRole( Qt::CheckStateRole, "CheckState" );
     calendarSearch->setSelectionModel( collectionSelectionModel->selectionModel() );
 
@@ -170,7 +169,7 @@ void EventView::Private::reconnectCollectionSelection()
   }
 
   QObject::connect( q->collectionSelection(),
-                    SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
+                    SIGNAL(selectionChanged(CalendarSupport::Collection::List,Akonadi::Collection::List)),
                     q, SLOT(collectionSelectionChanged()) );
 }
 
@@ -189,15 +188,15 @@ EventView::~EventView()
   delete d;
 }
 
-void EventView::defaultAction( const Item &aitem )
+void EventView::defaultAction( const Akonadi::Item &aitem )
 {
   kDebug();
-  const Incidence::Ptr incidence = Akonadi::incidence( aitem );
+  const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
     return;
   }
 
-  kDebug() << "  type:" << incidence->type();
+  kDebug() << "  type:" << int( incidence->type() );
 
   if ( incidence->isReadOnly() ) {
     emit showIncidenceSignal(aitem);
@@ -211,9 +210,9 @@ void EventView::setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegi
   d->mHolidayRegion = holidayRegion;
 }
 
-int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
+int EventView::showMoveRecurDialog( const Akonadi::Item &aitem, const QDate &date )
 {
-  const Incidence::Ptr inc = Akonadi::incidence( aitem );
+  const Incidence::Ptr inc = CalendarSupport::incidence( aitem );
 
   KDateTime dateTime( date, preferences()->timeSpec() );
 
@@ -259,7 +258,7 @@ int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
   return RecurrenceActions::NoOccurrence;
 }
 
-void EventView::setCalendar( Akonadi::Calendar *cal )
+void EventView::setCalendar( CalendarSupport::Calendar *cal )
 {
   if ( d->calendar != cal ) {
     d->calendar = cal;
@@ -269,7 +268,7 @@ void EventView::setCalendar( Akonadi::Calendar *cal )
   }
 }
 
-Akonadi::Calendar *EventView::calendar() const
+CalendarSupport::Calendar *EventView::calendar() const
 {
   return d->calendar;
 }
@@ -291,7 +290,7 @@ PrefsPtr EventView::preferences() const
   return d->mPrefs;
 }
 
-Akonadi::CalendarSearch* EventView::calendarSearch() const
+CalendarSupport::CalendarSearch* EventView::calendarSearch() const
 {
   return d->calendarSearch;
 }
@@ -301,7 +300,7 @@ void EventView::dayPassed( const QDate & )
   updateView();
 }
 
-void EventView::setIncidenceChanger( IncidenceChanger *changer )
+void EventView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
 {
   d->mChanger = changer;
 }
@@ -483,12 +482,12 @@ void EventView::finishTypeAhead()
   d->mTypeAhead = false;
 }
 
-CollectionSelection* EventView::collectionSelection() const
+CalendarSupport::CollectionSelection* EventView::collectionSelection() const
 {
   return d->customCollectionSelection ? d->customCollectionSelection : globalCollectionSelection();
 }
 
-void EventView::setCustomCollectionSelectionProxyModel( Akonadi::CollectionSelectionProxyModel* model )
+void EventView::setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel* model )
 {
   if ( d->collectionSelectionModel == model )
     return;
@@ -503,20 +502,20 @@ void EventView::collectionSelectionChanged()
 
 }
 
-CollectionSelectionProxyModel *EventView::customCollectionSelectionProxyModel() const
+CalendarSupport::CollectionSelectionProxyModel *EventView::customCollectionSelectionProxyModel() const
 {
   return d->collectionSelectionModel;
 }
 
-CollectionSelectionProxyModel *EventView::takeCustomCollectionSelectionProxyModel()
+CalendarSupport::CollectionSelectionProxyModel *EventView::takeCustomCollectionSelectionProxyModel()
 {
-  CollectionSelectionProxyModel* m = d->collectionSelectionModel;
+  CalendarSupport::CollectionSelectionProxyModel* m = d->collectionSelectionModel;
   d->collectionSelectionModel = 0;
   d->setUpModels();
   return m;
 }
 
-CollectionSelection *EventView::customCollectionSelection() const
+CalendarSupport::CollectionSelection *EventView::customCollectionSelection() const
 {
   return d->customCollectionSelection;
 }
@@ -533,7 +532,7 @@ bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &a
   return false;
 }
 
-Akonadi::IncidenceChanger *EventView::changer() const
+CalendarSupport::IncidenceChanger *EventView::changer() const
 {
   return d->mChanger;
 }
@@ -608,29 +607,29 @@ void EventView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bott
 {
   Q_ASSERT( topLeft.parent() == bottomRight.parent() );
 
-  incidencesChanged( Akonadi::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
+  incidencesChanged( CalendarSupport::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
                      topLeft.row(), bottomRight.row() ) );
 }
 
 void EventView::rowsInserted( const QModelIndex& parent, int start, int end )
 {
-  incidencesAdded( Akonadi::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
+  incidencesAdded( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
 }
 
 void EventView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int end )
 {
-  incidencesAboutToBeRemoved( Akonadi::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
+  incidencesAboutToBeRemoved( CalendarSupport::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
 }
 
-CollectionSelection* EventView::globalCollectionSelection()
+CalendarSupport::CollectionSelection* EventView::globalCollectionSelection()
 {
   return Private::sGlobalCollectionSelection;
 }
 
 /* static */
-bool EventView::usesCompletedTodoPixmap( const Item &aitem, const QDate &date )
+bool EventView::usesCompletedTodoPixmap( const Akonadi::Item &aitem, const QDate &date )
 {
-  const Todo::Ptr todo = Akonadi::todo( aitem );
+  const Todo::Ptr todo = CalendarSupport::todo( aitem );
   if ( !todo ) {
     return false;
   }

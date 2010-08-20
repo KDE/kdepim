@@ -80,7 +80,7 @@ target_link_libraries( akonadiconsole_bin
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   akonadi_next
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  akonadi-kcal_next
+  calendarsupport
   ${KDEPIMLIBS_KCALCORE_LIBS}
   kdepim
   messageviewer

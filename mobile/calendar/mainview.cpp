@@ -23,11 +23,12 @@
 #include "calendarinterface.h"
 #include "calendaradaptor.h"
 
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/kcalprefs.h>
+
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <Akonadi/ItemFetchScope>
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/kcalprefs.h>
 #include <akonadi/standardactionmanager.h>
 #include <incidenceeditors/incidenceeditor-ng/incidencedefaults.h>
 
@@ -70,7 +71,7 @@ void MainView::delayedInit()
 
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
 
-  m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
+  m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
 
   QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
@@ -205,7 +206,7 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
 
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
                            i18nc( "@title:window", "Delete Account?" ) );
-  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadin::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
 }
 

@@ -24,21 +24,21 @@
 #include <kdebug.h>
 #include <QtDeclarative/qdeclarative.h>
 
-using namespace Akonadi::KCal;
+using namespace CalendarSupport::KCal;
 
 Plugin::Plugin(QObject* parent): QDeclarativeExtensionPlugin(parent)
 {
   kDebug();
   if ( !KGlobal::hasMainComponent() )
-    new KComponentData( "KcalQmlPlugin", "libakonadi-kcal_next", KComponentData::RegisterAsMainComponent );
+    new KComponentData( "KcalQmlPlugin", "calendarsupport", KComponentData::RegisterAsMainComponent );
 }
 
 void Plugin::registerTypes(const char* uri)
 {
   kDebug() << uri;
-  qmlRegisterType<Akonadi::KCal::KCalItemBrowserItem>( uri, 4, 5, "IncidenceView" );
+  qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( uri, 4, 5, "IncidenceView" );
 }
 
 #include "plugin.moc"
 
-Q_EXPORT_PLUGIN2( kdeintegrationplugin, Akonadi::KCal::Plugin )
+Q_EXPORT_PLUGIN2( kdeintegrationplugin, CalendarSupport::KCal::Plugin )

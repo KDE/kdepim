@@ -95,7 +95,7 @@ target_link_libraries(incidenceeditorsng
   ${KDEPIMLIBS_KCALUTILS_LIBS}
   kdepim               # For KPIM::K{Date|Time}Edit
   kdepimdbusinterfaces # For UriHandler
-  akonadi-kcal_next    # For KCalPrefs
+  calendarsupport      # For KCalPrefs
   kdgantt2             # For FreeBusy Editor
 )
 
@@ -132,8 +132,8 @@ if (KDEPIM_MOBILE_UI)
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
-    kdepim            # For KPIM::K{Date|Time}Edit
-    akonadi-kcal_next # For KCalPrefs
+    kdepim               # For KPIM::K{Date|Time}Edit
+    calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
     kdgantt2
     ${KDEPIMLIBS_KCALUTILS_LIBS}
@@ -163,7 +163,7 @@ target_link_libraries(keventeditor
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
   incidenceeditorsng
-  akonadi-kcal_next
+  calendarsupport
   kdepimdbusinterfaces
 )
 

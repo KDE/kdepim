@@ -40,8 +40,11 @@ class EditorDetails;
 
 class EmbeddedURLPage;
 
-namespace Akonadi {
+namespace CalendarSupport {
   class IncidenceChanger;
+}
+
+namespace Akonadi {
   class CollectionComboBox;
   class Monitor;
 }
@@ -84,7 +87,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
 
   public slots:
     /** Edit an existing todo. */
-    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer )
+    virtual void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
     { mChanger = changer; }
 
     /** Initialize editor. This function creates the tab widgets. */
@@ -170,7 +173,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
     Akonadi::CollectionComboBox *mCalSelector;
     EditorDetails *mDetails;
     AttendeeEditor *mAttendeeEditor;
-    Akonadi::IncidenceChanger *mChanger;
+    CalendarSupport::IncidenceChanger *mChanger;
 
     QList<DesignerFields*> mDesignerFields;
     QMap<QWidget*, DesignerFields*> mDesignerFieldForWidget;

@@ -18,9 +18,10 @@
 
 #include "korganizereditorconfig.h"
 
-#include <kcalprefs.h>
+#include <calendarsupport/kcalprefs.h>
 
 using namespace KCalCore;
+using namespace CalendarSupport;
 using namespace IncidenceEditors;
 
 KOrganizerEditorConfig::KOrganizerEditorConfig()

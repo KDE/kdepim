@@ -35,7 +35,7 @@
 #include <QList>
 #include <QWidget>
 
-namespace Akonadi {
+namespace CalendarSupport {
   class Calendar;
 }
 
@@ -93,7 +93,8 @@ class AgendaItem : public QWidget, public CellItem
 {
   Q_OBJECT
   public:
-    AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const Akonadi::Item &incidence,
+    AgendaItem( EventView *eventView, CalendarSupport::Calendar *calendar,
+                const Akonadi::Item &incidence,
                 int itemPos, int itemCount,
                 const QDate &qd, QWidget *parent );
     ~AgendaItem();
@@ -235,7 +236,7 @@ class AgendaItem : public QWidget, public CellItem
     int mCellYTop, mCellYBottom;
 
     EventView *mEventView;
-    Akonadi::Calendar *mCalendar;
+    CalendarSupport::Calendar *mCalendar;
     Akonadi::Item mIncidence;
     QDate mDate;
     bool mValid;

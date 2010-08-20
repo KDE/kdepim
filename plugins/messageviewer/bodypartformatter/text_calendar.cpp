@@ -34,7 +34,7 @@
 #include "calendarinterface.h"
 #include "delegateselector.h"
 
-#include <akonadi/kcal/groupware.h>
+#include <calendarsupport/groupware.h>
 
 #include <incidenceeditors/groupwareintegration.h>
 
@@ -724,7 +724,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         IncidenceEditors::GroupwareIntegration::activate();
       }
 #endif
-      return Akonadi::Groupware::instance()->handleInvitation( receiver, iCal, type );
+      return CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
     }
 
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const

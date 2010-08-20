@@ -34,7 +34,7 @@
 #include "grantleecontactgroupformatter.h"
 #endif
 
-#include <akonadi/akonadi_next/checkableitemproxymodel.h>
+#include <akonadi_next/checkableitemproxymodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>

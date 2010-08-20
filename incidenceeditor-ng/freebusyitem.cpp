@@ -24,13 +24,13 @@
 
 #include <KSystemTimeZones>
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/freebusymanager.h>
 
 using namespace IncidenceEditorsNG;
 
-FreeBusyItem::FreeBusyItem( const KCalCore::Attendee::Ptr &attendee , QWidget *parentWidget ) :
-        mAttendee( attendee ), mTimerID( 0 ),
-        mIsDownloading( false ), mParentWidget( parentWidget )
+FreeBusyItem::FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget )
+  : mAttendee( attendee ), mTimerID( 0 ),
+    mIsDownloading( false ), mParentWidget( parentWidget )
 {
   Q_ASSERT( attendee );
   setFreeBusy( KCalCore::FreeBusy::Ptr() );
@@ -50,39 +50,39 @@ void FreeBusyItem::setFreeBusy( const KCalCore::FreeBusy::Ptr &fb)
 
 KCalCore::FreeBusy::Ptr FreeBusyItem::freeBusy() const
 {
-    return mFreeBusy;
+  return mFreeBusy;
 }
 
 QString FreeBusyItem::email() const
 {
-    return mAttendee->email();
+  return mAttendee->email();
 }
 
 void FreeBusyItem::setUpdateTimerID(int id)
 {
-    mTimerID = id;
+  mTimerID = id;
 }
 
 int FreeBusyItem::updateTimerID() const
 {
-    return mTimerID;
+  return mTimerID;
 }
 
 void FreeBusyItem::startDownload(bool forceDownload)
 {
-    mIsDownloading = true;
-    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-    if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload, mParentWidget ) ) {
-        mIsDownloading = false;
-    }
+  mIsDownloading = true;
+  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
+  if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload, mParentWidget ) ) {
+    mIsDownloading = false;
+  }
 }
 
 void FreeBusyItem::setIsDownloading(bool d)
 {
-    mIsDownloading = d;
+  mIsDownloading = d;
 }
 
 bool FreeBusyItem::isDownloading() const
 {
-    return mIsDownloading;
+  return mIsDownloading;
 }

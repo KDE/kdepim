@@ -8,8 +8,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/kdgantt1
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
-    ${CMAKE_SOURCE_DIR}/akonadi/kcal
-    ${CMAKE_BINARY_DIR}/akonadi/kcal
+    ${CMAKE_SOURCE_DIR}/calendarsupport
+    ${CMAKE_BINARY_DIR}/calendarsupport
     ${Boost_INCLUDE_DIR}
 )
 
@@ -70,7 +70,7 @@ target_link_libraries(incidenceeditors
    ${KDE4_KPARTS_LIBRARY}
    kdepim
    kdepimdbusinterfaces
-   akonadi-kcal_next
+   calendarsupport
    incidenceeditorsng
 )
 

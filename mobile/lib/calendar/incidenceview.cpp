@@ -19,6 +19,8 @@
 
 #include "incidenceview.h"
 
+#include <calendarsupport/utils.h>
+
 #include <QtGui/QMessageBox>
 
 #include <KDebug>
@@ -28,7 +30,6 @@
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
 
-#include <akonadi/kcal/utils.h>
 
 #include "declarativeeditors.h"
 
@@ -100,7 +101,7 @@ void IncidenceView::setCollectionCombo( Akonadi::CollectionComboBox *combo )
 void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 {
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
-  Incidence::Ptr incidencePtr = Akonadi::incidence( mItem );
+  Incidence::Ptr incidencePtr = CalendarSupport::incidence( mItem );
 
   IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceWhatWhere( editorWidget->mUi );
   mEditor->combine( editor );
@@ -121,7 +122,7 @@ void IncidenceView::setGeneralEditor( MobileIncidenceGeneral *editorWidget )
 void IncidenceView::initIncidenceMore()
 {
   Q_ASSERT( mItem.hasPayload<Incidence::Ptr>() );
-  const Incidence::Ptr incidencePtr = Akonadi::incidence( mItem );
+  const Incidence::Ptr incidencePtr = CalendarSupport::incidence( mItem );
 
   IncidenceEditorsNG::IncidenceEditor *editor = new IncidenceEditorsNG::IncidenceCategories( mIncidenceMore->mUi );
   mEditor->combine( editor );
@@ -182,7 +183,7 @@ void IncidenceView::load( const Akonadi::Item &item )
   Q_ASSERT( hasSupportedPayload( item ) );
 
   mItem = item;
-  mEditor->load( Akonadi::incidence( item ) );
+  mEditor->load( CalendarSupport::incidence( item ) );
 }
 
 Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
@@ -193,7 +194,7 @@ Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
     return item;
   }
 
-  KCalCore::Incidence::Ptr incidence = Akonadi::incidence( mItem );
+  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( mItem );
   mEditor->save( incidence );
 
   Akonadi::Item result = item;

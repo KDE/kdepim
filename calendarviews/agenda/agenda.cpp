@@ -36,9 +36,9 @@
 
 #include "recurrenceactions.h"
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/utils.h>
-#include <akonadi/kcal/incidencechanger.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/utils.h>
+#include <calendarsupport/incidencechanger.h>
 
 #include <kcalcore/todo.h>
 
@@ -75,7 +75,6 @@
 
 #include <cmath>
 
-using namespace Akonadi;
 using namespace EventViews;
 using namespace KCalUtils;
 
@@ -256,8 +255,8 @@ class Agenda::Private
     double mDesiredGridSpacingY;
 
     // We need the calendar for drag'n'drop and for paint the ResourceColor
-    Akonadi::Calendar *mCalendar;
-    IncidenceChanger *mChanger;
+    CalendarSupport::Calendar *mCalendar;
+    CalendarSupport::IncidenceChanger *mChanger;
 
     // size of border, where mouse action will resize the AgendaItem
     int mResizeBorderWidth;
@@ -352,7 +351,7 @@ Agenda::~Agenda()
 
 Akonadi::Item Agenda::selectedIncidence() const
 {
-  return ( d->mSelectedItem ? d->mSelectedItem->incidence() : Item() );
+  return ( d->mSelectedItem ? d->mSelectedItem->incidence() : Akonadi::Item() );
 }
 
 QDate Agenda::selectedIncidenceDate() const
@@ -360,7 +359,7 @@ QDate Agenda::selectedIncidenceDate() const
   return ( d->mSelectedItem ? d->mSelectedItem->itemDate() : QDate() );
 }
 
-Item::Id Agenda::lastSelectedItemId() const
+Akonadi::Item::Id Agenda::lastSelectedItemId() const
 {
   return d->mSelectedId;
 }
@@ -565,11 +564,11 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
   switch ( de->type() ) {
   case QEvent::DragEnter:
   case QEvent::DragMove:
-    if ( !Akonadi::canDecode( md ) ) {
+    if ( !CalendarSupport::canDecode( md ) ) {
       return false;
     }
 
-    if ( Akonadi::mimeDataHasTodo( md ) ) {
+    if ( CalendarSupport::mimeDataHasTodo( md ) ) {
       de->accept();
     } else {
       de->ignore();
@@ -581,12 +580,12 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
     break;
   case QEvent::Drop:
   {
-    if ( !Akonadi::canDecode( md ) ) {
+    if ( !CalendarSupport::canDecode( md ) ) {
       return false;
     }
 
-    const QList<KUrl> todoUrls = Akonadi::todoItemUrls( md );
-    const QList<Todo::Ptr> todos = Akonadi::todos( md, d->mCalendar->timeSpec() );
+    const QList<KUrl> todoUrls = CalendarSupport::todoItemUrls( md );
+    const QList<Todo::Ptr> todos = CalendarSupport::todos( md, d->mCalendar->timeSpec() );
 
     Q_ASSERT( !todoUrls.isEmpty() || !todos.isEmpty() );
 
@@ -679,8 +678,8 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
       } else {
         AgendaItem *item = dynamic_cast<AgendaItem *>(object);
         if (item) {
-          const Item aitem = item->incidence();
-          Incidence::Ptr incidence = Akonadi::incidence( aitem );
+          const Akonadi::Item aitem = item->incidence();
+          Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
           if ( incidence->isReadOnly() ) {
             d->mActionItem = 0;
           } else {
@@ -736,8 +735,8 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
     QPoint indicatorPos = gridToContents( contentsToGrid(  viewportPos  ) );
     if ( object != this ) {
       AgendaItem *moveItem = dynamic_cast<AgendaItem *>( object );
-      const Item aitem = moveItem ? moveItem->incidence() : Item();
-      Incidence::Ptr incidence = Akonadi::incidence( aitem );
+      const Akonadi::Item aitem = moveItem ? moveItem->incidence() : Akonadi::Item();
+      Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
       if ( incidence && !incidence->isReadOnly() ) {
         if ( !d->mActionItem ) {
           setNoActionCursor( moveItem, viewportPos );
@@ -938,7 +937,7 @@ void Agenda::startItemAction( const QPoint &pos )
   d->mStartCell = contentsToGrid( pos );
   d->mEndCell = d->mStartCell;
 
-  bool noResize = Akonadi::hasTodo( d->mActionItem->incidence() );
+  bool noResize = CalendarSupport::hasTodo( d->mActionItem->incidence() );
 
   d->mActionType = MOVE;
   if ( !noResize ) {
@@ -1157,7 +1156,7 @@ void Agenda::endItemAction()
   bool multiModify = false;
   // FIXME: do the cloning here...
   Akonadi::Item inc = d->mActionItem->incidence();
-  const Incidence::Ptr incidence = Akonadi::incidence( inc );
+  const Incidence::Ptr incidence = CalendarSupport::incidence( inc );
   d->mItemMoved = d->mItemMoved && !( d->mStartCell.x() == d->mEndCell.x() &&
                                       d->mStartCell.y() == d->mEndCell.y() );
 
@@ -1189,8 +1188,9 @@ void Agenda::endItemAction()
           // don't recreate items, they already have the correct position
           emit enableAgendaUpdate( false );
           if ( d->mChanger ) {
-            d->mChanger->changeIncidence( oldIncSaved, inc,
-                                          IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this );
+            d->mChanger->changeIncidence(
+              oldIncSaved, inc,
+              CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this );
           } else {
             kError() << "No IncidenceChanger set";
           }
@@ -1244,8 +1244,9 @@ void Agenda::endItemAction()
           }
           emit enableAgendaUpdate( true );
           if ( d->mChanger ) {
-            d->mChanger->changeIncidence( oldIncSaved, inc,
-                                          IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, this );
+            d->mChanger->changeIncidence(
+              oldIncSaved, inc,
+              CalendarSupport::IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, this );
           } else {
             kError() << "No IncidenceChanger set";
           }
@@ -1336,9 +1337,9 @@ void Agenda::setActionCursor( int actionType, bool acting )
 
 void Agenda::setNoActionCursor( AgendaItem *moveItem, const QPoint &pos )
 {
-  const Item item = moveItem ? moveItem->incidence() : Item();
+  const Akonadi::Item item = moveItem ? moveItem->incidence() : Akonadi::Item();
 
-  const bool noResize = Akonadi::hasTodo( item );
+  const bool noResize = CalendarSupport::hasTodo( item );
 
   Agenda::MouseActionType resizeType = MOVE;
   if ( !noResize ) {
@@ -1707,7 +1708,7 @@ void Agenda::setStartTime( const QTime &startHour )
 /*
   Insert AgendaItem into agenda.
 */
-AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
+AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
                                 int X, int YTop, int YBottom, int itemPos, int itemCount )
 {
   if ( d->mAllDayMode ) {
@@ -1755,7 +1756,7 @@ AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
 /*
   Insert all-day AgendaItem into agenda.
 */
-AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
+AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDate &qd,
                                       int XBegin, int XEnd )
 {
   if ( !d->mAllDayMode ) {
@@ -1792,10 +1793,10 @@ AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
   return agendaItem;
 }
 
-void Agenda::insertMultiItem( const Item &event, const QDate &qd, int XBegin,
+void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int XBegin,
                               int XEnd, int YTop, int YBottom )
 {
-  Event::Ptr ev = Akonadi::event( event );
+  Event::Ptr ev = CalendarSupport::event( event );
   Q_ASSERT( ev );
   if ( d->mAllDayMode ) {
     kDebug() << "using this in all-day mode is illegal.";
@@ -1868,7 +1869,7 @@ QList<AgendaItem*> Agenda::agendaItems( const Akonadi::Item &aitem ) const
   return items;
 }
 
-void Agenda::removeIncidence( const Item &incidence )
+void Agenda::removeIncidence( const Akonadi::Item &incidence )
 {
   // First find all items to be deleted and store them
   // in its own list. Otherwise removeAgendaItem will reset
@@ -2094,10 +2095,10 @@ void Agenda::deselectItem()
     return;
   }
 
-  const Item selectedItem = d->mSelectedItem->incidence();
+  const Akonadi::Item selectedItem = d->mSelectedItem->incidence();
 
   foreach ( AgendaItem *item, d->mItems ) {
-    const Item itemInc = item->incidence();
+    const Akonadi::Item itemInc = item->incidence();
     if( itemInc.isValid() && selectedItem.isValid() && itemInc.id() == selectedItem.id() ) {
       item->select( false );
     }
@@ -2113,12 +2114,12 @@ void Agenda::selectItem( AgendaItem *item )
   }
   deselectItem();
   if ( item == 0 ) {
-    emit incidenceSelected( Item(), QDate() );
+    emit incidenceSelected( Akonadi::Item(), QDate() );
     return;
   }
   d->mSelectedItem = item;
   d->mSelectedItem->select();
-  Q_ASSERT( Akonadi::hasIncidence( d->mSelectedItem->incidence() ) );
+  Q_ASSERT( CalendarSupport::hasIncidence( d->mSelectedItem->incidence() ) );
   d->mSelectedId = d->mSelectedItem->incidence().id();
 
   foreach ( AgendaItem *item, d->mItems ) {
@@ -2129,7 +2130,7 @@ void Agenda::selectItem( AgendaItem *item )
   emit incidenceSelected( d->mSelectedItem->incidence(), d->mSelectedItem->itemDate() );
 }
 
-void Agenda::selectItemByItemId( const Item::Id &id )
+void Agenda::selectItemByItemId( const Akonadi::Item::Id &id )
 {
   foreach ( AgendaItem *item, d->mItems ) {
     if( item->incidence().id() == id ) {
@@ -2139,7 +2140,7 @@ void Agenda::selectItemByItemId( const Item::Id &id )
   }
 }
 
-void Agenda::selectItem( const Item &item )
+void Agenda::selectItem( const Akonadi::Item &item )
 {
   selectItemByItemId( item.id() );
 }
@@ -2190,12 +2191,12 @@ DateList Agenda::dateList() const
   return d->mSelectedDates;
 }
 
-void Agenda::setCalendar( Akonadi::Calendar *cal )
+void Agenda::setCalendar( CalendarSupport::Calendar *cal )
 {
   d->mCalendar = cal;
 }
 
-void Agenda::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
+void Agenda::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
 {
   d->mChanger = changer;
 }

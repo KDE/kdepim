@@ -31,8 +31,8 @@
 #endif
 #include "editorgeneraljournal.h"
 
-#include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/incidencechanger.h>
+#include <calendarsupport/incidencechanger.h>
+#include <calendarsupport/utils.h>
 
 #include <Akonadi/CollectionComboBox>
 
@@ -42,7 +42,6 @@
 #include <QVBoxLayout>
 
 using namespace KCalCore;
-using namespace Akonadi;
 using namespace IncidenceEditors;
 
 JournalEditor::JournalEditor( QWidget *parent )
@@ -89,7 +88,7 @@ void JournalEditor::setupGeneral()
 void JournalEditor::newJournal()
 {
   init();
-  mIncidence = Item();
+  mIncidence = Akonadi::Item();
   loadDefaults();
   setCaption( i18nc( "@title:window", "New Journal" ) );
 }
@@ -120,22 +119,22 @@ bool JournalEditor::processInput()
     return false;
   }
 
-  if ( Akonadi::hasJournal( mIncidence ) ) {
+  if ( CalendarSupport::hasJournal( mIncidence ) ) {
     bool rc = true;
-    Journal::Ptr oldJournal( Akonadi::journal( mIncidence )->clone() );
-    Journal::Ptr journal( Akonadi::journal( mIncidence )->clone() );
+    Journal::Ptr oldJournal( CalendarSupport::journal( mIncidence )->clone() );
+    Journal::Ptr journal( CalendarSupport::journal( mIncidence )->clone() );
 
     fillJournal( journal );
 
     if ( *oldJournal == *journal ) {
       // Don't do anything
     } else {
-      journal = Akonadi::journal( mIncidence );
+      journal = CalendarSupport::journal( mIncidence );
       journal->startUpdates(); //merge multiple mIncidence->updated() calls into one
       fillJournal( journal );
       rc = mChanger->changeIncidence( oldJournal,
                                       mIncidence,
-                                      Akonadi::IncidenceChanger::NOTHING_MODIFIED,
+                                      CalendarSupport::IncidenceChanger::NOTHING_MODIFIED,
                                       this );
       journal->endUpdates();
     }
@@ -149,7 +148,7 @@ bool JournalEditor::processInput()
     mIncidence.setPayload( j );
     Akonadi::Collection col = mCalSelector->currentCollection();
     if ( !mChanger->addIncidence( j, col, this ) ) {
-      mIncidence = Item();
+      mIncidence = Akonadi::Item();
       return false;
     }
   }
@@ -158,7 +157,7 @@ bool JournalEditor::processInput()
 
 void JournalEditor::deleteJournal()
 {
-  if ( Akonadi::hasJournal( mIncidence ) ) {
+  if ( CalendarSupport::hasJournal( mIncidence ) ) {
     emit deleteIncidenceSignal( mIncidence );
   }
 
@@ -182,8 +181,8 @@ bool JournalEditor::incidenceModified()
   Journal::Ptr oldJournal;
   bool modified;
 
-  if ( Akonadi::hasJournal( mIncidence ) ) { // modification
-    oldJournal = Akonadi::journal( mIncidence );
+  if ( CalendarSupport::hasJournal( mIncidence ) ) { // modification
+    oldJournal = CalendarSupport::journal( mIncidence );
   } else { // new one
     oldJournal = mInitialJournal;
   }
@@ -194,9 +193,9 @@ bool JournalEditor::incidenceModified()
   return modified;
 }
 
-bool JournalEditor::read( const Item &item, const QDate &date, bool tmpl )
+bool JournalEditor::read( const Akonadi::Item &item, const QDate &date, bool tmpl )
 {
-  const Journal::Ptr journal = Akonadi::journal( item );
+  const Journal::Ptr journal = CalendarSupport::journal( item );
   if ( !journal ) {
     return false;
   }

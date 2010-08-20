@@ -25,7 +25,6 @@ target_link_libraries(viewerapp
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${QT_QTGUI_LIBS}
     ${KDEPIMLIBS_KCALCORE_LIBS}
-    akonadi-kcal_next
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
