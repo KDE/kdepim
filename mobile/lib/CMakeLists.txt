@@ -30,6 +30,7 @@ target_link_libraries(kdepimmobileui
   ${KDEPIMLIBS_AKONADI_LIBS}
   akonadi_next
   kdepim
+  calendarsupport
 )
 
 set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
