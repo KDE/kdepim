@@ -21,12 +21,10 @@
 #ifndef ALARMPRESETS_H
 #define ALARMPRESETS_H
 
+#include <kcalcore/alarm.h>
+
 class QString;
 class QStringList;
-
-namespace KCal {
-  class Alarm;
-}
 
 namespace IncidenceEditorsNG {
 
@@ -48,13 +46,13 @@ namespace AlarmPresets {
    *
    * Note: The caller takes ownership over the pointer.
    */
-  KCal::Alarm *preset( When when, const QString &name );
+  KCalCore::Alarm::Ptr preset( When when, const QString &name );
 
   /**
    * Returns the index of the preset in availablePresets for the given recurrence,
    * or -1 if no preset is equal to the given recurrence.
    */
-  int presetIndex( When when, const KCal::Alarm &alarm );
+  int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm );
 
 }
 

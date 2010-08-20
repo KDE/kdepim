@@ -19,19 +19,20 @@
 */
 
 #include "alarmdialog.h"
-
-#include <KCal/Alarm>
-#include <KPIMUtils/Email>
-
 #include "editorconfig.h"
-
 #include "ui_alarmdialog.h"
 
-using namespace IncidenceEditorsNG;
-using namespace KCal;
+#include <KPIMUtils/Email>
 
-AlarmDialog::AlarmDialog()
-  : mUi( new Ui::AlarmDialog )
+using namespace IncidenceEditorsNG;
+using namespace KCalCore;
+
+AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent )
+  : KDialog( parent )
+  ,  mUi( new Ui::AlarmDialog )
+  , mIncidenceType( incidenceType )
+  , mAllowBeginReminders( true )
+  , mAllowEndReminders( true )
 {
   setWindowTitle( i18n( "Create a new alarm" ) );
   mUi->setupUi( mainWidget() );
@@ -47,14 +48,17 @@ AlarmDialog::AlarmDialog()
 
   if ( IncidenceEditors::EditorConfig::instance()->defaultAudioFileReminders() )
     mUi->mSoundFile->setUrl( IncidenceEditors::EditorConfig::instance()->audioFilePath() );
+
+  fillCombo();
 }
 
-void AlarmDialog::load( Alarm *alarm )
+void AlarmDialog::load( const Alarm::Ptr &alarm )
 {
-  setWindowTitle( i18n( "Edit existing alarm" ) );
   if ( !alarm ) {
     return;
   }
+
+  setWindowTitle( i18n( "Edit existing alarm" ) );
 
   // Offsets
   int offset;
@@ -113,11 +117,11 @@ void AlarmDialog::load( Alarm *alarm )
   case Alarm::Email:
   {
     mUi->mTypeCombo->setCurrentIndex( 3 );
-    QList<Person> addresses = alarm->mailAddresses();
+    QList<Person::Ptr> addresses = alarm->mailAddresses();
     QStringList add;
-    for ( QList<Person>::ConstIterator it = addresses.constBegin();
+    for ( QList<Person::Ptr>::ConstIterator it = addresses.constBegin();
           it != addresses.constEnd(); ++it ) {
-      add << (*it).fullName();
+      add << (*it)->fullName();
     }
     mUi->mEmailAddress->setText( add.join( ", " ) );
     mUi->mEmailText->setPlainText( alarm->mailText() );
@@ -139,7 +143,7 @@ void AlarmDialog::load( Alarm *alarm )
   }
 }
 
-void AlarmDialog::save( Alarm *alarm ) const
+void AlarmDialog::save( const Alarm::Ptr &alarm ) const
 {
   // Offsets
   int offset = mUi->mAlarmOffset->value() * 60; // minutes
@@ -154,12 +158,32 @@ void AlarmDialog::save( Alarm *alarm ) const
     offset *= 7; // weeks
   }
 
-  int beforeafterpos = mUi->mBeforeAfter->currentIndex();
+  const int beforeafterpos = mUi->mBeforeAfter->currentIndex();
   if ( beforeafterpos % 2 == 0 ) { // before -> negative
     offset = -offset;
   }
 
+  // Note: if this triggers, fix the logic at the place causing it. It really makes
+  // no sense to have both disabled.
+  Q_ASSERT( mAllowBeginReminders || mAllowEndReminders );
+
   // TODO: Add possibility to specify a given time for the reminder
+  if ( mAllowBeginReminders && beforeafterpos == 0 ) // before start
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( mAllowBeginReminders && beforeafterpos == 1 ) // after start
+    alarm->setStartOffset( Duration( offset ) );
+
+  // We assume that if mAllowBeginReminders is not set, that mAllowBeginReminders
+  // is set.
+  if ( !mAllowBeginReminders && beforeafterpos == 0 ) // before end
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( !mAllowBeginReminders && beforeafterpos == 1 ) // after end
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( beforeafterpos == 2 ) // before end
+    alarm->setStartOffset( Duration( offset ) );
+  else if ( beforeafterpos == 3 ) // after end
+    alarm->setStartOffset( Duration( offset ) );
+
   if ( beforeafterpos / 2 == 0 ) { // start offset
     alarm->setStartOffset( Duration( offset ) );
   } else {
@@ -181,7 +205,7 @@ void AlarmDialog::save( Alarm *alarm ) const
                               mUi->mAppArguments->text() );
   } else if ( mUi->mTypeCombo->currentIndex() == 3 ) { // Email
     QStringList addresses = KPIMUtils::splitAddressList( mUi->mEmailAddress->text() );
-    QList<Person> add;
+    QList<Person::Ptr> add;
     for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it ) {
       add << Person::fromFullName( *it );
     }
@@ -192,23 +216,42 @@ void AlarmDialog::save( Alarm *alarm ) const
   }
 }
 
-void AlarmDialog::setIsTodoReminder( bool isTodo )
+void AlarmDialog::fillCombo()
 {
-  if ( isTodo ) {
+  QStringList items;
+
+  if ( mIncidenceType == Incidence::TypeTodo ) {
     mUi->mBeforeAfter->clear();
-    mUi->mBeforeAfter->addItems( QStringList()
-                                 << i18n( "Before the task starts" )
-                                 << i18n( "After the task starts" )
-                                 << i18n( "Before the task is due" )
-                                 << i18n( "After the task is due" ) );
+
+    if ( mAllowBeginReminders )
+      items << i18n( "Before the to-do starts" ) << i18n( "After the to-do starts" );
+
+    if ( mAllowEndReminders )
+      items << i18n( "Before the to-do is due" ) << i18n( "After the to-do is due" );
+
   } else {
-    mUi->mBeforeAfter->clear();
-    mUi->mBeforeAfter->addItems( QStringList()
-                                 << i18n( "Before the event starts" )
-                                 << i18n( "After the event starts" )
-                                 << i18n( "Before the event ends" )
-                                 << i18n( "After the event ends" ) );
+
+    if ( mAllowEndReminders )
+      items << i18n( "Before the event starts" ) << i18n( "After the event starts" );
+
+    if ( mAllowEndReminders )
+      items << i18n( "Before the event ends" ) << i18n( "After the event ends" );
   }
+
+  mUi->mBeforeAfter->clear();
+  mUi->mBeforeAfter->addItems( items );
+}
+
+void AlarmDialog::setAllowBeginReminders( bool allow )
+{
+  mAllowBeginReminders = allow;
+  fillCombo();
+}
+
+void AlarmDialog::setAllowEndReminders( bool allow )
+{
+  mAllowEndReminders = allow;
+  fillCombo();
 }
 
 void AlarmDialog::setOffset( int offset )
@@ -224,6 +267,7 @@ void AlarmDialog::setUnit( Unit unit )
 
 void AlarmDialog::setWhen( When when )
 {
+  Q_ASSERT( when <= mUi->mBeforeAfter->count() );
   mUi->mBeforeAfter->setCurrentIndex( when );
 }
 

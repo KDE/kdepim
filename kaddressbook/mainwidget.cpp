@@ -27,7 +27,6 @@
 #include "printing/printingwizard.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
-#include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
 
 #ifdef GRANTLEE_FOUND
@@ -35,7 +34,7 @@
 #include "grantleecontactgroupformatter.h"
 #endif
 
-#include <akonadi/akonadi_next/collectionselectionproxymodel.h>
+#include <akonadi_next/checkableitemproxymodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
@@ -46,6 +45,7 @@
 #include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/contact/contactviewer.h>
+#include <akonadi/contact/standardcontactactionmanager.h>
 #include <akonadi/control.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreeview.h>
@@ -134,21 +134,20 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    */
 
   mCollectionTree = new Akonadi::EntityMimeTypeFilterModel( this );
+  mCollectionTree->setDynamicSortFilter( true );
+  mCollectionTree->setSortCaseSensitivity( Qt::CaseInsensitive );
   mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
   mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
   mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
-  Akonadi::CollectionSelectionProxyModel *proxyModel = new Akonadi::CollectionSelectionProxyModel( this );
-  proxyModel->setDynamicSortFilter( true );
-  proxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-
-  mCollectionSelectionModel = new QItemSelectionModel( proxyModel );
-  proxyModel->setSelectionModel( mCollectionSelectionModel );
-  proxyModel->setSourceModel( mCollectionTree );
+  mCollectionSelectionModel = new QItemSelectionModel( mCollectionTree );
+  CheckableItemProxyModel *checkableProxyModel = new CheckableItemProxyModel( this );
+  checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
+  checkableProxyModel->setSourceModel( mCollectionTree );
 
   mXXPortManager->setItemModel( allContactsModel() );
 
-  mCollectionView->setModel( proxyModel );
+  mCollectionView->setModel( checkableProxyModel );
   mCollectionView->setXmlGuiClient( guiClient );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
@@ -183,10 +182,15 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 
   mXXPortManager->setSelectionModel( mItemView->selectionModel() );
 
+  mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
+  mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
+  mActionManager->setItemSelectionModel( mItemView->selectionModel() );
+  mActionManager->createAllActions();
+
   connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
            this, SLOT( itemSelected( const Akonadi::Item& ) ) );
   connect( mItemView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
-           this, SLOT( editItem( const Akonadi::Item& ) ) );
+           mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SLOT( trigger() ) );
   connect( mItemView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( itemSelectionChanged( const QModelIndex&, const QModelIndex& ) ) );
 
@@ -196,19 +200,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mContactSwitcher->setView( mItemView );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
-
-  mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
-  mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
-  mActionManager->setItemSelectionModel( mItemView->selectionModel() );
-
-  mActionManager->createAllActions();
-
-  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
-           this, SLOT( newContact() ) );
-  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
-           this, SLOT( newGroup() ) );
-  connect( mActionManager, SIGNAL( editItem( const Akonadi::Item& ) ),
-           this, SLOT( editItem( const Akonadi::Item& ) ) );
 
   mModelColumnManager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
   mModelColumnManager->setWidget( mItemView->header() );
@@ -520,27 +511,12 @@ void MainWidget::print()
 
 void MainWidget::newContact()
 {
-  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
-  dlg.setDefaultAddressBook( currentAddressBook() );
-
-  dlg.exec();
+  mActionManager->action( Akonadi::StandardContactActionManager::CreateContact )->trigger();
 }
 
 void MainWidget::newGroup()
 {
-  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, this );
-  dlg.setDefaultAddressBook( currentAddressBook() );
-
-  dlg.exec();
-}
-
-void MainWidget::editItem( const Akonadi::Item &reference )
-{
-  if ( Akonadi::MimeTypeChecker::isWantedItem( reference, KABC::Addressee::mimeType() ) ) {
-    editContact( reference );
-  } else if ( Akonadi::MimeTypeChecker::isWantedItem( reference, KABC::ContactGroup::mimeType() ) ) {
-    editGroup( reference );
-  }
+  mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup )->trigger();
 }
 
 /**
@@ -606,20 +582,6 @@ void MainWidget::setSimpleGuiMode( bool on )
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
 
   Settings::self()->setUseSimpleMode( on );
-}
-
-void MainWidget::editContact( const Akonadi::Item &contact )
-{
-  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, this );
-  dlg.setContact( contact );
-  dlg.exec();
-}
-
-void MainWidget::editGroup( const Akonadi::Item &group )
-{
-  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
-  dlg.setContactGroup( group );
-  dlg.exec();
 }
 
 Akonadi::Collection MainWidget::currentAddressBook() const

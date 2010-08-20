@@ -87,7 +87,9 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
 
   QPixmap pixmap = QPixmap::fromImage( image );
 
+#ifndef Q_OS_WINCE
   image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, mParent );
+#endif
   if ( image.isNull() ) {
     (*ok) = false;
     return image;
@@ -195,6 +197,7 @@ void ImageWidget::updateView()
   }
 }
 
+#ifndef QT_NO_DRAGANDDROP
 void ImageWidget::dragEnterEvent( QDragEnterEvent *event )
 {
   const QMimeData *mimeData = event->mimeData();
@@ -226,6 +229,7 @@ void ImageWidget::dropEvent( QDropEvent *event )
     }
   }
 }
+#endif
 
 void ImageWidget::mousePressEvent( QMouseEvent *event )
 {
@@ -235,6 +239,7 @@ void ImageWidget::mousePressEvent( QMouseEvent *event )
 
 void ImageWidget::mouseMoveEvent( QMouseEvent *event )
 {
+#ifndef QT_NO_DRAGANDDROP
   if ( (event->buttons() & Qt::LeftButton) &&
        (event->pos() - mDragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
 
@@ -245,6 +250,7 @@ void ImageWidget::mouseMoveEvent( QMouseEvent *event )
       drag->start();
     }
   }
+#endif
 }
 
 void ImageWidget::contextMenuEvent( QContextMenuEvent *event )

@@ -12,7 +12,6 @@ include_directories(
   ${PROJECT_BINARY_DIR}
   ${PROJECT_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/libmailreader
-  ${CMAKE_SOURCE_DIR}/akonadi
   ${Boost_INCLUDE_DIRS}
 
 )

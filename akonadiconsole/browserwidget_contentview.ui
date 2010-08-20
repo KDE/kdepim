@@ -76,7 +76,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="Akonadi::IncidenceViewer" name="incidenceView"/>
+            <widget class="CalendarSupport::IncidenceViewer" name="incidenceView"/>
            </item>
           </layout>
          </widget>
@@ -444,9 +444,9 @@
    <header>ktextbrowser.h</header>
   </customwidget>
   <customwidget>
-   <class>Akonadi::IncidenceViewer</class>
+   <class>CalendarSupport::IncidenceViewer</class>
    <extends>QWidget</extends>
-   <header location="global">kcal/incidenceviewer.h</header>
+   <header location="global">calendarsupport/incidenceviewer.h</header>
   </customwidget>
   <customwidget>
    <class>MessageViewer::Viewer</class>

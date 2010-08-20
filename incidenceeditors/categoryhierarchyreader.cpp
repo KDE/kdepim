@@ -21,9 +21,9 @@
 
 #include "categoryhierarchyreader.h"
 #include "categoryconfig.h"
-#include "autochecktreewidget.h"
 
 #include <QComboBox>
+#include <QTreeWidget>
 #include <QStringList>
 
 using namespace IncidenceEditors;
@@ -121,6 +121,8 @@ int CategoryHierarchyReaderQComboBox::depth() const
   return mCurrentDepth;
 }
 
+#ifndef QT_NO_TREEWIDGET
+
 void CategoryHierarchyReaderQTreeWidget::clear()
 {
   mTree->clear();
@@ -151,3 +153,4 @@ int CategoryHierarchyReaderQTreeWidget::depth() const
 {
   return mCurrentDepth;
 }
+#endif

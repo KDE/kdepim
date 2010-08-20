@@ -1,10 +1,8 @@
 project( kaddressbook-mobile )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-add_subdirectory( qmlplugin )
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
   ${CMAKE_SOURCE_DIR}/libkleo/
   ${Boost_INCLUDE_DIR}
 )
@@ -12,6 +10,8 @@ include_directories(
 set(kab_mobile_srcs
   mainview.cpp
   main.cpp
+  contactviewitem.cpp
+  contactgroupviewitem.cpp
   contactcompletionmodel.cpp
   contacteditorview.cpp
   contactgroupeditorview.cpp
@@ -24,7 +24,6 @@ set(kab_mobile_srcs
   editorbase.cpp
   editorbusiness.cpp
   editorcontactgroup.cpp
-  editorcrypto.cpp
   editorgeneral.cpp
   editorlocation.cpp
   editormore.cpp
@@ -35,6 +34,12 @@ set(kab_mobile_srcs
   mobilelineedit.cpp
   phonetypecombo.cpp
 )
+
+if (NOT WINCE)
+  set(kab_mobile_srcs ${kab_mobile_srcs}
+    editorcrypto.cpp
+  )
+endif(NOT WINCE)
 
 kde4_add_ui_files(kab_mobile_srcs
   editorbusiness.ui
@@ -54,8 +59,8 @@ kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 target_link_libraries(kaddressbook-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDEPIMLIBS_AKONADI_CONTACTS_LIBRARY}
-    ${KDEPIMLIBS_KABC_LIBRARY}
-    ${KDEPIMLIBS_AKONADI_LIBRARY}
+    ${KDEPIMLIBS_KABC_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
     akonadi_next
     kdepim
     kdepimmobileui

@@ -58,7 +58,6 @@ set( kaddressbook_LIB_SRCS
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
   recursiveitemfetchjob.cpp
-  standardcontactactionmanager.cpp
   xxportmanager.cpp
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
@@ -68,8 +67,13 @@ if (Grantlee_FOUND)
   set( kaddressbook_LIB_SRCS ${kaddressbook_LIB_SRCS}
        grantleecontactformatter.cpp
        grantleecontactgroupformatter.cpp
+       grantlee/theme.cpp
+       grantlee/themecombobox.cpp
+       grantlee/thememanager.cpp
+       grantlee/thememodel.cpp
      )
   add_definitions(-DGRANTLEE_FOUND)
+  add_subdirectory(grantlee)
 endif (Grantlee_FOUND)
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
@@ -99,7 +103,7 @@ kde4_add_app_icon(kaddressbook_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-pim-
 
 kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
 
-target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS}
+target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim
                               ${KDE4_KIO_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_PHONON_LIBS})
 target_link_libraries(kaddressbook ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} kaddressbookprivate)
 

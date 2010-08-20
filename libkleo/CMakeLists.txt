@@ -4,8 +4,6 @@ if (KDEPIM_ONLY_KLEO)
   add_definitions( -DKDEPIM_ONLY_KLEO )
 endif (KDEPIM_ONLY_KLEO)
 
-remove_definitions( -DQT_NO_STL )
-add_definitions ( -DQT_STL )
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 #parts of Boost don't build with the gcc pedantic option, so remove that option
 string(REPLACE "-pedantic" "" FOO ${CMAKE_CXX_FLAGS})
@@ -70,13 +68,8 @@ set(libkleo_core_SRCS
    kleo/keyfiltermanager.cpp
    )
 
-set(libkleo_ui_SRCS    # make this a separate lib.
-   ui/keylistview.cpp
-   ui/keyselectiondialog.cpp
-   ui/keyrequester.cpp
-   ui/keyapprovaldialog.cpp
-)
 set(libkleo_ui_common_SRCS
+   ui/dnattributeorderconfigwidget.cpp
    ui/kdhorizontalline.cpp
    ui/filenamerequester.cpp
    ui/messagebox.cpp
@@ -86,8 +79,20 @@ set(libkleo_ui_common_SRCS
    ui/cryptoconfigdialog.cpp
    ui/directoryserviceswidget.cpp
    ui/adddirectoryservicedialogimpl.cpp
-   ui/dnattributeorderconfigwidget.cpp
 )
+
+
+if (NOT WINCE)
+  set(libkleo_ui_SRCS    # make this a separate lib.
+    ui/keylistview.cpp
+    ui/keyselectiondialog.cpp
+    ui/keyrequester.cpp
+    ui/keyapprovaldialog.cpp
+  )
+else (NOT WINCE)
+  # disabled due to no QTreeWidget
+  set(libkleo_ui_SRCS )
+endif (NOT WINCE)
 
 kde4_add_ui_files(libkleo_ui_common_SRCS
     ui/adddirectoryservicedialog.ui

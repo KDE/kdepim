@@ -15,7 +15,6 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${etm_usage_SOURCE_DIR})
 
 include_directories( ${KDE4_INCLUDES}
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/akonadi
   ${CMAKE_CURRENT_BINARY_DIR}
   ${kdepim_SOURCE_DIR}
   ${Boost_INCLUDE_DIRS}
@@ -23,6 +22,7 @@ include_directories( ${KDE4_INCLUDES}
 
 set(etm_usage_SRCS
     main.cpp
+    mailmodel.cpp
     mainwindow.cpp
     entitytreewidget.cpp
     entityfindingwidget.cpp
@@ -50,7 +50,7 @@ kde4_add_executable(etm_usage ${etm_usage_SRCS} )
 
 target_link_libraries(etm_usage messageviewer messagelist kdepim kpgp kleo akonadi-kde messagecore
                       akonadi-kmime akonadi_next ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}
-                      ${KDEPIMLIBS_KTNEF_LIBRARY} ${QGPGME_LIBRARIES}
+                      ${KDEPIMLIBS_KTNEF_LIBS} ${QGPGME_LIBRARIES}
                       ${KDEPIMLIBS_AKONADI_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDEPIMLIBS_KABC_LIBS}

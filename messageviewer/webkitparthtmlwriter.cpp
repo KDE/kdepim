@@ -31,11 +31,14 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "webkitparthtmlwriter.h"
+
+#include "mailwebview.h"
 
 #include <KDebug>
 #include <KUrl>
-#include <KWebView>
 
 #include <cassert>
 #include <QByteArray>
@@ -46,15 +49,11 @@
 
 using namespace MessageViewer;
 
-WebKitPartHtmlWriter::WebKitPartHtmlWriter( KWebView *view,
-                                          QObject * parent, const char * name )
+WebKitPartHtmlWriter::WebKitPartHtmlWriter( MailWebView * view, QObject * parent )
   : QObject( parent ), HtmlWriter(),
     mHtmlView( view ), mState( Ended )
 {
-  setObjectName( name );
   assert( view );
-  mHtmlTimer.setSingleShot( true );
-  connect( &mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()) );
 }
 
 WebKitPartHtmlWriter::~WebKitPartHtmlWriter() {
@@ -72,11 +71,11 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
 
   // clear the widget:
   mHtmlView->setUpdatesEnabled( false );
-  QPoint point = mHtmlView->page()->mainFrame()->scrollPosition();
-  point -= QPoint(0, 10);
-  mHtmlView->page()->mainFrame()->setScrollPosition( point );
-
+  mHtmlView->scrollUp( 10 );
+#ifndef MESSAGEVIEWER_NO_WEBKIT
+  // PENDING(marc) push into MailWebView
   mHtmlView->load( QUrl() );
+#endif
   mState = Begun;
 }
 
@@ -98,8 +97,6 @@ void WebKitPartHtmlWriter::end() {
 
 void WebKitPartHtmlWriter::reset() {
   if ( mState != Ended ) {
-    mHtmlTimer.stop();
-    mHtmlQueue.clear();
     mHtml.clear();
     mState = Begun; // don't run into end()'s warning
     end();
@@ -115,28 +112,12 @@ void WebKitPartHtmlWriter::write( const QString & str ) {
 }
 
 void WebKitPartHtmlWriter::queue( const QString & str ) {
-  if ( mState != Begun && mState != Queued ) {
-    kWarning() << "queue() called in Ended state!";
-  }
-  static const uint chunksize = 16384;
-  for ( int pos = 0 ; pos < str.length() ; pos += chunksize )
-    mHtmlQueue.push_back( str.mid( pos, chunksize ) );
-  mState = Queued;
+  write( str );
 }
 
 void WebKitPartHtmlWriter::flush() {
-  slotWriteNextHtmlChunk();
-}
-
-void WebKitPartHtmlWriter::slotWriteNextHtmlChunk() {
-  if ( mHtmlQueue.empty() ) {
-    mState = Begun; // don't run into end()'s warning
-    end();
-  } else {
-    mHtml.append( mHtmlQueue.front() );
-    mHtmlQueue.pop_front();
-    mHtmlTimer.start( 0 );
-  }
+  mState = Begun; // don't run into end()'s warning
+  end();
 }
 
 void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
@@ -146,6 +127,10 @@ void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
 
 void WebKitPartHtmlWriter::resolveCidUrls()
 {
+  // FIXME: instead of patching around in the HTML source, this should
+  // be replaced by a custom QNetworkAccessManager (for QWebView), or
+  // virtual loadResource() (for QTextBrowser)
+#ifndef MESSAGEVIEWER_NO_WEBKIT
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
   QWebElementCollection images = root.findAll( "img" );
   QWebElement image;
@@ -161,6 +146,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
       }
     }
   }
+#endif
 }
 
 

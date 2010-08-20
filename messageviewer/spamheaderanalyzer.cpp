@@ -32,6 +32,8 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "spamheaderanalyzer.h"
 
 #include "antispamconfig.h"
@@ -48,9 +50,9 @@ using namespace MessageViewer;
 // static
 SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message *message ) {
   SpamScores scores;
-  SpamAgents agents = AntiSpamConfig::instance()->uniqueAgents();
+  const SpamAgents agents = AntiSpamConfig::instance()->uniqueAgents();
 
-  for ( SpamAgentsIterator it = agents.begin(); it != agents.end(); ++it ) {
+  for ( SpamAgents::const_iterator it = agents.begin(); it != agents.end(); ++it ) {
     float score = -2.0;
 
     SpamError spamError = noError;

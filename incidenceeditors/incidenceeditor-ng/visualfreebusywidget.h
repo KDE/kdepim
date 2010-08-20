@@ -24,12 +24,18 @@
 #include <KDateTime>
 
 #include <QWidget>
+#include "conflictresolver.h"
 
-class QTreeWidget;
+namespace KCal {
+  class FreeBusy;
+}
+
+class QTreeView;
 class QLabel;
 class KComboBox;
 class FreeBusyItem;
 class RowController;
+class QStandardItemModel;
 
 namespace KDGantt {
   class DateTimeGrid;
@@ -39,19 +45,24 @@ namespace KDGantt {
 namespace IncidenceEditorsNG {
 
 class ConflictResolver;
+class FreeBusyItemModel;
+class FreeBusyGanttProxyModel;
 
 class VisualFreeBusyWidget : public QWidget
 {
 Q_OBJECT
 public:
-    VisualFreeBusyWidget( ConflictResolver* resolver, int spacing = 8, QWidget* parent = 0 );
+    explicit VisualFreeBusyWidget( FreeBusyItemModel* model, int spacing = 8, QWidget* parent = 0 );
     ~VisualFreeBusyWidget();
+
+public slots:
+  void slotUpdateIncidenceStartEnd( const KDateTime &, const KDateTime & );
 
 signals:
     void dateTimesChanged( const KDateTime &, const KDateTime & );
+    void manualReload();
 
 protected slots:
-    void slotUpdateGanttView( const KDateTime &, const KDateTime & );
     void slotScaleChanged( int );
     void slotCenterOnStart() ;
     void slotZoomToTime();
@@ -63,16 +74,16 @@ private slots:
     void splitterMoved();
 
 private:
-    KDGantt::GraphicsView *mGanttView;
-    QTreeWidget *mLeftView;
+    KDGantt::GraphicsView *mGanttGraphicsView;
+    QTreeView *mLeftView;
     RowController *mRowController;
     KDGantt::DateTimeGrid *mGanttGrid;
     KComboBox *mScaleCombo;
+    FreeBusyGanttProxyModel *mModel;
 
     KDateTime mDtStart, mDtEnd;
 
-    ConflictResolver* mResolver;
-
+    FreeBusyItemModel *m;
     bool mIsOrganizer;
 };
 

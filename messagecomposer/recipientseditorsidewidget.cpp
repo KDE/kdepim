@@ -26,7 +26,6 @@
 
 #include "recipientspicker.h"
 #include "kwindowpositioner.h"
-#include <messagecomposer/distributionlistdialog.h>
 
 #include <KDialog>
 #include <KLocale>

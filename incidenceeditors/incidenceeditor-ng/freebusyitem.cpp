@@ -22,69 +22,67 @@
 
 #include "freebusyitem.h"
 
-#include <KCal/FreeBusy>
 #include <KSystemTimeZones>
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/freebusymanager.h>
 
 using namespace IncidenceEditorsNG;
 
-FreeBusyItem::FreeBusyItem( const KCal::Attendee &attendee , QWidget *parentWidget ) :
-        mAttendee( attendee ), mTimerID( 0 ),
-        mIsDownloading( false ), mParentWidget( parentWidget )
+FreeBusyItem::FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget )
+  : mAttendee( attendee ), mTimerID( 0 ),
+    mIsDownloading( false ), mParentWidget( parentWidget )
 {
-//     Q_ASSERT( attendee );
-    setFreeBusy( 0 );
-
+  Q_ASSERT( attendee );
+  setFreeBusy( KCalCore::FreeBusy::Ptr() );
 }
 
-KCal::Attendee FreeBusyItem::attendee() const
+KCalCore::Attendee::Ptr FreeBusyItem::attendee() const
 {
-    return mAttendee;
+  return mAttendee;
 }
 
 
-void FreeBusyItem::setFreeBusy(KCal::FreeBusy* fb)
+void FreeBusyItem::setFreeBusy( const KCalCore::FreeBusy::Ptr &fb)
 {
-    mFreeBusy = fb;
-    mIsDownloading = false;
+  mFreeBusy = fb;
+  mIsDownloading = false;
 }
 
-KCal::FreeBusy* FreeBusyItem::freeBusy() const
+KCalCore::FreeBusy::Ptr FreeBusyItem::freeBusy() const
 {
-    return mFreeBusy;
+  return mFreeBusy;
 }
 
 QString FreeBusyItem::email() const
 {
-    return mAttendee.email();
+  return mAttendee->email();
 }
 
 void FreeBusyItem::setUpdateTimerID(int id)
 {
-    mTimerID = id;
+  mTimerID = id;
 }
 
 int FreeBusyItem::updateTimerID() const
 {
-    return mTimerID;
+  return mTimerID;
 }
 
 void FreeBusyItem::startDownload(bool forceDownload)
 {
-    mIsDownloading = true;
-    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-    if ( !m->retrieveFreeBusy( attendee().email(), forceDownload, mParentWidget ) ) {
-        mIsDownloading = false;
-    }
+  mIsDownloading = true;
+  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
+  if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload, mParentWidget ) ) {
+    mIsDownloading = false;
+  }
 }
 
 void FreeBusyItem::setIsDownloading(bool d)
 {
-    mIsDownloading = d;
+  mIsDownloading = d;
 }
 
 bool FreeBusyItem::isDownloading() const
 {
-    return mIsDownloading;
+  return mIsDownloading;
 }

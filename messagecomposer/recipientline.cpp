@@ -80,7 +80,6 @@ RecipientLineNG::RecipientLineNG( QWidget* parent )
   mCombo->addItems( recipientTypes );
   topLayout->addWidget( mCombo );
   mCombo->setToolTip( i18nc("@label:listbox","Select type of recipient") );
-  
   mEdit = new RecipientLineEdit( this );
   mEdit->setToolTip( i18n( "Set the list of email addresses to receive this message" ) );
   mEdit->setClearButtonShown( true );
@@ -137,6 +136,7 @@ void RecipientLineNG::setData( const MultiplyingLineData::Ptr &data )
   Recipient::Ptr rec = qSharedPointerDynamicCast<Recipient>( data );
   if( !rec )
     return;
+  //TODO laurent: mem leak ????? mData(new Recipient) in constructor, never deleted.
   mData = rec;
   fieldsFromData();
 }

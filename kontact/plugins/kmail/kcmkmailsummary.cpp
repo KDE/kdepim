@@ -33,8 +33,8 @@
 
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/ChangeRecorder>
-#include <akonadi/akonadi_next/entitymodelstatesaver.h>
-#include <akonadi/akonadi_next/checkableitemproxymodel.h>
+#include <akonadi/etmviewstatesaver.h>
+#include <akonadi_next/checkableitemproxymodel.h>
 
 #include <kmime/kmime_message.h>
 
@@ -119,16 +119,18 @@ void KCMKMailSummary::initFolders()
 
   mFolderView->setModel( mCheckProxy );
 
-  mCollectionSelectionModelStateSaver = new Akonadi::EntityModelStateSaver( mCheckProxy, this );
-  mCollectionSelectionModelStateSaver->addRole( Qt::CheckStateRole, "CheckState" );
+  KSharedConfigPtr _config = KSharedConfig::openConfig("kcmkmailsummaryrc");
+
+  mModelState = new Future::KViewStateMaintainer<Akonadi::ETMViewStateSaver>( _config, "CheckState", this );
+  mModelState->setSelectionModel( mSelectionModel );
 }
 
 void KCMKMailSummary::loadFolders()
 {
   KConfig _config( "kcmkmailsummaryrc" );
   KConfigGroup config(&_config, "General" );
-  mCollectionSelectionModelStateSaver->restoreConfig( config );
-  bool showFolderPaths = config.readEntry( "showFolderPaths", false );
+  mModelState->restoreState();
+  const bool showFolderPaths = config.readEntry( "showFolderPaths", false );
   mFullPath->setChecked( showFolderPaths );
 }
 
@@ -136,7 +138,7 @@ void KCMKMailSummary::storeFolders()
 {
   KConfig _config( "kcmkmailsummaryrc" );
   KConfigGroup config(&_config, "General" );
-  mCollectionSelectionModelStateSaver->saveConfig( config );
+  mModelState->saveState();
   config.writeEntry( "showFolderPaths", mFullPath->isChecked() );
   config.sync();
 }

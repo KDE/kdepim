@@ -24,7 +24,9 @@
 #include <akonadi/contact/emailaddressselectiondialog.h>
 #include <libkdepim/addresseelineedit.h>
 
-#include <KCal/Incidence>
+#include <kcalutils/stringify.h>
+#include <kcalcore/incidence.h>
+
 #include <kabc/addressee.h>
 #include <KPIMUtils/Email>
 
@@ -44,7 +46,8 @@
 #include <Q3ListViewItem>
 
 using namespace IncidenceEditors;
-using namespace KCal;
+using namespace KCalCore;
+using namespace KCalUtils;
 
 AttendeeEditor::AttendeeEditor( QWidget *parent )
   : QWidget( parent ), mDisableItemUpdate( true )
@@ -120,7 +123,7 @@ void AttendeeEditor::initEditWidgets( QWidget *parent, QBoxLayout *layout )
   mRoleCombo->setToolTip(
     i18nc( "@info:tooltip", "Select the attendee participation role" ) );
   mRoleCombo->setWhatsThis( whatsThis );
-  mRoleCombo->addItems( Attendee::roleList() );
+  mRoleCombo->addItems( Stringify::attendeeRoleList() );
   attendeeRoleLabel->setBuddy( mRoleCombo );
   connect( mRoleCombo, SIGNAL(activated(int)), SLOT(updateAttendee()) );
   topLayout->addWidget( mRoleCombo, 1, 1 );
@@ -143,19 +146,19 @@ void AttendeeEditor::initEditWidgets( QWidget *parent, QBoxLayout *layout )
 
   //TODO: the icons below aren't exactly correct
   mStatusCombo->addItem( SmallIcon( "help-about" ),
-                         Attendee::statusName( Attendee::NeedsAction ) );
+                         Stringify::attendeeStatus( Attendee::NeedsAction ) );
   mStatusCombo->addItem( SmallIcon( "dialog-ok-apply" ),
-                         Attendee::statusName( Attendee::Accepted ) );
+                         Stringify::attendeeStatus( Attendee::Accepted ) );
   mStatusCombo->addItem( SmallIcon( "dialog-cancel" ),
-                         Attendee::statusName( Attendee::Declined ) );
+                         Stringify::attendeeStatus( Attendee::Declined ) );
   mStatusCombo->addItem( SmallIcon( "dialog-ok" ),
-                         Attendee::statusName( Attendee::Tentative ) );
+                         Stringify::attendeeStatus( Attendee::Tentative ) );
   mStatusCombo->addItem( SmallIcon( "mail-forward" ),
-                         Attendee::statusName( Attendee::Delegated ) );
+                         Stringify::attendeeStatus( Attendee::Delegated ) );
   mStatusCombo->addItem( SmallIcon( "mail-mark-read" ),
-                         Attendee::statusName( Attendee::Completed ) ),
+                         Stringify::attendeeStatus( Attendee::Completed ) ),
   mStatusCombo->addItem( SmallIcon( "help-about" ),
-                         Attendee::statusName( Attendee::InProcess ) );
+                         Stringify::attendeeStatus( Attendee::InProcess ) );
 
   statusLabel->setBuddy( mStatusCombo );
   connect( mStatusCombo, SIGNAL(activated(int)), SLOT(updateAttendee()) );
@@ -235,7 +238,7 @@ void AttendeeEditor::openAddressBook()
   delete dia;
 }
 
-void AttendeeEditor::insertAttendeeFromAddressee( const KABC::Addressee &a, const Attendee *at )
+void AttendeeEditor::insertAttendeeFromAddressee( const KABC::Addressee &a, const Attendee::Ptr &at )
 {
   const bool myself = EditorConfig::instance()->thatIsMe( a.preferredEmail() );
   const bool sameAsOrganizer = mOrganizerCombo &&
@@ -248,8 +251,8 @@ void AttendeeEditor::insertAttendeeFromAddressee( const KABC::Addressee &a, cons
     partStat = Attendee::Accepted;
     rsvp = false;
   }
-  Attendee *newAt = new Attendee( a.realName(), a.preferredEmail(), !myself,
-                                  partStat, at ? at->role() : Attendee::ReqParticipant, a.uid() );
+  Attendee::Ptr newAt = Attendee::Ptr( new Attendee( a.realName(), a.preferredEmail(), !myself,
+                                                     partStat, at ? at->role() : Attendee::ReqParticipant, a.uid() ) );
   newAt->setRSVP( rsvp );
   insertAttendee( newAt, true );
   mNewAttendees.append( newAt );
@@ -285,9 +288,9 @@ void AttendeeEditor::addNewAttendee()
       item->listView()->setCurrentItem( item );
       return;
   }
-  Attendee *a = new Attendee(
-    i18nc( "@item:intext sample attendee name", "Firstname Lastname" ),
-    i18nc( "@item:intext sample attendee email name", "name" ) + "@example.net", true );
+  Attendee::Ptr a = Attendee::Ptr(  new Attendee(
+                                      i18nc( "@item:intext sample attendee name", "Firstname Lastname" ),
+                                      i18nc( "@item:intext sample attendee email name", "name" ) + "@example.net", true ) );
   insertAttendee( a, false );
   mNewAttendees.append( a );
   updateAttendeeInput();
@@ -297,15 +300,13 @@ void AttendeeEditor::addNewAttendee()
   QTimer::singleShot( 0, mNameEdit, SLOT(selectAll()) );
 }
 
-void AttendeeEditor::readIncidence( Incidence *incidence )
+void AttendeeEditor::readIncidence( const Incidence::Ptr &incidence )
 {
-  qDeleteAll( mDelAttendees );
   mDelAttendees.clear();
-  qDeleteAll( mNewAttendees );
   mNewAttendees.clear();
 
-  const bool itsMe = EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
-  if ( itsMe || incidence->organizer().isEmpty() ) {
+  const bool itsMe = EditorConfig::instance()->thatIsMe( incidence->organizer()->email() );
+  if ( itsMe || incidence->organizer()->isEmpty() ) {
     //TODO: make a new private method for creating the mOrganizerCombo
     //and use it here and initOrganizerWidgets() above.
     if ( !mOrganizerCombo ) {
@@ -319,7 +320,7 @@ void AttendeeEditor::readIncidence( Incidence *incidence )
     mOrganizerLabel->setText( i18nc( "@label", "Identity as organizer:" ) );
 
     int found = -1;
-    QString fullOrganizer = incidence->organizer().fullName();
+    QString fullOrganizer = incidence->organizer()->fullName();
     for ( int i = 0; i < mOrganizerCombo->count(); ++i ) {
       if ( mOrganizerCombo->itemText( i ) == fullOrganizer ) {
         found = i;
@@ -337,14 +338,14 @@ void AttendeeEditor::readIncidence( Incidence *incidence )
       mOrganizerCombo = 0;
     }
     mOrganizerLabel->setText( i18nc( "@label", "Organizer: %1",
-                                     incidence->organizer().fullName() ) );
+                                     incidence->organizer()->fullName() ) );
   }
 
   Attendee::List al = incidence->attendees();
   Attendee::List::ConstIterator it;
-  Attendee *first = 0;
+  Attendee::Ptr first;
   for ( it = al.constBegin(); it != al.constEnd(); ++it ) {
-    Attendee *a = new Attendee( **it );
+    Attendee::Ptr a( new Attendee( **it ) );
     if ( !first ) {
       first = a;
     }
@@ -374,7 +375,7 @@ void AttendeeEditor::readIncidence( Incidence *incidence )
   }
 }
 
-void AttendeeEditor::fillIncidence( Incidence *incidence )
+void AttendeeEditor::fillIncidence( Incidence::Ptr &incidence )
 {
   if ( mOrganizerCombo ) {
     // TODO: Don't take a string and split it up... Is there a better way?
@@ -405,7 +406,7 @@ void AttendeeEditor::clearAttendeeInput()
 
 void AttendeeEditor::updateAttendee()
 {
-  Attendee *a = currentAttendee();
+  Attendee::Ptr a = currentAttendee();
   if ( !a || mDisableItemUpdate ) {
     return;
   }
@@ -448,7 +449,7 @@ void AttendeeEditor::updateAttendee()
   updateCurrentItem();
 }
 
-void AttendeeEditor::fillAttendeeInput( Attendee *a )
+void AttendeeEditor::fillAttendeeInput( Attendee::Ptr &a )
 {
   mDisableItemUpdate = true;
 
@@ -506,7 +507,7 @@ void AttendeeEditor::fillAttendeeInput( Attendee *a )
 void AttendeeEditor::updateAttendeeInput()
 {
   setEnableAttendeeInput( !mNameEdit->text().isEmpty() );
-  Attendee *a = currentAttendee();
+  Attendee::Ptr a = currentAttendee();
   if ( a ) {
     fillAttendeeInput( a );
   } else {
@@ -514,24 +515,23 @@ void AttendeeEditor::updateAttendeeInput()
   }
 }
 
-void AttendeeEditor::cancelAttendeeIncidence( Incidence *incidence )
+void AttendeeEditor::cancelAttendeeIncidence( const Incidence::Ptr &incidence )
 {
   incidence->clearAttendees();
 
-  foreach ( Attendee *att, mDelAttendees ) {
+  foreach ( Attendee::Ptr att, mDelAttendees ) {
     bool isNewAttendee = false;
-    foreach ( Attendee *newAtt, mNewAttendees ) {
-      if ( *att == *newAtt ) {
+    foreach ( Attendee::Ptr newAtt, mNewAttendees ) {
+      if ( att == newAtt ) {
         isNewAttendee = true;
         break;
       }
     }
     if ( !isNewAttendee ) {
-      incidence->addAttendee( new Attendee( *att ) );
+      incidence->addAttendee( Attendee::Ptr( new Attendee( *att.data() ) ) );
     }
   }
 
-  qDeleteAll( mDelAttendees );
   mDelAttendees.clear();
 }
 
@@ -555,7 +555,7 @@ bool AttendeeEditor::eventFilter( QObject *watched, QEvent *ev )
   return QWidget::eventFilter( watched, ev );
 }
 
-bool AttendeeEditor::isExampleAttendee( const Attendee *attendee ) const
+bool AttendeeEditor::isExampleAttendee( const Attendee::Ptr &attendee ) const
 {
   if ( !attendee ) {
     return false;

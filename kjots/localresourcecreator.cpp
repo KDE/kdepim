@@ -100,6 +100,7 @@ void LocalResourceCreator::instanceCreated( KJob *job )
   // TODO: Make errors user-visible.
   if (!iface->isValid() ) {
     kWarning() << "Failed to obtain D-Bus interface for remote configuration.";
+    delete iface;
     deleteLater();
     return;
   }

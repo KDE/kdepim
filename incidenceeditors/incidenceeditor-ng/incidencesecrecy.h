@@ -40,8 +40,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceSecrecy : public IncidenceEditor
     IncidenceSecrecy( Ui::EventOrTodoDesktop *ui );
 #endif
 
-    virtual void load(KCal::Incidence::ConstPtr incidence);
-    virtual void save(KCal::Incidence::Ptr incidence);
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
   private:

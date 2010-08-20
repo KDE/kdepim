@@ -24,6 +24,20 @@
 #include "listproxy.h"
 
 #include <akonadi/entitytreemodel.h>
+#include <QtDeclarative/QDeclarativeImageProvider>
+
+class ContactImageProvider : public QDeclarativeImageProvider
+{
+  public:
+    ContactImageProvider();
+
+    QPixmap requestPixmap( const QString &id, QSize *size, const QSize &requestedSize );
+
+    void setModel( QAbstractItemModel *model );
+
+  private:
+    QAbstractItemModel *mModel;
+};
 
 /** Adaptor proxy for contact access from QML. */
 class ContactListProxy : public ListProxy

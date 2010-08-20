@@ -30,8 +30,8 @@
 #include <akonadi/collectionview.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
-#include "kcal/kcalmodel.h"
-#include "kcal/incidenceviewer.h"
+#include "calendarsupport/kcalmodel.h"
+#include "calendarsupport/incidenceviewer.h"
 
 class MainWindow;
 
@@ -52,12 +52,12 @@ class MainWidget : public QWidget
       // Views
       Akonadi::CollectionView *mCollectionList;
       QTreeView *mIncidenceList;
-      Akonadi::IncidenceViewer *mIncidenceViewer;
+      CalendarSupport::IncidenceViewer *mIncidenceViewer;
 
       // Models
       Akonadi::CollectionModel *mCollectionModel;
       Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
-      Akonadi::KCalModel *mIncidenceModel;
+      CalendarSupport::KCalModel *mIncidenceModel;
 
 };
 

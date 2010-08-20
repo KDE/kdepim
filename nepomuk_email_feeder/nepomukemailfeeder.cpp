@@ -41,11 +41,9 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
 {
   addSupportedMimeType( "message/rfc822" );
   addSupportedMimeType( "message/news" );
+  setIndexCompatibilityLevel( INDEX_COMPAT_LEVEL );
 
   setNeedsStrigi( true );
-
-  connect( this, SIGNAL( fullyIndexed() ),
-           this, SLOT( slotFullyIndexed() ) );
 
   // failsafe in case we don't have / lost G13 support
   if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
@@ -108,17 +106,6 @@ ItemFetchScope NepomukEMailFeeder::fetchScopeForCollection(const Akonadi::Collec
   }
   scope.fetchFullPayload( true );
   return scope;
-}
-
-bool NepomukEMailFeeder::needsReIndexing() const
-{
-  return INDEX_COMPAT_LEVEL > Settings::self()->indexCompatLevel();
-}
-
-void NepomukEMailFeeder::slotFullyIndexed()
-{
-  Settings::self()->setIndexCompatLevel( INDEX_COMPAT_LEVEL );
-  Settings::self()->writeConfig();
 }
 
 AKONADI_AGENT_MAIN( NepomukEMailFeeder )

@@ -26,16 +26,14 @@
 #ifndef EDITORATTACHMENTS_H
 #define EDITORATTACHMENTS_H
 
+#include <kcalcore/attachment.h>
+#include <kcalcore/incidence.h>
+
 #include <KDialog>
 #include <KMimeType>
 
 class AttachmentIconItem;
 class AttachmentIconView;
-
-namespace KCal {
-  class Attachment;
-  class Incidence;
-}
 
 class KAction;
 class KJob;
@@ -84,7 +82,7 @@ class EditorAttachments : public QWidget
                            const QString &mimeType = QString(),
                            const QString &label = QString(),
                            bool inLine = false );
-    void addAttachment( KCal::Attachment *attachment );
+    void addAttachment( const KCalCore::Attachment::Ptr &attachment );
     void addDataAttachment( const QByteArray &data,
                             const QString &mimeType = QString(),
                             const QString &label = QString() );
@@ -92,9 +90,9 @@ class EditorAttachments : public QWidget
     /** Set widgets to default values */
     void setDefaults();
     /** Read event object and setup widgets accordingly */
-    void readIncidence( KCal::Incidence * );
+    void readIncidence( const KCalCore::Incidence::Ptr & );
     /** Write event settings to event object */
-    void fillIncidence( KCal::Incidence * );
+    void fillIncidence( KCalCore::Incidence::Ptr & );
 
     bool hasAttachments();
 

@@ -51,7 +51,6 @@ class KXMLGUIClient;
 class KToggleAction;
 class KHBox;
 
-class QWebElement;
 class QPoint;
 class QSplitter;
 class QStyle;
@@ -292,9 +291,11 @@ public:
   /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
 
+private:
   /** HTML initialization. */
-  virtual void initHtmlWidget(void);
+  void initHtmlWidget();
 
+public:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
 
@@ -386,7 +387,7 @@ public:
   const QTextCodec * overrideCodec() const;
 
 
-  QString renderAttachments( KMime::Content *node, const QColor &bgColor );
+  QString renderAttachments( KMime::Content *node, const QColor &bgColor ) const;
 
   KMime::Content* findContentByType(KMime::Content *content, const QByteArray &type); //TODO(Andras) move to NodeHelper
 
@@ -574,6 +575,10 @@ signals:
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
   void itemRemoved();
 
+private:
+  QString attachmentInjectionHtml() const;
+  QString attachmentQuickListLinkHtml( bool, const QString & ) const;
+
 public:
   NodeHelper* mNodeHelper;
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
@@ -583,7 +588,9 @@ public:
   QSplitter * mSplitter;
   KHBox *mBox;
   HtmlStatusBar *mColorBar;
+#ifndef QT_NO_TREEVIEW
   QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
+#endif
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
   FindBar *mFindBar;

@@ -33,6 +33,21 @@ KPIM.MainView {
     collectionView.visible = true;
     itemListPage.visible = true;
     taskView.itemId = -1;
+
+    updateContextActionsStates();
+  }
+
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      taskActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      taskActions.showOnlyCategory("account")
+    } else { // something else is selected
+      taskActions.showOnlyCategory("single_folder")
+    }
   }
 
   KCal.IncidenceView {
@@ -115,6 +130,9 @@ KPIM.MainView {
       multipleSelectionText : KDE.i18n("You have selected \n%1 folders\nfrom %2 accounts\n%3 tasks", collectionView.numSelected,
                                                                                                         application.numSelectedAccounts,
                                                                                                         itemList.count)
+      QML.Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
     }
     KPIM.Button2 {
       id : selectButton
@@ -279,6 +297,7 @@ KPIM.MainView {
         onItemSelected: {
           taskView.itemId = itemList.currentItemId;
           taskView.visible = true;
+          taskActions.showOnlyCategory("todo_viewer")
           collectionView.visible = false;
           itemListPage.visible = false;
         }
@@ -307,66 +326,39 @@ KPIM.MainView {
     anchors.fill: parent
 
     SlideoutPanel {
-      id: actionPanel
+      id: actionPanelNew
       titleText: KDE.i18n( "Actions" )
       handlePosition : 125
       handleHeight: 150
-      contentWidth: 240
       anchors.fill : parent
-      content: [
-          KPIM.Button {
-            id: newTaskButton
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "New Task" )
-            onClicked: {
-              application.newTask();
-              actionPanel.collapse();
+
+      content : [
+        TaskActions {
+          id : taskActions
+          anchors.fill : parent
+
+          scriptActions : [
+            KPIM.ScriptAction {
+              name : "show_about_dialog"
+              script : {
+                actionPanelNew.collapse();
+                aboutDialog.visible = true
+              }
+            },
+            KPIM.ScriptAction {
+              name : "to_selection_screen"
+              script : {
+                actionPanelNew.collapse();
+                favoriteSelector.visible = true;
+                mainWorkView.visible = false;
+              }
             }
-          },
-          KPIM.Action {
-            id: syncButton
-            anchors.top: newTaskButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("akonadi_collection_sync")
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Action {
-             id: deleteButton
-             anchors.top: syncButton.bottom;
-             anchors.horizontalCenter: parent.horizontalCenter;
-             width: parent.width - 10
-             height: parent.height / 6
-             action : application.getAction("akonadi_item_delete")
-             onTriggered : actionPanel.collapse();
-           },
-           KPIM.Button {
-             id: previousButton
-             anchors.top: deleteButton.bottom;
-             anchors.horizontalCenter: parent.horizontalCenter;
-             width: parent.width - 10
-             height: parent.height / 6
-             buttonText: KDE.i18n( "Previous" )
-             onClicked: {
-               itemList.previousItem()
-               actionPanel.collapse()
-             }
-           },
-           KPIM.Button {
-             anchors.top: previousButton.bottom;
-             anchors.horizontalCenter: parent.horizontalCenter;
-             width: parent.width - 10
-             height: parent.height / 6
-             buttonText: KDE.i18n( "Next" )
-             onClicked: {
-               itemList.nextItem();
-               actionPanel.collapse();
-             }
-           }
+          ]
+
+          onTriggered : {
+            console.log("Triggered was: " + triggeredName)
+          }
+        }
       ]
     }
 

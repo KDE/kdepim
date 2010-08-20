@@ -21,27 +21,41 @@
 #include "schedulingdialog.h"
 
 #include "conflictresolver.h"
-#include "freeperiodmodel.h"
 #include "visualfreebusywidget.h"
+#include "freeperiodmodel.h"
+
+#include <kcalcore/attendee.h>
+#include <kcalutils/stringify.h>
 
 #include <KCalendarSystem>
 #include <KIconLoader>
 #include <KLocale>
 #include <KDebug>
-#include <KCal/Attendee>
 
 #include <QBoxLayout>
 
 using namespace IncidenceEditorsNG;
 
-SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent  )
+SchedulingDialog::SchedulingDialog(  const QDate& startDate, const QTime& startTime, int duration, ConflictResolver* resolver, QWidget* parent  )
   : KDialog( parent ),
   mResolver( resolver ),
-  mPeriodModel( new FreePeriodModel( this ) ),
-  mVisualWidget( new VisualFreeBusyWidget( resolver, 8, this ) )
+  mPeriodModel( new FreePeriodModel( this ) )
 {
-    setupUi( this );
+    QWidget *w = new QWidget( this );
+    setupUi( w );
+    setMainWidget( w );
     fillCombos();
+
+    Q_ASSERT( duration > 0 );
+    mDuration = duration;
+
+#ifndef KDEPIM_MOBILE_UI
+    mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8, this );
+    QVBoxLayout *ganttlayout = new QVBoxLayout( mGanttTab );
+
+    mGanttTab->setLayout( ganttlayout );
+    ganttlayout->addWidget( mVisualWidget );
+#endif
 
     connect( mStartDate, SIGNAL( dateChanged( QDate ) ), mResolver, SLOT( setEarliestDate( QDate ) ) );
     connect( mStartTime, SIGNAL( timeChanged( QTime ) ), mResolver, SLOT( setEarliestTime( QTime ) ) );
@@ -53,47 +67,70 @@ SchedulingDialog::SchedulingDialog( ConflictResolver* resolver, QWidget* parent 
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotWeekdaysChanged() ) );
     connect( mWeekdayCombo, SIGNAL( checkedItemsChanged( QStringList ) ), SLOT( slotMandatoryRolesChanged() ) );
 
-    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCal::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCal::Period::List & ) ) );
+    connect( mResolver, SIGNAL( freeSlotsAvailable( const KCalCore::Period::List & ) ), mPeriodModel, SLOT( slotNewFreePeriods( const KCalCore::Period::List & ) ) );
+    connect( mMoveBeginTimeEdit, SIGNAL( timeChanged( const QTime & ) ), this, SLOT( slotSetEndTimeLabel( const QTime & ) ) );
 
-    mListView->setModel( mPeriodModel );
+    mTableView->setModel( mPeriodModel );
+    connect( mTableView->selectionModel(), SIGNAL( currentRowChanged( const QModelIndex &, const QModelIndex & ) ),
+             this, SLOT( slotRowSelectionChanged( const QModelIndex &, const QModelIndex & ) ) );
 
-    QVBoxLayout* layout = new QVBoxLayout( mGanttTab );
-    layout->addWidget( mVisualWidget );
-    mGanttTab->setLayout( layout );
+
+    mStartDate->setDate( startDate );
+    mEndDate->setDate( mStartDate->date().addDays( 7 ) );
+    mStartTime->setTime( startTime );
+    mEndTime->setTime( startTime );
+
+    mResolver->setEarliestDate( mStartDate->date() );
+    mResolver->setEarliestTime( mStartTime->time() );
+    mResolver->setLatestDate( mEndDate->date() );
+    mResolver->setLatestTime( mEndTime->time() );
+
+    mMoveApptGroupBox->hide();
 }
-
 
 SchedulingDialog::~SchedulingDialog()
 {
-
 }
+
+void SchedulingDialog::slotUpdateIncidenceStartEnd( const KDateTime & startDateTime, const KDateTime & endDateTime )
+{
+#ifndef KDEPIM_MOBILE_UI
+    mVisualWidget->slotUpdateIncidenceStartEnd( startDateTime, endDateTime );
+#endif
+}
+
 
 void SchedulingDialog::fillCombos()
 {
 // Note: we depend on the following order
 #ifdef KDEPIM_MOBILE_UI
     mRolesCombo->addItem( DesktopIcon( "meeting-participant", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::ReqParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-participant-optional", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::OptParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::OptParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-observer", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::NonParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::NonParticipant ) );
     mRolesCombo->addItem( DesktopIcon( "meeting-chair", 48 ),
-                          KCal::Attendee::roleName( KCal::Attendee::Chair ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
 #else
     mRolesCombo->addItem( SmallIcon( "meeting-participant" ),
-                          KCal::Attendee::roleName( KCal::Attendee::ReqParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::ReqParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-participant-optional" ),
-                          KCal::Attendee::roleName( KCal::Attendee::OptParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::OptParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-observer" ),
-                          KCal::Attendee::roleName( KCal::Attendee::NonParticipant ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::NonParticipant ) );
     mRolesCombo->addItem( SmallIcon( "meeting-chair" ),
-                          KCal::Attendee::roleName( KCal::Attendee::Chair ) );
+                          KCalUtils::Stringify::attendeeRole( KCalCore::Attendee::Chair ) );
 
 #endif
     mRolesCombo->setWhatsThis( i18nc( "@info:whatsthis",
                                   "Edits the role of the attendee." ) );
+
+    mRolesCombo->setItemCheckState( 0, Qt::Checked );
+    mRolesCombo->setItemCheckState( 1, Qt::Checked );
+    mRolesCombo->setItemCheckState( 2, Qt::Checked );
+    mRolesCombo->setItemCheckState( 3, Qt::Checked );
 
     QBitArray days( 7 );
     days.setBit( 0 ); //Monday
@@ -103,6 +140,7 @@ void SchedulingDialog::fillCombos()
     days.setBit( 4 ); //Friday.. surprise!
 
     mWeekdayCombo->setDays( days );
+    mResolver->setAllowedWeekdays( days );
 }
 
 void SchedulingDialog::slotStartDateChanged( const QDate& newDate )
@@ -132,11 +170,59 @@ void SchedulingDialog::slotWeekdaysChanged()
 
 void SchedulingDialog::slotMandatoryRolesChanged()
 {
-    QSet<KCal::Attendee::Role> roles;
+    QSet<KCalCore::Attendee::Role> roles;
     for( int i = 0; i < mRolesCombo->count(); ++i )
     {
       if( mRolesCombo->itemCheckState( i ) == Qt::Checked )
-        roles << KCal::Attendee::Role( i );
+        roles << KCalCore::Attendee::Role( i );
     }
     mResolver->setMandatoryRoles( roles );
+}
+
+void SchedulingDialog::slotRowSelectionChanged( const QModelIndex& current, const QModelIndex& previous )
+{
+    Q_UNUSED( previous );
+    if( !current.isValid() ) {
+      mMoveApptGroupBox->hide();
+      return;
+    }
+    KCalCore::Period period = current.data( FreePeriodModel::PeriodRole ).value<KCalCore::Period>();
+    const QDate startDate = period.start().date();
+
+    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+    const QString dayLabel = ki18nc( "@label Day of week followed by day of the month, then the month. example: Monday, 12 June",
+                                "%1, %2 %3" )
+                              .subs( calSys->weekDayName( startDate.dayOfWeek(), KCalendarSystem::LongDayName ) )
+                              .subs( startDate.day() )
+                              .subs( calSys->monthName( startDate ) ).toString();
+
+    mMoveDayLabel->setText( dayLabel );
+    mMoveBeginTimeEdit->setTimeRange( period.start().time(), period.end().addSecs( -mDuration ).time() );
+    mMoveBeginTimeEdit->setTime( period.start().time() );
+    slotSetEndTimeLabel( period.start().time() );
+    mMoveApptGroupBox->show();
+
+    mSelectedDate = startDate;
+}
+
+void SchedulingDialog::slotSetEndTimeLabel( const QTime& startTime )
+{
+    const QTime endTime = startTime.addSecs( mDuration );
+    const QString endTimeLabel = ki18nc( "@label This is a suffix following a time selecting widget. Example: [timeedit] to 10:00am",
+                                     "to %1" )
+                                  .subs( KGlobal::locale()->formatTime( endTime ) ).toString();
+    mMoveEndTimeLabel->setText( endTimeLabel );
+
+    mSelectedTime = startTime;
+}
+
+
+QDate SchedulingDialog::selectedStartDate() const
+{
+    return mSelectedDate;
+}
+
+QTime SchedulingDialog::selectedStartTime() const
+{
+    return mSelectedTime;
 }

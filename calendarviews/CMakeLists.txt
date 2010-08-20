@@ -1,7 +1,6 @@
 add_subdirectory( agenda )
 
+if (KDEPIM_BUILD_EXAMPLES)
 add_subdirectory( viewerapp )
+endif (KDEPIM_BUILD_EXAMPLES)
 
-if ( KDEPIM_MOBILE_UI AND QT_QTDECLARATIVE_FOUND )
-  add_subdirectory(qml)
-endif ()

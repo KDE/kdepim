@@ -29,7 +29,7 @@
 #include "incidenceeditors_export.h"
 #include "incidenceeditor.h"
 
-#include <KCal/Journal>
+#include <kcalcore/journal.h>
 
 class EditorGeneralJournal;
 
@@ -82,7 +82,7 @@ class INCIDENCEEDITORS_EXPORT JournalEditor : public IncidenceEditor
     void setTime( const QTime &time );
 
     /** Write Journal settings to journal object */
-    void fillJournal( KCal::Journal * );
+    void fillJournal( KCalCore::Journal::Ptr &  );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -104,7 +104,8 @@ class INCIDENCEEDITORS_EXPORT JournalEditor : public IncidenceEditor
     void deleteJournal();
 
   protected:
-    QString type() { return "Journal"; }
+    KCalCore::Incidence::IncidenceType type() const { return KCalCore::Incidence::TypeJournal; }
+    QByteArray typeStr() const { return "Journal"; }
 
     /**
       Read journal object and setup widgets accordingly. If tmpl is true, the
@@ -123,7 +124,7 @@ class INCIDENCEEDITORS_EXPORT JournalEditor : public IncidenceEditor
     // Journal which represents the initial dialog setup when creating a new journal.
     // If cancel is pressed and the dialog has different information than
     // this journal then the user will be asked if he really wants to cancel
-    KCal::Journal mInitialJournal;
+    KCalCore::Journal::Ptr mInitialJournal;
 
     EditorGeneralJournal *mGeneral;
 };

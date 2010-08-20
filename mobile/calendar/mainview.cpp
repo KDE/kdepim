@@ -23,24 +23,36 @@
 #include "calendarinterface.h"
 #include "calendaradaptor.h"
 
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/kcalprefs.h>
+
+#include <akonadi/agentactionmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <Akonadi/ItemFetchScope>
-#include <akonadi/kcal/incidencemimetypevisitor.h>
-#include <akonadi/kcal/calendar.h>
+#include <akonadi/standardactionmanager.h>
+#include <incidenceeditors/incidenceeditor-ng/incidencedefaults.h>
 
 #include <ksystemtimezone.h>
 
 #include <qdeclarativeengine.h>
 #include <qdeclarativecontext.h>
 
-#include "incidenceview.h"
+#include "agendaviewitem.h"
+#include "calendar/incidenceview.h"
+
+#include <KAction>
+#include <KActionCollection>
 
 #include <QGraphicsItem>
 #include <QTimer>
 #include <QDBusConnection>
 
 using namespace Akonadi;
-using namespace KCal;
+using namespace CalendarSupport;
+
+QML_DECLARE_TYPE( EventViews::AgendaView )
 
 MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
@@ -56,17 +68,26 @@ void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
 
-  addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
-  addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
+  addMimeType( KCalCore::Event::eventMimeType() );
+  addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 
-  m_calendar = new Akonadi::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
+  qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
+
+  m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
 
   QDBusConnection::sessionBus().registerService("org.kde.korganizer"); //register also as the real korganizer, so kmail can communicate with it
   CalendarInterface* calendarIface = new CalendarInterface();
   new CalendarAdaptor(calendarIface);
   QDBusConnection::sessionBus().registerObject("/Calendar", calendarIface);
+
+  KAction *action = new KAction( i18n( "New Appointment" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(newEvent()) );
+  actionCollection()->addAction( QLatin1String( "add_new_event" ), action );
+  action = new KAction( i18n( "New Todo" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(newTodo()) );
+  actionCollection()->addAction( QLatin1String( "add_new_task" ), action );
 
   //connect Qt signals to QML slots
   connect(calendarIface, SIGNAL(showDateSignal(QVariant)), rootObject(), SLOT(showDate(QVariant)));
@@ -91,14 +112,24 @@ void MainView::newEvent()
 {
   IncidenceView *editor = new IncidenceView;
   Item item;
-  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  KCal::Event::Ptr event( new KCal::Event );
+  item.setMimeType( KCalCore::Event::eventMimeType() );
+  KCalCore::Event::Ptr event( new KCalCore::Event );
 
-  // make it take one hour from now
-  event->setDtStart( KDateTime::currentLocalDateTime() );
-  event->setDtEnd( KDateTime::currentLocalDateTime().addSecs( 3600 ) );
+  IncidenceEditorsNG::IncidenceDefaults defaults;
+  // Set the full emails manually here, to avoid that we get dependencies on
+  // KCalPrefs all over the place.
+  defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );
+  // NOTE: At some point this should be generalized. That is, we now use the
+  //       freebusy url as a hack, but this assumes that the user has only one
+  //       groupware account. Which doesn't have to be the case necessarily.
+  //       This method should somehow depend on the calendar selected to which
+  //       the incidence is added.
+  if ( KCalPrefs::instance()->useGroupwareCommunication() )
+    defaults.setGroupWareDomain( KUrl( KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
 
-  item.setPayload<KCal::Event::Ptr>( event );
+  defaults.setDefaults( event );
+
+  item.setPayload<KCalCore::Event::Ptr>( event );
   editor->load( item );
   editor->show();
 }
@@ -107,14 +138,14 @@ void MainView::newTodo()
 {
   IncidenceView *editor = new IncidenceView;
   Item item;
-  item.setMimeType( Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
-  KCal::Todo::Ptr todo( new KCal::Todo );
+  item.setMimeType( KCalCore::Todo::todoMimeType() );
+  KCalCore::Todo::Ptr todo( new KCalCore::Todo );
 
   // make it due one day from now
   todo->setDtStart( KDateTime::currentLocalDateTime() );
   todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
 
-  item.setPayload<KCal::Todo::Ptr>( todo );
+  item.setPayload<KCalCore::Todo::Ptr>( todo );
   editor->load( item );
   editor->show();
 }
@@ -126,5 +157,60 @@ void MainView::editIncidence( const Akonadi::Item &item, const QDate &date )
   editor->show();
 }
 
+void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel )
+{
+  Akonadi::StandardActionManager *manager = new Akonadi::StandardActionManager( actionCollection(), this );
+  manager->setCollectionSelectionModel( collectionSelectionModel );
+  manager->setItemSelectionModel( itemSelectionModel );
+
+  manager->createAllActions();
+  manager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+
+  connect( manager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize events\nin account" ) );
+  manager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  manager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
+  manager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize events\nin folder" ) );
+  manager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  manager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  manager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  manager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete event" ) );
+  manager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move event\nto folder" ) );
+  manager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy event\nto folder" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall events" ) );
+}
+
+void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( selectionModel );
+  manager->createAllActions();
+
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
+
+  manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
+
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
+                           i18nc( "@title:window", "New Account" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
+                           i18n( "Could not create account: %1" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
+                           i18n( "Account creation failed" ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
+                           i18nc( "@title:window", "Delete Account?" ) );
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+                           i18n( "Do you really want to delete the selected account?" ) );
+}
 
 #include "mainview.moc"

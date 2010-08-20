@@ -41,7 +41,7 @@
       <Separator/>
       <Action name="akonadi_item_delete" append="edit_delete_merge"/>
       <Separator/>
-      <Action name="akonadi_addressbook_delete"/>
+      <Action name="akonadi_resource_delete"/>
     </Menu>
 
     <Menu name="settings"><text>&amp;Settings</text>
@@ -59,11 +59,11 @@
     <Action name="akonadi_paste"/>
     <Separator/>
     <Action name="akonadi_addressbook_create"/>
-    <Action name="akonadi_addressbook_delete"/>
+    <Action name="akonadi_resource_delete"/>
     <Action name="akonadi_collection_sync"/>
     <Separator/>
     <Action name="akonadi_collection_properties"/>
-    <Action name="akonadi_addressbook_properties"/>
+    <Action name="akonadi_resource_properties"/>
   </Menu>
 
   <Menu name="akonadi_itemview_contextmenu">

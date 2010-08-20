@@ -74,7 +74,8 @@ ComposerView::ComposerView(QWidget* parent) :
   m_busy( false ),
   m_draft( false ),
   m_urgent( false ),
-  m_mdnrequested( false )
+  m_mdnrequested( false ),
+  m_fileName ( QString() )
 {
   setSubject( QString() );
   setAttribute(Qt::WA_DeleteOnClose);
@@ -116,14 +117,13 @@ void ComposerView::delayedInit()
   fcc->hide();
   m_composerBase->setFccCombo( fcc );
   */
-  /*
+
+
   connect( m_composerBase, SIGNAL( disableHtml( Message::ComposerViewBase::Confirmation ) ),
            this, SLOT( disableHtml( Message::ComposerViewBase::Confirmation ) ) );
+  connect( m_composerBase, SIGNAL( enableHtml() ),this, SLOT( enableHtml() ) );
 
-  connect( m_composerBase, SIGNAL( enableHtml() ),
-  this, SLOT( enableHtml() ) ); */
-
-  connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( slotSendSuccessful() ) );
+  connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( sendSuccessful() ) );
   connect( m_composerBase, SIGNAL( failed(const QString&) ), this, SLOT( failed(const QString&) ) );
   connect( m_composerBase, SIGNAL( sentSuccessfully() ), this, SLOT( success() ) );
 
@@ -182,6 +182,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   m_composerBase->setSignatureController( signatureController );
 
   m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
+  m_composerBase->recipientsEditor()->setAutoResizeView( true );
 
   if ( m_message )
     setMessage( m_message );
@@ -195,6 +196,11 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg)
 
   m_subject = msg->subject()->asUnicodeString();
   m_composerBase->setMessage( msg );
+
+  //###: See comment in setAutoSaveFileName
+  if ( !m_fileName.isEmpty() )
+    m_composerBase->setAutoSaveFileName( m_fileName );
+
   emit changed();
 }
 
@@ -204,6 +210,22 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
 
   if ( !m_composerBase->editor()->checkExternalEditorFinished() )
     return;
+
+  if ( m_composerBase->recipientsEditor()->recipients().isEmpty() ) {
+      KMessageBox::sorry( this,
+                          i18n("You should specify at least one recipient for this message."),
+                          i18n("No recipients found"));
+      return;
+  }
+
+  if ( m_subject.isEmpty() ) {
+      const int rc = KMessageBox::questionYesNo( this,
+                                                 i18n("You did not specify a subject. Do you want to send the message without specifying one?"),
+                                                 i18n("No subject"));
+      if ( rc == KMessageBox::No) {
+          return;
+      }
+  }
 
   setBusy(true);
 
@@ -260,11 +282,12 @@ void ComposerView::configureIdentity()
 {
   KCMultiDialog dlg;
   dlg.addModule( "kcm_kpimidentities" );
+  dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
+  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-
 }
 
-void ComposerView::slotSendSuccessful()
+void ComposerView::sendSuccessful()
 {
   // Removed successfully sent messages from autosave
   m_composerBase->cleanupAutoSave();
@@ -275,6 +298,8 @@ void ComposerView::configureTransport()
 {
   KCMultiDialog dlg;
   dlg.addModule( "kcm_mailtransport" );
+  dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
+  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
 }
 
@@ -284,6 +309,16 @@ void ComposerView::addAttachment()
   if (!url.isEmpty())
     m_composerBase->addAttachment( url, QString() );
 }
+
+void ComposerView::addAttachment(KMime::Content* part)
+{
+  if ( part ) {
+//     qDebug() << part->encodedContent();
+//FIXME: Why isn't the attachment added to the message??
+    m_composerBase->addAttachmentPart( part );
+  }
+}
+
 
 void ComposerView::success()
 {
@@ -312,7 +347,8 @@ void ComposerView::failed( const QString &errorMessage )
   notify->sendEvent();
 }
 
-void ComposerView::setEditor( Message::KMeditor* editor ) {
+void ComposerView::setEditor( Message::KMeditor* editor )
+{
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
 }
@@ -348,6 +384,38 @@ void ComposerView::saveDraft()
   const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
   m_draft = true;
   send ( method, saveIn );
+}
+
+void ComposerView::enableHtml()
+{
+  m_composerBase->editor()->enableRichTextMode();
+  m_composerBase->editor()->updateActionStates();
+  m_composerBase->editor()->setActionsEnabled( true );
+}
+
+void ComposerView::disableHtml( Message::ComposerViewBase::Confirmation confirmation )
+{
+  if ( confirmation == Message::ComposerViewBase::LetUserConfirm && m_composerBase->editor()->isFormattingUsed() ) {
+    int choice = KMessageBox::warningContinueCancel( this, i18n( "Turning HTML mode off "
+        "will cause the text to lose the formatting. Are you sure?" ),
+        i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KStandardGuiItem::cancel(),
+              "LoseFormattingWarning" );
+    if ( choice != KMessageBox::Continue ) {
+      enableHtml();
+      return;
+    }
+  }
+
+  m_composerBase->editor()->switchToPlainText();
+  m_composerBase->editor()->setActionsEnabled( false );
+}
+
+void ComposerView::setAutoSaveFileName(const QString &fileName)
+{
+  m_fileName = fileName;
+  //###: the idea is to set the filename directly in ComposerViewBase,
+  // but it is not working as expected yet.
+  //m_composerBase->setAutoSaveFileName( fileName );
 }
 
 #include "composerview.moc"

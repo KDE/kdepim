@@ -27,6 +27,8 @@
 
 #include "incidenceeditors_export.h"
 
+#include <kcalcore/incidence.h>
+
 #include <Akonadi/Item>
 
 #include <KDialog>
@@ -38,12 +40,11 @@ class EditorDetails;
 
 class EmbeddedURLPage;
 
-namespace KCal {
-  class Incidence;
+namespace CalendarSupport {
+  class IncidenceChanger;
 }
 
 namespace Akonadi {
-  class IncidenceChanger;
   class CollectionComboBox;
   class Monitor;
 }
@@ -86,7 +87,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
 
   public slots:
     /** Edit an existing todo. */
-    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer )
+    virtual void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
     { mChanger = changer; }
 
     /** Initialize editor. This function creates the tab widgets. */
@@ -137,13 +138,14 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
     virtual bool read( const Akonadi::Item &item, const QDate &date, bool tmpl = false ) = 0;
     virtual void closeEvent( QCloseEvent * );
 
-    virtual QString type() = 0;
+    virtual KCalCore::Incidence::IncidenceType type() const = 0;
+    virtual QByteArray typeStr() const = 0;
 
     void setupAttendeesTab();
     void setupDesignerTabs( const QString &type );
 
     void readDesignerFields( const Akonadi::Item &item );
-    void writeDesignerFields( KCal::Incidence * );
+    void writeDesignerFields( KCalCore::Incidence::Ptr &  );
 
     /**
       Returns true if the user made any alteration
@@ -155,7 +157,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
 
     void setupEmbeddedURLPage( const QString &label, const QString &url,
                                const QString &mimetype );
-    void createEmbeddedURLPages( const KCal::Incidence *inc );
+    void createEmbeddedURLPages( const KCalCore::Incidence::Ptr &inc );
 
     /**
       Process user input and create or update event.
@@ -171,7 +173,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
     Akonadi::CollectionComboBox *mCalSelector;
     EditorDetails *mDetails;
     AttendeeEditor *mAttendeeEditor;
-    Akonadi::IncidenceChanger *mChanger;
+    CalendarSupport::IncidenceChanger *mChanger;
 
     QList<DesignerFields*> mDesignerFields;
     QMap<QWidget*, DesignerFields*> mDesignerFieldForWidget;

@@ -61,7 +61,9 @@
 #include <assert.h>
 #include <string.h> // for memcpy(3)
 
+#ifndef QT_NO_TREEWIDGET
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
+#endif
 
 namespace Kpgp {
 
@@ -275,6 +277,7 @@ Config::applySettings()
   pgp->writeConfig(true);
 }
 
+#ifndef QT_NO_TREEWIDGET
 
 
 // ------------------------------------------------------------------------
@@ -1166,6 +1169,8 @@ void KeySelectionDialog::showAllItems()
   for ( QTreeWidgetItemIterator it( mListView ); *it; ++it )
     (*it)->setHidden( false );
 }
+
+#endif // QT_NO_TREEWIDGET
 
 // ------------------------------------------------------------------------
 KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,

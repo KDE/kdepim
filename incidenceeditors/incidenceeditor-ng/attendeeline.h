@@ -139,7 +139,7 @@ class AttendeeLine : public KPIM::MultiplyingLine
 
   signals:
     void changed();
-    void changed( const KCal::Attendee &oldAttendee, const KCal::Attendee &newAttendee );
+    void changed( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
     void editingFinished( KPIM::MultiplyingLine * );
 
   private slots:
@@ -157,10 +157,8 @@ class AttendeeLine : public KPIM::MultiplyingLine
     QSharedPointer<AttendeeData> mData;
     QString mUid;
     bool mModified;
-    
-
 };
-  
+
 }
 
 

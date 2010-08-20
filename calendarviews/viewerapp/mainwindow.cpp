@@ -25,10 +25,9 @@
 #include "agendaview.h"
 #include "prefs.h"
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/calendarmodel.h>
-#include <akonadi/kcal/incidencechanger.h>
-#include <akonadi/kcal/incidencemimetypevisitor.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/incidencechanger.h>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
@@ -40,6 +39,7 @@
 #include <KSystemTimeZones>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 using namespace EventViews;
 
 MainWindow::MainWindow( const QStringList &viewNames )
@@ -107,7 +107,7 @@ void MainWindow::delayedInit()
   mChangeRecorder->fetchCollection( true );
   mChangeRecorder->setItemFetchScope( scope );
 
-  mChangeRecorder->setMimeTypeMonitored( IncidenceMimeTypeVisitor::eventMimeType(), true );
+  mChangeRecorder->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
 
   CalendarModel* calendarModel = new CalendarModel( mChangeRecorder, this );
 
@@ -119,7 +119,7 @@ void MainWindow::delayedInit()
   filterModel->setSourceModel( calendarModel );
   filterModel->setSortRole( CalendarModel::SortRole );
 
-  mCalendar = new Akonadi::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
+  mCalendar = new CalendarSupport::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
 
   mIncidenceChanger = new IncidenceChanger( mCalendar, this, Collection().id() );
 

@@ -21,11 +21,9 @@
 #ifndef INCIDENCEEDITOR_NG_H
 #define INCIDENCEEDITOR_NG_H
 
-#include <boost/shared_ptr.hpp>
-
 #include <QtGui/QWidget>
 
-#include <KCal/Incidence>
+#include <KCalCore/Incidence>
 
 #include "incidenceeditors-ng_export.h"
 
@@ -47,12 +45,12 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      * Load the values of @param incidence into the editor widgets. The passed
      * incidence is kept for comparing with the current values of the editor.
      */
-    virtual void load( KCal::Incidence::ConstPtr incidence ) = 0;
+    virtual void load( const KCalCore::Incidence::Ptr &incidence ) = 0;
 
     /**
      * Store the current values of the editor into @param incidince.
      */
-    virtual void save( KCal::Incidence::Ptr incidence ) = 0;
+    virtual void save( const KCalCore::Incidence::Ptr &incidence ) = 0;
 
     /**
      * Returns whether or not the current values in the editor differ from the
@@ -68,15 +66,15 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     virtual bool isValid();
 
     /**
-     * Returns a string representation of the Inicdince that is currently loaded.
+     * Returns the type of the Incidence that is currently loaded.
      */
-    QString type();
+    KCalCore::IncidenceBase::IncidenceType type() const;
 
     /** Convenience method to get a pointer for a specific const Incidence Type. */
     template <typename IncidenceT>
-    boost::shared_ptr<const IncidenceT> incidence() const
+    QSharedPointer<IncidenceT> incidence() const
     {
-      return  boost::dynamic_pointer_cast<const IncidenceT>( mLoadedIncidence );
+      return mLoadedIncidence.dynamicCast<IncidenceT>();
     }
 
   signals:
@@ -92,25 +90,19 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      * dirtyStatusChanged signal if needed.
      */
     void checkDirtyStatus();
-    
+
   protected:
     /** Only subclasses can instantiate IncidenceEditors */
     IncidenceEditor( QObject *parent = 0 );
 
     template <typename IncidenceT>
-    boost::shared_ptr<IncidenceT> incidence( KCal::Incidence::Ptr inc )
+    QSharedPointer<IncidenceT> incidence( KCalCore::Incidence::Ptr inc )
     {
-      return  boost::dynamic_pointer_cast<IncidenceT>( inc );
-    }
-
-    template <typename IncidenceT>
-    boost::shared_ptr<const IncidenceT> incidence( KCal::Incidence::ConstPtr inc )
-    {
-      return  boost::dynamic_pointer_cast<const IncidenceT>( inc );
+      return inc.dynamicCast<IncidenceT>();
     }
 
   protected:
-    KCal::Incidence::ConstPtr mLoadedIncidence;
+    KCalCore::Incidence::Ptr mLoadedIncidence;
     bool mWasDirty;
 };
 

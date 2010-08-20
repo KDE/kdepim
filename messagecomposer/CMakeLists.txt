@@ -48,7 +48,6 @@ set( messagecomposer_src
      inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
-     distributionlistdialog.cpp
      recipientspicker.cpp
      recipient.cpp
      recipientline.cpp
@@ -61,6 +60,13 @@ set( messagecomposer_src
 
      keyresolver.cpp
 )
+
+if (NOT WINCE)
+  # disabled due to no QTreeWidget
+  set( messagecomposer_src ${messagecomposer_src}
+     distributionlistdialog.cpp
+  )
+endif (NOT WINCE)
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
@@ -77,7 +83,7 @@ kde4_add_kcfg_files(messagecomposer_src
 )
 
 kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
-target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} )
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 

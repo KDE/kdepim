@@ -6,46 +6,36 @@ In this file:
 
 What you find here
 ------------------
-
 Anything relating to the KDE-PIM project. See also http://pim.kde.org.
 
 The KDE-PIM project aims to bring together those who wish to help design,
 implement, test, etc. anything that's to do with personal information
 management.
 
-This rather broad scope encompasses mail clients, addressbooks, usenet news,
+This rather broad scope encompasses mail clients, addressbooks, Usenet news,
 scheduling and even sticky notes.
 
 What it is
 ----------
-
+* akregator: Feed reader
+* blogilo: The KDE blogging client
 * kaddressbook: The KDE addressbook application.
+* kalarm: gui for setting up personal alarm messages, emails and commands
+* kjots: manager for several "books" with a subject and notes
 * kmail: the KDE mail client
 * kmailcvt: tool for importing mail related data from other programs
-* knode: UseNet client
-* korganizer: a calendar-of-events, todo-list manager, journal 
-* kalarm: gui for setting up personal alarm messages, emails and commands
-* kalarmd: alarm monitoring daemon
+* knode: Usenet client
+* knotes: popup notes application
+* konsolekalendar: Command line tool for accessing calendar files.
 * kontact: Integrated PIM application
+* korgac: a daemon for handling calendar reminders.
+* korganizer: a calendar-of-events, todo-list manager, journal 
 * ksendemail: commandline email tool.
 * ktimetracker: Time tracker.
-* knotes: yellow notes application
-* konsolekalendar: Command line tool for accessing calendar files.
-* akregator: Feed reader
-* kjots: manager for several "books" with a subject and notes
-* blogilo: The KDE blogging client
-
-
-There is also quite an amount of infrastructure in this package:
-
-* libkdepim: Common code for different kdepim apps
-* kpgp: A library for pgp
-* kdgantt: lib for Gantt diagrams, used by the free/busy view of KOrganizer
 
 
 Mailing List, getting involved
 ------------------------------
-
 If you'd like to get involved with the project, subscribe to kde-pim@kde.org
 with an email to kde-pim-request@kde.org with the subject line:
 subscribe my@email.address

@@ -19,10 +19,62 @@
 */
 
 #include "contactlistproxy.h"
+
+#include <akonadi/entitytreemodel.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+#include <QIcon>
 #include <QPixmap>
 #include <KIconLoader>
+
+ContactImageProvider::ContactImageProvider()
+  : QDeclarativeImageProvider( QDeclarativeImageProvider::Pixmap ), mModel( 0 )
+{
+}
+
+QPixmap ContactImageProvider::requestPixmap( const QString &id, QSize *size, const QSize &requestedSize )
+{
+  int width = 50;
+  int height = 50;
+  if ( requestedSize.isValid() ) {
+    width = requestedSize.width();
+    height = requestedSize.height();
+  }
+
+  if ( size )
+    *size = QSize( width, height );
+
+  const Akonadi::Item item( id.toLongLong() );
+  const QModelIndexList indexes = Akonadi::EntityTreeModel::modelIndexesForItem( mModel, item );
+  if ( indexes.isEmpty() || !indexes.first().isValid() )
+    return QPixmap();
+
+  const QModelIndex index = indexes.first();
+
+  const Akonadi::Item contactItem = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  if ( !contactItem.isValid() )
+    return QPixmap();
+
+  if ( contactItem.hasPayload<KABC::Addressee>() ) {
+    const KABC::Addressee addressee = contactItem.payload<KABC::Addressee>();
+    if ( addressee.photo().isEmpty() ) {
+      const QIcon icon = KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge );
+      return icon.pixmap( width, height );
+    }
+
+    return QPixmap::fromImage( addressee.photo().data().scaled( width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
+  } else if ( contactItem.hasPayload<KABC::ContactGroup>() ) {
+    const QIcon icon = KIconLoader::global()->loadIcon( "x-mail-distribution-list", KIconLoader::Dialog, KIconLoader::SizeHuge );
+    return icon.pixmap( width, height );
+  }
+
+  return QPixmap();
+}
+
+void ContactImageProvider::setModel( QAbstractItemModel *model )
+{
+  mModel = model;
+}
 
 ContactListProxy::ContactListProxy(QObject* parent) : ListProxy( parent )
 {
@@ -39,9 +91,7 @@ QVariant ContactListProxy::data(const QModelIndex& index, int role) const
       case NameRole:
         return addressee.realName();
       case PictureRole:
-        if ( addressee.photo().isEmpty() )
-          return KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge );
-        return QPixmap::fromImage( addressee.photo().data() );
+        return QString::fromLatin1( "image://contact_images/%1" ).arg( item.id() );
       case TypeRole:
         return QLatin1String( "contact" );
     }
@@ -51,7 +101,7 @@ QVariant ContactListProxy::data(const QModelIndex& index, int role) const
       case NameRole:
         return group.name();
       case PictureRole:
-        return KIconLoader::global()->loadIcon( "x-mail-distribution-list", KIconLoader::Dialog, KIconLoader::SizeHuge );
+        return QString::fromLatin1( "image://contact_images/%1" ).arg( item.id() );
       case TypeRole:
         return QLatin1String( "group" );
     }

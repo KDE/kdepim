@@ -3,14 +3,18 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 #add_subdirectory( tests )
 
 set( templateparser_LIB_SRCS
-
-   customtemplates.cpp
-   customtemplatesmenu.cpp
-   templatesconfiguration.cpp
-   templatesinsertcommand.cpp
-
    templateparser.cpp
 )
+
+if (NOT WINCE)
+  set( templateparser_LIB_SRCS ${templateparser_LIB_SRCS}
+    # All disabled due to QTreeWidget and QToolbox in the UI
+    customtemplates.cpp
+    customtemplatesmenu.cpp
+    templatesconfiguration.cpp
+    templatesinsertcommand.cpp
+  )
+endif (NOT WINCE)
 
 include_directories(
     ${Boost_INCLUDE_DIR}
@@ -18,6 +22,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_SOURCE_DIR}/messagecore
 )
+
+if (NOT WINCE)
 
 kde4_add_kcfg_files(templateparser_LIB_SRCS
   templatesconfiguration_kfg.kcfgc
@@ -30,9 +36,10 @@ kde4_add_ui_files(templateparser_LIB_SRCS
   ui/customtemplates_base.ui
 )
 
+endif (NOT WINCE)
 
 kde4_add_library( templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS} )
-target_link_libraries( templateparser messageviewer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+target_link_libraries( templateparser messageviewer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore kleo kpgp ${QGPGME_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} )
 set_target_properties( templateparser PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 

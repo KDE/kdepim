@@ -288,12 +288,14 @@ QPushButton *KPrefsWidFont::button()
 
 void KPrefsWidFont::selectFont()
 {
+#ifndef QT_NO_FONTDIALOG
   QFont myFont( mPreview->font() );
   int result = KFontDialog::getFont( myFont );
   if ( result == KFontDialog::Accepted ) {
     mPreview->setFont( myFont );
     emit changed();
   }
+#endif
 }
 
 KPrefsWidTime::KPrefsWidTime( KConfigSkeleton::ItemDateTime *item, QWidget *parent )

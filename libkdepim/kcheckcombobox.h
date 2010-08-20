@@ -36,7 +36,7 @@ namespace KPIM {
 /**
  * A combobox that shows its items in such a way that they can be checked in the
  * drop menu. It provides methods to set the default text when no items are selected
- * and the seperator that is used to show the items that are selected in the line
+ * and the separator that is used to show the items that are selected in the line
  * edit.
  */
 class KDEPIM_EXPORT KCheckComboBox : public KComboBox
@@ -160,7 +160,9 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     virtual bool eventFilter( QObject *receiver, QEvent *event );
     virtual void keyPressEvent( QKeyEvent *event );
     virtual void resizeEvent( QResizeEvent * event );
+#ifndef QT_NO_WHEELEVENT
     virtual void wheelEvent( QWheelEvent *event );
+#endif
 
   private:
     //@cond PRIVATE
@@ -170,8 +172,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     Q_PRIVATE_SLOT( d, void makeInsertedItemsCheckable(const QModelIndex &, int start, int end) );
     Q_PRIVATE_SLOT( d, void updateCheckedItems( const QModelIndex &topLeft,
                                                 const QModelIndex &bottomRight ) );
-    Q_PRIVATE_SLOT( d, void toggleCheckState( int pos ) );
-    Q_PRIVATE_SLOT( d, void toggleCheckState( const QModelIndex &index ) );
+    Q_PRIVATE_SLOT( d, void toggleCheckState() );
     //@endcond
 };
 

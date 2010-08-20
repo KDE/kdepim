@@ -34,7 +34,7 @@
 #include <QObject>
 
 namespace KPIM {
-  
+
 class MultiplyingLineView;
 
 /**
@@ -72,8 +72,13 @@ class KDEPIM_EXPORT MultiplyingLineFactory : public QObject
 class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
 {
   Q_OBJECT
+  Q_PROPERTY( bool autoResizeView READ autoResizeView WRITE setAutoResizeView )
+
   public:
+
+    // We take ownership of factory
     explicit MultiplyingLineEditor( MultiplyingLineFactory* factory, QWidget *parent = 0 );
+
     virtual ~MultiplyingLineEditor();
 
     /** Get the current line factory for this instance of the widget.
@@ -131,6 +136,13 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
      */
     void setFrameStyle( int shape );
 
+    /**
+     Make the line view follow it's children's size
+     @param resize turn on or off this behavior of auto resizing
+     */
+    void setAutoResizeView( bool resize );
+    bool autoResizeView();
+
   signals:
     void focusUp();
     void focusDown();
@@ -152,7 +164,6 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
   private:
     MultiplyingLineFactory *mMultiplyingLineFactory;
     MultiplyingLineView *mView;
-    
 };
 }
 #endif // MULTIPLYINGLINEEDITOR_H

@@ -43,6 +43,35 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action->setText( i18n( "Action Item" ) );
   action->setIcon( KIcon( "mail-mark-task" ) );
   action->setCheckable(true);
+
+  action = actionCollection->addAction("write_new_email");
+  action->setText( i18n("Write New Email") );
+
+  action = actionCollection->addAction("message_reply");
+  action->setText( i18n("Reply") );
+  
+  action = actionCollection->addAction("message_reply_to_all");
+  action->setText( i18n("Reply to All") );
+
+  action = actionCollection->addAction("message_reply_to_author");
+  action->setText( i18n("Reply to Author") );
+
+    action = actionCollection->addAction("message_reply_to_list");
+  action->setText( i18n("Reply to Mailing List") );
+
+  action = actionCollection->addAction("message_reply_variants");
+
+  action = actionCollection->addAction("message_forward");
+  action->setText( i18n("Forward") );
+
+  action = actionCollection->addAction("message_forward_as_attachment");
+  action->setText( i18n("Forward as Attachment") );
+
+  action = actionCollection->addAction("message_redirect");
+  action->setText( i18n("Redirect") );
+
+  action = actionCollection->addAction("save_favorite");
+  action->setText( i18n("Save Favorite") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

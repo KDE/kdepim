@@ -77,6 +77,13 @@ class MultiplyingLineView : public QScrollArea
       */
     int setFirstColumnWidth( int );
 
+    /**
+     Make this widget follow it's children's size
+     @param resize turn on or off this behavior of auto resizing
+     */
+    void setAutoResize( bool resize );
+    bool autoResize();
+
     QList<MultiplyingLine*> lines() const;
 
   public slots:
@@ -119,6 +126,7 @@ class MultiplyingLineView : public QScrollArea
     QWidget *mPage;
     QLayout *mTopLayout;
     MultiplyingLineFactory *mMultiplyingLineFactory;
+    bool mAutoResize;
 };
 }
 

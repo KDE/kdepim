@@ -20,6 +20,8 @@
 
 #include "incidenceeditor-ng.h"
 
+#include <KDebug>
+
 using namespace IncidenceEditorsNG;
 
 IncidenceEditor::IncidenceEditor( QObject *parent )
@@ -32,6 +34,11 @@ IncidenceEditor::~IncidenceEditor()
 
 void IncidenceEditor::checkDirtyStatus()
 {
+  if ( !mLoadedIncidence ) {
+    kDebug() << "checkDirtyStatus called on an invalid incidence";
+    return;
+  }
+
   const bool dirty = isDirty();
   if ( mWasDirty != dirty ) {
     mWasDirty = dirty;
@@ -44,12 +51,13 @@ bool IncidenceEditor::isValid()
   return true;
 }
 
-QString IncidenceEditor::type()
+KCalCore::IncidenceBase::IncidenceType IncidenceEditor::type() const
 {
-  if ( mLoadedIncidence == 0 )
-    return QString();
-
-  return mLoadedIncidence->type();
+  if ( mLoadedIncidence) {
+    return mLoadedIncidence->type();
+  } else {
+    return KCalCore::IncidenceBase::TypeUnknown;
+  }
 }
 
 #include "moc_incidenceeditor-ng.cpp"

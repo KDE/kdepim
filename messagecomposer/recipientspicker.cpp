@@ -164,6 +164,8 @@ void RecipientsPicker::pick( Recipient::Type type )
   const Akonadi::EmailAddressSelection::List selections = mView->selectedAddresses();
 
   const int count = selections.count();
+  if ( count == 0 )
+    return;
 
   if ( count > MessageComposerSettings::self()->maximumRecipients() ) {
     KMessageBox::sorry( this,

@@ -48,10 +48,30 @@ KPIM.MainView {
       handleHeight: 150
       handlePosition: 40
       content: [
-        MessageComposer.RecipientsEditor {
-          id: recipientsEditor
-          anchors.fill: parent
-        }
+          Flickable {
+              id: flickablerecipients
+              anchors.fill: parent
+              flickableDirection: Flickable.VerticalFlick
+              contentHeight: recipientsEditor.height;
+              clip: true;
+
+              Item {
+                  id: recipientswrapper
+                  anchors.top: parent.top
+                  anchors.left: parent.left
+                  anchors.right: parent.right
+
+                  width: folderPanel.width
+                  height: folderPanel.height
+
+                  MessageComposer.RecipientsEditor {
+                      id: recipientsEditor
+                      anchors.top: parent.top
+                      anchors.left: parent.left
+                      anchors.right: parent.right
+                  }
+              }
+          }
       ]
     }
 

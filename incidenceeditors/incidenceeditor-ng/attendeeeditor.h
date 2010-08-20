@@ -46,19 +46,18 @@ class AttendeeEditor : public KPIM::MultiplyingLineEditor
 
     AttendeeData::List attendees() const;
 
-    void addAttendee( const KCal::Attendee &attendee );
+    void addAttendee( const KCalCore::Attendee::Ptr &attendee );
     void removeAttendee( const AttendeeData::Ptr& attendee );
 
     void setActions( AttendeeLine::AttendeeActions actions );
 
   signals:
     void countChanged( int );
-    void changed( const KCal::Attendee &oldAttendee, const KCal::Attendee &newAttendee );
+    void changed( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
     void editingFinished( KPIM::MultiplyingLine* );
 
   protected slots:
     void slotLineAdded( KPIM::MultiplyingLine* );
-    void slotLineDeleted( int pos );
     void slotCalculateTotal();
 };
 }

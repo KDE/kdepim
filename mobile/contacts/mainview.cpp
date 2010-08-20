@@ -18,12 +18,16 @@
 */
 
 #include "mainview.h"
+#include "contactviewitem.h"
+#include "contactgroupviewitem.h"
 #include "contacteditorview.h"
 #include "contactgroupeditorview.h"
 #include "contactlistproxy.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 
+#include <akonadi/agentactionmanager.h>
+#include <akonadi/contact/standardcontactactionmanager.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kaction.h>
@@ -31,68 +35,33 @@
 #include <klocale.h>
 #include <Akonadi/ItemFetchScope>
 
+QML_DECLARE_TYPE( Akonadi::Contact::ContactViewItem )
+QML_DECLARE_TYPE( Akonadi::Contact::ContactGroupViewItem )
+
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
 {
 }
 
 void MainView::delayedInit()
 {
+  qmlRegisterType<Akonadi::Contact::ContactViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactView" );
+  qmlRegisterType<Akonadi::Contact::ContactGroupViewItem>( "org.kde.akonadi.contacts", 4, 5, "ContactGroupView" );
+
+  ContactImageProvider *provider = new ContactImageProvider;
+  provider->setModel( itemModel() );
+  engine()->addImageProvider( QLatin1String( "contact_images" ), provider );
+
   KDeclarativeMainView::delayedInit();
 
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();
-
-  KAction *action = new KAction( i18n( "New Contact" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( newContact() ) );
-  actionCollection()->addAction( "kab_mobile_new_contact", action );
-
-  action = new KAction( i18n( "Edit Contact" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( editContact() ) );
-  actionCollection()->addAction( "kab_mobile_edit_contact", action );
-
-  action = new KAction( i18n( "New Contact Group" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( newContactGroup() ) );
-  actionCollection()->addAction( "kab_mobile_new_contactgroup", action );
-
-  action = new KAction( i18n( "Edit Contact Group" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( editContactGroup() ) );
-  actionCollection()->addAction( "kab_mobile_edit_contactgroup", action );
-
-  action = new KAction( i18n( "New Address Book" ), this );
-  connect( action, SIGNAL( triggered( bool ) ), SLOT( launchAccountWizard() ) );
-  actionCollection()->addAction( "kab_mobile_new_addressbook", action );
 }
 
 void MainView::newContact()
 {
   ContactEditorView *editor = new ContactEditorView;
   connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
-  editor->show();
-}
-
-void MainView::editContact()
-{
-  if ( !itemSelectionModel() )
-    return;
-
-  const QModelIndexList indexes = itemSelectionModel()->selectedIndexes();
-  if ( indexes.isEmpty() )
-    return;
-
-  const QModelIndex index = indexes.first();
-  if ( !index.isValid() )
-    return;
-
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  editContact( item );
-}
-
-void MainView::editContact( const Akonadi::Item &item )
-{
-  ContactEditorView *editor = new ContactEditorView;
-  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
-  editor->loadContact( item );
   editor->show();
 }
 
@@ -103,21 +72,26 @@ void MainView::newContactGroup()
   editor->show();
 }
 
-void MainView::editContactGroup()
+void MainView::editItem()
 {
-  if ( !itemSelectionModel() )
+  const Akonadi::Item::List items = mActionManager->selectedItems();
+  if ( items.isEmpty() )
     return;
 
-  const QModelIndexList indexes = itemSelectionModel()->selectedIndexes();
-  if ( indexes.isEmpty() )
-    return;
+  const Akonadi::Item item = items.first();
 
-  const QModelIndex index = indexes.first();
-  if ( !index.isValid() )
-    return;
+  if ( item.hasPayload<KABC::Addressee>() )
+    editContact( item );
+  else if ( item.hasPayload<KABC::ContactGroup>() )
+    editContactGroup( item );
+}
 
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  editContactGroup( item );
+void MainView::editContact( const Akonadi::Item &item )
+{
+  ContactEditorView *editor = new ContactEditorView;
+  connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
+  editor->loadContact( item );
+  editor->show();
 }
 
 void MainView::editContactGroup( const Akonadi::Item &item )
@@ -126,6 +100,71 @@ void MainView::editContactGroup( const Akonadi::Item &item )
   connect( editor, SIGNAL( requestLaunchAccountWizard() ), SLOT( launchAccountWizard() ) );
   editor->loadContactGroup( item );
   editor->show();
+}
+
+void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel )
+{
+  mActionManager = new Akonadi::StandardContactActionManager( actionCollection(), this );
+  mActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  mActionManager->setItemSelectionModel( itemSelectionModel );
+
+  mActionManager->createAllActions();
+  mActionManager->interceptAction( Akonadi::StandardContactActionManager::CreateContact );
+  mActionManager->interceptAction( Akonadi::StandardContactActionManager::CreateContactGroup );
+  mActionManager->interceptAction( Akonadi::StandardContactActionManager::EditItem );
+  mActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
+
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newContact() ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newContactGroup() ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::EditItem ), SIGNAL( triggered( bool ) ),
+           this, SLOT( editItem() ) );
+  connect( mActionManager->action( Akonadi::StandardActionManager::CreateResource ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  mActionManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Synchronize contacts\nin account" ) );
+  mActionManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Edit account" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add subfolder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Synchronize contacts\nin folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Edit folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::MoveCollectionToMenu )->setText( i18n( "Move folder to" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CopyCollectionToMenu )->setText( i18n( "Copy folder to" ) );
+  mActionManager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "Delete contact" ) );
+  mActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move contact\nto folder" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy contact\nto folder" ) );
+
+  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize\nall contacts" ) );
+}
+
+void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( selectionModel );
+  manager->createAllActions();
+
+  manager->action( Akonadi::AgentActionManager::CreateAgentInstance )->setText( i18n( "Add" ) );
+  manager->action( Akonadi::AgentActionManager::DeleteAgentInstance )->setText( i18n( "Delete" ) );
+  manager->action( Akonadi::AgentActionManager::ConfigureAgentInstance )->setText( i18n( "Edit" ) );
+
+  manager->interceptAction( Akonadi::AgentActionManager::CreateAgentInstance );
+
+  connect( manager->action( Akonadi::AgentActionManager::CreateAgentInstance ), SIGNAL( triggered( bool ) ),
+           this, SLOT( launchAccountWizard() ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
+                           i18nc( "@title:window", "New Account" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
+                           i18n( "Could not create account: %1" ) );
+  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
+                           i18n( "Account creation failed" ) );
+
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
+                           i18nc( "@title:window", "Delete Account?" ) );
+  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+                           i18n( "Do you really want to delete the selected account?" ) );
 }
 
 #include "mainview.moc"

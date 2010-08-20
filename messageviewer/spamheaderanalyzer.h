@@ -36,12 +36,12 @@
 
 #include <KMime/Message>
 
-#include <QString>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 namespace MessageViewer {
 
-typedef enum {
+enum SpamError {
   noError,
   uninitializedStructUsed,
   errorExtractingAgentString,
@@ -50,7 +50,7 @@ typedef enum {
   couldNotFindTheScoreField,
   couldNotFindTheThresholdField,
   couldNotConvertConfidenceToFloat
-} SpamError;
+};
 
 /**
     @short A simple tupel of error, agent, score, confidence and header.
@@ -89,8 +89,7 @@ private:
   QString mHeader;
   QString mConfidenceHeader;
 };
-typedef QList<SpamScore> SpamScores;
-typedef QList<SpamScore>::Iterator SpamScoresIterator;
+typedef QVector<SpamScore> SpamScores;
 
 
 /**

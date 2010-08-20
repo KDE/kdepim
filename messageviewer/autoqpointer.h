@@ -19,30 +19,48 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef AUTOQPOINTER_H
-#define AUTOQPOINTER_H
+#ifndef MESSAGEVIEWER_AUTOQPOINTER_H
+#define MESSAGEVIEWER_AUTOQPOINTER_H
 
 #include <QPointer>
+#include <QObject>
+
+#include <kdemacros.h>
 
 namespace MessageViewer {
 
 /**
  *  A QPointer which when destructed, deletes the object it points to.
  *
- *  @author David Jarvie <djarvie@kde.org>
+ *  @author David Jarvie <djarvie@kde.org>, Marc Mutz <mutz@kde.org>
  */
 template <class T>
-class AutoQPointer : public QPointer<T>
+class AutoQPointer
 {
-  public:
-    inline AutoQPointer() : QPointer<T>() {}
-    inline AutoQPointer(T* p) : QPointer<T>(p) {}
-    inline AutoQPointer(const QPointer<T>& p) : QPointer<T>(p) {}
-    inline ~AutoQPointer()  { delete this->data(); }
-    inline AutoQPointer<T>& operator=(const AutoQPointer<T>& p) { QPointer<T>::operator=(p); return *this; }
-    inline AutoQPointer<T>& operator=(T* p) { QPointer<T>::operator=(p); return *this; }
+  Q_DISABLE_COPY( AutoQPointer )
+  struct SafeBool { void func() {} };
+  typedef void (SafeBool::*save_bool)();
+  QPointer<QObject> o;
+public:
+    AutoQPointer() : o() {}
+    explicit AutoQPointer( T * p ) : o(p) {}
+    ~AutoQPointer()  { delete o; }
+    T * data() const { return static_cast<T*>(o.data()); }
+    T * get()  const { return data(); }
+    bool isNull() const { return o.isNull(); }
+    T * operator->() const { return data(); }
+    T & operator*() const { return *data(); }
+#if 0 // enable when all users of operator T*() have been converted to use .get()
+    operator save_bool() const { return isNull() ? 0 : &SafeBool::func ; }
+#else
+    // unsafe - use explicit .get()
+    KDE_DEPRECATED operator T*() const { return get(); }
+    // unsafe - only provided to prevent the above warning in bool contexts
+    operator bool() const { return get(); }
+#endif
+    
 };
 
 }
 
-#endif // AUTOQPOINTER_H
+#endif // MESSAGEVIEWER_AUTOQPOINTER_H

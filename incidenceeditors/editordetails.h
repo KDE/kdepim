@@ -27,15 +27,13 @@
 #include "customlistviewitem.h"
 #include "attendeeeditor.h"
 
+#include <kcalcore/incidence.h>
+#include <kcalcore/attendee.h>
+
 #include <K3ListView>
 
-namespace KCal {
-  class Attendee;
-  class Incidence;
-}
-
 namespace IncidenceEditors {
-  typedef CustomListViewItem<KCal::Attendee *> AttendeeListItem;
+  typedef CustomListViewItem<KCalCore::Attendee::Ptr > AttendeeListItem;
 }
 
 class AttendeeListView;
@@ -61,7 +59,7 @@ class AttendeeListView : public K3ListView
     virtual void contentsDragMoveEvent( QDragMoveEvent *e );
 
   signals:
-    void dropped( KCal::Attendee * );
+    void dropped( const KCalCore::Attendee::Ptr & );
 #endif
 };
 
@@ -76,10 +74,10 @@ class EditorDetails : public AttendeeEditor
     void setDefaults();
 
     /** Read incidence and setup widgets accordingly */
-    void readIncidence( KCal::Incidence *incidence );
+    void readIncidence( const KCalCore::Incidence::Ptr &incidence );
 
     /** Write settings to incidence */
-    void fillIncidence( KCal::Incidence *incidence );
+    void fillIncidence( KCalCore::Incidence::Ptr &incidence );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -87,16 +85,16 @@ class EditorDetails : public AttendeeEditor
     /** Returns whether at least one attendee was added */
     bool hasAttendees();
 
-    void insertAttendee( KCal::Attendee *, bool goodEmailAddress=true );
+    void insertAttendee( const KCalCore::Attendee::Ptr & , bool goodEmailAddress=true );
 
   protected slots:
     void removeAttendee();
-    void slotInsertAttendee( KCal::Attendee *a );
+    void slotInsertAttendee( const KCalCore::Attendee::Ptr &a );
 
   protected:
-    void changeStatusForMe( KCal::Attendee::PartStat status );
+    void changeStatusForMe( KCalCore::Attendee::PartStat status );
 
-    KCal::Attendee *currentAttendee() const;
+    KCalCore::Attendee::Ptr currentAttendee() const;
     /* reimpl */
     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();

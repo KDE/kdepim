@@ -24,20 +24,20 @@
 #ifndef KORG_HISTORY_H
 #define KORG_HISTORY_H
 
-#include <akonadi/kcal/incidencechanger.h>
+#include <kcalcore/incidence.h>
+
+#include <calendarsupport/incidencechanger.h>
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
 
-#include <KCal/Incidence>
+#include <kcalcore/incidence.h>
 
 #include <QObject>
 #include <QStack>
 #include <QList>
 
-#include <boost/shared_ptr.hpp>
-
-namespace Akonadi {
+namespace CalendarSupport {
   class Calendar;
 }
 
@@ -47,7 +47,7 @@ class History : public QObject
 {
   Q_OBJECT
   public:
-    History( Akonadi::Calendar *, QWidget *parent );
+    History( CalendarSupport::Calendar *, QWidget *parent );
 
     void recordDelete( const Akonadi::Item & );
     void recordAdd( const Akonadi::Item & );
@@ -62,7 +62,7 @@ class History : public QObject
   private slots:
     void incidenceChangeFinished( const Akonadi::Item &,
                                   const Akonadi::Item &,
-                                  Akonadi::IncidenceChanger::WhatChanged,
+                                  CalendarSupport::IncidenceChanger::WhatChanged,
                                   bool);
 
     void incidenceAddFinished( const Akonadi::Item &, bool );
@@ -93,7 +93,7 @@ class History : public QObject
     class Entry
     {
       public:
-        Entry( Akonadi::Calendar *, Akonadi::IncidenceChanger * );
+        Entry( CalendarSupport::Calendar *, CalendarSupport::IncidenceChanger * );
         virtual ~Entry();
 
         virtual bool undo() = 0;
@@ -104,18 +104,16 @@ class History : public QObject
         void setItemId( Akonadi::Item::Id );
         Akonadi::Item::Id itemId();
 
-        void removeRelations( const KCal::Incidence::Ptr &incidence );
-
       protected:
-        Akonadi::Calendar *mCalendar;
-        Akonadi::IncidenceChanger *mChanger;
+        CalendarSupport::Calendar *mCalendar;
+        CalendarSupport::IncidenceChanger *mChanger;
         Akonadi::Item::Id mItemId;
     };
 
     class EntryDelete : public Entry
     {
       public:
-        EntryDelete( Akonadi::Calendar *, Akonadi::IncidenceChanger *, const Akonadi::Item & );
+        EntryDelete( CalendarSupport::Calendar *, CalendarSupport::IncidenceChanger *, const Akonadi::Item & );
         ~EntryDelete();
 
         bool undo();
@@ -124,7 +122,7 @@ class History : public QObject
         QString text();
 
       private:
-        KCal::Incidence::Ptr mIncidence;
+        KCalCore::Incidence::Ptr mIncidence;
         Akonadi::Collection mCollection;
         QString mParentUid;
     };
@@ -132,7 +130,7 @@ class History : public QObject
     class EntryAdd : public Entry
     {
       public:
-        EntryAdd( Akonadi::Calendar *, Akonadi::IncidenceChanger *, const Akonadi::Item & );
+        EntryAdd( CalendarSupport::Calendar *, CalendarSupport::IncidenceChanger *, const Akonadi::Item & );
         ~EntryAdd();
 
         bool undo();
@@ -140,7 +138,7 @@ class History : public QObject
 
         QString text();
       private:
-        KCal::Incidence::Ptr mIncidence;
+        KCalCore::Incidence::Ptr mIncidence;
         Akonadi::Collection mCollection;
         QString mParentUid;
     };
@@ -148,8 +146,8 @@ class History : public QObject
     class EntryEdit : public Entry
     {
       public:
-        EntryEdit( Akonadi::Calendar *calendar,
-                   Akonadi::IncidenceChanger *,
+        EntryEdit( CalendarSupport::Calendar *calendar,
+                   CalendarSupport::IncidenceChanger *,
                    const Akonadi::Item &oldItem,
                    const Akonadi::Item &newItem );
         ~EntryEdit();
@@ -160,14 +158,14 @@ class History : public QObject
         QString text();
 
       private:
-        KCal::Incidence::Ptr mOldIncidence;
-        KCal::Incidence::Ptr mNewIncidence;
+        KCalCore::Incidence::Ptr mOldIncidence;
+        KCalCore::Incidence::Ptr mNewIncidence;
     };
 
     class MultiEntry : public Entry
     {
       public:
-        MultiEntry( Akonadi::Calendar *calendar, const QString &text );
+        MultiEntry( CalendarSupport::Calendar *calendar, const QString &text );
         ~MultiEntry();
 
         void appendEntry( Entry *entry );
@@ -182,10 +180,10 @@ class History : public QObject
         QString mText;
     };
 
-    Akonadi::Calendar *mCalendar;
+    CalendarSupport::Calendar *mCalendar;
     MultiEntry *mCurrentMultiEntry;
     QWidget *mParent;
-    Akonadi::IncidenceChanger *mChanger;
+    CalendarSupport::IncidenceChanger *mChanger;
 
     QStack<Entry*> mUndoEntries;
     QStack<Entry*> mRedoEntries;

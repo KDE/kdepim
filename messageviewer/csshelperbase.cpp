@@ -29,6 +29,8 @@
     your version.
 */
 
+#include <config-messageviewer.h>
+
 #include "csshelperbase.h"
 
 #include <KColorScheme>

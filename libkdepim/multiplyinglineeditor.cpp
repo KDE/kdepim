@@ -52,6 +52,7 @@ MultiplyingLineEditor::MultiplyingLineEditor( MultiplyingLineFactory* factory, Q
 
 MultiplyingLineEditor::~MultiplyingLineEditor()
 {
+  delete mMultiplyingLineFactory;
 }
 
 void MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
@@ -70,6 +71,8 @@ void MultiplyingLineEditor::removeData( const MultiplyingLineData::Ptr &data )
 
 void MultiplyingLineEditor::clear()
 {
+  foreach ( MultiplyingLine *line, mView->lines() )
+    line->slotPropagateDeletion();
 }
 
 bool MultiplyingLineEditor::isModified()
@@ -139,7 +142,14 @@ void MultiplyingLineEditor::setFrameStyle( int shape )
   mView->setFrameStyle( shape );
 }
 
+void MultiplyingLineEditor::setAutoResizeView( bool resize )
+{
+  mView->setAutoResize( resize );
+}
 
-
+bool MultiplyingLineEditor::autoResizeView()
+{
+  return mView->autoResize();
+}
 
 #include "multiplyinglineeditor.moc"

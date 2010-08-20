@@ -42,6 +42,8 @@
 
 #include "ui_template_management_dialog_base.h"
 
+#include <KCalCore/IncidenceBase>
+
 #include <KDialog>
 
 #include <QString>
@@ -54,7 +56,7 @@ class INCIDENCEEDITORS_EXPORT TemplateManagementDialog: public KDialog
   Q_OBJECT
   public:
     TemplateManagementDialog( QWidget *parent, const QStringList &templates,
-                              const QString &incidenceType );
+                              KCalCore::IncidenceBase::IncidenceType incidenceType );
 
   signals:
     /* Emitted whenever the user hits apply, indicating that the currently

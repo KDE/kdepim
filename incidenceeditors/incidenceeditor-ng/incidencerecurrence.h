@@ -34,6 +34,16 @@ namespace IncidenceEditorsNG {
 
 class IncidenceDateTime;
 
+/// Keep this in sync with the values in mUi->mRecurrenceTypeCombo
+enum RecurrenceType {
+    RecurrenceTypeNone = 0,
+    RecurrenceTypeDaily,
+    RecurrenceTypeWeekly,
+    RecurrenceTypeMonthly,
+    RecurrenceTypeYearly,
+    RecurrenceTypeUnknown // keep this one at the end always
+ };
+
 class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
 {
     Q_OBJECT
@@ -44,16 +54,19 @@ public:
     IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
 #endif
 
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
+    RecurrenceType currentRecurrenceType() const;
+
 Q_SIGNALS:
-    void recurrenceChanged( int type );
+    void recurrenceChanged( IncidenceEditorsNG::RecurrenceType type );
 
 private Q_SLOTS:
     void addException();
     void fillCombos();
+    void handleDateTimeToggle();
     void handleEndAfterOccurrencesChange( int currentValue );
     void handleExceptionDateChange( const QDate &currentDate );
     void handleFrequencyChange();
@@ -63,7 +76,7 @@ private Q_SLOTS:
     void updateWeekDays( const QDate &newStartDate );
 
 private:
-    KLocalizedString subsOrdinal (const KLocalizedString &text, int number) const;
+    KLocalizedString subsOrdinal( const KLocalizedString &text, int number ) const;
     /**
      * Return the day in the month/year on which the event recurs, starting at the
      * beginning/end. Both return a positive number.
@@ -80,11 +93,11 @@ private:
     /** DO NOT USE THIS METHOD DIRECTLY
         use subsOrdinal() instead for i18n * */
     QString numberToString( int number ) const;
-    void selectMonthlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
-    void selectYearlyItem( KCal::Recurrence *recurrence, ushort recurenceType );
+    void selectMonthlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType );
+    void selectYearlyItem( KCalCore::Recurrence *recurrence, ushort recurenceType );
     void setDefaults();
     void setDuration( int duration );
-    void setExceptionDates( const KCal::DateList &dates );
+    void setExceptionDates( const KCalCore::DateList &dates );
     void setFrequency( int freq );
     void toggleRecurrenceWidgets( bool enable );
     /** Returns an array with the weekday on which the event occurs set to 1 */
@@ -104,7 +117,12 @@ private:
 #endif
     QDate mCurrentDate;
     IncidenceDateTime *mDateTime;
-    KCal::DateList mExceptionDates;
+    KCalCore::DateList mExceptionDates;
+
+    // So we can easily detect if the user changed the type,
+    // without going through complicated recurrence logic:
+    int mMonthlyInitialType;
+    int mYearlyInitialType;
 };
 
 }

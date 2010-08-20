@@ -28,7 +28,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/korganizer
   ${GPGME_INCLUDES}
   ${Boost_INCLUDE_DIR}
-  ${CMAKE_SOURCE_DIR}/akonadi/
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${NEPOMUK_INCLUDES}
   ${SOPRANO_INCLUDE_DIR}
@@ -48,6 +47,7 @@ add_subdirectory(kcm_kpimidentities)
 ########### kmailprivate ###############
 
 set(kmailprivate_LIB_SRCS
+   kmcollectionpropertiesdialog.cpp
    foldercollectionmonitor.cpp
    readablecollectionproxymodel.cpp
    entitycollectionorderproxymodel.cpp
@@ -211,22 +211,22 @@ kde4_add_kcfg_files(kmailprivate_LIB_SRCS
 
 kde4_add_library(kmailprivate ${LIBRARY_TYPE} ${kmailprivate_LIB_SRCS})
 target_link_libraries(kmailprivate
-  ${KDEPIMLIBS_KMIME_LIBRARY}
+  ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   messagecore
   messagecomposer
   messagelist
   templateparser
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
+  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   ${KDE4_PHONON_LIBRARY}
   ${KDE4_KNOTIFYCONFIG_LIBRARY}
-  ${KDEPIMLIBS_KTNEF_LIBRARY}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBRARY}
-  ${KDEPIMLIBS_KIMAP_LIBRARY}
+  ${KDEPIMLIBS_KTNEF_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${KDEPIMLIBS_KIMAP_LIBS}
   ${KDE4_KPARTS_LIBRARY}
-  ${KDE4_KRESOURCES_LIBRARY}
+  ${KDEPIMLIBS_KRESOURCES_LIBS}
   ${KDE4_KCMUTILS_LIBS}
   kleo
   ${QGPGME_LIBRARIES}

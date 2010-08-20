@@ -19,7 +19,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <config-messageviewer.h>
+
 #include "findbar.h"
+#include "mailwebview.h"
 
 // qt/kde includes
 #include <QtCore/QTimer>
@@ -27,7 +30,6 @@
 #include <QtGui/QLayout>
 #include <QtGui/QMenu>
 #include <QtGui/QToolButton>
-#include <QtWebKit/QWebView>
 #include <QEvent>
 #include <QKeyEvent>
 #include <kicon.h>
@@ -38,7 +40,7 @@
 
 using namespace MessageViewer;
 
-FindBar::FindBar( QWebView * view, QWidget * parent )
+FindBar::FindBar( MailWebView * view, QWidget * parent )
   : QWidget( parent ), m_view( view )
 {
   QHBoxLayout * lay = new QHBoxLayout( this );
@@ -76,8 +78,10 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   QMenu * optionsMenu = new QMenu( optionsBtn );
   m_caseSensitiveAct = optionsMenu->addAction( i18n( "Case sensitive" ) );
   m_caseSensitiveAct->setCheckable( true );
+#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
   m_highlightAll = optionsMenu->addAction( i18n( "Highlight all matches" ) );
   m_highlightAll->setCheckable( true );
+#endif
   optionsBtn->setMenu( optionsMenu );
   lay->addWidget( optionsBtn );
 
@@ -85,7 +89,9 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   connect( m_findNextBtn, SIGNAL( clicked() ), this, SLOT( findNext() ) );
   connect( m_findPrevBtn, SIGNAL( clicked() ), this, SLOT( findPrev() ) );
   connect( m_caseSensitiveAct, SIGNAL( toggled( bool ) ), this, SLOT( caseSensitivityChanged() ) );
+#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
   connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
+#endif
   connect( m_search, SIGNAL( textEdited( QString ) ), this, SLOT( autoSearch( QString ) ) );
   connect( m_search, SIGNAL( clearButtonClicked() ), this, SLOT( slotClearSearch() ) );
   hide();
@@ -124,14 +130,16 @@ void FindBar::autoSearch( const QString& str )
 
 void FindBar::searchText( bool backward)
 {
-  QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
+  MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
 
   if ( backward )
-    searchOptions = QWebPage::FindBackward;
+    searchOptions = MailWebView::FindBackward;
   if ( m_caseSensitiveAct->isChecked() )
-    searchOptions |= QWebPage::FindCaseSensitively;
+    searchOptions |= MailWebView::FindCaseSensitively;
+#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
   if ( m_highlightAll->isChecked() )
-    searchOptions |= QWebPage::HighlightAllOccurrences;
+    searchOptions |= MailWebView::HighlightAllOccurrences;
+#endif
 
   if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ) )
   {
@@ -163,7 +171,9 @@ void FindBar::setFoundMatch( bool match )
                  .arg(bgBrush.brush(m_search).color().name());
   }
 
+#ifndef QT_NO_STYLE_STYLESHEET
   m_search->setStyleSheet(styleSheet);
+#endif
 
 }
 
@@ -189,10 +199,8 @@ void FindBar::highlightAllChanged()
 
 void FindBar::clearSelections()
 {
-  m_view->findText( QString());
+  m_view->clearFindSelection();
   setFoundMatch( false );
-  //WEBKIT: TODO: Find a way to unselect last selection
-  // http://bugreports.qt.nokia.com/browse/QTWEBKIT-80
 }
 
 void FindBar::closeBar()

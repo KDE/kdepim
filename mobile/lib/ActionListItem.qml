@@ -27,17 +27,29 @@ QML.Item {
   height : parent.height
   width : parent.width
   property string name
+  property string argument : ""
+  property string title : ""
 
   property string category
 
   signal triggered(string triggeredName)
+  signal pressAndHold()
 
   KPIM.Action {
     height : parent.height
     width : parent.width
-    action : application.getAction(name);
+    action : {
+      application.setActionTitle(name, title)
+      application.getAction(name, argument);
+    }
     hidable : false
-  }
+
+    onLongPressed: {
+      pressAndHold();
+    }
+    }
+     
+
 /*
   QML.Rectangle {
     height : parent.height

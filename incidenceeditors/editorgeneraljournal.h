@@ -26,11 +26,10 @@
 #ifndef EDITORGENERALJOURNAL_H
 #define EDITORGENERALJOURNAL_H
 
+#include <kcalcore/journal.h>
+
 #include "editorgeneral.h"
 
-namespace KCal {
-  class Journal;
-}
 
 namespace KPIM {
   class KDateEdit;
@@ -53,9 +52,9 @@ class EditorGeneralJournal : public EditorGeneral
     /** Set time widget to default values */
     void setTime( const QTime &time );
     /** Read journal object and setup widgets accordingly */
-    void readJournal( KCal::Journal *, const QDate &date, bool tmpl = false );
+    void readJournal( const KCalCore::Journal::Ptr &, const QDate &date, bool tmpl = false );
     /** Write journal settings to event object */
-    void fillJournal( KCal::Journal * );
+    void fillJournal( KCalCore::Journal::Ptr & );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -64,7 +63,7 @@ class EditorGeneralJournal : public EditorGeneral
     void finishSetup();
 
   protected:
-    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
+    virtual bool setAlarmOffset( const KCalCore::Alarm::Ptr &alarm, int value ) const;
 
   private:
     QWidget *mParent;

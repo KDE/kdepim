@@ -3,7 +3,6 @@ project(akonadiconsole)
 include_directories(${AKONADI_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIR})
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories(${CMAKE_SOURCE_DIR}/akonadi)
 include_directories(${NEPOMUK_INCLUDES})
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -80,9 +79,8 @@ target_link_libraries( akonadiconsole_bin
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   akonadi_next
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  akonadi-kcal_next
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
-  ${KDEPIMLIBS_KCAL_LIBS}
+  calendarsupport
+  ${KDEPIMLIBS_KCALCORE_LIBS}
   kdepim
   messageviewer
   ${KDE4_KCMUTILS_LIBS}

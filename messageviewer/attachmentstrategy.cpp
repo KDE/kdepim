@@ -31,6 +31,8 @@
     your version.
 */
 
+#include <config-messageviewer.h>
+
 #include "attachmentstrategy.h"
 
 #include "nodehelper.h"

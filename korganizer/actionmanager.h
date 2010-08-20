@@ -31,34 +31,36 @@
 #include "korganizer_export.h"
 #include "korganizer/part.h"
 
+#include <KCalCore/Incidence>
+
 #include <KUrl>
 
 #include <QObject>
 
-#include <akonadi/item.h>
-
-namespace KCal {
-  class Calendar;
-  class Incidence;
-}
+#include <Akonadi/Item>
 
 namespace KOrg {
   class HTMLExportSettings;
 }
 
-namespace Akonadi {
+namespace CalendarSupport {
   class Calendar;
   class CalendarModel;
   class EntityModelStateSaver;
+}
+
+namespace Akonadi {
   class EntityTreeViewStateSaver;
+}
+
+namespace KCalCore {
+  class Calendar;
 }
 
 class AkonadiCollectionView;
 class CalendarView;
 class ImportDialog;
 class KOWindowList;
-
-using namespace KCal;
 
 class KRecentFilesAction;
 class KSelectAction;
@@ -209,8 +211,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
                          const QString &uri,
                          const QString &file,
                          const QStringList &attendees,
-                         const QString &attachmentMimetype,
-                         bool isTask );
+                         const QString &attachmentMimetype );
 
     void openJournalEditor( const QDate &date );
     void openJournalEditor( const QString &text, const QDate &date );
@@ -429,11 +430,11 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
 
     bool mHtmlExportSync;
 
-    Akonadi::CalendarModel *mCalendarModel;
-    Akonadi::Calendar *mCalendar;
+    CalendarSupport::CalendarModel *mCalendarModel;
+    CalendarSupport::Calendar *mCalendar;
     AkonadiCollectionView *mCollectionView;
     Akonadi::EntityTreeViewStateSaver *mCollectionViewStateSaver;
-    Akonadi::EntityModelStateSaver *mCollectionSelectionModelStateSaver;
+    CalendarSupport::EntityModelStateSaver *mCollectionSelectionModelStateSaver;
     bool mIsClosing;
 };
 

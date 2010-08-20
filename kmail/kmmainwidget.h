@@ -39,7 +39,7 @@
 #include <QLabel>
 #include <QHash>
 #include <QPointer>
-#include <akonadi/standardactionmanager.h>
+#include <akonadi/kmime/standardmailactionmanager.h>
 #include <messagelist/core/view.h>
 #include "foldertreewidget.h"
 
@@ -278,6 +278,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotStartCheckMail();
     void slotEndCheckMail();
 
+    void slotCollectionProperties();
+
   signals:
     void messagesTransfered( bool );
     void captionChangeRequest( const QString &caption );
@@ -420,8 +422,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotEditNotifications();
     void slotEditKeys();
 
-    void removeDuplicates();
-
     /** Slot to reply to a message */
     void slotCustomReplyToMsg( const QString &tmpl );
     void slotCustomReplyAllToMsg( const QString &tmpl );
@@ -457,8 +457,10 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
 
     void slotAkonadiStandardActionUpdated();
     void slotCollectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& );
-    void slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+    void slotCreateNewTab( bool );
+
   private:
+
     /** Get override character encoding. */
     QString overrideEncoding() const;
 
@@ -575,7 +577,6 @@ private:
     Akonadi::Collection mTemplateFolder;
     QMenu        *mViewMenu, *mBodyPartsMenu;
     KAction      *mlistFilterAction;
-    bool          mIntegrated;
     bool          mBeepOnNew;
     bool          mConfirmEmpty;
     int           mMessageStatusId;
@@ -596,11 +597,10 @@ private:
     //  QPopupMenu *mMessageMenu;
     KMail::SearchWindow *mSearchWin;
 
-    KAction *mRemoveFolderAction,
-      *mExpireFolderAction,
-      *mEmptyFolderAction, *mMarkAllAsReadAction, *mFolderMailingListPropertiesAction,
+    KAction *mExpireFolderAction,
+      *mMarkAllAsReadAction, *mFolderMailingListPropertiesAction,
       *mShowFolderShortcutDialogAction,
-      *mRemoveDuplicatesAction, *mArchiveFolderAction,
+      *mArchiveFolderAction,
       *mPostToMailinglistAction;
     KToggleAction *mPreferHtmlAction, *mPreferHtmlLoadExtAction;
     KToggleAction *mFolderAction, *mHeaderAction, *mMimeAction;
@@ -627,12 +627,11 @@ private:
     KXMLGUIClient *mGUIClient;
 
     KMail::MessageActions *mMsgActions;
-    Akonadi::StandardActionManager *mAkonadiStandardActionManager;
+    Akonadi::StandardMailActionManager *mAkonadiStandardActionManager;
     CollectionPane *mMessagePane;
     QSharedPointer<FolderCollection> mCurrentFolder;
 
     FolderTreeWidget *mFolderTreeWidget;
-    bool mOpenedImapFolder;
 
     KMail::StatusBarLabel *mVacationScriptIndicator;
     bool mVacationIndicatorActive;

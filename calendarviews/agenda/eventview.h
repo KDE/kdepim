@@ -30,12 +30,14 @@
 
 #include "eventviews_export.h"
 
+#include <kcalcore/incidence.h>
+
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
 #include <QWidget>
 
-namespace Akonadi {
+namespace CalendarSupport {
   class Calendar;
   class CalendarSearch;
   class CollectionSelection;
@@ -47,8 +49,7 @@ namespace boost {
   template <typename T> class shared_ptr;
 }
 
-namespace KCal {
-  class Incidence;
+namespace KCalCore {
   template <typename T> class SortableList;
   typedef SortableList<QDate> DateList;
 }
@@ -104,18 +105,18 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       BRIGHTNESS_FACTOR = 125
     };
 
-    virtual void setCalendar( Akonadi::Calendar *cal );
+    virtual void setCalendar( CalendarSupport::Calendar *cal );
 
     /**
       Return calendar object of this view.
     */
-    virtual Akonadi::Calendar *calendar() const;
+    virtual CalendarSupport::Calendar *calendar() const;
 
     virtual void setPreferences( const PrefsPtr &preferences );
 
     PrefsPtr preferences() const;
 
-    Akonadi::CalendarSearch* calendarSearch() const;
+    CalendarSupport::CalendarSearch* calendarSearch() const;
 
     /**
        A todo can have two pixmaps, one for completed and one for incomplete.
@@ -134,7 +135,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       probably only select a single event at a time, but some may be able
       to select more than one.
     */
-    virtual KCal::DateList selectedIncidenceDates() const = 0;
+    virtual KCalCore::DateList selectedIncidenceDates() const = 0;
 
     /**
        Returns the start of the selection, or an invalid QDateTime if there is no selection
@@ -187,14 +188,14 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     //----------------------------------------------------------------------------
     // TODO_SPLIT: review these collection stuff
-    Akonadi::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
-    Akonadi::CollectionSelectionProxyModel *customCollectionSelectionProxyModel() const;
-    void setCustomCollectionSelectionProxyModel( Akonadi::CollectionSelectionProxyModel* model );
+    CalendarSupport::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
+    CalendarSupport::CollectionSelectionProxyModel *customCollectionSelectionProxyModel() const;
+    void setCustomCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel* model );
 
-    Akonadi::CollectionSelection *customCollectionSelection() const;
+    CalendarSupport::CollectionSelection *customCollectionSelection() const;
 
-    static Akonadi::CollectionSelection* globalCollectionSelection();
-    static void setGlobalCollectionSelection( Akonadi::CollectionSelection* selection );
+    static CalendarSupport::CollectionSelection* globalCollectionSelection();
+    static void setGlobalCollectionSelection( CalendarSupport::CollectionSelection* selection );
     //----------------------------------------------------------------------------
 
     /**
@@ -228,7 +229,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     /**
      * returns the selection of collection to be used by this view (custom if set, or global otherwise)
      */
-    Akonadi::CollectionSelection* collectionSelection() const;
+    CalendarSupport::CollectionSelection* collectionSelection() const;
 
     /**
        Notifies the view that there are pending changes so a redraw is needed.
@@ -259,7 +260,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     /**
       Assign a new incidence change helper object.
      */
-    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    virtual void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
     /**
       Write all unsaved data back to calendar store.
@@ -311,7 +312,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * selected dates has changed.
      *   @param datelist the new list of selected dates
      */
-    void datesSelected( const KCal::DateList &datelist );
+    void datesSelected( const KCalCore::DateList &datelist );
 
     /**
      * Emitted when an event is moved using the mouse in an agenda
@@ -423,7 +424,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
   protected:
-    Akonadi::IncidenceChanger *changer() const;
+    CalendarSupport::IncidenceChanger *changer() const;
 
    /**
      * reimplement to read view-specific settings

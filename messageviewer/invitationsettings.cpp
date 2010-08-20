@@ -25,6 +25,8 @@
 
 */
 
+#include <config-messageviewer.h>
+
 #include "invitationsettings.h"
 #include "invitationsettings.moc"
 #include "ui_invitationsettings.h"

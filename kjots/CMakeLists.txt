@@ -24,7 +24,6 @@ include_directories(
   ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${Grantlee_INCLUDE_DIRS}
-  ${CMAKE_SOURCE_DIR}/akonadi/
 )
 
 set(kjotsLibs ${KDE4_KIO_LIBS})

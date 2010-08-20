@@ -31,7 +31,7 @@
 
 #include "attendeedata.h"
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/freebusymanager.h>
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -40,9 +40,9 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 
-#include <KCal/Incidence>
-#include <KCal/FreeBusy>
 #include <KPIMUtils/Email>
+
+#include <kcalutils/stringify.h>
 
 #include <KComboBox>
 #include <KLocale>
@@ -129,21 +129,21 @@ public:
 //
 // We can't use the CustomListViewItem base class, since we need a
 // different inheritance hierarchy for supporting the Gantt view.
-class FreeBusyItem 
+class FreeBusyItem
 {
   public:
     FreeBusyItem( AttendeeData::Ptr attendee, QStandardItemModel *model,
                   EditorFreeBusy *parentWidget, QTreeWidget *listWidget ) :
-      mAttendee( attendee ), mModel( model ), mTimerID( 0 ),
-      mIsDownloading( false ), mParentWidget( parentWidget ), mListWidget( listWidget )
+      mAttendee( attendee ), mTimerID( 0 ), mIsDownloading( false ),
+      mModel( model ), mParentWidget( parentWidget ), mListWidget( listWidget )
     {
       QStandardItem * dummyItem = new QStandardItem;
       dummyItem->setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
       mModel->appendRow( dummyItem );
       Q_ASSERT( attendee );
       updateItem();
-      setFreeBusyPeriods( 0 );
-#if 0       
+      setFreeBusyPeriods( KCalCore::FreeBusy::Ptr() );
+#if 0
       setDisplaySubitemsAsGroup( true );
       if ( listView () ) {
         listView ()->setRootIsDecorated( false );
@@ -151,20 +151,20 @@ class FreeBusyItem
 #else
  kDebug() << "Disabled code, port to KDGantt2";
 #endif
-      
+
     }
     ~FreeBusyItem() {}
 
     void updateItem();
 
     AttendeeData::Ptr attendee() const { return mAttendee; }
-    void setFreeBusy( KCal::FreeBusy *fb ) { mFreeBusy = fb; }
-    KCal::FreeBusy *freeBusy() const
+  void setFreeBusy( const KCalCore::FreeBusy::Ptr &fb ) { mFreeBusy = fb; }
+    KCalCore::FreeBusy::Ptr freeBusy() const
     {
       return mFreeBusy;
     }
 
-    void setFreeBusyPeriods( KCal::FreeBusy *fb );
+  void setFreeBusyPeriods( const KCalCore::FreeBusy::Ptr &fb );
 
     QString email() const { return mAttendee->email(); }
     void setUpdateTimerID( int id ) { mTimerID = id; }
@@ -172,7 +172,7 @@ class FreeBusyItem
 
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
-      Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+      CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
       if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
                                  mParentWidget ) ) {
         mIsDownloading = false;
@@ -183,7 +183,7 @@ class FreeBusyItem
 
   private:
     AttendeeData::Ptr mAttendee;
-    KCal::FreeBusy *mFreeBusy;
+    KCalCore::FreeBusy::Ptr mFreeBusy;
 
     // This is used for the update timer
     int mTimerID;
@@ -193,7 +193,7 @@ class FreeBusyItem
 
     QStandardItemModel* mModel;
     EditorFreeBusy *mParentWidget;
-    QTreeWidget *mListWidget;    
+    QTreeWidget *mListWidget;
 };
 
 void FreeBusyItem::updateItem()
@@ -208,7 +208,7 @@ void FreeBusyItem::updateItem()
     item = mListWidget->topLevelItem( index );
     item->setText( 0, text );
   }
-    
+
   switch ( mAttendee->status() ) {
     case AttendeeData::Accepted:
       item->setIcon( 0, SmallIcon( "dialog-ok-apply" ) );
@@ -232,17 +232,17 @@ void FreeBusyItem::updateItem()
 }
 
 // Set the free/busy periods for this attendee
-void FreeBusyItem::setFreeBusyPeriods( KCal::FreeBusy *fb )
+void FreeBusyItem::setFreeBusyPeriods( const KCalCore::FreeBusy::Ptr &fb )
 {
   if ( fb ) {
     KDateTime::Spec timeSpec = KSystemTimeZones::local();
 
     QList<QStandardItem *> newItems;
     // Evaluate free/busy information
-    QList<KCal::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
-    for ( QList<KCal::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
+    QList<KCalCore::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
+    for ( QList<KCalCore::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
           it != busyPeriods.end(); ++it ) {
-      KCal::FreeBusyPeriod per = *it;
+      KCalCore::FreeBusyPeriod per = *it;
 
       QStandardItem* newItem = new QStandardItem;
       newItem->setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
@@ -278,12 +278,12 @@ void FreeBusyItem::setFreeBusyPeriods( KCal::FreeBusy *fb )
     mModel->insertRow( index, newItems );
     setFreeBusy( fb );
   } else {
-    setFreeBusy( 0 );
+    setFreeBusy( KCalCore::FreeBusy::Ptr() );
   }
 
   // We are no longer downloading
   mIsDownloading = false;
- 
+
 }
 
 ////
@@ -383,11 +383,11 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( splitter, SIGNAL( splitterMoved(int,int) ), SLOT( splitterMoved() ) );
   mLeftView = new QTreeWidget;
   mLeftView->setHeader( new GanttHeaderView );
-  mLeftView->setHeaderLabel( i18n("Attendee") );
+  mLeftView->setHeaderLabel( i18nc( "@label:listbox A list showing attendees", "Attendee") );
   mLeftView->setRootIsDecorated( false );
   mLeftView->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   mLeftView->setContextMenuPolicy( Qt::CustomContextMenu );
-  
+
   mGanttView = new KDGantt::GraphicsView();
   mGanttView->setObjectName( "mGanttView" );
   mGanttView->setToolTip(
@@ -419,7 +419,7 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
 
   splitter->addWidget( mLeftView );
   splitter->addWidget( mGanttView );
-  
+
   topLayout->addWidget( splitter );
   topLayout->setStretchFactor( splitter, 100 );
 
@@ -429,7 +429,7 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
     QDateTime( QDateTime::currentDateTime().addDays( -15 ).date() );
   QDateTime horizonEnd = QDateTime::currentDateTime().addDays( 15 );
   mGanttGrid->setStartDateTime( horizonStart );
-  
+
 #if 0
   // mEventRectangle is the colored rectangle representing the event being modified
   mEventRectangle = new KDIntervalColorRectangle( mGanttView );
@@ -449,9 +449,9 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(showAttendeeStatusMenu()) );
 
-  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-  connect( m, SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)),
-           SLOT(slotInsertFreeBusy(KCal::FreeBusy *,const QString &)) );
+  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
+  connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy *,const QString &)),
+           SLOT(slotInsertFreeBusy(KCalCore::FreeBusy *,const QString &)) );
 
 
   connect( &mReloadTimer, SIGNAL(timeout()), SLOT(autoReload()) );
@@ -472,7 +472,7 @@ EditorFreeBusy::~EditorFreeBusy()
 void EditorFreeBusy::removeAttendee( AttendeeData::Ptr attendee )
 {
   FreeBusyItem *anItem = 0;
-  for (uint i = 0; i < mFreeBusyItems.count(); i++ ) {
+  for ( int i = 0; i < mFreeBusyItems.count(); i++ ) {
     anItem = mFreeBusyItems[i];
     if ( anItem->attendee() == attendee ) {
       if ( anItem->updateTimerID() != 0 ) {
@@ -599,8 +599,8 @@ void EditorFreeBusy::timerEvent( QTimerEvent *event )
 
 // Set the Free Busy list for everyone having this email address
 // If fb == 0, this disabled the free busy list for them
-void EditorFreeBusy::slotInsertFreeBusy( KCal::FreeBusy *fb,
-                                           const QString &email )
+void EditorFreeBusy::slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb,
+                                         const QString &email )
 {
   if ( fb ) {
     fb->sortList();
@@ -757,13 +757,13 @@ bool EditorFreeBusy::tryDate( FreeBusyItem *attendee,
   // If we don't have any free/busy information, assume the
   // participant is free. Otherwise a participant without available
   // information would block the whole allocation.
-  KCal::FreeBusy *fb = attendee->freeBusy();
+  KCalCore::FreeBusy::Ptr fb = attendee->freeBusy();
   if ( !fb ) {
     return true;
   }
 
-  QList<KCal::Period> busyPeriods = fb->busyPeriods();
-  for ( QList<KCal::Period>::Iterator it = busyPeriods.begin();
+  QList<KCalCore::Period> busyPeriods = fb->busyPeriods();
+  for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
        it != busyPeriods.end(); ++it ) {
     if ( (*it).end() <= tryFrom || // busy period ends before try period
          (*it).start() >= tryTo ) { // busy period starts after try period
@@ -918,7 +918,7 @@ void EditorFreeBusy::removeAttendee()
   } else {
     nextSelectedItem = mFreeBusyItems[ mFreeBusyItems.indexOf( item ) + 1 ];
   }
-    
+
 
   AttendeeData::Ptr delA ( new AttendeeData( item->attendee()->name(), item->attendee()->email(),
                                  item->attendee()->RSVP(), item->attendee()->status(),
@@ -967,25 +967,25 @@ void EditorFreeBusy::showAttendeeStatusMenu()
 
   QAction *needsaction =
     menu->addAction( SmallIcon( "help-about" ),
-                     AttendeeData::statusName( AttendeeData::NeedsAction ) );
+                     KCalUtils::Stringify::attendeeStatus( AttendeeData::NeedsAction ) );
   QAction *accepted =
     menu->addAction( SmallIcon( "dialog-ok-apply" ),
-                     AttendeeData::statusName( AttendeeData::Accepted ) );
+                     KCalUtils::Stringify::attendeeStatus( AttendeeData::Accepted ) );
   QAction *declined =
     menu->addAction( SmallIcon( "dialog-cancel" ),
-                     AttendeeData::statusName( AttendeeData::Declined ) );
+                     KCalUtils::Stringify::attendeeStatus( AttendeeData::Declined ) );
   QAction *tentative =
     menu->addAction( SmallIcon( "dialog-ok" ),
-                     AttendeeData::statusName( AttendeeData::Tentative ) );
+                     KCalUtils::Stringify::attendeeStatus( AttendeeData::Tentative ) );
   QAction *delegated =
     menu->addAction( SmallIcon( "mail-forward" ),
-                     AttendeeData::statusName( AttendeeData::Delegated ) );
+                     KCalUtils::Stringify::attendeeStatus( AttendeeData::Delegated ) );
   QAction *completed =
     menu->addAction( SmallIcon( "mail-mark-read" ),
-                     AttendeeData::statusName( AttendeeData::Completed ) );
+                     KCalUtils::Stringify::attendeeStatus( AttendeeData::Completed ) );
   QAction *inprocess =
     menu->addAction( SmallIcon( "help-about" ),
-                     AttendeeData::statusName( AttendeeData::InProcess ) );
+                     KCalUtils::Stringify::attendeeStatus( AttendeeData::InProcess ) );
   QAction *ret = menu->exec( QCursor::pos() );
   delete menu;
   if ( ret == needsaction ) {
@@ -1081,13 +1081,13 @@ void EditorFreeBusy::slotOrganizerChanged( const QString &newOrganizer )
 // #else
 //  kDebug() << "Disabled code, port to KDGantt2";
 // #endif
-// 
+//
 //   return 0; //TODO-NGPORT
 // }
 
 bool EditorFreeBusy::eventFilter( QObject *watched, QEvent *event )
 {
-#if 0  
+#if 0
   if ( watched == mGanttView->timeHeaderWidget() &&
        event->type() >= QEvent::MouseButtonPress && event->type() <= QEvent::MouseMove ) {
     return true;

@@ -34,8 +34,8 @@
 #ifndef __MESSAGEVIEWER_ANTISPAMCONFIG_H__
 #define __MESSAGEVIEWER_ANTISPAMCONFIG_H__
 
-#include <QRegExp>
-#include <QList>
+#include <QtCore/QRegExp>
+#include <QtCore/QVector>
 #include "messageviewer_export.h"
 
 class QString;
@@ -43,13 +43,13 @@ class QString;
 namespace MessageViewer {
 
 /// Valid types of SpamAgent
-typedef enum {
+enum SpamAgentTypes {
   SpamAgentNone,          //!< Invalid SpamAgent, skip this agent
   SpamAgentBool,          //!< Simple Yes or No (Razor)
   SpamAgentFloat,         //!< For straight percentages between 0.0 and 1.0 (BogoFilter)
   SpamAgentFloatLarge,    //!< For straight percentages between 0.0 and 100.0
   SpamAgentAdjustedFloat  //!< Use this when we need to compare against a threshold (SpamAssasssin)
-} SpamAgentTypes;
+};
 
 class SpamAgent
 {
@@ -77,8 +77,7 @@ private:
   QRegExp mThreshold;
   QRegExp mConfidence;
 };
-typedef QList<SpamAgent> SpamAgents;
-typedef QList<SpamAgent>::Iterator SpamAgentsIterator;
+typedef QVector<SpamAgent> SpamAgents;
 
 class AntiSpamConfigSingletonProvider;
 
@@ -97,7 +96,7 @@ private:
   AntiSpamConfig();
 
 public:
-  ~AntiSpamConfig() {}
+  ~AntiSpamConfig();
 
   static AntiSpamConfig * instance();
 

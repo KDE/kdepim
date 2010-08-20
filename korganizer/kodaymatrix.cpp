@@ -30,13 +30,14 @@
 #include "koglobals.h"
 #include "koprefs.h"
 
-#include <KCal/ICalDrag>
-#include <KCal/VCalDrag>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/utils.h>
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/utils.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemfetchjob.h>
+
+#include <kcalutils/icaldrag.h>
+#include <kcalutils/vcaldrag.h>
 
 #include <KCalendarSystem>
 #include <KIcon>
@@ -52,8 +53,8 @@
 //  K O D A Y M A T R I X
 // ============================================================================
 
-using namespace Akonadi;
-using namespace KCal;
+using namespace KCalCore;
+using namespace KCalUtils;
 
 const int KODayMatrix::NOSELECTION = -1000;
 const int KODayMatrix::NUMDAYS = 42;
@@ -75,7 +76,7 @@ KODayMatrix::KODayMatrix( QWidget *parent )
   mHighlightJournals = false;
 }
 
-void KODayMatrix::setCalendar( Akonadi::Calendar *cal )
+void KODayMatrix::setCalendar( CalendarSupport::Calendar *cal )
 {
   if ( mCalendar ) {
     mCalendar->unregisterObserver( this );
@@ -278,13 +279,13 @@ void KODayMatrix::updateIncidences()
 
 void KODayMatrix::updateJournals()
 {
-  const Item::List items = mCalendar->incidences();
+  const Akonadi::Item::List items = mCalendar->incidences();
 
-  foreach ( const Item & item, items ) {
-    Incidence::Ptr inc = Akonadi::incidence( item );
+  foreach ( const Akonadi::Item & item, items ) {
+    Incidence::Ptr inc = CalendarSupport::incidence( item );
     Q_ASSERT( inc );
     QDate d = inc->dtStart().toTimeSpec( mCalendar->timeSpec() ).date();
-    if ( inc->type() == "Journal" &&
+    if ( inc->type() == Incidence::TypeJournal &&
          d >= mDays[0] &&
          d <= mDays[NUMDAYS-1] &&
          !mEvents.contains( d ) ) {
@@ -304,10 +305,10 @@ void KODayMatrix::updateJournals()
   */
 void KODayMatrix::updateTodos()
 {
-  const Item::List items = mCalendar->todos();
+  const Akonadi::Item::List items = mCalendar->todos();
   QDate d;
-  foreach ( const Item &item, items ) {
-    const Todo::Ptr t = Akonadi::todo( item );
+  foreach ( const Akonadi::Item &item, items ) {
+    const Todo::Ptr t = CalendarSupport::todo( item );
     Q_ASSERT( t );
     if ( t->hasDueDate() ) {
       ushort recurType = t->recurrenceType();
@@ -340,11 +341,11 @@ void KODayMatrix::updateTodos()
 
 void KODayMatrix::updateEvents()
 {
-  Item::List eventlist = mCalendar->events( mDays[0], mDays[NUMDAYS-1],
+  Akonadi::Item::List eventlist = mCalendar->events( mDays[0], mDays[NUMDAYS-1],
                                                       mCalendar->timeSpec() );
 
-  Q_FOREACH ( const Item & item, eventlist ) {
-    const Event::ConstPtr event = Akonadi::event( item );
+  Q_FOREACH ( const Akonadi::Item & item, eventlist ) {
+    const Event::Ptr event = CalendarSupport::event( item );
     Q_ASSERT( event );
     ushort recurType = event->recurrenceType();
 
@@ -596,7 +597,7 @@ void KODayMatrix::dragEnterEvent( QDragEnterEvent *e )
 {
   e->acceptProposedAction();
   const QMimeData *md = e->mimeData();
-  if ( !Akonadi::canDecode( md )) {
+  if ( !CalendarSupport::canDecode( md )) {
     e->ignore();
     return;
   }
@@ -612,7 +613,7 @@ void KODayMatrix::dragEnterEvent( QDragEnterEvent *e )
 void KODayMatrix::dragMoveEvent( QDragMoveEvent *e )
 {
   const QMimeData *md = e->mimeData();
-  if ( !Akonadi::canDecode( md ) ) {
+  if ( !CalendarSupport::canDecode( md ) ) {
     e->ignore();
     return;
   }
@@ -648,7 +649,7 @@ void KODayMatrix::dropEvent( QDropEvent *e )
     KUrl res = urls.at( 0 );
 
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item::fromUrl( res ) );
-    job->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->fetchScope().fetchFullPayload();
     Akonadi::Item::List items;
     if ( job->exec() ) {

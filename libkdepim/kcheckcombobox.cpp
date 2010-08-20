@@ -25,6 +25,9 @@
 
 #include "kcheckcombobox.h"
 
+#include <KLineEdit>
+#include <KDebug>
+
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QLineEdit>
@@ -43,7 +46,6 @@ class KCheckComboBox::Private
   public:
     Private( KCheckComboBox *qq )
       : q( qq )
-      , mLineEditIsReceiver( false )
       , mSeparator( QLatin1String( "," ) )
       , mSqueezeText( false )
       , mIgnoreHide( false )
@@ -53,11 +55,9 @@ class KCheckComboBox::Private
     QString squeeze( const QString &text );
     void updateCheckedItems( const QModelIndex &topLeft = QModelIndex(),
                              const QModelIndex &bottomRight = QModelIndex() );
-    void toggleCheckState( int pos );
-    void toggleCheckState( const QModelIndex &index );
+    void toggleCheckState();
 
   public:
-    bool mLineEditIsReceiver;
     QString mSeparator;
     QString mDefaultText;
     bool mSqueezeText;
@@ -70,24 +70,29 @@ void KCheckComboBox::Private::makeInsertedItemsCheckable(const QModelIndex &pare
 {
   Q_UNUSED( parent );
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>( q->model() );
-  Q_ASSERT( model );
-  for ( int r = start; r <= end; ++r ) {
-    QStandardItem *item = model->item( r, 0 );
-    item->setCheckable( true );
+  if ( model ) {
+    for ( int r = start; r <= end; ++r ) {
+      QStandardItem *item = model->item( r, 0 );
+      item->setCheckable( true );
+    }
+  } else {
+    kWarning() << "KCheckComboBox: model is not a QStandardItemModel but a" << q->model() << ". Cannot proceed.";
   }
 }
 
 QString KCheckComboBox::Private::squeeze( const QString &text )
 {
   QFontMetrics fm( q->fontMetrics() );
-  // NOTE: the 25 substracted is to take in account the space taken by the drop
-  //       image. It quite ugly and probably differs per style, but I don't know
-  //       better way to do this.
-  int labelWidth = q->lineEdit()->width() - 25;
-
-  int lineWidth = fm.width( text );
-  if ( lineWidth > labelWidth )
-    return fm.elidedText( text, Qt::ElideMiddle, labelWidth );
+  // The 4 pixels is 2 * horizontalMargin from QLineEdit.
+  // The rest is code from QLineEdit::paintEvent, where it determines whether to scroll the text
+  // (on my machine minLB=2 and minRB=2, so this removes 8 pixels in total)
+  const int minLB = qMax(0, -fm.minLeftBearing());
+  const int minRB = qMax(0, -fm.minRightBearing());
+  const int lineEditWidth = q->lineEdit()->width() - 4 - minLB - minRB;
+  const int textWidth = fm.width( text );
+  if ( textWidth > lineEditWidth ) {
+    return fm.elidedText( text, Qt::ElideMiddle, lineEditWidth );
+  }
 
   return text;
 }
@@ -98,7 +103,7 @@ void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
   Q_UNUSED( topLeft );
   Q_UNUSED( bottomRight );
 
-  QStringList items = q->checkedItems();
+  const QStringList items = q->checkedItems();
   QString text;
   if ( items.isEmpty() ) {
     text = mDefaultText;
@@ -114,21 +119,17 @@ void KCheckComboBox::Private::updateCheckedItems( const QModelIndex &topLeft,
   emit q->checkedItemsChanged( items );
 }
 
-void KCheckComboBox::Private::toggleCheckState( const QModelIndex &index )
+void KCheckComboBox::Private::toggleCheckState()
 {
-  QVariant value = index.data( Qt::CheckStateRole );
-  if ( value.isValid() ) {
-    Qt::CheckState state = static_cast<Qt::CheckState>( value.toInt() );
-    q->model()->setData( index, state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked,
-                         Qt::CheckStateRole );
+  if (q->view()->isVisible()) {
+    const QModelIndex index = q->view()->currentIndex();
+    QVariant value = index.data( Qt::CheckStateRole );
+    if ( value.isValid() ) {
+      Qt::CheckState state = static_cast<Qt::CheckState>( value.toInt() );
+      q->model()->setData( index, state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked,
+                           Qt::CheckStateRole );
+    }
   }
-}
-
-void KCheckComboBox::Private::toggleCheckState( int pos )
-{
-  Q_UNUSED( pos );
-  if ( !mLineEditIsReceiver )
-    toggleCheckState( q->view()->currentIndex() );
 }
 
 /// Class KCheckComboBox
@@ -137,7 +138,7 @@ KCheckComboBox::KCheckComboBox( QWidget *parent )
   : KComboBox( parent )
   , d( new KCheckComboBox::Private( this ) )
 {
-  connect( this, SIGNAL(activated(int)), this, SLOT(toggleCheckState(int)) );
+  connect( this, SIGNAL(activated(int)), this, SLOT(toggleCheckState()) );
   connect( model(), SIGNAL(rowsInserted (const QModelIndex &, int, int)),
            SLOT(makeInsertedItemsCheckable(const QModelIndex &, int, int)) );
   connect( model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
@@ -146,7 +147,9 @@ KCheckComboBox::KCheckComboBox( QWidget *parent )
   // read-only contents
   setEditable( true );
   lineEdit()->setAlignment( Qt::AlignLeft );
-  lineEdit()->setReadOnly( true );
+  // The cast is a workaround for the fact that QLineEdit::setReadOnly isn't virtual.
+  // KLineEdit copes with this case since kdelibs-4.6 though.
+  qobject_cast<KLineEdit *>(lineEdit())->setReadOnly( true );
   setInsertPolicy( KComboBox::NoInsert );
 
   view()->installEventFilter( this );
@@ -180,18 +183,20 @@ void KCheckComboBox::setItemCheckState( int index, Qt::CheckState state )
   setItemData( index, state, Qt::CheckStateRole );
 }
 
+// TODO (BIC) pass the role as parameter to this method
 QStringList KCheckComboBox::checkedItems() const
 {
   QStringList items;
   if ( model() ) {
-    QModelIndex index = model()->index( 0, modelColumn(), rootModelIndex() );
-    QModelIndexList indexes = model()->match( index, Qt::CheckStateRole,
-                                              Qt::Checked, -1, Qt::MatchExactly );
+    const QModelIndex index = model()->index( 0, modelColumn(), rootModelIndex() );
+    const QModelIndexList indexes = model()->match( index, Qt::CheckStateRole,
+                                                    Qt::Checked, -1, Qt::MatchExactly );
     foreach ( const QModelIndex &index, indexes ) {
-      if ( index.data( Qt::UserRole ).isNull() )
+      if ( index.data( Qt::UserRole ).isNull() ) {
         items += index.data( Qt::DisplayRole ).toString();
-      else
-      items += index.data( Qt::UserRole ).toString();
+      } else {
+        items += index.data( Qt::UserRole ).toString();
+      }
     }
   }
   return items;
@@ -289,11 +294,13 @@ void KCheckComboBox::keyPressEvent( QKeyEvent *event )
   // don't call base class implementation, we don't need all that stuff in there
 }
 
+#ifndef QT_NO_WHEELEVENT
 void KCheckComboBox::wheelEvent( QWheelEvent *event )
 {
   // discard mouse wheel events on the combo box
   event->accept();
 }
+#endif
 
 void KCheckComboBox::resizeEvent( QResizeEvent * event )
 {
@@ -311,11 +318,11 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
     {
       switch ( static_cast<QKeyEvent *>( event )->key() ) {
         case Qt::Key_Space:
-          if ( event->type() == QEvent::KeyPress ) {
-            d->toggleCheckState( view()->currentIndex() );
-            return true;
+          if ( event->type() == QEvent::KeyPress && view()->isVisible() ) {
+            d->toggleCheckState();
           }
-          break;
+          // Always eat the event: don't let QItemDelegate toggle the current index when the view is hidden.
+          return true;
         case Qt::Key_Return:
         case Qt::Key_Enter:
         case Qt::Key_Escape:
@@ -331,14 +338,10 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
       d->mIgnoreHide = true;
-
       if ( receiver == lineEdit() ) {
-        d->mLineEditIsReceiver = true;
         showPopup();
         return true;
-      } else
-        d->mLineEditIsReceiver = false;
-
+      }
       break;
     default:
       break;

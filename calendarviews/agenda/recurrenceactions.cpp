@@ -24,7 +24,7 @@
 
 #include "ui_recurrenceactionsscopewidget.h"
 
-#include <KCal/Recurrence>
+#include <kcalcore/recurrence.h>
 
 #include <KDialog>
 #include <KLocale>
@@ -32,8 +32,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-using namespace KCal;
-using namespace KCal::RecurrenceActions;
+using namespace KCalCore;
+using namespace KCalCore::RecurrenceActions;
 
 class ScopeWidget : public QWidget
 {

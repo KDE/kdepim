@@ -29,7 +29,9 @@
 #include "recipientseditorsidewidget.h"
 
 #include "messagecomposersettings.h"
+#ifndef Q_OS_WINCE
 #include <messagecomposer/distributionlistdialog.h>
+#endif
 #include "messageviewer/autoqpointer.h"
 
 #include <KDebug>
@@ -42,7 +44,7 @@
 using namespace MessageComposer;
 using namespace KPIM;
 
-RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent )
+RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent ), mRecentAddressConfig( 0 )
 {
   factory()->setParent( this ); // HACK: can't use 'this' above since it's not yet constructed at that point
   mSideWidget = new RecipientsEditorSideWidget( this, this );
@@ -78,8 +80,6 @@ void RecipientsEditor::addRecipient( const QString& recipient, Recipient::Type t
 
 void RecipientsEditor::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, Recipient::Type type )
 {
-  clear();
-
   int count = 1;
 
   foreach( const KMime::Types::Mailbox &mailbox, mailboxes ) {
@@ -152,9 +152,12 @@ void RecipientsEditor::removeRecipient(const QString& recipient, Recipient::Type
 
 void RecipientsEditor::saveDistributionList()
 {
+// disabled due to no QTreeWidget
+#ifndef Q_OS_WINCE
   MessageViewer::AutoQPointer<MessageComposer::DistributionListDialog> dlg( new MessageComposer::DistributionListDialog( this ) );
   dlg->setRecipients( recipients() );
   dlg->exec();
+#endif
 }
 
 void RecipientsEditor::selectRecipients()

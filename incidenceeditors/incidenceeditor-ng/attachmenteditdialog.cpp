@@ -28,7 +28,6 @@
 
 #include "attachmenteditdialog.h"
 
-#include <KDE/KCal/Attachment>
 #include <KDE/KIO/NetAccess>
 
 #include "attachmenticonview.h" // UGLY
@@ -41,15 +40,15 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                                             bool modal )
   : KDialog( parent )
 #ifdef KDEPIM_ENTERPRISE_BUILD
-  , mAttachment( new KCal::Attachment( '\0' ) ) //use the non-uri constructor
+  , mAttachment( new KCalCore::Attachment( '\0' ) ) //use the non-uri constructor
                                                 // as we want inline by default
 #else
-   , mAttachment( new KCal::Attachment( QString() ) )
+   , mAttachment( new KCalCore::Attachment( QString() ) )
 #endif
   , mItem( item )
   , mMimeType( KMimeType::mimeType( item->mimeType() ) )
   , mUi( new Ui::AttachmentEditDialog )
-{ 
+{
   QWidget *page = new QWidget(this);
   mUi->setupUi( page );
   mUi->mLabelEdit->setText( item->label().isEmpty() ? item->uri() : item->label() );
@@ -60,11 +59,11 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                         i18nc( "@label unknown mimetype", "Unknown" ) :
                         mMimeType->comment();
   mUi->mTypeLabel->setText( typecomment );
-  
+
   setMainWidget( page );
   setModal( modal );
 
-  if ( item->attachment()->isUri() || !item->attachment()->data() ) {
+  if ( item->attachment()->isUri() || item->attachment()->data().isEmpty() ) {
     mUi->mStackedWidget->setCurrentIndex( 0 );
     mUi->mURLRequester->setUrl( item->uri() );
     urlChanged( item->uri() );
@@ -75,7 +74,7 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                                  arg( KGlobal::locale()->formatNumber(
                                         item->attachment()->size(), 0 ) ) );
   }
-  
+
   connect( mUi->mURLRequester, SIGNAL(urlSelected(const KUrl &)),
            SLOT(urlChanged(const KUrl &)) );
   connect( mUi->mURLRequester, SIGNAL( textChanged( const QString& ) ),

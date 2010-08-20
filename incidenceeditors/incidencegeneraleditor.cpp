@@ -24,15 +24,16 @@
 #include <KDE/KSystemTimeZones>
 #include <KDE/KToolBar>
 
-#include <KCal/Incidence>
-#include <KCal/IncidenceFormatter>
-#include <KCal/ICalTimeZones>
+#include <kcalcore/incidence.h>
+#include <kcalcore/icaltimezones.h>
+#include <kcalutils/incidenceformatter.h>
+
 
 #include "editoralarms.h"
 #include "editorconfig.h"
 #include "ui_incidencegeneral.h"
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace IncidenceEditors;
 
 IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
@@ -60,12 +61,12 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
                                              KRichTextWidget::SupportFormatPainting );
 
   initDescriptionToolBar();
-  
+
   connect( mUi->mAlarmEditButton, SIGNAL(clicked()), SLOT(editAlarms()) );
   connect( mUi->mHasTimeCheckbox, SIGNAL(toggled(bool)), SLOT(slotHasTimeCheckboxToggled(bool)) );
 }
 
-void IncidenceGeneralEditor::load( const KCal::Incidence::Ptr &incidence )
+void IncidenceGeneralEditor::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mIncidence = incidence;
   mUi->mSummaryEdit->setText( incidence->summary() );
@@ -73,9 +74,9 @@ void IncidenceGeneralEditor::load( const KCal::Incidence::Ptr &incidence )
   mUi->mCategoriesLabel->setText( incidence->categories().join( "," ) );
 
   enableTimeEditors( !incidence->allDay() );
-  
+
   mUi->mHasTimeCheckbox->setChecked( !incidence->allDay() );
-  
+
   switch( incidence->secrecy() ) {
   case Incidence::SecrecyPublic:
     mUi->mSecrecyCombo->setCurrentIndex( 0 );
@@ -91,27 +92,27 @@ void IncidenceGeneralEditor::load( const KCal::Incidence::Ptr &incidence )
   setDescription( incidence->description(), incidence->descriptionIsRich() );
 
   updateRecurrenceSummary( incidence );
-  
+
   // set up alarm stuff
   mAlarmList.clear();
   Alarm::List::ConstIterator it;
   Alarm::List alarms = incidence->alarms();
   for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
-    Alarm *al = new Alarm( *(*it) );
+    Alarm::Ptr al = Alarm::Ptr( new Alarm( *(*it) ) );
     al->setParent( 0 );
     mAlarmList.append( al );
   }
-  
+
   updateDefaultAlarmTime();
   updateAlarmWidgets();
 
 //   mAttachments->readIncidence( incidence );
 }
 
-Alarm *IncidenceGeneralEditor::alarmFromSimplePage() const
+Alarm::Ptr IncidenceGeneralEditor::alarmFromSimplePage() const
 {
   if ( mUi->mAlarmButton->isChecked() ) {
-    Alarm *alarm = new Alarm( 0 );
+    Alarm::Ptr alarm( new Alarm( 0 ) );
     alarm->setDisplayAlarm( "" );
     alarm->setEnabled( true );
     QString tmpStr = mUi->mAlarmTimeEdit->text();
@@ -148,7 +149,7 @@ void IncidenceGeneralEditor::initDescriptionToolBar()
 
   connect( mRichTextCheck, SIGNAL(toggled(bool)),
            this, SLOT(enableRichTextDescription(bool)) );
-           
+
   KActionCollection *collection = new KActionCollection( this ); //krazy:exclude=tipsandthis
   mUi->mDescriptionEdit->createActions( collection );
 
@@ -195,7 +196,7 @@ void IncidenceGeneralEditor::editAlarms()
 {
   if ( mUi->mAlarmStack->indexOf( mUi->mAlarmStack->currentWidget() ) == SimpleAlarmPage ) {
     mAlarmList.clear();
-    Alarm *al = alarmFromSimplePage();
+    Alarm::Ptr al = alarmFromSimplePage();
     if ( al ) {
       mAlarmList.append( al );
     }
@@ -238,7 +239,7 @@ void IncidenceGeneralEditor::updateAlarmWidgets()
                                            mAlarmList.count() ) );
   } else {
     mUi->mAlarmEditButton->setEnabled( true );
-    Alarm *alarm = mAlarmList.first();
+    Alarm::Pyt alarm = mAlarmList.first();
     // Check if it is the trivial type of alarm, which can be
     // configured with a simply spin box...
 
@@ -279,7 +280,7 @@ void IncidenceGeneralEditor::updateDefaultAlarmTime()
   mUi->mAlarmIncrCombo->setCurrentIndex( index );
 }
 
-void IncidenceGeneralEditor::updateRecurrenceSummary( const KCal::Incidence::Ptr &incidence )
+void IncidenceGeneralEditor::updateRecurrenceSummary( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( incidence->recurs() ) {
     mUi->mRecurrenceLabel->setText( IncidenceFormatter::recurrenceString( incidence.get() ) );
@@ -400,7 +401,7 @@ void EventGeneralEditor::enableTimeEditors( bool enabled )
   mUi->mTimeZoneComboEnd->setEnabled( enabled );
 }
 
-bool EventGeneralEditor::setAlarmOffset( Alarm *alarm, int value ) const
+bool EventGeneralEditor::setAlarmOffset( const Alarm::Ptr &alarm, int value ) const
 {
   alarm->setStartOffset( value );
   return true;
@@ -412,7 +413,7 @@ void EventGeneralEditor::slotHasTimeCheckboxToggled( bool checked )
 
   setDuration();
   emitDateTimeStr();
-  
+
   //if(alarmButton->isChecked()) alarmStuffDisable(noTime);
   emit allDayChanged( !checked );
 }
@@ -434,7 +435,7 @@ TodoGeneralEditor::TodoGeneralEditor( QWidget *parent )
   connect( mUi->mCompletedCombo, SIGNAL(activated(int)), SLOT(completedChanged(int)) );
 }
 
-void TodoGeneralEditor::load( const KCal::Todo::Ptr &todo,
+void TodoGeneralEditor::load( const KCalCore::Todo::Ptr &todo,
                               const QDate &date,
                               bool tmpl )
 {
@@ -451,7 +452,7 @@ void TodoGeneralEditor::load( const KCal::Todo::Ptr &todo,
 
     if ( startDT.isUtc() )
       startDT = startDT.toLocalZone();
-    
+
     mUi->mStartDateEdit->setDate( startDT.date() );
     mUi->mStartTimeEdit->setTime( startDT.time() );
     mUi->mStartCheck->setChecked( true );
@@ -587,7 +588,7 @@ void TodoGeneralEditor::updateHasTimeCheckBox()
   }
 }
 
-bool TodoGeneralEditor::setAlarmOffset( Alarm *alarm, int value ) const
+bool TodoGeneralEditor::setAlarmOffset( const Alarm::Ptr &alarm, int value ) const
 {
   if ( mUi->mEndDateEdit->isEnabled() ) {
     alarm->setEndOffset( value );

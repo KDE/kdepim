@@ -29,12 +29,10 @@
 #ifndef ATTACHMENTEDITDIALOG_H
 #define ATTACHMENTEDITDIALOG_H
 
+#include <kcalcore/attachment.h>
+
 #include <KDE/KDialog>
 #include <KDE/KMimeType>
-
-namespace KCal {
-class Attachment;
-}
 
 namespace Ui {
 class AttachmentEditDialog;
@@ -58,7 +56,7 @@ class AttachmentEditDialog : public KDialog
     virtual void slotApply();
 
   private:
-    KCal::Attachment *mAttachment;
+    KCalCore::Attachment::Ptr mAttachment;
     AttachmentIconItem *mItem;
     KMimeType::Ptr mMimeType;
     Ui::AttachmentEditDialog *mUi;

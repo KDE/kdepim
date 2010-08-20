@@ -5,12 +5,12 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 add_subdirectory(tests)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
   ${CMAKE_SOURCE_DIR}/libkleo/
   ${Boost_INCLUDE_DIR}
 )
 
 set(kmail_mobile_srcs
+  attachmentproxymodel.cpp
   global.cpp
   composerautoresizer.cpp
   composerview.cpp
@@ -19,6 +19,7 @@ set(kmail_mobile_srcs
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
+  messageviewitem.cpp
 )
 
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
@@ -26,9 +27,9 @@ kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 target_link_libraries(kmail-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDE4_KCMUTILS_LIBS}
-    ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
-    ${KDEPIMLIBS_KMIME_LIBRARY}
-    ${KDEPIMLIBS_AKONADI_LIBRARY}
+    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+    ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
     akonadi_next
     kdepim
@@ -49,6 +50,7 @@ install(FILES
   EditorView.qml
   kmail-composer.qml
   kmail-mobile.qml
+  KMailActions.qml
   kmail-mobile-background.png
   kmail-mobile.notifyrc
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile

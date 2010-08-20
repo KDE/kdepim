@@ -31,6 +31,7 @@ Item {
 
         anchors.horizontalCenter: spinner.horizontalCenter;
         anchors.verticalCenter: spinner.verticalCenter;
+        source: "images/loading/loading_" + spinnerImage.n + ".png"
 
         NumberAnimation on n {
             target: spinnerImage
@@ -42,13 +43,5 @@ Item {
             loops: Animation.Infinite
         }
 
-        source: "images/loading/loading_" + spinnerImage.n + ".png"
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                console.log("comecou");
-                animation.start();
-            }
-        }
     }
 }

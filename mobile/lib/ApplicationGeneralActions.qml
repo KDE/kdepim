@@ -20,6 +20,7 @@
 */
 
 import Qt 4.7 as QML
+import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 
@@ -31,10 +32,10 @@ KPIM.ActionList {
   KPIM.ActionListItem {
     name : "quit"
   }
-  KPIM.FakeAction {
+  KPIM.ActionListItem {
     name : "wm_task_switch"
   }
-  KPIM.FakeAction {
+  KPIM.ActionListItem {
     name : "add_new_" + type
   }
   KPIM.FakeAction {
@@ -43,8 +44,9 @@ KPIM.ActionList {
   KPIM.FakeAction {
     name : "configure"
   }
-  KPIM.FakeAction {
+  KPIM.ScriptActionItem  {
     name : "show_about_dialog"
+    title : KDE.i18n( "About" )
   }
 
   QML.Component.onCompleted :

@@ -36,6 +36,7 @@ Rectangle {
   property alias imageHeight : image.height
 
   signal triggered()
+  signal longPressed()
 
   Binding {
     target : image
@@ -47,6 +48,12 @@ Rectangle {
     target : buttonText
     property : "text"
     value : { action.text.replace("&", ""); }
+  }
+
+  Binding {
+    target: parent
+    property: "enabled"
+    value: action.enabled
   }
 
   height : (!hidable || action.enabled) ? hardcoded_height : 0
@@ -75,6 +82,7 @@ Rectangle {
     id : buttonText
     anchors.horizontalCenter : parent.horizontalCenter
     anchors.verticalCenter : parent.verticalCenter
+    color: parent.enabled ? "black" : "gray"
   }
 
   MouseArea {
@@ -87,6 +95,9 @@ Rectangle {
     }
     onClicked : {
       triggered(); action.trigger();
+    }
+    onPressAndHold : {
+      longPressed()
     }
   }
 

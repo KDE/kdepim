@@ -56,8 +56,8 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
      * you reimplement the load method in a subclass, make sure to call this
      * implementation too.
      */
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence );
 
 
   private slots:

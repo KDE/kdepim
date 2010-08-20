@@ -26,6 +26,8 @@
 
 #include "attendeeeditor.h"
 
+#include <kcalcore/freebusy.h>
+
 #include <QDateTime>
 #include <QTimer>
 
@@ -34,10 +36,6 @@ class FreeBusyItem;
 class KDGanttView;
 class KDGanttViewItem;
 class KDIntervalColorRectangle;
-
-namespace KCal {
-  class FreeBusy;
-}
 
 class KDateTime;
 
@@ -51,12 +49,12 @@ class EditorFreeBusy : public AttendeeEditor
     void setUpdateEnabled( bool enabled );
     bool updateEnabled() const;
 
-    void insertAttendee( KCal::Attendee *, bool readFBList = true );
-    void removeAttendee( KCal::Attendee * );
+    void insertAttendee( const KCalCore::Attendee::Ptr & , bool readFBList = true );
+    void removeAttendee( const KCalCore::Attendee::Ptr & );
     void clearAttendees();
 
-    void readIncidence( KCal::Incidence *incidence );
-    void fillIncidence( KCal::Incidence *incidence );
+    void readIncidence( const KCalCore::Incidence::Ptr &incidence );
+    void fillIncidence( KCalCore::Incidence::Ptr &incidence );
 
     void triggerReload();
     void cancelReload();
@@ -65,7 +63,7 @@ class EditorFreeBusy : public AttendeeEditor
     void dateTimesChanged( const QDateTime &, const QDateTime & );
 
   public slots:
-    void slotInsertFreeBusy( KCal::FreeBusy *fb, const QString &email );
+    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
 
     void setDateTimes( const QDateTime &, const QDateTime & );
 
@@ -91,12 +89,12 @@ class EditorFreeBusy : public AttendeeEditor
 
   protected:
     void timerEvent( QTimerEvent * );
-    KCal::Attendee *currentAttendee() const;
+    KCalCore::Attendee::Ptr currentAttendee() const;
     /* reimpl */
     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();
     void clearSelection() const;
-    void changeStatusForMe( KCal::Attendee::PartStat status );
+    void changeStatusForMe( KCalCore::Attendee::PartStat status );
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
   private slots:

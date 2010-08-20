@@ -42,7 +42,7 @@ class HTMLQuoteColorer
      *
      * If you don't call this, the color of the quoting will be black.
      */
-    void setQuoteColor( int level, const QColor &color );
+    void setQuoteColor( unsigned int level, const QColor &color );
 
     /**
      * Do the work and add nice colors to the HTML.

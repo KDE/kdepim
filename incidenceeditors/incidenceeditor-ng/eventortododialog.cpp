@@ -20,11 +20,14 @@
 
 #include "eventortododialog.h"
 
-#include <KCal/CalendarLocal>
-#include <KCal/ICalFormat>
-#include <KCal/Incidence>
-#include <KCal/Event>
-#include <KCal/Todo>
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/utils.h>
+
+#include <kcalcore/memorycalendar.h>
+#include <kcalcore/icalformat.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
 #include <KConfigSkeleton>
 #include <KMessageBox>
 #include <KStandardDirs>
@@ -32,7 +35,6 @@
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/Item>
-#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
@@ -42,10 +44,11 @@
 #include "incidencecompletionpriority.h"
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
-#include "incidencegeneral.h"
+#include "incidencewhatwhere.h"
 #include "incidencerecurrence.h"
 #include "incidencesecrecy.h"
 #include "incidenceattendee.h"
+#include "invitationdispatcher.h"
 #include "templatemanagementdialog.h"
 #include "ui_eventortododesktop.h"
 
@@ -53,7 +56,15 @@ using namespace IncidenceEditorsNG;
 
 namespace IncidenceEditorsNG {
 
-class EventOrTodoDialogPrivate : public Akonadi::ItemEditorUi
+enum Tabs {
+  GeneralTab = 0,
+  AttendeesTab,
+  AlarmsTab,
+  RecurrenceTab,
+  AttachmentsTab,
+};
+
+class EventOrTodoDialogPrivate : public CalendarSupport::ItemEditorUi
 {
   EventOrTodoDialog *q_ptr;
   Q_DECLARE_PUBLIC( EventOrTodoDialog )
@@ -63,9 +74,13 @@ public:
   Akonadi::CollectionComboBox *mCalSelector;
   bool mCloseOnSave;
 
-  Akonadi::EditorItemManager *mItemManager;
+  CalendarSupport::EditorItemManager *mItemManager;
+  CalendarSupport::InvitationDispatcher *mInvitationDispatcher;
+
   CombinedIncidenceEditor *mEditor;
   IncidenceDateTime *mIeDateTime;
+  IncidenceAttendee *mIeAttendee;
+  IncidenceRecurrence *mIeRecurrence;
 
 public:
   EventOrTodoDialogPrivate( EventOrTodoDialog *qq );
@@ -73,7 +88,7 @@ public:
 
   /// General methods
   void handleAlarmCountChange( int newCount );
-  void handleRecurrenceChange( int type );
+  void handleRecurrenceChange( IncidenceEditorsNG::RecurrenceType type );
   void loadTemplate( const QString &templateName );
   void manageTemplates();
   void saveTemplate( const QString &templateName );
@@ -84,21 +99,16 @@ public:
 
   /// ItemEditorUi methods
   virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
-  void handleItemSaveFinish( Akonadi::EditorItemManager::SaveAction );
-  void handleItemSaveFail( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage );
+  void handleItemSaveFinish( CalendarSupport::EditorItemManager::SaveAction );
+  void handleItemSaveFail( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage );
   virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
   virtual bool isDirty() const;
   virtual bool isValid();
   virtual void load( const Akonadi::Item &item );
   virtual Akonadi::Item save( const Akonadi::Item &item );
   virtual Akonadi::Collection selectedCollection() const;
-  void slotButtonClicked( int button );    enum RecurrenceType {
-    None = 0,
-    Daily,
-    Weekly,
-    Monthly,
-    Yearly
-  };
+  void slotButtonClicked( int button );
+
   virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 };
 
@@ -109,7 +119,8 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   , mUi( new Ui::EventOrTodoDesktop )
   , mCalSelector( new Akonadi::CollectionComboBox )
   , mCloseOnSave( false )
-  , mItemManager( new Akonadi::EditorItemManager( this ) )
+  , mItemManager( new CalendarSupport::EditorItemManager( this ) )
+  , mInvitationDispatcher( 0 )
   , mEditor( new CombinedIncidenceEditor )
 {
   Q_Q( EventOrTodoDialog );
@@ -120,6 +131,11 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   layout->addWidget( mCalSelector );
 
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+
+  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
+    mInvitationDispatcher = new CalendarSupport::InvitationDispatcher( 0, q );
+    mInvitationDispatcher->setItemManager( mItemManager );
+  }
 
   // Now instantiate the logic of the dialog. These editors update the ui, validate
   // fields and load/store incidences in the ui.
@@ -138,34 +154,34 @@ EventOrTodoDialogPrivate::EventOrTodoDialogPrivate( EventOrTodoDialog *qq )
   IncidenceDescription *ieDescription = new IncidenceDescription( mUi );
   mEditor->combine( ieDescription );
 
-  IncidenceAlarm *ieAlarm = new IncidenceAlarm( mUi );
+  IncidenceAlarm *ieAlarm = new IncidenceAlarm( mIeDateTime, mUi );
   mEditor->combine( ieAlarm );
 
   IncidenceAttachment *ieAttachments = new IncidenceAttachment( mUi );
   mEditor->combine( ieAttachments );
 
-  IncidenceRecurrence *ieRecurrence = new IncidenceRecurrence( mIeDateTime, mUi );
-  mEditor->combine( ieRecurrence );
+  mIeRecurrence = new IncidenceRecurrence( mIeDateTime, mUi );
+  mEditor->combine( mIeRecurrence );
 
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
-  IncidenceAttendee *ieAttendee= new IncidenceAttendee( qq, mIeDateTime, mUi );
-  mEditor->combine( ieAttendee );
+  mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
+  mEditor->combine( mIeAttendee );
 
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
-  q->connect( mItemManager, SIGNAL(itemSaveFinished(Akonadi::EditorItemManager::SaveAction)),
-              SLOT(handleItemSaveFinish(Akonadi::EditorItemManager::SaveAction)));
-  q->connect( mItemManager, SIGNAL(itemSaveFailed(Akonadi::EditorItemManager::SaveAction, QString)),
-              SLOT(handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString)));
+  q->connect( mItemManager, SIGNAL(itemSaveFinished(CalendarSupport::EditorItemManager::SaveAction)),
+              SLOT(handleItemSaveFinish(CalendarSupport::EditorItemManager::SaveAction)));
+  q->connect( mItemManager, SIGNAL(itemSaveFailed(CalendarSupport::EditorItemManager::SaveAction, QString)),
+              SLOT(handleItemSaveFail(CalendarSupport::EditorItemManager::SaveAction, QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );
-  q->connect( ieRecurrence, SIGNAL(recurrenceChanged(int)),
-              SLOT(handleRecurrenceChange(int)) );
+  q->connect( mIeRecurrence, SIGNAL(recurrenceChanged(IncidenceEditorsNG::RecurrenceType)),
+              SLOT(handleRecurrenceChange(IncidenceEditorsNG::RecurrenceType)) );
   q->connect( ieAttachments, SIGNAL(attachmentCountChanged(int)),
               SLOT(updateAttachmentCount(int)) );
-  q->connect( ieAttendee, SIGNAL(attendeeCountChanged(int)),
+  q->connect( mIeAttendee, SIGNAL(attendeeCountChanged(int)),
               SLOT(updateAttendeeCount(int)) );
 }
 
@@ -180,69 +196,76 @@ void EventOrTodoDialogPrivate::handleAlarmCountChange( int newCount )
 {
   QString tabText;
   if ( newCount > 0 ) {
-    tabText = i18n( "Reminder (%1)", newCount );
+    tabText = i18nc( "@title:tab Tab to configure the reminders of an event or todo",
+                     "Reminder (%1)", newCount );
   } else {
-    tabText = i18n( "Reminder" );
+    tabText = i18nc( "@title:tab Tab to configure the reminders of an event or todo", "Reminder" );
   }
 
-  mUi->mTabWidget->setTabText( 2, tabText );
+  mUi->mTabWidget->setTabText( AlarmsTab, tabText );
 }
 
-void EventOrTodoDialogPrivate::handleRecurrenceChange( int type )
+void EventOrTodoDialogPrivate::handleRecurrenceChange( IncidenceEditorsNG::RecurrenceType type )
 {
-  QString tabText = i18n( "Rec&urrence" );
+  QString tabText = i18nc( "@title:tab Tab to configure the recurrence of an event or todo",
+                           "Rec&urrence" );
 
   // Keep this numbers in sync with the items in mUi->mRecurrenceTypeCombo. I
   // tried adding an enum to IncidenceRecurrence but for whatever reason I could
   // Qt not play nice with namespaced enums in signal/slot connections.
   // Anyways, I don't expect these values to change.
   switch ( type ) {
-  case 0: // None
+  case RecurrenceTypeNone:
     break;
-  case 1: // Daily
-    tabText += i18nc( "Daily recurring event, capital first letter only", " (D)" );
+  case RecurrenceTypeDaily:
+    tabText += i18nc( "@title:tab Daily recurring event, capital first letter only", " (D)" );
     break;
-  case 2: // Weekly
-    tabText += i18nc( "Weekly recurring event, capital first letter only", " (W)" );
+  case RecurrenceTypeWeekly:
+    tabText += i18nc( "@title:tab Weekly recurring event, capital first letter only", " (W)" );
     break;
-  case 3: // Monthly
-    tabText += i18nc( "Monthly recurring event, capital first letter only", " (M)" );
+  case RecurrenceTypeMonthly:
+    tabText += i18nc( "@title:tab Monthly recurring event, capital first letter only", " (M)" );
     break;
-  case 4: // Yearly
-    tabText += i18nc( "Yearly recurring event, capital first letter only", " (Y)" );
+  case RecurrenceTypeYearly:
+    tabText += i18nc( "@title:tab Yearly recurring event, capital first letter only", " (Y)" );
     break;
+  default:
+    Q_ASSERT_X( false, "handleRecurrenceChange", "Fix your program" );
   }
 
-  mUi->mTabWidget->setTabText( 3, tabText );
+  mUi->mTabWidget->setTabText( RecurrenceTab, tabText );
 }
 
 void EventOrTodoDialogPrivate::loadTemplate( const QString &templateName )
 {
   Q_Q( EventOrTodoDialog );
 
-  KCal::CalendarLocal cal( KSystemTimeZones::local() );
-  QString fileName = KStandardDirs::locateLocal( "data",
-                       "korganizer/templates/" + mEditor->type() + '/' + templateName );
+  KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
+
+  QStringList typeStrings;
+  typeStrings << "Event" << "Todo" << "Journal";
+  const QString fileName = KStandardDirs::locateLocal( "data",
+                                                       "korganizer/templates/" + typeStrings[mEditor->type()] + '/' + templateName );
 
   if ( fileName.isEmpty() ) {
     KMessageBox::error( q, i18nc( "@info", "Unable to find template '%1'.", fileName ) );
     return;
   }
 
-  KCal::ICalFormat format;
-  if ( !format.load( &cal, fileName ) ) {
+  KCalCore::ICalFormat format;
+  if ( !format.load( cal, fileName ) ) {
     KMessageBox::error( q, i18nc( "@info", "Error loading template file '%1'.", fileName ) );
     return;
   }
 
-  KCal::Incidence::List incidences = cal.incidences();
+  KCalCore::Incidence::List incidences = cal->incidences();
   if ( incidences.isEmpty() ) {
     KMessageBox::error( q, i18nc( "@info", "Template does not contain a valid incidence." ) );
     return;
   }
 
   mIeDateTime->setActiveDate( QDate() );
-  mEditor->load( KCal::Incidence::Ptr( incidences.first()->clone() ) );
+  mEditor->load( KCalCore::Incidence::Ptr( incidences.first()->clone() ) );
 }
 
 
@@ -267,17 +290,17 @@ void EventOrTodoDialogPrivate::saveTemplate( const QString &templateName )
 {
   Q_ASSERT( ! templateName.isEmpty() );
 
-  KCal::Incidence::Ptr incidence( new KCal::Event );
+  KCalCore::Incidence::Ptr incidence( new KCalCore::Event );
   mEditor->save( incidence );
 
   QString fileName = "templates/" + incidence->type();
   fileName.append( '/' + templateName );
   fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
 
-  KCal::CalendarLocal cal( KSystemTimeZones::local() );
-  cal.addIncidence( incidence->clone() );
-  KCal::ICalFormat format;
-  format.save( &cal, fileName );
+  KCalCore::MemoryCalendar::Ptr cal( new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
+  cal->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
+  KCalCore::ICalFormat format;
+  format.save( cal, fileName );
 }
 
 void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templateNames )
@@ -292,18 +315,20 @@ void EventOrTodoDialogPrivate::storeTemplatesInConfig( const QStringList &templa
 void EventOrTodoDialogPrivate::updateAttachmentCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 4, i18n( "Attac&hments (%1)", newCount ) );
+    mUi->mTabWidget->setTabText( AttachmentsTab, i18nc( "@title:tab Tab to modify attachments of an event or todo",
+                                           "Attac&hments (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 4, i18n( "Attac&hments" ) );
+    mUi->mTabWidget->setTabText( AttachmentsTab, i18nc( "@title:tab Tab to modify attachments of an event or todo",
+                                           "Attac&hments" ) );
   }
 }
 
 void EventOrTodoDialogPrivate::updateAttendeeCount( int newCount )
 {
   if ( newCount > 0 ) {
-    mUi->mTabWidget->setTabText( 1, i18n( "&Attendees (%1)", newCount ) );
+    mUi->mTabWidget->setTabText( AttendeesTab, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees (%1)", newCount ) );
   } else {
-    mUi->mTabWidget->setTabText( 1, i18n( "&Attendees" ) );
+    mUi->mTabWidget->setTabText( AttendeesTab, i18nc( "@title:tab Tab to modify attendees of an event or todo", "&Attendees" ) );
   }
 }
 
@@ -312,7 +337,6 @@ void EventOrTodoDialogPrivate::updateButtonStatus( bool isDirty )
 {
   Q_Q( EventOrTodoDialog );
   q->enableButton( KDialog::Apply, isDirty );
-  q->enableButton( KDialog::Ok, isDirty );
 }
 
 
@@ -321,20 +345,21 @@ bool EventOrTodoDialogPrivate::containsPayloadIdentifiers( const QSet<QByteArray
   return partIdentifiers.contains( QByteArray( "PLD:RFC822" ) );
 }
 
-void EventOrTodoDialogPrivate::handleItemSaveFail( Akonadi::EditorItemManager::SaveAction, const QString &errorMessage )
+void EventOrTodoDialogPrivate::handleItemSaveFail( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   Q_Q( EventOrTodoDialog );
 
-  const QString message = i18n( "Unable to store the incidence in the calendar. Try again?\n\n Reason: %1", errorMessage );
+  const QString message = i18nc( "@info", "Unable to store the incidence in the calendar. Try again?\n\n Reason: %1", errorMessage );
   if ( KMessageBox::warningYesNo( q, message ) == KMessageBox::Yes ) {
     mItemManager->save();
   } else {
     updateButtonStatus( mEditor->isDirty() );
+    q->enableButtonOk( true );
     q->enableButtonCancel( true );
   }
 }
 
-void EventOrTodoDialogPrivate::handleItemSaveFinish( Akonadi::EditorItemManager::SaveAction )
+void EventOrTodoDialogPrivate::handleItemSaveFinish( CalendarSupport::EditorItemManager::SaveAction )
 {
   Q_Q( EventOrTodoDialog );
 
@@ -344,14 +369,14 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish( Akonadi::EditorItemManager:
     const Akonadi::Item item = mItemManager->item();
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload() );
-    Q_ASSERT( item.hasPayload<KCal::Incidence::Ptr>() );
+    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     // Now the item is succesfull saved, reload it in the editor in order to
     // reset the dirty status of the editor.
-    mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+    mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
 
     // Set the buttons to a reasonable state as well (ok and apply should be
     // disabled at this point).
-    q->enableButtonOk( mEditor->isDirty() );
+    q->enableButtonOk( true );
     q->enableButtonCancel( true );
     q->enableButtonApply( mEditor->isDirty() );
   }
@@ -359,8 +384,8 @@ void EventOrTodoDialogPrivate::handleItemSaveFinish( Akonadi::EditorItemManager:
 
 bool EventOrTodoDialogPrivate::hasSupportedPayload( const Akonadi::Item &item ) const
 {
-  return item.hasPayload() && item.hasPayload<KCal::Incidence::Ptr>()
-    && ( item.hasPayload<KCal::Event::Ptr>() || item.hasPayload<KCal::Todo::Ptr>() );
+  return item.hasPayload() && item.hasPayload<KCalCore::Incidence::Ptr>()
+    && ( item.hasPayload<KCalCore::Event::Ptr>() || item.hasPayload<KCalCore::Todo::Ptr>() );
 }
 
 bool EventOrTodoDialogPrivate::isDirty() const
@@ -375,29 +400,69 @@ bool EventOrTodoDialogPrivate::isValid()
 
 void EventOrTodoDialogPrivate::load( const Akonadi::Item &item )
 {
-  Q_ASSERT( hasSupportedPayload( item ) );
-  mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+  Q_Q( EventOrTodoDialog );
 
-  if ( item.hasPayload<KCal::Event::Ptr>() ) {
-    mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
+  Q_ASSERT( hasSupportedPayload( item ) );
+  mEditor->load( CalendarSupport::incidence( item ) );
+
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  const QStringList allEmails = IncidenceEditors::EditorConfig::instance()->allEmails();
+  KCalCore::Attendee::Ptr me = incidence->attendeeByMails( allEmails );
+
+  if ( incidence->attendeeCount() > 1 &&
+       me && ( me->status() == KCalCore::Attendee::NeedsAction ||
+               me->status() == KCalCore::Attendee::Tentative ||
+               me->status() == KCalCore::Attendee::InProcess ) ) {
+    mUi->mInvitationBar->show();
   } else {
-    mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
+    mUi->mInvitationBar->hide();
   }
+
+  mCalSelector->setMimeTypeFilter( QStringList() << incidence->mimeType() );
+  if ( item.parentCollection().isValid() ) {
+    mCalSelector->setDefaultCollection( item.parentCollection() );
+  }
+
+  if ( mEditor->type() == KCalCore::Incidence::TypeTodo ) {
+    q->setWindowIcon( SmallIcon( "view-calendar-tasks" ) );
+  } else if ( mEditor->type() == KCalCore::Incidence::TypeEvent ) {
+    q->setWindowIcon( SmallIcon( "view-calendar-day" ) );
+  }
+
+  // Initialize tab's titles
+  updateAttachmentCount( incidence->attachments().size() );
+  handleRecurrenceChange( mIeRecurrence->currentRecurrenceType() );
+  handleAlarmCountChange( incidence->alarms().count() );
+
+  q->show();
 }
 
 Akonadi::Item EventOrTodoDialogPrivate::save( const Akonadi::Item &item )
 {
-  KCal::Event::Ptr event( new KCal::Event );
-  // Make sure that we don't loose uid for existing incidence
-  if ( mEditor->incidence<KCal::Incidence>() )
-    event->setUid( mEditor->incidence<KCal::Incidence>()->uid() );
-  mEditor->save( event );
+  Q_ASSERT( mEditor->incidence<KCalCore::Incidence>() );
+
+  KCalCore::Incidence::Ptr incidenceInEditor = mEditor->incidence<KCalCore::Incidence>();
+  KCalCore::Incidence::Ptr newIncidence;
 
   Akonadi::Item result = item;
-  result.setMimeType( Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  result.setPayload<KCal::Event::Ptr>( event );
+  if ( incidenceInEditor->type() == KCalCore::Incidence::TypeEvent ) {
+    newIncidence = KCalCore::Event::Ptr( new KCalCore::Event );
+  } else if ( incidenceInEditor->type() == KCalCore::Incidence::TypeTodo ) {
+    newIncidence = KCalCore::Todo::Ptr( new KCalCore::Todo );
+  } else {
+    Q_ASSERT_X( false, "save", "Invalid Incidence type" );
+  }
+
+  result.setMimeType( newIncidence->mimeType() );
+
+  mEditor->save( newIncidence );
+
+  // TODO: Remove this once we support moving of events/todo's
+  mCalSelector->setEnabled( false );
+
+  // Make sure that we don't loose uid for existing incidence
+  newIncidence->setUid( mEditor->incidence<KCalCore::Incidence>()->uid() );
+  result.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
   return result;
 }
 
@@ -415,16 +480,21 @@ void EventOrTodoDialogPrivate::reject( RejectReason /*reason*/, const QString &e
 
 /// EventOrTodoDialog
 
-EventOrTodoDialog::EventOrTodoDialog()
-  : d_ptr( new EventOrTodoDialogPrivate( this ) )
+EventOrTodoDialog::EventOrTodoDialog( QWidget *parent, Qt::WFlags flags )
+  : IncidenceDialog( parent, flags )
+  , d_ptr( new EventOrTodoDialogPrivate( this ) )
 {
+  Q_D( EventOrTodoDialog );
+
+  resize( QSize( 600, 500 ).expandedTo( minimumSizeHint() ) );
+  d->mUi->mTabWidget->setCurrentIndex( 0 );
+  d->mUi->mSummaryEdit->setFocus();
+
   setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default );
-  setButtonText( KDialog::Apply, i18nc( "@action:button", "&Save" ) );
   setButtonToolTip( KDialog::Apply, i18nc( "@info:tooltip", "Save current changes" ) );
   setButtonToolTip( KDialog::Ok, i18nc( "@action:button", "Save changes and close dialog" ) );
   setButtonToolTip( KDialog::Cancel, i18nc( "@action:button", "Discard changes and close dialog" ) );
   setDefaultButton( Ok );
-  enableButton( Ok, false );
   enableButton( Apply, false );
 
   setButtonText( Default, i18nc( "@action:button", "Manage &Templates..." ) );
@@ -442,6 +512,16 @@ EventOrTodoDialog::EventOrTodoDialog()
 
   setModal( false );
   showButtonSeparator( false );
+
+  // TODO: Implement these.
+  connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+           d->mIeAttendee, SLOT(acceptForMe()) );
+  connect( d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
+           d->mUi->mInvitationBar, SLOT(hide()) );
+  connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+           d->mIeAttendee, SLOT(declineForMe()) );
+  connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
+           d->mUi->mInvitationBar, SLOT(hide()) );
 }
 
 EventOrTodoDialog::~EventOrTodoDialog()
@@ -450,24 +530,41 @@ EventOrTodoDialog::~EventOrTodoDialog()
 }
 
 
-void EventOrTodoDialog::load( const Akonadi::Item &item )
+void EventOrTodoDialog::load( const Akonadi::Item &item, const QDate &activeDate )
 {
   Q_D( EventOrTodoDialog );
-  Q_ASSERT( d->hasSupportedPayload( item ) );
+  d->mIeDateTime->setActiveDate( activeDate );
 
   if ( item.isValid() ) {
     d->mItemManager->load( item );
+    // TODO: Remove this once we support moving of events/todo's
+    d->mCalSelector->setEnabled( false );
   } else {
-    d->mEditor->load( item.payload<KCal::Incidence::Ptr>() );
+    Q_ASSERT( d->hasSupportedPayload( item ) );
+    d->load( item );
+    show();
   }
+}
 
-  if ( item.hasPayload<KCal::Event::Ptr>() ) {
-    d->mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::eventMimeType() );
-  } else {
-    d->mCalSelector->setMimeTypeFilter(
-      QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType() );
-  }
+void EventOrTodoDialog::selectCollection( const Akonadi::Collection &collection )
+{
+  Q_D( EventOrTodoDialog );
+  if ( collection.isValid() )
+    d->mCalSelector->setDefaultCollection( collection );
+  else
+    d->mCalSelector->setCurrentIndex( 0 );
+}
+
+void EventOrTodoDialog::setIsCounterProposal( bool isCounterProposal )
+{
+  Q_D( EventOrTodoDialog );
+  d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
+}
+
+QObject *EventOrTodoDialog::typeAheadReceiver() const
+{
+  Q_D( const EventOrTodoDialog );
+  return d->mUi->mSummaryEdit;
 }
 
 void EventOrTodoDialog::slotButtonClicked( int button )
@@ -477,11 +574,15 @@ void EventOrTodoDialog::slotButtonClicked( int button )
   switch( button ) {
   case KDialog::Ok:
   {
-    enableButtonOk( false );
-    enableButtonCancel( false );
-    enableButtonApply( false );
-    d->mCloseOnSave = true;
-    d->mItemManager->save();
+    if ( d->mEditor->isDirty() ) {
+      enableButtonOk( false );
+      enableButtonCancel( false );
+      enableButtonApply( false );
+      d->mCloseOnSave = true;
+      d->mItemManager->save();
+    } else {
+      close();
+    }
     break;
   }
   case KDialog::Apply:

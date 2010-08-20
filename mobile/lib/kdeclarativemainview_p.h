@@ -23,6 +23,7 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QStringListModel>
 
+#include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 
@@ -46,6 +47,8 @@ public: /// members
   Akonadi::EntityMimeTypeFilterModel *mItemFilter;
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
+  Akonadi::AgentFilterProxyModel     *mAgentInstanceFilterModel;
+  QItemSelectionModel                *mAgentInstanceSelectionModel;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
   Akonadi::BreadcrumbNavigationFactory *mMultiBnf;
   QItemSelectionModel                *mItemSelectionModel;

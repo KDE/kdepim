@@ -27,21 +27,19 @@
 
 #include "cellitem.h"
 
+#include <kcalcore/incidence.h>
+
 #include <Akonadi/Item>
 
 #include <QDate>
 #include <QList>
 #include <QWidget>
 
-namespace KCal {
-  class Incidence;
-}
-
-namespace Akonadi {
+namespace CalendarSupport {
   class Calendar;
 }
 
-using namespace KCal;
+using namespace KCalCore;
 
 class QDragEnterEvent;
 class QDropEvent;
@@ -95,7 +93,8 @@ class AgendaItem : public QWidget, public CellItem
 {
   Q_OBJECT
   public:
-    AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const Akonadi::Item &incidence,
+    AgendaItem( EventView *eventView, CalendarSupport::Calendar *calendar,
+                const Akonadi::Item &incidence,
                 int itemPos, int itemCount,
                 const QDate &qd, QWidget *parent );
     ~AgendaItem();
@@ -237,7 +236,7 @@ class AgendaItem : public QWidget, public CellItem
     int mCellYTop, mCellYBottom;
 
     EventView *mEventView;
-    Akonadi::Calendar *mCalendar;
+    CalendarSupport::Calendar *mCalendar;
     Akonadi::Item mIncidence;
     QDate mDate;
     bool mValid;

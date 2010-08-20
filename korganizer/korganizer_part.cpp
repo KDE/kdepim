@@ -30,9 +30,9 @@
 #include "kocore.h"
 #include "korganizerifaceimpl.h"
 
-#include <KCal/IncidenceFormatter>
+#include <kcalutils/incidenceformatter.h>
 
-#include <akonadi/kcal/utils.h>
+#include <calendarsupport/utils.h>
 
 #include <akonadi/item.h>
 
@@ -42,6 +42,8 @@
 #include <KParts/StatusBarExtension>
 
 #include <QVBoxLayout>
+
+using namespace KCalUtils;
 
 static const KAboutData &createAboutData()
 {
@@ -110,7 +112,7 @@ KOrganizerPart::~KOrganizerPart()
 void KOrganizerPart::slotChangeInfo( const Akonadi::Item &item, const QDate &date )
 {
   Q_UNUSED( date );
-  const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( incidence ) {
     emit textChanged( incidence->summary() + " / " +
                       IncidenceFormatter::timeToString( incidence->dtStart() ) );

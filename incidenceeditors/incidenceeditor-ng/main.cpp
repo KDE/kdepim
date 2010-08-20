@@ -23,12 +23,15 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 
+#include <calendarsupport/kcalprefs.h>
+
 #include <Akonadi/Item>
-#include <KCal/Event>
-#include <KCal/Todo>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
 
 #include "../korganizereditorconfig.h"
 #include "eventortododialog.h"
+#include "incidencedefaults.h"
 
 using namespace IncidenceEditors;
 using namespace IncidenceEditorsNG;
@@ -59,12 +62,29 @@ int main( int argc, char **argv )
 
   KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
   Akonadi::Item item( -1 );
+
+  IncidenceDefaults defaults;
+  // Set the full emails manually here, to avoid that we get dependencies on
+  // KCalPrefs all over the place.
+  defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );
+  // NOTE: At some point this should be generalized. That is, we now use the
+  //       freebusy url as a hack, but this assumes that the user has only one
+  //       groupware account. Which doesn't have to be the case necessarily.
+  //       This method should somehow depend on the calendar selected to which
+  //       the incidence is added.
+  if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
+    defaults.setGroupWareDomain( KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+
   if ( args->isSet( "new-event" ) ) {
     std::cout << "Creating new event..." << std::endl;
-    item.setPayload<KCal::Event::Ptr>( KCal::Event::Ptr( new KCal::Event ) );
+    KCalCore::Event::Ptr event( new KCalCore::Event );
+    defaults.setDefaults( event );
+    item.setPayload<KCalCore::Event::Ptr>( event );
   } else if ( args->isSet( "new-todo" ) ) {
     std::cout << "Creating new todo..." << std::endl;
-    item.setPayload<KCal::Todo::Ptr>( KCal::Todo::Ptr( new KCal::Todo ) );
+    KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+    defaults.setDefaults( todo );
+    item.setPayload<KCalCore::Todo::Ptr>( todo );
   } else if ( args->count() == 1 ) {
     qint64 id = -1;
     if ( argc == 2 ) {
@@ -90,9 +110,7 @@ int main( int argc, char **argv )
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
   EventOrTodoDialog dialog;
-  dialog.resize( QSize( 600, 500 ).expandedTo( dialog.minimumSizeHint() ) );
-  dialog.load( item );
-  dialog.show();
+  dialog.load( item ); // The dialog will show up once the item is loaded.
 
   return app.exec();
 }

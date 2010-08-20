@@ -30,7 +30,9 @@
 #include <Akonadi/Contact/ContactGroupSearchJob>
 
 #include <KABC/VCardDrag>
-#include <KCal/Incidence>
+
+#include <kcalutils/stringify.h>
+#include <kcalcore/incidence.h>
 
 #include <KPIMUtils/Email>
 
@@ -47,20 +49,22 @@
 #include <QDragMoveEvent>
 #endif
 
+using namespace KCalCore;
+using namespace KCalUtils;
+
 namespace IncidenceEditors {
 template <>
-CustomListViewItem<KCal::Attendee *>::~CustomListViewItem()
+CustomListViewItem<KCalCore::Attendee::Ptr >::~CustomListViewItem()
 {
-  delete mData;
 }
 
 template <>
-void CustomListViewItem<KCal::Attendee *>::updateItem()
+void CustomListViewItem<KCalCore::Attendee::Ptr >::updateItem()
 {
   setText( 0, mData->name() );
   setText( 1, mData->email() );
-  setText( 2, mData->roleStr() );
-  setText( 3, mData->statusStr() );
+  setText( 2, Stringify::attendeeRole( mData->role() ) );
+  setText( 3, Stringify::attendeeStatus( mData->status() ) );
   if ( mData->RSVP() && !mData->email().isEmpty() ) {
     setPixmap( 4, SmallIcon( "mail-flag" ) );
   } else {
@@ -74,7 +78,6 @@ void CustomListViewItem<KCal::Attendee *>::updateItem()
 }
 
 using namespace IncidenceEditors;
-using namespace KCal;
 
 AttendeeListView::AttendeeListView ( QWidget *parent )
   : K3ListView( parent )
@@ -130,7 +133,7 @@ void AttendeeListView::addAttendee( const QString &newAttendee )
   QString email;
   KPIMUtils::extractEmailAddressAndName( newAttendee, email, name );
 #ifndef KORG_NODND
-  emit dropped( new Attendee( name, email, true ) );
+  emit dropped( Attendee::Ptr( new Attendee( name, email, true ) ) );
 #endif
 }
 
@@ -201,8 +204,8 @@ EditorDetails::EditorDetails( int spacing, QWidget *parent )
   connect( mListView, SIGNAL(selectionChanged(Q3ListViewItem*)),
            SLOT(updateAttendeeInput()) );
 #ifndef KORG_NODND
-  connect( mListView, SIGNAL( dropped( KCal::Attendee * ) ),
-           SLOT( slotInsertAttendee( KCal::Attendee * ) ) );
+  connect( mListView, SIGNAL( dropped( KCalCore::Attendee::Ptr  ) ),
+           SLOT( slotInsertAttendee( KCalCore::Attendee::Ptr ) ) );
 #endif
   topLayout->addWidget( mListView );
 
@@ -237,9 +240,9 @@ void EditorDetails::removeAttendee()
     nextSelectedItem = static_cast<AttendeeListItem*>( mListView->firstChild() );
   }
 
-  Attendee *delA = new Attendee( aItem->data()->name(), aItem->data()->email(),
-                                 aItem->data()->RSVP(), aItem->data()->status(),
-                                 aItem->data()->role(), aItem->data()->uid() );
+  Attendee::Ptr delA = Attendee::Ptr( new Attendee( aItem->data()->name(), aItem->data()->email(),
+                                                    aItem->data()->RSVP(), aItem->data()->status(),
+                                                    aItem->data()->role(), aItem->data()->uid() ) );
   mDelAttendees.append( delA );
 
   delete aItem;
@@ -251,7 +254,7 @@ void EditorDetails::removeAttendee()
   emit updateAttendeeSummary( mListView->childCount() );
 }
 
-void EditorDetails::insertAttendee( Attendee *a, bool goodEmailAddress )
+void EditorDetails::insertAttendee( const Attendee::Ptr &a, bool goodEmailAddress )
 {
   Q_UNUSED( goodEmailAddress );
 
@@ -267,7 +270,7 @@ void EditorDetails::setDefaults()
   mRsvpButton->setChecked( true );
 }
 
-void EditorDetails::readIncidence( Incidence *event )
+void EditorDetails::readIncidence( const Incidence::Ptr &event )
 {
   mListView->clear();
   AttendeeEditor::readIncidence( event );
@@ -277,7 +280,7 @@ void EditorDetails::readIncidence( Incidence *event )
   emit updateAttendeeSummary( mListView->childCount() );
 }
 
-void EditorDetails::fillIncidence( Incidence *incidence )
+void EditorDetails::fillIncidence( Incidence::Ptr &incidence )
 {
   incidence->clearAttendees();
   QVector<Q3ListViewItem*> toBeDeleted;
@@ -285,7 +288,7 @@ void EditorDetails::fillIncidence( Incidence *incidence )
   AttendeeListItem *a;
   for ( item = mListView->firstChild(); item; item = item->nextSibling() ) {
     a = (AttendeeListItem *)item;
-    Attendee *attendee = a->data();
+    Attendee::Ptr attendee = a->data();
     Q_ASSERT( attendee );
     /* Check if the attendee is a distribution list and expand it */
     if ( attendee->email().isEmpty() ) {
@@ -321,7 +324,7 @@ void EditorDetails::fillIncidence( Incidence *incidence )
         }
       }
       if ( !skip ) {
-        incidence->addAttendee( new Attendee( *attendee ) );
+        incidence->addAttendee( Attendee::Ptr( new Attendee( *attendee ) ) );
       }
     }
   }
@@ -338,12 +341,12 @@ bool EditorDetails::validateInput()
   return true;
 }
 
-KCal::Attendee *EditorDetails::currentAttendee() const
+KCalCore::Attendee::Ptr EditorDetails::currentAttendee() const
 {
   Q3ListViewItem *item = mListView->selectedItem();
   AttendeeListItem *aItem = static_cast<AttendeeListItem *>( item );
   if ( !aItem ) {
-    return 0;
+    return Attendee::Ptr();
   }
   return aItem->data();
 }
@@ -356,7 +359,7 @@ void EditorDetails::updateCurrentItem()
   }
 }
 
-void EditorDetails::slotInsertAttendee( Attendee *a )
+void EditorDetails::slotInsertAttendee( const Attendee::Ptr &a )
 {
   insertAttendee( a );
   mNewAttendees.append( a );
@@ -381,7 +384,7 @@ Q3ListViewItem *EditorDetails::hasExampleAttendee() const
 {
   for ( Q3ListViewItemIterator it( mListView ); it.current(); ++it ) {
     AttendeeListItem *item = static_cast<AttendeeListItem*>( it.current() );
-    Attendee *attendee = item->data();
+    Attendee::Ptr attendee = item->data();
     Q_ASSERT( attendee );
     if ( isExampleAttendee( attendee ) ) {
       return item;

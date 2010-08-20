@@ -19,6 +19,7 @@
 */
 
 #include "incidencesecrecy.h"
+#include <kcalutils/stringify.h>
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_eventortodomoremobile.h"
@@ -36,16 +37,16 @@ IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoDesktop *ui )
   : mUi( ui )
 {
   setObjectName( "IncidenceSecrecy" );
-  mUi->mSecrecyCombo->addItems( KCal::Incidence::secrecyList() );
+  mUi->mSecrecyCombo->addItems( KCalUtils::Stringify::secrecyList() );
   connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceSecrecy::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceSecrecy::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
-    Q_ASSERT( mUi->mSecrecyCombo->count() == KCal::Incidence::secrecyList().count() );
+    Q_ASSERT( mUi->mSecrecyCombo->count() == KCalUtils::Stringify::secrecyList().count() );
     mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
   } else {
     mUi->mSecrecyCombo->setCurrentIndex( 0 );
@@ -54,18 +55,18 @@ void IncidenceSecrecy::load( KCal::Incidence::ConstPtr incidence )
   mWasDirty = false;
 }
 
-void IncidenceSecrecy::save( KCal::Incidence::Ptr incidence )
+void IncidenceSecrecy::save( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
   switch( mUi->mSecrecyCombo->currentIndex() ) {
   case 1:
-    incidence->setSecrecy( KCal::Incidence::SecrecyPrivate );
+    incidence->setSecrecy( KCalCore::Incidence::SecrecyPrivate );
     break;
   case 2:
-    incidence->setSecrecy( KCal::Incidence::SecrecyConfidential );
+    incidence->setSecrecy( KCalCore::Incidence::SecrecyConfidential );
     break;
   default:
-    incidence->setSecrecy( KCal::Incidence::SecrecyPublic );
+    incidence->setSecrecy( KCalCore::Incidence::SecrecyPublic );
   }
 }
 

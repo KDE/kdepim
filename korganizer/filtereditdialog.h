@@ -35,10 +35,10 @@ namespace IncidenceEditors {
   class CategorySelectDialog;
 }
 
-namespace KCal {
+namespace KCalCore {
   class CalFilter;
 }
-using namespace KCal;
+using namespace KCalCore;
 
 /**
   This is the class to add/edit a calendar filter.

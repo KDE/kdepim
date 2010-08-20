@@ -70,6 +70,8 @@ KJotsPlugin::KJotsPlugin( KontactInterface::Core *core, const QVariantList & )
 
 KJotsPlugin::~KJotsPlugin()
 {
+  delete m_interface;
+  m_interface = 0;
 }
 
 bool KJotsPlugin::isRunningStandalone() const
@@ -126,8 +128,10 @@ int KJotsUniqueAppHandler::newInstance()
 {
   // Ensure part is loaded
   (void)plugin()->part();
+#if 0  
   org::kde::KJotsWidget kjots(
     "org.kde.kjots", "/KJotsWidget", QDBusConnection::sessionBus() );
+#endif  
   return KontactInterface::UniqueAppHandler::newInstance();
 
 }

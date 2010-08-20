@@ -26,10 +26,12 @@
 
 #include "incidenceeditors_export.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QStringList>
+#include <KCalCore/IncidenceBase>
 
 #include <KUrl>
+
+#include <QtCore/QDateTime>
+#include <QtCore/QStringList>
 
 class KConfigSkeleton;
 
@@ -83,7 +85,7 @@ class INCIDENCEEDITORS_EXPORT EditorConfig
     virtual bool defaultTodoReminders() const { return false; }
     virtual bool defaultEventReminders() const { return false; }
     virtual QStringList activeDesignerFields() const { return QStringList(); }
-    virtual QStringList &templates( const QString &type );
+    virtual QStringList &templates( KCalCore::IncidenceBase::IncidenceType type );
 
   private:
     class Private;

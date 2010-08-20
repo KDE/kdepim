@@ -32,8 +32,10 @@
 
 #include <libkdepim/kdateedit.h>
 
-#include <KCal/Incidence>
-#include <KCal/ICalTimeZones>
+#include <kcalcore/incidence.h>
+#include <kcalcore/icaltimezones.h>
+
+#include <kcalutils/stringify.h>
 
 #include <KActionCollection>
 #include <KComboBox>
@@ -56,7 +58,7 @@
 #include <QWidget>
 
 using namespace IncidenceEditors;
-using namespace KCal;
+using namespace KCalCore;
 
 FocusLineEdit::FocusLineEdit( QWidget *parent )
   : KLineEdit( parent ), mFirst( true )
@@ -76,7 +78,6 @@ EditorGeneral::EditorGeneral( QObject *parent )
   : QObject( parent ), mAttachments( 0 ), mTimeZones( new ICalTimeZones )
 {
   mType = "Event";
-  mAlarmList.setAutoDelete( true );
 }
 
 EditorGeneral::~EditorGeneral()
@@ -177,7 +178,7 @@ void EditorGeneral::initSecrecy( QWidget *parent, QBoxLayout *topLayout )
   mSecrecyCombo = new KComboBox( parent );
   mSecrecyCombo->setWhatsThis( whatsThis );
   mSecrecyCombo->setToolTip( toolTip );
-  mSecrecyCombo->addItems( Incidence::secrecyList() );
+  mSecrecyCombo->addItems( KCalUtils::Stringify::secrecyList() );
   secrecyLayout->addWidget( mSecrecyCombo );
   secrecyLabel->setBuddy( mSecrecyCombo );
 }
@@ -368,7 +369,7 @@ void EditorGeneral::editAlarms()
 {
   if ( mAlarmStack->indexOf( mAlarmStack->currentWidget() ) == SimpleAlarmPage ) {
     mAlarmList.clear();
-    Alarm *al = alarmFromSimplePage();
+    Alarm::Ptr al = alarmFromSimplePage();
     if ( al ) {
       mAlarmList.append( al );
     }
@@ -441,7 +442,7 @@ void EditorGeneral::updateAlarmWidgets()
                                       mAlarmList.count() ) );
   } else {
     mAlarmEditButton->setEnabled( true );
-    Alarm *alarm = mAlarmList.first();
+    Alarm::Ptr alarm = mAlarmList.first();
     // Check if it is the trivial type of alarm, which can be
     // configured with a simply spin box...
 
@@ -473,7 +474,7 @@ void EditorGeneral::updateAlarmWidgets()
   }
 }
 
-void EditorGeneral::readIncidence( Incidence *incidence )
+void EditorGeneral::readIncidence( const Incidence::Ptr &incidence )
 {
   setSummary( incidence->summary() );
   mLocationEdit->setText( incidence->location() );
@@ -496,7 +497,7 @@ void EditorGeneral::readIncidence( Incidence *incidence )
   Alarm::List::ConstIterator it;
   Alarm::List alarms = incidence->alarms();
   for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
-    Alarm *al = new Alarm( *(*it) );
+    Alarm::Ptr al( new Alarm( *(*it).data() ) );
     al->setParent( 0 );
     mAlarmList.append( al );
   }
@@ -508,10 +509,10 @@ void EditorGeneral::readIncidence( Incidence *incidence )
   mAttachments->readIncidence( incidence );
 }
 
-Alarm *EditorGeneral::alarmFromSimplePage() const
+Alarm::Ptr EditorGeneral::alarmFromSimplePage() const
 {
   if ( mAlarmButton->isChecked() ) {
-    Alarm *alarm = new Alarm( 0 );
+    Alarm::Ptr alarm( new Alarm( 0 ) );
     alarm->setDisplayAlarm( "" );
     alarm->setEnabled( true );
     QString tmpStr = mAlarmTimeEdit->text();
@@ -525,14 +526,14 @@ Alarm *EditorGeneral::alarmFromSimplePage() const
     if ( setAlarmOffset( alarm, j ) ) {
       return alarm;
     } else {
-      return 0;
+      return Alarm::Ptr();
     }
   } else {
-    return 0;
+    return Alarm::Ptr();
   }
 }
 
-void EditorGeneral::fillIncidence( Incidence *incidence )
+void EditorGeneral::fillIncidence( Incidence::Ptr &incidence )
 {
   incidence->setSummary( mSummaryEdit->text() );
 
@@ -560,17 +561,17 @@ void EditorGeneral::fillIncidence( Incidence *incidence )
   // alarm stuff
   incidence->clearAlarms();
   if ( mAlarmStack->indexOf( mAlarmStack->currentWidget() ) == SimpleAlarmPage ) {
-    Alarm *al = alarmFromSimplePage();
+    Alarm::Ptr al = alarmFromSimplePage();
     if ( al ) {
-      al->setParent( incidence );
+      al->setParent( incidence.data() );
       incidence->addAlarm( al );
     }
   } else {
     // simply assign the list of alarms
     Alarm::List::ConstIterator it;
     for ( it = mAlarmList.constBegin(); it != mAlarmList.constEnd(); ++it ) {
-      Alarm *al = new Alarm( *(*it) );
-      al->setParent( incidence );
+      Alarm::Ptr al( new Alarm( *(*it) ) );
+      al->setParent( incidence.data() );
       al->setEnabled( true );
       incidence->addAlarm( al );
     }

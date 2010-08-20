@@ -218,14 +218,16 @@ void MessageActions::setCurrentMessage( const Akonadi::Item &msg )
     mVisibleItems.clear();
   }
 
-  mMonitor->setItemMonitored( mCurrentItem, true ); 
+  mMonitor->setItemMonitored( mCurrentItem, true );
+  updateActions();
 }
 
 void MessageActions::slotItemModified( const Akonadi::Item &  item, const QSet< QByteArray > &  partIdentifiers )
 {
   if ( item.id() == mCurrentItem.id() && item.remoteId() == mCurrentItem.remoteId() )
     mCurrentItem = item;
-  for( int i = 0; i < mVisibleItems.count(); ++i ) {
+  const int numberOfVisibleItems = mVisibleItems.count();
+  for( int i = 0; i < numberOfVisibleItems; ++i ) {
     Akonadi::Item it = mVisibleItems[i];
     if ( item.id() == it.id() && item.remoteId() == it.remoteId() ) {
       mVisibleItems[i] = item;
@@ -244,11 +246,11 @@ void MessageActions::setSelectedItem( const Akonadi::Item::List &items )
 
 void MessageActions::setSelectedVisibleItems( const Akonadi::Item::List &items )
 {
-  Q_FOREACH( Akonadi::Item item, mVisibleItems ) {
+  Q_FOREACH( const Akonadi::Item& item, mVisibleItems ) {
     mMonitor->setItemMonitored( item, false );
   }
   mVisibleItems = items;
-  Q_FOREACH( Akonadi::Item item, items ) {
+  Q_FOREACH( const Akonadi::Item& item, items ) {
     mMonitor->setItemMonitored( item, true );
   }
   updateActions();

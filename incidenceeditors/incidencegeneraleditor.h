@@ -25,6 +25,8 @@
 #ifndef INCIDENCEGENERALEDITOR_H
 #define INCIDENCEGENERALEDITOR_H
 
+#include <kcalcore/incidence.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <QtCore/QDateTime>
@@ -32,16 +34,13 @@
 
 #include <KDateTime>
 
-#include <KCal/Alarm>
-#include <KCal/Event>
-#include <KCal/Todo>
+#include <kcalcore/alarm.h>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
 
 class QCheckBox;
 class QDateTime;
 
-namespace KCal {
-class ICalTimeZones;
-}
 
 namespace KPIM {
 class KTimeZoneComboBox;
@@ -62,36 +61,36 @@ class IncidenceGeneralEditor : public QWidget
 
   signals:
     void dateTimeStrChanged( const QString &dateTimeStr );
-    
+
   protected: /// Methods
     /**
      * Disable creation of plain IncidenceGeneralEditor widgets. Use one of the
      * sub-classes instead.
      */
     explicit IncidenceGeneralEditor( QWidget *parent = 0 );
-    
+
     void emitDateTimeStr();
     void enableAlarmEditor( bool enable );
-    
-    void load( const KCal::Incidence::Ptr &incidence );
-    
+
+    void load( const KCalCore::Incidence::Ptr &incidence );
+
   protected slots:
     virtual void enableTimeEditors( bool enabled ) = 0;
     virtual void slotHasTimeCheckboxToggled( bool checked );
 
   protected:
-    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const = 0;
+    virtual bool setAlarmOffset( const KCalCore::Alarm::Ptr &alarm, int value ) const = 0;
 
   private slots:
     void editAlarms();
     void enableRichTextDescription( bool enable );
     void updateAlarmWidgets();
     void updateDefaultAlarmTime();
-    void updateRecurrenceSummary( const KCal::Incidence::Ptr &incidence );
-    
-  
+    void updateRecurrenceSummary( const KCalCore::Incidence::Ptr &incidence );
+
+
   private: /// Methods
-    KCal::Alarm *alarmFromSimplePage() const;
+    KCalCore::Alarm::Ptr alarmFromSimplePage() const;
     void initDescriptionToolBar();
     void setDescription( const QString &text, bool isRich );
 
@@ -101,10 +100,10 @@ class IncidenceGeneralEditor : public QWidget
       AdvancedAlarmLabel
     };
 
-    KCal::Incidence::ConstPtr mIncidence;
-    
-    KCal::Alarm::List     mAlarmList;
-    KCal::ICalTimeZones  *mTimeZones;
+    KCalCore::Incidence::Ptr mIncidence;
+
+    KCalCore::Alarm::List     mAlarmList;
+    KCalCore::ICalTimeZones  *mTimeZones;
 
     Ui::IncidenceGeneral *mUi;
     QCheckBox            *mRichTextCheck;
@@ -124,7 +123,7 @@ class EventGeneralEditor : public IncidenceGeneralEditor
   public:
     explicit EventGeneralEditor( QWidget *parent = 0 );
 
-    void load( const KCal::Event::Ptr &event );
+    void load( const KCalCore::Event::Ptr &event );
 
   signals:
     void allDayChanged( bool changed );
@@ -135,10 +134,10 @@ class EventGeneralEditor : public IncidenceGeneralEditor
 
   private:
     void enableTimeEditors( bool enabled );
-    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
+    virtual bool setAlarmOffset( const KCalCore::Alarm::Ptr &alarm, int value ) const;
 
   private:
-//     KCal::Todo::Ptr mEvent;
+//     KCalCore::Todo::Ptr mEvent;
 };
 
 class TodoGeneralEditor : public IncidenceGeneralEditor
@@ -147,7 +146,7 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
   public:
     explicit TodoGeneralEditor( QWidget *parent = 0 );
 
-    void load( const KCal::Todo::Ptr &todo,
+    void load( const KCalCore::Todo::Ptr &todo,
                const QDate &date,
                bool tmpl );
 
@@ -164,11 +163,11 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
                          QWidget *timeEdit,
                          KPIM::KTimeZoneComboBox *timeZoneCmb,
                          bool enable );
-    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
-    
-    
+    virtual bool setAlarmOffset( const KCalCore::Alarm::Ptr &alarm, int value ) const;
+
+
   private:
-//     KCal::Todo::Ptr mTodo;
+//     KCalCore::Todo::Ptr mTodo;
     bool mAlreadyComplete;
     QDateTime mCompleted;
 };

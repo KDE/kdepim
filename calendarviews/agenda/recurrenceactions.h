@@ -25,13 +25,13 @@
 
 #include "eventviews_export.h"
 
-#include <KCal/Incidence>
+#include <kcalcore/incidence.h>
 
 class KDateTime;
 class KGuiItem;
 class QWidget;
 
-namespace KCal
+namespace KCalCore
 {
 
 /**

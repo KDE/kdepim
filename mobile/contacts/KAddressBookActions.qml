@@ -20,17 +20,25 @@
 */
 
 import Qt 4.7 as QML
+import org.kde 4.5
 import org.kde.pim.mobileui 4.5
 
 ActionMenuContainer {
 
-  actionItemHeight : 70
+  actionItemHeight : height / 6 - actionItemSpacing
   actionItemWidth : 200
   actionItemSpacing : 2
 
+  ActionList {
+    category : "home"
+    name : KDE.i18n( "Home" )
+    ActionListItem { name : "synchronize_all_items" }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
+  }
+
   ReorderList {
     category : "home"
-    name : "Favorites"
+    name : KDE.i18n( "Favorites" )
 
     delegate : QML.Component {
       QML.Text { height : 20; text : model.display }
@@ -39,71 +47,88 @@ ActionMenuContainer {
     downAction : "fav_down"
     deleteAction : "fav_delete"
     model : favoritesList
+
+    customActions : [
+      FakeAction { name : "un_mark_as_default" },
+      FakeAction { name : "delete_favorite" }
+    ]
   }
 
-  ReorderList {
+  AgentInstanceList {
     category : "home"
-    name : "Address Books"
+    name : KDE.i18n( "Accounts" )
 
-    delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
-    }
-    upAction : "resource_up"
-    downAction : "resource_down"
-    deleteAction : "resource_delete"
-    model : allFoldersModel
+    model : agentInstanceList
+
+    customActions : [
+      ActionListItem { name : "akonadi_agentinstance_configure" },
+      ActionListItem { name : "akonadi_agentinstance_delete" },
+      ActionListItem { name : "akonadi_agentinstance_create" }
+    ]
   }
 
   ActionList {
-    category : "home"
-    name : "View"
-    FakeAction { name : "select_multiple_folders" }
-  }
-
-  ActionList {
-    category : "resource"
-    name : "Address Book"
-    FakeAction { name : "edit_resource" }
+    category : "account"
+    name : KDE.i18n( "Account" )
+    ActionListItem { name : "akonadi_resource_synchronize" }
+    ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
 
   ActionList {
     category : "single_folder"
-    name : "Folder"
+    name : KDE.i18n( "Folder" )
+    ActionListItem { name : "akonadi_collection_sync" }
+  }
+
+  ActionList {
+    category : "single_folder"
+    name : KDE.i18n( "Edit" )
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
-    ActionListItem { name : "akonadi_collection_sync" }
+    ActionListItem { name : "akonadi_collection_move_to_menu" }
+    ActionListItem { name : "akonadi_collection_copy_to_menu" }
     ActionListItem { name : "akonadi_collection_delete" }
   }
 
   ActionList {
     category : "single_folder"
-    name : "View"
+    name : KDE.i18n( "View" )
     FakeAction { name : "save_view_as_favorite" }
     FakeAction { name : "start_maintenance" }
-    FakeAction { name : "filter_view" }
-    FakeAction { name : "view_options" }
   }
 
   ActionList {
     category : "multiple_folder"
-    name : "View"
+    name : KDE.i18n( "Folders" )
+    ActionListItem { name : "akonadi_collection_sync" }
+  }
+
+  ActionList {
+    category : "multiple_folder"
+    name : KDE.i18n( "View" )
     FakeAction { name : "save_view_as_favorite" }
+    FakeAction { name : "change_folder_selection" }
     FakeAction { name : "start_maintenance" }
   }
 
   ActionList {
     category : "contact_viewer"
-    name : "Contact"
-    FakeAction { name : "copy_to_addressbook" }
-    FakeAction { name : "move_to_addressbook" }
+    name : KDE.i18n( "Contact" )
+  }
+
+  ActionList {
+    category : "contact_viewer"
+    name : KDE.i18n( "Edit" )
+    ActionListItem { name : "akonadi_contact_item_edit" }
+    ActionListItem { name : "akonadi_item_copy_to_menu" }
+    ActionListItem { name : "akonadi_item_move_to_menu" }
     ActionListItem { name : "akonadi_item_delete" }
-    ActionListItem { name : "kab_mobile_edit_contact" }
   }
 
   ApplicationGeneralActions {
     category : "standard"
-    name : "KAddressBook"
+    name : KDE.i18n( "KAddressBook" )
     type : "contacts"
   }
 }

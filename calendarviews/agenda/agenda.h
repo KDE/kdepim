@@ -28,7 +28,8 @@
 
 #include "eventviews_export.h"
 
-#include <KCal/Todo>
+#include <kcalcore/todo.h>
+#include <kcalcore/event.h>
 
 #include <Akonadi/Item>
 
@@ -44,15 +45,10 @@ class QScrollBar;
 class QTime;
 class QWheelEvent;
 
-namespace Akonadi
+namespace CalendarSupport
 {
   class Calendar;
   class IncidenceChanger;
-}
-
-namespace KCal {
-  class Event;
-  class Todo;
 }
 
 namespace EventViews
@@ -163,12 +159,12 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setHolidayMask( QVector<bool> * );
 
-    void setDateList( const KCal::DateList &selectedDates );
-    KCal::DateList dateList() const;
+    void setDateList( const KCalCore::DateList &selectedDates );
+    KCalCore::DateList dateList() const;
 
-    void setCalendar( Akonadi::Calendar *cal );
+    void setCalendar( CalendarSupport::Calendar *cal );
 
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
     QList<AgendaItem*> agendaItems( const Akonadi::Item &item ) const;
 
@@ -224,7 +220,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void upperYChanged( int );
 
     void startDragSignal( const Akonadi::Item & );
-    void droppedToDos( const QList<KCal::Todo::Ptr> &todo, const QPoint &gpos, bool allDay );
+    void droppedToDos( const QList<KCalCore::Todo::Ptr> &todo, const QPoint &gpos, bool allDay );
     void droppedToDos( const QList<KUrl> &todo, const QPoint &gpos, bool allDay );
 
     void enableAgendaUpdate( bool enable );

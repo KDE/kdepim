@@ -720,7 +720,9 @@ void LdapSearchDialog::Private::slotStartSearch()
     return;
   }
 
+#ifndef QT_NO_CURSOR
   QApplication::setOverrideCursor( Qt::WaitCursor );
+#endif
   mSearchButton->setText( i18n( "Stop" ) );
 
   q->disconnect( mSearchButton, SIGNAL( clicked() ),
@@ -763,12 +765,16 @@ void LdapSearchDialog::Private::slotSearchDone()
               q, SLOT( slotStartSearch() ) );
 
   mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
+#ifndef QT_NO_CURSOR
   QApplication::restoreOverrideCursor();
+#endif
 }
 
 void LdapSearchDialog::Private::slotError( const QString &error )
 {
+#ifndef QT_NO_CURSOR
   QApplication::restoreOverrideCursor();
+#endif
   KMessageBox::error( q, error );
 }
 

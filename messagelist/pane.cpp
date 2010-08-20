@@ -45,7 +45,7 @@ class Pane::Private
 {
 public:
   Private( Pane *owner )
-    : q( owner ), mXmlGuiClient( 0 ), mActionMenu( 0 ) { }
+    : q( owner ), mXmlGuiClient( 0 ), mActionMenu( 0 ), mPreferEmptyTab( false ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
@@ -70,7 +70,7 @@ public:
 
   QToolButton *mNewTabButton;
   QToolButton *mCloseTabButton;
-
+  bool mPreferEmptyTab;
 };
 
 } // namespace MessageList
@@ -316,8 +316,15 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
 
+  if ( mPreferEmptyTab ) {
+    q->createNewTab();
+    w = static_cast<Widget*>( q->currentWidget() );
+    s = mWidgetSelectionHash[w];
+  }
+
   QString label;
   QIcon icon = KIcon( "folder" );
+  QString toolTip;
   foreach ( const QModelIndex &index, s->selectedRows() ) {
     label+= index.data( Qt::DisplayRole ).toString()+", ";
   }
@@ -328,17 +335,23 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
     icon = QIcon();
   } else if ( s->selectedRows().size()==1 ) {
     icon = s->selectedRows().first().data( Qt::DecorationRole ).value<QIcon>();
+    QModelIndex idx = s->selectedRows().first().parent();
+    toolTip = label;
+    while ( idx != QModelIndex() ) {
+      toolTip = idx.data().toString() + '/' + toolTip;
+      idx = idx.parent();
+    }
   }
 
   int index = q->indexOf( w );
   q->setTabText( index, label );
   q->setTabIcon( index, icon );
+  q->setTabToolTip( index, toolTip);
 }
 
 void Pane::Private::onNewTabClicked()
 {
   q->createNewTab();
-  updateTabControls();
 }
 
 void Pane::Private::onCloseTabClicked()
@@ -417,10 +430,9 @@ MessageList::StorageModel *Pane::createStorageModel( QAbstractItemModel *model, 
   return new MessageList::StorageModel( model, selectionModel, parent );
 }
 
-void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
+void Pane::setCurrentFolder( const Akonadi::Collection &, bool, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
-
   if ( w ) {
     QItemSelectionModel *s = d->mWidgetSelectionHash[w];
     MessageList::StorageModel *m = createStorageModel( d->mModel, s, w );
@@ -675,6 +687,9 @@ void Pane::resetModelStorage()
   }
 }
 
-
+void Pane::setPreferEmptyTab( bool emptyTab )
+{
+  d->mPreferEmptyTab = emptyTab;
+}
 
 #include "pane.moc"

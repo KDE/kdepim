@@ -62,9 +62,6 @@ public slots:
   // Retrieve messages then calls execute
   void start();
 
-  // advance the progressbar, emitted by the folderjob
-  void slotProgress( unsigned long done, unsigned long total );
-
 signals:
 
   /// @param result The status of the command.
@@ -118,9 +115,6 @@ private:
   void transferSelectedMsgs();
 
 private slots:
-  /** Called from start() via a single shot timer. */
-  virtual void slotStart();
-
   void slotPostTransfer( KMCommand::Result result );
   /** the msg has been transferred */
   void slotMsgTransfered(const Akonadi::Item::List& msgs);
@@ -129,7 +123,7 @@ private slots:
   /** the transfer was canceled */
   void slotTransferCancelled();
 
-protected:  
+protected:
   QList<Akonadi::Item> mRetrievedMsgs;
 
 private:
@@ -249,7 +243,7 @@ class KMAIL_EXPORT KMSaveMsgCommand : public KMCommand
 public:
   KMSaveMsgCommand( QWidget *parent, const QList<Akonadi::Item> &msgList );
   KMSaveMsgCommand( QWidget *parent, const Akonadi::Item & msg );
-  KUrl url();
+  KUrl url() const;
 
 private:
   virtual Result execute();

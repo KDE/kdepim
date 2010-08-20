@@ -21,10 +21,10 @@ t it will be useful,
 
 #include "icsendanalyzer.h"
 
-#include <kcal/calendarlocal.h>
-#include <kcal/icalformat.h>
-#include <kcal/vcalformat.h>
-#include <kcal/todo.h>
+#include <kcalcore/memorycalendar.h>
+#include <kcalcore/icalformat.h>
+#include <kcalcore/vcalformat.h>
+#include <kcalcore/todo.h>
 
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
@@ -32,7 +32,7 @@ t it will be useful,
 
 //#include <KDebug>
 
-using namespace KCal;
+using namespace KCalCore;
 
 IcsEndAnalyzer::IcsEndAnalyzer( const IcsEndAnalyzerFactory* f )
   : m_factory( f )
@@ -53,7 +53,7 @@ maintain this way.
 */
 STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
 {
-  CalendarLocal cal( QString::fromLatin1( "UTC" ) );
+  MemoryCalendar::Ptr cal( new MemoryCalendar( QString::fromLatin1( "UTC" ) ) );
 
   const char* data;
   //FIXME: large calendars will exhaust memory; incremental loading would be
@@ -65,23 +65,23 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, 
   }
 
   ICalFormat ical;
-  if ( !ical.fromRawString( &cal, QByteArray::fromRawData(data, nread) ) ) {
+  if ( !ical.fromRawString( cal, QByteArray::fromRawData( data, nread ) ) ) {
     VCalFormat vcal;
-    if ( !vcal.fromRawString( &cal, data ) ) {
+    if ( !vcal.fromRawString( cal, data ) ) {
       //kDebug() <<"Could not load calendar";
       return Strigi::Error;
     }
   }
 
-  idx.addValue( m_factory->field( ProductId ), cal.productId().toUtf8().data() );
-  idx.addValue( m_factory->field( Events ), (quint32)cal.events().count() );
-  idx.addValue( m_factory->field( Journals ), (quint32)cal.journals().count() );
-  Todo::List todos = cal.todos();
+  idx.addValue( m_factory->field( ProductId ), cal->productId().toUtf8().data() );
+  idx.addValue( m_factory->field( Events ), static_cast<quint32>( cal->events().count() ) );
+  idx.addValue( m_factory->field( Journals ), static_cast<quint32>( cal->journals().count() ) );
+  Todo::List todos = cal->todos();
 
   // count completed and overdue
   int completed = 0;
   int overdue = 0;
-  foreach ( const Todo* todo, todos ) {
+  foreach ( const Todo::Ptr todo, todos ) {
     if ( todo->isCompleted() ) {
       ++completed;
     } else if ( todo->hasDueDate() && todo->dtDue().date() < QDate::currentDate() ) {
@@ -93,7 +93,7 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, 
   idx.addValue( m_factory->field( TodosCompleted ), (quint32)completed );
   idx.addValue( m_factory->field( TodosOverdue ), (quint32)overdue );
 
-  cal.close();
+  cal->close();
 
   return Strigi::Ok;
 }

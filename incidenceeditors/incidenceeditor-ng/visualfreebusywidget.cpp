@@ -21,20 +21,24 @@
 #include "visualfreebusywidget.h"
 
 #include "conflictresolver.h"
+#include "freebusyitem.h"
+#include "freebusyitemmodel.h"
+#include "freebusyganttproxymodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
+#include <kdgantt2/kdganttview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 
-#include <KSystemTimeZones>
+#include <kcalutils/stringify.h>
+
 #include <KComboBox>
 #include <KLocale>
 #include <KMenu>
-#include <KCal/Attendee>
 #include <KMessageBox>
 #include <KDebug>
 
-#include <QTreeWidget>
+#include <QTreeView>
 #include <QAction>
 #include <QBoxLayout>
 #include <QLabel>
@@ -104,11 +108,10 @@ public:
     QSize sizeHint() const { QSize s = QHeaderView::sizeHint(); s.rheight() *= 2; return s; }
 };
 
-VisualFreeBusyWidget::VisualFreeBusyWidget( ConflictResolver* resolver, int spacing, QWidget* parent )
+VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel* model, int spacing, QWidget* parent )
         : QWidget( parent ),
         mGanttGrid( 0 ),
-        mScaleCombo( 0 ),
-        mResolver( resolver )
+        mScaleCombo( 0 )
 {
     QVBoxLayout *topLayout = new QVBoxLayout( this );
     topLayout->setSpacing( spacing );
@@ -184,46 +187,48 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( ConflictResolver* resolver, int spac
                "Pressing this button will cause the Free/Busy data for all "
                "attendees to be reloaded from their corresponding servers." ) );
     controlLayout->addWidget( button );
-    connect( button, SIGNAL( clicked() ), SLOT( manualReload() ) );
+    connect( button, SIGNAL( clicked() ), SIGNAL( manualReload() ) );
 
     QSplitter *splitter = new QSplitter( Qt::Horizontal, this );
     connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( splitterMoved() ) );
-    mLeftView = new QTreeWidget;
+    mLeftView = new QTreeView( this );
+    mLeftView->setModel( model );
     mLeftView->setHeader( new GanttHeaderView );
-    mLeftView->setHeaderLabel( i18n( "Attendee" ) );
+    mLeftView->header()->setStretchLastSection( true );
     mLeftView->setRootIsDecorated( false );
     mLeftView->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     mLeftView->setContextMenuPolicy( Qt::CustomContextMenu );
 
-    mGanttView = new KDGantt::GraphicsView( this );
-    mGanttView->setObjectName( "mGanttView" );
-    mGanttView->setToolTip(
+    mGanttGraphicsView = new KDGantt::GraphicsView( this );
+    mGanttGraphicsView->setObjectName( "mGanttGraphicsView" );
+    mGanttGraphicsView->setToolTip(
         i18nc( "@info:tooltip",
                "Shows the Free/Busy status of all attendees" ) );
-    mGanttView->setWhatsThis(
+    mGanttGraphicsView->setWhatsThis(
         i18nc( "@info:whatsthis",
                "Shows the Free/Busy status of all attendees. "
                "Double-clicking on an attendee's entry in the "
                "list will allow you to enter the location of "
                "their Free/Busy Information." ) );
-    QStandardItemModel *model = new QStandardItemModel( this );
+    mModel = new FreeBusyGanttProxyModel( this );
+    mModel->setSourceModel( model );
 
     mRowController = new RowController;
     mRowController->setRowHeight( fontMetrics().height() ); //TODO: detect
 
-    mRowController->setModel( model );
-    mGanttView->setRowController( mRowController );
+    mRowController->setModel( mModel );
+    mGanttGraphicsView->setRowController( mRowController );
 
     mGanttGrid = new KDGantt::DateTimeGrid;
     mGanttGrid->setScale( KDGantt::DateTimeGrid::ScaleHour );
     mGanttGrid->setDayWidth( 800 );
     mGanttGrid->setRowSeparators( true );
-    mGanttView->setGrid( mGanttGrid );
-    mGanttView->setModel( model );
-    mGanttView->viewport()->setFixedWidth( 800 * 30 );
+    mGanttGraphicsView->setGrid( mGanttGrid );
+    mGanttGraphicsView->setModel( mModel );
+    mGanttGraphicsView->viewport()->setFixedWidth( 800 * 30 );
 
     splitter->addWidget( mLeftView );
-    splitter->addWidget( mGanttView );
+    splitter->addWidget( mGanttGraphicsView );
 
     topLayout->addWidget( splitter );
     topLayout->setStretchFactor( splitter, 100 );
@@ -235,64 +240,67 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( ConflictResolver* resolver, int spac
     QDateTime horizonEnd = QDateTime::currentDateTime().addDays( 15 );
     mGanttGrid->setStartDateTime( horizonStart );
 
-    connect( mGanttView, SIGNAL( timeIntervalSelected( const KDateTime &, const KDateTime & ) ),
-             mGanttView, SLOT( zoomToSelection( const KDateTime &, const  KDateTime & ) ) );
-    connect( mGanttView, SIGNAL( doubleClicked( QModelIndex ) ),
-             SLOT( editFreeBusyUrl( QModelIndex ) ) );
-    connect( mGanttView, SIGNAL( intervalColorRectangleMoved( const KDateTime &, const KDateTime & ) ),
-             this, SLOT( slotIntervalColorRectangleMoved( const KDateTime &, const KDateTime & ) ) );
+//     connect( mGanttGraphicsView, SIGNAL( timeIntervalSelected( const KDateTime &, const KDateTime & ) ),
+//              mGanttGraphicsView, SLOT( zoomToSelection( const KDateTime &, const  KDateTime & ) ) );
+//     connect( mGanttGraphicsView, SIGNAL( doubleClicked( QModelIndex ) ),
+//              SLOT( editFreeBusyUrl( QModelIndex ) ) );
+//     connect( mGanttGraphicsView, SIGNAL( intervalColorRectangleMoved( const KDateTime &, const KDateTime & ) ),
+//              this, SLOT( slotIntervalColorRectangleMoved( const KDateTime &, const KDateTime & ) ) );
 
     connect( mLeftView, SIGNAL( customContextMenuRequested( QPoint ) ),
              this, SLOT( showAttendeeStatusMenu() ) );
+
+//     foreach( FreeBusyItem::Ptr item, mResolver->freeBusyItems() ) {
+//         newFreeBusy( item );
+//     }
 
 }
 
 VisualFreeBusyWidget::~VisualFreeBusyWidget()
 {
-
 }
 
 void VisualFreeBusyWidget::showAttendeeStatusMenu()
 {
-    KMenu *menu = new KMenu( 0 );
-
-    QAction *needsaction =
-        menu->addAction( SmallIcon( "help-about" ),
-                         KCal::Attendee::statusName( KCal::Attendee::NeedsAction ) );
-    QAction *accepted =
-        menu->addAction( SmallIcon( "dialog-ok-apply" ),
-                         KCal::Attendee::statusName( KCal::Attendee::Accepted ) );
-    QAction *declined =
-        menu->addAction( SmallIcon( "dialog-cancel" ),
-                         KCal::Attendee::statusName( KCal::Attendee::Declined ) );
-    QAction *tentative =
-        menu->addAction( SmallIcon( "dialog-ok" ),
-                         KCal::Attendee::statusName( KCal::Attendee::Tentative ) );
-    QAction *delegated =
-        menu->addAction( SmallIcon( "mail-forward" ),
-                         KCal::Attendee::statusName( KCal::Attendee::Delegated ) );
-    QAction *completed =
-        menu->addAction( SmallIcon( "mail-mark-read" ),
-                         KCal::Attendee::statusName( KCal::Attendee::Completed ) );
-    QAction *inprocess =
-        menu->addAction( SmallIcon( "help-about" ),
-                         KCal::Attendee::statusName( KCal::Attendee::InProcess ) );
+//     KMenu *menu = new KMenu( 0 );
+// 
+//     QAction *needsaction =
+//         menu->addAction( SmallIcon( "help-about" ),
+//                          KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::NeedsAction ) );
+//     QAction *accepted =
+//         menu->addAction( SmallIcon( "dialog-ok-apply" ),
+//                          KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Accepted ) );
+//     QAction *declined =
+//         menu->addAction( SmallIcon( "dialog-cancel" ),
+//                          KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Declined ) );
+//     QAction *tentative =
+//         menu->addAction( SmallIcon( "dialog-ok" ),
+//                          KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Tentative ) );
+//     QAction *delegated =
+//         menu->addAction( SmallIcon( "mail-forward" ),
+//                          KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Delegated ) );
+//     QAction *completed =
+//         menu->addAction( SmallIcon( "mail-mark-read" ),
+//                          KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Completed ) );
+//     QAction *inprocess =
+//         menu->addAction( SmallIcon( "help-about" ),
+//                          KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::InProcess ) );
 //   QAction *ret = menu->exec( QCursor::pos() );
 //   delete menu;
 //   if ( ret == needsaction ) {
-//     currentAttendee()->setStatus( KCal::Attendee::NeedsAction );
+//     currentAttendee()->setStatus( KCalCore::Attendee::NeedsAction );
 //   } else if ( ret == accepted ) {
-//     currentAttendee()->setStatus( KCal::Attendee::Accepted );
+//     currentAttendee()->setStatus( KCalCore::Attendee::Accepted );
 //   } else if ( ret == declined ) {
-//     currentAttendee()->setStatus( KCal::Attendee::Declined );
+//     currentAttendee()->setStatus( KCalCore::Attendee::Declined );
 //   } else if ( ret == tentative ) {
-//     currentAttendee()->setStatus( KCal::Attendee::Tentative );
+//     currentAttendee()->setStatus( KCalCore::Attendee::Tentative );
 //   } else if ( ret == delegated ) {
-//     currentAttendee()->setStatus( KCal::Attendee::Delegated );
+//     currentAttendee()->setStatus( KCalCore::Attendee::Delegated );
 //   } else if ( ret == completed ) {
-//     currentAttendee()->setStatus( KCal::Attendee::Completed );
+//     currentAttendee()->setStatus( KCalCore::Attendee::Completed );
 //   } else if ( ret == inprocess ) {
-//     currentAttendee()->setStatus( KCal::Attendee::InProcess );
+//     currentAttendee()->setStatus( KCalCore::Attendee::InProcess );
 //   } else {
 //     return;
 //   }
@@ -302,9 +310,9 @@ void VisualFreeBusyWidget::showAttendeeStatusMenu()
 
 void VisualFreeBusyWidget::slotCenterOnStart()
 {
-    KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>( mGanttView->grid() );
+    KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>( mGanttGraphicsView->grid() );
     int daysTo = grid->startDateTime().daysTo( mDtStart.dateTime() );
-    mGanttView->horizontalScrollBar()->setValue( daysTo * 800 );
+    mGanttGraphicsView->horizontalScrollBar()->setValue( daysTo * 800 );
 }
 
 void VisualFreeBusyWidget::slotIntervalColorRectangleMoved( const KDateTime& start, const KDateTime& end )
@@ -319,35 +327,36 @@ void VisualFreeBusyWidget::slotIntervalColorRectangleMoved( const KDateTime& sta
 */
 void VisualFreeBusyWidget::slotPickDate()
 {
-    KDateTime::Spec timeSpec = KSystemTimeZones::local();
-    KDateTime start = mDtStart;
-    KDateTime end = mDtEnd;
-    bool success = mResolver->findFreeSlot( KCal::Period( start, end ) );
-
-    if ( success ) {
-        if ( start == mDtStart && end == mDtEnd ) {
-            KMessageBox::information(
-                this,
-                i18nc( "@info", "The meeting already has suitable start/end times." ),
-                QString(),
-                "MeetingTimeOKFreeBusy" );
-        } else {
-            if ( KMessageBox::questionYesNo(
-                        this,
-                        i18nc( "@info",
-                               "The next available time slot for the meeting is:<nl/>"
-                               "Start: %1<nl/>End: %2<nl/>"
-                               "Would you like to move the meeting to this time slot?",
-                               start.dateTime().toString(), end.dateTime().toString() ), QString(),
-                        KStandardGuiItem::yes(), KStandardGuiItem::no(),
-                        "MeetingMovedFreeBusy" ) == KMessageBox::Yes ) {
-                emit dateTimesChanged( start, end );
-                slotUpdateGanttView( start, end );
-            }
-        }
-    } else {
-        KMessageBox::sorry( this, i18nc( "@info", "No suitable date found." ) );
-    }
+  //TODO implement or discard
+//     KDateTime::Spec timeSpec = KSystemTimeZones::local();
+//     KDateTime start = mDtStart;
+//     KDateTime end = mDtEnd;
+//     bool success = mResolver->findFreeSlot( KCalCore::Period( start, end ) );
+// 
+//     if ( success ) {
+//         if ( start == mDtStart && end == mDtEnd ) {
+//             KMessageBox::information(
+//                 this,
+//                 i18nc( "@info", "The meeting already has suitable start/end times." ),
+//                 QString(),
+//                 "MeetingTimeOKFreeBusy" );
+//         } else {
+//             if ( KMessageBox::questionYesNo(
+//                         this,
+//                         i18nc( "@info",
+//                                "The next available time slot for the meeting is:<nl/>"
+//                                "Start: %1<nl/>End: %2<nl/>"
+//                                "Would you like to move the meeting to this time slot?",
+//                                start.dateTime().toString(), end.dateTime().toString() ), QString(),
+//                         KStandardGuiItem::yes(), KStandardGuiItem::no(),
+//                         "MeetingMovedFreeBusy" ) == KMessageBox::Yes ) {
+//                 emit dateTimesChanged( start, end );
+//                 slotUpdateGanttView( start, end );
+//             }
+//         }
+//     } else {
+//         KMessageBox::sorry( this, i18nc( "@info", "No suitable date found." ) );
+//     }
 }
 
 void VisualFreeBusyWidget::slotScaleChanged( int newScale )
@@ -360,12 +369,12 @@ void VisualFreeBusyWidget::slotScaleChanged( int newScale )
     mGanttGrid->setScale(( KDGantt::DateTimeGrid::Scale ) value );
 }
 
-void VisualFreeBusyWidget::slotUpdateGanttView( const KDateTime& dtFrom, const KDateTime& dtTo )
+void VisualFreeBusyWidget::slotUpdateIncidenceStartEnd( const KDateTime& dtFrom, const KDateTime& dtTo )
 {
     mDtStart = dtFrom;
     mDtEnd = dtTo;
     QDateTime horizonStart = QDateTime( dtFrom.addDays( -15 ).date() );
-    KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>( mGanttView->grid() );
+    KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>( mGanttGraphicsView->grid() );
     grid->setStartDateTime( horizonStart );
     slotCenterOnStart();
     mGanttGrid->setStartDateTime( horizonStart );
@@ -374,7 +383,7 @@ void VisualFreeBusyWidget::slotUpdateGanttView( const KDateTime& dtFrom, const K
 void VisualFreeBusyWidget::slotZoomToTime()
 {
 #if 0
-    mGanttView->zoomToFit();
+    mGanttGraphicsView->zoomToFit();
 #else
     kDebug() << "Disabled code, port to KDGantt2";
 #endif
@@ -382,7 +391,7 @@ void VisualFreeBusyWidget::slotZoomToTime()
 
 void VisualFreeBusyWidget::splitterMoved()
 {
-    mLeftView->setColumnWidth( 0, mLeftView->width() );
+//     mLeftView->setColumnWidth( 0, mLeftView->width() );
 }
 
 #include "visualfreebusywidget.moc"

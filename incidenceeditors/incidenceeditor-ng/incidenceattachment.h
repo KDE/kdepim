@@ -41,16 +41,16 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
 {
   Q_OBJECT
   public:
-#ifdef KDEPIM_MOBILE_UI    
-    IncidenceAttachment( Ui::EventOrTodoMore *ui = 0 );
-#else    
-    IncidenceAttachment( Ui::EventOrTodoDesktop *ui = 0 );
-#endif    
+#ifdef KDEPIM_MOBILE_UI
+    IncidenceAttachment( Ui::EventOrTodoMore *ui );
+#else
+    IncidenceAttachment( Ui::EventOrTodoDesktop *ui );
+#endif
 
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
-    
+
     int attachmentCount() const;
 
   signals:
@@ -73,7 +73,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     void slotSelectionChanged();
 
   private:
-    //     void addAttachment( KCal::Attachment *attachment );
+    //     void addAttachment( KCalCore::Attachment *attachment );
     void addDataAttachment( const QByteArray &data,
                             const QString &mimeType = QString(),
                             const QString &label = QString() );
@@ -84,20 +84,22 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     void handlePasteOrDrop( const QMimeData *mimeData );
     void setupActions();
     void setupAttachmentIconView();
-    
+
   private:
     AttachmentIconView *mAttachmentView;
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
-#else    
+#else
     Ui::EventOrTodoDesktop *mUi;
-#endif    
+#endif
 
     KMenu *mPopupMenu;
     KAction *mOpenAction;
     KAction *mSaveAsAction;
+#ifndef QT_NO_CLIPBOARD
     KAction *mCopyAction;
     KAction *mCutAction;
+#endif
     KAction *mDeleteAction;
     KAction *mEditAction;
 };

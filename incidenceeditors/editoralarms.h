@@ -26,7 +26,7 @@
 
 #include "ui_editoralarms_base.h"
 
-#include <KCal/Alarm>
+#include <kcalcore/alarm.h>
 
 #include <KDialog>
 
@@ -38,7 +38,7 @@ class EditorAlarms : public KDialog
   Q_OBJECT
   public:
     explicit EditorAlarms( const QByteArray &type,
-                           KCal::Alarm::List *alarms, QWidget *parent = 0 );
+                           KCalCore::Alarm::List *alarms, QWidget *parent = 0 );
     ~EditorAlarms();
 
   protected slots:
@@ -56,12 +56,12 @@ class EditorAlarms : public KDialog
     void slotUpdateButtons();
   protected:
     void init();
-    void readAlarm( KCal::Alarm *alarm );
-    void writeAlarm( KCal::Alarm *alarm );
+    void readAlarm( const KCalCore::Alarm::Ptr &alarm );
+    void writeAlarm( KCalCore::Alarm::Ptr &alarm );
 
   private:
     QByteArray mType; // as in the Incidence::type
-    KCal::Alarm::List *mAlarms;
+    KCalCore::Alarm::List *mAlarms;
     Ui::EditorAlarms_base mWidget;
     bool mInitializing;
     AlarmListViewItem *mCurrentItem;

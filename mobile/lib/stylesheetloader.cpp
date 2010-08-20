@@ -46,6 +46,8 @@ K_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
 
 void StyleSheetLoader::applyStyle(QWidget* widget)
 {
+#ifndef QT_NO_STYLE_STYLESHEET
   if ( widget && !s_styleSheetLoader->styleSheet.isEmpty() )
     widget->setStyleSheet( s_styleSheetLoader->styleSheet );
+#endif
 }

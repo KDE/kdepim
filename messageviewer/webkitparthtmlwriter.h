@@ -37,23 +37,20 @@
 #include <QObject>
 
 #include <QString>
-#include <QStringList>
-#include <QTimer>
 #include <QByteArray>
 #include <QMap>
 
-class KWebView;
+namespace MessageViewer {
+  class MailWebView;
+}
 
 namespace MessageViewer {
 
 class WebKitPartHtmlWriter : public QObject, public HtmlWriter {
   Q_OBJECT
 public:
-  // Key is Content-Id, value is URL
-  typedef QMap<QString, QString> EmbeddedPartMap;
-  explicit WebKitPartHtmlWriter( KWebView *view,
-                                QObject * parent=0, const char * name = 0 );
-  virtual ~WebKitPartHtmlWriter();
+  explicit WebKitPartHtmlWriter( MailWebView * view, QObject * parent=0 );
+  ~WebKitPartHtmlWriter();
 
   void begin( const QString & cssDefs );
   void end();
@@ -66,23 +63,20 @@ public:
 signals:
   void finished();
 
-private slots:
-  void slotWriteNextHtmlChunk();
-
 private:
   void resolveCidUrls();
 
 private:
-  KWebView *mHtmlView;
-  QStringList mHtmlQueue;
+  MailWebView * mHtmlView;
   QString mHtml;
   QString mCss;
-  QTimer mHtmlTimer;
   enum State {
     Begun,
     Queued,
     Ended
   } mState;
+  // Key is Content-Id, value is URL
+  typedef QMap<QString, QString> EmbeddedPartMap;
   EmbeddedPartMap mEmbeddedPartMap;
 };
 

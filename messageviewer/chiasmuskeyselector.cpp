@@ -1,4 +1,6 @@
 
+#include <config-messageviewer.h>
+
 #include "chiasmuskeyselector.h"
 
 #include <KLineEdit>

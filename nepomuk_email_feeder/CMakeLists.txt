@@ -1,3 +1,5 @@
+project(akonadi_nepomuk_email_feeder)
+
 include_directories(
   ${CMAKE_BINARY_DIR}/ontologies
   ${CMAKE_SOURCE_DIR}/libkleo

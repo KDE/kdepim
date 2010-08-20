@@ -270,8 +270,10 @@ QStringList ChecksumDefinition::verifyCommandArguments( const QStringList & file
 
 static QByteArray make_input( const QStringList & files, char sep ) {
     QByteArray result;
-    Q_FOREACH( const QString & file, files )
-        result += QFile::encodeName( file ) + sep;
+    Q_FOREACH( const QString & file, files ) {
+        result += QFile::encodeName( file );
+        result + sep;
+    }
     return result;
 }
 

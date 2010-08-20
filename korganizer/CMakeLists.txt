@@ -39,9 +39,8 @@ endif (QT_QT3SUPPORT_FOUND)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5850)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
                     ${CMAKE_CURRENT_BINARY_DIR}
-                    ${CMAKE_SOURCE_DIR}/akonadi/kcal
-                    ${CMAKE_BINARY_DIR}/akonadi/kcal
-                    ${CMAKE_SOURCE_DIR}/akonadi/
+                    ${CMAKE_SOURCE_DIR}/calendarsupport
+                    ${CMAKE_BINARY_DIR}/calendarsupport
                     ${CMAKE_SOURCE_DIR}/korganizer/printing
                     ${CMAKE_BINARY_DIR}/libkdepim
                     ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
@@ -83,18 +82,17 @@ target_link_libraries(korganizer
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KDE3SUPPORT_LIBRARY}
     ${KDE4_KPARTS_LIBRARY}
-    ${KDEPIMLIBS_KCAL_LIBS}
-    ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
     ${KDEPIMLIBS_KHOLIDAYS_LIBS}
     ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
+    ${KDEPIMLIBS_KCALCORE_LIBS}
+    ${KDEPIMLIBS_KCALUTILS_LIBS}
     kdepim
     kdepimdbusinterfaces
     korganizerprivate
     korganizer_interfaces
     korganizer_core
-    akonadi_next
-    akonadi-kcal_next
+    calendarsupport
     incidenceeditors
 )
 
@@ -113,8 +111,8 @@ kde4_add_plugin(kcm_korganizer ${kcm_korganizer_PART_SRCS} )
 target_link_libraries(kcm_korganizer
   ${QT_QTUITOOLS_LIBRARY}
   ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KHOLIDAYS_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
-  mailtransport korganizerprivate korganizer_core kdepim incidenceeditors akonadi-kcal_next)
+  ${KDEPIMLIBS_KHOLIDAYS_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
+  mailtransport korganizerprivate korganizer_core kdepim incidenceeditors calendarsupport ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} )
 
 install(TARGETS kcm_korganizer  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -125,7 +123,7 @@ set(korganizerpart_PART_SRCS korganizer_part.cpp )
 
 kde4_add_plugin(korganizerpart ${korganizerpart_PART_SRCS})
 
-target_link_libraries(korganizerpart ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} korganizer_interfaces akonadi-kcal_next korganizer_core korganizerprivate)
+target_link_libraries(korganizerpart ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} korganizer_interfaces calendarsupport korganizer_core korganizerprivate ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} )
 
 install(TARGETS korganizerpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 endif (QT_QT3SUPPORT_FOUND)
@@ -147,7 +145,7 @@ kde4_add_kcfg_files(korganizer_core_LIB_SRCS koprefs_base.kcfgc )
 
 kde4_add_library(korganizer_core ${LIBRARY_TYPE} ${korganizer_core_LIB_SRCS})
 
-target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_AKONADI_KCAL_LIBS} kdepim incidenceeditors akonadi-kcal_next korganizer_interfaces)
+target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} kdepim incidenceeditors calendarsupport korganizer_interfaces ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} )
 
 set_target_properties(korganizer_core PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
@@ -158,6 +156,7 @@ install(TARGETS korganizer_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if (QT_QT3SUPPORT_FOUND)
 set(korganizerprivate_LIB_SRCS
+  kocollectionpropertiesdialog.cpp
   collectiongeneralpage.cpp
   koalternatelabel.cpp
   kodecorationlabel.cpp
@@ -222,6 +221,7 @@ set(korganizerprivate_LIB_SRCS
   printing/calprinter.cpp
   printing/calprintpluginbase.cpp
   printing/calprintdefaultplugins.cpp
+  previewdialog.cpp
 )
 
 kde4_add_kcfg_files(korganizerprivate_LIB_SRCS htmlexportsettings.kcfgc )
@@ -244,18 +244,20 @@ kde4_add_library(korganizerprivate ${LIBRARY_TYPE} ${korganizerprivate_LIB_SRCS}
 
 target_link_libraries(korganizerprivate
   ${KDE4_KNEWSTUFF2_LIBS} ${KDE4_KNEWSTUFF3_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KPRINTUTILS_LIBS}  ${KDE4_KDE3SUPPORT_LIBS} ${ZLIB_LIBRARY}
-  ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY} ${KDE4_KMIME_LIBRARY}
+  ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KHOLIDAYS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_KCALUTILS_LIBS}
   kdepim
   korganizer_interfaces
   kdepimdbusinterfaces
   korganizer_core
-  akonadi-kcal_next
-  akonadi_next
+  calendarsupport
   incidenceeditors
+  incidenceeditorsng
   kdgantt2
 )
 

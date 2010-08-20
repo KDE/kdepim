@@ -22,6 +22,8 @@
 // define this to copy all html that is written to the readerwindow to
 // filehtmlwriter.out in the current working directory
 //#define KMAIL_READER_HTML_DEBUG 1
+#include <config-messageviewer.h>
+
 #include "viewer.h"
 #include "viewer_p.h"
 #include "configurewidget.h"
@@ -135,9 +137,7 @@ void Viewer::printMessage( const Akonadi::Item &msg )
 void Viewer::print()
 {
   Q_D(Viewer);
-  if ( !message() )
-    return;
-  d->mViewer->print( false );
+  d->slotPrintMsg();
 }
 
 void Viewer::resizeEvent( QResizeEvent * )
@@ -175,49 +175,37 @@ void Viewer::slotSaveMessage()
 void Viewer::slotScrollUp( int pixels )
 {
   Q_D(Viewer);
-  QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
-  point -= QPoint( 0, qAbs( pixels ) );
-  d->mViewer->page()->mainFrame()->setScrollPosition( point );
+  d->mViewer->scrollUp( qAbs( pixels ) );
 }
 
 void Viewer::slotScrollDown( int pixels )
 {
   Q_D(Viewer);
-  QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
-  point += QPoint( 0, qAbs( pixels ) );
-  d->mViewer->page()->mainFrame()->setScrollPosition( point );
+  d->mViewer->scrollDown( qAbs( pixels ) );
 }
 
 bool Viewer::atBottom() const
 {
   Q_D(const Viewer);
-  int pos = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
-  int max = d->mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-  return pos == max;
+  return d->mViewer->isScrolledToBottom();
 }
 
 void Viewer::slotJumpDown()
 {
   Q_D(Viewer);
-  int height = d->mViewer->page()->viewportSize().height();
-  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
-  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current + height );
+  d->mViewer->scrollPageDown( 100 );
 }
 
 void Viewer::slotScrollPrior()
 {
   Q_D(Viewer);
-  int height = d->mViewer->page()->viewportSize().height();
-  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
-  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current - ( 0.8 * height ) );
+  d->mViewer->scrollPageUp( 80 );
 }
 
 void Viewer::slotScrollNext()
 {
   Q_D(Viewer);
-  int height = d->mViewer->page()->viewportSize().height();
-  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
-  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current + ( 0.8 * height ) );
+  d->mViewer->scrollPageDown( 80 );
 }
 
 QString Viewer::selectedText()

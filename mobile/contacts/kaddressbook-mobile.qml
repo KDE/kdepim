@@ -49,7 +49,7 @@ KPIM.MainView {
       kaddressbookActions.showOnlyCategory("home")
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
     {
-      kaddressbookActions.showOnlyCategory("resource")
+      kaddressbookActions.showOnlyCategory("account")
     } else { // something else is selected
       kaddressbookActions.showOnlyCategory("single_folder")
     }
@@ -356,14 +356,14 @@ KPIM.MainView {
           anchors.fill : parent
 
           scriptActions : [
-            KPIM.ScriptActionItem {
+            KPIM.ScriptAction {
               name : "show_about_dialog"
               script : {
                 actionPanelNew.collapse();
                 aboutDialog.visible = true
               }
             },
-            KPIM.ScriptActionItem {
+            KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
                 actionPanelNew.collapse();

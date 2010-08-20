@@ -27,6 +27,7 @@
 
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemDeleteJob>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemModifyJob>
@@ -35,10 +36,11 @@
 #include <Akonadi/Session>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 
 /// ItemEditorPrivate
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class ItemEditorPrivate
 {
@@ -47,6 +49,7 @@ class ItemEditorPrivate
 
   public:
     Item mItem;
+    Item mPrevItem;
     ItemFetchScope mFetchScope;
     Monitor *mItemMonitor;
     ItemEditorUi *mItemUi;
@@ -59,8 +62,6 @@ class ItemEditorPrivate
     void modifyResult( KJob *job );
     void setupMonitor();
 };
-
-}
 
 ItemEditorPrivate::ItemEditorPrivate( EditorItemManager *qq )
   : q_ptr( qq ), mItemMonitor( 0 )
@@ -110,7 +111,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
   Q_Q( EditorItemManager );
 
   if ( job->error() ) {
-    if ( ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob*>( job ) )
+    if ( qobject_cast<ItemModifyJob*>( job ) )
       emit q->itemSaveFailed( EditorItemManager::Modify, job->errorString() );
     else
       emit q->itemSaveFailed( EditorItemManager::Create, job->errorString() );
@@ -176,6 +177,8 @@ void ItemEditorPrivate::itemChanged( const Akonadi::Item &item,
   mItem.setRevision( item.revision() );
 }
 
+}
+
 /// ItemEditor
 
 EditorItemManager::EditorItemManager( ItemEditorUi *ui )
@@ -191,12 +194,20 @@ EditorItemManager::~EditorItemManager()
   delete d_ptr;
 }
 
-Akonadi::Item EditorItemManager::item() const
+Akonadi::Item EditorItemManager::item( ItemState state ) const
 {
   Q_D( const ItemEditor );
 
-  if ( d->mItem.isValid() && d->mItem.hasPayload() )
-    return d->mItem;
+  switch ( state ) {
+  case EditorItemManager::AfterSave:
+    if ( d->mItem.isValid() && d->mItem.hasPayload() )
+      return d->mItem;
+    break;
+  case EditorItemManager::BeforeSave:
+    if ( d->mPrevItem.isValid() && d->mPrevItem.hasPayload() )
+      return d->mPrevItem;
+    break;
+  }
 
   return Akonadi::Item();
 }
@@ -207,6 +218,7 @@ void EditorItemManager::load( const Akonadi::Item &item )
   Q_D( ItemEditor );
 
   if ( item.hasPayload() ) {
+    d->mPrevItem = item;
     d->mItem = item;
     d->mItemUi->load( item );
     d->setupMonitor();
@@ -217,6 +229,34 @@ void EditorItemManager::load( const Akonadi::Item &item )
     connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
     return;
   }
+}
+
+void EditorItemManager::revertLastSave()
+{
+  Q_D( ItemEditor );
+
+  if ( d->mPrevItem.hasPayload() ) {
+    // Modify
+    Q_ASSERT( d->mItem.isValid() ); // Really, if this isn't true, then fix the logic somewhere else
+    Q_ASSERT( d->mItem.id() == d->mPrevItem.id() ); // If this triggers: wtf, managing two different items?
+
+    d->mPrevItem.setRevision( d->mItem.revision() );
+    ItemModifyJob *job = new ItemModifyJob( d->mPrevItem );
+    if ( !job->exec() )
+      kDebug() << "Revert failed, could not delete item." << job->errorText();
+
+  } else if ( d->mItem.isValid() ) {
+
+    // No payload in the previous item and the current item is valid, so the last
+    // call to save created a new item and reverting that means that we have to
+    // delete it.
+    ItemDeleteJob *job = new ItemDeleteJob( d->mItem );
+    if ( !job->exec() )
+      kDebug() << "Revert failed, could not delete item." << job->errorText();
+  }
+
+  // else, the previous item had no payload *and* the current item is not valid,
+  // meaning that no item has been saved yet. Nothing to be done.
 }
 
 void EditorItemManager::save()

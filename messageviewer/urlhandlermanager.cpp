@@ -33,6 +33,8 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "urlhandlermanager.h"
 
 #include "interfaces/urlhandler.h"
@@ -636,20 +638,7 @@ namespace {
     if ( url.hasHost() || !url.hasRef() )
       return false;
 
-    QWebPage *page = w->htmlPart()->page();
-    QWebElement doc = page->mainFrame()->documentElement();
-
-    QWebElement link = doc.findFirst( QString( "a[name=%1]" ).arg( url.ref() ) );
-    if( link.isNull() ) {
-      kDebug() << "No such anchor found in document:" << url.ref();
-      return false;
-    }
-
-    int linkPos = link.geometry().bottom();
-    int viewerPos  = page->mainFrame()->scrollPosition().y();
-    link.setFocus();
-    page->mainFrame()->scroll(0, linkPos - viewerPos );
-
+    w->htmlPart()->scrollToAnchor( url.ref() );
     return true;
   }
 }
@@ -719,6 +708,7 @@ namespace {
 
   bool AttachmentURLHandler::handleDrag( const KUrl &url, ViewerPrivate *window ) const
   {
+#ifndef QT_NO_DRAGANDDROP
     KMime::Content *node = nodeForUrl( url, window );
     if ( !node )
       return false;
@@ -736,6 +726,7 @@ namespace {
       return true;
     }
     else
+#endif
       return false;
   }
 

@@ -28,12 +28,11 @@
 #include <KontactInterface/Core>
 #include <KontactInterface/Plugin>
 
-#include <akonadi/kcal/utils.h>
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/calendarmodel.h>
-#include <akonadi/kcal/calendaradaptor.h>
-#include <akonadi/kcal/incidencechanger.h>
-#include <akonadi/kcal/incidencemimetypevisitor.h>
+#include <calendarsupport/utils.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/calendaradaptor.h>
+#include <calendarsupport/incidencechanger.h>
 
 #include <Akonadi/Session>
 #include <Akonadi/Collection>
@@ -44,8 +43,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Contact/ContactViewerDialog>
 
-#include <KCal/Calendar>
-#include <KCal/CalHelper>
+#include <KCalCore/Calendar>
 
 #include <KMenu>
 #include <KLocale>
@@ -61,7 +59,6 @@
 #include <QLabel>
 #include <QGridLayout>
 
-using namespace Akonadi;
 using namespace KHolidays;
 
 class BirthdaySearchJob : public Akonadi::ItemSearchJob
@@ -102,7 +99,7 @@ BirthdaySearchJob::BirthdaySearchJob( QObject *parent, int daysInAdvance )
       ).arg( QString::fromLatin1( Akonadi::ItemSearchJob::akonadiItemIdUri().toEncoded() ) )
      .arg( QDate::currentDate().toString( Qt::ISODate ) )
      .arg( daysInAdvance );
-  ItemSearchJob::setQuery( query );
+  Akonadi::ItemSearchJob::setQuery( query );
 }
 
 enum SDIncidenceType {
@@ -199,7 +196,7 @@ void SDSummaryWidget::configUpdated()
 
   group = config.group( "Groupware" );
   mShowMineOnly = group.readEntry( "ShowMineOnly", false );
-  
+
   updateView();
 }
 
@@ -217,7 +214,7 @@ bool SDSummaryWidget::initHolidays()
 }
 
 // number of days remaining in an Event
-int SDSummaryWidget::span( KCal::Event::Ptr event ) const
+int SDSummaryWidget::span( const KCalCore::Event::Ptr &event ) const
 {
   int span = 1;
   if ( event->isMultiDay() && event->allDay() ) {
@@ -234,7 +231,7 @@ int SDSummaryWidget::span( KCal::Event::Ptr event ) const
 }
 
 // day of a multiday Event
-int SDSummaryWidget::dayof( KCal::Event::Ptr event, const QDate &date ) const
+int SDSummaryWidget::dayof( const KCalCore::Event::Ptr &event, const QDate &date ) const
 {
   int dayof = 1;
   QDate d = event->dtStart().date();
@@ -300,22 +297,24 @@ void SDSummaryWidget::createLabels()
   for ( dt = QDate::currentDate();
         dt <= QDate::currentDate().addDays( mDaysAhead - 1 );
         dt = dt.addDays( 1 ) ) {
-    Item::List items  = mCalendar->events( dt, mCalendar->timeSpec(),
-                                           EventSortStartDate,
-                                           SortDirectionAscending );
-    foreach ( const Item &item, items ) {
-      KCal::Event::Ptr ev = Akonadi::event( item );
+    Akonadi::Item::List items  = mCalendar->events( dt, mCalendar->timeSpec(),
+                                                    CalendarSupport::EventSortStartDate,
+                                                    CalendarSupport::SortDirectionAscending );
+    foreach ( const Akonadi::Item &item, items ) {
+      KCalCore::Event::Ptr ev = CalendarSupport::event( item );
 
       // Optionally, show only my Events
-      if ( mShowMineOnly && !KCal::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, ev.get() ) ) {
+      /* if ( mShowMineOnly && !KCalCore::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, ev. ) ) {
         // FIXME; does isMyCalendarIncidence work !? It's deprecated too.
         continue;
-      }
+        }
+        // TODO: CalHelper is deprecated, remove this?
+        */
 
       if ( ev->customProperty("KABC","BIRTHDAY" ) == "YES" ) {
         // Skipping, because these are got by the BirthdaySearchJob
         // See comments in updateView()
-        continue; 
+        continue;
       }
 
       if ( !ev->categoriesStr().isEmpty() ) {
@@ -324,7 +323,7 @@ void SDSummaryWidget::createLabels()
         for ( it2 = c.constBegin(); it2 != c.constEnd(); ++it2 ) {
 
           // Append Birthday Event?
-          if ( mShowBirthdaysFromCal && ( ( *it2 ).toUpper() == i18n( "BIRTHDAY" ) ) ) {
+          if ( mShowBirthdaysFromCal && ( ( *it2 ).toUpper() == "BIRTHDAY" ) ) {
             SDEntry entry;
             entry.type = IncidenceTypeEvent;
             entry.category = CategoryBirthday;
@@ -346,7 +345,7 @@ void SDSummaryWidget::createLabels()
           }
 
           // Append Anniversary Event?
-          if ( mShowAnniversariesFromCal && ( ( *it2 ).toUpper() == i18n( "ANNIVERSARY" ) ) ) {
+          if ( mShowAnniversariesFromCal && ( ( *it2 ).toUpper() == "ANNIVERSARY"  ) ) {
             SDEntry entry;
             entry.type = IncidenceTypeEvent;
             entry.category = CategoryAnniversary;
@@ -362,7 +361,7 @@ void SDSummaryWidget::createLabels()
           }
 
           // Append Holiday Event?
-          if ( mShowHolidays && ( ( *it2 ).toUpper() == i18n( "HOLIDAY" ) ) ) {
+          if ( mShowHolidays && ( ( *it2 ).toUpper() == "HOLIDAY" ) ) {
             SDEntry entry;
             entry.type = IncidenceTypeEvent;
             entry.category = CategoryHoliday;
@@ -380,7 +379,7 @@ void SDSummaryWidget::createLabels()
           }
 
           // Append Special Occasion Event?
-          if ( mShowSpecialsFromCal && ( ( *it2 ).toUpper() == i18n( "SPECIAL OCCASION" ) ) ) {
+          if ( mShowSpecialsFromCal && ( ( *it2 ).toUpper() == "SPECIAL OCCASION"  ) ) {
             SDEntry entry;
             entry.type = IncidenceTypeEvent;
             entry.category = CategoryOther;
@@ -629,7 +628,7 @@ void SDSummaryWidget::updateView()
    *
    * We could remove thomas' BirthdaySearchJob and use the ETM for that
    * but it has the advantage that we don't need a Birthday agent running.
-   * 
+   *
    **/
 
   // Search for Birthdays
@@ -749,22 +748,26 @@ QStringList SDSummaryWidget::configModules() const
 
 void SDSummaryWidget::createCalendar()
 {
-  Session *session = new Session( "SDSummaryWidget", this );
-  ChangeRecorder *monitor = new ChangeRecorder( this );
+  Akonadi::Session *session = new Akonadi::Session( "SDSummaryWidget", this );
+  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
 
-  ItemFetchScope scope;
+  Akonadi::ItemFetchScope scope;
   scope.fetchFullPayload( true );
-  scope.fetchAttribute<EntityDisplayAttribute>();
+  scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
   monitor->setSession( session );
-  monitor->setCollectionMonitored( Collection::root() );
+  monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->fetchCollection( true );
   monitor->setItemFetchScope( scope );
-  monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), true );
-  CalendarModel *calendarModel = new CalendarModel( monitor, this );
+  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
 
-  mCalendar = new Akonadi::Calendar( calendarModel, calendarModel, KSystemTimeZones::local() );
-  mCalendarAdaptor = new CalendarAdaptor( mCalendar, this );
+  CalendarSupport::CalendarModel *calendarModel =
+    new CalendarSupport::CalendarModel( monitor, this );
+
+  mCalendar =
+    new CalendarSupport::Calendar( calendarModel, calendarModel, KSystemTimeZones::local() );
+
+  mCalendarAdaptor = new CalendarSupport::CalendarAdaptor( mCalendar, this );
 }
 
 #include "sdsummarywidget.moc"

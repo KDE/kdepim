@@ -1,7 +1,6 @@
 project(task-mobile)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
@@ -18,14 +17,16 @@ set(mobile_tasks_SRCS
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 target_link_libraries(tasks-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
   kdepimmobileui
-#    ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
-#    ${KDEPIMLIBS_AKONADI_LIBRARY}
-#    akonadi_next
-    kdepim
-    incidenceeditors
+  kdepimmobileuicalendar
+  kdepim
 )
+
+# not built under WinCE, should be going away eventually anyway
+if (NOT WINCE)
+  target_link_libraries(tasks-mobile incidenceeditors)
+endif (NOT WINCE)
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES tasks-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
@@ -33,6 +34,7 @@ install(FILES tasks-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   tasks.qml
   tasks-mobile-background.png
+  TaskActions.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )

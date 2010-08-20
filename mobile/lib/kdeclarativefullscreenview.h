@@ -22,7 +22,7 @@
 
 #include <QtDeclarative/QDeclarativeView>
 
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
 #include <QGLWidget>
 #endif
 
@@ -52,7 +52,13 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     /** Triggers de-fullscreen/task switcher */
     void triggerTaskSwitcher();
 
-    QObject* getAction( const QString &name ) const;
+    /** Get an action based on name. If the @param argument is not empty, it sets that
+     * as the data member of the action, see QAction::setData().
+     */
+    QObject* getAction( const QString &name, const QString& argument ) const;
+
+    void setActionTitle( const QString& name, const QString& title);
+    
     KActionCollection* actionCollection() const;
 
   protected slots:
@@ -67,7 +73,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 
   private:
     KActionCollection *mActionCollection;
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
     QGLWidget *glWidget;
 #endif
     QString m_qmlFileName;

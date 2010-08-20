@@ -25,13 +25,13 @@
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 
-#include <kcal/incidence.h>
-#include <kcal/event.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/event.h>
 
 #include <boost/shared_ptr.hpp>
 
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
-typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
+typedef QSharedPointer<KCalCore::Incidence> IncidencePtr;
 
 class AkonadiBrowserModel::State
 {
@@ -188,10 +188,10 @@ public:
       return incidence->dtStart().toString();
       break;
     case 2:
-      return incidence->dtEnd().toString();
+      return incidence->dateTime( KCalCore::Incidence::RoleEnd ).toString();
       break;
     case 3:
-      return incidence->type();
+      return incidence->typeStr();
       break;
     default:
       break;

@@ -206,12 +206,6 @@ KMCommand::Result KMCommand::result() const
   return mResult;
 }
 
-void KMCommand::start()
-{
-  QTimer::singleShot( 0, this, SLOT( slotStart() ) );
-}
-
-
 const QList<Akonadi::Item> KMCommand::retrievedMsgs() const
 {
   return mRetrievedMsgs;
@@ -231,7 +225,7 @@ QWidget *KMCommand::parentWidget() const
 
 int KMCommand::mCountJobs = 0;
 
-void KMCommand::slotStart()
+void KMCommand::start()
 {
   connect( this, SIGNAL( messagesTransfered( KMCommand::Result ) ),
            this, SLOT( slotPostTransfer( KMCommand::Result ) ) );
@@ -303,7 +297,6 @@ void KMCommand::transferSelectedMsgs()
   }
 
   // TODO once the message list is based on ETM and we get the more advanced caching we need to make that check a bit more clever
-#include <mdnstateattribute.h>
   if ( !mFetchScope.isEmpty() ) {
 #if 0 //TODO port to akonadi
     if ( thisMsg->parent() && !thisMsg->isComplete() &&
@@ -350,11 +343,6 @@ void KMCommand::slotMsgTransfered(const Akonadi::Item::List& msgs)
   }
   // save the complete messages
   mRetrievedMsgs.append( msgs );
-}
-
-void KMCommand::slotProgress( unsigned long done, unsigned long /*total*/ )
-{
-  mProgressDialog->progressBar()->setValue( done );
 }
 
 void KMCommand::slotJobFinished()
@@ -678,7 +666,7 @@ KMSaveMsgCommand::KMSaveMsgCommand( QWidget *parent,
   fetchScope().fetchFullPayload( true ); // ### unless we call the corresponding KMCommand ctor, this has no effect
 }
 
-KUrl KMSaveMsgCommand::url()
+KUrl KMSaveMsgCommand::url() const
 {
   return mUrl;
 }
@@ -2043,7 +2031,7 @@ KMCommand::Result CreateTodoCommand::execute()
       new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
                                              QDBusConnection::sessionBus(), this );
   iface->openTodoEditor( i18n("Mail: %1", msg->subject()->asUnicodeString() ), txt, uri,
-                         tf.fileName(), QStringList(), "message/rfc822", true );
+                         tf.fileName(), QStringList(), "message/rfc822" );
   delete iface;
   tf.close();
   return OK;

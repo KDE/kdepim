@@ -29,16 +29,15 @@
 #include <QList>
 #include <QDate>
 
+#include <kcalcore/incidence.h>
+
 #include <Akonadi/Item>
 
 class QPixmap;
 class QColor;
 class QString;
 
-namespace KCal {
-  class Incidence;
-}
-using namespace KCal;
+using namespace KCalCore;
 
 namespace KOrg {
 

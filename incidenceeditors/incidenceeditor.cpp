@@ -31,8 +31,7 @@
 #include "embeddedurlpage.h"
 #include "templatemanagementdialog.h"
 
-#include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/kcalprefs.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/utils.h>
 
 #include <libkdepimdbusinterfaces/urihandler.h>
 
@@ -42,8 +41,8 @@
 
 #include <KABC/Addressee>
 
-#include <KCal/CalendarLocal>
-#include <KCal/ICalFormat>
+#include <kcalcore/memorycalendar.h>
+#include <kcalcore/icalformat.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -57,8 +56,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
-using namespace Akonadi;
-using namespace KCal;
+using namespace KCalCore;
 using namespace IncidenceEditors;
 
 IncidenceEditor::IncidenceEditor( const QString &caption, const QStringList& mimetypes, QWidget *parent )
@@ -148,7 +146,7 @@ void IncidenceEditor::readIncidence( const Akonadi::Item &item, const QDate &dat
 
 void IncidenceEditor::editIncidence( const Akonadi::Item &item, const QDate &date )
 {
-  Incidence::Ptr incidence = Akonadi::incidence( item );
+  Incidence::Ptr incidence = CalendarSupport::incidence( item );
   Q_ASSERT( incidence );
   Q_ASSERT( incidence->type() == type() );
 
@@ -262,19 +260,19 @@ void IncidenceEditor::closeEvent( QCloseEvent *event )
 
 void IncidenceEditor::cancelRemovedAttendees( const Akonadi::Item &item )
 {
-  const Incidence::Ptr incidence = Akonadi::incidence( item );
+  const Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence ) {
     return;
   }
 
   // cancelAttendeeIncidence removes all attendees from the incidence,
   // and then only adds those that need to be canceled (i.e. a mail needs to be sent to them).
-  const bool thatIsMe = EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
+  const bool thatIsMe = EditorConfig::instance()->thatIsMe( incidence->organizer()->email() );
   if ( thatIsMe ) {
     Incidence::Ptr inc( incidence->clone() );
     inc->registerObserver( 0 );
 #ifdef HAVE_QT3SUPPORT
-    mAttendeeEditor->cancelAttendeeIncidence( inc.get() );
+    mAttendeeEditor->cancelAttendeeIncidence( inc );
 #endif
     if ( inc->attendeeCount() > 0 ) {
       emit deleteAttendee( item );
@@ -331,9 +329,9 @@ void IncidenceEditor::slotManageTemplates()
 
 void IncidenceEditor::slotLoadTemplate( const QString &templateName )
 {
-  CalendarLocal cal( KSystemTimeZones::local() );
+  MemoryCalendar::Ptr cal( new MemoryCalendar( KSystemTimeZones::local() ) );
   QString fileName = KStandardDirs::locateLocal( "data",
-                       "korganizer/templates/" + type() + '/' + templateName );
+                       "korganizer/templates/" + typeStr() + '/' + templateName );
 
   if ( fileName.isEmpty() ) {
     KMessageBox::error( this,
@@ -342,20 +340,20 @@ void IncidenceEditor::slotLoadTemplate( const QString &templateName )
   }
 
   ICalFormat format;
-  if ( !format.load( &cal, fileName ) ) {
+  if ( !format.load( cal, fileName ) ) {
     KMessageBox::error( this,
                         i18nc( "@info", "Error loading template file '%1'.", fileName ) );
     return;
   }
 
-  Incidence::List incidences = cal.incidences();
+  Incidence::List incidences = cal->incidences();
   if ( incidences.isEmpty() ) {
     KMessageBox::error( this,
                         i18nc( "@info", "Template does not contain a valid incidence." ) );
     return;
   }
 
-  Incidence *incidence = incidences.first();
+  Incidence::Ptr incidence = incidences.first();
   Akonadi::Item incidenceItem;
   incidenceItem.setPayload( Incidence::Ptr( incidence->clone() ) );
   readIncidence( incidenceItem, QDate(), true );
@@ -372,10 +370,10 @@ void IncidenceEditor::slotSaveTemplate( const QString &templateName )
   fileName.append( '/' + templateName );
   fileName = KStandardDirs::locateLocal( "data", "korganizer/" + fileName );
 
-  CalendarLocal cal( KSystemTimeZones::local() );
-  cal.addIncidence( incidence->clone() );
+  MemoryCalendar::Ptr cal( new MemoryCalendar( KSystemTimeZones::local() ) );
+  cal->addIncidence( Incidence::Ptr( incidence->clone() ) );
   ICalFormat format;
-  format.save( &cal, fileName );
+  format.save( cal, fileName );
 }
 
 void IncidenceEditor::slotTemplatesChanged( const QStringList &templateNames )
@@ -421,7 +419,7 @@ QWidget *IncidenceEditor::addDesignerTab( const QString &uifile )
 class KCalStorage : public DesignerFields::Storage
 {
   public:
-    KCalStorage( Incidence *incidence )
+    KCalStorage( const Incidence::Ptr &incidence )
       : mIncidence( incidence )
     {
     }
@@ -458,12 +456,12 @@ class KCalStorage : public DesignerFields::Storage
     }
 
   private:
-    Incidence *mIncidence;
+    Incidence::Ptr mIncidence;
 };
 
-void IncidenceEditor::readDesignerFields( const Item &i )
+void IncidenceEditor::readDesignerFields( const Akonadi::Item &i )
 {
-  KCalStorage storage( Akonadi::incidence( i ).get() );
+  KCalStorage storage( CalendarSupport::incidence( i ) );
   foreach ( DesignerFields *fields, mDesignerFields ) {
     if ( fields ) {
       fields->load( &storage );
@@ -471,7 +469,7 @@ void IncidenceEditor::readDesignerFields( const Item &i )
   }
 }
 
-void IncidenceEditor::writeDesignerFields( Incidence *i )
+void IncidenceEditor::writeDesignerFields( Incidence::Ptr &i )
 {
   KCalStorage storage( i );
   foreach ( DesignerFields *fields, mDesignerFields ) {
@@ -482,8 +480,8 @@ void IncidenceEditor::writeDesignerFields( Incidence *i )
 }
 
 void IncidenceEditor::setupEmbeddedURLPage( const QString &label,
-                                              const QString &url,
-                                              const QString &mimetype )
+                                            const QString &url,
+                                            const QString &mimetype )
 {
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, label );
@@ -500,7 +498,7 @@ void IncidenceEditor::setupEmbeddedURLPage( const QString &label,
   wid->loadContents();
 }
 
-void IncidenceEditor::createEmbeddedURLPages( const Incidence *i )
+void IncidenceEditor::createEmbeddedURLPages( const Incidence::Ptr &i )
 {
   if ( !i ) return;
   if ( !mEmbeddedURLPages.isEmpty() ) {
@@ -520,7 +518,7 @@ void IncidenceEditor::createEmbeddedURLPages( const Incidence *i )
 
   Attachment::List att = i->attachments();
   for ( Attachment::List::Iterator it = att.begin(); it != att.end(); ++it ) {
-    Attachment *a = (*it);
+    Attachment::Ptr a = (*it);
     if ( a->showInline() && a->isUri() ) {
       // TODO: Allow more mime-types, but add security checks!
 //       if ( a->mimeType() == QLatin1String("application/x-designer") ) {
@@ -558,7 +556,7 @@ void IncidenceEditor::addAttendees( const QStringList &attendees )
     QString name, email;
     KABC::Addressee::parseEmailAddress( *it, name, email );
 #ifdef HAVE_QT3SUPPORT
-    mAttendeeEditor->insertAttendee( new Attendee( name, email, true, Attendee::NeedsAction ) );
+    mAttendeeEditor->insertAttendee( Attendee::Ptr( new Attendee( name, email, true, Attendee::NeedsAction ) ) );
 #endif
   }
 }

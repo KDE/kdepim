@@ -1,7 +1,9 @@
 project(korganizer-mobile)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
+  # This is probably not the correct way to get KCalPrefs in.
+  ${CMAKE_SOURCE_DIR}/calendarsupport/
+  ${CMAKE_BINARY_DIR}/calendarsupport/
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
@@ -9,7 +11,9 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-set(korganizer_mobile_SRCS calendarinterface.cpp
+set(korganizer_mobile_SRCS
+  agendaviewitem.cpp
+  calendarinterface.cpp
   mainview.cpp
   main.cpp
 )
@@ -21,12 +25,15 @@ target_link_libraries(korganizer-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDE4_KDECORE_LIBRARY}
   ${KDE4_KDEUI_LIBRARY}
-  ${KDEPIMLIBS_KCAL_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   kdepimmobileui
-  akonadi-kcal_next
-  incidenceeditors
+  kdepimmobileuicalendar
+  calendarsupport
+  incidenceeditorsngmobile
+  eventviews
+  calendarsupport
+  kdepim
 )
 
 install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

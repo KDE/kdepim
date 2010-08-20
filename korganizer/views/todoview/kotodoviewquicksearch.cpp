@@ -32,9 +32,9 @@
 #include "categoryconfig.h"
 #include "categoryhierarchyreader.h"
 
-#include <akonadi/kcal/calendar.h>
+#include <calendarsupport/calendar.h>
 
-#include <KCal/CalFilter>
+#include <kcalcore/calfilter.h>
 
 #include <KLineEdit>
 
@@ -46,11 +46,11 @@
 #include <QAbstractItemView>
 #include <QHBoxLayout>
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace KPIM;
 using namespace IncidenceEditors;
 
-KOTodoViewQuickSearch::KOTodoViewQuickSearch( Akonadi::Calendar *calendar, QWidget *parent )
+KOTodoViewQuickSearch::KOTodoViewQuickSearch( CalendarSupport::Calendar *calendar, QWidget *parent )
   : QWidget( parent ), mCalendar( calendar )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
@@ -78,7 +78,7 @@ KOTodoViewQuickSearch::KOTodoViewQuickSearch( Akonadi::Calendar *calendar, QWidg
   setLayout( layout );
 }
 
-void KOTodoViewQuickSearch::setCalendar( Akonadi::Calendar *calendar )
+void KOTodoViewQuickSearch::setCalendar( CalendarSupport::Calendar *calendar )
 {
   mCalendar = calendar;
   fillCategories();

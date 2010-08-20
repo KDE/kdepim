@@ -36,8 +36,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceE
     explicit IncidenceCompletionPriority( Ui::EventOrTodoDesktop *ui );
     ~IncidenceCompletionPriority();
 
-    void load( KCal::Incidence::ConstPtr incidence );
-    void save( KCal::Incidence::Ptr incidence );
+    void load( const KCalCore::Incidence::Ptr &incidence );
+    void save( const KCalCore::Incidence::Ptr &incidence );
     bool isDirty() const;
 
   private:
@@ -45,7 +45,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceE
     Private *const d;
 
   Q_PRIVATE_SLOT( d, void sliderValueChanged(int) )
-  Q_PRIVATE_SLOT( d, void slotSetDirty() )
 };
 
 }

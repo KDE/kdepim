@@ -24,7 +24,7 @@
 
 #include "freebusyurldialog.h"
 
-#include <KCal/FreeBusyUrlStore>
+#include <kcalcore/freebusyurlstore.h>
 
 #include <KDebug>
 #include <KLineEdit>
@@ -35,7 +35,7 @@
 #include <QLabel>
 
 using namespace IncidenceEditorsNG;
-using namespace KCal;
+using namespace KCalCore;
 
 FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *parent )
   : KDialog( parent )
@@ -88,7 +88,7 @@ void FreeBusyUrlWidget::loadConfig()
 {
   kDebug();
 
-  const QString url = KCal::FreeBusyUrlStore::self()->readUrl( mAttendee->email() );
+  const QString url = KCalCore::FreeBusyUrlStore::self()->readUrl( mAttendee->email() );
   mUrlEdit->setText( url );
 }
 
@@ -97,8 +97,8 @@ void FreeBusyUrlWidget::saveConfig()
   kDebug();
 
   const QString url = mUrlEdit->text();
-  KCal::FreeBusyUrlStore::self()->writeUrl( mAttendee->email(), url );
-  KCal::FreeBusyUrlStore::self()->sync();
+  KCalCore::FreeBusyUrlStore::self()->writeUrl( mAttendee->email(), url );
+  KCalCore::FreeBusyUrlStore::self()->sync();
 }
 
 #include "freebusyurldialog.moc"

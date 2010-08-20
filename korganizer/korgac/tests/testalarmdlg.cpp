@@ -24,23 +24,22 @@
 
 #include "alarmdialog.h"
 
-#include <kcal/event.h>
-#include <kcal/todo.h>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
-#include <boost/shared_ptr.hpp>
 #include <akonadi/item.h>
 #include <QWidget>
 
-using namespace KCal;
+using namespace KCalCore;
 
 template<class T> Akonadi::Item incidenceToItem(T* incidence)
 {
   Akonadi::Item item;
-  item.setPayload< boost::shared_ptr<T> >( boost::shared_ptr<T>(incidence) );
+  item.setPayload< QSharedPointer<T> >( QSharedPointer<T>(incidence) );
   return item;
 }
 
@@ -56,7 +55,7 @@ int main( int argc, char **argv )
   KDateTime now = KDateTime::currentLocalDateTime();
   e1->setDtStart( now );
   e1->setDtEnd( now.addDays( 1 ) );
-  Alarm *a = e1->newAlarm();
+  Alarm::Ptr a = e1->newAlarm();
 //  a->setProcedureAlarm( "/usr/X11R6/bin/xeyes" );
   a->setAudioAlarm( "/data/kde/share/apps/korganizer/sounds/spinout.wav" );
 

@@ -21,7 +21,9 @@
 #ifndef ATTENDEEEDITOR_H
 #define ATTENDEEEDITOR_H
 
-#include <KCal/Attendee>
+#include <kcalcore/attendee.h>
+#include <kcalcore/incidence.h>
+
 #include <QWidget>
 
 namespace KPIM {
@@ -54,13 +56,13 @@ class AttendeeEditor : public QWidget
   public:
     AttendeeEditor( QWidget *parent );
 
-    virtual void insertAttendee( KCal::Attendee *attendee, bool fetchFB = true ) = 0;
+    virtual void insertAttendee( const KCalCore::Attendee::Ptr &attendee, bool fetchFB = true ) = 0;
 
-    virtual void readIncidence( KCal::Incidence *incidence );
-    virtual void fillIncidence( KCal::Incidence *incidence );
+    virtual void readIncidence( const KCalCore::Incidence::Ptr &incidence );
+    virtual void fillIncidence( KCalCore::Incidence::Ptr &incidence );
 
     /** return a clone of the incidence with attendees to be canceled */
-    void cancelAttendeeIncidence( KCal::Incidence *incidence );
+    void cancelAttendeeIncidence( const KCalCore::Incidence::Ptr &incidence );
 
   public slots:
     void acceptForMe();
@@ -78,15 +80,16 @@ class AttendeeEditor : public QWidget
      * from the addressbook and expanding distribution lists.
      * The optional Attendee parameter can be used to pass in default values
      * to be used by the new Attendee. */
-    void insertAttendeeFromAddressee( const KABC::Addressee &a, const KCal::Attendee *at = 0 );
+    void insertAttendeeFromAddressee( const KABC::Addressee &a,
+                                      const KCalCore::Attendee::Ptr &at = KCalCore::Attendee::Ptr() );
 
     void fillOrganizerCombo();
     virtual Q3ListViewItem *hasExampleAttendee() const = 0;
-    bool isExampleAttendee( const KCal::Attendee * ) const;
-    virtual KCal::Attendee *currentAttendee() const = 0;
+    bool isExampleAttendee( const KCalCore::Attendee::Ptr & ) const;
+    virtual KCalCore::Attendee::Ptr currentAttendee() const = 0;
     virtual void updateCurrentItem() = 0;
 
-    virtual void changeStatusForMe( KCal::Attendee::PartStat status ) = 0;
+    virtual void changeStatusForMe( KCalCore::Attendee::PartStat status ) = 0;
 
     virtual bool eventFilter( QObject *, QEvent * );
 
@@ -97,7 +100,7 @@ class AttendeeEditor : public QWidget
     void setEnableAttendeeInput( bool enabled );
     void updateAttendeeInput();
     void clearAttendeeInput();
-    void fillAttendeeInput( KCal::Attendee *a );
+    void fillAttendeeInput( KCalCore::Attendee::Ptr &a );
     void updateAttendee();
 
   protected:
@@ -117,8 +120,8 @@ class AttendeeEditor : public QWidget
     QPushButton *mRemoveButton;
     QPushButton *mAddressBookButton;
 
-    QList<KCal::Attendee*> mDelAttendees;
-    QList<KCal::Attendee*>mNewAttendees;
+    QList<KCalCore::Attendee::Ptr> mDelAttendees;
+    QList<KCalCore::Attendee::Ptr>mNewAttendees;
 
   private:
     bool mDisableItemUpdate;

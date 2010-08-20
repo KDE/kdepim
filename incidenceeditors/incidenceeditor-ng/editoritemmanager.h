@@ -21,19 +21,22 @@
 #ifndef EDITORITEMMANAGER_H
 #define EDITORITEMMANAGER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "incidenceeditors-ng_export.h"
 
 class KJob;
 
 namespace Akonadi {
+  class Collection;
+  class Item;
+  class ItemFetchScope;
+}
 
-class Collection;
-class Item;
-class ItemEditorPrivate;
+namespace CalendarSupport {
+
 class ItemEditorUi;
-class ItemFetchScope;
+class ItemEditorPrivate;
 
 /**
  * Helper class for creating dialogs that let the user create and edit the payload
@@ -56,17 +59,29 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      */
     ~EditorItemManager();
 
+    enum ItemState {
+      AfterSave,  /**< Returns the last saved item */
+      BeforeSave  /**< Returns an item with the original payload before the last save call */
+    };
+
     /**
      * Returns the last saved item with payload or an invalid item when save is
      * not called yet.
      */
-    Akonadi::Item item() const;
+    Akonadi::Item item( ItemState state = AfterSave ) const;
 
     /**
      * Loads the @param item into the editor. The item passed <em>must</em> be
      * a valid item. When the payload is not set it will be fetched.
      */
     void load( const Akonadi::Item &item );
+
+    /**
+     * Reverts the changes that where done by the last call to save. So if an
+     * item was created by save(), it will be deleted and if an item was modified,
+     * the previous values are restored.
+     */
+    void revertLastSave();
 
     /**
      * Saves the new or modified item. This method does nothing when the
@@ -84,7 +99,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      *
      * @see fetchScope()
      */
-    void setFetchScope( const ItemFetchScope &fetchScope );
+    void setFetchScope( const Akonadi::ItemFetchScope &fetchScope );
 
     /**
      * Returns the item fetch scope.
@@ -98,7 +113,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      *
      * @see setFetchScope() for replacing the current item fetch scope
      */
-    ItemFetchScope &fetchScope();
+    Akonadi::ItemFetchScope &fetchScope();
 
     enum SaveAction {
       Create, /**< A new item was created */
@@ -107,11 +122,13 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     };
 
   Q_SIGNALS:
-    void itemSaveFinished( Akonadi::EditorItemManager::SaveAction action );
-    void itemSaveFailed( Akonadi::EditorItemManager::SaveAction action, const QString &message );
+    void itemSaveFinished( EditorItemManager::SaveAction action );
+    void itemSaveFailed( EditorItemManager::SaveAction action, const QString &message );
+    void revertFinished();
+    void revertFailed( const QString &message );
 
   private:
-    ItemEditorPrivate * const d_ptr;
+    ItemEditorPrivate *const d_ptr;
     Q_DECLARE_PRIVATE( ItemEditor )
     Q_DISABLE_COPY( EditorItemManager )
 

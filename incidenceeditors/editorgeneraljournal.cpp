@@ -30,7 +30,7 @@
 #include <libkdepim/kdateedit.h>
 #include <libkdepim/ktimeedit.h>
 
-#include <KCal/Journal>
+#include <kcalcore/journal.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -45,7 +45,7 @@
 #include <QPushButton>
 #include <QTimer>
 
-using namespace KCal;
+using namespace KCalCore;
 
 EditorGeneralJournal::EditorGeneralJournal( QObject *parent )
   : EditorGeneral( parent )
@@ -141,7 +141,7 @@ void EditorGeneralJournal::initCategories( QWidget *parent, QBoxLayout *topLayou
   categoriesLayout->addWidget( mCategoriesLabel, 1 );
 }
 
-void EditorGeneralJournal::readJournal( Journal *journal, const QDate &date, bool tmpl )
+void EditorGeneralJournal::readJournal( const Journal::Ptr &journal, const QDate &date, bool tmpl )
 {
   Q_UNUSED( date ); //journals cannot recur, so this is not needed
 
@@ -162,7 +162,7 @@ void EditorGeneralJournal::readJournal( Journal *journal, const QDate &date, boo
   setCategories( journal->categories() );
 }
 
-void EditorGeneralJournal::fillJournal( Journal *journal )
+void EditorGeneralJournal::fillJournal( Journal::Ptr &journal )
 {
   journal->setSummary( mTitleEdit->text() );
   if ( mRichDescription->isChecked() ) {
@@ -217,7 +217,7 @@ bool EditorGeneralJournal::validateInput()
   return true;
 }
 
-bool EditorGeneralJournal::setAlarmOffset( Alarm *alarm, int value ) const
+bool EditorGeneralJournal::setAlarmOffset( const Alarm::Ptr &alarm, int value ) const
 {
   Q_UNUSED( alarm );
   Q_UNUSED( value );

@@ -1,5 +1,5 @@
 include_directories(${CMAKE_SOURCE_DIR}/kmail ${CMAKE_BINARY_DIR}/kmail
-	${CMAKE_SOURCE_DIR}/messageviewer  ${CMAKE_SOURCE_DIR}/akonadi ${Boost_INCLUDE_DIRS})
+	${CMAKE_SOURCE_DIR}/messageviewer ${Boost_INCLUDE_DIRS})
 
 ########### next target ###############
 set(interface_SRCS)
@@ -12,7 +12,7 @@ set(kontact_kmailplugin_PART_SRCS kmail_plugin.cpp summarywidget.cpp ${kontact_k
 kde4_add_plugin(kontact_kmailplugin ${kontact_kmailplugin_PART_SRCS})
 add_dependencies(kontact_kmailplugin kmail_xml)
 
-target_link_libraries(kontact_kmailplugin ${KDEPIMLIBS_KMIME_LIBRARY} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim akonadi_next)
+target_link_libraries(kontact_kmailplugin ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KPARTS_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} kdepim akonadi_next)
 
 ########### next target ###############
 
@@ -21,8 +21,8 @@ set(kcm_kmailsummary_PART_SRCS kcmkmailsummary.cpp ${kontact_kmail_plugins_inter
 kde4_add_plugin(kcm_kmailsummary ${kcm_kmailsummary_PART_SRCS})
 add_dependencies(kcm_kmailsummary kmail_xml)
 
-target_link_libraries(kcm_kmailsummary ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBRARY} 
-${KDEPIMLIBS_AKONADI_LIBS} akonadi_next akonadi-kcal_next)
+target_link_libraries(kcm_kmailsummary ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBS}
+${KDEPIMLIBS_AKONADI_LIBS} akonadi_next)
 
 ########### install files ###############
 

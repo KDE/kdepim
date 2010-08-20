@@ -32,6 +32,8 @@
 */
 
 // MessageViewer includes
+#include <config-messageviewer.h>
+
 #include "objecttreeparser.h"
 
 #include "objecttreeparser_p.h"
@@ -278,7 +280,7 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
 
     KMime::ContentIndex contentIndex = node->index();
     if ( htmlWriter() /*&& contentIndex.isValid()*/ )
-      htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"></a>").arg( contentIndex.toString() ) );
+      htmlWriter()->queue( QString::fromLatin1("<a name=\"att%1\"></a>").arg( contentIndex.toString() ) );
 
     QByteArray mediaType( "text" );
     QByteArray subType( "plain" );
@@ -1967,10 +1969,9 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
     return false;
   }
 
-  AutoQPointer<ChiasmusKeySelector> selectorDlg;
-  selectorDlg = new ChiasmusKeySelector( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
-                                         keys, GlobalSettings::chiasmusDecryptionKey(),
-                                         GlobalSettings::chiasmusDecryptionOptions() );
+  AutoQPointer<ChiasmusKeySelector> selectorDlg( new ChiasmusKeySelector( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
+                                                                          keys, GlobalSettings::chiasmusDecryptionKey(),
+                                                                          GlobalSettings::chiasmusDecryptionOptions() ) );
 
   if ( selectorDlg->exec() != KDialog::Accepted || !selectorDlg ) {
     return false;

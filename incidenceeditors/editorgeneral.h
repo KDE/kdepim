@@ -26,7 +26,9 @@
 
 #include <KLineEdit>
 
-#include <KCal/Alarm>
+#include <kcalcore/alarm.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/icaltimezones.h>
 
 class EditorAttachments;
 
@@ -44,11 +46,6 @@ class QPushButton;
 class QSpinBox;
 class QStackedWidget;
 class QWidget;
-
-namespace KCal {
-  class Incidence;
-  class ICalTimeZones;
-}
 
 class FocusLineEdit : public KLineEdit
 {
@@ -83,10 +80,10 @@ class EditorGeneral : public QObject
     void setDefaults( bool allDay );
 
     /** Read event object and setup widgets accordingly */
-    void readIncidence( KCal::Incidence *incidence );
+    void readIncidence( const KCalCore::Incidence::Ptr &incidence );
 
     /** Write event settings to event object */
-    void fillIncidence( KCal::Incidence * );
+    void fillIncidence( KCalCore::Incidence::Ptr & );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -121,9 +118,9 @@ class EditorGeneral : public QObject
     void openURL( const KUrl & );
 
   protected:
-    KCal::Alarm *alarmFromSimplePage() const;
+    KCalCore::Alarm::Ptr alarmFromSimplePage() const;
 
-    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const = 0;
+    virtual bool setAlarmOffset( const KCalCore::Alarm::Ptr &alarm, int value ) const = 0;
 
     QWidget                 *mParent;
     FocusLineEdit           *mSummaryEdit;
@@ -152,12 +149,12 @@ class EditorGeneral : public QObject
       AdvancedAlarmLabel
     };
 
-    KCal::ICalTimeZones *mTimeZones;
+    KCalCore::ICalTimeZones *mTimeZones;
 
   private:
     void toggleDescriptionRichButtons( bool rich );
     QByteArray mType; // as in Incidence::type()
-    KCal::Alarm::List mAlarmList;
+    KCalCore::Alarm::List mAlarmList;
 };
 
 #endif

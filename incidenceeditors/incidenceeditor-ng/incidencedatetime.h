@@ -23,10 +23,10 @@
 
 #include "combinedincidenceeditor.h"
 
-#include <KCal/Event>
-#include <KCal/Todo>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 
-namespace KCal {
+namespace KCalCore {
 class ICalTimeZones;
 }
 
@@ -41,11 +41,11 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDateTime( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
     ~IncidenceDateTime();
 
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 
     /**
@@ -64,9 +64,19 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     KDateTime currentStartDateTime() const;
     KDateTime currentEndDateTime() const;
 
+    void setStartTime( const QTime &newTime );
+    void setStartDate( const QDate &newDate );
+
+    bool startDateTimeEnabled() const;
+    bool endDateTimeEnabled() const;
+
+    bool isValid();
+
   signals:
+    void startDateTimeToggled( bool enabled );
     void startDateChanged( const QDate &newDate );
     void startTimeChanged( const QTime &newTime );
+    void endDateTimeToggled( bool enabled );
     void endDateChanged( const QDate &newDate );
     void endTimeChanged( const QTime &newTime );
 
@@ -81,21 +91,21 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
     void enableTimeEdits();
-    bool isDirty( KCal::Todo::ConstPtr todo ) const;
+    bool isDirty( const KCalCore::Todo::Ptr &todo ) const;
 
   private slots: /// Event specific
-    bool isDirty( KCal::Event::ConstPtr event ) const;
+    bool isDirty( const KCalCore::Event::Ptr &event ) const;
 
   private:
-    void load( KCal::Event::ConstPtr event );
-    void load( KCal::Todo::ConstPtr todo );
-    void save( KCal::Event::Ptr event );
-    void save( KCal::Todo::Ptr todo );
+    void load( const KCalCore::Event::Ptr &event );
+    void load( const KCalCore::Todo::Ptr &todo );
+    void save( const KCalCore::Event::Ptr &event );
+    void save( const KCalCore::Todo::Ptr &todo );
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
 
   private:
-    KCal::ICalTimeZones *mTimeZones;
+    KCalCore::ICalTimeZones *mTimeZones;
     Ui::EventOrTodoDesktop *mUi;
 
     QDate mActiveDate;
@@ -112,6 +122,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
      * time appropriate when the start time changes.
      */
     KDateTime mCurrentStartDateTime;
+
+    /// Remembers state when switching between takes whole day and timed event/to-do.
+    bool mTimezoneCombosWhereVisibile;
 };
 
 } // IncidenceEditorsNG

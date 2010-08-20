@@ -32,6 +32,8 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "partnodebodypart.h"
 #include "nodehelper.h"
 

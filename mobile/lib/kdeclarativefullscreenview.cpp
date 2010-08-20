@@ -20,6 +20,8 @@
 #include "kdeclarativefullscreenview.h"
 #include "stylesheetloader.h"
 
+#include <akonadi/control.h>
+
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KStandardDirs>
@@ -47,7 +49,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   QDeclarativeView( parent ),
   m_qmlFileName( qmlFileName )
 {
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
   // make MainView use OpenGL ES2 backend for better performance
   // right now, the best performance can be achieved with a GLWidget
   // and the use of the raster graphicssystem.
@@ -56,19 +58,29 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
   glWidget->setAutoFillBackground(false);
   setViewport(glWidget);
+  Akonadi::Control::widgetNeedsAkonadi( glWidget );
+#else
+  Akonadi::Control::widgetNeedsAkonadi( this );
 #endif
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
-#ifdef Q_WS_MAEMO_5
+#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
   setWindowState( Qt::WindowFullScreen );
   // use the oxygen black on whilte palette instead of the native white on black maemo5 one
   setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
+#else
+  // on the desktop start with a nice size
+  resize(800, 480);
 #endif
 
-  m_splashScreen = new QLabel( this );
-  QPixmap splashBackground;
-  splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
-  m_splashScreen->setPixmap( splashBackground );
+  const QString splashPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" )
+                                                    + QDir::separator()
+                                                    + QLatin1String( "splashscreenstatic.png" ) );
+
+  // set the background brush instead of using a QLabel for that
+  QPixmap splashBackground(splashPath);
+  setBackgroundBrush( splashBackground );
+  setAutoFillBackground( true );
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
 }
@@ -111,6 +123,12 @@ void KDeclarativeFullScreenView::delayedInit()
   // TODO: Get this from a KXMLGUIClient?
   mActionCollection = new KActionCollection( this );
 
+  KAction *action = KStandardAction::close( this, SLOT(close()), this );
+  mActionCollection->addAction( QLatin1String( "close" ), action );
+  action = new KAction( i18n( "Switch Windows" ), this );
+  connect( action, SIGNAL(triggered()), SLOT(triggerTaskSwitcher()) );
+  mActionCollection->addAction( QLatin1String( "wm_task_switch" ), action );
+
   if ( debugTiming ) {
     kWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
   }
@@ -118,7 +136,7 @@ void KDeclarativeFullScreenView::delayedInit()
 
 KDeclarativeFullScreenView::~KDeclarativeFullScreenView()
 {
-#ifndef Q_OS_WINCE
+#ifndef Q_OS_WIN
   delete glWidget;
 #endif
 }
@@ -156,9 +174,6 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
     KMessageBox::error( this, i18n( "Application loading failed: %1", errorMessages.join( QLatin1String( "\n" ) ) ) );
     QCoreApplication::instance()->exit( 1 );
   }
-
-  if ( status == QDeclarativeView::Ready )
-    m_splashScreen->deleteLater();
 }
 
 KActionCollection* KDeclarativeFullScreenView::actionCollection() const
@@ -166,9 +181,19 @@ KActionCollection* KDeclarativeFullScreenView::actionCollection() const
   return mActionCollection;
 }
 
-QObject* KDeclarativeFullScreenView::getAction( const QString &name ) const
+QObject* KDeclarativeFullScreenView::getAction( const QString& name, const QString& argument ) const
 {
-  return mActionCollection->action( name );
+  QAction * action = mActionCollection->action( name );
+  if ( !argument.isEmpty() && action )
+    action->setData( argument );
+  return action;
+}
+
+void KDeclarativeFullScreenView::setActionTitle(const QString& name, const QString& title)
+{
+  QAction * action = mActionCollection->action( name );
+  if ( !title.isEmpty() && action )
+    action->setText( title );
 }
 
 #include "kdeclarativefullscreenview.moc"

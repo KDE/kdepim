@@ -21,7 +21,6 @@ kde4_add_plugin(plasma_applet_akonotes_list ${akonotes_noteslist_plasmoid_SRCS})
 include_directories(
                       ${CMAKE_CURRENT_SOURCE_DIR}/..
                       ${KDEPIMLIBS_INCLUDE_DIRS}
-                      ${CMAKE_SOURCE_DIR}/akonadi/
                       )
 
 target_link_libraries(plasma_applet_akonotes_note

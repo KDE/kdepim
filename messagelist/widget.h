@@ -295,7 +295,7 @@ public:
    * Return a persistent set from current thread
    */
   MessageList::Core::MessageItemSetReference currentThreadAsPersistentSet() const;
-
+  Akonadi::Collection currentCollection() const;
 
 protected:
 

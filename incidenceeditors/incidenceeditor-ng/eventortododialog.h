@@ -21,9 +21,8 @@
 #ifndef EVENTORTODODIALOGNG_H
 #define EVENTORTODODIALOGNG_H
 
-#include <KDialog>
-
 #include "editoritemmanager.h"
+#include "incidencedialog.h"
 #include "incidenceeditors-ng_export.h"
 
 namespace Akonadi {
@@ -34,23 +33,37 @@ namespace IncidenceEditorsNG {
 
 class EventOrTodoDialogPrivate;
 
-class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public IncidenceDialog
 {
   Q_OBJECT
 public:
-  EventOrTodoDialog();
+  explicit EventOrTodoDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
   ~EventOrTodoDialog();
 
   /**
    * Loads the @param item into the dialog.
    *
    * To create a new Incidence pass an invalid item with either an
-   * KCal::Event:Ptr or a KCal::Todo:Ptr set as payload.
+   * KCalCore::Event:Ptr or a KCalCore::Todo:Ptr set as payload. Note: When the
+   * item is invalid, i.e. it has an invalid id, a valid payload <em>must</em>
+   * be set.
    *
-   * When the item has is valid it will fetch the payload when this is not
-   * set.
+   * When the item has is valid this method will fetch the payload when this is
+   * not already set.
    */
-  void load( const Akonadi::Item &item );
+  virtual void load( const Akonadi::Item &item, const QDate &activeDate = QDate() );
+
+  /**
+   * Sets the Collection combobox to @param collection.
+   */
+  virtual void selectCollection( const Akonadi::Collection &collection );
+
+  virtual void setIsCounterProposal( bool isCounterProposal );
+
+  /**
+    Returns the object that will receive all key events.
+   */
+  QObject *typeAheadReceiver() const;
 
 protected Q_SLOTS:
   virtual void slotButtonClicked( int button );
@@ -61,9 +74,9 @@ private:
   Q_DISABLE_COPY( EventOrTodoDialog )
 
   Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int))
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(Akonadi::EditorItemManager::SaveAction))
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString))
-  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(int))
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(CalendarSupport::EditorItemManager::SaveAction))
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(CalendarSupport::EditorItemManager::SaveAction, QString))
+  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(IncidenceEditorsNG::RecurrenceType))
   Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))

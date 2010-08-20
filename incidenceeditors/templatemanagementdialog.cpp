@@ -49,7 +49,7 @@
 using namespace IncidenceEditors;
 
 TemplateManagementDialog::TemplateManagementDialog(
-  QWidget *parent, const QStringList &templates, const QString &type )
+  QWidget *parent, const QStringList &templates, KCalCore::IncidenceBase::IncidenceType type )
   : KDialog( parent ), m_templates( templates ), m_type( type ), m_changed( false )
 {
   QString m_type_translated = i18n( qPrintable( m_type ) );

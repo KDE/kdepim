@@ -38,6 +38,7 @@ Rectangle {
   property alias upAction : upAction.name
   property alias downAction : downAction.name
   property alias deleteAction : deleteAction.name
+  property alias customActions : actionColumn.content
 
   signal triggered(string triggeredName)
 

@@ -18,6 +18,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 //#define MESSAGEVIEWER_READER_HTML_DEBUG 1
+#include <config-messageviewer.h>
+
 #include "viewer_p.h"
 #include "viewer.h"
 #include "objecttreeemptysource.h"
@@ -35,7 +37,6 @@
 #include <KActionMenu>
 #include <kascii.h>
 #include <KCharsets>
-#include <kcursorsaver.h>
 #include <KFileDialog>
 #include <KGuiItem>
 #include <QWebView>
@@ -117,7 +118,6 @@
 #include "headertheme.h"
 #include "htmlstatusbar.h"
 #include "webkitparthtmlwriter.h"
-#include <kparts/browserextension.h>
 #include "mailsourceviewer.h"
 #include "mimetreemodel.h"
 #include "nodehelper.h"
@@ -143,6 +143,9 @@
 #include <Akonadi/CollectionFetchJob>
 #include <akonadi/collectionfetchscope.h>
 
+#include <boost/bind.hpp>
+
+using namespace boost;
 using namespace MailTransport;
 using namespace MessageViewer;
 using namespace MessageCore;
@@ -153,6 +156,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
   : QObject(aParent),
     mNodeHelper( new NodeHelper ),
+    mViewer( 0 ),
     mFindBar( 0 ),
     mAttachmentStrategy( 0 ),
     mHeaderTheme( 0 ),
@@ -187,7 +191,10 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mRecursionCountForDisplayMessage( 0 ),
     mCurrentContent( 0 ),
     mJob( 0 ),
-    q( aParent )
+    q( aParent ),
+    mShowFullToAddressList( true ),
+    mShowFullCcAddressList( true )
+
 {
   if ( !mainWindow )
     mainWindow = aParent;
@@ -432,24 +439,7 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
-// Checks if the given node has a child node that is a DIV which has an ID attribute
-// with the value specified here
-static bool hasParentDivWithId( const QWebElement &start, const QString &id )
-{
-  if ( start.isNull() )
-    return false;
-
-  if ( start.tagName().toLower() == "div" ) {
-    if ( start.attribute( "id", "" ) == id )
-      return true;
-  }
-
-  if ( !start.parent().isNull() )
-    return hasParentDivWithId( start.parent(), id );
-  else return false;
-}
-
-void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint &p )
+void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & globalPos )
 {
   prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
@@ -471,11 +461,8 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, Viewer::View );
 
-  const QPoint local = mViewer->page()->view()->mapFromGlobal( p );
-  const QWebHitTestResult hit = mViewer->page()->currentFrame()->hitTestContent( local );
-  const bool attachmentInHeader = hasParentDivWithId(
-      hit.enclosingBlockElement(), "attachmentInjectionPoint" );
-  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
+  const bool attachmentInHeader = mViewer->isAttachmentInjectionPoint( globalPos );
+  const bool hasScrollbar = mViewer->hasVerticalScrollBar();
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
@@ -517,7 +504,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   action = menu->addAction(i18n("Properties") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, Viewer::Properties );
-  menu->exec( p );
+  menu->exec( globalPos );
   delete menu;
 }
 
@@ -726,6 +713,7 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
 KMime::Content::List ViewerPrivate::selectedContents()
 {
   KMime::Content::List contents;
+#ifndef QT_NO_TREEVIEW
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
@@ -735,6 +723,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
      if ( content )
        contents.append( content );
   }
+#endif
 
   return contents;
 }
@@ -1084,15 +1073,15 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 }
 
 
-void ViewerPrivate::initHtmlWidget(void)
+void ViewerPrivate::initHtmlWidget()
 {
-  mViewer->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-  mViewer->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-  mViewer->settings()->setAttribute(QWebSettings::JavaEnabled, false);
-  mViewer->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-
   mViewer->setFocusPolicy( Qt::WheelFocus );
+#if 0
+  // (marc) I guess this is not needed? All events go through the
+  // Viewer, since the Page is just a QObject, and we're only
+  // interested in mouse events...
   mViewer->page()->view()->installEventFilter( this );
+#endif
   mViewer->installEventFilter( this );
 
   if ( !htmlWriter() ) {
@@ -1125,11 +1114,12 @@ void ViewerPrivate::initHtmlWidget(void)
     metaTypesRegistered = true;
   }
 #endif
-  connect(mViewer->page(), SIGNAL( linkHovered( const QString &, const QString &, const QString & ) ),
-          this, SLOT( slotUrlOn(const QString &, const QString &, const QString & )));
-  connect(mViewer->page(), SIGNAL( linkClicked( const QUrl & ) ),this, SLOT( slotUrlOpen( const QUrl & ) ), Qt::QueuedConnection);
-  connect( mViewer, SIGNAL(popupMenu(const QString &, const QPoint &) ),
-           SLOT(slotUrlPopup(const QString &, const QPoint &)) );
+  connect( mViewer, SIGNAL(linkHovered(QString,QString,QString)),
+           this, SLOT(slotUrlOn(QString,QString,QString)) );
+  connect( mViewer, SIGNAL(linkClicked(QUrl)),
+           this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection );
+  connect( mViewer, SIGNAL(popupMenu(QString,QPoint) ),
+           SLOT(slotUrlPopup(QString,QPoint)) );
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
@@ -1156,17 +1146,7 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
     QMouseEvent* me = static_cast<QMouseEvent*>( e );
 
     // First, update the hovered URL
-    const QPoint local = mViewer->page()->view()->mapFromGlobal( me->globalPos() );
-    const QWebHitTestResult hit = mViewer->page()->currentFrame()->hitTestContent( local );
-    if ( !hit.linkUrl().isEmpty() || !hit.imageUrl().isEmpty() ) {
-      if ( !hit.linkUrl().isEmpty() ) {
-        mHoveredUrl = hit.linkUrl();
-      } else {
-        mHoveredUrl = hit.imageUrl();
-      }
-    } else {
-      mHoveredUrl.clear();
-    }
+    mHoveredUrl = mViewer->linkOrImageUrlAt( me->globalPos() );
 
     // If we are potentially handling a drag, deal with that.
     if ( mCanStartDrag && me->buttons() & Qt::LeftButton ) {
@@ -1400,6 +1380,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
 
 void ViewerPrivate::showHideMimeTree( )
 {
+#ifndef QT_NO_TREEVIEW
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always )
     mMimePartTree->show();
   else {
@@ -1409,6 +1390,7 @@ void ViewerPrivate::showHideMimeTree( )
   }
   if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != mMimePartTree->isVisible() ) )
     mToggleMimePartTreeAction->setChecked( mMimePartTree->isVisible() );
+#endif
 }
 
 
@@ -1420,6 +1402,7 @@ void ViewerPrivate::atmViewMsg( KMime::Message::Ptr message )
 
 void ViewerPrivate::adjustLayout()
 {
+#ifndef QT_NO_TREEVIEW
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitter->addWidget( mMimePartTree );
   else
@@ -1431,6 +1414,7 @@ void ViewerPrivate::adjustLayout()
     mMimePartTree->show();
   else
     mMimePartTree->hide();
+#endif
 
   if (  GlobalSettings::self()->showColorBar() && mMsgDisplay )
     mColorBar->show();
@@ -1441,6 +1425,7 @@ void ViewerPrivate::adjustLayout()
 
 void ViewerPrivate::saveSplitterSizes() const
 {
+#ifndef QT_NO_TREEVIEW
   if ( !mSplitter || !mMimePartTree )
     return;
   if ( mMimePartTree->isHidden() )
@@ -1449,6 +1434,7 @@ void ViewerPrivate::saveSplitterSizes() const
   const bool mimeTreeAtBottom = GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom;
   GlobalSettings::self()->setMimePaneHeight( mSplitter->sizes()[ mimeTreeAtBottom ? 1 : 0 ] );
   GlobalSettings::self()->setMessagePaneHeight( mSplitter->sizes()[ mimeTreeAtBottom ? 0 : 1 ] );
+#endif
 }
 
 void ViewerPrivate::createWidgets() {
@@ -1460,6 +1446,7 @@ void ViewerPrivate::createWidgets() {
   mSplitter->setObjectName( "mSplitter" );
   mSplitter->setChildrenCollapsible( false );
   vlay->addWidget( mSplitter );
+#ifndef QT_NO_TREEVIEW
   mMimePartTree = new QTreeView( mSplitter );
   mMimePartTree->setObjectName( "mMimePartTree" );
   mMimePartModel = new MimeTreeModel( mMimePartTree );
@@ -1471,6 +1458,7 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
+#endif
   mBox = new KHBox( mSplitter );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
@@ -1479,20 +1467,19 @@ void ViewerPrivate::createWidgets() {
   mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
 
-#ifdef KDEPIM_MOBILE_UI
-  mViewer->page()->mainFrame()->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
-  mViewer->page()->mainFrame()->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
-#endif
-
   mFindBar = new FindBar( mViewer, readerBox );
+#ifndef QT_NO_TREEVIEW
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
+#endif
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 }
 
 void ViewerPrivate::slotMimePartDestroyed()
 {
+#ifndef QT_NO_TREEVIEW
   //root is either null or a modified tree that we need to clean up
   delete mMimePartModel->root();
+#endif
 }
 
 void ViewerPrivate::setXmlGuiClient( KXMLGUIClient *guiClient )
@@ -1579,8 +1566,8 @@ void ViewerPrivate::createActions()
   mCopyAction = ac->addAction( KStandardAction::Copy, "kmail_copy", this,
                                SLOT(slotCopySelectedText()) );
 
-  connect( mViewer->page(), SIGNAL( selectionChanged() ), this,
-                      SLOT( viewerSelectionChanged() ) );
+  connect( mViewer, SIGNAL(selectionChanged()),
+           this, SLOT(viewerSelectionChanged()) );
   viewerSelectionChanged();
 
   // copy all text to clipboard
@@ -1765,7 +1752,9 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     if ( !content->isTopLevel() )
       popup.addAction( i18n( "Properties" ), this, SLOT( slotAttachmentProperties() ) );
   }
+#ifndef QT_NO_TREEVIEW
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
+#endif
 
 }
 
@@ -1830,7 +1819,7 @@ static QColor nextColor( const QColor & c )
   return QColor::fromHsv( (h + 50) % 360, qMax(s, 64), v );
 }
 
-QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &bgColor )
+QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &bgColor ) const
 {
 
   if ( !node )
@@ -2029,7 +2018,7 @@ void ViewerPrivate::slotShowMessageSource()
 {
   mNodeHelper->messageWithExtraContent( mMessage.get() );
   const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
-  const QString htmlSource = mViewer->page()->mainFrame()->documentElement().toOuterXml();
+  const QString htmlSource = mViewer->htmlSource();
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
   viewer->setWindowTitle( i18n("Message as Plain Text") );
@@ -2043,7 +2032,11 @@ void ViewerPrivate::slotShowMessageSource()
   // Update: (GS) I'm not going to make this code behave according to Xinerama
   //         configuration because this is quite the hack.
   if ( QApplication::desktop()->isVirtualDesktop() ) {
+#ifndef QT_NO_CURSOR
     int scnum = QApplication::desktop()->screenNumber( QCursor::pos() );
+#else
+    int scnum = 0;
+#endif
     viewer->resize( QApplication::desktop()->screenGeometry( scnum ).width()/2,
                     2 * QApplication::desktop()->screenGeometry( scnum ).height()/3);
   } else {
@@ -2087,18 +2080,17 @@ void ViewerPrivate::updateReaderWin()
     displayMessage();
   } else {
     mColorBar->hide();
+#ifndef QT_NO_TREEVIEW
     mMimePartTree->hide();
   //FIXME(Andras)  mMimePartTree->clearAndResetSortOrder();
+#endif
     htmlWriter()->begin( QString() );
     htmlWriter()->write( mCSSHelper->htmlHead( mUseFixedFont ) + "</body></html>" );
     htmlWriter()->end();
   }
 
   if ( mSavedRelativePosition ) {
-    // FIXME: This doesn't work, Qt resets the scrollbar value somewhere in the event handler.
-    //        Using a singleshot timer wouldn't work either, since that introduces visible scrolling.
-    const float max = mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-    mViewer->page()->currentFrame()->setScrollBarValue( Qt::Vertical, max * mSavedRelativePosition );
+    mViewer->scrollToRelativePosition( mSavedRelativePosition );
     mSavedRelativePosition = 0;
   }
   mRecursionCountForDisplayMessage--;
@@ -2182,15 +2174,13 @@ void ViewerPrivate::slotPrintMsg()
   if ( !mMessage ) return;
 
 // wince does not support printing
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
   QPrinter printer;
 
-  QPointer<QPrintDialog> dlg = new QPrintDialog( &printer, mViewer );
+  AutoQPointer<QPrintDialog> dlg( new QPrintDialog( &printer, mViewer ) );
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
-    mViewer->page()->mainFrame()->print( &printer );
+    mViewer->print( &printer );
   }
-
-  delete dlg;
 #endif
 }
 
@@ -2232,17 +2222,8 @@ void ViewerPrivate::slotNewStuffFinished()
   }
 }
 
-void ViewerPrivate::injectAttachments()
+QString ViewerPrivate::attachmentInjectionHtml() const
 {
-  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT( injectAttachments() ) );
-  // inject attachments in header view
-  // we have to do that after the otp has run so we also see encrypted parts
-
-  QWebElement doc = mViewer->page()->currentFrame()->documentElement();
-  QWebElement injectionPoint = doc.findFirst( "div#attachmentInjectionPoint" );
-  if( injectionPoint.isNull() )
-    return;
-
   QString imgpath( KStandardDirs::locate("data","messageviewer/themes/") );
   QString urlHandle;
   QString imgSrc;
@@ -2260,7 +2241,7 @@ void ViewerPrivate::injectAttachments()
     html += renderAttachments( node, background );
   }
   if ( html.isEmpty() )
-    return;
+    return QString();
 
   QString link("");
   if ( mThemeName == "fancy" ) {
@@ -2272,8 +2253,16 @@ void ViewerPrivate::injectAttachments()
     html.prepend( link );
   }
 
-  assert( injectionPoint.tagName().toLower() == "div" );
-  injectionPoint.setInnerXml( html );
+  return html;
+}
+
+void ViewerPrivate::injectAttachments()
+{
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT( injectAttachments() ) );
+  // inject attachments in header view
+  // we have to do that after the otp has run so we also see encrypted parts
+
+  mViewer->injectAttachments( bind( &ViewerPrivate::attachmentInjectionHtml, this ) );
 }
 
 void ViewerPrivate::slotSettingsChanged()
@@ -2283,15 +2272,18 @@ void ViewerPrivate::slotSettingsChanged()
 
 void ViewerPrivate::slotMimeTreeContextMenuRequested( const QPoint& pos )
 {
+#ifndef QT_NO_TREEVIEW
   QModelIndex index = mMimePartTree->indexAt( pos );
   if ( index.isValid() ) {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      showContextMenu( content, pos );
   }
+#endif
 }
 
 void ViewerPrivate::slotAttachmentOpenWith()
 {
+#ifndef QT_NO_TREEVIEW
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
@@ -2300,11 +2292,12 @@ void ViewerPrivate::slotAttachmentOpenWith()
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      attachmentOpenWith( content );
  }
+#endif
 }
 
 void ViewerPrivate::slotAttachmentOpen()
 {
-
+#ifndef QT_NO_TREEVIEW
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
 
@@ -2313,6 +2306,7 @@ void ViewerPrivate::slotAttachmentOpen()
     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
     attachmentOpen( content );
   }
+#endif
 }
 
 void ViewerPrivate::slotAttachmentSaveAs()
@@ -2394,9 +2388,11 @@ void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
   if ( urls.isEmpty() )
     return;
 
+#ifndef QT_NO_CLIPBOARD
   QMimeData *mimeData = new QMimeData;
   mimeData->setUrls( urls );
   QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
+#endif
 }
 
 
@@ -2490,9 +2486,11 @@ void ViewerPrivate::slotHandleAttachment( int choice )
 
 void ViewerPrivate::slotCopySelectedText()
 {
+#ifndef QT_NO_CLIPBOARD
   QString selection = mViewer->selectedText();
   selection.replace( QChar::Nbsp, ' ' );
   QApplication::clipboard()->setText( selection );
+#endif
 }
 
 void ViewerPrivate::viewerSelectionChanged()
@@ -2508,11 +2506,12 @@ void ViewerPrivate::viewerSelectionChanged()
 
 void ViewerPrivate::selectAll()
 {
-  mViewer->page()->triggerAction(QWebPage::SelectAll);
+  mViewer->selectAll();
 }
 
 void ViewerPrivate::slotUrlCopy()
 {
+#ifndef QT_NO_CLIPBOARD
   QClipboard* clip = QApplication::clipboard();
   if ( mClickedUrl.protocol() == "mailto" ) {
     // put the url into the mouse selection and the clipboard
@@ -2526,6 +2525,7 @@ void ViewerPrivate::slotUrlCopy()
     clip->setText( mClickedUrl.url(), QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "URL copied to clipboard." ));
   }
+#endif
 }
 
 void ViewerPrivate::slotSaveMessage()
@@ -2545,15 +2545,7 @@ void ViewerPrivate::slotSaveMessage()
 
 void ViewerPrivate::saveRelativePosition()
 {
-  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
-  if ( hasScrollbar ) {
-    const float pos = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
-    const float height = mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-    mSavedRelativePosition = pos / height;
-  }
-  else {
-    mSavedRelativePosition = 0;
-  }
+  mSavedRelativePosition = mViewer->relativePosition();
 }
 
 //TODO(Andras) inline them
@@ -2619,26 +2611,15 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 
 void ViewerPrivate::scrollToAttachment( KMime::Content *node )
 {
-  QWebElement doc = mViewer->page()->mainFrame()->documentElement();
-
+  const QString indexStr = node->index().toString();
   // The anchors for this are created in ObjectTreeParser::parseObjectTree()
-  QWebElement link = doc.findFirst( QString::fromLatin1( "a#att%1" ).arg( node->index().toString() ) );
-  if( link.isNull() ) {
-    return;
-  }
-
-  int linkPos = link.geometry().bottom();
-  int viewerPos  = mViewer->page()->mainFrame()->scrollPosition().y();
-  link.setFocus();
-  mViewer->page()->mainFrame()->scroll(0, linkPos - viewerPos );
+  mViewer->scrollToAnchor( "att" + indexStr );
 
   // Remove any old color markings which might be there
   const KMime::Content *root = node->topLevel();
-  int totalChildCount = Util::allContents( root ).size();
-  for ( int i = 0; i <= totalChildCount + 1; i++ ) {
-    QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( i + 1 ) );
-    if ( !attachmentDiv.isNull() )
-      attachmentDiv.removeAttribute( "style" );
+  const int totalChildCount = Util::allContents( root ).size();
+  for ( int i = 0 ; i < totalChildCount + 1 ; ++i ) {
+    mViewer->removeAttachmentMarking( QString::fromLatin1( "attachmentDiv%1" ).arg( i + 1 ) );
   }
 
   // Don't mark hidden nodes, that would just produce a strange yellow line
@@ -2649,12 +2630,7 @@ void ViewerPrivate::scrollToAttachment( KMime::Content *node )
   // Now, color the div of the attachment in yellow, so that the user sees what happened.
   // We created a special marked div for this in writeAttachmentMarkHeader() in ObjectTreeParser,
   // find and modify that now.
-
-  QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( node->index().toString() ) );
-  if ( attachmentDiv.isNull() ) {
-    return;
-  }
-  attachmentDiv.setAttribute( "style", QString( "border:2px solid %1" ).arg( cssHelper()->pgpWarnColor().name() ) );
+  mViewer->markAttachment( "attachmentDiv" + indexStr, QString::fromLatin1( "border:2px solid %1" ).arg( cssHelper()->pgpWarnColor().name() ) );
 }
 
 void ViewerPrivate::setUseFixedFont( bool useFixedFont )
@@ -2708,11 +2684,10 @@ void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
     KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
     return;
   }
-  AutoQPointer<ChiasmusKeySelector> selectorDlg;
-  selectorDlg = new ChiasmusKeySelector( mMainWindow,
-                                         i18n( "Chiasmus Decryption Key Selection" ),
-                                         keys, GlobalSettings::chiasmusDecryptionKey(),
-                                         GlobalSettings::chiasmusDecryptionOptions() );
+  AutoQPointer<ChiasmusKeySelector> selectorDlg( new ChiasmusKeySelector( mMainWindow,
+                                                                          i18n( "Chiasmus Decryption Key Selection" ),
+                                                                          keys, GlobalSettings::chiasmusDecryptionKey(),
+                                                                          GlobalSettings::chiasmusDecryptionOptions() ) );
   if ( selectorDlg->exec() != QDialog::Accepted || !selectorDlg ) {
     return;
   }
@@ -2826,20 +2801,12 @@ void ViewerPrivate::toggleFullAddressList()
   toggleFullAddressList( "Cc" );
 }
 
-void ViewerPrivate::toggleFullAddressList( const QString &field )
+QString ViewerPrivate::attachmentQuickListLinkHtml( bool doShow, const QString & field ) const
 {
-  QWebElement doc = mViewer->page()->currentFrame()->documentElement();
-  // First inject the correct icon
-  QWebElement tag = doc.findFirst( QString( "span#iconFull%1AddressList" ).arg( field ) );
-  if ( tag.isNull() ) {
-    return;
-  }
-
   QString imgpath( KStandardDirs::locate( "data","messageviewer/themes/" ) );
   QString urlHandle;
   QString imgSrc;
   QString altText;
-  bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
   if ( doShow ) {
     urlHandle.append( "kmail:hideFull" + field + "AddressList" );
     imgSrc.append( "quicklistOpened.png" );
@@ -2850,23 +2817,20 @@ void ViewerPrivate::toggleFullAddressList( const QString &field )
     altText = i18n("Show full address list");
   }
 
-  QString link = "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
+  return "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
                  "alt=\"" + altText + "\" /></a></span>";
-  tag.setInnerXml( link );
+}
 
-  // Then show/hide the full address list
-  QWebElement dotsTag = doc.findFirst( QString( "span#dotsFull%1AddressList" ).arg( field ) );
-  Q_ASSERT( !dotsTag.isNull() );
-
-  tag = doc.findFirst( QString( "span#hiddenFull%1AddressList" ).arg( field ) );
-  Q_ASSERT( !tag.isNull() );
-
-  if ( doShow ) {
-    dotsTag.setStyleProperty( "display", "none" );
-    tag.removeAttribute( "display" );
-  } else {
-    tag.setStyleProperty( "display", "none" );
-    dotsTag.removeAttribute( "display" );
+void ViewerPrivate::toggleFullAddressList( const QString &field )
+{
+  const bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
+  // First inject the correct icon
+  if ( mViewer->replaceInnerHtml( "iconFull" + field + "AddressList",
+                                  bind( &ViewerPrivate::attachmentQuickListLinkHtml, this, doShow, field ) ) )
+  {
+    // Then show/hide the full address list
+    mViewer->setElementByIdVisible( "dotsFull"   + field + "AddressList", !doShow );
+    mViewer->setElementByIdVisible( "hiddenFull" + field + "AddressList",  doShow );
   }
 }
 

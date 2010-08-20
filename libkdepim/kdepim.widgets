@@ -29,9 +29,3 @@ IncludeFile=libkdepim/kcheckcombobox.h
 ConstructorArgs=(parent)
 Group=Input (KDE-PIM)
 
-[KPIM::KTimeZoneComboBox]
-ToolTip=Time Zone Combobox (KDE-PIM)
-WhatsThis=A widget to select a time zone.
-IncludeFile=libkdepim/ktimezonecombobox.h
-ConstructorArgs=(parent)
-Group=Input (KDE-PIM)

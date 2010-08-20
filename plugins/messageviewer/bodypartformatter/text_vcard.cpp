@@ -1,172 +1,275 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    text_vcard.cpp
 
-    This file is part of KMail, the KDE mail client.
-    Copyright (c) 2004 Till Adam <adam@kde.org>
+  This file is part of KMail, the KDE mail client.
+  Copyright (c) 2004 Till Adam <adam@kde.org>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
-    KMail is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+  KMail is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-    KMail is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
+  KMail is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-    In addition, as a special exception, the copyright holders give
-    permission to link the code of this program with any edition of
-    the Qt library by Trolltech AS, Norway (or with modified versions
-    of Qt that use the same license as Qt), and distribute linked
-    combinations including the two.  You must obey the GNU General
-    Public License in all respects for all of the code used other than
-    Qt.  If you modify this file, you may extend this exception to
-    your version of the file, but you are not obligated to do so.  If
-    you do not wish to do so, delete this exception statement from
-    your version.
+  In addition, as a special exception, the copyright holders give
+  permission to link the code of this program with any edition of
+  the Qt library by Trolltech AS, Norway (or with modified versions
+  of Qt that use the same license as Qt), and distribute linked
+  combinations including the two.  You must obey the GNU General
+  Public License in all respects for all of the code used other than
+  Qt.  If you modify this file, you may extend this exception to
+  your version of the file, but you are not obligated to do so.  If
+  you do not wish to do so, delete this exception statement from
+  your version.
 */
-
-#include <QUrl>
-
-#include <kapplication.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <kstringhandler.h>
-#include <kglobalsettings.h>
-#include <kiconloader.h>
-
-#include <akonadi/contact/standardcontactformatter.h>
+#include "messageviewer/interfaces/bodypartformatter.h"
+#include "messageviewer/interfaces/bodyparturlhandler.h"
+#include "messageviewer/interfaces/bodypart.h"
+using MessageViewer::Interface::BodyPart;
+#include "messageviewer/webkitparthtmlwriter.h"
 
 #include <libkdepim/addcontactjob.h>
 
-#include "messageviewer/interfaces/bodypartformatter.h"
-#include "messageviewer/interfaces/bodypart.h"
-using MessageViewer::Interface::BodyPart;
-#include "messageviewer/interfaces/bodyparturlhandler.h"
-#include "messageviewer/webkitparthtmlwriter.h"
-#include <kimproxy.h>
+#include <Akonadi/Contact/ContactViewer>
+#include <Akonadi/Contact/StandardContactFormatter>
 
-#include <kabc/vcardconverter.h>
-#include <kabc/addressee.h>
-using KABC::VCardConverter;
-using KABC::Addressee;
+#include <KABC/VCardConverter>
+#include <KABC/Addressee>
 
 #include <kdemacros.h>
+#include <KFileDialog>
+#include <KGlobal>
+#include <KIcon>
+#include <KLocale>
+#include <KMenu>
+#include <KMessageBox>
+#include <KTemporaryFile>
+#include <KIO/NetAccess>
 
 namespace {
 
-  class Formatter : public MessageViewer::Interface::BodyPartFormatter {
+class Formatter : public MessageViewer::Interface::BodyPartFormatter
+{
   public:
-    Formatter() {
-      // disabled pending resolution of how to share static objects when dlopening libraries
-      //mKIMProxy = ::KIMProxy::instance( kapp->dcopClient() );
+    Formatter()
+    {
     }
 
-    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const {
+    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const
+    {
+      if ( !writer ) {
+        return AsIcon;
+      }
 
-       if ( !writer ) return AsIcon;
+      KABC::VCardConverter vcc;
+      const QString vCard = bodyPart->asText();
+      if ( vCard.isEmpty() ) {
+        return AsIcon;
+      }
+      KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+      if ( al.empty() ) {
+        return AsIcon;
+      }
 
-       VCardConverter vcc;
-       const QString vCard = bodyPart->asText();
-       if ( vCard.isEmpty() ) return AsIcon;
-       Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-       if ( al.empty() ) return AsIcon;
+      writer->queue( "<div align=\"center\"><h2>" +
+                     i18n( "Attached business cards" ) +
+                     "</h2></div>" );
 
-       writer->queue (
-             "<div align=\"center\"><h2>" +
-             i18n( "Attached business cards" ) +
-             "</h2></div>"
-                );
+      int count = 0;
+      foreach ( const KABC::Addressee &a, al ) {
+        if ( a.isEmpty() ) {
+          return AsIcon;
+        }
 
-       int count = 0;
-       foreach (const KABC::Addressee& a, al ) {
-          if ( a.isEmpty() ) return AsIcon;
+        Akonadi::StandardContactFormatter formatter;
+        formatter.setContact( a );
 
-          Akonadi::StandardContactFormatter formatter;
-          formatter.setContact( a );
+        writer->queue( formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm ) );
 
-          writer->queue( formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm ) );
+        QString addToLinkText = i18n( "[Add this contact to the address book]" );
+        QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
+        writer->queue( "<div align=\"center\"><a href=\"" +
+                       bodyPart->makeLink( op ) +
+                       "\">" +
+                       addToLinkText +
+                       "</a></div><br><br>" );
+        count++;
+      }
 
-          QString addToLinkText = i18n( "[Add this contact to the address book]" );
-          QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
-          writer->queue(
-                "<div align=\"center\"><a href=\"" +
-                bodyPart->makeLink( op ) +
-                "\">" +
-                addToLinkText +
-                "</a></div><br><br>" );
-          count++;
-       }
-
-       return Ok;
+      return Ok;
     }
-  private:
-    //::KIMProxy *mKIMProxy;
 };
 
-  class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler {
+class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
+{
   public:
-     bool handleClick(  MessageViewer::Viewer* /*viewerInstance*/, BodyPart * bodyPart, const QString & path ) const {
+    bool handleClick( MessageViewer::Viewer *viewerInstance, BodyPart *bodyPart,
+                      const QString &path ) const
+    {
 
-       const QString vCard = bodyPart->asText();
-       if ( vCard.isEmpty() ) return true;
-       VCardConverter vcc;
-       Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-       int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
-       if ( index == -1 || index >= al.count() ) return true;
-       KABC::Addressee a = al[index];
-       if ( a.isEmpty() ) return true;
+      Q_UNUSED( viewerInstance );
+      const QString vCard = bodyPart->asText();
+      if ( vCard.isEmpty() ) {
+        return true;
+      }
+      KABC::VCardConverter vcc;
+      KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+      int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+      if ( index == -1 || index >= al.count() ) {
+        return true;
+      }
+      KABC::Addressee a = al[index];
+      if ( a.isEmpty() ) {
+        return true;
+      }
 
-       KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
-       job->start();
+      KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
+      job->start();
 
-       return true;
+      return true;
+    }
+
+    static KABC::Addressee findAddressee( BodyPart *part, const QString &path )
+    {
+      const QString vCard = part->asText();
+      if ( !vCard.isEmpty() ) {
+        KABC::VCardConverter vcc;
+        KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
+        int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+        if ( index >= 0 ) {
+          return al[index];
+        }
+      }
+      return KABC::Addressee();
+    }
+
+    bool handleContextMenuRequest( BodyPart *part, const QString &path, const QPoint &point ) const
+    {
+      const QString vCard = part->asText();
+      if ( vCard.isEmpty() ) {
+        return true;
+      }
+      KABC::Addressee a = findAddressee( part, path );
+      if ( a.isEmpty() ) {
+        return true;
+      }
+
+      KMenu *menu = new KMenu();
+      QAction *open =
+        menu->addAction( KIcon( "document-open" ), i18n( "View Business Card" ) );
+      QAction *saveas =
+        menu->addAction( KIcon( "document-save-as" ), i18n( "Save Business Card As..." ) );
+
+      QAction *action = menu->exec( point, 0 );
+      if ( action == open ) {
+        openVCard( a, vCard );
+      } else if ( action == saveas ) {
+        saveAsVCard( a, vCard );
+      }
+      delete menu;
+      return true;
+    }
+
+    QString statusBarMessage( BodyPart *part, const QString &path ) const
+    {
+      KABC::Addressee a = findAddressee( part, path );
+      if ( a.realName().isEmpty() ) {
+        return i18n( "Add this contact to the address book." );
+      } else {
+        return i18n( "Add \"%1\" to the address book.", a.realName() );
      }
+    }
 
-     bool handleContextMenuRequest(  BodyPart *, const QString &, const QPoint & ) const {
-       return false;
-     }
+    bool openVCard( const KABC::Addressee &a, const QString &vCard ) const
+    {
+      Q_UNUSED( vCard );
+      Akonadi::ContactViewer *view = new Akonadi::ContactViewer( 0 );
+      view->setRawContact( a );
+      view->setMinimumSize( 300, 400 );
+      view->show();
+      return true;
+    }
 
-     QString statusBarMessage(  BodyPart *, const QString & ) const {
-       return i18n("Add this contact to the address book.");
-     }
-  };
+    bool saveAsVCard( const KABC::Addressee &a, const QString &vCard ) const
+    {
+      QString fileName = a.givenName() + '_' + a.familyName() + ".vcf";
 
-  class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin {
+      // get the saveas file name
+      KUrl saveAsUrl =
+        KFileDialog::getSaveUrl( fileName,
+                                 QString(), 0,
+                                 i18n( "Save Business Card" ) );
+      if ( saveAsUrl.isEmpty() ||
+           ( QFileInfo( saveAsUrl.path() ).exists() &&
+             ( KMessageBox::warningYesNo(
+               0,
+               i18n( "%1 already exists. Do you want to overwrite it?",
+                     saveAsUrl.path() ) ) == KMessageBox::No ) ) ) {
+        return false;
+      }
+
+      // put the attachment in a temporary file and save it
+      KTemporaryFile tmpFile;
+      tmpFile.open();
+
+      QByteArray data = vCard.toUtf8();
+      tmpFile.write( data );
+      tmpFile.flush();
+
+      return KIO::NetAccess::upload( tmpFile.fileName(), saveAsUrl, 0 );
+    }
+};
+
+class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
+{
   public:
-    const MessageViewer::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
+    const MessageViewer::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const
+    {
       return validIndex( idx ) ? new Formatter() : 0 ;
     }
-    const char * type( int idx ) const {
+    const char * type( int idx ) const
+    {
       return validIndex( idx ) ? "text" : 0 ;
     }
-    const char * subtype( int idx ) const {
+    const char * subtype( int idx ) const
+    {
       switch( idx ) {
-        case 0: return "x-vcard";
-        case 1: return "vcard";
-        case 2: return "directory";
-        default: return 0;
+      case 0:
+        return "x-vcard";
+      case 1:
+        return "vcard";
+      case 2:
+        return "directory";
+      default:
+        return 0;
       }
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int idx ) const {
+    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int idx ) const
+    {
        return validIndex( idx ) ? new UrlHandler() : 0 ;
     }
+
   private:
-    bool validIndex( int idx ) const {
+    bool validIndex( int idx ) const
+    {
       return ( idx >= 0 && idx <= 2 );
     }
-  };
+};
 
 }
 
 extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
-messageviewer_bodypartformatter_text_vcard_create_bodypart_formatter_plugin() {
+messageviewer_bodypartformatter_text_vcard_create_bodypart_formatter_plugin()
+{
   KGlobal::locale()->insertCatalog( "messageviewer_text_vcard_plugin" );
   return new Plugin();
 }

@@ -62,23 +62,25 @@ IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
   setupActions();
   setupAttachmentIconView();
   setObjectName( "IncidenceAttachment" );
-  
+
   connect( mUi->mAddButton, SIGNAL(clicked()), SLOT(addAttachment()) );
   connect( mUi->mRemoveButton, SIGNAL(clicked()), SLOT(removeSelectedAttachments()) );
 }
 
-void IncidenceAttachment::load( KCal::Incidence::ConstPtr incidence )
+void IncidenceAttachment::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   mAttachmentView->clear();
 
-  KCal::Attachment::List attachments = incidence->attachments();
-  KCal::Attachment::List::ConstIterator it;
+  KCalCore::Attachment::List attachments = incidence->attachments();
+  KCalCore::Attachment::List::ConstIterator it;
   for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it )
     new AttachmentIconItem( (*it), mAttachmentView );
+
+  mWasDirty = false;
 }
 
-void IncidenceAttachment::save( KCal::Incidence::Ptr incidence )
+void IncidenceAttachment::save( const KCalCore::Incidence::Ptr &incidence )
 {
   incidence->clearAttachments();
 
@@ -86,7 +88,7 @@ void IncidenceAttachment::save( KCal::Incidence::Ptr incidence )
     QListWidgetItem *item = mAttachmentView->item( itemIndex );
     AttachmentIconItem *attitem = dynamic_cast<AttachmentIconItem*>(item);
     Q_ASSERT( item );
-    incidence->addAttachment( new KCal::Attachment( *( attitem->attachment() ) ) );
+    incidence->addAttachment( KCalCore::Attachment::Ptr( new KCalCore::Attachment( *( attitem->attachment() ) ) ) );
   }
 }
 
@@ -96,17 +98,17 @@ bool IncidenceAttachment::isDirty() const
     if ( mAttachmentView->count() != mLoadedIncidence->attachments().count() )
       return true;
 
-    KCal::Attachment::List origAttachments = mLoadedIncidence->attachments();
+    KCalCore::Attachment::List origAttachments = mLoadedIncidence->attachments();
     for ( int itemIndex = 0; itemIndex < mAttachmentView->count(); ++itemIndex ) {
       QListWidgetItem *item = mAttachmentView->item( itemIndex );
       Q_ASSERT( dynamic_cast<AttachmentIconItem*>( item ) );
 
-      KCal::Attachment * const listAttachment
+      const KCalCore::Attachment::Ptr listAttachment
         = static_cast<AttachmentIconItem*>( item )->attachment();
-      
+
       bool found = false;
       for ( int i = 0; i < origAttachments.size() && !found; ++i ) {
-        KCal::Attachment * const attachment = origAttachments.at( i );
+        const KCalCore::Attachment::Ptr attachment = origAttachments.at( i );
 
         // Check for changed label first
         if ( attachment->label() != listAttachment->label() )
@@ -126,15 +128,15 @@ bool IncidenceAttachment::isDirty() const
     }
 
     // All attachments are removed from the list, meaning, the items in mAttachmentView
-    // are equal to the attachements set on mLoadedIncidence.
+    // are equal to the attachments set on mLoadedIncidence.
     return !origAttachments.isEmpty();
 
-    
+
   } else {
     // No incidence loaded, so if the user added attachments we're dirty.
     return mAttachmentView->count() != 0;
   }
-  
+
   return false;
 }
 
@@ -148,7 +150,7 @@ int IncidenceAttachment::attachmentCount() const
 
 void IncidenceAttachment::addAttachment()
 {
-  AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachmentView );
+  AttachmentIconItem *item = new AttachmentIconItem( KCalCore::Attachment::Ptr(), mAttachmentView );
 
 #ifdef KDEPIM_MOBILE_UI
   QWeakPointer<AttachmentEditDialog> dialog( new AttachmentEditDialog( item, 0 ) );
@@ -166,7 +168,9 @@ void IncidenceAttachment::addAttachment()
 
 void IncidenceAttachment::copyToClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   QApplication::clipboard()->setMimeData( mAttachmentView->mimeData(), QClipboard::Clipboard );
+#endif
 }
 
 void IncidenceAttachment::openURL( const KUrl &url )
@@ -177,7 +181,9 @@ void IncidenceAttachment::openURL( const KUrl &url )
 
 void IncidenceAttachment::pasteFromClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   handlePasteOrDrop( QApplication::clipboard()->mimeData() );
+#endif
 }
 
 void IncidenceAttachment::removeSelectedAttachments()
@@ -190,7 +196,7 @@ void IncidenceAttachment::removeSelectedAttachments()
     if ( it->isSelected() ) {
       AttachmentIconItem *attitem = static_cast<AttachmentIconItem *>( it );
       if ( attitem ) {
-        KCal::Attachment *att = attitem->attachment();
+        KCalCore::Attachment::Ptr att = attitem->attachment();
         labels << att->label();
         selected << it;
       }
@@ -239,10 +245,10 @@ void IncidenceAttachment::saveAttachment( QListWidgetItem *item )
   if ( !attitem->attachment() )
     return;
 
-  KCal::Attachment *att = attitem->attachment();
+  KCalCore::Attachment::Ptr att = attitem->attachment();
 
   // get the saveas file name
-  QString saveAsFile =  KFileDialog::getSaveFileName(
+  QString saveAsFile = KFileDialog::getSaveFileName(
     att->label(),
     QString(), 0,
     i18nc( "@title", "Save Attachment" ) );
@@ -286,7 +292,7 @@ void IncidenceAttachment::showAttachment( QListWidgetItem *item )
   if ( !attitem->attachment() )
     return;
 
-  KCal::Attachment *att = attitem->attachment();
+  KCalCore::Attachment::Ptr att = attitem->attachment();
   if ( att->isUri() ) {
     emit openURL( att->uri() );
   } else {
@@ -310,8 +316,10 @@ void IncidenceAttachment::showContextMenu( const QPoint &pos )
   mOpenAction->setEnabled( enable );
   //TODO: support saving multiple attachments into a directory
   mSaveAsAction->setEnabled( enable && numSelected == 1 );
+#ifndef QT_NO_CLIPBOARD
   mCopyAction->setEnabled( enable && numSelected == 1 );
   mCutAction->setEnabled( enable && numSelected == 1 );
+#endif
   mDeleteAction->setEnabled( enable );
   mEditAction->setEnabled( enable );
   mPopupMenu->exec( mAttachmentView->mapToGlobal( pos ) );
@@ -328,8 +336,10 @@ void IncidenceAttachment::showSelectedAttachments()
 
 void IncidenceAttachment::cutToClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   copyToClipboard();
   removeSelectedAttachments();
+#endif
 }
 
 void IncidenceAttachment::editSelectedAttachments()
@@ -440,11 +450,11 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   QString label;
 
   if(!mimeData->formats().isEmpty() && !probablyWeHaveUris) {
-    data=mimeData->data( mimeData->formats().first() );
     mimeType = mimeData->formats().first();
-    if( KMimeType::mimeType( mimeData->formats().first() ) )
-       label = KMimeType::mimeType( mimeData->formats().first() )->name();
-
+    data = mimeData->data( mimeType );
+    KMimeType::Ptr mime = KMimeType::mimeType( mimeType );
+    if ( mime )
+        label = mime->comment();
   }
 
   QAction *ret = menu.exec( QCursor::pos() );
@@ -472,7 +482,7 @@ void IncidenceAttachment::setupActions()
 {
   KActionCollection *ac = new KActionCollection( this );
 //  ac->addAssociatedWidget( this );
-  
+
   mOpenAction = new KAction( i18nc( "@action:inmenu open the attachment in a viewer",
                                     "&Open" ), this );
   connect( mOpenAction, SIGNAL(triggered(bool)), SLOT(showSelectedAttachments()) );
@@ -485,15 +495,17 @@ void IncidenceAttachment::setupActions()
   mPopupMenu->addAction( mSaveAsAction );
   mPopupMenu->addSeparator();
 
+#ifndef QT_NO_CLIPBOARD
   mCopyAction = KStandardAction::copy( this, SLOT(copyToClipboard()), ac );
   mPopupMenu->addAction( mCopyAction );
-  
+
   mCutAction = KStandardAction::cut( this, SLOT(cutToClipboard()), ac );
   mPopupMenu->addAction( mCutAction );
-  
+
   KAction *action = KStandardAction::paste( this, SLOT(pasteFromClipboard()), ac );
   mPopupMenu->addAction( action );
   mPopupMenu->addSeparator();
+#endif
 
   mDeleteAction = new KAction( i18nc( "@action:inmenu remove the attachment",
                                       "&Remove" ), this );
@@ -526,21 +538,21 @@ void IncidenceAttachment::setupAttachmentIconView()
   connect( mAttachmentView, SIGNAL(customContextMenuRequested(QPoint)),
            SLOT(showContextMenu(QPoint)) );
 
-                                     
+
   QGridLayout *layout = new QGridLayout( mUi->mAttachmentViewPlaceHolder );
   layout->addWidget( mAttachmentView );
 }
 
-// void IncidenceAttachmentEditor::addAttachment( KCal::Attachment *attachment )
+// void IncidenceAttachmentEditor::addAttachment( KCalCore::Attachment *attachment )
 // {
 //   new AttachmentIconItem( attachment, mAttachmentView );
 // }
 
 void IncidenceAttachment::addDataAttachment( const QByteArray &data,
-                                                   const QString &mimeType,
-                                                   const QString &label )
+                                             const QString &mimeType,
+                                             const QString &label )
 {
-  AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachmentView );
+  AttachmentIconItem *item = new AttachmentIconItem( KCalCore::Attachment::Ptr(), mAttachmentView );
 
   QString nlabel = label;
   if ( mimeType == "message/rfc822" ) {
@@ -568,7 +580,7 @@ void IncidenceAttachment::addUriAttachment( const QString &uri,
                                                   bool inLine )
 {
   if ( !inLine ) {
-    AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachmentView );
+    AttachmentIconItem *item = new AttachmentIconItem( KCalCore::Attachment::Ptr(), mAttachmentView );
     item->setUri( uri );
     item->setLabel( label );
     if ( mimeType.isEmpty() ) {

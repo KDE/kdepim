@@ -26,7 +26,7 @@
 class CalendarInterface;
 class QDate;
 
-namespace Akonadi
+namespace CalendarSupport
 {
 class Calendar;
 }
@@ -34,12 +34,13 @@ class Calendar;
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
-public:
+
+  public:
     explicit MainView( QWidget* parent = 0 );
 
     ~MainView();
-    
-public slots:
+
+  public slots:
     void showRegularCalendar();
 
     void setCurrentEventItemId( qint64 id );
@@ -48,11 +49,17 @@ public slots:
     void newTodo();
     void editIncidence( const Akonadi::Item &item, const QDate &date );
 
-protected slots:
+  protected slots:
     void delayedInit();
-  
-private:
-  Akonadi::Calendar *m_calendar;
+
+  protected:
+    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                             QItemSelectionModel *itemSelectionModel );
+
+    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+
+  private:
+    CalendarSupport::Calendar *m_calendar;
 };
 
 #endif // MAINVIEW_H

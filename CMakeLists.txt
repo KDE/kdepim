@@ -10,7 +10,7 @@ option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 
-# cmake would not find kde for xcompile if that is not set 
+# cmake would not find kde for xcompile if that is not set
 if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
 endif(WINCE)
@@ -182,6 +182,7 @@ if(WINCE)
   set(LIBRARY_TYPE STATIC)
   add_definitions(-DKDELIBS_STATIC_LIBS)
   add_definitions(-DKDEPIM_STATIC_LIBS)
+  add_definitions(-DAKONADI_STATIC_LIBS)
 else(WINCE)
   set(LIBRARY_TYPE SHARED)
 endif(WINCE)
@@ -243,21 +244,23 @@ set(libkdgantt1_SRCS
 
   # These targets will always be built before anything else.
 
-  add_subdirectory( ontologies ) # must be the first one.
-  add_subdirectory(akonadi)
+  add_subdirectory(ontologies) # must be the first one.
+  add_subdirectory(akonadi_next)
   add_subdirectory(libkdepim)
+  add_subdirectory(calendarsupport)
   add_subdirectory(calendarviews)
-  add_subdirectory( incidenceeditors )
+  add_subdirectory(incidenceeditors)
   add_subdirectory(libkdepimdbusinterfaces)
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
   add_subdirectory(libksieve)
-  #add_subdirectory(libstickynotes)
   add_subdirectory(kdgantt1)
   add_subdirectory(kdgantt2)
   add_subdirectory(icons)
   add_subdirectory(messagecore)
+if (NOT WINCE)
   add_subdirectory(messagelist)
+endif (NOT WINCE)
   add_subdirectory(templateparser)
   add_subdirectory(pimimport)
 
@@ -291,9 +294,12 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
 
-   # if (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
-   #   add_subdirectory( nepomuk_email_feeder )
-   #  endif ()
+    # disabled until Strigi dep is removed
+    if (NOT WINCE)
+      if (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
+    #    add_subdirectory( nepomuk_email_feeder )
+      endif (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
+    endif(NOT WINCE)
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)

@@ -39,12 +39,14 @@
 
 #include <kselectionproxymodel.h>
 
+#include <akonadi/agentactionmanager.h>
+#include <akonadi/agentinstancemodel.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/selectionproxymodel.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/agentmanager.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
@@ -56,9 +58,8 @@
 #include <akonadi/standardactionmanager.h>
 #include <KAction>
 #include <KCmdLineArgs>
-#include <QInputDialog>
+#include <KInputDialog>
 
-#include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
 
 using namespace Akonadi;
@@ -143,19 +144,28 @@ void KDeclarativeMainView::delayedInit()
 
   context->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
 
-  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
+  // A list of agent instances
+  Akonadi::AgentInstanceModel *agentInstanceModel = new Akonadi::AgentInstanceModel( this );
+  d->mAgentInstanceFilterModel = new Akonadi::AgentFilterProxyModel( this );
+  d->mAgentInstanceFilterModel->addCapabilityFilter( QLatin1String( "Resource" ) );
+  d->mAgentInstanceFilterModel->setSourceModel( agentInstanceModel );
 
-  KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
+  context->setContextProperty( "agentInstanceList", QVariant::fromValue( static_cast<QObject*>( d->mAgentInstanceFilterModel ) ) );
+  d->mAgentInstanceSelectionModel = new QItemSelectionModel( d->mAgentInstanceFilterModel, this );
+
+  setupAgentActionManager( d->mAgentInstanceSelectionModel );
+
+  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy )
+                                                                  : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
+
+  KAction *action = KStandardAction::quit( qApp, SLOT( quit() ), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
 
-  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
-  standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
-  standardActionManager->setCollectionSelectionModel( regularSelectionModel() );
-  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
-  standardActionManager->createAction( Akonadi::StandardActionManager::SynchronizeCollections );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CollectionProperties );
-  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteCollections );
-  standardActionManager->createAction( Akonadi::StandardActionManager::CreateCollection );
+  action = new KAction( i18n( "Synchronize all" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT( synchronizeAllItems() ) );
+  actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
+
+  setupStandardActionManager( regularSelectionModel(), d->mItemSelectionModel );
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
@@ -215,6 +225,7 @@ ItemFetchScope& KDeclarativeMainView::itemFetchScope()
 void KDeclarativeMainView::addMimeType( const QString &mimeType )
 {
   d->mChangeRecorder->setMimeTypeMonitored( mimeType );
+  d->mAgentInstanceFilterModel->addMimeTypeFilter( mimeType );
 }
 
 QStringList KDeclarativeMainView::mimeTypes() const
@@ -227,6 +238,13 @@ void KDeclarativeMainView::setListSelectedRow( int row )
   static const int column = 0;
   const QModelIndex idx = d->mItemSelectionModel->model()->index( row, column );
   d->mItemSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
+}
+
+void KDeclarativeMainView::setAgentInstanceListSelectedRow( int row )
+{
+  static const int column = 0;
+  const QModelIndex idx = d->mAgentInstanceSelectionModel->model()->index( row, column );
+  d->mAgentInstanceSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
 }
 
 void KDeclarativeMainView::setSelectedAccount( int row )
@@ -270,11 +288,29 @@ void KDeclarativeMainView::launchAccountWizard()
   }
 }
 
+void KDeclarativeMainView::synchronizeAllItems()
+{
+  if ( !d->mAgentInstanceFilterModel )
+    return;
+
+  for ( int row = 0; row < d->mAgentInstanceFilterModel->rowCount(); ++row ) {
+    const QModelIndex index = d->mAgentInstanceFilterModel->index( row, 0 );
+    if ( !index.isValid() )
+      continue;
+
+    Akonadi::AgentInstance instance = index.data( Akonadi::AgentInstanceModel::InstanceRole ).value<Akonadi::AgentInstance>();
+    if ( !instance.isValid() )
+      continue;
+
+    instance.synchronize();
+  }
+}
+
 void KDeclarativeMainView::saveFavorite()
 {
   bool ok;
-  QString name = QInputDialog::getText(this, i18n("Select name for favorite"),
-                                      i18n("Favorite name"), QLineEdit::Normal, QString(), &ok);
+  QString name = KInputDialog::getText(i18n("Select name for favorite"), i18n("Favorite name"),
+                                       QString(), &ok, this);
 
   if (!ok || name.isEmpty())
     return;
@@ -327,24 +363,6 @@ Akonadi::Item KDeclarativeMainView::itemFromId(quint64 id) const
 QItemSelectionModel* KDeclarativeMainView::itemSelectionModel() const
 {
   return d->mItemSelectionModel;
-}
-
-void KDeclarativeMainView::configureCurrentAccount()
-{
-  const QModelIndexList list = d->mBnf->selectionModel()->selectedRows();
-  if (list.size() != 1)
-    return;
-
-  const Collection col = list.first().data(EntityTreeModel::CollectionRole).value<Collection>();
-  if (!col.isValid())
-    return;
-
-  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
-  AgentInstance agent = manager->instance(col.resource());
-  if (!agent.isValid())
-    return;
-
-  agent.configure();
 }
 
 void KDeclarativeMainView::persistCurrentSelection(const QString& key)
@@ -413,3 +431,18 @@ bool KDeclarativeMainView::isLoadingSelected()
   return fetchState == EntityTreeModel::FetchingState;
 }
 
+void KDeclarativeMainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                                       QItemSelectionModel *itemSelectionModel )
+{
+  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( actionCollection(), this );
+  standardActionManager->setItemSelectionModel( itemSelectionModel );
+  standardActionManager->setCollectionSelectionModel( collectionSelectionModel );
+  standardActionManager->createAllActions();
+}
+
+void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+{
+  Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
+  manager->setSelectionModel( selectionModel );
+  manager->createAllActions();
+}

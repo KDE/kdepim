@@ -54,9 +54,11 @@ class ImageWidget : public QPushButton
     void setReadOnly( bool readOnly );
 
   protected:
+#ifndef QT_NO_DRAGANDDROP
     // image drop handling
     virtual void dragEnterEvent( QDragEnterEvent* );
     virtual void dropEvent( QDropEvent* );
+#endif
 
     // image drag handling
     virtual void mousePressEvent( QMouseEvent* );

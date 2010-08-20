@@ -35,13 +35,15 @@
 
 class QAbstractProxyModel;
 
-
 namespace Akonadi {
-  class CalendarModel;
   class Collection;
-  class CollectionSelectionProxyModel;
   class EntityTreeView;
-  class StandardActionManager;
+  class StandardCalendarActionManager;
+}
+
+namespace CalendarSupport {
+  class CalendarModel;
+  class CollectionSelectionProxyModel;
 }
 
 class KAction;
@@ -62,7 +64,7 @@ class AkonadiCollectionViewFactory : public CalendarViewExtension::Factory
     CalendarViewExtension *create( QWidget * );
 
   private:
-    Akonadi::CalendarModel *mModel;
+    CalendarSupport::CalendarModel *mModel;
     CalendarView *mView;
     AkonadiCollectionView *mAkonadiCollectionView;
 };
@@ -79,16 +81,18 @@ class AkonadiCollectionView : public CalendarViewExtension
 
     Akonadi::EntityTreeView* view() const;
 
-    Akonadi::CollectionSelectionProxyModel* collectionSelectionProxyModel() const;
-    void setCollectionSelectionProxyModel( Akonadi::CollectionSelectionProxyModel* );
+    CalendarSupport::CollectionSelectionProxyModel* collectionSelectionProxyModel() const;
+    void setCollectionSelectionProxyModel( CalendarSupport::CollectionSelectionProxyModel* );
 
   signals:
     void resourcesChanged( bool enabled );
     void resourcesAddedRemoved();
     void defaultResourceChanged( const Akonadi::Collection & );
+
   private:
     void updateView();
     void updateMenu();
+
   private Q_SLOTS:
     void selectionChanged();
 
@@ -100,20 +104,21 @@ class AkonadiCollectionView : public CalendarViewExtension
     void rowsInserted( const QModelIndex&, int, int );
     void assignColor();
     void disableColor();
-    void editCalendar();
     void setDefaultCalendar();
+    void slotCollectionProperties();
+
   private:
-    Akonadi::StandardActionManager* mActionManager;
+    Akonadi::StandardCalendarActionManager* mActionManager;
     Akonadi::EntityTreeView *mCollectionview;
     QAbstractProxyModel* mBaseModel;
-    Akonadi::CollectionSelectionProxyModel *mSelectionProxyModel;
+    CalendarSupport::CollectionSelectionProxyModel *mSelectionProxyModel;
     KAction *mCreateAction;
     KAction *mDeleteAction;
     KAction *mAssignColor;
     KAction *mDisableColor;
     KAction *mEditAction;
     KAction *mDefaultCalendar;
-    Akonadi::CollectionSelection *mCollectionSelection;
+    CalendarSupport::CollectionSelection *mCollectionSelection;
     bool mNotSendAddRemoveSignal;
     bool mWasDefaultCalendar;
     bool mInitDefaultCalendar;

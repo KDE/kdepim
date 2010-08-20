@@ -30,17 +30,19 @@
 #include "koglobals.h"
 #include "interfaces/korganizer/calendarviewbase.h"
 
-#include <akonadi/kcal/calendar.h>
+#include <kcalcore/visitor.h>
+
+#include <calendarsupport/calendar.h>
 
 #include <Akonadi/Item>
 
 #include <QObject>
 #include <QWidget>
 
-namespace Akonadi {
-  class Calendar;
+namespace CalendarSupport {
   class IncidenceViewer;
 }
+
 class CalPrinter;
 class DateChecker;
 class DateNavigator;
@@ -50,8 +52,11 @@ class KOTodoView;
 class KOViewManager;
 class NavigatorBar;
 
+namespace IncidenceEditorsNG {
+  class IncidenceDialog;
+}
+
 namespace IncidenceEditors {
-  class EventEditor;
   class IncidenceEditor;
 }
 
@@ -60,7 +65,7 @@ namespace KOrg {
   class History;
 }
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace KOrg;
 
 class KVBox;
@@ -91,7 +96,7 @@ class CalendarViewExtension : public QWidget
   @author Cornelius Schumacher
 */
 class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
-                                              public Akonadi::Calendar::CalendarObserver
+                                              public CalendarSupport::Calendar::CalendarObserver
 {
   Q_OBJECT
   public:
@@ -102,14 +107,14 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     CalendarView( QWidget *parent=0 );
     virtual ~CalendarView();
 
-    class CalendarViewVisitor : public IncidenceBase::Visitor
+    class CalendarViewVisitor : public Visitor
     {
       public:
         CalendarViewVisitor() : mView( 0 ) {}
-        bool act( IncidenceBase *incidence, CalendarView *view )
+        bool act( IncidenceBase::Ptr &incidence, CalendarView *view )
         {
           mView = view;
-          return incidence->accept( *this );
+          return incidence->accept( *this, incidence );
         }
       protected:
         CalendarView *mView;
@@ -121,15 +126,15 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
       public:
         explicit CanDeleteIncidenceVisitor( const Akonadi::Item& i ) : item( i ) {}
       protected:
-        bool visit( Event * ) { return mView->deleteEvent( item ); }
-        bool visit( Todo * ) { return mView->deleteTodo( item ); }
-        bool visit( Journal * ) { return mView->deleteJournal( item ); }
-        bool visit( FreeBusy * ) { return false; }
+        bool visit( Event::Ptr  ) { return mView->deleteEvent( item ); }
+        bool visit( Todo::Ptr  ) { return mView->deleteTodo( item ); }
+        bool visit( Journal::Ptr ) { return mView->deleteJournal( item ); }
+        bool visit( FreeBusy::Ptr  ) { return false; }
 
     };
 
-    void setCalendar( Akonadi::Calendar * );
-    Akonadi::Calendar *calendar();
+    void setCalendar( CalendarSupport::Calendar * );
+    CalendarSupport::Calendar *calendar() const;
 
     History *history() const { return mHistory; }
 
@@ -142,7 +147,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     DateNavigator *dateNavigator() const { return mDateNavigator; }
 
     IncidenceEditors::IncidenceEditor *editorDialog( const Akonadi::Item &item ) const;
-    virtual Akonadi::IncidenceChanger *incidenceChanger() const { return mChanger; }
+    virtual CalendarSupport::IncidenceChanger *incidenceChanger() const { return mChanger; }
 
     /*
      * Informs the date navigator which incidence types should be used
@@ -245,7 +250,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     /** Emitted when auto-archiving options were modified */
     void autoArchivingSettingsModified();
 
-    void newIncidenceChanger( Akonadi::IncidenceChanger * );
+    void newIncidenceChanger( CalendarSupport::IncidenceChanger * );
     void exportHTML( KOrg::HTMLExportSettings * );
 
     void filtersUpdated( const QStringList &, int );
@@ -412,7 +417,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
                   const QStringList &attachments=QStringList(),
                   const QStringList &attendees=QStringList(),
                   const QStringList &attachmentMimetypes=QStringList(),
-                  bool inlineAttachment=false, bool createTask=false );
+                  bool inlineAttachment=false );
 
     void newJournal();
     void newJournal( const QDate &date );
@@ -456,7 +461,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
 
     void incidenceAddFinished( const Akonadi::Item &incidence, bool success );
     void incidenceChangeFinished( const Akonadi::Item &oldEvent, const Akonadi::Item &newEvent,
-                                  Akonadi::IncidenceChanger::WhatChanged modification, bool success );
+                                  CalendarSupport::IncidenceChanger::WhatChanged modification, bool success );
     void incidenceToBeDeleted( const Akonadi::Item &incidence );
     void incidenceDeleteFinished( const Akonadi::Item &incidence, bool success );
     void startMultiModify( const QString &text );
@@ -596,7 +601,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     void slotAutoArchivingSettingsModified() { emit autoArchivingSettingsModified(); }
 
     void showErrorMessage( const QString & );
-    void schedule( KCal::iTIPMethod, const Akonadi::Item &incidence );
+    void schedule( KCalCore::iTIPMethod, const Akonadi::Item &incidence );
     void addIncidenceOn( const Akonadi::Item &incidence, const QDate & );
     void moveIncidenceTo( const Akonadi::Item &incidence, const QDate & );
     void filterActivated( int filterNum );
@@ -616,7 +621,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
         preferredMonth is useful when the datelist crosses months, if valid,
         any month-like component should honour this
     */
-    void showDates( const KCal::DateList &, const QDate &preferredMonth = QDate() );
+    void showDates( const KCalCore::DateList &, const QDate &preferredMonth = QDate() );
 
   public:
     int msgCalModified();
@@ -652,11 +657,11 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
      * @param enabled if false the user won't be able to create new incidences.
      * A use case is when there aren't any resources checked and the user double clicks
      * agenda view.
-     */ 
+     */
     void setCreatingEnabled( bool enabled );
 
   protected:
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
 
     int msgItemDelete( const Akonadi::Item &incidence );
 
@@ -670,9 +675,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
       defaults, if invalid values are given) and allow the view to adjust the type.
     */
     void dateTimesForNewEvent( QDateTime &startDt, QDateTime &endDt, bool &allDay );
-    IncidenceEditors::EventEditor *newEventEditor( const QDateTime &startDtParam=QDateTime(),
-                                                   const QDateTime &endDtParam=QDateTime(),
-                                                   bool allDayParam=false );
+    IncidenceEditorsNG::IncidenceDialog *newEventEditor( const Event::Ptr &event );
 
     bool eventFilter( QObject *watched, QEvent *event );
 
@@ -694,6 +697,8 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     //
     void getIncidenceHierarchy( const Akonadi::Item &item, Akonadi::Item::List &items );
 
+    Akonadi::Collection defaultCollection() const;
+
     KOrg::History *mHistory;
 
     CalPrinter *mCalPrinter;
@@ -711,13 +716,13 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
 
     QList<CalendarViewExtension*> mExtensions;
 
-    Akonadi::Calendar *mCalendar;
+    CalendarSupport::Calendar *mCalendar;
 
     DateNavigator *mDateNavigator;
     DateChecker *mDateChecker;
 
     KVBox *mEventViewerBox;
-    Akonadi::IncidenceViewer *mEventViewer;
+    CalendarSupport::IncidenceViewer *mEventViewer;
     KOViewManager *mViewManager;
     KODialogManager *mDialogManager;
 
@@ -731,10 +736,10 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     Akonadi::Item mSelectedIncidence;
     QDate mSaveDate;
 
-  KOTodoView *mTodoList;
+    KOTodoView *mTodoList;
     QMap<Akonadi::Item::Id,IncidenceEditors::IncidenceEditor*> mDialogList;
 
-    Akonadi::IncidenceChanger *mChanger;
+    CalendarSupport::IncidenceChanger *mChanger;
     QList<int> mMainSplitterSizes; // temp store for main splitter sizes while left frame is hidden
     bool mSplitterSizesValid;
     bool mCreatingEnabled;

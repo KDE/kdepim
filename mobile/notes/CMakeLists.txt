@@ -1,8 +1,6 @@
 # project(notes-mobile)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/akonadi/
-  ${PROJECT_SOURCE_DIR}/../lib
   ${KDEPIMLIBS_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
@@ -19,8 +17,8 @@ set(notes_mobile_SRCS
 kde4_add_executable(notes-mobile ${notes_mobile_SRCS} )
 target_link_libraries(notes-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
-  ${KDEPIMLIBS_KMIME_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
   kdepimmobileui
   kdepim
   akonadi_next
@@ -31,6 +29,7 @@ install(FILES notes-mobile.sh DESTINATION ${BIN_INSTALL_DIR})
 install(FILES notes-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   notes.qml
+  NoteActions.qml
   NoteView.qml
   NotesListView.qml
   notes-mobile-background.png

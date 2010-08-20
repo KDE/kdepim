@@ -26,15 +26,15 @@
 #include "editoralarms.h"
 #include <KPIMUtils/Email>
 using namespace KPIMUtils;
-using namespace KCal;
+using namespace KCalCore;
 
 class AlarmListViewItem : public QTreeWidgetItem
 {
   public:
-    AlarmListViewItem( QTreeWidget *parent, KCal::Alarm *alarm );
+  AlarmListViewItem( QTreeWidget *parent, const KCalCore::Alarm::Ptr &alarm );
     virtual ~AlarmListViewItem();
     void construct();
-    KCal::Alarm *alarm() const
+    KCalCore::Alarm::Ptr alarm() const
     {
       return mAlarm;
     }
@@ -45,23 +45,22 @@ class AlarmListViewItem : public QTreeWidgetItem
       ColAlarmRepeat };
 
   protected:
-    Alarm *mAlarm;
+    Alarm::Ptr mAlarm;
 };
 
-AlarmListViewItem::AlarmListViewItem( QTreeWidget *parent, Alarm *alarm )
+AlarmListViewItem::AlarmListViewItem( QTreeWidget *parent, const Alarm::Ptr &alarm )
     : QTreeWidgetItem( parent )
 {
   if ( alarm ) {
-    mAlarm = new Alarm( *alarm );
+    mAlarm = Alarm::Ptr( new Alarm( *alarm ) );
   } else {
-    mAlarm = new Alarm( 0 );
+    mAlarm = Alarm::Ptr( new Alarm( 0 ) );
   }
   construct();
 }
 
 AlarmListViewItem::~AlarmListViewItem()
 {
-  delete mAlarm;
 }
 
 void AlarmListViewItem::construct()
@@ -242,12 +241,13 @@ void EditorAlarms::slotUpdateButtons()
 void EditorAlarms::changed()
 {
   if ( !mInitializing && mCurrentItem ) {
-    writeAlarm( mCurrentItem->alarm() );
+    Alarm::Ptr p = mCurrentItem->alarm();
+    writeAlarm( p );
     mCurrentItem->construct();
   }
 }
 
-void EditorAlarms::readAlarm( Alarm *alarm )
+void EditorAlarms::readAlarm( const Alarm::Ptr &alarm )
 {
   if ( !alarm ) {
     return;
@@ -311,11 +311,11 @@ void EditorAlarms::readAlarm( Alarm *alarm )
   case Alarm::Email:
   {
     mWidget.mTypeEmailRadio->setChecked( true );
-    QList<Person> addresses = alarm->mailAddresses();
+    QList<Person::Ptr> addresses = alarm->mailAddresses();
     QStringList add;
-    for ( QList<Person>::ConstIterator it = addresses.constBegin();
+    for ( QList<Person::Ptr>::ConstIterator it = addresses.constBegin();
           it != addresses.constEnd(); ++it ) {
-      add << (*it).fullName();
+      add << (*it)->fullName();
     }
     mWidget.mEmailAddress->setText( add.join( ", " ) );
     mWidget.mEmailText->setPlainText( alarm->mailText() );
@@ -335,7 +335,7 @@ void EditorAlarms::readAlarm( Alarm *alarm )
   mInitializing = false;
 }
 
-void EditorAlarms::writeAlarm( Alarm *alarm )
+void EditorAlarms::writeAlarm( Alarm::Ptr &alarm )
 {
   // Offsets
   int offset = mWidget.mAlarmOffset->value() * 60; // minutes
@@ -377,7 +377,7 @@ void EditorAlarms::writeAlarm( Alarm *alarm )
                               mWidget.mAppArguments->text() );
   } else if ( mWidget.mTypeEmailRadio->isChecked() ) { // Email
     QStringList addresses = KPIMUtils::splitAddressList( mWidget.mEmailAddress->text() );
-    QList<Person> add;
+    QList<Person::Ptr> add;
     for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it ) {
       add << Person::fromFullName( *it );
     }
@@ -414,7 +414,7 @@ void EditorAlarms::slotApply()
       AlarmListViewItem *item =
         dynamic_cast< AlarmListViewItem *>( mWidget.mAlarmList->topLevelItem( i ) );
       if ( item ) {
-        mAlarms->append( new Alarm( *( item->alarm() ) ) );
+        mAlarms->append( Alarm::Ptr( new Alarm( *( item->alarm() ) ) ) );
       }
     }
   }
@@ -428,7 +428,7 @@ void EditorAlarms::slotOk()
 
 void EditorAlarms::slotAdd()
 {
-  mCurrentItem = new AlarmListViewItem( mWidget.mAlarmList, 0 );
+  mCurrentItem = new AlarmListViewItem( mWidget.mAlarmList, Alarm::Ptr() );
   mWidget.mAlarmList->setCurrentItem( mCurrentItem );
   mWidget.mBeforeAfter->setCurrentIndex( 0 );
   changed();

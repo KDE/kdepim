@@ -882,7 +882,7 @@ AbstractKeyListModel * AbstractKeyListModel::createHierarchicalKeyListModel( QOb
   \fn AbstractKeyListModel::rowAboutToBeMoved( const QModelIndex & old_parent, int old_row )
 
   Emitted before the removal of a row from that model. It will later
-  be added to the model again, in reponse to which rowMoved() will be
+  be added to the model again, in response to which rowMoved() will be
   emitted. If multiple rows are moved in one go, multiple
   rowAboutToBeMoved() signals are emitted before the corresponding
   number of rowMoved() signals is emitted - in reverse order.

@@ -18,60 +18,63 @@
 
 #include "groupwareintegration.h"
 #include "editorconfig.h"
-#include "eventeditor.h"
+#include "incidenceeditor-ng/incidencedialog.h"
+#include "incidenceeditor-ng/incidencedialogfactory.h"
 #include "journaleditor.h"
-#include "todoeditor.h"
+
+#include <kcalcore/visitor.h>
 
 #include <kcalprefs.h>
 
-#include <akonadi/kcal/calendar.h>  //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/calendarmodel.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/groupware.h> //krazy:exclude=camelcase since kdepim/akonadi
-#include <akonadi/kcal/utils.h>     //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/groupware.h>
+#include <calendarsupport/utils.h>
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
-#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include <KSystemTimeZones>
 
 #include "korganizereditorconfig.h"
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace IncidenceEditors;
 
-class EditorDialogVisitor : public IncidenceBase::Visitor
+class EditorDialogVisitor : public Visitor
 {
   public:
-    EditorDialogVisitor() : IncidenceBase::Visitor(), mEditor( 0 ) {}
+    EditorDialogVisitor() : Visitor(), mEditor( 0 ), mDialog( 0 ) {}
     IncidenceEditor *editor() const { return mEditor; }
 
+    // TODO: Once the JournalEditor is ported, we can just use the factory method
+    //       and get rid of this visitor.
+
   protected:
-    bool visit( Event * )
+    bool visit( Event::Ptr  )
     {
-      mEditor = new EventEditor( 0 );
-      return mEditor;
+      return true;
     }
-    bool visit( Todo * )
+    bool visit( Todo::Ptr  )
     {
-      mEditor = new TodoEditor( 0 );
-      return mEditor;
+      return true;
     }
-    bool visit( Journal * )
+    bool visit( Journal::Ptr  )
     {
       mEditor = new JournalEditor( 0 );
       return mEditor;
     }
-    bool visit( FreeBusy * ) // to inhibit hidden virtual compile warning
+    bool visit( FreeBusy::Ptr  ) // to inhibit hidden virtual compile warning
     {
       return 0;
     }
 
     IncidenceEditor *mEditor;
+    IncidenceEditorsNG::IncidenceDialog *mDialog;
 };
 
-class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
+class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
 {
   public:
     GroupwareUiDelegate()
@@ -86,38 +89,45 @@ class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
       monitor->setCollectionMonitored( Akonadi::Collection::root() );
       monitor->fetchCollection( true );
       monitor->setItemFetchScope( scope );
-      monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), true );
-      monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::todoMimeType(), true );
-      monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::journalMimeType(), true );
+      monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
+      monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
+      monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
 
-      Akonadi::CalendarModel *calendarModel = new Akonadi::CalendarModel( monitor, this );
+      CalendarSupport::CalendarModel *calendarModel = new CalendarSupport::CalendarModel( monitor, this );
 
-      mCalendar = new Akonadi::Calendar( calendarModel, calendarModel,
-                                         KSystemTimeZones::local() );
-      mCalendar->setOwner( Person( KCalPrefs::instance()->fullName(),
-                                   KCalPrefs::instance()->email() ) );
+      mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
+                                                 KSystemTimeZones::local() );
+      mCalendar->setOwner( Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                   CalendarSupport::KCalPrefs::instance()->email() ) );
     }
 
     void requestIncidenceEditor( const Akonadi::Item &item )
     {
-      const Incidence::Ptr incidence = Akonadi::incidence( item );
+      const Incidence::Ptr incidence = CalendarSupport::incidence( item );
       if ( !incidence ) {
         return;
       }
 
       EditorDialogVisitor v;
-      if ( !incidence.get()->accept( v ) ) {
+      if ( !incidence->accept( v, incidence ) ) {
         return;
       }
 
-      IncidenceEditor *editor = v.editor();
-      editor->editIncidence( item, QDate::currentDate() );
-      editor->selectInvitationCounterProposal( true );
-      editor->setIncidenceChanger( new Akonadi::IncidenceChanger( mCalendar, this, -1 ) );
-      editor->show();
+      if ( v.editor() ) {
+        // TODO: Get rid of this as soon as the JournalEditor is ported as well.
+        IncidenceEditor *editor = v.editor();
+        editor->editIncidence( item, QDate::currentDate() );
+        editor->selectInvitationCounterProposal( true );
+        editor->setIncidenceChanger( new CalendarSupport::IncidenceChanger( mCalendar, this, -1 ) );
+        editor->show();
+      } else {
+        IncidenceEditorsNG::IncidenceDialog *dialog = IncidenceEditorsNG::IncidenceDialogFactory::create( incidence->type() );
+        dialog->setIsCounterProposal( true );
+        dialog->load( item, QDate::currentDate() );
+      }
     }
 
-    Akonadi::Calendar *mCalendar;
+    CalendarSupport::Calendar *mCalendar;
 };
 
 K_GLOBAL_STATIC( GroupwareUiDelegate, globalDelegate )
@@ -132,7 +142,7 @@ bool GroupwareIntegration::isActive()
 void GroupwareIntegration::activate()
 {
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-  Akonadi::Groupware::create( globalDelegate->mCalendar, &*globalDelegate );
+  CalendarSupport::Groupware::create( globalDelegate->mCalendar, &*globalDelegate );
   sActivated = true;
 }
 

@@ -37,7 +37,7 @@ KnowItImporter::KnowItImporter()
 {
 }
 
-void KnowItImporter::importFromUrl( KUrl url )
+void KnowItImporter::importFromUrl( const KUrl& url )
 {
 // TODO PORT
 #if 0
@@ -69,7 +69,7 @@ void KnowItImporter::importFromUrl( KUrl url )
 #endif
 }
 
-QDomElement KnowItImporter::addNote( KnowItNote note)
+QDomElement KnowItImporter::addNote( const KnowItNote& note)
 {
   QDomElement newElement;
   int childNotesCount = m_childNotes[ note.id ].size();
@@ -163,7 +163,7 @@ void KnowItImporter::buildDomDocument()
   kDebug() << m_domDoc.toString();
 }
 
-void KnowItImporter::buildNoteTree( KUrl url )
+void KnowItImporter::buildNoteTree( const KUrl& url )
 {
 
   QFile knowItFile( url.toLocalFile() );

@@ -100,6 +100,7 @@ class KPGP_EXPORT Config : public QWidget
 
 
 // -------------------------------------------------------------------------
+#ifndef QT_NO_TREEWIDGET
 #define KeySelectionDialogSuper KDialog
 class KPGP_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 {
@@ -197,6 +198,7 @@ class KPGP_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 
   static const int sCheckSelectionDelay;
 };
+#endif
 
 class KPGP_EXPORT KeyRequester: public QWidget
 {

@@ -39,7 +39,7 @@ MultiplyingLineView::MultiplyingLineView( MultiplyingLineFactory* factory, Multi
     mLineHeight( 0 ), mFirstColumnWidth( 0 ),
     mModified( false ), mCompletionMode( KGlobalSettings::completionMode() ),
     mPage( new QWidget( this ) ), mTopLayout( new QVBoxLayout( this ) ),
-    mMultiplyingLineFactory( factory )
+    mMultiplyingLineFactory( factory ), mAutoResize( false )
 {
   setWidgetResizable( true );
   setFrameStyle( QFrame::NoFrame );
@@ -149,7 +149,7 @@ void MultiplyingLineView::slotDecideLineDeletion( MultiplyingLine *line )
     line->clear();
   } else if ( mLines.indexOf( line ) != mLines.count() - 1 ) {
     mCurDelLine = line;
-    QTimer::singleShot( 0, this, SLOT( slotDeleteLine( ) ) );
+    slotDeleteLine();
   }
 }
 
@@ -186,11 +186,15 @@ void MultiplyingLineView::slotDeleteLine()
 
 void MultiplyingLineView::resizeView()
 {
-  if ( mLines.count() < 6 ) {
-    setMinimumHeight( mLineHeight * mLines.count() );
+  if ( !mAutoResize ) {
+    if ( mLines.count() < 6 ) {
+      setMinimumHeight( mLineHeight * mLines.count() );
+    } else {
+      setMinimumHeight( mLineHeight * 5 );
+      setMaximumHeight( mLineHeight * mLines.count() );
+    }
   } else {
-    setMinimumHeight( mLineHeight * 5 );
-    setMaximumHeight( mLineHeight * mLines.count() );
+    setMinimumHeight( mLineHeight * mLines.count() );
   }
 
   parentWidget()->layout()->activate();
@@ -360,5 +364,23 @@ QList< MultiplyingLine* > MultiplyingLineView::lines() const
   return mLines;
 }
 
+void MultiplyingLineView::setAutoResize( bool resize )
+{
+  mAutoResize = resize;
+
+  if ( mAutoResize ) {
+      setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+      setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+      setMaximumHeight( QWIDGETSIZE_MAX );
+  } else {
+      setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+      setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  }
+}
+
+bool MultiplyingLineView::autoResize()
+{
+  return mAutoResize;
+}
 
 #include "multiplyinglineview_p.moc"

@@ -24,7 +24,7 @@
 #ifndef HELPER_H
 #define HELPER_H
 
-#include <KCal/Incidence>
+#include <kcalcore/incidence.h>
 
 #include <QColor>
 

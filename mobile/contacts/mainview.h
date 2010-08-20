@@ -26,7 +26,10 @@
 namespace Akonadi
 {
   class Item;
+  class StandardContactActionManager;
 }
+
+class ContactListProxy;
 
 class MainView : public KDeclarativeMainView
 {
@@ -36,15 +39,24 @@ class MainView : public KDeclarativeMainView
 
   public Q_SLOTS:
     void newContact();
-    void editContact();
-    void editContact( const Akonadi::Item &item );
-
     void newContactGroup();
-    void editContactGroup();
+
+    void editItem();
+    void editContact( const Akonadi::Item &item );
     void editContactGroup( const Akonadi::Item &item );
 
   protected slots:
     virtual void delayedInit();
+
+  protected:
+    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                             QItemSelectionModel *itemSelectionModel );
+
+    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+
+  private:
+    Akonadi::StandardContactActionManager *mActionManager;
+    ContactListProxy *mContactListProxy;
 };
 
 #endif // MAINVIEW_H

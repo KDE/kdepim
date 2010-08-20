@@ -40,7 +40,7 @@ class EditorConfig::Private
       config = 0;
     }
 
-    QHash<QString, QStringList> mTemplates;
+    QHash<KCalCore::IncidenceBase::IncidenceType, QStringList> mTemplates;
 };
 
 EditorConfig *EditorConfig::Private::config = 0;
@@ -121,7 +121,7 @@ bool EditorConfig::showTimeZoneSelectorInIncidenceEditor() const
   return true;
 }
 
-QStringList &EditorConfig::templates( const QString &type )
+QStringList &EditorConfig::templates( KCalCore::IncidenceBase::IncidenceType type )
 {
   return d->mTemplates[type];
 }

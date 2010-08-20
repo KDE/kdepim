@@ -28,7 +28,7 @@
 
 #include <KontactInterface/Summary>
 
-#include <KCal/Event>
+#include <kcalcore/event.h>
 
 namespace KHolidays {
   class HolidayRegion;
@@ -38,7 +38,7 @@ namespace KontactInterface {
   class Plugin;
 }
 
-namespace Akonadi {
+namespace CalendarSupport {
   class Calendar;
   class CalendarAdaptor;
 }
@@ -75,15 +75,15 @@ class SDSummaryWidget : public KontactInterface::Summary
     void slotBirthdayJobFinished( KJob* job );
 
   private:
-    int span( KCal::Event::Ptr event ) const;
-    int dayof( KCal::Event::Ptr event, const QDate &date ) const;
+    int span( const KCalCore::Event::Ptr &event ) const;
+    int dayof( const KCalCore::Event::Ptr &event, const QDate &date ) const;
     bool initHolidays();
     void dateDiff( const QDate &date, int &days, int &years ) const;
     void createCalendar();
 
-    Akonadi::Calendar *mCalendar;
-    Akonadi::CalendarAdaptor *mCalendarAdaptor;
-    
+    CalendarSupport::Calendar *mCalendar;
+    CalendarSupport::CalendarAdaptor *mCalendarAdaptor;
+
     QGridLayout *mLayout;
     QList<QLabel*> mLabels;
     KontactInterface::Plugin *mPlugin;

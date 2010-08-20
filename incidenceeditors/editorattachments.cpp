@@ -28,8 +28,8 @@
 #include "editorattachments.h"
 
 #include <KABC/VCardDrag>
-#include <KCal/Attachment>
-#include <KCal/Incidence>
+#include <kcalcore/attachment.h>
+#include <kcalcore/incidence.h>
 #include <KMime/Message>
 
 #include <KAction>
@@ -62,28 +62,30 @@
 #include <QVBoxLayout>
 #include <qlistwidget.h>
 
+using namespace KCalCore;
+
 class AttachmentIconItem : public QListWidgetItem
 {
   public:
-    AttachmentIconItem( KCal::Attachment *att, QListWidget *parent )
+    AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QListWidget *parent )
       : QListWidgetItem( parent )
     {
       if ( att ) {
-        mAttachment = new KCal::Attachment( *att );
+        mAttachment = Attachment::Ptr( new KCalCore::Attachment( *att.data() ) );
       } else {
         // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
-        mAttachment = new KCal::Attachment( '\0' ); //use the non-uri constructor
+        mAttachment = Attachment::Ptr( new KCalCore::Attachment( '\0' ) ); //use the non-uri constructor
                                                     // as we want inline by default
 #else
-        mAttachment = new KCal::Attachment( QString() );
+        mAttachment = Attachment::Ptr( new KCalCore::Attachment( QString() ) );
 #endif
       }
       readAttachment();
       setFlags( flags() | Qt::ItemIsDragEnabled );
     }
-    ~AttachmentIconItem() { delete mAttachment; }
-    KCal::Attachment *attachment() const
+    ~AttachmentIconItem() { }
+    KCalCore::Attachment::Ptr attachment() const
     {
       return mAttachment;
     }
@@ -174,7 +176,7 @@ class AttachmentIconItem : public QListWidgetItem
     }
 
   private:
-    KCal::Attachment *mAttachment;
+    KCalCore::Attachment::Ptr mAttachment;
 };
 
 AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
@@ -240,7 +242,7 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
            "attachments that change often or may be moved (or removed) from "
            "their current location." ) );
 
-  if ( item->attachment()->isUri() || !item->attachment()->data() ) {
+  if ( item->attachment()->isUri() || item->attachment()->data().isEmpty() ) {
       label = new QLabel( i18nc( "@label", "Location:" ), page );
     grid->addWidget( label, 4, 0 );
     mURLRequester = new KUrlRequester( item->uri(), page );
@@ -336,7 +338,7 @@ class AttachmentIconView : public QListWidget
       setContextMenuPolicy( Qt::CustomContextMenu );
     }
 
-    KUrl tempFileForAttachment( KCal::Attachment *attachment ) const
+    KUrl tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const
     {
       if ( mTempFiles.contains( attachment ) ) {
         return mTempFiles.value( attachment );
@@ -430,7 +432,7 @@ class AttachmentIconView : public QListWidget
     }
 
   private:
-    mutable QHash<KCal::Attachment *, KUrl> mTempFiles;
+    mutable QHash<KCalCore::Attachment::Ptr , KUrl> mTempFiles;
 };
 
 EditorAttachments::EditorAttachments( int spacing, QWidget *parent )
@@ -647,7 +649,7 @@ void EditorAttachments::showAttachment( QListWidgetItem *item )
     return;
   }
 
-  KCal::Attachment *att = attitem->attachment();
+  KCalCore::Attachment::Ptr att = attitem->attachment();
   if ( att->isUri() ) {
     emit openURL( att->uri() );
   } else {
@@ -662,7 +664,7 @@ void EditorAttachments::saveAttachment( QListWidgetItem *item )
     return;
   }
 
-  KCal::Attachment *att = attitem->attachment();
+  KCalCore::Attachment::Ptr att = attitem->attachment();
 
   // get the saveas file name
   QString saveAsFile =  KFileDialog::getSaveFileName(
@@ -694,7 +696,7 @@ void EditorAttachments::saveAttachment( QListWidgetItem *item )
 
 void EditorAttachments::slotAdd()
 {
-  AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachments );
+  AttachmentIconItem *item = new AttachmentIconItem( Attachment::Ptr(), mAttachments );
 
   QPointer<AttachmentEditDialog> dlg = new AttachmentEditDialog( item, mAttachments );
   dlg->setCaption( i18nc( "@title", "Add Attachment" ) );
@@ -732,7 +734,7 @@ void EditorAttachments::slotRemove()
     if ( it->isSelected() ) {
       AttachmentIconItem *attitem = static_cast<AttachmentIconItem *>( it );
       if ( attitem ) {
-        KCal::Attachment *att = attitem->attachment();
+        KCalCore::Attachment::Ptr att = attitem->attachment();
         labels << att->label();
         selected << it;
       }
@@ -802,7 +804,7 @@ void EditorAttachments::addUriAttachment( const QString &uri,
                                             bool inLine )
 {
   if ( !inLine ) {
-    AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachments );
+    AttachmentIconItem *item = new AttachmentIconItem( Attachment::Ptr(), mAttachments );
     item->setUri( uri );
     item->setLabel( label );
     if ( mimeType.isEmpty() ) {
@@ -834,10 +836,10 @@ void EditorAttachments::addUriAttachment( const QString &uri,
 }
 
 void EditorAttachments::addDataAttachment( const QByteArray &data,
-                                             const QString &mimeType,
-                                             const QString &label )
+                                           const QString &mimeType,
+                                           const QString &label )
 {
-  AttachmentIconItem *item = new AttachmentIconItem( 0, mAttachments );
+  AttachmentIconItem *item = new AttachmentIconItem( Attachment::Ptr(), mAttachments );
 
   QString nlabel = label;
   if ( mimeType == "message/rfc822" ) {
@@ -857,17 +859,17 @@ void EditorAttachments::addDataAttachment( const QByteArray &data,
   }
 }
 
-void EditorAttachments::addAttachment( KCal::Attachment *attachment )
+void EditorAttachments::addAttachment( const KCalCore::Attachment::Ptr &attachment )
 {
   new AttachmentIconItem( attachment, mAttachments );
 }
 
-void EditorAttachments::readIncidence( KCal::Incidence *i )
+void EditorAttachments::readIncidence( const KCalCore::Incidence::Ptr &i )
 {
   mAttachments->clear();
 
-  KCal::Attachment::List attachments = i->attachments();
-  KCal::Attachment::List::ConstIterator it;
+  KCalCore::Attachment::List attachments = i->attachments();
+  KCalCore::Attachment::List::ConstIterator it;
   for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
     addAttachment( (*it) );
   }
@@ -875,7 +877,7 @@ void EditorAttachments::readIncidence( KCal::Incidence *i )
   mUid = i->uid();
 }
 
-void EditorAttachments::fillIncidence( KCal::Incidence *i )
+void EditorAttachments::fillIncidence( KCalCore::Incidence::Ptr &i )
 {
   i->clearAttachments();
 
@@ -883,7 +885,7 @@ void EditorAttachments::fillIncidence( KCal::Incidence *i )
     QListWidgetItem *item = mAttachments->item( itemIndex );
     AttachmentIconItem *attitem = static_cast<AttachmentIconItem*>(item);
     if ( attitem ) {
-      i->addAttachment( new KCal::Attachment( *( attitem->attachment() ) ) );
+      i->addAttachment( Attachment::Ptr( new KCalCore::Attachment( *( attitem->attachment() ) ) ) );
     }
   }
 }

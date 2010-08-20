@@ -1,6 +1,8 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
     Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
+    Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Copyright (c) 2010 Andras Mantia <amantia@kdab.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -34,6 +36,21 @@ KPIM.MainView {
     collectionView.visible = true;
     emailListPage.visible = true;
     messageView.itemId = -1;
+
+    updateContextActionsStates();
+ }
+
+  function updateContextActionsStates()
+  {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
+    {
+      kmailActions.showOnlyCategory("home")
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
+    {
+      kmailActions.showOnlyCategory("account")
+    } else { // something else is selected
+      kmailActions.showOnlyCategory("single_folder")
+    }
   }
 
   QML.SystemPalette { id: palette; colorGroup: "Active" }
@@ -51,12 +68,14 @@ KPIM.MainView {
       // Only go to the next message when currently a valid item is set.
       if ( messageView.itemId >= 0 )
         headerList.nextItem();
-    }
+      kmailActions.showOnlyCategory("mail_viewer")
+   }
 
     onPreviousItemRequest: {
       // Only go to the previous message when currently a valid item is set.
       if ( messageView.itemId >= 0 )
         headerList.previousItem();
+      kmailActions.showOnlyCategory("mail_viewer")
     }
   }
 
@@ -110,7 +129,10 @@ KPIM.MainView {
                                         application.numSelectedAccounts,
                                         headerList.count)
 
-    }
+      QML.Component.onCompleted : updateContextActionsStates();
+      onNumBreadcrumbsChanged : updateContextActionsStates();
+      onNumSelectedChanged : updateContextActionsStates();
+   }
     KPIM.Button2 {
       id : selectButton
       anchors.left: collectionView.left
@@ -244,8 +266,10 @@ KPIM.MainView {
               backToMessageListButton.visible = true;
               collectionView.visible = false;
               emailListPage.visible = false;
+              kmailActions.showOnlyCategory("mail_viewer")
             } else {
               application.restoreDraft(headerList.currentItemId);
+              updateContextActionsStates()
             }
           }
         }
@@ -270,16 +294,54 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
-    visible : !favoriteSelector.visible
+//     visible : !favoriteSelector.visible
     SlideoutPanel {
-
-      anchors.fill: parent
       id: actionPanel
       titleText: KDE.i18n( "Actions" )
       handlePosition : 125
       handleHeight: 150
+      anchors.fill: parent
+//       contentWidth: 240
+      content: [
+      
+          KMailActions {
+            id : kmailActions
+            anchors.fill : parent
+
+            scriptActions : [
+              KPIM.ScriptAction {
+                name : "show_about_dialog"
+                script : {
+                  actionPanel.collapse();
+                  aboutDialog.visible = true
+                }
+              },
+              KPIM.ScriptAction {
+                name : "to_selection_screen"
+                script : {
+                  actionPanel.collapse();
+                  favoriteSelector.visible = true;
+                  mainWorkView.visible = false;
+                }
+              }
+            ]
+
+            onTriggered : {
+              console.log("Triggered was: " + triggeredName)
+            }
+          }
+      ]
+    }
+/*
+    SlideoutPanel {
+      id: actionPanel2
+      titleText: KDE.i18n( "Actions" )
+      handlePosition : 225
+      handleHeight: 150
+      anchors.fill: parent
       contentWidth: 240
       content: [
+
           KPIM.Button {
             id: replyButton
             anchors.top: parent.top;
@@ -390,11 +452,11 @@ KPIM.MainView {
               application.launchAccountWizard();
               actionPanel.collapse();
             }
-          }
+          }          
       ]
     }
-
-    SlideoutPanel {
+*/
+  SlideoutPanel {
       anchors.fill: parent
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1 && messageView.visible

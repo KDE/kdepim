@@ -25,9 +25,5 @@
       </choices>
       <default>LocalAndCached</default>
     </entry>
-    <entry name="IndexCompatLevel" type="Int">
-        <label>The compatibility level of the last successful full indexing.</label>
-        <default>0</default>
-    </entry>
   </group>
 </kcfg>

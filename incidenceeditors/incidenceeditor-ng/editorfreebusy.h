@@ -29,6 +29,8 @@
 
 #include "attendeeeditor.h"
 
+#include <kcalcore/freebusy.h>
+
 #include <QDateTime>
 #include <QTimer>
 #include <QAbstractItemModel>
@@ -42,10 +44,6 @@ class RowController;
 namespace KDGantt {
   class DateTimeGrid;
   class GraphicsView;
-}
-
-namespace KCal {
-  class FreeBusy;
 }
 
 class KDateTime;
@@ -75,7 +73,7 @@ class EditorFreeBusy : public QDialog
     void dateTimesChanged( const QDateTime &, const QDateTime & );
 
   public slots:
-    void slotInsertFreeBusy( KCal::FreeBusy *fb, const QString &email );
+    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
 
     void setDateTimes( const KDateTime &, const KDateTime  & );
 
@@ -107,7 +105,7 @@ class EditorFreeBusy : public QDialog
 //     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();
     void clearSelection() const;
-    void changeStatusForMe( KCal::Attendee::PartStat status );
+    void changeStatusForMe( KCalCore::Attendee::PartStat status );
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
   private slots:
@@ -123,7 +121,7 @@ class EditorFreeBusy : public QDialog
     void updateStatusSummary();
     void reload();
     FreeBusyItem* selectedItem() const;
-    
+
     KDGantt::GraphicsView *mGanttView;
     QTreeWidget *mLeftView;
     RowController *mRowController;

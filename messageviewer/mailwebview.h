@@ -16,28 +16,94 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <KWebView>
 
-class QContextMenuEventF;
+#ifndef MESSAGEVIEWER_MAILWEBVIEW_H__
+#define MESSAGEVIEWER_MAILWEBVIEW_H__
+
+#include <qglobal.h> // make sure we have Q_OS_WINCE defined
+
+#ifdef MESSAGEVIEWER_NO_WEBKIT
+# include <QTextBrowser>
+#else
+# ifdef Q_OS_WINCE
+#  include <QWebView>
+# else
+#  include <KWebView>
+# endif
+#endif
+
+#include <boost/function.hpp>
 
 namespace MessageViewer {
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
+#ifdef MESSAGEVIEWER_NO_WEBKIT
+class MailWebView : public QTextBrowser
+#else
+# ifdef Q_OS_WINCE
+class MailWebView : public QWebView
+# else
 class MailWebView : public KWebView
+# endif
+#endif
 {
   Q_OBJECT
-  public:
+public:
 
-    MailWebView( QWidget *parent );
+    explicit MailWebView( QWidget *parent=0 );
+    ~MailWebView();
 
-  signals:
+    enum FindFlag {
+        FindWrapsAroundDocument,
+        FindBackward,
+        FindCaseSensitively,
+        HighlightAllOccurrences,
+
+        NumFindFlags
+    };
+    Q_DECLARE_FLAGS( FindFlags, FindFlag )
+
+    bool findText( const QString & test, FindFlags flags );
+    void clearFindSelection();
+
+    void scrollUp( int pixels );
+    void scrollDown( int pixels );
+    bool isScrolledToBottom() const;
+    bool hasVerticalScrollBar() const;
+    void scrollPageDown( int percent );
+    void scrollPageUp( int percent );
+    void scrollToAnchor( const QString & anchor );
+
+    QString selectedText() const;
+    bool isAttachmentInjectionPoint( const QPoint & globalPos ) const;
+    void injectAttachments( const boost::function<QString()> & delayedHtml );
+    bool removeAttachmentMarking( const QString & id );
+    void markAttachment( const QString & id, const QString & style );
+    bool replaceInnerHtml( const QString & id, const boost::function<QString()> & delayedHtml );
+    void setElementByIdVisible( const QString & id, bool visible );
+    void setHtml( const QString & html, const QUrl & baseUrl );
+    QString htmlSource() const;
+    void selectAll();
+    void scrollToRelativePosition( double pos );
+    double relativePosition() const;
+
+    void setAllowExternalContent( bool allow );
+
+    QUrl linkOrImageUrlAt( const QPoint & global ) const;
+
+Q_SIGNALS:
 
     /// Emitted when the user right-clicks somewhere
     /// @param url if an URL was under the cursor, this parameter contains it. Otherwise empty
     /// @param point position where the click happened, in local coordinates
     void popupMenu( const QString &url, const QPoint &point );
 
-  protected:
+    void linkHovered( const QString & link, const QString & title=QString(), const QString & textContent=QString() );
+#ifdef MESSAGEVIEWER_NO_WEBKIT
+    void linkClicked( const QUrl & link );
+#endif
+
+protected:
 #ifdef KDEPIM_MOBILE_UI
     friend class MessageViewItem;
 #endif
@@ -46,3 +112,7 @@ class MailWebView : public KWebView
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( MessageViewer::MailWebView::FindFlags )
+
+#endif /* MESSAGEVIEWER_MAILWEBVIEW_H__ */

@@ -23,7 +23,7 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <QPointer>
+#include <kcalcore/incidence.h>
 
 class KJob;
 
@@ -44,6 +44,7 @@ namespace IncidenceEditorsNG {
 
 class AttendeeEditor;
 class ConflictResolver;
+class FreeBusyItemModel;
 class IncidenceDateTime;
 class SchedulingDialog;
 
@@ -51,17 +52,24 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
   Q_OBJECT
 public:
-#ifdef KDEPIM_MOBILE_UI  
-    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui = 0 );
+#ifdef KDEPIM_MOBILE_UI
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
 #else
-    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceAttendee( QWidget* parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
 #endif
+    ~IncidenceAttendee();
 
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
+    virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
 signals:
     void attendeeCountChanged( int );
+
+public slots:
+    /// If the user is attendee of the loaded event, one of the following slots
+    /// can be used to change the status.
+    void acceptForMe();
+    void declineForMe();
 
 private slots:
     void checkIfExpansionIsNeeded( KPIM::MultiplyingLine* );
@@ -70,12 +78,15 @@ private slots:
     void slotSelectAddresses();
     void slotSolveConflictPressed();
     void slotUpdateConflictLabel( int );
-    void slotAttendeeChanged( const KCal::Attendee &oldAttendee, const KCal::Attendee &newAttendee );
+    void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee, const KCalCore::Attendee::Ptr &newAttendee );
     void slotOrganizerChanged( const QString & organizer );
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
 private:
+    void changeStatusForMe( KCalCore::Attendee::PartStat );
+    /** Returns if I was the organizer of the loaded event */
+    bool iAmOrganizer() const;
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
      * from the addressbook and expanding distribution lists.
@@ -91,12 +102,9 @@ private:
 #endif
     QWidget* mParentWidget;
     AttendeeEditor *mAttendeeEditor;
-    KCal::Incidence::ConstPtr mOrigIncidence;
     ConflictResolver *mConflictResolver;
-    QPointer<SchedulingDialog> mSchedulingDialog;
     QMap<KJob*, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
     IncidenceDateTime *mDateTime;
-
     QString mOrganizer;
 };
 

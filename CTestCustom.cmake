@@ -3,7 +3,7 @@
 
 # Change the maximum warnings that will be displayed
 # on the report page (default 50)
-set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 2000)
+set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 5000)
 
 # Warnings that will be ignored
 set(CTEST_CUSTOM_WARNING_EXCEPTION

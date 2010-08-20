@@ -73,8 +73,8 @@ static const struct {
   { KIMAP::Acl::None, I18N_NOOP2( "Permissions", "None" ) },
   { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen, I18N_NOOP2( "Permissions", "Read" ) },
   { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post, I18N_NOOP2( "Permissions", "Append" ) },
-  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write | KIMAP::Acl::Create | KIMAP::Acl::Delete, I18N_NOOP2( "Permissions", "Write" ) },
-  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write | KIMAP::Acl::Create | KIMAP::Acl::Delete | KIMAP::Acl::Admin, I18N_NOOP2( "Permissions", "All" ) }
+  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write | KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox | KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge, I18N_NOOP2( "Permissions", "Write" ) },
+  { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen | KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write | KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox | KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge | KIMAP::Acl::Admin, I18N_NOOP2( "Permissions", "All" ) }
 };
 
 ACLEntryDialog::ACLEntryDialog( const QString& caption, QWidget* parent )
@@ -116,6 +116,9 @@ ACLEntryDialog::ACLEntryDialog( const QString& caption, QWidget* parent )
   vbox->addStretch( 1 );
 
   topLayout->addWidget( groupBox, 1, 0, 1, 3 );
+  label = new QLabel( i18n( "<b>Note: </b>Renaming requires write permissions on the parent folder." ),
+                      page );
+  topLayout->addWidget( label, 2, 0, 1, 3 );
   topLayout->setRowStretch(2, 10);
 
   connect( mUserIdLineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
@@ -156,7 +159,7 @@ void ACLEntryDialog::setValues( const QString& userId, KIMAP::Acl::Rights permis
 {
   mUserIdLineEdit->setText( userId );
 
-  QAbstractButton* button = mButtonGroup->button( permissions );
+  QAbstractButton* button = mButtonGroup->button( KIMAP::Acl::normalizedRights( permissions ) );
   if ( button )
     button->setChecked( true );
 
@@ -178,7 +181,7 @@ KIMAP::Acl::Rights ACLEntryDialog::permissions() const
   QAbstractButton* button = mButtonGroup->checkedButton();
   if( !button )
     return static_cast<KIMAP::Acl::Rights>(-1); // hm ?
-  return static_cast<KIMAP::Acl::Rights>( mButtonGroup->id( button ) );
+  return KIMAP::Acl::denormalizedRights( static_cast<KIMAP::Acl::Rights>( mButtonGroup->id( button ) ) );
 }
 
 class CollectionAclPage::ListViewItem : public QTreeWidgetItem
@@ -212,12 +215,12 @@ private:
 };
 
 // internalRightsList is only used if permissions doesn't match the standard set
-static QString permissionsToUserString( int permissions, const QString& internalRightsList )
+static QString permissionsToUserString( KIMAP::Acl::Rights permissions, const QString& internalRightsList )
 {
-  for ( int i = 0;
+  for ( uint i = 0;
         i < sizeof( standardPermissions ) / sizeof( *standardPermissions );
         ++i ) {
-    if ( permissions == standardPermissions[i].permissions )
+    if ( KIMAP::Acl::normalizedRights( permissions ) == standardPermissions[i].permissions )
       return i18nc( "Permissions", standardPermissions[i].userString );
   }
   if ( internalRightsList.isEmpty() )
@@ -268,11 +271,6 @@ void CollectionAclPage::init()
   mStack = new QStackedWidget( this );
   topLayout->addWidget( mStack );
 
-  mLabel = new QLabel( mStack );
-  mLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
-  mLabel->setWordWrap( true );
-  mStack->addWidget( mLabel );
-
   mACLWidget = new KHBox( mStack );
   mACLWidget->setSpacing( KDialog::spacingHint() );
 
@@ -287,7 +285,7 @@ void CollectionAclPage::init()
 
   mStack->addWidget( mACLWidget );
 
-  connect( mListView, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ),
+  connect( mListView, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ),
        SLOT( slotEditACL( QTreeWidgetItem* ) ) );
   connect( mListView, SIGNAL( itemSelectionChanged() ),
        SLOT( slotSelectionChanged() ) );

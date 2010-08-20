@@ -5,6 +5,10 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/calendarviews/agenda
 )
 
+if (KDEPIM_MOBILE_UI)
+  add_definitions( -DKORG_NODND )
+endif (KDEPIM_MOBILE_UI)
+
 ########### next target ###############
 
 set( eventviews_LIB_SRCS
@@ -38,18 +42,18 @@ target_link_libraries(eventviews
                       ${QT_QTGUI_LIBRARY}
                       ${QT_QTUITOOLS_LIBRARY}
                       ${KDE4_KDEUI_LIBS}
-                      ${KDE4_KMIME_LIBRARY}
-                      ${KDEPIMLIBS_KCAL_LIBS}
+                      ${KDEPIMLIBS_KMIME_LIBS}
                       ${KDE4_KCMUTILS_LIBS}
                       ${ZLIB_LIBRARY}
-                      ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
+                      ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDEPIMLIBS_AKONADI_LIBS}
-                      ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
                       ${KDEPIMLIBS_KHOLIDAYS_LIBS}
                       kdepim
-                      akonadi-kcal_next
+                      calendarsupport
                       akonadi_next
+                      ${KDEPIMLIBS_KCALCORE_LIBS}
+                      ${KDEPIMLIBS_KCALUTILS_LIBS}
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

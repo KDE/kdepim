@@ -33,11 +33,11 @@
 #include "kotodomodel.h"
 #include "kotodoviewview.h"
 
-#include <akonadi/kcal/calendar.h>
+#include <calendarsupport/calendar.h>
 
 #include <libkdepim/kdateedit.h>
 
-#include <kcal/calfilter.h>
+#include <kcalcore/calfilter.h>
 
 #include <kcolorscheme.h>
 #include <kcombobox.h>
@@ -61,7 +61,7 @@
 #include <QFontMetrics>
 #include <QToolTip>
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace KPIM;
 using namespace IncidenceEditors;
 
@@ -395,7 +395,7 @@ void KOTodoCategoriesDelegate::updateEditorGeometry( QWidget *editor,
   editor->setGeometry( option.rect );
 }
 
-void KOTodoCategoriesDelegate::setCalendar( Akonadi::Calendar *cal )
+void KOTodoCategoriesDelegate::setCalendar( CalendarSupport::Calendar *cal )
 {
   mCalendar = cal;
 }

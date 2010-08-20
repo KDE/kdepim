@@ -18,8 +18,10 @@
 
 #include "korganizereditorconfig.h"
 
-#include <kcalprefs.h>
+#include <calendarsupport/kcalprefs.h>
 
+using namespace KCalCore;
+using namespace CalendarSupport;
 using namespace IncidenceEditors;
 
 KOrganizerEditorConfig::KOrganizerEditorConfig()
@@ -109,17 +111,15 @@ QStringList KOrganizerEditorConfig::activeDesignerFields() const
   return KCalPrefs::instance()->activeDesignerFields();
 }
 
-QStringList &KOrganizerEditorConfig::templates( const QString &type )
+QStringList &KOrganizerEditorConfig::templates( IncidenceBase::IncidenceType type )
 {
-  if ( type == "Event" ) {
+  if ( type == IncidenceBase::TypeEvent ) {
     //TODO remove mEventTemplates+etc from Prefs::instance()
     return KCalPrefs::instance()->mEventTemplates;
-  }
-  if ( type == "Todo" ) {
+  } if ( type == IncidenceBase::TypeTodo ) {
     return KCalPrefs::instance()->mTodoTemplates;
-  }
-  if ( type == "Journal" ) {
+  } if ( type == IncidenceBase::TypeJournal ) {
     return KCalPrefs::instance()->mJournalTemplates;
   }
-  return EditorConfig::templates(type);
+  return EditorConfig::templates( type );
 }

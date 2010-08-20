@@ -12,9 +12,18 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *
 install(DIRECTORY htmlOTP DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
 install(FILES kmail_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 
-if(KDEPIM_MOBILE_UI)
-  add_subdirectory(qml)
-endif(KDEPIM_MOBILE_UI)
+if(MESSAGEVIEWER_NO_WEBKIT)
+  add_definitions( -DMESSAGEVIEWER_NO_WEBKIT=1 )
+  set(_mailwebview_cpp mailwebview_textbrowser.cpp )
+  set(_mailwebview_lib )
+else(MESSAGEVIEWER_NO_WEBKIT)
+  set(_mailwebview_cpp mailwebview_webkit.cpp )
+  if(NOT WINCE)
+    set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
+  else(NOT WINCE)
+    set(_mailwebview_lib ${QT_QTWEBKIT_LIBRARY} )
+  endif(NOT WINCE)
+endif(MESSAGEVIEWER_NO_WEBKIT)
 
 set(libmessageviewer_SRCS
 viewer_p.cpp
@@ -49,7 +58,7 @@ objecttreeemptysource.cpp
 filehtmlwriter.cpp
 teehtmlwriter.cpp
 chiasmuskeyselector.cpp
-mailwebview.cpp
+${_mailwebview_cpp}
 findbar/findbar.cpp
 pluginloaderbase.cpp
 kxface.cpp
@@ -73,19 +82,19 @@ kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
-  ${KDE4_KTNEF_LIBRARY}
+  ${KDEPIMLIBS_KTNEF_LIBS}
   ${KDE4_KNEWSTUFF3_LIBS}
   ${QGPGME_LIBRARIES}
-  ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_KDEWEBKIT_LIBRARY}
+  ${_mailwebview_lib}
   ${Grantlee_CORE_LIBRARIES}
   ${Grantlee_GUI_LIBRARIES}
 )
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIR}
@@ -93,7 +102,7 @@ include_directories(
     ${Grantlee_INCLUDE_DIRS}
 )
 
-set_target_properties( messageviewer PROPERTIES VERSION 0.1.0 SOVERSION 0)
+set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)

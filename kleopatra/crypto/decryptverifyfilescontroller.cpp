@@ -45,6 +45,7 @@
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
+#include <utils/archivedefinition.h>
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -132,8 +133,18 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
         const unsigned int classification = classify( fileName );
         kDebug() << "classified" << fileName << "as" << printableClassification( classification );
 
+        const shared_ptr<ArchiveDefinition> ad = w->selectedArchiveDefinition();
+
+        const Protocol proto =
+            isOpenPGP( classification ) ? OpenPGP :
+            isCMS( classification )     ? CMS :
+            ad /* _needs_ the info */   ? throw Exception( gpg_error( GPG_ERR_CONFLICT ), i18n("Cannot determine whether input data is OpenPGP or CMS") ) :
+            /* else we don't care */      UnknownProtocol ;
+
         const shared_ptr<Input> input = Input::createFromFile( fileName );
-        const shared_ptr<Output> output = Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy );
+        const shared_ptr<Output> output =
+            ad       ? ad->createOutputFromUnpackCommand( proto, fileName, outDir ) :
+            /*else*/   Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy );
 
         if ( mayBeCipherText( classification ) ) {
             kDebug() << "creating a DecryptVerifyTask";
@@ -247,10 +258,52 @@ void DecryptVerifyFilesController::Private::ensureWizardCreated()
 
 }
 
+namespace {
+    struct FindExtension : std::unary_function<shared_ptr<ArchiveDefinition>,bool> {
+        const QString ext;
+        const Protocol proto;
+        FindExtension( const QString & ext, Protocol proto ) : ext( ext ), proto( proto ) {}
+        bool operator()( const shared_ptr<ArchiveDefinition> & ad ) const {
+            qDebug() << "   considering" << ( ad ? ad->label() : QLatin1String( "<null>" ) ) << "for" << ext;
+            bool result;
+            if ( proto == UnknownProtocol )
+                result = ad && ( ad->extensions( OpenPGP ).contains( ext, Qt::CaseInsensitive ) || ad->extensions( CMS ).contains( ext, Qt::CaseInsensitive ) );
+            else
+                result = ad && ad->extensions( proto ).contains( ext, Qt::CaseInsensitive );
+            qDebug() << ( result ? "   -> matches" : "   -> doesn't match" );
+            return result;
+        }
+    };
+}
+
+shared_ptr<ArchiveDefinition> pick_archive_definition( GpgME::Protocol proto, const std::vector< shared_ptr<ArchiveDefinition> > & ads, const QString & filename ) {
+    const QFileInfo fi( outputFileName( filename ) );
+    QString extension = fi.completeSuffix();
+
+    if ( extension == QLatin1String("out") ) // added by outputFileName() -> useless
+        return shared_ptr<ArchiveDefinition>();
+
+    if ( extension.endsWith( ".out" ) )      // added by outputFileName() -> remove
+        extension.chop(4);
+
+    for ( ;; ) {
+        const std::vector<shared_ptr<ArchiveDefinition> >::const_iterator it
+            = std::find_if( ads.begin(), ads.end(), FindExtension( extension, proto ) );
+        if ( it != ads.end() )
+            return *it;
+        const int idx = extension.indexOf( QLatin1Char('.') );
+        if ( idx < 0 )
+            return shared_ptr<ArchiveDefinition>();
+        extension = extension.mid( idx + 1 );
+    }
+}
+    
 
 QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles()
 {
     ensureWizardCreated();
+
+    const std::vector< shared_ptr<ArchiveDefinition> > archiveDefinitions = ArchiveDefinition::getArchiveDefinitions();
 
     QStringList fileNames;
     unsigned int counter = 0;
@@ -259,11 +312,14 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
         kleo_assert( !fname.isEmpty() );
 
         const unsigned int classification = classify( fname );
+        const Protocol proto = findProtocol( classification );
 
         if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) || mayBeDetachedSignature( classification ) ) {
 
             DecryptVerifyOperationWidget * const op = m_wizard->operationWidget( counter++ );
             kleo_assert( op != 0 );
+
+            op->setArchiveDefinitions( archiveDefinitions );
 
             const QString signedDataFileName = findSignedData( fname );
 
@@ -275,7 +331,7 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
                 op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
             // ### end FIXME
             else if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) )
-                op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
+                op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque, pick_archive_definition( proto, archiveDefinitions, fname ) );
             else
                 op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
 
@@ -296,7 +352,8 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
                 // classify() and/or classifyContent()
                 DecryptVerifyOperationWidget * const op = m_wizard->operationWidget( counter++ );
                 kleo_assert( op != 0 );
-                op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
+                op->setArchiveDefinitions( archiveDefinitions );
+                op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque, pick_archive_definition( proto, archiveDefinitions, fname ) );
                 op->setInputFileName( fname );
                 fileNames.push_back( fname );
             } else {
@@ -305,6 +362,7 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
                     DecryptVerifyOperationWidget * op = m_wizard->operationWidget( counter++ );
                     kleo_assert( op != 0 );
 
+                    op->setArchiveDefinitions( archiveDefinitions );
                     op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
                     op->setInputFileName( s );
                     op->setSignedDataFileName( fname );

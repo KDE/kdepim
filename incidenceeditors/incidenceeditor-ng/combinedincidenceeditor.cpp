@@ -77,7 +77,7 @@ void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
     emit dirtyStatusChanged( false );
 }
 
-void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
+void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
@@ -88,7 +88,7 @@ void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
     editor->blockSignals( false );
     if ( editor->isDirty() ) {
       qDebug() << editor->objectName();
-      Q_ASSERT( !editor->isDirty() );
+      Q_ASSERT_X( false, "load", "editor shouldn't be dirty" );
     }
   }
 
@@ -97,7 +97,7 @@ void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
   emit dirtyStatusChanged( false );
 }
 
-void CombinedIncidenceEditor::save( KCal::Incidence::Ptr incidence )
+void CombinedIncidenceEditor::save( const KCalCore::Incidence::Ptr &incidence )
 {
   foreach ( IncidenceEditor *editor, mCombinedEditors  )
     editor->save( incidence );

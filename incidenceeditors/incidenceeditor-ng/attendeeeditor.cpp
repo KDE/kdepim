@@ -29,8 +29,8 @@ using namespace IncidenceEditorsNG;
 AttendeeEditor::AttendeeEditor( QWidget* parent )
   : MultiplyingLineEditor( new AttendeeLineFactory( parent ), parent )
 {
-  connect( this, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ), SLOT( slotLineAdded( KPIM::MultiplyingLine* ) ) );
-  connect( this, SIGNAL( lineDeleted( int ) ), SLOT( slotLineDeleted( int ) ) );
+  connect( this, SIGNAL( lineAdded( KPIM::MultiplyingLine* ) ),
+           SLOT( slotLineAdded( KPIM::MultiplyingLine* ) ) );
 
   addData();
 }
@@ -42,12 +42,10 @@ void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine* line )
     return;
 
   connect( att, SIGNAL( changed() ), SLOT( slotCalculateTotal() ) );
-  connect( att, SIGNAL( changed( const KCal::Attendee &, const KCal::Attendee & ) ), SIGNAL( changed( const KCal::Attendee &, const KCal::Attendee & ) ) );
-  connect( att, SIGNAL( editingFinished( KPIM::MultiplyingLine * ) ), SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ) );
-}
-
-void AttendeeEditor::slotLineDeleted( int /*pos*/ )
-{
+  connect( att, SIGNAL( changed( const KCalCore::Attendee::Ptr &, const KCalCore::Attendee::Ptr & ) ),
+           SIGNAL( changed( const KCalCore::Attendee::Ptr &, const KCalCore::Attendee::Ptr & ) ) );
+  connect( att, SIGNAL( editingFinished( KPIM::MultiplyingLine * ) ),
+           SIGNAL( editingFinished( KPIM::MultiplyingLine* ) ) );
 }
 
 void AttendeeEditor::slotCalculateTotal()
@@ -84,7 +82,7 @@ AttendeeData::List AttendeeEditor::attendees() const
   return attList;
 }
 
-void AttendeeEditor::addAttendee(const KCal::Attendee& attendee)
+void AttendeeEditor::addAttendee(const KCalCore::Attendee::Ptr& attendee)
 {
   addData( AttendeeData::Ptr( new AttendeeData( attendee ) ) );
 }

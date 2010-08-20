@@ -30,10 +30,11 @@
 #include <KABC/ContactGroup>
 
 using namespace Akonadi;
+using namespace CalendarSupport;
 
 typedef DeclarativeWidgetBase<EditorContactGroup, ContactGroupEditorView, &ContactGroupEditorView::setEditor> DeclarativeEditorContactGroup;
 
-class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
+class ContactGroupEditorView::Private : public CalendarSupport::ItemEditorUi
 {
   ContactGroupEditorView *const q;
 
@@ -50,7 +51,7 @@ class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
 
   public: // slots
     void saveFinished();
-    void saveFailed( const QString &errorMessage );
+    void saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage );
     void collectionChanged( const Akonadi::Collection &collection );
 
   public: // ItemEditorUi interface
@@ -58,21 +59,21 @@ class ContactGroupEditorView::Private : public Akonadi::ItemEditorUi
     {
       return partIdentifiers.contains( Item::FullPayload );
     }
-    
+
     bool hasSupportedPayload( const Item &item ) const
     {
       return item.hasPayload<KABC::ContactGroup>();
     }
-    
+
     bool isDirty() const
     {
       return true;
     }
-  
+
     bool isValid()
     {
       return true;
-    }    
+    }
 
     void load( const Item &item );
     Item save( const Item &item );
@@ -94,7 +95,7 @@ void ContactGroupEditorView::Private::saveFinished()
   q->deleteLater();
 }
 
-void ContactGroupEditorView::Private::saveFailed( const QString &errorMessage )
+void ContactGroupEditorView::Private::saveFailed( CalendarSupport::EditorItemManager::SaveAction, const QString &errorMessage )
 {
   kError() << errorMessage;
 }
@@ -102,12 +103,12 @@ void ContactGroupEditorView::Private::saveFailed( const QString &errorMessage )
 void ContactGroupEditorView::Private::load( const Item &item )
 {
   Q_ASSERT( item.hasPayload<KABC::ContactGroup>() );
- 
+
   mItem = item;
   mCollection = item.parentCollection();
 
   const KABC::ContactGroup contactGroup = mItem.payload<KABC::ContactGroup>();
-  
+
   if ( mEditor != 0 ) {
     mEditor->setDefaultCollection( mCollection );
     mEditor->loadContactGroup( contactGroup );
@@ -124,7 +125,7 @@ Item ContactGroupEditorView::Private::save( const Item &item )
   if ( mEditor != 0 ) {
     mEditor->saveContactGroup( contactGroup );
   }
- 
+
   result.setPayload<KABC::ContactGroup>( contactGroup );
 
   return result;
@@ -151,7 +152,7 @@ void ContactGroupEditorView::Private::reject( RejectReason reason, const QString
       kWarning() << "Item has Invalid Payload:" << errorMessage;
       break;
   }
-  
+
   q->deleteLater();
 }
 
@@ -168,8 +169,10 @@ void ContactGroupEditorView::delayedInit()
 
   qmlRegisterType<DeclarativeEditorContactGroup>( "org.kde.contacteditors", 4, 5, "ContactGroupEditor" );
 
-  connect( d->mItemManager, SIGNAL( itemSaveFinished() ), SLOT( saveFinished() ) );
-  connect( d->mItemManager, SIGNAL( itemSaveFailed( QString ) ), SLOT( saveFailed( QString ) ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ),
+           SLOT( saveFinished() ) );
+  connect( d->mItemManager, SIGNAL( itemSaveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ),
+           SLOT( saveFailed( CalendarSupport::EditorItemManager::SaveAction, QString ) ) );
 }
 
 ContactGroupEditorView::~ContactGroupEditorView()
@@ -195,7 +198,12 @@ void ContactGroupEditorView::setEditor( EditorContactGroup *editor )
 
 void ContactGroupEditorView::loadContactGroup( const Item &item )
 {
-  d->mItemManager->load( item );
+  if ( !d->mEditor ) {
+    // the editor is not fully loaded yet, so try later again
+    QMetaObject::invokeMethod( this, "loadContactGroup", Qt::QueuedConnection, Q_ARG( Akonadi::Item, item ) );
+  } else {
+    d->mItemManager->load( item );
+  }
 }
 
 void ContactGroupEditorView::save()

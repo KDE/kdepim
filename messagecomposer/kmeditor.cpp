@@ -296,12 +296,14 @@ void KMeditor::disableWordWrap()
 
 void KMeditor::slotPasteAsQuotation()
 {
+#ifndef QT_NO_CLIPBOARD
   if ( hasFocus() ) {
     QString s = QApplication::clipboard()->text();
     if ( !s.isEmpty() ) {
       insertPlainText( d->addQuotesToText( s ) );
     }
   }
+#endif
 }
 
 void KMeditor::slotRemoveQuotes()

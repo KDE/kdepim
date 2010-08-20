@@ -67,6 +67,24 @@ protected:
    */
   bool isLoadingSelected();
 
+  /**
+   * Initializes the standard action manager that will be used by the application.
+   * This is a point of extension to use a custom action manager.
+   *
+   * @param collectionSelectionModel The selection model for the collections.
+   * @param itemSelectionModel The selection model for the items.
+   */
+  virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
+                                           QItemSelectionModel *itemSelectionModel );
+
+  /**
+   * Initializes the agent action manager that will be used by the application.
+   * This is a point of extension to use a custom action manager.
+   *
+   * @param selectionModel The selection model for the agent instances.
+   */
+  virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+
 protected slots:
   void delayedInit();
 
@@ -93,14 +111,15 @@ public slots:
   // FIXME: make non-virtual again once mark-as-read logic is in messageviewer
   virtual void setListSelectedRow( int row );
 
+  void setAgentInstanceListSelectedRow( int row );
+
   QString pathToItem( qint64 id );
 
   void launchAccountWizard();
+  void synchronizeAllItems();
 
   void saveFavorite();
   void loadFavorite( const QString &name );
-
-  void configureCurrentAccount();
 
   void persistCurrentSelection(const QString &key);
   void clearPersistedSelection(const QString &key);

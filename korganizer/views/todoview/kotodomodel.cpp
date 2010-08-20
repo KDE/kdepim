@@ -27,22 +27,23 @@
 #include "koprefs.h"
 #include "kohelper.h"
 
-#include <KCal/CalFormat>
-#include <KCal/Incidence>
-#include <KCal/IncidenceFormatter>
-#include <KCal/Todo>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendaradaptor.h>
+#include <calendarsupport/dndfactory.h>
+#include <calendarsupport/incidencechanger.h>
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/utils.h>
+
+#include <kcalcore/calformat.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/todo.h>
+#include <kcalutils/incidenceformatter.h>
 #ifndef KORG_NODND
-#include <KCal/DndFactory>
-#include <KCal/ICalDrag>
-#include <KCal/VCalDrag>
+#include <kcalutils/dndfactory.h>
+#include <kcalutils/icaldrag.h>
+#include <kcalutils/vcaldrag.h>
 #endif
 
-#include <kcalprefs.h>
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/utils.h>
-#include <akonadi/kcal/incidencechanger.h>
-#include <akonadi/kcal/dndfactory.h>
-#include <akonadi/kcal/calendaradaptor.h>
 
 #include <KPIMUtils/Email>
 
@@ -56,26 +57,26 @@
 #include <QMimeData>
 #endif
 
-using namespace Akonadi;
+using namespace KCalUtils;
 
 /** This class represents a node in the todo-tree. */
 struct KOTodoModel::TodoTreeNode : QObject
 {
-  TodoTreeNode( const Item &todo_, TodoTreeNode *parent, KOTodoModel *model )
+  TodoTreeNode( const Akonadi::Item &todo_, TodoTreeNode *parent, KOTodoModel *model )
     : mTodo( todo_ ), mParent( parent ), mParentListPos( 0 ),
       mToDelete( false ), mModel( model )
   {
-    if ( Akonadi::hasTodo( mTodo ) ) {
+    if ( CalendarSupport::hasTodo( mTodo ) ) {
       mItemId = mTodo.id();
-      mModel->mTodoUidHash.insert( Akonadi::todo( mTodo )->uid(), this );
+      mModel->mTodoUidHash.insert( CalendarSupport::todo( mTodo )->uid(), this );
     }
   }
 
   /** Recursively delete all TodoTreeNodes which are children of this one. */
   ~TodoTreeNode()
   {
-    if ( Akonadi::hasTodo( mTodo ) ) {
-      mModel->mTodoUidHash.remove( Akonadi::todo( mTodo )->uid() );
+    if ( CalendarSupport::hasTodo( mTodo ) ) {
+      mModel->mTodoUidHash.remove( CalendarSupport::todo( mTodo )->uid() );
     } else {
       // root node gets deleted, clear the whole hash
       mModel->mTodoUidHash.clear();
@@ -86,7 +87,7 @@ struct KOTodoModel::TodoTreeNode : QObject
   /** Checks if it's save to access the todo-pointer of this node. */
   bool isValid() const
   {
-    return Akonadi::hasTodo( mTodo ) && !mToDelete;
+    return CalendarSupport::hasTodo( mTodo ) && !mToDelete;
   }
 
   /** Recursively set mToDelete to true for all todos.
@@ -112,7 +113,7 @@ struct KOTodoModel::TodoTreeNode : QObject
       toCheck << mChildren;
       while ( !toCheck.isEmpty() ) {
         TodoTreeNode *node = toCheck.takeFirst();
-        Q_ASSERT ( node->mToDelete || ! Akonadi::todo( node->mTodo )->relatedTo() );
+        Q_ASSERT ( node->mToDelete || CalendarSupport::todo( node->mTodo )->relatedTo().isEmpty() );
         toCheck << node->mChildren;
       }
 #endif
@@ -135,7 +136,7 @@ struct KOTodoModel::TodoTreeNode : QObject
    *  Note: public field for performance reason, and because this
    *  class is only used internally from KOTodoModel
    */
-  Item mTodo;
+  Akonadi::Item mTodo;
   /** Pointer to the parent TodoTreeNode. Only the root element has no parent. */
   TodoTreeNode *mParent;
   /** Position of this TodoTreeNode in it's parents children list */
@@ -183,11 +184,11 @@ KOTodoModel::KOTodoModel( QObject *parent )
   : QAbstractItemModel( parent ), mColumnCount( DescriptionColumn + 1 ), mCalendar( 0 ),
     mChanger( 0 )
 {
-  mRootNode = new TodoTreeNode( Item(), 0, this );
+  mRootNode = new TodoTreeNode( Akonadi::Item(), 0, this );
   mFlatView = false;
 }
 
-static bool isDueToday( const Todo *todo )
+static bool isDueToday( const Todo::Ptr &todo )
 {
   return !todo->isCompleted() && todo->dtDue().date() == QDate::currentDate();
 }
@@ -197,7 +198,7 @@ KOTodoModel::~KOTodoModel()
   delete mRootNode;
 }
 
-void KOTodoModel::setCalendar( Akonadi::Calendar *cal )
+void KOTodoModel::setCalendar( CalendarSupport::Calendar *cal )
 {
   mCalendar = cal;
   // old todos might no longer be valid, so clear them
@@ -208,7 +209,7 @@ void KOTodoModel::setCalendar( Akonadi::Calendar *cal )
 void KOTodoModel::clearTodos()
 {
   delete mRootNode;
-  mRootNode = new TodoTreeNode( Item(), 0, this );
+  mRootNode = new TodoTreeNode( Akonadi::Item(), 0, this );
   // inform all views that we cleared our internal list
   reset();
 }
@@ -224,13 +225,13 @@ void KOTodoModel::reloadTodos()
   // never delete the root node
   mRootNode->mToDelete = false;
 
-  Item::List todoList = mCalendar->todos();
-  Item::List::ConstIterator it;
+  Akonadi::Item::List todoList = mCalendar->todos();
+  Akonadi::Item::List::ConstIterator it;
   QList<TodoTreeNode*> changedNodes;
   for ( it = todoList.constBegin(); it != todoList.constEnd(); ++it ) {
-    TodoTreeNode *tmp = findTodo( Akonadi::incidence( *it )->uid() );
+    TodoTreeNode *tmp = findTodo( CalendarSupport::incidence( *it )->uid() );
     if ( !tmp ) {
-      kDebug()<<"Inserting " << Akonadi::todo(*it)->summary() << Akonadi::todo(*it)->relatedToUid() << Akonadi::todo(*it)->relatedTo();
+      kDebug()<<"Inserting " << CalendarSupport::todo(*it)->summary() << CalendarSupport::todo(*it)->relatedTo();
       insertTodo( *it );
     } else {
       // update pointer to the todo
@@ -255,14 +256,14 @@ void KOTodoModel::reloadTodos()
   }
 }
 
-void KOTodoModel::processChange( const Item & aitem, int action )
+void KOTodoModel::processChange( const Akonadi::Item & aitem, int action )
 {
-  if ( !Akonadi::hasTodo( aitem ) ) {
+  if ( !CalendarSupport::hasTodo( aitem ) ) {
     return;
   }
 
-  if ( action == Akonadi::IncidenceChanger::INCIDENCEEDITED ) {
-    TodoTreeNode *ttTodo = findTodo( Akonadi::incidence ( aitem )->uid() );
+  if ( action == CalendarSupport::IncidenceChanger::INCIDENCEEDITED ) {
+    TodoTreeNode *ttTodo = findTodo( CalendarSupport::incidence ( aitem )->uid() );
     if ( !ttTodo || !ttTodo->isValid() ) {
       return;
     }
@@ -273,8 +274,8 @@ void KOTodoModel::processChange( const Item & aitem, int action )
     // changed, because we can't be sure that only the relationship changed
     emit dataChanged( miChanged,
                       miChanged.sibling( miChanged.row(), mColumnCount - 1 ) );
-  } else if ( action == Akonadi::IncidenceChanger::INCIDENCEADDED ) {
-    const bool found = findTodo( Akonadi::incidence ( aitem )->uid() );
+  } else if ( action == CalendarSupport::IncidenceChanger::INCIDENCEADDED ) {
+    const bool found = findTodo( CalendarSupport::incidence ( aitem )->uid() );
 
     // "found" can be true, with akonadi calendarview listens to ETM model signals
     // and calls updateview, which calls reloadTodos().  I think we have lots of room
@@ -283,8 +284,8 @@ void KOTodoModel::processChange( const Item & aitem, int action )
     if ( !found ) {
       insertTodo( aitem );
     }
-  } else if ( action == Akonadi::IncidenceChanger::INCIDENCEDELETED ) {
-    TodoTreeNode *ttTodo = findTodo( Akonadi::incidence ( aitem )->uid() );
+  } else if ( action == CalendarSupport::IncidenceChanger::INCIDENCEDELETED ) {
+    TodoTreeNode *ttTodo = findTodo( CalendarSupport::incidence ( aitem )->uid() );
     if ( !ttTodo || !ttTodo->isValid() ) {
       return;
     }
@@ -310,7 +311,7 @@ void KOTodoModel::processChange( const Item & aitem, int action )
 Akonadi::Item KOTodoModel::todoForIndex( const QModelIndex &idx ) const
 {
   if ( !idx.isValid() ) {
-    return Item();
+    return Akonadi::Item();
   }
 
   TodoTreeNode *node = static_cast<TodoTreeNode *>( idx.internalPointer() );
@@ -328,10 +329,10 @@ QModelIndex KOTodoModel::getModelIndex( TodoTreeNode *node ) const
   return createIndex( node->mParentListPos, 0, node );
 }
 
-QModelIndex KOTodoModel::moveIfParentChanged( TodoTreeNode *curNode, const Item &aitem,
+QModelIndex KOTodoModel::moveIfParentChanged( TodoTreeNode *curNode, const Akonadi::Item &aitem,
                                               bool addParentIfMissing )
 {
-  const Todo::Ptr todo = Akonadi::todo( aitem );
+  const Todo::Ptr todo = CalendarSupport::todo( aitem );
   // find the model index of the changed incidence
   QModelIndex miChanged = getModelIndex( curNode );
 
@@ -344,19 +345,21 @@ QModelIndex KOTodoModel::moveIfParentChanged( TodoTreeNode *curNode, const Item 
   if ( !mFlatView ) {
     // in flat view, no todo has a parent
 
-    if ( !isInHierarchyLoop( todo.get() ) ) {
-      Incidence *inc = todo->relatedTo();
-      if ( inc && inc->type() == "Todo" ) {
-        newParent = Todo::Ptr( static_cast<Todo *>( inc )->clone() );
+    if ( !isInHierarchyLoop( todo ) ) {
+      const QString parentUid = todo->relatedTo();
+      Akonadi::Item parentItem = mCalendar->itemForIncidenceUid( parentUid );
+      Incidence::Ptr inc = CalendarSupport::incidence( parentItem );
+      if ( inc && inc->type() == Incidence::TypeTodo ) {
+        newParent = Todo::Ptr( static_cast<Todo *>( inc ->clone() ) );
       }
     }
   }
 
   // check if the relation to the parent has changed
-  if ( ( newParent == 0 && Akonadi::hasTodo( ttOldParent->mTodo ) )  ||  // became parentless  OR
-       ( newParent != 0 && !Akonadi::hasTodo( ttOldParent->mTodo ) ) ||  // gained a parent    OR
-       ( newParent != 0 && Akonadi::hasTodo( ttOldParent->mTodo ) &&     // changed parent
-         newParent->uid() != Akonadi::todo( ttOldParent->mTodo )->uid() ) ) {
+  if ( ( newParent == 0 && CalendarSupport::hasTodo( ttOldParent->mTodo ) )  ||  // became parentless  OR
+       ( newParent != 0 && !CalendarSupport::hasTodo( ttOldParent->mTodo ) ) ||  // gained a parent    OR
+       ( newParent != 0 && CalendarSupport::hasTodo( ttOldParent->mTodo ) &&     // changed parent
+         newParent->uid() != CalendarSupport::todo( ttOldParent->mTodo )->uid() ) ) {
 
     kDebug() << "parent changed";
 
@@ -365,7 +368,7 @@ QModelIndex KOTodoModel::moveIfParentChanged( TodoTreeNode *curNode, const Item 
     if ( newParent ) {
       Akonadi::Item newParentItem;
       newParentItem.setPayload<Todo::Ptr>(newParent);
-      ttNewParent = findTodo( Akonadi::incidence ( newParentItem )->uid() );
+      ttNewParent = findTodo( CalendarSupport::incidence ( newParentItem )->uid() );
       if ( !ttNewParent && addParentIfMissing ) {
         ttNewParent = insertTodo( newParentItem );
       }
@@ -417,27 +420,28 @@ KOTodoModel::TodoTreeNode *KOTodoModel::findTodo( const QString &uid ) const
   return mTodoUidHash.value( uid );
 }
 
-void KOTodoModel::expandTodoIfNeeded( const Item &todoItem )
+void KOTodoModel::expandTodoIfNeeded( const Akonadi::Item &todoItem )
 {
-  Todo::Ptr todo = Akonadi::todo( todoItem );
+  Todo::Ptr todo = CalendarSupport::todo( todoItem );
   if ( !todo ) {
     return;
   }
 
-  if ( todo->isOverdue() || isDueToday( todo.get() ) ) {
-    QModelIndex index = getModelIndex( findTodo( Akonadi::incidence( todoItem )->uid() ) );
+  if ( todo->isOverdue() || isDueToday( todo ) ) {
+    QModelIndex index = getModelIndex( findTodo( CalendarSupport::incidence( todoItem )->uid() ) );
     emit expandIndex( index );
   }
 }
 
-bool KOTodoModel::isInHierarchyLoop( const Todo *todo ) const
+bool KOTodoModel::isInHierarchyLoop( const Todo::Ptr &todo ) const
 {
   if ( !todo ) {
     return false;
   }
 
-  Incidence *i = todo->relatedTo();
-  QList<Incidence *> processedParents;
+  QString parentUid = todo->relatedTo();
+  Incidence::Ptr i = CalendarSupport::incidence( mCalendar->itemForIncidenceUid( parentUid ) );
+  QList<Incidence::Ptr > processedParents;
 
   // Lets iterate through all parents, if we find one with the same
   // uid then there's a loop.
@@ -449,7 +453,8 @@ bool KOTodoModel::isInHierarchyLoop( const Todo *todo ) const
       if ( !processedParents.contains( i ) ) {
         processedParents.append( i );
         // Next parent
-        i = i->relatedTo();
+        parentUid = todo->relatedTo();
+        i = CalendarSupport::incidence( mCalendar->itemForIncidenceUid( parentUid ) );
       } else {
         // There's a loop but this to-do isn't in it
         // the loop is at a higher level, e.g:
@@ -464,17 +469,19 @@ bool KOTodoModel::isInHierarchyLoop( const Todo *todo ) const
   return false;
 }
 
-KOTodoModel::TodoTreeNode *KOTodoModel::insertTodo( const Item &todoItem,
+KOTodoModel::TodoTreeNode *KOTodoModel::insertTodo( const Akonadi::Item &todoItem,
                                                     bool checkRelated )
 {
-  const Todo::Ptr todo = Akonadi::todo( todoItem );
-  if ( !mFlatView && checkRelated && todo && todo->relatedTo() ) {
-    Incidence *incidence = todo->relatedTo();
-    Todo *relatedTodo = dynamic_cast<Todo *>( incidence );
+  const Todo::Ptr todo = CalendarSupport::todo( todoItem );
+  if ( !mFlatView && checkRelated && todo && !todo->relatedTo().isEmpty() ) {
+    const QString parentUid = todo->relatedTo();
+    Akonadi::Item parentItem = mCalendar->itemForIncidenceUid( parentUid );
+    Incidence::Ptr incidence = CalendarSupport::incidence( parentItem );
+    Todo::Ptr relatedTodo = incidence.dynamicCast<Todo>();
     Q_ASSERT( relatedTodo );
 
     // check if there are recursively linked todos
-    if ( isInHierarchyLoop( todo.get() ) ) {
+    if ( isInHierarchyLoop( todo ) ) {
       // recursion detected, break recursion
       return insertTodo( todoItem, false );
     }
@@ -540,7 +547,7 @@ Qt::ItemFlags KOTodoModel::flags( const QModelIndex &index ) const
 
   ret |= Qt::ItemIsDragEnabled;
 
-  const Todo::Ptr todo = Akonadi::todo( node->mTodo );
+  const Todo::Ptr todo = CalendarSupport::todo( node->mTodo );
 
   if ( mCalendar->hasChangeRights( node->mTodo ) ) {
     // the following columns are editable:
@@ -640,7 +647,7 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
     return QVariant();
   }
 
-  const Todo::Ptr todo = Akonadi::todo( node->mTodo );
+  const Todo::Ptr todo = CalendarSupport::todo( node->mTodo );
 
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
@@ -699,9 +706,9 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
   if ( role == Qt::ToolTipRole ) {
     if ( KOPrefs::instance()->enableToolTips() ) {
       return QVariant( IncidenceFormatter::toolTipStr(
-                         Akonadi::displayName( node->mTodo.parentCollection() ),
-                         todo.get(), QDate(), true, KCalPrefs::instance()->timeSpec() ) );
-  } else {
+                         CalendarSupport::displayName( node->mTodo.parentCollection() ),
+                         todo, QDate(), true, CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
+    } else {
       return QVariant();
     }
   }
@@ -711,7 +718,7 @@ QVariant KOTodoModel::data( const QModelIndex &index, int role ) const
     if ( todo->isOverdue() ) {
       return QVariant(
         QBrush( KOPrefs::instance()->agendaCalendarItemsToDosOverdueBackgroundColor() ) );
-    } else if ( isDueToday( todo.get() ) ) {
+    } else if ( isDueToday( todo ) ) {
       return QVariant(
         QBrush( KOPrefs::instance()->agendaCalendarItemsToDosDueTodayBackgroundColor() ) );
     }
@@ -811,18 +818,18 @@ bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int 
   if ( !node->isValid() ) {
     return false;
   }
-  const Todo::Ptr todo = Akonadi::todo( node->mTodo );
+  const Todo::Ptr todo = CalendarSupport::todo( node->mTodo );
 
   if ( mCalendar->hasChangeRights( node->mTodo ) ) {
     Todo::Ptr oldTodo( todo->clone() );
-    Akonadi::IncidenceChanger::WhatChanged modified = Akonadi::IncidenceChanger::UNKNOWN_MODIFIED;
+    CalendarSupport::IncidenceChanger::WhatChanged modified = CalendarSupport::IncidenceChanger::UNKNOWN_MODIFIED;
 
     if ( role == Qt::CheckStateRole && index.column() == 0 ) {
       todo->setCompleted( static_cast<Qt::CheckState>( value.toInt() ) == Qt::Checked );
       if ( todo->recurs() ) {
-        modified = Akonadi::IncidenceChanger::COMPLETION_MODIFIED_WITH_RECURRENCE;
+        modified = CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED_WITH_RECURRENCE;
       } else {
-        modified = Akonadi::IncidenceChanger::COMPLETION_MODIFIED;
+        modified = CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED;
       }
     }
 
@@ -831,16 +838,16 @@ bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int 
         case SummaryColumn:
           if ( !value.toString().isEmpty() ) {
             todo->setSummary( value.toString() );
-            modified = Akonadi::IncidenceChanger::SUMMARY_MODIFIED;
+            modified = CalendarSupport::IncidenceChanger::SUMMARY_MODIFIED;
           }
           break;
         case PriorityColumn:
           todo->setPriority( value.toInt() );
-          modified = Akonadi::IncidenceChanger::PRIORITY_MODIFIED;
+          modified = CalendarSupport::IncidenceChanger::PRIORITY_MODIFIED;
           break;
         case PercentColumn:
           todo->setPercentComplete( value.toInt() );
-          modified = Akonadi::IncidenceChanger::COMPLETION_MODIFIED;
+          modified = CalendarSupport::IncidenceChanger::COMPLETION_MODIFIED;
           break;
         case DueDateColumn:
           {
@@ -848,21 +855,21 @@ bool KOTodoModel::setData( const QModelIndex &index, const QVariant &value, int 
             tmp.setDate( value.toDate() );
             todo->setDtDue( tmp );
             todo->setHasDueDate( value.toDate().isValid() );
-            modified = Akonadi::IncidenceChanger::DATE_MODIFIED;
+            modified = CalendarSupport::IncidenceChanger::DATE_MODIFIED;
           }
           break;
         case CategoriesColumn:
           todo->setCategories( value.toStringList() );
-          modified = Akonadi::IncidenceChanger::CATEGORY_MODIFIED;
+          modified = CalendarSupport::IncidenceChanger::CATEGORY_MODIFIED;
           break;
         case DescriptionColumn:
           todo->setDescription( value.toString() );
-          modified = Akonadi::IncidenceChanger::DESCRIPTION_MODIFIED;
+          modified = CalendarSupport::IncidenceChanger::DESCRIPTION_MODIFIED;
           break;
       }
     }
 
-    if ( modified != Akonadi::IncidenceChanger::UNKNOWN_MODIFIED ) {
+    if ( modified != CalendarSupport::IncidenceChanger::UNKNOWN_MODIFIED ) {
       mChanger->changeIncidence( oldTodo, node->mTodo, modified, 0 );
       // changeIncidence will eventually call the view's
       // changeIncidenceDisplay method, which in turn
@@ -896,14 +903,14 @@ QStringList KOTodoModel::mimeTypes() const
 
 QMimeData *KOTodoModel::mimeData( const QModelIndexList &indexes ) const
 {
-  Item::List items;
+  Akonadi::Item::List items;
   Q_FOREACH ( const QModelIndex &index, indexes ) {
     const TodoTreeNode * const node = static_cast<TodoTreeNode *>( index.internalPointer() );
     if ( node->isValid() && !items.contains( node->mTodo ) ) {
       items.push_back( node->mTodo );
     }
   }
-  return Akonadi::createMimeData( items, mCalendar->timeSpec() );
+  return CalendarSupport::createMimeData( items, mCalendar->timeSpec() );
 }
 
 bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
@@ -920,27 +927,28 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
 
   if ( mCalendar && mChanger &&
        ( ICalDrag::canDecode( data ) || VCalDrag::canDecode( data ) ) ) {
-    Akonadi::DndFactory dndFactory ( new CalendarAdaptor( mCalendar, 0 ), true );
-    Todo *t = dndFactory.createDropTodo( data );
-    Event *e = dndFactory.createDropEvent( data );
+    CalendarSupport::DndFactory dndFactory (
+      CalendarSupport::CalendarAdaptor::Ptr(
+        new CalendarSupport::CalendarAdaptor( mCalendar, 0 ) ), true );
+    Todo::Ptr t = dndFactory.createDropTodo( data );
+    Event::Ptr e = dndFactory.createDropEvent( data );
 
     if ( t ) {
       // we don't want to change the created todo, but the one which is already
       // stored in our calendar / tree
       TodoTreeNode *ttTodo = findTodo( t->uid() );
       Q_ASSERT( ttTodo ); //TODO if the todo is not found, just insert a new one
-      delete t;
-      Todo::Ptr todo = Akonadi::todo( ttTodo->mTodo );
+      Todo::Ptr todo = CalendarSupport::todo( ttTodo->mTodo );
 
       Todo::Ptr destTodo;
       if ( parent.isValid() ) {
         TodoTreeNode *node = static_cast<TodoTreeNode *>( parent.internalPointer() );
         if ( node->isValid() ) {
-          destTodo = Akonadi::todo( node->mTodo );
+          destTodo = CalendarSupport::todo( node->mTodo );
         }
       }
 
-      Incidence *tmp = destTodo.get();
+      Incidence::Ptr tmp = destTodo;
       while ( tmp ) {
         if ( tmp->uid() == todo->uid() ) {
           KMessageBox::information(
@@ -949,12 +957,13 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
             i18n( "Drop To-do" ), "NoDropTodoOntoItself" );
           return false;
         }
-        tmp = tmp->relatedTo();
+        const QString parentUid = tmp->relatedTo();
+        tmp = CalendarSupport::incidence( mCalendar->itemForIncidenceUid( parentUid ) );
       }
 
       Todo::Ptr oldTodo = Todo::Ptr( todo->clone() );
-      todo->setRelatedTo( destTodo.get() );
-      mChanger->changeIncidence( oldTodo, ttTodo->mTodo, Akonadi::IncidenceChanger::RELATION_MODIFIED, 0 );
+      todo->setRelatedTo( destTodo->uid() );
+      mChanger->changeIncidence( oldTodo, ttTodo->mTodo, CalendarSupport::IncidenceChanger::RELATION_MODIFIED, 0 );
 
       // again, no need to emit dataChanged, that's done by processChange
       return true;
@@ -969,7 +978,7 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
       }
 
       TodoTreeNode *node = static_cast<TodoTreeNode *>( parent.internalPointer() );
-      Todo::Ptr destTodo = Akonadi::todo( node->mTodo );
+      Todo::Ptr destTodo = CalendarSupport::todo( node->mTodo );
 
       if ( data->hasText() ) {
         QString text = data->text();
@@ -977,7 +986,7 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
         Todo::Ptr oldTodo = Todo::Ptr( destTodo->clone() );
 
         if( text.startsWith( QLatin1String( "file:" ) ) ) {
-          destTodo->addAttachment( new Attachment( text ) );
+          destTodo->addAttachment( Attachment::Ptr( new Attachment( text ) ) );
         } else {
           QStringList emails = KPIMUtils::splitAddressList( text );
           for ( QStringList::ConstIterator it = emails.constBegin();
@@ -985,11 +994,11 @@ bool KOTodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
             QString name, email, comment;
             if ( KPIMUtils::splitAddress( *it, name, email, comment ) ==
                  KPIMUtils::AddressOk ) {
-              destTodo->addAttendee( new Attendee( name, email ) );
+              destTodo->addAttendee( Attendee::Ptr( new Attendee( name, email ) ) );
             }
           }
         }
-        mChanger->changeIncidence( oldTodo, node->mTodo, Akonadi::IncidenceChanger::RELATION_MODIFIED, 0 );
+        mChanger->changeIncidence( oldTodo, node->mTodo, CalendarSupport::IncidenceChanger::RELATION_MODIFIED, 0 );
         return true;
       }
     }

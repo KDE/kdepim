@@ -21,6 +21,8 @@
 
 #include "editorconfig.h"
 
+#include <KCalCore/IncidenceBase>
+
 namespace IncidenceEditors {
 
 class INCIDENCEEDITORS_EXPORT KOrganizerEditorConfig : public IncidenceEditors::EditorConfig
@@ -45,7 +47,7 @@ class INCIDENCEEDITORS_EXPORT KOrganizerEditorConfig : public IncidenceEditors::
     virtual bool defaultTodoReminders() const;
     virtual bool defaultEventReminders() const;
     virtual QStringList activeDesignerFields() const;
-    virtual QStringList &templates( const QString &type );
+    virtual QStringList &templates( KCalCore::IncidenceBase::IncidenceType type );
 };
 
 } // IncidenceEditors

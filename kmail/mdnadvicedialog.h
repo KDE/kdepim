@@ -44,7 +44,7 @@ public:
   * Will also set the Akonadi::MDNStateAttribute on the given item
   *  to what the user has selected.
   */
-  QPair< bool, KMime::MDN::SendingMode > checkAndSetMDNInfo( Akonadi::Item item, KMime::MDN::DispositionType d );
+  QPair< bool, KMime::MDN::SendingMode > checkAndSetMDNInfo( const Akonadi::Item &item, KMime::MDN::DispositionType d );
 
   Akonadi::MDNStateAttribute::MDNSentState dispositionToSentState( KMime::MDN::DispositionType d );
 
@@ -52,25 +52,23 @@ public:
 private:
     MDNAdviceHelper(QObject* parent = 0) {}
     virtual ~MDNAdviceHelper() {}
-    
+
     int requestAdviceOnMDN( const char * what );
     MessageComposer::MDNAdvice questionIgnoreSend( const QString &text, bool canDeny );
-    
+
     static MDNAdviceHelper* s_instance;
-private slots:
-    void itemsReceived(Akonadi::Item::List);
 };
 
 class MDNAdviceDialog : public KDialog
 {
   Q_OBJECT
-  
-public:  
+
+public:
   MDNAdviceDialog( const QString &text, bool canDeny, QWidget *parent = 0 );
   ~MDNAdviceDialog();
 
-  MessageComposer::MDNAdvice result();
-  
+  MessageComposer::MDNAdvice result() const;
+
 private:
   MessageComposer::MDNAdvice m_result;
 

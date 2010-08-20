@@ -35,12 +35,11 @@
 #include <Akonadi/Session>
 #include <Akonadi/ItemFetchScope>
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/calendarmodel.h>
-#include <akonadi/kcal/incidencemimetypevisitor.h>
-#include <akonadi/kcal/utils.h>
+#include <calendarsupport/calendar.h>
+#include <calendarsupport/calendarmodel.h>
+#include <calendarsupport/utils.h>
 
-#include <KCal/Calendar>
+#include <kcalcore/calendar.h>
 
 #include <KApplication>
 #include <KConfig>
@@ -54,8 +53,7 @@
 #include <QtMaemo5/QMaemo5InformationBox>
 #endif
 
-using namespace Akonadi;
-using namespace KCal;
+using namespace KCalCore;
 
 KOAlarmClient::KOAlarmClient( QObject *parent )
   : QObject( parent ), mDocker( 0 ), mDialog( 0 )
@@ -76,23 +74,23 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
   }
 
   const KTimeZone zone = KSystemTimeZones::local();
-  Session *session = new Session( "KOAlarmClient", this );
-  ChangeRecorder *monitor = new ChangeRecorder( this );
+  Akonadi::Session *session = new Akonadi::Session( "KOAlarmClient", this );
+  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
   monitor->setSession( session );
   monitor->itemFetchScope().fetchFullPayload( true );
-  monitor->setCollectionMonitored( Collection::root() );
+  monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->fetchCollection( true );
   monitor->setMimeTypeMonitored( "text/calendar", true ); // FIXME: this one should not be needed, in fact it might cause the inclusion of free/busy, notes or other unwanted stuff
-  monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), true );
-  monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::todoMimeType(), true );
-  monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::journalMimeType(), true );
-  CalendarModel *calendarModel = new CalendarModel( monitor, this );
+  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
+  monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
+  monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
+  CalendarSupport::CalendarModel *calendarModel = new CalendarSupport::CalendarModel( monitor, this );
   //mCalendarModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
 
   KDescendantsProxyModel *flattener = new KDescendantsProxyModel(this);
   flattener->setSourceModel( calendarModel );
 
-  mCalendar = new Akonadi::Calendar( calendarModel, flattener,
+  mCalendar = new CalendarSupport::Calendar( calendarModel, flattener,
                                      zone.isValid() ? KDateTime::Spec( zone ) : KDateTime::ClockTime );
 
   connect( &mCheckTimer, SIGNAL(timeout()), SLOT(checkAlarms()) );
@@ -118,13 +116,13 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
         akonadiItemId = mCalendar->itemIdForIncidenceUid(uid);
       }
     } else {
-      akonadiItemId = Item::fromUrl( url ).id();
+      akonadiItemId = Akonadi::Item::fromUrl( url ).id();
     }
 
     if ( akonadiItemId >= 0 ) {
       const QDateTime dt = incGroup.readEntry( "RemindAt", QDateTime() );
-      Item i = mCalendar->incidence( Item::fromUrl( url ).id() );
-      if ( Akonadi::hasIncidence( i ) && !Akonadi::incidence( i )->alarms().isEmpty() ) {
+      Akonadi::Item i = mCalendar->incidence( Akonadi::Item::fromUrl( url ).id() );
+      if ( CalendarSupport::hasIncidence( i ) && !CalendarSupport::incidence( i )->alarms().isEmpty() ) {
         createReminder( mCalendar, i, dt, QString() );
       }
     }
@@ -161,20 +159,21 @@ void KOAlarmClient::checkAlarms()
   Alarm::List alarms = mCalendar->alarms( KDateTime( from, KDateTime::LocalZone ),
                                             KDateTime( mLastChecked, KDateTime::LocalZone ) );
 
-  foreach( Alarm* a, alarms ) {
-    const QString uid = a->parent()->uid();
+  foreach( Alarm::Ptr a, alarms ) {
+    const QString uid = a->parentUid();
     const Akonadi::Item::Id itemId = mCalendar->itemIdForIncidenceUid( uid );
     const Akonadi::Item incidence = mCalendar->incidence( itemId );
+
     createReminder( mCalendar, incidence, from, a->text() );
   }
 }
 
-void KOAlarmClient::createReminder( Akonadi::Calendar *calendar,
-                                    const Item &aitem,
+void KOAlarmClient::createReminder( CalendarSupport::Calendar *calendar,
+                                    const Akonadi::Item &aitem,
                                     const QDateTime &dt,
                                     const QString &displayText )
 {
-  if ( !Akonadi::hasIncidence( aitem ) ) {
+  if ( !CalendarSupport::hasIncidence( aitem ) ) {
     return;
   }
 
@@ -195,7 +194,7 @@ void KOAlarmClient::createReminder( Akonadi::Calendar *calendar,
   mDialog->addIncidence( aitem, dt, displayText );
   mDialog->wakeUp();
 #else
-  const Incidence::Ptr incidence = Akonadi::incidence( aitem );
+  const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   QMaemo5InformationBox::information( 0, incidence->summary(), QMaemo5InformationBox::NoTimeout );
 #endif
   saveLastCheckTime();
@@ -255,8 +254,10 @@ QStringList KOAlarmClient::dumpAlarms()
          end.toString();
 
   Alarm::List alarms = mCalendar->alarms( start, end );
-  foreach( Alarm* a, alarms ) {
-    lst << QString( "  " ) + a->parent()->summary() + " (" + a->time().toString() + ')';
+  foreach( Alarm::Ptr a, alarms ) {
+    const Akonadi::Item::Id itemId = mCalendar->itemIdForIncidenceUid( a->parentUid() );
+    const Incidence::Ptr parentIncidence = CalendarSupport::incidence( mCalendar->incidence( itemId ) );
+    lst << QString( "  " ) + parentIncidence->summary() + " (" + a->time().toString() + ')';
   }
 
   return lst;

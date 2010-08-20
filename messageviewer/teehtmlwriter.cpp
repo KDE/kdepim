@@ -30,6 +30,8 @@
 */
 
 
+#include <config-messageviewer.h>
+
 #include "teehtmlwriter.h"
 
 #include <kdebug.h>
