@@ -150,6 +150,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
                               KActionCollection *actionCollection )
   : QObject(aParent),
     mNodeHelper( new NodeHelper ),
+    mViewer( 0 ),
     mFindBar( 0 ),
     mAttachmentStrategy( 0 ),
     mHeaderStrategy( 0 ),
