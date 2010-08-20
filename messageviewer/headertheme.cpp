@@ -253,7 +253,7 @@ QString HeaderTheme::setTheming( const QString &themeName, KMime::Message *messa
 
   if ( GlobalSettings::self()->showSpamStatus() ) {
     SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
-    for ( SpamScoresIterator it = scores.begin(); it != scores.end(); ++it )
+    for ( SpamScores::const_iterator it = scores.constBegin(); it != scores.constEnd(); ++it )
       spamHTML += (*it).agent() + ' ' +
                    drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
   }
