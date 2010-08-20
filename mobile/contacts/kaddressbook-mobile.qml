@@ -370,6 +370,13 @@ KPIM.MainView {
                 favoriteSelector.visible = true;
                 mainWorkView.visible = false;
               }
+            },
+            KPIM.ScriptAction {
+              name : "add_as_favorite"
+              script : {
+                actionPanelNew.collapse();
+                application.saveFavorite();
+              }
             }
           ]
 
