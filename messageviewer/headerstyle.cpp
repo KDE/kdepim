@@ -466,8 +466,8 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
   QString spamHTML;
 
   if ( GlobalSettings::self()->showSpamStatus() ) {
-    SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
-    for ( SpamScoresIterator it = scores.begin(); it != scores.end(); ++it )
+    const SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
+    for ( SpamScores::const_iterator it = scores.begin(), end = scores.end() ; it != end ; ++it )
       spamHTML += (*it).agent() + ' ' +
                    drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
   }
