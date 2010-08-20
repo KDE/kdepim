@@ -22,7 +22,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include "../incidenceviewer.h"
+#include "calendarsupport/incidenceviewer.h"
 #include <mobile/lib/declarativeakonadiitem.h>
 
 namespace CalendarSupport {

@@ -6,6 +6,7 @@ include_directories(
 
 set(mobileui_calendar_SRCS
     declarativeeditors.cpp
+    kcalitembrowseritem.cpp
     incidenceview.cpp
 )
 

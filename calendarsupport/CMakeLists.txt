@@ -5,10 +5,6 @@ include_directories(
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
-if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
-  add_subdirectory(qml)
-endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
-
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS

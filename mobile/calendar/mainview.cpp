@@ -41,6 +41,7 @@
 
 #include "agendaviewitem.h"
 #include "calendar/incidenceview.h"
+#include "calendar/kcalitembrowseritem.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -50,8 +51,9 @@
 #include <QDBusConnection>
 
 using namespace Akonadi;
-using namespace CalendarSupport;
+using CalendarSupport::KCalPrefs;
 
+QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( EventViews::AgendaView )
 
 MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
@@ -72,6 +74,7 @@ void MainView::delayedInit()
   addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 
+  qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
 
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
