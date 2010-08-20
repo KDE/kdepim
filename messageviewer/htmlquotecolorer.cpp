@@ -22,9 +22,11 @@
 
 #include <KDebug>
 
+#ifndef MESSAGEVIEWER_NO_WEBKIT
 #include <QWebPage>
 #include <QWebFrame>
 #include <QWebElement>
+#endif
 
 using namespace MessageViewer;
 
@@ -34,6 +36,7 @@ HTMLQuoteColorer::HTMLQuoteColorer()
 
 QString HTMLQuoteColorer::process( const QString &htmlSource )
 {
+#ifndef MESSAGEVIEWER_NO_WEBKIT
   // Create a DOM Document from the HTML source
   QWebPage page(0);
   QWebFrame *frame = page.mainFrame();
@@ -124,9 +127,12 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
   const QWebElement body = frame->documentElement().findFirst("body");
   
   return body.toInnerXml();
+#else
+  return htmlSource;
+#endif
 }
 
-void HTMLQuoteColorer::setQuoteColor( int level, const QColor& color )
+void HTMLQuoteColorer::setQuoteColor( unsigned int level, const QColor& color )
 {
   if ( level < 3 )
     mQuoteColors[level] = color;

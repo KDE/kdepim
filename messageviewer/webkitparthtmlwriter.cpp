@@ -72,7 +72,10 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
   // clear the widget:
   mHtmlView->setUpdatesEnabled( false );
   mHtmlView->scrollUp( 10 );
+#ifndef MESSAGEVIEWER_NO_WEBKIT
+  // PENDING(marc) push into MailWebView
   mHtmlView->load( QUrl() );
+#endif
   mState = Begun;
 }
 
@@ -127,6 +130,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
   // FIXME: instead of patching around in the HTML source, this should
   // be replaced by a custom QNetworkAccessManager (for QWebView), or
   // virtual loadResource() (for QTextBrowser)
+#ifndef MESSAGEVIEWER_NO_WEBKIT
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
   QWebElementCollection images = root.findAll( "img" );
   QWebElement image;
@@ -142,6 +146,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
       }
     }
   }
+#endif
 }
 
 
