@@ -48,8 +48,8 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   incidencedefaults.cpp
 
-  ../categoryconfig.cpp
-  ../categoryhierarchyreader.cpp
+  categoryconfig.cpp
+  categoryhierarchyreader.cpp
   ../editorconfig.cpp
   ../korganizereditorconfig.cpp
 )

@@ -26,9 +26,8 @@
 #include "editoralarms.h"
 #include "editorattachments.h"
 #include "editorconfig.h"
-
-#include "categoryconfig.h"
 #include "categoryselectdialog.h"
+#include "incidenceeditor-ng/categoryconfig.h"
 
 #include <libkdepim/kdateedit.h>
 

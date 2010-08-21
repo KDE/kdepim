@@ -21,9 +21,11 @@
 */
 
 #include "categoryselectdialog.h"
-#include "categoryhierarchyreader.h"
 #include "autochecktreewidget.h"
-#include "categoryconfig.h"
+
+#include "incidenceeditor-ng/categoryhierarchyreader.h"
+#include "incidenceeditor-ng/categoryconfig.h"
+
 #include "ui_categoryselectdialog_base.h"
 
 #include <KLocale>
@@ -185,7 +187,7 @@ CategorySelectDialog::CategorySelectDialog( CategoryConfig* cc, QWidget *parent 
   setButtons( Ok | Apply | Cancel | Help );
   showButtonSeparator( true );
 #endif
-  
+
   QWidget *page = new QWidget;
   setMainWidget( page );
   QVBoxLayout *lay = new QVBoxLayout( page );
