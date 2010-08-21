@@ -42,8 +42,8 @@ class InvitationDispatcherPrivate
 
   public: /// Functions
     InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar );
-    bool myAttendeeStatusChanged( const Incidence::Ptr &newInc,
-                                  const Incidence::Ptr &oldInc );
+    bool myAttendeeStatusChanged( const Incidence::Ptr &oldInc,
+                                  const Incidence::Ptr &newInc );
     void processItemSave( EditorItemManager::SaveAction action );
     void sentEventInvitationMessage();
     void sentEventModifiedMessage();
@@ -56,8 +56,8 @@ InvitationDispatcherPrivate::InvitationDispatcherPrivate( CalendarSupport::Calen
   , mIsCounterProposal( false )
 { }
 
-bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr &newInc,
-                                                           const Incidence::Ptr &oldInc )
+bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr &oldInc,
+                                                           const Incidence::Ptr &newInc )
 {
   Attendee::Ptr oldMe( oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
   Attendee::Ptr newMe( newInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
@@ -95,8 +95,8 @@ void InvitationDispatcherPrivate::sentEventInvitationMessage()
 
 void InvitationDispatcherPrivate::sentEventModifiedMessage()
 {
-  const Incidence::Ptr newInc = CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
   const Incidence::Ptr oldInc = CalendarSupport::incidence( mManager->item( EditorItemManager::BeforeSave ) );
+  const Incidence::Ptr newInc = CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
 
   InvitationHandler::SendStatus status = InvitationHandler::Success;
   if ( mIsCounterProposal ) {
