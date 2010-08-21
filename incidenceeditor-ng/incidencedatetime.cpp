@@ -99,16 +99,6 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
   if ( mUi->mTimeZoneComboEnd->currentIndex() == 0 ) // Floating
     mInitialEndDT.setTimeSpec( mInitialEndDT.toLocalZone().timeSpec() );
 
-  setTimeZonesVisibility( false );
-  if ( mUi->mTimeZoneComboStart->isEnabled()
-       && ( mUi->mTimeZoneComboStart->currentIndex() == 0
-            || ! mUi->mTimeZoneComboStart->selectedTimeSpec().isLocalZone() ) )
-    setTimeZonesVisibility( true );
-  if ( mUi->mTimeZoneComboEnd->isEnabled()
-       && ( mUi->mTimeZoneComboEnd->currentIndex() == 0
-            || ! mUi->mTimeZoneComboEnd->selectedTimeSpec().isLocalZone() ) )
-    setTimeZonesVisibility( true );
-
   mWasDirty = false;
 }
 
