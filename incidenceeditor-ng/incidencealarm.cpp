@@ -326,10 +326,10 @@ QString IncidenceAlarm::stringForAlarm( const KCalCore::Alarm::Ptr &alarm )
                      alarm->endOffset().asSeconds() / 60; // make minutes
 
   int useoffset = offset;
-  if ( offset % ( 24 * 60 ) == 0 && offset > 0 ) { // divides evenly into days?
+  if ( offset % ( 24 * 60 ) == 0 && offset != 0 ) { // divides evenly into days?
     useoffset =  offset / 60 / 24;
     offsetUnit = i18nc( "The alarm is set to X days before/after the event", "days" );
-  } else if ( offset % 60 == 0 && offset > 0 ) { // divides evenly into hours?
+  } else if ( offset % 60 == 0 && offset != 0 ) { // divides evenly into hours?
     offsetUnit = i18nc( "The alarm is set to X hours before/after the event", "hours" );
     useoffset = offset / 60;
   }
