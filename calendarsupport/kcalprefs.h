@@ -74,11 +74,7 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
     void setTimeSpec( const KDateTime::Spec &spec );
     KDateTime::Spec timeSpec();
 
-    QString mMailTransport;
-
-    // Groupware passwords
-    QString mPublishPassword;
-    QString mRetrievePassword;
+    QString mailTransport() const;
 
     Akonadi::Entity::Id defaultCalendarId() const;
     void setDefaultCalendarId( const Akonadi::Entity::Id );
