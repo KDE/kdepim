@@ -84,9 +84,8 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
     void setDefaultCalendarId( const Akonadi::Entity::Id );
 
   private:
-    KDateTime::Spec mTimeSpec;
-
-    Akonadi::Entity::Id mDefaultCalendarId;
+    class Private;
+    Private *const d;
 };
 
 }

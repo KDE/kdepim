@@ -38,13 +38,25 @@ using namespace CalendarSupport;
 
 K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 
-KCalPrefs::KCalPrefs() : KCalPrefsBase()
+
+class KCalPrefs::Private
+{
+  public:
+    Private() : mDefaultCalendarId( -1 )
+    {
+    }
+
+    KDateTime::Spec mTimeSpec;
+    Akonadi::Entity::Id mDefaultCalendarId;
+};
+
+KCalPrefs::KCalPrefs() : KCalPrefsBase(), d( new Private() )
 {
 }
 
 KCalPrefs::~KCalPrefs()
 {
-  kDebug();
+  delete d;
 }
 
 KCalPrefs *KCalPrefs::instance()
@@ -87,17 +99,17 @@ KDateTime::Spec KCalPrefs::timeSpec()
 
 void KCalPrefs::setTimeSpec( const KDateTime::Spec &spec )
 {
-  mTimeSpec = spec;
+  d->mTimeSpec = spec;
 }
 
 Akonadi::Entity::Id KCalPrefs::defaultCalendarId() const
 {
-  return mDefaultCalendarId;
+  return d->mDefaultCalendarId;
 }
 
 void KCalPrefs::setDefaultCalendarId( const Akonadi::Entity::Id id )
 {
-  mDefaultCalendarId = id;
+  d->mDefaultCalendarId = id;
 }
 
 void KCalPrefs::setTimeZoneDefault()
@@ -110,7 +122,7 @@ void KCalPrefs::setTimeZoneDefault()
 
   kDebug () << "----- time zone:" << zone.name();
 
-  mTimeSpec = zone;
+  d->mTimeSpec = zone;
 }
 
 void KCalPrefs::fillMailDefaults()
@@ -133,12 +145,12 @@ void KCalPrefs::usrReadConfig()
   KConfigGroup generalConfig( config(), "General" );
   mMailTransport = generalConfig.readEntry( "MailTransport", QString() );
 
-  if ( !mTimeSpec.isValid() ) {
+  if ( !d->mTimeSpec.isValid() ) {
     setTimeZoneDefault();
   }
 
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
+  d->mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
 
 #if 0
   config()->setGroup( "FreeBusy" );
