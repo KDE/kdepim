@@ -910,8 +910,6 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
 
 // #####################
 
-#ifdef KDEPIM_MOBILE_UI
-
 class MobileHeaderStyle : public HeaderStyle {
   friend class HeaderStyle;
 protected:
@@ -975,8 +973,6 @@ QString MobileHeaderStyle::format( KMime::Message *message ) const
   return headerStr;
 }
 
-#endif
-
 // #####################
 
 //
@@ -999,9 +995,7 @@ HeaderStyle * HeaderStyle::create( Type type ) {
   case Plain:  return plain();
   case Fancy:   return fancy();
   case Enterprise: return enterprise();
-#ifdef KDEPIM_MOBILE_UI
   case Mobile: return mobile();
-#endif
   }
   kFatal() << "Unknown header style ( type ==" << (int)type << ") requested!";
   return 0; // make compiler happy
@@ -1012,9 +1006,7 @@ HeaderStyle * HeaderStyle::create( const QString & type ) {
   if ( lowerType == "brief" ) return brief();
   if ( lowerType == "plain" )  return plain();
   if ( lowerType == "enterprise" )  return enterprise();
-#ifdef KDEPIM_MOBILE_UI
   if ( lowerType ==  "mobile" )  return mobile();
-#endif
   //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
@@ -1025,9 +1017,7 @@ HeaderStyle * briefStyle = 0;
 HeaderStyle * plainStyle = 0;
 HeaderStyle * fancyStyle = 0;
 HeaderStyle * enterpriseStyle = 0;
-#ifdef KDEPIM_MOBILE_UI
 HeaderStyle * mobileStyle = 0;
-#endif
 
 HeaderStyle * HeaderStyle::brief() {
   if ( !briefStyle )
@@ -1053,13 +1043,11 @@ HeaderStyle * HeaderStyle::enterprise() {
   return enterpriseStyle;
 }
 
-#ifdef KDEPIM_MOBILE_UI
 HeaderStyle * HeaderStyle::mobile() {
   if ( !mobileStyle )
     mobileStyle = new MobileHeaderStyle();
   return mobileStyle;
 }
-#endif
 
 QString HeaderStyle::dateStr(const KDateTime &dateTime)
 {

@@ -37,8 +37,6 @@
 
 using namespace MessageViewer;
 
-static double sDirectionThreshHold = 8.5; /// Threshold in pixels
-
 MessageViewItem::MessageViewItem( QDeclarativeItem* parent )
   : DeclarativeAkonadiItem( parent )
 {

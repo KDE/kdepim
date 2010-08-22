@@ -67,10 +67,8 @@ public:
     Brief,
     Plain,
     Fancy,
-    Enterprise
-#ifdef KDEPIM_MOBILE_UI
-    , Mobile
-#endif
+    Enterprise,
+    Mobile
   };
 
   static HeaderStyle * create( Type type );
@@ -80,9 +78,7 @@ public:
   static HeaderStyle * plain();
   static HeaderStyle * fancy();
   static HeaderStyle * enterprise();
-#ifdef KDEPIM_MOBILE_UI
   static HeaderStyle * mobile();
-#endif
 
   //
   // Methods for handling the styles:
