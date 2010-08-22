@@ -293,7 +293,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   QWidget *dummyAllDayRight = new QWidget( d->mAllDayFrame );
 
   // Create time labels
-  d->mTimeLabelsZone = new TimeLabelsZone( this, this, d->mAgenda );
+  d->mTimeLabelsZone = new TimeLabelsZone( this, preferences(), d->mAgenda );
   d->mAgendaLayout->addWidget( d->mTimeLabelsZone, 1, 0 );
 
   // Scrolling

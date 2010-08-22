@@ -28,16 +28,21 @@
 
 #include "eventviews_export.h"
 
+
+#include <prefs.h>
 #include <KDateTime>
 
 #include <QFrame>
+
+#include <boost/shared_ptr.hpp>
 
 namespace EventViews
 {
 
 class Agenda;
-class EventView;
 class TimeLabelsZone;
+
+typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 {
@@ -45,9 +50,9 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
   public:
     typedef QList<TimeLabels *> List;
 
-    explicit TimeLabels( const KDateTime::Spec &spec, int rows,
-                         EventView *eventView,
-                         TimeLabelsZone *parent = 0, Qt::WFlags f = 0 );
+    TimeLabels( const KDateTime::Spec &spec, int rows,
+                const PrefsPtr &preferences ,
+                TimeLabelsZone *parent = 0, Qt::WFlags f = 0 );
 
     /** Calculates the minimum width */
     virtual int minimumWidth() const;
@@ -94,9 +99,9 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
     int mRows;
     double mCellHeight;
     int mMiniWidth;
-    EventView *mEventView;
     Agenda *mAgenda;
     TimeLabelsZone *mTimeLabelsZone;
+    PrefsPtr mPrefs;
 
     QFrame *mMousePos;  // shows a marker for the current mouse position in y direction
 };

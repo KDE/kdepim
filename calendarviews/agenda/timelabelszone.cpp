@@ -35,8 +35,8 @@
 
 using namespace EventViews;
 
-TimeLabelsZone::TimeLabelsZone( QWidget *parent, EventView *eventView, Agenda *agenda )
-  : QWidget( parent ), mAgenda( agenda ), mEventView( eventView ),
+TimeLabelsZone::TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda )
+  : QWidget( parent ), mAgenda( agenda ), mPrefs( preferences ),
     mParent( dynamic_cast<AgendaView*>( parent ) )
 {
   mTimeLabelsLayout = new QHBoxLayout( this );
@@ -66,9 +66,9 @@ void TimeLabelsZone::reset()
 
 void TimeLabelsZone::init()
 {
-  addTimeLabels( mEventView->preferences()->timeSpec() );
+  addTimeLabels( mPrefs->timeSpec() );
 
-  foreach ( const QString &zoneStr, mEventView->preferences()->timeScaleTimezones() ) {
+  foreach ( const QString &zoneStr, mPrefs->timeScaleTimezones() ) {
     KTimeZone zone = KSystemTimeZones::zone( zoneStr );
     if ( zone.isValid() ) {
       addTimeLabels( zone );
@@ -79,7 +79,7 @@ void TimeLabelsZone::init()
 void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
 {
   QScrollArea *area = new QScrollArea( this );
-  TimeLabels *labels = new TimeLabels( spec, 24, mEventView, this );
+  TimeLabels *labels = new TimeLabels( spec, 24, mPrefs, this );
   mTimeLabelsList.prepend( area );
   area->setWidget( labels );
   area->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
