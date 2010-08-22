@@ -977,36 +977,6 @@ QColor Prefs::resourceColor( const QString &cal )
   }
 }
 
-QString Prefs::fullName() const
-{
-  QString tusername;
-  if ( d->getBool( d->mBaseConfig.emailControlCenterItem() ) ) {
-    KEMailSettings settings;
-    tusername = settings.getSetting( KEMailSettings::RealName );
-  } else {
-    tusername = d->getString( d->mBaseConfig.userNameItem() );
-  }
-
-  // Quote the username as it might contain commas and other quotable chars.
-  tusername = KPIMUtils::quoteNameIfNecessary( tusername );
-
-  QString tname, temail;
-  // ignore the return value from extractEmailAddressAndName() because
-  // it will always be false since tusername does not contain "@domain".
-  KPIMUtils::extractEmailAddressAndName( tusername, temail, tname );
-  return tname;
-}
-
-QString Prefs::email() const
-{
-  if ( d->getBool( d->mBaseConfig.emailControlCenterItem() ) ) {
-    KEMailSettings settings;
-    return settings.getSetting( KEMailSettings::EmailAddress );
-  } else {
-    return d->getString( d->mBaseConfig.userEmailItem() );
-  }
-}
-
 QStringList Prefs::timeScaleTimezones() const
 {
   return d->mBaseConfig.timeScaleTimezones();

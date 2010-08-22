@@ -151,11 +151,6 @@ class EVENTVIEWS_EXPORT Prefs
 
   public:
     // preferences data
-    void setFullName( const QString & );
-    QString fullName() const;
-    void setEmail( const QString & );
-    QString email() const;
-
     void setCategoryColor( const QString &cat, const QColor &color );
     QColor categoryColor( const QString &cat ) const;
     bool hasCategoryColor( const QString &cat ) const;
