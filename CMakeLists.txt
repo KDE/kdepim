@@ -8,6 +8,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
+option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 
 # cmake would not find kde for xcompile if that is not set
@@ -24,6 +25,7 @@ else(KDEPIM_ENTERPRISE_BUILD)
   # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING is disabled.
   if(KDEPIM_ONLY_KLEO)
     set(KDEPIM_BUILD_EVERYTHING FALSE)
+    set(KDEPIM_MOBILE_UI FALSE)
     set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
     message(STATUS "Only libkleo and Kleopatra will be built.")
   endif(KDEPIM_ONLY_KLEO)
@@ -162,7 +164,6 @@ else(KDEPIM_ONLY_KLEO)
 
 ############### Desktop vs. Mobile options ##############
 
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 if (KDEPIM_MOBILE_UI)
   macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" TRUE "4.7" "Required for building mobile UI")
   add_definitions( -DKDEPIM_MOBILE_UI )
