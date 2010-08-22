@@ -174,10 +174,6 @@ class EVENTVIEWS_EXPORT Prefs
     QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
 
-    QString defaultCalendar() const;
-    void setDefaultCollection( const Akonadi::Collection& );
-    Akonadi::Collection defaultCollection() const;
-
   private:
     class Private;
     Private *const d;

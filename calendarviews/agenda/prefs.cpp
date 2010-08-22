@@ -918,21 +918,6 @@ bool Prefs::hasCategoryColor( const QString &cat ) const
     return d->mBaseConfig.mCategoryColors[ cat ].isValid();
 }
 
-QString Prefs::defaultCalendar() const
-{
-  return d->mBaseConfig.defaultCalendar();
-}
-
-Akonadi::Collection Prefs::defaultCollection() const
-{
-  return d->mBaseConfig.defaultCollection();
-}
-
-void Prefs::setDefaultCollection( const Akonadi::Collection& col )
-{
-  d->mBaseConfig.setDefaultCollection( col );
-}
-
 void Prefs::setResourceColor ( const QString &cal, const QColor &color )
 {
   d->mBaseConfig.setResourceColor( cal, color );
