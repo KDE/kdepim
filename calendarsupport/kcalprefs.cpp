@@ -46,9 +46,9 @@ class KCalPrefs::Private
     {
     }
 
-    // Groupware passwords
-    QString mPublishPassword;
-    QString mRetrievePassword;
+    // Groupware passwords - deprecated !?
+    // QString mPublishPassword;
+    // QString mRetrievePassword;
 
     QString mMailTransport;
 

@@ -164,13 +164,6 @@ class EVENTVIEWS_EXPORT Prefs
     void setHtmlExportFile( const QString &fileName );
     QString htmlExportFile() const;
 
-    // Groupware passwords
-    void setPublishPassword( const QString &password );
-    QString publishPassword() const;
-
-    void setRetrievePassword( const QString &password );
-    QString retrievePassword() const;
-
     QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
 

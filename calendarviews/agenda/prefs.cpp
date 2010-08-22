@@ -75,10 +75,6 @@ class BaseConfig : public PrefsBase
   public:
     QString mHtmlExportFile;
 
-    // Groupware passwords
-    QString mPublishPassword;
-    QString mRetrievePassword;
-
     QHash<QString,QColor> mCategoryColors;
     QColor mDefaultCategoryColor;
 
@@ -842,26 +838,6 @@ void Prefs::setHtmlExportFile( const QString &fileName )
 QString Prefs::htmlExportFile() const
 {
   return d->mBaseConfig.mHtmlExportFile;
-}
-
-void Prefs::setPublishPassword( const QString &password )
-{
-  d->mBaseConfig.mPublishPassword = password;
-}
-
-QString Prefs::publishPassword() const
-{
-  return d->mBaseConfig.mPublishPassword;
-}
-
-void Prefs::setRetrievePassword( const QString &password )
-{
-  d->mBaseConfig.mRetrievePassword = password;
-}
-
-QString Prefs::retrievePassword() const
-{
-  return d->mBaseConfig.mRetrievePassword;
 }
 
 void Prefs::setCategoryColor( const QString &cat, const QColor &color )
