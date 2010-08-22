@@ -181,7 +181,11 @@ void MessageAnalyzer::processPart(KMime::Content* content)
   // non plain text main body part, let strigi figure out what to do about that
   else if ( !m_mainBodyPart ) {
     m_mainBodyPart = content;
+#if !(KDE_IS_VERSION( 4, 5, 50 ))
     m_parent->indexData( m_email.uri(), content->decodedContent(), m_item.modificationTime() );
+#else
+#warning Fix attachment indexing once Nepomuk adds the necessary interface again
+#endif
   }
 
   // attachment -> delegate to strigi
