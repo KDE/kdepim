@@ -155,12 +155,6 @@ class EVENTVIEWS_EXPORT Prefs
     QString fullName() const;
     void setEmail( const QString & );
     QString email() const;
-    /// Returns all email addresses for the user.
-    QStringList allEmails() const;
-    /// Returns all email addresses together with the full username for the user.
-    QStringList fullEmails() const;
-    /// Return true if the given email belongs to the user
-    bool thatIsMe( const QString &email ) const;
 
     void setCategoryColor( const QString &cat, const QColor &color );
     QColor categoryColor( const QString &cat ) const;

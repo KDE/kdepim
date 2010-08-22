@@ -2,6 +2,8 @@ include_directories(
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_BINARY_DIR}/libkdepim
+    ${CMAKE_SOURCE_DIR}/calendarsupport
+    ${CMAKE_BINARY_DIR}/calendarsupport
     ${CMAKE_SOURCE_DIR}/calendarviews/agenda
 )
 

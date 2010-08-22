@@ -55,8 +55,12 @@ namespace KCalCore {
 }
 
 namespace KHolidays {
-    class HolidayRegion;
-    typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
+  class HolidayRegion;
+  typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
+}
+
+namespace CalendarSupport {
+  class KCalPrefs;
 }
 
 class KConfigGroup;
@@ -68,6 +72,10 @@ namespace EventViews
 {
   class Prefs;
   typedef boost::shared_ptr<Prefs> PrefsPtr;
+
+
+  typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
+
 
 /**
   EventView is the abstract base class from wich all other
@@ -113,8 +121,10 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual CalendarSupport::Calendar *calendar() const;
 
     virtual void setPreferences( const PrefsPtr &preferences );
-
     PrefsPtr preferences() const;
+
+    virtual void setKCalPreferences( const KCalPrefsPtr &preferences );
+    KCalPrefsPtr kcalPreferences() const;
 
     CalendarSupport::CalendarSearch* calendarSearch() const;
 

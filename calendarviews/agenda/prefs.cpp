@@ -30,11 +30,6 @@
 
 #include "prefs_base.h"
 
-//TODO_SPLIT
-//#include "kocore.h"
-
-//#include "categoryconfig.h"
-
 #include <akonadi/collection.h>
 
 #include <kmime/kmime_header_parsing.h>
@@ -1010,89 +1005,6 @@ QString Prefs::email() const
   } else {
     return d->getString( d->mBaseConfig.userEmailItem() );
   }
-}
-
-QStringList Prefs::allEmails() const
-{
-  // Grab emails from the email identities
-  QStringList lst;/* = KOCore::self()->identityManager()->allEmails();
-  // Add emails configured in korganizer
-  lst += mAdditionalMails;
-  // Add the email entered as the userEmail here
-  lst += email();
-                  */
-  // Warning, this list could contain duplicates.
-  return lst;
-}
-
-QStringList Prefs::fullEmails() const
-{
-  QStringList fullEmails;
-  /*
-  // The user name and email from the config dialog:
-  fullEmails << QString( "%1 <%2>" ).arg( fullName() ).arg( email() );
-
-  QStringList::Iterator it;
-  // Grab emails from the email identities
-  IdentityManager *idmanager = KOCore::self()->identityManager();
-  QStringList lst = idmanager->identities();
-  IdentityManager::ConstIterator it1;
-  for ( it1 = idmanager->begin(); it1 != idmanager->end(); ++it1 ) {
-    fullEmails << (*it1).fullEmailAddr();
-  }
-  // Add emails configured in korganizer
-  lst = mAdditionalMails;
-  for ( it = lst.begin(); it != lst.end(); ++it ) {
-    fullEmails << QString( "%1 <%2>" ).arg( fullName() ).arg( *it );
-  }
-
-  // Warning, this list could contain duplicates.
-  // */
-  return fullEmails;
-}
-
-bool Prefs::thatIsMe(const QString &_email ) const
-{
-  // TODO_SPLIT: review this
-
-  // NOTE: this method is called for every created agenda view item,
-  // so we need to keep performance in mind
-
-  /* identityManager()->thatIsMe() is quite expensive since it does parsing of
-     _email in a way which is unnecessarily complex for what we can have here,
-     so we do that ourselves. This makes sense since this
-
-  if ( KOCore::self()->identityManager()->thatIsMe( _email ) ) {
-    return true;
-  }
-  */
-
-  // in case email contains a full name, strip it out.
-  // the below is the simpler but slower version of the following code:
-  // const QString email = KPIM::getEmailAddress( _email );
-/*  const QByteArray tmp = _email.toUtf8();
-  const char *cursor = tmp.constData();
-  const char *end = tmp.data() + tmp.length();
-  KMime::Types::Mailbox mbox;
-  KMime::HeaderParsing::parseMailbox( cursor, end, mbox );
-  const QString email = mbox.addrSpec().asString();
-
-  if ( this->email() == email ) {
-    return true;
-  }
-
-  for ( IdentityManager::ConstIterator it = KOCore::self()->identityManager()->begin();
-        it != KOCore::self()->identityManager()->end(); ++it ) {
-    if ( email == (*it).emailAddr() ) {
-      return true;
-    }
-  }
-
-  if ( mAdditionalMails.contains( email ) ) {
-    return true;
-  }
-*/
-  return false;
 }
 
 QStringList Prefs::timeScaleTimezones() const
