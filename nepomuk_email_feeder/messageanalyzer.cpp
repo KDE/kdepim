@@ -37,6 +37,7 @@
 
 #include <kmime/kmime_message.h>
 
+#include <kglobal.h>
 #include <klocalizedstring.h>
 
 #include <Nepomuk/Resource>
@@ -199,7 +200,11 @@ void MessageAnalyzer::processPart(KMime::Content* content)
     if ( content->contentDescription( false ) && !content->contentDescription()->asUnicodeString().isEmpty() )
       attachment.addProperty( Vocabulary::NIE::description(), Soprano::LiteralValue( content->contentDescription()->asUnicodeString() ) );
     m_email.addAttachment( attachment );
+#if !(KDE_IS_VERSION( 4, 5, 50 ))
     m_parent->indexData( attachmentUrl, content->decodedContent(), m_item.modificationTime() );
+#else
+#warning Fix attachment indexing once Nepomuk adds the necessary interface again
+#endif
   }
 
   if ( shouldResetModel ) {
