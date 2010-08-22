@@ -161,9 +161,6 @@ class EVENTVIEWS_EXPORT Prefs
     void setTimeSpec( const KDateTime::Spec &spec );
     KDateTime::Spec timeSpec() const;
 
-    void setHtmlExportFile( const QString &fileName );
-    QString htmlExportFile() const;
-
     QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
 

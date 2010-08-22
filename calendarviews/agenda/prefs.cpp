@@ -73,8 +73,6 @@ class BaseConfig : public PrefsBase
     QStringList timeScaleTimezones() const;
 
   public:
-    QString mHtmlExportFile;
-
     QHash<QString,QColor> mCategoryColors;
     QColor mDefaultCategoryColor;
 
@@ -110,11 +108,6 @@ BaseConfig::BaseConfig() : PrefsBase()
   // make it a bit smaller
   mDefaultMonthViewFont.setPointSize(
     qMax( mDefaultMonthViewFont.pointSize() - 2, 6 ) );
-
-  // TODO move this to the kcfg file
-  setCurrentGroup( "General" );
-  addItemPath( "Html Export File", mHtmlExportFile,
-      QDir::homePath() + '/' + i18nc( "Default export file", "calendar.html" ) );
 
   agendaTimeLabelsFontItem()->setDefaultValue( mDefaultAgendaTimeLabelsFont );
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
@@ -828,16 +821,6 @@ KDateTime::Spec Prefs::timeSpec() const
 void Prefs::setTimeSpec( const KDateTime::Spec &spec )
 {
   d->mBaseConfig.mTimeSpec = spec;
-}
-
-void Prefs::setHtmlExportFile( const QString &fileName )
-{
-  d->mBaseConfig.mHtmlExportFile = fileName;
-}
-
-QString Prefs::htmlExportFile() const
-{
-  return d->mBaseConfig.mHtmlExportFile;
 }
 
 void Prefs::setCategoryColor( const QString &cat, const QColor &color )
