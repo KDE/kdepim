@@ -72,10 +72,6 @@ class BaseConfig : public PrefsBase
     void setTimeScaleTimezones( const QStringList &timeZones );
     QStringList timeScaleTimezones() const;
 
-    QString defaultCalendar() const;
-    Akonadi::Collection defaultCollection() const;
-    void setDefaultCollection( const Akonadi::Collection& col );
-
   public:
     QString mHtmlExportFile;
 
@@ -94,9 +90,6 @@ class BaseConfig : public PrefsBase
 
     KDateTime::Spec mTimeSpec;
     QStringList mTimeScaleTimeZones;
-
-    QString mDefaultCalendar;
-    Akonadi::Collection mDefaultCollection;
 
   protected:
     void usrSetDefaults();
@@ -144,24 +137,6 @@ void BaseConfig::setTimeScaleTimezones( const QStringList &list )
 QStringList BaseConfig::timeScaleTimezones() const
 {
   return mTimeScaleTimeZones;
-}
-
-QString BaseConfig::defaultCalendar() const
-{
-  return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
-}
-
-Akonadi::Collection BaseConfig::defaultCollection() const
-{
-  return mDefaultCollection;
-}
-
-void BaseConfig::setDefaultCollection( const Akonadi::Collection& col )
-{
-  mDefaultCollection = col;
-  if ( !col.isValid() ) {
-    mDefaultCalendar ="";
-  }
 }
 
 void BaseConfig::usrSetDefaults()
@@ -230,7 +205,6 @@ void BaseConfig::usrReadConfig()
   }
 #endif
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  mDefaultCalendar = defaultCalendarConfig.readEntry( "Default Calendar", QString() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
@@ -276,9 +250,6 @@ void BaseConfig::usrWriteConfig()
     config()->deleteEntry( "Retrieve Server Password" );
   }
 #endif
-
-  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendar() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
