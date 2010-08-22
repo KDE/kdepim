@@ -29,7 +29,7 @@
 #include "eventviews_export.h"
 
 
-#include <prefs.h>
+#include "prefs.h"
 #include <KDateTime>
 
 #include <QFrame>
