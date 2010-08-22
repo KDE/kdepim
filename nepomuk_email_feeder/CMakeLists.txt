@@ -20,8 +20,6 @@ set(akonadi_nepomuk_email_feeder_SRCS
   messagesearch.cpp
   configdialog.cpp
   shared/nepomukfeederagentbase.cpp
-  shared/sparqlbuilder.cpp
-  shared/selectsparqlbuilder.cpp
 )
 
 kde4_add_app_icon(akonadi_nepomuk_email_feeder_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/nepomuk.png")
