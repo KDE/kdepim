@@ -679,10 +679,20 @@ static TQString invitationDetailsEvent( Event* event )
   html += invitationRow( i18n( "Where:" ), sLocation );
 
   // Meeting Start Time Row
-  html += invitationRow( i18n( "Start Time:" ), eventStartTimeStr( event ) );
+  if (event->doesRecur() == true) {
+    html += invitationRow( i18n( "First Start Time:" ), eventStartTimeStr( event ) );
+  }
+  else {
+    html += invitationRow( i18n( "Start Time:" ), eventStartTimeStr( event ) );
+  }
 
   // Meeting End Time Row
-  html += invitationRow( i18n( "End Time:" ), eventEndTimeStr( event ) );
+  if (event->doesRecur() == true) {
+    html += invitationRow( i18n( "First End Time:" ), eventEndTimeStr( event ) );
+  }
+  else {
+    html += invitationRow( i18n( "End Time:" ), eventEndTimeStr( event ) );
+  }
 
   // Meeting Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
@@ -698,6 +708,55 @@ static TQString invitationDetailsEvent( Event* event )
     }
 
     html += invitationRow( i18n( "Duration:" ), tmp );
+
+    if ( event->doesRecur() ) {
+      TQString recurrence[]= {i18n("no recurrence", "None"),
+        i18n("Minutely"), i18n("Hourly"), i18n("Daily"),
+        i18n("Weekly"), i18n("Monthly Same Day"), i18n("Monthly Same Position"),
+        i18n("Yearly"), i18n("Yearly"), i18n("Yearly")};
+
+      Recurrence *recur = event->recurrence();
+      if (event->doesRecur() == true) {
+        html += invitationRow( " ", " " );
+        html += invitationRow( i18n( "Recurs:" ), recurrence[ recur->recurrenceType() ] );
+        html += invitationRow( i18n("Frequency:"),  i18n("%1").arg(event->recurrence()->frequency()) );
+
+        if ( recur->duration() > 0 ) {
+          if ( recur->duration() == 1 )
+            html += invitationRow( i18n("Repeats:"), i18n("Once") );
+          else
+            html += invitationRow( i18n("Repeats:"), i18n("%1 times").arg(recur->duration()));
+        } else {
+          if ( recur->duration() != -1 ) {
+            TQString endstr;
+            if ( event->doesFloat() ) {
+              endstr = KGlobal::locale()->formatDate( recur->endDate() );
+            } else {
+              endstr = KGlobal::locale()->formatDateTime( recur->endDateTime() );
+            }
+             html += invitationRow( i18n("Repeats until:"), endstr );
+          } else {
+             html += invitationRow( i18n("Repeats:"), i18n("Forever") );
+          }
+        }
+
+        DateList exceptions = recur->exDates();
+        if (exceptions.isEmpty() == false) {
+          bool isFirstExRow;
+          isFirstExRow = true;
+          DateList::ConstIterator ex_iter;
+          for ( ex_iter = exceptions.begin(); ex_iter != exceptions.end(); ++ex_iter ) {
+            if (isFirstExRow == true) {
+              isFirstExRow = false;
+              html += invitationRow( i18n("Cancelled on:"), KGlobal::locale()->formatDate(* ex_iter ) );
+            }
+            else {
+              html += invitationRow(" ", KGlobal::locale()->formatDate(* ex_iter ) );
+            }
+          }
+        }
+      }
+    }
   }
 
   html += "</table>\n";
@@ -1157,6 +1216,52 @@ class IncidenceFormatter::IncidenceCompareVisitor :
       if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
         mChanges += i18n( "The end of the meeting has been changed from %1 to %2" )
             .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
+      if ( newEvent->doesRecur() ) {
+        TQString recurrence[]= {i18n("no recurrence", "None"),
+          i18n("Minutely"), i18n("Hourly"), i18n("Daily"),
+          i18n("Weekly"), i18n("Monthly Same Day"), i18n("Monthly Same Position"),
+          i18n("Yearly"), i18n("Yearly"), i18n("Yearly")};
+
+        Recurrence *recur = newEvent->recurrence();
+        if (oldEvent->doesRecur() == false) {
+          mChanges += i18n( "The meeting now recurs %1" ).arg( recurrence[ recur->recurrenceType() ] );
+          DateList exceptions = recur->exDates();
+          if (exceptions.isEmpty() == false) {
+            mChanges += i18n("This recurring meeting has been cancelled on the following days:<br>");
+            DateList::ConstIterator ex_iter;
+            for ( ex_iter = exceptions.begin(); ex_iter != exceptions.end(); ++ex_iter ) {
+              mChanges += i18n("&nbsp&nbsp%1<br>").arg( KGlobal::locale()->formatDate(* ex_iter ) );
+            }
+          }
+        }
+        else {
+          Recurrence *oldRecur = oldEvent->recurrence();
+          DateList exceptions = recur->exDates();
+          DateList oldExceptions = oldRecur->exDates();
+          bool existsInOldEvent;
+          bool atLeastOneModified;
+          if (exceptions.isEmpty() == false) {
+            atLeastOneModified = false;
+            DateList::ConstIterator ex_iter;
+            DateList::ConstIterator ex_iter_old;
+            for ( ex_iter = exceptions.begin(); ex_iter != exceptions.end(); ++ex_iter ) {
+              existsInOldEvent = false;
+              for ( ex_iter_old = oldExceptions.begin(); ex_iter_old != oldExceptions.end(); ++ex_iter_old ) {
+                if ( KGlobal::locale()->formatDate(* ex_iter ) == KGlobal::locale()->formatDate(* ex_iter_old ) ) {
+                  existsInOldEvent = true;
+                  if (atLeastOneModified == false) {
+                    mChanges += i18n("This recurring meeting has been cancelled on the following days:<br>");
+                  }
+                  atLeastOneModified = true;
+                }
+              }
+              if (existsInOldEvent == false ) {
+                mChanges += i18n("&nbsp&nbsp%1<br>").arg( KGlobal::locale()->formatDate(* ex_iter ) );
+              }
+            }
+          }
+        }
+      }
     }
 
     void compareIncidences( Incidence *newInc, Incidence *oldInc )
@@ -2099,6 +2204,15 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
         mResult += i18n("Repeat until: %1\n").arg( endstr );
       } else {
         mResult += i18n("Repeats forever\n");
+      }
+    }
+
+    DateList exceptions = recur->exDates();
+    if (exceptions.isEmpty() == false) {
+      mResult += i18n("This recurring meeting has been cancelled on the following days:\n");
+      DateList::ConstIterator ex_iter;
+      for ( ex_iter = exceptions.begin(); ex_iter != exceptions.end(); ++ex_iter ) {
+        mResult += i18n("  %1\n").arg( KGlobal::locale()->formatDate(* ex_iter ) );
       }
     }
   }
