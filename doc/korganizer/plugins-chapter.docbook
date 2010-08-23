@@ -9,9 +9,7 @@
 <para>
 The plugins can be configured under the &korganizer; main configuration dialog
 Choose <menuchoice><guimenu>Settings</guimenu><guimenuitem>
-Configure &korganizer;</guimenuitem></menuchoice> or
-<menuchoice><guimenu>Settings</guimenu><guimenuitem>
-Configure Calendar</guimenuitem></menuchoice>, inside &kontact;, and click the
+Configure &korganizer;</guimenuitem></menuchoice> and click the
 <guilabel>Plugin</guilabel> icon on the icon list sidebar of the dialog.
 </para>
 
@@ -23,6 +21,20 @@ Configure Calendar</guimenuitem></menuchoice>, inside &kontact;, and click the
 <para>
 This plugin adds the day number of day in the year to the agenda view. For
 instance, February 1 is the day number 32.
+</para>
+</sect2>
+
+<sect2 id="wikipedia-thisday-plugin">
+<title>Wikipedia 'This Day in History' Plugin</title>
+<para>
+This plugin provides links to Wikipedia's <quote>This Day in History</quote> pages.
+</para>
+</sect2>
+
+<sect2 id="wikipedia-pictureoftheday-plugin">
+<title>Wikipedia Picture of the Day Plugin for Calendars</title>
+<para>
+This plugin provides the Wikipedia <quote>Picture of the Day</quote>.
 </para>
 </sect2>
 
@@ -39,7 +51,14 @@ or Chol HaMoed.
 <sect2 id="journal-print-plugin">
 <title>Journal Print Style</title>
 <para>
-The plugin allows you to print journal (diary) entries.
+The plugin allows you to print ou journal entries (diary entries).
+</para>
+</sect2>
+
+<sect2 id="yearly-print-plugin">
+<title>Yearly Print Style</title>
+<para>
+The plugin allows you to print out a yearly calendar.
 </para>
 </sect2>
 
