@@ -99,6 +99,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     QScrollBar* verticalScrollBar();
 
+    QScrollArea* scrollArea() const;
+
     /**
       Returns the uid of the last incidence that was selected. This
       persists across reloads and clear, so that if the same uid
@@ -350,7 +352,7 @@ class AgendaScrollArea : public QScrollArea
     AgendaScrollArea( bool allDay, EventView *eventView, QWidget *parent );
     ~AgendaScrollArea();
 
-    Agenda* agenda();
+    Agenda* agenda() const;
 
   private:
     Agenda *mAgenda;

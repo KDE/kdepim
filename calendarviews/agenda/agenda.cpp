@@ -2230,6 +2230,11 @@ void Agenda::setContentsPos( int x, int y )
   d->mScrollArea->ensureVisible( x, y, 0, 0 );
 }
 
+QScrollArea* Agenda::scrollArea() const
+{
+  return d->mScrollArea;
+}
+
 AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView, QWidget *parent )
   : QScrollArea( parent )
 {
@@ -2251,7 +2256,7 @@ AgendaScrollArea::~AgendaScrollArea()
 {
 }
 
-Agenda *AgendaScrollArea::agenda()
+Agenda *AgendaScrollArea::agenda() const
 {
   return mAgenda;
 }
