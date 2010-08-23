@@ -19,7 +19,8 @@
 #ifndef KORG_MULTIAGENDAVIEW_H_H
 #define KORG_MULTIAGENDAVIEW_H_H
 
-#include "views/agendaview/agendaview.h"
+#include "../agenda/eventview.h"
+#include "../agenda/agendaview.h"
 
 #include <Akonadi/Item>
 
@@ -34,17 +35,17 @@ class QResizeEvent;
 class QScrollBar;
 class QSplitter;
 
-namespace EventViews {
-  class AgendaView;
-  class TimeLabelsZone;
-}
 
 namespace CalendarSupport {
   class CollectionSelectionProxyModel;
 }
 
-namespace KOrg {
+namespace EventViews {
+  class AgendaView;
+  class TimeLabelsZone;
 
+
+#if 0 // TODO_EVENTVIEWS
 class MultiAgendaViewConfigDialog : public KDialog
 {
   Q_OBJECT
@@ -79,23 +80,23 @@ class MultiAgendaViewConfigDialog : public KDialog
     class Private;
     Private *const d;
 };
-
+#endif
 /**
   Shows one agenda for every resource side-by-side.
 */
-class MultiAgendaView : public AgendaView
+class MultiAgendaView : public EventView
 {
   Q_OBJECT
   public:
     explicit MultiAgendaView( QWidget *parent = 0 );
     ~MultiAgendaView();
 
-    Akonadi::Item::List selectedIncidences();
-    KCalCore::DateList selectedIncidenceDates();
+    Akonadi::Item::List selectedIncidences() const;
+    KCalCore::DateList selectedIncidenceDates() const;
     int currentDateCount() const;
     int maxDatesHint() const;
 
-    bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
+    bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
     /* reimp */void setCalendar( CalendarSupport::Calendar *cal );
 
     /**
@@ -135,7 +136,7 @@ class MultiAgendaView : public AgendaView
   private:
     void addView( const Akonadi::Collection &collection );
     void addView( CalendarSupport::CollectionSelectionProxyModel *selectionProxy, const QString &title );
-    EventViews::AgendaView *createView( const QString &title );
+    AgendaView *createView( const QString &title );
 
     void deleteViews();
     void setupViews();
@@ -151,11 +152,11 @@ class MultiAgendaView : public AgendaView
     void recreateViews();
 
   private:
-    QList<EventViews::AgendaView*> mAgendaViews;
+    QList<AgendaView*> mAgendaViews;
     QList<QWidget*> mAgendaWidgets;
     KHBox *mTopBox;
     QScrollArea *mScrollArea;
-    EventViews::TimeLabelsZone *mTimeLabelsZone;
+    TimeLabelsZone *mTimeLabelsZone;
     QSplitter *mLeftSplitter, *mRightSplitter;
     QScrollBar *mScrollBar;
     QWidget *mLeftBottomSpacer, *mRightBottomSpacer;
