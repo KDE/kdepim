@@ -117,9 +117,9 @@ void AlarmDialog::load( const Alarm::Ptr &alarm )
   case Alarm::Email:
   {
     mUi->mTypeCombo->setCurrentIndex( 3 );
-    QList<Person::Ptr> addresses = alarm->mailAddresses();
+    Person::List addresses = alarm->mailAddresses();
     QStringList add;
-    for ( QList<Person::Ptr>::ConstIterator it = addresses.constBegin();
+    for ( Person::List::ConstIterator it = addresses.constBegin();
           it != addresses.constEnd(); ++it ) {
       add << (*it)->fullName();
     }
@@ -205,7 +205,7 @@ void AlarmDialog::save( const Alarm::Ptr &alarm ) const
                               mUi->mAppArguments->text() );
   } else if ( mUi->mTypeCombo->currentIndex() == 3 ) { // Email
     QStringList addresses = KPIMUtils::splitAddressList( mUi->mEmailAddress->text() );
-    QList<Person::Ptr> add;
+    Person::List add;
     for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it ) {
       add << Person::fromFullName( *it );
     }
