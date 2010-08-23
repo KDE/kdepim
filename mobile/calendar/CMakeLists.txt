@@ -14,6 +14,8 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 set(korganizer_mobile_SRCS
   agendaviewitem.cpp
   calendarinterface.cpp
+  declarativewidgetwrapper.cpp
+  qmldateedit.cpp
   mainview.cpp
   main.cpp
 )
