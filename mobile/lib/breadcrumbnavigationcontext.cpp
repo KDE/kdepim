@@ -31,6 +31,7 @@
 
 #include "breadcrumbnavigation.h"
 #include "qmllistselectionmodel.h"
+#include "kdescendantsproxymodel.h"
 #include "akonadi_next/checkableitemproxymodel.h"
 
 class QMLCheckableItemProxyModel : public CheckableItemProxyModel
@@ -131,9 +132,13 @@ void KBreadcrumbNavigationFactory::createCheckableBreadcrumbContext(QAbstractIte
 
   d->m_checkModel = new QItemSelectionModel( model, parent);
 
-  QMLCheckableItemProxyModel *checkableProxy = new QMLCheckableItemProxyModel(this);
+  QMLCheckableItemProxyModel *checkableProxy = new QMLCheckableItemProxyModel(parent);
   checkableProxy->setSourceModel( model );
   checkableProxy->setSelectionModel( d->m_checkModel );
+
+  KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(parent);
+  descProxy->setDisplayAncestorData(true);
+  descProxy->setSourceModel( checkableProxy );
 
   createBreadcrumbContext(checkableProxy, parent);
 
@@ -147,7 +152,7 @@ void KBreadcrumbNavigationFactory::createCheckableBreadcrumbContext(QAbstractIte
 
   d->m_checkedItemsModel = new KSelectionProxyModel( d->m_checkModel, parent );
   d->m_checkedItemsModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  d->m_checkedItemsModel->setSourceModel( checkableProxy );
+  d->m_checkedItemsModel->setSourceModel( descProxy );
 
   d->m_checkedItemsCheckModel = new KLinkItemSelectionModel( d->m_checkedItemsModel, d->m_checkModel, parent);
 
