@@ -166,8 +166,8 @@ bool ConflictResolver::tryDate( const KCalCore::FreeBusy::Ptr &fb, KDateTime& tr
       return true;
     }
 
-    QList<KCalCore::Period> busyPeriods = fb->busyPeriods();
-    for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
+    KCalCore::Period::List busyPeriods = fb->busyPeriods();
+    for ( KCalCore::Period::List::Iterator it = busyPeriods.begin();
             it != busyPeriods.end(); ++it ) {
         if (( *it ).end() <= tryFrom || // busy period ends before try period
                 ( *it ).start() >= tryTo ) { // busy period starts after try period
@@ -293,10 +293,10 @@ void ConflictResolver::findAllFreeSlots()
     // etareti
     foreach( KCalCore::FreeBusy::Ptr currentFB, filteredFBItems ) {
         Q_ASSERT( currentFB ); // sanity check
-        QList<KCalCore::Period> busyPeriods = currentFB->busyPeriods();
+        KCalCore::Period::List busyPeriods = currentFB->busyPeriods();
         QVector<int> fbArray( range );
         fbArray.fill( 0 ); // initialize to zero
-        for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
+        for ( KCalCore::Period::List::Iterator it = busyPeriods.begin();
                 it != busyPeriods.end(); ++it ) {
             if ( it->end() >= begin && it->start() <= end ) {
                 int start_index = -1; // Initialize it to an invalid value.
