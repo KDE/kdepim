@@ -36,7 +36,7 @@
 
 #include "kleo/cryptoconfig.h"
 
-#include <gpg-error.h>
+#include <gpgme++/error.h>
 
 #include <kshell.h>
 #include <klocale.h>
@@ -50,6 +50,8 @@
 #include <memory>
 
 #include <cassert>
+
+using namespace GpgME;
 
 Kleo::ChiasmusJob::ChiasmusJob( Mode mode )
   : Kleo::SpecialJob( 0 ),
@@ -66,7 +68,7 @@ Kleo::ChiasmusJob::~ChiasmusJob() {}
 
 GpgME::Error Kleo::ChiasmusJob::setup() {
   if ( !checkPreconditions() )
-    return mError = GpgME::Error( gpg_error( GPG_ERR_INV_VALUE ) );
+    return mError = Error::fromCode( GPG_ERR_INV_VALUE );
 
   const Kleo::CryptoConfigEntry * class_
     = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "symcryptrun-class" );
@@ -75,7 +77,7 @@ GpgME::Error Kleo::ChiasmusJob::setup() {
   const Kleo::CryptoConfigEntry * timeoutEntry
     = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "timeout" );
   if ( !class_ || !chiasmus || !timeoutEntry )
-    return mError = GpgME::Error( gpg_error( GPG_ERR_INTERNAL ) );
+    return mError = Error::fromCode( GPG_ERR_INTERNAL );
 
   mSymCryptRun = new SymCryptRunProcessBase( class_->stringValue(),
                                              KShell::tildeExpand( chiasmus->urlValue().path() ),
@@ -110,7 +112,7 @@ GpgME::Error Kleo::ChiasmusJob::start() {
            this, SLOT(finished()) );
 
   if ( !mSymCryptRun->launch( mInput ) )
-    return mError = GpgME::Error( gpg_error( GPG_ERR_ENOENT ) ); // what else?
+    return mError = Error::fromCode( GPG_ERR_ENOENT ); // what else?
 
   d.disable();
   return mError = GpgME::Error();
@@ -118,13 +120,13 @@ GpgME::Error Kleo::ChiasmusJob::start() {
 
 GpgME::Error Kleo::ChiasmusJob::finished() {
   if ( !mSymCryptRun )
-    mError = GpgME::Error( gpg_error( GPG_ERR_INTERNAL ) );
+    mError = Error::fromCode( GPG_ERR_INTERNAL );
   else if ( mCanceled )
-    mError = GpgME::Error( gpg_error( GPG_ERR_CANCELED ) );
+    mError = Error::fromCode( GPG_ERR_CANCELED );
   else if ( mTimeout )
-    mError = GpgME::Error( gpg_error( GPG_ERR_TIMEOUT ) );
+    mError = Error::fromCode( GPG_ERR_TIMEOUT );
   else if ( mSymCryptRun->exitStatus() != QProcess::NormalExit )
-    mError = GpgME::Error( gpg_error( GPG_ERR_GENERAL ) );
+    mError = Error::fromCode( GPG_ERR_GENERAL );
   else
     switch ( mSymCryptRun->exitCode() ) {
     case 0: // success
@@ -134,13 +136,13 @@ GpgME::Error Kleo::ChiasmusJob::finished() {
     default:
     case 1: // Some error occurred
       mStderr = mSymCryptRun->stdErr();
-      mError = GpgME::Error( gpg_error( GPG_ERR_GENERAL ) );
+      mError = Error::fromCode( GPG_ERR_GENERAL );
       break;
     case 2: // No valid passphrase was provided
-      mError = GpgME::Error( gpg_error( GPG_ERR_INV_PASSPHRASE ) );
+      mError = Error::fromCode( GPG_ERR_INV_PASSPHRASE );
       break;
     case 3: // Canceled
-      mError = GpgME::Error( gpg_error( GPG_ERR_CANCELED ) );
+      mError = Error::fromCode( GPG_ERR_CANCELED );
       break;
     }
 
@@ -170,7 +172,7 @@ GpgME::Error Kleo::ChiasmusJob::exec() {
 
   if ( !mSymCryptRun->launch( mInput, true ) ) {
     delete mSymCryptRun; mSymCryptRun = 0;
-    return mError = GpgME::Error( gpg_error( GPG_ERR_ENOENT ) ); // what else?
+    return mError = Error::fromCode( GPG_ERR_ENOENT ); // what else?
   }
 
   const GpgME::Error err = finished();

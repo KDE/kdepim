@@ -84,7 +84,7 @@ QString Kleo::Job::auditLogAsHtml() const {
 
 GpgME::Error Kleo::Job::auditLogError() const {
     kDebug(5150) << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
-    return GpgME::Error( gpg_error( GPG_ERR_NOT_IMPLEMENTED ) );
+    return GpgME::Error::fromCode( GPG_ERR_NOT_IMPLEMENTED );
 }
 
 bool Kleo::Job::isAuditLogSupported() const {

@@ -85,7 +85,7 @@ void Kleo::ObtainKeysJob::slotPerform() {
 
 void Kleo::ObtainKeysJob::slotPerform( bool async ) {
   if ( mCanceled && !mError )
-    mError = GpgME::Error( gpg_error( GPG_ERR_CANCELED ) );
+    mError = GpgME::Error::fromCode( GPG_ERR_CANCELED );
   if ( int(mIndex) >= mKeyPaths.size() || mError ) {
     emit done();
     emit SpecialJob::result( mError, QVariant( mResult ) );
