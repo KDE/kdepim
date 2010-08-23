@@ -1646,11 +1646,11 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
         // notified about it as early as possible:
         keys = selectKeys( person,
             i18nc("if in your language something like "
-              "'key(s)' is not possible please "
+              "'certificate(s)' is not possible please "
               "use the plural in the translation",
               "There is a problem with the "
-              "encryption key(s) for \"%1\".\n\n"
-              "Please re-select the key(s) which should "
+              "encryption certificate(s) for \"%1\".\n\n"
+              "Please re-select the certificate(s) which should "
               "be used for this recipient.", person),
             keys );
       }
@@ -1701,7 +1701,8 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
                    "found for \"%1\".<br/><br/>"
                    "Select the certificate(s) which should "
                    "be used for this recipient. If there is no suitable certificate in the list "
-                   "you can also search for external certificates by clicking this button:</qt>",
+                   "you can also search for external certificates by clicking the button: "
+                   "search for external certificates.</qt>",
                    Qt::escape( person ) )
           : i18nc( "if in your language something like "
                    "'certificate(s)' is not possible please "
