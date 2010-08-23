@@ -63,6 +63,8 @@ void CheckableItemProxyModel::setSelectionModel(QItemSelectionModel* itemSelecti
 
 Qt::ItemFlags CheckableItemProxyModel::flags(const QModelIndex& index) const
 {
+  if (!index.isValid())
+    return Future::KIdentityProxyModel::flags(index);
   return Future::KIdentityProxyModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
