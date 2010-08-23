@@ -24,7 +24,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi 4.5
 
 QML.Rectangle {
-
+  color : "#00000000"
   AkonadiBreadcrumbNavigationView {
     id : navigationView
 
