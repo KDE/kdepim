@@ -36,23 +36,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
   }
 
-  ReorderList {
-    category : "home"
-    name : KDE.i18n( "Favorites" )
-
-    delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
-    }
-    upAction : "fav_up"
-    downAction : "fav_down"
-    deleteAction : "fav_delete"
-    model : favoritesList
-
-    customActions : [
-      FakeAction { name : "un_mark_as_default" },
-      FakeAction { name : "delete_favorite" }
-    ]
-  }
+  FavoriteManager{ model : favoritesList }
 
   AgentInstanceList {
     category : "home"

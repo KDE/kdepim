@@ -37,18 +37,7 @@ ActionMenuContainer {
     FakeAction { name : "purge_completed_todos" }
   }
 
-  ReorderList {
-    category : "home"
-    name : KDE.i18n( "Favorites" )
-
-    delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
-    }
-    upAction : "fav_up"
-    downAction : "fav_down"
-    deleteAction : "fav_delete"
-    model : favoritesList
-  }
+  FavoriteManager{ model : favoritesList }
 
   AgentInstanceList {
     category : "home"

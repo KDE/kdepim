@@ -26,8 +26,8 @@ import org.kde.pim.mobileui 4.5 as KPIM
 Rectangle {
   id : _topLevel
   color : "#00000000"
-  property int actionItemHeight
-  property int actionItemWidth
+  property int actionItemHeight: 70
+  property int actionItemWidth: 200
   property int actionItemSpacing : 0
   property int bottomMargin
   anchors.bottomMargin : bottomMargin
@@ -45,16 +45,18 @@ Rectangle {
   ListView {
     id : myList
     anchors.fill : parent
+    interactive: count * actionItemHeight > height
   }
 
   ActionMenuContainer {
     id : actionColumn
-    width : 200
+    width : _topLevel.actionItemWidth
     anchors.top : parent.top
     anchors.bottom : parent.bottom
     anchors.right : parent.right
     actionItemWidth : width
-    actionItemHeight : 70
+    actionItemHeight : _topLevel.actionItemHeight
+    actionItemSpacing: _topLevel.actionItemSpacing
     FakeAction { id : upAction }
     FakeAction { id : downAction }
     FakeAction { id : deleteAction }

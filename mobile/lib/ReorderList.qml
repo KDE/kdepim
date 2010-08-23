@@ -41,10 +41,9 @@ QML.Item {
   property alias deleteAction : _listContent.deleteAction
   property alias customActions : _listContent.customActions
 
-  /*
   property alias actionItemSpacing : _listContent.actionItemSpacing
   property alias actionItemHeight : _listContent.actionItemHeight
-*/
+  property alias actionItemWidth : _listContent.actionItemWidth
 
   property alias model : _listContent.model
   property alias delegate : _listContent.delegate

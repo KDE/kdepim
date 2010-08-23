@@ -38,41 +38,15 @@ QML.Rectangle {
 
   signal triggered(string triggeredName)
 
-  QML.Component {
-    id: highlightBar
-    QML.Rectangle {
-      width: myList.width
-      height: 30
-      color: "#FFFF88"
-      y: myList.currentItem.y
-    }
-  }
-
   QML.ListView {
     id : myList
     anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
     width: parent.width - actionColumn.width
     focus: true
     clip: true
-    highlight: highlightBar
-    delegate : QML.Component {
-      QML.Item {
-        id: _delegateTopLevel
+    delegate : ReorderListDelegate {
         height: _topLevel.actionItemHeight
         width: myList.width
-
-        QML.Text {
-          anchors.fill: parent
-          text : model.display
-          horizontalAlignment: QML.Text.AlignHCenter
-          verticalAlignment: QML.Text.AlignVCenter
-        }
-
-        QML.MouseArea {
-          anchors.fill: parent
-          onClicked: { _delegateTopLevel.QML.ListView.view.currentIndex = model.index; }
-        }
-      }
     }
 
     onCurrentIndexChanged : {

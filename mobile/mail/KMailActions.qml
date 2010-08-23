@@ -38,16 +38,7 @@ ActionMenuContainer {
     FakeAction { name : "empty_all_trash_folders" }
   }
 
-  ReorderList {
-    category : "home"
-    name : KDE.i18n( "Favorites" )
-
-    delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
-    }
-    upAction : "fav_up"
-    downAction : "fav_down"
-    deleteAction : "fav_delete"
+  FavoriteManager{
     model : favoritesList
   }
 

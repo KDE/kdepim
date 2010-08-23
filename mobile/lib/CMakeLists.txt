@@ -43,8 +43,10 @@ install(FILES
   qmldir
   Action.qml
   FakeAction.qml
+  FavoriteManager.qml
   ActionList.qml
   ReorderList.qml
+  ReorderListDelegate.qml
   MultipleSelectionComponent.qml
   MultipleSelectionScreen.qml
   ReorderListContainer.qml
