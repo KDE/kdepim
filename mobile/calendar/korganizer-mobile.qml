@@ -181,8 +181,8 @@ KPIM.MainView {
     id : favoriteSelector
     anchors.fill : parent
     anchors.topMargin : 12
-    anchors.leftMargin: 40
     visible : false
+    backgroundImage : backgroundImage.source
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
