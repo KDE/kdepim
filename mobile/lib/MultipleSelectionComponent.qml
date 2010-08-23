@@ -41,6 +41,7 @@ QML.Rectangle {
   QML.ListView {
     id : selectedView
     anchors.left : navigationView.right
+    anchors.right : parent.right
     anchors.top : parent.top
     anchors.bottom : parent.bottom
 
@@ -50,7 +51,6 @@ QML.Rectangle {
       id : selectedDelegate
       showCheckbox : true
       checkModel : _multiSelectionComponentFactory.qmlCheckedItemsCheckModel();
-      indentation : 35
       height : 70
     }
   }
