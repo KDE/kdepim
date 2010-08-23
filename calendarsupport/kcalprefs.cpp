@@ -38,7 +38,6 @@ using namespace CalendarSupport;
 
 K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 
-
 class KCalPrefs::Private
 {
   public:
