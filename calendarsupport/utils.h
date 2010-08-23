@@ -61,7 +61,7 @@ namespace CalendarSupport
   /**
    * returns event pointers from an akonadi item, or a null pointer if the item has no such payload
    */
-  CALENDARSUPPORT_EXPORT QList<KCalCore::Event::Ptr> eventsFromItems(
+  CALENDARSUPPORT_EXPORT KCalCore::Event::List eventsFromItems(
     const Akonadi::Item::List &items );
 
   /**
@@ -127,8 +127,8 @@ namespace CalendarSupport
 
   CALENDARSUPPORT_EXPORT bool mimeDataHasTodo( const QMimeData *mimeData );
 
-  CALENDARSUPPORT_EXPORT QList<KCalCore::Todo::Ptr> todos( const QMimeData *mimeData,
-                                                           const KDateTime::Spec &timeSpec );
+  CALENDARSUPPORT_EXPORT KCalCore::Todo::List todos( const QMimeData *mimeData,
+                                                     const KDateTime::Spec &timeSpec );
 
   /**
   * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
