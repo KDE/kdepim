@@ -36,7 +36,7 @@ QML.Rectangle {
     anchors.top : parent.top
     anchors.left : parent.left
     anchors.bottom : parent.bottom
-    width : 400
+    width : parent.width / 3
   }
 
   QML.ListView {
