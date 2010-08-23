@@ -16,8 +16,6 @@ else(MESSAGEVIEWER_NO_WEBKIT)
   set(_mailwebview_cpp mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
-  else(NOT WINCE)
-    set(_mailwebview_lib ${QT_QTWEBKIT_LIBRARY} )
   endif(NOT WINCE)
 endif(MESSAGEVIEWER_NO_WEBKIT)
 

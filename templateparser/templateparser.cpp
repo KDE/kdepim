@@ -60,7 +60,11 @@
 #include <QWebElement>
 #include <QTextCodec>
 #include <QWebFrame>
-#include <QtWebKit/QWebPage>
+#ifndef TEMPLATEPARSER_NO_WEBKIT
+# include <QtWebKit/QWebPage>
+#else
+# include <QTextBrowser>
+#endif
 
 namespace TemplateParser {
 
@@ -1345,11 +1349,19 @@ QString TemplateParser::asPlainTextFromObjectTree( const KMime::Message::Ptr &ms
   }
 
   // html -> plaintext conversion, if necessary:
+#ifndef TEMPLATEPARSER_NO_WEBKIT
   if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
     QWebPage doc;
     doc.mainFrame()->setHtml( result );
     result = doc.mainFrame()->toPlainText();
   }
+#else
+  if ( isHTML /* TODO port it && mDecodeHTML*/ ) {
+    QTextDocument doc;
+    doc.setHtml( result );
+    result = doc.toPlainText();
+  }
+#endif
 
   // strip the signature (footer):
   if ( aStripSignature )
