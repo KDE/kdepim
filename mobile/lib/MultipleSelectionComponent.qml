@@ -29,6 +29,7 @@ QML.Rectangle {
     id : navigationView
 
     showCheckboxes : true
+    checkable : true
 
     breadcrumbComponentFactory : _multiSelectionComponentFactory
 
@@ -49,7 +50,7 @@ QML.Rectangle {
 
     delegate : CollectionDelegate{
       id : selectedDelegate
-      showCheckbox : true
+      uncheckable : true
       checkModel : _multiSelectionComponentFactory.qmlCheckedItemsCheckModel();
       height : 70
     }
