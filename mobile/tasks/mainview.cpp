@@ -51,6 +51,7 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskL
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
+  setWindowTitle( i18n( "KOrganizer Task Manager" ) );
 
   addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();

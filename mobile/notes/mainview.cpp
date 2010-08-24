@@ -50,6 +50,7 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteL
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
+  setWindowTitle( i18n( "KJots" ) );
 
   addMimeType( "text/x-vnd.akonadi.note" );
   itemFetchScope().fetchFullPayload();

@@ -202,8 +202,9 @@ KPIM.MainView {
       contextActions : [
         QML.Column {
           anchors.fill: parent
-          height : kaddressbookMobile.height 
+          height : startPageNewContactButton.height + startPageNewContactGroupButton.height + 3 * spacing
           KPIM.Button2 {
+            id: startPageNewContactButton
             width: parent.width
             buttonText : KDE.i18n( "New Contact" )
             onClicked : {
@@ -211,17 +212,11 @@ KPIM.MainView {
             }
           }
           KPIM.Button2 {
+            id: startPageNewContactGroupButton
             width: parent.width
             buttonText : KDE.i18n( "New Contact Group" )
             onClicked : {
               application.newContactGroup();
-            }
-          }
-          KPIM.Button2 {
-            width: parent.width
-            buttonText: KDE.i18n( "New Address Book" )
-            onClicked : {
-              application.launchAccountWizard();
             }
           }
         }
