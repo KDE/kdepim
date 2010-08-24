@@ -55,9 +55,13 @@ bool TaskListProxy::setData(const QModelIndex& index, const QVariant& value, int
 
     if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
       KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
-      incidence->setPercentComplete(value.toInt());
-      item.setPayload(incidence);
-      return QSortFilterProxyModel::setData(index, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+      if ( incidence->percentComplete() != value.toInt() ) {
+        incidence->setPercentComplete(value.toInt());
+        item.setPayload(incidence);
+        return QSortFilterProxyModel::setData(index, QVariant::fromValue(item), EntityTreeModel::ItemRole);
+      } else {
+        return true;
+      }
     }
   }
   return QSortFilterProxyModel::setData(index, value, role);
