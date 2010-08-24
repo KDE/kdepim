@@ -58,10 +58,10 @@ void CalFilterProxyModel::setFilter( KCalCore::CalFilter *filter )
     return;
   }
 
-  layoutAboutToBeChanged();
+  emit layoutAboutToBeChanged();
   d->filter = filter;
   invalidateFilter();
-  layoutChanged();
+  emit layoutChanged();
 }
 
 bool CalFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const
