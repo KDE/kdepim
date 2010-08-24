@@ -16,8 +16,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KORG_MULTIAGENDAVIEW_H_H
-#define KORG_MULTIAGENDAVIEW_H_H
+#ifndef EVENTVIEWS_MULTIAGENDAVIEW_H_H
+#define EVENTVIEWS_MULTIAGENDAVIEW_H_H
 
 #include "../agenda/eventview.h"
 #include "../agenda/agendaview.h"
