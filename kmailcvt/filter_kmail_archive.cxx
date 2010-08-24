@@ -18,7 +18,6 @@
 */
 #include "filter_kmail_archive.hxx"
 
-#include <KMime/Message>
 
 #include <KLocale>
 #include <KFileDialog>

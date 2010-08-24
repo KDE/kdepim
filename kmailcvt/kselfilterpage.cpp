@@ -44,7 +44,6 @@
 
 // Qt includes
 #include <QCheckBox>
-#include <QTimer>
 
 // Akonadi includes
 #include <akonadi/collectionrequester.h>

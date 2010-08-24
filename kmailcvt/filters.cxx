@@ -38,7 +38,6 @@
 #include <KMessageBox>
 
 // Qt Includes
-#include <QFile>
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -154,7 +153,7 @@ Filter::Filter( const QString& name, const QString& author,
 }
 
 bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &collection,
-                                const KMime::Message::Ptr message )
+                                const KMime::Message::Ptr& message )
 {
   Akonadi::Item item;
   Akonadi::MessageStatus status;
