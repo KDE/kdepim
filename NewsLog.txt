@@ -35,6 +35,9 @@ Problems addressed
 kk4:
 * kolab/issue4469: (Kontact loses shared calendar folders (type changed)(rt#6174)
 
+kk6:
+* Add more debug output to help finding the cause of kolab/issue4498 
+
 
 Friday, July 30th 2010
 
