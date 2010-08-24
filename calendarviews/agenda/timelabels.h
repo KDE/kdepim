@@ -44,7 +44,7 @@ class TimeLabelsZone;
 
 typedef boost::shared_ptr<Prefs> PrefsPtr;
 
-class EVENTVIEWS_EXPORT TimeLabels : public QFrame
+class TimeLabels : public QFrame
 {
   Q_OBJECT
   public:

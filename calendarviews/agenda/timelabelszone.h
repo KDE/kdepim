@@ -42,7 +42,7 @@ namespace EventViews
 class AgendaView;
 class Agenda;
 
-class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
+class TimeLabelsZone : public QWidget
 {
   Q_OBJECT
   public:
