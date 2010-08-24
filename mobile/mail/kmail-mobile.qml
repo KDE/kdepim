@@ -42,13 +42,13 @@ KPIM.MainView {
 
   function updateContextActionsStates()
   {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
-    {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
       kmailActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
-    {
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       kmailActions.showOnlyCategory("account")
-    } else { // something else is selected
+    } else if ( collectionView.numSelected > 1 ) { 
+      kmailActions.showOnlyCategory( "multiple_folder" );
+    } else { 
       kmailActions.showOnlyCategory("single_folder")
     }
   }
