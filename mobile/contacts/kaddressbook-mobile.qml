@@ -36,6 +36,7 @@ KPIM.MainView {
     backToFolderListButton.visible = false;
     collectionView.visible = true;
     contactListPage.visible = true;
+    selectButton.visible = true;
     contactView.itemId = -1;
     contactGroupView.itemId = -1;
 
@@ -301,6 +302,7 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            selectButton.visible = false;
             kaddressbookActions.showOnlyCategory("contact_viewer")
           }
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
@@ -312,6 +314,7 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            selectButton.visible = false;
             kaddressbookActions.showOnlyCategory("contact_viewer")
           }
         }

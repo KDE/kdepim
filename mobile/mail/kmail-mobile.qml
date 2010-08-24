@@ -35,6 +35,7 @@ KPIM.MainView {
     backToMessageListButton.visible = false;
     collectionView.visible = true;
     emailListPage.visible = true;
+    selectButton.visible = true;
     messageView.itemId = -1;
 
     updateContextActionsStates();
@@ -266,6 +267,7 @@ KPIM.MainView {
               backToMessageListButton.visible = true;
               collectionView.visible = false;
               emailListPage.visible = false;
+              selectButton.visible = false;
               kmailActions.showOnlyCategory("mail_viewer")
             } else {
               application.restoreDraft(headerList.currentItemId);

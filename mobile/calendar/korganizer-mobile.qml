@@ -143,6 +143,7 @@ KPIM.MainView {
           onClicked : {
             agendaView.visible = false;
             mainWorkView.visible = true;
+            selectButton.visible = true
             korganizerActions.showOnlyCategory("home")
           }
         }
@@ -313,6 +314,7 @@ KPIM.MainView {
             agenda.showRange( dateEdit.date, 0 /* "Day" */ );
             mainWorkView.visible = false
             agendaView.visible = true
+            selectButton.visible = false
           }
         }
         KPIM.Button2 {
@@ -323,6 +325,7 @@ KPIM.MainView {
             agenda.showRange( dateEdit.date, 1 /* "Week" */ );
             mainWorkView.visible = false
             agendaView.visible = true
+            selectButton.visible = false
           }
         }
         KPIM.Button2 {
@@ -333,6 +336,7 @@ KPIM.MainView {
             agenda.showRange( dateEdit.date, 2 /* "Month" */ );
             mainWorkView.visible = false
             agendaView.visible = true
+            selectButton.visible = false
           }
         }
       }

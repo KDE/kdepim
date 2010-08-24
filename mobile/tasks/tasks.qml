@@ -32,6 +32,7 @@ KPIM.MainView {
     taskView.visible = false;
     collectionView.visible = true;
     itemListPage.visible = true;
+    selectButton.visible = true;
     taskView.itemId = -1;
 
     updateContextActionsStates();
@@ -300,6 +301,7 @@ KPIM.MainView {
           taskActions.showOnlyCategory("todo_viewer")
           collectionView.visible = false;
           itemListPage.visible = false;
+          selectButton.visible = false;
         }
       }
     }

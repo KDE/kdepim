@@ -79,6 +79,7 @@ KPIM.MainView {
           backToMessageListButton.visible = false;
           collectionView.visible = true;
           notesListPage.visible = true;
+          selectButton.visible = true;
           noteView.noteId = -1;
         }
       }
@@ -209,6 +210,7 @@ KPIM.MainView {
             backToMessageListButton.visible = true;
             collectionView.visible = false;
             notesListPage.visible = false;
+            selectButton.visible = false;
           }
         }
       }
