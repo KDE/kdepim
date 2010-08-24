@@ -105,11 +105,16 @@ void EventIndicator::paintEvent( QPaintEvent *event )
   QPainter painter( this );
 
   for ( int i = 0; i < d->mColumns; ++i ) {
-    if ( d->mEnabled[ i ] ) {
-      int cellWidth = contentsRect().right() / d->mColumns;
-      int xOffset = QApplication::isRightToLeft() ?
-                    ( d->mColumns - 1 - i ) * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2 :
-                    i * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2;
+    if ( d->mEnabled[ i ] || true ) {
+      const double cellWidth = static_cast<double>( contentsRect().right() ) / d->mColumns;
+
+      const uint halfPixmapWidth = d->mPixmap.width() / 2;
+      const uint halfColumnWidth = cellWidth / 2;
+
+      const int xOffset = QApplication::isRightToLeft() ?
+                          ( d->mColumns - 1 - i ) * cellWidth + halfColumnWidth - halfPixmapWidth :
+                          i * cellWidth + halfColumnWidth - halfPixmapWidth;
+
       painter.drawPixmap( QPoint( xOffset, 0 ), d->mPixmap );
     }
   }
