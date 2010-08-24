@@ -38,7 +38,6 @@
 #include "resource.h"
 #include "reader.h"
 #include "writer.h"
-#include <korganizer/kocore.h>
 
 /*=========================================================================
 | NAMESPACE
@@ -143,9 +142,6 @@ bool ResourceCalDav::isSaving() {
 
 bool ResourceCalDav::doLoad() {
     bool syncCache = true;
-
-    // Make sure no editor windows are open
-    if (KOCore::self()->editorWindowOpen() == true) return true;
 
     if ((mLoadingQueueReady == false) || (mLoadingQueue.isEmpty() == false) || (mLoader->running() == true) || (isSaving() == true)) {
         return true;	// Silently fail; the user has obviously not responded to a dialog and we don't need to pop up more of them!

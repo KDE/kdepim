@@ -66,6 +66,9 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     void readConfig( const KConfig *config );
     void writeConfig( KConfig *config );
 
+    static bool editorWindowOpen();
+    static void setEditorWindowOpen(bool open);
+
     /**
       Set reload policy. This controls when the cache is refreshed.
 

@@ -84,9 +84,6 @@ class KDE_EXPORT KOCore
 
     KPIM::IdentityManager* identityManager();
 
-    bool editorWindowOpen();
-    void setEditorWindowOpen(bool open);
-
   protected:
     KOCore();
 

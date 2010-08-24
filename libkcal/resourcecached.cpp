@@ -46,6 +46,8 @@
 
 using namespace KCal;
 
+static bool m_editoropen = false;
+
 ResourceCached::ResourceCached( const KConfig* config )
   : ResourceCalendar( config ), mCalendar( TQString::fromLatin1( "UTC" ) ),
     mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ), 
@@ -584,9 +586,22 @@ void ResourceCached::disableChangeNotification()
   mCalendar.unregisterObserver( this );
 }
 
+bool ResourceCached::editorWindowOpen()
+{
+  return m_editoropen;
+}
+
+void ResourceCached::setEditorWindowOpen(bool open)
+{
+  m_editoropen = open;
+}
+
 void ResourceCached::slotReload()
 {
   if ( !isActive() ) return;
+
+  // Make sure no editor windows are open
+  if (editorWindowOpen() == true) return;
 
   kdDebug(5800) << "ResourceCached::slotReload()" << endl;
 

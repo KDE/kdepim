@@ -54,13 +54,13 @@
 
 #include <libkcal/todo.h>
 #include <libkcal/event.h>
+#include <libkcal/resourcecached.h>
 
 #include <libkdepim/kdateedit.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "koprefs.h"
 #include "koglobals.h"
-#include "kocore.h"
 
 #include "koeditorgeneral.h"
 #include "koeditoralarms.h"
@@ -71,13 +71,13 @@
 KOEditorGeneral::KOEditorGeneral(TQObject* parent, const char* name) :
   TQObject( parent, name ), mAttachments(0)
 {
-  KOCore::self()->setEditorWindowOpen(true);
+  ResourceCached::setEditorWindowOpen(true);
   mAlarmList.setAutoDelete( true );
 }
 
 KOEditorGeneral::~KOEditorGeneral()
 {
-  KOCore::self()->setEditorWindowOpen(false);
+  ResourceCached::setEditorWindowOpen(false);
 }
 
 
