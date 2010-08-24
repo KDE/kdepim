@@ -30,7 +30,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       anchors.fill: parent
-      titleText: "More..."
+      titleText: KDE.i18n("More...");
       handlePosition: 250
       handleHeight: 120
       // TODO: Better icons for the buttons probably.
