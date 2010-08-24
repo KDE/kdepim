@@ -394,6 +394,13 @@ KPIM.MainView {
   }
 
   QML.Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
+    }
+  }
+
+  QML.Connections {
     target: contactView
     onContactRemoved : { goBackToListing(); }
   }

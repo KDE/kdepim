@@ -388,8 +388,15 @@ KPIM.MainView {
     }
   }
 
-   QML.Connections {
-     target: taskView
-     onIncidenceRemoved : { goBackToListing(); }
-   }
+  QML.Connections {
+    target: taskView
+    onIncidenceRemoved : { goBackToListing(); }
+  }
+
+  QML.Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
+    }
+  }
 }
