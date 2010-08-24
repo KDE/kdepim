@@ -5,5 +5,3 @@
 * Make the configuration specific to agenda, remove korganizer stuff
 
 * Review collectionSelection stuff in eventview.h
-
-* We should only export agendaview, now we need to export agenda and timelabels because of multiagendaview, which still isn't extracted from korganizer.
