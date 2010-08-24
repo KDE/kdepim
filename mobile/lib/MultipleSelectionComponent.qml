@@ -51,6 +51,7 @@ QML.Rectangle {
     delegate : CollectionDelegate{
       id : selectedDelegate
       uncheckable : true
+      alternatingRowColors : true
       checkModel : _multiSelectionComponentFactory.qmlCheckedItemsCheckModel();
       height : 70
     }
