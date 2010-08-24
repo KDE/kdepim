@@ -148,8 +148,10 @@ shared_ptr<const KeyFilter> KeyListSortFilterProxyModel::keyFilter() const {
 void KeyListSortFilterProxyModel::setKeyFilter( const shared_ptr<const KeyFilter> & kf ) {
     if ( kf == d->keyFilter )
         return;
+    layoutAboutToBeChanged();
     d->keyFilter = kf;
     invalidateFilter();
+    layoutChanged();
 }
 
 bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const {

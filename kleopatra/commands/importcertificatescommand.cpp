@@ -96,8 +96,10 @@ namespace {
         }
 
         void setImportResults( const std::vector<ImportResult> & results, const QStringList & ids ) {
+            layoutAboutToBeChanged();
             updateFindCache( results, ids );
             invalidateFilter();
+            layoutChanged();
         }
 
     protected:
