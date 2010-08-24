@@ -41,6 +41,8 @@
 
 #include <tqwidget.h>
 
+static bool m_editoropen = false;
+
 KOCore *KOCore::mSelf = 0;
 
 KOCore *KOCore::self()
@@ -60,6 +62,16 @@ KOCore::KOCore()
 KOCore::~KOCore()
 {
   mSelf = 0;
+}
+
+bool KOCore::editorWindowOpen()
+{
+  return m_editoropen;
+}
+
+void KOCore::setEditorWindowOpen(bool open)
+{
+  m_editoropen = open;
 }
 
 KTrader::OfferList KOCore::availablePlugins( const TQString &type, int version )

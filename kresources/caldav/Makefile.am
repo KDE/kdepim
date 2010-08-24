@@ -15,7 +15,7 @@ libkcal_caldav_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
 libkcal_caldav_la_LIBADD = \
                               $(top_builddir)/libkcal/libkcal.la \
                               $(top_builddir)/libkdepim/libkdepim.la \
-                              -lcaldav
+                              -lcaldav -lkorganizer
 libkcal_caldav_la_COMPILE_FIRST = prefsskel.h
 
 kde_module_LTLIBRARIES = kcal_caldav.la

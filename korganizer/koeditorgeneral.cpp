@@ -60,6 +60,7 @@
 
 #include "koprefs.h"
 #include "koglobals.h"
+#include "kocore.h"
 
 #include "koeditorgeneral.h"
 #include "koeditoralarms.h"
@@ -70,11 +71,13 @@
 KOEditorGeneral::KOEditorGeneral(TQObject* parent, const char* name) :
   TQObject( parent, name ), mAttachments(0)
 {
+  KOCore::self()->setEditorWindowOpen(true);
   mAlarmList.setAutoDelete( true );
 }
 
 KOEditorGeneral::~KOEditorGeneral()
 {
+  KOCore::self()->setEditorWindowOpen(false);
 }
 
 
