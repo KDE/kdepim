@@ -31,7 +31,7 @@
 
 #include "breadcrumbnavigation.h"
 #include "qmllistselectionmodel.h"
-#include "kdescendantsproxymodel.h"
+#include "libkdepim/kdescendantsproxymodel_p.h"
 #include "akonadi_next/checkableitemproxymodel.h"
 
 class QMLCheckableItemProxyModel : public CheckableItemProxyModel
