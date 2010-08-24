@@ -303,9 +303,7 @@ KPIM.MainView {
       handlePosition : 125
       handleHeight: 150
       anchors.fill: parent
-//       contentWidth: 240
       content: [
-      
           KMailActions {
             id : kmailActions
             anchors.fill : parent
@@ -341,131 +339,8 @@ KPIM.MainView {
           }
       ]
     }
-/*
-    SlideoutPanel {
-      id: actionPanel2
-      titleText: KDE.i18n( "Actions" )
-      handlePosition : 225
-      handleHeight: 150
-      anchors.fill: parent
-      contentWidth: 240
-      content: [
 
-          KPIM.Button {
-            id: replyButton
-            anchors.top: parent.top;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Reply" )
-            onClicked: {
-              actionPanel.collapse();
-              application.reply( messageView.itemId );
-            }
-          },
-          KPIM.Button {
-            id: replyAllButton
-            anchors.top: replyButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Reply To All" )
-            onClicked: {
-              actionPanel.collapse();
-              application.replyToAll( messageView.itemId );
-            }
-          },
-          KPIM.Button {
-            id: forwardButton
-            anchors.top: replyAllButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: KDE.i18n( "Forward" )
-            onClicked: {
-              actionPanel.collapse();
-              application.forwardInline( messageView.itemId );
-            }
-          },
-          KPIM.Action {
-            id: syncButton
-            anchors.top: forwardButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("akonadi_collection_sync")
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Action{
-            id : deleteButton
-            anchors.top: syncButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("akonadi_item_delete")
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Action{
-            id : importantButton
-            anchors.top: deleteButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("mark_message_important")
-            checkable : true
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Action{
-            id : markAsActionButton
-            anchors.top: importantButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            hardcoded_height: parent.height / 6
-            action : application.getAction("mark_message_action_item")
-            checkable : true
-            onTriggered : actionPanel.collapse();
-          },
-          KPIM.Button {
-            id : saveFavoriteButton
-            anchors.top: markAsActionButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            buttonText: KDE.i18n( "Save Favorite" )
-            width: parent.width - 10
-            height: collectionView.hasSelection ? parent.height / 6 : 0
-            visible : collectionView.hasSelection
-            onClicked : {
-              application.saveFavorite();
-              actionPanel.collapse();
-            }
-          },
-          KPIM.Button {
-            id : writeNewEmailButton
-            anchors.top: saveFavoriteButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "Write new Email" )
-            onClicked : {
-              application.startComposer();
-              actionPanel.collapse();
-            }
-          },
-          KPIM.Button {
-            visible : !collectionView.hasSelection
-            anchors.top: writeNewEmailButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText : KDE.i18n( "New Account" )
-            onClicked : {
-              application.launchAccountWizard();
-              actionPanel.collapse();
-            }
-          }          
-      ]
-    }
-*/
-  SlideoutPanel {
+    SlideoutPanel {
       anchors.fill: parent
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1 && messageView.visible
