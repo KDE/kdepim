@@ -135,7 +135,7 @@ namespace {
             const QModelIndex fprIndex = sourceModel()->index( source_row, AbstractKeyListModel::Fingerprint, source_parent );
             assert( fprIndex.isValid() );
             const QString fpr = fprIndex.data( Qt::EditRole ).toString();
-            
+
             return std::binary_search( m_importsByFingerprint.begin(), m_importsByFingerprint.end(),
                                        fpr.toLatin1().constData(),
                                        ByImportFingerprint<std::less>() );
@@ -176,7 +176,7 @@ ImportCertificatesCommand::Private::Private( ImportCertificatesCommand * qq, Key
       results(),
       ids()
 {
-    
+
 }
 
 ImportCertificatesCommand::Private::~Private() {}
@@ -188,13 +188,13 @@ ImportCertificatesCommand::Private::~Private() {}
 ImportCertificatesCommand::ImportCertificatesCommand( KeyListController * p )
     : Command( new Private( this, p ) )
 {
-    
+
 }
 
 ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, KeyListController * p )
     : Command( v, new Private( this, p ) )
 {
-    
+
 }
 
 ImportCertificatesCommand::~ImportCertificatesCommand() {}
@@ -412,7 +412,7 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
 
     connect( job.get(), SIGNAL(result(GpgME::ImportResult)),
              q, SLOT(importResult(GpgME::ImportResult)) );
-    connect( job.get(), SIGNAL(progress(QString,int,int)), 
+    connect( job.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
     const GpgME::Error err = job->start( data );
     if ( err.code() ) {
@@ -449,7 +449,7 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
 
     connect( job.get(), SIGNAL(result(GpgME::ImportResult)),
              q, SLOT(importResult(GpgME::ImportResult)) );
-    connect( job.get(), SIGNAL(progress(QString,int,int)), 
+    connect( job.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
     const GpgME::Error err = job->start( keys );
     if ( err.code() ) {
