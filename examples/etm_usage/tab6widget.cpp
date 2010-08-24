@@ -38,7 +38,7 @@
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-#include "akonadi_next/checkableitemproxymodel.h"
+#include "akonadi_next/kcheckableproxymodel.h"
 
 class Tab6TreeWidget : public EntityTreeWidget
 {
@@ -55,7 +55,7 @@ public:
     m_collectionFilter->setSourceModel(model);
     m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
 
-    m_checkableProxy = new CheckableItemProxyModel(this);
+    m_checkableProxy = new Future::KCheckableProxyModel(this);
     m_checkableProxy->setSourceModel(m_collectionFilter);
 
     m_itemSelectionModel = new QItemSelectionModel(m_collectionFilter);
@@ -80,7 +80,7 @@ public:
 
 private:
   Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
-  CheckableItemProxyModel *m_checkableProxy;
+  Future::KCheckableProxyModel *m_checkableProxy;
   QItemSelectionModel *m_itemSelectionModel;
 
 };

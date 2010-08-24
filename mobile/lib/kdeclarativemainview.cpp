@@ -47,7 +47,6 @@
 
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
-#include <akonadi_next/checkableitemproxymodel.h>
 
 #include "listproxy.h"
 #include "akonadibreadcrumbnavigationfactory.h"

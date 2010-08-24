@@ -19,8 +19,8 @@
     USA.
 */
 
-#ifndef CHECKABLEITEMPROXYMODEL_H
-#define CHECKABLEITEMPROXYMODEL_H
+#ifndef KCHECKABLEPROXYMODEL_H
+#define KCHECKABLEPROXYMODEL_H
 
 #include "kidentityproxymodel.h"
 
@@ -28,14 +28,17 @@
 
 #include <QItemSelection>
 
-class CheckableItemProxyModelPrivate;
+namespace Future
+{
 
-class AKONADI_NEXT_EXPORT CheckableItemProxyModel : public Future::KIdentityProxyModel
+class KCheckableProxyModelPrivate;
+
+class AKONADI_NEXT_EXPORT KCheckableProxyModel : public Future::KIdentityProxyModel
 {
   Q_OBJECT
 public:
-  CheckableItemProxyModel(QObject* parent = 0);
-  ~CheckableItemProxyModel();
+  KCheckableProxyModel(QObject* parent = 0);
+  ~KCheckableProxyModel();
 
   void setSelectionModel(QItemSelectionModel *itemSelectionModel);
 
@@ -51,11 +54,13 @@ protected:
   virtual bool select( const QItemSelection &selection, QItemSelectionModel::SelectionFlags command );
 
 private:
-  Q_DECLARE_PRIVATE(CheckableItemProxyModel)
-  CheckableItemProxyModelPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE(KCheckableProxyModel )
+  KCheckableProxyModelPrivate * const d_ptr;
 
   Q_PRIVATE_SLOT(d_func(), void selectionChanged(const QItemSelection &, const QItemSelection &) )
 };
+
+}
 
 #endif
 

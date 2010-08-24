@@ -23,8 +23,8 @@ set( akonadi_next_SRCS
   note.cpp
   notecreatorandselector.cpp
   quotacolorproxymodel.cpp
-  checkableitemproxymodel.cpp
   incidenceattachmentmodel.cpp
+  kcheckableproxymodel.cpp
   kviewstatemaintainer.cpp
   kidentityproxymodel.cpp
   amazingcompleter.cpp
