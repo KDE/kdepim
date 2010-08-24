@@ -97,10 +97,6 @@ class KBreadcrumbNavigationFactoryPrivate
   QItemSelectionModel *m_selectionModel;
   QItemSelectionModel *m_childItemsSelectionModel;
 
-  QMLListSelectionModel *m_qmlBreadcrumbSelectionModel;
-  QMLListSelectionModel *m_qmlSelectedItemSelectionModel;
-  QMLListSelectionModel *m_qmlChildSelectionModel;
-
   QAbstractItemModel *m_breadcrumbModel;
   QAbstractItemModel *m_selectedItemModel;
   QAbstractItemModel *m_unfilteredChildItemsModel;
@@ -109,6 +105,10 @@ class KBreadcrumbNavigationFactoryPrivate
   KModelIndexProxyMapper *m_modelIndexProxyMapper;
 
   QItemSelectionModel *m_checkModel;
+
+  QMLListSelectionModel *m_qmlBreadcrumbSelectionModel;
+  QMLListSelectionModel *m_qmlSelectedItemSelectionModel;
+  QMLListSelectionModel *m_qmlChildSelectionModel;
 
   QMLListSelectionModel *m_qmlBreadcrumbCheckModel;
   QMLListSelectionModel *m_qmlSelectedItemCheckModel;
