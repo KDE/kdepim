@@ -333,6 +333,7 @@ KPIM.MainView {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
       application.clearPersistedSelection("preFavSelection");
+      application.multipleSelectionFinished();
     }
     onCanceled : {
       favoriteSelector.visible = false;
