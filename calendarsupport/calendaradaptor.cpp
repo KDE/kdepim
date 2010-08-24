@@ -414,12 +414,15 @@ void CalendarAdaptor::schedule( KCalCore::iTIPMethod method, const Akonadi::Item
   }
 }
 
-void CalendarAdaptor::incidenceUpdate( const QString & )
+void CalendarAdaptor::incidenceUpdate( const QString &uid, const KDateTime &recurrenceId )
 {
-
+  Q_UNUSED( uid );
+  Q_UNUSED( recurrenceId );
 }
 
-void CalendarAdaptor::incidenceUpdated( const QString & )
+void CalendarAdaptor::incidenceUpdated( const QString &uid, const KDateTime &recurrenceId )
 {
+  Q_UNUSED( uid );
+  Q_UNUSED( recurrenceId );
 }
 
