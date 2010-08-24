@@ -30,6 +30,7 @@
 // Qt includes
 #include <QPushButton>
 
+#include <akonadi/control.h>
 
 
 KMailCVT::KMailCVT(QWidget *parent)
@@ -53,6 +54,7 @@ KMailCVT::KMailCVT(QWidget *parent)
 
         connect( selfilterpage->mCollectionRequestor, SIGNAL( collectionChanged(Akonadi::Collection) ),
                  this, SLOT( collectionChanged(Akonadi::Collection) ) );
+	Akonadi::Control::widgetNeedsAkonadi(this);
 }
 
 KMailCVT::~KMailCVT()
