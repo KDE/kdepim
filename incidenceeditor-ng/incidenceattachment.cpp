@@ -117,11 +117,11 @@ bool IncidenceAttachment::isDirty() const
         if ( attachment->isBinary() && listAttachment->isBinary()
           && attachment->decodedData() == listAttachment->decodedData() ) {
           // Not sure about this. Might be too expensive.
-          origAttachments.removeAt( i );
+          origAttachments.remove( i );
           found = true;
         } else if ( attachment->isUri() && listAttachment->isUri()
            && attachment->uri() == listAttachment->uri() ) {
-          origAttachments.removeAt( i );
+          origAttachments.remove( i );
           found = true;
         }
       }

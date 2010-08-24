@@ -242,7 +242,7 @@ void IncidenceAlarm::removeCurrentAlarm()
   Q_ASSERT( mUi->mAlarmList->selectedItems().size() == 1 );
   const int curAlarmIndex = mUi->mAlarmList->currentRow();
   delete mUi->mAlarmList->takeItem( curAlarmIndex );
-  mAlarms.removeAt( curAlarmIndex );
+  mAlarms.remove( curAlarmIndex );
 
   updateAlarmList();
   updateButtons();
