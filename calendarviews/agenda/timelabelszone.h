@@ -24,8 +24,6 @@
 #ifndef TIMELABELSZONE_H
 #define TIMELABELSZONE_H
 
-#include "eventviews_export.h"
-
 #include "timelabels.h"
 
 #include <KDateTime>

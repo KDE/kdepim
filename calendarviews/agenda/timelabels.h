@@ -23,11 +23,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef TIMELABELS_H
-#define TIMELABELS_H
-
-#include "eventviews_export.h"
-
+#ifndef EVENTVIEWS_TIMELABELS_H
+#define EVENTVIEWS_TIMELABELS_H
 
 #include "prefs.h"
 #include <KDateTime>
