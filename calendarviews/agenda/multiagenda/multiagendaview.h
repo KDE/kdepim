@@ -46,7 +46,7 @@ namespace EventViews {
 
 
 #if 0 // TODO_EVENTVIEWS
-class MultiAgendaViewConfigDialog : public KDialog
+class EVENTVIEWS_EXPORT MultiAgendaViewConfigDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -84,7 +84,7 @@ class MultiAgendaViewConfigDialog : public KDialog
 /**
   Shows one agenda for every resource side-by-side.
 */
-class MultiAgendaView : public EventView
+class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
 {
   Q_OBJECT
   public:
