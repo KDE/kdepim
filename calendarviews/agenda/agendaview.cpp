@@ -1183,7 +1183,7 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
     return;
   }
 
-  if ( !start.isValid() || !end.isValid() || start > end || start.daysTo( end ) > 31 ) {
+  if ( !start.isValid() || !end.isValid() || start > end || start.daysTo( end ) > MAX_DAY_COUNT ) {
     kWarning() << "got bizare parameters: " << start << end << " - aborting here";
     return;
   }

@@ -328,7 +328,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * Emitted when an event is moved using the mouse in an agenda
      * view (week / month).
      */
-    void shiftedEvent( const QDate &olddate, const QDate &ewdate );
+    void shiftedEvent( const QDate &olddate, const QDate &newdate );
 
     void incidenceSelected( const Akonadi::Item &, const QDate );
 

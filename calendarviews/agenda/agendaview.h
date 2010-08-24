@@ -91,6 +91,10 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     explicit AgendaView( QWidget *parent = 0, bool isSideBySide = false );
     virtual ~AgendaView();
 
+    enum {
+      MAX_DAY_COUNT = 42 // ( 6 * 7)
+    };
+
     /** Returns number of currently shown dates. */
     virtual int currentDateCount() const;
 
