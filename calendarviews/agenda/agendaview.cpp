@@ -405,10 +405,10 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
            SIGNAL(incidenceSelected(const Akonadi::Item &, const QDate &)) );
 
   // rescheduling of todos by d'n'd
-  connect( agenda, SIGNAL(droppedToDos(QList<KCalCore::Todo::Ptr>,const QPoint &,bool)),
-           SLOT(slotTodosDropped(QList<KCalCore::Todo::Ptr>,const QPoint &,bool)) );
-  connect( agenda, SIGNAL(droppedToDos(QList<KUrl>,const QPoint &,bool)),
-           SLOT(slotTodosDropped(QList<KUrl>,const QPoint &,bool)) );
+  connect( agenda, SIGNAL(droppedToDos(KCalCore::Todo::List,QPoint,bool)),
+           SLOT(slotTodosDropped(KCalCore::Todo::List,QPoint,bool)) );
+  connect( agenda, SIGNAL(droppedToDos(QList<KUrl>,QPoint,bool)),
+           SLOT(slotTodosDropped(QList<KUrl>,QPoint,bool)) );
 
 }
 
@@ -1658,7 +1658,7 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
 #endif
 }
 
-void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &gpos, bool allDay )
+void AgendaView::slotTodosDropped( const Todo::List &items, const QPoint &gpos, bool allDay )
 {
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
     return;
