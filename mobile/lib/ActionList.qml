@@ -64,7 +64,7 @@ QML.Item {
   }
 
   KPIM.ActionMenuContainer {
-    actionItemWidth : parent.width
+    actionItemWidth : parent.totalWidth
     anchors.left : nameItem.right
     anchors.bottom : nameItem.top
     id : _listContent
