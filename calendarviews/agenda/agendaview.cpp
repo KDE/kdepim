@@ -790,19 +790,17 @@ void AgendaView::updateView()
 */
 void AgendaView::updateConfig()
 {
-  d->mAgenda->updateConfig();
-
-  d->mAllDayAgenda->updateConfig();
-
-  d->mTimeLabelsZone->updateAll();
-
-  updateTimeBarWidth();
-
-  setHolidayMasks();
-
-  createDayLabels( true );
-
-  updateView();
+  // Agenda can be null if setPreferences() is called inside the ctor
+  // We don't need to update anything in this case.
+  if ( d->mAgenda && d->mAllDayAgenda ) {
+    d->mAgenda->updateConfig();
+    d->mAllDayAgenda->updateConfig();
+    d->mTimeLabelsZone->updateAll();
+    updateTimeBarWidth();
+    setHolidayMasks();
+    createDayLabels( true );
+    updateView();
+  }
 }
 
 void AgendaView::createTimeBarHeaders()
