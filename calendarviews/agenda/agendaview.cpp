@@ -333,6 +333,14 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
 
   /* Connect the agendas */
 
+  connect( d->mAllDayAgenda,
+           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
+           SLOT(newTimeSpanSelectedAllDay(QPoint,QPoint)) );
+
+  connect( d->mAgenda,
+           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
+           SLOT(newTimeSpanSelected(QPoint,QPoint)) );
+
   connectAgenda( d->mAgenda, d->mAllDayAgenda );
   connectAgenda( d->mAllDayAgenda, d->mAgenda );
 }
@@ -365,10 +373,6 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 
   connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
-
-  connect( agenda,
-           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
-           SLOT(newTimeSpanSelected(QPoint,QPoint)) );
 
   agenda->setCalendar( calendar() );
 
