@@ -101,6 +101,6 @@ Rectangle {
     }
   }
 
-  border.color : "lightblue"
+  border.color : "#4166F5"
   border.width : action.checked ? 2 : 0
 }

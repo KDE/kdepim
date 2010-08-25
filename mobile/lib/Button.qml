@@ -43,7 +43,7 @@ Rectangle {
   MouseArea {
     anchors.fill: parent
     onPressed: {
-      border.color = "lightblue";
+      border.color = "#4166F5";
       border.width = 2
     }
     onReleased: border.width = 0
