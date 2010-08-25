@@ -14,7 +14,7 @@ INCLUDES = \
 
 bin_PROGRAMS = korganizer
 
-korganizer_LDFLAGS = $(all_libraries) $(KDE_RPATH) -lkcal
+korganizer_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 korganizer_LDADD   = libkorganizer.la
 korganizer_SOURCES = main.cpp korganizer.cpp koapp.cpp
 korganizer_COMPILE_FIRST = koprefs_base.h
