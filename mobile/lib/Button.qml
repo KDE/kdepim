@@ -24,7 +24,7 @@ Rectangle {
   property alias buttonText: buttonText.text
   property alias font: buttonText.font
   signal clicked
-  
+
   radius: 12
   color: "#00000000" // Set a transparant color.
 
@@ -39,7 +39,7 @@ Rectangle {
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
   }
-    
+
   MouseArea {
     anchors.fill: parent
     onPressed: {
