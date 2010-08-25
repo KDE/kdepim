@@ -713,6 +713,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
         setCursor( Qt::ArrowCursor );
 #endif
         startSelectAction( viewportPos );
+        update();
       }
     }
     break;
