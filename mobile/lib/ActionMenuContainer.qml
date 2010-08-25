@@ -91,7 +91,11 @@ Item {
         children[i].triggered.connect( itemModel, triggered )
         // children[i].width = parent.actionItemWidth
         if (i == myListView.currentIndex)
+        {
           found = true;
+          if (children[i].showChildren != undefined)
+            children[i].showChildren = true;
+        }
         if (found)
           _spaceBelow += children[i].height
         else
