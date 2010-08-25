@@ -25,8 +25,8 @@
 #include <QSortFilterProxyModel>
 
 /**
- * This class is a workaround for buggy handling of insert/remove signals in QML:
- * http://bugreports.qt.nokia.com/browse/QTBUG-11644
+ * This class is a workaround for buggy handling of layout change signals in QML:
+ * http://bugreports.qt.nokia.com/browse/QTBUG-13146
  */
 class KResettingProxyModel : public QSortFilterProxyModel
 {

@@ -29,17 +29,13 @@ KResettingProxyModel::KResettingProxyModel(QObject* parent)
 
 void KResettingProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
-  connect(sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)), this, SLOT(slotBeginReset()));
-  connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(slotEndReset()));
-  connect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(slotBeginReset()));
-  connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(slotEndReset()));
+  connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotBeginReset()));
+  connect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(slotEndReset()));
 
   QSortFilterProxyModel::setSourceModel(sourceModel);
-  disconnect(sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)), this, SLOT(_q_sourceRowsAboutToBeInserted(QModelIndex,int,int)));
-  disconnect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(_q_sourceRowsInserted(QModelIndex,int,int)));
-  disconnect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(_q_sourceRowsAboutToBeRemoved(QModelIndex,int,int)));
-  disconnect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(_q_sourceRowsRemoved(QModelIndex,int,int)));
 
+  disconnect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(_q_sourceLayoutAboutToBeChanged()));
+  disconnect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(_q_sourceLayoutChanged()));
 }
 
 void KResettingProxyModel::slotBeginReset()
