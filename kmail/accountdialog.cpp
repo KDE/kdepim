@@ -279,6 +279,8 @@ void AccountDialog::makeImapAccountPage( bool connected )
   mImap.ui.editSNS->setIcon( KIcon("document-properties") );
   mImap.ui.editSNS->setFixedSize( 22, 22 );
 
+  mImap.ui.intervalSpin->setRange( GlobalSettings::self()->minimumCheckInterval(), 10000, 1 );
+
   if( connected ) {
     // not implemented for disconnected yet
     mImap.ui.autoExpungeCheck->hide();
@@ -315,6 +317,8 @@ void AccountDialog::makeImapAccountPage( bool connected )
   mImap.authButtonGroup->addButton( mImap.ui.authNTLM );
   mImap.authButtonGroup->addButton( mImap.ui.authGSSAPI );
   mImap.authButtonGroup->addButton( mImap.ui.authAnonymous );
+
+ 
 
   // Connect all slots.
   connect( mImap.ui.button, SIGNAL(clicked()), this, SLOT(slotReloadNamespaces()) );
@@ -460,6 +464,7 @@ void AccountDialog::setupSettings()
     mImap.ui.storePasswordCheck->setChecked( ai.storePasswd() );
     mImap.ui.intervalCheck->setChecked( intervalCheckingEnabled );
     mImap.ui.intervalSpin->setValue( interval);
+    
     mImap.ui.includeInCheck->setChecked( !ai.checkExclude() );
     QString trashfolder = ai.trash();
     if (trashfolder.isEmpty())
