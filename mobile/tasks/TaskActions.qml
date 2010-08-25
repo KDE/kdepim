@@ -31,7 +31,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "home"
-    name : KDE.i18n( "Home" )
+    name : "home_menu"
+    text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
     FakeAction { name : "purge_completed_todos" }
@@ -41,7 +42,8 @@ ActionMenuContainer {
 
   AgentInstanceList {
     category : "home"
-    name : KDE.i18n( "Accounts" )
+    name : "accounts_list"
+    text : KDE.i18n( "Accounts" )
 
     model : agentInstanceList
 
@@ -54,22 +56,25 @@ ActionMenuContainer {
 
   ActionList {
     category : "account"
-    name : KDE.i18n( "Account" )
+    name : "account_menu"
+    text : KDE.i18n( "Account" )
     ActionListItem { name : "akonadi_resource_synchronize" }
     ActionListItem { name : "akonadi_resource_properties" }
     ActionListItem { name : "akonadi_collection_create" }
   }
 
   ActionList {
+    name : "single_folder_folder_menu"
     category : "single_folder"
-    name : KDE.i18n( "Folder" )
+    text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
     FakeAction { name : "purge_completed_todos" }
   }
 
   ActionList {
     category : "single_folder"
-    name : KDE.i18n( "Edit" )
+    name : "single_folder_edit_menu"
+    text : KDE.i18n( "Edit" )
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_move_to_menu" }
@@ -79,21 +84,24 @@ ActionMenuContainer {
 
   ActionList {
     category : "single_folder"
-    name : KDE.i18n( "View" )
+    name : "single_folder_view_menu"
+    text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintenance" }
   }
 
   ActionList {
     category : "multiple_folder"
-    name : KDE.i18n( "Folders" )
+    name : "multi_folder_folder_menu"
+    text : KDE.i18n( "Folders" )
     ActionListItem { name : "akonadi_collection_sync" }
     FakeAction { name : "purge_completed_todos" }
   }
 
   ActionList {
     category : "multiple_folder"
-    name : KDE.i18n( "View" )
+    name : "multi_folder_view_menu"
+    text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
     FakeAction { name : "start_maintenance" }
@@ -101,7 +109,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "todo_viewer"
-    name : KDE.i18n( "ToDo" )
+    name : "todo_viewer_todo_menu"
+    text : KDE.i18n( "ToDo" )
     FakeAction { name : "new_sub_todo" }
     FakeAction { name : "make_sub_todo_independent" }
     FakeAction { name : "make_all_sub_todos_independent" }
@@ -109,13 +118,15 @@ ActionMenuContainer {
 
   ActionList {
     category : "todo_viewer"
-    name : KDE.i18n( "Attachments" )
+    name : "todo_viewer_attachment_menu"
+    text : KDE.i18n( "Attachments" )
     FakeAction { name : "save_all" }
   }
 
   ActionList {
     category : "todo_viewer"
-    name : KDE.i18n( "Edit" )
+    name : "todo_viewer_edit_menu"
+    text : KDE.i18n( "Edit" )
     FakeAction { name : "edit_todo" }
     ActionListItem { name : "akonadi_item_copy_to_menu" }
     ActionListItem { name : "akonadi_item_move_to_menu" }
@@ -123,8 +134,9 @@ ActionMenuContainer {
   }
 
   ApplicationGeneralActions {
+    name : "application_menu"
     category : "standard"
-    name : KDE.i18n( "KTasks" )
+    text : KDE.i18n( "KTasks" )
     type : "tasks"
   }
 }

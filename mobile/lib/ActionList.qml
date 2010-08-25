@@ -31,7 +31,8 @@ QML.Item {
 
   property string category
 
-  property alias name : nameItem.buttonText
+  property string name
+  property alias text : nameItem.buttonText
   property alias columnHeight : _listContent.height
   property alias totalWidth : _listContent.width
   property alias depth : _listContent.bottomMargin
@@ -48,7 +49,7 @@ QML.Item {
     width : parent.width
 
     onClicked : {
-      actionList_top.triggered(buttonText)
+      actionList_top.triggered(actionList_top.name)
       showChildren = true
     }
   }
@@ -60,7 +61,6 @@ QML.Item {
     id : _listContent
 
     onTriggered : {
-      console.log ("INNER NAME" + triggeredName + " " + nameItem.name)
       actionList_top.triggered(triggeredName)
     }
     visible : false

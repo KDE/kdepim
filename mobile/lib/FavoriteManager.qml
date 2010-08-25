@@ -25,7 +25,9 @@ import org.kde.pim.mobileui 4.5
 ReorderList {
   id: _root
   category : "home"
-  name : KDE.i18n( "Favorites" )
+
+  name : "favorites_list"
+  text : KDE.i18n( "Favorites" )
 
   delegate : ReorderListDelegate {
     height: _root.actionItemHeight

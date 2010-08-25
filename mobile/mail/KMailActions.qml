@@ -30,7 +30,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "home"
-    name : KDE.i18n( "Home" )
+    name : "home_menu"
+    text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
     FakeAction { name : "check_emails" }
     FakeAction { name : "send_queued_emails" }
@@ -44,7 +45,8 @@ ActionMenuContainer {
 
   AgentInstanceList {
     category : "home"
-    name : KDE.i18n( "Accounts" )
+    name : "accounts_list"
+    text : KDE.i18n( "Accounts" )
 
     model : agentInstanceList
 
@@ -62,7 +64,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "account"
-    name : KDE.i18n( "Account" )
+    name : "account_menu"
+    text : KDE.i18n( "Account" )
     ActionListItem { name : "akonadi_resource_synchronize" }
   //  FakeAction { name : "srv_side_subsrcp" }
     ActionListItem { name : "akonadi_manage_local_subscriptions" }
@@ -72,7 +75,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "single_folder"
-    name : KDE.i18n( "Folder" )
+    name : "single_folder_folder_menu"
+    text : KDE.i18n( "Folder" )
     ActionListItem { name : "akonadi_collection_sync" }
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "akonadi_move_all_to_trash" }
@@ -85,7 +89,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "single_folder"
-    name : KDE.i18n( "Edit" )
+    name : "single_folder_edit_menu"
+    text : KDE.i18n( "Edit" )
     ActionListItem { name : "akonadi_collection_properties" }
     ActionListItem { name : "akonadi_collection_create" }
     ActionListItem { name : "akonadi_collection_move_to_menu" }
@@ -95,7 +100,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "single_folder"
-    name : KDE.i18n( "View" )
+    name : "single_folder_view_menu"
+    text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintaince" }
     FakeAction { name : "prefer_html_to_plain" }
@@ -104,12 +110,13 @@ ActionMenuContainer {
 
   ActionListItem {
     category: "single_folder"
-    ActionListItem { name : "write_new_email" }
+    name : "write_new_email"
   }
 
   ActionList {
     category : "multiple_folder"
-    name : KDE.i18n( "Folders" )
+    name : "multi_folder_folder_menu"
+    text : KDE.i18n( "Folders" )
     FakeAction { name : "check_mail_in_sel_folder" }
     FakeAction { name : "mark_all_msg_as_read" }
     FakeAction { name : "move_all_msg_to_trash" }
@@ -119,7 +126,8 @@ ActionMenuContainer {
 
   ActionList {
     category : "multiple_folder"
-    name : KDE.i18n( "View" )
+    name : "multi_folder_view_menu"
+    text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintaince" }
     FakeAction { name : "prefer_html_to_plain" }
@@ -128,7 +136,8 @@ ActionMenuContainer {
 
   ActionList {
     category: "mail_viewer"
-    name: KDE.i18n( "Email" )
+    name : "email_menu"
+    text : KDE.i18n( "Email" )
     /*
     ActionListItem {
       name : "message_reply"
@@ -139,7 +148,8 @@ ActionMenuContainer {
     //TODO: Show this above onPressAndHold
     ActionList {
       category: "mail_viewer"
-      name: KDE.i18n( "Reply ..." )
+      name : "mail_viewer_reply"
+      text : KDE.i18n( "Reply ..." )
       ActionListItem { name: "message_reply" }
       ActionListItem { name: "message_reply_to_author" }
       ActionListItem { name: "message_reply_to_all" }
@@ -150,18 +160,20 @@ ActionMenuContainer {
       name : "message_forward"
       onPressAndHold: {
           console.log("TODO: Show the possible forward actions")
-      }      
+      }
     }*/
     //TODO: Show this above onPressAndHold
     ActionList {
       category: "mail_viewer"
-      name: KDE.i18n( "Forward ..." )
+      name : "mail_viewer_forward"
+      text : KDE.i18n( "Forward ..." )
       ActionListItem { name: "message_forward" }
       ActionListItem { name: "message_forward_as_attachment" }
       ActionListItem { name: "message_redirect" }
    }
     ActionList {
-      name: KDE.i18n( "Mark As" )
+      name : "mail_viewer_mark_as_menu"
+      text : KDE.i18n( "Mark As" )
       ActionListItem { name : "akonadi_mark_as_read" }
       ActionListItem { name : "akonadi_mark_as_unread" }
       ActionListItem { name : "akonadi_mark_as_important" }
@@ -176,13 +188,15 @@ ActionMenuContainer {
 
   ActionList {
     category: "mail_viewer"
-    name: KDE.i18n( "Attachments" )
+    name : "mail_viewer_attachments"
+    text : KDE.i18n( "Attachments" )
     FakeAction { name : "save_all" }
   }
 
   ActionList {
     category: "mail_viewer"
-    name: KDE.i18n( "Edit" )
+    name : "mail_viewer_edit"
+    text : KDE.i18n( "Edit" )
     FakeAction { name : "edit_email" }
     ActionListItem { name : "akonadi_item_copy_to_menu" }
     ActionListItem { name : "akonadi_item_move_to_menu" }
@@ -191,14 +205,16 @@ ActionMenuContainer {
 
   ActionList {
     category: "standard"
-    name: KDE.i18n( "Settings (merge)" )
+    name : "standard_settings"
+    text : KDE.i18n( "Settings (merge)" )
     FakeAction { name : "work_offline" }
     FakeAction { name : "configure_notifications" }
   }
 
   ApplicationGeneralActions {
     category : "standard"
-    name : KDE.i18n( "Application" )
+    name : "application_menu"
+    text : KDE.i18n( "Application" )
     type : "mail"
   }
 }
