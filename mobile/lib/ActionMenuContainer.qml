@@ -33,7 +33,7 @@ Item {
 
   property alias scriptActions : myScriptActions.data
 
-  default property alias content : myColumn.children
+  default property alias content : itemModel.children
 
   signal triggered(string triggeredName)
 
@@ -55,24 +55,37 @@ Item {
 
   function showOnlyCategory(category)
   {
-    myColumn.showOnlyCategory(category)
+    itemModel.showOnlyCategory(category)
   }
 
-  Column {
-    height : parent.height
-    width : parent.actionItemWidth
-    id : myColumn
-    spacing : actionItemSpacing
+  VisualItemModel {
+    id : itemModel
 
-    function showOnlyCategory(category)
-    {
+    function refresh() {
+      var _depth = -myListView.height;
       for ( var i = 0; i < children.length; ++i ) {
-        if ( children[i].category != undefined && children[i].category != "standard" )
-          children[i].visible = (children[i].category == category);
+        if (children[i].visible)
+          children[i].height = actionItemHeight
+        if (children[i].columnHeight != undefined)
+          children[i].columnHeight = myListView.height
+        if (children[i].totalWidth != undefined)
+          children[i].totalWidth = _topLevel.width - actionItemWidth
+        if (children[i].depth != undefined) {
+          children[i].depth = _depth
+          _depth += children[i].height + actionItemSpacing;
+        }
+        if (children[i].actionItemSpacing != undefined)
+          children[i].actionItemSpacing = actionItemSpacing
+        if (children[i].actionItemHeight != undefined)
+          children[i].actionItemHeight = actionItemHeight
+        children[i].triggered.disconnect( itemModel, triggered )
+        children[i].triggered.connect( itemModel, triggered )
+        // children[i].width = parent.actionItemWidth
       }
+    }
+    onChildrenChanged : {
       refresh();
     }
-
     function triggered(triggeredName) {
       myScriptActions.trigger(triggeredName)
       _topLevel.triggered(triggeredName)
@@ -81,46 +94,37 @@ Item {
         if (children[i].name != triggeredName && children[i].showChildren != undefined)
           children[i].showChildren = false;
       }
-
     }
 
-    function refresh() {
-      var _depth = -myColumn.height;
+    function showOnlyCategory(category)
+    {
       for ( var i = 0; i < children.length; ++i ) {
-        children[i].height = actionItemHeight
-        if (children[i].columnHeight != undefined)
-          children[i].columnHeight = myColumn.height
-        if (children[i].totalWidth != undefined)
-          children[i].totalWidth = _topLevel.width - actionItemWidth
-        if (children[i].depth != undefined) {
-          children[i].depth = _depth
-          if ( children[i].visible )
-            _depth += actionItemHeight + actionItemSpacing;
+        if ( children[i].category != undefined && children[i].category != "standard" )
+        {
+          children[i].visible = (children[i].category == category)
         }
-        if (children[i].actionItemSpacing != undefined)
-          children[i].actionItemSpacing = actionItemSpacing
-        if (children[i].actionItemHeight != undefined)
-          children[i].actionItemHeight = actionItemHeight
-        children[i].triggered.disconnect( myColumn, triggered )
-        children[i].triggered.connect( myColumn, triggered )
-        // children[i].width = parent.actionItemWidth
       }
-    }
-
-    onHeightChanged : {
-      refresh()
-    }
-
-    onChildrenChanged : {
       refresh();
     }
   }
 
+  ListView {
+    height : parent.height
+    width : parent.actionItemWidth
+    id : myListView
+    model : itemModel
+    spacing : actionItemSpacing
+
+    onHeightChanged : {
+      itemModel.refresh()
+    }
+  }
+
   onActionItemSpacingChanged : {
-    myColumn.refresh();
+    itemModel.refresh();
   }
 
   onActionItemHeightChanged : {
-    myColumn.refresh();
+    itemModel.refresh();
   }
 }

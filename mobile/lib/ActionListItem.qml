@@ -35,6 +35,14 @@ QML.Item {
   signal triggered(string triggeredName)
   signal pressAndHold()
 
+  onVisibleChanged :
+  {
+    if (!visible)
+      height = -actionItemSpacing
+    else
+      height = actionItemHeight
+  }
+
   KPIM.Action {
     height : parent.height
     width : parent.width

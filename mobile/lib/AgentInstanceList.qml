@@ -42,6 +42,15 @@ QML.Item {
   property alias showChildren : _listContent.visible
   signal triggered(string triggeredName)
 
+  onVisibleChanged :
+  {
+    if (!visible)
+      height = -actionItemSpacing
+    else
+      height = actionItemHeight
+  }
+
+
   KPIM.Button {
     id : nameItem
     height : parent.height

@@ -29,6 +29,14 @@ ReorderList {
   name : "favorites_list"
   text : KDE.i18n( "Favorites" )
 
+  onVisibleChanged :
+  {
+    if (!visible)
+      height = -actionItemSpacing
+    else
+      height = actionItemHeight
+  }
+
   delegate : ReorderListDelegate {
     height: _root.actionItemHeight
     width: _root.totalWidth - _root.actionItemWidth

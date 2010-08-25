@@ -29,6 +29,14 @@ QML.Rectangle {
   color : "red"
   property string name
 
+  onVisibleChanged :
+  {
+    if (!visible)
+      height = -actionItemSpacing
+    else
+      height = actionItemHeight
+  }
+
   signal triggered(string triggeredName)
 
   KPIM.Button {

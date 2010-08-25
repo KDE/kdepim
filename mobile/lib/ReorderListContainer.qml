@@ -61,12 +61,4 @@ Rectangle {
     FakeAction { id : downAction }
     FakeAction { id : deleteAction }
   }
-
-  onActionItemSpacingChanged : {
-    myColumn.refresh();
-  }
-
-  onActionItemHeightChanged : {
-    myColumn.refresh();
-  }
 }
