@@ -105,7 +105,7 @@ void EventIndicator::paintEvent( QPaintEvent *event )
   QPainter painter( this );
 
   for ( int i = 0; i < d->mColumns; ++i ) {
-    if ( d->mEnabled[ i ] || true ) {
+    if ( d->mEnabled[ i ] ) {
       const double cellWidth = static_cast<double>( contentsRect().right() ) / d->mColumns;
 
       const uint halfPixmapWidth = d->mPixmap.width() / 2;
