@@ -56,6 +56,7 @@
 #include <KCmdLineArgs>
 #include <KInputDialog>
 
+#include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
 
 using namespace Akonadi;
@@ -130,8 +131,11 @@ void KDeclarativeMainView::delayedInit()
 
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
-  if ( d->mListProxy )
-    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
+  if ( d->mListProxy ) {
+    KResettingProxyModel *resetter = new KResettingProxyModel(this);
+    resetter->setSourceModel( d->mListProxy );
+    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( resetter ) ) );
+  }
 
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
