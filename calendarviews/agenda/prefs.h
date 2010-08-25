@@ -29,6 +29,7 @@
 
 #include "eventviews_export.h"
 
+#include <kconfigskeleton.h>
 #include <KDateTime>
 
 namespace Akonadi
@@ -51,7 +52,6 @@ namespace EventViews
 class EVENTVIEWS_EXPORT Prefs
 {
   public:
-
     /** Creates an instance of Prefs with just base config
     */
     Prefs();
@@ -71,6 +71,7 @@ class EVENTVIEWS_EXPORT Prefs
     void writeConfig();
 
   public:
+
     void setMarcusBainsShowSeconds( bool showSeconds );
     bool marcusBainsShowSeconds() const;
 
@@ -148,6 +149,8 @@ class EVENTVIEWS_EXPORT Prefs
 
     void setExcludeHolidays( bool exclude );
     bool excludeHolidays() const;
+
+    KConfigSkeleton::ItemFont* fontItem( const QString &name ) const;
 
   public:
     // preferences data

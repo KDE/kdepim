@@ -902,4 +902,15 @@ void Prefs::setTimeScaleTimezones( const QStringList &list )
   d->mBaseConfig.setTimeScaleTimezones( list );
 }
 
+KConfigSkeleton::ItemFont* Prefs::fontItem( const QString &name ) const
+{
+  KConfigSkeletonItem *item = d->mAppConfig ? d->mAppConfig->findItem( name ) : 0;
+
+  if ( !item ) {
+    item = d->mBaseConfig.findItem( name );
+  }
+
+  return dynamic_cast<KConfigSkeleton::ItemFont *>( item );
+}
+
 // kate: space-indent on; indent-width 2; replace-tabs on;
