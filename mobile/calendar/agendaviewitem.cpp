@@ -29,7 +29,7 @@ using namespace EventViews;
 
 AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
-  , m_view( new AgendaView( 0 ) )
+  , m_view( new AgendaView( false, 0 ) )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );

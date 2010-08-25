@@ -19,7 +19,7 @@ class Settings : public KConfigSkeleton
     static
     void setCol_background( const QColor & v )
     {
-      if (!self()->isImmutable( QString::fromLatin1 ( "col_background" ) ))
+      if (!self()->isImmutable( QString::fromLatin1( "col_background" ) ))
         self()->mCol_background = v;
     }
 
@@ -38,7 +38,7 @@ class Settings : public KConfigSkeleton
     static
     void setCol_foreground( const QColor & v )
     {
-      if (!self()->isImmutable( QString::fromLatin1 ( "col_foreground" ) ))
+      if (!self()->isImmutable( QString::fromLatin1( "col_foreground" ) ))
         self()->mCol_foreground = v;
     }
 

@@ -32,7 +32,9 @@
 
 #include "eventview.h"
 
-#include <kcalcore/todo.h>
+#include "prefs.h"
+
+#include <KCalCore/Todo>
 
 #include <QFrame>
 
@@ -88,7 +90,13 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 {
   Q_OBJECT
   public:
-    explicit AgendaView( QWidget *parent = 0, bool isSideBySide = false );
+    explicit AgendaView( bool isSideBySide = false,
+                         const PrefsPtr &preferences = PrefsPtr( new Prefs() ),
+                         QWidget *parent = 0 );
+
+    explicit AgendaView( bool isSideBySide = false,
+                         QWidget *parent = 0 );
+
     virtual ~AgendaView();
 
     enum {
@@ -237,6 +245,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void alignAgendas();
 
   private:
+    void init();
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
     int timeLabelsWidth();

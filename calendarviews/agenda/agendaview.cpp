@@ -28,7 +28,6 @@
 #include "agenda.h"
 #include "agendaitem.h"
 #include "alternatelabel.h"
-#include "prefs.h"
 #include "timelabelszone.h"
 
 #include <calendarsupport/calendar.h>
@@ -240,8 +239,24 @@ void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &inciden
 
 ////////////////////////////////////////////////////////////////////////////
 
-AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
+AgendaView::AgendaView( bool isSideBySide,
+                        QWidget *parent )
   : EventView( parent ), d( new Private( this, isSideBySide ) )
+{
+  init();
+}
+
+
+AgendaView::AgendaView( bool isSideBySide,
+                        const PrefsPtr &prefs,
+                        QWidget *parent )
+  : EventView( parent ), d( new Private( this, isSideBySide ) )
+{
+  setPreferences( prefs );
+  init();
+}
+
+void AgendaView::init()
 {
   d->mSelectedDates.append( QDate::currentDate() );
 
@@ -275,7 +290,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   d->mAgendaLayout->setMargin( 0 );
   d->mAgendaLayout->setHorizontalSpacing( 2 );
   d->mAgendaLayout->setVerticalSpacing( 0 );
-  if ( isSideBySide ) {
+  if ( d->mIsSideBySide ) {
     d->mTimeBarHeaderFrame->hide();
   }
 
@@ -311,7 +326,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   connect( d->mAgenda, SIGNAL(upperYChanged(int)),
            SLOT(updateEventIndicatorBottom(int)) );
 
-  if ( isSideBySide ) {
+  if ( d->mIsSideBySide ) {
     d->mTimeLabelsZone->hide();
   }
 
@@ -319,7 +334,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   d->mBottomDayLabelsFrame = new KHBox( d->mSplitterAgenda );
   d->mBottomDayLabelsFrame->setSpacing( 2 );
 
-  if ( !isSideBySide ) {
+  if ( !d->mIsSideBySide ) {
     /* Make the all-day and normal agendas line up with each other */
     dummyAllDayRight->setFixedWidth( style()->pixelMetric( QStyle::PM_ScrollBarExtent ) -
                                      d->mAgendaLayout->horizontalSpacing() );

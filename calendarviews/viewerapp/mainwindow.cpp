@@ -72,7 +72,7 @@ void MainWindow::addView( const QString &viewName )
   EventView *eventView = 0;
 
   if ( viewName == QLatin1String( "agenda" ) ) {
-    eventView = new AgendaView( this );
+    eventView = new AgendaView( false, this );
   }
 
   if ( eventView != 0 ) {
