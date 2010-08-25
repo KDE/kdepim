@@ -7,6 +7,8 @@ ReorderListContainer 4.5 ReorderListContainer.qml
 ActionListItem 4.5 ActionListItem.qml
 AttachmentList 4.5 AttachmentList.qml
 CompletionSlider 4.5 CompletionSlider.qml
+HorizontalSelector 4.5 HorizontalSelector.qml
+HorizontalFadeSelector 4.5 HorizontalFadeSelector.qml
 ItemListView 4.5 ItemListView.qml
 ItemListViewDelegate 4.5 ItemListViewDelegate.qml
 MainView 4.5 MainView.qml
