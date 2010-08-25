@@ -1,5 +1,7 @@
 Button 4.5 Button.qml
 Button2 4.5 Button2.qml
+BulkActionScreen 4.5 BulkActionScreen.qml
+BulkActionList 4.5 BulkActionList.qml
 Action 4.5 Action.qml
 ActionList 4.5 ActionList.qml
 ActiveActionMenuItemDelegate 4.5 ActiveActionMenuItemDelegate.qml

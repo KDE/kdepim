@@ -44,6 +44,8 @@ install(FILES
   qmldir
   Action.qml
   ActiveActionMenuItemDelegate.qml
+  BulkActionScreen.qml
+  BulkActionList.qml
   FakeAction.qml
   FavoriteManager.qml
   ActionList.qml
