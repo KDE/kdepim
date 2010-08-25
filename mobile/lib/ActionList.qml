@@ -40,6 +40,7 @@ QML.Item {
   property alias actionItemHeight : _listContent.actionItemHeight
 
   property alias showChildren : _listContent.visible
+  property alias menuStyle : _listContent.menuStyle
 
   onVisibleChanged :
   {

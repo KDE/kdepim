@@ -43,6 +43,7 @@ install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
   Action.qml
+  ActiveActionMenuItemDelegate.qml
   FakeAction.qml
   FavoriteManager.qml
   ActionList.qml

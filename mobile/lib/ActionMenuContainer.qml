@@ -29,6 +29,7 @@ Item {
   property int actionItemWidth
   property int actionItemSpacing : 0
   property int bottomMargin
+  property bool menuStyle : false
   anchors.bottomMargin : bottomMargin
 
   property alias scriptActions : myScriptActions.data
@@ -61,8 +62,16 @@ Item {
   VisualItemModel {
     id : itemModel
 
+    property int spaceAbove
+    property int spaceBelow
+
     function refresh() {
       var _depth = -myListView.height;
+
+      var _spaceAbove = 0;
+      var _spaceBelow = 0;
+      var found = false;
+
       for ( var i = 0; i < children.length; ++i ) {
         if (children[i].visible)
           children[i].height = actionItemHeight
@@ -81,7 +90,15 @@ Item {
         children[i].triggered.disconnect( itemModel, triggered )
         children[i].triggered.connect( itemModel, triggered )
         // children[i].width = parent.actionItemWidth
+        if (i == myListView.currentIndex)
+          found = true;
+        if (found)
+          _spaceBelow += children[i].height
+        else
+          _spaceAbove += children[i].height
       }
+      spaceAbove = _spaceAbove;
+      spaceBelow = _spaceBelow - myListView.currentItem.height;
     }
     onChildrenChanged : {
       refresh();
@@ -90,12 +107,26 @@ Item {
       myScriptActions.trigger(triggeredName)
       _topLevel.triggered(triggeredName)
 
+      var _spaceAbove = 0;
+      var _spaceBelow = 0;
+      var found = false;
       for ( var i = 0; i < children.length; ++i ) {
-        if (children[i].name != triggeredName && children[i].showChildren != undefined)
+        if (children[i].name != triggeredName && children[i].showChildren != undefined) {
           children[i].showChildren = false;
+        }
+        else if (children[i].name == triggeredName)
+        {
+          found = true
+          myListView.currentIndex = i
+        }
+        if (found)
+          _spaceBelow += children[i].height
+        else
+          _spaceAbove += children[i].height
       }
+      spaceAbove = _spaceAbove;
+      spaceBelow = _spaceBelow - myListView.currentItem.height;
     }
-
     function showOnlyCategory(category)
     {
       for ( var i = 0; i < children.length; ++i ) {
@@ -114,6 +145,13 @@ Item {
     id : myListView
     model : itemModel
     spacing : actionItemSpacing
+
+    highlight : ActiveActionMenuItemDelegate{
+      id : menuHighLight;
+      visible : menuStyle;
+      spaceAbove : itemModel.spaceAbove;
+      spaceBelow : itemModel.spaceBelow;
+    }
 
     onHeightChanged : {
       itemModel.refresh()
