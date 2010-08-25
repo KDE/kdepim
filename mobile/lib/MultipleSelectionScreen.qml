@@ -24,6 +24,13 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
   anchors.fill : parent
+  property alias backgroundImage : backgroundImage.source
+
+  QML.Image {
+    id: backgroundImage
+    x: 0
+    y: 0
+  }
 
   signal finished()
   signal canceled()

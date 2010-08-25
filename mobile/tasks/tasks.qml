@@ -32,6 +32,7 @@ KPIM.MainView {
     taskView.visible = false;
     collectionView.visible = true;
     itemListPage.visible = true;
+    selectButton.visible = true;
     taskView.itemId = -1;
 
     updateContextActionsStates();
@@ -39,13 +40,13 @@ KPIM.MainView {
 
   function updateContextActionsStates()
   {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
-    {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
       taskActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
-    {
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       taskActions.showOnlyCategory("account")
-    } else { // something else is selected
+    } else if ( collectionView.numSelected > 1 ) {
+      taskActions.showOnlyCategory( "multiple_folder" );
+    } else {
       taskActions.showOnlyCategory("single_folder")
     }
   }
@@ -300,6 +301,7 @@ KPIM.MainView {
           taskActions.showOnlyCategory("todo_viewer")
           collectionView.visible = false;
           itemListPage.visible = false;
+          selectButton.visible = false;
         }
       }
     }
@@ -308,10 +310,12 @@ KPIM.MainView {
     id : favoriteSelector
     anchors.fill : parent
     visible : false
+    backgroundImage : backgroundImage.source
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
       application.clearPersistedSelection("preFavSelection");
+      application.multipleSelectionFinished();
     }
     onCanceled : {
       favoriteSelector.visible = false;
@@ -352,6 +356,13 @@ KPIM.MainView {
                 favoriteSelector.visible = true;
                 mainWorkView.visible = false;
               }
+            },
+            KPIM.ScriptAction {
+              name : "add_as_favorite"
+              script : {
+                actionPanelNew.collapse();
+                application.saveFavorite();
+              }
             }
           ]
 
@@ -364,7 +375,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition : 150
+      handlePosition : actionPanelNew.handlePosition + actionPanelNew.handleHeight
       id: attachmentPanel
       visible: taskView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
@@ -379,8 +390,15 @@ KPIM.MainView {
     }
   }
 
-   QML.Connections {
-     target: taskView
-     onIncidenceRemoved : { goBackToListing(); }
-   }
+  QML.Connections {
+    target: taskView
+    onIncidenceRemoved : { goBackToListing(); }
+  }
+
+  QML.Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
+    }
+  }
 }

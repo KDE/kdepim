@@ -1,24 +1,37 @@
-akregator         Frank Osterfeld <osterfeld@kde.org>
-blogilo           Mehrdad Momeny <mehrdad.momeny@gmail.com>
-kabcclient        Kevin Krammer <kevin.krammer@gmx.at>
-kalarm            David Jarvie <djarvie@kde.org>
-kaddressbook      Tobias Koenig <tokoe@kde.org>
-kdgantt           KDAB
-kjots             Stephen Kelly <steveire@gmail.com>
-kleopatra         Marc Mutz <mutz@kde.org>
-kmail             ?
-kmailcvt          Danny Kukawka <danny.kukawka@web.de>
-knode             Olivier Trichet <nive@nivalis.org>
-knotes            (this project is deprecated)
-konsolekalendar   Allen Winter <winter@kde.org>
-kontact           ?
-korganizer        Allen Winter <winter@kde.org>
-kresources        (this project is deprecated)
-ksendemail        ?
-ktimetracker      Thorsten Staerk <dev@staerk.de>
-libkdepim         ? 
-libkpgp           (this project is deprecated)
-libksieve         Marc Mutz <mutz@kde.org>
-plugins           ?
-qpgpme            Marc Mutz <mutz@kde.org>
-wizards           ?
+Applications
+akonadiconsole        ?
+akregator             Frank Osterfeld <osterfeld@kde.org>
+blogilo               Mehrdad Momeny <mehrdad.momeny@gmail.com>
+calendarsupport       ?
+calendarviews         ?
+incidenceeditors      ?
+kabcclient            Kevin Krammer <kevin.krammer@gmx.at>
+kaddressbook          Tobias Koenig <tokoe@kde.org>
+kalarm                David Jarvie <djarvie@kde.org>
+kdgantt               KDAB
+kjots                 Stephen Kelly <steveire@gmail.com>
+kleopatra             Marc Mutz <mutz@kde.org>
+kmail                 ?
+kmailcvt              Danny Kukawka <danny.kukawka@web.de>
+knode                 Olivier Trichet <nive@nivalis.org>
+knotes                ?
+konsolekalendar       Allen Winter <winter@kde.org>
+kontact               ?
+korganizer            Allen Winter <winter@kde.org>
+kresources            DEPRECATED
+ksendemail            ?
+ktimetracker          Thorsten Staerk <dev@staerk.de>
+libkdepim             ? 
+libkleo               Marc Mutz <mutz@kde.org>
+libkpgp               DEPRECATED
+libksieve             Marc Mutz <mutz@kde.org>
+messagecomposer       ?
+messagecore           ?
+messagelibs           ?
+messageviewer         Torgny Nyblom <kde@nyblom.org>
+nepomuk_email_feeder  ?
+ontologies            ?
+plugins               ?
+strigi-analyzer       ?
+templateparser        ?
+wizards               ?

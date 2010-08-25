@@ -706,8 +706,8 @@ class CALENDARSUPPORT_EXPORT Calendar : public QObject,
 
     QAbstractItemModel *treeModel() const;
 
-    void incidenceUpdated( const QString &uid );
-    void incidenceUpdate( const QString &uid );
+    void incidenceUpdated( const QString &uid, const KDateTime &recurrenceId );
+    void incidenceUpdate( const QString &uid, const KDateTime &recurrenceId );
 
     Akonadi::Item ::List rawEvents( EventSortField sortField = EventSortUnsorted,
                                     SortDirection sortDirection = SortDirectionAscending );

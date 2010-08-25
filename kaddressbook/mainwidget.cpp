@@ -34,7 +34,7 @@
 #include "grantleecontactgroupformatter.h"
 #endif
 
-#include <akonadi_next/checkableitemproxymodel.h>
+#include <akonadi_next/kcheckableproxymodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
@@ -141,7 +141,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   mCollectionSelectionModel = new QItemSelectionModel( mCollectionTree );
-  CheckableItemProxyModel *checkableProxyModel = new CheckableItemProxyModel( this );
+  Future::KCheckableProxyModel *checkableProxyModel = new Future::KCheckableProxyModel( this );
   checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
   checkableProxyModel->setSourceModel( mCollectionTree );
 

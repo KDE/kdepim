@@ -143,6 +143,7 @@ KPIM.MainView {
           onClicked : {
             agendaView.visible = false;
             mainWorkView.visible = true;
+            selectButton.visible = true
             korganizerActions.showOnlyCategory("home")
           }
         }
@@ -181,11 +182,12 @@ KPIM.MainView {
     id : favoriteSelector
     anchors.fill : parent
     anchors.topMargin : 12
-    anchors.leftMargin: 40
     visible : false
+    backgroundImage : backgroundImage.source
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
+      application.multipleSelectionFinished();
     }
     onCanceled : {
       favoriteSelector.visible = false;
@@ -312,6 +314,7 @@ KPIM.MainView {
             agenda.showRange( dateEdit.date, 0 /* "Day" */ );
             mainWorkView.visible = false
             agendaView.visible = true
+            selectButton.visible = false
           }
         }
         KPIM.Button2 {
@@ -322,6 +325,7 @@ KPIM.MainView {
             agenda.showRange( dateEdit.date, 1 /* "Week" */ );
             mainWorkView.visible = false
             agendaView.visible = true
+            selectButton.visible = false
           }
         }
         KPIM.Button2 {
@@ -332,6 +336,7 @@ KPIM.MainView {
             agenda.showRange( dateEdit.date, 2 /* "Month" */ );
             mainWorkView.visible = false
             agendaView.visible = true
+            selectButton.visible = false
           }
         }
       }
@@ -404,6 +409,13 @@ KPIM.MainView {
                 actionPanelNew.collapse();
                 favoriteSelector.visible = true;
                 mainWorkView.visible = false;
+              }
+            },
+            KPIM.ScriptAction {
+              name : "add_as_favorite"
+              script : {
+                actionPanelNew.collapse();
+                application.saveFavorite();
               }
             }
           ]

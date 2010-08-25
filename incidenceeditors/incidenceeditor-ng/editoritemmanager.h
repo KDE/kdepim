@@ -122,8 +122,11 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     };
 
   Q_SIGNALS:
-    void itemSaveFinished( EditorItemManager::SaveAction action );
-    void itemSaveFailed( EditorItemManager::SaveAction action, const QString &message );
+    void itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction action );
+
+    void itemSaveFailed( CalendarSupport::EditorItemManager::SaveAction action,
+                         const QString &message );
+
     void revertFinished();
     void revertFailed( const QString &message );
 

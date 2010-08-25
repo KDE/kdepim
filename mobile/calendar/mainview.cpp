@@ -40,7 +40,9 @@
 #include <qdeclarativecontext.h>
 
 #include "agendaviewitem.h"
+#include "qmldateedit.h"
 #include "calendar/incidenceview.h"
+#include "calendar/kcalitembrowseritem.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -50,9 +52,11 @@
 #include <QDBusConnection>
 
 using namespace Akonadi;
-using namespace CalendarSupport;
+using CalendarSupport::KCalPrefs;
 
+QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( EventViews::AgendaView )
+QML_DECLARE_TYPE( Qt::QmlDateEdit )
 
 MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
@@ -67,12 +71,15 @@ MainView::~MainView()
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
+  setWindowTitle( i18n( "KOrganizer" ) );
 
   addMimeType( KCalCore::Event::eventMimeType() );
   addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
 
+  qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
   qmlRegisterType<EventViews::AgendaViewItem>( "org.kde.calendarviews", 4, 5, "AgendaView" );
+  qmlRegisterType<Qt::QmlDateEdit>( "org.qt", 4, 7, "QmlDateEdit" );
 
   m_calendar = new CalendarSupport::Calendar( entityTreeModel(), regularSelectedItems(), KSystemTimeZones::local() );
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );

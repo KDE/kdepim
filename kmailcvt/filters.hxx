@@ -25,6 +25,7 @@
 #include <Akonadi/Collection>
 #include <KMime/KMimeMessage>
 
+
 #include "kimportpage.h"
 
 class FilterInfo
@@ -96,7 +97,7 @@ class Filter
 
     bool addAkonadiMessage( FilterInfo* info,
                             const Akonadi::Collection &collection,
-                            const KMime::Message::Ptr message );
+                            const KMime::Message::Ptr& message );
 
     bool addMessage( FilterInfo* info,
                      const QString& folder,

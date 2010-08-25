@@ -112,8 +112,10 @@ bool KOTodoViewSortFilterProxyModel::lessThan( const QModelIndex &left,
 
 void KOTodoViewSortFilterProxyModel::setCategoryFilter( const QStringList &categories )
 {
+  emit layoutAboutToBeChanged();
   mCategories = categories;
   invalidateFilter();
+  emit layoutChanged();
 }
 
 #include "kotodoviewsortfilterproxymodel.moc"

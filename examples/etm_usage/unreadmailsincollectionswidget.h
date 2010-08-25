@@ -29,7 +29,9 @@
 
 class QItemSelectionModel;
 
-class CheckableItemProxyModel;
+namespace Future {
+  class KCheckableProxyModel;
+}
 
 namespace Akonadi
 {
@@ -63,7 +65,7 @@ private:
   Akonadi::ChangeRecorder *m_changeRecorder;
   Akonadi::EntityTreeModel *m_etm;
   QItemSelectionModel *m_checkedItemModel;
-  CheckableItemProxyModel *m_checkableProxy;
+  Future::KCheckableProxyModel *m_checkableProxy;
 
 
 };

@@ -22,9 +22,6 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QApplication>
-#include <QtGui/QColumnView>
-#include <QtGui/QTreeView>
-#include <QtGui/QListView>
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusmessage.h>
 
@@ -50,7 +47,6 @@
 
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
-#include <akonadi_next/checkableitemproxymodel.h>
 
 #include "listproxy.h"
 #include "akonadibreadcrumbnavigationfactory.h"
@@ -60,6 +56,7 @@
 #include <KCmdLineArgs>
 #include <KInputDialog>
 
+#include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
 
 using namespace Akonadi;
@@ -134,8 +131,11 @@ void KDeclarativeMainView::delayedInit()
 
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
-  if ( d->mListProxy )
-    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
+  if ( d->mListProxy ) {
+    KResettingProxyModel *resetter = new KResettingProxyModel(this);
+    resetter->setSourceModel( d->mListProxy );
+    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( resetter ) ) );
+  }
 
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
@@ -335,6 +335,15 @@ void KDeclarativeMainView::loadFavorite(const QString& name)
     return;
   }
   saver->restoreState( cfg );
+}
+
+void KDeclarativeMainView::multipleSelectionFinished()
+{
+  QModelIndexList list = d->mMultiBnf->checkModel()->selectedRows();
+  QItemSelection selection;
+  foreach(const QModelIndex &idx, list)
+    selection.select(idx, idx);
+  d->mBnf->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
 }
 
 QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const

@@ -74,7 +74,7 @@ bool MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
   return mailer.mailTo(
     incidence,
     CalendarSupport::identityManager()->identityForAddress( from ),
-    from, bccMe, recipients, messageText, KCalPrefs::instance()->mMailTransport );
+    from, bccMe, recipients, messageText, KCalPrefs::instance()->mailTransport() );
 }
 
 bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -89,7 +89,7 @@ bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
   return mailer.mailTo(
     incidence,
     CalendarSupport::identityManager()->identityForAddress( from ),
-    from, bccMe, recipients, messageText, KCalPrefs::instance()->mMailTransport );
+    from, bccMe, recipients, messageText, KCalPrefs::instance()->mailTransport() );
 }
 
 bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -108,7 +108,7 @@ bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
     status = mailer.mailAttendees(
       incidence,
       CalendarSupport::identityManager()->identityForAddress( from ),
-      bccMe, messageText, KCalPrefs::instance()->mMailTransport );
+      bccMe, messageText, KCalPrefs::instance()->mailTransport() );
   } else {
     QString subject;
     KCalCore::Incidence::Ptr inc = incidence.dynamicCast<KCalCore::Incidence>() ;
@@ -118,7 +118,7 @@ bool MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
     status = mailer.mailOrganizer(
       incidence,
       CalendarSupport::identityManager()->identityForAddress( from ),
-      from, bccMe, messageText, subject, KCalPrefs::instance()->mMailTransport );
+      from, bccMe, messageText, subject, KCalPrefs::instance()->mailTransport() );
   }
   return status;
 }

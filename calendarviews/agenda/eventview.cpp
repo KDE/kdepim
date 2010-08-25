@@ -38,6 +38,7 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/collectionselectionproxymodel.h>
 #include <calendarsupport/entitymodelstatesaver.h>
+#include <calendarsupport/kcalprefs.h>
 
 #include <kholidays/holidayregion.h>
 
@@ -69,6 +70,7 @@ class EventView::Private
         mTypeAhead( false ),
         mTypeAheadReceiver( 0 ),
         mPrefs( new Prefs() ),
+        mKCalPrefs( new CalendarSupport::KCalPrefs() ),
         mChanger( 0 ),
         mPendingChanges( true )
     {
@@ -118,6 +120,7 @@ class EventView::Private
 
     KHolidays::HolidayRegionPtr mHolidayRegion;
     PrefsPtr mPrefs;
+    KCalPrefsPtr mKCalPrefs;
 
     CalendarSupport::IncidenceChanger *mChanger;
     bool mPendingChanges;
@@ -285,9 +288,26 @@ void EventView::setPreferences( const PrefsPtr &preferences )
   }
 }
 
+void EventView::setKCalPreferences( const KCalPrefsPtr &preferences )
+{
+  if ( d->mKCalPrefs != preferences ) {
+    if ( preferences ) {
+        d->mKCalPrefs = preferences;
+    } else {
+      d->mKCalPrefs = KCalPrefsPtr( new CalendarSupport::KCalPrefs() );
+    }
+    updateConfig();
+  }
+}
+
 PrefsPtr EventView::preferences() const
 {
   return d->mPrefs;
+}
+
+KCalPrefsPtr EventView::kcalPreferences() const
+{
+  return d->mKCalPrefs;
 }
 
 CalendarSupport::CalendarSearch* EventView::calendarSearch() const

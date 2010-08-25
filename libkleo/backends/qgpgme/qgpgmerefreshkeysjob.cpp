@@ -117,8 +117,8 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
 
   mProcess->setOutputChannelMode( KProcess::SeparateChannels );
   mProcess->start();
-   if ( !mProcess->waitForStarted() ) {
-    mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ) ); // what else?
+  if ( !mProcess->waitForStarted() ) {
+    mError = GpgME::Error::fromCode( GPG_ERR_ENOENT, GPG_ERR_SOURCE_GPGSM ); // what else?
     deleteLater();
     return mError;
   } else
@@ -129,7 +129,7 @@ void Kleo::QGpgMERefreshKeysJob::slotCancel() {
   if ( mProcess )
     mProcess->kill();
   mProcess = 0;
-  mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_CANCELED ) );
+  mError = GpgME::Error::fromCode( GPG_ERR_CANCELED, GPG_ERR_SOURCE_GPGSM );
 }
 
 void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QString & type, const QStringList & args ) {
@@ -156,7 +156,7 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
       kDebug( 5150 ) <<"expected number for second ERROR arg, got something else";
       return;
     }
-    mError = GpgME::Error( gpg_err_make( (gpg_err_source_t)source, (gpg_err_code_t)code ) );
+    mError = GpgME::Error::fromCode( code, source );
 
 
   } else if ( type == "PROGRESS" ) {
@@ -206,7 +206,7 @@ void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitS
   emit done();
   if ( !mError &&
        ( exitStatus != QProcess::NormalExit || exitCode != 0 ) )
-    mError = GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_GENERAL ) );
+    mError = GpgME::Error::fromCode( GPG_ERR_GENERAL, GPG_ERR_SOURCE_GPGSM );
   emit result( mError );
   deleteLater();
 }

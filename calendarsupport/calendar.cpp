@@ -560,13 +560,15 @@ void Calendar::setUnfilteredModel( QAbstractItemModel *model )
 // This method will be called probably multiple times if a series of changes where done.
 // One finished the endChange() method got called.
 
-void Calendar::incidenceUpdate( const QString &uid )
+void Calendar::incidenceUpdate( const QString &uid, const KDateTime &recurrenceId )
 {
   Q_UNUSED( uid );
+  Q_UNUSED( recurrenceId );
 }
 
-void Calendar::incidenceUpdated( const QString &uid )
+void Calendar::incidenceUpdated( const QString &uid, const KDateTime &recurrenceId )
 {
+  Q_UNUSED( recurrenceId );
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( itemForIncidenceUid( uid ) );
 
   if ( !incidence ) {

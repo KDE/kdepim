@@ -30,11 +30,6 @@
 
 #include "prefs_base.h"
 
-//TODO_SPLIT
-//#include "kocore.h"
-
-//#include "categoryconfig.h"
-
 #include <akonadi/collection.h>
 
 #include <kmime/kmime_header_parsing.h>
@@ -77,17 +72,7 @@ class BaseConfig : public PrefsBase
     void setTimeScaleTimezones( const QStringList &timeZones );
     QStringList timeScaleTimezones() const;
 
-    QString defaultCalendar() const;
-    Akonadi::Collection defaultCollection() const;
-    void setDefaultCollection( const Akonadi::Collection& col );
-
   public:
-    QString mHtmlExportFile;
-
-    // Groupware passwords
-    QString mPublishPassword;
-    QString mRetrievePassword;
-
     QHash<QString,QColor> mCategoryColors;
     QColor mDefaultCategoryColor;
 
@@ -99,9 +84,6 @@ class BaseConfig : public PrefsBase
 
     KDateTime::Spec mTimeSpec;
     QStringList mTimeScaleTimeZones;
-
-    QString mDefaultCalendar;
-    Akonadi::Collection mDefaultCollection;
 
   protected:
     void usrSetDefaults();
@@ -127,11 +109,6 @@ BaseConfig::BaseConfig() : PrefsBase()
   mDefaultMonthViewFont.setPointSize(
     qMax( mDefaultMonthViewFont.pointSize() - 2, 6 ) );
 
-  // TODO move this to the kcfg file
-  setCurrentGroup( "General" );
-  addItemPath( "Html Export File", mHtmlExportFile,
-      QDir::homePath() + '/' + i18nc( "Default export file", "calendar.html" ) );
-
   agendaTimeLabelsFontItem()->setDefaultValue( mDefaultAgendaTimeLabelsFont );
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
 }
@@ -149,24 +126,6 @@ void BaseConfig::setTimeScaleTimezones( const QStringList &list )
 QStringList BaseConfig::timeScaleTimezones() const
 {
   return mTimeScaleTimeZones;
-}
-
-QString BaseConfig::defaultCalendar() const
-{
-  return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
-}
-
-Akonadi::Collection BaseConfig::defaultCollection() const
-{
-  return mDefaultCollection;
-}
-
-void BaseConfig::setDefaultCollection( const Akonadi::Collection& col )
-{
-  mDefaultCollection = col;
-  if ( !col.isValid() ) {
-    mDefaultCalendar ="";
-  }
 }
 
 void BaseConfig::usrSetDefaults()
@@ -235,7 +194,6 @@ void BaseConfig::usrReadConfig()
   }
 #endif
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  mDefaultCalendar = defaultCalendarConfig.readEntry( "Default Calendar", QString() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
@@ -281,9 +239,6 @@ void BaseConfig::usrWriteConfig()
     config()->deleteEntry( "Retrieve Server Password" );
   }
 #endif
-
-  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendar() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
@@ -868,36 +823,6 @@ void Prefs::setTimeSpec( const KDateTime::Spec &spec )
   d->mBaseConfig.mTimeSpec = spec;
 }
 
-void Prefs::setHtmlExportFile( const QString &fileName )
-{
-  d->mBaseConfig.mHtmlExportFile = fileName;
-}
-
-QString Prefs::htmlExportFile() const
-{
-  return d->mBaseConfig.mHtmlExportFile;
-}
-
-void Prefs::setPublishPassword( const QString &password )
-{
-  d->mBaseConfig.mPublishPassword = password;
-}
-
-QString Prefs::publishPassword() const
-{
-  return d->mBaseConfig.mPublishPassword;
-}
-
-void Prefs::setRetrievePassword( const QString &password )
-{
-  d->mBaseConfig.mRetrievePassword = password;
-}
-
-QString Prefs::retrievePassword() const
-{
-  return d->mBaseConfig.mRetrievePassword;
-}
-
 void Prefs::setCategoryColor( const QString &cat, const QColor &color )
 {
   d->mBaseConfig.mCategoryColors.insert( cat, color );
@@ -921,21 +846,6 @@ QColor Prefs::categoryColor( const QString &cat ) const
 bool Prefs::hasCategoryColor( const QString &cat ) const
 {
     return d->mBaseConfig.mCategoryColors[ cat ].isValid();
-}
-
-QString Prefs::defaultCalendar() const
-{
-  return d->mBaseConfig.defaultCalendar();
-}
-
-Akonadi::Collection Prefs::defaultCollection() const
-{
-  return d->mBaseConfig.defaultCollection();
-}
-
-void Prefs::setDefaultCollection( const Akonadi::Collection& col )
-{
-  d->mBaseConfig.setDefaultCollection( col );
 }
 
 void Prefs::setResourceColor ( const QString &cal, const QColor &color )
@@ -982,119 +892,6 @@ QColor Prefs::resourceColor( const QString &cal )
   }
 }
 
-QString Prefs::fullName() const
-{
-  QString tusername;
-  if ( d->getBool( d->mBaseConfig.emailControlCenterItem() ) ) {
-    KEMailSettings settings;
-    tusername = settings.getSetting( KEMailSettings::RealName );
-  } else {
-    tusername = d->getString( d->mBaseConfig.userNameItem() );
-  }
-
-  // Quote the username as it might contain commas and other quotable chars.
-  tusername = KPIMUtils::quoteNameIfNecessary( tusername );
-
-  QString tname, temail;
-  // ignore the return value from extractEmailAddressAndName() because
-  // it will always be false since tusername does not contain "@domain".
-  KPIMUtils::extractEmailAddressAndName( tusername, temail, tname );
-  return tname;
-}
-
-QString Prefs::email() const
-{
-  if ( d->getBool( d->mBaseConfig.emailControlCenterItem() ) ) {
-    KEMailSettings settings;
-    return settings.getSetting( KEMailSettings::EmailAddress );
-  } else {
-    return d->getString( d->mBaseConfig.userEmailItem() );
-  }
-}
-
-QStringList Prefs::allEmails() const
-{
-  // Grab emails from the email identities
-  QStringList lst;/* = KOCore::self()->identityManager()->allEmails();
-  // Add emails configured in korganizer
-  lst += mAdditionalMails;
-  // Add the email entered as the userEmail here
-  lst += email();
-                  */
-  // Warning, this list could contain duplicates.
-  return lst;
-}
-
-QStringList Prefs::fullEmails() const
-{
-  QStringList fullEmails;
-  /*
-  // The user name and email from the config dialog:
-  fullEmails << QString( "%1 <%2>" ).arg( fullName() ).arg( email() );
-
-  QStringList::Iterator it;
-  // Grab emails from the email identities
-  IdentityManager *idmanager = KOCore::self()->identityManager();
-  QStringList lst = idmanager->identities();
-  IdentityManager::ConstIterator it1;
-  for ( it1 = idmanager->begin(); it1 != idmanager->end(); ++it1 ) {
-    fullEmails << (*it1).fullEmailAddr();
-  }
-  // Add emails configured in korganizer
-  lst = mAdditionalMails;
-  for ( it = lst.begin(); it != lst.end(); ++it ) {
-    fullEmails << QString( "%1 <%2>" ).arg( fullName() ).arg( *it );
-  }
-
-  // Warning, this list could contain duplicates.
-  // */
-  return fullEmails;
-}
-
-bool Prefs::thatIsMe(const QString &_email ) const
-{
-  // TODO_SPLIT: review this
-
-  // NOTE: this method is called for every created agenda view item,
-  // so we need to keep performance in mind
-
-  /* identityManager()->thatIsMe() is quite expensive since it does parsing of
-     _email in a way which is unnecessarily complex for what we can have here,
-     so we do that ourselves. This makes sense since this
-
-  if ( KOCore::self()->identityManager()->thatIsMe( _email ) ) {
-    return true;
-  }
-  */
-
-  // in case email contains a full name, strip it out.
-  // the below is the simpler but slower version of the following code:
-  // const QString email = KPIM::getEmailAddress( _email );
-/*  const QByteArray tmp = _email.toUtf8();
-  const char *cursor = tmp.constData();
-  const char *end = tmp.data() + tmp.length();
-  KMime::Types::Mailbox mbox;
-  KMime::HeaderParsing::parseMailbox( cursor, end, mbox );
-  const QString email = mbox.addrSpec().asString();
-
-  if ( this->email() == email ) {
-    return true;
-  }
-
-  for ( IdentityManager::ConstIterator it = KOCore::self()->identityManager()->begin();
-        it != KOCore::self()->identityManager()->end(); ++it ) {
-    if ( email == (*it).emailAddr() ) {
-      return true;
-    }
-  }
-
-  if ( mAdditionalMails.contains( email ) ) {
-    return true;
-  }
-*/
-  return false;
-}
-
 QStringList Prefs::timeScaleTimezones() const
 {
   return d->mBaseConfig.timeScaleTimezones();
@@ -1103,6 +900,17 @@ QStringList Prefs::timeScaleTimezones() const
 void Prefs::setTimeScaleTimezones( const QStringList &list )
 {
   d->mBaseConfig.setTimeScaleTimezones( list );
+}
+
+KConfigSkeleton::ItemFont* Prefs::fontItem( const QString &name ) const
+{
+  KConfigSkeletonItem *item = d->mAppConfig ? d->mAppConfig->findItem( name ) : 0;
+
+  if ( !item ) {
+    item = d->mBaseConfig.findItem( name );
+  }
+
+  return dynamic_cast<KConfigSkeleton::ItemFont *>( item );
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

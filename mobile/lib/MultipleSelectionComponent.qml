@@ -24,23 +24,25 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi 4.5
 
 QML.Rectangle {
-
+  color : "#00000000"
   AkonadiBreadcrumbNavigationView {
     id : navigationView
 
     showCheckboxes : true
+    checkable : true
 
     breadcrumbComponentFactory : _multiSelectionComponentFactory
 
     anchors.top : parent.top
     anchors.left : parent.left
     anchors.bottom : parent.bottom
-    width : 400
+    width : parent.width / 3
   }
 
   QML.ListView {
     id : selectedView
     anchors.left : navigationView.right
+    anchors.right : parent.right
     anchors.top : parent.top
     anchors.bottom : parent.bottom
 
@@ -48,9 +50,9 @@ QML.Rectangle {
 
     delegate : CollectionDelegate{
       id : selectedDelegate
-      showCheckbox : true
+      uncheckable : true
+      alternatingRowColors : true
       checkModel : _multiSelectionComponentFactory.qmlCheckedItemsCheckModel();
-      indentation : 35
       height : 70
     }
   }

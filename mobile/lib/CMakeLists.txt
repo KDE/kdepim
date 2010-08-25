@@ -10,6 +10,7 @@ set(mobileui_SRCS
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
     akonadibreadcrumbnavigationfactory.cpp
+    kresettingproxymodel.cpp
     declarativeakonadiitem.cpp
     kdeclarativeapplication.cpp
     kdeclarativemainview_p.cpp
@@ -43,8 +44,10 @@ install(FILES
   qmldir
   Action.qml
   FakeAction.qml
+  FavoriteManager.qml
   ActionList.qml
   ReorderList.qml
+  ReorderListDelegate.qml
   MultipleSelectionComponent.qml
   MultipleSelectionScreen.qml
   ReorderListContainer.qml

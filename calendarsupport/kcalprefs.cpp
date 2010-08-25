@@ -38,13 +38,30 @@ using namespace CalendarSupport;
 
 K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 
-KCalPrefs::KCalPrefs() : KCalPrefsBase()
+class KCalPrefs::Private
+{
+  public:
+    Private() : mDefaultCalendarId( -1 )
+    {
+    }
+
+    // Groupware passwords - deprecated !?
+    // QString mPublishPassword;
+    // QString mRetrievePassword;
+
+    QString mMailTransport;
+
+    KDateTime::Spec mTimeSpec;
+    Akonadi::Entity::Id mDefaultCalendarId;
+};
+
+KCalPrefs::KCalPrefs() : KCalPrefsBase(), d( new Private() )
 {
 }
 
 KCalPrefs::~KCalPrefs()
 {
-  kDebug();
+  delete d;
 }
 
 KCalPrefs *KCalPrefs::instance()
@@ -87,17 +104,17 @@ KDateTime::Spec KCalPrefs::timeSpec()
 
 void KCalPrefs::setTimeSpec( const KDateTime::Spec &spec )
 {
-  mTimeSpec = spec;
+  d->mTimeSpec = spec;
 }
 
 Akonadi::Entity::Id KCalPrefs::defaultCalendarId() const
 {
-  return mDefaultCalendarId;
+  return d->mDefaultCalendarId;
 }
 
 void KCalPrefs::setDefaultCalendarId( const Akonadi::Entity::Id id )
 {
-  mDefaultCalendarId = id;
+  d->mDefaultCalendarId = id;
 }
 
 void KCalPrefs::setTimeZoneDefault()
@@ -110,7 +127,7 @@ void KCalPrefs::setTimeZoneDefault()
 
   kDebug () << "----- time zone:" << zone.name();
 
-  mTimeSpec = zone;
+  d->mTimeSpec = zone;
 }
 
 void KCalPrefs::fillMailDefaults()
@@ -131,19 +148,19 @@ void KCalPrefs::fillMailDefaults()
 void KCalPrefs::usrReadConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
-  mMailTransport = generalConfig.readEntry( "MailTransport", QString() );
+  d->mMailTransport = generalConfig.readEntry( "MailTransport", QString() );
 
-  if ( !mTimeSpec.isValid() ) {
+  if ( !d->mTimeSpec.isValid() ) {
     setTimeZoneDefault();
   }
 
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
+  d->mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
 
 #if 0
   config()->setGroup( "FreeBusy" );
   if ( mRememberRetrievePw ) {
-    mRetrievePassword =
+    d->mRetrievePassword =
       KStringHandler::obscure( config()->readEntry( "Retrieve Server Password" ) );
   }
 #endif
@@ -155,8 +172,8 @@ void KCalPrefs::usrReadConfig()
 void KCalPrefs::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
-  if ( !mMailTransport.isNull() ) {
-    generalConfig.writeEntry( "MailTransport", mMailTransport );
+  if ( !d->mMailTransport.isNull() ) {
+    generalConfig.writeEntry( "MailTransport", d->mMailTransport );
   }
 
   if ( !mFreeBusyPublishSavePassword ) {
@@ -173,7 +190,7 @@ void KCalPrefs::usrWriteConfig()
 #if 0
   if ( mRememberRetrievePw ) {
     config()->writeEntry( "Retrieve Server Password",
-                          KStringHandler::obscure( mRetrievePassword ) );
+                          KStringHandler::obscure( d->mRetrievePassword ) );
   } else {
     config()->deleteEntry( "Retrieve Server Password" );
   }
@@ -293,5 +310,10 @@ bool KCalPrefs::thatIsMe( const QString &_email )
   }
 
   return false;
+}
+
+QString KCalPrefs::mailTransport() const
+{
+  return d->mMailTransport;
 }
 

@@ -1,3 +1,5 @@
+add_definitions( -DKDEPIM_MOBILE_UI )
+
 add_subdirectory(lib)
 add_subdirectory(pics)
 

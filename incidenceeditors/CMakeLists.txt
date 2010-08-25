@@ -24,8 +24,6 @@ if (NOT WINCE)
 
 set( incidenceeditors_LIB_SRCS
     autochecktreewidget.cpp
-    categoryconfig.cpp
-    categoryhierarchyreader.cpp
     categoryselectdialog.cpp
     designerfields.cpp
     editoralarms.cpp

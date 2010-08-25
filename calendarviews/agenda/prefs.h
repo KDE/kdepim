@@ -29,6 +29,7 @@
 
 #include "eventviews_export.h"
 
+#include <kconfigskeleton.h>
 #include <KDateTime>
 
 namespace Akonadi
@@ -51,7 +52,6 @@ namespace EventViews
 class EVENTVIEWS_EXPORT Prefs
 {
   public:
-
     /** Creates an instance of Prefs with just base config
     */
     Prefs();
@@ -71,6 +71,7 @@ class EVENTVIEWS_EXPORT Prefs
     void writeConfig();
 
   public:
+
     void setMarcusBainsShowSeconds( bool showSeconds );
     bool marcusBainsShowSeconds() const;
 
@@ -149,19 +150,10 @@ class EVENTVIEWS_EXPORT Prefs
     void setExcludeHolidays( bool exclude );
     bool excludeHolidays() const;
 
+    KConfigSkeleton::ItemFont* fontItem( const QString &name ) const;
+
   public:
     // preferences data
-    void setFullName( const QString & );
-    QString fullName() const;
-    void setEmail( const QString & );
-    QString email() const;
-    /// Returns all email addresses for the user.
-    QStringList allEmails() const;
-    /// Returns all email addresses together with the full username for the user.
-    QStringList fullEmails() const;
-    /// Return true if the given email belongs to the user
-    bool thatIsMe( const QString &email ) const;
-
     void setCategoryColor( const QString &cat, const QColor &color );
     QColor categoryColor( const QString &cat ) const;
     bool hasCategoryColor( const QString &cat ) const;
@@ -172,22 +164,8 @@ class EVENTVIEWS_EXPORT Prefs
     void setTimeSpec( const KDateTime::Spec &spec );
     KDateTime::Spec timeSpec() const;
 
-    void setHtmlExportFile( const QString &fileName );
-    QString htmlExportFile() const;
-
-    // Groupware passwords
-    void setPublishPassword( const QString &password );
-    QString publishPassword() const;
-
-    void setRetrievePassword( const QString &password );
-    QString retrievePassword() const;
-
     QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
-
-    QString defaultCalendar() const;
-    void setDefaultCollection( const Akonadi::Collection& );
-    Akonadi::Collection defaultCollection() const;
 
   private:
     class Private;

@@ -26,7 +26,8 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/favoritecollectionsmodel.h>
-#include <akonadi/akonadi_next/kreparentingproxymodel.h>
+#include <akonadi_next/kreparentingproxymodel.h>
+#include <kcalcore/calendar.h>
 #include <QListView>
 #include <QItemDelegate>
 #include <QColor>
@@ -38,7 +39,6 @@
 namespace Akonadi {
     class AgentInstanceCreateJob;
 }
-namespace KCal { class CalendarLocal; }
 class QPixmap;
 class KJob;
 class KAEvent;
@@ -144,7 +144,7 @@ class AkonadiModel : public Akonadi::EntityTreeModel
          *  Collection's mime types.
          *  @return true if at least one alarm is the right type.
          */
-        static bool checkAlarmTypes(const Akonadi::Collection&, KCal::CalendarLocal&);
+        static bool checkAlarmTypes(const Akonadi::Collection&, KCalCore::Calendar::Ptr&);
 
         static QSize iconSize()  { return mIconSize; }
 
@@ -205,7 +205,7 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         void modifyCollectionJobDone(KJob*);
         void deleteCollectionJobDone(KJob*);
         void itemJobDone(KJob*);
-        
+
     private:
         struct CalData   // data per collection
         {
@@ -276,8 +276,8 @@ class CollectionListModel : public KDescendantsProxyModel
 = Class: CollectionCheckListModel
 = Proxy model providing a checkable collection list.
 =============================================================================*/
-#include <akonadi/akonadi_next/checkableitemproxymodel.h>
-class CollectionCheckListModel : public CheckableItemProxyModel
+#include <akonadi_next/kcheckableproxymodel.h>
+class CollectionCheckListModel : public Future::KCheckableProxyModel
 {
         Q_OBJECT
     public:

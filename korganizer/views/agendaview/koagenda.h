@@ -205,7 +205,7 @@ class KOAgenda : public Q3ScrollView
     void upperYChanged( int );
 
     void startDragSignal( const Akonadi::Item & );
-    void droppedToDos( const QList<KCalCore::Todo::Ptr> &todo, const QPoint &gpos, bool allDay );
+    void droppedToDos( const KCalCore::Todo::List &todo, const QPoint &gpos, bool allDay );
     void droppedToDos( const QList<KUrl> &todo, const QPoint &gpos, bool allDay );
 
     void enableAgendaUpdate( bool enable );

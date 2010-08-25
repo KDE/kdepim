@@ -7,7 +7,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### Build Options ###############
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
+option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." TRUE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
+option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 
 # cmake would not find kde for xcompile if that is not set
@@ -16,21 +18,28 @@ if(WINCE)
 endif(WINCE)
 
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
+# FIXME build the mobile applications ?
 if(KDEPIM_ENTERPRISE_BUILD)
   set(KDEPIM_ONLY_KLEO FALSE)
   set(KDEPIM_BUILD_EVERYTHING FALSE)
   message(STATUS "Enterprise build is enabled.")
-else(KDEPIM_ENTERPRISE_BUILD)
-  # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING is disabled.
+else()
+  # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
   if(KDEPIM_ONLY_KLEO)
     set(KDEPIM_BUILD_EVERYTHING FALSE)
+    set(KDEPIM_BUILD_MOBILE FALSE)
+    set(KDEPIM_MOBILE_UI FALSE)
     set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
     message(STATUS "Only libkleo and Kleopatra will be built.")
-  endif(KDEPIM_ONLY_KLEO)
-  # Default
+  elseif(KDEPIM_MOBILE_UI)
+    # Build the mobile applications
+    set(KDEPIM_BUILD_MOBILE TRUE)
+  else()
+    # Default
     set(KDEPIM_BUILD_EVERYTHING TRUE)
     message(STATUS "Enterprise build is disabled.")
-endif(KDEPIM_ENTERPRISE_BUILD)
+  endif()
+endif()
 
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
@@ -162,11 +171,16 @@ else(KDEPIM_ONLY_KLEO)
 
 ############### Desktop vs. Mobile options ##############
 
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 if (KDEPIM_MOBILE_UI)
   macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" TRUE "4.7" "Required for building mobile UI")
   add_definitions( -DKDEPIM_MOBILE_UI )
-endif (KDEPIM_MOBILE_UI)
+else()
+  macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" FALSE "4.7" "Required for building the mobile applications")
+  if (NOT QT_QTDECLARATIVE_FOUND)
+    message(STATUS "The Qt Declarative (QML) module was not found. The mobile applications will not be built.")
+    set(KDEPIM_BUILD_MOBILE FALSE)
+  endif()
+endif()
 
 ############### Needed commands before building anything ###############
 
@@ -183,6 +197,7 @@ if(WINCE)
   add_definitions(-DKDELIBS_STATIC_LIBS)
   add_definitions(-DKDEPIM_STATIC_LIBS)
   add_definitions(-DAKONADI_STATIC_LIBS)
+  add_definitions(-DSOPRANO_STATIC_LIBS)
 else(WINCE)
   set(LIBRARY_TYPE SHARED)
 endif(WINCE)
@@ -276,9 +291,9 @@ endif (NOT WINCE)
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(messagecomposer)
     macro_optional_add_subdirectory(kmail)
-    if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
-      macro_optional_add_subdirectory(mobile)
-    endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
+    if (KDEPIM_BUILD_MOBILE)
+      add_subdirectory(mobile)
+    endif (KDEPIM_BUILD_MOBILE)
 
     if(KDEPIM_BUILD_EXAMPLES)
       add_subdirectory(examples)

@@ -134,7 +134,7 @@ void ItemEditorPrivate::modifyResult( KJob *job )
 
 void ItemEditorPrivate::setupMonitor()
 {
-  Q_Q( EditorItemManager );
+  // Q_Q( EditorItemManager );
   delete mItemMonitor;
   mItemMonitor = new Akonadi::Monitor;
   mItemMonitor->ignoreSession( Akonadi::Session::defaultSession() );

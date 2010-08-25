@@ -20,8 +20,6 @@ set(akonadi_nepomuk_email_feeder_SRCS
   messagesearch.cpp
   configdialog.cpp
   shared/nepomukfeederagentbase.cpp
-  shared/sparqlbuilder.cpp
-  shared/selectsparqlbuilder.cpp
 )
 
 kde4_add_app_icon(akonadi_nepomuk_email_feeder_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/nepomuk.png")
@@ -51,10 +49,12 @@ target_link_libraries(akonadi_nepomuk_email_feeder
   ${QT_QTCORE_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${NEPOMUK_LIBRARIES}
+  ${NEPOMUK_QUERY_LIBRARIES}
   ${STRIGI_STREAMS_LIBRARY}
   ${STRIGI_STREAMANALYZER_LIBRARY}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${QGPGME_LIBRARIES}
+  ${KDE4_KIDLETIME_LIBRARY}
 )
 
 install(TARGETS akonadi_nepomuk_email_feeder ${INSTALL_TARGETS_DEFAULT_ARGS})

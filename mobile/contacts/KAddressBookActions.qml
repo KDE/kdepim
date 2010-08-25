@@ -36,23 +36,7 @@ ActionMenuContainer {
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Select multiple folders" ) }
   }
 
-  ReorderList {
-    category : "home"
-    name : KDE.i18n( "Favorites" )
-
-    delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
-    }
-    upAction : "fav_up"
-    downAction : "fav_down"
-    deleteAction : "fav_delete"
-    model : favoritesList
-
-    customActions : [
-      FakeAction { name : "un_mark_as_default" },
-      FakeAction { name : "delete_favorite" }
-    ]
-  }
+  FavoriteManager{ model : favoritesList }
 
   AgentInstanceList {
     category : "home"
@@ -94,7 +78,7 @@ ActionMenuContainer {
   ActionList {
     category : "single_folder"
     name : KDE.i18n( "View" )
-    FakeAction { name : "save_view_as_favorite" }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintenance" }
   }
 
@@ -107,8 +91,8 @@ ActionMenuContainer {
   ActionList {
     category : "multiple_folder"
     name : KDE.i18n( "View" )
-    FakeAction { name : "save_view_as_favorite" }
-    FakeAction { name : "change_folder_selection" }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
     FakeAction { name : "start_maintenance" }
   }
 

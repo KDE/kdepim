@@ -32,6 +32,8 @@
 
 #include <gpgme++/context.h>
 
+#include <kglobal.h>
+
 static const int INDEX_COMPAT_LEVEL = 1; // increment when the index format for emails changes
 
 using namespace Akonadi;
@@ -43,7 +45,11 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   addSupportedMimeType( "message/news" );
   setIndexCompatibilityLevel( INDEX_COMPAT_LEVEL );
 
+#if !(KDE_IS_VERSION( 4, 5, 50 ))
   setNeedsStrigi( true );
+#else
+#warning Fix attachment indexing once Nepomuk adds the necessary interface again
+#endif
 
   // failsafe in case we don't have / lost G13 support
   if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )

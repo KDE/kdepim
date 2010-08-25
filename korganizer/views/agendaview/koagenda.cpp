@@ -462,7 +462,7 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
     }
 
     const QList<KUrl> todoUrls = todoItemUrls( md );
-    const QList<Todo::Ptr> todos = CalendarSupport::todos( md, mCalendar->timeSpec() );
+    const Todo::List todos = CalendarSupport::todos( md, mCalendar->timeSpec() );
 
     Q_ASSERT( !todoUrls.isEmpty() || !todos.isEmpty() );
 

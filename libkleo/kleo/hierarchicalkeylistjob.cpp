@@ -70,7 +70,7 @@ Kleo::HierarchicalKeyListJob::~HierarchicalKeyListJob() {
 
 GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
   if ( secretOnly || patterns.empty() )
-    return GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION ) );
+    return GpgME::Error::fromCode( GPG_ERR_UNSUPPORTED_OPERATION, GPG_ERR_SOURCE_GPGME );
   qCopy( patterns.begin(), patterns.end(),
 	 std::inserter( mNextSet, mNextSet.begin() ) );
   const GpgME::Error err = startAJob();
@@ -82,7 +82,7 @@ GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns, 
 GpgME::KeyListResult Kleo::HierarchicalKeyListJob::exec( const QStringList &, bool,
 							 std::vector<GpgME::Key> & keys ) {
   keys.clear();
-  return GpgME::KeyListResult( GpgME::Error( gpg_err_make( GPG_ERR_SOURCE_GPGME, GPG_ERR_UNSUPPORTED_OPERATION ) ) );
+  return GpgME::KeyListResult( GpgME::Error::fromCode( GPG_ERR_UNSUPPORTED_OPERATION, GPG_ERR_SOURCE_GPGME ) );
 }
 
 void Kleo::HierarchicalKeyListJob::slotNextKey( const GpgME::Key & key ) {

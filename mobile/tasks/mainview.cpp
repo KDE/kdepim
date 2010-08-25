@@ -37,9 +37,12 @@
 #include <akonadi/standardactionmanager.h>
 
 #include "calendar/incidenceview.h"
+#include "calendar/kcalitembrowseritem.h"
 #include "tasklistproxy.h"
 
 using namespace Akonadi;
+
+QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
 {
@@ -48,9 +51,12 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskL
 void MainView::delayedInit()
 {
   KDeclarativeMainView::delayedInit();
+  setWindowTitle( i18n( "KOrganizer Task Manager" ) );
 
   addMimeType( KCalCore::Todo::todoMimeType() );
   itemFetchScope().fetchFullPayload();
+
+  qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
 }
 
 void MainView::newTask()

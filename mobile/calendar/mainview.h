@@ -23,7 +23,6 @@
 
 #include "kdeclarativemainview.h"
 
-class CalendarInterface;
 class QDate;
 
 namespace CalendarSupport

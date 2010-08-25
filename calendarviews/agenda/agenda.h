@@ -23,13 +23,12 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef AGENDA_H
-#define AGENDA_H
+#ifndef EVENTVIEWS_AGENDA_H
+#define EVENTVIEWS_AGENDA_H
 
-#include "eventviews_export.h"
 
-#include <kcalcore/todo.h>
-#include <kcalcore/event.h>
+#include <KCalCore/Todo>
+#include <KCalCore/Event>
 
 #include <Akonadi/Item>
 
@@ -74,7 +73,7 @@ class MarcusBains : public QFrame
     Private *const d;
 };
 
-class EVENTVIEWS_EXPORT Agenda : public QWidget
+class Agenda : public QWidget
 {
   Q_OBJECT
   public:
@@ -98,6 +97,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setContentsPos( int x, int y );
 
     QScrollBar* verticalScrollBar();
+
+    QScrollArea* scrollArea() const;
 
     /**
       Returns the uid of the last incidence that was selected. This
@@ -220,7 +221,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void upperYChanged( int );
 
     void startDragSignal( const Akonadi::Item & );
-    void droppedToDos( const QList<KCalCore::Todo::Ptr> &todo, const QPoint &gpos, bool allDay );
+    void droppedToDos( const KCalCore::Todo::List &todo, const QPoint &gpos, bool allDay );
     void droppedToDos( const QList<KUrl> &todo, const QPoint &gpos, bool allDay );
 
     void enableAgendaUpdate( bool enable );
@@ -350,7 +351,7 @@ class AgendaScrollArea : public QScrollArea
     AgendaScrollArea( bool allDay, EventView *eventView, QWidget *parent );
     ~AgendaScrollArea();
 
-    Agenda* agenda();
+    Agenda* agenda() const;
 
   private:
     Agenda *mAgenda;

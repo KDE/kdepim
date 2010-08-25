@@ -41,16 +41,16 @@
 
 using namespace EventViews;
 
-TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows, EventView *eventView,
+TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows, const PrefsPtr &preferences,
                         TimeLabelsZone *parent, Qt::WFlags f )
-  : QFrame( parent, f ), mEventView( eventView )
+  : QFrame( parent, f ), mPrefs( preferences )
 {
   mTimeLabelsZone = parent;
   mSpec = spec;
   mRows = rows;
   mMiniWidth = 0;
 
-  mCellHeight = mEventView->preferences()->hourSize() * 4;
+  mCellHeight = mPrefs->hourSize() * 4;
 
   setFrameStyle( Plain );
 
@@ -94,9 +94,9 @@ void TimeLabels::colorMousePos()
 {
   QPalette pal;
   pal.setColor( QPalette::Window, // for Oxygen
-                mEventView->preferences()->agendaMarcusBainsLineLineColor() );
+                mPrefs->agendaMarcusBainsLineLineColor() );
   pal.setColor( QPalette::WindowText, // for Plastique
-                mEventView->preferences()->agendaMarcusBainsLineLineColor() );
+                mPrefs->agendaMarcusBainsLineLineColor() );
   mMousePos->setPalette( pal );
 }
 
@@ -116,7 +116,7 @@ int TimeLabels::minimumWidth() const
 /** updates widget's internal state */
 void TimeLabels::updateConfig()
 {
-  setFont( mEventView->preferences()->agendaTimeLabelsFont() );
+  setFont( mPrefs->agendaTimeLabelsFont() );
 
   QString test = "20";
   if ( KGlobal::locale()->use12Clock() ) {
@@ -141,7 +141,7 @@ void TimeLabels::updateConfig()
   }
 
   // update HourSize
-  mCellHeight = mEventView->preferences()->hourSize() * 4;
+  mCellHeight = mPrefs->hourSize() * 4;
   // If the agenda is zoomed out so that more than 24 would be shown,
   // the agenda only shows 24 hours, so we need to take the cell height
   // from the agenda, which is larger than the configured one!
@@ -180,7 +180,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
     beginning = 0;
   } else {
     beginning = ( mSpec.timeZone().currentOffset() -
-                  mEventView->preferences()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
+                  mPrefs->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
   }
 
   // bug:  the parameters cx and cw are the areas that need to be
@@ -196,7 +196,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
   QFontMetrics fm = fontMetrics();
   QString hour;
   int timeHeight = fm.ascent();
-  QFont hourFont = mEventView->preferences()->agendaTimeLabelsFont();
+  QFont hourFont = mPrefs->agendaTimeLabelsFont();
   p.setFont( font() );
 
   //TODO: rewrite this using KLocale's time formats. "am/pm" doesn't make sense
@@ -296,22 +296,22 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
     popup.addAction( KIcon( "edit-delete" ),
                      i18n( "&Remove Timezone %1", mSpec.timeZone().name() ) );
   if ( !mSpec.isValid() ||
-       !mEventView->preferences()->timeScaleTimezones().count() ||
-       mSpec == mEventView->preferences()->timeSpec() ) {
+       !mPrefs->timeScaleTimezones().count() ||
+       mSpec == mPrefs->timeSpec() ) {
     removeTimeZone->setEnabled( false );
   }
 
   QAction *activatedAction = popup.exec( QCursor::pos() );
   if ( activatedAction == editTimeZones ) {
-    QPointer<TimeScaleConfigDialog> dialog = new TimeScaleConfigDialog( mEventView->preferences(), this );
+    QPointer<TimeScaleConfigDialog> dialog = new TimeScaleConfigDialog( mPrefs, this );
     if ( dialog->exec() == QDialog::Accepted ) {
       mTimeLabelsZone->reset();
     }
     delete dialog;
   } else if ( activatedAction == removeTimeZone ) {
-    QStringList list = mEventView->preferences()->timeScaleTimezones();
+    QStringList list = mPrefs->timeScaleTimezones();
     list.removeAll( mSpec.timeZone().name() );
-    mEventView->preferences()->setTimeScaleTimezones( list );
+    mPrefs->setTimeScaleTimezones( list );
     mTimeLabelsZone->reset();
     hide();
     deleteLater();

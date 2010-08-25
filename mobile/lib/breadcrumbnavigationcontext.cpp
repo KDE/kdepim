@@ -31,22 +31,23 @@
 
 #include "breadcrumbnavigation.h"
 #include "qmllistselectionmodel.h"
-#include "akonadi_next/checkableitemproxymodel.h"
+#include "libkdepim/kdescendantsproxymodel_p.h"
+#include "akonadi_next/kcheckableproxymodel.h"
 
-class QMLCheckableItemProxyModel : public CheckableItemProxyModel
+class QMLCheckableItemProxyModel : public Future::KCheckableProxyModel
 {
 public:
   enum MoreRoles {
     CheckOn = Qt::UserRole + 3000
   };
   QMLCheckableItemProxyModel (QObject* parent = 0)
-    : CheckableItemProxyModel(parent)
+    : Future::KCheckableProxyModel(parent)
   {
   }
 
   virtual void setSourceModel(QAbstractItemModel* sourceModel)
   {
-    CheckableItemProxyModel::setSourceModel(sourceModel);
+    Future::KCheckableProxyModel::setSourceModel(sourceModel);
 
     QHash<int, QByteArray> roles = roleNames();
     roles.insert( CheckOn, "checkOn" );
@@ -57,7 +58,7 @@ public:
   {
     if ( role == CheckOn )
       return (index.data(Qt::CheckStateRole) == Qt::Checked);
-    return CheckableItemProxyModel::data(index, role);
+    return Future::KCheckableProxyModel::data(index, role);
   }
 
 };
@@ -96,10 +97,6 @@ class KBreadcrumbNavigationFactoryPrivate
   QItemSelectionModel *m_selectionModel;
   QItemSelectionModel *m_childItemsSelectionModel;
 
-  QMLListSelectionModel *m_qmlBreadcrumbSelectionModel;
-  QMLListSelectionModel *m_qmlSelectedItemSelectionModel;
-  QMLListSelectionModel *m_qmlChildSelectionModel;
-
   QAbstractItemModel *m_breadcrumbModel;
   QAbstractItemModel *m_selectedItemModel;
   QAbstractItemModel *m_unfilteredChildItemsModel;
@@ -108,6 +105,10 @@ class KBreadcrumbNavigationFactoryPrivate
   KModelIndexProxyMapper *m_modelIndexProxyMapper;
 
   QItemSelectionModel *m_checkModel;
+
+  QMLListSelectionModel *m_qmlBreadcrumbSelectionModel;
+  QMLListSelectionModel *m_qmlSelectedItemSelectionModel;
+  QMLListSelectionModel *m_qmlChildSelectionModel;
 
   QMLListSelectionModel *m_qmlBreadcrumbCheckModel;
   QMLListSelectionModel *m_qmlSelectedItemCheckModel;
@@ -131,9 +132,13 @@ void KBreadcrumbNavigationFactory::createCheckableBreadcrumbContext(QAbstractIte
 
   d->m_checkModel = new QItemSelectionModel( model, parent);
 
-  QMLCheckableItemProxyModel *checkableProxy = new QMLCheckableItemProxyModel(this);
+  QMLCheckableItemProxyModel *checkableProxy = new QMLCheckableItemProxyModel(parent);
   checkableProxy->setSourceModel( model );
   checkableProxy->setSelectionModel( d->m_checkModel );
+
+  KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(parent);
+  descProxy->setDisplayAncestorData(true);
+  descProxy->setSourceModel( checkableProxy );
 
   createBreadcrumbContext(checkableProxy, parent);
 
@@ -147,7 +152,7 @@ void KBreadcrumbNavigationFactory::createCheckableBreadcrumbContext(QAbstractIte
 
   d->m_checkedItemsModel = new KSelectionProxyModel( d->m_checkModel, parent );
   d->m_checkedItemsModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  d->m_checkedItemsModel->setSourceModel( checkableProxy );
+  d->m_checkedItemsModel->setSourceModel( descProxy );
 
   d->m_checkedItemsCheckModel = new KLinkItemSelectionModel( d->m_checkedItemsModel, d->m_checkModel, parent);
 

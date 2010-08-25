@@ -41,6 +41,11 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <kmcommands.h>
+#include "util.h"
+
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+
 
 #include "mailinglist-magic.h"
 
@@ -177,7 +182,7 @@ void MailingListFolderPropertiesDialog::load()
 }
 
 //-----------------------------------------------------------------------------
-bool MailingListFolderPropertiesDialog::save()
+void MailingListFolderPropertiesDialog::save()
 {
   if( mFolder )
   {
@@ -186,7 +191,6 @@ bool MailingListFolderPropertiesDialog::save()
     fillMLFromWidgets();
     mFolder->setMailingList( mMailingList );
   }
-  return true;
 }
 
 //----------------------------------------------------------------------------
@@ -204,7 +208,6 @@ void MailingListFolderPropertiesDialog::slotHoldsML( bool holdsML )
 void MailingListFolderPropertiesDialog::slotDetectMailingList()
 {
   if ( !mFolder ) return; // in case the folder was just created
-  int num = mFolder->count();
 
   kDebug()<< "Detecting mailing list";
 
@@ -215,35 +218,56 @@ void MailingListFolderPropertiesDialog::slotDetectMailingList()
   if ( curMsgIdx > 0 ) {
     KMMessage *mes = mFolder->getMsg( curMsgIdx );
     if ( mes )
-      mMailingList = MailingList::detect( mes );
+      mMailingList = MessageCore::MailingList::detect( mes );
   }
   */
 
   // next try the 5 most recently added messages
   if ( !( mMailingList.features() & MailingList::Post ) ) {
 
-#if 0 //TODO port to akonadi
-    const int maxchecks = 5;
-    for( int i = --num; i > num-maxchecks; --i ) {
-      KMMessage *mes = mFolder->getMsg( i );
-      if ( !mes )
-        continue;
-      mMailingList = MailingList::detect( mes );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolder->collection(), this );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    job->fetchScope().fetchFullPayload();
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
+  }
+  else {
+    mMLId->setText( (mMailingList.id().isEmpty() ? i18n("Not available.") : mMailingList.id() ) );
+    fillEditBox();
+  }
+}
+
+
+void MailingListFolderPropertiesDialog::slotFetchDone( KJob* job )
+{
+  if ( job->error() ) {
+    // handle errors
+    KMail::Util::showJobErrorMessage(job);
+    return;
+  }
+  Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
+  Q_ASSERT( fjob );
+  Akonadi::Item::List items = fjob->items();
+
+  const int maxchecks = 5;
+  int num = items.size();
+  for ( int i = --num ; ( i > num - maxchecks ) && ( i >= 0 ); --i ) {
+    Akonadi::Item item = items[i];
+    if ( item.hasPayload<KMime::Message::Ptr>() ) {
+      KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+      mMailingList = MessageCore::MailingList::detect( message );
       if ( mMailingList.features() & MailingList::Post )
         break;
     }
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   }
   if ( !(mMailingList.features() & MailingList::Post) ) {
     KMessageBox::error( this,
-              i18n("KMail was unable to detect a mailing list in this folder. "
-                   "Please fill the addresses by hand.") );
+                        i18n("KMail was unable to detect a mailing list in this folder. "
+                             "Please fill the addresses by hand.") );
   } else {
     mMLId->setText( (mMailingList.id().isEmpty() ? i18n("Not available.") : mMailingList.id() ) );
     fillEditBox();
   }
+
 }
 
 //----------------------------------------------------------------------------
@@ -334,6 +358,7 @@ void MailingListFolderPropertiesDialog::fillEditBox()
 
 void MailingListFolderPropertiesDialog::slotInvokeHandler()
 {
+  save();
   KMCommand *command =0;
   switch ( mAddressCombo->currentIndex() ) {
   case 0:

@@ -30,15 +30,16 @@
 #include "prefs_base.h" // for enums
 
 #include <calendarsupport/utils.h>
+#include <calendarsupport/kcalprefs.h>
 
 #include <KABC/VCardDrag>
 
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 
-#include <kcalutils/icaldrag.h>
-#include <kcalutils/vcaldrag.h>
-#include <kcalutils/incidenceformatter.h>
+#include <KCalUtils/ICalDrag>
+#include <KCalUtils/VCalDrag>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <KPIMUtils/Email>
 
@@ -143,13 +144,13 @@ void AgendaItem::updateIcons()
   mIconRecur = incidence->recurs();
   mIconAlarm = incidence->hasEnabledAlarms();
   if ( incidence->attendeeCount() > 1 ) {
-    if ( mEventView->preferences()->thatIsMe( incidence->organizer()->email() ) ) {
+    if ( mEventView->kcalPreferences()->thatIsMe( incidence->organizer()->email() ) ) {
       mIconReply = false;
       mIconGroup = false;
       mIconGroupTent = false;
       mIconOrganizer = true;
     } else {
-      Attendee::Ptr me = incidence->attendeeByMails( mEventView->preferences()->allEmails() );
+      Attendee::Ptr me = incidence->attendeeByMails( mEventView->kcalPreferences()->allEmails() );
       if ( me ) {
         if ( me->status() == Attendee::NeedsAction && me->RSVP() ) {
           mIconReply = true;

@@ -106,10 +106,15 @@ void EventIndicator::paintEvent( QPaintEvent *event )
 
   for ( int i = 0; i < d->mColumns; ++i ) {
     if ( d->mEnabled[ i ] ) {
-      int cellWidth = contentsRect().right() / d->mColumns;
-      int xOffset = QApplication::isRightToLeft() ?
-                    ( d->mColumns - 1 - i ) * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2 :
-                    i * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2;
+      const double cellWidth = static_cast<double>( contentsRect().right() ) / d->mColumns;
+
+      const uint halfPixmapWidth = d->mPixmap.width() / 2;
+      const uint halfColumnWidth = cellWidth / 2;
+
+      const int xOffset = QApplication::isRightToLeft() ?
+                          ( d->mColumns - 1 - i ) * cellWidth + halfColumnWidth - halfPixmapWidth :
+                          i * cellWidth + halfColumnWidth - halfPixmapWidth;
+
       painter.drawPixmap( QPoint( xOffset, 0 ), d->mPixmap );
     }
   }
@@ -293,7 +298,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   QWidget *dummyAllDayRight = new QWidget( d->mAllDayFrame );
 
   // Create time labels
-  d->mTimeLabelsZone = new TimeLabelsZone( this, this, d->mAgenda );
+  d->mTimeLabelsZone = new TimeLabelsZone( this, preferences(), d->mAgenda );
   d->mAgendaLayout->addWidget( d->mTimeLabelsZone, 1, 0 );
 
   // Scrolling
@@ -328,6 +333,14 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
 
   /* Connect the agendas */
 
+  connect( d->mAllDayAgenda,
+           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
+           SLOT(newTimeSpanSelectedAllDay(QPoint,QPoint)) );
+
+  connect( d->mAgenda,
+           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
+           SLOT(newTimeSpanSelected(QPoint,QPoint)) );
+
   connectAgenda( d->mAgenda, d->mAllDayAgenda );
   connectAgenda( d->mAllDayAgenda, d->mAgenda );
 }
@@ -360,10 +373,6 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 
   connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
-
-  connect( agenda,
-           SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
-           SLOT(newTimeSpanSelected(QPoint,QPoint)) );
 
   agenda->setCalendar( calendar() );
 
@@ -405,10 +414,10 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
            SIGNAL(incidenceSelected(const Akonadi::Item &, const QDate &)) );
 
   // rescheduling of todos by d'n'd
-  connect( agenda, SIGNAL(droppedToDos(QList<KCalCore::Todo::Ptr>,const QPoint &,bool)),
-           SLOT(slotTodosDropped(QList<KCalCore::Todo::Ptr>,const QPoint &,bool)) );
-  connect( agenda, SIGNAL(droppedToDos(QList<KUrl>,const QPoint &,bool)),
-           SLOT(slotTodosDropped(QList<KUrl>,const QPoint &,bool)) );
+  connect( agenda, SIGNAL(droppedToDos(KCalCore::Todo::List,QPoint,bool)),
+           SLOT(slotTodosDropped(KCalCore::Todo::List,QPoint,bool)) );
+  connect( agenda, SIGNAL(droppedToDos(QList<KUrl>,QPoint,bool)),
+           SLOT(slotTodosDropped(QList<KUrl>,QPoint,bool)) );
 
 }
 
@@ -1183,7 +1192,7 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
     return;
   }
 
-  if ( !start.isValid() || !end.isValid() || start > end || start.daysTo( end ) > 31 ) {
+  if ( !start.isValid() || !end.isValid() || start > end || start.daysTo( end ) > MAX_DAY_COUNT ) {
     kWarning() << "got bizare parameters: " << start << end << " - aborting here";
     return;
   }
@@ -1658,7 +1667,7 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
 #endif
 }
 
-void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &gpos, bool allDay )
+void AgendaView::slotTodosDropped( const Todo::List &items, const QPoint &gpos, bool allDay )
 {
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
     return;

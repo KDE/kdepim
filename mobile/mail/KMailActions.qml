@@ -38,16 +38,7 @@ ActionMenuContainer {
     FakeAction { name : "empty_all_trash_folders" }
   }
 
-  ReorderList {
-    category : "home"
-    name : KDE.i18n( "Favorites" )
-
-    delegate : QML.Component {
-      QML.Text { height : 20; text : model.display }
-    }
-    upAction : "fav_up"
-    downAction : "fav_down"
-    deleteAction : "fav_delete"
+  FavoriteManager{
     model : favoritesList
   }
 
@@ -105,7 +96,7 @@ ActionMenuContainer {
   ActionList {
     category : "single_folder"
     name : KDE.i18n( "View" )
-    FakeAction { name : "save_favorite" }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintaince" }
     FakeAction { name : "prefer_html_to_plain" }
     FakeAction { name : "load_external_ref" }
@@ -129,7 +120,7 @@ ActionMenuContainer {
   ActionList {
     category : "multiple_folder"
     name : KDE.i18n( "View" )
-    FakeAction { name : "save_as_favorite" }
+    ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     FakeAction { name : "start_maintaince" }
     FakeAction { name : "prefer_html_to_plain" }
     FakeAction { name : "load_external_ref" }

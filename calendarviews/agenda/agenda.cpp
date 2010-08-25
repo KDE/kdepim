@@ -585,7 +585,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
     }
 
     const QList<KUrl> todoUrls = CalendarSupport::todoItemUrls( md );
-    const QList<Todo::Ptr> todos = CalendarSupport::todos( md, d->mCalendar->timeSpec() );
+    const Todo::List todos = CalendarSupport::todos( md, d->mCalendar->timeSpec() );
 
     Q_ASSERT( !todoUrls.isEmpty() || !todos.isEmpty() );
 
@@ -713,6 +713,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
         setCursor( Qt::ArrowCursor );
 #endif
         startSelectAction( viewportPos );
+        update();
       }
     }
     break;
@@ -2230,6 +2231,11 @@ void Agenda::setContentsPos( int x, int y )
   d->mScrollArea->ensureVisible( x, y, 0, 0 );
 }
 
+QScrollArea* Agenda::scrollArea() const
+{
+  return d->mScrollArea;
+}
+
 AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView, QWidget *parent )
   : QScrollArea( parent )
 {
@@ -2251,7 +2257,7 @@ AgendaScrollArea::~AgendaScrollArea()
 {
 }
 
-Agenda *AgendaScrollArea::agenda()
+Agenda *AgendaScrollArea::agenda() const
 {
   return mAgenda;
 }

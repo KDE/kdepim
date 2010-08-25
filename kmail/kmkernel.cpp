@@ -942,7 +942,8 @@ void KMKernel::checkMailOnStartup()
       type.synchronize();
     }
 
-    if ( group.readEntry( "OfflineOnShutdown", false ) ) {
+    /* TODO should not assume true but notify or ask the user. other Akonadi clients could expect these resources to continue working */
+    if ( group.readEntry( "OfflineOnShutdown", true ) ) {
       if ( !type.isOnline() )
         type.setIsOnline( true );
     }
@@ -1940,7 +1941,8 @@ void KMKernel::stopAgentInstance()
   const Akonadi::AgentInstance::List lst = KMail::Util::agentInstances();
   foreach( Akonadi::AgentInstance type, lst ) {
     KConfigGroup group( KMKernel::config(), resourceGroupPattern.arg( type.identifier() ) );
-    if ( group.readEntry( "OfflineOnShutdown", false ) )
+    /* TODO should not assume true but notify or ask the user. other Akonadi clients could expect these resources to continue working */
+    if ( group.readEntry( "OfflineOnShutdown", true ) )
       type.setIsOnline( false );
   }
 }

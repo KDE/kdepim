@@ -1,1 +1,2 @@
-// DOXYGEN_REFERENCES = kdecore kdeui kcalcore akonadi/libakonadi
+// DOXYGEN_NAME=Calendar Support
+// DOXYGEN_ENABLE=YES

@@ -101,8 +101,10 @@ void IncidenceFilterProxyModel::setShowEvents( bool show )
   if ( d->showEvents == show ) {
     return;
   }
+  emit layoutAboutToBeChanged();
   d->showEvents = show;
   invalidateFilter();
+  emit layoutChanged();
 }
 
 bool IncidenceFilterProxyModel::showJournals() const
@@ -115,8 +117,10 @@ void IncidenceFilterProxyModel::setShowJournals( bool show )
   if ( d->showJournals == show ) {
     return;
   }
+  emit layoutAboutToBeChanged();
   d->showJournals = show;
   invalidateFilter();
+  emit layoutChanged();
 }
 
 bool IncidenceFilterProxyModel::showTodos() const
@@ -129,8 +133,10 @@ void IncidenceFilterProxyModel::setShowTodos( bool show )
   if ( d->showTodos == show ) {
     return;
   }
+  emit layoutAboutToBeChanged();
   d->showTodos = show;
   invalidateFilter();
+  emit layoutChanged();
 }
 
 void IncidenceFilterProxyModel::showAll()
@@ -138,10 +144,12 @@ void IncidenceFilterProxyModel::showAll()
   if ( d->showEvents && d->showJournals && d->showTodos ) {
     return;
   }
+  emit layoutAboutToBeChanged();
   d->showEvents = true;
   d->showJournals = true;
   d->showTodos = true;
   invalidateFilter();
+  emit layoutChanged();
 }
 
 void IncidenceFilterProxyModel::hideAll()
@@ -149,10 +157,12 @@ void IncidenceFilterProxyModel::hideAll()
   if ( !d->showEvents && !d->showJournals && !d->showTodos ) {
     return;
   }
+  emit layoutAboutToBeChanged();
   d->showEvents = false;
   d->showJournals = false;
   d->showTodos = false;
   invalidateFilter();
+  emit layoutChanged();
 }
 
 bool IncidenceFilterProxyModel::filterAcceptsRow( int source_row,

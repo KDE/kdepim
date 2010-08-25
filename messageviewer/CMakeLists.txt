@@ -12,6 +12,8 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *
 install(DIRECTORY htmlOTP DESTINATION ${DATA_INSTALL_DIR}/messageviewer PATTERN *.svn EXCLUDE )
 install(FILES kmail_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 
+option(MESSAGEVIEWER_NO_WEBKIT "Use QTextBrowser instead of WebKit for the message viewer" FALSE)
+
 if(MESSAGEVIEWER_NO_WEBKIT)
   add_definitions( -DMESSAGEVIEWER_NO_WEBKIT=1 )
   set(_mailwebview_cpp mailwebview_textbrowser.cpp )
@@ -20,8 +22,6 @@ else(MESSAGEVIEWER_NO_WEBKIT)
   set(_mailwebview_cpp mailwebview_webkit.cpp )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
-  else(NOT WINCE)
-    set(_mailwebview_lib ${QT_QTWEBKIT_LIBRARY} )
   endif(NOT WINCE)
 endif(MESSAGEVIEWER_NO_WEBKIT)
 

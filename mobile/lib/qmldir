@@ -23,3 +23,5 @@ ScriptAction 4.5 ScriptAction.qml
 ScriptActionItem 4.5 ScriptActionItem.qml
 AgentInstanceList 4.5 AgentInstanceList.qml
 AgentInstanceListContainer 4.5 AgentInstanceListContainer.qml
+FavoriteManager 4.5 FavoriteManager.qml
+ReorderListDelegate 4.5 ReorderListDelegate.qml

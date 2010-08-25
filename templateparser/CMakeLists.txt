@@ -6,6 +6,11 @@ set( templateparser_LIB_SRCS
    templateparser.cpp
 )
 
+option(TEMPLATEPARSER_NO_WEBKIT "Use QTextBrowser instead of WebKit for the templateparser" FALSE)
+if(TEMPLATEPARSER_NO_WEBKIT)
+  add_definitions( -DTEMPLATEPARSER_NO_WEBKIT=1 )
+endif(TEMPLATEPARSER_NO_WEBKIT)
+
 if (NOT WINCE)
   set( templateparser_LIB_SRCS ${templateparser_LIB_SRCS}
     # All disabled due to QTreeWidget and QToolbox in the UI
@@ -42,6 +47,8 @@ kde4_add_library( templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS} )
 target_link_libraries( templateparser messageviewer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
  messagecore kleo kpgp ${QGPGME_LIBRARIES} ${QT_QTWEBKIT_LIBRARY} )
 set_target_properties( templateparser PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+
+
 
 install( TARGETS templateparser ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

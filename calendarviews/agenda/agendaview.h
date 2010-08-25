@@ -91,6 +91,10 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     explicit AgendaView( QWidget *parent = 0, bool isSideBySide = false );
     virtual ~AgendaView();
 
+    enum {
+      MAX_DAY_COUNT = 42 // ( 6 * 7)
+    };
+
     /** Returns number of currently shown dates. */
     virtual int currentDateCount() const;
 
@@ -129,7 +133,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void setCollection( Akonadi::Collection::Id id );
     Akonadi::Collection::Id collection() const;
 
-    Agenda *agenda() const;
     QSplitter *splitter() const;
 
     /** First shown day */
@@ -159,7 +162,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     /** reschedule the todo  to the given x- and y- coordinates.
         Third parameter determines all-day (no time specified) */
-    void slotTodosDropped( const QList<KCalCore::Todo::Ptr> & todos, const QPoint &, bool );
+    void slotTodosDropped( const KCalCore::Todo::List &, const QPoint &, bool );
     void slotTodosDropped( const QList<KUrl>& todos, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
@@ -234,13 +237,15 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void alignAgendas();
 
   private:
-
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
     int timeLabelsWidth();
     void displayIncidence( const Akonadi::Item &incidence );
     void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
 
+    friend class TimeLabelsZone;
+    friend class MultiAgendaView;
+    Agenda *agenda() const;
   private:
     class Private;
     Private *const d;

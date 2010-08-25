@@ -163,8 +163,10 @@ namespace {
         void setShowAll( bool on ) {
             if ( on == m_showAll )
                 return;
+            emit layoutAboutToBeChanged();
             m_showAll = on;
             invalidateFilter();
+            emit layoutChanged();
             emit showAllChanged( on );
         }
 

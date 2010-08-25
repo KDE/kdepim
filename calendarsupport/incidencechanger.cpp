@@ -223,8 +223,8 @@ IncidenceChanger::IncidenceChanger( CalendarSupport::Calendar *cal,
                                     Akonadi::Entity::Id defaultCollectionId )
   : QObject( parent ), d( new Private( defaultCollectionId, cal ) )
 {
-  connect( d, SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)),
-           SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,Akonadi::IncidenceChanger::WhatChanged,bool)) );
+  connect( d, SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)),
+           SIGNAL(incidenceChangeFinished(Akonadi::Item,Akonadi::Item,CalendarSupport::IncidenceChanger::WhatChanged,bool)) );
 }
 
 IncidenceChanger::~IncidenceChanger()

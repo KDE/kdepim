@@ -26,10 +26,6 @@
 #include <QWidget>
 #include "conflictresolver.h"
 
-namespace KCal {
-  class FreeBusy;
-}
-
 class QTreeView;
 class QLabel;
 class KComboBox;

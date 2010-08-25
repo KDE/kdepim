@@ -177,8 +177,8 @@ void FreeBusyItem::setFreeBusyPeriods( const FreeBusy::Ptr &fb )
     }
 
     // Evaluate free/busy information
-    QList<KCalCore::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
-    for ( QList<KCalCore::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
+    KCalCore::FreeBusyPeriod::List busyPeriods = fb->fullBusyPeriods();
+    for ( KCalCore::FreeBusyPeriod::List::Iterator it = busyPeriods.begin();
           it != busyPeriods.end(); ++it ) {
       FreeBusyPeriod per = *it;
 
@@ -688,8 +688,8 @@ bool EditorFreeBusy::tryDate( FreeBusyItem *attendee,
     return true;
   }
 
-  QList<KCalCore::Period> busyPeriods = fb->busyPeriods();
-  for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
+  KCalCore::Period::List busyPeriods = fb->busyPeriods();
+  for ( KCalCore::Period::List::Iterator it = busyPeriods.begin();
        it != busyPeriods.end(); ++it ) {
     if ( (*it).end() <= tryFrom || // busy period ends before try period
          (*it).start() >= tryTo ) { // busy period starts after try period

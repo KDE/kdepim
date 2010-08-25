@@ -39,7 +39,7 @@ MailWebView::MailWebView( QWidget *parent )
   setOpenLinks( false );
 #ifdef KDEPIM_MOBILE_UI
   setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  setVeritcalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 #endif
   connect( this, SIGNAL(highlighted(QString)),
            this, SIGNAL(linkHovered(QString)) );

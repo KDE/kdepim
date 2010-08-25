@@ -404,7 +404,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   QPushButton * const searchExternalPB =
     new QPushButton( i18n( "Search for &External Certificates" ), page );
-  mTopLayout->addWidget( searchExternalPB, 0, Qt::AlignRight );
+  mTopLayout->addWidget( searchExternalPB, 0, Qt::AlignLeft );
   connect( searchExternalPB, SIGNAL(clicked()),
            this, SLOT(slotStartSearchForExternalCertificates()) );
   if ( initialQuery.isEmpty() ) {

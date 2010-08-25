@@ -70,9 +70,9 @@ KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
     KCalCore::Event::Ptr();
 }
 
-QList<KCalCore::Event::Ptr> CalendarSupport::eventsFromItems( const Akonadi::Item::List &items )
+KCalCore::Event::List CalendarSupport::eventsFromItems( const Akonadi::Item::List &items )
 {
-  QList<KCalCore::Event::Ptr> events;
+  KCalCore::Event::List events;
   Q_FOREACH ( const Akonadi::Item &item, items ) {
     if ( const KCalCore::Event::Ptr e = CalendarSupport::event( item ) ) {
       events.push_back( e );
@@ -301,10 +301,10 @@ bool CalendarSupport::mimeDataHasTodo( const QMimeData *mimeData )
   return !todoItemUrls( mimeData ).isEmpty() || !todos( mimeData, KDateTime::Spec() ).isEmpty();
 }
 
-QList<KCalCore::Todo::Ptr> CalendarSupport::todos( const QMimeData *mimeData,
-                                                   const KDateTime::Spec &spec )
+KCalCore::Todo::List CalendarSupport::todos( const QMimeData *mimeData,
+                                             const KDateTime::Spec &spec )
 {
-  QList<KCalCore::Todo::Ptr> todos;
+  KCalCore::Todo::List todos;
 
 #ifndef QT_NO_DRAGANDDROP
   KCalCore::Calendar::Ptr cal( KCalUtils::DndFactory::createDropCalendar( mimeData, spec ) );

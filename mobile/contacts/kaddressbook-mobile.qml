@@ -36,6 +36,7 @@ KPIM.MainView {
     backToFolderListButton.visible = false;
     collectionView.visible = true;
     contactListPage.visible = true;
+    selectButton.visible = true;
     contactView.itemId = -1;
     contactGroupView.itemId = -1;
 
@@ -44,13 +45,13 @@ KPIM.MainView {
 
   function updateContextActionsStates()
   {
-    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) // root is selected
-    {
+    if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected == 0) { // root is selected
       kaddressbookActions.showOnlyCategory("home")
-    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) // top-level is selected
-    {
+    } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       kaddressbookActions.showOnlyCategory("account")
-    } else { // something else is selected
+    } else if ( collectionView.numSelected > 1 ) {
+      kaddressbookActions.showOnlyCategory( "multiple_folder" );
+    } else {
       kaddressbookActions.showOnlyCategory("single_folder")
     }
   }
@@ -202,8 +203,9 @@ KPIM.MainView {
       contextActions : [
         QML.Column {
           anchors.fill: parent
-          height : kaddressbookMobile.height 
+          height : startPageNewContactButton.height + startPageNewContactGroupButton.height + 3 * spacing
           KPIM.Button2 {
+            id: startPageNewContactButton
             width: parent.width
             buttonText : KDE.i18n( "New Contact" )
             onClicked : {
@@ -211,17 +213,11 @@ KPIM.MainView {
             }
           }
           KPIM.Button2 {
+            id: startPageNewContactGroupButton
             width: parent.width
             buttonText : KDE.i18n( "New Contact Group" )
             onClicked : {
               application.newContactGroup();
-            }
-          }
-          KPIM.Button2 {
-            width: parent.width
-            buttonText: KDE.i18n( "New Address Book" )
-            onClicked : {
-              application.launchAccountWizard();
             }
           }
         }
@@ -306,6 +302,7 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            selectButton.visible = false;
             kaddressbookActions.showOnlyCategory("contact_viewer")
           }
           if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
@@ -317,6 +314,7 @@ KPIM.MainView {
             backToFolderListButton.visible = true;
             collectionView.visible = false;
             contactListPage.visible = false;
+            selectButton.visible = false;
             kaddressbookActions.showOnlyCategory("contact_viewer")
           }
         }
@@ -328,10 +326,12 @@ KPIM.MainView {
     id : favoriteSelector
     anchors.fill : parent
     visible : false
+    backgroundImage : backgroundImage.source
     onFinished : {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
       application.clearPersistedSelection("preFavSelection");
+      application.multipleSelectionFinished();
     }
     onCanceled : {
       favoriteSelector.visible = false;
@@ -370,6 +370,13 @@ KPIM.MainView {
                 favoriteSelector.visible = true;
                 mainWorkView.visible = false;
               }
+            },
+            KPIM.ScriptAction {
+              name : "add_as_favorite"
+              script : {
+                actionPanelNew.collapse();
+                application.saveFavorite();
+              }
             }
           ]
 
@@ -386,6 +393,13 @@ KPIM.MainView {
     onAccountSelected : {
       application.setSelectedAccount(row);
       // TODO: Figure out how to expand the slider programatically.
+    }
+  }
+
+  QML.Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
     }
   }
 

@@ -1,4 +1,6 @@
+#ifdef __GNUC__
 #warning Read-only resource endlessly triggers alarm, disabling does not stop this
+#endif
 
 /*
  *  akonadimodel.cpp  -  KAlarm calendar file access using Akonadi
@@ -46,7 +48,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
-#include <kcal/calendarlocal.h>
+#include <kcalcore/memorycalendar.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -58,8 +60,6 @@
 #include <QToolTip>
 #include <QTimer>
 #include <QObject>
-
-Q_DECLARE_METATYPE(KAEvent)
 
 using namespace Akonadi;
 using KAlarm::CollectionAttribute;
@@ -135,7 +135,9 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 
     connect(this, SIGNAL(rowsInserted(const QModelIndex&, int, int)), SLOT(slotRowsInserted(const QModelIndex&, int, int)));
     connect(this, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int, int)), SLOT(slotRowsAboutToBeRemoved(const QModelIndex&, int, int)));
+#ifdef __GNUC__
 #warning When a calendar is disabled, its rows are not removed from the model, so no alarms deleted signal is emitted
+#endif
     connect(monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)), SLOT(slotMonitoredItemChanged(const Akonadi::Item&, const QSet<QByteArray>&)));
 }
 
@@ -522,7 +524,7 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
             {
                 bool enabled = value.toBool();
                 CollectionAttribute* attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
-if (attr) { kDebug()<<"Set:"<<enabled<<", was="<<attr->isEnabled(); } else { kDebug()<<"Set:"<<enabled<<", no attribute"; }
+if (attr) { kDebug()<<"Set enabled:"<<enabled<<", was="<<attr->isEnabled(); } else { kDebug()<<"Set enabled:"<<enabled<<", no attribute"; }
                 if (attr->isEnabled() == enabled)
                     return true;
                 attr->setEnabled(enabled);
@@ -543,7 +545,7 @@ if (attr) { kDebug()<<"Set:"<<enabled<<", was="<<attr->isEnabled(); } else { kDe
         if (updateCollection)
         {
             CollectionModifyJob* job = new CollectionModifyJob(collection, this);
-            connect(job, SIGNAL(result(KJob*)), this, SLOT(modifyCollectionJobDone(KJob*))); 
+            connect(job, SIGNAL(result(KJob*)), this, SLOT(modifyCollectionJobDone(KJob*)));
             return true;
         }
     }
@@ -557,7 +559,9 @@ if (attr) { kDebug()<<"Set:"<<enabled<<", was="<<attr->isEnabled(); } else { kDe
             {
                 case Qt::EditRole:
                 {
+#ifdef __GNUC__
 #warning  ??? update event
+#endif
                     int row = index.row();
                     emit dataChanged(this->index(row, 0, index.parent()), this->index(row, ColumnCount - 1, index.parent()));
                     return true;
@@ -591,7 +595,7 @@ if (attr) { kDebug()<<"Set:"<<enabled<<", was="<<attr->isEnabled(); } else { kDe
             if (updateItem)
             {
                 ItemModifyJob* job = new ItemModifyJob(item, this);
-                connect(job, SIGNAL(result(KJob*)), this, SLOT(itemJobDone(KJob*))); 
+                connect(job, SIGNAL(result(KJob*)), this, SLOT(itemJobDone(KJob*)));
                 return true;
             }
         }
@@ -868,7 +872,9 @@ void AkonadiModel::slotUpdateWorkingHours()
 */
 void AkonadiModel::updateCommandError(const KAEvent& event)
 {
+#ifdef __GNUC__
 #warning ensure commandError is set when loading an alarm by Akonadi
+#endif
     QModelIndexList list = match(QModelIndex(), ItemIdRole, event.itemId(), 1, Qt::MatchExactly | Qt::MatchRecursive);
     if (!list.isEmpty())
         setData(list[0], QVariant(static_cast<int>(event.commandError())), CommandErrorRole);
@@ -885,7 +891,7 @@ void AkonadiModel::setBackgroundColor(Collection& collection, const QColor& colo
     if (ix.isValid())
         signalDataChanged(&checkItem_true, 0, ColumnCount - 1, ix);
 }
- 
+
 /******************************************************************************
 * Return the background color for displaying the collection and its alarms.
 */
@@ -895,7 +901,7 @@ QColor AkonadiModel::backgroundColor(const Akonadi::Collection& collection) cons
         return QColor();
     return collection.attribute<CollectionAttribute>()->backgroundColor();
 }
- 
+
 /******************************************************************************
 * Return the display name for the collection.
 */
@@ -906,7 +912,7 @@ QString AkonadiModel::displayName(const Akonadi::Collection& collection) const
         name = collection.attribute<EntityDisplayAttribute>()->displayName();
     return name.isEmpty() ? collection.name() : name;
 }
- 
+
 /******************************************************************************
 * Return the storage type (file, directory, etc.) for the collection.
 */
@@ -1056,7 +1062,9 @@ void AkonadiModel::addCollectionJobDone(KJob* j)
     }
     else
     {
+#ifdef __GNUC__
 #warning Can the collection be retrieved?
+#endif
         //job->instance().identifier();
         emit collectionAdded(job, true);
     }
@@ -1308,7 +1316,9 @@ bool AkonadiModel::updateEvent(Akonadi::Entity::Id itemId, KAEvent& newEvent)
     mPendingItems[job] = itemId;
     job->start();
     return true;
+#ifdef __GNUC__
 #warning Ensure KAlarm event list is updated correctly before and after Akonadi update
+#endif
 }
 
 /******************************************************************************
@@ -1385,7 +1395,9 @@ void AkonadiModel::itemJobDone(KJob* j)
         kError() << errMsg << itemId << ":" << j->errorString();
         emit itemDone(itemId, false);
         KMessageBox::error(0, i18nc("@info", "%1<nl/>(%2)", errMsg, j->errorString()));
+#ifdef __GNUC__
 #warning No widget parent
+#endif
     }
     else
         emit itemDone(itemId);
@@ -1396,7 +1408,6 @@ void AkonadiModel::itemJobDone(KJob* j)
 */
 void AkonadiModel::slotRowsInserted(const QModelIndex& parent, int start, int end)
 {
-kDebug();
     for (int row = start;  row <= end;  ++row)
     {
         const QModelIndex ix = index(row, 0, parent);
@@ -1418,9 +1429,7 @@ kDebug();
 */
 void AkonadiModel::slotRowsAboutToBeRemoved(const QModelIndex& parent, int start, int end)
 {
-kDebug();
     EventList events = eventList(parent, start, end);
-kDebug()<<"Count="<<(end-start+1)<<", event count="<<events.count();
     if (!events.isEmpty())
         emit eventsToBeRemoved(events);
 }
@@ -1435,7 +1444,6 @@ AkonadiModel::EventList AkonadiModel::eventList(const QModelIndex& parent, int s
     {
         QModelIndex ix = index(row, 0, parent);
         const Item item = ix.data(ItemRole).value<Item>();
-kDebug()<<"row="<<row<<", item valid="<<item.isValid()<<", has payload="<<item.hasPayload<KAEvent>();
         if (item.isValid()  &&  item.hasPayload<KAEvent>())
         {
             KAEvent event = item.payload<KAEvent>();
@@ -1452,13 +1460,13 @@ kDebug()<<"row="<<row<<", item valid="<<item.isValid()<<", has payload="<<item.h
 */
 void AkonadiModel::slotCollectionChanged(const Collection& collection, const QSet<QByteArray>& attributeNames)
 {
-kDebug();
+#ifdef __GNUC__
 #warning Ensure collection rights is initialised at startup
+#endif
     Collection::Rights oldRights = mCollectionRights.value(collection.id(), Collection::AllRights);
     Collection::Rights newRights = collection.rights() & writableRights;
     if (newRights != oldRights)
     {
-kDebug()<<"rights changed";
         mCollectionRights[collection.id()] = newRights;
         emit collectionStatusChanged(collection, ReadOnly, (newRights != writableRights));
     }
@@ -1470,7 +1478,6 @@ kDebug()<<"rights changed";
         bool newEnabled = collection.hasAttribute<CollectionAttribute>() ? collection.attribute<CollectionAttribute>()->isEnabled() : false;
         if (first  ||  newEnabled != oldEnabled)
         {
-kDebug()<<"enabled changed ->"<<newEnabled;
             first = false;
             mCollectionEnabled[collection.id()] = newEnabled;
             emit collectionStatusChanged(collection, Enabled, newEnabled);
@@ -1574,14 +1581,14 @@ KAlarm::CalEvent::Types AkonadiModel::types(const Collection& collection)
 * mime types.
 * Reply = true if at least 1 alarm is the right type.
 */
-bool AkonadiModel::checkAlarmTypes(const Akonadi::Collection& collection, KCal::CalendarLocal& calendar)
+bool AkonadiModel::checkAlarmTypes(const Akonadi::Collection& collection, KCalCore::Calendar::Ptr& calendar)
 {
     KAlarm::CalEvent::Types etypes = types(collection);
     if (etypes)
     {
         bool have = false;
         bool other = false;
-        const KCal::Event::List events = calendar.rawEvents();
+        const KCalCore::Event::List events = calendar->rawEvents();
         for (int i = 0, iend = events.count();  i < iend;  ++i)
         {
             KAlarm::CalEvent::Type s = KAlarm::CalEvent::status(events[i]);
@@ -1637,8 +1644,10 @@ void CollectionMimeTypeFilterModel::setEventTypeFilter(KAlarm::CalEvent::Type ty
     QString mimeType = KAlarm::CalEvent::mimeType(type);
     if (mimeType != mMimeType)
     {
+        emit layoutAboutToBeChanged();
         mMimeType = mimeType;
         invalidateFilter();
+        emit layoutChanged();
     }
 }
 
@@ -1646,8 +1655,10 @@ void CollectionMimeTypeFilterModel::setFilterWritable(bool writable)
 {
     if (writable != mWritableOnly)
     {
+        emit layoutAboutToBeChanged();
         mWritableOnly = writable;
         invalidateFilter();
+        emit layoutChanged();
     }
 }
 
@@ -1739,7 +1750,7 @@ CollectionCheckListModel* CollectionCheckListModel::instance()
 }
 
 CollectionCheckListModel::CollectionCheckListModel(QObject* parent)
-    : CheckableItemProxyModel(parent)
+    : Future::KCheckableProxyModel(parent)
 {
     CollectionListModel* model = new CollectionListModel(this);
     setSourceModel(model);
@@ -1791,10 +1802,7 @@ void CollectionCheckListModel::selectionChanged(const QItemSelection& selected, 
 {
     const QModelIndexList sel = selected.indexes();
     foreach (const QModelIndex& ix, sel)
-{
         CollectionControlModel::setEnabled(static_cast<CollectionListModel*>(sourceModel())->collection(ix), true);
-kDebug()<<"Enabled";
-}
     const QModelIndexList desel = deselected.indexes();
     foreach (const QModelIndex& ix, desel)
     {
@@ -1802,20 +1810,17 @@ kDebug()<<"Enabled";
         // Check for eligibility.
         const Collection collection = static_cast<CollectionListModel*>(sourceModel())->collection(ix);
         if (!collection.isValid()  ||  !collection.hasAttribute<CollectionAttribute>())
-{kDebug()<<"No attribute";
             continue;
-}
         const CollectionAttribute* attr = collection.attribute<CollectionAttribute>();
         if (!attr->isEnabled())
-{kDebug()<<"Already disabled";
             continue;
-}
         if (attr->standard() != KAlarm::CalEvent::EMPTY)
         {
             // It's the standard collection for some alarm type.
+            QWidget* messageParent = qobject_cast<QWidget*>(QObject::parent());
             if (attr->isStandard(KAlarm::CalEvent::ACTIVE))
             {
-                KMessageBox::sorry(static_cast<QWidget*>(parent()),
+                KMessageBox::sorry(messageParent,
                                    i18nc("@info", "You cannot disable your default active alarm calendar."));
                 continue;
             }
@@ -1823,18 +1828,17 @@ kDebug()<<"Enabled";
             {
                 // Only allow the archived alarms standard collection to be disabled if
                 // we're not saving expired alarms.
-                KMessageBox::sorry(static_cast<QWidget*>(parent()),
+                KMessageBox::sorry(messageParent,
                                    i18nc("@info", "You cannot disable your default archived alarm calendar "
                                                   "while expired alarms are configured to be kept."));
                 continue;
             }
-            if (KMessageBox::warningContinueCancel(static_cast<QWidget*>(parent()),
+            if (KMessageBox::warningContinueCancel(messageParent,
                                                    i18nc("@info", "Do you really want to disable your default calendar?"))
                        == KMessageBox::Cancel)
                 continue;
         }
         CollectionControlModel::setEnabled(collection, false);
-kDebug()<<"Disabled";
     }
 }
 
@@ -1855,8 +1859,10 @@ void CollectionFilterCheckListModel::setEventTypeFilter(KAlarm::CalEvent::Type t
     QString mimeType = KAlarm::CalEvent::mimeType(type);
     if (mimeType != mMimeType)
     {
+        emit layoutAboutToBeChanged();
         mMimeType = mimeType;
         invalidateFilter();
+        emit layoutChanged();
     }
 }
 
@@ -2353,7 +2359,6 @@ void ItemListModel::slotRowsInserted()
 */
 void ItemListModel::slotRowsToBeRemoved()
 {
-kDebug();
     if (mHaveEvents  &&  !rowCount())
     {
         mHaveEvents = false;
@@ -2432,7 +2437,9 @@ KAEvent ItemListModel::event(const QModelIndex& index) const
 */
 bool ItemListModel::haveEvents() const
 {
+#ifdef __GNUC__
 #warning Might instead need to iterate over all collections to find item count
+#endif
     return rowCount();
 }
 
@@ -2481,8 +2488,10 @@ void AlarmListModel::setEventTypeFilter(KAlarm::CalEvent::Types types)
     if (this != mAllInstance
     &&  types != mFilterTypes  &&  (types & includedTypes()) == types)
     {
+        emit layoutAboutToBeChanged();
         mFilterTypes = types;
         invalidateFilter();
+        emit layoutChanged();
     }
 }
 

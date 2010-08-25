@@ -30,6 +30,7 @@
 #include <KAction>
 #include <KCmdLineArgs>
 #include <KCMultiDialog>
+#include <KMessageBox>
 #include <kselectionproxymodel.h>
 #include <klocalizedstring.h>
 #include <kstandarddirs.h>
@@ -141,8 +142,11 @@ void MainView::recoverAutoSavedMessages()
 
       file.close();
     } else {
-      //### TODO: error message
       kDebug() << "error!!";
+      //###: review error string
+      KMessageBox::sorry( this,
+                          i18n("Could not recover a saved message."),
+                          i18n("Recover Message Error"));
     }
   }
 }
@@ -165,19 +169,29 @@ void MainView::composeFetchResult( KJob *job )
 {
   Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
   if ( job->error() || fetch->items().isEmpty() ) {
-    // ###: emit ERROR
+    kDebug() << "error!!";
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n("Could not restore a draft."),
+                        i18n("Restore Draft Error"));
     return;
   }
 
   const Akonadi::Item item = fetch->items().first();
   if (!item.isValid() && !item.parentCollection().isValid() ) {
-    // ###: emit ERROR
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n("Invalid draft message."),
+                        i18n("Restore Draft Error"));
     return;
   }
 
   KMime::Message::Ptr msg = MessageCore::Util::message( item );
   if ( !msg ) {
-    // ###: emit ERROR
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n("Message content error"),
+                        i18n("Restore Draft Error"));
     return;
   }
 
@@ -384,6 +398,11 @@ void MainView::modifyDone(KJob *job)
   if (job->error())
   {
     kWarning() << "Modify error: " << job->errorString();
+    //###: review error string
+    //## Use a notification instead?
+    KMessageBox::sorry( this,
+                        i18n("Error trying to set item status"),
+                        i18n("Messages status error"));
     return;
   }
 }
@@ -472,6 +491,10 @@ void MainView::createDefaultCollectionDone( KJob *job)
 {
   if ( job->error() ) {
     kDebug() << "Error creating default collection: " << job->errorText();
+    //###: review error string
+    KMessageBox::sorry( this,
+                        i18n("Error creating default collection."),
+                        i18n("Internal Error"));
     return;
   }
 
@@ -511,9 +534,12 @@ bool MainView::folderIsDrafts(const Akonadi::Collection &col)
 
 void MainView::deleteItemResult( KJob *job )
 {
-    // ###: Need proper UI for this.
   if ( job->error() ) {
       kDebug() << "Error trying to delete item";
+      //###: review error string
+      KMessageBox::sorry( this,
+                          i18n("Can not delete draft."),
+                          i18n("Delete Draft Error"));
   }
 }
 
