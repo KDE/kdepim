@@ -99,21 +99,27 @@ QML.Column {
     anchors.left : parent.left
     anchors.right : parent.right
     action : application.getAction("akonadi_item_delete", "")
-    onTriggered : _top.triggered("akonadi_item_delete")
+    onTriggered : {
+      _top.triggered("akonadi_item_delete")
+    }
   }
   KPIM.Action {
     height : itemHeight
     anchors.left : parent.left
     anchors.right : parent.right
-    action : application.getAction("akonadi_item_cut", "")
-    onTriggered : _top.triggered("akonadi_item_cut")
+    action : application.getAction("akonadi_item_move_to_menu", "")
+    onTriggered : {
+      _top.triggered("akonadi_item_move_to_menu")
+    }
   }
   KPIM.Action {
     height : itemHeight
     anchors.left : parent.left
     anchors.right : parent.right
-    action : application.getAction("akonadi_item_copy", "")
-    onTriggered : _top.triggered("akonadi_item_copy")
+    action : application.getAction("akonadi_item_copy_to_menu", "")
+    onTriggered : {
+      _top.triggered("akonadi_item_copy_to_menu")
+    }
   }
   KPIM.FakeAction {
     height : itemHeight
