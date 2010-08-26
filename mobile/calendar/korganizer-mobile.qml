@@ -178,23 +178,6 @@ KPIM.MainView {
     }
   }
 
-  KPIM.MultipleSelectionScreen {
-    id : favoriteSelector
-    anchors.fill : parent
-    anchors.topMargin : 12
-    visible : false
-    backgroundImage : backgroundImage.source
-    onFinished : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
-      application.multipleSelectionFinished();
-    }
-    onCanceled : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
-    }
-  }
-
   Item {
     id : mainWorkView
     anchors.top: parent.top
@@ -433,6 +416,22 @@ KPIM.MainView {
           anchors.fill: parent
         }
       ]
+    }
+  }
+  KPIM.MultipleSelectionScreen {
+    id : favoriteSelector
+    anchors.fill : parent
+    anchors.topMargin : 12
+    visible : false
+    backgroundImage : backgroundImage.source
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.multipleSelectionFinished();
+    }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
     }
   }
 

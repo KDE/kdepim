@@ -269,23 +269,6 @@ KPIM.MainView {
       }
     }
   }
-  KPIM.MultipleSelectionScreen {
-    id : favoriteSelector
-    anchors.fill : parent
-    visible : false
-    backgroundImage : backgroundImage.source
-    onFinished : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
-      application.clearPersistedSelection("preFavSelection");
-      application.multipleSelectionFinished();
-    }
-    onCanceled : {
-      favoriteSelector.visible = false;
-      mainWorkView.visible = true;
-      application.restorePersistedSelection("preFavSelection");
-    }
-  }
 
   SlideoutPanelContainer {
     anchors.fill: parent
@@ -348,6 +331,24 @@ KPIM.MainView {
           anchors.fill: parent
         }
       ]
+    }
+  }
+
+  KPIM.MultipleSelectionScreen {
+    id : favoriteSelector
+    anchors.fill : parent
+    visible : false
+    backgroundImage : backgroundImage.source
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.clearPersistedSelection("preFavSelection");
+      application.multipleSelectionFinished();
+    }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.restorePersistedSelection("preFavSelection");
     }
   }
 
