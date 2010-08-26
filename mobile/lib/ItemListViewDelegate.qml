@@ -23,6 +23,7 @@ import Qt 4.7
 Item {
   id: itemViewTopLevel
   property alias summaryContent: itemSummary.data
+  property alias showCheckBox : checkBoxImage.visible
 
   width: itemListView.width
 
@@ -49,6 +50,14 @@ Item {
     x: 1; y: parent.height -2; width: parent.width - 2; height: 1
     border.color: palette.mid
     opacity: 0.25
+  }
+  Image {
+    id : checkBoxImage
+    anchors.verticalCenter: parent.verticalCenter;
+    anchors.right : parent.right;
+    visible : false
+    opacity : model.checkOn ? 1 : 0
+    source : "images/check.png"
   }
 
   Connections {
