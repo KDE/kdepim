@@ -205,18 +205,12 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_item_delete" }
   }
 
-  ActionList {
-    category: "standard"
-    name : "standard_settings"
-    text : KDE.i18n( "Settings (merge)" )
-    FakeAction { name : "work_offline" }
-    FakeAction { name : "configure_notifications" }
-  }
-
   ApplicationGeneralActions {
     category : "standard"
     name : "application_menu"
     text : KDE.i18n( "Application" )
     type : "mail"
+
+    FakeAction { name : "configure_notifications" }
   }
 }

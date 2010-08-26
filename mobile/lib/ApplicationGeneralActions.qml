@@ -42,6 +42,9 @@ KPIM.ActionList {
     name : "search_" + type
   }
   KPIM.FakeAction {
+    name : "work_offline"
+  }
+  KPIM.FakeAction {
     name : "configure"
   }
   KPIM.ScriptActionItem  {
