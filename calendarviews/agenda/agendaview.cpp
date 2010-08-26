@@ -569,7 +569,7 @@ void AgendaView::zoomView( const int delta, const QPoint &pos, const Qt::Orienta
   }
 }
 
-#ifndef KORG_NODECOS
+#ifndef EVENTVIEWS_NODECOS
 
 bool AgendaView::loadDecorations( const QStringList &decorations, DecorationList &decoList )
 {
@@ -658,7 +658,7 @@ void AgendaView::createDayLabels( bool force )
 
   const KCalendarSystem *calsys = KGlobal::locale()->calendar();
 
-#ifndef KORG_NODECOS
+#ifndef EVENTVIEWS_NODECOS
   QList<CalendarDecoration::Decoration *> topDecos;
   QStringList topStrDecos = preferences()->decorationsAtAgendaViewTop();
   placeDecorationsFrame( d->mTopDayLabelsFrame, loadDecorations( topStrDecos, topDecos ), true );
@@ -704,14 +704,14 @@ void AgendaView::createDayLabels( bool force )
       delete ww;
     }
 
-#ifndef KORG_NODECOS
+#ifndef EVENTVIEWS_NODECOS
     // Day decoration labels
     placeDecorations( topDecos, date, topDayLabelBox, false );
     placeDecorations( botDecos, date, bottomDayLabelBox, false );
 #endif
   }
 
-#ifndef KORG_NODECOS
+#ifndef EVENTVIEWS_NODECOS
   // Week decoration labels
   placeDecorations( topDecos, d->mSelectedDates.first(), topWeekLabelBox, true );
   placeDecorations( botDecos, d->mSelectedDates.first(), bottomWeekLabelBox, true );

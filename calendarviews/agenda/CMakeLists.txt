@@ -1,3 +1,17 @@
+
+#
+# The following macros can be defined to alter behavior.
+# (if desired, use add_definitions() to define them)
+#
+# EVENTVIEWS_NODECOS - turns-off decoration plugins in views.
+#                No idea why you would want to define this, perhaps to save
+#                screen real estate? But there are a config options for that.
+option(EVENTVIEWS_NODECOS "Turn-off decoration plugins in views." FALSE)
+
+if(EVENTVIEWS_NODECOS)
+  add_definitions(-DEVENTVIEWS_NODECOS)
+endif(EVENTVIEWS_NODECOS)
+
 include_directories(
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkdepim

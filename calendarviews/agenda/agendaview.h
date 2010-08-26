@@ -52,7 +52,7 @@ namespace Akonadi {
 namespace EventViews
 {
 
-#ifndef KORG_NODECOS
+#ifndef EVENTVIEWS_NODECOS
   namespace CalendarDecoration {
     class Decoration;
   }
@@ -257,7 +257,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void setupTimeLabel( TimeLabels *timeLabel );
     int timeLabelsWidth();
     void displayIncidence( const Akonadi::Item &incidence );
-#ifndef KORG_NODECOS
+#ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
     bool loadDecorations( const QStringList &decorations, DecorationList &decoList );
     void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
