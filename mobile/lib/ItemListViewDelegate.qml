@@ -24,6 +24,7 @@ Item {
   id: itemViewTopLevel
   property alias summaryContent: itemSummary.data
   property alias showCheckBox : checkBoxImage.visible
+  property variant checkModel
 
   width: itemListView.width
 
@@ -32,11 +33,15 @@ Item {
   MouseArea {
     anchors.fill: parent
     onClicked: {
-      itemViewTopLevel.ListView.view.currentIndex = model.index;
-      itemViewTopLevel.ListView.view.parent.currentItemId = model.itemId;
+      if (showCheckBox && checkModel) {
+        checkModel.select(model.index, 8)
+      } else {
+        itemViewTopLevel.ListView.view.currentIndex = model.index;
+        itemViewTopLevel.ListView.view.parent.currentItemId = model.itemId;
 
-      itemViewTopLevel.ListView.view.parent.itemSelected();
-      application.setListSelectedRow(model.index);
+        itemViewTopLevel.ListView.view.parent.itemSelected();
+        application.setListSelectedRow(model.index);
+      }
     }
   }
 
