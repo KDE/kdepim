@@ -28,8 +28,13 @@ QML.Rectangle {
   property alias multipleText : actionList.multipleText
   property alias headerList : headerList.children
   property alias actionListWidth : actionList.width
+  property alias backgroundImage : _backgroundImage.source
 
   signal backClicked()
+
+  QML.Image {
+    id: _backgroundImage
+  }
 
   BulkActionList {
     id : actionList
