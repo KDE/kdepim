@@ -20,6 +20,7 @@
 */
 
 import Qt 4.7 as QML
+import org.kde.akonadi 4.5 as Akonadi
 
 QML.Rectangle {
   color : "#00000000"
@@ -42,14 +43,100 @@ QML.Rectangle {
     anchors.bottom : parent.bottom
     anchors.left : parent.left
     onBackClicked : parent.backClicked()
+    onTriggered : {
+      mainPanel.complete(name)
+    }
   }
 
   QML.Item {
+    id : mainPanel
     anchors.top : parent.top
     anchors.right : parent.right
     anchors.bottom : parent.bottom
     anchors.left : actionList.right
-    id :headerList
-  }
+    QML.Item {
+      anchors.fill : parent
+      id : headerList
+    }
 
+    function complete(name) {
+      if (name == "akonadi_item_cut")
+      {
+        headerList.visible = false
+        completeMove.visible = true
+      }
+      else if (name == "akonadi_item_copy")
+      {
+        headerList.visible = false
+        completeCopy.visible = true
+      }
+    }
+
+    QML.Rectangle {
+      anchors.fill : parent
+      id : completeMove
+
+      visible : false
+      color : "#00000000"
+      Akonadi.AkonadiBreadcrumbNavigationView {
+        id : moveBnv
+        anchors.left : parent.left
+        anchors.top : parent.top
+        anchors.bottom : parent.bottom
+        width : 1 / 3 * parent.width
+
+        breadcrumbComponentFactory : _bulkActionBnf
+      }
+      QML.Text {
+        id : moveSummaryText
+        anchors.left : moveBnv.right
+        anchors.right : parent.right
+        anchors.verticalCenter : parent.verticalCenter
+        height : 30
+        text : KDE.i18n("Move %1 items to %2", _itemCheckModel.selection.length, _bulkActionBnf.selectedDisplayText);
+      }
+      Button2 {
+        anchors.bottom : parent.bottom
+        anchors.left : moveSummaryText.left
+        width : 100
+        buttonText : "Ok"
+      }
+    }
+
+    QML.Rectangle {
+      anchors.fill : parent
+      id : completeCopy
+
+      visible : false
+      color : "#00000000"
+      Akonadi.AkonadiBreadcrumbNavigationView {
+        id : copyBnv
+        anchors.left : parent.left
+        anchors.top : parent.top
+        anchors.bottom : parent.bottom
+        width : 1 / 3 * parent.width
+
+        breadcrumbComponentFactory : _bulkActionBnf
+      }
+      QML.Text {
+        id : copySummaryText
+        anchors.left : copyBnv.right
+        anchors.right : parent.right
+        anchors.verticalCenter : parent.verticalCenter
+        height : 30
+        text : KDE.i18n("Move %1 items to %2", _itemCheckModel.selection.length, _bulkActionBnf.selectedDisplayText);
+      }
+      Button2 {
+        anchors.bottom : parent.bottom
+        anchors.left : copySummaryText.left
+        width : 100
+        buttonText : "Ok"
+      }
+    }
+
+    QML.Item {
+      anchors.fill : parent
+      id : completeMarkAs
+    }
+  }
 }
