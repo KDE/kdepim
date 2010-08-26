@@ -47,9 +47,9 @@ KPIM.MainView {
       kmailActions.showOnlyCategory("home")
     } else if (collectionView.numBreadcrumbs == 0 && collectionView.numSelected != 0) { // top-level is selected
       kmailActions.showOnlyCategory("account")
-    } else if ( collectionView.numSelected > 1 ) { 
+    } else if ( collectionView.numSelected > 1 ) {
       kmailActions.showOnlyCategory( "multiple_folder" );
-    } else { 
+    } else {
       kmailActions.showOnlyCategory("single_folder")
     }
   }
