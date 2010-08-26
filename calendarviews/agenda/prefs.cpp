@@ -913,4 +913,9 @@ KConfigSkeleton::ItemFont* Prefs::fontItem( const QString &name ) const
   return dynamic_cast<KConfigSkeleton::ItemFont *>( item );
 }
 
+QStringList Prefs::selectedPlugins() const
+{
+  return d->mBaseConfig.mSelectedPlugins;
+}
+
 // kate: space-indent on; indent-width 2; replace-tabs on;

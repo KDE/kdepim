@@ -152,7 +152,6 @@ class EVENTVIEWS_EXPORT Prefs
 
     KConfigSkeleton::ItemFont* fontItem( const QString &name ) const;
 
-  public:
     // preferences data
     void setCategoryColor( const QString &cat, const QColor &color );
     QColor categoryColor( const QString &cat ) const;
@@ -166,6 +165,8 @@ class EVENTVIEWS_EXPORT Prefs
 
     QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
+
+    QStringList selectedPlugins() const;
 
   private:
     class Private;
