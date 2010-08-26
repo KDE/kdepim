@@ -29,6 +29,7 @@ QML.Column {
   property alias multipleText : _multipleText.text
 
   signal backClicked()
+  signal triggered(string name)
 
   property int itemHeight : 65
 
@@ -93,17 +94,26 @@ QML.Column {
       }
     }
   }
-  KPIM.FakeAction {
+  KPIM.Action {
     height : itemHeight
-    name : "delete"
+    anchors.left : parent.left
+    anchors.right : parent.right
+    action : application.getAction("akonadi_item_delete", "")
+    onTriggered : _top.triggered("akonadi_item_delete")
   }
-  KPIM.FakeAction {
+  KPIM.Action {
     height : itemHeight
-    name : "move"
+    anchors.left : parent.left
+    anchors.right : parent.right
+    action : application.getAction("akonadi_item_cut", "")
+    onTriggered : _top.triggered("akonadi_item_cut")
   }
-  KPIM.FakeAction {
+  KPIM.Action {
     height : itemHeight
-    name : "copy"
+    anchors.left : parent.left
+    anchors.right : parent.right
+    action : application.getAction("akonadi_item_copy", "")
+    onTriggered : _top.triggered("akonadi_item_copy")
   }
   KPIM.FakeAction {
     height : itemHeight
