@@ -20,63 +20,92 @@
 import Qt 4.7
 
 Item {
-    id: selector
-    width: 130
-    height: 64
+    id: fadeselector
+    width: 160
+    height: 90
 
     property alias model: list.model
     property alias currentIndex: list.currentIndex
 
+
     Image {
         id: inputLeft
-        source: "images/scrollinput-left" + (selector.focus ? "-active" : "") + ".png"
+        source: "images/scrollinput-left" + (fadeselector.focus ? "-active" : "") + ".png"
 
         anchors.top: parent.top
+        anchors.topMargin: 15
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 15
         anchors.left: parent.left
         anchors.leftMargin: 5
     }
 
     BorderImage {
         id: inputCenter
-        source: "images/scrollinput-center" + (selector.focus ? "-active" : "") + ".png"
+        source: "images/scrollinput-center" + (fadeselector.focus ? "-active" : "") + ".png"
 
         anchors.top: parent.top
+        anchors.topMargin: 15
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 15
         anchors.left: inputLeft.right
         anchors.right: inputRight.left
     }
 
     Image {
         id: inputRight
-        source: "images/scrollinput-right" + (selector.focus ? "-active" : "") + ".png"
+        source: "images/scrollinput-right" + (fadeselector.focus ? "-active" : "") + ".png"
 
         anchors.top: parent.top
+        anchors.topMargin: 15
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 15
         anchors.right: parent.right
         anchors.rightMargin: 5
     }
 
+    function relativeopacity(y1, y2, height) {
+        var opacity = (y2 + y1) / height;
+        if (opacity > 1)
+            return 2.4 - opacity;
+        else if (opacity == 1)
+            return opacity
+        return opacity + 0.4
+    }
+
+    function indexopacity(index) {
+        if (index == list.currentIndex)
+            return 1;
+        return 0;
+    }
+
     Component {
-        id: delegate
+        id: fadeDelegate
         Item {
-            id: wrapper
-            width: 75
-            height: 45
-            anchors.verticalCenterOffset: 5
-            anchors.verticalCenter: parent.verticalCenter
+            id: fadewrapper
+            width: fadeselector.width
+            height: 30
+            opacity: fadeselector.focus ? relativeopacity(parent.y, y, height) : indexopacity(index);
             Text {
                 text: index + 1
                 anchors.fill: parent
                 color: "#004bb8"
                 font.bold: true
-                font.pixelSize: 32
+                font.pixelSize: 28
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
             MouseArea {
+                hoverEnabled: true
                 anchors.fill: parent
                 onClicked: {
-                    selector.focus = true;
+                    fadeselector.focus = true;
+                }
+                onEntered: {
+                    fadeselector.focus = true;
+                }
+                onExited: {
+                    fadeselector.focus = false;
                 }
             }
         }
@@ -93,20 +122,19 @@ Item {
     ListView {
         id: list
         clip: true
-        model: 2010
-        spacing: 30
-        delegate: delegate
+        model: 10
+        delegate: fadeDelegate
         highlight: highlight
         highlightRangeMode: ListView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
         preferredHighlightBegin: 30
-        preferredHighlightEnd: 100
+        preferredHighlightEnd: 60
 
         anchors.fill: parent
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        orientation: Qt.Horizontal
+        anchors.leftMargin: 5
+        anchors.rightMargin: 5
+        orientation: Qt.Vertical
         snapMode: ListView.SnapToItem
     }
+
 }
