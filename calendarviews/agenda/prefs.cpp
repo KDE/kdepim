@@ -928,4 +928,20 @@ QStringList Prefs::decorationsAtAgendaViewBottom() const
   return d->mBaseConfig.decorationsAtAgendaViewBottom();
 }
 
+
+void Prefs::setSelectedPlugins( const QStringList &plugins )
+{
+  d->mBaseConfig.setSelectedPlugins( plugins );
+}
+
+void Prefs::setDecorationsAtAgendaViewTop( const QStringList &decorations )
+{
+  d->mBaseConfig.setDecorationsAtAgendaViewTop( decorations );
+}
+
+void Prefs::setDecorationsAtAgendaViewBottom( const QStringList &decorations )
+{
+  d->mBaseConfig.setDecorationsAtAgendaViewBottom( decorations );
+}
+
 // kate: space-indent on; indent-width 2; replace-tabs on;
