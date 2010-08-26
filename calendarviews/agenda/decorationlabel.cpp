@@ -23,17 +23,19 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kodecorationlabel.h"
+#include "decorationlabel.h"
 
 #include <KToolInvocation>
 
 #include <QtGui/QMouseEvent>
 #include <QtGui/QResizeEvent>
 
-#include "kodecorationlabel.moc"
+#include "decorationlabel.moc"
 
-KODecorationLabel::KODecorationLabel( KOrg::CalendarDecoration::Element *e,
-                                      QWidget *parent )
+using namespace EventViews;
+
+DecorationLabel::DecorationLabel( CalendarDecoration::Element *e,
+                                  QWidget *parent )
   : QLabel( parent ), mAutomaticSqueeze( true ), mDecorationElement( e ),
     mShortText( e->shortText() ), mLongText( e->longText() ),
     mExtensiveText( e->extensiveText() )
@@ -55,12 +57,12 @@ KODecorationLabel::KODecorationLabel( KOrg::CalendarDecoration::Element *e,
   squeezeContentsToLabel();
 }
 
-KODecorationLabel::KODecorationLabel( const QString &shortText,
-                                      const QString &longText,
-                                      const QString &extensiveText,
-                                      const QPixmap &pixmap,
-                                      const KUrl &url,
-                                      QWidget *parent )
+DecorationLabel::DecorationLabel( const QString &shortText,
+                                  const QString &longText,
+                                  const QString &extensiveText,
+                                  const QPixmap &pixmap,
+                                  const KUrl &url,
+                                  QWidget *parent )
   : QLabel( parent ), mAutomaticSqueeze( true ), mShortText( shortText ),
     mLongText( longText ), mExtensiveText( extensiveText ),
     mPixmap( pixmap )
@@ -70,11 +72,11 @@ KODecorationLabel::KODecorationLabel( const QString &shortText,
   squeezeContentsToLabel();
 }
 
-KODecorationLabel::~KODecorationLabel()
+DecorationLabel::~DecorationLabel()
 {
 }
 
-void KODecorationLabel::mouseReleaseEvent( QMouseEvent *event )
+void DecorationLabel::mouseReleaseEvent( QMouseEvent *event )
 {
   QLabel::mouseReleaseEvent( event );
 
@@ -92,43 +94,43 @@ void KODecorationLabel::mouseReleaseEvent( QMouseEvent *event )
   }
 }
 
-void KODecorationLabel::resizeEvent( QResizeEvent *event )
+void DecorationLabel::resizeEvent( QResizeEvent *event )
 {
   mPixmap = mDecorationElement->newPixmap( event->size() );
   QLabel::resizeEvent( event );
   squeezeContentsToLabel();
 }
 
-void KODecorationLabel::setExtensiveText( const QString &text )
+void DecorationLabel::setExtensiveText( const QString &text )
 {
   mExtensiveText = text;
   squeezeContentsToLabel();
 }
 
-void KODecorationLabel::setLongText( const QString &text )
+void DecorationLabel::setLongText( const QString &text )
 {
   mLongText = text;
   squeezeContentsToLabel();
 }
 
-void KODecorationLabel::setPixmap( const QPixmap &pixmap )
+void DecorationLabel::setPixmap( const QPixmap &pixmap )
 {
   mPixmap = pixmap.scaled( size(), Qt::KeepAspectRatio );
   squeezeContentsToLabel();
 }
 
-void KODecorationLabel::setShortText( const QString &text )
+void DecorationLabel::setShortText( const QString &text )
 {
   mShortText = text;
   squeezeContentsToLabel();
 }
 
-void KODecorationLabel::setText( const QString &text )
+void DecorationLabel::setText( const QString &text )
 {
   setLongText( text );
 }
 
-void KODecorationLabel::setUrl( const KUrl &url )
+void DecorationLabel::setUrl( const KUrl &url )
 {
   mUrl = url;
   QFont f = font();
@@ -144,7 +146,7 @@ void KODecorationLabel::setUrl( const KUrl &url )
   setFont( f );
 }
 
-void KODecorationLabel::squeezeContentsToLabel()
+void DecorationLabel::squeezeContentsToLabel()
 {
   if ( !mAutomaticSqueeze ) { // The content type to use has been set manually
     return;
@@ -176,34 +178,34 @@ void KODecorationLabel::squeezeContentsToLabel()
                  QSizePolicy::MinimumExpanding );
 }
 
-void KODecorationLabel::useDefaultText()
+void DecorationLabel::useDefaultText()
 {
   mAutomaticSqueeze = false;
   squeezeContentsToLabel();
 }
 
-void KODecorationLabel::useExtensiveText( bool allowAutomaticSqueeze )
+void DecorationLabel::useExtensiveText( bool allowAutomaticSqueeze )
 {
   mAutomaticSqueeze = allowAutomaticSqueeze;
   QLabel::setText( mExtensiveText );
   setToolTip( QString() );
 }
 
-void KODecorationLabel::useLongText( bool allowAutomaticSqueeze )
+void DecorationLabel::useLongText( bool allowAutomaticSqueeze )
 {
   mAutomaticSqueeze = allowAutomaticSqueeze;
   QLabel::setText( mLongText );
   setToolTip( mExtensiveText.isEmpty() ? QString() : mExtensiveText );
 }
 
-void KODecorationLabel::usePixmap( bool allowAutomaticSqueeze )
+void DecorationLabel::usePixmap( bool allowAutomaticSqueeze )
 {
   mAutomaticSqueeze = allowAutomaticSqueeze;
   QLabel::setPixmap( mPixmap );
   setToolTip( mExtensiveText.isEmpty() ? mLongText : mExtensiveText );
 }
 
-void KODecorationLabel::useShortText( bool allowAutomaticSqueeze )
+void DecorationLabel::useShortText( bool allowAutomaticSqueeze )
 {
   mAutomaticSqueeze = allowAutomaticSqueeze;
   QLabel::setText( mShortText );

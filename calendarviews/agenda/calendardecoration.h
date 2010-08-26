@@ -18,8 +18,8 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KORG_CALENDARDECORATION_H
-#define KORG_CALENDARDECORATION_H
+#ifndef CALENDARDECORATION_H
+#define CALENDARDECORATION_H
 
 #include "plugin.h"
 
@@ -30,7 +30,7 @@
 #include <QtCore/QList>
 #include <QtGui/QPixmap>
 
-namespace KOrg {
+namespace EventViews {
 
 namespace CalendarDecoration {
 

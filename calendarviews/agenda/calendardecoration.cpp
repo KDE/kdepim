@@ -22,9 +22,7 @@
 #include "calendardecoration.h"
 #include "calendardecoration.moc"
 
-using namespace KOrg::CalendarDecoration;
-
-////////////////////////////////////////////////////////////////////////////////
+using namespace EventViews::CalendarDecoration;
 
 Element::Element( const QString &id )
   : mId( id )

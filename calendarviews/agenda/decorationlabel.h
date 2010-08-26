@@ -23,29 +23,32 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KODECORATIONLABEL_H
-#define KODECORATIONLABEL_H
+#ifndef DECORATIONLABEL_H
+#define DECORATIONLABEL_H
 
-#include "calendar/calendardecoration.h"
+#include "calendardecoration.h"
 
 #include <KUrl>
 
 #include <QtGui/QLabel>
 
-class KODecorationLabel : public QLabel
+namespace EventViews {
+
+class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
 {
   Q_OBJECT
 
   public:
-    explicit KODecorationLabel( KOrg::CalendarDecoration::Element *e,
-                       QWidget *parent = 0 );
-    explicit KODecorationLabel( const QString &shortText,
-                       const QString &longText = QString(),
-                       const QString &extensiveText = QString(),
-                       const QPixmap &pixmap = QPixmap(),
-                       const KUrl &url = KUrl(),
-                       QWidget *parent = 0 );
-    ~KODecorationLabel();
+    explicit DecorationLabel( EventViews::CalendarDecoration::Element *e,
+                              QWidget *parent = 0 );
+
+    explicit DecorationLabel( const QString &shortText,
+                              const QString &longText = QString(),
+                              const QString &extensiveText = QString(),
+                              const QPixmap &pixmap = QPixmap(),
+                              const KUrl &url = KUrl(),
+                              QWidget *parent = 0 );
+    ~DecorationLabel();
 
   public slots:
     void setExtensiveText( const QString & );
@@ -65,10 +68,12 @@ class KODecorationLabel : public QLabel
     virtual void mouseReleaseEvent( QMouseEvent * );
     virtual void squeezeContentsToLabel();
     bool mAutomaticSqueeze;
-    KOrg::CalendarDecoration::Element *mDecorationElement;
+    EventViews::CalendarDecoration::Element *mDecorationElement;
     QString mShortText, mLongText, mExtensiveText;
     QPixmap mPixmap;
     KUrl mUrl;
 };
+
+}
 
 #endif
