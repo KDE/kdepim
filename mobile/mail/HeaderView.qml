@@ -26,10 +26,13 @@ KPIM.ItemListView {
   id : _top
   property bool showDeleteButton : false
   property bool showCheckBox
+  property variant checkModel
+
   delegate: [
     KPIM.ItemListViewDelegate {
       id : _delegate
       showCheckBox : _top.showCheckBox
+      checkModel : _top.checkModel
       height : itemListView.height / 7
       summaryContent : [
         QML.Text {
