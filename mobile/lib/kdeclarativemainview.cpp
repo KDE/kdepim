@@ -146,6 +146,10 @@ void KDeclarativeMainView::delayedInit()
 
     QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlSelectionModel ) ) );
+
+    Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory(this);
+    bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this);
+    context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
   }
 
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
