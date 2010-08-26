@@ -48,8 +48,15 @@ namespace Akonadi {
   class CollectionSelection;
 }
 
+
 namespace EventViews
 {
+
+#ifndef KORG_NODECOS
+  namespace CalendarDecoration {
+    class Decoration;
+  }
+#endif
 
 class TimeLabels;
 class TimeLabelsZone;
@@ -250,7 +257,13 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void setupTimeLabel( TimeLabels *timeLabel );
     int timeLabelsWidth();
     void displayIncidence( const Akonadi::Item &incidence );
+#ifndef KORG_NODECOS
+    typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
+    bool loadDecorations( const QStringList &decorations, DecorationList &decoList );
     void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
+    void placeDecorations( DecorationList &decoList, const QDate &date,
+                           KHBox *labelBox, bool forWeek );
+#endif
 
     friend class TimeLabelsZone;
     friend class MultiAgendaView;

@@ -29,14 +29,15 @@
 #include "agendaitem.h"
 #include "alternatelabel.h"
 #include "timelabelszone.h"
+#include "decorationlabel.h"
 
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/incidencechanger.h>
 
-#include <kcalcore/calfilter.h>
-#include <kcalcore/calformat.h>
+#include <KCalCore/CalFilter>
+#include <KCalCore/CalFormat>
 
 #include <KCalendarSystem>
 #include <KGlobalSettings>
@@ -566,6 +567,18 @@ void AgendaView::zoomView( const int delta, const QPoint &pos, const Qt::Orienta
   }
 }
 
+#ifndef KORG_NODECOS
+
+bool AgendaView::loadDecorations( const QStringList &decorations, DecorationList &decoList )
+{
+  foreach ( const QString &decoName, decorations ) {
+    if ( preferences()->selectedPlugins().contains( decoName ) ) {
+//      decoList << KOCore::s->loadCalendarDecoration( decoName );
+    }
+  }
+  return ( decorations.count() > 0 );
+}
+
 void AgendaView::placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop )
 {
   if ( decorationsFound ) {
@@ -583,6 +596,28 @@ void AgendaView::placeDecorationsFrame( KHBox *frame, bool decorationsFound, boo
   }
 }
 
+void AgendaView::placeDecorations( DecorationList &decoList, const QDate &date,
+                                     KHBox *labelBox, bool forWeek )
+{
+  foreach ( CalendarDecoration::Decoration *deco, decoList ) {
+    CalendarDecoration::Element::List elements;
+    elements = forWeek ? deco->weekElements( date ) : deco->dayElements( date );
+    if ( elements.count() > 0 ) {
+      KHBox *decoHBox = new KHBox( labelBox );
+      decoHBox->setFrameShape( QFrame::StyledPanel );
+      decoHBox->setMinimumWidth( 1 );
+
+      foreach ( CalendarDecoration::Element *it, elements ) {
+        DecorationLabel *label = new DecorationLabel( it, decoHBox );
+        label->setAlignment( Qt::AlignBottom );
+        label->setMinimumWidth( 1 );
+      }
+    }
+  }
+}
+
+#endif
+
 void AgendaView::createDayLabels( bool force )
 {
   // Check if mSelectedDates has changed, if not just return
@@ -595,7 +630,6 @@ void AgendaView::createDayLabels( bool force )
   delete d->mTopDayLabels;
   delete d->mBottomDayLabels;
   d->mDateDayLabels.clear();
-
 
   QFontMetrics fm = fontMetrics();
 
@@ -621,6 +655,16 @@ void AgendaView::createDayLabels( bool force )
   d->mLayoutBottomDayLabels->addWidget( bottomWeekLabelBox );
 
   const KCalendarSystem *calsys = KGlobal::locale()->calendar();
+
+#ifndef KORG_NODECOS
+  QList<CalendarDecoration::Decoration *> topDecos;
+  QStringList topStrDecos = preferences()->decorationsAtAgendaViewTop();
+  placeDecorationsFrame( d->mTopDayLabelsFrame, loadDecorations( topStrDecos, topDecos ), true );
+
+  QList<CalendarDecoration::Decoration *> botDecos;
+  QStringList botStrDecos = preferences()->decorationsAtAgendaViewBottom();
+  placeDecorationsFrame( d->mBottomDayLabelsFrame, loadDecorations( botStrDecos, botDecos ), false );
+#endif
 
   Q_FOREACH( const QDate &date, d->mSelectedDates ) {
     KVBox *topDayLabelBox = new KVBox( d->mTopDayLabels );
@@ -657,7 +701,19 @@ void AgendaView::createDayLabels( bool force )
       label->setAlignment( Qt::AlignCenter );
       delete ww;
     }
+
+#ifndef KORG_NODECOS
+    // Day decoration labels
+    placeDecorations( topDecos, date, topDayLabelBox, false );
+    placeDecorations( botDecos, date, bottomDayLabelBox, false );
+#endif
   }
+
+#ifndef KORG_NODECOS
+  // Week decoration labels
+  placeDecorations( topDecos, d->mSelectedDates.first(), topWeekLabelBox, true );
+  placeDecorations( botDecos, d->mSelectedDates.first(), bottomWeekLabelBox, true );
+#endif
 
   if ( !d->mIsSideBySide ) {
     d->mLayoutTopDayLabels->addSpacing( d->mAgenda->verticalScrollBar()->width() );
