@@ -23,9 +23,13 @@ import org.kde.pim.mobileui 4.5 as KPIM
 /** Akonadi Message Header List View
  */
 KPIM.ItemListView {
+  id : _top
   property bool showDeleteButton : false
+  property bool showCheckBox
   delegate: [
     KPIM.ItemListViewDelegate {
+      id : _delegate
+      showCheckBox : _top.showCheckBox
       height : itemListView.height / 7
       summaryContent : [
         QML.Text {
