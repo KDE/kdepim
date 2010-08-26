@@ -32,36 +32,8 @@
 #include "breadcrumbnavigation.h"
 #include "qmllistselectionmodel.h"
 #include "libkdepim/kdescendantsproxymodel_p.h"
-#include "akonadi_next/kcheckableproxymodel.h"
 
-class QMLCheckableItemProxyModel : public Future::KCheckableProxyModel
-{
-public:
-  enum MoreRoles {
-    CheckOn = Qt::UserRole + 3000
-  };
-  QMLCheckableItemProxyModel (QObject* parent = 0)
-    : Future::KCheckableProxyModel(parent)
-  {
-  }
-
-  virtual void setSourceModel(QAbstractItemModel* sourceModel)
-  {
-    Future::KCheckableProxyModel::setSourceModel(sourceModel);
-
-    QHash<int, QByteArray> roles = roleNames();
-    roles.insert( CheckOn, "checkOn" );
-    setRoleNames(roles);
-  }
-
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if ( role == CheckOn )
-      return (index.data(Qt::CheckStateRole) == Qt::Checked);
-    return Future::KCheckableProxyModel::data(index, role);
-  }
-
-};
+#include "qmlcheckableproxymodel.h"
 
 class KBreadcrumbNavigationFactoryPrivate
 {
