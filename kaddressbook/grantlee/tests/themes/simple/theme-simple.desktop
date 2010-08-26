@@ -2,6 +2,7 @@
 Name=Simple
 Name[en_GB]=Simple
 Name[es]=Sencillo
+Name[nds]=Eenfach
 Name[pt]=Simples
 Name[pt_BR]=Simples
 Name[sv]=Enkel
@@ -9,6 +10,7 @@ Name[uk]=Проста
 Name[x-test]=xxSimplexx
 Description=An Simple theme
 Description[es]=Un tema sencillo
+Description[nds]=En eenfach Muster
 Description[pt]=Um tema simples
 Description[pt_BR]=Um tema simples
 Description[sv]=Ett enkelt tema
