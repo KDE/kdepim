@@ -58,6 +58,7 @@
 
 #include "kresettingproxymodel.h"
 #include "qmllistselectionmodel.h"
+#include "qmlcheckableproxymodel.h"
 
 using namespace Akonadi;
 
@@ -116,6 +117,9 @@ void KDeclarativeMainView::delayedInit()
     d->mListProxy->setSourceModel( d->mItemFilter );
   }
 
+  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy )
+                                                                  : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
+
   if ( debugTiming ) {
     kWarning() << "Begin inserting QML context" << t.elapsed() << &t;
   }
@@ -132,9 +136,16 @@ void KDeclarativeMainView::delayedInit()
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
   if ( d->mListProxy ) {
+    QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
+    qmlCheckable->setSourceModel(d->mListProxy);
+    qmlCheckable->setSelectionModel(d->mItemSelectionModel);
+
     KResettingProxyModel *resetter = new KResettingProxyModel(this);
-    resetter->setSourceModel( d->mListProxy );
+    resetter->setSourceModel( qmlCheckable );
     context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( resetter ) ) );
+
+    QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
+    context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlSelectionModel ) ) );
   }
 
   context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
@@ -154,9 +165,6 @@ void KDeclarativeMainView::delayedInit()
   d->mAgentInstanceSelectionModel = new QItemSelectionModel( d->mAgentInstanceFilterModel, this );
 
   setupAgentActionManager( d->mAgentInstanceSelectionModel );
-
-  d->mItemSelectionModel = new QItemSelectionModel( d->mListProxy ? static_cast<QAbstractItemModel *>( d->mListProxy )
-                                                                  : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
   KAction *action = KStandardAction::quit( qApp, SLOT( quit() ), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
