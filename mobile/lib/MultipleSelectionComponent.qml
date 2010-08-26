@@ -28,6 +28,8 @@ QML.Rectangle {
   AkonadiBreadcrumbNavigationView {
     id : navigationView
 
+    indentation : 0
+
     showCheckboxes : true
     checkable : true
 
