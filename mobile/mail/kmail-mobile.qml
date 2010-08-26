@@ -306,6 +306,14 @@ KPIM.MainView {
                   actionPanel.collapse();
                   application.saveFavorite();
                 }
+              },
+              KPIM.ScriptAction {
+                name : "start_maintenance"
+                script : {
+                  actionPanel.collapse();
+                  mainWorkView.visible = false
+                  bulkActionScreen.visible = true
+                }
               }
             ]
 
@@ -349,6 +357,31 @@ KPIM.MainView {
       favoriteSelector.visible = false;
       mainWorkView.visible = true;
       application.restorePersistedSelection("preFavSelection");
+    }
+  }
+  KPIM.BulkActionScreen {
+    id : bulkActionScreen
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+    backgroundImage : backgroundImage.source
+
+    visible : false
+    actionListWidth : 1/3 * parent.width
+    multipleText : KDE.i18n("%1 folders", collectionView.numSelected)
+    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
+    headerList : HeaderView {
+      showCheckBox : true
+      id: bulkActionHeaderList
+      model: itemModel
+      checkModel : _itemCheckModel
+      anchors.fill : parent
+    }
+    onBackClicked : {
+      bulkActionScreen.visible = false
+      mainWorkView.visible = true
     }
   }
 
