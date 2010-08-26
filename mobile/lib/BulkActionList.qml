@@ -71,7 +71,7 @@ QML.Column {
       source : "images/dividing-line-horizontal.png"
       anchors.right : selectedItem.right
       anchors.bottom : selectedItem.bottom
-      fillMode : Image.TileHorizontally
+      fillMode : QML.Image.TileHorizontally
       width : parent.width
     }
     QML.Image {
@@ -79,7 +79,7 @@ QML.Column {
       anchors.top : selectedItem.bottom
       anchors.right : parent.right
       height : _top.height - selectedItem.height
-      fillMode : Image.TileVertically
+      fillMode : QML.Image.TileVertically
     }
     QML.Image {
       id : backIcon

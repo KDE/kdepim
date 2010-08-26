@@ -34,7 +34,7 @@ QML.Item {
     lineBelow.height = spaceBelow
   }
 
-  QML.Behavior on y { QML.NumberAnimation { duration : 1000; easing.type : Easing.OutQuad } }
+  QML.Behavior on y { QML.NumberAnimation { duration : 1000; easing.type : QML.Easing.OutQuad } }
   QML.Image {
     id : lineAbove
     anchors.bottom : active_image.top
@@ -43,7 +43,7 @@ QML.Item {
     height : 0
 
     QML.Behavior on height {
-      QML.NumberAnimation { duration : 1000; easing.type : Easing.OutQuad }
+      QML.NumberAnimation { duration : 1000; easing.type : QML.Easing.OutQuad }
     }
   }
 
@@ -61,7 +61,7 @@ QML.Item {
     source : "images/dividing-line.png"
     height : 0
     QML.Behavior on height {
-      QML.NumberAnimation { duration : 1000; easing.type : Easing.OutQuad }
+      QML.NumberAnimation { duration : 1000; easing.type : QML.Easing.OutQuad }
     }
   }
 }
