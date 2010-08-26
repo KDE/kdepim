@@ -44,7 +44,7 @@ QML.Rectangle {
     anchors.left : parent.left
     onBackClicked : parent.backClicked()
     onTriggered : {
-      mainPanel.complete(name)
+      //mainPanel.complete(name)
     }
   }
 
@@ -59,6 +59,7 @@ QML.Rectangle {
       id : headerList
     }
 
+    /*
     function complete(name) {
       if (name == "akonadi_item_cut")
       {
@@ -138,5 +139,6 @@ QML.Rectangle {
       anchors.fill : parent
       id : completeMarkAs
     }
+    */
   }
 }
