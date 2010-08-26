@@ -34,17 +34,13 @@ QML.Item {
     lineBelow.height = spaceBelow
   }
 
-  QML.Behavior on y { QML.NumberAnimation { duration : 1000; easing.type : QML.Easing.OutQuad } }
+  QML.Behavior on y { QML.NumberAnimation { duration : 250; easing.type : Easing.OutQuad } }
   QML.Image {
     id : lineAbove
     anchors.bottom : active_image.top
     anchors.right : _top.right
     source : "images/dividing-line.png"
     height : 0
-
-    QML.Behavior on height {
-      QML.NumberAnimation { duration : 1000; easing.type : QML.Easing.OutQuad }
-    }
   }
 
   QML.Image {
@@ -60,8 +56,6 @@ QML.Item {
     anchors.right : _top.right
     source : "images/dividing-line.png"
     height : 0
-    QML.Behavior on height {
-      QML.NumberAnimation { duration : 1000; easing.type : QML.Easing.OutQuad }
-    }
   }
 }
+

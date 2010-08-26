@@ -30,6 +30,7 @@ Item {
   property int actionItemSpacing : 0
   property int bottomMargin
   property bool menuStyle : false
+  property int activeCount: 0
   anchors.bottomMargin : bottomMargin
 
   property alias scriptActions : myScriptActions.data
@@ -37,6 +38,8 @@ Item {
   default property alias content : itemModel.children
 
   signal triggered(string triggeredName)
+
+  clip: true
 
   Item {
     id : myScriptActions
@@ -70,11 +73,14 @@ Item {
 
       var _spaceAbove = 0;
       var _spaceBelow = 0;
+      var _activeCount = 0;
       var found = false;
 
       for ( var i = 0; i < children.length; ++i ) {
-        if (children[i].visible)
+        if (children[i].visible) {
           children[i].height = actionItemHeight
+          _activeCount++;
+        }
         if (children[i].columnHeight != undefined)
           children[i].columnHeight = myListView.height
         if (children[i].totalWidth != undefined)
@@ -106,6 +112,7 @@ Item {
         spaceBelow = _spaceBelow - myListView.currentItem.height;
       else
         spaceBelow = _spaceBelow;
+      activeCount = _activeCount;
     }
     onChildrenChanged : {
       refresh();
@@ -127,9 +134,9 @@ Item {
           myListView.currentIndex = i
         }
         if (found)
-          _spaceBelow += children[i].height
+          _spaceBelow += children[i].height + actionItemSpacing
         else
-          _spaceAbove += children[i].height
+          _spaceAbove += children[i].height + actionItemSpacing
       }
       spaceAbove = _spaceAbove;
       spaceBelow = _spaceBelow - myListView.currentItem.height;
@@ -152,6 +159,7 @@ Item {
     id : myListView
     model : itemModel
     spacing : actionItemSpacing
+    interactive: (actionItemHeight + actionItemSpacing) * (activeCount <= 0 ? count : activeCount) > height
 
     highlight : ActiveActionMenuItemDelegate{
       id : menuHighLight;
