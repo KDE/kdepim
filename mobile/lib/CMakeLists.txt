@@ -72,8 +72,7 @@ install(FILES
   StartCanvas.qml
   Spinner.qml
   WindowBar.qml
-  HorizontalSelector.qml
-  HorizontalFadeSelector.qml
+  VerticalFadeSelector.qml
   Clock.qml
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
