@@ -58,10 +58,15 @@ int CardDavWriter::runJob(runtime_info* RT) {
             res = pushObjects(mChanged, carddav_modify_object_by_uri, OK, RT);
         if (OK == res) {
             kdDebug() << "pushing deleted objects";
-            if (getUseURI() == false)
-                res = pushObjects(mDeleted, carddav_delete_object, OK, RT);
-            else
-                res = pushObjects(mDeleted, carddav_delete_object_by_uri, OK, RT);
+            while (mDeleted.contains("BEGIN:VCARD", TRUE) > 0) {
+                int endLocation = mDeleted.find("END:VCARD", 0, TRUE);
+                TQString deletedCurSeq = mDeleted.mid(0, endLocation+9);
+                mDeleted = mDeleted.remove(0, endLocation+9);
+                if (getUseURI() == false)
+                    res = pushObjects(deletedCurSeq, carddav_delete_object, OK, RT);
+                else
+                    res = pushObjects(deletedCurSeq, carddav_delete_object_by_uri, OK, RT);
+            }
         }
 #else // if USE_CARDDAV_MODIFY
         kdDebug() << "pushing changed objects (delete)";
@@ -77,10 +82,15 @@ int CardDavWriter::runJob(runtime_info* RT) {
                 res = pushObjects(mChanged, carddav_add_object, OK, RT);
             if (OK == res) {
                 kdDebug() << "pushing deleted objects";
-                if (getUseURI() == false)
-                    res = pushObjects(mDeleted, carddav_delete_object, OK, RT);
-                else
-                    res = pushObjects(mDeleted, carddav_delete_object_by_uri, OK, RT);
+                while (mDeleted.contains("BEGIN:VCARD", TRUE) > 0) {
+                    int endLocation = mDeleted.find("END:VCARD", 0, TRUE);
+                    TQString deletedCurSeq = mDeleted.mid(0, endLocation+9);
+                    mDeleted = mDeleted.remove(0, endLocation+9);
+                    if (getUseURI() == false)
+                        res = pushObjects(deletedCurSeq, carddav_delete_object, OK, RT);
+                    else
+                        res = pushObjects(deletedCurSeq, carddav_delete_object_by_uri, OK, RT);
+                }
             }
         }
 #endif // if USE_CARDDAV_MODIFY
