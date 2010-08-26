@@ -102,7 +102,10 @@ Item {
           _spaceAbove += children[i].height
       }
       spaceAbove = _spaceAbove;
-      spaceBelow = _spaceBelow - myListView.currentItem.height;
+      if (myListView.currentItem)
+        spaceBelow = _spaceBelow - myListView.currentItem.height;
+      else
+        spaceBelow = _spaceBelow;
     }
     onChildrenChanged : {
       refresh();
