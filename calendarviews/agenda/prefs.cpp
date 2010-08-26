@@ -918,4 +918,14 @@ QStringList Prefs::selectedPlugins() const
   return d->mBaseConfig.mSelectedPlugins;
 }
 
+QStringList Prefs::decorationsAtAgendaViewTop() const
+{
+  return d->mBaseConfig.decorationsAtAgendaViewTop();
+}
+
+QStringList Prefs::decorationsAtAgendaViewBottom() const
+{
+  return d->mBaseConfig.decorationsAtAgendaViewBottom();
+}
+
 // kate: space-indent on; indent-width 2; replace-tabs on;

@@ -167,6 +167,8 @@ class EVENTVIEWS_EXPORT Prefs
     void setTimeScaleTimezones( const QStringList &list );
 
     QStringList selectedPlugins() const;
+    QStringList decorationsAtAgendaViewTop() const;
+    QStringList decorationsAtAgendaViewBottom() const;
 
   private:
     class Private;
