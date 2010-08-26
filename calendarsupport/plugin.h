@@ -39,7 +39,7 @@ class Plugin
 
   enum {
     INTERFACE_VERSION = 2
-  }
+  };
 
   public:
     static int interfaceVersion() { return INTERFACE_VERSION; }

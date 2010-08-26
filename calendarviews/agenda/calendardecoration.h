@@ -154,7 +154,7 @@ class StoredElement : public Element
   The decoration is made of various decoration elements,
   which show a defined text/picture/widget for a given date.
  */
-class Decoration : public Plugin
+class Decoration : public CalendarSupport::Plugin
 {
   public:
     static int interfaceVersion() { return 2; }
@@ -252,7 +252,7 @@ class Decoration : public Plugin
     QMap<QDate,Element::List> mYearElements;
 };
 
-class DecorationFactory : public PluginFactory
+class DecorationFactory : public CalendarSupport::PluginFactory
 {
   public:
     virtual Decoration *createPluginFactory() = 0;

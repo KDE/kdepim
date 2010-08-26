@@ -28,6 +28,8 @@
 
 #include "calendardecoration.h"
 
+#include "eventviews_export.h"
+
 #include <KUrl>
 
 #include <QtGui/QLabel>

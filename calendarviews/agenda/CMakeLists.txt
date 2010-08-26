@@ -27,6 +27,8 @@ set( eventviews_LIB_SRCS
      timescaleconfigdialog.cpp
      recurrenceactions.cpp
      multiagenda/multiagendaview.cpp
+     calendardecoration.cpp
+     decorationlabel.cpp
 )
 
 kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc )
@@ -61,3 +63,4 @@ target_link_libraries(eventviews
 
 set_target_properties(eventviews PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS eventviews ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES calendardecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
