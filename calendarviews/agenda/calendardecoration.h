@@ -21,7 +21,7 @@
 #ifndef CALENDARDECORATION_H
 #define CALENDARDECORATION_H
 
-#include "plugin.h"
+#include <calendarsupport/plugin.h>
 
 #include <kurl.h>
 

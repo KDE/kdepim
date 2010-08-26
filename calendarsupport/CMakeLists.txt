@@ -63,4 +63,6 @@ target_link_libraries(calendarsupport
 )
 
 set_target_properties(calendarsupport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+install( TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( FILES calendarplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )

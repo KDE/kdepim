@@ -18,24 +18,38 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KORG_PLUGIN_H
-#define KORG_PLUGIN_H
+#ifndef CALENDARSUPPORT_PLUGIN_H
+#define CALENDARSUPPORT_PLUGIN_H
 
 #include <klocale.h>
 #include <kpluginfactory.h>
 
-namespace KOrg {
+namespace CalendarSupport {
 
+/**
+   @class Plugin
+
+   @brief Specifies the plugin interface.
+
+   This class is shared between korganizer's print plugins and
+   calendarview's decoration plugins.
+*/
 class Plugin
 {
+
+  enum {
+    INTERFACE_VERSION = 2
+  }
+
   public:
-    static int interfaceVersion() { return 2; }
+    static int interfaceVersion() { return INTERFACE_VERSION; }
+
     static QString serviceType() { return QLatin1String( "Calendar/Plugin" ); }
 
     Plugin() {}
     virtual ~Plugin() {}
 
-    virtual QString info() = 0;
+    virtual QString info() const = 0;
 
     virtual void configure( QWidget * ) {}
 };
