@@ -21,6 +21,8 @@
 #ifndef CALENDARDECORATION_H
 #define CALENDARDECORATION_H
 
+#include "eventviews_export.h"
+
 #include <calendarsupport/plugin.h>
 
 #include <kurl.h>
@@ -42,7 +44,7 @@ namespace CalendarDecoration {
   It provides entities like texts and pictures for a given date.
   Implementations can implement all functions or only a subset.
  */
-class Element : public QObject
+class EVENTVIEWS_EXPORT Element : public QObject
 {
   Q_OBJECT
 
@@ -112,7 +114,7 @@ class Element : public QObject
   This class provides a stored element, which contains all data for the given
   date/month/year.
 */
-class StoredElement : public Element
+class EVENTVIEWS_EXPORT StoredElement : public Element
 {
   public:
     StoredElement( const QString &id );
@@ -154,7 +156,7 @@ class StoredElement : public Element
   The decoration is made of various decoration elements,
   which show a defined text/picture/widget for a given date.
  */
-class Decoration : public CalendarSupport::Plugin
+class EVENTVIEWS_EXPORT Decoration : public CalendarSupport::Plugin
 {
   public:
     static int interfaceVersion() { return 2; }
@@ -252,7 +254,7 @@ class Decoration : public CalendarSupport::Plugin
     QMap<QDate,Element::List> mYearElements;
 };
 
-class DecorationFactory : public CalendarSupport::PluginFactory
+class EVENTVIEWS_EXPORT DecorationFactory : public CalendarSupport::PluginFactory
 {
   public:
     virtual Decoration *createPluginFactory() = 0;
