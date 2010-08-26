@@ -49,6 +49,7 @@
 #include <KConfigGroup>
 #include <KMessageBox>
 #include <KWordWrap>
+#include <KServiceTypeTrader>
 
 #include <QStyle>
 #include <QApplication>
@@ -204,6 +205,7 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
 
     QWidget *mDummyAllDayLeft;
 
+    CalendarDecoration::Decoration *loadCalendarDecoration( const QString &name );
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const Akonadi::Item &incidence );
@@ -573,7 +575,7 @@ bool AgendaView::loadDecorations( const QStringList &decorations, DecorationList
 {
   foreach ( const QString &decoName, decorations ) {
     if ( preferences()->selectedPlugins().contains( decoName ) ) {
-//      decoList << KOCore::s->loadCalendarDecoration( decoName );
+      decoList << d->loadCalendarDecoration( decoName );
     }
   }
   return ( decorations.count() > 0 );
@@ -597,7 +599,7 @@ void AgendaView::placeDecorationsFrame( KHBox *frame, bool decorationsFound, boo
 }
 
 void AgendaView::placeDecorations( DecorationList &decoList, const QDate &date,
-                                     KHBox *labelBox, bool forWeek )
+                                   KHBox *labelBox, bool forWeek )
 {
   foreach ( CalendarDecoration::Decoration *deco, decoList ) {
     CalendarDecoration::Element::List elements;
@@ -1986,6 +1988,46 @@ void AgendaView::alignAgendas()
                                       d->mTimeBarHeaderFrame->width() );
 
   createDayLabels( true );
+}
+
+CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration( const QString &name )
+{
+  const QString type = CalendarSupport::Plugin::serviceType();
+  const int version = CalendarSupport::Plugin::interfaceVersion();
+
+  QString constraint;
+  if ( version >= 0 ) {
+    constraint =
+      QString( "[X-KDE-PluginInterfaceVersion] == %1" ).arg( QString::number( version ) );
+  }
+
+  KService::List list = KServiceTypeTrader::self()->query( type, constraint );
+
+  KService::List::ConstIterator it;
+  for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
+    if ( (*it)->desktopEntryName() == name ) {
+      KService::Ptr service = *it;
+      KPluginLoader loader( *service );
+      KPluginFactory *factory = loader.factory();
+
+      if ( !factory ) {
+        kDebug() << "Factory creation failed";
+        return 0;
+      }
+
+      CalendarDecoration::DecorationFactory *pluginFactory =
+        static_cast<CalendarDecoration::DecorationFactory *>( factory );
+
+      if ( !pluginFactory ) {
+        kDebug() << "Cast failed";
+        return 0;
+      }
+
+      return pluginFactory->createPluginFactory();
+    }
+  }
+
+  return 0;
 }
 
 #include "agendaview.moc"
