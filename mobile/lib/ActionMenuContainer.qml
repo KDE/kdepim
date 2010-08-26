@@ -87,8 +87,8 @@ Item {
           children[i].totalWidth = _topLevel.width - actionItemWidth
         if (children[i].depth != undefined) {
           children[i].depth = _depth
-          _depth += children[i].height + actionItemSpacing;
         }
+        _depth += children[i].height + actionItemSpacing;
         if (children[i].actionItemSpacing != undefined)
           children[i].actionItemSpacing = actionItemSpacing
         if (children[i].actionItemHeight != undefined)
