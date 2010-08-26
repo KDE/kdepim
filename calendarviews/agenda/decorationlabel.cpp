@@ -137,11 +137,15 @@ void DecorationLabel::setUrl( const KUrl &url )
   if ( url.isEmpty() ) {
     setForegroundRole( QPalette::WindowText );
     f.setUnderline( false );
+#ifndef QT_NO_CURSOR
     setCursor( QCursor( Qt::ArrowCursor ) );
+#endif
   } else {
     setForegroundRole( QPalette::Link );
     f.setUnderline( true );
+#ifndef QT_NO_CURSOR
     setCursor( QCursor( Qt::PointingHandCursor ) );
+#endif
   }
   setFont( f );
 }
