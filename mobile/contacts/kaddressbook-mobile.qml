@@ -247,6 +247,18 @@ KPIM.MainView {
           application.newContact();
         }
       }
+      KPIM.Button2 {
+        id : newContactGroupButton
+        anchors.top : newContactButton.bottom
+        anchors.left : parent.left
+        anchors.right : parent.right
+        anchors.leftMargin : 10
+        anchors.rightMargin : 10
+        buttonText : KDE.i18n( "New Contact Group" )
+        onClicked : {
+          application.newContactGroup();
+        }
+      }
     }
 
     QML.Rectangle {
