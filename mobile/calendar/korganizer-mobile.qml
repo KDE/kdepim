@@ -351,14 +351,6 @@ KPIM.MainView {
         onClicked : { application.newEvent(); }
 
       }
-      KPIM.Button2 {
-        id: configureAccountButton
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: 2/3 * parent.width
-        visible: (collectionView.hasSelection && !collectionView.hasBreadcrumbs) ? true : false
-        buttonText: KDE.i18n( "Configure Account" )
-        onClicked : { application.configureCurrentAccount(); }
-      }
 
       KPIM.Button2 {
         id: addCalendarAccountButton

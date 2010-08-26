@@ -198,17 +198,6 @@ KPIM.MainView {
           application.newTask();
         }
       }
-      KPIM.Button2 {
-        anchors.bottom : parent.bottom
-        anchors.bottomMargin : 10
-        anchors.right : parent.right
-        anchors.rightMargin : 35
-        width : 230
-        buttonText : KDE.i18n( "Configure Account" )
-        onClicked : {
-          application.configureCurrentAccount();
-        }
-      }
     }
 
     QML.Rectangle {
