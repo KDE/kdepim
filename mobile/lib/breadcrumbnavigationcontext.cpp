@@ -181,6 +181,8 @@ void KBreadcrumbNavigationFactory::createBreadcrumbContext(QAbstractItemModel *m
   d->m_qmlBreadcrumbSelectionModel = new QMLListSelectionModel( d->m_breadcrumbSelectionModel, parent );
   d->m_qmlSelectedItemSelectionModel = new QMLListSelectionModel( d->m_selectionModel, parent );
   d->m_qmlChildSelectionModel = new QMLListSelectionModel( d->m_childItemsSelectionModel, parent );
+
+  connect(d->m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(selectedDisplayTextChanged()));
 }
 
 QItemSelectionModel* KBreadcrumbNavigationFactory::selectionModel() const
@@ -368,6 +370,12 @@ QObject* KBreadcrumbNavigationFactory::qmlCheckedItemsModel() const
 {
   Q_D(const KBreadcrumbNavigationFactory);
   return d->m_checkedItemsModel;
+}
+
+QString KBreadcrumbNavigationFactory::selectedDisplayText() const
+{
+  Q_D(const KBreadcrumbNavigationFactory);
+  return d->m_selectedItemModel->index(0, 0).data().toString();
 }
 
 

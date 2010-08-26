@@ -34,6 +34,7 @@ class KBreadcrumbNavigationFactoryPrivate;
 class KBreadcrumbNavigationFactory : public QObject
 {
   Q_OBJECT
+  Q_PROPERTY(QString selectedDisplayText READ selectedDisplayText NOTIFY selectedDisplayTextChanged)
 public:
   KBreadcrumbNavigationFactory(QObject* parent = 0);
 
@@ -55,6 +56,11 @@ public:
   QItemSelectionModel *checkModel() const;
   QAbstractItemModel *checkedItemsModel() const;
   QItemSelectionModel *checkedItemsCheckModel() const;
+
+  QString selectedDisplayText() const;
+
+signals:
+  void selectedDisplayTextChanged();
 
 public slots:
   QObject* qmlBreadcrumbSelectionModel() const;
