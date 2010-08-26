@@ -243,6 +243,8 @@ KPIM.MainView {
         id: headerList
         model: itemModel
         anchors.fill : parent
+
+        showDeleteButton : true
         onItemSelected: {
           // Prevent reloading of the message, perhaps this should be done
           // in messageview itself.

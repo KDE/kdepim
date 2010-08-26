@@ -23,6 +23,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 /** Akonadi Message Header List View
  */
 KPIM.ItemListView {
+  property bool showDeleteButton : false
   delegate: [
     KPIM.ItemListViewDelegate {
       height : itemListView.height / 7
@@ -86,6 +87,7 @@ KPIM.ItemListView {
           hidable : false
           showText : false
           opacity : 0.6
+          visible : showDeleteButton
           onTriggered : {
             application.setListSelectedRow(model.index);
           }
