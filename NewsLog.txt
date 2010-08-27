@@ -1,3 +1,13 @@
+Friday, August 27th 2010
+
+Problems addressed
+------------------
+
+* Improve the error message when regenerating a corrupt index:
+  Show one error message for all folders on startup, instead of multiple error messages
+* Possibly fix a crash when selecting or deselecting resources when the side-by-side view is active
+
+
 Friday, August 20th 2010
 
 Problems addressed
@@ -9,6 +19,7 @@ Problems addressed
 * kolab/issue4479: Change used kontact plugins crash (Kontact::MainWindow::addPlugin at mainwindow.cpp:719) (rt#6193)
 * kolab/issue4333: Renaming of a shared calendar folder failed (rt#6121)
 * Add more debug output to help finding the cause of kolab/issue4498
+* Regenerate the mail index earlier when finding inconsistencies in it
 
 
 Friday, August 13th 2010
