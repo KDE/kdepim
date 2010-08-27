@@ -26,10 +26,6 @@
 #include <QWidget>
 #include "conflictresolver.h"
 
-namespace KCal {
-  class FreeBusy;
-}
-
 class QTreeView;
 class QLabel;
 class KComboBox;
@@ -55,12 +51,14 @@ public:
     explicit VisualFreeBusyWidget( FreeBusyItemModel* model, int spacing = 8, QWidget* parent = 0 );
     ~VisualFreeBusyWidget();
 
+public slots:
+  void slotUpdateIncidenceStartEnd( const KDateTime &, const KDateTime & );
+
 signals:
     void dateTimesChanged( const KDateTime &, const KDateTime & );
     void manualReload();
 
 protected slots:
-    void slotUpdateGanttView( const KDateTime &, const KDateTime & );
     void slotScaleChanged( int );
     void slotCenterOnStart() ;
     void slotZoomToTime();

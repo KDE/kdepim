@@ -27,8 +27,7 @@
 
 #include "korganizer_export.h"
 
-#include <calendarviews/agenda/calendardecoration.h>
-
+#include <calendar/calendardecoration.h>
 #include <korganizer/part.h>
 #include <korganizer/printplugin.h>
 #include <kservice.h>
@@ -47,11 +46,11 @@ class KORGANIZER_CORE_EXPORT KOCore
     KService::List availableParts();
     KService::List availablePrintPlugins();
 
-    CalendarSupport::Plugin *loadPlugin( KService::Ptr service );
-    CalendarSupport::Plugin *loadPlugin( const QString & );
+    KOrg::Plugin *loadPlugin( KService::Ptr service );
+    KOrg::Plugin *loadPlugin( const QString & );
 
-    EventViews::CalendarDecoration::Decoration *loadCalendarDecoration( KService::Ptr service );
-    EventViews::CalendarDecoration::Decoration *loadCalendarDecoration( const QString & );
+    KOrg::CalendarDecoration::Decoration *loadCalendarDecoration( KService::Ptr service );
+    KOrg::CalendarDecoration::Decoration *loadCalendarDecoration( const QString & );
 
     KOrg::Part *loadPart( KService::Ptr, KOrg::MainWindow *parent );
     KOrg::Part *loadPart( const QString &, KOrg::MainWindow *parent );
@@ -59,7 +58,7 @@ class KORGANIZER_CORE_EXPORT KOCore
     KOrg::PrintPlugin *loadPrintPlugin( KService::Ptr service );
     KOrg::PrintPlugin *loadPrintPlugin( const QString & );
     KOrg::PrintPlugin::List loadPrintPlugins();
-    EventViews::CalendarDecoration::Decoration::List loadCalendarDecorations();
+    KOrg::CalendarDecoration::Decoration::List loadCalendarDecorations();
     KOrg::Part::List loadParts( KOrg::MainWindow *parent );
 
     void addXMLGUIClient( QWidget *, KXMLGUIClient *guiclient );
@@ -94,7 +93,7 @@ class KORGANIZER_CORE_EXPORT KOCore
   private:
     static KOCore *mSelf;
 
-    EventViews::CalendarDecoration::Decoration::List mCalendarDecorations;
+    KOrg::CalendarDecoration::Decoration::List mCalendarDecorations;
     bool mCalendarDecorationsLoaded;
 
     QMap<QWidget*, KXMLGUIClient*> mXMLGUIClients;

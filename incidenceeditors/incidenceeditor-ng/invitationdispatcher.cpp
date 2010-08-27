@@ -23,17 +23,15 @@
 #include <kcalcore/icalformat.h>
 #include <KDebug>
 
-#include <akonadi/kcal/kcalprefs.h>
-#include <akonadi/kcal/utils.h>
+#include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/invitationhandler.h>
+#include <calendarsupport/utils.h>
 #include <Akonadi/Item>
 
-#include <invitations/invitationhandler.h>
-
-
-using namespace Akonadi;
+using namespace CalendarSupport;
 using namespace KCalCore;
 
-namespace Akonadi {
+namespace CalendarSupport {
 
 class InvitationDispatcherPrivate
 {
@@ -43,25 +41,23 @@ class InvitationDispatcherPrivate
     bool mIsCounterProposal;
 
   public: /// Functions
-    InvitationDispatcherPrivate( Akonadi::Calendar *calendar );
-    bool myAttendeeStatusChanged( const Incidence::Ptr &newInc,
-                                  const Incidence::Ptr &oldInc );
+    InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar );
+    bool myAttendeeStatusChanged( const Incidence::Ptr &oldInc,
+                                  const Incidence::Ptr &newInc );
     void processItemSave( EditorItemManager::SaveAction action );
     void sentEventInvitationMessage();
     void sentEventModifiedMessage();
     void resetManager();
 };
 
-}
-
-InvitationDispatcherPrivate::InvitationDispatcherPrivate( Akonadi::Calendar *calendar )
+InvitationDispatcherPrivate::InvitationDispatcherPrivate( CalendarSupport::Calendar *calendar )
   : mManager( 0 )
   , mInvitationHandler( calendar )
   , mIsCounterProposal( false )
 { }
 
-bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr &newInc,
-                                                           const Incidence::Ptr &oldInc )
+bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr &oldInc,
+                                                           const Incidence::Ptr &newInc )
 {
   Attendee::Ptr oldMe( oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
   Attendee::Ptr newMe( newInc->attendeeByMails( KCalPrefs::instance()->allEmails() ) );
@@ -74,7 +70,7 @@ bool InvitationDispatcherPrivate::myAttendeeStatusChanged( const Incidence::Ptr 
 
 void InvitationDispatcherPrivate::sentEventInvitationMessage()
 {
-  const Incidence::Ptr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
+  const Incidence::Ptr newInc = CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
   const InvitationHandler::SendStatus status =
       mInvitationHandler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, newInc );
 
@@ -99,8 +95,8 @@ void InvitationDispatcherPrivate::sentEventInvitationMessage()
 
 void InvitationDispatcherPrivate::sentEventModifiedMessage()
 {
-  const Incidence::Ptr newInc = Akonadi::incidence( mManager->item( EditorItemManager::AfterSave ) );
-  const Incidence::Ptr oldInc = Akonadi::incidence( mManager->item( EditorItemManager::BeforeSave ) );
+  const Incidence::Ptr oldInc = CalendarSupport::incidence( mManager->item( EditorItemManager::BeforeSave ) );
+  const Incidence::Ptr newInc = CalendarSupport::incidence( mManager->item( EditorItemManager::AfterSave ) );
 
   InvitationHandler::SendStatus status = InvitationHandler::Success;
   if ( mIsCounterProposal ) {
@@ -154,9 +150,11 @@ void InvitationDispatcherPrivate::resetManager()
   mManager = 0;
 }
 
+}
+
 /// InvitationDispatcher
 
-InvitationDispatcher::InvitationDispatcher( Akonadi::Calendar *calendar, QObject *parent )
+InvitationDispatcher::InvitationDispatcher( CalendarSupport::Calendar *calendar, QObject *parent )
   : QObject(parent)
   , d_ptr( new InvitationDispatcherPrivate( calendar ) )
 { }
@@ -166,6 +164,12 @@ InvitationDispatcher::~InvitationDispatcher()
   delete d_ptr;
 }
 
+void InvitationDispatcher::setIsCounterProposal( bool isCounterProposal )
+{
+  Q_D( InvitationDispatcher );
+  d->mIsCounterProposal = isCounterProposal;
+}
+
 void InvitationDispatcher::setItemManager( EditorItemManager *manager )
 {
   Q_D( InvitationDispatcher );
@@ -173,13 +177,15 @@ void InvitationDispatcher::setItemManager( EditorItemManager *manager )
 
   if ( d->mManager ) {
     disconnect( d->mManager, SIGNAL( destroyed() ) );
-    disconnect( d->mManager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ) );
+    disconnect( d->mManager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ) );
   }
 
   d->mManager = manager;
   connect( manager, SIGNAL( destroyed() ), SLOT( resetManager() ) );
-  connect( manager, SIGNAL( itemSaveFinished( Akonadi::EditorItemManager::SaveAction ) ),
-           SLOT( processItemSave( Akonadi::EditorItemManager::SaveAction ) ) );
+
+  qRegisterMetaType<CalendarSupport::EditorItemManager::SaveAction>( "CalendarSupport::EditorItemManager::SaveAction" );
+  connect( manager, SIGNAL( itemSaveFinished( CalendarSupport::EditorItemManager::SaveAction ) ),
+           SLOT( processItemSave( CalendarSupport::EditorItemManager::SaveAction ) ), Qt::QueuedConnection );
 }
 
 #include "invitationdispatcher.moc"

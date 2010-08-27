@@ -12,6 +12,11 @@ option(KORG_NOARCHIVE "Turn-off the Archive dialog which allows incidences to be
 #                  views or between a view and the navigator. Probably necessary
 #                  if KOrganizer is being used on small form factor devices.
 option(KORG_NODND "Turn-off the ability to drag-and-drop incidences in the views or between a view and the date navigator." FALSE)
+#
+# KORG_NODECOS - turns-off decoration plugins in views.
+#                No idea why you would want to define this, perhaps to save
+#                screen real estate? But there are a config options for that.
+option(KORG_NODECOS "Turn-off decoration plugins in views." FALSE)
 
 # add C++ macro definitions for options passed to CMake
 if(KORG_NOARCHIVE)
@@ -20,6 +25,9 @@ endif(KORG_NOARCHIVE)
 if(KORG_NODND)
   add_definitions(-DKORG_NODND)
 endif(KORG_NODND)
+if(KORG_NODECOS)
+  add_definitions(-DKORG_NODECOS)
+endif(KORG_NODECOS)
 
 # enable exception handling
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -104,7 +112,7 @@ target_link_libraries(kcm_korganizer
   ${QT_QTUITOOLS_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KHOLIDAYS_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
-  mailtransport korganizerprivate korganizer_core kdepim incidenceeditorsng calendarsupport ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} eventviews )
+  mailtransport korganizerprivate korganizer_core kdepim incidenceeditorsng calendarsupport ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} )
 
 install(TARGETS kcm_korganizer  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -137,7 +145,7 @@ kde4_add_kcfg_files(korganizer_core_LIB_SRCS koprefs_base.kcfgc )
 
 kde4_add_library(korganizer_core ${LIBRARY_TYPE} ${korganizer_core_LIB_SRCS})
 
-target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} kdepim incidenceeditorsng calendarsupport korganizer_interfaces ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} eventviews)
+target_link_libraries(korganizer_core ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} kdepim incidenceeditorsng calendarsupport korganizer_interfaces ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} )
 
 set_target_properties(korganizer_core PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
@@ -150,11 +158,19 @@ if (QT_QT3SUPPORT_FOUND)
 set(korganizerprivate_LIB_SRCS
   kocollectionpropertiesdialog.cpp
   collectiongeneralpage.cpp
+  koalternatelabel.cpp
+  kodecorationlabel.cpp
   koeventviewerdialog.cpp
+  timelabelszone.cpp
+  timelabels.cpp
+  timescaleconfigdialog.cpp
   datenavigator.cpp
   kdatenavigator.cpp
   datenavigatorcontainer.cpp
   datechecker.cpp
+  views/agendaview/agendaview.cpp
+  views/agendaview/koagenda.cpp
+  views/agendaview/koagendaitem.cpp
   views/agendaview/koagendaview.cpp
   views/listview/kolistview.cpp
   views/journalview/kojournalview.cpp
@@ -199,6 +215,7 @@ set(korganizerprivate_LIB_SRCS
   exportwebdialog.cpp
   kocorehelper.cpp
   kohelper.cpp
+  cellitem.cpp
   akonadicollectionview.cpp
   htmlexportjob.cpp
   printing/calprinter.cpp
@@ -211,6 +228,7 @@ kde4_add_kcfg_files(korganizerprivate_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_ui_files(korganizerprivate_LIB_SRCS
   accountscalendarwidget.ui
+  multiagendaviewconfigwidget.ui
   filteredit_base.ui publishdialog_base.ui kogroupwareprefspage.ui searchdialog_base.ui timescaleedit_base.ui
   printing/calprintincidenceconfig_base.ui printing/calprintdayconfig_base.ui printing/calprintmonthconfig_base.ui printing/calprinttodoconfig_base.ui printing/calprintweekconfig_base.ui
 )
@@ -238,7 +256,6 @@ target_link_libraries(korganizerprivate
   kdepimdbusinterfaces
   korganizer_core
   calendarsupport
-  eventviews
   incidenceeditors
   incidenceeditorsng
   kdgantt2

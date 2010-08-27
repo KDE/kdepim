@@ -39,7 +39,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
   Q_OBJECT
 
 public:
-  IncidenceDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
+  explicit IncidenceDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
   virtual ~IncidenceDialog();
 
   /**
@@ -63,6 +63,13 @@ public:
    * when @param collection is invalid.
    */
   virtual void selectCollection( const Akonadi::Collection &collection ) = 0;
+
+  /**
+   * Indicates whether or not the loaded incidence must be treated as a counter
+   * proposal. By default incidences are <em>not</em> treated as counter
+   * proposals.
+   */
+  virtual void setIsCounterProposal( bool isCounterProposal ) = 0;
 
   /**
     Returns the object that will receive all key events.

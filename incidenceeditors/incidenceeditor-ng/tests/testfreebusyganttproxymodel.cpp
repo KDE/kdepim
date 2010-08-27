@@ -42,6 +42,8 @@ void FreeBusyGanttProxyModelTest::testModelValidity()
     ganttModel->setSourceModel( fbModel );
     ModelTest * modelTest = new ModelTest( ganttModel );
 
+    Q_UNUSED( modelTest );
+
     QVERIFY( ganttModel->rowCount() == 0 );
 
     const KDateTime dt1( QDate( 2010, 8, 24 ), QTime( 7, 0, 0 ), KDateTime::UTC );

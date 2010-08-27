@@ -1,1 +1,2 @@
-add_subdirectory( korganizer )
+add_subdirectory( calendar ) 
+add_subdirectory( korganizer ) 

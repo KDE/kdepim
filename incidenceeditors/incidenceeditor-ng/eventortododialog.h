@@ -37,7 +37,7 @@ class INCIDENCEEDITORS_NG_EXPORT EventOrTodoDialog : public IncidenceDialog
 {
   Q_OBJECT
 public:
-  EventOrTodoDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
+  explicit EventOrTodoDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
   ~EventOrTodoDialog();
 
   /**
@@ -56,7 +56,9 @@ public:
   /**
    * Sets the Collection combobox to @param collection.
    */
-  void selectCollection( const Akonadi::Collection &collection );
+  virtual void selectCollection( const Akonadi::Collection &collection );
+
+  virtual void setIsCounterProposal( bool isCounterProposal );
 
   /**
     Returns the object that will receive all key events.
@@ -72,9 +74,9 @@ private:
   Q_DISABLE_COPY( EventOrTodoDialog )
 
   Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int))
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(Akonadi::EditorItemManager::SaveAction))
-  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(Akonadi::EditorItemManager::SaveAction, QString))
-  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(int))
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(CalendarSupport::EditorItemManager::SaveAction))
+  Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(CalendarSupport::EditorItemManager::SaveAction, QString))
+  Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(IncidenceEditorsNG::RecurrenceType))
   Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))
   Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))

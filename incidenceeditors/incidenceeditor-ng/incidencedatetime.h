@@ -41,7 +41,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDateTime( Ui::EventOrTodoDesktop *ui = 0 );
+    IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
     ~IncidenceDateTime();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
@@ -70,6 +70,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool startDateTimeEnabled() const;
     bool endDateTimeEnabled() const;
 
+    bool isValid();
+
   signals:
     void startDateTimeToggled( bool enabled );
     void startDateChanged( const QDate &newDate );
@@ -89,10 +91,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
     void enableTimeEdits();
-    bool isDirty( KCalCore::Todo::Ptr todo ) const;
+    bool isDirty( const KCalCore::Todo::Ptr &todo ) const;
 
   private slots: /// Event specific
-    bool isDirty( KCalCore::Event::Ptr event ) const;
+    bool isDirty( const KCalCore::Event::Ptr &event ) const;
 
   private:
     void load( const KCalCore::Event::Ptr &event );
@@ -120,6 +122,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
      * time appropriate when the start time changes.
      */
     KDateTime mCurrentStartDateTime;
+
+    /// Remembers state when switching between takes whole day and timed event/to-do.
+    bool mTimezoneCombosWhereVisibile;
 };
 
 } // IncidenceEditorsNG

@@ -48,9 +48,6 @@
      <property name="toolTip">
       <string>Check the weekdays to include from the search.</string>
      </property>
-     <property name="statusTip">
-      <string/>
-     </property>
      <property name="whatsThis">
       <string>Only the checked weekdays will be included in the free time slot search.</string>
      </property>

@@ -31,7 +31,7 @@
 
 #include "attendeedata.h"
 
-#include <akonadi/kcal/freebusymanager.h> //krazy:exclude=camelcase since kdepim/akonadi
+#include <calendarsupport/freebusymanager.h>
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -172,7 +172,7 @@ class FreeBusyItem
 
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
-      Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+      CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
       if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
                                  mParentWidget ) ) {
         mIsDownloading = false;
@@ -239,8 +239,8 @@ void FreeBusyItem::setFreeBusyPeriods( const KCalCore::FreeBusy::Ptr &fb )
 
     QList<QStandardItem *> newItems;
     // Evaluate free/busy information
-    QList<KCalCore::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
-    for ( QList<KCalCore::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
+    KCalCore::FreeBusyPeriod::List busyPeriods = fb->fullBusyPeriods();
+    for ( KCalCore::FreeBusyPeriod::List::Iterator it = busyPeriods.begin();
           it != busyPeriods.end(); ++it ) {
       KCalCore::FreeBusyPeriod per = *it;
 
@@ -449,7 +449,7 @@ EditorFreeBusy::EditorFreeBusy( int spacing, QWidget *parent )
   connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(showAttendeeStatusMenu()) );
 
-  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
   connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy *,const QString &)),
            SLOT(slotInsertFreeBusy(KCalCore::FreeBusy *,const QString &)) );
 
@@ -762,8 +762,8 @@ bool EditorFreeBusy::tryDate( FreeBusyItem *attendee,
     return true;
   }
 
-  QList<KCalCore::Period> busyPeriods = fb->busyPeriods();
-  for ( QList<KCalCore::Period>::Iterator it = busyPeriods.begin();
+  KCalCore::Period::List busyPeriods = fb->busyPeriods();
+  for ( KCalCore::Period::List::Iterator it = busyPeriods.begin();
        it != busyPeriods.end(); ++it ) {
     if ( (*it).end() <= tryFrom || // busy period ends before try period
          (*it).start() >= tryTo ) { // busy period starts after try period

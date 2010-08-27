@@ -887,7 +887,7 @@ void KOTodoView::resizeColumnsToContent()
   mView->resizeColumnToContents( eSummaryColumn );
 }
 
-KOrg::CalPrinterBase::PrintType KOTodoView::printType() const
+KOrg::CalPrinterBase::PrintType KOTodoView::printType()
 {
   return KOrg::CalPrinterBase::Todolist;
 }

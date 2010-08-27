@@ -35,9 +35,10 @@
 
 #include <libkdepim/ktimeedit.h>
 
-#include <KCalCore/Calendar>
+#include <kcalcore/calendar.h>
 
 #include <KHolidays/Holidays>
+using namespace KHolidays;
 
 #include <mailtransport/transportmanagementwidget.h>
 using MailTransport::TransportManagementWidget;
@@ -86,8 +87,6 @@ using MailTransport::TransportManagementWidget;
 #include <mailtransport/transport.h>
 #include <mailtransport/transporttype.h>
 #include <mailtransport/transportmanager.h>
-
-using namespace KHolidays;
 
 KOPrefsDialogMain::KOPrefsDialogMain( const KComponentData &inst, QWidget *parent )
   : KPrefsModule( KOPrefs::instance(), inst, parent )
@@ -881,7 +880,7 @@ KOPrefsDialogColorsAndFonts::KOPrefsDialogColorsAndFonts( const KComponentData &
   fontLayout->setSpacing( KDialog::spacingHint() );
 
   KPrefsWidFont *timeBarFont =
-     addWidFont( KOPrefs::instance()->agendaTimeLabelsFontItem(), fontFrame,
+    addWidFont( KOPrefs::instance()->agendaTimeLabelsFontItem(), fontFrame,
                 KGlobal::locale()->formatTime( QTime( 12, 34 ) ) );
   fontLayout->addWidget( timeBarFont->label(), 0, 0 );
   fontLayout->addWidget( timeBarFont->preview(), 0, 1 );
@@ -929,15 +928,12 @@ void KOPrefsDialogColorsAndFonts::usrWriteConfig()
     KOPrefs::instance()->setResourceColor( i.key(), i.value() );
     ++i;
   }
-
-  //mCalendarViewsPrefs->writeConfig();
 }
 
 void KOPrefsDialogColorsAndFonts::usrReadConfig()
 {
   updateCategories();
   updateResources();
-  //mCalendarViewsPrefs->readConfig();
 }
 
 void KOPrefsDialogColorsAndFonts::updateCategories()
@@ -1402,9 +1398,7 @@ void KOPrefsDialogPlugins::usrReadConfig()
   KService::List plugins = KOCore::self()->availablePlugins();
   plugins += KOCore::self()->availableParts();
 
-  EventViews::PrefsPtr viewPrefs = KOPrefs::instance()->eventViewsPreferences();
-
-  QStringList selectedPlugins = viewPrefs->selectedPlugins();
+  QStringList selectedPlugins = KOPrefs::instance()->mSelectedPlugins;
 
   QTreeWidgetItem *decorations =
     new QTreeWidgetItem( mTreeWidget, QStringList(
@@ -1419,7 +1413,7 @@ void KOPrefsDialogPlugins::usrReadConfig()
   KService::List::ConstIterator it;
   for ( it = plugins.constBegin(); it != plugins.constEnd(); ++it ) {
     QTreeWidgetItem *item;
-    if ( (*it)->hasServiceType( EventViews::CalendarDecoration::Decoration::serviceType() ) ) {
+    if ( (*it)->hasServiceType( KOrg::CalendarDecoration::Decoration::serviceType() ) ) {
       item = new PluginItem( decorations, *it );
     } else if ( (*it)->hasServiceType( KOrg::PrintPlugin::serviceType() ) ){
       item = new PluginItem( printPlugins, *it );
@@ -1438,8 +1432,8 @@ void KOPrefsDialogPlugins::usrReadConfig()
   others->setExpanded( true );
 
   mDecorationsAtMonthViewTop = KOPrefs::instance()->decorationsAtMonthViewTop().toSet();
-  mDecorationsAtAgendaViewTop = viewPrefs->decorationsAtAgendaViewTop().toSet();
-  mDecorationsAtAgendaViewBottom = viewPrefs->decorationsAtAgendaViewBottom().toSet();
+  mDecorationsAtAgendaViewTop = KOPrefs::instance()->decorationsAtAgendaViewTop().toSet();
+  mDecorationsAtAgendaViewBottom = KOPrefs::instance()->decorationsAtAgendaViewBottom().toSet();
 }
 
 void KOPrefsDialogPlugins::usrWriteConfig()
@@ -1455,12 +1449,11 @@ void KOPrefsDialogPlugins::usrWriteConfig()
       }
     }
   }
-  EventViews::PrefsPtr viewPrefs = KOPrefs::instance()->eventViewsPreferences();
-  viewPrefs->setSelectedPlugins( selectedPlugins );
+  KOPrefs::instance()->mSelectedPlugins = selectedPlugins;
 
   KOPrefs::instance()->setDecorationsAtMonthViewTop( mDecorationsAtMonthViewTop.toList() );
-  viewPrefs->setDecorationsAtAgendaViewTop( mDecorationsAtAgendaViewTop.toList() );
-  viewPrefs->setDecorationsAtAgendaViewBottom( mDecorationsAtAgendaViewBottom.toList() );
+  KOPrefs::instance()->setDecorationsAtAgendaViewTop( mDecorationsAtAgendaViewTop.toList() );
+  KOPrefs::instance()->setDecorationsAtAgendaViewBottom( mDecorationsAtAgendaViewBottom.toList() );
 }
 
 void KOPrefsDialogPlugins::configure()
@@ -1474,7 +1467,7 @@ void KOPrefsDialogPlugins::configure()
     return;
   }
 
-  CalendarSupport::Plugin *plugin = KOCore::self()->loadPlugin( item->service() );
+  KOrg::Plugin *plugin = KOCore::self()->loadPlugin( item->service() );
 
   if ( plugin ) {
     plugin->configure( this );
@@ -1564,7 +1557,7 @@ void KOPrefsDialogPlugins::selectionChanged()
   }
 
   bool hasPosition = false;
-  if ( item->service()->hasServiceType( EventViews::CalendarDecoration::Decoration::serviceType() ) ) {
+  if ( item->service()->hasServiceType( KOrg::CalendarDecoration::Decoration::serviceType() ) ) {
     QString decoration = item->service()->desktopEntryName();
     /*if ( mDecorationsAtMonthViewTop.contains( decoration ) ) {
       mPositionMonthTop->setChecked( true );

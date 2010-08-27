@@ -76,6 +76,8 @@ void IncidenceAttachment::load( const KCalCore::Incidence::Ptr &incidence )
   KCalCore::Attachment::List::ConstIterator it;
   for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it )
     new AttachmentIconItem( (*it), mAttachmentView );
+
+  mWasDirty = false;
 }
 
 void IncidenceAttachment::save( const KCalCore::Incidence::Ptr &incidence )
@@ -115,18 +117,18 @@ bool IncidenceAttachment::isDirty() const
         if ( attachment->isBinary() && listAttachment->isBinary()
           && attachment->decodedData() == listAttachment->decodedData() ) {
           // Not sure about this. Might be too expensive.
-          origAttachments.removeAt( i );
+          origAttachments.remove( i );
           found = true;
         } else if ( attachment->isUri() && listAttachment->isUri()
            && attachment->uri() == listAttachment->uri() ) {
-          origAttachments.removeAt( i );
+          origAttachments.remove( i );
           found = true;
         }
       }
     }
 
     // All attachments are removed from the list, meaning, the items in mAttachmentView
-    // are equal to the attachements set on mLoadedIncidence.
+    // are equal to the attachments set on mLoadedIncidence.
     return !origAttachments.isEmpty();
 
 
@@ -166,7 +168,9 @@ void IncidenceAttachment::addAttachment()
 
 void IncidenceAttachment::copyToClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   QApplication::clipboard()->setMimeData( mAttachmentView->mimeData(), QClipboard::Clipboard );
+#endif
 }
 
 void IncidenceAttachment::openURL( const KUrl &url )
@@ -177,7 +181,9 @@ void IncidenceAttachment::openURL( const KUrl &url )
 
 void IncidenceAttachment::pasteFromClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   handlePasteOrDrop( QApplication::clipboard()->mimeData() );
+#endif
 }
 
 void IncidenceAttachment::removeSelectedAttachments()
@@ -310,8 +316,10 @@ void IncidenceAttachment::showContextMenu( const QPoint &pos )
   mOpenAction->setEnabled( enable );
   //TODO: support saving multiple attachments into a directory
   mSaveAsAction->setEnabled( enable && numSelected == 1 );
+#ifndef QT_NO_CLIPBOARD
   mCopyAction->setEnabled( enable && numSelected == 1 );
   mCutAction->setEnabled( enable && numSelected == 1 );
+#endif
   mDeleteAction->setEnabled( enable );
   mEditAction->setEnabled( enable );
   mPopupMenu->exec( mAttachmentView->mapToGlobal( pos ) );
@@ -328,8 +336,10 @@ void IncidenceAttachment::showSelectedAttachments()
 
 void IncidenceAttachment::cutToClipboard()
 {
+#ifndef QT_NO_CLIPBOARD
   copyToClipboard();
   removeSelectedAttachments();
+#endif
 }
 
 void IncidenceAttachment::editSelectedAttachments()
@@ -440,11 +450,11 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   QString label;
 
   if(!mimeData->formats().isEmpty() && !probablyWeHaveUris) {
-    data=mimeData->data( mimeData->formats().first() );
     mimeType = mimeData->formats().first();
-    if( KMimeType::mimeType( mimeData->formats().first() ) )
-       label = KMimeType::mimeType( mimeData->formats().first() )->name();
-
+    data = mimeData->data( mimeType );
+    KMimeType::Ptr mime = KMimeType::mimeType( mimeType );
+    if ( mime )
+        label = mime->comment();
   }
 
   QAction *ret = menu.exec( QCursor::pos() );
@@ -485,6 +495,7 @@ void IncidenceAttachment::setupActions()
   mPopupMenu->addAction( mSaveAsAction );
   mPopupMenu->addSeparator();
 
+#ifndef QT_NO_CLIPBOARD
   mCopyAction = KStandardAction::copy( this, SLOT(copyToClipboard()), ac );
   mPopupMenu->addAction( mCopyAction );
 
@@ -494,6 +505,7 @@ void IncidenceAttachment::setupActions()
   KAction *action = KStandardAction::paste( this, SLOT(pasteFromClipboard()), ac );
   mPopupMenu->addAction( action );
   mPopupMenu->addSeparator();
+#endif
 
   mDeleteAction = new KAction( i18nc( "@action:inmenu remove the attachment",
                                       "&Remove" ), this );

@@ -42,7 +42,6 @@
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 
-
 #include <Akonadi/Item>
 
 #include <Mailtransport/TransportManager>
