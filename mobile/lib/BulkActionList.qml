@@ -35,8 +35,8 @@ QML.Column {
 
   onChildrenChanged: {
     var newChild = children[ children.length - 1 ];
-    newChild.anchors.left = parent.left;
-    newChild.anchors.right = parent.right;
+    newChild.anchors.left = _top.left;
+    newChild.anchors.right = _top.right;
     newChild.height = itemHeight;
   }
 

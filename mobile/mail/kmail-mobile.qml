@@ -383,11 +383,15 @@ KPIM.MainView {
       bulkActionScreen.visible = false
       mainWorkView.visible = true
     }
-    KPIM.FakeAction {
-      name : "spam"
+
+    KPIM.Action {
+      action: application.getAction( "akonadi_mark_as_read", "" );
     }
-    KPIM.FakeAction {
-      name : "mark_as"
+    KPIM.Action {
+      action: application.getAction( "akonadi_mark_as_important", "" );
+    }
+    KPIM.Action {
+      action: application.getAction( "akonadi_mark_as_action_item", "" );
     }
   }
 
