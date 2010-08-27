@@ -154,9 +154,8 @@ QTime IncidenceDateTime::endTime() const
 
 void IncidenceDateTime::setTimeZonesVisibility( bool visible )
 {
-  static const QString tz( i18nc( "@action show or hide the time zone widgets", "Time zones" ) );
-
 #ifndef KDEPIM_MOBILE_UI
+  static const QString tz( i18nc( "@action show or hide the time zone widgets", "Time zones" ) );
   QString placeholder( "<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>" );
   if ( visible ) {
     placeholder = placeholder.arg( tz );
