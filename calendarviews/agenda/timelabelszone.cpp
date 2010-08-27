@@ -114,7 +114,9 @@ int TimeLabelsZone::timeLabelsWidth() const
   if ( mTimeLabelsList.isEmpty() ) {
     return 0;
   } else {
-    return mTimeLabelsList.first()->widget()->width() * mTimeLabelsList.count();
+    const int w = mTimeLabelsList.first()->widget()->width() * mTimeLabelsList.count();
+    kDebug() << "DEBUG timeLabelsWidth returning = " << w << " but real width is " << width();
+    return w;
   }
 }
 
@@ -128,6 +130,7 @@ void TimeLabelsZone::updateAll()
 
 void TimeLabelsZone::setTimeLabelsWidth( int width )
 {
+  kDebug() << "DEBUG setTimeLabelsWidth called with width = " << width;
   foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
     timeLabel->widget()->setFixedWidth( width );
   }

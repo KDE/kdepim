@@ -884,17 +884,18 @@ void AgendaView::updateTimeBarWidth()
 
   QFontMetrics fm( font() );
 
-  int num = 0;
   int width = d->mTimeLabelsZone->timeLabelsWidth();
   foreach ( QLabel *l, d->mTimeBarHeaders ) {
-    num++;
     foreach ( const QString &word, l->text().split( ' ' ) ) {
       width = qMax( width, fm.width( word ) );
     }
   }
 
-  width = width + fm.width( "/" );
-  int timeBarWidth = ( width + 1 ) * num;
+  width = width + fm.width( QLatin1Char( '/' ) );
+
+  const int timeBarWidth = ( width + 1 ) * d->mTimeBarHeaders.size();
+
+  kDebug() << "DEBUG calculated width is " << width << " and timeBarWidth is " << timeBarWidth;
 
   d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth );
   d->mTimeLabelsZone->setTimeLabelsWidth( width );
