@@ -30,7 +30,7 @@
 
 #include "eventviews_export.h"
 
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
@@ -73,9 +73,7 @@ namespace EventViews
   class Prefs;
   typedef boost::shared_ptr<Prefs> PrefsPtr;
 
-
   typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
-
 
 /**
   EventView is the abstract base class from wich all other

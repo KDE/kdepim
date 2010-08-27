@@ -5,6 +5,7 @@
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Kevin Krammer, krake@kdab.com
+  Author: Sergio Martins, sergio.martins@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,6 +32,9 @@
 
 #include "recurrenceactions.h"
 
+// AKONADI_PORT hack, see below
+#include "agendaview.h"
+
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>
@@ -41,6 +45,8 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <kholidays/holidayregion.h>
+
+#include <Akonadi/Collection>
 
 #include <KLocale>
 #include <KXMLGUIClient>
@@ -235,7 +241,7 @@ int EventView::showMoveRecurDialog( const Akonadi::Item &aitem, const QDate &dat
     case RecurrenceActions::AllOccurrences: {
       Q_ASSERT( availableOccurrences & RecurrenceActions::SelectedOccurrence );
 
-      // if there are all kinds of ooccurrences (i.e. past present and futur) the user might
+      // if there are all kinds of ooccurrences (i.e. past present and future) the user might
       // want the option only apply to current and future occurrences, leaving the past ones
       // untouched.
       // provide a third choice for that ("Also future")
@@ -400,28 +406,27 @@ void EventView::showConfigurationDialog( QWidget* )
 
 
 bool EventView::processKeyEvent( QKeyEvent *ke )
-{ // TODO_SPLIT: review this
-
+{
   // If Return is pressed bring up an editor for the current selected time span.
-/*  if ( ke->key() == Qt::Key_Return ) {
+  if ( ke->key() == Qt::Key_Return ) {
     if ( ke->type() == QEvent::KeyPress ) {
-      mReturnPressed = true;
+      d->mReturnPressed = true;
     } else if ( ke->type() == QEvent::KeyRelease ) {
-      if ( mReturnPressed ) {
+      if ( d->mReturnPressed ) {
         // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
         if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
           if ( view->collection() >= 0 ) {
-            emit newEventSignal( Akonadi::Collection::List() << Collection( view->collection() ) );
+            emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( view->collection() ) );
           } else {
             emit newEventSignal( collectionSelection()->selectedCollections() );
           }
         } else {
           emit newEventSignal( collectionSelection()->selectedCollections() );
         }
-        mReturnPressed = false;
+        d->mReturnPressed = false;
         return true;
       } else {
-        mReturnPressed = false;
+        d->mReturnPressed = false;
       }
     }
   }
@@ -453,19 +458,19 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
     case Qt::Key_Alt:
       break;
     default:
-      mTypeAheadEvents.append(
+      d->mTypeAheadEvents.append(
         new QKeyEvent( ke->type(),
                        ke->key(),
                        ke->modifiers(),
                        ke->text(),
                        ke->isAutoRepeat(),
                        static_cast<ushort>( ke->count() ) ) );
-      if ( !mTypeAhead ) {
-        mTypeAhead = true;
+      if ( !d->mTypeAhead ) {
+        d->mTypeAhead = true;
         // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
         if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
           if ( view->collection() >= 0 ) {
-            emit newEventSignal( Akonadi::Collection::List() << Collection( view->collection() ) );
+            emit newEventSignal( Akonadi::Collection::List() << Akonadi::Collection( view->collection() ) );
           } else {
             emit newEventSignal( collectionSelection()->selectedCollections() );
           }
@@ -475,7 +480,7 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
       }
       return true;
     }
-    } */
+    }
   return false;
 }
 
