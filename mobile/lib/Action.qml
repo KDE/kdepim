@@ -51,7 +51,7 @@ Rectangle {
   }
 
   Binding {
-    target: parent
+    target: _topContext
     property: "enabled"
     value: action.enabled
   }
