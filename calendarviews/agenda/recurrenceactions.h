@@ -25,7 +25,7 @@
 
 #include "eventviews_export.h"
 
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 class KDateTime;
 class KGuiItem;

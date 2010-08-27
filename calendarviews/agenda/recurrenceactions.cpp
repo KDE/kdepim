@@ -24,8 +24,7 @@
 
 #include "ui_recurrenceactionsscopewidget.h"
 
-#include <kcalcore/recurrence.h>
-
+#include <KCalCore/Recurrence>
 #include <KDialog>
 #include <KLocale>
 #include <KMessageBox>
@@ -178,7 +177,8 @@ int RecurrenceActions::questionSelectedAllCancel( const QString &message, const 
   switch (result) {
     case KDialog::Yes:
       return SelectedOccurrence;
-    case KDialog::Ok:
+    case QDialog::Accepted:
+      // See kdialog.h, 'Ok' doesn't return KDialog:Ok
       return AllOccurrences;
     default:
       return NoOccurrence;
