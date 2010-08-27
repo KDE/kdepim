@@ -290,6 +290,25 @@ bool Calendar::addIncidence( Incidence *incidence )
 bool Calendar::deleteIncidence( Incidence *incidence )
 {
   if ( beginChange( incidence ) ) {
+    if (incidence->hasRecurrenceID()) {
+      // Delete this event's UID from the parent's list of children
+      Incidence *parentIncidence;
+      IncidenceList il = incidence->childIncidences();
+      IncidenceListIterator it;
+      it = il.begin();
+      parentIncidence = this->incidence(*it);
+      parentIncidence->deleteChildIncidence(incidence->uid());
+    }
+    else {
+      // Delete all children as well
+      IncidenceList il = incidence->childIncidences();
+      IncidenceListIterator it;
+      for ( it = il.begin(); it != il.end(); ++it ) {
+        deleteIncidence( this->incidence(*it) );
+        // Avoid a crash, reset the iterator every time the list is modified
+        it = il.begin();
+      }
+    }
     Incidence::DeleteVisitor<Calendar> v( this );
     bool result = incidence->accept( v );
     endChange( incidence );

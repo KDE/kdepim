@@ -89,6 +89,10 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     */
     bool deleteEvent( Event *event );
     /**
+      Deletes a child event from this calendar.
+    */
+    bool deleteChildEvents( Event *event );
+    /**
       Deletes all events from this calendar.
     */
     void deleteAllEvents();
@@ -110,6 +114,10 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
       Remove a todo from the todolist.
     */
     bool deleteTodo( Todo * );
+    /**
+      Deletes a child todo from this calendar.
+    */
+    bool deleteChildTodos( Todo *todo );
     /**
       Deletes all todos from this calendar.
     */
@@ -136,6 +144,10 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
       Remove a Journal from the calendar.
     */
     bool deleteJournal( Journal * );
+    /**
+      Delete a child journal from this calendar.
+    */
+    bool deleteChildJournals( Journal *journal );
     /**
       Deletes all journals from this calendar.
     */

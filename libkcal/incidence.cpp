@@ -27,13 +27,15 @@
 #include "calformat.h"
 
 #include "incidence.h"
+#include "calendar.h"
 
 using namespace KCal;
 
 Incidence::Incidence() :
   IncidenceBase(),
   mRelatedTo(0), mStatus(StatusNone), mSecrecy(SecrecyPublic),
-  mPriority(0), mRecurrence(0)
+  mPriority(0), mRecurrence(0),
+  mHasRecurrenceID( false ), mChildRecurrenceEvents()
 {
   recreate();
 
@@ -59,6 +61,9 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i ),Recurrence::Obse
   mSecrecy = i.mSecrecy;
   mPriority = i.mPriority;
   mLocation = i.mLocation;
+  mRecurrenceID = i.mRecurrenceID;
+  mHasRecurrenceID = i.mHasRecurrenceID;
+  mChildRecurrenceEvents = i.mChildRecurrenceEvents;
 
   // Alarms and Attachments are stored in ListBase<...>, which is a TQValueList<...*>.
   // We need to really duplicate the objects stored therein, otherwise deleting
@@ -124,6 +129,9 @@ Incidence& Incidence::operator=( const Incidence &i )
   mSecrecy = i.mSecrecy;
   mPriority = i.mPriority;
   mLocation = i.mLocation;
+  mRecurrenceID = i.mRecurrenceID;
+  mHasRecurrenceID = i.mHasRecurrenceID;
+  mChildRecurrenceEvents = i.mChildRecurrenceEvents;
 
   mAlarms.clearAll();
   Alarm::List::ConstIterator it;
@@ -413,12 +421,58 @@ bool Incidence::doesRecur() const
 
 bool Incidence::recursOn(const TQDate &qd) const
 {
-  return ( mRecurrence && mRecurrence->recursOn(qd) );
+  bool doesRecur = false;
+  doesRecur = mRecurrence && mRecurrence->recursOn(qd);
+
+  return doesRecur;
 }
 
 bool Incidence::recursAt(const TQDateTime &qdt) const
 {
-  return ( mRecurrence && mRecurrence->recursAt(qdt) );
+  bool doesRecur = false;
+  doesRecur = mRecurrence && mRecurrence->recursAt(qdt);
+
+  return doesRecur;
+}
+
+bool Incidence::recursOn(const TQDate &qd, Calendar *cal) const
+{
+  bool doesRecur = false;
+  doesRecur = mRecurrence && mRecurrence->recursOn(qd);
+
+  // Make sure that this instance has not been moved through a RECURRENCE-ID statement
+  if (hasRecurrenceID() == false) {
+    IncidenceList il = childIncidences();
+    IncidenceListIterator it;
+    for ( it = il.begin(); it != il.end(); ++it ) {
+      QDateTime modifiedDt = cal->incidence(*it)->recurrenceID();
+      modifiedDt.setTime(QTime());
+      if (QDateTime(qd) == modifiedDt) {
+        doesRecur = false;
+      }
+    }
+  }
+
+  return doesRecur;
+}
+
+bool Incidence::recursAt(const TQDateTime &qdt, Calendar *cal) const
+{
+  bool doesRecur = false;
+  doesRecur = mRecurrence && mRecurrence->recursAt(qdt);
+
+  // Make sure that this instance has not been moved through a RECURRENCE-ID statement
+  if (hasRecurrenceID() == false) {
+    IncidenceList il = childIncidences();
+    IncidenceListIterator it;
+    for ( it = il.begin(); it != il.end(); ++it ) {
+      if (qdt == cal->incidence(*it)->recurrenceID()) {
+        doesRecur = false;
+      }
+    }
+  }
+
+  return doesRecur;
 }
 
 /**
@@ -834,6 +888,52 @@ TQString Incidence::schedulingID() const
     // Nothing set, so use the normal uid
     return uid();
   return mSchedulingID;
+}
+
+bool Incidence::hasRecurrenceID() const
+{
+  return mHasRecurrenceID;
+}
+
+void Incidence::setHasRecurrenceID( bool hasRecurrenceID )
+{
+  if ( mReadOnly ) {
+    return;
+  }
+
+  mHasRecurrenceID = hasRecurrenceID;
+  updated();
+}
+
+TQDateTime Incidence::recurrenceID() const
+{
+  return mRecurrenceID;
+}
+
+void Incidence::setRecurrenceID( const TQDateTime &recurrenceID )
+{
+  if ( mReadOnly ) {
+    return;
+  }
+
+//   update();
+  mRecurrenceID = recurrenceID;
+  updated();
+}
+
+void Incidence::addChildIncidence( TQString childIncidence )
+{
+  mChildRecurrenceEvents.append(childIncidence);
+}
+
+void Incidence::deleteChildIncidence( TQString childIncidence )
+{
+  mChildRecurrenceEvents.remove(childIncidence);
+}
+
+IncidenceList Incidence::childIncidences() const
+{
+  return mChildRecurrenceEvents;
 }
 
 /** Observer interface for the recurrence class. If the recurrence is changed,

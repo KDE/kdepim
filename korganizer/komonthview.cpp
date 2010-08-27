@@ -970,7 +970,7 @@ void KOMonthView::changeIncidenceDisplayAdded( Incidence *incidence, MonthViewCe
 
   if ( incidence->doesRecur() ) {
     for ( uint i = 0; i < mCells.count(); ++i ) {
-      if ( incidence->recursOn( mCells[i]->date() ) ) {
+      if ( incidence->recursOn( mCells[i]->date(), calendar() ) ) {
 
         // handle multiday events
         int length = gdv.startDate().daysTo( gdv.endDate().addSecs( floats ? 0 : -1 ).date() );

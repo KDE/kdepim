@@ -36,6 +36,10 @@
 
 namespace KCal {
 
+class Calendar;
+
+typedef QStringList IncidenceList;
+typedef QStringList::iterator IncidenceListIterator;
 
 /**
   This class provides the base class common to all calendar components.
@@ -249,6 +253,21 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     bool recursAt( const TQDateTime &qdt ) const;
 
     /**
+      Returns true if the date specified is one on which the incidence will
+      recur.
+      This function takes RECURRENCE-ID parameters into account
+      @param cal the calendar owning the incidence
+    */
+    virtual bool recursOn( const TQDate &qd, Calendar *cal ) const;
+    /**
+      Returns true if the date/time specified is one on which the incidence will
+      recur.
+      This function takes RECURRENCE-ID parameters into account
+      @param cal the calendar owning the incidence
+    */
+    bool recursAt( const TQDateTime &qdt, Calendar *cal ) const;
+
+    /**
       Calculates the start date/time for all recurrences that happen at some time
       on the given date (might start before that date, but end on or after the
       given date).
@@ -378,6 +397,58 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     */
     int priority() const;
 
+    /**
+      Returns true if the incidence has recurrenceID, otherwise return false.
+      @see setHasRecurrenceID(), setRecurrenceID(TQDateTime)
+      @since 3.5.12
+    */
+    bool hasRecurrenceID() const;
+
+    /**
+      Sets if the incidence has recurrenceID.
+      @param hasRecurrenceID true if incidence has recurrenceID, otherwise false
+      @see hasRecurrenceID(), recurrenceID()
+      @since 3.5.12
+    */
+    void setHasRecurrenceID( bool hasRecurrenceID );
+
+    /**
+      Set the incidences recurrenceID.
+      @param recurrenceID is the incidence recurrenceID to set
+      @see recurrenceID().
+      @since 3.5.12
+    */
+    void setRecurrenceID( const TQDateTime &recurrenceID );
+
+    /**
+      Returns the incidence recurrenceID.
+      @return incidences recurrenceID value
+      @see setRecurrenceID().
+      @since 3.5.12
+    */
+    TQDateTime recurrenceID() const;
+
+    /**
+      Attach a child incidence to a parent incidence.
+      @param childIncidence is the child incidence to add
+      @since 3.5.12
+    */
+    void addChildIncidence( TQString childIncidence );
+
+    /**
+      Detach a child incidence from its parent incidence.
+      @param childIncidence is the child incidence to remove
+      @since 3.5.12
+    */
+    void deleteChildIncidence( TQString childIncidence );
+
+    /**
+      Returns an EventList of all child incidences.
+      @return EventList of all child incidences.
+      @since 3.5.12
+    */
+    IncidenceList childIncidences() const;
+
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Alarm-related methods
@@ -476,6 +547,11 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
 
     // Scheduling ID - used only to identify between scheduling mails
     TQString mSchedulingID;
+
+    TQDateTime mRecurrenceID;         // recurrenceID
+    bool mHasRecurrenceID;           // if incidence has recurrenceID
+
+    IncidenceList mChildRecurrenceEvents;
 
     class Private;
     Private *d;

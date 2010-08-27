@@ -506,16 +506,24 @@ TQString ResourceCalDav::getICalString(const Incidence::List& inc) {
 
     CalendarLocal loc(timeZoneId());
     TQString data = "";
+    TQString header = "";
+    TQString footer = "";
     ICalFormat ical;
 
+    // Get the iCal header and footer
+    header = ical.toString(&loc);
+    int location = header.find("END:VCALENDAR", 0, true);
+    footer = header.mid(location, 0xffffffff);
+    header.remove("END:VCALENDAR");
+
+    data = data + header;
     // NOTE: This is very susceptible to invalid entries in added/changed/deletedIncidences
     // Be very careful with clearChange/clearChanges, and be sure to clear after load and save...
     for(Incidence::List::ConstIterator it = inc.constBegin(); it != inc.constEnd(); ++it) {
         Incidence *i = (*it)->clone();
-        loc.addIncidence(i);
+        data = data + ical.toString(i, &mCalendar);
     }
-
-    data = ical.toString(&loc);
+    data = data + footer;
 
     return data;
 }

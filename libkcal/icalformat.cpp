@@ -293,6 +293,50 @@ TQString ICalFormat::toString( Incidence *incidence )
   return text;
 }
 
+TQString ICalFormat::toString( Incidence *incidence, Calendar *calendar )
+{
+  icalcomponent *component;
+  TQString text = "";
+
+  // See if there are any parent or child events that must be added to the string
+  if ( incidence->hasRecurrenceID() ) {
+    // Get the parent
+    IncidenceList il = incidence->childIncidences();
+    IncidenceListIterator it;
+    it = il.begin();
+    Incidence *parentIncidence;
+    parentIncidence = calendar->incidence(*it);
+    il = parentIncidence->childIncidences();
+    if (il.count() > 0) {
+      for ( it = il.begin(); it != il.end(); ++it ) {
+        component = mImpl->writeIncidence( calendar->incidence(*it) );
+        text = text + TQString::fromUtf8( icalcomponent_as_ical_string( component ) );
+        icalcomponent_free( component );
+      }
+    }
+    component = mImpl->writeIncidence( parentIncidence );
+    text = text + TQString::fromUtf8( icalcomponent_as_ical_string( component ) );
+    icalcomponent_free( component );
+  }
+  else {
+    // This incidence is a potential parent
+    IncidenceList il = incidence->childIncidences();
+    if (il.count() > 0) {
+      IncidenceListIterator it;
+      for ( it = il.begin(); it != il.end(); ++it ) {
+        component = mImpl->writeIncidence( calendar->incidence(*it) );
+        text = text + TQString::fromUtf8( icalcomponent_as_ical_string( component ) );
+        icalcomponent_free( component );
+      }
+    }
+    component = mImpl->writeIncidence( incidence );
+    text = text + TQString::fromUtf8( icalcomponent_as_ical_string( component ) );
+    icalcomponent_free( component );
+  }
+
+  return text;
+}
+
 TQString ICalFormat::toString( RecurrenceRule *recurrence )
 {
   icalproperty *property;

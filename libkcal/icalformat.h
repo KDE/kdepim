@@ -87,6 +87,13 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
     */
     TQString toString( Incidence * );
     /**
+      Return incidence as iCalendar formatted text.
+      This function includes all RECURRENCE-ID related incidences.
+      @return TQString of iCalendar formatted text.
+      @since 3.5.12
+    */
+    TQString toString( Incidence *, Calendar * );
+    /**
       Return recurrence rule as iCalendar formatted text.
     */
     TQString toString( RecurrenceRule * );

@@ -314,10 +314,24 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     icalcomponent_add_property(parent,p);
   }
 
-  if ( incidence->schedulingID() != incidence->uid() )
+  TQString modifiedUid;
+  if ( incidence->hasRecurrenceID() ) {
+    // Recurring incidences are special; they must match their parent's UID
+    // Each child has the parent set as the first item in the list
+    // So, get and set the UID...
+    IncidenceList il = incidence->childIncidences();
+    IncidenceListIterator it;
+    it = il.begin();
+    modifiedUid = (*it);
+  }
+  else {
+    modifiedUid = incidence->uid();
+  }
+
+  if ( incidence->schedulingID() != modifiedUid )
     // We need to store the UID in here. The rawSchedulingID will
     // go into the iCal UID component
-    incidence->setCustomProperty( "LIBKCAL", "ID", incidence->uid() );
+    incidence->setCustomProperty( "LIBKCAL", "ID", modifiedUid );
   else
     incidence->removeCustomProperty( "LIBKCAL", "ID" );
 
@@ -330,9 +344,15 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // unique id
   // If the scheduling ID is different from the real UID, the real
   // one is stored on X-REALID above
-  if ( !incidence->schedulingID().isEmpty() ) {
-    icalcomponent_add_property(parent,icalproperty_new_uid(
-        incidence->schedulingID().utf8()));
+  if ( incidence->hasRecurrenceID() ) {
+    // Recurring incidences are special; they must match their parent's UID
+    icalcomponent_add_property(parent,icalproperty_new_uid(modifiedUid.utf8()));
+  }
+  else {
+    if ( !incidence->schedulingID().isEmpty() ) {
+      icalcomponent_add_property(parent,icalproperty_new_uid(
+          incidence->schedulingID().utf8()));
+    }
   }
 
   // revision
@@ -424,6 +444,11 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   if ( !incidence->relatedToUid().isEmpty() ) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
         incidence->relatedToUid().utf8()));
+  }
+
+  // recurrenceid
+  if ( incidence->hasRecurrenceID() ) {
+    icalcomponent_add_property(parent, icalproperty_new_recurrenceid( writeICalDateTime( incidence->recurrenceID() ) ));
   }
 
 //   kdDebug(5800) << "Write recurrence for '" << incidence->summary() << "' (" << incidence->uid()
@@ -1359,9 +1384,20 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
         categories.append(TQString::fromUtf8(text));
         break;
 
+      case ICAL_RECURRENCEID_PROPERTY:  // recurrenceID
+        icaltime = icalproperty_get_recurrenceid(p);
+        incidence->setRecurrenceID( readICalDateTime( p, icaltime ) );
+        incidence->setHasRecurrenceID( true );
+        break;
+
       case ICAL_RRULE_PROPERTY:
         readRecurrenceRule( p, incidence );
         break;
+
+//       case ICAL_CONTACT_PROPERTY:
+//         incidenceBase->addContact(
+//           QString::fromUtf8( icalproperty_get_contact( p ) ) );
+//         break;
 
       case ICAL_RDATE_PROPERTY: {
         icaldatetimeperiodtype rd = icalproperty_get_rdate( p );
@@ -2031,11 +2067,29 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 //    kdDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c);
     if (todo) {
-      if (!cal->todo(todo->uid())) {
-        cal->addTodo(todo);
-      } else {
-        delete todo;
-        mTodosRelate.remove( todo );
+      if (todo->hasRecurrenceID()) {
+        TQString originalUid = todo->uid();
+        todo->setUid(originalUid + QString("-recur-%1").arg(todo->recurrenceID().toTime_t()));
+        if (!cal->todo(todo->uid())) {
+          cal->addTodo(todo);
+          if (!cal->event(originalUid)) {
+            printf("FIXME! [WARNING] Parent for child event does not yet exist!\n\r");
+          }
+          else {
+            // Add this todo to its parent
+            cal->todo(originalUid)->addChildIncidence(todo->uid());
+            // And the parent to the child
+            todo->addChildIncidence(cal->todo(originalUid)->uid());
+          }
+        }
+      }
+      else {
+        if (!cal->todo(todo->uid())) {
+          cal->addTodo(todo);
+        } else {
+          delete todo;
+          mTodosRelate.remove( todo );
+        }
       }
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
@@ -2047,11 +2101,29 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 //    kdDebug(5800) << "----Event found" << endl;
     Event *event = readEvent(c, ctz);
     if (event) {
-      if (!cal->event(event->uid())) {
-        cal->addEvent(event);
-      } else {
-        delete event;
-        mEventsRelate.remove( event );
+      if (event->hasRecurrenceID()) {
+        TQString originalUid = event->uid();
+        event->setUid(originalUid + QString("-recur-%1").arg(event->recurrenceID().toTime_t()));
+        if (!cal->event(event->uid())) {
+          cal->addEvent(event);
+          if (!cal->event(originalUid)) {
+            printf("FIXME! [WARNING] Parent for child event does not yet exist!\n\r");
+          }
+          else {
+            // Add this event to its parent
+            cal->event(originalUid)->addChildIncidence(event->uid());
+            // And the parent to the child
+            event->addChildIncidence(cal->event(originalUid)->uid());
+          }
+        }
+      }
+      else {
+        if (!cal->event(event->uid())) {
+          cal->addEvent(event);
+        } else {
+          delete event;
+          mEventsRelate.remove( event );
+        }
       }
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
@@ -2063,10 +2135,28 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 //    kdDebug(5800) << "----Journal found" << endl;
     Journal *journal = readJournal(c);
     if (journal) {
-      if (!cal->journal(journal->uid())) {
-        cal->addJournal(journal);
-      } else {
-        delete journal;
+      if (journal->hasRecurrenceID()) {
+        TQString originalUid = journal->uid();
+        journal->setUid(originalUid + QString("-recur-%1").arg(journal->recurrenceID().toTime_t()));
+        if (!cal->journal(journal->uid())) {
+          cal->addJournal(journal);
+          if (!cal->event(originalUid)) {
+            printf("FIXME! [WARNING] Parent for child event does not yet exist!\n\r");
+          }
+          else {
+            // Add this journal to its parent
+            cal->journal(originalUid)->addChildIncidence(journal->uid());
+            // And the parent to the child
+            journal->addChildIncidence(cal->journal(originalUid)->uid());
+          }
+        }
+      }
+      else {
+        if (!cal->journal(journal->uid())) {
+          cal->addJournal(journal);
+        } else {
+          delete journal;
+        }
       }
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);

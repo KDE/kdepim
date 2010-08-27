@@ -1170,7 +1170,7 @@ void KOAgendaView::changeIncidenceDisplayAdded( Incidence *incidence )
     for( dit = mSelectedDates.begin(); dit != mSelectedDates.end(); ++dit ) {
       curDate = *dit;
 // FIXME: This breaks with recurring multi-day events!
-      if ( incidence->recursOn( curDate ) ) {
+      if ( incidence->recursOn( curDate, calendar() ) ) {
         insertIncidence( incidence, curDate );
       }
     }

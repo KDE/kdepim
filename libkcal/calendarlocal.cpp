@@ -126,11 +126,30 @@ bool CalendarLocal::deleteEvent( Event *event )
     setModified( true );
     notifyIncidenceDeleted( event );
     mDeletedIncidences.append( event );
+    // Delete child events
+    if (!event->hasRecurrenceID()) {
+      deleteChildEvents(event);
+    }
     return true;
   } else {
     kdWarning() << "CalendarLocal::deleteEvent(): Event not found." << endl;
     return false;
   }
+}
+
+bool CalendarLocal::deleteChildEvents( Event *event )
+{
+  EventDictIterator it( mEvents );
+  for( ; it.current(); ++it ) {
+    Event *e = *it;
+    if (e->uid() == event->uid()) {
+      if ( e->hasRecurrenceID() ) {
+        deleteEvent(( e ));
+      }
+    }
+  }
+
+  return true;
 }
 
 void CalendarLocal::deleteAllEvents()
@@ -178,11 +197,30 @@ bool CalendarLocal::deleteTodo( Todo *todo )
     setModified( true );
     notifyIncidenceDeleted( todo );
     mDeletedIncidences.append( todo );
+    // Delete child todos
+    if (!todo->hasRecurrenceID()) {
+      deleteChildTodos(todo);
+    }
     return true;
   } else {
     kdWarning() << "CalendarLocal::deleteTodo(): Todo not found." << endl;
     return false;
   }
+}
+
+bool CalendarLocal::deleteChildTodos( Todo *todo )
+{
+  Todo::List::ConstIterator it;
+  for( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
+    Todo *t = *it;
+    if (t->uid() == todo->uid()) {
+      if ( t->hasRecurrenceID() ) {
+        deleteTodo(( t ));
+      }
+    }
+  }
+
+  return true;
 }
 
 void CalendarLocal::deleteAllTodos()
@@ -392,13 +430,13 @@ Event::List CalendarLocal::rawEventsForDate( const TQDate &qd,
         int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
         int i;
         for ( i = 0; i <= extraDays; i++ ) {
-          if ( event->recursOn( qd.addDays( -i ) ) ) {
+          if ( event->recursOn( qd.addDays( -i ), this ) ) {
             eventList.append( event );
             break;
           }
         }
       } else {
-        if ( event->recursOn( qd ) )
+        if ( event->recursOn( qd, this ) )
           eventList.append( event );
       }
     } else {
@@ -527,11 +565,30 @@ bool CalendarLocal::deleteJournal( Journal *journal )
     setModified( true );
     notifyIncidenceDeleted( journal );
     mDeletedIncidences.append( journal );
+    // Delete child journals
+    if (!journal->hasRecurrenceID()) {
+      deleteChildJournals(journal);
+    }
     return true;
   } else {
     kdWarning() << "CalendarLocal::deleteJournal(): Journal not found." << endl;
     return false;
   }
+}
+
+bool CalendarLocal::deleteChildJournals( Journal *journal )
+{
+  Journal::List::ConstIterator it;
+  for( it = mJournalList.begin(); it != mJournalList.end(); ++it ) {
+    Journal *j = *it;
+    if (j->uid() == journal->uid()) {
+      if ( j->hasRecurrenceID() ) {
+        deleteJournal(( j ));
+      }
+    }
+  }
+
+  return true;
 }
 
 void CalendarLocal::deleteAllJournals()
