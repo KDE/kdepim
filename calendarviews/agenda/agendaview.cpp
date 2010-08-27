@@ -250,8 +250,8 @@ AgendaView::AgendaView( bool isSideBySide,
 }
 
 
-AgendaView::AgendaView( bool isSideBySide,
-                        const PrefsPtr &prefs,
+AgendaView::AgendaView( const PrefsPtr &prefs,
+                        bool isSideBySide,
                         QWidget *parent )
   : EventView( parent ), d( new Private( this, isSideBySide ) )
 {

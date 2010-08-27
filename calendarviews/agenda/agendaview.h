@@ -97,9 +97,9 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 {
   Q_OBJECT
   public:
-    explicit AgendaView( bool isSideBySide = false,
-                         const PrefsPtr &preferences = PrefsPtr( new Prefs() ),
-                         QWidget *parent = 0 );
+  explicit AgendaView( const PrefsPtr &preferences,
+                       bool isSideBySide = false,
+                       QWidget *parent = 0 );
 
     explicit AgendaView( bool isSideBySide = false,
                          QWidget *parent = 0 );
