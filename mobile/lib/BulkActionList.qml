@@ -71,7 +71,7 @@ QML.Column {
       source : "images/dividing-line-horizontal.png"
       anchors.right : topLine.left
       anchors.bottom : topLine.bottom
-      fillMode : Image.TileHorizontally
+      fillMode : QML.Image.TileHorizontally
       width : parent.width - topLine.width
     }
     QML.Image {
@@ -91,7 +91,7 @@ QML.Column {
     }
     QML.Image {
       id : backIcon
-      source : "images/bulk_back_overlay.png"
+      source : "images/bulk-back-overlay.png"
       anchors.right : parent.right
       anchors.verticalCenter : parent.verticalCenter
       QML.MouseArea {
