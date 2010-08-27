@@ -33,6 +33,13 @@ QML.Column {
 
   property int itemHeight : 65
 
+  onChildrenChanged: {
+    var newChild = children[ children.length - 1 ];
+    newChild.anchors.left = parent.left;
+    newChild.anchors.right = parent.right;
+    newChild.height = itemHeight;
+  }
+
   QML.Item {
     anchors.left : parent.left
     anchors.right : parent.right
@@ -120,13 +127,5 @@ QML.Column {
     onTriggered : {
       _top.triggered("akonadi_item_copy_to_menu")
     }
-  }
-  KPIM.FakeAction {
-    height : itemHeight
-    name : "spam"
-  }
-  KPIM.FakeAction {
-    height : itemHeight
-    name : "mark_as"
   }
 }

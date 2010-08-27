@@ -383,6 +383,12 @@ KPIM.MainView {
       bulkActionScreen.visible = false
       mainWorkView.visible = true
     }
+    KPIM.FakeAction {
+      name : "spam"
+    }
+    KPIM.FakeAction {
+      name : "mark_as"
+    }
   }
 
   QML.Connections {
