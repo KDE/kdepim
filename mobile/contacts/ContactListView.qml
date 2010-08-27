@@ -22,8 +22,13 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.ItemListView {
+  property bool showCheckBox
+  property variant checkModel
+
   delegate: [
     KPIM.ItemListViewDelegate {
+      showCheckBox : _top.showCheckBox
+      checkModel : _top.checkModel
       height : itemListView.height / 7
       summaryContent: [
         QML.Image {
