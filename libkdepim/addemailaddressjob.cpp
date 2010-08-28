@@ -1,5 +1,6 @@
 /*
   Copyright 2010 Tobias Koenig <tokoe@kde.org>
+  Copyright 2010 Nicolas Lécureuil <nlecureuil@mandriva.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -19,13 +20,18 @@
 
 #include "addemailaddressjob.h"
 
-#include <akonadi/collectiondialog.h>
-#include <akonadi/contact/contactsearchjob.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
-#include <kabc/addressee.h>
-#include <klocale.h>
-#include <kmessagebox.h>
+#include <Akonadi/CollectionDialog>
+#include <Akonadi/Contact/ContactSearchJob>
+#include <Akonadi/Item>
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
+#include <Akonadi/Collection>
+
+#include <KABC/Addressee>
+#include <KLocale>
+#include <KMessageBox>
+
 
 using namespace KPIM;
 
@@ -60,25 +66,65 @@ class AddEmailAddressJob::Private
         return;
       }
 
-      KABC::Addressee contact;
-      contact.setNameFromString( mName );
-      contact.insertEmail( mEmail, true );
-
-      // ask user in which address book the new contact shall be stored
       const QStringList mimeTypes( KABC::Addressee::mimeType() );
-      Akonadi::CollectionDialog dlg;
-      dlg.setMimeTypeFilter( mimeTypes );
-      dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-      dlg.setCaption( i18n( "Select Address Book" ) );
-      dlg.setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
 
-      if ( !dlg.exec() ) {
-        q->setError( UserDefinedError );
+      Akonadi::CollectionFetchJob * const addressBookJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive );
+      addressBookJob->fetchScope().setContentMimeTypes( mimeTypes );
+      q->connect( addressBookJob, SIGNAL( result( KJob* ) ), SLOT( slotCollectionsFetched( KJob* ) ) );
+    }
+
+    void slotCollectionsFetched( KJob *job )
+    {
+      if ( job->error() ) {
+        q->setError( job->error() );
+        q->setErrorText( job->errorText() );
         q->emitResult();
         return;
       }
 
-      const Akonadi::Collection addressBook = dlg.selectedCollection();
+      const Akonadi::CollectionFetchJob *addressBookJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
+
+      Akonadi::Collection::List canCreateItemCollections ;
+
+      foreach( const Akonadi::Collection &collection, addressBookJob->collections() ) {
+        if ( Akonadi::Collection::CanCreateItem & collection.rights() ) {
+          canCreateItemCollections.append(collection);
+        }
+      }
+
+      KABC::Addressee contact;
+      contact.setNameFromString( mName );
+      contact.insertEmail( mEmail, true );
+
+      Akonadi::Collection addressBook;
+
+      if ( canCreateItemCollections.size() == 0 ) {
+        KMessageBox::information ( 0, i18n( "Please create an address book before adding a contact." ), i18n( "No Address Book Available" ) );
+        q->setError( UserDefinedError );
+        q->emitResult();
+        return;
+      }
+      else if ( canCreateItemCollections.size() == 1 ) {
+        addressBook = canCreateItemCollections[0];
+      }
+      else {
+        // ask user in which address book the new contact shall be stored
+        const QStringList mimeTypes( KABC::Addressee::mimeType() );
+        Akonadi::CollectionDialog dlg;
+        dlg.setMimeTypeFilter( mimeTypes );
+        dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+        dlg.setCaption( i18n( "Select Address Book" ) );
+        dlg.setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+
+        if ( !dlg.exec() ) {
+          q->setError( UserDefinedError );
+          q->emitResult();
+          return;
+        }
+
+        addressBook = dlg.selectedCollection();
+      }
+
       if ( !addressBook.isValid() ) {
         q->setError( UserDefinedError );
         q->emitResult();
