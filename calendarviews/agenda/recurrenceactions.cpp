@@ -112,7 +112,8 @@ int ScopeWidget::checkedChoices() const
   return result;
 }
 
-int RecurrenceActions::availableOccurrences( const Incidence::Ptr &incidence, const KDateTime &selectedOccurrence )
+int RecurrenceActions::availableOccurrences( const Incidence::Ptr &incidence,
+                                             const KDateTime &selectedOccurrence )
 {
   int result = NoOccurrence;
 
@@ -209,7 +210,7 @@ int RecurrenceActions::questionSelectedFutureAllCancel( const QString &message, 
       return SelectedOccurrence;
     case KDialog::No:
       return FutureOccurrences;
-    case KDialog::Ok:
+    case QDialog::Accepted:
       return AllOccurrences;
     default:
       return NoOccurrence;

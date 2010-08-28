@@ -108,7 +108,7 @@ namespace RecurrenceActions
     @param preselectedChoices combined #Scope values to optionally preselect some of the options specified with @p availableChoices
     @param parent QWidget parent for the dialog
 
-    @return the chosen #Scope options, OR'ed to gether
+    @return the chosen #Scope options, OR'ed together
   */
   EVENTVIEWS_EXPORT // TODO should be KCAL_EXPORT
   int questionMultipleChoice( const KDateTime &selectedOccurrence,
