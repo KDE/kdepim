@@ -30,11 +30,11 @@
 
 #include "prefs.h"
 
-#include "recurrenceactions.h"
 
 // AKONADI_PORT hack, see below
 #include "agendaview.h"
 
+#include <calendarsupport/recurrenceactions.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarsearch.h>
 #include <calendarsupport/collectionselection.h>

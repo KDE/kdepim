@@ -23,7 +23,7 @@
 #ifndef RECURRENCEACTIONS_H
 #define RECURRENCEACTIONS_H
 
-#include "eventviews_export.h"
+#include "calendarsupport_export.h"
 
 #include <KCalCore/Incidence>
 
@@ -91,7 +91,7 @@ namespace RecurrenceActions
 
     @return the #Scope to which actions on the given @incidence can be applied to
   */
-  EVENTVIEWS_EXPORT // TODO should be KCAL_EXPORT
+  CALENDARSUPPORT_EXPORT // TODO should be KCAL_EXPORT
   int availableOccurrences( const Incidence::Ptr &incidence, const KDateTime &selectedOccurrence );
 
   /**
@@ -110,7 +110,7 @@ namespace RecurrenceActions
 
     @return the chosen #Scope options, OR'ed together
   */
-  EVENTVIEWS_EXPORT // TODO should be KCAL_EXPORT
+  CALENDARSUPPORT_EXPORT // TODO should be KCAL_EXPORT
   int questionMultipleChoice( const KDateTime &selectedOccurrence,
                               const QString &message, const QString &caption, const KGuiItem &action,
                               int availableChoices, int preselectedChoices, QWidget *parent );
@@ -129,7 +129,7 @@ namespace RecurrenceActions
 
     @param #NoOccurrence on cancel, #SelectedOccurrence or #AllOccurrences on the respective action
   */
-  EVENTVIEWS_EXPORT // TODO should be KCAL_EXPORT
+  CALENDARSUPPORT_EXPORT // TODO should be KCAL_EXPORT
   int questionSelectedAllCancel( const QString &message, const QString &caption,
                                  const KGuiItem &actionSelected, const KGuiItem &actionAll,
                                  QWidget *parent );
@@ -154,7 +154,7 @@ namespace RecurrenceActions
 
     @param #NoOccurrence on cancel, #SelectedOccurrence, #FutureOccurrences or #AllOccurrences on the respective action
   */
-  EVENTVIEWS_EXPORT // TODO should be KCAL_EXPORT
+  CALENDARSUPPORT_EXPORT // TODO should be KCAL_EXPORT
   int questionSelectedFutureAllCancel( const QString &message, const QString &caption,
                                        const KGuiItem &actionSelected, const KGuiItem &actionFuture, const KGuiItem &actionAll,
                                        QWidget *parent );

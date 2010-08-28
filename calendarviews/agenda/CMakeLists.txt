@@ -39,7 +39,6 @@ set( eventviews_LIB_SRCS
      helper.cpp
      alternatelabel.cpp
      timescaleconfigdialog.cpp
-     recurrenceactions.cpp
      multiagenda/multiagendaview.cpp
      calendardecoration.cpp
      decorationlabel.cpp
@@ -49,7 +48,6 @@ kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc )
 
 kde4_add_ui_files(eventviews_LIB_SRCS
     timescaleedit_base.ui
-    recurrenceactionsscopewidget.ui
 )
 
 kde4_add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})

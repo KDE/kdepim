@@ -34,17 +34,16 @@
 #include "helper.h"
 #include "prefs.h"
 
-#include "recurrenceactions.h"
-
+#include <calendarsupport/recurrenceactions.h>
 #include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/incidencechanger.h>
 
-#include <kcalcore/todo.h>
+#include <KCalCore/Todo>
 
-#include <kcalutils/dndfactory.h>
-#include <kcalutils/icaldrag.h>
-#include <kcalutils/vcaldrag.h>
+#include <KCalUtils/DndFactory>
+#include <KCalUtils/ICalDrag>
+#include <KCalUtils/VCalDrag>
 
 
 #include <KDebug>
