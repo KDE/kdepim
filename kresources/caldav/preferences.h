@@ -87,6 +87,11 @@ public:
      */
     TQString getFullUrl();
 
+    /**
+     * @return A full URL to connect to CalDAV Tasks server (including username and password).
+     */
+    TQString getFullTasksUrl();
+
 protected:
 
     /**

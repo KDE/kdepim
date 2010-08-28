@@ -10,6 +10,14 @@
    <label>URL</label>
   </entry>
 
+  <entry key="TasksUrl" type="String" >
+   <label>URL</label>
+  </entry>
+
+  <entry key="UseSTasks" type="Bool" >
+   <label>Use separate Tasks URL</label>
+  </entry>
+
   <entry key="Username" type="String">
    <label>User Name</label>
   </entry>

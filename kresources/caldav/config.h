@@ -50,6 +50,8 @@ public slots:
     virtual void loadSettings(KRES::Resource *resource);
     virtual void saveSettings(KRES::Resource *resource);
 
+    void slotSTasksToggled( bool );
+
 protected:
 
     virtual void setupUI();
@@ -57,8 +59,10 @@ protected:
 private:
 
     TQLineEdit *mUrl;
+    TQLineEdit *mTasksUrl;
     TQLineEdit *mUsername;
     TQLineEdit *mPassword;
+    TQCheckBox *mUseSTasks;
     TQCheckBox *mRememberPassword;
     CalDavReloadConfig* mReloadConfig;
     CalDavSaveConfig* mSaveConfig;

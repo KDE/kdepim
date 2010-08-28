@@ -54,6 +54,13 @@ public:
     }
 
     /**
+     * Sets a new Tasks URL to load.
+     */
+    virtual void setTasksUrl(const TQString& s) {
+        mTasksUrl = s;
+    }
+
+    /**
      * Sets the parent qobject.
      */
     virtual void setParent(TQObject *s) {
@@ -72,6 +79,13 @@ public:
      */
     virtual TQString url() const {
         return mUrl;
+    }
+
+    /**
+     * @return Tasks URL to load.
+     */
+    virtual TQString tasksUrl() const {
+        return mTasksUrl;
     }
 
     /**
@@ -147,6 +161,7 @@ protected:
 private:
 
     TQString mUrl;
+    TQString mTasksUrl;
     bool mError;
     TQString mErrorString;
     long mErrorNumber;

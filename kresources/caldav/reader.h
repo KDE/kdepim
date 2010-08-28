@@ -71,6 +71,13 @@ public:
         return mData;
     }
 
+    /**
+     * @return downloaded task data in iCal format.
+     */
+    TQString tasksData() const {
+        return mTasksData;
+    }
+
 protected:
 
     virtual int runJob(runtime_info* caldavRuntime);
@@ -80,6 +87,7 @@ protected:
 private:
 
     TQString mData;
+    TQString mTasksData;
     bool mGetAll;
     TQDateTime mTimeStart;
     TQDateTime mTimeEnd;

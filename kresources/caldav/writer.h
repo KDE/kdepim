@@ -46,30 +46,57 @@ public:
     }
 
     /**
-     * Sets the information about added incidences writer should send to server.
-     * @param s icalendar-formatted string consists of all added incidences plus necessary calendar info.
-     * May be an empty string, which means there is no added incidences to send.
+     * Sets the information about added events writer should send to server.
+     * @param s icalendar-formatted string consists of all added events plus necessary calendar info.
+     * May be an empty string, which means there are no added events to send.
      */
     void setAddedObjects(const TQString& s) {
         mAdded = s;
     }
 
     /**
-     * Sets the information about changed incidences writer should send to server.
-     * @param s icalendar-formatted string consists of all changed incidences plus necessary calendar info.
-     * May be an empty string, which means there is no changed incidences to send.
+     * Sets the information about changed events writer should send to server.
+     * @param s icalendar-formatted string consists of all changed events plus necessary calendar info.
+     * May be an empty string, which means there are no changed events to send.
      */
     void setChangedObjects(const TQString& s) {
         mChanged = s;
     }
 
     /**
-     * Sets the information about deleted incidences writer should send to server.
-     * @param s icalendar-formatted string consists of all deleted incidences plus necessary calendar info.
-     * May be an empty string, which means there is no deleted incidences to send.
+     * Sets the information about deleted events writer should send to server.
+     * @param s icalendar-formatted string consists of all deleted events plus necessary calendar info.
+     * May be an empty string, which means there are no deleted events to send.
      */
     void setDeletedObjects(const TQString& s) {
         mDeleted = s;
+    }
+
+    /**
+     * Sets the information about added tasks writer should send to server.
+     * @param s icalendar-formatted string consists of all added tasks plus necessary calendar info.
+     * May be an empty string, which means there are no added tasks to send.
+     */
+    void setAddedTasksObjects(const TQString& s) {
+        mTasksAdded = s;
+    }
+
+    /**
+     * Sets the information about changed tasks writer should send to server.
+     * @param s icalendar-formatted string consists of all changed tasks plus necessary calendar info.
+     * May be an empty string, which means there are no changed tasks to send.
+     */
+    void setChangedTasksObjects(const TQString& s) {
+        mTasksChanged = s;
+    }
+
+    /**
+     * Sets the information about deleted tasks writer should send to server.
+     * @param s icalendar-formatted string consists of all deleted tasks plus necessary calendar info.
+     * May be an empty string, which means there are no deleted tasks to send.
+     */
+    void setDeletedTasksObjects(const TQString& s) {
+        mTasksDeleted = s;
     }
 
     /**
@@ -79,6 +106,9 @@ public:
         setAddedObjects("");
         setChangedObjects("");
         setDeletedObjects("");
+        setAddedTasksObjects("");
+        setChangedTasksObjects("");
+        setDeletedTasksObjects("");
     }
 
 protected:
@@ -87,7 +117,7 @@ protected:
 
     virtual void cleanJob();
 
-    /// Just a wrapper above libcaldav functions.
+    /// Just a wrapper above libcaldav event writing functions.
     template<typename Operation>
     int pushObjects(const TQString& data, Operation op, int okCode, runtime_info* RT) {
         int r = okCode;
@@ -97,11 +127,25 @@ protected:
         return r;
     }
 
+    /// Just a wrapper above libcaldav task writing functions.
+    template<typename Operation>
+    int pushTasksObjects(const TQString& data, Operation op, int okCode, runtime_info* RT) {
+        int r = okCode;
+        if (!data.isNull() && !data.isEmpty()) {
+            r = op(std::string(data.ascii()).c_str(), std::string(tasksUrl().ascii()).c_str(), RT);
+        }
+        return r;
+    }
+
 private:
 
     TQString mAdded;
     TQString mChanged;
     TQString mDeleted;
+
+    TQString mTasksAdded;
+    TQString mTasksChanged;
+    TQString mTasksDeleted;
 };
 
 } // namespace KCal

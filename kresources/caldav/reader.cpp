@@ -31,6 +31,7 @@ using namespace KCal;
 void CalDavReader::cleanJob() {
     CalDavJob::cleanJob();
     mData = "";
+    mTasksData = "";
 }
 
 int CalDavReader::runJob(runtime_info* RT) {
@@ -41,10 +42,10 @@ int CalDavReader::runJob(runtime_info* RT) {
 
     if (mGetAll) {
         kdDebug() << "getting all objects";
-    	res = caldav_getall_object(result, std::string(url().ascii()).c_str(), RT);
+        res = caldav_tasks_getall_object(result, std::string(url().ascii()).c_str(), RT);
     } else {
         kdDebug() << "getting object from the specified time range";
-        res = caldav_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(url().ascii()).c_str(), RT);
+        res = caldav_tasks_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(url().ascii()).c_str(), RT);
     }
 
     if (OK == res) {
@@ -59,6 +60,34 @@ int CalDavReader::runJob(runtime_info* RT) {
     }
 
     caldav_free_response(&result);
+
+    if ((OK == res) && (tasksUrl() != "")) {
+      kdDebug() << "reader::run, url: " << tasksUrl();
+
+      response* result = caldav_get_response();
+      CALDAV_RESPONSE res = OK;
+
+      if (mGetAll) {
+          kdDebug() << "getting all objects";
+          res = caldav_tasks_getall_object(result, std::string(tasksUrl().ascii()).c_str(), RT);
+      } else {
+          kdDebug() << "getting object from the specified time range";
+          res = caldav_tasks_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(tasksUrl().ascii()).c_str(), RT);
+      }
+
+      if (OK == res) {
+          kdDebug() << "success";
+          if (result->msg) {
+              mTasksData = result->msg;
+          } else {
+              kdDebug() << "empty collection";
+              // empty collection
+              mTasksData = "";
+          }
+      }
+
+      caldav_free_response(&result);
+    }
 
     return res;
 }

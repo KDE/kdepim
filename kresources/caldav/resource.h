@@ -85,13 +85,20 @@ protected:
 
     struct LoadingTask {
         TQString url;
+        TQString tasksUrl;
     };
 
     struct WritingTask {
         TQString url;
+        TQString tasksUrl;
+
         TQString added;
         TQString changed;
         TQString deleted;
+
+        TQString tasksAdded;
+        TQString tasksChanged;
+        TQString tasksDeleted;
     };
 
 
@@ -121,8 +128,9 @@ protected:
     /**
      * Initiates calendar loading process.
      * @param url URL to load calendar data from.
+     * @param tasksUrl URL to load task data from.
      */
-    void startLoading(const TQString& url);
+    void startLoading(const TQString& url, const TQString& tasksUrl);
 
     /**
      * Checks if the data is correct and can be parsed.
@@ -139,11 +147,19 @@ protected:
     bool parseData(const TQString& data);
 
     /**
+     * Parses the data and adds tasks to the calendar.
+     * Unlike @ref parseData, this function does NOT clear the cache.
+     * @param data calendar data.
+     * @return true on success, false on fail.
+     */
+    bool parseTasksData(const TQString& data);
+
+    /**
      * Initiates calendar writing process.
      * @param url URL to save calendar data to.
      * @return true if write was queued successfully, false if not
      */
-    bool startWriting(const TQString& url);
+    bool startWriting(const TQString& url, const TQString& tasksUrl);
 
     /**
      * Returns a list of incidences as a valid iCalendar string.
