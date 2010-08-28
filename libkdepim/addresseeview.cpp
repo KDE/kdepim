@@ -782,7 +782,7 @@ TQString AddresseeView::strippedNumber( const TQString &number )
 
   for ( uint i = 0; i < number.length(); ++i ) {
     TQChar c = number[ i ];
-    if ( (c.isDigit() || (c == '*') || (c == '#') || (c == '+')) && (i == 0) )
+    if ( c.isDigit() || (((c == '*') || (c == '#') || (c == '+')) && (i == 0)) )
       retval.append( c );
   }
 
