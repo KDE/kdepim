@@ -42,10 +42,10 @@ int CalDavReader::runJob(runtime_info* RT) {
 
     if (mGetAll) {
         kdDebug() << "getting all objects";
-        res = caldav_tasks_getall_object(result, std::string(url().ascii()).c_str(), RT);
+        res = caldav_getall_object(result, std::string(url().ascii()).c_str(), RT);
     } else {
         kdDebug() << "getting object from the specified time range";
-        res = caldav_tasks_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(url().ascii()).c_str(), RT);
+        res = caldav_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(url().ascii()).c_str(), RT);
     }
 
     if (OK == res) {
