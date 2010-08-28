@@ -49,54 +49,56 @@ int CalDavWriter::runJob(runtime_info* RT) {
 
     int res = OK;
 
-    kdDebug() << "pushing added objects";
-    res = pushObjects(mAdded, caldav_add_object, OK, RT);
-    if (OK == res) {
+    if ((OK == res) && (url() != "")) {
+      kdDebug() << "pushing added objects";
+      res = pushObjects(mAdded, caldav_add_object, OK, RT);
+      if (OK == res) {
 #ifdef USE_CALDAV_MODIFY
-        kdDebug() << "pushing changed objects";
-        res = pushObjects(mChanged, caldav_modify_object, OK, RT);
-        if (OK == res) {
-            kdDebug() << "pushing deleted objects";
-            res = pushObjects(mDeleted, caldav_delete_object, OK, RT);
-        }
+          kdDebug() << "pushing changed objects";
+          res = pushObjects(mChanged, caldav_modify_object, OK, RT);
+          if (OK == res) {
+              kdDebug() << "pushing deleted objects";
+              res = pushObjects(mDeleted, caldav_delete_object, OK, RT);
+          }
 #else // if USE_CALDAV_MODIFY
-        kdDebug() << "pushing changed objects (delete)";
-        res = pushObjects(mChanged, caldav_delete_object, OK, RT);
-        if (OK == res) {
-            kdDebug() << "pushing changed objects (add)";
-            res = pushObjects(mChanged, caldav_add_object, OK, RT);
-            if (OK == res) {
-                kdDebug() << "pushing deleted objects";
-                res = pushObjects(mDeleted, caldav_delete_object, OK, RT);
-            }
-        }
+          kdDebug() << "pushing changed objects (delete)";
+          res = pushObjects(mChanged, caldav_delete_object, OK, RT);
+          if (OK == res) {
+              kdDebug() << "pushing changed objects (add)";
+              res = pushObjects(mChanged, caldav_add_object, OK, RT);
+              if (OK == res) {
+                  kdDebug() << "pushing deleted objects";
+                  res = pushObjects(mDeleted, caldav_delete_object, OK, RT);
+              }
+          }
 #endif // if USE_CALDAV_MODIFY
+      }
     }
 
-    res = OK;
-
-    kdDebug() << "pushing added tasks objects";
-    res = pushTasksObjects(mTasksAdded, caldav_add_object, OK, RT);
     if ((OK == res) && (tasksUrl() != "")) {
+      kdDebug() << "pushing added tasks objects";
+      res = pushTasksObjects(mTasksAdded, caldav_add_object, OK, RT);
+      if (OK == res) {
 #ifdef USE_CALDAV_TASKS_MODIFY
-        kdDebug() << "pushing changed objects";
-        res = pushTasksObjects(mTasksChanged, caldav_tasks_modify_object, OK, RT);
-        if (OK == res) {
-            kdDebug() << "pushing deleted objects";
-            res = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
-        }
+          kdDebug() << "pushing changed objects";
+          res = pushTasksObjects(mTasksChanged, caldav_tasks_modify_object, OK, RT);
+          if (OK == res) {
+              kdDebug() << "pushing deleted objects";
+              res = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
+          }
 #else // if USE_CALDAV_TASKS_MODIFY
-        kdDebug() << "pushing changed objects (delete)";
-        res = pushTasksObjects(mTasksChanged, caldav_tasks_delete_object, OK, RT);
-        if (OK == res) {
-            kdDebug() << "pushing changed objects (add)";
-            res = pushTasksObjects(mTasksChanged, caldav_add_object, OK, RT);
-            if (OK == res) {
-                kdDebug() << "pushing deleted objects";
-                res = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
-            }
-        }
+          kdDebug() << "pushing changed objects (delete)";
+          res = pushTasksObjects(mTasksChanged, caldav_tasks_delete_object, OK, RT);
+          if (OK == res) {
+              kdDebug() << "pushing changed objects (add)";
+              res = pushTasksObjects(mTasksChanged, caldav_add_object, OK, RT);
+              if (OK == res) {
+                  kdDebug() << "pushing deleted objects";
+                  res = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
+              }
+          }
 #endif // if USE_CALDAV_TASKS_MODIFY
+      }
     }
 
     if (OK != res) {

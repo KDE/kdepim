@@ -487,12 +487,24 @@ void ResourceCached::calendarIncidenceDeleted( Incidence *i )
             << i->uid() << endl;
 #endif
 
-  TQMap<Incidence *,bool>::ConstIterator it;
-  it = mDeletedIncidences.find( i );
-  if ( it == mDeletedIncidences.end() ) {
-    mDeletedIncidences.insert( i, true );
+  if (i->hasRecurrenceID()) {
+    // This incidence has a parent; notify the parent of the child's death and do not destroy the parent!
+    // Get the parent
+    IncidenceList il = i->childIncidences();
+    IncidenceListIterator it;
+    it = il.begin();
+    Incidence *parentIncidence;
+    parentIncidence = this->incidence(*it);
+    // Remove the child
+    calendarIncidenceChanged(parentIncidence);
   }
-
+  else {
+    TQMap<Incidence *,bool>::ConstIterator it;
+    it = mDeletedIncidences.find( i );
+    if ( it == mDeletedIncidences.end() ) {
+      mDeletedIncidences.insert( i, true );
+    }
+  }
   checkForAutomaticSave();
 }
 
