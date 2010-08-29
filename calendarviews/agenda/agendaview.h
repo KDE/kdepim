@@ -207,9 +207,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void timeSpanSelectionChanged();
 
   protected:
-    /** Fill agenda beginning with date startDate */
-    void fillAgenda( const QDate &startDate );
-
     /** Fill agenda using the current set value for the start date */
     void fillAgenda();
 

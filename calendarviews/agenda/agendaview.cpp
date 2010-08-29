@@ -1258,8 +1258,7 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
 {
   if ( !d->mSelectedDates.isEmpty() &&
        d->mSelectedDates.first() == start &&
-       d->mSelectedDates.last() == end &&
-       !updateNeeded() ) {
+       d->mSelectedDates.last() == end ) {
     return;
   }
 
@@ -1277,6 +1276,7 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
   }
 
   // and update the view
+  setUpdateNeeded( true );
   fillAgenda();
 }
 
@@ -1511,13 +1511,12 @@ void AgendaView::changeIncidenceDisplay( const Akonadi::Item &aitem, int mode )
   }
 }
 
-void AgendaView::fillAgenda( const QDate & )
-{
-  fillAgenda();
-}
-
 void AgendaView::fillAgenda()
 {
+  if ( !updateNeeded() ) {
+    return;
+  }
+
   setUpdateNeeded( false );
 
   /* Remember the item Ids of the selected items. In case one of the
