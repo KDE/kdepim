@@ -329,7 +329,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, TQDate date,
   Incidence *newInc = incidence->clone();
   newInc->recreate();
   newInc->setHasRecurrenceID(false);
-  newInc->setRecurrenceID(QString());
+//  newInc->setRecurrenceID(QString());
   newInc->setRelatedTo( incidence );
   Recurrence *recur = newInc->recurrence();
   if ( single ) {
