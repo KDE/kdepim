@@ -71,6 +71,7 @@ void HeaderWidget::paintEvent( QPaintEvent* ev )
     view()->grid()->paintHeader( &p, rect(), ev->rect(), m_offset, this );
 }
 
+#ifndef QT_NO_CONTEXTMENU
 void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
 {
     QMenu contextMenu;
@@ -152,6 +153,7 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
 
     event->accept();
 }
+#endif
 
 GraphicsView::Private::Private( GraphicsView* _q )
   : q( _q ), rowcontroller(0), headerwidget( _q )

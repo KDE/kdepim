@@ -157,6 +157,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      */
     virtual void keyPressEvent( QKeyEvent * );
 
+#ifndef QT_NO_CONTEXTMENU
     /**
      * Reimplemented for subclass access to menu
      */
@@ -168,6 +169,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * See QLineEdit::contextMenuEvent().
      */
     virtual void contextMenuEvent( QContextMenuEvent * );
+#endif
 
   private:
     virtual bool eventFilter( QObject *, QEvent * );

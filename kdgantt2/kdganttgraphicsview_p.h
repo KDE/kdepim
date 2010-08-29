@@ -44,7 +44,9 @@ namespace KDGantt {
         void scrollTo( int );
     protected:
         /*reimp*/ void paintEvent( QPaintEvent* ev );
+#ifndef QT_NO_CONTEXTMENU
         /*reimp*/ void contextMenuEvent( QContextMenuEvent* ev );
+#endif
     private:
         qreal m_offset;
     };

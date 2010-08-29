@@ -253,6 +253,7 @@ void ImageWidget::mouseMoveEvent( QMouseEvent *event )
 #endif
 }
 
+#ifndef QT_NO_CONTEXTMENU
 void ImageWidget::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu menu;
@@ -281,6 +282,7 @@ void ImageWidget::contextMenuEvent( QContextMenuEvent *event )
 
   menu.exec( event->globalPos() );
 }
+#endif
 
 void ImageWidget::changeImage()
 {

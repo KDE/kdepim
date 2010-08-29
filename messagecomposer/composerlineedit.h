@@ -47,7 +47,9 @@ class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 
     virtual void keyPressEvent(QKeyEvent*);
 
+#ifndef QT_NO_CONTEXTMENU
     virtual void contextMenuEvent( QContextMenuEvent*e );
+#endif
 
   private slots:
     void editRecentAddresses();

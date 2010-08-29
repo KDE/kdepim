@@ -64,8 +64,10 @@ class ImageWidget : public QPushButton
     virtual void mousePressEvent( QMouseEvent* );
     virtual void mouseMoveEvent( QMouseEvent* );
 
+#ifndef QT_NO_CONTEXTMENU
     // context menu handling
     virtual void contextMenuEvent( QContextMenuEvent* );
+#endif
 
   private Q_SLOTS:
     void updateView();

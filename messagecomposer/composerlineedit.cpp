@@ -200,6 +200,7 @@ void ComposerLineEdit::groupDropExpandResult( KJob* job )
 }
 
 
+#ifndef QT_NO_CONTEXTMENU
 void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
    QMenu *popup = createStandardContextMenu();
@@ -209,6 +210,7 @@ void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
    popup->exec( e->globalPos() );
    delete popup;
 }
+#endif
 
 void ComposerLineEdit::editRecentAddresses()
 {

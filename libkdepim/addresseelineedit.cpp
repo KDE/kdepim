@@ -1177,6 +1177,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
   }
 }
 
+#ifndef QT_NO_CONTEXTMENU
 void AddresseeLineEdit::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu *menu = createStandardContextMenu();
@@ -1201,6 +1202,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
   }
   return menu;
 }
+#endif
 
 int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int weight )
 {
