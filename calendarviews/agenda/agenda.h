@@ -126,13 +126,13 @@ class Agenda : public QWidget
     void setStartTime( const QTime &startHour );
 
     AgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
-                             int YBottom, int itemPos, int itemCount );
+                             int YBottom, int itemPos, int itemCount, bool isSelected );
 
     AgendaItem *insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
-                                   int XEnd );
+                                   int XEnd, bool isSelected );
 
     void insertMultiItem ( const Akonadi::Item &event, const QDate &qd, int XBegin, int XEnd,
-                           int YTop, int YBottom );
+                           int YTop, int YBottom, bool isSelected );
 
     /**
       Removes an event and all its multi-items from the agenda. This function

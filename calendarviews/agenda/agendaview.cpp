@@ -1327,7 +1327,9 @@ void AgendaView::showIncidences( const Akonadi::Item::List &incidences, const QD
   d->mAgenda->selectItem( first );
 }
 
-void AgendaView::insertIncidence( const Akonadi::Item &aitem, const QDate &curDate )
+void AgendaView::insertIncidence( const Akonadi::Item &aitem,
+                                  const QDate &curDate,
+                                  bool createSelected )
 {
   if ( !filterByCollectionSelection( aitem ) ) {
     return;
@@ -1383,9 +1385,9 @@ void AgendaView::insertIncidence( const Akonadi::Item &aitem, const QDate &curDa
   const KDateTime::Spec timeSpec = preferences()->timeSpec();
 
   if ( todo && todo->isOverdue() ) {
-    d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol );
+    d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol, createSelected );
   } else if ( incidence->allDay() ) {
-      d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX );
+      d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX, createSelected );
   } else if ( event && event->isMultiDay( timeSpec ) ) {
     int startY = d->mAgenda->timeToY( event->dtStart().toTimeSpec( timeSpec ).time() );
     QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
@@ -1394,7 +1396,7 @@ void AgendaView::insertIncidence( const Akonadi::Item &aitem, const QDate &curDa
     }
     int endY = d->mAgenda->timeToY( endtime ) - 1;
     if ( ( beginX <= 0 && curCol == 0 ) || beginX == curCol ) {
-      d->mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY );
+      d->mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY, createSelected );
 
     }
     if ( beginX == curCol ) {
@@ -1440,7 +1442,7 @@ void AgendaView::insertIncidence( const Akonadi::Item &aitem, const QDate &curDa
     if ( endY < startY ) {
       endY = startY;
     }
-    d->mAgenda->insertItem( aitem, columnDate, curCol, startY, endY, 1, 1 );
+    d->mAgenda->insertItem( aitem, columnDate, curCol, startY, endY, 1, 1, createSelected );
     if ( startY < d->mMinY[curCol] ) {
       d->mMinY[curCol] = startY;
     }
@@ -1463,7 +1465,7 @@ void AgendaView::changeIncidenceDisplayAdded( const Akonadi::Item &aitem )
     return;
   }
 
-  displayIncidence( aitem );
+  displayIncidence( aitem, false );
 }
 
 void AgendaView::changeIncidenceDisplay( const Akonadi::Item &aitem, int mode )
@@ -1546,14 +1548,11 @@ void AgendaView::fillAgenda()
                                          Akonadi::Item::List();
 
   foreach ( const Akonadi::Item &aitem, incidences ) {
-    displayIncidence( aitem );
-    if ( aitem.id() == selectedAgendaId ) {
-      d->mAgenda->selectItem( aitem );
-      somethingReselected = true;
-    }
+    const bool wasSelected = aitem.id() == selectedAgendaId  ||
+                             aitem.id() == selectedAllDayAgendaId;
 
-    if ( aitem.id() == selectedAllDayAgendaId ) {
-      d->mAllDayAgenda->selectItem( aitem );
+    displayIncidence( aitem, wasSelected );
+    if ( wasSelected ) {
       somethingReselected = true;
     }
   }
@@ -1572,12 +1571,11 @@ void AgendaView::fillAgenda()
   }
 }
 
-void AgendaView::displayIncidence( const Akonadi::Item &aitem )
+void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
 {
   QDate today = QDate::currentDate();
   DateTimeList::iterator t;
 
-  // FIXME: use a visitor here
   Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   Todo::Ptr todo = CalendarSupport::todo( aitem );
   Event::Ptr event = CalendarSupport::event( aitem );
@@ -1665,7 +1663,7 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem )
   }
 
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-    insertIncidence( aitem, t->toTimeSpec( timeSpec ).date() );
+    insertIncidence( aitem, t->toTimeSpec( timeSpec ).date(), createSelected );
   }
 }
 

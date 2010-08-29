@@ -27,7 +27,7 @@
 
 #include "cellitem.h"
 
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include <Akonadi/Item>
 
@@ -93,10 +93,14 @@ class AgendaItem : public QWidget, public CellItem
 {
   Q_OBJECT
   public:
-    AgendaItem( EventView *eventView, CalendarSupport::Calendar *calendar,
+    AgendaItem( EventView *eventView,
+                CalendarSupport::Calendar *calendar,
                 const Akonadi::Item &incidence,
-                int itemPos, int itemCount,
-                const QDate &qd, QWidget *parent );
+                int itemPos,
+                int itemCount,
+                const QDate &qd,
+                bool isSelected,
+                QWidget *parent );
     ~AgendaItem();
 
     int cellXLeft() const { return mCellXLeft; }
@@ -116,8 +120,10 @@ class AgendaItem : public QWidget, public CellItem
 
     /** Start movement */
     void startMove();
+
     /** Reset to original values */
     void resetMove();
+
     /** End the movement (i.e. clean up) */
     void endMove();
 
@@ -139,7 +145,7 @@ class AgendaItem : public QWidget, public CellItem
     void expandLeft( int dx );
     void expandRight( int dx );
 
-    bool isMultiItem();
+    bool isMultiItem() const;
     AgendaItem *prevMoveItem() const
     { return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0; }
 
@@ -199,7 +205,7 @@ class AgendaItem : public QWidget, public CellItem
 
   public slots:
     void updateIcons();
-    void select( bool selected=true );
+    void select( bool selected = true );
     void addAttendee( const QString & );
 
   protected:

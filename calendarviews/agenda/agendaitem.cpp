@@ -74,9 +74,9 @@ QPixmap *AgendaItem::completedPxmp = 0;
 AgendaItem::AgendaItem( EventView *eventView, CalendarSupport::Calendar *calendar,
                         const Akonadi::Item &item,
                         int itemPos, int itemCount,
-                        const QDate &qd, QWidget *parent )
+                        const QDate &qd, bool isSelected, QWidget *parent )
   : QWidget( parent ), mEventView( eventView ), mCalendar( calendar ), mIncidence( item ),
-    mDate( qd ), mValid( true ), mCloned( false ), mSpecialEvent( false )
+    mDate( qd ), mValid( true ), mCloned( false ), mSelected( isSelected ), mSpecialEvent( false )
 {
   if ( !CalendarSupport::hasIncidence( mIncidence ) ) {
     mValid = false;
@@ -87,7 +87,7 @@ AgendaItem::AgendaItem( EventView *eventView, CalendarSupport::Calendar *calenda
   Q_ASSERT( incidence );
   if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    int years = EventViews::yearDiff( incidence->dtStart().date(), qd );
+    const int years = EventViews::yearDiff( incidence->dtStart().date(), qd );
     if ( years > 0 ) {
       incidence = Incidence::Ptr( incidence->clone() );
       incidence->setReadOnly( false );
@@ -121,10 +121,6 @@ AgendaItem::AgendaItem( EventView *eventView, CalendarSupport::Calendar *calenda
   setMouseTracking( true );
   mResourceColor = QColor();
   updateIcons();
-
-  // select() does nothing if the state hasn't changed, so preset mSelected.
-  mSelected = true;
-  select( false );
 
   setAcceptDrops( true );
 }
@@ -181,12 +177,10 @@ void AgendaItem::updateIcons()
 
 void AgendaItem::select( bool selected )
 {
-  if ( mSelected == selected ) {
-    return;
+  if ( mSelected != selected ) {
+    mSelected = selected;
+    update();
   }
-  mSelected = selected;
-
-  update();
 }
 
 bool AgendaItem::dissociateFromMultiItem()
@@ -286,7 +280,7 @@ void AgendaItem::setMultiItem( AgendaItem *first, AgendaItem *prev,
   mMultiItemInfo->mLastMultiItem = last;
 }
 
-bool AgendaItem::isMultiItem()
+bool AgendaItem::isMultiItem() const
 {
   return mMultiItemInfo;
 }
@@ -294,7 +288,7 @@ bool AgendaItem::isMultiItem()
 AgendaItem *AgendaItem::prependMoveItem( AgendaItem *e )
 {
   if ( !e ) {
-    return e;
+    return 0;
   }
 
   AgendaItem *first = 0, *last = 0;
@@ -335,7 +329,7 @@ AgendaItem *AgendaItem::prependMoveItem( AgendaItem *e )
 AgendaItem *AgendaItem::appendMoveItem( AgendaItem *e )
 {
   if ( !e ) {
-    return e;
+    return 0;
   }
 
   AgendaItem *first = 0, *last = 0;

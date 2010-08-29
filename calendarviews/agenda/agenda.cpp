@@ -1051,7 +1051,7 @@ void Agenda::performItemAction( const QPoint &pos )
             } else {
               newFirst = insertItem( moveItem->incidence(), moveItem->itemDate(),
                                      moveItem->cellXLeft() - 1, rows() + newY, rows() - 1,
-                                     moveItem->itemPos(), moveItem->itemCount() ) ;
+                                     moveItem->itemPos(), moveItem->itemCount(), false ) ;
             }
             if ( newFirst ) {
               newFirst->show();
@@ -1102,7 +1102,7 @@ void Agenda::performItemAction( const QPoint &pos )
             } else {
               newLast = insertItem( moveItem->incidence(), moveItem->itemDate(),
                                     moveItem->cellXLeft() + 1, 0, newY - rows() - 1,
-                                    moveItem->itemPos(), moveItem->itemCount() ) ;
+                                    moveItem->itemPos(), moveItem->itemCount(), false ) ;
             }
             moveItem->appendMoveItem( newLast );
             newLast->show();
@@ -1699,17 +1699,18 @@ QVector<int> Agenda::maxContentsY() const
 
 void Agenda::setStartTime( const QTime &startHour )
 {
-  double startPos =
+  const double startPos =
     ( startHour.hour() / 24. + startHour.minute() / 1440. + startHour.second() / 86400. ) *
     d->mRows * gridSpacingY();
-  setContentsPos( 0, int( startPos ) );
+  setContentsPos( 0, static_cast<int>( startPos ) );
 }
 
 /*
   Insert AgendaItem into agenda.
 */
 AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
-                                int X, int YTop, int YBottom, int itemPos, int itemCount )
+                                int X, int YTop, int YBottom, int itemPos, int itemCount,
+                                bool isSelected )
 {
   if ( d->mAllDayMode ) {
     kDebug() << "using this in all-day mode is illegal.";
@@ -1719,7 +1720,7 @@ AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
   d->mActionType = NOP;
 
   AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence,
-                                           itemPos, itemCount, qd, this );
+                                           itemPos, itemCount, qd, isSelected, this );
 
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
@@ -1757,7 +1758,7 @@ AgendaItem *Agenda::insertItem( const Akonadi::Item &incidence, const QDate &qd,
   Insert all-day AgendaItem into agenda.
 */
 AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDate &qd,
-                                      int XBegin, int XEnd )
+                                      int XBegin, int XEnd, bool isSelected )
 {
   if ( !d->mAllDayMode ) {
     kDebug() << "using this in non all-day mode is illegal.";
@@ -1766,7 +1767,7 @@ AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDat
 
   d->mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence, 1, 1, qd, this );
+  AgendaItem *agendaItem = new AgendaItem( d->mEventView, d->mCalendar, incidence, 1, 1, qd, isSelected, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1794,7 +1795,7 @@ AgendaItem *Agenda::insertAllDayItem( const Akonadi::Item &incidence, const QDat
 }
 
 void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int XBegin,
-                              int XEnd, int YTop, int YBottom )
+                              int XEnd, int YTop, int YBottom, bool isSelected )
 {
   Event::Ptr ev = CalendarSupport::event( event );
   Q_ASSERT( ev );
@@ -1828,7 +1829,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const QDate &qd, int X
       newtext = QString( "(%1/%2): " ).arg( count ).arg( width );
       newtext.append( ev->summary() );
 
-      current = insertItem( event, qd, cellX, cellYTop, cellYBottom, count, width );
+      current = insertItem( event, qd, cellX, cellYTop, cellYBottom, count, width, isSelected );
       current->setText( newtext );
       multiItems.append( current );
     }

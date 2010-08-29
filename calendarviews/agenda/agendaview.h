@@ -161,7 +161,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual void showDates( const QDate &start, const QDate &end );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
-    void insertIncidence( const Akonadi::Item &incidence, const QDate &curDate );
+    void insertIncidence( const Akonadi::Item &incidence, const QDate &curDate, bool createSelected );
     void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
     void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
 
@@ -255,7 +255,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void init();
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
-    void displayIncidence( const Akonadi::Item &incidence );
+    void displayIncidence( const Akonadi::Item &incidence, bool createSelected );
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
     bool loadDecorations( const QStringList &decorations, DecorationList &decoList );
