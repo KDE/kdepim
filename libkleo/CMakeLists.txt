@@ -74,8 +74,6 @@ set(libkleo_ui_common_SRCS
    ui/kdhorizontalline.cpp
    ui/filenamerequester.cpp
    ui/messagebox.cpp
-   ui/progressbar.cpp
-   ui/progressdialog.cpp
    ui/cryptoconfigmodule.cpp
    ui/cryptoconfigdialog.cpp
    ui/directoryserviceswidget.cpp
@@ -84,6 +82,10 @@ set(libkleo_ui_common_SRCS
 
 
 if (NOT WINCE)
+  set(libkleo_ui_common_SRCS ${libkleo_ui_common_SRCS}
+   ui/progressbar.cpp
+   ui/progressdialog.cpp
+  )
   set(libkleo_ui_SRCS    # make this a separate lib.
     ui/keylistview.cpp
     ui/keyselectiondialog.cpp

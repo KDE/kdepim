@@ -57,8 +57,12 @@ private:
     void slotButtonClicked();
 
 private:
+#ifndef QT_NO_DIRMODEL
     QDirModel  dirmodel;
     QCompleter completer;
+#else
+    QDir::Filters filter;
+#endif
 
     QLineEdit    lineedit;
     QToolButton  button;
@@ -70,22 +74,30 @@ private:
 
 FileNameRequester::Private::Private( FileNameRequester * qq )
     : q( qq ),
+#ifndef QT_NO_DIRMODEL
       dirmodel(),
       completer( &dirmodel ),
+#else
+      filter(),
+#endif
       lineedit( q ),
       button( q ),
       hlay( q ),
       nameFilter(),
       existingOnly( true )
 {
+#ifndef QT_NO_DIRMODEL
     dirmodel.setObjectName( "dirmodel" );
     completer.setObjectName( "completer" );
+#endif
     lineedit.setObjectName( "lineedit" );
     button.setObjectName( "button" );
     hlay.setObjectName( "hlay" );
 
     button.setIcon( KIcon("document-open") );
+#ifndef QT_NO_DIRMODEL
     lineedit.setCompleter( &completer );
+#endif
 
     hlay.setMargin( 0 );
     hlay.addWidget( &lineedit );
@@ -108,7 +120,11 @@ FileNameRequester::FileNameRequester( QWidget * p )
 FileNameRequester::FileNameRequester( QDir::Filters f, QWidget * p )
     : QWidget( p ), d( new Private( this ) )
 {
+#ifndef QT_NO_DIRMODEL
     d->dirmodel.setFilter( f );
+#else
+    d->filter = f;
+#endif
 }
 
 FileNameRequester::~FileNameRequester() {
@@ -132,11 +148,19 @@ bool FileNameRequester::existingOnly() const {
 }
 
 void FileNameRequester::setFilter( QDir::Filters f ) {
+#ifndef QT_NO_DIRMODEL
     d->dirmodel.setFilter( f );
+#else
+    d->filter = f;
+#endif
 }
 
 QDir::Filters FileNameRequester::filter() const {
+#ifndef QT_NO_DIRMODEL
     return d->dirmodel.filter();
+#else
+    return d->filter;
+#endif
 }
 
 void FileNameRequester::setNameFilter( const QString & nameFilter ) {
@@ -154,6 +178,7 @@ void FileNameRequester::Private::slotButtonClicked() {
 }
 
 QString FileNameRequester::requestFileName() {
+#ifndef QT_NO_FILEDIALOG
     const QDir::Filters filters = filter();
     if ( (filters & QDir::Dirs) && !(filters & QDir::Files) )
         return QFileDialog::getExistingDirectory( this );
@@ -161,6 +186,9 @@ QString FileNameRequester::requestFileName() {
         return QFileDialog::getOpenFileName( this, QString(), QString(), d->nameFilter );
     else
         return QFileDialog::getSaveFileName( this, QString(), QString(), d->nameFilter );
+#else
+    return QString();
+#endif
 }
       
 #include "moc_filenamerequester.cpp"
