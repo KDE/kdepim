@@ -1258,9 +1258,11 @@ void CalendarView::dissociateOccurrence( Incidence *incidence, const TQDate &dat
   Incidence* newInc = mCalendar->dissociateOccurrence( incidence, date, true );
 
   if ( newInc ) {
-    // TODO: Use the same resource instead of asking again!
-    mChanger->changeIncidence( oldincidence, incidence );
-    mChanger->addIncidence( newInc, this );
+    // TODO [FIXME]: Use the same resource instead of asking again!
+    // See also koagenda.cpp: endItemAction()
+    bool success = mChanger->addIncidence( newInc, this );
+    if ( success )
+      mChanger->changeIncidence( oldincidence, incidence );
   } else {
     KMessageBox::sorry( this, i18n("Dissociating the occurrence failed."),
       i18n("Dissociating Failed") );

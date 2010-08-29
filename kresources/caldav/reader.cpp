@@ -63,20 +63,22 @@ int CalDavReader::runJob(runtime_info* RT) {
 
     caldav_free_response(&result);
 
-    if ((OK == res) && (tasksUrl() != "")) {
+    CALDAV_RESPONSE tasksres = OK;
+
+    if ((OK == tasksres) && (tasksUrl() != "")) {
       kdDebug() << "reader::run, url: " << tasksUrl();
 
       result = caldav_get_response();
 
       if (mGetAll) {
           kdDebug() << "getting all objects";
-          res = caldav_tasks_getall_object(result, std::string(tasksUrl().ascii()).c_str(), RT);
+          tasksres = caldav_tasks_getall_object(result, std::string(tasksUrl().ascii()).c_str(), RT);
       } else {
           kdDebug() << "getting object from the specified time range";
-          res = caldav_tasks_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(tasksUrl().ascii()).c_str(), RT);
+          tasksres = caldav_tasks_get_object(result, mTimeStart.toTime_t(), mTimeEnd.toTime_t(), std::string(tasksUrl().ascii()).c_str(), RT);
       }
 
-      if (OK == res) {
+      if (OK == tasksres) {
           kdDebug() << "success";
           if (result->msg) {
               mTasksData = result->msg;
@@ -90,7 +92,10 @@ int CalDavReader::runJob(runtime_info* RT) {
       caldav_free_response(&result);
     }
 
-    return res;
+    if (tasksres == OK)
+      return res;
+    else
+      return tasksres;
 }
 
 // EOF ========================================================================

@@ -177,7 +177,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
     /**
      * Reloads all incidences from all resources.
-     * @par tz The timezone to set.
+     * @param tz The timezone to set.
      * @return success or failure
      */
     bool reload( const TQString &tz );
@@ -293,7 +293,7 @@ class LIBKCAL_EXPORT CalendarResources :
     /**
        Add a Resource to the Calendar.
        This method must be public, because in-process added Resources
-       do not emit the corresponding signal, so this methodd has to be
+       do not emit the corresponding signal, so this method has to be
        called manually!
 
        @param resource is a pointer to the ResourceCalendar to add.

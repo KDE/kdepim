@@ -1046,6 +1046,12 @@ void KOAgenda::endItemAction()
   bool multiModify = false;
   // FIXME: do the cloning here...
   Incidence* inc = mActionItem->incidence();
+  // Store modification information in case it is needed to recreate the changes with a new actionitem...
+  int mai_xl = mActionItem->cellXLeft();
+  int mai_xr = mActionItem->cellXRight();
+  int mai_yt = mActionItem->cellYTop();
+  int mai_yb = mActionItem->cellYBottom();
+  Incidence* newInc;
 
   if ( mItemMoved ) {
     bool modify = true;
@@ -1061,6 +1067,9 @@ void KOAgenda::endItemAction()
             // Moving the whole sequene of events is handled by the itemModified below.
             modify = true;
             break;
+        // FIXME: The following two cases do the following bad things:
+        // 1. Pop up a message box asking which resource to save the disassociated event to (!)
+        // 2. Crash at mActionItem->endMove(); below.
         case KMessageBox::Yes: { // Just this occurrence
             // Dissociate this occurrence:
             // create clone of event, set relation to old event, set cloned event
@@ -1073,16 +1082,18 @@ void KOAgenda::endItemAction()
             emit startMultiModify( i18n("Dissociate event from recurrence") );
             Incidence* oldInc = mActionItem->incidence();
             Incidence* oldIncSaved = mActionItem->incidence()->clone();
-            Incidence* newInc = mCalendar->dissociateOccurrence(
+            newInc = mCalendar->dissociateOccurrence(
                 oldInc, mActionItem->itemDate() );
             if ( newInc ) {
               // don't recreate items, they already have the correct position
               emit enableAgendaUpdate( false );
               mActionItem->dissociateFromMultiItem();
               mActionItem->setIncidence( newInc );
-              mChanger->addIncidence( newInc, this );
+              bool success = mChanger->addIncidence( newInc, this );
               emit enableAgendaUpdate( true );
-              mChanger->changeIncidence( oldIncSaved, oldInc );
+              if ( success ) {
+                mChanger->changeIncidence( oldIncSaved, oldInc );
+              }
             } else {
               KMessageBox::sorry( this, i18n("Unable to add the exception item to the "
                   "calendar. No change will be done."), i18n("Error Occurred") );
@@ -1101,15 +1112,17 @@ void KOAgenda::endItemAction()
             emit startMultiModify( i18n("Split future recurrences") );
             Incidence* oldInc = mActionItem->incidence();
             Incidence* oldIncSaved = mActionItem->incidence()->clone();
-            Incidence* newInc = mCalendar->dissociateOccurrence(
+            newInc = mCalendar->dissociateOccurrence(
                 oldInc, mActionItem->itemDate(), false );
             if ( newInc ) {
               emit enableAgendaUpdate( false );
               mActionItem->dissociateFromMultiItem();
               mActionItem->setIncidence( newInc );
-              mChanger->addIncidence( newInc, this );
+              bool success = mChanger->addIncidence( newInc, this );
               emit enableAgendaUpdate( true );
-              mChanger->changeIncidence( oldIncSaved, oldInc );
+              if ( success ) {
+                mChanger->changeIncidence( oldIncSaved, oldInc );
+              }
             } else {
               KMessageBox::sorry( this, i18n("Unable to add the future items to the "
                   "calendar. No change will be done."), i18n("Error Occurred") );
@@ -1124,28 +1137,58 @@ void KOAgenda::endItemAction()
     }
 
     if ( modify ) {
-      mActionItem->endMove();
-      KOAgendaItem *placeItem = mActionItem->firstMultiItem();
-      if  ( !placeItem ) {
-        placeItem = mActionItem;
-      }
+      if ( multiModify ) {
+        // mActionItem does not exist any more, seeing as we just got done deleting it
+        // (by deleting/replacing the original incidence it was created from through
+        // user modification of said incidence) above!
+        // Therefore we have to find the new KOAgendaItem that matches the new incidence
+        // Then we can apply the saved X/Y settings from the original move operation as shown.
 
-      KOAgendaItem *modif = placeItem;
+        KOAgendaItem *koai_insertedItem;
+        for ( koai_insertedItem = mItems.first(); koai_insertedItem; koai_insertedItem = mItems.next() ) {
+          if (koai_insertedItem->incidence() == newInc) {
+            selectItem( koai_insertedItem );
+            mSelectedItem->startMove();
+            mSelectedItem->setCellY(mai_yt, mai_yb);
+            mSelectedItem->setCellX(mai_xl, mai_xr);
+            mActionItem = mSelectedItem;
+            //mSelectedItem->endMove();
+            break;
+          }
+        }
 
-      TQPtrList<KOAgendaItem> oldconflictItems = placeItem->conflictItems();
-      KOAgendaItem *item;
-      for ( item = oldconflictItems.first(); item != 0;
-            item = oldconflictItems.next() ) {
-        placeSubCells( item );
+//         mActionItem->startMove();
+//         mActionItem->setCellY(mai_yt, mai_yb);
+//         mActionItem->setCellX(mai_xl, mai_xr);
+//         mActionItem->endMove();
       }
-      while ( placeItem ) {
-        placeSubCells( placeItem );
-        placeItem = placeItem->nextMultiItem();
-      }
+    }
 
-      // Notify about change
-      // the agenda view will apply the changes to the actual Incidence*!
-      emit itemModified( modif );
+    if ( modify ) {
+//       if ( !multiModify ) {
+        mActionItem->endMove();
+        KOAgendaItem *placeItem = mActionItem->firstMultiItem();
+        if  ( !placeItem ) {
+          placeItem = mActionItem;
+        }
+
+        KOAgendaItem *modif = placeItem;
+
+        TQPtrList<KOAgendaItem> oldconflictItems = placeItem->conflictItems();
+        KOAgendaItem *item;
+        for ( item = oldconflictItems.first(); item != 0;
+              item = oldconflictItems.next() ) {
+          placeSubCells( item );
+        }
+        while ( placeItem ) {
+          placeSubCells( placeItem );
+          placeItem = placeItem->nextMultiItem();
+        }
+
+        // Notify about change
+        // the agenda view will apply the changes to the actual Incidence*!
+        emit itemModified( modif );
+//       }
     }
     // FIXME: If the change failed, we need to update the view!
     mChanger->endChange( inc );

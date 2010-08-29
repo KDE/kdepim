@@ -75,37 +75,42 @@ int CalDavWriter::runJob(runtime_info* RT) {
       }
     }
 
-    if ((OK == res) && (tasksUrl() != "")) {
+    int tasksres = OK;
+
+    if ((OK == tasksres) && (tasksUrl() != "")) {
       kdDebug() << "pushing added tasks objects";
-      res = pushTasksObjects(mTasksAdded, caldav_add_object, OK, RT);
-      if (OK == res) {
+      tasksres = pushTasksObjects(mTasksAdded, caldav_add_object, OK, RT);
+      if (OK == tasksres) {
 #ifdef USE_CALDAV_TASKS_MODIFY
           kdDebug() << "pushing changed objects";
-          res = pushTasksObjects(mTasksChanged, caldav_tasks_modify_object, OK, RT);
-          if (OK == res) {
+          tasksres = pushTasksObjects(mTasksChanged, caldav_tasks_modify_object, OK, RT);
+          if (OK == tasksres) {
               kdDebug() << "pushing deleted objects";
-              res = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
+              tasksres = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
           }
 #else // if USE_CALDAV_TASKS_MODIFY
           kdDebug() << "pushing changed objects (delete)";
-          res = pushTasksObjects(mTasksChanged, caldav_tasks_delete_object, OK, RT);
-          if (OK == res) {
+          tasksres = pushTasksObjects(mTasksChanged, caldav_tasks_delete_object, OK, RT);
+          if (OK == tasksres) {
               kdDebug() << "pushing changed objects (add)";
-              res = pushTasksObjects(mTasksChanged, caldav_add_object, OK, RT);
-              if (OK == res) {
+              tasksres = pushTasksObjects(mTasksChanged, caldav_add_object, OK, RT);
+              if (OK == tasksres) {
                   kdDebug() << "pushing deleted objects";
-                  res = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
+                  tasksres = pushTasksObjects(mTasksDeleted, caldav_tasks_delete_object, OK, RT);
               }
           }
 #endif // if USE_CALDAV_TASKS_MODIFY
       }
     }
 
-    if (OK != res) {
+    if ((OK != res) || (OK != tasksres)) {
         clearObjects();
     }
 
-    return res;
+    if (tasksres == OK)
+      return res;
+    else
+      return tasksres;
 }
 
 // EOF ========================================================================
