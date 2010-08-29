@@ -27,9 +27,16 @@ KDeclarativeApplication::KDeclarativeApplication()
 {
 #ifndef Q_WS_MAEMO_5
   // make it look more like on the actual device when testing on the desktop
+#ifdef Q_OS_WINCE
+  QFont f = font();
+  f.setPointSize( 11 );
+  f.setWeight( QFont::Bold );
+  setFont( f );
+#else
   QFont f = font();
   f.setPointSize( 16 );
   setFont( f );
+#endif
 
   QPalette p;
   p.setColor( QPalette::Window,          QColor( 0,     0,   0 ) );
