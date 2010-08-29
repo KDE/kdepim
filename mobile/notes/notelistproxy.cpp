@@ -23,8 +23,6 @@
 
 #include <QTextDocument>
 
-#include <kcal/incidence.h>
-
 #include <akonadi/entitytreemodel.h>
 #include <KMime/KMimeMessage>
 

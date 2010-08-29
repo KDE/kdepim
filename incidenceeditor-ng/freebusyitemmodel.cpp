@@ -22,7 +22,6 @@
 
 #include <kcalcore/attendee.h>
 #include <kcalcore/period.h>
-#include <kcal/alarm.h>
 
 #include <KLocale>
 #include <KGlobal>
