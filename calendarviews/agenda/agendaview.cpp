@@ -1186,7 +1186,6 @@ void AgendaView::updateEventDates( AgendaItem *item )
   }
 */
 
-  // FIXME: use a visitor here
   if ( const Event::Ptr ev = CalendarSupport::event( aitem ) ) {
     /* setDtEnd() must be called before setDtStart(), otherwise, when moving
      * events, CalendarLocal::incidenceUpdated() will not remove the old hash

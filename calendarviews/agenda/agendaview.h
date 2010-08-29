@@ -162,8 +162,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void insertIncidence( const Akonadi::Item &incidence, const QDate &curDate, bool createSelected );
-    void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
-    void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
 
     void clearSelection();
 
@@ -256,6 +254,12 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     bool filterByCollectionSelection( const Akonadi::Item &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
     void displayIncidence( const Akonadi::Item &incidence, bool createSelected );
+
+    // TODO: delete this in a few weeks, after reviewing if doUpdateItem() can be removed.
+    // (it's not even called)
+    void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
+    void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
+
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
     bool loadDecorations( const QStringList &decorations, DecorationList &decoList );

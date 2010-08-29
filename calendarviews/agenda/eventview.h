@@ -276,11 +276,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual void flushView();
 
     /**
-      Updates the current display to reflect the changes to one particular incidence.
-    */
-    virtual void changeIncidenceDisplay( const Akonadi::Item &, int ) = 0;
-
-    /**
       Re-reads the configuration and picks up relevant
       changes which are applicable to the view.
     */
