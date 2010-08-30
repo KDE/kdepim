@@ -71,14 +71,14 @@ Item {
 
         Text {
             id: month
-            text: "April"
+            text: "Month"
             color: "#004bb8"
             font.pixelSize: 24
         }
 
         Text {
             id: year
-            text: "2010"
+            text: "Year"
             color: "#004bb8"
             font.pixelSize: 24
         }
@@ -159,27 +159,33 @@ Item {
                 height: 20
                 text: "Sun"
                 color: "#5c5c5c"
+                style: Text.Sunken
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
             }
 
             Loader {
+                id: day1
                 sourceComponent: day
             }
 
             Loader {
+                id: day8
                 sourceComponent: day
             }
 
             Loader {
+                id: day15
                 sourceComponent: day
             }
 
             Loader {
+                id: day22
                 sourceComponent: day
             }
 
             Loader {
+                id: day29
                 sourceComponent: day
             }
 
@@ -195,27 +201,33 @@ Item {
                 height: 20
                 text: "Mon"
                 color: "#5c5c5c"
+                style: Text.Sunken
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
             }
 
             Loader {
+                id: day2
                 sourceComponent: day
             }
 
             Loader {
+                id: day9
                 sourceComponent: day
             }
 
             Loader {
+                id: day16
                 sourceComponent: day
             }
 
             Loader {
+                id: day23
                 sourceComponent: day
             }
 
             Loader {
+                id: day30
                 sourceComponent: day
             }
         }
@@ -230,27 +242,33 @@ Item {
                 height: 20
                 text: "Tue"
                 color: "#5c5c5c"
+                style: Text.Sunken
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
             }
 
             Loader {
+                id: day3
                 sourceComponent: day
             }
 
             Loader {
+                id: day10
                 sourceComponent: day
             }
 
             Loader {
+                id: day17
                 sourceComponent: day
             }
 
             Loader {
+                id: day24
                 sourceComponent: day
             }
 
             Loader {
+                id: day31
                 sourceComponent: day
             }
         }
@@ -265,27 +283,33 @@ Item {
                 height: 20
                 text: "Wed"
                 color: "#5c5c5c"
+                style: Text.Sunken
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
             }
 
             Loader {
+                id: day4
                 sourceComponent: day
             }
 
             Loader {
+                id: day11
                 sourceComponent: day
             }
 
             Loader {
+                id: day18
                 sourceComponent: day
             }
 
             Loader {
+                id: day25
                 sourceComponent: day
             }
 
             Loader {
+                id: day32
                 sourceComponent: day
             }
         }
@@ -300,27 +324,33 @@ Item {
                 height: 20
                 text: "Thu"
                 color: "#5c5c5c"
+                style: Text.Sunken
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
             }
 
             Loader {
+                id: day5
                 sourceComponent: day
             }
 
             Loader {
+                id: day12
                 sourceComponent: day
             }
 
             Loader {
+                id: day19
                 sourceComponent: day
             }
 
             Loader {
+                id: day26
                 sourceComponent: day
             }
 
             Loader {
+                id: day33
                 sourceComponent: day
             }
         }
@@ -335,27 +365,33 @@ Item {
                 height: 20
                 text: "Fri"
                 color: "#5c5c5c"
+                style: Text.Sunken
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
             }
 
             Loader {
+                id: day6
                 sourceComponent: day
             }
 
             Loader {
+                id: day13
                 sourceComponent: day
             }
 
             Loader {
+                id: day20
                 sourceComponent: day
             }
 
             Loader {
+                id: day27
                 sourceComponent: day
             }
 
             Loader {
+                id: day34
                 sourceComponent: day
             }
         }
@@ -370,40 +406,36 @@ Item {
                 height: 20
                 text: "Sat"
                 color: "#5c5c5c"
+                style: Text.Sunken
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
             }
 
             Loader {
+                id: day7
                 sourceComponent: day
             }
 
             Loader {
+                id: day14
                 sourceComponent: day
             }
 
             Loader {
+                id: day21
                 sourceComponent: day
             }
 
             Loader {
+                id: day28
                 sourceComponent: day
             }
 
             Loader {
+                id: day35
                 sourceComponent: day
             }
         }
     }
-
-
-    // ### TODO: i18n calls
-    // Row {
-    //     width: 420
-    //     anchors.left: parent.left
-    //     anchors.leftMargin: 12
-    //     spacing: 40
-
-    // }
 
 }
