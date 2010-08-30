@@ -260,6 +260,11 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     virtual void setChanges( Changes changes );
 
+    /**
+       Returns if there are pending changes and a redraw is needed.
+    */
+    Changes changes() const;
+
   public Q_SLOTS:
 
     /**
@@ -474,11 +479,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     bool isWorkDay( const QDate &date ) const;
     QStringList holidayNames( const QDate &date ) const;
-
-    /**
-       Returns if there are pending changes and a redraw is needed.
-    */
-    Changes changes() const;
 
   private:
     /*

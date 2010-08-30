@@ -150,12 +150,16 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
         mLayoutBottomDayLabels( 0 ),
         mBottomDayLabels( 0 ),
         mBottomDayLabelsFrame( 0 ),
+        mAllDayAgenda( 0 ),
+        mAgenda( 0 ),
         mTimeLabelsZone( 0 ),
         mAllowAgendaUpdate( true ),
         mUpdateItem( 0 ),
         mCollectionId( -1 ),
         mIsSideBySide( isSideBySide ),
-        mDummyAllDayLeft( 0 )
+        mDummyAllDayLeft( 0 ),
+        mUpdateAllDayAgenda( true ),
+        mUpdateAgenda( true )
     {
     }
 
@@ -204,33 +208,72 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
     bool mIsSideBySide;
 
     QWidget *mDummyAllDayLeft;
+    bool mUpdateAllDayAgenda;
+    bool mUpdateAgenda;
 
     CalendarDecoration::Decoration *loadCalendarDecoration( const QString &name );
+    void clearView();
+    void setChanges( EventView::Changes changes,
+                     const KCalCore::Incidence::Ptr &incidence = KCalCore::Incidence::Ptr() );
   protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const Akonadi::Item &incidence );
     void calendarIncidenceChanged( const Akonadi::Item &incidence );
     void calendarIncidenceDeleted( const Akonadi::Item &incidence );
+
 };
 
 void AgendaView::Private::calendarIncidenceAdded( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
 
-  q->setChanges( q->changes() | IncidencesAdded );
+  setChanges( q->changes() | IncidencesAdded, CalendarSupport::incidence( incidence ) );
 }
 
 void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
 
-  q->setChanges( q->changes() | IncidencesEdited );
+  setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
 }
 
 void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
-  q->setChanges( q->changes() | IncidencesDeleted );
+  setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
+}
+
+void EventViews::AgendaView::Private::setChanges( EventView::Changes changes,
+                                                  const KCalCore::Incidence::Ptr &incidence )
+{
+  // We could just call EventView::setChanges(...) but we're going to do a little
+  // optimization. If only an all day item was changed, only all day agenda
+  // should be updated.
+
+  // all bits = 1
+  const int ones = ~0;
+
+  const int incidenceOperations = IncidencesAdded | IncidencesEdited | IncidencesDeleted;
+
+  // If changes has a flag turned on, other than incidence operations, than update both agendas
+  if ( ( ones ^ incidenceOperations ) & changes ) {
+    mUpdateAllDayAgenda = true;
+    mUpdateAgenda = true;
+  } else if ( incidence ) {
+    mUpdateAllDayAgenda = incidence->allDay();
+    mUpdateAgenda = !incidence->allDay();
+  }
+
+  q->EventView::setChanges( changes );
+}
+
+void AgendaView::Private::clearView()
+{
+  if ( mUpdateAllDayAgenda )
+    mAllDayAgenda->clear();
+
+  if ( mUpdateAgenda )
+    mAgenda->clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1511,7 +1554,9 @@ void AgendaView::fillAgenda()
   if ( changes() == NothingChanged ) {
     return;
   }
-  kDebug();
+  kDebug() << "changes = " << changes()
+           << "; mUpdateAgenda = " << d->mUpdateAgenda
+           << "; mUpdateAllDayAgenda = " << d->mUpdateAllDayAgenda;
 
   /* Remember the item Ids of the selected items. In case one of the
    * items was deleted and re-added, we want to reselect it. */
@@ -1519,7 +1564,7 @@ void AgendaView::fillAgenda()
   const Akonadi::Item::Id selectedAllDayAgendaId = d->mAllDayAgenda->lastSelectedItemId();
 
   enableAgendaUpdate( true );
-  clearView();
+  d->clearView();
 
   if ( changes().testFlag( DatesChanged ) ) {
     d->mAllDayAgenda->changeColumns( d->mSelectedDates.count() );
@@ -1547,7 +1592,12 @@ void AgendaView::fillAgenda()
     const bool wasSelected = aitem.id() == selectedAgendaId  ||
                              aitem.id() == selectedAllDayAgendaId;
 
-    displayIncidence( aitem, wasSelected );
+    Incidence::Ptr i = CalendarSupport::incidence( aitem );
+    if ( ( i->allDay() && d->mUpdateAllDayAgenda ) ||
+          ( !i->allDay() && d->mUpdateAgenda ) ) {
+      displayIncidence( aitem, wasSelected );
+    }
+
     if ( wasSelected ) {
       somethingReselected = true;
     }
@@ -1561,6 +1611,9 @@ void AgendaView::fillAgenda()
 
   // make invalid
   deleteSelectedDateTime();
+
+  d->mUpdateAgenda = false;
+  d->mUpdateAllDayAgenda = false;
 
   if ( !somethingReselected ) {
     emit incidenceSelected( Akonadi::Item(), QDate() );
@@ -1661,12 +1714,6 @@ void AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
     insertIncidence( aitem, t->toTimeSpec( timeSpec ).date(), createSelected );
   }
-}
-
-void AgendaView::clearView()
-{
-  d->mAllDayAgenda->clear();
-  d->mAgenda->clear();
 }
 
 void AgendaView::updateEventIndicatorTop( int newY )
@@ -2025,5 +2072,12 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration( con
   return 0;
 }
 
+void AgendaView::setChanges( EventView::Changes changes )
+{
+  d->setChanges( changes );
+}
+
+
 #include "agendaview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;
+

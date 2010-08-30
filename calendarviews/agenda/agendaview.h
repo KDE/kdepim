@@ -48,7 +48,6 @@ namespace Akonadi {
   class CollectionSelection;
 }
 
-
 namespace EventViews
 {
 
@@ -122,9 +121,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
-    /** Remove all events from view */
-    void clearView();
-
     /** start-datetime of selection */
     virtual QDateTime selectionStart() const;
 
@@ -144,7 +140,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual void setCalendar( CalendarSupport::Calendar *cal );
 
     /** Show only incidences from the given collection selection. */
-//    void setCollectionSelection( CollectionSelection* selection );
+    // void setCollectionSelection( CollectionSelection* selection );
     void setCollection( Akonadi::Collection::Id id );
     Akonadi::Collection::Id collection() const;
 
@@ -152,6 +148,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     /** First shown day */
     QDate startDate() const;
+
     /** Last shown day */
     QDate endDate() const;
 
@@ -198,6 +195,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void createDayLabels( bool force );
 
     void createTimeBarHeaders();
+
+    void setChanges( EventView::Changes );
 
   Q_SIGNALS:
     void showNewEventPopupSignal();
