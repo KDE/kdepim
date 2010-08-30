@@ -111,9 +111,9 @@ ActionMenuContainer {
     text : KDE.i18n( "Calendar" )
     ActionListItem { name : "akonadi_collection_sync" }
     FakeAction { name : "show_today" }
-    FakeAction { name : "day_layout" }
-    FakeAction { name : "week_layout" }
-    FakeAction { name : "month_layout" }
+    ScriptActionItem { name : "day_layout"; title : KDE.i18n( "Day View" ) }
+    ScriptActionItem { name : "week_layout"; title : KDE.i18n( "Week View" ) }
+    ScriptActionItem { name : "month_layout"; title : KDE.i18n( "Month View" ) }
   }
 
   ActionList {
@@ -130,9 +130,9 @@ ActionMenuContainer {
     text : KDE.i18n( "Calendars" )
     ActionListItem { name : "akonadi_collection_sync" }
     FakeAction { name : "show_today" }
-    FakeAction { name : "day_layout" }
-    FakeAction { name : "week_layout" }
-    FakeAction { name : "month_layout" }
+    ScriptActionItem { name : "day_layout"; title : KDE.i18n( "Day View" ) }
+    ScriptActionItem { name : "week_layout"; title : KDE.i18n( "Week View" ) }
+    ScriptActionItem { name : "month_layout"; title : KDE.i18n( "Month View" ) }
   }
 
   ActionList {

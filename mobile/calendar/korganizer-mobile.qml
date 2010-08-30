@@ -392,6 +392,27 @@ KPIM.MainView {
                 actionPanelNew.collapse();
                 application.saveFavorite();
               }
+            },
+            KPIM.ScriptAction {
+              name : "day_layout"
+              script: {
+                agenda.showRange( dateEdit.date, 0 /* "Day" */ );
+                actionPanelNew.collapse();
+              }
+            },
+            KPIM.ScriptAction {
+              name : "week_layout"
+              script: {
+                agenda.showRange( dateEdit.date, 1 /* "Week" */ );
+                actionPanelNew.collapse();
+              }
+            },
+            KPIM.ScriptAction {
+              name : "month_layout"
+              script: {
+                agenda.showRange( dateEdit.date, 2 /* "Month" */ );
+                actionPanelNew.collapse();
+              }
             }
           ]
 
