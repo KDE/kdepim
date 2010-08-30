@@ -23,8 +23,15 @@ import org.kde.pim.mobileui 4.5 as KPIM
 /** Akonadi Note List View
  */
 KPIM.ItemListView {
+  id: _top
+  property bool showDeleteButton : true
+  property bool showCheckBox
+  property variant checkModel
+
   delegate: [
     KPIM.ItemListViewDelegate {
+      showCheckBox : _top.showCheckBox
+      checkModel : _top.checkModel
       height : itemListView.height / 7
       summaryContent : [
         QML.Text {
@@ -79,6 +86,7 @@ KPIM.ItemListView {
           hidable : false
           showText : false
           opacity : 0.6
+          visible : showDeleteButton
           onTriggered : {
             application.setListSelectedRow(model.index);
           }

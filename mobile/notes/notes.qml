@@ -254,6 +254,14 @@ KPIM.MainView {
                 actionPanelNew.collapse();
                 application.saveFavorite();
               }
+            },
+            KPIM.ScriptAction {
+              name : "start_maintenance"
+              script : {
+                actionPanelNew.collapse();
+                mainWorkView.visible = false
+                bulkActionScreen.visible = true
+              }
             }
           ]
 
@@ -262,6 +270,50 @@ KPIM.MainView {
           }
         }
       ]
+    }
+  }
+
+  KPIM.MultipleSelectionScreen {
+    id : favoriteSelector
+    anchors.fill : parent
+    visible : false
+    backgroundImage : backgroundImage.source
+    onFinished : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.clearPersistedSelection("preFavSelection");
+      application.multipleSelectionFinished();
+    }
+    onCanceled : {
+      favoriteSelector.visible = false;
+      mainWorkView.visible = true;
+      application.restorePersistedSelection("preFavSelection");
+    }
+  }
+  KPIM.BulkActionScreen {
+    id : bulkActionScreen
+    anchors.top: parent.top
+    anchors.topMargin : 12
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right : parent.right
+    backgroundImage : backgroundImage.source
+
+    visible : false
+    actionListWidth : 1/3 * parent.width
+    multipleText : KDE.i18n("%1 note books", collectionView.numSelected)
+    selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
+    headerList : NotesListView {
+      showCheckBox : true
+      id: bulkActionHeaderList
+      model: itemModel
+      checkModel : _itemCheckModel
+      anchors.fill : parent
+      showDeleteButton: false
+    }
+    onBackClicked : {
+      bulkActionScreen.visible = false
+      mainWorkView.visible = true
     }
   }
 

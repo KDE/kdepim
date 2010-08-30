@@ -87,7 +87,7 @@ ActionMenuContainer {
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
-    FakeAction { name : "start_maintenance" }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
   ActionList {
@@ -103,7 +103,7 @@ ActionMenuContainer {
     text : KDE.i18n( "View" )
     ScriptActionItem { name : "add_as_favorite"; title : KDE.i18n( "Add as Favorite" ) }
     ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Back to folder selection" ) }
-    FakeAction { name : "start_maintenance" }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
   ActionList {
