@@ -484,13 +484,13 @@ KPIM.MainView {
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18n("%1 calendars", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-/*    headerList : HeaderView {
+    headerList : EventListView {
       showCheckBox : true
       id: bulkActionHeaderList
       model: itemModel
       checkModel : _itemCheckModel
       anchors.fill : parent
-    }*/
+    }
     onBackClicked : {
       bulkActionScreen.visible = false
       mainWorkView.visible = true

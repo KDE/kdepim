@@ -22,6 +22,7 @@
 #include "mainview.h"
 #include "calendarinterface.h"
 #include "calendaradaptor.h"
+#include "eventlistproxy.h"
 
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
@@ -58,7 +59,7 @@ QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
 QML_DECLARE_TYPE( EventViews::AgendaView )
 QML_DECLARE_TYPE( Qt::QmlDateEdit )
 
-MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
+MainView::MainView( QWidget* parent ) : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent )
 {
   m_calendar = 0;
 }

@@ -15,6 +15,7 @@ set(korganizer_mobile_SRCS
   agendaviewitem.cpp
   calendarinterface.cpp
   declarativewidgetwrapper.cpp
+  eventlistproxy.cpp
   qmldateedit.cpp
   mainview.cpp
   main.cpp
@@ -45,6 +46,7 @@ install(FILES
   korganizer-mobile.qml
   KorganizerActions.qml
   korganizer-mobile-background.png
+  EventListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )
