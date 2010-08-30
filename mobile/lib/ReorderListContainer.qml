@@ -35,30 +35,51 @@ Rectangle {
   property alias model : myList.model
   property alias delegate : myList.delegate
 
-  property alias upAction : upAction.name
-  property alias downAction : downAction.name
-  property alias deleteAction : deleteAction.name
-  property alias customActions : actionColumn.content
-
   signal triggered(string triggeredName)
 
   ListView {
     id : myList
-    anchors.fill : parent
+    anchors.top : _topLevel.top
+    anchors.bottom : _topLevel.bottom
+    anchors.left : _topLevel.left
+    anchors.right : actionColumn.left
     interactive: count * actionItemHeight > height
+
+    delegate : ReorderListDelegate {
+        height: _root.actionItemHeight
+        width: ListView.view.width;
+    }
   }
 
-  ActionMenuContainer {
+  Column {
     id : actionColumn
-    width : _topLevel.actionItemWidth
     anchors.top : parent.top
     anchors.bottom : parent.bottom
     anchors.right : parent.right
-    actionItemWidth : width
-    actionItemHeight : _topLevel.actionItemHeight
-    actionItemSpacing: _topLevel.actionItemSpacing
-    FakeAction { id : upAction }
-    FakeAction { id : downAction }
-    FakeAction { id : deleteAction }
+    width : 100
+    Image { source : "images/moveup.png"
+      MouseArea {
+        anchors.fill : parent
+        onClicked : {
+          favoritesList.moveUp(myList.currentIndex);
+        }
+      }
+    }
+    Image { source : "images/movedown.png"
+      MouseArea {
+        anchors.fill : parent
+        onClicked : {
+          favoritesList.moveDown(myList.currentIndex);
+        }
+      }
+    }
+    Image { source :  KDE.locate( "data", "mobileui/delete-button.png" );
+      MouseArea {
+        anchors.fill : parent
+        onClicked : {
+          favoritesList.removeItem(myList.currentIndex);
+        }
+      }
+    }
   }
 }

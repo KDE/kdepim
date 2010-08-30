@@ -37,17 +37,11 @@ QML.Item {
   property alias columnHeight : _listContent.height
   property alias depth : _listContent.bottomMargin
 
-  property alias upAction : _listContent.upAction
-  property alias downAction : _listContent.downAction
-  property alias deleteAction : _listContent.deleteAction
-  property alias customActions : _listContent.customActions
-
   property alias actionItemSpacing : _listContent.actionItemSpacing
   property alias actionItemHeight : _listContent.actionItemHeight
   property alias actionItemWidth : _listContent.actionItemWidth
 
   property alias model : _listContent.model
-  property alias delegate : _listContent.delegate
 
   property alias showChildren : _listContent.visible
   signal triggered(string triggeredName)

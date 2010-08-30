@@ -36,13 +36,4 @@ ReorderList {
     else
       height = actionItemHeight
   }
-
-  delegate : ReorderListDelegate {
-    height: _root.actionItemHeight
-    width: _root.totalWidth - _root.actionItemWidth
-  }
-
-  upAction : "fav_up"
-  downAction : "fav_down"
-  deleteAction : "fav_delete"
 }
