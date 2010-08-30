@@ -117,7 +117,6 @@ ActionMenuContainer {
     name : "note_viewer_edit_menu"
     category : "note_viewer"
     text : KDE.i18n( "Edit" )
-    FakeAction { name : "edit_note" }
     ActionListItem { name : "akonadi_item_copy_to_menu" }
     ActionListItem { name : "akonadi_item_move_to_menu" }
     ActionListItem { name : "akonadi_item_delete" }
