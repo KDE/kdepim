@@ -126,6 +126,6 @@ ActionMenuContainer {
     name : "application_menu"
     category : "standard"
     text : KDE.i18n( "KAddressBook" )
-    type : "contacts"
+    type : "contact"
   }
 }

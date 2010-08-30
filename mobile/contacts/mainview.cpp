@@ -57,6 +57,10 @@ void MainView::delayedInit()
   addMimeType( KABC::Addressee::mimeType() );
   addMimeType( KABC::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();
+
+  KAction *action = new KAction( i18n( "New Contact" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(newContact()) );
+  actionCollection()->addAction( QLatin1String( "add_new_contact" ), action );
 }
 
 void MainView::newContact()
