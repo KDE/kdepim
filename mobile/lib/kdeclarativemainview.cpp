@@ -138,13 +138,18 @@ void KDeclarativeMainView::delayedInit()
   context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
 
   if ( d->mListProxy ) {
+    // Remove this resetter after the Qt in master on Aug 26 is in mobile packages
+    // That is after rc1.
+    KResettingProxyModel *resetter = new KResettingProxyModel(this);
+    resetter->setSourceModel( d->mListProxy->sourceModel() );
+
+    d->mListProxy->setSourceModel( resetter );
+
+    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
+
     QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
     qmlCheckable->setSourceModel(d->mListProxy);
     qmlCheckable->setSelectionModel(d->mItemSelectionModel);
-
-    KResettingProxyModel *resetter = new KResettingProxyModel(this);
-    resetter->setSourceModel( qmlCheckable );
-    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( resetter ) ) );
 
     QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlSelectionModel ) ) );
