@@ -237,7 +237,17 @@ void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &inciden
 {
   Q_UNUSED( incidence );
 
-  setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
+  // No need to call setChanges(), that triggers a fillAgenda()
+  if ( CalendarSupport::incidence( incidence )->allDay() ) {
+    mAllDayAgenda->showIncidence( incidence, false );
+  } else {
+    mAgenda->showIncidence( incidence, false );
+  }
+
+  mAgenda->checkScrollBoundaries();
+  q->updateEventIndicators();
+
+  //setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
 }
 
 void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
@@ -1602,6 +1612,7 @@ void AgendaView::fillAgenda()
                              aitem.id() == selectedAllDayAgendaId;
 
     Incidence::Ptr i = CalendarSupport::incidence( aitem );
+    // No need to update both agendas
     if ( ( i->allDay() && d->mUpdateAllDayAgenda ) ||
           ( !i->allDay() && d->mUpdateAgenda ) ) {
       displayIncidence( aitem, wasSelected );

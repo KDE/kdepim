@@ -125,6 +125,8 @@ class Agenda : public QWidget
 
     void setStartTime( const QTime &startHour );
 
+    void showIncidence( const Akonadi::Item &item, bool hide = true );
+
     AgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
                              int YBottom, int itemPos, int itemCount, bool isSelected );
 
@@ -197,7 +199,7 @@ class Agenda : public QWidget
     void selectItem( const Akonadi::Item &item );
 
     bool removeAgendaItem( AgendaItem *item );
-    void showAgendaItem( AgendaItem *item );
+    void showAgendaItem( AgendaItem *item, bool hide = true );
 
   Q_SIGNALS:
     void newEventSignal();
