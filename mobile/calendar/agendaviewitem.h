@@ -40,6 +40,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
   Q_PROPERTY( QDate endDate READ endDate WRITE setEndDate )
   Q_PROPERTY( QObject* calendar READ calendar WRITE setCalendar )
   Q_PROPERTY( qint64 selectedItemId READ selectedItemId NOTIFY itemSelected )
+  Q_PROPERTY( int range READ range )
 
   public:
     enum Range {
@@ -65,6 +66,8 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     /** Show the appropriate range for given date. */
     Q_INVOKABLE void showRange( const QDate &date, /* Range */ int range ); // TODO: Figure out how to export enums to QML
 
+    int range() const { return m_currentRange; }
+
     qint64 selectedItemId() const;
 
   public slots:
@@ -81,6 +84,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
 
   private:
     AgendaView *m_view;
+    Range m_currentRange;
 };
 
 }

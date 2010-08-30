@@ -30,6 +30,7 @@ using namespace EventViews;
 AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
   , m_view( new AgendaView( false, 0 ) )
+  , m_currentRange( Week )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
   QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
@@ -94,7 +95,8 @@ void AgendaViewItem::showRange( const QDate &date, int range )
 {
   Q_ASSERT( range >= 0 && range <= 3 );
 
-  switch( Range( range ) ) {
+  m_currentRange = Range( range );
+  switch( m_currentRange ) {
   case Day:
     m_view->showDates( date, date );
     break;

@@ -29,13 +29,14 @@ namespace Qt {
 class QmlDateEdit : public DeclarativeWidgetWrapper<QDateEdit>
 {
   Q_OBJECT
-  Q_PROPERTY( QDate date READ date )
+  Q_PROPERTY( QDate date READ date WRITE setDate )
   Q_PROPERTY( QString displayFormat READ displayFormat WRITE setDisplayFormat )
 
 public:
   explicit QmlDateEdit( QDeclarativeItem *parent = 0 );
 
   QDate date() const;
+  void setDate( const QDate &date );
 
   QString displayFormat() const;
   void setDisplayFormat( const QString &format );

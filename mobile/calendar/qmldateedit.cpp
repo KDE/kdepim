@@ -31,6 +31,11 @@ QDate QmlDateEdit::date() const
   return m_widget->date();
 }
 
+void QmlDateEdit::setDate(const QDate& date)
+{
+  m_widget->setDate( date );
+}
+
 QString QmlDateEdit::displayFormat() const
 {
   return m_widget->displayFormat();

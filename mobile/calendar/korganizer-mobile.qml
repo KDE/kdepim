@@ -413,6 +413,14 @@ KPIM.MainView {
                 agenda.showRange( dateEdit.date, 2 /* "Month" */ );
                 actionPanelNew.collapse();
               }
+            },
+            KPIM.ScriptAction {
+              name : "show_today"
+              script : {
+                dateEdit.date = new Date;
+                agenda.showRange( dateEdit.date, agenda.range );
+                actionPanelNew.collapse();
+              }
             }
           ]
 
