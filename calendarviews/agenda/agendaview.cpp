@@ -216,34 +216,21 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
 void AgendaView::Private::calendarIncidenceAdded( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
-  const Changes changes = q->changes();
-  q->setChanges( changes | IncidencesAdded );
 
-  if ( changes == NothingChanged ) {
-    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
-  }
+  q->setChanges( q->changes() | IncidencesAdded );
 }
 
 void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
-  const Changes changes = q->changes();
-  q->setChanges( changes | IncidencesEdited );
 
-  if ( changes == NothingChanged ) {
-    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
-  }
+  q->setChanges( q->changes() | IncidencesEdited );
 }
 
 void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
-  const Changes changes = q->changes();
-  q->setChanges( changes | IncidencesDeleted );
-
-  if ( changes == NothingChanged ) {
-    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
-  }
+  q->setChanges( q->changes() | IncidencesDeleted );
 }
 
 ////////////////////////////////////////////////////////////////////////////

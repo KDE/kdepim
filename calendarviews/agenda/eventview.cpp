@@ -690,6 +690,10 @@ void EventView::setIdentifier( const QByteArray &identifier )
 
 void EventView::setChanges( Changes changes )
 {
+  if ( d->mChanges == NothingChanged ) {
+    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
+  }
+
   d->mChanges = changes;
 }
 
