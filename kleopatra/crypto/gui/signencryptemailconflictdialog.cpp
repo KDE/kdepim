@@ -391,14 +391,14 @@ static QString make_top_label_conflict_text( bool sign, bool enc ) {
         enc         ? i18n("Kleopatra cannot unambiguously determine matching certificates "
                            "for all recipients of the message.\n"
                            "Please select the correct certificates for each recipient:" ) :
-        /* else */    kleo_assert_fail( sign || enc ) ;
+        /* else */    (kleo_assert_fail( sign || enc ),QString()) ;
 }
 
 static QString make_top_label_quickmode_text( bool sign, bool enc ) {
     return
         enc    ? i18n("Please verify that correct certificates have been selected for each recipient:") :
         sign   ? i18n("Please verify that the correct certificate has been selected for the sender:") :
-        /*else*/ kleo_assert_fail( sign || enc ) ;
+        /*else*/ (kleo_assert_fail( sign || enc ),QString()) ;
 }
 
 class SignEncryptEMailConflictDialog::Private {
