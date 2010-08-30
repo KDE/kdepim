@@ -116,7 +116,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     explicit EventView( QWidget *parent = 0 );
 
     /**
-     * Destructor.  Views will do view-specific cleanups here.
+     * Destructor. Views will do view-specific cleanups here.
      */
     virtual ~EventView();
 

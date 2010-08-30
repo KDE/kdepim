@@ -78,7 +78,7 @@ class EventView::Private
         mPrefs( new Prefs() ),
         mKCalPrefs( new CalendarSupport::KCalPrefs() ),
         mChanger( 0 ),
-        mChanges( NothingChanged )
+        mChanges( DatesChanged )
     {
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );

@@ -1521,6 +1521,7 @@ void AgendaView::changeIncidenceDisplay( const Akonadi::Item &aitem, int mode )
 
 void AgendaView::fillAgenda()
 {
+  kDebug();
   if ( changes() == NothingChanged ) {
     return;
   }
