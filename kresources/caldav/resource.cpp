@@ -394,9 +394,8 @@ void ResourceCalDav::loadFinished() {
             loadError(TQString("[%1] ").arg(abs(loader->errorNumber())) + loader->errorString());
         }
     } else {
-        log("successful load");
+        log("successful event load");
         TQString data = loader->data();
-        TQString tasksData = loader->tasksData();
 
         if (!data.isNull() && !data.isEmpty()) {
             // TODO: I don't know why, but some schedules on http://caldav-test.ioda.net/ (I used it for testing)
@@ -417,6 +416,34 @@ void ResourceCalDav::loadFinished() {
                 emit resourceLoaded(this);
             }
         }
+    }
+
+    if (loader->tasksError()) {
+        if (loader->tasksErrorNumber() == -401) {
+            if (NULL != mPrefs) {
+//                 TQCString newpass;
+//                 if (KPasswordDialog::getPassword (newpass, TQString("<b>") + i18n("Remote authorization required") + TQString("</b><p>") + i18n("Please input the password for") + TQString(" ") + mPrefs->getusername(), NULL) != 1) {
+//                     log("load error: " + loader->tasksErrorString() );
+//                     loadError(TQString("[%1] ").arg(abs(loader->tasksErrorNumber())) + loader->tasksErrorString());
+//                 }
+//                 else {
+//                     // Set new password and try again
+//                     mPrefs->setPassword(TQString(newpass));
+//                     startLoading(mPrefs->getFullUrl(), mPrefs->getFullTasksUrl());
+//                 }
+            }
+            else {
+                log("load error: " + loader->tasksErrorString() );
+                loadError(TQString("[%1] ").arg(abs(loader->tasksErrorNumber())) + loader->tasksErrorString());
+            }
+        }
+        else {
+            log("load error: " + loader->tasksErrorString() );
+            loadError(TQString("[%1] ").arg(abs(loader->tasksErrorNumber())) + loader->tasksErrorString());
+        }
+    } else {
+        log("successful tasks load");
+        TQString tasksData = loader->tasksData();
 
         if (!tasksData.isNull() && !tasksData.isEmpty()) {
             // TODO: I don't know why, but some schedules on http://caldav-test.ioda.net/ (I used it for testing)

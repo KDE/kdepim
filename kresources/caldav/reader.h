@@ -81,8 +81,10 @@ public:
 protected:
 
     virtual int runJob(runtime_info* caldavRuntime);
+    virtual int runTasksJob(runtime_info* caldavRuntime);
 
     virtual void cleanJob();
+    virtual void cleanTasksJob();
 
 private:
 

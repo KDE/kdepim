@@ -62,6 +62,12 @@ void CalDavJob::setErrorString(const TQString& err, const long number) {
     mErrorNumber = number;
 }
 
+void CalDavJob::setTasksErrorString(const TQString& err, const long number) {
+    mTasksError = true;
+    mTasksErrorString = err;
+    mTasksErrorNumber = number;
+}
+
 void CalDavJob::processError(const caldav_error* err) {
     TQString error_string;
 
@@ -70,12 +76,28 @@ void CalDavJob::processError(const caldav_error* err) {
     if (-401 == code) { // unauthorized
         error_string = i18n("Unauthorized. Username or password incorrect.");
     } else if (-599 <= code && code <= -300) {
-        error_string = i18n("HTTP error %1. Maybe, URL is not a CalDAV resource.").arg(-code);
+        error_string = i18n("HTTP error %1. Please ensure that the URL is a valid CalDAV resource.").arg(-code);
     } else {
         error_string = err->str;
     }
 
     setErrorString(error_string, code);
+}
+
+void CalDavJob::processTasksError(const caldav_error* err) {
+    TQString error_string;
+
+    long code = err->code;
+
+    if (-401 == code) { // unauthorized
+        error_string = i18n("Unauthorized. Username or password incorrect.");
+    } else if (-599 <= code && code <= -300) {
+        error_string = i18n("HTTP error %1. Please ensure that the URL is a valid CalDAV resource.").arg(-code);
+    } else {
+        error_string = err->str;
+    }
+
+    setTasksErrorString(error_string, code);
 }
 
 
@@ -84,6 +106,7 @@ void CalDavJob::run() {
     cleanJob();
 
     int res = OK;
+    int tasksres = OK;
 
     runtime_info* caldav_runtime = caldav_get_runtime_info();
 
@@ -92,12 +115,20 @@ void CalDavJob::run() {
     enableCaldavDebug(caldav_runtime);
 #endif // KCALDAV_DEBUG
 
-    log("running job");
+    log("running event job");
     res = runJob(caldav_runtime);
 
     if (OK != res) {
-        log("job failed");
+        log("event job failed");
         processError(caldav_runtime->error);
+    }
+
+    log("running tasks job");
+    tasksres = runTasksJob(caldav_runtime);
+
+    if (OK != tasksres) {
+        log("tasks job failed");
+        processTasksError(caldav_runtime->error);
     }
 
     caldav_free_runtime_info(&caldav_runtime);

@@ -113,4 +113,13 @@ int CalDavWriter::runJob(runtime_info* RT) {
       return tasksres;
 }
 
+int CalDavWriter::runTasksJob(runtime_info* RT) {
+    // Stub function as there is no reason to split the writing jobs like the reading jobs
+    return OK;
+}
+
+void CalDavWriter::cleanTasksJob() {
+    // Stub function as there is no reason to split the writing jobs like the reading jobs
+}
+
 // EOF ========================================================================

@@ -103,24 +103,45 @@ public:
     }
 
     /**
-     * @return true if downloading process failed.
+     * @return true if events downloading process failed.
      */
     virtual bool error() const {
         return mError;
     }
 
     /**
-     * @return an error string.
+     * @return true if tasks downloading process failed.
+     */
+    virtual bool tasksError() const {
+        return mTasksError;
+    }
+
+    /**
+     * @return an event error string.
      */
     virtual TQString errorString() const {
         return mErrorString;
     }
 
     /**
-     * @return an error number.
+     * @return a task error string.
+     */
+    virtual TQString tasksErrorString() const {
+        return mTasksErrorString;
+    }
+
+    /**
+     * @return an event error number.
      */
     virtual long errorNumber() const {
         return mErrorNumber;
+    }
+
+    /**
+     * @return a task error number.
+     */
+    virtual long tasksErrorNumber() const {
+        return mTasksErrorNumber;
     }
 
 protected:
@@ -128,7 +149,7 @@ protected:
     virtual void run();
 
     /**
-     * Main run method for jobs. Jobs should not override run() method.
+     * Main run method for event jobs. Jobs should not override run() method.
      * Instead of this they should override this one.
      * @param caldavRuntime specific libcaldav runtime information. This pointer should not be saved for the usage
      * outside of runJob.
@@ -137,34 +158,62 @@ protected:
     virtual int runJob(runtime_info* caldavRuntime) = 0;
 
     /**
+     * Main run method for task jobs. Jobs should not override run() method.
+     * Instead of this they should override this one.
+     * @param caldavRuntime specific libcaldav runtime information. This pointer should not be saved for the usage
+     * outside of runJob.
+     * @return libcaldav response code (see CALDAV_RESPONSE)
+     */
+    virtual int runTasksJob(runtime_info* caldavRuntime) = 0;
+
+    /**
      * Some cleaning. Jobs may (and usually should) override this method.
      */
     virtual void cleanJob() {
         mError = false;
         mErrorString = "";
         mErrorNumber = 0;
+        mTasksError = false;
+        mTasksErrorString = "";
+        mTasksErrorNumber = 0;
     }
 
     /**
-     * Sets an error string to @p err. Also sets an error flag.
+     * Sets an event error string to @p err. Also sets an error flag.
      */
     void setErrorString(const TQString& str, const long number);
 
     /**
-     * Process an error.
+     * Sets a task error string to @p err. Also sets an error flag.
+     */
+    void setTasksErrorString(const TQString& str, const long number);
+
+    /**
+     * Process an event error.
      * Subclasses can overwrite this method, if some special error message handling
      * should be done. Call setErrorString() to set the error after processing is done.
      * @param err error structure.
      */
     virtual void processError(const caldav_error* err);
 
+    /**
+     * Process a task error.
+     * Subclasses can overwrite this method, if some special error message handling
+     * should be done. Call setErrorString() to set the error after processing is done.
+     * @param err error structure.
+     */
+    virtual void processTasksError(const caldav_error* err);
+
 private:
 
     TQString mUrl;
     TQString mTasksUrl;
     bool mError;
+    bool mTasksError;
     TQString mErrorString;
+    TQString mTasksErrorString;
     long mErrorNumber;
+    long mTasksErrorNumber;
     TQObject *mParent;
     int mType;
 
