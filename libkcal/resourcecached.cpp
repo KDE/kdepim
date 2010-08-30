@@ -321,6 +321,21 @@ void ResourceCached::clearCache()
   mCalendar.close();
 }
 
+void ResourceCached::clearEventsCache()
+{
+  mCalendar.closeEvents();
+}
+
+void ResourceCached::clearTodosCache()
+{
+  mCalendar.closeTodos();
+}
+
+void ResourceCached::clearJournalsCache()
+{
+  mCalendar.closeJournals();
+}
+
 void ResourceCached::cleanUpEventCache( const Event::List &eventList )
 {
   CalendarLocal calendar ( TQString::fromLatin1( "UTC" ) );

@@ -72,6 +72,21 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
     void close() {}
 
     /**
+       Clears out the current Calendar, freeing all used memory etc.
+    */
+    void closeEvents() {}
+
+    /**
+       Clears out the current Calendar, freeing all used memory etc.
+    */
+    void closeTodos() {}
+
+    /**
+       Clears out the current Calendar, freeing all used memory etc.
+    */
+    void closeJournals() {}
+
+    /**
        Sync changes in memory to persistant storage.
     */
     void save() {}

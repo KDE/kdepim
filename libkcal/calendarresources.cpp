@@ -204,6 +204,51 @@ void CalendarResources::close()
   }
 }
 
+void CalendarResources::closeEvents()
+{
+  kdDebug(5800) << "CalendarResources::close" << endl;
+
+  if ( mOpen ) {
+    CalendarResourceManager::ActiveIterator it;
+    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+      (*it)->close();
+    }
+
+    setModified( false );
+    mOpen = false;
+  }
+}
+
+void CalendarResources::closeTodos()
+{
+  kdDebug(5800) << "CalendarResources::close" << endl;
+
+  if ( mOpen ) {
+    CalendarResourceManager::ActiveIterator it;
+    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+      (*it)->close();
+    }
+
+    setModified( false );
+    mOpen = false;
+  }
+}
+
+void CalendarResources::closeJournals()
+{
+  kdDebug(5800) << "CalendarResources::close" << endl;
+
+  if ( mOpen ) {
+    CalendarResourceManager::ActiveIterator it;
+    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+      (*it)->close();
+    }
+
+    setModified( false );
+    mOpen = false;
+  }
+}
+
 void CalendarResources::save()
 {
   kdDebug(5800) << "CalendarResources::save()" << endl;

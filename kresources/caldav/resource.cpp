@@ -501,7 +501,7 @@ bool ResourceCalDav::parseData(const TQString& data) {
     }
 
     log("clearing cache");
-    clearCache();
+    clearEventsCache();
 
     disableChangeNotification();
 
@@ -556,6 +556,9 @@ bool ResourceCalDav::parseTasksData(const TQString& data) {
         loadError(i18n("Parsing calendar data failed."));
         return false;
     }
+
+    log("clearing cache");
+    clearTodosCache();
 
     disableChangeNotification();
 

@@ -78,6 +78,21 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     */
     void close();
 
+    /**
+      Clears out the current calendar, freeing all used memory etc. etc.
+    */
+    void closeEvents();
+
+    /**
+      Clears out the current calendar, freeing all used memory etc. etc.
+    */
+    void closeTodos();
+
+    /**
+      Clears out the current calendar, freeing all used memory etc. etc.
+    */
+    void closeJournals();
+
     void save() {}
 
     /**

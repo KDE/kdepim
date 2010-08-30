@@ -270,6 +270,21 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     */
     void clearCache();
 
+    /**
+      Clear events cache.
+    */
+    void clearEventsCache();
+
+    /**
+      Clear todos cache.
+    */
+    void clearTodosCache();
+
+    /**
+      Clear journals cache.
+    */
+    void clearJournalsCache();
+
     void cleanUpEventCache( const KCal::Event::List &eventList );
     void cleanUpTodoCache( const KCal::Todo::List &todoList );
 

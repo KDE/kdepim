@@ -188,6 +188,21 @@ class LIBKCAL_EXPORT CalendarResources :
     void close();
 
     /**
+       Clear out the current Calendar, freeing all used memory etc.
+    */
+    void closeEvents();
+
+    /**
+       Clear out the current Calendar, freeing all used memory etc.
+    */
+    void closeTodos();
+
+    /**
+       Clear out the current Calendar, freeing all used memory etc.
+    */
+    void closeJournals();
+
+    /**
        Save this Calendar.
        If the save is successfull, the Ticket is deleted.  Otherwise, the
        caller must release the Ticket with releaseSaveTicket() to abandon

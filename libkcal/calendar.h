@@ -285,6 +285,21 @@ class LIBKCAL_EXPORT Calendar : public TQObject, public CustomProperties,
     virtual void close() = 0;
 
     /**
+       Clears out the current Calendar, freeing all used memory etc.
+    */
+    virtual void closeEvents() = 0;
+
+    /**
+       Clears out the current Calendar, freeing all used memory etc.
+    */
+    virtual void closeTodos() = 0;
+
+    /**
+       Clears out the current Calendar, freeing all used memory etc.
+    */
+    virtual void closeJournals() = 0;
+
+    /**
        Sync changes in memory to persistant storage.
     */
     virtual void save() = 0;

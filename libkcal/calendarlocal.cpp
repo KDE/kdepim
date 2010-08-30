@@ -104,6 +104,45 @@ void CalendarLocal::close()
   setObserversEnabled( true );
 }
 
+void CalendarLocal::closeEvents()
+{
+  setObserversEnabled( false );
+  mFileName = TQString::null;
+
+  deleteAllEvents();
+
+  mDeletedIncidences.clear();
+  setModified( false );
+
+  setObserversEnabled( true );
+}
+
+void CalendarLocal::closeTodos()
+{
+  setObserversEnabled( false );
+  mFileName = TQString::null;
+
+  deleteAllTodos();
+
+  mDeletedIncidences.clear();
+  setModified( false );
+
+  setObserversEnabled( true );
+}
+
+void CalendarLocal::closeJournals()
+{
+  setObserversEnabled( false );
+  mFileName = TQString::null;
+
+  deleteAllJournals();
+
+  mDeletedIncidences.clear();
+  setModified( false );
+
+  setObserversEnabled( true );
+}
+
 
 bool CalendarLocal::addEvent( Event *event )
 {
