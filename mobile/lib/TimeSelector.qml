@@ -1,0 +1,125 @@
+/*
+    Copyright (C) 2010 Anselmo Lacerda Silveira de Melo <anselmolsm@gmail.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+import Qt 4.7
+import ClockHelper 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
+
+Item {
+    id: timeSelector
+    height: 400
+    width: 600
+
+    KPIM.Clock {
+        id: clock
+        anchors {
+            left: parent.left
+            top: parent.top
+            bottom: parent.bottom
+
+            topMargin: 10
+            bottomMargin: 10
+            leftMargin: 20
+        }
+
+        seconds: seconds.currentIndex*6
+        minutes: minutes.currentIndex*6
+        hours: hours.currentIndex*30
+    }
+
+    KPIM.VerticalFadeSelector {
+        id: seconds
+        height: 90
+        width: 150
+        model: 60
+
+        anchors {
+            right: parent.right
+            topMargin: 120
+            rightMargin: 40
+        }
+    }
+    Text {
+        id: secondsLabel
+        text: "seconds"
+        font.pointSize: 15
+
+        anchors {
+            top: seconds.bottom
+            right: parent.right
+            topMargin: -20
+            rightMargin: 40
+        }
+    }
+
+    KPIM.VerticalFadeSelector {
+        id: minutes
+        height: 90
+        width: 150
+        model: 60
+        currentIndex: 0
+
+        anchors {
+            top: secondsLabel.bottom
+            right: parent.right
+            topMargin: -10
+            rightMargin: 40
+        }
+    }
+    Text {
+        id: minutesLabel
+        text: "minutes"
+        font.pointSize: 15
+
+        anchors {
+            top: minutes.bottom
+            right: parent.right
+            topMargin: -20
+            rightMargin: 40
+        }
+    }
+
+    KPIM.VerticalFadeSelector {
+        id: hours
+        height: 90
+        width: 150
+        model: 12
+        currentIndex: 0
+
+        anchors {
+            top: minutesLabel.bottom
+            right: parent.right
+            topMargin: -10
+            rightMargin: 40
+        }
+
+    }
+
+    Text {
+        text: "hours"
+        font.pointSize: 15
+
+        anchors {
+            top: hours.bottom
+            right: parent.right
+            topMargin: -20
+            rightMargin: 40
+        }
+    }
+}

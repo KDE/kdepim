@@ -12,6 +12,7 @@ AttachmentList 4.5 AttachmentList.qml
 CompletionSlider 4.5 CompletionSlider.qml
 VerticalFadeSelector 4.5 VerticalFadeSelector.qml
 Clock 4.5 Clock.qml
+TimeSelector 4.5 TimeSelector.qml
 Calendar 4.5 Calendar.qml
 ItemListView 4.5 ItemListView.qml
 ItemListViewDelegate 4.5 ItemListViewDelegate.qml
