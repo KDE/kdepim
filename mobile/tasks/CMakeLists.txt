@@ -35,6 +35,7 @@ install(FILES
   tasks.qml
   tasks-mobile-background.png
   TaskActions.qml
+  TaskListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )
 kde4_install_icons( ${ICON_INSTALL_DIR} )

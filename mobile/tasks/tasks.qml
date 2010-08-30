@@ -228,60 +228,8 @@ KPIM.MainView {
       color : "#00000000"
       opacity : itemList.count > 0 ? 1 : 0
 
-      KPIM.ItemListView {
+      TaskListView {
         id: itemList
-        delegate: [
-          KPIM.ItemListViewDelegate {
-            id : listDelegate
-            height : itemListView.height / 7
-            summaryContent: [
-              QML.Text {
-                id : summaryLabel
-                anchors.top : parent.top
-                anchors.topMargin : 1
-                anchors.left : parent.left
-                anchors.leftMargin : 10
-                anchors.right: parent.right
-                anchors.rightMargin: completionSlider.width
-                text: KDE.i18n( "Task: %1", model.summary )
-                color : "#0C55BB"
-                font.pixelSize: 16
-                elide: "ElideRight"
-              },
-              QML.Text {
-                anchors.top : summaryLabel.bottom
-                anchors.topMargin : 1
-                anchors.left : parent.left
-                anchors.leftMargin : 10
-                anchors.right: parent.right
-                anchors.rightMargin: completionSlider.width
-                height : 30;
-                text: KDE.i18n( "Details: %1", model.description )
-                color: "#3B3B3B"
-                font.pointSize: 14
-                elide: "ElideRight"
-              },
-              KPIM.CompletionSlider {
-                id: completionSlider
-                anchors.top: parent.top
-                anchors.right: parent.right
-                percentComplete : model.percentComplete
-                onPercentCompleteChanged : {
-                  application.setPercentComplete(model.index, percentComplete);
-                }
-              },
-              QML.Image {
-                id : importantFlagImage
-                anchors.verticalCenter : parent.verticalCenter;
-                anchors.left : parent.left
-                anchors.leftMargin : 15
-                source : KDE.iconPath("emblem-important.png", parent.height + 16)
-                opacity : model.is_important ? 0.25 : 0
-              }
-            ]
-          }
-        ]
-
         model: itemModel
         anchors.fill: parent
         onItemSelected: {
@@ -398,13 +346,13 @@ KPIM.MainView {
     actionListWidth : 1/3 * parent.width
     multipleText : KDE.i18n("%1 folders", collectionView.numSelected)
     selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-/*    headerList : HeaderView {
+    headerList : TaskListView {
       showCheckBox : true
       id: bulkActionHeaderList
       model: itemModel
       checkModel : _itemCheckModel
       anchors.fill : parent
-    }*/
+    }
     onBackClicked : {
       bulkActionScreen.visible = false
       mainWorkView.visible = true
