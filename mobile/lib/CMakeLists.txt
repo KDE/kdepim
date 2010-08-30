@@ -10,6 +10,7 @@ set(mobileui_SRCS
     breadcrumbnavigation.cpp
     breadcrumbnavigationcontext.cpp
     akonadibreadcrumbnavigationfactory.cpp
+    favoriteslistmodel.cpp
     kresettingproxymodel.cpp
     declarativeakonadiitem.cpp
     kdeclarativeapplication.cpp
