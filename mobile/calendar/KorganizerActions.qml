@@ -86,7 +86,7 @@ ActionMenuContainer {
     category : "single_folder"
     name : "single_folder_view_menu"
     text : KDE.i18n( "View" )
-    FakeAction { name : "start_maintenance" }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
   ActionList {
@@ -102,7 +102,7 @@ ActionMenuContainer {
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
     FakeAction { name : "change_folder_selection" }
-    FakeAction { name : "start_maintenance" }
+    ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
   ActionList {
