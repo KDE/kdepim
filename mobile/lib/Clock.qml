@@ -18,66 +18,94 @@
 */
 
 import Qt 4.7
+import ClockHelper 4.5
 
 Image {
     id: clock
+
+    property alias seconds: clockHelper.seconds
+    property alias minutes: clockHelper.minutes
+    property alias hours: clockHelper.hours
+
+    // selects a clock hand to move using mouse/finger
+    property alias secondsHandSelected : clockHelper.secondsHandSelected
+    property alias minutesHandSelected : clockHelper.minutesHandSelected
+    property alias hoursHandSelected : clockHelper.hoursHandSelected
+
     source: "images/clock-background.png"
     smooth: true
 
     Image {
-        id: seconds
+        id: secondsHand
         source: "images/clock-seconds.png"
         smooth: true
 
-        x: clock.width/2 - width/2
-        y: clock.height/2 - seconds.height*0.95
+        x: clock.width/2 - secondsHand.width/2
+        y: clock.height/2 - secondsHand.height*0.95
         height: clock.height/(372/173)
         width: clock.width/(370/3)
 
         transform: Rotation {
-            origin.x: seconds.width/2
-            origin.y: seconds.height*0.95
+            origin.x: secondsHand.width/2
+            origin.y: secondsHand.height*0.95
+            angle: clockHelper.seconds
         }
     }
 
     Image {
-        id: minutes
+        id: minutesHand
         source: "images/clock-minutes.png"
         smooth: true
 
-        x: clock.width/2 - width/2
-        y: clock.height/2 - minutes.height*0.95
+        x: clock.width/2 - minutesHand.width/2
+        y: clock.height/2 - minutesHand.height*0.95
         height: clock.height/(372/148)
         width: clock.width/(370/12)
 
         transform: Rotation {
-            origin.x: minutes.width/2
-            origin.y: minutes.height*0.95
+            origin.x: minutesHand.width/2
+            origin.y: minutesHand.height*0.95
+            angle: clockHelper.minutes
         }
     }
 
     Image {
-        id: hours
+        id: hoursHand
         source: "images/clock-hours.png"
         smooth: true
 
-        x: clock.width/2 - hours.width/2
-        y: clock.height/2 - hours.height*0.95
+        x: clock.width/2 - hoursHand.width/2
+        y: clock.height/2 - hoursHand.height*0.95
         height: clock.height/(372/113)
         width: clock.width/(370/12)
 
         transform: Rotation {
-            origin.x: hours.width/2
-            origin.y: hours.height*0.95
+            origin.x: hoursHand.width/2
+            origin.y: hoursHand.height*0.95
+            angle: clockHelper.hours
         }
     }
 
     Image {
         id: center
         source: "images/clock-center.png"
+        smooth: true
 
         anchors.centerIn: clock
         height: clock.height/(372/38)
         width: clock.width/(370/38)
     }
+
+    MouseArea {
+        id: area;
+        anchors.fill: parent;
+        onPositionChanged: clockHelper.setXY(mouseX, mouseY);
+    }
+
+    ClockHelper {
+        id: clockHelper;
+
+        originX: area.width / 2;
+        originY: area.height / 2;
+     }
 }
