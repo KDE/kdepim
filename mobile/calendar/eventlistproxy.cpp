@@ -42,7 +42,10 @@ QVariant EventListProxy::data(const QModelIndex& index, int role) const
       case BeginRole:
         return KGlobal::locale()->formatDateTime( event->dtStart(), KLocale::FancyShortDate );
       case DurationRole:
-        return KGlobal::locale()->formatDuration( event->duration() );
+        if ( event->duration() )
+          return KGlobal::locale()->formatDuration( event->duration().asSeconds() * 1000 );
+        else
+          return KGlobal::locale()->formatDuration( event->dtStart().secsTo( event->dtEnd() ) * 1000 );
     }
   }
   return QSortFilterProxyModel::data(index, role);
