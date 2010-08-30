@@ -76,7 +76,7 @@ void KNMainWindow::slotConfToolbar()
   saveMainWindowSettings(knGlobals.config()->group( "mainWindow_options") );
   KEditToolBar dlg( actionCollection() );
   dlg.setResourceFile( "knodeui.rc" );
-  connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
+  connect(&dlg,SIGNAL( newToolBarConfig() ), this, SLOT( slotNewToolbarConfig() ));
   dlg.exec();
 }
 
