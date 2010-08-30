@@ -163,6 +163,7 @@ void KDeclarativeMainView::delayedInit()
 
   // A list of available favorites
   QAbstractItemModel *favsList = d->getFavoritesListModel();
+  favsList->setParent(this);
 
   context->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
 

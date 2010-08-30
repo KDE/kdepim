@@ -24,9 +24,12 @@
 
 #include <akonadi/etmviewstatesaver.h>
 
+#include "favoriteslistmodel.h"
+
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
   : mChangeRecorder( 0 )
   , mCollectionFilter( 0 )
+  , mFavsListModel( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()
@@ -58,12 +61,8 @@ QStringList KDeclarativeMainViewPrivate::getFavoritesList()
 
 QAbstractItemModel* KDeclarativeMainViewPrivate::getFavoritesListModel()
 {
-  mFavsListModel = new QStringListModel( getFavoritesList(), this );
+  if (!mFavsListModel)
+    mFavsListModel = new FavoritesListModel( KGlobal::config() );
 
-  QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( this );
-  sortModel->setSourceModel( mFavsListModel );
-  sortModel->setDynamicSortFilter( true );
-  sortModel->sort(0, Qt::AscendingOrder);
-
-  return sortModel;
+  return mFavsListModel;
 }
