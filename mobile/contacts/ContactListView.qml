@@ -22,6 +22,7 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.ItemListView {
+  id: _top
   property bool showCheckBox
   property variant checkModel
 
