@@ -26,6 +26,8 @@ KPIM.ItemListView {
   id: itemList
   property bool showCheckBox
   property variant checkModel
+  property bool showCompletionSlider: true
+
   delegate: [
     KPIM.ItemListViewDelegate {
       id : listDelegate
@@ -61,6 +63,7 @@ KPIM.ItemListView {
         },
         KPIM.CompletionSlider {
           id: completionSlider
+          visible: showCompletionSlider
           anchors.top: parent.top
           anchors.right: parent.right
           percentComplete : model.percentComplete

@@ -352,6 +352,7 @@ KPIM.MainView {
       model: itemModel
       checkModel : _itemCheckModel
       anchors.fill : parent
+      showCompletionSlider: false
     }
     onBackClicked : {
       bulkActionScreen.visible = false
