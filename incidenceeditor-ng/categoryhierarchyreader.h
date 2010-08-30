@@ -23,7 +23,7 @@
 
 #include <QVariant>
 
-#include "incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 class QComboBox;
 class QStringList;
@@ -34,7 +34,7 @@ class QTreeWidgetItem;
 namespace IncidenceEditors
 {
 
-class INCIDENCEEDITORS_EXPORT CategoryHierarchyReader
+class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReader
 {
   public:
     void read( QStringList categories );
@@ -48,7 +48,7 @@ class INCIDENCEEDITORS_EXPORT CategoryHierarchyReader
     virtual int depth() const = 0;
 };
 
-class INCIDENCEEDITORS_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
+class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
 {
   public:
     CategoryHierarchyReaderQComboBox( QComboBox *box )
@@ -66,7 +66,7 @@ class INCIDENCEEDITORS_EXPORT CategoryHierarchyReaderQComboBox : public Category
 };
 
 #ifndef QT_NO_TREEWIDGET
-class INCIDENCEEDITORS_EXPORT CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
+class INCIDENCEEDITORS_NG_EXPORT CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
 {
   public:
     CategoryHierarchyReaderQTreeWidget( QTreeWidget *tree )

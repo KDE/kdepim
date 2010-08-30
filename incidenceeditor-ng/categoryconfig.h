@@ -22,7 +22,7 @@
 #ifndef CATEGORYCONFIG_H
 #define CATEGORYCONFIG_H
 
-#include "incidenceeditors_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include <KConfigSkeleton>
 
@@ -35,7 +35,7 @@ class KConfig;
 namespace IncidenceEditors
 {
 
-class INCIDENCEEDITORS_EXPORT CategoryConfig : public QObject
+class INCIDENCEEDITORS_NG_EXPORT CategoryConfig : public QObject
 {
   Q_OBJECT
 public:
