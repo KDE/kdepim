@@ -109,7 +109,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
      */
     void showConfigurationDialog( QWidget *parent );
 
-    void setUpdateNeeded( bool needed );
+    void setChanges( Changes changes );
 
   public slots:
     void showDates( const QDate &start, const QDate &end );

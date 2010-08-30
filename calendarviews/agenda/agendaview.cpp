@@ -216,8 +216,10 @@ class AgendaView::Private : public CalendarSupport::Calendar::CalendarObserver
 void AgendaView::Private::calendarIncidenceAdded( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
-  if ( !q->updateNeeded() ) {
-    q->setUpdateNeeded( true );
+  const Changes changes = q->changes();
+  q->setChanges( changes | IncidencesAdded );
+
+  if ( changes == NothingChanged ) {
     QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
   }
 }
@@ -225,8 +227,10 @@ void AgendaView::Private::calendarIncidenceAdded( const Akonadi::Item &incidence
 void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
-  if ( !q->updateNeeded() ) {
-    q->setUpdateNeeded( true );
+  const Changes changes = q->changes();
+  q->setChanges( changes | IncidencesEdited );
+
+  if ( changes == NothingChanged ) {
     QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
   }
 }
@@ -234,8 +238,10 @@ void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &inciden
 void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
 {
   Q_UNUSED( incidence );
-  if ( !q->updateNeeded() ) {
-    q->setUpdateNeeded( true );
+  const Changes changes = q->changes();
+  q->setChanges( changes | IncidencesDeleted );
+
+  if ( changes == NothingChanged ) {
     QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
   }
 }
@@ -1211,7 +1217,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
   if ( !result ) {
-    setUpdateNeeded( true );
+    setChanges( changes() | IncidencesEdited );
     QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
     return;
   }
@@ -1276,7 +1282,7 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
   }
 
   // and update the view
-  setUpdateNeeded( true );
+  setChanges( changes() | DatesChanged );
   fillAgenda();
 }
 
@@ -1513,11 +1519,11 @@ void AgendaView::changeIncidenceDisplay( const Akonadi::Item &aitem, int mode )
 
 void AgendaView::fillAgenda()
 {
-  if ( !updateNeeded() ) {
+  if ( changes() == NothingChanged ) {
     return;
   }
 
-  setUpdateNeeded( false );
+  setChanges( NothingChanged );
 
   /* Remember the item Ids of the selected items. In case one of the
    * items was deleted and re-added, we want to reselect it. */

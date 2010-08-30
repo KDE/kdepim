@@ -78,7 +78,7 @@ class EventView::Private
         mPrefs( new Prefs() ),
         mKCalPrefs( new CalendarSupport::KCalPrefs() ),
         mChanger( 0 ),
-        mPendingChanges( true )
+        mChanges( NothingChanged )
     {
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
@@ -129,7 +129,7 @@ class EventView::Private
     KCalPrefsPtr mKCalPrefs;
 
     CalendarSupport::IncidenceChanger *mChanger;
-    bool mPendingChanges;
+    Changes mChanges;
 };
 
 CalendarSupport::CollectionSelection* EventView::Private::sGlobalCollectionSelection = 0;
@@ -688,14 +688,14 @@ void EventView::setIdentifier( const QByteArray &identifier )
   d->identifier = identifier;
 }
 
-void EventView::setUpdateNeeded( bool needed )
+void EventView::setChanges( Changes changes )
 {
-  d->mPendingChanges = needed;
+  d->mChanges = changes;
 }
 
-bool EventView::updateNeeded() const
+EventView::Changes EventView::changes() const
 {
-  return d->mPendingChanges;
+  return d->mChanges;
 }
 
 #include "eventview.moc"

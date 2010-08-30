@@ -532,11 +532,11 @@ void MultiAgendaView::showEvent( QShowEvent *event )
   }
 }
 
-void MultiAgendaView::setUpdateNeeded( bool needed )
+void MultiAgendaView::setChanges( Changes changes )
 {
-  EventView::setUpdateNeeded( needed );
+  EventView::setChanges( changes );
   foreach ( AgendaView *agenda, mAgendaViews ) {
-    agenda->setUpdateNeeded( needed );
+    agenda->setChanges( changes );
   }
 }
 

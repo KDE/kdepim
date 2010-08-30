@@ -93,6 +93,16 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 {
   Q_OBJECT
   public:
+
+    enum Change {
+      NothingChanged = 0,
+      IncidencesAdded = 1,
+      IncidencesEdited = 2,
+      IncidencesDeleted = 4,
+      DatesChanged = 8
+    };
+    Q_DECLARE_FLAGS(Changes, Change)
+
     /**
      * Constructs a view.
      * @param cal is a pointer to the calendar object from which events
@@ -244,7 +254,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
        @param needed if the update is needed or not.
     */
-    virtual void setUpdateNeeded( bool needed );
+    virtual void setChanges( Changes changes );
 
   public Q_SLOTS:
 
@@ -427,6 +437,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
   protected:
+
     CalendarSupport::IncidenceChanger *changer() const;
 
    /**
@@ -463,7 +474,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     /**
        Returns if there are pending changes and a redraw is needed.
     */
-    bool updateNeeded() const;
+    Changes changes() const;
 
   private:
     /*
