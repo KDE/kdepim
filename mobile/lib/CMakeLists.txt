@@ -75,6 +75,7 @@ install(FILES
   WindowBar.qml
   VerticalFadeSelector.qml
   Clock.qml
+  Calendar.qml
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
