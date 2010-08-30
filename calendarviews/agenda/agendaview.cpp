@@ -1508,12 +1508,10 @@ void AgendaView::changeIncidenceDisplay( const Akonadi::Item &aitem, int mode )
 
 void AgendaView::fillAgenda()
 {
-  kDebug();
   if ( changes() == NothingChanged ) {
     return;
   }
-
-  setChanges( NothingChanged );
+  kDebug();
 
   /* Remember the item Ids of the selected items. In case one of the
    * items was deleted and re-added, we want to reselect it. */
@@ -1523,18 +1521,22 @@ void AgendaView::fillAgenda()
   enableAgendaUpdate( true );
   clearView();
 
-  d->mAllDayAgenda->changeColumns( d->mSelectedDates.count() );
-  d->mAgenda->changeColumns( d->mSelectedDates.count() );
-  d->mEventIndicatorTop->changeColumns( d->mSelectedDates.count() );
-  d->mEventIndicatorBottom->changeColumns( d->mSelectedDates.count() );
+  if ( changes().testFlag( DatesChanged ) ) {
+    d->mAllDayAgenda->changeColumns( d->mSelectedDates.count() );
+    d->mAgenda->changeColumns( d->mSelectedDates.count() );
+    d->mEventIndicatorTop->changeColumns( d->mSelectedDates.count() );
+    d->mEventIndicatorBottom->changeColumns( d->mSelectedDates.count() );
 
-  createDayLabels( false );
-  setHolidayMasks();
+    createDayLabels( false );
+    setHolidayMasks();
 
-  d->mMinY.resize( d->mSelectedDates.count() );
-  d->mMaxY.resize( d->mSelectedDates.count() );
+    d->mMinY.resize( d->mSelectedDates.count() );
+    d->mMaxY.resize( d->mSelectedDates.count() );
 
-  d->mAgenda->setDateList( d->mSelectedDates );
+    d->mAgenda->setDateList( d->mSelectedDates );
+  }
+
+  setChanges( NothingChanged );
 
   bool somethingReselected = false;
   const Akonadi::Item::List incidences = calendar() ?
