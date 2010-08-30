@@ -446,4 +446,9 @@ KPIM.MainView {
     target: contactGroupView
     onContactGroupRemoved : { goBackToListing(); }
   }
+
+  KPIM.AboutDialog {
+    id : aboutDialog
+    source: backgroundImage.source
+  }
 }

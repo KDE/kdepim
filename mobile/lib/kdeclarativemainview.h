@@ -43,6 +43,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
   Q_OBJECT
   Q_PROPERTY(int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged)
   Q_PROPERTY(bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged)
+  Q_PROPERTY(QString version READ version CONSTANT)
 
 protected:
   /**
@@ -103,6 +104,8 @@ public:
   QStringList mimeTypes() const;
 
   int numSelectedAccounts();
+
+  QString version() const;
 
 public slots:
   void setSelectedAccount( int row );

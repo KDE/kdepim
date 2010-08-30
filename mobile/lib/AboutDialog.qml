@@ -21,13 +21,14 @@
 
 import Qt 4.7 as QML
 
-QML.Rectangle {
-  color : "lightsteelblue"
+QML.Image {
+  anchors.fill: parent
+  visible: false
 
   //Flickable {
     QML.Text {
       anchors.centerIn : parent
-      text : "This is the about dialog"
+      text : "This is the about dialog\n\n" + application.version
     }
   //}
 

@@ -415,4 +415,8 @@ KPIM.MainView {
     onMailRemoved : { backToListing(); }
   }
 
+  KPIM.AboutDialog {
+    id : aboutDialog
+    source: backgroundImage.source
+  }
 }

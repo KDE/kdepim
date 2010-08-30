@@ -520,7 +520,6 @@ KPIM.MainView {
 
   KPIM.AboutDialog {
     id : aboutDialog
-    anchors.fill : parent
-    visible : false
+    source: backgroundImage.source
   }
 }

@@ -19,6 +19,8 @@
 #include "kdeclarativemainview.h"
 #include "kdeclarativemainview_p.h"
 
+#include "kdepim-version.h"
+
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QApplication>
@@ -466,4 +468,9 @@ void KDeclarativeMainView::setupAgentActionManager( QItemSelectionModel *selecti
   Akonadi::AgentActionManager *manager = new Akonadi::AgentActionManager( actionCollection(), this );
   manager->setSelectionModel( selectionModel );
   manager->createAllActions();
+}
+
+QString KDeclarativeMainView::version() const
+{
+  return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_SVN_REVISION_STRING, KDEPIM_SVN_LAST_CHANGE );
 }

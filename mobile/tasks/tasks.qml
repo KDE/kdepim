@@ -389,4 +389,9 @@ KPIM.MainView {
       application.loadFavorite(favName);
     }
   }
+
+  KPIM.AboutDialog {
+    id : aboutDialog
+    source: backgroundImage.source
+  }
 }
