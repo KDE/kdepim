@@ -101,7 +101,7 @@ ActionMenuContainer {
     category : "multiple_folder"
     name : "multi_folder_view_menu"
     text : KDE.i18n( "View" )
-    FakeAction { name : "change_folder_selection" }
+    ScriptActionItem { name : "to_selection_screen"; title : KDE.i18n( "Change Folder Selection" ) }
     ScriptActionItem { name : "start_maintenance"; title : KDE.i18n( "Start Maintenance" ) }
   }
 
