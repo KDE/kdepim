@@ -1088,7 +1088,7 @@ void KJotsWidget::printSelection()
 {
 
   QPrinter *printer = new QPrinter();
-  printer->setDocName("KJots Print");
+  printer->setDocName("KJots_Print");
   printer->setFullPage(false);
   printer->setCreator("KJots");
   //Not supported in Qt?
