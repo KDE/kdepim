@@ -289,6 +289,15 @@ KPIM.MainView {
                 mainWorkView.visible = false
                 bulkActionScreen.visible = true
               }
+            },
+            KPIM.ScriptAction {
+              name : "edit_todo"
+              script : {
+                application.editIncidence( taskView.item );
+                eventView.visible = false;
+                agendaView.visible = true;
+                actionPanelNew.collapse();
+              }
             }
           ]
 

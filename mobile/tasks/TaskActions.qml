@@ -129,7 +129,7 @@ ActionMenuContainer {
     category : "todo_viewer"
     name : "todo_viewer_edit_menu"
     text : KDE.i18n( "Edit" )
-    FakeAction { name : "edit_todo" }
+    ScriptActionItem { name : "edit_todo"; title: KDE.i18n( "Edit task" ) }
     ActionListItem { name : "akonadi_item_copy_to_menu" }
     ActionListItem { name : "akonadi_item_move_to_menu" }
     ActionListItem { name : "akonadi_item_delete" }
@@ -139,6 +139,6 @@ ActionMenuContainer {
     name : "application_menu"
     category : "standard"
     text : KDE.i18n( "KTasks" )
-    type : "tasks"
+    type : "task"
   }
 }
