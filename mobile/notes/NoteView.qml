@@ -39,18 +39,20 @@ Rectangle {
   }
 
   Rectangle {
-    border.color : "blue"
+    border { color: "grey"; width: 2; }
     color: "#00000000"
     id : titleWrapper
     anchors.top : parent.top
     anchors.left : parent.left
     anchors.right : parent.right
     height : 30
-    radius : 5
+    radius : 8
     TextInput {
       id : titleInput
       color : "#000001" // yes, not exactly black, since QML maps black to white on the N900...
-      anchors.fill : parent
+      anchors.left : parent.left
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
       anchors.leftMargin : 10
       anchors.rightMargin : 10
 
@@ -63,13 +65,14 @@ Rectangle {
   }
 
   Rectangle {
-    border.color : "blue"
+    border { color: "grey"; width: 2; }
     color: "#00000000"
     anchors.top : titleWrapper.bottom
     anchors.left : parent.left
     anchors.right : parent.right
     anchors.bottom : parent.bottom
-    radius : 5
+    anchors.topMargin: 8
+    radius : 8
     Flickable {
       id: flick
 
