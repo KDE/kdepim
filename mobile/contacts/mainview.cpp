@@ -61,6 +61,9 @@ void MainView::delayedInit()
   KAction *action = new KAction( i18n( "New Contact" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(newContact()) );
   actionCollection()->addAction( QLatin1String( "add_new_contact" ), action );
+  action = new KAction( i18n( "New Contact Group" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(newContactGroup()) );
+  actionCollection()->addAction( QLatin1String( "add_new_contact_group" ), action );
 }
 
 void MainView::newContact()

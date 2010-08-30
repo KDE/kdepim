@@ -127,5 +127,7 @@ ActionMenuContainer {
     category : "standard"
     text : KDE.i18n( "KAddressBook" )
     type : "contact"
+
+    ActionListItem { name : "add_new_contact_group" }
   }
 }
