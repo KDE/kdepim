@@ -1161,7 +1161,7 @@ void Agenda::endItemAction()
                                       d->mStartCell.y() == d->mEndCell.y() );
 
   if ( d->mItemMoved ) {
-    bool modify = true;
+    bool modify = false;
     if ( incidence->recurs() ) {
       int res = d->mEventView->showMoveRecurDialog( d->mActionItem->incidence(),
                                                     d->mActionItem->itemDate() );
@@ -1276,7 +1276,6 @@ void Agenda::endItemAction()
       AgendaItem *modif = placeItem;
 
       QList<AgendaItem*> oldconflictItems = placeItem->conflictItems();
-
       QList<AgendaItem*>::iterator it;
       for ( it = oldconflictItems.begin(); it != oldconflictItems.end(); ++it ) {
         placeSubCells( *it );
@@ -1883,23 +1882,13 @@ void Agenda::removeIncidence( const Akonadi::Item &incidence )
   }
 }
 
-void Agenda::showIncidence( const Akonadi::Item &item, bool hide )
-{
-  QList<AgendaItem*> agenda_items = agendaItems( item );
-  foreach( AgendaItem *ai, agenda_items ) {
-    showAgendaItem( ai, hide );
-  }
-}
-
-void Agenda::showAgendaItem( AgendaItem *agendaItem, bool hide )
+void Agenda::showAgendaItem( AgendaItem *agendaItem )
 {
   if ( !agendaItem ) {
     return;
   }
 
-  if ( hide ) {
-    agendaItem->hide();
-  }
+  agendaItem->hide();
 
   agendaItem->setParent( this );
 
