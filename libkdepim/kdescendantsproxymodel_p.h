@@ -20,8 +20,8 @@
 // WARNING: This is a temporary copy of kdepimlibs/akonadi/kdescendantsproxymodel
 // which exists until this class or its replacement can go into kdelibs.
 
-#ifndef DESCENDANTENTITIESPROXYMODEL_H
-#define DESCENDANTENTITIESPROXYMODEL_H
+#ifndef KDESCENDANTSPROXYMODEL_P_H
+#define KDESCENDANTSPROXYMODEL_P_H
 
 #include <QtGui/QAbstractProxyModel>
 
