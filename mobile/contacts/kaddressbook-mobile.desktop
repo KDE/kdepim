@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Address Book
+Name[de]=KDE-Adressbuch
 Name[en_GB]=KDE Address Book
 Name[es]=Libreta de direcciones de KDE
 Name[nb]=KDE adressebok
@@ -11,6 +12,7 @@ Name[pt_BR]=Livro de endereços do KDE
 Name[sv]=KDE:s adressbok
 Name[uk]=Адресна книга KDE
 Name[x-test]=xxKDE Address Bookxx
+Name[zh_TW]=KDE 通訊錄
 Exec=kaddressbook-mobile.sh
 
 Icon=kaddressbook-mobile

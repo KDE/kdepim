@@ -1,6 +1,7 @@
 [Global]
 IconName=mail-mobile
 Comment=KDE e-mail client
+Comment[de]=E-Mail-Programm für KDE
 Comment[en_GB]=KDE e-mail client
 Comment[es]=Cliente de correo de KDE
 Comment[ja]=KDE メールクライアント
@@ -14,6 +15,7 @@ Comment[x-test]=xxKDE e-mail clientxx
 Comment[zh_CN]=KDE 邮件客户端
 Comment[zh_TW]=KDE 收發信軟體
 Name=KDE Mail
+Name[de]=KDE-E-Mail
 Name[en_GB]=KDE Mail
 Name[es]=Correo de KDE
 Name[ja]=KDE Mail
@@ -50,10 +52,12 @@ Comment[pt_BR]=O seu e-mail foi enviado com sucesso.
 Comment[sv]=E-post skickad med lyckat resultat.
 Comment[uk]=Вашу пошту успішно надіслано.
 Comment[x-test]=xxYour e-mail was successfully sent.xx
+Comment[zh_TW]=您的電子郵件已成功傳送。
 Action=Popup
 
 [Event/sendfailed]
 Name=Error while sending email
+Name[de]=Fehler beim Versenden der E-Mail
 Name[en_GB]=Error while sending email
 Name[es]=Error al enviar correo
 Name[nb]=Feil under sending av e-post
@@ -75,4 +79,5 @@ Comment[pt_BR]=Ocorreu um erro ao tentar enviar o e-mail.
 Comment[sv]=Ett fel uppstod vid försök att skicka e-post.
 Comment[uk]=Під час спроби надсилання пошти сталася помилка.
 Comment[x-test]=xxThere was an error while trying to send the e-mail.xx
+Comment[zh_TW]=傳送郵件時發生錯誤。
 Action=Popup

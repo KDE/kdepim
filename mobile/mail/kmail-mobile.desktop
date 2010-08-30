@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Mail
+Name[de]=KDE-E-Mail
 Name[en_GB]=KDE Mail
 Name[es]=Correo de KDE
 Name[ja]=KDE Mail
