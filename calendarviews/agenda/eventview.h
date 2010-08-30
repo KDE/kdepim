@@ -99,7 +99,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       IncidencesAdded = 1,
       IncidencesEdited = 2,
       IncidencesDeleted = 4,
-      DatesChanged = 8
+      DatesChanged = 8,
+      FilterChanged = 16,
+      ResourcesChanged = 32
     };
     Q_DECLARE_FLAGS(Changes, Change)
 
