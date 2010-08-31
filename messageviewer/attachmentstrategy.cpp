@@ -155,6 +155,8 @@ public:
           node->contentType()->name().trimmed().isEmpty() )
       // text/* w/o filename parameter:
       return Inline;
+    if (!node->parent())
+      return Inline;
 
     if ( node->parent() && node->parent()->contentType()->isMultipart() &&
           node->parent()->contentType()->subType() == "related" )
