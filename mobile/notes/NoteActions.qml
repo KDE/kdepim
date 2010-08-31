@@ -126,6 +126,6 @@ ActionMenuContainer {
     category : "standard"
     name : "application_menu"
     text : KDE.i18n( "KNotes" )
-    type : "notes"
+    type : "note"
   }
 }

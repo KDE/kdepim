@@ -54,6 +54,10 @@ void MainView::delayedInit()
 
   addMimeType( "text/x-vnd.akonadi.note" );
   itemFetchScope().fetchFullPayload();
+
+  KAction *action = new KAction( i18n( "New Note" ), this );
+  connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
+  actionCollection()->addAction( QLatin1String( "add_new_note" ), action );
 }
 
 QString MainView::noteTitle(int row)

@@ -38,7 +38,8 @@ KPIM.ActionList {
   KPIM.ActionListItem {
     name : "add_new_" + type
   }
-  KPIM.FakeAction {
+  // TODO: implement us!
+/*  KPIM.FakeAction {
     name : "search_" + type
   }
   KPIM.FakeAction {
@@ -46,7 +47,7 @@ KPIM.ActionList {
   }
   KPIM.FakeAction {
     name : "configure"
-  }
+  }*/
   KPIM.ScriptActionItem  {
     name : "show_about_dialog"
     title : KDE.i18n( "About" )
