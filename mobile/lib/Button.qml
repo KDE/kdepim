@@ -47,6 +47,7 @@ Rectangle {
       border.width = 2
     }
     onReleased: border.width = 0
+    onCanceled : border.width = 0
     onClicked: parent.clicked()
   }
 }

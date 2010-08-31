@@ -93,6 +93,7 @@ Rectangle {
     onReleased : {
       border.width = 0
     }
+    onCanceled : border.width = 0
     onClicked : {
       triggered(); action.trigger();
     }
