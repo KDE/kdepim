@@ -26,6 +26,7 @@ import org.kde.akonadi 4.5 as Akonadi
 import org.kde.messageviewer 4.5 as MessageViewer
 import org.kde.pim.mobileui 4.5 as KPIM
 
+
 KPIM.MainView {
   id: kmailMobile
 
@@ -54,7 +55,160 @@ KPIM.MainView {
     }
   }
 
+
   QML.SystemPalette { id: palette; colorGroup: "Active" }
+
+  QML.Rectangle {
+      id : replyOptionsPage
+      anchors.right : kmailMobile.right
+      anchors.rightMargin : 70
+      anchors.left : kmailMobile. left
+      anchors.leftMargin : 70
+      anchors.top : kmailMobile.top
+      anchors.topMargin : 70
+      visible : false
+      color: "lightgray"
+      z: 1
+      //how to calculate the height needed for buttons?
+      height: 195
+
+      QML.Column {
+            anchors.fill: parent
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Reply to Author" )
+              onClicked : {
+                application.getAction("message_reply_to_author", "").trigger();
+                replyOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Reply to All" )
+              onClicked : {
+                application.getAction("message_reply_to_all", "").trigger();
+                replyOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Reply to List" )
+              onClicked : {
+                application.getAction("message_reply_to_list", "").trigger();
+                replyOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Discard" )
+              onClicked : {
+                replyOptionsPage.visible = false
+              }
+            }
+          }
+  }
+
+  QML.Rectangle {
+      id : forwardOptionsPage
+      anchors.right : kmailMobile.right
+      anchors.rightMargin : 70
+      anchors.left : kmailMobile. left
+      anchors.leftMargin : 70
+      anchors.top : kmailMobile.top
+      anchors.topMargin : 70
+      visible : false
+      color: "lightgray"
+      z: 1
+      //how to calculate the height needed for buttons?
+      height: 145
+
+      QML.Column {
+            anchors.fill: parent
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Forward as Attachemnt" )
+              onClicked : {
+                application.getAction("message_forward_as_attachment", "").trigger();
+                forwardOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Redirect" )
+              onClicked : {
+                application.getAction("message_redirect", "").trigger();
+                forwardOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Discard" )
+              onClicked : {
+                forwardOptionsPage.visible = false
+              }
+            }
+          }
+  }
+
+
+  QML.Rectangle {
+      id : markOptionsPage
+      anchors.right : kmailMobile.right
+      anchors.rightMargin : 70
+      anchors.left : kmailMobile. left
+      anchors.leftMargin : 70
+      anchors.top : kmailMobile.top
+      anchors.topMargin : 70
+      visible : false
+      color: "lightgray"
+      z: 1
+      //how to calculate the height needed for buttons?
+      height: 240
+
+      QML.Column {
+            anchors.fill: parent
+            height : 210
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Mark as Read" )
+              onClicked : {
+                application.getAction("akonadi_mark_as_read", "").trigger();
+                markOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Mark as Unread" )
+              onClicked : {
+                application.getAction("akonadi_mark_as_unread", "").trigger();
+                markOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Mark as Important" )
+              onClicked : {
+                application.getAction("akonadi_mark_as_important", "").trigger();
+                markOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Mark as Action Item" )
+              onClicked : {
+                application.getAction("akonadi_mark_as_action_item", "").trigger();
+                markOptionsPage.visible = false
+              }
+            }
+            KPIM.Button2 {
+              width: parent.width
+              buttonText : KDE.i18n( "Discard" )
+              onClicked : {
+                markOptionsPage.visible = false
+              }
+            }
+          }
+  }
 
   MessageViewer.MessageView {
     id: messageView
@@ -298,6 +452,13 @@ KPIM.MainView {
                   actionPanel.collapse();
                   favoriteSelector.visible = true;
                   mainWorkView.visible = false;
+                }
+              },
+              KPIM.ScriptAction {
+                name : "mark_as_dialog"
+                script : {
+                  actionPanel.collapse();
+                  markOptionsPage.visible = true;
                 }
               },
               KPIM.ScriptAction {
