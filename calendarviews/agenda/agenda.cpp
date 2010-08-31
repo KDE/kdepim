@@ -1266,12 +1266,13 @@ void Agenda::endItemAction()
       }
     }
 
+    AgendaItem *placeItem = d->mActionItem->firstMultiItem();
+    if ( !placeItem ) {
+      placeItem = d->mActionItem;
+    }
+
     if ( modify ) {
       d->mActionItem->endMove();
-      AgendaItem *placeItem = d->mActionItem->firstMultiItem();
-      if  ( !placeItem ) {
-        placeItem = d->mActionItem;
-      }
 
       AgendaItem *modif = placeItem;
 
@@ -1296,7 +1297,7 @@ void Agenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      emit itemModified( d->mActionItem );
+      emit itemModified( placeItem );
     }
   }
 
