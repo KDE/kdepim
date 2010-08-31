@@ -237,7 +237,14 @@ void AgendaView::Private::calendarIncidenceChanged( const Akonadi::Item &inciden
 {
   Q_UNUSED( incidence );
 
-  setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
+  mAgenda->removeIncidence( incidence );
+  mAllDayAgenda->removeIncidence( incidence );
+  q->displayIncidence( incidence, false );
+  mAgenda->checkScrollBoundaries();
+  q->updateEventIndicators();
+
+  // No need to call setChanges(), that triggers a fillAgenda()
+  // setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
 }
 
 void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &incidence )
@@ -249,6 +256,7 @@ void AgendaView::Private::calendarIncidenceDeleted( const Akonadi::Item &inciden
   mAllDayAgenda->removeIncidence( incidence );
   mAgenda->checkScrollBoundaries();
   q->updateEventIndicators();
+
   //setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
 }
 
