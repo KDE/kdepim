@@ -14,6 +14,7 @@ VerticalFadeSelector 4.5 VerticalFadeSelector.qml
 Clock 4.5 Clock.qml
 TimeSelector 4.5 TimeSelector.qml
 Calendar 4.5 Calendar.qml
+CalendarDaay 4.5 CalendarDay.qml
 ItemListView 4.5 ItemListView.qml
 ItemListViewDelegate 4.5 ItemListViewDelegate.qml
 MainView 4.5 MainView.qml
