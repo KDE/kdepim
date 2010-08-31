@@ -148,6 +148,10 @@ namespace KMail {
         // text/* w/o filename parameter:
         return Inline;
 
+
+      if (!node->parentNode())
+        return Inline;
+
       if ( node->parentNode()->type() == DwMime::kTypeMultipart &&
            node->parentNode()->subType() == DwMime::kSubtypeRelated )
         return Inline;
