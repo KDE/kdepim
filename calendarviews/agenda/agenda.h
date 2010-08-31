@@ -209,10 +209,11 @@ class Agenda : public QWidget
     void deleteIncidenceSignal( const Akonadi::Item & );
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate &);
 
-    //TODO_SPIT: change it's name to something like RMBClicked
     void showNewEventPopupSignal();
 
+    // If the incidence is multi-day, item is the first one
     void itemModified( AgendaItem *item );
+
     void incidenceSelected( const Akonadi::Item &, const QDate & );
     void startMultiModify( const QString & );
     void endMultiModify();
