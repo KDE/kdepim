@@ -377,7 +377,7 @@ class KMFolderCachedImap : public KMFolderMaildir
       Is set by the account for the root folder when the listing starts
     */
     QStringList namespacesToList() { return mNamespacesToList; }
-    void setNamespacesToList( QStringList list ) { mNamespacesToList = list; }
+    void setNamespacesToList( const QStringList& list ) { mNamespacesToList = list; }
 
     /**  \reimp */
     bool isCloseToQuota() const;
