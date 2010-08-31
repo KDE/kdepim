@@ -219,6 +219,7 @@ void AgendaItem::setIncidence( const Akonadi::Item &incidence )
   if ( CalendarSupport::hasIncidence( incidence ) ) {
     mValid = true;
     mIncidence = incidence;
+    mLabelText = CalendarSupport::incidence( incidence )->summary();
     updateIcons();
   }
 }
