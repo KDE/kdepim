@@ -429,6 +429,13 @@ KPIM.MainView {
                 mainWorkView.visible = false
                 bulkActionScreen.visible = true
               }
+            },
+            KPIM.ScriptAction {
+              name : "edit_event"
+              script: {
+                actionPanelNew.collapse();
+                application.editIncidence( eventView.item, eventView.activeDate );
+              }
             }
           ]
 
