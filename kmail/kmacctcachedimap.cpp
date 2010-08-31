@@ -203,7 +203,8 @@ void KMAcctCachedImap::slotCheckQueuedFolders()
 
 void KMAcctCachedImap::processNewMail( bool /*interactive*/ )
 {
-  assert( mFolder );
+  if( !mFolder )
+      return;
 
   if ( mMailCheckFolders.isEmpty() )
     processNewMail( mFolder, true );
