@@ -24,45 +24,6 @@ Item {
     width: 460
     height: 360
 
-    Component {
-        id: day
-        Item {
-            id: wrapper
-            property alias text: myText.text
-            property alias active: active.visible
-            property alias valid: inactive.visible
-
-            width: 54
-            height: 54
-            Image {
-                id: normal
-                source: "images/normaldate.png"
-                anchors.fill: parent
-            }
-            Image {
-                id: inactive
-                source: "images/inactivedate.png"
-                anchors.fill: parent
-            }
-            Image {
-                id: active
-                visible: false
-                source: "images/activedate.png"
-                anchors.fill: parent
-            }
-            Text {
-                id: myText
-                color: "#004bb8"
-                font.bold: true
-                font.pixelSize: 28
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
-        }
-    }
-
     Row {
         id: title
         spacing: 8
@@ -71,14 +32,14 @@ Item {
 
         Text {
             id: month
-            text: "Month"
+            text: calendarHelper.monthName
             color: "#004bb8"
             font.pixelSize: 24
         }
 
         Text {
             id: year
-            text: "Year"
+            text: calendarHelper.year
             color: "#004bb8"
             font.pixelSize: 24
         }
@@ -87,6 +48,7 @@ Item {
     Row {
         spacing: 6
         anchors.top: title.bottom
+        anchors.topMargin: 10
 
         Column {
             id: weeks
@@ -102,7 +64,7 @@ Item {
                 id: week1
                 width: 20
                 height: 54
-                text: "1"
+                text: calendarHelper.weekForPosition(1)
                 color: "#828282"
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignTop
@@ -112,7 +74,7 @@ Item {
                 id: week2
                 width: 20
                 height: 54
-                text: "2"
+                text: calendarHelper.weekForPosition(2)
                 color: "#828282"
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignTop
@@ -122,7 +84,7 @@ Item {
                 id: week3
                 width: 20
                 height: 54
-                text: "3"
+                text: calendarHelper.weekForPosition(3)
                 color: "#828282"
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignTop
@@ -132,7 +94,7 @@ Item {
                 id: week4
                 width: 20
                 height: 54
-                text: "4"
+                text: calendarHelper.weekForPosition(4)
                 color: "#828282"
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignTop
@@ -142,7 +104,7 @@ Item {
                 id: week5
                 width: 20
                 height: 54
-                text: "5"
+                text: calendarHelper.weekForPosition(5)
                 color: "#828282"
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignTop
@@ -164,29 +126,29 @@ Item {
                 verticalAlignment: Text.AlignBottom
             }
 
-            Loader {
+            CalendarDay {
                 id: day1
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(1);
             }
 
-            Loader {
+            CalendarDay {
                 id: day8
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(8);
             }
 
-            Loader {
+            CalendarDay {
                 id: day15
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(15);
             }
 
-            Loader {
+            CalendarDay {
                 id: day22
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(22);
             }
 
-            Loader {
+            CalendarDay {
                 id: day29
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(29);
             }
 
         }
@@ -206,29 +168,29 @@ Item {
                 verticalAlignment: Text.AlignBottom
             }
 
-            Loader {
+            CalendarDay {
                 id: day2
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(2);
             }
 
-            Loader {
+            CalendarDay {
                 id: day9
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(9);
             }
 
-            Loader {
+            CalendarDay {
                 id: day16
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(16);
             }
 
-            Loader {
+            CalendarDay {
                 id: day23
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(23);
             }
 
-            Loader {
+            CalendarDay {
                 id: day30
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(30);
             }
         }
 
@@ -247,29 +209,29 @@ Item {
                 verticalAlignment: Text.AlignBottom
             }
 
-            Loader {
+            CalendarDay {
                 id: day3
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(3);
             }
 
-            Loader {
+            CalendarDay {
                 id: day10
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(10);
             }
 
-            Loader {
+            CalendarDay {
                 id: day17
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(17);
             }
 
-            Loader {
+            CalendarDay {
                 id: day24
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(24);
             }
 
-            Loader {
+            CalendarDay {
                 id: day31
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(31);
             }
         }
 
@@ -288,29 +250,29 @@ Item {
                 verticalAlignment: Text.AlignBottom
             }
 
-            Loader {
+            CalendarDay {
                 id: day4
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(4);
             }
 
-            Loader {
+            CalendarDay {
                 id: day11
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(11);
             }
 
-            Loader {
+            CalendarDay {
                 id: day18
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(18);
             }
 
-            Loader {
+            CalendarDay {
                 id: day25
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(25);
             }
 
-            Loader {
+            CalendarDay {
                 id: day32
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(32);
             }
         }
 
@@ -329,29 +291,29 @@ Item {
                 verticalAlignment: Text.AlignBottom
             }
 
-            Loader {
+            CalendarDay {
                 id: day5
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(5);
             }
 
-            Loader {
+            CalendarDay {
                 id: day12
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(12);
             }
 
-            Loader {
+            CalendarDay {
                 id: day19
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(19);
             }
 
-            Loader {
+            CalendarDay {
                 id: day26
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(26);
             }
 
-            Loader {
+            CalendarDay {
                 id: day33
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(33);
             }
         }
 
@@ -370,29 +332,29 @@ Item {
                 verticalAlignment: Text.AlignBottom
             }
 
-            Loader {
+            CalendarDay {
                 id: day6
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(6);
             }
 
-            Loader {
+            CalendarDay {
                 id: day13
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(13);
             }
 
-            Loader {
+            CalendarDay {
                 id: day20
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(20);
             }
 
-            Loader {
+            CalendarDay {
                 id: day27
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(27);
             }
 
-            Loader {
+            CalendarDay {
                 id: day34
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(34);
             }
         }
 
@@ -411,29 +373,29 @@ Item {
                 verticalAlignment: Text.AlignBottom
             }
 
-            Loader {
+            CalendarDay {
                 id: day7
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(7);
             }
 
-            Loader {
+            CalendarDay {
                 id: day14
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(14);
             }
 
-            Loader {
+            CalendarDay {
                 id: day21
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(21);
             }
 
-            Loader {
+            CalendarDay {
                 id: day28
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(28);
             }
 
-            Loader {
+            CalendarDay {
                 id: day35
-                sourceComponent: day
+                text: calendarHelper.dayForPosition(35);
             }
         }
     }
