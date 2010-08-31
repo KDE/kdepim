@@ -38,7 +38,6 @@ set( incidenceeditors_LIB_SRCS
     journaleditor.cpp
     korganizereditorconfig.cpp
     templatemanagementdialog.cpp
-    incidenceeditor-ng/categoryconfig.cpp
 )
 
 if (QT_QT3SUPPORT_FOUND)
