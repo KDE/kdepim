@@ -35,9 +35,8 @@ ActionMenuContainer {
     name : "home_menu"
     text : KDE.i18n( "Home" )
     ActionListItem { name : "synchronize_all_items" }
-    FakeAction { name : "check_emails" }
     FakeAction { name : "send_queued_emails" }
-    FakeAction { name : "select_multiple_folders" }
+    ScriptActionItem { name : "to_selection_screen"; title: KDE.i18n( "Select multiple folders" ) }
     FakeAction { name : "empty_all_trash_folders" }
   }
 

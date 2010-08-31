@@ -101,7 +101,10 @@ void MainView::delayedInit()
   KAction *action = new KAction( i18n( "Identities" ), this );
   connect( action, SIGNAL( triggered( bool ) ), SLOT( configureIdentity() ) );
   actionCollection()->addAction( "kmail_mobile_identities", action );
-
+  action = new KAction( i18n( "New Email" ), this );
+  connect( action, SIGNAL( triggered( bool ) ), SLOT(startComposer()) );
+  actionCollection()->addAction( "add_new_mail", action );
+  
   // lazy load of the default single folders
   QTimer::singleShot(3000, this, SLOT(initDefaultFolders()));
 
