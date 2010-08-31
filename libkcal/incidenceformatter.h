@@ -68,10 +68,16 @@ class LIBKCAL_EXPORT IncidenceFormatter
     static QString KDE_DEPRECATED formatICalInvitationNoHtml( QString invitation,
                                                               Calendar *mCalendar,
                                                               InvitationFormatterHelper *helper );
+    static QString KDE_DEPRECATED formatICalInvitationNoHtml( QString invitation,
+                                                              Calendar *mCalendar,
+                                                              InvitationFormatterHelper *helper,
+                                                              const QString &sender );
+
     static QString formatICalInvitationNoHtml( QString invitation,
                                                Calendar *mCalendar,
                                                InvitationFormatterHelper *helper,
-                                               const QString &sender );
+                                               const QString &sender,
+                                               bool outlookCompareStyle );
 
     // Format a TNEF attachment to an HTML mail
     static QString formatTNEFInvitation( const QByteArray& tnef,
@@ -118,7 +124,8 @@ class LIBKCAL_EXPORT IncidenceFormatter
                                                Calendar *mCalendar,
                                                InvitationFormatterHelper *helper,
                                                bool noHtmlMode,
-                                               const QString &sender );
+                                               const QString &sender,
+                                               bool outlookCompareStyle );
     class EventViewerVisitor;
     class ScheduleMessageVisitor;
     class InvitationHeaderVisitor;

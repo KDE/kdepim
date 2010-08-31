@@ -181,7 +181,9 @@ class Formatter : public KMail::Interface::BodyPartFormatter
         source = bodyPart->asText();
       }
       QString html =
-        IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper, callback.sender() );
+        IncidenceFormatter::formatICalInvitationNoHtml(
+          source, &cl, &helper, callback.sender(),
+          callback.outlookCompatibleInvitationComparisons() );
 
       if ( html.isEmpty() ) return AsIcon;
       writer->queue( html );
