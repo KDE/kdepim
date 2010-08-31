@@ -73,14 +73,10 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   resize(800, 480);
 #endif
 
-  const QString splashPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" )
-                                                    + QDir::separator()
-                                                    + QLatin1String( "splashscreenstatic.png" ) );
-
-  // set the background brush instead of using a QLabel for that
-  QPixmap splashBackground(splashPath);
-  setBackgroundBrush( splashBackground );
-  setAutoFillBackground( true );
+  m_splashScreen = new QLabel( this );
+  QPixmap splashBackground;
+  splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
+  m_splashScreen->setPixmap( splashBackground );
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
 }
@@ -174,6 +170,9 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
     KMessageBox::error( this, i18n( "Application loading failed: %1", errorMessages.join( QLatin1String( "\n" ) ) ) );
     QCoreApplication::instance()->exit( 1 );
   }
+
+  if ( status == QDeclarativeView::Ready )
+    m_splashScreen->deleteLater();
 }
 
 KActionCollection* KDeclarativeFullScreenView::actionCollection() const
