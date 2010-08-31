@@ -40,6 +40,7 @@ class IncidenceDateTime;
 
 class MobileIncidenceGeneral;
 class MobileIncidenceMore;
+class CalendarHelper;
 
 class IncidenceView : public KDeclarativeFullScreenView, public CalendarSupport::ItemEditorUi
 {
@@ -88,6 +89,8 @@ class IncidenceView : public KDeclarativeFullScreenView, public CalendarSupport:
 
     /// We need this because we can't rely on the order in which those two are added.
     MobileIncidenceMore *mIncidenceMore;
+
+    CalendarHelper *m_calendarHelper;
 };
 
 #endif // INCIDENCEVIEW_H
