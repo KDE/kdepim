@@ -182,7 +182,7 @@ void EventView::Private::reconnectCollectionSelection()
   }
 
   QObject::connect( q->collectionSelection(),
-                    SIGNAL(selectionChanged(CalendarSupport::Collection::List,Akonadi::Collection::List)),
+                    SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
                     q, SLOT(collectionSelectionChanged()) );
 }
 
@@ -194,6 +194,8 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( thi
   //But the global focus widget in QApplication is changed later, thus subsequent keyevents still went to this view, triggering another editor, for each keypress
   //Thus listen to the global focusChanged() signal (seen with Qt 4.6-stable-patched 20091112 -Frank)
   connect( qobject_cast<QApplication*>( QApplication::instance() ), SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(focusChanged(QWidget*,QWidget*)) );
+
+  d->setUpModels();
 }
 
 EventView::~EventView()

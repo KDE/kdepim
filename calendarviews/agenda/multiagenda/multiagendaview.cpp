@@ -96,7 +96,6 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   // compensate for the frame the agenda views but not the timelabels have
   QWidget *timeLabelTopAlignmentSpacer = new QWidget( sideBox );
 
-  //TODO_EVENTVIEWS: use a singleton for prefs
   mTimeLabelsZone = new TimeLabelsZone( sideBox, PrefsPtr( new Prefs() ) );
 
   QWidget *timeLabelBotAlignmentSpacer = new QWidget( sideBox );
