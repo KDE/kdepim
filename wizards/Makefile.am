@@ -4,22 +4,26 @@ INCLUDES = -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/kolab/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes \
            -I$(top_srcdir)/certmanager/lib \
+            -I$(top_builddir)/kresources/groupwise \
            -I$(top_builddir)/kresources/lib \
            -I$(top_srcdir)/kresources/lib \
            $(all_includes)
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard \
-               exchangewizard
+               groupwisewizard exchangewizard scalixwizard
 
 kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la \
                          libkolabwizard.la \
-                         libexchangewizard.la 
+                         libexchangewizard.la \
+                         libgroupwisewizard.la \
+                         libscalixwizard.la
 
 
 groupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 groupwarewizard_LDADD = libegroupwarewizard.la libsloxwizard.la $(LIB_KDEUI) \
                         libkolabwizard.la \
-                        libexchangewizard.la
+                        libexchangewizard.la \
+                        libgroupwisewizard.la
 groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
@@ -63,6 +67,22 @@ sloxwizard_LDADD = libsloxwizard.la
 sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 sloxwizard_SOURCES = sloxmain.cpp
 
+# GroupWise
+libgroupwisewizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
+libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc \
+  kmailchanges.cpp
+libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
+                          $(top_builddir)/kresources/groupwise/libkabc_groupwise.la \
+                          $(top_builddir)/libkdepim/libkdepim.la \
+                          $(top_builddir)/libkpimidentities/libkpimidentities.la
+libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h \
+                                      $(top_builddir)/kresources/groupwise/kcal_groupwiseprefsbase.h
+
+
+groupwisewizard_LDADD = libgroupwisewizard.la
+groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+groupwisewizard_SOURCES = groupwisemain.cpp
+
 # Exchange
 libexchangewizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libexchangewizard_la_SOURCES = exchangewizard.cpp
@@ -74,10 +94,25 @@ exchangewizard_LDADD = libexchangewizard.la
 exchangewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 exchangewizard_SOURCES = exchangemain.cpp
 
-noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h \
-                 exchangewizard.h
+# Scalix
+libscalixwizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
+libscalixwizard_la_LIBADD = $(top_builddir)/kresources/scalix/kcal/libkcalscalix.la \
+                           $(top_builddir)/kresources/scalix/kabc/libkabcscalix.la \
+                           $(top_builddir)/libkcal/libkcal.la \
+                           $(top_builddir)/libkdepim/libkdepim.la \
+                           $(top_builddir)/libkpimidentities/libkpimidentities.la
 
-kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg
+libscalixwizard_la_SOURCES = scalixwizard.cpp kmailchanges.cpp scalixconfig.kcfgc \
+  scalixkmailchanges.cpp
+
+scalixwizard_LDADD = libscalixwizard.la $(LIB_KDEUI)
+scalixwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+scalixwizard_SOURCES = scalixmain.cpp
+
+noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h \
+                 groupwisewizard.h exchangewizard.h
+
+kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimwizards.pot
