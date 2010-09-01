@@ -59,6 +59,7 @@ class CalendarHelper : public QObject
     void dayChanged();
     void monthChanged();
     void yearChanged();
+    void activeDay( const QString & );
 
   private:
     QDateTime m_original;

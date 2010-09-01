@@ -134,7 +134,7 @@ QString CalendarHelper::dayForPosition( const int pos ) const
   // the current day
   if ( pos == m_offset ) {
     const QString rpos = QString::number(pos);
-    emit activeDay( rpos );
+    emit const_cast<CalendarHelper*>( this )->activeDay( rpos );
     return rpos;
   }
 
