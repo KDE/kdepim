@@ -138,7 +138,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual void setKCalPreferences( const KCalPrefsPtr &preferences );
     KCalPrefsPtr kcalPreferences() const;
 
-    CalendarSupport::CalendarSearch* calendarSearch() const;
+    // CalendarSupport::CalendarSearch* calendarSearch() const;
 
     /**
        A todo can have two pixmaps, one for completed and one for incomplete.
