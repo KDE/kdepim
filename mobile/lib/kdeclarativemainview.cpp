@@ -145,11 +145,11 @@ void KDeclarativeMainView::delayedInit()
 
     d->mListProxy->setSourceModel( resetter );
 
-    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( d->mListProxy ) ) );
-
     QMLCheckableItemProxyModel *qmlCheckable = new QMLCheckableItemProxyModel(this);
     qmlCheckable->setSourceModel(d->mListProxy);
     qmlCheckable->setSelectionModel(d->mItemSelectionModel);
+
+    context->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( qmlCheckable ) ) );
 
     QMLListSelectionModel *qmlSelectionModel = new QMLListSelectionModel(d->mItemSelectionModel, this);
     context->setContextProperty( "_itemCheckModel", QVariant::fromValue( static_cast<QObject*>( qmlSelectionModel ) ) );
