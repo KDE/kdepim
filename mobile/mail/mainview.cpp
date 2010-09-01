@@ -461,6 +461,7 @@ void MainView::setListSelectedRow(int row)
 {
   static const int column = 0;
   const QModelIndex idx = itemSelectionModel()->model()->index( row, column );
+  Q_ASSERT(idx.isValid());
   itemSelectionModel()->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
   Akonadi::Item item = idx.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
