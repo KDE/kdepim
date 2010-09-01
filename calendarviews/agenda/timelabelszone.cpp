@@ -110,14 +110,12 @@ void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
   // }
 }
 
-int TimeLabelsZone::timeLabelsWidth() const
+int TimeLabelsZone::preferedTimeLabelsWidth() const
 {
   if ( mTimeLabelsList.isEmpty() ) {
     return 0;
   } else {
-    const int w = mTimeLabelsList.first()->widget()->width() * mTimeLabelsList.count();
-    kDebug() << "DEBUG timeLabelsWidth returning = " << w << " but real width is " << width();
-    return w;
+    return mTimeLabelsList.first()->widget()->sizeHint().width();
   }
 }
 
@@ -126,14 +124,6 @@ void TimeLabelsZone::updateAll()
   foreach ( QScrollArea *area, mTimeLabelsList ) {
     TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
     timeLabel->updateConfig();
-  }
-}
-
-void TimeLabelsZone::setTimeLabelsWidth( int width )
-{
-  kDebug() << "DEBUG setTimeLabelsWidth called with width = " << width;
-  foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
-    timeLabel->widget()->setFixedWidth( width );
   }
 }
 

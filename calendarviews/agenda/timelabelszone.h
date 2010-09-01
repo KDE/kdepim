@@ -50,10 +50,11 @@ class TimeLabelsZone : public QWidget
         If spec is not valid, use the display timespec.
     */
     void addTimeLabels( const KDateTime::Spec &spec );
-    int timeLabelsWidth() const;
 
-    /* sets the width of each individual label */
-    void setTimeLabelsWidth( int width );
+    /**
+       Returns the best width for each TimeLabels widget
+    */
+    int preferedTimeLabelsWidth() const;
 
     void updateAll();
     void reset();

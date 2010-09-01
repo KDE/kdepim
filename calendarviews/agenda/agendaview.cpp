@@ -939,7 +939,7 @@ void AgendaView::updateTimeBarWidth()
 
   QFontMetrics fm( font() );
 
-  int width = d->mTimeLabelsZone->timeLabelsWidth();
+  int width = d->mTimeLabelsZone->preferedTimeLabelsWidth();
   foreach ( QLabel *l, d->mTimeBarHeaders ) {
     foreach ( const QString &word, l->text().split( ' ' ) ) {
       width = qMax( width, fm.width( word ) );
@@ -953,7 +953,8 @@ void AgendaView::updateTimeBarWidth()
   kDebug() << "DEBUG calculated width is " << width << " and timeBarWidth is " << timeBarWidth;
 
   d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth );
-  d->mTimeLabelsZone->setTimeLabelsWidth( width );
+  d->mTimeLabelsZone->setFixedWidth( timeBarWidth );
+  d->mDummyAllDayLeft->setFixedWidth( 0 );
 }
 
 void AgendaView::updateEventDates( AgendaItem *item )
