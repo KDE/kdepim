@@ -135,6 +135,10 @@ KPIM.MainView {
       QML.Component.onCompleted : updateContextActionsStates();
       onNumBreadcrumbsChanged : updateContextActionsStates();
       onNumSelectedChanged : updateContextActionsStates();
+      onSelectedClicked : {
+        mainWorkView.visible = false
+        bulkActionScreen.visible = true
+      }
     }
     KPIM.Button2 {
       id : selectButton
