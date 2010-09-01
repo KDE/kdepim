@@ -46,18 +46,18 @@ Item {
     }
 
     Row {
-        spacing: 6
+        spacing: 4
         anchors.top: title.bottom
         anchors.topMargin: 10
 
         Column {
             id: weeks
-            spacing: 6
+            spacing: 4
 
             Item {
                 id: spacer
                 width: 20
-                height: 20
+                height: 15
             }
 
             Text {
@@ -109,16 +109,26 @@ Item {
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignTop
             }
+
+            Text {
+                id: week6
+                width: 20
+                height: 54
+                text: calendarHelper.weekForPosition(6)
+                color: "#828282"
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignTop
+            }
         }
 
         Column {
             id: sundays
-            spacing: 6
+            spacing: 4
 
             Text {
                 id: sundayLabel
                 width: 54
-                height: 20
+                height: 15
                 text: "Sun"
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -151,16 +161,20 @@ Item {
                 text: calendarHelper.dayForPosition(29);
             }
 
+            CalendarDay {
+                id: day36
+                text: calendarHelper.dayForPosition(36);
+            }
         }
 
         Column {
             id: mondays
-            spacing: 6
+            spacing: 4
 
             Text {
                 id: mondayLabel
                 width: 54
-                height: 20
+                height: 15
                 text: "Mon"
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -192,16 +206,21 @@ Item {
                 id: day30
                 text: calendarHelper.dayForPosition(30);
             }
+
+            CalendarDay {
+                id: day37
+                text: calendarHelper.dayForPosition(37);
+            }
         }
 
         Column {
             id: tuesdays
-            spacing: 6
+            spacing: 4
 
             Text {
                 id: tuesdayLabel
                 width: 54
-                height: 20
+                height: 15
                 text: "Tue"
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -233,16 +252,21 @@ Item {
                 id: day31
                 text: calendarHelper.dayForPosition(31);
             }
+
+            CalendarDay {
+                id: day38
+                text: calendarHelper.dayForPosition(38);
+            }
         }
 
         Column {
             id: wednesdays
-            spacing: 6
+            spacing: 4
 
             Text {
                 id: wednesdayLabel
                 width: 54
-                height: 20
+                height: 15
                 text: "Wed"
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -274,16 +298,21 @@ Item {
                 id: day32
                 text: calendarHelper.dayForPosition(32);
             }
+
+            CalendarDay {
+                id: day39
+                text: calendarHelper.dayForPosition(39);
+            }
         }
 
         Column {
             id: thursdays
-            spacing: 6
+            spacing: 4
 
             Text {
                 id: thursdayLabel
                 width: 54
-                height: 20
+                height: 15
                 text: "Thu"
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -315,16 +344,21 @@ Item {
                 id: day33
                 text: calendarHelper.dayForPosition(33);
             }
+
+            CalendarDay {
+                id: day40
+                text: calendarHelper.dayForPosition(40);
+            }
         }
 
         Column {
             id: fridays
-            spacing: 6
+            spacing: 4
 
             Text {
                 id: fridayLabel
                 width: 54
-                height: 20
+                height: 15
                 text: "Fri"
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -356,16 +390,21 @@ Item {
                 id: day34
                 text: calendarHelper.dayForPosition(34);
             }
+
+            CalendarDay {
+                id: day41
+                text: calendarHelper.dayForPosition(41);
+            }
         }
 
         Column {
             id: saturdays
-            spacing: 6
+            spacing: 4
 
             Text {
                 id: saturdayLabel
                 width: 54
-                height: 20
+                height: 15
                 text: "Sat"
                 color: "#5c5c5c"
                 style: Text.Sunken
@@ -396,6 +435,11 @@ Item {
             CalendarDay {
                 id: day35
                 text: calendarHelper.dayForPosition(35);
+            }
+
+            CalendarDay {
+                id: day42
+                text: calendarHelper.dayForPosition(42);
             }
         }
     }
