@@ -501,7 +501,7 @@ void AgendaView::zoomInVertically( )
   d->mAgenda->checkScrollBoundaries();
 
   d->mTimeLabelsZone->updateAll();
-  setChanges( ZoomChanged );
+  setChanges( changes() | ZoomChanged );
   updateView();
 
 }
@@ -517,7 +517,7 @@ void AgendaView::zoomOutVertically( )
     d->mAgenda->checkScrollBoundaries();
 
     d->mTimeLabelsZone->updateAll();
-    setChanges( ZoomChanged );
+    setChanges( changes() | ZoomChanged );
     updateView();
   }
 }
@@ -911,7 +911,7 @@ void AgendaView::updateConfig()
     updateTimeBarWidth();
     setHolidayMasks();
     createDayLabels( true );
-    setChanges( ConfigChanged );
+    setChanges( changes() | ConfigChanged );
     updateView();
   }
 }
