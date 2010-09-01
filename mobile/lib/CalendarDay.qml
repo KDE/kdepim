@@ -22,19 +22,19 @@ import Qt 4.7
 Item {
     id: calendarday
     property alias text: myText.text
-    property alias active: active.visible
-    property alias valid: inactive.visible
 
     width: 54
     height: 54
     Image {
-        id: normal
-        source: "images/normaldate.png"
+        id: inactive
+        source: "images/inactivedate.png"
+        visible: false
         anchors.fill: parent
     }
     Image {
-        id: inactive
-        source: "images/inactivedate.png"
+        id: normal
+        source: "images/normaldate.png"
+        visible: true
         anchors.fill: parent
     }
     Image {
@@ -54,4 +54,39 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
     }
+
+    states: [
+        State {
+            name: "active"
+            when: calendarHelper.isCurrentDay(myText.text)
+            PropertyChanges {
+                target: active
+                visible: true
+            }
+            PropertyChanges {
+                target: normal
+                visible: true
+            }
+            PropertyChanges {
+                target: inactive
+                visible: false
+            }
+        },
+        State {
+            name: "inactive"
+            when: (myText.text == "")
+            PropertyChanges {
+                target: active
+                visible: false
+            }
+            PropertyChanges {
+                target: normal
+                visible: false
+            }
+            PropertyChanges {
+                target: inactive
+                visible: true
+            }
+        }
+    ]
 }
