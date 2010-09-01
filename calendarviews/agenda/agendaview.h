@@ -168,7 +168,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     void readSettings( const KConfig * );
     void writeSettings( KConfig * );
 
-    void setContentsPos( int y );
 
     /** reschedule the todo  to the given x- and y- coordinates.
         Third parameter determines all-day (no time specified) */

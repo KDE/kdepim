@@ -96,7 +96,7 @@ class Agenda : public QWidget
     int contentsX() const { return x(); };
     void setContentsPos( int x, int y );
 
-    QScrollBar* verticalScrollBar();
+    QScrollBar* verticalScrollBar() const;
 
     QScrollArea* scrollArea() const;
 
@@ -120,8 +120,8 @@ class Agenda : public QWidget
     QVector<int> minContentsY() const;
     QVector<int> maxContentsY() const;
 
-    int visibleContentsYMin();
-    int visibleContentsYMax();
+    int visibleContentsYMin() const;
+    int visibleContentsYMax() const;
 
     void setStartTime( const QTime &startHour );
 

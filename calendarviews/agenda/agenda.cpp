@@ -2079,13 +2079,13 @@ void Agenda::checkScrollBoundaries( int v )
   }
 }
 
-int Agenda::visibleContentsYMin()
+int Agenda::visibleContentsYMin() const
 {
   int v = verticalScrollBar()->value();
   return int( v / d->mGridSpacingY );
 }
 
-int Agenda::visibleContentsYMax()
+int Agenda::visibleContentsYMax() const
 {
   int v = verticalScrollBar()->value();
   return int( ( v + d->mScrollArea->height() ) / d->mGridSpacingY );
@@ -2222,7 +2222,7 @@ QSize Agenda::sizeHint() const
   }
 }
 
-QScrollBar * Agenda::verticalScrollBar()
+QScrollBar * Agenda::verticalScrollBar() const
 {
   return d->mScrollArea->verticalScrollBar();
 }

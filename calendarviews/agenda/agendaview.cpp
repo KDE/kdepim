@@ -1903,13 +1903,6 @@ void AgendaView::setHolidayMasks()
   d->mAllDayAgenda->setHolidayMask( &d->mHolidayMask );
 }
 
-void AgendaView::setContentsPos( int y )
-{
-  if ( y != d->mAgenda->contentsY() ) {
-    d->mAgenda->setContentsPos( 0, y );
-  }
-}
-
 void AgendaView::clearSelection()
 {
   d->mAgenda->deselectItem();
