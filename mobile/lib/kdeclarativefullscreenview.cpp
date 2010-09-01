@@ -31,9 +31,9 @@
 #include <KActionCollection>
 #include <KCmdLineArgs>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
+#include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
@@ -72,6 +72,8 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   // on the desktop start with a nice size
   resize(800, 480);
 #endif
+
+  qApp->setStartDragDistance(40);
 
   m_splashScreen = new QLabel( this );
   QPixmap splashBackground;
