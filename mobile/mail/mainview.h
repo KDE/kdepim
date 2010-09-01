@@ -67,6 +67,7 @@ class MainView : public KDeclarativeMainView
     void replyToAuthor();
     void replyToMailingList();
     void replyToMessage();
+    void sendAgain();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
@@ -75,6 +76,7 @@ class MainView : public KDeclarativeMainView
     virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
 
   private slots:
+    void sendAgainFetchResult( KJob *job );
     void replyFetchResult( KJob *job );
     void forwardFetchResult( KJob *job );
     void composeFetchResult( KJob *job );

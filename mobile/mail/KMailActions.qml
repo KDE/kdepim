@@ -184,7 +184,7 @@ ActionMenuContainer {
       ActionListItem { name : "akonadi_mark_as_action_item" }
     }*/
     ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark As ..." ) }
-    FakeAction { name : "send_again" }
+    ActionListItem { name : "message_send_again" }
     FakeAction { name : "create_todo_reminder" }
     FakeAction { name : "find_in_email" }
     FakeAction { name : "save_as" }

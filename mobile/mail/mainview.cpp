@@ -42,6 +42,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <akonadi/kmime/messagestatus.h>
 #include "messagecore/messagehelpers.h"
+#include "messageviewer/nodehelper.h"
 #include <akonadi/kmime/standardmailactionmanager.h>
 
 #include <Akonadi/ItemFetchScope>
@@ -94,6 +95,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("message_forward"), SIGNAL(triggered(bool)), SLOT(forwardMessage()));
   connect(actionCollection()->action("message_forward_as_attachment"), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()));
   connect(actionCollection()->action("message_redirect"), SIGNAL(triggered(bool)), SLOT(redirect()));
+  connect(actionCollection()->action("message_send_again"), SIGNAL(triggered(bool)), SLOT(sendAgain()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
@@ -209,6 +211,37 @@ void MainView::composeFetchResult( KJob *job )
   composer->show();
 }
 
+
+void MainView::sendAgain()
+{
+    Akonadi::Item item = currentItem();
+    if ( !item.isValid() )
+      return;
+
+    Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( Akonadi::Item( item.id() ), this );
+    fetch->fetchScope().fetchFullPayload();
+    connect( fetch, SIGNAL(result(KJob*)), SLOT(sendAgainFetchResult(KJob*)) );
+}
+
+void MainView::sendAgainFetchResult(KJob* job)
+{
+  Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+  if ( job->error() || fetch->items().isEmpty() )
+    return;
+
+  const Akonadi::Item item = fetch->items().first();
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+  KMime::Message::Ptr msg = MessageCore::Util::message( item );
+  MessageComposer::MessageFactory factory( msg, item.id() );
+  factory.setIdentityManager( Global::identityManager() );
+  KMime::Message::Ptr newMsg = factory.createResend();
+  newMsg->contentType()->setCharset( MessageViewer::NodeHelper::charset( msg.get() ) );
+
+  ComposerView *composer = new ComposerView;
+  composer->setMessage( newMsg );
+  composer->show();
+}
 
 void MainView::replyToAuthor()
 {
