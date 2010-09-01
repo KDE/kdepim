@@ -20,6 +20,7 @@ set(kmail_mobile_srcs
   main.cpp
   messagelistproxy.cpp
   messageviewitem.cpp
+  savemailcommand.cpp
 )
 
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )

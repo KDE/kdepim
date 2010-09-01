@@ -25,6 +25,8 @@
 #include "global.h"
 #include "messageviewitem.h"
 
+#include "savemailcommand_p.h"
+
 #include <KDE/KDebug>
 #include <KActionCollection>
 #include <KAction>
@@ -88,7 +90,6 @@ void MainView::delayedInit()
   connect(actionCollection()->action("mark_message_action_item"), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)));
   connect(actionCollection()->action("write_new_email"), SIGNAL(triggered(bool)), SLOT(startComposer()));
   connect(actionCollection()->action("message_reply"), SIGNAL(triggered(bool)), SLOT(replyToMessage()));
-  connect(actionCollection()->action("message_reply_variants"), SIGNAL(triggered(bool)), SLOT(replyVariants()));
   connect(actionCollection()->action("message_reply_to_all"), SIGNAL(triggered(bool)), SLOT(replyToAll()));
   connect(actionCollection()->action("message_reply_to_author"), SIGNAL(triggered(bool)), SLOT(replyToAuthor()));
   connect(actionCollection()->action("message_reply_to_list"), SIGNAL(triggered(bool)), SLOT(replyToMailingList()));
@@ -96,6 +97,7 @@ void MainView::delayedInit()
   connect(actionCollection()->action("message_forward_as_attachment"), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()));
   connect(actionCollection()->action("message_redirect"), SIGNAL(triggered(bool)), SLOT(redirect()));
   connect(actionCollection()->action("message_send_again"), SIGNAL(triggered(bool)), SLOT(sendAgain()));
+  connect(actionCollection()->action("message_save_as"), SIGNAL(triggered(bool)), SLOT(saveMessage()));
   connect(actionCollection()->action("save_favorite"), SIGNAL(triggered(bool)), SLOT(saveFavorite()));
 
   connect(itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()));
@@ -636,6 +638,18 @@ void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
   manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
                            i18n( "Do you really want to delete the selected account?" ) );
 }
+
+void MainView::saveMessage()
+{
+    Akonadi::Item item = currentItem();
+    if ( !item.isValid() )
+      return;
+
+//See the header file for SaveMailCommand why is it here
+    SaveMailCommand *command = new SaveMailCommand( item, this );
+    command->execute();
+}
+
 
 
 // #############################################################

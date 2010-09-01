@@ -68,6 +68,7 @@ class MainView : public KDeclarativeMainView
     void replyToMailingList();
     void replyToMessage();
     void sendAgain();
+    void saveMessage();
 
   protected:
     virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,

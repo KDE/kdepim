@@ -76,6 +76,8 @@ MailActionManager::MailActionManager(KActionCollection* actionCollection, QObjec
   action = actionCollection->addAction("message_send_again");
   action->setText( i18n("Send Again") );
 
+  action = actionCollection->addAction("message_save_as");
+  action->setText( i18n("Save As...") );
 }
 
 void MailActionManager::setItemSelectionModel(QItemSelectionModel* selectionModel)

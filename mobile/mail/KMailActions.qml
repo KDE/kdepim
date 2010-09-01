@@ -187,7 +187,7 @@ ActionMenuContainer {
     ActionListItem { name : "message_send_again" }
     FakeAction { name : "create_todo_reminder" }
     FakeAction { name : "find_in_email" }
-    FakeAction { name : "save_as" }
+    ActionListItem { name : "message_save_as" }
   }
 
 
