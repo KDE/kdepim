@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="7">
+<kpartgui name="kaddressbook" version="8">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -8,7 +8,7 @@
         <Action name="akonadi_contact_create"/>
         <Action name="akonadi_contact_group_create"/>
         <Separator/>
-        <Action name="akonadi_addressbook_create"/>
+        <Action name="akonadi_resource_create"/>
       </Menu>
       <Separator/>
       <Menu name="file_import">
@@ -58,7 +58,7 @@
     <Action name="akonadi_collection_copy"/>
     <Action name="akonadi_paste"/>
     <Separator/>
-    <Action name="akonadi_addressbook_create"/>
+    <Action name="akonadi_resource_create"/>
     <Action name="akonadi_resource_delete"/>
     <Action name="akonadi_collection_sync"/>
     <Separator/>
