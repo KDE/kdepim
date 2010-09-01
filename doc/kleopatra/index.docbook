@@ -1346,7 +1346,7 @@ updated.</para>
         <varlistentry id="settings-toolbars">
           <term>
             <menuchoice>
-              <guimenu>Settings</guimenu><guisubmenu>Toolbars</guisubmenu></menuchoice></term>
+              <guimenu>Settings</guimenu><guisubmenu>Toolbars Shown</guisubmenu></menuchoice></term>
           <listitem>
             <para>
               <action>Shows/hides &kleopatra; toolbars.</action>
@@ -1514,14 +1514,14 @@ linkend="file-import-certificates"/>.</para>
 <para>Sign file(s)</para>
 </listitem>
 </varlistentry>
-<!-- comment for 4.5
+<!-- comment for 4.5-->
 <varlistentry>
-<term><option>-E</option> <option>- -encrypt-sign</option></term>
+<term><option>-E</option> <option>--encrypt-sign</option></term>
 <listitem>
-<para>Encrypt and/or sign file(s). Same as <option>- -sign-encrypt</option>, do not use</para>
+<para>Encrypt and/or sign file(s). Same as <option>--sign-encrypt</option>, do not use</para>
 </listitem>
 </varlistentry>
--->
+
 <varlistentry>
 <term><option>-d</option> <option>--decrypt</option></term>
 <listitem>
@@ -1851,7 +1851,7 @@ list.</para>
             </listitem>
           </varlistentry>
           <varlistentry id="tooltips-details">
-            <term><guilabel>Show certificate details</guilabel></term>
+            <term><guilabel>Show technical details</guilabel></term>
             <listitem>
               <para>
                 Shows technical information about the certificate:
@@ -1874,7 +1874,7 @@ list.</para>
       </sect2>
 
       <sect2 id="configuration-appearance-certificate-filters">
-        <title>Configuring <guilabel>Certificate Filters</guilabel></title>
+        <title>Configuring <guilabel>Certificate Categories</guilabel></title>
 
         <para>
           &kleopatra; allows you to customize the appearance of
@@ -2065,7 +2065,7 @@ button.</para>
       </sect2>
 
       <sect2 id="configuration-crypto-operations-file">
-        <title>Configuring <guilabel>Checksum Operations</guilabel></title>
+        <title>Configuring <guilabel>File Operations</guilabel></title>
 
         <para>
           Here you can configure some aspects of the file operations

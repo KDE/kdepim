@@ -101,7 +101,8 @@ communicate effectively with various groupware solutions.
 <title>Outlook and Exchange</title>
 
 <para>
-In the &kappname; configuration dialog, under <guilabel>Misc->Groupware...</guilabel>
+In the &kappname; configuration dialog, under <menuchoice><guimenu>Mail</guimenu>
+<guimenuitem>Misc</guimenuitem></menuchoice> on the <guilabel>Invitations</guilabel> page 
 you will find the following options that will help the user communicate
 with Microsoft Outlook(tm) running in a Kolab environment or in a
 Microsoft Exchange(tm) environment.
@@ -147,7 +148,7 @@ required for composing.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Exchange compatible invitations naming</guilabel></term>
+<term><guilabel>Exchange-compatible invitation naming</guilabel></term>
 <listitem>
 <para>Microsoft Outlook, when used in combination with a Microsoft Exchange
 server, has a problem understanding standards-compliant groupware e-mail.

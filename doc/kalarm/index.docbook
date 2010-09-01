@@ -81,7 +81,7 @@ command whose output should be displayed. You can also choose the
 color of the alarm message, and whether to play a sound or speak the
 message.</para>
 
-<para>Alarms may also be scheduled from the command line, or via D-Bus
+<para>Alarms may also be scheduled from the command line, or via &DBus;
 calls from programs.</para>
 
 <para>When an alarm message is due, it is displayed on each &kde;
@@ -133,7 +133,7 @@ buttons.</para>
 <title>Alarm Types</title>
 
 <para>The basic functions available from the different alarm types
-which KAlarm provides are:</para>
+which &kalarm; provides are:</para>
 
 <itemizedlist>
 <listitem>
@@ -2433,8 +2433,8 @@ at which you finish work each day.</para>
 </listitem>
 
 <listitem><para><guilabel>KOrganizer event duration</guilabel>: Enter
-the event duration to set in KOrganizer for alarms which are copied to
-KOrganizer. The default duration is zero.</para>
+the event duration to set in &korganizer; for alarms which are copied to
+&korganizer;. The default duration is zero.</para>
 </listitem>
 
 </itemizedlist>
@@ -3210,15 +3210,15 @@ request the following functions:</para>
 <listitem><para>display the Alarm Edit dialog</para></listitem>
 </itemizedlist>
 
-<para>Each of the above functions is implemented both by a D-Bus call
-and by the command line. D-Bus calls should be used in preference if
+<para>Each of the above functions is implemented both by a &DBus; call
+and by the command line. &DBus; calls should be used in preference if
 &kalarm; is already running.</para>
 
 <sect1 id="dbus-interface">
-<title>D-Bus Interface</title>
+<title>&DBus; Interface</title>
 
-<para>The D-Bus calls described in this document are all implemented
-in &kalarm;'s <constant>/kalarm</constant> D-Bus object path. The
+<para>The &DBus; calls described in this document are all implemented
+in &kalarm;'s <constant>/kalarm</constant> &DBus; object path. The
 interface is defined in the files
 <filename>org.kde.kalarm.kalarm.xml</filename> and
 <filename>kalarmiface.h</filename>.</para>
@@ -3252,7 +3252,7 @@ void cancelEvent(const QString&amp; <replaceable>eventID</replaceable>)
 <refsect1>
 <title>Description</title>
 
-<para><function>cancelEvent()</function> is a D-Bus call to cancel
+<para><function>cancelEvent()</function> is a &DBus; call to cancel
 the specified alarm. &kalarm; deletes the alarm from the calendar 
 without displaying or executing it.</para>
 
@@ -3288,7 +3288,7 @@ void triggerEvent(const QString&amp; <replaceable>eventID</replaceable>)
 <refsect1>
 <title>Description</title>
 
-<para><function>triggerEvent()</function> is a D-Bus call to trigger
+<para><function>triggerEvent()</function> is a &DBus; call to trigger
 the immediate display or execution of the specified alarm (regardless
 of what time it is scheduled for). &kalarm; retrieves the alarm from
 the calendar and then displays or executes it.</para>
@@ -3543,7 +3543,7 @@ including the initial occurrence.</para>
 
 <refsect1 id="scheduleMessage-descrip">
 <title>Description</title>
-<para><function>scheduleMessage()</function> is a D-Bus call to
+<para><function>scheduleMessage()</function> is a &DBus; call to
 schedule the specified alarm message for display at the specified date
 and time. It has three forms. The most general form allows an
 arbitrary recurrence to be specified &ndash; use this also for
@@ -3775,7 +3775,7 @@ including the initial occurrence.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleFile()</function> is a D-Bus call to schedule
+<para><function>scheduleFile()</function> is a &DBus; call to schedule
 the specified text or image file for display at the specified date and
 time. Apart from specifying a file path or &URL; and omitting the
 foreground color and font, its usage is identical to
@@ -3958,7 +3958,7 @@ including the initial occurrence.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleCommand()</function> is a D-Bus call to
+<para><function>scheduleCommand()</function> is a &DBus; call to
 schedule the specified shell command line, or command script, for
 execution at the specified date and time. Apart from specifying a
 command and omitting the message color, font and audio file
@@ -4183,7 +4183,7 @@ including the initial occurrence.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleEmail()</function> is a D-Bus call to
+<para><function>scheduleEmail()</function> is a &DBus; call to
 schedule the specified email for sending at the specified date and
 time. Apart from specifying the email header and contents and omitting
 the message color, font and audio file parameters, its usage is
@@ -4376,7 +4376,7 @@ including the initial occurrence.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleAudio()</function> is a D-Bus call to
+<para><function>scheduleAudio()</function> is a &DBus; call to
 schedule the specified audio file to be played at the specified date
 and time. Apart from specifying a volume and omitting the message
 color and font parameters, its usage is identical to
@@ -4422,7 +4422,7 @@ alarm could not be found or is read-only,
 <refsect1>
 <title>Description</title>
 
-<para><function>edit()</function> is a D-Bus call to display the
+<para><function>edit()</function> is a &DBus; call to display the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> to edit the
 specified alarm.</para>
 
@@ -4481,7 +4481,7 @@ has an invalid value, or if no template with the name
 <refsect1>
 <title>Description</title>
 
-<para><function>editNew()</function> is a D-Bus call to display the
+<para><function>editNew()</function> is a &DBus; call to display the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> to edit a new
 alarm. If an alarm type is specified as a parameter, a blank dialog is
 displayed. Alternatively, if an alarm template name is specified as a
@@ -4499,12 +4499,12 @@ parameter, the dialog is preset with details from the template.</para>
 start up &kalarm; if it is not already running, in order to trigger or
 cancel scheduled alarms, or schedule new alarms. The reason for using
 command line options for this purpose is that if &kalarm; were started
-without any command line parameters and then sent D-Bus requests, it
+without any command line parameters and then sent &DBus; requests, it
 would start in its default graphical mode, which is clearly undesirable
 for an inter-program request.</para>
 
 <note><para>Programs should first check whether &kalarm; is already
-running; if it is, they should instead use D-Bus calls to request these
+running; if it is, they should instead use &DBus; calls to request these
 operations.</para></note>
 
 <para>The command line options for scheduling a new alarm are as
@@ -4535,7 +4535,7 @@ information).</para></note>
   <entry><option>--triggerEvent <replaceable>eventID</replaceable></option></entry>
   <entry>Trigger the alarm with the specified event ID. The action
   taken is the same as for the
-  <link linkend="triggerEvent">triggerEvent()</link> D-Bus call.
+  <link linkend="triggerEvent">triggerEvent()</link> &DBus; call.
   <option>--cancelEvent</option> cannot be specified with this
   option.</entry>
 </row>
