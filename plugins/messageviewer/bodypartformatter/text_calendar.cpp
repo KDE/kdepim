@@ -231,7 +231,8 @@ class Formatter : public Interface::BodyPartFormatter
       MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
       const QString html =
         KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
-          source, cl, &helper, message->sender()->asUnicodeString() );
+          source, cl, &helper, message->sender()->asUnicodeString(),
+          GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
 
       if ( html.isEmpty() ) {
         return AsIcon;

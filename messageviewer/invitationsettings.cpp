@@ -37,43 +37,53 @@
 
 using namespace MessageViewer;
 
-InvitationSettings::InvitationSettings( QWidget* parent )
-  : QWidget( parent ), mInvitationUi(new Ui_InvitationSettings)
+InvitationSettings::InvitationSettings( QWidget *parent )
+  : QWidget( parent ), mInvitationUi( new Ui_InvitationSettings )
 {
   mInvitationUi->setupUi( this );
 
   mInvitationUi->mDeleteInvitations->setText(
-             i18n( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem()->label().toUtf8() ) );
-  mInvitationUi->mDeleteInvitations->setWhatsThis( i18n( GlobalSettings::self()
-             ->deleteInvitationEmailsAfterSendingReplyItem()->whatsThis().toUtf8() ) );
-  connect( mInvitationUi->mDeleteInvitations, SIGNAL( toggled(bool) ),
-           SIGNAL( changed() ) );
+    i18n( GlobalSettings::self()->
+          deleteInvitationEmailsAfterSendingReplyItem()->label().toUtf8() ) );
+  mInvitationUi->mDeleteInvitations->setWhatsThis(
+    i18n( GlobalSettings::self()->
+          deleteInvitationEmailsAfterSendingReplyItem()->whatsThis().toUtf8() ) );
+  connect( mInvitationUi->mDeleteInvitations, SIGNAL(toggled(bool)),
+           SIGNAL(changed()) );
 
-  mInvitationUi->mLegacyMangleFromTo->setWhatsThis( i18n( GlobalSettings::self()->
-           legacyMangleFromToHeadersItem()->whatsThis().toUtf8() ) );
-  connect( mInvitationUi->mLegacyMangleFromTo, SIGNAL( stateChanged( int ) ),
-           this, SIGNAL( changed() ) );
-  mInvitationUi->mLegacyMangleFromTo->setWhatsThis( i18n( GlobalSettings::self()->
-           legacyBodyInvitesItem()->whatsThis().toUtf8() ) );
-  connect( mInvitationUi->mLegacyBodyInvites, SIGNAL( toggled( bool ) ),
-           this, SLOT( slotLegacyBodyInvitesToggled( bool ) ) );
-  connect( mInvitationUi->mLegacyBodyInvites, SIGNAL( stateChanged( int ) ),
-           this, SIGNAL( changed() ) );
+  mInvitationUi->mLegacyMangleFromTo->setWhatsThis(
+    i18n( GlobalSettings::self()->legacyMangleFromToHeadersItem()->whatsThis().toUtf8() ) );
+  connect( mInvitationUi->mLegacyMangleFromTo, SIGNAL(stateChanged(int)),
+           this, SIGNAL(changed()) );
 
-  mInvitationUi->mExchangeCompatibleInvitations->setWhatsThis( i18n( GlobalSettings::self()->
-           exchangeCompatibleInvitationsItem()->whatsThis().toUtf8() ) );
-  connect( mInvitationUi->mExchangeCompatibleInvitations, SIGNAL( stateChanged( int ) ),
-           this, SIGNAL( changed() ) );
+  mInvitationUi->mLegacyBodyInvites->setWhatsThis(
+    i18n( GlobalSettings::self()->legacyBodyInvitesItem()->whatsThis().toUtf8() ) );
+  connect( mInvitationUi->mLegacyBodyInvites, SIGNAL(toggled(bool)),
+           this, SLOT(slotLegacyBodyInvitesToggled(bool)) );
+  connect( mInvitationUi->mLegacyBodyInvites, SIGNAL(stateChanged(int)),
+           this, SIGNAL(changed()) );
 
-  mInvitationUi->mOutlookCompatibleInvitationComments->setWhatsThis( i18n( GlobalSettings::self()->
-           outlookCompatibleInvitationReplyCommentsItem()->whatsThis().toUtf8() ) );
-  connect( mInvitationUi->mOutlookCompatibleInvitationComments, SIGNAL( stateChanged( int ) ),
-           this, SIGNAL( changed() ) );
+  mInvitationUi->mExchangeCompatibleInvitations->setWhatsThis(
+    i18n( GlobalSettings::self()->exchangeCompatibleInvitationsItem()->whatsThis().toUtf8() ) );
+  connect( mInvitationUi->mExchangeCompatibleInvitations, SIGNAL(stateChanged(int)),
+           this, SIGNAL(changed()) );
 
-  mInvitationUi->mAutomaticSending->setWhatsThis( i18n( GlobalSettings::self()->
-           automaticSendingItem()->whatsThis().toUtf8() ) );
-  connect( mInvitationUi->mAutomaticSending, SIGNAL( stateChanged( int ) ),
-           this, SIGNAL( changed() ) );
+  mInvitationUi->mOutlookCompatibleInvitationComments->setWhatsThis(
+    i18n( GlobalSettings::self()->
+          outlookCompatibleInvitationReplyCommentsItem()->whatsThis().toUtf8() ) );
+  connect( mInvitationUi->mOutlookCompatibleInvitationComments, SIGNAL(stateChanged(int)),
+           this, SIGNAL(changed()) );
+
+  mInvitationUi->mOutlookCompatibleInvitationComparisons->setWhatsThis(
+    i18n( GlobalSettings::self()->
+          outlookCompatibleInvitationComparisonsItem()->whatsThis().toUtf8() ) );
+  connect( mInvitationUi->mOutlookCompatibleInvitationComparisons, SIGNAL(stateChanged(int)),
+           this, SIGNAL(changed()) );
+
+  mInvitationUi->mAutomaticSending->setWhatsThis(
+    i18n( GlobalSettings::self()->automaticSendingItem()->whatsThis().toUtf8() ) );
+  connect( mInvitationUi->mAutomaticSending, SIGNAL(stateChanged(int)),
+           this, SIGNAL(changed()) );
 }
 
 InvitationSettings::~InvitationSettings()
@@ -81,7 +91,6 @@ InvitationSettings::~InvitationSettings()
   delete mInvitationUi;
   mInvitationUi = 0;
 }
-
 
 void InvitationSettings::slotLegacyBodyInvitesToggled( bool on )
 {
@@ -106,35 +115,55 @@ void InvitationSettings::slotLegacyBodyInvitesToggled( bool on )
 
 void InvitationSettings::doLoadFromGlobalSettings()
 {
-  mInvitationUi->mLegacyMangleFromTo->setChecked( GlobalSettings::self()->legacyMangleFromToHeaders() );
-  mInvitationUi->mExchangeCompatibleInvitations->setChecked( GlobalSettings::self()->exchangeCompatibleInvitations() );
+  mInvitationUi->mLegacyMangleFromTo->setChecked(
+    GlobalSettings::self()->legacyMangleFromToHeaders() );
+
+  mInvitationUi->mExchangeCompatibleInvitations->setChecked(
+    GlobalSettings::self()->exchangeCompatibleInvitations() );
 
   mInvitationUi->mLegacyBodyInvites->blockSignals( true );
   mInvitationUi->mLegacyBodyInvites->setChecked( GlobalSettings::self()->legacyBodyInvites() );
   mInvitationUi->mLegacyBodyInvites->blockSignals( false );
 
-  mInvitationUi->mOutlookCompatibleInvitationComments->setChecked( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() );
+  mInvitationUi->mOutlookCompatibleInvitationComments->setChecked(
+    GlobalSettings::self()->outlookCompatibleInvitationReplyComments() );
+
+  mInvitationUi->mOutlookCompatibleInvitationComparisons->setChecked(
+    GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
 
   mInvitationUi->mAutomaticSending->setChecked( GlobalSettings::self()->automaticSending() );
   mInvitationUi->mAutomaticSending->setEnabled( !mInvitationUi->mLegacyBodyInvites->isChecked() );
-  mInvitationUi->mDeleteInvitations->setChecked(  GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
+
+  mInvitationUi->mDeleteInvitations->setChecked(
+    GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
 }
 
 void InvitationSettings::save()
 {
   KConfigGroup groupware( GlobalSettings::self()->config(), "Invitations" );
 
-  // Write the groupware config
-  GlobalSettings::self()->setLegacyMangleFromToHeaders( mInvitationUi->mLegacyMangleFromTo->isChecked() );
+  GlobalSettings::self()->setLegacyMangleFromToHeaders(
+    mInvitationUi->mLegacyMangleFromTo->isChecked() );
+
   GlobalSettings::self()->setLegacyBodyInvites( mInvitationUi->mLegacyBodyInvites->isChecked() );
-  GlobalSettings::self()->setExchangeCompatibleInvitations( mInvitationUi->mExchangeCompatibleInvitations->isChecked() );
-  GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments( mInvitationUi->mOutlookCompatibleInvitationComments->isChecked() );
+
+  GlobalSettings::self()->setExchangeCompatibleInvitations(
+    mInvitationUi->mExchangeCompatibleInvitations->isChecked() );
+
+  GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments(
+    mInvitationUi->mOutlookCompatibleInvitationComments->isChecked() );
+
+  GlobalSettings::self()->setOutlookCompatibleInvitationComparisons(
+    mInvitationUi->mOutlookCompatibleInvitationComparisons->isChecked() );
+
   GlobalSettings::self()->setAutomaticSending( mInvitationUi->mAutomaticSending->isChecked() );
-  GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( mInvitationUi->mDeleteInvitations->isChecked() );
+
+  GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply(
+    mInvitationUi->mDeleteInvitations->isChecked() );
 }
 
 QString InvitationSettings::helpAnchor() const
 {
-  return QString::fromLatin1("configure-misc-invites");
+  return QString::fromLatin1( "configure-misc-invites" );
 }
 

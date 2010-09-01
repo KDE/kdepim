@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>572</width>
-    <height>266</height>
+    <height>297</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -60,6 +60,22 @@ Turn this option on to send groupware invitations in a way that Microsoft Exchan
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="mOutlookCompatibleInvitationComparisons">
+        <property name="toolTip">
+         <string>Display invitation update differences in the Microsoft Outlook(tm) style.</string>
+        </property>
+        <property name="whatsThis">
+         <string>When viewing invitation updates, show the differences in the Microsoft Outlook style.</string>
+        </property>
+        <property name="text">
+         <string>Show invitation update differences in the Outlook style</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QCheckBox" name="mAutomaticSending">
         <property name="toolTip">
          <string>When this is on, the user will not see the mail composer window. Invitation mails are sent automatically.</string>
@@ -77,7 +93,7 @@ Turn this option on to send groupware invitations in a way that Microsoft Exchan
      <property name="title">
       <string>Options</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QCheckBox" name="mDeleteInvitations">
         <property name="text">
@@ -85,21 +101,21 @@ Turn this option on to send groupware invitations in a way that Microsoft Exchan
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
