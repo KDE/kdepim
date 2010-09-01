@@ -19,8 +19,8 @@
 
 #include "calendarhelper.h"
 
-#define MAX_DAYS_ON_WIDGET 35
-#define MAX_WEEKS_ON_WIDGET 5
+#define MAX_DAYS_ON_WIDGET 42
+#define MAX_WEEKS_ON_WIDGET 6
 
 #include <KDebug>
 
@@ -28,8 +28,7 @@
 CalendarHelper::CalendarHelper( QObject *parent )
     : QObject( parent )
 {
-    //setDate(QDateTime::currentDateTime());
-    setDate(QDateTime(QDate(2010, 8, 10)));
+    setDate(QDateTime::currentDateTime());
 }
 
 CalendarHelper::~CalendarHelper()
@@ -124,7 +123,7 @@ QString CalendarHelper::dayForPosition( const int pos ) const
   int res = (pos - m_offset);
 
   // out of range
-  if ( pos < 1 || pos > MAX_DAYS_ON_WIDGET || res < 1)
+  if ( pos < 1 || pos > MAX_DAYS_ON_WIDGET || res < 1 )
     return QString();
 
   // if the position is the firsts days (0 to m_offset)
@@ -134,11 +133,10 @@ QString CalendarHelper::dayForPosition( const int pos ) const
   // the current day
   if ( pos == m_offset ) {
     const QString rpos = QString::number(pos);
-    emit const_cast<CalendarHelper*>( this )->activeDay( rpos );
     return rpos;
   }
 
-  if ( res >= m_daysInMonth )
+  if ( res > m_daysInMonth )
     return QString();
 
   return QString::number(res);
@@ -156,6 +154,11 @@ int CalendarHelper::weekForPosition( const int pos ) const
 
   // for all other weeks do the math
   return pos + m_weekOffset - 1;
+}
+
+bool CalendarHelper::isCurrentDay( const QString &text ) const
+{
+    return ( m_day == text.toInt() );
 }
 
 #include "calendarhelper.moc"

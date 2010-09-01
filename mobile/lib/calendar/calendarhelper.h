@@ -53,13 +53,13 @@ class CalendarHelper : public QObject
   public slots:
     QString dayForPosition( const int pos ) const;
     int weekForPosition( const int pos ) const;
+    bool isCurrentDay( const QString &text ) const;
 
   signals:
     void dateChanged();
     void dayChanged();
     void monthChanged();
     void yearChanged();
-    void activeDay( const QString & );
 
   private:
     QDateTime m_original;
